@@ -132,8 +132,22 @@ namespace Dt.Base
             var btn = (Button)GetTemplateChild("BtnAdd");
             if (btn != null)
             {
-                btn.Click -= OnAddImage;
-                btn.Click += OnAddImage;
+                if (Type.GetType(FileItem.SelectFileDlgType) != null)
+                {
+                    var menu = new Menu { Placement = MenuPosition.BottomLeft };
+                    Mi mi = new Mi { ID = "上传图像", Icon = Icons.曲别针 };
+                    mi.Click += (s, e) => OnAddImage();
+                    menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "选择图像", Icon = Icons.图片 };
+                    mi.Click += OnSelectFiles;
+                    menu.Items.Add(mi);
+                    Ex.SetMenu(btn, menu);
+                }
+                else
+                {
+                    btn.Click += (s, e) => OnAddImage();
+                }
             }
             UpdateDefaultMenu();
         }
@@ -193,10 +207,21 @@ namespace Dt.Base
             Ex.SetMenu(_fl, menu);
         }
 
-        void OnAddImage(object sender, RoutedEventArgs e)
+        void OnAddImage()
         {
             if (ValBinding.Source != null)
                 _fl.AddImage();
+        }
+
+        async void OnSelectFiles(object sender, Mi e)
+        {
+            var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
+            if (await dlg.Show(false, FileItem.ImageExt)
+                && dlg.SelectedFiles != null
+                && dlg.SelectedFiles.Count > 0)
+            {
+                _fl.AddExistFiles(dlg.SelectedFiles[0]);
+            }
         }
         #endregion
     }

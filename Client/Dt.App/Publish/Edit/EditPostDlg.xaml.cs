@@ -23,8 +23,6 @@ namespace Dt.App.Publish
     {
         const string _insertVideo = "<video src=\"../../fsm/{0}\" poster=\"../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
         const string _insertImg = "../../fsm/{0}";
-        const string _imgExt = "png,jpg,jpeg,bmp,gif,ico,tif";
-        const string _videoExt = "mp4,wmv,mov";
         static Repo<Post> _repo = new Repo<Post>();
         PostMgr _owner;
         bool _saved;
@@ -65,7 +63,7 @@ namespace Dt.App.Publish
         async void OnInsertImg(object sender, Mi e)
         {
             var dlg = new SelectFileDlg();
-            if (await dlg.Show(true, _imgExt))
+            if (await dlg.Show(true, FileItem.ImageExt))
             {
                 foreach (var file in dlg.SelectedFiles)
                 {
@@ -79,7 +77,7 @@ namespace Dt.App.Publish
         async void OnInsertVideo(object sender, Mi e)
         {
             var dlg = new SelectFileDlg();
-            if (await dlg.Show(true, _videoExt))
+            if (await dlg.Show(true, FileItem.VideoExt))
             {
                 foreach (var file in dlg.SelectedFiles)
                 {

@@ -126,6 +126,10 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
+        internal const string SelectFileDlgType = "Dt.App.File.SelectFileDlg,Dt.App";
+        public const string ImageExt = "png,jpg,jpeg,bmp,gif,ico,tif";
+        public const string VideoExt = "mp4,wmv,mov";
+
         static MediaPlayerElement _mediaPlayer;
         static FileItem _playerHost;
 
@@ -415,7 +419,40 @@ namespace Dt.Base
             if (State != FileItemState.None)
                 return;
 
-            var file = await CrossKit.PickFile();
+            if (Type.GetType(SelectFileDlgType) != null)
+            {
+                int result = await new UpdateFileDlg().ShowDlg();
+                if (result < 0)
+                    return;
+
+                if (result == 0)
+                {
+                    // 通过从库中选择文件进行更新，无需上传
+                    string ext = null;
+                    if (FileType == FileItemType.Image)
+                        ext = ImageExt;
+                    else if (FileType == FileItemType.Video)
+                        ext = VideoExt;
+
+                    var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(SelectFileDlgType));
+                    if (await dlg.Show(false, ext)
+                        && dlg.SelectedFiles != null
+                        && dlg.SelectedFiles.Count > 0)
+                    {
+                        _owner.UpdateExistFiles(dlg.SelectedFiles[0], this);
+                    }
+                    return;
+                }
+            }
+
+            // 上传同类型文件
+            FileData file;
+            if (FileType == FileItemType.Image)
+                file = await CrossKit.PickImage();
+            else if (FileType == FileItemType.Video)
+                file = await CrossKit.PickVideo();
+            else
+                file = await CrossKit.PickFile();
             if (file != null)
                 await _owner.UpdateFile(file, this);
         }

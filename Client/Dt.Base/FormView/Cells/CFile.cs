@@ -8,6 +8,10 @@
 
 #region 引用命名
 using Dt.Base.FormView;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -246,7 +250,22 @@ namespace Dt.Base
             if (_toolbar == null)
             {
                 Button btn = new Button { Content = "\uE080", Style = AtRes.字符按钮 };
-                btn.Click += AddFile;
+                if (Type.GetType(FileItem.SelectFileDlgType) != null)
+                {
+                    var menu = new Menu { Placement = MenuPosition.BottomLeft };
+                    Mi mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
+                    mi.Click += (s, e) => OnAddFile();
+                    menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "选择文件", Icon = Icons.详细 };
+                    mi.Click += OnSelectFiles;
+                    menu.Items.Add(mi);
+                    Ex.SetMenu(btn, menu);
+                }
+                else
+                {
+                    btn.Click += (s, e) => OnAddFile();
+                }
                 _toolbar = btn;
             }
             Toolbar = _toolbar;
@@ -279,11 +298,45 @@ namespace Dt.Base
             Ex.SetMenu(_fl, menu);
         }
 
-        void AddFile(object sender, RoutedEventArgs e)
+        void OnAddFile()
         {
             if (ValBinding.Source != null)
-                _fl.AddImage();
+                _fl.AddFile();
+        }
+
+        async void OnSelectFiles(object sender, Mi e)
+        {
+            var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
+            if (await dlg.Show(MaxFileCount > 1, null)
+                && dlg.SelectedFiles != null
+                && dlg.SelectedFiles.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var file in dlg.SelectedFiles)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(",");
+                    sb.Append(file);
+                }
+                _fl.AddExistFiles(sb.ToString());
+            }
         }
         #endregion
+    }
+
+    public interface ISelectFileDlg
+    {
+        /// <summary>
+        /// 已选择的文件列表，每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
+        /// </summary>
+        List<string> SelectedFiles { get; set; }
+
+        /// <summary>
+        /// 显示文件选择对话框
+        /// </summary>
+        /// <param name="p_isMultiSelection">是否允许多选</param>
+        /// <param name="p_typeFilter">按文件扩展名过滤</param>
+        /// <returns></returns>
+        Task<bool> Show(bool p_isMultiSelection, string p_typeFilter);
     }
 }

@@ -522,6 +522,24 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 通过从库中选择文件添加，无上传过程，只更新文件信息
+        /// </summary>
+        /// <param name="p_fileJson"></param>
+        public void AddExistFiles(string p_fileJson)
+        {
+            if (string.IsNullOrEmpty(p_fileJson)
+                || !p_fileJson.StartsWith('[')
+                || !p_fileJson.EndsWith(']'))
+                return;
+
+            string data = Data;
+            if (string.IsNullOrEmpty(data) || data == "[]")
+                Data = "[" + p_fileJson + "]";
+            else
+                Data = data.Insert(data.Length - 1, "," + p_fileJson);
+        }
+
+        /// <summary>
         /// 增加录音
         /// </summary>
         public async void CaptureVoice()
@@ -573,6 +591,25 @@ namespace Dt.Base
             _pnl.ChildrenTransitions = AtRes.AddDeleteTransition;
             _pnl.Children.Remove(p_vf);
             _pnl.ChildrenTransitions = null;
+
+            WriteData();
+        }
+
+        /// <summary>
+        /// 通过从库中选择文件进行更新，无需上传
+        /// </summary>
+        /// <param name="p_fileJson"></param>
+        /// <param name="p_vf"></param>
+        internal void UpdateExistFiles(string p_fileJson, FileItem p_vf)
+        {
+            int index = _pnl.Children.IndexOf(p_vf);
+            _pnl.Children.RemoveAt(index);
+
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_fileJson));
+            reader.Read();
+            FileItem vf = new FileItem(this);
+            vf.ReadData(ref reader);
+            _pnl.Children.Insert(index, vf);
 
             WriteData();
         }
