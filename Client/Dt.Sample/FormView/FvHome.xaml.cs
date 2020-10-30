@@ -36,6 +36,7 @@ namespace Dt.Sample
                 new CenterInfo(Icons.搜索, "查询面板", typeof(SearchFvDemo), "手机样式查询面板"),
                 new CenterInfo(Icons.排列, "自动布局", typeof(FvLayout), "面板布局及格的样式"),
                 new CenterInfo(Icons.乐谱, "外部ScrollViewer", typeof(FvInScrollViewer), "外部嵌套ScrollViewer，和其他元素一起滚动"),
+                new CenterInfo(Icons.乐谱, "内嵌Lv", typeof(LvInFv), "Lv作为单元格嵌套在内部"),
             };
         }
     }

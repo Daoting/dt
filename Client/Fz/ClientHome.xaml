@@ -10,8 +10,8 @@
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
-            <a:Tab Title="主页" Icon="主页" HideTitleBar="True">
-                <pub:PostList x:Name="_post" />
+            <a:Tab x:Name="_tabMain" Title="主页" Icon="主页" HideTitleBar="True">
+
             </a:Tab>
             <a:Tab Title="训练" Icon="步行">
 

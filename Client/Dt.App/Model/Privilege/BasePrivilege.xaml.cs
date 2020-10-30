@@ -73,14 +73,7 @@ namespace Dt.App.Model
             }
 
             if (await _prv.Delete(prv))
-            {
-                AtKit.Msg("删除成功！");
                 LoadAll();
-            }
-            else
-            {
-                AtKit.Warn("删除失败！");
-            }
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

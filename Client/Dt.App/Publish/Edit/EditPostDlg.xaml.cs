@@ -7,9 +7,13 @@
 #endregion
 
 #region 引用命名
+using Dt.App.File;
 using Dt.Base;
 using Dt.Core;
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
 
@@ -19,6 +23,8 @@ namespace Dt.App.Publish
     {
         const string _insertVideo = "<video src=\"../../fsm/{0}\" poster=\"../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
         const string _insertImg = "../../fsm/{0}";
+        const string _imgExt = "png,jpg,jpeg,bmp,gif,ico,tif";
+        const string _videoExt = "mp4,wmv,mov";
         static Repo<Post> _repo = new Repo<Post>();
         PostMgr _owner;
         bool _saved;
@@ -58,12 +64,34 @@ namespace Dt.App.Publish
 
         async void OnInsertImg(object sender, Mi e)
         {
-            await _wv.InvokeScriptAsync("insertImage", new string[] { string.Format(_insertImg, "photo/1.jpg") });
+            var dlg = new SelectFileDlg();
+            if (await dlg.Show(true, _imgExt))
+            {
+                foreach (var file in dlg.SelectedFiles)
+                {
+                    int index = file.IndexOf("\",");
+                    if (index > 2)
+                        await _wv.InvokeScriptAsync("insertImage", new string[] { string.Format(_insertImg, file.Substring(2, index - 2)) });
+                }
+            }
         }
 
         async void OnInsertVideo(object sender, Mi e)
         {
-            await _wv.InvokeScriptAsync("insertVideo", new string[] { string.Format(_insertVideo, "photo/mov.mp4", "photo/mov-t.jpg") });
+            var dlg = new SelectFileDlg();
+            if (await dlg.Show(true, _videoExt))
+            {
+                foreach (var file in dlg.SelectedFiles)
+                {
+                    int index = file.IndexOf("\",");
+                    if (index > 2)
+                    {
+                        string id = file.Substring(2, index - 2);
+                        string thumb = id.Substring(0, id.LastIndexOf('.')) + "-t.jpg";
+                        await _wv.InvokeScriptAsync("insertVideo", new string[] { string.Format(_insertVideo, id, thumb) });
+                    }
+                }
+            }
         }
 
         protected override async Task<bool> OnClosing()

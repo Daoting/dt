@@ -20,7 +20,7 @@ namespace Dt.App.Publish
     {
         void OnDeleting()
         {
-            Throw.If(!IsPublish, "已发布的文章不可删除");
+            Throw.If(IsPublish, "已发布的文章不可删除");
         }
 
         void SetIsPublish(bool p_value)

@@ -1304,24 +1304,42 @@ namespace Dt.Base
         /// 关闭或后退之前，返回false表示禁止关闭
         /// </summary>
         /// <returns>true 表允许关闭</returns>
-        internal async Task<bool> OnClosing()
+        internal async Task<bool> AllowClose()
         {
             if (Closing != null)
             {
                 var args = new AsyncCancelEventArgs();
                 Closing(this, args);
                 await args.EnsureAllCompleted();
-                return !args.Cancel;
+                if (args.Cancel)
+                    return false;
             }
-            return true;
+            return await OnClosing();
         }
 
         /// <summary>
         /// 关闭或后退之后
         /// </summary>
-        internal void OnClosed()
+        internal void AfterClosed()
         {
             Closed?.Invoke(this, EventArgs.Empty);
+            OnClosed();
+        }
+
+        /// <summary>
+        /// 关闭或后退之前，返回false表示禁止关闭
+        /// </summary>
+        /// <returns>true 表允许关闭</returns>
+        protected virtual Task<bool> OnClosing()
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// 关闭或后退之后
+        /// </summary>
+        protected virtual void OnClosed()
+        {
         }
 
         /// <summary>

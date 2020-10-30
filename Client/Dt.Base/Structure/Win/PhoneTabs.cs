@@ -105,7 +105,7 @@ namespace Dt.Base
         Task<bool> IPhonePage.OnClosing()
         {
             if (OwnWin != null)
-                return OwnWin.OnClosing();
+                return OwnWin.AllowClose();
             return Task.FromResult(true);
         }
 
@@ -116,7 +116,7 @@ namespace Dt.Base
         {
             // 只在首页时处理
             if (OwnWin != null)
-                OwnWin.OnClosed();
+                OwnWin.AfterClosed();
         }
         #endregion
 

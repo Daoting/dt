@@ -30,9 +30,9 @@ namespace Dt.App.File
         string FolderName { get; set; }
 
         /// <summary>
-        /// 允许编辑
+        /// 参数设置
         /// </summary>
-        bool AllowEdit { get; }
+        FileMgrSetting Setting { get; set; }
 
         /// <summary>
         /// 获取所有子项
@@ -45,6 +45,13 @@ namespace Dt.App.File
         /// </summary>
         /// <returns></returns>
         Task<Table> GetChildFolders();
+
+        /// <summary>
+        /// 获取所有子文件夹和指定扩展名的文件
+        /// </summary>
+        /// <param name="p_typeFilter">文件扩展名，逗号隔开</param>
+        /// <returns></returns>
+        Task<Table> GetChildrenByType(string p_typeFilter);
 
         /// <summary>
         /// 查询文件

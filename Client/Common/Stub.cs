@@ -133,6 +133,13 @@ namespace Dt.Shell
                     Icon = "文件夹",
                     ViewName = "文件"
                 },
+                new OmMenu
+                {
+                    ID = 4000,
+                    Name = "发布",
+                    Icon = "公告",
+                    ViewName = "发布"
+                },
             };
         }
 
@@ -145,6 +152,7 @@ namespace Dt.Shell
             { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
             { "发布管理", typeof(Dt.App.Publish.PublishMgr) },
+            { "发布", typeof(Dt.App.Publish.PublishView) },
             { "基础代码", typeof(Dt.App.Model.BaseCode) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },

@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:file="using:Dt.App.File"
     Home="最近使用,公共文件,我的文件">
 
     <a:WinItem DockState="DockedLeft">

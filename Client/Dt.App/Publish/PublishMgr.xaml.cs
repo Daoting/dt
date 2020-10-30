@@ -25,7 +25,7 @@ namespace Dt.App.Publish
                 new CenterInfo(Icons.留言, "评论管理", typeof(KeywordMgr), ""),
                 new CenterInfo(Icons.展开, "关键字", typeof(KeywordMgr), ""),
                 new CenterInfo(Icons.文件, "文章专辑", typeof(AlbumMgr), ""),
-                new CenterInfo(Icons.词典, "素材库", typeof(PostMgr), ""),
+                new CenterInfo(Icons.词典, "素材库", typeof(ResLibWin), ""),
             };
         }
     }

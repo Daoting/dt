@@ -81,6 +81,8 @@ namespace Dt.App.Publish
                 Creator: AtUser.Name,
                 Ctime: AtSys.Now);
             _fv.Data = post;
+            _lvKeyword.Data = null;
+            _lvAlbum.Data = null;
         }
 
         internal async Task<bool> SavePost()
@@ -128,13 +130,10 @@ namespace Dt.App.Publish
 
             if (await _repoPost.Delete(post))
             {
-                AtKit.Msg("删除成功！");
                 LoadAll();
                 _fv.Data = null;
-            }
-            else
-            {
-                AtKit.Warn("删除失败！");
+                _lvKeyword.Data = null;
+                _lvAlbum.Data = null;
             }
         }
 
@@ -146,13 +145,13 @@ namespace Dt.App.Publish
                 if (string.IsNullOrEmpty(post.Url))
                     AtKit.Warn("文章的标题和内容不可为空！");
                 else
-                    new ViewPostDlg(this).Show();
+                    AtApp.OpenWin(typeof(PublishView), post.Title, Icons.公告, post.ID);
             }
         }
 
-        async void OnAddKeyword(object sender, RoutedEventArgs e)
+        async void OnAddKeyword(object sender, Mi e)
         {
-            if (_fv.Data != null)
+            if (await IsValidate())
             {
                 if (await new SelectKeywordDlg().Show(_fv.Row.ID))
                     LoadKeyword(_fv.Row.ID);
@@ -166,9 +165,9 @@ namespace Dt.App.Publish
                 LoadKeyword(_fv.Row.ID);
         }
 
-        async void OnAddAlbum(object sender, RoutedEventArgs e)
+        async void OnAddAlbum(object sender, Mi e)
         {
-            if (_fv.Data != null)
+            if (await IsValidate())
             {
                 if (await new SelectAlbumDlg().Show(_fv.Row.ID))
                     LoadAlbum(_fv.Row.ID);
@@ -180,6 +179,18 @@ namespace Dt.App.Publish
             var pa = new Postalbum(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
             if (await new Repo<Postalbum>().Delete(pa))
                 LoadAlbum(_fv.Row.ID);
+        }
+
+        Task<bool> IsValidate()
+        {
+            if (_fv.Data == null)
+                return Task.FromResult(false);
+
+            if (_fv.Row.IsAdded || _fv.Row.IsChanged)
+            {
+                return SavePost();
+            }
+            return Task.FromResult(true);
         }
         #endregion
     }

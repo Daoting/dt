@@ -24,13 +24,11 @@ namespace Dt.App.File
     public sealed partial class FolderPage : UserControl, INaviContent
     {
         readonly IFileMgr _fileMgr;
-        readonly FileHome _owner;
 
-        public FolderPage(IFileMgr p_fileMgr, FileHome p_owner)
+        public FolderPage(IFileMgr p_fileMgr)
         {
             InitializeComponent();
             _fileMgr = p_fileMgr;
-            _owner = p_owner;
             _lv.View = new FileItemSelector((DataTemplate)Resources["FolderTemplate"], (DataTemplate)Resources["FileTemplate"]);
             this.FirstLoaded(LoadData);
         }
@@ -48,11 +46,15 @@ namespace Dt.App.File
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
-            _host.NaviTo(new FolderPage(mgr, _owner));
+            mgr.Setting = _fileMgr.Setting;
+            _host.NaviTo(new FolderPage(mgr));
         }
 
         void OnOpenedFile(object sender, FileItem e)
         {
+            if (!_fileMgr.Setting.SaveHistory)
+                return;
+
             AtKit.RunAsync(() =>
             {
                 // 记录到本地已读文件目录
@@ -66,9 +68,7 @@ namespace Dt.App.File
                 }
                 his.LastReadTime = AtSys.Now;
                 if (AtLocal.Save(his) == 1)
-                {
-                    _owner.LoadHistory();
-                }
+                    _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
         }
 
@@ -92,6 +92,7 @@ namespace Dt.App.File
                 row.AddCell("parentid", _fileMgr.FolderID);
                 row.AddCell("name", file.DisplayName);
                 row.AddCell("isfolder", false);
+                row.AddCell("extname", file.Ext.TrimStart('.'));
                 row.AddCell<string>("info");
                 row.AddCell("ctime", ctime);
                 _lv.Data.Add(row);
@@ -159,7 +160,8 @@ namespace Dt.App.File
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
                 mgr.FolderID = dlg.Target.FolderID;
                 mgr.FolderName = dlg.Target.FolderName;
-                _host.NaviTo(new FolderPage(mgr, _owner));
+                mgr.Setting = _fileMgr.Setting;
+                _host.NaviTo(new FolderPage(mgr));
                 LoadData();
             }
         }
@@ -182,16 +184,17 @@ namespace Dt.App.File
             }
             else if (await _fileMgr.Delete(p_rows))
             {
-                foreach (var row in p_rows)
-                {
-                    if (!row.Bool("IsFolder"))
-                    {
-                        // 删除文件
-                        var fi = GetFileItem(row);
-                        if (fi != null)
-                            await fi.Delete();
-                    }
-                }
+                // 不删除实际文件，其他位置可能已引用！
+                //foreach (var row in p_rows)
+                //{
+                //    if (!row.Bool("IsFolder"))
+                //    {
+                //        // 删除文件
+                //        var fi = GetFileItem(row);
+                //        if (fi != null)
+                //            await fi.Delete();
+                //    }
+                //}
                 LoadData();
             }
         }
@@ -215,7 +218,7 @@ namespace Dt.App.File
             Row row = (Row)_m.TargetData;
             if (row.Bool("isfolder"))
             {
-                if (_fileMgr.AllowEdit)
+                if (_fileMgr.Setting.AllowEdit)
                 {
                     _m["另存为"].Visibility = Visibility.Collapsed;
                     _m["分享"].Visibility = Visibility.Collapsed;
@@ -229,7 +232,7 @@ namespace Dt.App.File
                     e.Cancel = true;
                 }
             }
-            else if (_fileMgr.AllowEdit)
+            else if (_fileMgr.Setting.AllowEdit)
             {
                 _m["另存为"].Visibility = Visibility.Visible;
                 _m["分享"].Visibility = Visibility.Visible;
@@ -260,7 +263,7 @@ namespace Dt.App.File
                 mi.Click += OnMultiDelete;
                 _menuMulti.Items.Add(mi);
 
-                mi = new Mi { ID = "全选", Icon = Icons.删除 };
+                mi = new Mi { ID = "全选", Icon = Icons.正确 };
                 mi.Click += OnSelectAll;
                 _menuMulti.Items.Add(mi);
 
@@ -298,7 +301,7 @@ namespace Dt.App.File
             mi.Click += OnSearch;
             _menu.Items.Add(mi);
 
-            if (_fileMgr.AllowEdit)
+            if (_fileMgr.Setting.AllowEdit)
             {
                 mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
                 mi.Click += OnUpload;

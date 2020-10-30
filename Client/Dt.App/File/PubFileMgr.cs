@@ -47,10 +47,7 @@ namespace Dt.App.File
             set { _folderName = value; }
         }
 
-        public bool AllowEdit
-        {
-            get { return AtUser.HasPrv("公共文件管理"); }
-        }
+        public FileMgrSetting Setting { get; set; }
 
         public Task<Table> GetChildren()
         {
@@ -60,6 +57,11 @@ namespace Dt.App.File
         public Task<Table> GetChildFolders()
         {
             return AtCm.Query("文件-子级文件夹", new { parentid = FolderID });
+        }
+
+        public Task<Table> GetChildrenByType(string p_typeFilter)
+        {
+            return AtCm.Query("文件-扩展名过滤子级", new { parentid = FolderID, extname = p_typeFilter });
         }
 
         public Task<Table> SearchFiles(string p_name)
@@ -74,6 +76,7 @@ namespace Dt.App.File
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
                     IsFolder: false,
+                    ExtName: p_row.Str("extname"),
                     Info: p_row.Str("info"),
                     Ctime: p_row.Date("ctime"));
             return new Repo<Pubfile>().Save(pf, false);

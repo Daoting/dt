@@ -337,7 +337,7 @@ namespace Dt.Base
         {
             // 只在首页时处理
             if (OwnWin != null && OwnWin.Home == Title)
-                return OwnWin.OnClosing();
+                return OwnWin.AllowClose();
             return Task.FromResult(true);
         }
 
@@ -348,7 +348,7 @@ namespace Dt.Base
         {
             // 只在首页时处理
             if (OwnWin != null && OwnWin.Home == Title)
-                OwnWin.OnClosed();
+                OwnWin.AfterClosed();
         }
         #endregion
 

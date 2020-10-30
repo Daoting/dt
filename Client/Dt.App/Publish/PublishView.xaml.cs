@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.App.Publish;
 using Dt.Base;
 using Dt.Core;
 using System;
@@ -18,18 +17,19 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
-    /// <summary>
-    /// 首页
-    /// </summary>
-    [View("福祉主页")]
-    public partial class ClientHome : Win
+    [View("发布")]
+    public partial class PublishView : Win
     {
-        public ClientHome()
+        public PublishView() : this(-1)
+        {
+        }
+
+        public PublishView(long p_postID)
         {
             InitializeComponent();
-            _tabMain.Content = new PostList(this, -1);
+            _tab.Content = new PostList(this, p_postID);
         }
     }
 }

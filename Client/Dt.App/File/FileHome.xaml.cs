@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 using System.Linq;
 using System.Text;
 #endregion
@@ -24,12 +25,25 @@ namespace Dt.App.File
         public FileHome()
         {
             InitializeComponent();
-            _tabPub.Content = new FolderPage(new PubFileMgr(), this);
-            _tabMy.Content = new FolderPage(new MyFileMgr(), this);
+
+            var setting = new FileMgrSetting
+            {
+                AllowEdit = AtUser.HasPrv("公共文件管理"),
+                OnOpenedFile = LoadHistory,
+            };
+            _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });
+
+            setting = new FileMgrSetting
+            {
+                AllowEdit = true,
+                OnOpenedFile = LoadHistory,
+            };
+            _tabMy.Content = new FolderPage(new MyFileMgr { Setting = setting });
+
             LoadHistory();
         }
 
-        public void LoadHistory()
+        void LoadHistory()
         {
             AtKit.RunAsync(() =>
             {

@@ -24,10 +24,7 @@ namespace Dt.App.File
 
         public string FolderName { get; set; } = "我的文件";
 
-        public bool AllowEdit
-        {
-            get { return true; }
-        }
+        public FileMgrSetting Setting { get; set; }
 
         public Task<Table> GetChildren()
         {
@@ -39,6 +36,13 @@ namespace Dt.App.File
         public Task<Table> GetChildFolders()
         {
             return AtCm.Query("个人文件-子级文件夹", new { parentid = FolderID });
+        }
+        
+        public Task<Table> GetChildrenByType(string p_typeFilter)
+        {
+            if (FolderID == -1)
+                return AtCm.Query("个人文件-扩展名过滤根目录", new { userid = AtUser.ID, extname = p_typeFilter });
+            return AtCm.Query("个人文件-扩展名过滤子级", new { parentid = FolderID, extname = p_typeFilter });
         }
 
         public Task<Table> SearchFiles(string p_name)
@@ -53,6 +57,7 @@ namespace Dt.App.File
                 ParentID: FolderID == -1 ? (long?)null : FolderID,
                 Name: p_row.Str("name"),
                 IsFolder: false,
+                ExtName: p_row.Str("extname"),
                 Info: p_row.Str("info"),
                 Ctime: p_row.Date("ctime"),
                 UserID: AtUser.ID);

@@ -25,6 +25,7 @@ namespace Dt.App.File
             long? ParentID = default,
             string Name = default,
             bool IsFolder = default,
+            string ExtName = default,
             string Info = default,
             DateTime Ctime = default)
         {
@@ -32,6 +33,7 @@ namespace Dt.App.File
             AddCell<long?>("ParentID", ParentID);
             AddCell<string>("Name", Name);
             AddCell<bool>("IsFolder", IsFolder);
+            AddCell<string>("ExtName", ExtName);
             AddCell<string>("Info", Info);
             AddCell<DateTime>("Ctime", Ctime);
             IsAdded = true;
@@ -65,6 +67,15 @@ namespace Dt.App.File
         {
             get { return (bool)this["IsFolder"]; }
             set { this["IsFolder"] = value; }
+        }
+
+        /// <summary>
+        /// 文件扩展名
+        /// </summary>
+        public string ExtName
+        {
+            get { return (string)this["ExtName"]; }
+            set { this["ExtName"] = value; }
         }
 
         /// <summary>
@@ -109,6 +120,10 @@ namespace Dt.App.File
         }
 
         void SetIsFolder(bool p_value)
+        {
+        }
+
+        void SetExtName(string p_value)
         {
         }
 

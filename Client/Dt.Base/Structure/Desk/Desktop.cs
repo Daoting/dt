@@ -212,7 +212,7 @@ namespace Dt.Base
                 return false;
 
             // 触发关闭前事件，外部判断是否允许关闭
-            if (!await p_win.OnClosing())
+            if (!await p_win.AllowClose())
                 return false;
 
             Items.RemoveAt(index);
@@ -241,7 +241,7 @@ namespace Dt.Base
             }
 
             // 关闭后
-            p_win.OnClosed();
+            p_win.AfterClosed();
             GC.Collect();
             return true;
         }
@@ -264,11 +264,11 @@ namespace Dt.Base
                 foreach (var win in ls)
                 {
                     // 触发关闭前事件，外部判断是否允许关闭
-                    if (await win.OnClosing())
+                    if (await win.AllowClose())
                     {
                         Items.Remove(win);
                         // 关闭后
-                        win.OnClosed();
+                        win.AfterClosed();
                     }
                 }
             }
