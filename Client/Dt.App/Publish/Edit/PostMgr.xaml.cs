@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base;
+using Dt.Base.FormView;
 using Dt.Core;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -15,7 +16,7 @@ using Windows.UI.Xaml;
 
 namespace Dt.App.Publish
 {
-    public partial class PostMgr : Win
+    public partial class PostMgr : Win, IHtmlEditHost
     {
         readonly Repo<Post> _repoPost = new Repo<Post>();
 
@@ -116,7 +117,7 @@ namespace Dt.App.Publish
         {
             Post post = (Post)_fv.Data;
             if (post != null)
-                new EditPostDlg().ShowDlg(this);
+                new HtmlEditDlg().ShowDlg(this);
         }
 
         async void OnDelPost(object sender, Mi e)
@@ -191,6 +192,16 @@ namespace Dt.App.Publish
                 return SavePost();
             }
             return Task.FromResult(true);
+        }
+        #endregion
+
+
+        #region IHtmlEditHost
+        string IHtmlEditHost.CurrentHtml => CurrentPost.Content;
+
+        Task<bool> IHtmlEditHost.SaveHtml(string p_html)
+        {
+            return SavePost();
         }
         #endregion
     }

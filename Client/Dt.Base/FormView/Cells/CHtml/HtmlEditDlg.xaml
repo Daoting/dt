@@ -7,7 +7,9 @@
     IsPinned="True">
 
     <a:Dlg.Menu>
-        <a:Menu>
+        <a:Menu x:Name="_menu">
+            <a:Mi ID="图片" Icon="图片" Click="OnInsertImg" />
+            <a:Mi ID="视频" Icon="视频" Click="OnInsertVideo" />
             <a:Mi ID="保存" Icon="保存" Click="OnSave" />
         </a:Menu>
     </a:Dlg.Menu>

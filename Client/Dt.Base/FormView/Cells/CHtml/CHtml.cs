@@ -10,6 +10,7 @@
 using Dt.Base.FormView;
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -19,8 +20,9 @@ namespace Dt.Base
     /// <summary>
     /// 富文本格
     /// </summary>
-    public partial class CHtml : FvCell
+    public partial class CHtml : FvCell, IHtmlEditHost
     {
+        
         #region 构造方法
         public CHtml()
         {
@@ -70,5 +72,24 @@ namespace Dt.Base
         {
             Saved?.Invoke(this, EventArgs.Empty);
         }
+
+        #region IHtmlEditHost
+        string IHtmlEditHost.CurrentHtml
+        {
+            get
+            {
+                if (ValBinding.Source is ICell cell)
+                    return cell.GetVal<string>();
+                return "";
+            }
+        }
+
+        Task<bool> IHtmlEditHost.SaveHtml(string p_html)
+        {
+            SetVal(p_html);
+            OnSaved();
+            return Task.FromResult(true);
+        }
+        #endregion
     }
 }
