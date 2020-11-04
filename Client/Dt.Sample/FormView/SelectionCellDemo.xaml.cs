@@ -36,7 +36,7 @@ namespace Dt.Sample
             {
                 { "liststr" },
                 { "listenum1", typeof(Base.SelectionMode) },
-                { "listenum2" },
+                { "listenum2", typeof(byte) },
                 { "listint" },
                 { "listobj", typeof(Person) },
                 { "listrow" },
@@ -63,7 +63,7 @@ namespace Dt.Sample
             {
                 liststr = "选项三",
                 listenum1 = Base.SelectionMode.Multiple,
-                listenum2 = "None",
+                listenum2 = 1,
                 listint = "2",
                 listobj = default(Person),
                 listrow = "",

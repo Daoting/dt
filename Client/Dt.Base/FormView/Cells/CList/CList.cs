@@ -399,7 +399,7 @@ namespace Dt.Base
                 Binding bind = new Binding
                 {
                     Path = new PropertyPath("Value"),
-                    Converter = new ListTextConverter(),
+                    Converter = new ListTextConverter(this),
                     Mode = BindingMode.TwoWay,
                     Source = this
                 };
@@ -412,7 +412,7 @@ namespace Dt.Base
                 Binding bind = new Binding
                 {
                     Path = new PropertyPath("Value"),
-                    Converter = new ListTextConverter(),
+                    Converter = new ListTextConverter(this),
                     Source = this
                 };
                 tb.SetBinding(TextBlock.TextProperty, bind);

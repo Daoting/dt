@@ -55,10 +55,35 @@ namespace Dt.Base
     /// </summary>
     class ListTextConverter : IValueConverter
     {
+        readonly CList _owner;
+
+        public ListTextConverter(CList p_owner)
+        {
+            _owner = p_owner;
+        }
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value == null)
                 return "";
+
+            if (value is string)
+                return value;
+
+            if (!string.IsNullOrEmpty(_owner.Enum))
+            {
+                // 将byte int等数值类型转成枚举类型，显示枚举项
+                Type type = Type.GetType(_owner.Enum, false, true);
+                if (type != null)
+                {
+                    try
+                    {
+                        return Enum.ToObject(type, value).ToString();
+                    }
+                    catch { }
+                }
+            }
+
             return value.ToString();
         }
 
