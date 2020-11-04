@@ -26,7 +26,7 @@ namespace Dt.App.Model
         public ReportMgr()
         {
             InitializeComponent();
-            LoadAll();
+            //LoadAll();
         }
 
         async void LoadAll()
@@ -69,7 +69,7 @@ namespace Dt.App.Model
         async void OnAdd(object sender, Mi e)
         {
             _fv.Data = new Rpt(
-                ID: await AtCm.NewFlagID(0),
+                ID: await AtCm.NewID(),
                 Name: "新报表");
         }
 

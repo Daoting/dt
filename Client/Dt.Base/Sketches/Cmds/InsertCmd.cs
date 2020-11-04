@@ -40,8 +40,7 @@ namespace Dt.Base.Sketches
         /// <param name="p_parameter"></param>
         protected override void DoExecute(object p_parameter)
         {
-            Control elem = p_parameter as Control;
-            if (elem != null)
+            if (p_parameter is FrameworkElement elem)
             {
                 _owner.Container.Children.Add(elem);
                 _owner.UpdateLayout();
@@ -56,8 +55,8 @@ namespace Dt.Base.Sketches
         /// <param name="p_parameter"></param>
         protected override void DoUndo(object p_parameter)
         {
-            Control elem = p_parameter as Control;
-            if (elem != null && _owner.Container.Children.Contains(elem))
+            if (p_parameter is FrameworkElement elem
+                && _owner.Container.Children.Contains(elem))
             {
                 _owner.Container.Children.Remove(elem);
                 _owner.SelectionClerk.Clear();

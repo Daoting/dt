@@ -88,7 +88,7 @@ namespace Dt.App.File
             if (p_id == -1)
             {
                 pf = new Pubfile(
-                    ID: await AtCm.NewFlagID(0),
+                    ID: await AtCm.NewID(),
                     ParentID: FolderID,
                     Name: p_name,
                     IsFolder: true,

@@ -99,6 +99,7 @@ namespace Dt.App.Model
 
             if (row.IsAdded)
             {
+                // 3位标志用来识别用户类型，如管理者、消费者
                 row["id"] = await AtCm.NewFlagID(0);
                 // 初始密码为手机号后4位
                 row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));

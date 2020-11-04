@@ -189,10 +189,9 @@ namespace Dt.Base
             _inputClerk = new SketchInputManager(this);
             _selectionClerk = new SelectionManager(this);
             _linkClerk = new SketchLinkManager(this);
-            //  在andriod中，点击节点事件会无限触发SizeChanged事件。
-            //SizeChanged += OnSizeChanged;
+            // 在andriod中，点击节点事件会无限触发SizeChanged事件。
+            SizeChanged += OnSizeChanged;
         }
-
         #endregion
 
         #region 事件
@@ -408,7 +407,7 @@ namespace Dt.Base
         #endregion
 
         #region 内部属性
-       
+
         internal SelectionManager SelectionClerk
         {
             get { return _selectionClerk; }
@@ -825,7 +824,7 @@ namespace Dt.Base
 
                 p_reader.Read();
             }
-           
+
             if (IsReadOnly)
                 ResizeReadOnlyPage(totalRect);
             else
@@ -897,15 +896,6 @@ namespace Dt.Base
                 writer.Flush();
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// 导出xaml内容
-        /// </summary>
-        /// <returns></returns>
-        public string WriteXaml()
-        {
-            throw new NotImplementedException();
         }
         #endregion
 
@@ -1220,22 +1210,22 @@ namespace Dt.Base
 
         void FrontNodes()
         {
-//#if UWP
-//            return;
-//#else
-//            for(int i = 0;i<Container.Children.Count;i++)
-//            {
-//                if(Container.Children[i] is SNode)
-//                {
-//#if ANDROID
+            //#if UWP
+            //            return;
+            //#else
+            //            for(int i = 0;i<Container.Children.Count;i++)
+            //            {
+            //                if(Container.Children[i] is SNode)
+            //                {
+            //#if ANDROID
 
-//                    Container.Children[i].BringToFront();
-//#else
-//                    Container.BringSubviewToFront(Container.Children[i]);
-//#endif
-//                }
-//            }
-//#endif
+            //                    Container.Children[i].BringToFront();
+            //#else
+            //                    Container.BringSubviewToFront(Container.Children[i]);
+            //#endif
+            //                }
+            //            }
+            //#endif
         }
         #endregion
 
@@ -1272,7 +1262,7 @@ namespace Dt.Base
             else
                 ResizeEditPage(rc);
         }
-#endregion
+        #endregion
 
     }
 

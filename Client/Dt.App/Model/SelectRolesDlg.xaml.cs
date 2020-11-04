@@ -44,6 +44,9 @@ namespace Dt.App.Model
                 case RoleRelations.Menu:
                     _lv.Data = await AtCm.Query("菜单-未关联的角色", new { menuid = p_tgtID });
                     break;
+                case RoleRelations.WfAtv:
+                    _lv.Data = await AtCm.Query("流程-活动未关联的角色", new { atvid = p_tgtID });
+                    break;
             }
             if (!AtSys.IsPhoneUI)
             {
@@ -86,5 +89,10 @@ namespace Dt.App.Model
         /// 菜单
         /// </summary>
         Menu,
+
+        /// <summary>
+        /// 流程中的活动
+        /// </summary>
+        WfAtv
     }
 }

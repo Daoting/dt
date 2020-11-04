@@ -37,7 +37,7 @@ namespace Dt.App.Publish
         async Task<Album> Create()
         {
             return new Album(
-                ID: await AtPublish.NewFlagID(0),
+                ID: await AtPublish.NewID(),
                 Name: "新专辑",
                 Creator: AtUser.Name,
                 Ctime: AtSys.Now);

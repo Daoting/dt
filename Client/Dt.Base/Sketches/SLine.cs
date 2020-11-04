@@ -260,8 +260,8 @@ namespace Dt.Base
         #region 成员变量
         const double _lineLength = 150;
 
-        string _headerID;
-        string _tailID;
+        long _headerID;
+        long _tailID;
         SNode _headerNode;
         SNode _tailNode;
         Thumb _headThumb;
@@ -289,7 +289,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置连线起始节点的标识
         /// </summary>
-        public string HeaderID
+        public long HeaderID
         {
             get { return _headerID; }
             set
@@ -327,7 +327,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置连线结束节点的标识
         /// </summary>
-        public string TailID
+        public long TailID
         {
             get { return _tailID; }
             set
@@ -365,7 +365,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置流程图中的迁移标识
         /// </summary>
-        public string ID { get; set; }
+        public long ID { get; set; }
 
         /// <summary>
         /// 获取设置端点大小，默认20
@@ -555,12 +555,12 @@ namespace Dt.Base
                 string id = p_reader.Name;
                 switch (id)
                 {
-                    case "id": ID = p_reader.Value; break;
+                    case "id": if (long.TryParse(p_reader.Value, out var l)) ID = l; break;
                     case "title": Title = p_reader.Value; break;
-                    case "headerid": HeaderID = p_reader.Value; break;
+                    case "headerid": if (long.TryParse(p_reader.Value, out var h)) HeaderID = h; break;
                     case "headerport": HeaderPort = (LinkPortPosition)int.Parse(p_reader.Value); break;
                     case "headershape": HeaderShape = (LinkPortShapes)int.Parse(p_reader.Value); break;
-                    case "tailid": TailID = p_reader.Value; break;
+                    case "tailid": if (long.TryParse(p_reader.Value, out var t)) TailID = t; break;
                     case "tailport": TailPort = (LinkPortPosition)int.Parse(p_reader.Value); break;
                     case "tailshape": TailShape = (LinkPortShapes)int.Parse(p_reader.Value); break;
                     case "headtailsize": HeadTailSize = double.Parse(p_reader.Value); break;
@@ -588,8 +588,8 @@ namespace Dt.Base
         {
             UpdateBounds();
             p_writer.WriteStartElement("Line");
-            p_writer.WriteAttributeString("id", ID);
-            p_writer.WriteAttributeString("headerid", HeaderID);
+            p_writer.WriteAttributeString("id", ID.ToString());
+            p_writer.WriteAttributeString("headerid", HeaderID.ToString());
             p_writer.WriteAttributeString("bounds", _bounds.ToString());
             if (!string.IsNullOrEmpty(Title))
                 p_writer.WriteAttributeString("title", Title);
@@ -597,7 +597,7 @@ namespace Dt.Base
                 p_writer.WriteAttributeString("headerport", ((int)HeaderPort).ToString());
             if (this.ExistLocalValue(HeaderShapeProperty))
                 p_writer.WriteAttributeString("headershape", ((int)HeaderShape).ToString());
-            p_writer.WriteAttributeString("tailid", TailID);
+            p_writer.WriteAttributeString("tailid", TailID.ToString());
             if (this.ExistLocalValue(TailPortProperty))
                 p_writer.WriteAttributeString("tailport", ((int)TailPort).ToString());
             if (this.ExistLocalValue(TailShapeProperty))
@@ -820,7 +820,7 @@ namespace Dt.Base
         /// </summary>
         void UpdateHeader()
         {
-            if (string.IsNullOrEmpty(_headerID))
+            if (_headerID == 0)
             {
                 _headerNode = null;
             }
@@ -838,7 +838,7 @@ namespace Dt.Base
         /// </summary>
         void UpdateTail()
         {
-            if (string.IsNullOrEmpty(_tailID))
+            if (_tailID == 0)
             {
                 _tailNode = null;
             }

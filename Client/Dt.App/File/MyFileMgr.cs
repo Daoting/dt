@@ -70,7 +70,7 @@ namespace Dt.App.File
             if (p_id == -1)
             {
                 file = new Myfile(
-                    ID: await AtCm.NewFlagID(0),
+                    ID: await AtCm.NewID(),
                     ParentID: FolderID == -1 ? (long?)null : FolderID,
                     Name: p_name,
                     IsFolder: true,

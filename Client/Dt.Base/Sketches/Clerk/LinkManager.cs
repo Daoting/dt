@@ -169,7 +169,6 @@ namespace Dt.Base.Sketches
                     if (!isHas)
                     {
                         SLine line = new SLine();
-                        line.ID = AtKit.NewID;
                         line.HeaderID = curNode.ID;
                         line.HeaderPort = startPos;
                         line.TailID = tagNode.ID;

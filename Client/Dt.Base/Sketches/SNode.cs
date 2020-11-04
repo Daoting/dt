@@ -135,7 +135,6 @@ namespace Dt.Base
         const double _rotationDepth = 20;
         static KeyTime _tilePressDuration = TimeSpan.FromSeconds(0.1);
 
-        string _id;
         Sketch _owner;
         uint? _pointerID;
         PointerDirection _ptDirection;
@@ -150,17 +149,10 @@ namespace Dt.Base
         public SNode()
         {
             DefaultStyleKey = typeof(SNode);
-            Loaded += OnLoaded;
-            _id = AtKit.NewID;
         }
         #endregion
 
         #region 事件
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-        }
-
         /// <summary>
         /// 图元点击事件
         /// </summary>
@@ -175,15 +167,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置流程图中的图元标识
         /// </summary>
-        public string ID
-        {
-            get { return _id; }
-            set
-            {
-                if (_id != value && !string.IsNullOrEmpty(value))
-                    _id = value;
-            }
-        }
+        public long ID { get; set; }
 
         /// <summary>
         /// 获取设置标题文字
@@ -270,7 +254,7 @@ namespace Dt.Base
                 p_reader.MoveToAttribute(i);
                 switch (p_reader.Name)
                 {
-                    case "id": ID = p_reader.Value; break;
+                    case "id": if (long.TryParse(p_reader.Value, out var l)) ID = l; break;
                     case "title": Title = p_reader.Value; break;
                     case "shape": Shape = p_reader.Value; break;
                     case "flag": Flag = (Icons)Enum.Parse(typeof(Icons), p_reader.Value); break;
@@ -293,7 +277,7 @@ namespace Dt.Base
         internal void WriteXml(XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Node");
-            p_writer.WriteAttributeString("id", ID);
+            p_writer.WriteAttributeString("id", ID.ToString());
             p_writer.WriteAttributeString("title", Title);
             if (!string.IsNullOrEmpty(Shape))
             {
@@ -783,7 +767,5 @@ namespace Dt.Base
             BottomLeft,
             BottomRight
         }
-
-
     }
 }

@@ -88,7 +88,7 @@ namespace Dt.App.File
             foreach (var file in files)
             {
                 Row row = new Row();
-                row.AddCell("id", await AtCm.NewFlagID(0));
+                row.AddCell("id", await AtCm.NewID());
                 row.AddCell("parentid", _fileMgr.FolderID);
                 row.AddCell("name", file.DisplayName);
                 row.AddCell("isfolder", false);

@@ -44,9 +44,20 @@ namespace Dt.Core
             string clsName;
             string[] arr = tblName.Split('_');
             if (arr.Length > 1)
+            {
                 clsName = SetFirstToUpper(arr[1]);
+                if (arr.Length > 2)
+                {
+                    for (int i = 2; i < arr.Length; i++)
+                    {
+                        clsName += SetFirstToUpper(arr[i]);
+                    }
+                }
+            }
             else
+            {
                 clsName = SetFirstToUpper(tblName);
+            }
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
@@ -279,6 +290,10 @@ namespace Dt.Core
                 return "int";
             if (p_type == typeof(long))
                 return "long";
+            if (p_type == typeof(byte))
+                return "byte";
+            if (p_type == typeof(sbyte))
+                return "sbyte";
             return p_type.Name;
         }
 
