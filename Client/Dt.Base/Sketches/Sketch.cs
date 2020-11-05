@@ -152,7 +152,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Canvas _container;
+        readonly Canvas _container;
         Line _topLine;
         Line _leftLine;
         Line _rightLine;
@@ -180,15 +180,15 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        /// <summary>
-        /// 构造方法
-        /// </summary>
         public Sketch()
         {
             DefaultStyleKey = typeof(Sketch);
+
+            _container = new Canvas();
             _inputClerk = new SketchInputManager(this);
             _selectionClerk = new SelectionManager(this);
             _linkClerk = new SketchLinkManager(this);
+
             // 在andriod中，点击节点事件会无限触发SizeChanged事件。
             SizeChanged += OnSizeChanged;
         }
@@ -448,14 +448,13 @@ namespace Dt.Base
             // 整理删除项
             List<FrameworkElement> items = new List<FrameworkElement>();
             if (_selectionClerk.SelectedLine != null)
-                AddShape(_selectionClerk.SelectedLine);
+                items.Add(_selectionClerk.SelectedLine);
             if (_selectionClerk.Selection.Count > 0)
             {
                 foreach (var item in _selectionClerk.Selection)
                 {
-                    AddShape(item);
-                    SNode node = item as SNode;
-                    if (node != null)
+                    items.Add(item);
+                    if (item is SNode node)
                     {
                         var lines = from obj in _container.Children
                                     let line = obj as SLine
@@ -463,8 +462,8 @@ namespace Dt.Base
                                     select line;
                         foreach (var line in lines)
                         {
-                            if (!_container.Children.Contains(line))
-                                AddShape(item);
+                            if (!items.Contains(line))
+                                items.Add(line);
                         }
                     }
                 }
@@ -710,127 +709,92 @@ namespace Dt.Base
 
         #region Xml
         /// <summary>
-        /// 加载xml文件
-        /// </summary>
-        /// <param name="p_file"></param>
-        public async void ReadXml(StorageFile p_file)
-        {
-            if (p_file == null)
-                return;
-
-            using (Stream stream = await p_file.OpenStreamForReadAsync())
-            {
-                using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
-                {
-                    if (reader.Read())
-                        ReadXml(reader);
-                }
-            }
-        }
-
-        /// <summary>
         /// 加载xml字符串
         /// </summary>
         /// <param name="p_xml"></param>
         public void ReadXml(string p_xml)
         {
-            if (!string.IsNullOrEmpty(p_xml))
-            {
-                using (StringReader stream = new StringReader(p_xml))
-                {
-                    using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
-                    {
-                        reader.Read();
-                        ReadXml(reader);
-                    }
-                }
-                RefreshAllLines();
-            }
-        }
-
-        /// <summary>
-        /// 加载xml
-        /// </summary>
-        /// <param name="p_reader"></param>
-        void ReadXml(XmlReader p_reader)
-        {
-            if (p_reader == null || p_reader.Name != "Sketch")
-                throw new Exception("加载流程图根节点时出错！");
-
-            // 清空原控件。
             _container.Children.Clear();
-            Rect totalRect = new Rect();
-            bool isFirst = true;
-            p_reader.Read();
-            while (p_reader.NodeType != XmlNodeType.None)
+            if (string.IsNullOrEmpty(p_xml))
+                return;
+
+            using (StringReader stream = new StringReader(p_xml))
+            using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
             {
-                if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == "Sketch")
-                    break;
+                reader.Read();
 
-                Rect rc = new Rect();
-                string name = p_reader.Name;
-                if (name == "Node")
+                Rect totalRect = new Rect();
+                bool isFirst = true;
+                reader.Read();
+                while (reader.NodeType != XmlNodeType.None)
                 {
-                    SNode node = new SNode();
-                    AddShape(node);
-                    node.ReadXml(p_reader);
-                    rc = new Rect(Canvas.GetLeft(node), Canvas.GetTop(node), node.Width, node.Height);
-                }
-                else if (name == "Line")
-                {
-                    SLine line = new SLine();
-                    AddShape(line);
-                    line.ReadXml(p_reader);
-                    rc = line.Bounds;
-                }
-                else if (name == "Txt")
-                {
-                    TextBlock tb = new TextBlock();
-                    AddShape(tb);
-                    for (int i = 0; i < p_reader.AttributeCount; i++)
+                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Sketch")
+                        break;
+
+                    Rect rc = new Rect();
+                    string name = reader.Name;
+                    if (name == "Node")
                     {
-                        p_reader.MoveToAttribute(i);
-                        switch (p_reader.Name)
-                        {
-                            case "text": tb.Text = p_reader.Value; break;
-                            case "fontsize": tb.FontSize = double.Parse(p_reader.Value); break;
-                            // uwp和手机系统weight的操作方式不同
-#if UWP
-                            case "fontweight": tb.FontWeight = new FontWeight() { Weight = ushort.Parse(p_reader.Value) }; break;
-#else
-                             case "fontweight": tb.FontWeight = new FontWeight(ushort.Parse(p_reader.Value));break;
-#endif
-                            case "foreground": tb.Foreground = new SolidColorBrush(AtRes.HexStringToColor(p_reader.Value)); break;
-                            case "fontstyle": tb.FontStyle = (FontStyle)int.Parse(p_reader.Value); break;
-                            case "fontfamily": tb.FontFamily = new FontFamily(p_reader.Value); break;
-                            case "left": Canvas.SetLeft(tb, double.Parse(p_reader.Value)); break;
-                            case "top": Canvas.SetTop(tb, double.Parse(p_reader.Value)); break;
-                            case "width": tb.Width = double.Parse(p_reader.Value); break;
-                            case "height": tb.Height = double.Parse(p_reader.Value); break;
-                        }
+                        SNode node = new SNode(this);
+                        _container.Children.Add(node);
+                        node.ReadXml(reader);
+                        rc = new Rect(Canvas.GetLeft(node), Canvas.GetTop(node), node.Width, node.Height);
                     }
-                    rc = new Rect(Canvas.GetLeft(tb), Canvas.GetTop(tb), tb.Width, tb.Height);
+                    else if (name == "Line")
+                    {
+                        SLine line = new SLine(this);
+                        _container.Children.Add(line);
+                        line.ReadXml(reader);
+                        rc = line.Bounds;
+                    }
+                    else if (name == "Txt")
+                    {
+                        TextBlock tb = new TextBlock();
+                        _container.Children.Add(tb);
+                        for (int i = 0; i < reader.AttributeCount; i++)
+                        {
+                            reader.MoveToAttribute(i);
+                            switch (reader.Name)
+                            {
+                                case "text": tb.Text = reader.Value; break;
+                                case "fontsize": tb.FontSize = double.Parse(reader.Value); break;
+                                // uwp和手机系统weight的操作方式不同
+#if UWP
+                                case "fontweight": tb.FontWeight = new FontWeight() { Weight = ushort.Parse(reader.Value) }; break;
+#else
+                             case "fontweight": tb.FontWeight = new FontWeight(ushort.Parse(reader.Value));break;
+#endif
+                                case "foreground": tb.Foreground = new SolidColorBrush(AtRes.HexStringToColor(reader.Value)); break;
+                                case "fontstyle": tb.FontStyle = (FontStyle)int.Parse(reader.Value); break;
+                                case "fontfamily": tb.FontFamily = new FontFamily(reader.Value); break;
+                                case "left": Canvas.SetLeft(tb, double.Parse(reader.Value)); break;
+                                case "top": Canvas.SetTop(tb, double.Parse(reader.Value)); break;
+                                case "width": tb.Width = double.Parse(reader.Value); break;
+                                case "height": tb.Height = double.Parse(reader.Value); break;
+                            }
+                        }
+                        rc = new Rect(Canvas.GetLeft(tb), Canvas.GetTop(tb), tb.Width, tb.Height);
+                    }
+
+                    if (isFirst)
+                    {
+                        totalRect = rc;
+                        isFirst = false;
+                    }
+                    else
+                    {
+                        totalRect = Union(totalRect, rc);
+                    }
+
+                    reader.Read();
                 }
 
-                if (isFirst)
-                {
-                    totalRect = rc;
-                    isFirst = false;
-                }
+                if (IsReadOnly)
+                    ResizeReadOnlyPage(totalRect);
                 else
-                {
-                    totalRect = Union(totalRect, rc);
-                }
-
-                p_reader.Read();
+                    ResizeEditPage(totalRect);
             }
-
-            if (IsReadOnly)
-                ResizeReadOnlyPage(totalRect);
-            else
-                ResizeEditPage(totalRect);
-
-            FrontNodes();
+            RefreshAllLines();
         }
 
         /// <summary>
@@ -1016,14 +980,10 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        /// <summary>
-        /// 应用模板
-        /// </summary>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            _container = GetTemplateChild("Part_Canvas") as Canvas;
             _leftLine = GetTemplateChild("Part_LeftLine") as Line;
             _topLine = GetTemplateChild("Part_TopLine") as Line;
             _rightLine = GetTemplateChild("Part_RightLine") as Line;
@@ -1032,6 +992,7 @@ namespace Dt.Base
             _scroll = GetTemplateChild("Part_ScrollViewer") as ScrollViewer;
 
             Grid grid = GetTemplateChild("Part_Grid") as Grid;
+            grid.Children.Insert(grid.Children.Count - 1, _container);
             Rectangle tmpRec = GetTemplateChild("Part_MouseRect") as Rectangle;
             _inputClerk.Init(
                 grid,
@@ -1048,64 +1009,10 @@ namespace Dt.Base
             var nodeSel = GetTemplateChild("Part_NodeSelector") as NodeSelector;
             nodeSel.Owner = this;
             _selectionClerk.Init(nodeSel, GetTemplateChild("Part_SelRect") as Rectangle);
-
-            foreach (object obj in Container.Children)
-            {
-                UIElement item = obj as UIElement;
-                if (item != null)
-                    AddShape(item);
-            }
         }
-
         #endregion
 
         #region 内部方法
-        void AddItem(UIElement p_elem)
-        {
-            SNode node;
-            SLine line;
-
-            _container.Children.Add(p_elem);
-            if ((node = p_elem as SNode) != null)
-                node.Owner = this;
-            else if ((line = p_elem as SLine) != null)
-                line.Owner = this;
-        }
-
-        void AddShape(UIElement p_shape)
-        {
-            if (_container == null)
-                return;
-            SNode node;
-            SLine line;
-            _container.Children.Add(p_shape);
-            if ((node = p_shape as SNode) != null)
-                node.Owner = this;
-            else if ((line = p_shape as SLine) != null)
-                line.Owner = this;
-        }
-
-
-        void ClearShape()
-        {
-            if (_container == null)
-                return;
-            _container.Children.Clear();
-        }
-
-        void RemoveShape(UIElement p_shape)
-        {
-            if (_container == null)
-                return;
-            SNode node;
-            SLine line;
-
-            if ((node = p_shape as SNode) != null)
-                _container.Children.Remove(node);
-            else if ((line = p_shape as SLine) != null)
-                _container.Children.Remove(line);
-        }
-
         /// <summary>
         /// 计算整个图形大小
         /// </summary>
@@ -1206,26 +1113,6 @@ namespace Dt.Base
                 if (_scroll.ComputedHorizontalScrollBarVisibility == Visibility.Visible)
                     _scroll.ChangeView(_scroll.ScrollableWidth / 2, _scroll.VerticalOffset, _scroll.ZoomFactor);
             }
-        }
-
-        void FrontNodes()
-        {
-            //#if UWP
-            //            return;
-            //#else
-            //            for(int i = 0;i<Container.Children.Count;i++)
-            //            {
-            //                if(Container.Children[i] is SNode)
-            //                {
-            //#if ANDROID
-
-            //                    Container.Children[i].BringToFront();
-            //#else
-            //                    Container.BringSubviewToFront(Container.Children[i]);
-            //#endif
-            //                }
-            //            }
-            //#endif
         }
         #endregion
 

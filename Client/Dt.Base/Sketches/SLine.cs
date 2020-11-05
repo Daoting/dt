@@ -260,13 +260,13 @@ namespace Dt.Base
         #region 成员变量
         const double _lineLength = 150;
 
+        readonly Sketch _owner;
         long _headerID;
         long _tailID;
         SNode _headerNode;
         SNode _tailNode;
         Thumb _headThumb;
         Thumb _tailThumb;
-        Sketch _owner;
         TextBlock _label;
         bool _isInit;
         CompositeTransform _headPathTransform = new CompositeTransform();
@@ -275,12 +275,10 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        public SLine()
+        public SLine(Sketch p_owner)
         {
             DefaultStyleKey = typeof(SLine);
+            _owner = p_owner;
             Loaded += OnLoaded;
         }
         #endregion
@@ -513,15 +511,6 @@ namespace Dt.Base
             get { return _bounds; }
             set { _bounds = value; }
         }
-
-        /// <summary>
-        /// 获取设置所属的Sketch
-        /// </summary>
-        internal Sketch Owner
-        {
-            get { return _owner; }
-            set { _owner = value; }
-        }
         #endregion
 
         #region 外部方法
@@ -698,7 +687,7 @@ namespace Dt.Base
         {
             base.OnPointerPressed(e);
             e.Handled = true;
-            if (_owner != null && !_owner.IsReadOnly)
+            if (!_owner.IsReadOnly)
                 _owner.SelectionClerk.SelectLine(this);
         }
         #endregion
@@ -734,7 +723,6 @@ namespace Dt.Base
         /// <param name="e"></param>
         void LineThumbDragDelta(Thumb p_thumb, bool p_isHead, DragDeltaEventArgs e)
         {
-            Sketch sketch = _owner;
             double left = Canvas.GetLeft(p_thumb) + e.HorizontalChange;
             double top = Canvas.GetTop(p_thumb) + e.VerticalChange;
             Canvas.SetLeft(p_thumb, left);
@@ -754,13 +742,12 @@ namespace Dt.Base
         /// <param name="e"></param>
         void LineThumbDragCompleted(Thumb p_thumb, bool p_isHeadNode, DragCompletedEventArgs e)
         {
-            Sketch sketch = _owner;
             LineMoveCmdArgs _lineMoveArg = null;
             double left = Canvas.GetLeft(p_thumb);
             double top = Canvas.GetTop(p_thumb);
             Rect rect = new Rect(left, top, p_thumb.ActualWidth, p_thumb.ActualHeight);
             SNode target = _owner.GetFirstIntersect(rect);
-            SketchMoveLineCmd cmd = sketch.CmdMoveLine;
+            SketchMoveLineCmd cmd = _owner.CmdMoveLine;
 
             if (target == null)
             {
@@ -777,7 +764,7 @@ namespace Dt.Base
             else
             {
                 _owner.LinkThumbEnd();
-                LinkPortPosition newPos = sketch.GetLinkPosition(target, rect);
+                LinkPortPosition newPos = _owner.GetLinkPosition(target, rect);
                 if (p_isHeadNode)
                 {
                     if (newPos != HeaderPort || target != _headerNode)
@@ -824,7 +811,7 @@ namespace Dt.Base
             {
                 _headerNode = null;
             }
-            else if (_owner != null)
+            else
             {
                 _headerNode = (from obj in _owner.Container.Children
                                let node = obj as SNode
@@ -842,7 +829,7 @@ namespace Dt.Base
             {
                 _tailNode = null;
             }
-            else if (_owner != null)
+            else
             {
                 _tailNode = (from obj in _owner.Container.Children
                              let node = obj as SNode

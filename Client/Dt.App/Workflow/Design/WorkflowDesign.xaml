@@ -17,6 +17,8 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="流程名称" />
+                    <a:CText ID="FormType" Title="表单窗口类" />
+                    <a:CText ID="ListType" Title="列表窗口类" />
                     <a:CBool ID="IsLocked" Title="锁定不可创建实例" />
                     <a:CBool ID="Singleton" Title="同一时刻只可单例" />
                     <a:CText ID="note" Title="描述" />
@@ -33,7 +35,6 @@
                     <a:Menu DataContext="{Binding ElementName=_sketch}">
                         <a:Mi ID="撤消" Icon="撤销" Cmd="{Binding CmdUndo}"/>
                         <a:Mi ID="重做" Icon="重做" Cmd="{Binding CmdRedo}"/>
-                        <a:Mi ID="删除" Icon="删除" Cmd="{Binding CmdDeleteSelection}"/>
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Sketch x:Name="_sketch"

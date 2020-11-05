@@ -135,7 +135,7 @@ namespace Dt.Base
         const double _rotationDepth = 20;
         static KeyTime _tilePressDuration = TimeSpan.FromSeconds(0.1);
 
-        Sketch _owner;
+        readonly Sketch _owner;
         uint? _pointerID;
         PointerDirection _ptDirection;
         Storyboard _storyboard;
@@ -146,9 +146,10 @@ namespace Dt.Base
         /// <summary>
         /// 构造方法
         /// </summary>
-        public SNode()
+        public SNode(Sketch p_owner)
         {
             DefaultStyleKey = typeof(SNode);
+            _owner = p_owner;
         }
         #endregion
 
@@ -203,15 +204,6 @@ namespace Dt.Base
         {
             get { return GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置所属的Sketch
-        /// </summary>
-        internal Sketch Owner
-        {
-            get { return _owner; }
-            set { _owner = value; }
         }
 
         /// <summary>
@@ -542,8 +534,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void SavePropertyChange(DependencyPropertyChangedEventArgs e)
         {
-            if (_owner != null
-                && !_owner.IsReadOnly
+            if (!_owner.IsReadOnly
                 && !_owner.CmdPropHis.IsSetting)
             {
                 var args = new HisPropertyCmdArgs();

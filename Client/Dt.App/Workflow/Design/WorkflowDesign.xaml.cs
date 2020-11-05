@@ -33,6 +33,7 @@ namespace Dt.App.Workflow
 
         WfInsertMenu _insertMenu;
         AlignMenu _alignMenu;
+        WfDeleteMenu _delMenu;
         WfAtvForm _atvForm;
         WfStartAtvForm _startAtvForm;
         WfSyncAtvForm _syncAtvForm;
@@ -126,8 +127,8 @@ namespace Dt.App.Workflow
                             CanJumpInto: false,
                             JoinKind: 0,
                             TransKind: 0,
-                            Ctime: AtSys.Now);
-                        atv.IsChanged = true;
+                            Ctime: AtSys.Now,
+                            Mtime: AtSys.Now);
 
                         node.Tag = atv;
                         _atvs.Add(atv);
@@ -148,7 +149,6 @@ namespace Dt.App.Workflow
                             SrcAtvID: line.HeaderID,
                             TgtAtvID: line.TailID,
                             Type: 0);
-                        trs.IsChanged = true;
 
                         line.Tag = trs;
                         _trss.Add(trs);
@@ -220,10 +220,11 @@ namespace Dt.App.Workflow
 
         void OnSketchRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            Menu menu = null;
+            Menu menu;
             if (_sketch.SelectedLine != null)
             {
                 LoadTrsForm(_sketch.SelectedLine);
+                menu = GetDelMenu();
             }
             else if (_sketch.SelectedNodes.Count > 1)
             {
@@ -238,6 +239,10 @@ namespace Dt.App.Workflow
                     _alignMenu.OnAlign(elem);
                     menu = _alignMenu;
                 }
+                else
+                {
+                    menu = GetDelMenu();
+                }
             }
             else if (_sketch.SelectedNodes.Count == 1)
             {
@@ -247,6 +252,7 @@ namespace Dt.App.Workflow
                     LoadTextForm(tb);
                 else
                     _tab.Content = null;
+                menu = GetDelMenu();
             }
             else
             {
@@ -256,8 +262,14 @@ namespace Dt.App.Workflow
                 menu = _insertMenu;
             }
 
-            if (menu != null)
-                _ = menu.OpenContextMenu(e.GetPosition(null));
+            _ = menu.OpenContextMenu(e.GetPosition(null));
+        }
+
+        WfDeleteMenu GetDelMenu()
+        {
+            if (_delMenu == null)
+                _delMenu = new WfDeleteMenu(_sketch);
+            return _delMenu;
         }
         #endregion
 

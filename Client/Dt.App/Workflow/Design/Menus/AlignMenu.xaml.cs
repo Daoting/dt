@@ -216,6 +216,11 @@ namespace Dt.App.Workflow
             RefreshSketch();
         }
 
+        void OnDel(object sender, Mi e)
+        {
+            _sketch.DeleteSelection();
+        }
+
         /// <summary>
         /// 刷新_sketch
         /// </summary>

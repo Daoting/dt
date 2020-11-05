@@ -99,11 +99,6 @@ namespace Dt.Base.Sketches
             }
         }
 
-        /// <summary>
-        /// 按下
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _isCaptured = _grid.CapturePointer(e.Pointer);
@@ -112,7 +107,6 @@ namespace Dt.Base.Sketches
 
             FrameworkElement hit;
             var clerk = _owner.SelectionClerk;
-            e.Handled = true;
             _owner.Focus(FocusState.Programmatic);
             _pointerId = e.Pointer.PointerId;
             _ptStart = e.GetCurrentPoint(_grid).Position;
@@ -121,17 +115,29 @@ namespace Dt.Base.Sketches
             if (clerk.IsInSelectionRect(_ptStart) && !InputManager.IsCtrlPressed)
             {
                 // 在多选矩形内部
-                _isDragging = true;
-                clerk.ShowTipLines();
-                _selectionStart = clerk.GetCurrentPos();
+                if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
+                {
+                    e.Handled = true;
+                    _isDragging = true;
+                    clerk.ShowTipLines();
+                    _selectionStart = clerk.GetCurrentPos();
+                }
             }
             else if ((hit = _owner.GetItemByPosition(_ptStart)) != null)
             {
                 // 在图元内部
-                _isDragging = true;
-                clerk.Select(hit, InputManager.IsCtrlPressed);
-                clerk.ShowTipLines();
-                _selectionStart = clerk.GetCurrentPos();
+                if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
+                {
+                    e.Handled = true;
+                    _isDragging = true;
+                    clerk.Select(hit, InputManager.IsCtrlPressed);
+                    clerk.ShowTipLines();
+                    _selectionStart = clerk.GetCurrentPos();
+                }
+                else
+                {
+                    clerk.Select(hit, InputManager.IsCtrlPressed);
+                }
             }
             else
             {
@@ -143,11 +149,6 @@ namespace Dt.Base.Sketches
             }
         }
 
-        /// <summary>
-        /// 拖动
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (!_isCaptured || _pointerId != e.Pointer.PointerId)

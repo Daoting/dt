@@ -158,7 +158,6 @@
                                 <!--页边框-->
                                 <Rectangle Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1" IsHitTestVisible="False" />
                                 <sketch:GridLinePanel Visibility="{Binding ShowGridLine, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <Canvas x:Name="Part_Canvas" />
                                 <Canvas x:Name="Part_Adorner">
                                     <sketch:NodeSelector x:Name="Part_NodeSelector" Visibility="Collapsed" 
                                                          ManipulationMode="TranslateRailsX"/>

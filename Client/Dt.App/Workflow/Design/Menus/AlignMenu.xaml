@@ -13,5 +13,6 @@
     <a:Mi ID="垂直居中对齐" Icon="收起" Click="OnAlignVerCenter" />
     <a:Mi ID="水平间距相同" Icon="暂停" Click="OnHorSpace" />
     <a:Mi ID="垂直间距相同" Icon="等于" Click="OnVerSpace" />
+    <a:Mi ID="删除" Icon="删除" Click="OnDel" />
 </a:Menu>
 

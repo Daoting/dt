@@ -4,5 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <CheckBox x:Name="_cbBack" Content="可以回退" Margin="10" Click="OnBackClick" />
+    <a:Fv>
+        <a:CFree Title="可以回退">
+            <CheckBox x:Name="_cbBack" HorizontalAlignment="Center" MinWidth="30" Click="OnBackClick" />
+        </a:CFree>
+    </a:Fv>
 </UserControl>

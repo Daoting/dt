@@ -39,7 +39,7 @@ namespace Dt.App.Workflow
         /// <param name="e"></param>
         void OnStartNode(object sender, Mi e)
         {
-            SNode node = new SNode()
+            SNode node = new SNode(_sketch)
             {
                 Title = "开始",
                 Shape = "开始",
@@ -56,7 +56,7 @@ namespace Dt.App.Workflow
         /// <param name="e"></param>
         void OnAtvNode(object sender, Mi e)
         {
-            SNode node = new SNode()
+            SNode node = new SNode(_sketch)
             {
                 Title = "任务项",
                 Shape = "任务",
@@ -73,7 +73,7 @@ namespace Dt.App.Workflow
         /// <param name="e"></param>
         void OnSyncNode(object sender, Mi e)
         {
-            SNode node = new SNode()
+            SNode node = new SNode(_sketch)
             {
                 Title = "同步",
                 Shape = "同步",
@@ -92,7 +92,7 @@ namespace Dt.App.Workflow
         /// <param name="e"></param>
         void OnEndNode(object sender, Mi e)
         {
-            SNode node = new SNode()
+            SNode node = new SNode(_sketch)
             {
                 Title = "完成",
                 Shape = "结束",

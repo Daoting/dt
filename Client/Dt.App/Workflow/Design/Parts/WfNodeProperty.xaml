@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Fv x:Name="_fv">
+    <a:Fv x:Name="_fv" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1">
         <a:CText ID="Title" Title="活动名称" />
         <a:CText ID="Content" Title="内容" />
         <a:CIcon ID="Flag" Title="图标" />

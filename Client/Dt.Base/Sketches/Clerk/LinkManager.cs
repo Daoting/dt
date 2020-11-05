@@ -168,7 +168,7 @@ namespace Dt.Base.Sketches
                                   select line).Any();
                     if (!isHas)
                     {
-                        SLine line = new SLine();
+                        SLine line = new SLine(_owner);
                         line.HeaderID = curNode.ID;
                         line.HeaderPort = startPos;
                         line.TailID = tagNode.ID;
