@@ -8,16 +8,13 @@
 
 #region 引用命名
 using Dt.Core.Caches;
-using System.Text.Json;
+using Dt.Core.Rpc;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Encodings.Web;
-using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Core
@@ -25,8 +22,7 @@ namespace Dt.Core
     /// <summary>
     /// 针对Entity的缓存管理
     /// </summary>
-    class CacheHandler<TEntity>
-        where TEntity : Entity
+    class CacheHandler
     {
         #region lua脚本
         // 先查出主键值，再查询实体json
@@ -97,7 +93,8 @@ namespace Dt.Core
             _db = new Lazy<IDatabase>(() => Redis.Db);
         }
 
-        public Task Cache(TEntity p_entity)
+        public Task Cache<TEntity>(TEntity p_entity)
+            where TEntity : Entity
         {
             Throw.IfNull(p_entity);
             string val = RpcKit.GetObjectString(p_entity);
@@ -122,7 +119,8 @@ namespace Dt.Core
             return Task.WhenAll(tasks);
         }
 
-        public async Task<TEntity> Get(string p_keyName, string p_keyVal)
+        public async Task<TEntity> Get<TEntity>(string p_keyName, string p_keyVal)
+            where TEntity : Entity
         {
             if (_primaryKey.Equals(p_keyName, StringComparison.OrdinalIgnoreCase))
             {
@@ -147,15 +145,17 @@ namespace Dt.Core
             return default;
         }
 
-        public Task Remove(TEntity p_entity)
+        public Task Remove<TEntity>(TEntity p_entity)
+            where TEntity : Entity
         {
             Throw.IfNull(p_entity);
             // 实体信息可能不全，多键时根据缓存实体执行删除！
             string id = p_entity.Str(_primaryKey);
-            return RemoveByID(id);
+            return RemoveByID<TEntity>(id);
         }
 
-        public async Task RemoveByID(string p_id)
+        public async Task RemoveByID<TEntity>(string p_id)
+            where TEntity : Entity
         {
             // 只删除主键
             string priKey = $"{_prefix}:{_primaryKey}:{p_id}";

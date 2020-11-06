@@ -16,7 +16,6 @@ namespace Dt.App.Publish
 {
     public sealed partial class EditKeywordDlg : Dlg
     {
-        readonly Repo<Keyword> _repo = new Repo<Keyword>();
         bool _needRefresh;
 
         public EditKeywordDlg()
@@ -27,7 +26,7 @@ namespace Dt.App.Publish
         public async Task<bool> Show(Keyword p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await _repo.GetByID(p_keyword.ID);
+                _fv.Data = await Repo.GetByID<Keyword>(p_keyword.ID);
             else
                 _fv.Data = Create();
             await ShowAsync();
@@ -47,7 +46,7 @@ namespace Dt.App.Publish
             if (_fv.ExistNull("ID"))
                 return;
 
-            if (await _repo.Save(_fv.Data.To<Keyword>()))
+            if (await Repo.Save(_fv.Data.To<Keyword>()))
             {
                 _needRefresh = true;
                 _fv.Data = Create();

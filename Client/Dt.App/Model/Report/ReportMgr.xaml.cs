@@ -9,11 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.App.Model
@@ -21,8 +16,6 @@ namespace Dt.App.Model
     [View("报表设计")]
     public partial class ReportMgr : Win
     {
-        readonly Repo<Rpt> _repo = new Repo<Rpt>();
-
         public ReportMgr()
         {
             InitializeComponent();
@@ -31,7 +24,7 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lv.Data = await _repo.Query("报表-所有");
+            _lv.Data = await Repo.Query<Rpt>("报表-所有");
         }
 
         async void OnItemClick(object sender, ItemClickArgs e)
@@ -45,7 +38,7 @@ namespace Dt.App.Model
                 rpt.RejectChanges();
             }
 
-            _fv.Data = await _repo.Get("报表-ID", new { id = e.Data.To<Rpt>().ID });
+            _fv.Data = await Repo.Get<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
             SelectTab("编辑");
         }
 
@@ -57,11 +50,11 @@ namespace Dt.App.Model
             }
             else if (e == "#最近修改")
             {
-                _lv.Data = await _repo.Query("报表-最近修改");
+                _lv.Data = await Repo.Query<Rpt>("报表-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await _repo.Query("报表-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await Repo.Query<Rpt>("报表-模糊查询", new { input = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -95,9 +88,9 @@ namespace Dt.App.Model
                 rpt["mtime"] = AtSys.Now;
             }
 
-            if (await _repo.Save(rpt))
+            if (await Repo.Save(rpt))
             {
-                _lv.Data = await _repo.Query("报表-最近修改");
+                _lv.Data = await Repo.Query<Rpt>("报表-最近修改");
             }
         }
 
@@ -131,7 +124,7 @@ namespace Dt.App.Model
             {
                 _fv.Data = null;
             }
-            else if (await _repo.DelByID(rpt.ID))
+            else if (await Repo.DelByID<Rpt>(rpt.ID))
             {
                 _fv.Data = null;
                 LoadAll();

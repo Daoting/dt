@@ -104,7 +104,7 @@ namespace Dt.Cm
             }
 
             Role role = new Role(p_roleID);
-            return await new Repo<Role>().Delete(role);
+            return await Repo.Delete(role);
         }
     }
 }

@@ -714,7 +714,10 @@ namespace Dt.Base
         /// <param name="p_xml"></param>
         public void ReadXml(string p_xml)
         {
+            _his?.Clear();
             _container.Children.Clear();
+            _selectionClerk.Clear();
+
             if (string.IsNullOrEmpty(p_xml))
                 return;
 

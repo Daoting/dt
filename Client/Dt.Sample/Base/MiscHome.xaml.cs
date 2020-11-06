@@ -28,7 +28,6 @@ namespace Dt.Sample
                 new CenterInfo(Icons.汉堡, "基础事件", typeof(RouteEventDemo), null),
                 new CenterInfo(Icons.分组, "分隔栏", typeof(SplitterDemo), null),
                 new CenterInfo(Icons.详细, "可停靠面板", typeof(DockPanelDemo), "停靠式窗口的布局面板"),
-                new CenterInfo(Icons.日历, "流程图", typeof(SketchPage), "任务流程定义示意图"),
                 new CenterInfo(Icons.乐谱, "控件事件顺序", typeof(TestInvokeDemo), "测试不同平台主事件的调用顺序"),
             };
         }

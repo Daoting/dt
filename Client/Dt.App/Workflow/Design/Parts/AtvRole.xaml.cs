@@ -53,34 +53,20 @@ namespace Dt.App.Workflow
             var dlg = new SelectRolesDlg();
             if (await dlg.Show(RoleRelations.WfAtv, _atvID.ToString(), (Button)sender))
             {
-                List<WfdAtvrole> roles = new List<WfdAtvrole>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
                     var ar = new WfdAtvrole(
                         AtvID: _atvID,
                         RoleID: row.ID);
                     ar.AddCell("role", row.Str("name"));
-                    roles.Add(ar);
-                }
-
-                if (roles.Count > 0)
-                {
-                    _lv.Data.AddRange(roles);
+                    _lv.Data.Add(ar);
                 }
             }
         }
 
-        async void OnDelete(object sender, Mi e)
+        void OnDelete(object sender, Mi e)
         {
-            var ar = e.Data.To<WfdAtvrole>();
-            if (ar.IsAdded)
-            {
-                _lv.Data.Remove(ar);
-            }
-            else if (await new Repo<WfdAtvrole>().Delete(ar))
-            {
-                _lv.Data.Remove(ar);
-            }
+            _lv.Data.Remove(e.Data);
         }
     }
 }

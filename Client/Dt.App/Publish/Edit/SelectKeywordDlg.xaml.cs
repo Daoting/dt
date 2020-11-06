@@ -57,7 +57,7 @@ namespace Dt.App.Publish
             {
                 ls.Add(new Postkeyword(PostID: _postID, Keyword: row.Str("id")));
             }
-            if (await new Repo<Postkeyword>().BatchSave(ls))
+            if (await Repo.BatchSave(ls))
                 Close(true);
         }
 

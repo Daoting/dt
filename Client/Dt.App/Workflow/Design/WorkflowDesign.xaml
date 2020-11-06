@@ -9,9 +9,9 @@
         <a:Tabs>
             <a:Tab Title="流程">
                 <a:Tab.Menu>
-                    <a:Menu>
+                    <a:Menu x:Name="_menu">
                         <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
-                        <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" IsEnabled="{Binding IsDirty,ElementName=_fv}" Click="OnSave" />
+                        <a:Mi ID="保存" Icon="保存" Click="OnSave" />
                         <a:Mi ID="删除" Icon="删除" Click="OnDel" />
                     </a:Menu>
                 </a:Tab.Menu>

@@ -145,7 +145,7 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(roleID, row.ID));
                 }
-                if (ls.Count > 0 && await new Repo<RoleMenu>().BatchSave(ls))
+                if (ls.Count > 0 && await Repo.BatchSave(ls))
                     _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
             }
         }
@@ -154,7 +154,7 @@ namespace Dt.App.Model
         {
             var rm = new RoleMenu(_lvRole.SelectedRow.ID, _lvMenu.SelectedRow.Long("menuid"));
             rm.AcceptChanges();
-            if (await new Repo<RoleMenu>().Delete(rm))
+            if (await Repo.Delete(rm))
                 _lvMenu.DeleteSelection();
         }
 
@@ -169,7 +169,7 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(roleID, row.Str("id")));
                 }
-                if (ls.Count > 0 && await new Repo<RolePrv>().BatchSave(ls))
+                if (ls.Count > 0 && await Repo.BatchSave(ls))
                     _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
             }
         }
@@ -178,7 +178,7 @@ namespace Dt.App.Model
         {
             var rp = new RolePrv(_lvRole.SelectedRow.ID, _lvPrv.SelectedRow.Str("prvid"));
             rp.AcceptChanges();
-            if (await new Repo<RolePrv>().Delete(rp))
+            if (await Repo.Delete(rp))
                 _lvPrv.DeleteSelection();
         }
 

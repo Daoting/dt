@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -20,8 +19,6 @@ namespace Dt.App.Model
     [View("基础权限")]
     public partial class BasePrivilege : Win
     {
-        readonly Repo<Prv> _prv = new Repo<Prv>();
-
         public BasePrivilege()
         {
             InitializeComponent();
@@ -30,7 +27,7 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lvPrv.Data = await _prv.Query("权限-所有");
+            _lvPrv.Data = await Repo.Query<Prv>("权限-所有");
         }
 
         void OnNaviToSearch(object sender, RoutedEventArgs e)
@@ -46,7 +43,7 @@ namespace Dt.App.Model
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lvPrv.Data = await _prv.Query("权限-模糊查询", new { id = $"%{e}%" });
+                _lvPrv.Data = await Repo.Query<Prv>("权限-模糊查询", new { id = $"%{e}%" });
             }
             NaviTo("权限列表");
         }
@@ -72,7 +69,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await _prv.Delete(prv))
+            if (await Repo.Delete(prv))
                 LoadAll();
         }
 
@@ -108,7 +105,7 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(row.ID, prvID));
                 }
-                if (ls.Count > 0 && await new Repo<RolePrv>().BatchSave(ls))
+                if (ls.Count > 0 && await Repo.BatchSave(ls))
                     RefreshRelation(prvID);
             }
         }
@@ -118,7 +115,7 @@ namespace Dt.App.Model
             string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             var rp = new RolePrv(_lvRole.SelectedRow.Long("roleid"), prvID);
             rp.AcceptChanges();
-            if (await new Repo<RolePrv>().Delete(rp))
+            if (await Repo.Delete(rp))
                 RefreshRelation(prvID);
         }
     }

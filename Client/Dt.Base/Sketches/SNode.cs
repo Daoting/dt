@@ -535,7 +535,8 @@ namespace Dt.Base
         void SavePropertyChange(DependencyPropertyChangedEventArgs e)
         {
             if (!_owner.IsReadOnly
-                && !_owner.CmdPropHis.IsSetting)
+                && !_owner.CmdPropHis.IsSetting
+                && _owner.Container.Children.Contains(this))
             {
                 var args = new HisPropertyCmdArgs();
                 args.Redo = () => SetValue(e.Property, e.NewValue);

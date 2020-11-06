@@ -16,7 +16,6 @@ namespace Dt.App.Model
 {
     public sealed partial class EditPrvDlg : Dlg
     {
-        readonly Repo<Prv> _repo = new Repo<Prv>();
         bool _needRefresh;
 
         public EditPrvDlg()
@@ -27,7 +26,7 @@ namespace Dt.App.Model
         public async Task<bool> Show(string p_id)
         {
             if (!string.IsNullOrEmpty(p_id))
-                _fv.Data = await _repo.GetByID(p_id);
+                _fv.Data = await Repo.GetByID<Prv>(p_id);
             else
                 CreatePrv();
             await ShowAsync();
@@ -52,7 +51,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await _repo.Save(prv))
+            if (await Repo.Save(prv))
             {
                 _needRefresh = true;
                 CreatePrv();

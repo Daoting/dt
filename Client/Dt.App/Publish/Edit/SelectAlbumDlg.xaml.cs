@@ -57,7 +57,7 @@ namespace Dt.App.Publish
             {
                 ls.Add(new Postalbum(PostID: _postID, AlbumID: row.ID));
             }
-            if (await new Repo<Postalbum>().BatchSave(ls))
+            if (await Repo.BatchSave(ls))
                 Close(true);
         }
 

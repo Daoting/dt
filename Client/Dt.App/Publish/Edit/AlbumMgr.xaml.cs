@@ -16,8 +16,6 @@ namespace Dt.App.Publish
 {
     public partial class AlbumMgr : Win
     {
-        readonly Repo<Album> _repo = new Repo<Album>();
-
         public AlbumMgr()
         {
             InitializeComponent();
@@ -26,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await _repo.Query("发布-所有专辑");
+            _lv.Data = await Repo.Query<Album>("发布-所有专辑");
         }
 
         async void OnSearch(object sender, string e)
@@ -37,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await _repo.Query("发布-模糊查询专辑", new { name = $"%{e}%" });
+                _lv.Data = await Repo.Query<Album>("发布-模糊查询专辑", new { name = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -70,7 +68,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await _repo.Delete(album))
+            if (await Repo.Delete(album))
                 LoadAll();
         }
 

@@ -19,7 +19,6 @@ namespace Dt.App.Model
 {
     public sealed partial class EditUserDlg : Dlg
     {
-        const string _tblName = "cm_user";
         bool _needRefresh;
 
         public EditUserDlg()
@@ -31,7 +30,7 @@ namespace Dt.App.Model
         {
             if (p_userID > 0)
             {
-                _fv.Data = await AtCm.GetRow("用户-编辑", new { id = p_userID });
+                _fv.Data = await Repo.Get<User>("用户-编辑", new { id = p_userID });
             }
             else
             {
@@ -49,9 +48,12 @@ namespace Dt.App.Model
             get { return _fv.Row; }
         }
 
-        void CreateUser()
+        async void CreateUser()
         {
-            _fv.Data = Table.NewRow(_tblName);
+            _fv.Data = new User(
+                // 3位标志用来识别用户类型，如管理者、消费者
+                ID: await AtCm.NewFlagID(0),
+                Name: "新用户");
         }
 
         void OnSave(object sender, Mi e)
@@ -82,38 +84,34 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name", "phone"))
                 return;
 
-            Row row = _fv.Row;
-            string phone = row.Str("phone");
-            if (!Regex.IsMatch(phone, "^1[34578]\\d{9}$"))
+            var usr = _fv.Data.To<User>();
+            if (!Regex.IsMatch(usr.Phone, "^1[34578]\\d{9}$"))
             {
                 _fv["phone"].Warn("手机号码错误！");
                 return;
             }
 
-            if ((row.IsAdded || row.Cells["phone"].IsChanged)
-                && await AtCm.GetScalar<int>("用户-重复手机号", new { phone = phone }) > 0)
+            if ((usr.IsAdded || usr.Cells["phone"].IsChanged)
+                && await AtCm.GetScalar<int>("用户-重复手机号", new { phone = usr.Phone }) > 0)
             {
                 _fv["phone"].Warn("手机号码重复！");
                 return;
             }
 
-            if (row.IsAdded)
+            if (usr.IsAdded)
             {
-                // 3位标志用来识别用户类型，如管理者、消费者
-                row["id"] = await AtCm.NewFlagID(0);
                 // 初始密码为手机号后4位
-                row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));
-                row["ctime"] = row["mtime"] = AtSys.Now;
+                usr.Pwd = AtKit.GetMD5(usr.Phone.Substring(usr.Phone.Length - 4));
+                usr.Ctime = usr.Mtime = AtSys.Now;
             }
             else
             {
-                row["mtime"] = AtSys.Now;
+                usr.Mtime = AtSys.Now;
             }
-            if (await AtCm.SaveRow(row, _tblName))
+
+            if (await Repo.Save(usr))
             {
                 _needRefresh = true;
-                AtKit.Msg("保存成功！");
-
                 if (_miAdd.Visibility == Visibility.Visible)
                 {
                     CreateUser();
@@ -121,13 +119,8 @@ namespace Dt.App.Model
                 }
                 else
                 {
-                    row.AcceptChanges();
                     Close();
                 }
-            }
-            else
-            {
-                AtKit.Warn("保存失败！");
             }
         }
     }

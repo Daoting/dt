@@ -608,6 +608,60 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 记录删除行
+        /// <summary>
+        /// 开始记录被删除的行，IsAdded为true的行不参加，当被删除的行重新添加时移除记录
+        /// 可通过 DeletedList 属性获得所有被删除的行
+        /// </summary>
+        public virtual void StartRecordDelRows()
+        {
+            DeletedList = new List<Row>();
+            CollectionChanged += OnCollectionChanged;
+        }
+
+        /// <summary>
+        /// 停止记录被删除的行
+        /// </summary>
+        public virtual void StopRecordDelRows()
+        {
+            DeletedList = null;
+            CollectionChanged -= OnCollectionChanged;
+        }
+
+        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add
+                && e.NewItems[0] is Row row)
+            {
+                if (!row.IsAdded)
+                    DeletedList.Remove(row);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove
+                && e.OldItems[0] is Row row2)
+            {
+                if (!row2.IsAdded)
+                    DeletedList.Add(row2);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                DeletedList.Clear();
+            }
+        }
+
+        /// <summary>
+        /// 获取已被删除的行列表
+        /// </summary>
+        public List<Row> DeletedList { get; private set; }
+
+        /// <summary>
+        /// 获取是否存在被删除的行
+        /// </summary>
+        public virtual bool ExistDeleted
+        {
+            get { return DeletedList != null && DeletedList.Count > 0; }
+        }
+        #endregion
+
         #region IRpcJson
         /// <summary>
         /// 反序列化读取Rpc Json数据

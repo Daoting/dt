@@ -38,7 +38,7 @@ namespace Dt.App.Model
 
         public override Task<string> ReadTemplate()
         {
-            return new Repo<Rpt>().GetScalar<string>("报表-模板", new { id = _rpt.ID });
+            return AtCm.GetScalar<string>("报表-模板", new { id = _rpt.ID });
         }
 
         public override async void SaveTemplate(string p_xml)
@@ -56,7 +56,7 @@ namespace Dt.App.Model
                 _rpt["mtime"] = AtSys.Now;
             }
 
-            await new Repo<Rpt>().Save(_rpt);
+            await Repo.Save(_rpt);
         }
     }
 }

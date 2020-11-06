@@ -35,20 +35,20 @@ namespace Dt.Core
         public string Svc { get; }
     }
 
-    /// <summary>
-    /// 子实体类标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ChildTblAttribute : Attribute
-    {
-        public ChildTblAttribute(string p_parentID)
-        {
-            ParentID = p_parentID;
-        }
+    ///// <summary>
+    ///// 子实体类标签
+    ///// </summary>
+    //[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    //public class ChildTblAttribute : Attribute
+    //{
+    //    public ChildTblAttribute(string p_parentID)
+    //    {
+    //        ParentID = p_parentID;
+    //    }
 
-        /// <summary>
-        /// 父表外键字段名
-        /// </summary>
-        public string ParentID { get; }
-    }
+    //    /// <summary>
+    //    /// 父表外键字段名
+    //    /// </summary>
+    //    public string ParentID { get; }
+    //}
 }

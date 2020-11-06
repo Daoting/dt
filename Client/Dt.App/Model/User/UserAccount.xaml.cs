@@ -21,8 +21,6 @@ namespace Dt.App.Model
     [View("用户账号")]
     public partial class UserAccount : Win
     {
-        const string _tblName = "cm_user";
-
         public UserAccount()
         {
             InitializeComponent();
@@ -33,19 +31,19 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lvUser.Data = await AtCm.Query("用户-所有");
+            _lvUser.Data = await Repo.Query<User>("用户-所有");
         }
 
         async void OnAddUser(object sender, Mi e)
         {
             if (await new EditUserDlg().Show(-1))
-                _lvUser.Data = await AtCm.Query("用户-最近修改");
+                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
         }
 
         async void OnEditUser(object sender, Mi e)
         {
             if (await new EditUserDlg().Show(e.Row.ID))
-                _lvUser.Data = await AtCm.Query("用户-最近修改");
+                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
         }
 
         async void OnAddRole(object sender, Mi e)
@@ -83,25 +81,18 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await AtCm.DelRowByKey(e.Row.Str("id"), _tblName) == 1)
-            {
-                AtKit.Msg("删除成功！");
+            if (await Repo.DelByID<User>(e.Row.ID))
                 LoadAll();
-            }
-            else
-            {
-                AtKit.Warn("删除失败！");
-            }
         }
 
         async void OnResetPwd(object sender, Mi e)
         {
-            Row row = Table.NewRow(_tblName, new { id = e.Row.ID });
-            row.IsAdded = false;
+            var usr = new User(ID: e.Row.ID);
+            usr.IsAdded = false;
             string phone = e.Row.Str("phone");
-            row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));
+            usr.Pwd = AtKit.GetMD5(phone.Substring(phone.Length - 4));
 
-            if (await AtCm.SaveRow(row, _tblName))
+            if (await Repo.Save(usr, false))
                 AtKit.Msg("密码已重置为手机号后4位！");
             else
                 AtKit.Msg("重置密码失败！");
@@ -110,12 +101,12 @@ namespace Dt.App.Model
         async void OnToggleExpired(object sender, Mi e)
         {
             bool expired = e.Row.Bool("expired");
-            Row row = Table.NewRow(_tblName, new { id = e.Row.ID, expired = expired });
-            row.IsAdded = false;
-            row["expired"] = !expired;
+            var usr = new User(ID: e.Row.ID, Expired: expired);
+            usr.IsAdded = false;
+            usr.Expired = !expired;
 
             string act = expired ? "启用" : "停用";
-            if (await AtCm.SaveRow(row, _tblName))
+            if (await Repo.Save(usr, false))
             {
                 AtKit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
                 LoadAll();
@@ -153,11 +144,11 @@ namespace Dt.App.Model
             }
             else if (e == "#最近修改")
             {
-                _lvUser.Data = await AtCm.Query("用户-最近修改");
+                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lvUser.Data = await AtCm.Query("用户-模糊查询", new { input = $"%{e}%" });
+                _lvUser.Data = await Repo.Query<User>("用户-模糊查询", new { input = $"%{e}%" });
             }
             NaviTo("用户列表");
         }

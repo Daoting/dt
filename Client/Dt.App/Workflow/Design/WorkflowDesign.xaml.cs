@@ -9,10 +9,13 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 #endregion
 
@@ -21,11 +24,6 @@ namespace Dt.App.Workflow
     public partial class WorkflowDesign : Win
     {
         #region 成员变量
-        readonly Repo<WfdPrc> _repoPrc = new Repo<WfdPrc>();
-        readonly Repo<WfdAtv> _repoAtv = new Repo<WfdAtv>();
-        readonly Repo<WfdTrs> _repoTrs = new Repo<WfdTrs>();
-        readonly Repo<WfdAtvrole> _repoAtvRole = new Repo<WfdAtvrole>();
-
         WfdPrc _prc;
         Table<WfdAtv> _atvs;
         Table<WfdTrs> _trss;
@@ -51,6 +49,32 @@ namespace Dt.App.Workflow
             else
                 LoadPrc(p_prcID);
             AttachSketch();
+
+            _menu["保存"].SetBinding(IsEnabledProperty, new Binding { Path = new PropertyPath("IsChanged"), Source = this });
+        }
+
+        #region 数据处理
+        async void CreateNewPrc()
+        {
+            _prc = new WfdPrc(
+                ID: await AtCm.NewID(),
+                Name: "新流程");
+
+            var dt = new Dict { { "prcid", -1 } };
+            _atvs = await Repo.Query<WfdAtv>("流程-编辑活动模板", dt);
+            _trss = await Repo.Query<WfdTrs>("流程-编辑迁移模板", dt);
+            _atvRoles = await Repo.Query<WfdAtvrole>("流程-编辑活动授权", dt);
+            OnDataChanged();
+        }
+
+        async void LoadPrc(long p_prcID)
+        {
+            var dt = new Dict { { "prcid", p_prcID } };
+            _prc = await Repo.Get<WfdPrc>("流程-编辑流程模板", dt);
+            _atvs = await Repo.Query<WfdAtv>("流程-编辑活动模板", dt);
+            _trss = await Repo.Query<WfdTrs>("流程-编辑迁移模板", dt);
+            _atvRoles = await Repo.Query<WfdAtvrole>("流程-编辑活动授权", dt);
+            OnDataChanged();
         }
 
         async void OnAdd(object sender, Mi e)
@@ -59,26 +83,83 @@ namespace Dt.App.Workflow
                 CreateNewPrc();
         }
 
-        async void CreateNewPrc()
+        void OnDataChanged()
         {
-            _prc = new WfdPrc(
-                ID: await AtCm.NewID(),
-                Name: "新流程");
-            _sketch.ReadXml("");
-        }
-
-        async void LoadPrc(long p_prcID)
-        {
-            var dt = new Dict { { "prcid", p_prcID } };
-            _prc = await _repoPrc.Get("流程-编辑流程模板", dt);
-            _atvs = await _repoAtv.Query("流程-编辑活动模板", dt);
-            _trss = await _repoTrs.Query("流程-编辑迁移模板", dt);
-            _atvRoles = await _repoAtvRole.Query("流程-编辑活动授权", dt);
+            IsChanged = false;
+            _sketch.His.CmdChanged -= OnSketchChanged;
 
             _fv.Data = _prc;
             _sketch.ReadXml(_prc.Diagram);
+
+            _prc.Changed += (s, e) => UpdateSaveState();
+            _atvs.Changed += (s, e) => UpdateSaveState();
+            _atvs.StartRecordDelRows();
+            _trss.Changed += (s, e) => UpdateSaveState();
+            _trss.StartRecordDelRows();
+            _atvRoles.Changed += (s, e) => UpdateSaveState();
+            _atvRoles.StartRecordDelRows();
+            _sketch.His.CmdChanged += OnSketchChanged;
         }
 
+        void OnSketchChanged(object sender, EventArgs e)
+        {
+            UpdateSaveState();
+        }
+
+        void UpdateSaveState()
+        {
+            IsChanged = _sketch.His.CanUndo
+                || _prc.IsChanged
+                || _atvs.IsChanged
+                || _trss.IsChanged
+                || _atvRoles.IsChanged;
+        }
+
+        void OnSave(object sender, Mi e)
+        {
+            DateTime now = AtSys.Now;
+            _prc.Mtime = now;
+            _prc.Diagram = _sketch.WriteXml();
+
+            foreach (var elem in _sketch.Container.Children)
+            {
+                if (elem is SNode node && node.Tag is WfdAtv atv)
+                {
+                    // 标题以属性值为准
+                    atv.Name = node.Title;
+                    if (atv.IsChanged)
+                        atv.Mtime = now;
+                }
+                else if (elem is SLine line && line.Tag is WfdTrs trs)
+                {
+                    // 以最终起点终点标识为准
+                    trs.SrcAtvID = line.HeaderID;
+                    trs.TgtAtvID = line.TailID;
+                }
+            }
+
+            
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            return CancelSave();
+        }
+
+        Task<bool> CancelSave()
+        {
+            if (IsChanged)
+            {
+                return AtKit.Confirm("数据已修改，确认要放弃修改吗？");
+            }
+            return Task.FromResult(true);
+        }
+
+        void OnDel(object sender, Mi e)
+        {
+
+        }
+        #endregion
 
         #region 图元事件
         void AttachSketch()
@@ -97,6 +178,7 @@ namespace Dt.App.Workflow
                 {
                     if (item.Tag == null)
                     {
+                        // 新增
                         AtvType tp;
                         switch (node.Shape)
                         {
@@ -133,10 +215,10 @@ namespace Dt.App.Workflow
                         node.Tag = atv;
                         _atvs.Add(atv);
                     }
-                    else
+                    else if (node.Tag is WfdAtv atv)
                     {
-                        // 说明是撤销
-                        _atvs.Add((WfdAtv)node.Tag);
+                        // 删除后撤销 或 撤销后重做
+                        _atvs.Add(atv);
                     }
                 }
                 else if (item is SLine line)
@@ -153,9 +235,9 @@ namespace Dt.App.Workflow
                         line.Tag = trs;
                         _trss.Add(trs);
                     }
-                    else
+                    else if (item.Tag is WfdTrs trs)
                     {
-                        _trss.Add((WfdTrs)item.Tag);
+                        _trss.Add(trs);
                     }
                     if (e.Count == 1)
                         _sketch.SelectionClerk.SelectLine(line);
@@ -352,28 +434,17 @@ namespace Dt.App.Workflow
         }
         #endregion
 
-        void OnSave(object sender, Mi e)
-        {
 
+        public bool IsChanged
+        {
+            get { return (bool)GetValue(IsChangedProperty); }
+            set { SetValue(IsChangedProperty, value); }
         }
 
-        protected override Task<bool> OnClosing()
-        {
-            return CancelSave();
-        }
-
-        Task<bool> CancelSave()
-        {
-            //if (_prc.IsChanged)
-            //{
-            //    return AtKit.Confirm("数据已修改，确认要放弃修改吗？");
-            //}
-            return Task.FromResult(true);
-        }
-
-        void OnDel(object sender, Mi e)
-        {
-
-        }
+        public static readonly DependencyProperty IsChangedProperty = DependencyProperty.Register(
+            "IsChanged",
+            typeof(bool),
+            typeof(WorkflowDesign),
+            new PropertyMetadata(false));
     }
 }

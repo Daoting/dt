@@ -8,15 +8,16 @@
 
 #region 引用命名
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 通用实体访问Api，全称EntityAccess
+    /// 通用实体访问Api，全称EntityAccess，使用场景少，暂时停用！
     /// </summary>
-    [Api(AgentMode = AgentMode.Generic)]
+    /// [Api(AgentMode = AgentMode.Generic)]
     public class Ea : BaseApi
     {
         /// <summary>
@@ -107,10 +108,8 @@ namespace Dt.Core
             Throw.IfNullOrEmpty(p_tblName);
 
             Type type = Silo.GetEntityType(p_tblName);
-            Type repoType = typeof(Repo<>).MakeGenericType(type);
-
-            var repo = Activator.CreateInstance(repoType);
-            Task task = repoType.GetMethod(p_methodName).Invoke(repo, p_params(type)) as Task;
+            var method = typeof(Repo).GetMethod(p_methodName, BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            Task task = method.Invoke(null, p_params(type)) as Task;
             await task;
             return task.GetType().GetProperty("Result").GetValue(task);
         }

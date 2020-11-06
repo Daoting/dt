@@ -18,9 +18,6 @@ namespace Dt.App.Model
     [View("菜单管理")]
     public partial class SysMenu : Win
     {
-        readonly Repo<Menu> _menu = new Repo<Menu>();
-        readonly Repo<RoleMenu> _roleMenu = new Repo<RoleMenu>();
-
         public SysMenu()
         {
             InitializeComponent();
@@ -52,7 +49,7 @@ namespace Dt.App.Model
             // 记录已选择的节点
             var m = _tv.Selected<Menu>();
             long id = m == null ? -1 : m.ID;
-            _tv.Data = await _menu.Query("菜单-完整树");
+            _tv.Data = await Repo.Query<Menu>("菜单-完整树");
 
             object select = null;
             if (id > 0)
@@ -68,7 +65,7 @@ namespace Dt.App.Model
         {
             var id = e.Row.ID;
             if (id > 0)
-                _fv.Data = await _menu.Get("菜单-id菜单项", new { id = id });
+                _fv.Data = await Repo.Get<Menu>("菜单-id菜单项", new { id = id });
             else
                 _fv.Data = _tv.FixedRoot;
             NaviTo("菜单项,菜单授权");
@@ -114,7 +111,7 @@ namespace Dt.App.Model
             else
             {
                 _mRole.IsEnabled = true;
-                _lvRole.Data = await _roleMenu.Query("菜单-关联的角色", new { menuid = m.ID });
+                _lvRole.Data = await Repo.Query<RoleMenu>("菜单-关联的角色", new { menuid = m.ID });
             }
         }
 
@@ -131,7 +128,7 @@ namespace Dt.App.Model
         async void AddMenu(bool p_isGroup)
         {
             var sel = _tv.Selected<Menu>();
-            var ids = await _menu.NewIDAndSeq("sq_menu");
+            var ids = await AtCm.NewIDAndSeq("sq_menu");
             Menu m = new Menu(
                 ID: ids[0],
                 Name: p_isGroup ? "新组" : "新菜单",
@@ -150,7 +147,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name"))
                 return;
 
-            if (await _menu.Save(_fv.Data.To<Menu>()))
+            if (await Repo.Save(_fv.Data.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
@@ -178,7 +175,7 @@ namespace Dt.App.Model
 
             if (p_row.IsGroup)
             {
-                int count = await _menu.GetScalar<int>("菜单-是否有子菜单", new { parentid = p_row.ID });
+                int count = await AtCm.GetScalar<int>("菜单-是否有子菜单", new { parentid = p_row.ID });
                 if (count > 0)
                 {
                     AtKit.Warn("含子菜单无法删除！");
@@ -186,7 +183,7 @@ namespace Dt.App.Model
                 }
             }
 
-            if (await _menu.Delete(p_row))
+            if (await Repo.Delete(p_row))
             {
                 long id = p_row.ID;
                 Row tvRow = (from tr in (Table)_tv.Data
@@ -226,14 +223,14 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(row.ID, menuID));
                 }
-                if (ls.Count > 0 && await _roleMenu.BatchSave(ls))
-                    _lvRole.Data = await _roleMenu.Query("菜单-关联的角色", new { menuid = menuID });
+                if (ls.Count > 0 && await Repo.BatchSave(ls))
+                    _lvRole.Data = await Repo.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
             }
         }
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            if (await _roleMenu.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
+            if (await Repo.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
                 _lvRole.DeleteSelection();
         }
 
@@ -241,7 +238,7 @@ namespace Dt.App.Model
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await _menu.Query("菜单-分组树");
+                ((CTree)sender).Data = await Repo.Query<Menu>("菜单-分组树");
             }
         }
 
@@ -252,7 +249,7 @@ namespace Dt.App.Model
                 return;
 
             var tgt = _tv.GetTopBrother(src) as Menu;
-            if (tgt != null && await _menu.ExchangeDispidx(src, tgt))
+            if (tgt != null && await Repo.ExchangeDispidx(src, tgt))
                 LoadTreeData();
         }
 
@@ -263,7 +260,7 @@ namespace Dt.App.Model
                 return;
 
             var tgt = _tv.GetFollowingBrother(src) as Menu;
-            if (tgt != null && await _menu.ExchangeDispidx(src, tgt))
+            if (tgt != null && await Repo.ExchangeDispidx(src, tgt))
                 LoadTreeData();
         }
 

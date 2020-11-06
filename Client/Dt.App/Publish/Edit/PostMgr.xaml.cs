@@ -18,8 +18,6 @@ namespace Dt.App.Publish
 {
     public partial class PostMgr : Win, IHtmlEditHost
     {
-        readonly Repo<Post> _repoPost = new Repo<Post>();
-
         public PostMgr()
         {
             InitializeComponent();
@@ -29,7 +27,7 @@ namespace Dt.App.Publish
         #region 文章列表
         async void LoadAll()
         {
-            _lvPost.Data = await _repoPost.Query("文章-管理列表");
+            _lvPost.Data = await Repo.Query<Post>("文章-管理列表");
         }
 
         void OnPostClick(object sender, ItemClickArgs e)
@@ -43,7 +41,7 @@ namespace Dt.App.Publish
 
         async void OnSearch(object sender, string e)
         {
-            _lvPost.Data = await _repoPost.Query("文章-模糊查询", new { input = $"%{e}%" });
+            _lvPost.Data = await Repo.Query<Post>("文章-模糊查询", new { input = $"%{e}%" });
         }
         #endregion
 
@@ -55,7 +53,7 @@ namespace Dt.App.Publish
 
         async void LoadPost(long p_id)
         {
-            _fv.Data = await _repoPost.Get("文章-编辑", new { id = p_id });
+            _fv.Data = await Repo.Get<Post>("文章-编辑", new { id = p_id });
             LoadKeyword(p_id);
             LoadAlbum(p_id);
         }
@@ -72,7 +70,7 @@ namespace Dt.App.Publish
 
         async void OnAddPost(object sender, Mi e)
         {
-            var ids = await _repoPost.NewIDAndSeq("sq_post");
+            var ids = await AtPublish.NewIDAndSeq("sq_post");
             var post = new Post(
                 ID: ids[0],
                 Title: "新文章",
@@ -129,7 +127,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await _repoPost.Delete(post))
+            if (await Repo.Delete(post))
             {
                 LoadAll();
                 _fv.Data = null;
@@ -162,7 +160,7 @@ namespace Dt.App.Publish
         async void OnDelPostKeyword(object sender, Mi e)
         {
             Postkeyword pk = new Postkeyword(PostID: _fv.Row.ID, Keyword: e.Row.Str(0));
-            if (await new Repo<Postkeyword>().Delete(pk))
+            if (await Repo.Delete(pk))
                 LoadKeyword(_fv.Row.ID);
         }
 
@@ -178,7 +176,7 @@ namespace Dt.App.Publish
         async void OnDelPostAlbum(object sender, Mi e)
         {
             var pa = new Postalbum(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
-            if (await new Repo<Postalbum>().Delete(pa))
+            if (await Repo.Delete(pa))
                 LoadAlbum(_fv.Row.ID);
         }
 

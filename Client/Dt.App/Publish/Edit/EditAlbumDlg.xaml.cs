@@ -16,7 +16,6 @@ namespace Dt.App.Publish
 {
     public sealed partial class EditAlbumDlg : Dlg
     {
-        readonly Repo<Album> _repo = new Repo<Album>();
         bool _needRefresh;
 
         public EditAlbumDlg()
@@ -27,7 +26,7 @@ namespace Dt.App.Publish
         public async Task<bool> Show(Album p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await _repo.GetByID(p_keyword.ID);
+                _fv.Data = await Repo.GetByID<Album>(p_keyword.ID);
             else
                 _fv.Data = await Create();
             await ShowAsync();
@@ -48,7 +47,7 @@ namespace Dt.App.Publish
             if (_fv.ExistNull("Name"))
                 return;
 
-            if (await _repo.Save(_fv.Data.To<Album>()))
+            if (await Repo.Save(_fv.Data.To<Album>()))
             {
                 _needRefresh = true;
                 _fv.Data = await Create();

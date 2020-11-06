@@ -27,7 +27,6 @@
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\Domain\Repository\TableSchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\ChildEntitySchema.cs" Link="Base\Domain\Repository\ChildEntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\Repository\EntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />

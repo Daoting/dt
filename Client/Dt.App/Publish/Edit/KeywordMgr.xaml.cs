@@ -16,8 +16,6 @@ namespace Dt.App.Publish
 {
     public partial class KeywordMgr : Win
     {
-        readonly Repo<Keyword> _repo = new Repo<Keyword>();
-
         public KeywordMgr()
         {
             InitializeComponent();
@@ -26,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await _repo.Query("发布-所有关键字");
+            _lv.Data = await Repo.Query<Keyword>("发布-所有关键字");
         }
 
         async void OnSearch(object sender, string e)
@@ -37,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await _repo.Query("发布-模糊查询关键字", new { id = $"%{e}%" });
+                _lv.Data = await Repo.Query<Keyword>("发布-模糊查询关键字", new { id = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -70,7 +68,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await _repo.Delete(key))
+            if (await Repo.Delete(key))
                 LoadAll();
         }
 
