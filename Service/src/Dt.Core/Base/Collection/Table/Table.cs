@@ -16,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Xml;
 #endregion
 
 namespace Dt.Core
@@ -90,6 +89,19 @@ namespace Dt.Core
         public ColumnList Columns
         {
             get { return _columns; }
+        }
+
+        /// <summary>
+        /// 获取是否存在新增的行
+        /// </summary>
+        public bool ExistAdded
+        {
+            get
+            {
+                return (from item in this
+                        where item.IsAdded
+                        select item).Any();
+            }
         }
 
         /// <summary>
@@ -611,20 +623,19 @@ namespace Dt.Core
         #region 记录删除行
         /// <summary>
         /// 开始记录被删除的行，IsAdded为true的行不参加，当被删除的行重新添加时移除记录
-        /// 可通过 DeletedList 属性获得所有被删除的行
         /// </summary>
-        public virtual void StartRecordDelRows()
+        public void StartRecordDelRows()
         {
-            DeletedList = new List<Row>();
+            DeletedRows = new List<Row>();
             CollectionChanged += OnCollectionChanged;
         }
 
         /// <summary>
         /// 停止记录被删除的行
         /// </summary>
-        public virtual void StopRecordDelRows()
+        public void StopRecordDelRows()
         {
-            DeletedList = null;
+            // 未清空或重置 DeletedRows，可能历史记录仍有用！
             CollectionChanged -= OnCollectionChanged;
         }
 
@@ -634,31 +645,31 @@ namespace Dt.Core
                 && e.NewItems[0] is Row row)
             {
                 if (!row.IsAdded)
-                    DeletedList.Remove(row);
+                    DeletedRows.Remove(row);
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove
                 && e.OldItems[0] is Row row2)
             {
                 if (!row2.IsAdded)
-                    DeletedList.Add(row2);
+                    DeletedRows.Add(row2);
             }
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                DeletedList.Clear();
+                DeletedRows.Clear();
             }
         }
 
         /// <summary>
         /// 获取已被删除的行列表
         /// </summary>
-        public List<Row> DeletedList { get; private set; }
+        public List<Row> DeletedRows { get; private set; }
 
         /// <summary>
         /// 获取是否存在被删除的行
         /// </summary>
-        public virtual bool ExistDeleted
+        public bool ExistDeleted
         {
-            get { return DeletedList != null && DeletedList.Count > 0; }
+            get { return DeletedRows != null && DeletedRows.Count > 0; }
         }
         #endregion
 

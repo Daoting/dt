@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
@@ -120,11 +121,11 @@ namespace Dt.Core
                 await db.CommitTrans();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 await db.RollbackTrans();
+                throw ex;
             }
-            return false;
         }
 
         /// <summary>

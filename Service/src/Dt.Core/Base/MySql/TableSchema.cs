@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -187,15 +188,14 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows">实体列表</param>
         /// <returns></returns>
-        internal List<Dict> GetBatchSaveSql<TEntity>(IList<TEntity> p_rows)
-            where TEntity : Row
+        internal List<Dict> GetBatchSaveSql(IList p_rows)
         {
             // 不再重复判断
             //if (p_rows == null || p_rows.Count == 0)
             //    throw new Exception(_saveError);
 
             // 检查是否包含主键
-            var first = p_rows[0];
+            var first = p_rows[0] as Row;
             foreach (var col in PrimaryKey)
             {
                 if (!first.Contains(col.Name))
@@ -205,6 +205,7 @@ namespace Dt.Core
             // 分类整理增改的行列表，记录需要更新的列
             bool insert = false;
             bool update = false;
+            bool delete = false;
             List<Row> insertRows = new List<Row>();
             List<Row> updateRows = new List<Row>();
             List<string> updateCols = new List<string>();
@@ -226,9 +227,11 @@ namespace Dt.Core
                     }
                 }
             }
+            if (p_rows is Table tbl)
+                delete = tbl.ExistDeleted;
 
             // 不需要保存
-            if (!insert && !update)
+            if (!insert && !update && !delete)
                 return null;
 
             // 构造sql及参数列表
@@ -238,6 +241,7 @@ namespace Dt.Core
             StringBuilder whereVal = null;
             Dict dtInsert = null;
             Dict dtUpdate = null;
+            Dict dtDelete = null;
             int updateIndex = 1;
 
             if (insert)
@@ -252,6 +256,13 @@ namespace Dt.Core
                 updateVal = new StringBuilder();
                 whereVal = new StringBuilder();
                 dtUpdate = new Dict();
+            }
+
+            if (delete)
+            {
+                if (whereVal == null)
+                    whereVal = new StringBuilder();
+                dtDelete = new Dict();
             }
 
             // 所有列
@@ -292,7 +303,7 @@ namespace Dt.Core
             }
 
             // 主键
-            if (update)
+            if (update || delete)
             {
                 foreach (var col in PrimaryKey)
                 {
@@ -302,9 +313,18 @@ namespace Dt.Core
                     whereVal.Append("=@");
                     whereVal.Append(col.Name);
 
-                    // 主键可能被更新
-                    dtUpdate[col.Name] = (from row in updateRows
-                                          select row.Cells[col.Name].OriginalVal).ToArray();
+                    if (update)
+                    {
+                        // 主键可能被更新
+                        dtUpdate[col.Name] = (from row in updateRows
+                                              select row.Cells[col.Name].OriginalVal).ToArray();
+                    }
+
+                    if (delete)
+                    {
+                        dtDelete[col.Name] = (from row in ((Table)p_rows).DeletedRows
+                                              select row.Cells[col.Name].OriginalVal).ToArray();
+                    }
                 }
             }
 
@@ -347,6 +367,20 @@ namespace Dt.Core
                     dt["params"] = GenRowParm(dtUpdate);
                     dts.Add(dt);
                 }
+            }
+
+            if (delete)
+            {
+                sql = new StringBuilder();
+                sql.Append("delete from ");
+                sql.Append(Name);
+                sql.Append(" where ");
+                sql.Append(whereVal.ToString());
+
+                dt = new Dict();
+                dt["text"] = sql.ToString();
+                dt["params"] = GenRowParm(dtDelete);
+                dts.Add(dt);
             }
             return dts;
         }

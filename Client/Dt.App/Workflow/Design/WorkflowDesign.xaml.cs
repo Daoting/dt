@@ -11,7 +11,7 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -91,13 +91,34 @@ namespace Dt.App.Workflow
             _fv.Data = _prc;
             _sketch.ReadXml(_prc.Diagram);
 
+            // 绑定所有节点和连线图元
+            foreach (var obj in _sketch.Container.Children)
+            {
+                if (obj is SNode node)
+                {
+                    node.Tag = (from item in _atvs.Items
+                                where item.ID == node.ID
+                                select item).FirstOrDefault();
+                }
+                else if (obj is SLine line)
+                {
+                    line.Tag = (from item in _trss.Items
+                                where item.ID == line.ID
+                                select item).FirstOrDefault();
+                }
+            }
+
             _prc.Changed += (s, e) => UpdateSaveState();
             _atvs.Changed += (s, e) => UpdateSaveState();
             _atvs.StartRecordDelRows();
             _trss.Changed += (s, e) => UpdateSaveState();
             _trss.StartRecordDelRows();
-            _atvRoles.Changed += (s, e) => UpdateSaveState();
+
+            // 角色集合变化时
+            _atvRoles.CollectionChanged += (s, e) => UpdateSaveState();
             _atvRoles.StartRecordDelRows();
+
+            _sketch.His.Clear();
             _sketch.His.CmdChanged += OnSketchChanged;
         }
 
@@ -108,14 +129,17 @@ namespace Dt.App.Workflow
 
         void UpdateSaveState()
         {
+            // _atvs和_trss集合变化会触发CmdChanged，无需重复判断
             IsChanged = _sketch.His.CanUndo
                 || _prc.IsChanged
                 || _atvs.IsChanged
                 || _trss.IsChanged
-                || _atvRoles.IsChanged;
+                || _atvRoles.IsChanged
+                || _atvRoles.ExistDeleted
+                || _atvRoles.ExistAdded;
         }
 
-        void OnSave(object sender, Mi e)
+        async void OnSave(object sender, Mi e)
         {
             DateTime now = AtSys.Now;
             _prc.Mtime = now;
@@ -138,7 +162,11 @@ namespace Dt.App.Workflow
                 }
             }
 
-            
+            if (await Repo.BatchSave(new List<object> { _prc, _atvs, _trss, _atvRoles }))
+            {
+                _sketch.His.Clear();
+                UpdateSaveState();
+            }
         }
 
         protected override Task<bool> OnClosing()
@@ -170,7 +198,7 @@ namespace Dt.App.Workflow
             _sketch.RightTapped += OnSketchRightTapped;
         }
 
-        void OnSketchAdded(object sender, List<FrameworkElement> e)
+        async void OnSketchAdded(object sender, List<FrameworkElement> e)
         {
             foreach (var item in e)
             {
@@ -225,6 +253,7 @@ namespace Dt.App.Workflow
                 {
                     if (item.Tag == null)
                     {
+                        line.ID = await AtCm.NewID();
                         WfdTrs trs = new WfdTrs(
                             ID: line.ID,
                             PrcID: _prc.ID,

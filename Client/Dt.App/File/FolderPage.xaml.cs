@@ -163,6 +163,7 @@ namespace Dt.App.File
                 mgr.Setting = _fileMgr.Setting;
                 _host.NaviTo(new FolderPage(mgr));
                 LoadData();
+                OnCancelMulti(null, null);
             }
         }
 

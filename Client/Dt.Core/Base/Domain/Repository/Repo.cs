@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core.Rpc;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,28 +127,11 @@ namespace Dt.Core
             }
 
             var model = GetModel(typeof(TEntity));
-
-            // 保存前外部校验，不合格在外部抛出异常
             if (model.OnSaving != null)
             {
-                try
-                {
-                    if (model.OnSaving.ReturnType == typeof(Task))
-                        await (Task)model.OnSaving.Invoke(p_entity, null);
-                    else
-                        model.OnSaving.Invoke(p_entity, null);
-                }
-                catch (Exception ex)
-                {
-                    if (p_isNotify)
-                    {
-                        if (ex.InnerException is KnownException kex)
-                            AtKit.Warn(kex.Message);
-                        else
-                            AtKit.Warn(ex.Message);
-                    }
+                // 保存前外部校验，不合格在外部抛出异常
+                if (!await OnSaving(model, p_entity, p_isNotify))
                     return false;
-                }
             }
 
             Dict dt = model.Schema.GetSaveSql(p_entity);
@@ -166,51 +150,50 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 批量保存实体数据，根据实体状态执行增改
+        /// 一个事务内批量保存实体数据，根据实体状态执行增改，Table&lt;Entity&gt;支持删除，列表类型支持：
+        /// <para>Table&lt;Entity&gt;，单表增删改</para>
+        /// <para>List&lt;Entity&gt;，单表增改</para>
+        /// <para>IList，多表增删改，成员可为Entity,List&lt;Entity&gt;,Table&lt;Entity&gt;的混合</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_entities">待保存</param>
+        /// <param name="p_list">待保存</param>
         /// <param name="p_isNotify">是否提示保存结果</param>
         /// <returns>true 保存成功</returns>
-        public static async Task<bool> BatchSave<TEntity>(IList<TEntity> p_entities, bool p_isNotify = true)
-            where TEntity : Entity
+        public static Task<bool> BatchSave(IList p_list, bool p_isNotify = true)
         {
-            if (p_entities == null || p_entities.Count == 0)
+            if (p_list == null || p_list.Count == 0)
             {
                 if (p_isNotify)
                     AtKit.Warn(_unchangedMsg);
-                return false;
+                return Task.FromResult(false);
             }
 
-            var model = GetModel(typeof(TEntity));
+            Type tp = p_list.GetType();
+            if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+            {
+                return BatchSaveSameType(p_list, p_isNotify);
+            }
 
-            // 保存前外部校验，不合格在外部抛出异常
+            return BatchSaveMultiTypes(p_list, p_isNotify);
+        }
+
+        /// <summary>
+        /// 单表增删改，列表中的实体类型相同
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <param name="p_isNotify"></param>
+        /// <returns></returns>
+        static async Task<bool> BatchSaveSameType(IList p_list, bool p_isNotify)
+        {
+            var model = GetModel(p_list.GetType().GetGenericArguments()[0]);
             if (model.OnSaving != null)
             {
-                foreach (var item in p_entities)
+                foreach (var item in p_list)
                 {
-                    try
-                    {
-                        if (model.OnSaving.ReturnType == typeof(Task))
-                            await (Task)model.OnSaving.Invoke(item, null);
-                        else
-                            model.OnSaving.Invoke(item, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (p_isNotify)
-                        {
-                            if (ex.InnerException is KnownException kex)
-                                AtKit.Warn(kex.Message);
-                            else
-                                AtKit.Warn(ex.Message);
-                        }
+                    if (item != null && !await OnSaving(model, item, p_isNotify))
                         return false;
-                    }
                 }
             }
-
-            List<Dict> dts = model.Schema.GetBatchSaveSql(p_entities);
+            var dts = model.Schema.GetBatchSaveSql(p_list);
 
             // 不需要保存
             if (dts == null || dts.Count == 0)
@@ -220,18 +203,17 @@ namespace Dt.Core
                 return true;
             }
 
-            bool suc = await BatchExec(model.Svc, dts);
-            if (suc)
+            if (await BatchExec(model.Svc, dts))
             {
-                if (p_entities is Table tbl)
+                if (p_list is Table tbl)
                 {
                     tbl.AcceptChanges();
                 }
                 else
                 {
-                    foreach (var row in p_entities)
+                    foreach (var row in p_list.OfType<Row>())
                     {
-                        row.AcceptChanges();
+                        row?.AcceptChanges();
                     }
                 }
 
@@ -243,6 +225,131 @@ namespace Dt.Core
             if (p_isNotify)
                 AtKit.Warn("保存失败！");
             return false;
+        }
+
+        /// <summary>
+        /// 多表增删改
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <param name="p_isNotify"></param>
+        /// <returns></returns>
+        static async Task<bool> BatchSaveMultiTypes(IList p_list, bool p_isNotify)
+        {
+            var dts = new List<Dict>();
+            string svc = null;
+            foreach (var item in p_list)
+            {
+                Type tp = item.GetType();
+                if (item is Entity entity)
+                {
+                    var model = GetModel(tp);
+                    if (model.OnSaving != null)
+                    {
+                        if (!await OnSaving(model, entity, p_isNotify))
+                            return false;
+                    }
+
+                    if (svc == null)
+                        svc = model.Svc;
+
+                    dts.Add(model.Schema.GetSaveSql(entity));
+                }
+                else if (item is IList clist
+                    && clist.Count > 0
+                    && tp.IsGenericType
+                    && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                {
+                    var model = GetModel(tp.GetGenericArguments()[0]);
+                    if (model.OnSaving != null)
+                    {
+                        foreach (var ci in clist)
+                        {
+                            if (!await OnSaving(model, ci, p_isNotify))
+                                return false;
+                        }
+                    }
+
+                    if (svc == null)
+                        svc = model.Svc;
+
+                    var cdts = model.Schema.GetBatchSaveSql(clist);
+                    if (cdts != null && cdts.Count > 0)
+                        dts.AddRange(cdts);
+                }
+            }
+
+            // 不需要保存
+            if (dts == null || dts.Count == 0)
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_unchangedMsg);
+                return true;
+            }
+
+            bool suc = await BatchExec(svc, dts);
+            if (suc)
+            {
+                foreach (var item in p_list)
+                {
+                    Type tp = item.GetType();
+                    if (item is Entity entity)
+                    {
+                        entity.AcceptChanges();
+                    }
+                    else if (item is Table tbl)
+                    {
+                        tbl.AcceptChanges();
+                    }
+                    else if (item is IList clist
+                        && clist.Count > 0
+                        && tp.IsGenericType
+                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        foreach (var ci in clist)
+                        {
+                            ((Row)ci).AcceptChanges();
+                        }
+                    }
+                }
+
+                if (p_isNotify)
+                    AtKit.Msg("保存成功！");
+                return true;
+            }
+
+            if (p_isNotify)
+                AtKit.Warn("保存失败！");
+            return false;
+        }
+
+        /// <summary>
+        /// 保存前外部校验，不合格在外部抛出异常
+        /// </summary>
+        /// <param name="p_model"></param>
+        /// <param name="p_entity"></param>
+        /// <param name="p_isNotify"></param>
+        /// <returns></returns>
+        static async Task<bool> OnSaving(EntitySchema p_model, object p_entity, bool p_isNotify)
+        {
+            try
+            {
+                if (p_model.OnSaving.ReturnType == typeof(Task))
+                    await (Task)p_model.OnSaving.Invoke(p_entity, null);
+                else
+                    p_model.OnSaving.Invoke(p_entity, null);
+            }
+            catch (Exception ex)
+            {
+                if (p_isNotify)
+                {
+                    if (ex.InnerException is KnownException kex)
+                        AtKit.Warn(kex.Message);
+                    else
+                        AtKit.Warn(ex.Message);
+                }
+                return false;
+            }
+            return true;
         }
         #endregion
 
@@ -429,7 +536,7 @@ namespace Dt.Core
             save.AcceptChanges();
             save["dispidx"] = p_src["dispidx"];
 
-            return BatchSave<TEntity>(tbl, false);
+            return BatchSave(tbl, false);
         }
         #endregion
 

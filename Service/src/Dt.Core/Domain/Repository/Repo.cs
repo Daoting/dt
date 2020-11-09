@@ -177,7 +177,7 @@ namespace Dt.Core
                 }
             }
 
-            List<Dict> dts = model.Schema.GetBatchSaveSql(p_entities);
+            List<Dict> dts = null; //model.Schema.GetBatchSaveSql(p_entities);
 
             // 不需要保存
             if (dts == null || dts.Count == 0)
