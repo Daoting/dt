@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,16 +128,10 @@ namespace Dt.Core
             where TEntity : Entity
         {
             Throw.If(p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged), _unchangedMsg);
-            var model = GetModel(typeof(TEntity));
 
-            // 保存前外部校验，不合格在外部抛出异常
+            var model = GetModel(typeof(TEntity));
             if (model.OnSaving != null)
-            {
-                if (model.OnSaving.ReturnType == typeof(Task))
-                    await (Task)model.OnSaving.Invoke(p_entity, null);
-                else
-                    model.OnSaving.Invoke(p_entity, null);
-            }
+                await OnSaving(model, p_entity);
 
             Dict dt = model.Schema.GetSaveSql(p_entity);
             if (await LobContext.Current.Db.Exec((string)dt["text"], (Dict)dt["params"]) != 1)
@@ -154,39 +149,172 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 批量保存实体数据，根据实体状态执行增改
+        /// 批量保存实体数据，根据实体状态执行增改，Table&lt;Entity&gt;支持删除，方法内部未启动事务！
+        /// <para>列表类型支持：</para>
+        /// <para>Table&lt;Entity&gt;，单表增删改</para>
+        /// <para>List&lt;Entity&gt;，单表增改</para>
+        /// <para>IList，多表增删改，成员可为Entity,List&lt;Entity&gt;,Table&lt;Entity&gt;的混合</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_entities">待保存</param>
+        /// <param name="p_list">待保存</param>
         /// <returns>true 保存成功</returns>
-        public static async Task<bool> BatchSave<TEntity>(IList<TEntity> p_entities)
-            where TEntity : Entity
+        public static Task<bool> BatchSave(IList p_list)
         {
-            Throw.If(p_entities == null || p_entities.Count == 0, _unchangedMsg);
-            var model = GetModel(typeof(TEntity));
+            Throw.If(p_list == null || p_list.Count == 0, _unchangedMsg);
 
-            // 保存前外部校验，不合格在外部抛出异常
+            Type tp = p_list.GetType();
+            if (tp.IsGenericType
+                && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+            {
+                return BatchSaveSameType(p_list);
+            }
+            return BatchSaveMultiTypes(p_list);
+        }
+
+        /// <summary>
+        /// 单表增删改，列表中的实体类型相同
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        static async Task<bool> BatchSaveSameType(IList p_list)
+        {
+            var model = GetModel(p_list.GetType().GetGenericArguments()[0]);
             if (model.OnSaving != null)
             {
-                foreach (var item in p_entities)
+                foreach (var item in p_list)
                 {
-                    if (model.OnSaving.ReturnType == typeof(Task))
-                        await (Task)model.OnSaving.Invoke(item, null);
-                    else
-                        model.OnSaving.Invoke(item, null);
+                    await OnSaving(model, item);
                 }
             }
-
-            List<Dict> dts = null; //model.Schema.GetBatchSaveSql(p_entities);
+            var dts = model.Schema.GetBatchSaveSql(p_list);
 
             // 不需要保存
             if (dts == null || dts.Count == 0)
-                return true;
+                Throw.Msg(_unchangedMsg);
 
-            // 批量执行多个Sql
-            // 参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}
+            await BatchExec(dts);
+
+            // 实体事件、缓存
+            foreach (var entity in p_list.OfType<Entity>())
+            {
+                if (entity.IsChanged || entity.IsAdded)
+                    await ApplyEventAndCache(entity, model);
+            }
+
+            if (p_list is Table tbl)
+                tbl.DeletedRows?.Clear();
+            return true;
+        }
+
+        /// <summary>
+        /// 多表增删改
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        static async Task<bool> BatchSaveMultiTypes(IList p_list)
+        {
+            var dts = new List<Dict>();
+            string svc = null;
+            foreach (var item in p_list)
+            {
+                if (item is Entity entity)
+                {
+                    if (entity.IsAdded || entity.IsChanged)
+                    {
+                        var model = GetModel(item.GetType());
+                        if (model.OnSaving != null)
+                            await OnSaving(model, entity);
+
+                        if (svc == null)
+                            svc = model.Svc;
+
+                        dts.Add(model.Schema.GetSaveSql(entity));
+                    }
+                }
+                else if (item is IList clist && clist.Count > 0)
+                {
+                    Type tp = item.GetType();
+                    if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        // IList<Entity> 或 Table<Entity>
+                        var model = GetModel(tp.GetGenericArguments()[0]);
+                        if (model.OnSaving != null)
+                        {
+                            foreach (var ci in clist)
+                            {
+                                await OnSaving(model, ci);
+                            }
+                        }
+
+                        if (svc == null)
+                            svc = model.Svc;
+
+                        var cdts = model.Schema.GetBatchSaveSql(clist);
+                        if (cdts != null && cdts.Count > 0)
+                            dts.AddRange(cdts);
+                    }
+                }
+            }
+
+            // 不需要保存
+            if (dts == null || dts.Count == 0)
+                Throw.Msg(_unchangedMsg);
+
+            await BatchExec(dts);
+
+            foreach (var item in p_list)
+            {
+                if (item is Entity entity)
+                {
+                    if (entity.IsChanged || entity.IsAdded)
+                    {
+                        await ApplyEventAndCache(entity, GetModel(item.GetType()));
+                    }
+                }
+                else if (item is IList clist && clist.Count > 0)
+                {
+                    Type tp = item.GetType();
+                    if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        // IList<Entity> 或 Table<Entity>
+                        var model = GetModel(tp.GetGenericArguments()[0]);
+                        foreach (var row in clist.OfType<Entity>())
+                        {
+                            if (row.IsAdded || row.IsChanged)
+                            {
+                                await ApplyEventAndCache(row, model);
+                            }
+                        }
+
+                        if (item is Table tbl)
+                            tbl.DeletedRows?.Clear();
+                    }
+                }
+            }
+            return true;
+        }
+
+        static async Task ApplyEventAndCache(Entity p_entity, EntitySchema p_model)
+        {
+            if (p_entity.IsAdded || p_entity.IsChanged)
+            {
+                GatherSaveEvents(p_entity);
+                p_entity.AcceptChanges();
+            }
+
+            if (p_model.CacheHandler != null && !p_entity.IsAdded && p_entity.IsChanged)
+                await p_model.CacheHandler.Remove(p_entity);
+        }
+
+        /// <summary>
+        /// 批量执行多个Sql
+        /// 参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}
+        /// </summary>
+        /// <param name="p_dts"></param>
+        /// <returns></returns>
+        static async Task BatchExec(List<Dict> p_dts)
+        {
             var db = LobContext.Current.Db;
-            foreach (Dict dt in dts)
+            foreach (Dict dt in p_dts)
             {
                 string sql = (string)dt["text"];
                 if (dt["params"] is List<Dict> ls)
@@ -201,16 +329,20 @@ namespace Dt.Core
                     await db.Exec(sql, par);
                 }
             }
+        }
 
-            // 实体事件
-            foreach (TEntity entity in p_entities)
-            {
-                GatherSaveEvents(entity);
-                if (model.CacheHandler != null && !entity.IsAdded && entity.IsChanged)
-                    await model.CacheHandler.Remove(entity);
-                entity.AcceptChanges();
-            }
-            return true;
+        /// <summary>
+        /// 保存前外部校验，不合格在外部抛出异常
+        /// </summary>
+        /// <param name="p_model"></param>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        static async Task OnSaving(EntitySchema p_model, object p_entity)
+        {
+            if (p_model.OnSaving.ReturnType == typeof(Task))
+                await (Task)p_model.OnSaving.Invoke(p_entity, null);
+            else
+                p_model.OnSaving.Invoke(p_entity, null);
         }
         #endregion
 
@@ -225,70 +357,34 @@ namespace Dt.Core
             where TEntity : Entity
         {
             Throw.IfNull(p_entity, _saveError);
+
             var model = GetModel(typeof(TEntity));
-
-            // 删除前外部校验，不合格在外部抛出异常
             if (model.OnDeleting != null)
-            {
-                if (model.OnDeleting.ReturnType == typeof(Task))
-                    await (Task)model.OnDeleting.Invoke(p_entity, null);
-                else
-                    model.OnDeleting.Invoke(p_entity, null);
-            }
+                await OnDeleting(model, p_entity);
 
-            Dict dt = model.Schema.GetDeleteSql(new List<Row> { p_entity });
-            int cnt = await LobContext.Current.Db.Exec((string)dt["text"], ((List<Dict>)dt["params"])[0]);
-            if (cnt == 1)
-            {
-                // 删除实体事件
-                GatherDelEvents(p_entity);
-                // 删除缓存
-                if (model.CacheHandler != null)
-                    await model.CacheHandler.Remove(p_entity);
-            }
-            return cnt;
+            Dict dt = model.Schema.GetDeleteSql(new List<Entity> { p_entity });
+            return await BatchExecDelete(dt, new List<Entity> { p_entity }, model);
         }
 
         /// <summary>
-        /// 批量删除实体，同步删除缓存，依靠数据库的级联删除自动删除子实体
+        /// 批量删除实体，单表或多表，列表类型支持：
+        /// <para>Table&lt;Entity&gt;，单表删除</para>
+        /// <para>List&lt;Entity&gt;，单表删除</para>
+        /// <para>IList，多表删除，成员可为Entity,List&lt;Entity&gt;,Table&lt;Entity&gt;的混合</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_entities">实体列表</param>
+        /// <param name="p_list">待删除实体列表</param>
         /// <returns>实际删除行数</returns>
-        public static async Task<int> BatchDelete<TEntity>(IList<TEntity> p_entities)
-            where TEntity : Entity
+        public static Task<int> BatchDelete(IList p_list)
         {
-            Throw.If(p_entities == null || p_entities.Count == 0, _saveError);
-            var model = GetModel(typeof(TEntity));
+            Throw.If(p_list == null || p_list.Count == 0, _saveError);
 
-            // 删除前外部校验，不合格在外部抛出异常
-            if (model.OnDeleting != null)
+            Type tp = p_list.GetType();
+            if (tp.IsGenericType
+                && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
             {
-                foreach (var item in p_entities)
-                {
-                    if (model.OnDeleting.ReturnType == typeof(Task))
-                        await (Task)model.OnDeleting.Invoke(item, null);
-                    else
-                        model.OnDeleting.Invoke(item, null);
-                }
+                return BatchDeleteSameType(p_list);
             }
-
-            int cnt = 0;
-            Dict dt = model.Schema.GetDeleteSql(p_entities);
-            string sql = (string)dt["text"];
-            List<Dict> ls = (List<Dict>)dt["params"];
-            var db = LobContext.Current.Db;
-            for (int i = 0; i < p_entities.Count; i++)
-            {
-                if (await db.Exec(sql, ls[i]) == 1)
-                {
-                    cnt++;
-                    GatherDelEvents(p_entities[i]);
-                    if (model.CacheHandler != null)
-                        await model.CacheHandler.Remove(p_entities[i]);
-                }
-            }
-            return cnt;
+            return BatchDeleteMultiTypes(p_list);
         }
 
         /// <summary>
@@ -364,6 +460,113 @@ namespace Dt.Core
             return await LobContext.Current.Db.Exec(
                 $"delete from `{model.Schema.Name}` where {p_keyName}=@{p_keyName}",
                 new Dict { { p_keyName, p_keyVal } });
+        }
+
+        /// <summary>
+        /// 单表批量删除
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        static async Task<int> BatchDeleteSameType(IList p_list)
+        {
+            var model = GetModel(p_list.GetType().GetGenericArguments()[0]);
+            if (model.OnDeleting != null)
+            {
+                foreach (var item in p_list)
+                {
+                    await OnDeleting(model, item);
+                }
+            }
+
+            Dict dt = model.Schema.GetDeleteSql(p_list);
+            return await BatchExecDelete(dt, p_list, model);
+        }
+
+        /// <summary>
+        /// 多表批量删除
+        /// </summary>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        static async Task<int> BatchDeleteMultiTypes(IList p_list)
+        {
+            int cnt = 0;
+            foreach (var item in p_list)
+            {
+                if (item is Entity entity)
+                {
+                    var model = GetModel(item.GetType());
+                    if (model.OnDeleting != null)
+                        await OnDeleting(model, item);
+
+                    var ls = new List<Row> { entity };
+                    Dict dt = model.Schema.GetDeleteSql(ls);
+                    cnt += await BatchExecDelete(dt, ls, model);
+                }
+                else if (item is IList clist && clist.Count > 0)
+                {
+                    Type tp = item.GetType();
+                    if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        // IList<Entity> 或 Table<Entity>
+                        var model = GetModel(tp.GetGenericArguments()[0]);
+                        if (model.OnDeleting != null)
+                        {
+                            foreach (var ci in clist)
+                            {
+                                await OnDeleting(model, item);
+                            }
+                        }
+
+                        Dict dt = model.Schema.GetDeleteSql(clist);
+                        cnt += await BatchExecDelete(dt, clist, model);
+                    }
+                }
+            }
+            return cnt;
+        }
+
+        /// <summary>
+        /// 单表批量执行，运行sql删除、收集领域事件、同步缓存
+        /// </summary>
+        /// <param name="p_dt"></param>
+        /// <param name="p_list"></param>
+        /// <param name="p_model"></param>
+        /// <returns></returns>
+        static async Task<int> BatchExecDelete(Dict p_dt, IList p_list, EntitySchema p_model)
+        {
+            int cnt = 0;
+            string sql = (string)p_dt["text"];
+            List<Dict> ls = (List<Dict>)p_dt["params"];
+            var db = LobContext.Current.Db;
+
+            for (int i = 0; i < p_list.Count; i++)
+            {
+                if (await db.Exec(sql, ls[i]) == 1)
+                {
+                    cnt++;
+                    Entity entity = (Entity)p_list[i];
+                    // 删除实体事件
+                    GatherDelEvents(entity);
+                    // 删除缓存
+                    if (p_model.CacheHandler != null)
+                        await p_model.CacheHandler.Remove(entity);
+                }
+            }
+            return cnt;
+        }
+
+        /// <summary>
+        /// 删除前外部校验，不合格在外部抛出异常
+        /// </summary>
+        /// <param name="p_model"></param>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        static async Task OnDeleting(EntitySchema p_model, object p_entity)
+        {
+            if (p_model.OnDeleting.ReturnType == typeof(Task))
+                await (Task)p_model.OnDeleting.Invoke(p_entity, null);
+            else
+                p_model.OnDeleting.Invoke(p_entity, null);
         }
         #endregion
 

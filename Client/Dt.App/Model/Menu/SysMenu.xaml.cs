@@ -128,14 +128,13 @@ namespace Dt.App.Model
         async void AddMenu(bool p_isGroup)
         {
             var sel = _tv.Selected<Menu>();
-            var ids = await AtCm.NewIDAndSeq("sq_menu");
             Menu m = new Menu(
-                ID: ids[0],
+                ID: await AtCm.NewID(),
                 Name: p_isGroup ? "新组" : "新菜单",
                 Icon: p_isGroup ? "文件夹" : "文件",
                 IsGroup: p_isGroup,
                 ParentID: sel.ID > 0 ? (long?)sel.ID : null,
-                Dispidx: (int)ids[1],
+                Dispidx: await AtCm.NewSeq("sq_menu"),
                 Ctime: AtSys.Now,
                 Mtime: AtSys.Now);
             m.AddCell("parentname", sel.Name);

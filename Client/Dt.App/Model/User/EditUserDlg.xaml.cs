@@ -52,7 +52,7 @@ namespace Dt.App.Model
         {
             _fv.Data = new User(
                 // 3位标志用来识别用户类型，如管理者、消费者
-                ID: await AtCm.NewFlagID(0),
+                ID: await AtCm.NewID(0),
                 Name: "新用户");
         }
 

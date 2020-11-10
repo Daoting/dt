@@ -84,6 +84,19 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取修改的和新增的行列表
+        /// </summary>
+        public IEnumerable<Row> ChangedAndAddedRows
+        {
+            get
+            {
+                return from item in this
+                       where item.IsChanged || item.IsAdded
+                       select item;
+            }
+        }
+
+        /// <summary>
         /// 列结构集合
         /// </summary>
         public ColumnList Columns
@@ -400,7 +413,7 @@ namespace Dt.Core
         public void AcceptChanges()
         {
             _delayCheckChanges = true;
-            foreach (Row row in ChangedRows)
+            foreach (Row row in ChangedAndAddedRows)
             {
                 row.AcceptChanges();
             }

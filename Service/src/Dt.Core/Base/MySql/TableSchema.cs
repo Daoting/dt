@@ -390,19 +390,19 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows"></param>
         /// <returns></returns>
-        internal Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
-            where TEntity : Row
+        internal Dict GetDeleteSql(IList p_rows)
         {
             // 不再重复判断
             //if (p_rows == null || p_rows.Count == 0)
             //    throw new Exception(_saveError);
 
             Dict dtParams = new Dict();
+            var first = p_rows[0] as Row;
             StringBuilder whereVal = new StringBuilder();
             foreach (var col in PrimaryKey)
             {
                 // 检查是否包含主键
-                if (!p_rows[0].Contains(col.Name))
+                if (!first.Contains(col.Name))
                     throw new Exception(string.Format(_primaryError, p_rows[0].GetType().Name, col.Name));
 
                 if (whereVal.Length > 0)
@@ -412,7 +412,7 @@ namespace Dt.Core
                 whereVal.Append(col.Name);
 
                 // 主键可能已修改
-                dtParams[col.Name] = (from row in p_rows
+                dtParams[col.Name] = (from row in p_rows.OfType<Row>()
                                       select row.Cells[col.Name].OriginalVal).ToArray();
             }
 

@@ -129,36 +129,27 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取新ID
+        /// 获取新ID，默认无标志位
         /// </summary>
+        /// <param name="p_flag">取值范围0-7时，将产生含3位标志位的新ID，如userid采用标志位可识别出用户类型，默认无标志位</param>
         /// <returns></returns>
-        public long NewID()
+        public long NewID(int p_flag = -1)
         {
-            return Id.New();
+            if (p_flag < 0 || p_flag > 7)
+                return Id.New();
+            return Id.New(p_flag);
         }
 
         /// <summary>
-        /// 获取新ID和新序列值
+        /// 获取新序列值
         /// </summary>
         /// <param name="p_seqName">序列名称，不可为空</param>
-        /// <returns>返回新ID和新序列值列表</returns>
-        public async Task<List<long>> NewIDAndSeq(string p_seqName)
+        /// <returns>新序列值</returns>
+        public Task<int> NewSeq(string p_seqName)
         {
-            List<long> ls = new List<long>();
-            ls.Add(Id.New());
             if (!string.IsNullOrEmpty(p_seqName))
-                ls.Add(await new Db().GetScalar<int>($"select nextval('{p_seqName}')"));
-            return ls;
-        }
-
-        /// <summary>
-        /// 产生含3位标志位的新ID
-        /// </summary>
-        /// <param name="p_flag">ID标志，取值范围0-7</param>
-        /// <returns></returns>
-        public long NewFlagID(int p_flag)
-        {
-            return Id.New(p_flag);
+                return new Db().GetScalar<int>($"select nextval('{p_seqName}')");
+            return Task.FromResult(0);
         }
     }
 }

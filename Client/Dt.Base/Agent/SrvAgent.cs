@@ -122,43 +122,31 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取新ID
+        /// 获取新ID，默认无标志位
         /// </summary>
+        /// <param name="p_flag">取值范围0-7时，将产生含3位标志位的新ID，如userid采用标志位可识别出用户类型，默认无标志位</param>
         /// <returns></returns>
-        public static Task<long> NewID()
+        public static Task<long> NewID(int p_flag = -1)
         {
             return new UnaryRpc(
                 typeof(TSrv).Name,
-                "Da.NewID"
-            ).Call<long>();
-        }
-
-        /// <summary>
-        /// 获取新ID和新序列值
-        /// </summary>
-        /// <param name="p_seqName">序列名称，不可为空</param>
-        /// <returns>返回新ID和新序列值列表</returns>
-        public static Task<List<long>> NewIDAndSeq(string p_seqName)
-        {
-            return new UnaryRpc(
-                typeof(TSrv).Name,
-                "Da.NewIDAndSeq",
-                p_seqName
-            ).Call<List<long>>();
-        }
-
-        /// <summary>
-        /// 产生含3位标志位的新ID
-        /// </summary>
-        /// <param name="p_flag">ID标志，取值范围0-7</param>
-        /// <returns></returns>
-        public static Task<long> NewFlagID(int p_flag)
-        {
-            return new UnaryRpc(
-                typeof(TSrv).Name,
-                "Da.NewFlagID",
+                "Da.NewID",
                 p_flag
             ).Call<long>();
+        }
+
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name="p_seqName">序列名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        public static Task<int> NewSeq(string p_seqName)
+        {
+            return new UnaryRpc(
+                typeof(TSrv).Name,
+                "Da.NewSeq",
+                p_seqName
+            ).Call<int>();
         }
         #endregion
 

@@ -70,12 +70,11 @@ namespace Dt.App.Publish
 
         async void OnAddPost(object sender, Mi e)
         {
-            var ids = await AtPublish.NewIDAndSeq("sq_post");
             var post = new Post(
-                ID: ids[0],
+                ID: await AtPublish.NewID(),
                 Title: "新文章",
                 TempType: 0,
-                Dispidx: (int)ids[1],
+                Dispidx: await AtPublish.NewSeq("sq_post"),
                 CreatorID: AtUser.ID,
                 Creator: AtUser.Name,
                 Ctime: AtSys.Now);

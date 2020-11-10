@@ -58,7 +58,10 @@ namespace Dt.App.Workflow
         {
             _prc = new WfdPrc(
                 ID: await AtCm.NewID(),
-                Name: "新流程");
+                Name: "新流程",
+                IsLocked: true,
+                Dispidx: await AtCm.NewSeq("sq_wfd_prc"),
+                Ctime: AtSys.Now);
 
             var dt = new Dict { { "prcid", -1 } };
             _atvs = await Repo.Query<WfdAtv>("流程-编辑活动模板", dt);
@@ -109,14 +112,14 @@ namespace Dt.App.Workflow
             }
 
             _prc.Changed += (s, e) => UpdateSaveState();
-            _atvs.Changed += (s, e) => UpdateSaveState();
             _atvs.StartRecordDelRows();
-            _trss.Changed += (s, e) => UpdateSaveState();
+
             _trss.StartRecordDelRows();
+            _trss.CollectionChanged += (s, e) => UpdateSaveState();
 
             // 角色集合变化时
-            _atvRoles.CollectionChanged += (s, e) => UpdateSaveState();
             _atvRoles.StartRecordDelRows();
+            _atvRoles.CollectionChanged += (s, e) => UpdateSaveState();
 
             _sketch.His.Clear();
             _sketch.His.CmdChanged += OnSketchChanged;
@@ -132,9 +135,8 @@ namespace Dt.App.Workflow
             // _atvs和_trss集合变化会触发CmdChanged，无需重复判断
             IsChanged = _sketch.His.CanUndo
                 || _prc.IsChanged
-                || _atvs.IsChanged
-                || _trss.IsChanged
-                || _atvRoles.IsChanged
+                || _trss.ExistDeleted
+                || _trss.ExistAdded
                 || _atvRoles.ExistDeleted
                 || _atvRoles.ExistAdded;
         }
