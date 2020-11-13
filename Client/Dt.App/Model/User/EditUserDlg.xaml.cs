@@ -30,7 +30,7 @@ namespace Dt.App.Model
         {
             if (p_userID > 0)
             {
-                _fv.Data = await Repo.Get<User>("用户-编辑", new { id = p_userID });
+                _fv.Data = await AtCm.Get<User>("用户-编辑", new { id = p_userID });
             }
             else
             {
@@ -109,7 +109,7 @@ namespace Dt.App.Model
                 usr.Mtime = AtSys.Now;
             }
 
-            if (await Repo.Save(usr))
+            if (await AtCm.Save(usr))
             {
                 _needRefresh = true;
                 if (_miAdd.Visibility == Visibility.Visible)

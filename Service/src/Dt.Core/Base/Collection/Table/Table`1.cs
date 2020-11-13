@@ -9,6 +9,7 @@
 #region 引用命名
 using System;
 using System.Collections.Generic;
+using System.Linq;
 #endregion
 
 namespace Dt.Core
@@ -28,6 +29,21 @@ namespace Dt.Core
         {
             // 实体的无参数构造方法为private
             return (TEntity)Activator.CreateInstance(typeof(TEntity), true);
+        }
+
+        /// <summary>
+        /// 创建空Table
+        /// </summary>
+        /// <returns>空表</returns>
+        public static Table<TEntity> Create()
+        {
+            var model = EntitySchema.Get(typeof(TEntity));
+            var tbl = new Table<TEntity>();
+            foreach (var col in model.Schema.PrimaryKey.Concat(model.Schema.Columns))
+            {
+                tbl.Columns.Add(new Column(col.Name, col.Type));
+            }
+            return tbl;
         }
 
         /// <summary>

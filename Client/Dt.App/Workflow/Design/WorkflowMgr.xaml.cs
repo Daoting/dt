@@ -24,7 +24,7 @@ namespace Dt.App.Workflow
 
         async void LoadAll()
         {
-            _lv.Data = await Repo.Query<WfdPrc>("流程-所有流程模板");
+            _lv.Data = await AtCm.Query<WfdPrc>("流程-所有流程模板");
         }
 
         async void OnSearch(object sender, string e)
@@ -35,11 +35,11 @@ namespace Dt.App.Workflow
             }
             else if (e == "#最近修改")
             {
-                _lv.Data = await Repo.Query<WfdPrc>("流程-最近修改");
+                _lv.Data = await AtCm.Query<WfdPrc>("流程-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await Repo.Query<WfdPrc>("流程-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await AtCm.Query<WfdPrc>("流程-模糊查询", new { input = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -75,7 +75,7 @@ namespace Dt.App.Workflow
                 return;
             }
 
-            if (await Repo.DelByID<WfdPrc>(p_prc.ID))
+            if (await AtCm.DelByID<WfdPrc>(p_prc.ID))
             {
                 LoadAll();
             }

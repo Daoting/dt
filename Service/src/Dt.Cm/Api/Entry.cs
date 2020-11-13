@@ -52,7 +52,7 @@ namespace Dt.Cm
             }
 
             // 从缓存读取
-            var user = await Repo.GetByKey<User>("phone", p_phone);
+            var user = await _dp.GetByKey<User>("phone", p_phone);
             if (user == null || user.Pwd != p_pwd)
             {
                 res["valid"] = false;
@@ -96,7 +96,7 @@ namespace Dt.Cm
             res["valid"] = true;
 
             // 已注册
-            var user = await Repo.GetByKey<User>("phone", p_phone);
+            var user = await _dp.GetByKey<User>("phone", p_phone);
             if (user != null)
             {
                 res["userid"] = user.ID;
@@ -110,7 +110,7 @@ namespace Dt.Cm
 
             // 初次登录，创建账号，初始密码为手机号后4位
             user = User.CreateByPhone(p_phone);
-            await Repo.Save(user);
+            await _dp.Save(user);
 
             res["userid"] = user.ID;
             res["phone"] = p_phone;

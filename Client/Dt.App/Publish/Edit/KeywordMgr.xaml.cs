@@ -24,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await Repo.Query<Keyword>("发布-所有关键字");
+            _lv.Data = await AtPublish.Query<Keyword>("发布-所有关键字");
         }
 
         async void OnSearch(object sender, string e)
@@ -35,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await Repo.Query<Keyword>("发布-模糊查询关键字", new { id = $"%{e}%" });
+                _lv.Data = await AtPublish.Query<Keyword>("发布-模糊查询关键字", new { id = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -68,7 +68,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await Repo.Delete(key))
+            if (await AtPublish.Delete(key))
                 LoadAll();
         }
 

@@ -161,8 +161,8 @@ namespace Dt.Core
 
         static void ApplyConfig()
         {
-            Db.DefaultConnStr = _config.GetValue("Db", "");
-            Db.TraceSql = _config.GetValue("TraceSql", false);
+            MySqlAccess.DefaultConnStr = _config.GetValue("Db", "");
+            MySqlAccess.TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
         }
         #endregion

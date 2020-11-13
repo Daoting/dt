@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Caches;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
@@ -29,7 +28,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> RemoveUserRole(long p_userID, long p_roleID)
         {
-            if (await _.Db.Exec("用户-删除用户角色", new { userid = p_userID, roleid = p_roleID }) > 0)
+            if (await _dp.Delete(new Userrole(p_userID, p_roleID)))
             {
                 await new UserRoleCache().Remove(p_userID);
                 return true;
@@ -49,15 +48,19 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
+            List<Userrole> ls = new List<Userrole>();
             foreach (var rid in p_roleIDs)
             {
                 // 任何人不需要关联
                 if (rid != 1)
                 {
-                    if (await _.Db.Exec("用户-增加用户角色", new { userid = p_userID, roleid = rid }) == 0)
-                        return false;
+                    ls.Add(new Userrole(p_userID, rid));
                 }
             }
+
+            if (!await _dp.BatchSave(ls))
+                return false;
+
             await new UserRoleCache().Remove(p_userID);
             return true;
         }
@@ -75,11 +78,14 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
+            List<Userrole> ls = new List<Userrole>();
             foreach (var uid in p_userIDs)
             {
-                if (await _.Db.Exec("用户-增加用户角色", new { userid = uid, roleid = p_roleID }) == 0)
-                    return false;
+                ls.Add(new Userrole(uid, p_roleID));
             }
+
+            if (!await _dp.BatchSave(ls))
+                return false;
 
             var cache = new UserRoleCache();
             foreach (var uid in p_userIDs)
@@ -94,17 +100,15 @@ namespace Dt.Cm
         /// </summary>
         /// <param name="p_roleID"></param>
         /// <returns></returns>
-        public async Task<int> DeleteRole(long p_roleID)
+        public async Task<bool> DeleteRole(long p_roleID)
         {
             var cache = new UserRoleCache();
-            var ls = await _.Db.EachItem<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
+            var ls = await _dp.EachItem<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
             foreach (var uid in ls)
             {
                 await cache.Remove(uid);
             }
-
-            Role role = new Role(p_roleID);
-            return await Repo.Delete(role);
+            return await _dp.Delete(new Role(p_roleID));
         }
     }
 }

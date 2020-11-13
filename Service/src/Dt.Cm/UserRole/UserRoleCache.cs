@@ -24,7 +24,7 @@ namespace Dt.Cm
             string roles = await _cache.Get<string>(p_userID.ToString());
             if (string.IsNullOrEmpty(roles))
             {
-                var ls = await LobContext.Current.Db.EachItem<long>("select roleid from cm_userrole where userid=@userid", new { userid = p_userID });
+                var ls = await Bag.Dp.EachItem<long>("select roleid from cm_userrole where userid=@userid", new { userid = p_userID });
                 StringBuilder sb = new StringBuilder();
                 // 任何人
                 sb.Append("1");

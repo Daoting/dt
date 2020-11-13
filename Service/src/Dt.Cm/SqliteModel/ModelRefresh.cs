@@ -85,11 +85,11 @@ namespace Dt.Cm
             string dbFile = System.IO.Path.Combine(path, p_event.Version + ".db");
             var handler = Glb.GetSvc<SqliteModelHandler>();
 
-            bool trace = Db.TraceSql;
-            Db.TraceSql = false;
+            bool trace = MySqlAccess.TraceSql;
+            MySqlAccess.TraceSql = false;
             try
             {
-                Db db = new Db();
+                MySqlAccess db = new MySqlAccess();
                 using (SqliteConnectionEx conn = new SqliteConnectionEx($"Data Source={dbFile}"))
                 {
                     conn.Open();
@@ -155,7 +155,7 @@ namespace Dt.Cm
             {
                 // 移除标志
                 SqliteModelHandler.Refreshing = false;
-                Db.TraceSql = trace;
+                MySqlAccess.TraceSql = trace;
             }
 
             // 删除历史文件

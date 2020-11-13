@@ -34,7 +34,7 @@ namespace Dt.Msg
         public static Task Register(ClientInfo p_client)
         {
             Throw.IfNull(p_client);
-            long userID = p_client.Context.UserID;
+            long userID = p_client.UserID;
 
             // 通知已注册的客户端关闭会话
             // 同一用户在一个服务副本最后注册的有效，在不同副本时都有效！！！
@@ -45,18 +45,18 @@ namespace Dt.Msg
                 {
                     // 同一设备多次注册
                     old.Exit();
-                    Log.Debug($"重复注册：{userID}  旧连接({old.Context.Context.Connection.Id})  新连接({p_client.Context.Context.Connection.Id})");
+                    Log.Debug($"重复注册：{userID}  旧连接({old.Context.Connection.Id})  新连接({p_client.Context.Connection.Id})");
                 }
                 else
                 {
                     old.StopPush();
                     old.Close();
-                    Log.Debug($"替换：{userID}  旧连接({old.Context.Context.Connection.Id})  新连接({p_client.Context.Context.Connection.Id})");
+                    Log.Debug($"替换：{userID}  旧连接({old.Context.Connection.Id})  新连接({p_client.Context.Connection.Id})");
                 }
             }
             else
             {
-                Log.Debug($"+{p_client.Context.Context.Connection.Id}：{userID}  ");
+                Log.Debug($"+{p_client.Context.Connection.Id}：{userID}  ");
             }
 
             _all[userID] = p_client;

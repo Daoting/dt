@@ -19,7 +19,7 @@ namespace Dt.App
     /// <summary>
     /// 内核模型服务Api代理类（自动生成）
     /// </summary>
-    public class AtCm : SrvAgent<cm>
+    public class AtCm : DataProvider<cm>
     {
         #region Entry
         /// <summary>
@@ -135,13 +135,13 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_roleID"></param>
         /// <returns></returns>
-        public static Task<int> DeleteRole(long p_roleID)
+        public static Task<bool> DeleteRole(long p_roleID)
         {
             return new UnaryRpc(
                 "cm",
                 "UserRoleApi.DeleteRole",
                 p_roleID
-            ).Call<int>();
+            ).Call<bool>();
         }
         #endregion
     }

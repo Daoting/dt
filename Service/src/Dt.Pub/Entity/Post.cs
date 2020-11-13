@@ -19,7 +19,7 @@ namespace Dt.Pub
     }
 
     #region 自动生成
-    [Tbl("pub_post", "pub")]
+    [Tbl("pub_post")]
     public partial class Post : Entity
     {
         #region 构造方法

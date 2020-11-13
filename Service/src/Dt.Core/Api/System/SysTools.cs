@@ -20,7 +20,7 @@ namespace Dt.Core
     /// 所有服务内部使用的工具Api
     /// </summary>
     [Api(GroupName = "系统工具", AgentMode = AgentMode.Generic)]
-    public class SysTools : BaseApi
+    public class SysTools
     {
         /// <summary>
         /// 重新加载Cache.db中的sql语句
@@ -67,7 +67,7 @@ namespace Dt.Core
 
             // Tbl标签
             AppendTabSpace(sb, 1);
-            sb.Append($"[Tbl(\"{tblName}\", \"{Glb.SvcName}\")]");
+            sb.Append($"[Tbl(\"{tblName}\")]");
 
             sb.AppendLine();
             AppendTabSpace(sb, 1);

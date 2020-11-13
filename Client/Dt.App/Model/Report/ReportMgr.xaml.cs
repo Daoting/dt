@@ -24,7 +24,7 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lv.Data = await Repo.Query<Rpt>("报表-所有");
+            _lv.Data = await AtCm.Query<Rpt>("报表-所有");
         }
 
         async void OnItemClick(object sender, ItemClickArgs e)
@@ -38,7 +38,7 @@ namespace Dt.App.Model
                 rpt.RejectChanges();
             }
 
-            _fv.Data = await Repo.Get<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
+            _fv.Data = await AtCm.Get<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
             SelectTab("编辑");
         }
 
@@ -50,11 +50,11 @@ namespace Dt.App.Model
             }
             else if (e == "#最近修改")
             {
-                _lv.Data = await Repo.Query<Rpt>("报表-最近修改");
+                _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await Repo.Query<Rpt>("报表-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await AtCm.Query<Rpt>("报表-模糊查询", new { input = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -88,9 +88,9 @@ namespace Dt.App.Model
                 rpt["mtime"] = AtSys.Now;
             }
 
-            if (await Repo.Save(rpt))
+            if (await AtCm.Save(rpt))
             {
-                _lv.Data = await Repo.Query<Rpt>("报表-最近修改");
+                _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
             }
         }
 
@@ -124,7 +124,7 @@ namespace Dt.App.Model
             {
                 _fv.Data = null;
             }
-            else if (await Repo.DelByID<Rpt>(rpt.ID))
+            else if (await AtCm.DelByID<Rpt>(rpt.ID))
             {
                 _fv.Data = null;
                 LoadAll();

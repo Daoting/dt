@@ -24,7 +24,7 @@ namespace Dt.Core
     /// <summary>
     /// 内部提供给 admin.html 页面的Api
     /// </summary>
-    public class Admin : BaseApi
+    public class Admin
     {
         #region Admin页面
         /// <summary>
@@ -251,7 +251,7 @@ namespace Dt.Core
             if (mode == AgentMode.Default)
                 serviceName = $"\"{Glb.SvcName}\"";
             else if (mode == AgentMode.Generic)
-                serviceName = "typeof(TSrv).Name";
+                serviceName = "typeof(TSvc).Name";
             else
                 serviceName = "p_serviceName";
 

@@ -23,7 +23,7 @@ namespace Dt.Core.Rpc
         internal static bool TraceRpc;
 
         protected readonly ApiInvoker _invoker;
-        protected BaseApi _tgt;
+        protected object _tgt;
         #endregion
 
         public RpcHandler(ApiInvoker p_invoker)
@@ -38,10 +38,10 @@ namespace Dt.Core.Rpc
         public Task<bool> Call()
         {
             // 创建服务实例
-            _tgt = Glb.GetSvc(_invoker.Api.Method.DeclaringType) as BaseApi;
+            _tgt = Glb.GetSvc(_invoker.Api.Method.DeclaringType);
             if (_tgt == null)
             {
-                var msg = $"类型{_invoker.Api.Method.DeclaringType.Name}未继承BaseApi！";
+                var msg = $"无法创建服务实例，类型{_invoker.Api.Method.DeclaringType.Name}！";
                 _invoker.Log.Warning(msg);
                 _ = _invoker.Response(ApiResponseType.Error, 0, msg);
                 return Task.FromResult(false);

@@ -49,7 +49,7 @@ namespace Dt.App.Model
             // 记录已选择的节点
             var m = _tv.Selected<Menu>();
             long id = m == null ? -1 : m.ID;
-            _tv.Data = await Repo.Query<Menu>("菜单-完整树");
+            _tv.Data = await AtCm.Query<Menu>("菜单-完整树");
 
             object select = null;
             if (id > 0)
@@ -65,7 +65,7 @@ namespace Dt.App.Model
         {
             var id = e.Row.ID;
             if (id > 0)
-                _fv.Data = await Repo.Get<Menu>("菜单-id菜单项", new { id = id });
+                _fv.Data = await AtCm.Get<Menu>("菜单-id菜单项", new { id = id });
             else
                 _fv.Data = _tv.FixedRoot;
             NaviTo("菜单项,菜单授权");
@@ -111,7 +111,7 @@ namespace Dt.App.Model
             else
             {
                 _mRole.IsEnabled = true;
-                _lvRole.Data = await Repo.Query<RoleMenu>("菜单-关联的角色", new { menuid = m.ID });
+                _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = m.ID });
             }
         }
 
@@ -146,7 +146,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name"))
                 return;
 
-            if (await Repo.Save(_fv.Data.To<Menu>()))
+            if (await AtCm.Save(_fv.Data.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
@@ -182,7 +182,7 @@ namespace Dt.App.Model
                 }
             }
 
-            if (await Repo.Delete(p_row))
+            if (await AtCm.Delete(p_row))
             {
                 long id = p_row.ID;
                 Row tvRow = (from tr in (Table)_tv.Data
@@ -222,14 +222,14 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(row.ID, menuID));
                 }
-                if (ls.Count > 0 && await Repo.BatchSave(ls))
-                    _lvRole.Data = await Repo.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                    _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
             }
         }
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            if (await Repo.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
+            if (await AtCm.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
                 _lvRole.DeleteSelection();
         }
 
@@ -237,7 +237,7 @@ namespace Dt.App.Model
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await Repo.Query<Menu>("菜单-分组树");
+                ((CTree)sender).Data = await AtCm.Query<Menu>("菜单-分组树");
             }
         }
 
@@ -248,7 +248,7 @@ namespace Dt.App.Model
                 return;
 
             var tgt = _tv.GetTopBrother(src) as Menu;
-            if (tgt != null && await Repo.ExchangeDispidx(src, tgt))
+            if (tgt != null && await AtCm.ExchangeDispidx(src, tgt))
                 LoadTreeData();
         }
 
@@ -259,7 +259,7 @@ namespace Dt.App.Model
                 return;
 
             var tgt = _tv.GetFollowingBrother(src) as Menu;
-            if (tgt != null && await Repo.ExchangeDispidx(src, tgt))
+            if (tgt != null && await AtCm.ExchangeDispidx(src, tgt))
                 LoadTreeData();
         }
 

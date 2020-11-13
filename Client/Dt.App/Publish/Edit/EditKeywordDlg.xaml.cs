@@ -26,7 +26,7 @@ namespace Dt.App.Publish
         public async Task<bool> Show(Keyword p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await Repo.GetByID<Keyword>(p_keyword.ID);
+                _fv.Data = await AtPublish.GetByID<Keyword>(p_keyword.ID);
             else
                 _fv.Data = Create();
             await ShowAsync();
@@ -46,7 +46,7 @@ namespace Dt.App.Publish
             if (_fv.ExistNull("ID"))
                 return;
 
-            if (await Repo.Save(_fv.Data.To<Keyword>()))
+            if (await AtPublish.Save(_fv.Data.To<Keyword>()))
             {
                 _needRefresh = true;
                 _fv.Data = Create();

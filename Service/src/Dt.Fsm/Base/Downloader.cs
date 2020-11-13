@@ -49,7 +49,7 @@ namespace Dt.Fsm
             }
 
             Log.Information("下载：" + p_path);
-            await new Db().Exec("增加下载次数", new { path = p_path });
+            await new MySqlAccess().Exec("增加下载次数", new { path = p_path });
 
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";

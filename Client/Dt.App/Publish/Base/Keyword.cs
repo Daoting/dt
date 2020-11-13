@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Dt.App.Publish
 {
     #region 自动生成
-    [Tbl("pub_keyword", "pub")]
+    [Tbl("pub_keyword")]
     public partial class Keyword : Entity
     {
         #region 构造方法

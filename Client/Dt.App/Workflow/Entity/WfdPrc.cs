@@ -9,12 +9,90 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Workflow
 {
+    public partial class WfdPrc
+    {
+        public static async Task<WfdPrc> New()
+        {
+            var prc = new WfdPrc(
+                ID: await AtCm.NewID(),
+                Name: "新流程",
+                IsLocked: true,
+                Dispidx: await AtCm.NewSeq("sq_wfd_prc"),
+                Ctime: AtSys.Now);
+
+            prc.Atvs = Table<WfdAtv>.Create();
+            prc.Trss = Table<WfdTrs>.Create();
+            prc.AtvRoles = Table<WfdAtvrole>.Create();
+            prc.AttachEvent();
+            return prc;
+        }
+
+        public static async Task<WfdPrc> Get(long p_id)
+        {
+            var dt = new Dict { { "prcid", p_id } };
+            var prc = await AtCm.Get<WfdPrc>("流程-编辑流程模板", dt);
+            prc.Atvs = await AtCm.Query<WfdAtv>("流程-编辑活动模板", dt);
+            prc.Trss = await AtCm.Query<WfdTrs>("流程-编辑迁移模板", dt);
+            prc.AtvRoles = await AtCm.Query<WfdAtvrole>("流程-编辑活动授权", dt);
+            prc.AttachEvent();
+            return prc;
+        }
+
+        public event EventHandler Modified;
+
+        public Table<WfdAtv> Atvs { get; private set; }
+
+        public Table<WfdTrs> Trss { get; private set; }
+
+        public Table<WfdAtvrole> AtvRoles { get; private set; }
+
+        public bool IsModified
+        {
+            get
+            {
+                // Atvs和Trss集合变化会触发CmdChanged，无需重复判断
+                return IsChanged
+                    || Trss.ExistDeleted
+                    || Trss.ExistAdded
+                    || AtvRoles.ExistDeleted
+                    || AtvRoles.ExistAdded;
+            }
+        }
+
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+        }
+
+        void AttachEvent()
+        {
+            Changed += (s, e) => OnModified();
+            Atvs.StartRecordDelRows();
+
+            Trss.StartRecordDelRows();
+            Trss.CollectionChanged += (s, e) => OnModified();
+
+            AtvRoles.StartRecordDelRows();
+            AtvRoles.CollectionChanged += (s, e) => OnModified();
+        }
+
+        void OnModified()
+        {
+            Modified?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
     #region 自动生成
-    [Tbl("cm_wfd_prc", "cm")]
+    [Tbl("cm_wfd_prc")]
     public partial class WfdPrc : Entity
     {
         #region 构造方法

@@ -28,7 +28,7 @@ namespace Dt.App.Model
         public async Task<bool> Show(long p_id)
         {
             if (p_id > 0)
-                _fv.Data = await Repo.Get<Role>("角色-编辑", new { id = p_id });
+                _fv.Data = await AtCm.Get<Role>("角色-编辑", new { id = p_id });
             else
                 CreateRole();
             await ShowAsync();
@@ -55,7 +55,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await Repo.Save(role))
+            if (await AtCm.Save(role))
             {
                 _needRefresh = true;
                 CreateRole();

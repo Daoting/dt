@@ -52,7 +52,7 @@ namespace Dt.Sample
     }
 
     #region 自动生成
-    [Tbl("pub_my", "pub")]
+    [Tbl("pub_my")]
     public partial class MyEntity : Entity
     {
         #region 构造方法

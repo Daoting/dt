@@ -19,7 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using static Dt.Core.Db;
+using static Dt.Core.MySqlAccess;
 #endregion
 
 namespace Dt.Cm

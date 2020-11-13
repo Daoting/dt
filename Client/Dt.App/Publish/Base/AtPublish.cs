@@ -18,7 +18,7 @@ namespace Dt.App.Publish
     /// <summary>
     /// 发布服务Api代理类（自动生成）
     /// </summary>
-    public class AtPublish : SrvAgent<pub>
+    public class AtPublish : DataProvider<pub>
     {
         #region Publish
         public static Task<string> SavePost(Row p_post)

@@ -20,41 +20,41 @@ namespace Dt.Core
     /// 功能测试Api
     /// </summary>
     [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
-    public class TestEventBus : BaseApi
+    public class TestEventBus
     {
         public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {
-            _.RemoteEB.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
+            Bag.RemoteEB.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
         }
 
         public void Multicast(string p_svcName)
         {
-            _.RemoteEB.Multicast(new TestEventData(), p_svcName);
+            Bag.RemoteEB.Multicast(new TestEventData(), p_svcName);
         }
 
         public void Push(string p_svcName)
         {
-            _.RemoteEB.Push(new TestEventData(), p_svcName);
+            Bag.RemoteEB.Push(new TestEventData(), p_svcName);
         }
 
         public void PushFixed(string p_svcID)
         {
-            _.RemoteEB.PushFixed(new TestEventData(), p_svcID);
+            Bag.RemoteEB.PushFixed(new TestEventData(), p_svcID);
         }
 
         public void PushGenericEvent(string p_name)
         {
-            _.RemoteEB.Multicast(new GenericEvent<EventData>(new EventData { Name = p_name }));
+            Bag.RemoteEB.Multicast(new GenericEvent<EventData>(new EventData { Name = p_name }));
         }
 
         public void LocalPublish()
         {
-            _.LocalEB.Publish(new KesEvent());
+            Bag.LocalEB.Publish(new KesEvent());
         }
 
         public Task<string> LocalCall(string p_name)
         {
-            return _.LocalEB.Call(new UyEvent { Name = p_name });
+            return Bag.LocalEB.Call(new UyEvent { Name = p_name });
         }
 
         public string TestLoadBalance()

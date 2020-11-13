@@ -14,7 +14,7 @@ using System;
 namespace Dt.App.Workflow
 {
     #region 自动生成
-    [Tbl("cm_wfd_atvrole", "cm")]
+    [Tbl("cm_wfd_atvrole")]
     public partial class WfdAtvrole : Entity
     {
         #region 构造方法

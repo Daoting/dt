@@ -56,7 +56,7 @@ namespace Dt.App.Model
                 _rpt["mtime"] = AtSys.Now;
             }
 
-            await Repo.Save(_rpt);
+            await AtCm.Save(_rpt);
         }
     }
 }

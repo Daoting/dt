@@ -14,7 +14,7 @@ using System;
 namespace Dt.App.Model
 {
     #region 自动生成
-    [Tbl("cm_user", "cm")]
+    [Tbl("cm_user")]
     public partial class User : Entity
     {
         #region 构造方法

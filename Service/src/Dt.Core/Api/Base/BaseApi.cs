@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Serilog;
 #endregion
 
 namespace Dt.Core
@@ -17,8 +18,13 @@ namespace Dt.Core
     public abstract class BaseApi
     {
         /// <summary>
-        /// 业务线上下文
+        /// 数据提供者
         /// </summary>
-        protected readonly LobContext _ = LobContext.Current;
+        protected DataProvider _dp = Bag.Dp;
+
+        /// <summary>
+        /// 日志对象，日志中比静态Log类多出Api名称和当前UserID
+        /// </summary>
+        protected ILogger Log => Bag.Log;
     }
 }

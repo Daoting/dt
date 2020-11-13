@@ -14,7 +14,7 @@ using System;
 namespace Dt.App.File
 {
     #region 自动生成
-    [Tbl("cm_pubfile", "cm")]
+    [Tbl("cm_pubfile")]
     public partial class Pubfile : Entity
     {
         #region 构造方法

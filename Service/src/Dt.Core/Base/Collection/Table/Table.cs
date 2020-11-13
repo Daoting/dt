@@ -141,6 +141,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 根据表名创建空Table
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public static Table Create(string p_tblName)
+        {
+            Throw.IfNullOrEmpty(p_tblName);
+            Table tbl = new Table();
+#if SERVER
+            var schema = DbSchema.GetTableSchema(p_tblName);
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                tbl._columns.Add(new Column(col.Name, col.Type));
+            }
+#else
+            foreach (var col in AtLocal.QueryColumns(p_tblName))
+            {
+                tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));
+            }
+#endif
+            return tbl;
+        }
+
+        /// <summary>
         /// 通过复制创建空Table（不复制数据！）
         /// </summary>
         /// <param name="p_tbl"></param>
@@ -310,6 +334,19 @@ namespace Dt.Core
                 }
             }
             return row;
+        }
+
+        /// <summary>
+        /// 创建独立行并设置初始值，已设置IsAdded标志！参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
+        /// <returns>返回独立行</returns>
+        public static Row NewRow(string p_tblName, object p_init = null)
+        {
+            return Create(p_tblName).NewRow(p_init);
         }
 
         /// <summary>

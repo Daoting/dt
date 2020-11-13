@@ -27,7 +27,7 @@ namespace Dt.App.Publish
         #region 文章列表
         async void LoadAll()
         {
-            _lvPost.Data = await Repo.Query<Post>("文章-管理列表");
+            _lvPost.Data = await AtPublish.Query<Post>("文章-管理列表");
         }
 
         void OnPostClick(object sender, ItemClickArgs e)
@@ -41,7 +41,7 @@ namespace Dt.App.Publish
 
         async void OnSearch(object sender, string e)
         {
-            _lvPost.Data = await Repo.Query<Post>("文章-模糊查询", new { input = $"%{e}%" });
+            _lvPost.Data = await AtPublish.Query<Post>("文章-模糊查询", new { input = $"%{e}%" });
         }
         #endregion
 
@@ -53,7 +53,7 @@ namespace Dt.App.Publish
 
         async void LoadPost(long p_id)
         {
-            _fv.Data = await Repo.Get<Post>("文章-编辑", new { id = p_id });
+            _fv.Data = await AtPublish.Get<Post>("文章-编辑", new { id = p_id });
             LoadKeyword(p_id);
             LoadAlbum(p_id);
         }
@@ -126,7 +126,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await Repo.Delete(post))
+            if (await AtPublish.Delete(post))
             {
                 LoadAll();
                 _fv.Data = null;
@@ -159,7 +159,7 @@ namespace Dt.App.Publish
         async void OnDelPostKeyword(object sender, Mi e)
         {
             Postkeyword pk = new Postkeyword(PostID: _fv.Row.ID, Keyword: e.Row.Str(0));
-            if (await Repo.Delete(pk))
+            if (await AtPublish.Delete(pk))
                 LoadKeyword(_fv.Row.ID);
         }
 
@@ -175,7 +175,7 @@ namespace Dt.App.Publish
         async void OnDelPostAlbum(object sender, Mi e)
         {
             var pa = new Postalbum(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
-            if (await Repo.Delete(pa))
+            if (await AtPublish.Delete(pa))
                 LoadAlbum(_fv.Row.ID);
         }
 

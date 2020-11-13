@@ -14,7 +14,7 @@ using System;
 namespace Dt.App.Model
 {
     #region 自动生成
-    [Tbl("cm_rolemenu", "cm")]
+    [Tbl("cm_rolemenu")]
     public partial class RoleMenu : Entity
     {
         #region 构造方法

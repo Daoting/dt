@@ -429,6 +429,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 选择所有数据的sql
+        /// </summary>
+        /// <returns></returns>
+        internal string GetSelectAllSql()
+        {
+            return $"select * from `{Name}`";
+        }
+
+        /// <summary>
         /// 将纵向保存的列值转换成横向保存的列值。
         /// </summary>
         /// <param name="p_parm">dict[string,array]</param>

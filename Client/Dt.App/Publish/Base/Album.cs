@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Dt.App.Publish
 {
     #region 自动生成
-    [Tbl("pub_album", "pub")]
+    [Tbl("pub_album")]
     public partial class Album : Entity
     {
         #region 构造方法

@@ -171,7 +171,7 @@ namespace Dt.Core
         {
             try
             {
-                var ls = new Db().EachRow($"select id,`sql` from {Glb.SvcName}_sql").Result;
+                var ls = new MySqlAccess().EachRow($"select id,`sql` from {Glb.SvcName}_sql").Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");
@@ -260,7 +260,7 @@ namespace Dt.Core
 
             // 键名不包含空格！！！
             if (!string.IsNullOrEmpty(p_keyOrSql))
-                return new Db().GetScalar<string>($"select `sql` from {Glb.SvcName}_sql where id='{p_keyOrSql}'").Result;
+                return new MySqlAccess().GetScalar<string>($"select `sql` from {Glb.SvcName}_sql where id='{p_keyOrSql}'").Result;
             return null;
         }
 
@@ -306,7 +306,7 @@ namespace Dt.Core
             {
                 // 提取Api
                 ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
-                if (rpcAttr != null && typeof(BaseApi).IsAssignableFrom(type))
+                if (rpcAttr != null)
                 {
                     ExtractApi(type, rpcAttr, builder);
                     continue;

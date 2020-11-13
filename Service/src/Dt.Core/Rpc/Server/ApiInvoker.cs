@@ -104,7 +104,8 @@ namespace Dt.Core.Rpc
             if (Api.CallMode != ApiCallMode.Unary)
                 await RpcServerKit.WriteHeartbeat(Context.Response.BodyWriter);
 
-            LobContext lc = new LobContext(this);
+            // 创建整个http请求期间有效的数据包，提供不同位置共享对象
+            Bag bag = new Bag(this);
             bool isSuc = true;
             switch (Api.CallMode)
             {
@@ -122,7 +123,7 @@ namespace Dt.Core.Rpc
                     break;
             }
             // Api调用结束后释放资源
-            await lc.Close(isSuc);
+            await bag.Close(isSuc);
         }
 
         /// <summary>

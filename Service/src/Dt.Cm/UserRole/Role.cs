@@ -13,7 +13,7 @@ using Dt.Core;
 namespace Dt.Cm
 {
     #region 自动生成
-    [Tbl("cm_role", "cm")]
+    [Tbl("cm_role")]
     public partial class Role : Entity
     {
         #region 构造方法

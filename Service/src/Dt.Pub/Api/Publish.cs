@@ -79,7 +79,7 @@ namespace Dt.Pub
                 }
             }
 
-            bool suc = await Repo.Save(p_post);
+            bool suc = await _dp.Save(p_post);
             Throw.If(!suc, "文章保存失败");
             return p_post.Url;
         }

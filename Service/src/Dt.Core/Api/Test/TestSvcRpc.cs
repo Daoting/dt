@@ -18,7 +18,7 @@ namespace Dt.Core
     /// 服务之间Rpc测试
     /// </summary>
     [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
-    public class TestSvcRpc : BaseApi
+    public class TestSvcRpc
     {
         public Task<string> GetString()
         {

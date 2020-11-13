@@ -26,7 +26,7 @@ namespace Dt.App.Model
         public async Task<bool> Show(string p_id)
         {
             if (!string.IsNullOrEmpty(p_id))
-                _fv.Data = await Repo.GetByID<Prv>(p_id);
+                _fv.Data = await AtCm.GetByID<Prv>(p_id);
             else
                 CreatePrv();
             await ShowAsync();
@@ -51,7 +51,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await Repo.Save(prv))
+            if (await AtCm.Save(prv))
             {
                 _needRefresh = true;
                 CreatePrv();

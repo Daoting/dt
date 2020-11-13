@@ -27,7 +27,7 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lvPrv.Data = await Repo.Query<Prv>("权限-所有");
+            _lvPrv.Data = await AtCm.Query<Prv>("权限-所有");
         }
 
         void OnNaviToSearch(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace Dt.App.Model
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lvPrv.Data = await Repo.Query<Prv>("权限-模糊查询", new { id = $"%{e}%" });
+                _lvPrv.Data = await AtCm.Query<Prv>("权限-模糊查询", new { id = $"%{e}%" });
             }
             NaviTo("权限列表");
         }
@@ -69,7 +69,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await Repo.Delete(prv))
+            if (await AtCm.Delete(prv))
                 LoadAll();
         }
 
@@ -105,7 +105,7 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(row.ID, prvID));
                 }
-                if (ls.Count > 0 && await Repo.BatchSave(ls))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
                     RefreshRelation(prvID);
             }
         }
@@ -115,7 +115,7 @@ namespace Dt.App.Model
             string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             var rp = new RolePrv(_lvRole.SelectedRow.Long("roleid"), prvID);
             rp.AcceptChanges();
-            if (await Repo.Delete(rp))
+            if (await AtCm.Delete(rp))
                 RefreshRelation(prvID);
         }
     }

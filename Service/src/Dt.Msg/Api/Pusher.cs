@@ -22,7 +22,7 @@ namespace Dt.Msg
     /// 消息推送Api
     /// </summary>
     [Api]
-    public class Pusher : BaseApi
+    public class Pusher
     {
         /// <summary>
         /// 客户端注册在线推送
@@ -32,7 +32,7 @@ namespace Dt.Msg
         /// <returns></returns>
         public async Task Register(Dict p_deviceInfo, ResponseWriter p_writer)
         {
-            var ci = new ClientInfo(_, p_deviceInfo, p_writer);
+            var ci = new ClientInfo(p_deviceInfo, p_writer);
             // 注册新会话，注销同一用户的旧会话，向新会话发送离线信息
             await Online.Register(ci);
 
@@ -41,15 +41,15 @@ namespace Dt.Msg
             { }
 
             // 推送结束，删除会话
-            var curClient = Online.GetClient(_.UserID);
+            var curClient = Online.GetClient(ci.UserID);
             if (curClient != null && curClient == ci)
             {
                 // 必须比较Online中该用户的会话是否与当前会话相同！
                 // 注册新会话时，若需要注销旧会话，存在删除新会话的可能！
-                Online.RemoveClient(_.UserID);
+                Online.RemoveClient(ci.UserID);
             }
 
-            Log.Debug("离线：" + _.UserID);
+            Log.Debug("离线：" + ci.UserID);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Dt.Msg
         /// <returns></returns>
         public Task Unregister()
         {
-            ClientInfo ci = Online.GetClient(_.UserID);
+            ClientInfo ci = Online.GetClient(Bag.UserID);
             if (ci != null)
             {
                 ci.Close();

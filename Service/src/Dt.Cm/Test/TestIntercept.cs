@@ -58,7 +58,7 @@ namespace Dt.Cm
 
         public virtual Task<string> GetSql()
         {
-            return _.Db.GetScalar<string>($"select `sql` from {Glb.SvcName}_sql");
+            return _dp.GetScalar<string>($"select `sql` from {Glb.SvcName}_sql");
         }
     }
 
@@ -71,8 +71,6 @@ namespace Dt.Cm
 
         public async void Intercept(IInvocation p_invocation)
         {
-            var lc = LobContext.Current;
-
             // 只拦截一次
             if (isIntercepted)
             {
@@ -82,7 +80,7 @@ namespace Dt.Cm
             }
 
             isIntercepted = true;
-            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + lc.UserID);
+            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + Bag.UserID);
             var type = p_invocation.Method.ReturnType;
             try
             {

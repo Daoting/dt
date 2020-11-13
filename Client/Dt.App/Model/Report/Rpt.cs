@@ -14,7 +14,7 @@ using System;
 namespace Dt.App.Model
 {
     #region 自动生成
-    [Tbl("cm_rpt", "cm")]
+    [Tbl("cm_rpt")]
     public partial class Rpt : Entity
     {
         #region 构造方法

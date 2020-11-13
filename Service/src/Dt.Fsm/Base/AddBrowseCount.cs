@@ -35,7 +35,7 @@ namespace Dt.Fsm
             {
                 var str = Path.Combine(Cfg.Root, path.TrimStart('/'));
                 if (File.Exists(str))
-                    await new Db().Exec("增加下载次数", new { path = path });
+                    await new MySqlAccess().Exec("增加下载次数", new { path = path });
             }
             await _next(p_context);
         }

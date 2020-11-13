@@ -79,7 +79,7 @@ namespace Dt.App.File
                     ExtName: p_row.Str("extname"),
                     Info: p_row.Str("info"),
                     Ctime: p_row.Date("ctime"));
-            return Repo.Save(pf, false);
+            return AtCm.Save(pf, false);
         }
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
@@ -100,7 +100,7 @@ namespace Dt.App.File
                 pf.IsAdded = false;
                 pf["name"] = p_name;
             }
-            return await Repo.Save(pf);
+            return await AtCm.Save(pf);
         }
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
@@ -120,7 +120,7 @@ namespace Dt.App.File
 
                 ls.Add(new Pubfile(ID: row.ID));
             }
-            return await Repo.BatchDelete(ls);
+            return await AtCm.BatchDelete(ls);
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
@@ -133,7 +133,7 @@ namespace Dt.App.File
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);
             }
-            return Repo.BatchSave(ls, false);
+            return AtCm.BatchSave(ls, false);
         }
     }
 

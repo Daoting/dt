@@ -24,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await Repo.Query<Album>("发布-所有专辑");
+            _lv.Data = await AtPublish.Query<Album>("发布-所有专辑");
         }
 
         async void OnSearch(object sender, string e)
@@ -35,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await Repo.Query<Album>("发布-模糊查询专辑", new { name = $"%{e}%" });
+                _lv.Data = await AtPublish.Query<Album>("发布-模糊查询专辑", new { name = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -68,7 +68,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await Repo.Delete(album))
+            if (await AtPublish.Delete(album))
                 LoadAll();
         }
 

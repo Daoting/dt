@@ -26,7 +26,7 @@ namespace Dt.App.Publish
         public async Task<bool> Show(Album p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await Repo.GetByID<Album>(p_keyword.ID);
+                _fv.Data = await AtPublish.GetByID<Album>(p_keyword.ID);
             else
                 _fv.Data = await Create();
             await ShowAsync();
@@ -47,7 +47,7 @@ namespace Dt.App.Publish
             if (_fv.ExistNull("Name"))
                 return;
 
-            if (await Repo.Save(_fv.Data.To<Album>()))
+            if (await AtPublish.Save(_fv.Data.To<Album>()))
             {
                 _needRefresh = true;
                 _fv.Data = await Create();

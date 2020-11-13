@@ -34,7 +34,7 @@ namespace Dt.Fsm
         readonly HttpContext _context;
         readonly List<string> _result;
         string _volume;
-        Db _db;
+        MySqlAccess _db;
 
         public Uploader(HttpContext p_context)
         {
@@ -84,7 +84,7 @@ namespace Dt.Fsm
             }
 
             SortedSetCache cache = null;
-            _db = new Db(false);
+            _db = new MySqlAccess(false);
 
             // 记录已成功接收的文件，以备后续异常时删除这些文件
             List<FileDesc> sucFiles = new List<FileDesc>();

@@ -10,6 +10,7 @@
 using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.Rpc;
+using Microsoft.AspNetCore.Http;
 using Serilog;
 using System;
 using System.Collections.Concurrent;
@@ -24,35 +25,29 @@ namespace Dt.Msg
     public class ClientInfo
     {
         readonly BlockingCollection<string> _queue;
-        readonly LobContext _c;
         readonly ResponseWriter _writer;
         readonly Dict _deviceInfo;
 
-        public ClientInfo(LobContext p_context, Dict p_deviceInfo, ResponseWriter p_writer)
+        public ClientInfo(Dict p_deviceInfo, ResponseWriter p_writer)
         {
-            _c = p_context;
             _deviceInfo = p_deviceInfo;
             _writer = p_writer;
+            Context = Bag.Context;
+            UserID = Bag.UserID;
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;
         }
 
         /// <summary>
-        /// 会话上下文
+        /// http请求上下文
         /// </summary>
-        public LobContext Context
-        {
-            get { return _c; }
-        }
+        public HttpContext Context { get; }
 
         /// <summary>
         /// 当前用户标识
         /// </summary>
-        public long UserID
-        {
-            get { return _c.UserID; }
-        }
+        public long UserID { get; }
 
         /// <summary>
         /// 客户端系统
@@ -86,7 +81,7 @@ namespace Dt.Msg
         public async Task SendOfflineMsg()
         {
             // 所有离线信息
-            string key = MsgKit.MsgQueueKey + _c.UserID.ToString();
+            string key = MsgKit.MsgQueueKey + UserID.ToString();
             var db = Redis.Db;
             var ls = await db.ListRangeAsync(key);
             if (ls != null && ls.Length > 0)
@@ -102,7 +97,7 @@ namespace Dt.Msg
                 }
                 catch (Exception ex)
                 {
-                    Log.Warning(ex, $"向{_c.UserID}发送离线信息异常");
+                    Log.Warning(ex, $"向{UserID}发送离线信息异常");
                 }
             }
         }
@@ -125,8 +120,8 @@ namespace Dt.Msg
             try
             {
                 // 客户端取消请求时触发 OperationCanceledException 异常，推送结束
-                var msg = _queue.Take(_c.Context.RequestAborted);
-                Log.Debug($"推送：{_c.UserID}  {msg}");
+                var msg = _queue.Take(Context.RequestAborted);
+                Log.Debug($"推送：{UserID}  {msg}");
                 return _writer.Write(msg);
             }
             catch { }
@@ -149,7 +144,7 @@ namespace Dt.Msg
         /// <returns></returns>
         public void Close()
         {
-            _c.Context.Abort();
+            Context.Abort();
         }
 
         /// <summary>

@@ -25,9 +25,6 @@ namespace Dt.App.Workflow
     {
         #region 成员变量
         WfdPrc _prc;
-        Table<WfdAtv> _atvs;
-        Table<WfdTrs> _trss;
-        Table<WfdAtvrole> _atvRoles;
 
         WfInsertMenu _insertMenu;
         AlignMenu _alignMenu;
@@ -44,50 +41,17 @@ namespace Dt.App.Workflow
         {
             InitializeComponent();
 
-            if (p_prcID < 0)
-                CreateNewPrc();
-            else
-                LoadPrc(p_prcID);
+            LoadPrc(p_prcID);
             AttachSketch();
 
             _menu["保存"].SetBinding(IsEnabledProperty, new Binding { Path = new PropertyPath("IsChanged"), Source = this });
         }
 
         #region 数据处理
-        async void CreateNewPrc()
-        {
-            _prc = new WfdPrc(
-                ID: await AtCm.NewID(),
-                Name: "新流程",
-                IsLocked: true,
-                Dispidx: await AtCm.NewSeq("sq_wfd_prc"),
-                Ctime: AtSys.Now);
-
-            var dt = new Dict { { "prcid", -1 } };
-            _atvs = await Repo.Query<WfdAtv>("流程-编辑活动模板", dt);
-            _trss = await Repo.Query<WfdTrs>("流程-编辑迁移模板", dt);
-            _atvRoles = await Repo.Query<WfdAtvrole>("流程-编辑活动授权", dt);
-            OnDataChanged();
-        }
-
         async void LoadPrc(long p_prcID)
         {
-            var dt = new Dict { { "prcid", p_prcID } };
-            _prc = await Repo.Get<WfdPrc>("流程-编辑流程模板", dt);
-            _atvs = await Repo.Query<WfdAtv>("流程-编辑活动模板", dt);
-            _trss = await Repo.Query<WfdTrs>("流程-编辑迁移模板", dt);
-            _atvRoles = await Repo.Query<WfdAtvrole>("流程-编辑活动授权", dt);
-            OnDataChanged();
-        }
+            _prc = (p_prcID < 0) ? await WfdPrc.New() : await WfdPrc.Get(p_prcID);
 
-        async void OnAdd(object sender, Mi e)
-        {
-            if (await CancelSave())
-                CreateNewPrc();
-        }
-
-        void OnDataChanged()
-        {
             IsChanged = false;
             _sketch.His.CmdChanged -= OnSketchChanged;
 
@@ -99,30 +63,27 @@ namespace Dt.App.Workflow
             {
                 if (obj is SNode node)
                 {
-                    node.Tag = (from item in _atvs.Items
+                    node.Tag = (from item in _prc.Atvs.Items
                                 where item.ID == node.ID
                                 select item).FirstOrDefault();
                 }
                 else if (obj is SLine line)
                 {
-                    line.Tag = (from item in _trss.Items
+                    line.Tag = (from item in _prc.Trss.Items
                                 where item.ID == line.ID
                                 select item).FirstOrDefault();
                 }
             }
 
-            _prc.Changed += (s, e) => UpdateSaveState();
-            _atvs.StartRecordDelRows();
-
-            _trss.StartRecordDelRows();
-            _trss.CollectionChanged += (s, e) => UpdateSaveState();
-
-            // 角色集合变化时
-            _atvRoles.StartRecordDelRows();
-            _atvRoles.CollectionChanged += (s, e) => UpdateSaveState();
-
+            _prc.Modified += (s, e) => UpdateSaveState();
             _sketch.His.Clear();
             _sketch.His.CmdChanged += OnSketchChanged;
+        }
+
+        async void OnAdd(object sender, Mi e)
+        {
+            if (await CancelSave())
+                LoadPrc(-1);
         }
 
         void OnSketchChanged(object sender, EventArgs e)
@@ -132,13 +93,8 @@ namespace Dt.App.Workflow
 
         void UpdateSaveState()
         {
-            // _atvs和_trss集合变化会触发CmdChanged，无需重复判断
-            IsChanged = _sketch.His.CanUndo
-                || _prc.IsChanged
-                || _trss.ExistDeleted
-                || _trss.ExistAdded
-                || _atvRoles.ExistDeleted
-                || _atvRoles.ExistAdded;
+            // _prc.Atvs和_prc.Trss集合变化会触发CmdChanged，无需重复判断
+            IsChanged = _sketch.His.CanUndo || _prc.IsModified;
         }
 
         async void OnSave(object sender, Mi e)
@@ -164,7 +120,7 @@ namespace Dt.App.Workflow
                 }
             }
 
-            if (await Repo.BatchSave(new List<object> { _prc, _atvs, _trss, _atvRoles }))
+            if (await AtCm.BatchSave(new List<object> { _prc, _prc.Atvs, _prc.Trss, _prc.AtvRoles }))
             {
                 _sketch.His.Clear();
                 UpdateSaveState();
@@ -243,12 +199,12 @@ namespace Dt.App.Workflow
                             Mtime: AtSys.Now);
 
                         node.Tag = atv;
-                        _atvs.Add(atv);
+                        _prc.Atvs.Add(atv);
                     }
                     else if (node.Tag is WfdAtv atv)
                     {
                         // 删除后撤销 或 撤销后重做
-                        _atvs.Add(atv);
+                        _prc.Atvs.Add(atv);
                     }
                 }
                 else if (item is SLine line)
@@ -264,11 +220,11 @@ namespace Dt.App.Workflow
                             Type: 0);
 
                         line.Tag = trs;
-                        _trss.Add(trs);
+                        _prc.Trss.Add(trs);
                     }
                     else if (item.Tag is WfdTrs trs)
                     {
-                        _trss.Add(trs);
+                        _prc.Trss.Add(trs);
                     }
                     if (e.Count == 1)
                         _sketch.SelectionClerk.SelectLine(line);
@@ -299,12 +255,12 @@ namespace Dt.App.Workflow
                 if (item is SNode node)
                 {
                     if (node.Tag is WfdAtv atv)
-                        _atvs.Remove(atv);
+                        _prc.Atvs.Remove(atv);
                 }
                 else if (item is SLine line)
                 {
                     if (line.Tag is WfdTrs trs)
-                        _trss.Remove(trs);
+                        _prc.Trss.Remove(trs);
                 }
             }
             _tab.Content = null;
@@ -406,7 +362,7 @@ namespace Dt.App.Workflow
                     // 开始活动
                     if (_startAtvForm == null)
                         _startAtvForm = new WfStartAtvForm();
-                    _startAtvForm.LoadNode(p_node, _atvRoles);
+                    _startAtvForm.LoadNode(p_node, _prc.AtvRoles);
                     _tab.Content = _startAtvForm;
                     break;
                 case 2:
@@ -427,7 +383,7 @@ namespace Dt.App.Workflow
                     // 普通活动
                     if (_atvForm == null)
                         _atvForm = new WfAtvForm();
-                    _atvForm.LoadNode(p_node, _atvRoles);
+                    _atvForm.LoadNode(p_node, _prc.AtvRoles);
                     _tab.Content = _atvForm;
                     break;
             }
@@ -448,7 +404,7 @@ namespace Dt.App.Workflow
 
             if (_trsForm == null)
                 _trsForm = new WfTrsForm();
-            _trsForm.LoadData(_trss, data);
+            _trsForm.LoadData(_prc.Trss, data);
             _tab.Content = _trsForm;
         }
 

@@ -31,19 +31,19 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lvUser.Data = await Repo.Query<User>("用户-所有");
+            _lvUser.Data = await AtCm.Query<User>("用户-所有");
         }
 
         async void OnAddUser(object sender, Mi e)
         {
             if (await new EditUserDlg().Show(-1))
-                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
+                _lvUser.Data = await AtCm.Query<User>("用户-最近修改");
         }
 
         async void OnEditUser(object sender, Mi e)
         {
             if (await new EditUserDlg().Show(e.Row.ID))
-                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
+                _lvUser.Data = await AtCm.Query<User>("用户-最近修改");
         }
 
         async void OnAddRole(object sender, Mi e)
@@ -81,7 +81,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await Repo.DelByID<User>(e.Row.ID))
+            if (await AtCm.DelByID<User>(e.Row.ID))
                 LoadAll();
         }
 
@@ -92,7 +92,7 @@ namespace Dt.App.Model
             string phone = e.Row.Str("phone");
             usr.Pwd = AtKit.GetMD5(phone.Substring(phone.Length - 4));
 
-            if (await Repo.Save(usr, false))
+            if (await AtCm.Save(usr, false))
                 AtKit.Msg("密码已重置为手机号后4位！");
             else
                 AtKit.Msg("重置密码失败！");
@@ -106,7 +106,7 @@ namespace Dt.App.Model
             usr.Expired = !expired;
 
             string act = expired ? "启用" : "停用";
-            if (await Repo.Save(usr, false))
+            if (await AtCm.Save(usr, false))
             {
                 AtKit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
                 LoadAll();
@@ -144,11 +144,11 @@ namespace Dt.App.Model
             }
             else if (e == "#最近修改")
             {
-                _lvUser.Data = await Repo.Query<User>("用户-最近修改");
+                _lvUser.Data = await AtCm.Query<User>("用户-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lvUser.Data = await Repo.Query<User>("用户-模糊查询", new { input = $"%{e}%" });
+                _lvUser.Data = await AtCm.Query<User>("用户-模糊查询", new { input = $"%{e}%" });
             }
             NaviTo("用户列表");
         }

@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
 #endregion
@@ -31,7 +32,6 @@ namespace Dt.Core
 
             OnSaving = GetMethod(p_type, "OnSaving");
             OnDeleting = GetMethod(p_type, "OnDeleting");
-            Svc = tbl.Svc;
 
 #if SERVER
             // 领域事件类型
@@ -52,11 +52,6 @@ namespace Dt.Core
         /// 表结构
         /// </summary>
         public TableSchema Schema { get; private set; }
-
-        /// <summary>
-        /// 实体所属的服务，客户端用
-        /// </summary>
-        public string Svc { get; }
 
         /// <summary>
         /// 保存前的处理，抛出异常时取消保存，实体中的方法规范：私有方法OnSaving，无入参，返回值void 或 Task
@@ -103,6 +98,25 @@ namespace Dt.Core
             return schema;
         }
 #endif
+
+        #region 静态内容
+        static readonly ConcurrentDictionary<Type, EntitySchema> _models = new ConcurrentDictionary<Type, EntitySchema>();
+
+        /// <summary>
+        /// 获取实体类型的定义
+        /// </summary>
+        /// <param name="p_type">实体类型</param>
+        /// <returns></returns>
+        public static EntitySchema Get(Type p_type)
+        {
+            if (_models.TryGetValue(p_type, out var m))
+                return m;
+
+            var model = new EntitySchema(p_type);
+            _models[p_type] = model;
+            return model;
+        }
+        #endregion
 
         static MethodInfo GetMethod(Type p_type, string p_name)
         {
