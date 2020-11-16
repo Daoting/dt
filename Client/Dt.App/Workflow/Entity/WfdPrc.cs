@@ -71,6 +71,7 @@ namespace Dt.App.Workflow
 
         void OnDeleting()
         {
+            Throw.If(true, "禁止删除");
         }
 
         void AttachEvent()

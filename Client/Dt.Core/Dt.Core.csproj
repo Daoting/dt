@@ -25,9 +25,9 @@
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\Domain\TableSchema.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\EntitySchema.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\DataProvider\TableSchema.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\TblAttribute.cs" Link="Base\Domain\TblAttribute.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
@@ -62,7 +62,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Base\Domain\Entity\" />
     <Folder Include="Rpc\Client\" />
   </ItemGroup>
 </Project>

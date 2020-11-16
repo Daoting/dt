@@ -75,7 +75,7 @@ namespace Dt.App.Workflow
                 return;
             }
 
-            if (await AtCm.DelByID<WfdPrc>(p_prc.ID))
+            if (await AtCm.Delete(p_prc))
             {
                 LoadAll();
             }

@@ -188,7 +188,7 @@ namespace Dt.Core
             sb.AppendLine("#endregion");
 
             // 添加可复制注释
-            AppendComment(sb, schema);
+            AppendComment(sb, schema, clsName, existID);
 
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
@@ -235,7 +235,7 @@ namespace Dt.Core
             p_sb.AppendLine("}");
         }
 
-        void AppendComment(StringBuilder p_sb, TableSchema schema)
+        void AppendComment(StringBuilder p_sb, TableSchema schema, string p_clsName, bool p_existID)
         {
             p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
@@ -257,7 +257,26 @@ namespace Dt.Core
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
+            p_sb.AppendLine();
 
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine($"public static async Task<{p_clsName}> New()");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("{");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("}");
+
+            if (p_existID)
+            {
+                p_sb.AppendLine();
+                AppendTabSpace(p_sb, 2);
+                p_sb.AppendLine($"public static async Task<{p_clsName}> Get(long p_id)");
+                AppendTabSpace(p_sb, 2);
+                p_sb.AppendLine("{");
+                AppendTabSpace(p_sb, 2);
+                p_sb.AppendLine("}");
+            }
+            
             foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
             {
                 // 注释SetXXX方法，提供复制
