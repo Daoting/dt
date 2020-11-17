@@ -8,12 +8,15 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.EventBus;
 using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
 {
-    [CudEvent(CudEvent.LocalDelete)]
+    [CudEvent(CudEvent.LocalInsert | CudEvent.LocalUpdate | CudEvent.LocalDelete)]
     [Cache(PrefixKey = "user", OtherKey = "Phone")]
     public partial class User
     {
@@ -26,6 +29,35 @@ namespace Dt.Cm
                 Name: p_phone,
                 Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
         }
+
+        async Task OnSaving()
+        {
+            Throw.If(!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"), "手机号码错误！");
+
+            if ((IsAdded || Cells["phone"].IsChanged)
+                && await Bag.Dp.GetScalar<int>("用户-重复手机号", new { phone = Phone }) > 0)
+            {
+                Throw.Msg("手机号码重复！");
+            }
+
+            if (IsAdded)
+            {
+                // 初始密码为手机号后4位
+                Pwd = Kit.GetMD5(Phone.Substring(Phone.Length - 4));
+                Ctime = Mtime = Glb.Now;
+            }
+            else
+            {
+                Mtime = Glb.Now;
+                if (Cells["phone"].IsChanged)
+                    AddDomainEvent(new UserPhoneChangedEvent { User = this });
+            }
+        }
+    }
+
+    public class UserPhoneChangedEvent : IEvent
+    {
+        public User User { get; set; }
     }
 
     #region 自动生成

@@ -8,7 +8,9 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
 
@@ -96,7 +98,7 @@ namespace Dt.Cm
         }
 
         /// <summary>
-        /// 删除角色
+        /// 删除角色，同步缓存
         /// </summary>
         /// <param name="p_roleID"></param>
         /// <returns></returns>

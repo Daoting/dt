@@ -10,7 +10,6 @@
 using Dt.Core.Rpc;
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -290,6 +289,45 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 将实体数据传输到服务端，由服务端DataProvider保存实体，用于需要触发领域事件或同步缓存的情况
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">待保存的实体</param>
+        /// <param name="p_isNotify">是否提示保存结果</param>
+        /// <returns>是否成功</returns>
+        public static async Task<bool> SaveBySvc<TEntity>(TEntity p_entity, bool p_isNotify = true)
+            where TEntity : Entity
+        {
+            if (p_entity == null
+                || (!p_entity.IsAdded && !p_entity.IsChanged))
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_unchangedMsg);
+                return false;
+            }
+
+            var model = EntitySchema.Get(typeof(TEntity));
+            bool suc = await new UnaryRpc(
+                typeof(TSvc).Name,
+                "EntityAccess.Save",
+                p_entity,
+                model.Schema.Name
+            ).Call<bool>();
+
+            if (suc)
+            {
+                p_entity.AcceptChanges();
+                if (p_isNotify)
+                    AtKit.Msg("保存成功！");
+                return true;
+            }
+
+            if (p_isNotify)
+                AtKit.Warn("保存失败！");
+            return false;
+        }
+
+        /// <summary>
         /// 单表增删改，列表中的实体类型相同
         /// </summary>
         /// <param name="p_list"></param>
@@ -527,6 +565,41 @@ namespace Dt.Core
                 return BatchDeleteSameType(p_list, p_isNotify);
             }
             return BatchDeleteMultiTypes(p_list, p_isNotify);
+        }
+
+        /// <summary>
+        /// 将实体数据传输到服务端，由服务端DataProvider删除实体，用于需要触发领域事件或同步缓存的情况
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">待删除的行</param>
+        /// <param name="p_isNotify">是否提示删除结果</param>
+        /// <returns>true 删除成功</returns>
+        public static async Task<bool> DeleteBySvc<TEntity>(TEntity p_entity, bool p_isNotify = true)
+            where TEntity : Entity
+        {
+            if (p_entity == null || p_entity.IsAdded)
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_saveError);
+                return false;
+            }
+
+            var model = EntitySchema.Get(typeof(TEntity));
+            bool suc = await new UnaryRpc(
+                typeof(TSvc).Name,
+                "EntityAccess.Delete",
+                p_entity,
+                model.Schema.Name
+            ).Call<bool>();
+
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("删除成功！");
+                else
+                    AtKit.Warn("删除失败！");
+            }
+            return suc;
         }
 
         /// <summary>

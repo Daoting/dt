@@ -81,7 +81,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await AtCm.DelByID<User>(e.Row.ID))
+            if (await AtCm.DeleteBySvc(e.Data.To<User>()))
                 LoadAll();
         }
 

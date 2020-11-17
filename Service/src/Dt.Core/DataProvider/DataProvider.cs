@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
@@ -368,7 +369,9 @@ namespace Dt.Core
         {
             if (p_entity.IsAdded || p_entity.IsChanged)
             {
-                GatherSaveEvents(p_entity, p_model);
+                // 不直接调用GatherSaveEvents，确保事件参数类型准确，不然发布事件时无法类型转换！
+                _gatherSaveEvents.MakeGenericMethod(p_entity.GetType()).Invoke(this, new object[] { p_entity, p_model });
+                //GatherSaveEvents(p_entity, p_model);
                 p_entity.AcceptChanges();
             }
 
@@ -589,12 +592,12 @@ namespace Dt.Core
                 if (await db.Exec(sql, ls[i]) == 1)
                 {
                     cnt++;
-                    Entity entity = (Entity)p_list[i];
-                    // 删除实体事件
-                    GatherDelEvents(entity, p_model);
+                    var entity = p_list[i];
+                    // 删除实体事件，不直接调GatherDelEvents！
+                    _gatherDelEvents.MakeGenericMethod(entity.GetType()).Invoke(this, new object[] { entity, p_model });
                     // 删除缓存
                     if (p_model.CacheHandler != null)
-                        await p_model.CacheHandler.Remove(entity);
+                        await p_model.CacheHandler.Remove(entity as Entity);
                 }
             }
             return cnt;
@@ -658,6 +661,11 @@ namespace Dt.Core
         #endregion
 
         #region 领域事件
+
+        // 确保事件参数类型准确，不然发布事件时无法类型转换！
+        static MethodInfo _gatherSaveEvents = typeof(DataProvider).GetMethod("GatherSaveEvents", BindingFlags.Instance | BindingFlags.NonPublic);
+        static MethodInfo _gatherDelEvents = typeof(DataProvider).GetMethod("GatherDelEvents", BindingFlags.Instance | BindingFlags.NonPublic);
+
         /// <summary>
         /// 保存实体时收集待发布的领域事件
         /// </summary>

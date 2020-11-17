@@ -61,8 +61,10 @@ namespace Dt.Core.Rpc
             catch (Exception ex)
             {
                 isSuc = false;
-                // 将异常记录日志
                 KnownException rpcEx = ex.InnerException as KnownException;
+                if (rpcEx == null)
+                    rpcEx = ex as KnownException;
+
                 if (rpcEx != null)
                 {
                     // 业务异常，在客户端作为提示消息，不记日志
@@ -71,7 +73,7 @@ namespace Dt.Core.Rpc
                 }
                 else
                 {
-                    // 程序执行过程的错误
+                    // 程序执行过程的错误，将异常记录日志
                     responseType = ApiResponseType.Error;
                     error = $"调用{_invoker.ApiName}出错";
                     if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))

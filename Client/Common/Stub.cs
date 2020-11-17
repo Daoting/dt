@@ -129,13 +129,20 @@ namespace Dt.Shell
                 new OmMenu
                 {
                     ID = 3000,
+                    Name = "任务",
+                    Icon = "双绞线",
+                    ViewName = "任务"
+                },
+                new OmMenu
+                {
+                    ID = 4000,
                     Name = "文件",
                     Icon = "文件夹",
                     ViewName = "文件"
                 },
                 new OmMenu
                 {
-                    ID = 4000,
+                    ID = 5000,
                     Name = "发布",
                     Icon = "公告",
                     ViewName = "发布"
@@ -152,6 +159,7 @@ namespace Dt.Shell
             { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
             { "流程设计", typeof(Dt.App.Workflow.WorkflowMgr) },
+            { "任务", typeof(Dt.App.Workflow.TasksView) },
             { "发布管理", typeof(Dt.App.Publish.PublishMgr) },
             { "发布", typeof(Dt.App.Publish.PublishView) },
             { "基础代码", typeof(Dt.App.Model.BaseCode) },

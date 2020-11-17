@@ -85,31 +85,7 @@ namespace Dt.App.Model
                 return;
 
             var usr = _fv.Data.To<User>();
-            if (!Regex.IsMatch(usr.Phone, "^1[34578]\\d{9}$"))
-            {
-                _fv["phone"].Warn("手机号码错误！");
-                return;
-            }
-
-            if ((usr.IsAdded || usr.Cells["phone"].IsChanged)
-                && await AtCm.GetScalar<int>("用户-重复手机号", new { phone = usr.Phone }) > 0)
-            {
-                _fv["phone"].Warn("手机号码重复！");
-                return;
-            }
-
-            if (usr.IsAdded)
-            {
-                // 初始密码为手机号后4位
-                usr.Pwd = AtKit.GetMD5(usr.Phone.Substring(usr.Phone.Length - 4));
-                usr.Ctime = usr.Mtime = AtSys.Now;
-            }
-            else
-            {
-                usr.Mtime = AtSys.Now;
-            }
-
-            if (await AtCm.Save(usr))
+            if (await AtCm.SaveBySvc(usr))
             {
                 _needRefresh = true;
                 if (_miAdd.Visibility == Visibility.Visible)

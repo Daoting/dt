@@ -131,7 +131,7 @@ namespace Dt.App
         }
 
         /// <summary>
-        /// 删除角色
+        /// 删除角色，同步缓存
         /// </summary>
         /// <param name="p_roleID"></param>
         /// <returns></returns>

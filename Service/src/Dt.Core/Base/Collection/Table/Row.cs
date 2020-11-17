@@ -259,7 +259,8 @@ namespace Dt.Core
         /// <returns>返回新独立实体</returns>
         public Row CloneTo(Type p_type)
         {
-            Row row = (Row)Activator.CreateInstance(p_type);
+            // 无参数构造方法可能为private，如实体类型
+            Row row = (Row)Activator.CreateInstance(p_type, true);
             row.IsAdded = IsAdded;
             foreach (var item in _cells)
             {
