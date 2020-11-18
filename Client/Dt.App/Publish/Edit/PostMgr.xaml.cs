@@ -86,28 +86,19 @@ namespace Dt.App.Publish
         internal async Task<bool> SavePost()
         {
             Post post = (Post)_fv.Data;
-            if (post == null)
+            if (post == null || !post.IsValid())
                 return false;
 
-            if (_fv.ExistNull("Title"))
-                return false;
-
-            if (post.IsPublish && string.IsNullOrEmpty(post.Content))
-            {
-                AtKit.Warn("发布的文章内容不能为空");
-                return false;
-            }
-
-            post.Url = await AtPublish.SavePost(_fv.Row);
+            post.Url = await AtPublish.SavePost(post);
             _fv.Row.AcceptChanges();
             LoadAll();
             AtKit.Msg("保存成功");
             return true;
         }
 
-        void OnSavePost(object sender, Mi e)
+        async void OnSavePost(object sender, Mi e)
         {
-            _ = SavePost();
+            await SavePost();
         }
 
         void OnEditContent(object sender, Mi e)
@@ -149,7 +140,7 @@ namespace Dt.App.Publish
 
         async void OnAddKeyword(object sender, Mi e)
         {
-            if (await IsValidate())
+            if (await IsValid())
             {
                 if (await new SelectKeywordDlg().Show(_fv.Row.ID))
                     LoadKeyword(_fv.Row.ID);
@@ -165,7 +156,7 @@ namespace Dt.App.Publish
 
         async void OnAddAlbum(object sender, Mi e)
         {
-            if (await IsValidate())
+            if (await IsValid())
             {
                 if (await new SelectAlbumDlg().Show(_fv.Row.ID))
                     LoadAlbum(_fv.Row.ID);
@@ -179,7 +170,7 @@ namespace Dt.App.Publish
                 LoadAlbum(_fv.Row.ID);
         }
 
-        Task<bool> IsValidate()
+        Task<bool> IsValid()
         {
             if (_fv.Data == null)
                 return Task.FromResult(false);

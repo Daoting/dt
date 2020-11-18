@@ -128,10 +128,45 @@ namespace Dt.App.Model
             }
         }
 
-        async void OnRemoveUser(object sender, Mi e)
+        void OnMultiMode(object sender, Mi e)
         {
-            if (await AtCm.RemoveUserRole(_lvUser.SelectedRow.Long("userid"), _lvRole.SelectedRow.ID))
-                _lvUser.DeleteSelection();
+            _lvUser.SelectionMode = SelectionMode.Multiple;
+            _uMenu.Hide("添加", "选择");
+            _uMenu.Show("移除", "全选", "取消");
+        }
+
+        void OnCancelMulti(object sender, Mi e)
+        {
+            _lvUser.SelectionMode = SelectionMode.Single;
+            _uMenu.Show("添加", "选择");
+            _uMenu.Hide("移除", "全选", "取消");
+        }
+
+        void OnSelectAll(object sender, Mi e)
+        {
+            _lvUser.SelectAll();
+        }
+
+        void OnRemoveUser(object sender, Mi e)
+        {
+            RemoveUser(_lvUser.SelectedRows);
+        }
+
+        void OnRemoveUser2(object sender, Mi e)
+        {
+            if (_lvUser.SelectionMode == SelectionMode.Multiple)
+                RemoveUser(_lvUser.SelectedRows);
+            else
+                RemoveUser(new List<Row> { e.Row });
+        }
+
+        async void RemoveUser(IEnumerable<Row> p_rows)
+        {
+            var roleID = _lvRole.SelectedRow.ID;
+            List<long> users = (from r in p_rows
+                                select r.Long("userid")).ToList();
+            if (users.Count > 0 && await AtCm.RemoveRoleUsers(roleID, users))
+                _lvUser.Data = await AtCm.Query("角色-关联用户", new { roleid = roleID });
         }
 
         async void OnAddMenu(object sender, Mi e)

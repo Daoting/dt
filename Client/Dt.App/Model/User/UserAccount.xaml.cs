@@ -46,28 +46,6 @@ namespace Dt.App.Model
                 _lvUser.Data = await AtCm.Query<User>("用户-最近修改");
         }
 
-        async void OnAddRole(object sender, Mi e)
-        {
-            SelectRolesDlg dlg = new SelectRolesDlg();
-            long userID = _lvUser.SelectedRow.ID;
-            if (await dlg.Show(RoleRelations.User, userID.ToString(), e))
-            {
-                List<long> roles = new List<long>();
-                foreach (var row in dlg.SelectedItems.OfType<Row>())
-                {
-                    roles.Add(row.ID);
-                }
-                if (roles.Count > 0 && await AtCm.AddUserRole(userID, roles))
-                    _lvRole.Data = await AtCm.Query("用户-关联角色", new { userid = userID });
-            }
-        }
-
-        async void OnRemoveRole(object sender, Mi e)
-        {
-            if (await AtCm.RemoveUserRole(_lvUser.SelectedRow.ID, _lvRole.SelectedRow.Long("roleid")))
-                _lvRole.DeleteSelection();
-        }
-
         void OnNaviToSearch(object sender, RoutedEventArgs e)
         {
             NaviTo("查找用户");
@@ -163,6 +141,63 @@ namespace Dt.App.Model
                     p_item.FontStyle = Windows.UI.Text.FontStyle.Italic;
                 }
             }
+        }
+
+        void OnMultiMode(object sender, Mi e)
+        {
+            _lvRole.SelectionMode = SelectionMode.Multiple;
+            _rMenu.Hide("添加", "选择");
+            _rMenu.Show("移除", "全选", "取消");
+        }
+
+        void OnCancelMulti(object sender, Mi e)
+        {
+            _lvRole.SelectionMode = SelectionMode.Single;
+            _rMenu.Show("添加", "选择");
+            _rMenu.Hide("移除", "全选", "取消");
+        }
+
+        void OnSelectAll(object sender, Mi e)
+        {
+            _lvRole.SelectAll();
+        }
+
+        async void OnAddRole(object sender, Mi e)
+        {
+            SelectRolesDlg dlg = new SelectRolesDlg();
+            long userID = _lvUser.SelectedRow.ID;
+            if (await dlg.Show(RoleRelations.User, userID.ToString(), e))
+            {
+                List<long> roles = new List<long>();
+                foreach (var row in dlg.SelectedItems.OfType<Row>())
+                {
+                    roles.Add(row.ID);
+                }
+                if (roles.Count > 0 && await AtCm.AddUserRole(userID, roles))
+                    _lvRole.Data = await AtCm.Query("用户-关联角色", new { userid = userID });
+            }
+        }
+
+        void OnRemoveRole(object sender, Mi e)
+        {
+            RemoveRole(_lvRole.SelectedRows);
+        }
+
+        void OnRemoveRole2(object sender, Mi e)
+        {
+            if (_lvRole.SelectionMode == SelectionMode.Multiple)
+                RemoveRole(_lvRole.SelectedRows);
+            else
+                RemoveRole(new List<Row> { e.Row });
+        }
+
+        async void RemoveRole(IEnumerable<Row> p_rows)
+        {
+            var userID = _lvUser.SelectedRow.ID;
+            List<long> roles = (from r in p_rows
+                                select r.Long("roleid")).ToList();
+            if (roles.Count > 0 && await AtCm.RemoveUserRoles(userID, roles))
+                _lvRole.Data = await AtCm.Query("用户-关联角色", new { userid = userID });
         }
     }
 }

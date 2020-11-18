@@ -914,8 +914,11 @@ namespace Dt.Base
                 _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
             }
 
-            if (adds.Count > 0 && SelectionChanged != null)
-                SelectionChanged(this, new SelectionChangedEventArgs(new List<object>(), adds));
+            if (adds.Count > 0)
+            {
+                HasSelected = true;
+                SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(new List<object>(), adds));
+            }
         }
 
         /// <summary>

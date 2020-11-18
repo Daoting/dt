@@ -52,26 +52,6 @@ namespace Dt.App.Workflow
 
         new public long ID { get { return -1; } }
         #endregion
-
-        #region 可复制
-        /*
-        void OnSaving()
-        {
-        }
-
-        void OnDeleting()
-        {
-        }
-
-        void SetAtvID(long p_value)
-        {
-        }
-
-        void SetRoleID(long p_value)
-        {
-        }
-        */
-        #endregion
     }
     #endregion
 }

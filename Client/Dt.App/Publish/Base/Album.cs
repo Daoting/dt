@@ -16,6 +16,14 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Publish
 {
+    public partial class Album
+    {
+        void OnSaving()
+        {
+            Throw.IfNullOrEmpty(Name, "名称不可为空！");
+        }
+    }
+
     #region 自动生成
     [Tbl("pub_album")]
     public partial class Album : Entity
@@ -66,14 +74,27 @@ namespace Dt.App.Publish
             set { this["Ctime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Album
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Album> New()
+        {
+        }
+
+        public static async Task<Album> Get(long p_id)
         {
         }
 
@@ -92,8 +113,6 @@ namespace Dt.App.Publish
         void SetCtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

@@ -52,26 +52,6 @@ namespace Dt.App.Model
 
         new public long ID { get { return -1; } }
         #endregion
-
-        #region 可复制
-        /*
-        void OnSaving()
-        {
-        }
-
-        void OnDeleting()
-        {
-        }
-
-        void SetRoleID(long p_value)
-        {
-        }
-
-        void SetPrvID(string p_value)
-        {
-        }
-        */
-        #endregion
     }
     #endregion
 }

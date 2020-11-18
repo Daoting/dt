@@ -16,6 +16,14 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Publish
 {
+    public partial class Keyword
+    {
+        void OnSaving()
+        {
+            Throw.IfNullOrEmpty(ID, "关键字不可为空！");
+        }
+    }
+
     #region 自动生成
     [Tbl("pub_keyword")]
     public partial class Keyword : Entity
@@ -64,14 +72,27 @@ namespace Dt.App.Publish
             set { this["Ctime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Keyword
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Keyword> New()
+        {
+        }
+
+        public static async Task<Keyword> Get(long p_id)
         {
         }
 
@@ -86,8 +107,6 @@ namespace Dt.App.Publish
         void SetCtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

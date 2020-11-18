@@ -9,10 +9,20 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
 {
+    public partial class User
+    {
+        void OnSaving()
+        {
+            Throw.IfNullOrEmpty(Name, "名称不可为空！");
+            Throw.IfNullOrEmpty(Phone, "手机号不可为空！");
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_user")]
     public partial class User : Entity
@@ -118,14 +128,27 @@ namespace Dt.App.Model
             set { this["Mtime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class User
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<User> New()
+        {
+        }
+
+        public static async Task<User> Get(long p_id)
         {
         }
 
@@ -164,8 +187,6 @@ namespace Dt.App.Model
         void SetMtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

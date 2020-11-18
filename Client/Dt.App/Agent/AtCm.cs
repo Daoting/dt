@@ -83,18 +83,34 @@ namespace Dt.App
 
         #region UserRoleApi
         /// <summary>
-        /// 删除用户角色的关联
+        /// 删除用户关联的多个角色
         /// </summary>
         /// <param name="p_userID"></param>
-        /// <param name="p_roleID"></param>
+        /// <param name="p_roleIDs"></param>
         /// <returns></returns>
-        public static Task<bool> RemoveUserRole(long p_userID, long p_roleID)
+        public static Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.RemoveUserRole",
+                "UserRoleApi.RemoveUserRoles",
                 p_userID,
-                p_roleID
+                p_roleIDs
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 删除角色关联的多个用户
+        /// </summary>
+        /// <param name="p_roleID"></param>
+        /// <param name="p_userIDs"></param>
+        /// <returns></returns>
+        public static Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.RemoveRoleUsers",
+                p_roleID,
+                p_userIDs
             ).Call<bool>();
         }
 

@@ -40,18 +40,7 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("id"))
-                return;
-
-            var prv = _fv.Data.To<Prv>();
-            if ((prv.IsAdded || prv.Cells["id"].IsChanged)
-                && await AtCm.GetScalar<int>("权限-名称重复", new { id = prv.ID }) > 0)
-            {
-                _fv["id"].Warn("权限名称重复！");
-                return;
-            }
-
-            if (await AtCm.Save(prv))
+            if (await AtCm.Save(_fv.Data.To<Prv>()))
             {
                 _needRefresh = true;
                 CreatePrv();

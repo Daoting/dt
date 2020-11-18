@@ -55,26 +55,6 @@ namespace Dt.App.Publish
 
         new public long ID { get { return -1; } }
         #endregion
-
-        #region 可复制
-        /*
-        void OnSaving()
-        {
-        }
-
-        void OnDeleting()
-        {
-        }
-
-        void SetPostID(long p_value)
-        {
-        }
-
-        void SetKeyword(string p_value)
-        {
-        }
-        */
-        #endregion
     }
     #endregion
 }

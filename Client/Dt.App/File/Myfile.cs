@@ -107,14 +107,27 @@ namespace Dt.App.File
             set { this["UserID"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Myfile
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Myfile> New()
+        {
+        }
+
+        public static async Task<Myfile> Get(long p_id)
         {
         }
 
@@ -149,8 +162,6 @@ namespace Dt.App.File
         void SetUserID(long p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

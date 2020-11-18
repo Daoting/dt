@@ -219,14 +219,27 @@ namespace Dt.App.Workflow
             set { this["Mtime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class WfdPrc
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<WfdPrc> New()
+        {
+        }
+
+        public static async Task<WfdPrc> Get(long p_id)
         {
         }
 
@@ -273,8 +286,6 @@ namespace Dt.App.Workflow
         void SetMtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

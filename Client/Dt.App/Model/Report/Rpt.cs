@@ -9,10 +9,34 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
 {
+    public partial class Rpt
+    {
+        async Task OnSaving()
+        {
+            Throw.IfNullOrEmpty(Name, "报表名称不可为空！");
+
+            if ((IsAdded || Cells["name"].IsChanged)
+                && await AtCm.GetScalar<int>("报表-重复名称", new { name = Name }) > 0)
+            {
+                Throw.Msg("报表名称重复！");
+            }
+
+            if (IsAdded)
+            {
+                Ctime = Mtime = AtSys.Now;
+            }
+            else
+            {
+                Mtime = AtSys.Now;
+            }
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_rpt")]
     public partial class Rpt : Entity
@@ -85,14 +109,27 @@ namespace Dt.App.Model
             set { this["Mtime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Rpt
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Rpt> New()
+        {
+        }
+
+        public static async Task<Rpt> Get(long p_id)
         {
         }
 
@@ -119,8 +156,6 @@ namespace Dt.App.Model
         void SetMtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

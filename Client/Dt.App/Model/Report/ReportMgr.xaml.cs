@@ -68,27 +68,7 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("name"))
-                return;
-
-            Rpt rpt = _fv.Data.To<Rpt>();
-            if ((rpt.IsAdded || rpt.Cells["name"].IsChanged)
-                && await AtCm.GetScalar<int>("报表-重复名称", new { name = rpt.Name }) > 0)
-            {
-                _fv["name"].Warn("报表名称重复！");
-                return;
-            }
-
-            if (rpt.IsAdded)
-            {
-                rpt["ctime"] = rpt["mtime"] = AtSys.Now;
-            }
-            else
-            {
-                rpt["mtime"] = AtSys.Now;
-            }
-
-            if (await AtCm.Save(rpt))
+            if (await AtCm.Save(_fv.Data.To<Rpt>()))
             {
                 _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
             }

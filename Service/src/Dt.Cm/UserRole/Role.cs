@@ -51,14 +51,27 @@ namespace Dt.Cm
             set { this["Note"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Role
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Role> New()
+        {
+        }
+
+        public static async Task<Role> Get(long p_id)
         {
         }
 
@@ -73,8 +86,6 @@ namespace Dt.Cm
         void SetNote(string p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

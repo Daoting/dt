@@ -9,10 +9,25 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
 {
+    public partial class Prv
+    {
+        async Task OnSaving()
+        {
+            Throw.IfNullOrEmpty(ID, "权限名称不可为空！");
+
+            if ((IsAdded || Cells["id"].IsChanged)
+                && await AtCm.GetScalar<int>("权限-名称重复", new { id = ID }) > 0)
+            {
+                Throw.Msg("权限名称重复！");
+            }
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_prv")]
     public partial class Prv : Entity
@@ -50,14 +65,27 @@ namespace Dt.App.Model
             set { this["Note"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Prv
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Prv> New()
+        {
+        }
+
+        public static async Task<Prv> Get(long p_id)
         {
         }
 
@@ -68,8 +96,6 @@ namespace Dt.App.Model
         void SetNote(string p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

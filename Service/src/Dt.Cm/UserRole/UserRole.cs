@@ -51,14 +51,23 @@ namespace Dt.Cm
 
         new public long ID { get { return -1; } }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Userrole
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Userrole> New()
         {
         }
 
@@ -69,8 +78,6 @@ namespace Dt.Cm
         void SetRoleID(long p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

@@ -13,7 +13,7 @@ using System;
 
 namespace Dt.Pub
 {
-    public partial class Post : Entity
+    public partial class Post
     {
         
     }
@@ -31,12 +31,12 @@ namespace Dt.Pub
             string Cover = default,
             string Summary = default,
             string Content = default,
-            SByte TempType = default,
+            byte TempType = default,
             bool IsPublish = default,
             bool AllowCoverClick = default,
             bool AllowComment = default,
             bool AddAlbumLink = default,
-            bool AddCatLink = default,
+            bool AddKeywordLink = default,
             string Url = default,
             int Dispidx = default,
             long CreatorID = default,
@@ -53,12 +53,12 @@ namespace Dt.Pub
             AddCell<string>("Cover", Cover);
             AddCell<string>("Summary", Summary);
             AddCell<string>("Content", Content);
-            AddCell<SByte>("TempType", TempType);
+            AddCell<byte>("TempType", TempType);
             AddCell<bool>("IsPublish", IsPublish);
             AddCell<bool>("AllowCoverClick", AllowCoverClick);
             AddCell<bool>("AllowComment", AllowComment);
             AddCell<bool>("AddAlbumLink", AddAlbumLink);
-            AddCell<bool>("AddCatLink", AddCatLink);
+            AddCell<bool>("AddKeywordLink", AddKeywordLink);
             AddCell<string>("Url", Url);
             AddCell<int>("Dispidx", Dispidx);
             AddCell<long>("CreatorID", CreatorID);
@@ -114,9 +114,9 @@ namespace Dt.Pub
         /// <summary>
         /// 在列表中显示时的模板类型
         /// </summary>
-        public SByte TempType
+        public byte TempType
         {
-            get { return (SByte)this["TempType"]; }
+            get { return (byte)this["TempType"]; }
             set { this["TempType"] = value; }
         }
 
@@ -157,12 +157,12 @@ namespace Dt.Pub
         }
 
         /// <summary>
-        /// 文章末尾是否添加同分类链接
+        /// 文章末尾是否添加同关键字链接
         /// </summary>
-        public bool AddCatLink
+        public bool AddKeywordLink
         {
-            get { return (bool)this["AddCatLink"]; }
-            set { this["AddCatLink"] = value; }
+            get { return (bool)this["AddKeywordLink"]; }
+            set { this["AddKeywordLink"] = value; }
         }
 
         /// <summary>
@@ -255,14 +255,27 @@ namespace Dt.Pub
             set { this["CommentCount"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Post
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Post> New()
+        {
+        }
+
+        public static async Task<Post> Get(long p_id)
         {
         }
 
@@ -286,7 +299,7 @@ namespace Dt.Pub
         {
         }
 
-        void SetTempType(SByte p_value)
+        void SetTempType(byte p_value)
         {
         }
 
@@ -306,7 +319,7 @@ namespace Dt.Pub
         {
         }
 
-        void SetAddCatLink(bool p_value)
+        void SetAddKeywordLink(bool p_value)
         {
         }
 
@@ -349,8 +362,6 @@ namespace Dt.Pub
         void SetCommentCount(int p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

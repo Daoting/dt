@@ -96,14 +96,27 @@ namespace Dt.App.File
             set { this["Ctime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Pubfile
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Pubfile> New()
+        {
+        }
+
+        public static async Task<Pubfile> Get(long p_id)
         {
         }
 
@@ -134,8 +147,6 @@ namespace Dt.App.File
         void SetCtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

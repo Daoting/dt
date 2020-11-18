@@ -187,13 +187,13 @@ namespace Dt.Core
             AppendTabSpace(sb, 2);
             sb.AppendLine("#endregion");
 
-            // 添加可复制注释
-            AppendComment(sb, schema, clsName, existID);
-
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
             AppendTabSpace(sb, 1);
             sb.AppendLine("#endregion");
+
+            // 添加可复制注释
+            AppendComment(sb, schema, clsName, existID);
             return sb.ToString();
         }
 
@@ -238,21 +238,30 @@ namespace Dt.Core
         void AppendComment(StringBuilder p_sb, TableSchema schema, string p_clsName, bool p_existID)
         {
             p_sb.AppendLine();
-            AppendTabSpace(p_sb, 2);
+            AppendTabSpace(p_sb, 1);
             p_sb.AppendLine("#region 可复制");
-            AppendTabSpace(p_sb, 2);
+            AppendTabSpace(p_sb, 1);
             p_sb.AppendLine("/*");
 
+            AppendTabSpace(p_sb, 1);
+            p_sb.Append($"public partial class {p_clsName}");
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 1);
+            p_sb.AppendLine("{");
+
             AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("void OnSaving()");
+            p_sb.AppendLine("async Task OnSaving()");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
-            p_sb.AppendLine();
 
+            AppendTabSpace(p_sb, 1);
+            p_sb.AppendLine("}");
+
+            p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("void OnDeleting()");
+            p_sb.AppendLine("async Task OnDeleting()");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 2);
@@ -290,9 +299,10 @@ namespace Dt.Core
                 p_sb.AppendLine("}");
             }
 
-            AppendTabSpace(p_sb, 2);
+            
+            AppendTabSpace(p_sb, 1);
             p_sb.AppendLine("*/");
-            AppendTabSpace(p_sb, 2);
+            AppendTabSpace(p_sb, 1);
             p_sb.AppendLine("#endregion");
         }
 

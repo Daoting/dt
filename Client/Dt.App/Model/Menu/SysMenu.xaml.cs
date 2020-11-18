@@ -143,9 +143,6 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("name"))
-                return;
-
             if (await AtCm.Save(_fv.Data.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
@@ -170,16 +167,6 @@ namespace Dt.App.Model
             {
                 _fv.Data = _tv.SelectedItem;
                 return;
-            }
-
-            if (p_row.IsGroup)
-            {
-                int count = await AtCm.GetScalar<int>("菜单-是否有子菜单", new { parentid = p_row.ID });
-                if (count > 0)
-                {
-                    AtKit.Warn("含子菜单无法删除！");
-                    return;
-                }
             }
 
             if (await AtCm.Delete(p_row))

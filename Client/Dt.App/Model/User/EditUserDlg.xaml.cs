@@ -81,11 +81,7 @@ namespace Dt.App.Model
 
         async void Save()
         {
-            if (_fv.ExistNull("name", "phone"))
-                return;
-
-            var usr = _fv.Data.To<User>();
-            if (await AtCm.SaveBySvc(usr))
+            if (await AtCm.SaveBySvc(_fv.Data.To<User>()))
             {
                 _needRefresh = true;
                 if (_miAdd.Visibility == Visibility.Visible)

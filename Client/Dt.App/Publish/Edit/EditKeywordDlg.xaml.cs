@@ -43,9 +43,6 @@ namespace Dt.App.Publish
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("ID"))
-                return;
-
             if (await AtPublish.Save(_fv.Data.To<Keyword>()))
             {
                 _needRefresh = true;

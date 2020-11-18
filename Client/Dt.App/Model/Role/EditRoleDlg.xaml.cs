@@ -44,18 +44,7 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("name"))
-                return;
-
-            var role = _fv.Data.To<Role>();
-            if ((role.IsAdded || role.Cells["name"].IsChanged)
-                && await AtCm.GetScalar<int>("角色-名称重复", new { name = role.Name }) > 0)
-            {
-                _fv["name"].Warn("角色名称重复！");
-                return;
-            }
-
-            if (await AtCm.Save(role))
+            if (await AtCm.Save(_fv.Data.To<Role>()))
             {
                 _needRefresh = true;
                 CreateRole();

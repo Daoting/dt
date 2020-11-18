@@ -18,6 +18,13 @@ namespace Dt.App.Publish
 {
     public partial class Post
     {
+        public bool IsValid()
+        {
+            Throw.IfNullOrEmpty(Title, "标题不可为空！");
+            Throw.If(IsPublish && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
+            return true;
+        }
+
         void OnDeleting()
         {
             Throw.If(IsPublish, "已发布的文章不可删除");
@@ -42,7 +49,7 @@ namespace Dt.App.Publish
             string Cover = default,
             string Summary = default,
             string Content = default,
-            SByte TempType = default,
+            byte TempType = default,
             bool IsPublish = default,
             bool AllowCoverClick = default,
             bool AllowComment = default,
@@ -64,7 +71,7 @@ namespace Dt.App.Publish
             AddCell<string>("Cover", Cover);
             AddCell<string>("Summary", Summary);
             AddCell<string>("Content", Content);
-            AddCell<SByte>("TempType", TempType);
+            AddCell<byte>("TempType", TempType);
             AddCell<bool>("IsPublish", IsPublish);
             AddCell<bool>("AllowCoverClick", AllowCoverClick);
             AddCell<bool>("AllowComment", AllowComment);
@@ -125,9 +132,9 @@ namespace Dt.App.Publish
         /// <summary>
         /// 在列表中显示时的模板类型
         /// </summary>
-        public SByte TempType
+        public byte TempType
         {
-            get { return (SByte)this["TempType"]; }
+            get { return (byte)this["TempType"]; }
             set { this["TempType"] = value; }
         }
 
@@ -266,14 +273,27 @@ namespace Dt.App.Publish
             set { this["CommentCount"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Post
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Post> New()
+        {
+        }
+
+        public static async Task<Post> Get(long p_id)
         {
         }
 
@@ -297,7 +317,7 @@ namespace Dt.App.Publish
         {
         }
 
-        void SetTempType(SByte p_value)
+        void SetTempType(byte p_value)
         {
         }
 
@@ -360,8 +380,6 @@ namespace Dt.App.Publish
         void SetCommentCount(int p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

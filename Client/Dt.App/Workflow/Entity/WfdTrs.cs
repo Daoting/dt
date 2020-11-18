@@ -85,14 +85,27 @@ namespace Dt.App.Workflow
             set { this["TrsID"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class WfdTrs
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<WfdTrs> New()
+        {
+        }
+
+        public static async Task<WfdTrs> Get(long p_id)
         {
         }
 
@@ -119,8 +132,6 @@ namespace Dt.App.Workflow
         void SetTrsID(long? p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }

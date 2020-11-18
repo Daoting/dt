@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
@@ -23,16 +24,49 @@ namespace Dt.Cm
     public class UserRoleApi : BaseApi
     {
         /// <summary>
-        /// 删除用户角色的关联
+        /// 删除用户关联的多个角色
         /// </summary>
         /// <param name="p_userID"></param>
-        /// <param name="p_roleID"></param>
+        /// <param name="p_roleIDs"></param>
         /// <returns></returns>
-        public async Task<bool> RemoveUserRole(long p_userID, long p_roleID)
+        [Transaction]
+        public async Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
         {
-            if (await _dp.Delete(new Userrole(p_userID, p_roleID)))
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return false;
+
+            List<Userrole> ls = (from id in p_roleIDs
+                                 select new Userrole(p_userID, id)).ToList();
+            if (await _dp.BatchDelete(ls) > 0)
             {
                 await new UserRoleCache().Remove(p_userID);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 删除角色关联的多个用户
+        /// </summary>
+        /// <param name="p_roleID"></param>
+        /// <param name="p_userIDs"></param>
+        /// <returns></returns>
+        [Transaction]
+        public async Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
+        {
+            // 任何人 roleid = 1 
+            if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
+                return false;
+
+            List<Userrole> ls = (from id in p_userIDs
+                                 select new Userrole(id, p_roleID)).ToList();
+            if (await _dp.BatchDelete(ls) > 0)
+            {
+                var cache = new UserRoleCache();
+                foreach (var uid in p_userIDs)
+                {
+                    await cache.Remove(uid);
+                }
                 return true;
             }
             return false;

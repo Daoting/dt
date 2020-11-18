@@ -44,9 +44,6 @@ namespace Dt.App.Publish
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("Name"))
-                return;
-
             if (await AtPublish.Save(_fv.Data.To<Album>()))
             {
                 _needRefresh = true;

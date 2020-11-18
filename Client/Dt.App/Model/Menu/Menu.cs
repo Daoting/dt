@@ -9,10 +9,28 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
 {
+    public partial class Menu
+    {
+        void OnSaving()
+        {
+            Throw.IfNullOrEmpty(Name, "菜单名称不可为空！");
+        }
+
+        async Task OnDeleting()
+        {
+            if (IsGroup)
+            {
+                int count = await AtCm.GetScalar<int>("菜单-是否有子菜单", new { parentid = ID });
+                Throw.If(count > 0, "含子菜单无法删除！");
+            }
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_menu")]
     public partial class Menu : Entity
@@ -162,14 +180,27 @@ namespace Dt.App.Model
             set { this["Mtime"] = value; }
         }
         #endregion
+    }
+    #endregion
 
-        #region 可复制
-        /*
-        void OnSaving()
+    #region 可复制
+    /*
+    public partial class Menu
+    {
+        async Task OnSaving()
+        {
+        }
+    }
+
+        async Task OnDeleting()
         {
         }
 
-        void OnDeleting()
+        public static async Task<Menu> New()
+        {
+        }
+
+        public static async Task<Menu> Get(long p_id)
         {
         }
 
@@ -224,8 +255,6 @@ namespace Dt.App.Model
         void SetMtime(DateTime p_value)
         {
         }
-        */
-        #endregion
-    }
+    */
     #endregion
 }
