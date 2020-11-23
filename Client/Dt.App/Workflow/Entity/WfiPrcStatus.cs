@@ -13,18 +13,23 @@
 namespace Dt.App.Workflow
 {
     /// <summary>
-    /// 执行者限制
+    /// 流程实例状态
     /// </summary>
-    public enum AtvExecLimit
+    public enum WfiPrcStatus
     {
-        无限制,
+        /// <summary>
+        /// 活动
+        /// </summary>
+        Active,
 
-        前一活动的执行者,
+        /// <summary>
+        /// 结束
+        /// </summary>
+        Finish,
 
-        前一活动的同部门执行者,
-
-        已完成活动的执行者,
-
-        已完成活动的同部门执行者
+        /// <summary>
+        /// 终止
+        /// </summary>
+        Terminate,
     }
 }

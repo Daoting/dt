@@ -43,7 +43,7 @@ namespace Dt.App.Workflow
                 WfdTrs trs = new WfdTrs(
                     ID: await AtCm.NewID(),
                     PrcID: _curTrs.PrcID,
-                    Type: 1,
+                    IsRollback: true,
                     SrcAtvID: _curTrs.TgtAtvID,
                     TgtAtvID: _curTrs.SrcAtvID,
                     TrsID: _curTrs.ID);

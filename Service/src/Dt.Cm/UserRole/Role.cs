@@ -53,39 +53,4 @@ namespace Dt.Cm
         #endregion
     }
     #endregion
-
-    #region 可复制
-    /*
-    public partial class Role
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Role> New()
-        {
-        }
-
-        public static async Task<Role> Get(long p_id)
-        {
-        }
-
-        void SetID(long p_value)
-        {
-        }
-
-        void SetName(string p_value)
-        {
-        }
-
-        void SetNote(string p_value)
-        {
-        }
-    */
-    #endregion
 }

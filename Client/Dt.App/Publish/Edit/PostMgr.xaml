@@ -61,12 +61,7 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv" MaxColCount="2">
                     <a:CText ID="Title" Title="标题" />
-                    <a:CList ID="TempType_dsp" Title="列表模板类型" SrcID="id" TgtID="TempType">
-                        <a:CList.Items>
-                            <a:IDStr ID="0" Str="普通" />
-                            <a:IDStr ID="1" Str="封面标题混合" />
-                        </a:CList.Items>
-                    </a:CList>
+                    <a:CList ID="TempType" Title="列表模板类型" Enum="Dt.App.Publish.PostTempType,Dt.App" />
                     <a:CFile ID="Cover" Title="封面" ColCount="3" />
                     <a:CText ID="Summary" Title="摘要" RowSpan="2" AcceptsReturn="True" />
                     <a:CBool ID="AllowComment" Title="允许评论" />

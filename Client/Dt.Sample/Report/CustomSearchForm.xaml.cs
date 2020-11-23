@@ -49,7 +49,7 @@ namespace Dt.Sample
                     Mi mi = new Mi { ID = "查询", Icon = Icons.搜索 };
                     mi.Click += OnQuery;
                     _menu.Items.Add(mi);
-                    mi = new Mi { ID = "重置", Icon = Icons.撤销 };
+                    mi = new Mi { ID = "重置", Icon = Icons.撤消 };
                     mi.Click += OnResetParams;
                     _menu.Items.Add(mi);
                     _menu.Items.Add(new Mi { ID = "自定义", Icon = Icons.两人 });

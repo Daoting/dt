@@ -10,26 +10,31 @@
 
 #endregion
 
-namespace Dt.App.Workflow
+namespace Dt.Cm.Workflow
 {
     /// <summary>
-    /// 同步活动的聚合方式
+    /// 活动实例状态
     /// </summary>
-    public enum SyncAtvJoinKind
+    public enum WfiAtvStatus
     {
         /// <summary>
-        /// 同步活动前的活动实例必须全部完成，才能激活后续活动
+        /// 活动
         /// </summary>
-        全部任务,
+        Active,
 
         /// <summary>
-        /// 只要同步活动前存在一个已完成的活动实例，就激活后续活动
+        /// 结束
         /// </summary>
-        任一任务,
+        Finish,
 
         /// <summary>
-        /// 等待在开始活动到同步活动之间所有已激活的活动完成
+        /// 终止
         /// </summary>
-        即时同步
+        Terminate,
+
+        /// <summary>
+        /// 同步活动
+        /// </summary>
+        Sync
     }
 }

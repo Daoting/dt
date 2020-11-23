@@ -489,7 +489,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 撤销操作时回退数据
+        /// 撤消操作时回退数据
         /// </summary>
         public void BackMtxRow()
         {

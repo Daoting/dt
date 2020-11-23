@@ -38,7 +38,7 @@ namespace Dt.App.Workflow
         void LoadExecDrop(WfdAtv p_atv)
         {
             var items = from item in p_atv.Table.OfType<WfdAtv>()
-                        where item != p_atv && item.Type != 2 && item.Type != 3
+                        where item != p_atv && item.Type != WfdAtvType.Sync && item.Type != WfdAtvType.Finish
                         select item;
             Nl<IDStr> ls = new Nl<IDStr>();
             foreach (var atv in items)

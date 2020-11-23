@@ -10,26 +10,26 @@
 
 #endregion
 
-namespace Dt.App.Workflow
+namespace Dt.Cm.Workflow
 {
     /// <summary>
-    /// 活动的后续迁移方式
+    /// 流程实例状态
     /// </summary>
-    public enum AtvTransKind
+    public enum WfiPrcStatus
     {
         /// <summary>
-        /// 自由选择后续迁移
+        /// 活动
         /// </summary>
-        自由选择,
+        Active,
 
         /// <summary>
-        /// 活动的所有后续迁移都执行
+        /// 结束
         /// </summary>
-        全部,
+        Finish,
 
         /// <summary>
-        /// 只允许选择一条后续迁移
+        /// 终止
         /// </summary>
-        独占式选择
+        Terminate,
     }
 }

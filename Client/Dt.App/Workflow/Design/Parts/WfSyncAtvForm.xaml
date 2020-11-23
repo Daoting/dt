@@ -13,7 +13,7 @@
 
         <wf:WfNodeProperty x:Name="_propBox" />
         <a:Fv x:Name="_fv" Grid.Row="1">
-            <a:CList ID="joinkind" Title="聚合方式" Enum="Dt.App.Workflow.SyncAtvJoinKind,Dt.App" />
+            <a:CList ID="joinkind" Title="聚合方式" Enum="Dt.App.Workflow.WfdAtvJoinKind,Dt.App" />
             <a:CTip ID="ctime" Title="创建时间" />
             <a:CTip ID="mtime" Title="修改时间" />
         </a:Fv>

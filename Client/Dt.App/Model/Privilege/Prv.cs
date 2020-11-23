@@ -67,35 +67,4 @@ namespace Dt.App.Model
         #endregion
     }
     #endregion
-
-    #region 可复制
-    /*
-    public partial class Prv
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Prv> New()
-        {
-        }
-
-        public static async Task<Prv> Get(long p_id)
-        {
-        }
-
-        void SetID(string p_value)
-        {
-        }
-
-        void SetNote(string p_value)
-        {
-        }
-    */
-    #endregion
 }

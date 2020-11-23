@@ -53,31 +53,4 @@ namespace Dt.Cm
         #endregion
     }
     #endregion
-
-    #region 可复制
-    /*
-    public partial class Userrole
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Userrole> New()
-        {
-        }
-
-        void SetUserID(long p_value)
-        {
-        }
-
-        void SetRoleID(long p_value)
-        {
-        }
-    */
-    #endregion
 }

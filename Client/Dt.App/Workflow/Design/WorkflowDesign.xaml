@@ -33,7 +33,7 @@
             <a:Tab Title="流程图">
                 <a:Tab.Menu>
                     <a:Menu DataContext="{Binding ElementName=_sketch}">
-                        <a:Mi ID="撤消" Icon="撤销" Cmd="{Binding CmdUndo}"/>
+                        <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo}"/>
                         <a:Mi ID="重做" Icon="重做" Cmd="{Binding CmdRedo}"/>
                     </a:Menu>
                 </a:Tab.Menu>

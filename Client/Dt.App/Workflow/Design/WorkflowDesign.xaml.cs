@@ -165,20 +165,20 @@ namespace Dt.App.Workflow
                     if (item.Tag == null)
                     {
                         // 新增
-                        AtvType tp;
+                        WfdAtvType tp;
                         switch (node.Shape)
                         {
                             case "开始":
-                                tp = AtvType.Start;
+                                tp = WfdAtvType.Start;
                                 break;
                             case "同步":
-                                tp = AtvType.Sync;
+                                tp = WfdAtvType.Sync;
                                 break;
                             case "结束":
-                                tp = AtvType.Finish;
+                                tp = WfdAtvType.Finish;
                                 break;
                             default:
-                                tp = AtvType.Normal;
+                                tp = WfdAtvType.Normal;
                                 break;
                         }
 
@@ -186,11 +186,11 @@ namespace Dt.App.Workflow
                             ID: node.ID,
                             PrcID: _prc.ID,
                             Name: node.Title,
-                            Type: (byte)tp,
+                            Type: tp,
                             ExecScope: 0,
                             ExecLimit: 0,
                             AutoAccept: true,
-                            CanDelete: (tp == AtvType.Start),
+                            CanDelete: (tp == WfdAtvType.Start),
                             CanTerminate: false,
                             CanJumpInto: false,
                             JoinKind: 0,
@@ -203,7 +203,7 @@ namespace Dt.App.Workflow
                     }
                     else if (node.Tag is WfdAtv atv)
                     {
-                        // 删除后撤销 或 撤销后重做
+                        // 删除后撤消 或 撤消后重做
                         _prc.Atvs.Add(atv);
                     }
                 }
@@ -216,8 +216,7 @@ namespace Dt.App.Workflow
                             ID: line.ID,
                             PrcID: _prc.ID,
                             SrcAtvID: line.HeaderID,
-                            TgtAtvID: line.TailID,
-                            Type: 0);
+                            TgtAtvID: line.TailID);
 
                         line.Tag = trs;
                         _prc.Trss.Add(trs);
@@ -358,21 +357,21 @@ namespace Dt.App.Workflow
 
             switch (data.Type)
             {
-                case 1:
+                case WfdAtvType.Start:
                     // 开始活动
                     if (_startAtvForm == null)
                         _startAtvForm = new WfStartAtvForm();
                     _startAtvForm.LoadNode(p_node, _prc.AtvRoles);
                     _tab.Content = _startAtvForm;
                     break;
-                case 2:
+                case WfdAtvType.Sync:
                     // 同步活动
                     if (_syncAtvForm == null)
                         _syncAtvForm = new WfSyncAtvForm();
                     _syncAtvForm.LoadNode(p_node);
                     _tab.Content = _syncAtvForm;
                     break;
-                case 3:
+                case WfdAtvType.Finish:
                     // 结束活动
                     if (_endAtvForm == null)
                         _endAtvForm = new WfEndAtvForm();

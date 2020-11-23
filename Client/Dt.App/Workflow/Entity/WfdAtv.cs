@@ -24,32 +24,32 @@ namespace Dt.App.Workflow
             long ID,
             long PrcID = default,
             string Name = default,
-            byte Type = default,
-            byte ExecScope = default,
-            byte ExecLimit = default,
+            WfdAtvType Type = default,
+            WfdAtvExecScope ExecScope = default,
+            WfdAtvExecLimit ExecLimit = default,
             long? ExecAtvID = default,
             bool AutoAccept = default,
             bool CanDelete = default,
             bool CanTerminate = default,
             bool CanJumpInto = default,
-            byte TransKind = default,
-            byte JoinKind = default,
+            WfdAtvTransKind TransKind = default,
+            WfdAtvJoinKind JoinKind = default,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
             AddCell<long>("ID", ID);
             AddCell<long>("PrcID", PrcID);
             AddCell<string>("Name", Name);
-            AddCell<byte>("Type", Type);
-            AddCell<byte>("ExecScope", ExecScope);
-            AddCell<byte>("ExecLimit", ExecLimit);
+            AddCell<byte>("Type", (byte)Type);
+            AddCell<byte>("ExecScope", (byte)ExecScope);
+            AddCell<byte>("ExecLimit", (byte)ExecLimit);
             AddCell<long?>("ExecAtvID", ExecAtvID);
             AddCell<bool>("AutoAccept", AutoAccept);
             AddCell<bool>("CanDelete", CanDelete);
             AddCell<bool>("CanTerminate", CanTerminate);
             AddCell<bool>("CanJumpInto", CanJumpInto);
-            AddCell<byte>("TransKind", TransKind);
-            AddCell<byte>("JoinKind", JoinKind);
+            AddCell<byte>("TransKind", (byte)TransKind);
+            AddCell<byte>("JoinKind", (byte)JoinKind);
             AddCell<DateTime>("Ctime", Ctime);
             AddCell<DateTime>("Mtime", Mtime);
             IsAdded = true;
@@ -79,28 +79,28 @@ namespace Dt.App.Workflow
         /// <summary>
         /// 活动类别 0:普通活动 1:开始活动 2:同步活动 3:结束活动
         /// </summary>
-        public byte Type
+        public WfdAtvType Type
         {
-            get { return (byte)this["Type"]; }
-            set { this["Type"] = value; }
+            get { return (WfdAtvType)this["Type"]; }
+            set { this["Type"] = (byte)value; }
         }
 
         /// <summary>
         /// 执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户
         /// </summary>
-        public byte ExecScope
+        public WfdAtvExecScope ExecScope
         {
-            get { return (byte)this["ExecScope"]; }
-            set { this["ExecScope"] = value; }
+            get { return (WfdAtvExecScope)this["ExecScope"]; }
+            set { this["ExecScope"] = (byte)value; }
         }
 
         /// <summary>
         /// 执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者
         /// </summary>
-        public byte ExecLimit
+        public WfdAtvExecLimit ExecLimit
         {
-            get { return (byte)this["ExecLimit"]; }
-            set { this["ExecLimit"] = value; }
+            get { return (WfdAtvExecLimit)this["ExecLimit"]; }
+            set { this["ExecLimit"] = (byte)value; }
         }
 
         /// <summary>
@@ -151,19 +151,19 @@ namespace Dt.App.Workflow
         /// <summary>
         /// 当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择
         /// </summary>
-        public byte TransKind
+        public WfdAtvTransKind TransKind
         {
-            get { return (byte)this["TransKind"]; }
-            set { this["TransKind"] = value; }
+            get { return (WfdAtvTransKind)this["TransKind"]; }
+            set { this["TransKind"] = (byte)value; }
         }
 
         /// <summary>
         /// 同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步
         /// </summary>
-        public byte JoinKind
+        public WfdAtvJoinKind JoinKind
         {
-            get { return (byte)this["JoinKind"]; }
-            set { this["JoinKind"] = value; }
+            get { return (WfdAtvJoinKind)this["JoinKind"]; }
+            set { this["JoinKind"] = (byte)value; }
         }
 
         /// <summary>
@@ -185,88 +185,5 @@ namespace Dt.App.Workflow
         }
         #endregion
     }
-    #endregion
-
-    #region 可复制
-    /*
-    public partial class WfdAtv
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<WfdAtv> New()
-        {
-        }
-
-        public static async Task<WfdAtv> Get(long p_id)
-        {
-        }
-
-        void SetID(long p_value)
-        {
-        }
-
-        void SetPrcID(long p_value)
-        {
-        }
-
-        void SetName(string p_value)
-        {
-        }
-
-        void SetType(byte p_value)
-        {
-        }
-
-        void SetExecScope(byte p_value)
-        {
-        }
-
-        void SetExecLimit(byte p_value)
-        {
-        }
-
-        void SetExecAtvID(long? p_value)
-        {
-        }
-
-        void SetAutoAccept(bool p_value)
-        {
-        }
-
-        void SetCanDelete(bool p_value)
-        {
-        }
-
-        void SetCanTerminate(bool p_value)
-        {
-        }
-
-        void SetCanJumpInto(bool p_value)
-        {
-        }
-
-        void SetTransKind(byte p_value)
-        {
-        }
-
-        void SetJoinKind(byte p_value)
-        {
-        }
-
-        void SetCtime(DateTime p_value)
-        {
-        }
-
-        void SetMtime(DateTime p_value)
-        {
-        }
-    */
     #endregion
 }

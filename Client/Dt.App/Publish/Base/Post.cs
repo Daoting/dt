@@ -49,7 +49,7 @@ namespace Dt.App.Publish
             string Cover = default,
             string Summary = default,
             string Content = default,
-            byte TempType = default,
+            PostTempType TempType = default,
             bool IsPublish = default,
             bool AllowCoverClick = default,
             bool AllowComment = default,
@@ -71,7 +71,7 @@ namespace Dt.App.Publish
             AddCell<string>("Cover", Cover);
             AddCell<string>("Summary", Summary);
             AddCell<string>("Content", Content);
-            AddCell<byte>("TempType", TempType);
+            AddCell<byte>("TempType", (byte)TempType);
             AddCell<bool>("IsPublish", IsPublish);
             AddCell<bool>("AllowCoverClick", AllowCoverClick);
             AddCell<bool>("AllowComment", AllowComment);
@@ -132,10 +132,10 @@ namespace Dt.App.Publish
         /// <summary>
         /// 在列表中显示时的模板类型
         /// </summary>
-        public byte TempType
+        public PostTempType TempType
         {
-            get { return (byte)this["TempType"]; }
-            set { this["TempType"] = value; }
+            get { return (PostTempType)this["TempType"]; }
+            set { this["TempType"] = (byte)value; }
         }
 
         /// <summary>
@@ -276,110 +276,9 @@ namespace Dt.App.Publish
     }
     #endregion
 
-    #region 可复制
-    /*
-    public partial class Post
+    public enum PostTempType
     {
-        async Task OnSaving()
-        {
-        }
+        普通,
+        封面标题混合
     }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Post> New()
-        {
-        }
-
-        public static async Task<Post> Get(long p_id)
-        {
-        }
-
-        void SetID(long p_value)
-        {
-        }
-
-        void SetTitle(string p_value)
-        {
-        }
-
-        void SetCover(string p_value)
-        {
-        }
-
-        void SetSummary(string p_value)
-        {
-        }
-
-        void SetContent(string p_value)
-        {
-        }
-
-        void SetTempType(byte p_value)
-        {
-        }
-
-        void SetIsPublish(bool p_value)
-        {
-        }
-
-        void SetAllowCoverClick(bool p_value)
-        {
-        }
-
-        void SetAllowComment(bool p_value)
-        {
-        }
-
-        void SetAddAlbumLink(bool p_value)
-        {
-        }
-
-        void SetAddKeywordLink(bool p_value)
-        {
-        }
-
-        void SetUrl(string p_value)
-        {
-        }
-
-        void SetDispidx(int p_value)
-        {
-        }
-
-        void SetCreatorID(long p_value)
-        {
-        }
-
-        void SetCreator(string p_value)
-        {
-        }
-
-        void SetCtime(DateTime p_value)
-        {
-        }
-
-        void SetLastEditorID(long? p_value)
-        {
-        }
-
-        void SetLastEditor(string p_value)
-        {
-        }
-
-        void SetMtime(DateTime? p_value)
-        {
-        }
-
-        void SetReadCount(int p_value)
-        {
-        }
-
-        void SetCommentCount(int p_value)
-        {
-        }
-    */
-    #endregion
 }

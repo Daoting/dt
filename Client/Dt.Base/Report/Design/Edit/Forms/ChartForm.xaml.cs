@@ -53,7 +53,7 @@ namespace Dt.Base.Report
                     var ls = _item.Root.Data.DataSet;
                     if (ls != null && ls.Count == 1)
                     {
-                        // 使用initVal 避免重做撤销命令产生冗余操作。
+                        // 使用initVal 避免重做撤消命令产生冗余操作。
                         _item.Data.InitVal("tbl", ls[0].Str("name"));
                         DataDropBox(ls[0].Str("name"));
                     }

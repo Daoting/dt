@@ -310,7 +310,7 @@ namespace Dt.Base
                 mi.Click += OnCopyMsg;
                 _msgMenu.Items.Add(mi);
 
-                mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
+                mi = new Mi { ID = "撤回", Icon = Icons.撤消 };
                 mi.Click += OnUndoMsg;
                 _msgMenu.Items.Add(mi);
 
@@ -409,7 +409,7 @@ namespace Dt.Base
                 mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdSaveAs") });
                 _fileMenu.Items.Add(mi);
 
-                mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
+                mi = new Mi { ID = "撤回", Icon = Icons.撤消 };
                 mi.Click += OnUndoMsg;
                 _fileMenu.Items.Add(mi);
 

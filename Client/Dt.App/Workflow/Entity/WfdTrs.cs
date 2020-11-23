@@ -25,14 +25,14 @@ namespace Dt.App.Workflow
             long PrcID = default,
             long SrcAtvID = default,
             long TgtAtvID = default,
-            byte Type = default,
+            bool IsRollback = default,
             long? TrsID = default)
         {
             AddCell<long>("ID", ID);
             AddCell<long>("PrcID", PrcID);
             AddCell<long>("SrcAtvID", SrcAtvID);
             AddCell<long>("TgtAtvID", TgtAtvID);
-            AddCell<byte>("Type", Type);
+            AddCell<bool>("IsRollback", IsRollback);
             AddCell<long?>("TrsID", TrsID);
             IsAdded = true;
             AttachHook();
@@ -68,12 +68,12 @@ namespace Dt.App.Workflow
         }
 
         /// <summary>
-        /// 迁移类别 0:常规迁移 1:回退迁移
+        /// 是否为回退迁移
         /// </summary>
-        public byte Type
+        public bool IsRollback
         {
-            get { return (byte)this["Type"]; }
-            set { this["Type"] = value; }
+            get { return (bool)this["IsRollback"]; }
+            set { this["IsRollback"] = value; }
         }
 
         /// <summary>
@@ -86,52 +86,5 @@ namespace Dt.App.Workflow
         }
         #endregion
     }
-    #endregion
-
-    #region 可复制
-    /*
-    public partial class WfdTrs
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<WfdTrs> New()
-        {
-        }
-
-        public static async Task<WfdTrs> Get(long p_id)
-        {
-        }
-
-        void SetID(long p_value)
-        {
-        }
-
-        void SetPrcID(long p_value)
-        {
-        }
-
-        void SetSrcAtvID(long p_value)
-        {
-        }
-
-        void SetTgtAtvID(long p_value)
-        {
-        }
-
-        void SetType(byte p_value)
-        {
-        }
-
-        void SetTrsID(long? p_value)
-        {
-        }
-    */
     #endregion
 }

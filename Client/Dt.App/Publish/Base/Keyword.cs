@@ -74,39 +74,4 @@ namespace Dt.App.Publish
         #endregion
     }
     #endregion
-
-    #region 可复制
-    /*
-    public partial class Keyword
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Keyword> New()
-        {
-        }
-
-        public static async Task<Keyword> Get(long p_id)
-        {
-        }
-
-        void SetID(string p_value)
-        {
-        }
-
-        void SetCreator(string p_value)
-        {
-        }
-
-        void SetCtime(DateTime p_value)
-        {
-        }
-    */
-    #endregion
 }

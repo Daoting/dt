@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
 
@@ -41,27 +42,10 @@ namespace Dt.Core
                 return null;
 
             string tblName = p_tblName.ToLower();
-            string clsName;
-            string[] arr = tblName.Split('_');
-            if (arr.Length > 1)
-            {
-                clsName = SetFirstToUpper(arr[1]);
-                if (arr.Length > 2)
-                {
-                    for (int i = 2; i < arr.Length; i++)
-                    {
-                        clsName += SetFirstToUpper(arr[i]);
-                    }
-                }
-            }
-            else
-            {
-                clsName = SetFirstToUpper(tblName);
-            }
+            string clsName = GetClsName(tblName);
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
-
             AppendTabSpace(sb, 1);
             sb.AppendLine("#region 自动生成");
 
@@ -100,7 +84,10 @@ namespace Dt.Core
             foreach (var col in schema.Columns)
             {
                 AppendTabSpace(sb, 3);
-                sb.Append(GetTypeName(col.Type));
+                if (col.Type == typeof(byte))
+                    sb.Append(GetEnumName(col));
+                else
+                    sb.Append(GetTypeName(col.Type));
                 sb.Append(" ");
                 sb.Append(col.Name);
                 if (string.IsNullOrEmpty(col.Default))
@@ -137,6 +124,8 @@ namespace Dt.Core
                 sb.Append(">(\"");
                 sb.Append(col.Name);
                 sb.Append("\", ");
+                if (IsEnumCol(col))
+                    sb.Append("(byte)");
                 sb.Append(col.Name);
                 sb.AppendLine(");");
             }
@@ -192,8 +181,77 @@ namespace Dt.Core
             AppendTabSpace(sb, 1);
             sb.AppendLine("#endregion");
 
-            // 添加可复制注释
-            AppendComment(sb, schema, clsName, existID);
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 生成实体类框架
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public string 实体类框架(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return null;
+
+            string tblName = p_tblName.ToLower();
+            string clsName = GetClsName(tblName);
+            var schema = DbSchema.GetTableSchema(tblName);
+
+            StringBuilder sb = new StringBuilder();
+            AppendTabSpace(sb, 1);
+            sb.Append($"public partial class {clsName}");
+            sb.AppendLine();
+            AppendTabSpace(sb, 1);
+            sb.AppendLine("{");
+
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("async Task OnSaving()");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("{");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("}");
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("async Task OnDeleting()");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("{");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("}");
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            sb.AppendLine($"public static async Task<{clsName}> New()");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("{");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("}");
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            sb.AppendLine($"public static async Task<{clsName}> Get(long p_id)");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("{");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("}");
+
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                // 注释SetXXX方法，提供复制
+                sb.AppendLine();
+                AppendTabSpace(sb, 2);
+                string tpName = GetTypeName(col.Type);
+                sb.AppendLine($"void Set{col.Name}({tpName} p_value)");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("{");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("}");
+            }
+
+            AppendTabSpace(sb, 1);
+            sb.AppendLine("}");
+
             return sb.ToString();
         }
 
@@ -209,17 +267,23 @@ namespace Dt.Core
 
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)
         {
+            // 枚举类型特殊
+            bool isEnum = IsEnumCol(p_col);
+            string tpName = isEnum ? GetEnumName(p_col) : GetTypeName(p_col.Type);
+
             p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("/// <summary>");
             AppendTabSpace(p_sb, 2);
             p_sb.Append("/// ");
-            p_sb.AppendLine(p_col.Comments);
+            if (isEnum)
+                p_sb.AppendLine(p_col.Comments.Substring(tpName.Length + 2));
+            else
+                p_sb.AppendLine(p_col.Comments);
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("/// </summary>");
             AppendTabSpace(p_sb, 2);
 
-            string tpName = GetTypeName(p_col.Type);
             if (p_isNew)
                 p_sb.Append("new ");
             p_sb.AppendLine($"public {tpName} {p_col.Name}");
@@ -229,81 +293,52 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 3);
             p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
             AppendTabSpace(p_sb, 3);
-            // 确保外部只能通过统一方法设置，DDD规范
-            p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
+            if (isEnum)
+                p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = (byte)value; }}");
+            else
+                p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
         }
 
-        void AppendComment(StringBuilder p_sb, TableSchema schema, string p_clsName, bool p_existID)
+        string GetClsName(string p_tblName)
         {
-            p_sb.AppendLine();
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("#region 可复制");
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("/*");
-
-            AppendTabSpace(p_sb, 1);
-            p_sb.Append($"public partial class {p_clsName}");
-            p_sb.AppendLine();
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("{");
-
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("async Task OnSaving()");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("{");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("}");
-
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("}");
-
-            p_sb.AppendLine();
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("async Task OnDeleting()");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("{");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("}");
-            p_sb.AppendLine();
-
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine($"public static async Task<{p_clsName}> New()");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("{");
-            AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine("}");
-
-            if (p_existID)
+            string clsName;
+            string[] arr = p_tblName.Split('_');
+            if (arr.Length > 1)
             {
-                p_sb.AppendLine();
-                AppendTabSpace(p_sb, 2);
-                p_sb.AppendLine($"public static async Task<{p_clsName}> Get(long p_id)");
-                AppendTabSpace(p_sb, 2);
-                p_sb.AppendLine("{");
-                AppendTabSpace(p_sb, 2);
-                p_sb.AppendLine("}");
+                clsName = SetFirstToUpper(arr[1]);
+                if (arr.Length > 2)
+                {
+                    for (int i = 2; i < arr.Length; i++)
+                    {
+                        clsName += SetFirstToUpper(arr[i]);
+                    }
+                }
             }
-            
-            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            else
             {
-                // 注释SetXXX方法，提供复制
-                p_sb.AppendLine();
-                AppendTabSpace(p_sb, 2);
-                string tpName = GetTypeName(col.Type);
-                p_sb.AppendLine($"void Set{col.Name}({tpName} p_value)");
-                AppendTabSpace(p_sb, 2);
-                p_sb.AppendLine("{");
-                AppendTabSpace(p_sb, 2);
-                p_sb.AppendLine("}");
+                clsName = SetFirstToUpper(p_tblName);
             }
+            return clsName;
+        }
 
-            
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("*/");
-            AppendTabSpace(p_sb, 1);
-            p_sb.AppendLine("#endregion");
+        string GetEnumName(TableCol p_col)
+        {
+            if (!string.IsNullOrEmpty(p_col.Comments))
+            {
+                var match = Regex.Match(p_col.Comments, @"^#[^\s#]+");
+                if (match.Success)
+                    return match.Value.Trim('#');
+            }
+            return "byte";
+        }
+
+        bool IsEnumCol(TableCol p_col)
+        {
+            return p_col.Type == typeof(byte)
+                && !string.IsNullOrEmpty(p_col.Comments)
+                && Regex.IsMatch(p_col.Comments, @"^#[^\s#]+");
         }
 
         string GetTypeName(Type p_type)

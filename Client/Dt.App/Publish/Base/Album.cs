@@ -76,43 +76,4 @@ namespace Dt.App.Publish
         #endregion
     }
     #endregion
-
-    #region 可复制
-    /*
-    public partial class Album
-    {
-        async Task OnSaving()
-        {
-        }
-    }
-
-        async Task OnDeleting()
-        {
-        }
-
-        public static async Task<Album> New()
-        {
-        }
-
-        public static async Task<Album> Get(long p_id)
-        {
-        }
-
-        void SetID(long p_value)
-        {
-        }
-
-        void SetName(string p_value)
-        {
-        }
-
-        void SetCreator(string p_value)
-        {
-        }
-
-        void SetCtime(DateTime p_value)
-        {
-        }
-    */
-    #endregion
 }

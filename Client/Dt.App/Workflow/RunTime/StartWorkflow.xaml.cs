@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Workflow
@@ -26,7 +25,7 @@ namespace Dt.App.Workflow
 
         public async void Open()
         {
-            _lv.Data = await AtCm.Query<WfdPrc>("流程-所有流程模板");
+            _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = AtUser.ID });
 
             if (!AtSys.IsPhoneUI)
             {
@@ -36,16 +35,16 @@ namespace Dt.App.Workflow
             Show();
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemDoubleClick(object sender, object e)
         {
             Close();
-            AtKit.RunAsync(() =>
-            {
-                //WfFormInfo info = new WfFormInfo();
-                //DataRow row = _st.SelectedItem;
-                //info.PrcDef = AtWf.GetPrcDef(row.Str("id"));
-                //AtWf.ShowForm(info);
-            });
+            AtWf.ShowForm(new WfFormInfo(e.To<Row>().ID, -1));
+        }
+
+        void OnStart(object sender, Mi e)
+        {
+            Close();
+            AtWf.ShowForm(new WfFormInfo(_lv.SelectedRow.ID, -1));
         }
     }
 }

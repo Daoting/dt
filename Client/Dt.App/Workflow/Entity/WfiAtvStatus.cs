@@ -13,28 +13,28 @@
 namespace Dt.App.Workflow
 {
     /// <summary>
-    /// 活动类别
+    /// 活动实例状态
     /// </summary>
-    public enum AtvType
+    public enum WfiAtvStatus
     {
         /// <summary>
-        /// 普通活动
+        /// 活动
         /// </summary>
-        Normal,
+        Active,
 
         /// <summary>
-        /// 开始活动
+        /// 结束
         /// </summary>
-        Start,
+        Finish,
+
+        /// <summary>
+        /// 终止
+        /// </summary>
+        Terminate,
 
         /// <summary>
         /// 同步活动
         /// </summary>
-        Sync,
-
-        /// <summary>
-        /// 结束活动
-        /// </summary>
-        Finish
+        Sync
     }
 }

@@ -201,7 +201,7 @@ namespace Dt.Base
             }
 
             // 打开新窗口
-            if (typeof(Win).IsAssignableFrom(p_type))
+            if (p_type.IsSubclassOf(typeof(Win)))
             {
                 if (p_params == null)
                     win = (Win)Activator.CreateInstance(p_type);
@@ -228,7 +228,7 @@ namespace Dt.Base
             }
 
             // 处理自定义启动情况
-            if (p_type.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IView)))
+            if (p_type.GetInterface("IView") == typeof(IView))
             {
                 IView viewer = Activator.CreateInstance(p_type) as IView;
                 viewer.Run(p_title, p_icon, p_params);
