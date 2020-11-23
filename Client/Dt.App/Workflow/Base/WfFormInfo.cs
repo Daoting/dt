@@ -47,6 +47,14 @@ namespace Dt.App
         }
         #endregion
 
+        #region 事件
+        /// <summary>
+        /// 发送前事件，用于外部自定义执行者范围
+        /// </summary>
+        public EventHandler<WfSendingArgs> Sending;
+
+        #endregion
+
         #region 属性
         /// <summary>
         /// 获取流程模板定义
@@ -92,6 +100,11 @@ namespace Dt.App
         /// 表单窗口类型
         /// </summary>
         internal Type FormType { get; private set; }
+
+        /// <summary>
+        /// 获取后续活动列表
+        /// </summary>
+        public AtvRecvs NextRecvs { get; private set; }
         #endregion
 
         #region 命令
@@ -270,7 +283,9 @@ namespace Dt.App
                 AtKit.Warn("表单保存失败！");
             return suc;
         }
+        #endregion
 
+        #region 发送
         async void Send()
         {
             // 先保存
@@ -286,7 +301,7 @@ namespace Dt.App
             }
 
             // 获取所有后续活动的接收者列表
-            Dict dt = new Dict(); // await AtWf.GetNextRecvs(_atvDef.ID, _prcInst.ID);
+            Dict dt = await AtWf.GetNextRecvs(AtvDef.ID, PrcInst.ID);
 
             // 无后续活动
             if (dt == null)
@@ -295,8 +310,318 @@ namespace Dt.App
                 await FinishCurItem(true);
                 return;
             }
+
+            if (!dt.ContainsKey("manualsend") || !dt.ContainsKey("atv"))
+            {
+                AtKit.Warn("加载后续活动信息失败！");
+                return;
+            }
+
+            // 构造数据
+            NextRecvs = new AtvRecvs();
+            foreach (var item in (Dict)dt["atv"])
+            {
+                AtvRecv ar = new AtvRecv();
+                ar.Def = await AtCm.GetByID<WfdAtv>(item.Key);
+                Dict dtRecv = item.Value as Dict;
+                if (dtRecv != null)
+                {
+                    ar.IsRole = (bool)dtRecv["isrole"];
+                    ar.Recvs = (Table)dtRecv["data"];
+                }
+                NextRecvs.Add(ar);
+            }
+
+            // 触发外部自定义执行者范围事件
+            if (Sending != null)
+            {
+                WfSendingArgs args = new WfSendingArgs(NextRecvs);
+                Sending(this, args);
+                await args.EnsureAllCompleted();
+            }
+
+            if (NextRecvs != null && NextRecvs.Count > 0)
+            {
+                // 手动选择后发送
+                if (dt.Bool("manualsend"))
+                    new WfSendDlg().Show(this);
+                else
+                    DoSend(false);
+            }
         }
 
+        /// <summary>
+        /// 执行发送
+        /// </summary>
+        internal async void DoSend(bool p_manualSend)
+        {
+            #region 后续活动
+            // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
+            var tblAtvs = Table<WfiAtv>.Create();
+            var tblItems = Table<WfiItem>.Create();
+            var tblTrs = Table<WfiTrs>.Create();
+            DateTime time = AtSys.Now;
+
+            foreach (AtvRecv ar in NextRecvs)
+            {
+                WfiAtv atvInst = null;
+                var atvType = ar.Def.Type;
+                if (atvType == WfdAtvType.Normal)
+                {
+                    // 活动实例
+                    atvInst = new WfiAtv(
+                        ID: await AtCm.NewID(),
+                        PrciID: PrcInst.ID,
+                        AtvdID: ar.Def.ID,
+                        Status: WfiAtvStatus.Active,
+                        Ctime: time,
+                        Mtime: time);
+
+                    if (p_manualSend)
+                    {
+                        // 手动发送，已选择项可能为用户或角色
+                        int cnt = 0;
+                        foreach (var row in ar.Recvs)
+                        {
+                            //if (row.IsSelected)
+                            {
+                                var wi = await CreateWorkItem(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                                tblItems.Add(wi);
+                                cnt++;
+                            }
+                        }
+
+                        // 无选择项时移除活动实例
+                        if (cnt == 0)
+                        {
+                            atvInst = null;
+                        }
+                        else
+                        {
+                            atvInst.InstCount = cnt;
+                            tblAtvs.Add(atvInst);
+                        }
+                    }
+                    else
+                    {
+                        // 自动发送，按角色
+                        atvInst.InstCount = ar.Recvs.Count;
+                        tblAtvs.Add(atvInst);
+                        foreach (var row in ar.Recvs)
+                        {
+                            var wi = await CreateWorkItem(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                            tblItems.Add(wi);
+                        }
+                    }
+                }
+                else if (atvType == WfdAtvType.Sync)
+                {
+                    // 同步
+                    // 活动实例
+                    atvInst = new WfiAtv(
+                        ID: await AtCm.NewID(),
+                        PrciID: PrcInst.ID,
+                        AtvdID: ar.Def.ID,
+                        Status: WfiAtvStatus.Sync,
+                        InstCount: 1,
+                        Ctime: time,
+                        Mtime: time);
+                    tblAtvs.Add(atvInst);
+
+                    // 工作项
+                    WfiItem item = new WfiItem(
+                        ID: await AtCm.NewID(),
+                        AtviID: atvInst.ID,
+                        AssignKind: WfiItemAssignKind.Normal,
+                        Status: WfiItemStatus.Sync,
+                        IsAccept: false,
+                        UserID: AtUser.ID,
+                        Sender: AtUser.Name,
+                        Stime: time,
+                        Ctime: time,
+                        Mtime: time,
+                        Dispidx: await AtCm.NewSeq("sq_wfi_item"));
+                    tblItems.Add(item);
+                }
+                else if (atvType == WfdAtvType.Finish)
+                {
+                    // 完成
+                    PrcInst.Status = WfiAtvStatus.Finish;
+                    PrcInst.Mtime = time;
+                }
+
+                // 增加迁移实例
+                if (atvInst != null)
+                {
+                    var trs = await CreateAtvTrs(ar.Def.ID, atvInst.ID, time, false);
+                    tblTrs.Add(trs);
+                }
+            }
+
+            // 发送是否有效
+            // 1. 只有'完成'时有效
+            // 2. 至少含有一个活动实例时有效
+            if (tblAtvs.Count == 0 && PrcInst.Status != WfiAtvStatus.Finish)
+            {
+                AtKit.Msg("所有后续活动均无接收者，发送失败！");
+                return;
+            }
+            #endregion
+
+            #region 整理待保存数据
+            // 当前活动、工作项
+            AtvInst.Status = WfiAtvStatus.Finish;
+            AtvInst.Mtime = time;
+            WorkItem.Status = WfiItemStatus.Finish;
+            WorkItem.Mtime = time;
+            WorkItem.UserID = AtUser.ID;
+
+            List<object> data = new List<object>();
+            if (PrcInst.IsChanged)
+                data.Add(PrcInst);
+            data.Add(AtvInst);
+            data.Add(WorkItem);
+
+            if (tblAtvs.Count > 0)
+            {
+                data.Add(tblAtvs);
+                data.Add(tblItems);
+                data.Add(tblTrs);
+            }
+            #endregion
+
+            if (await AtCm.BatchSave(data, false))
+            {
+                AtKit.Msg("发送成功！");
+                CloseWin();
+                // 推送客户端提醒
+
+            }
+            else
+            {
+                AtKit.Warn("发送失败！");
+            }
+        }
+
+        async Task<WfiItem> CreateWorkItem(
+            long p_atviID,
+            DateTime p_date,
+            bool p_isRole,
+            long p_receiver,
+            string p_note,
+            bool p_isBack)
+        {
+            WfiItem item = new WfiItem(
+                ID: await AtCm.NewID(),
+                AtviID: p_atviID,
+                AssignKind: (p_isBack ? WfiItemAssignKind.FallBack : WfiItemAssignKind.Normal),
+                Status: WfiItemStatus.Active,
+                IsAccept: false,
+                Sender: AtUser.Name,
+                Stime: p_date,
+                Ctime: p_date,
+                Mtime: p_date,
+                Note: p_note,
+                Dispidx: await AtCm.NewSeq("sq_wfi_item"));
+
+            if (p_isRole)
+                item.RoleID = p_receiver;
+            else
+                item.UserID = p_receiver;
+            return item;
+        }
+
+        /// <summary>
+        /// 创建迁移实例
+        /// </summary>
+        /// <param name="p_tatvid">目标活动模板标识</param>
+        /// <param name="p_tatviid">目标活动实例标识</param>
+        /// <param name="p_date">创建时间</param>
+        /// <param name="p_rollback">是否回退</param>
+        /// <returns></returns>
+        async Task<WfiTrs> CreateAtvTrs(long p_tatvid, long p_tatviid, DateTime p_date, bool p_rollback)
+        {
+            Dict dt = new Dict();
+            dt["prcid"] = PrcInst.PrcdID;
+            dt["SrcAtvID"] = AtvInst.AtvdID;
+            dt["TgtAtvID"] = p_tatvid;
+            dt["IsRollback"] = p_rollback;
+            long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+
+            // 存在同步
+            if (trsdid == 0)
+            {
+                var sync = (from ar in NextRecvs
+                            where ar.Def.Type == WfdAtvType.Sync
+                            select ar.Def).FirstOrDefault();
+                if (sync != null)
+                {
+                    dt["SrcAtvID"] = sync.ID;
+                    trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+                }
+            }
+
+            return new WfiTrs(
+                ID: await AtCm.NewID(),
+                TrsdID: trsdid,
+                SrcAtviID: AtvInst.AtvdID,
+                TgtAtviID: p_tatviid,
+                IsRollback: p_rollback,
+                Ctime: p_date);
+        }
+
+        /// <summary>
+        /// 将当前工作项置完成状态
+        /// </summary>
+        /// <param name="p_isFinishedAtv">活动是否完成</param>
+        /// <returns></returns>
+        async Task FinishCurItem(bool p_isFinishedAtv)
+        {
+            DateTime time = AtSys.Now;
+
+            if (p_isFinishedAtv)
+            {
+                // 当前活动已完成
+                AtvInst.Status = WfiAtvStatus.Finish;
+                AtvInst.Mtime = time;
+            }
+
+            WorkItem.Status = WfiItemStatus.Finish;
+            WorkItem.Mtime = time;
+            WorkItem.UserID = AtUser.ID;
+
+            List<object> ls = new List<object>();
+            if (AtvInst.IsChanged)
+                ls.Add(AtvInst);
+            ls.Add(WorkItem);
+            if (await AtCm.BatchSave(ls, false))
+            {
+                AtKit.Msg(p_isFinishedAtv ? "任务结束" : "当前工作项完成");
+                CloseWin();
+            }
+            else
+            {
+                AtKit.Warn("工作项保存失败");
+            }
+        }
+
+        /// <summary>
+        /// 判断当前发送者是否为当前活动的最后一个发送者
+        /// </summary>
+        /// <returns></returns>
+        async Task<bool> IsAtvFinished()
+        {
+            int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = AtvInst.ID });
+            return (count + 1) >= AtvInst.InstCount;
+        }
+
+        void CloseWin()
+        {
+            ((Win)Form).Close();
+        }
+        #endregion
+
+        #region 发送
         void Rollback()
         {
 
@@ -363,14 +688,12 @@ namespace Dt.App
 
             PrcInst = new WfiPrc(
                 ID: await AtCm.NewID(),
-                PrcdID: _prcID,
-                Status: 0);
+                PrcdID: _prcID);
 
             AtvInst = new WfiAtv(
                 ID: await AtCm.NewID(),
                 PrciID: PrcInst.ID,
                 AtvdID: AtvDef.ID,
-                Status: 0,
                 InstCount: 1);
 
             WorkItem = new WfiItem(
@@ -392,56 +715,6 @@ namespace Dt.App
             AtvDef = await AtCm.GetByID<WfdAtv>(AtvInst.AtvdID);
         }
         #endregion
-
-        /// <summary>
-        /// 将当前工作项置完成状态
-        /// </summary>
-        /// <param name="p_isFinishedAtv">活动是否完成</param>
-        /// <returns></returns>
-        async Task FinishCurItem(bool p_isFinishedAtv)
-        {
-            DateTime time = AtSys.Now;
-
-            if (p_isFinishedAtv)
-            {
-                // 当前活动已完成
-                AtvInst.Status = WfiAtvStatus.Finish;
-                AtvInst.Mtime = time;
-            }
-
-            WorkItem.Status = WfiItemStatus.Finish;
-            WorkItem.Mtime = time;
-            WorkItem.UserID = AtUser.ID;
-
-            List<object> ls = new List<object>();
-            if (AtvInst.IsChanged)
-                ls.Add(AtvInst);
-            ls.Add(WorkItem);
-            if (await AtCm.BatchSave(ls, false))
-            {
-                AtKit.Msg(p_isFinishedAtv ? "任务结束" : "当前工作项完成");
-                CloseWin();
-            }
-            else
-            {
-                AtKit.Warn("工作项保存失败");
-            }
-        }
-
-        /// <summary>
-        /// 判断当前发送者是否为当前活动的最后一个发送者
-        /// </summary>
-        /// <returns></returns>
-        async Task<bool> IsAtvFinished()
-        {
-            int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = AtvInst.ID });
-            return (count + 1) >= AtvInst.InstCount;
-        }
-
-        void CloseWin()
-        {
-            ((Win)Form).Close();
-        }
 
         #region 比较
         public override bool Equals(object obj)

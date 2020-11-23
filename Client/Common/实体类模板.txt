@@ -8,11 +8,11 @@
         {
         }
 
-        public static async Task<Role> New()
+        public static async Task<XXX> New()
         {
         }
 
-        public static async Task<Role> Get(long p_id)
+        public static async Task<XXX> Get(long p_id)
         {
         }
 

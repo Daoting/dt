@@ -7,6 +7,10 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <Content Include="..\Common\实体类模板.txt" Link="实体类模板.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
   </ItemGroup>

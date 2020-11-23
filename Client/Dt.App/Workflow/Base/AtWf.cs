@@ -9,7 +9,9 @@
 #region 命名空间
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Rpc;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App
@@ -44,5 +46,22 @@ namespace Dt.App
             p_info.Form = (IWfForm)AtApp.OpenWin(p_info.FormType, null, Icons.None, p_info);
         }
 
+        #region Wf
+        /// <summary>
+        /// 获取活动可迁移的后续活动的接收者列表
+        /// </summary>
+        /// <param name="p_atvID">当前活动模板标识</param>
+        /// <param name="p_prciID">流程实例标识</param>
+        /// <returns></returns>
+        public static Task<Dict> GetNextRecvs(long p_atvID, long p_prciID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "Wf.GetNextRecvs",
+                p_atvID,
+                p_prciID
+            ).Call<Dict>();
+        }
+        #endregion
     }
 }
