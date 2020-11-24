@@ -36,5 +36,15 @@ namespace Dt.App.Workflow
         {
             return Task.FromResult(true);
         }
+
+        public Task<bool> Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetPrcName()
+        {
+            return "请假单";
+        }
     }
 }

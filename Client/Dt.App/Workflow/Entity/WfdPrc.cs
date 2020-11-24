@@ -69,9 +69,10 @@ namespace Dt.App.Workflow
 
         }
 
-        void OnDeleting()
+        async Task OnDeleting()
         {
-            Throw.If(true, "禁止删除");
+            int cnt = await AtCm.GetScalar<int>("流程-流程实例数", new { PrcdID = ID });
+            Throw.If(cnt > 0, "已有流程实例，禁止删除！");
         }
 
         void AttachEvent()

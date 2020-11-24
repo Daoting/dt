@@ -80,10 +80,5 @@ namespace Dt.App.Workflow
                 LoadAll();
             }
         }
-
-        void OnRefreshModel(object sender, Mi e)
-        {
-            ModelKit.UpdateModel();
-        }
     }
 }

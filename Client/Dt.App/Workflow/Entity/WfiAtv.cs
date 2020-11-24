@@ -14,6 +14,55 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Workflow
 {
+    public partial class WfiAtv
+    {
+        public bool IsFinished
+        {
+            get { return Status == WfiAtvStatus.Finish; }
+        }
+
+        /// <summary>
+        /// 判断当前活动是否完成，发送者是否为当前活动的最后一个发送者
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateFinished()
+        {
+            if (InstCount == 1)
+            {
+                Status = WfiAtvStatus.Finish;
+                Mtime = AtSys.Now;
+            }
+            else
+            {
+                int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = ID });
+                if ((count + 1) >= InstCount)
+                {
+                    Status = WfiAtvStatus.Finish;
+                    Mtime = AtSys.Now;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获得当前活动的回退活动
+        /// </summary>
+        /// <returns></returns>
+        public async Task<WfiAtv> GetRollbackAtv()
+        {
+            Dict dt = new Dict();
+            dt["prciid"] = PrciID;
+            dt["SrcAtvID"] = AtvdID;
+
+            var atv = await AtCm.Get<WfiAtv>("流程-回退活动实例", dt);
+            if (atv != null && atv.Status != WfiAtvStatus.Sync)
+            {
+                // 存在同步的活动，不允许进行回退。(优先级大于设置的可以回退)
+                return atv;
+            }
+            return null;
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_wfi_atv")]
     public partial class WfiAtv : Entity

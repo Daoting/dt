@@ -43,7 +43,7 @@ namespace Dt.App
             }
 
             await p_info.Init();
-            p_info.Form = (IWfForm)AtApp.OpenWin(p_info.FormType, null, Icons.None, p_info);
+            p_info.Form = (IWfForm)AtApp.OpenWin(p_info.FormType, p_info.PrcInst.Name, Icons.None, p_info);
         }
 
         #region Wf

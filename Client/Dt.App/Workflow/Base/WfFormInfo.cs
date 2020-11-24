@@ -13,7 +13,6 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
@@ -30,6 +29,7 @@ namespace Dt.App
         static readonly Dictionary<long, WfdPrc> _prcDefs = new Dictionary<long, WfdPrc>();
         long _prcID;
         long _itemID;
+        bool _locked;
 
         BaseCommand _cmdSend;
         BaseCommand _cmdSave;
@@ -56,6 +56,14 @@ namespace Dt.App
         #endregion
 
         #region 属性
+        /// <summary>
+        /// 获取当前状态名称（即活动名称）
+        /// </summary>
+        public string State
+        {
+            get { return AtvDef.Name; }
+        }
+
         /// <summary>
         /// 获取流程模板定义
         /// </summary>
@@ -87,10 +95,20 @@ namespace Dt.App
         public bool IsReadOnly { get; set; }
 
         /// <summary>
+        /// 获取是否为回退活动
+        /// </summary>
+        public bool IsRollback
+        {
+            get { return WorkItem != null && WorkItem.AssignKind == WfiItemAssignKind.Rollback; }
+        }
+
+        /// <summary>
         /// 获取设置是否自动发送
         /// </summary>
         public bool AutoSend { get; set; }
+        #endregion
 
+        #region 内部属性
         /// <summary>
         /// 流程表单窗口
         /// </summary>
@@ -104,7 +122,7 @@ namespace Dt.App
         /// <summary>
         /// 获取后续活动列表
         /// </summary>
-        public AtvRecvs NextRecvs { get; private set; }
+        internal AtvRecvs NextRecvs { get; private set; }
         #endregion
 
         #region 命令
@@ -204,8 +222,10 @@ namespace Dt.App
             mi.Click += (s, e) => Rollback();
             m.Items.Add(mi);
 
-            mi = new Mi { ID = "签收", Icon = Icons.锁卡 };
+            mi = new Mi { ID = "签收", Icon = Icons.锁卡, IsCheckable = true };
             mi.Click += (s, e) => ToggleAccept();
+            if (WorkItem.IsAccept)
+                mi.IsChecked = true;
             m.Items.Add(mi);
 
             mi = new Mi { ID = "保存", Icon = Icons.保存, Cmd = CmdSave };
@@ -235,18 +255,58 @@ namespace Dt.App
         {
             p_menu.DataContext = this;
 
+            if (WorkItem.IsAccept)
+            {
+                foreach (var mi in p_menu.Items)
+                {
+                    // 此时无法获取Cmd的值
+                    var exp = mi.GetBindingExpression(Mi.CmdProperty);
+                    if (exp.ParentBinding.Path.Path == "CmdAccept")
+                    {
+                        if (!mi.IsCheckable)
+                            mi.IsCheckable = true;
+                        mi.IsChecked = true;
+                        break;
+                    }
+                }
+            }
+
             // 合并IsDirty属性
             CmdSave.AllowExecute = p_fv.IsDirty;
             p_fv.Dirty += (s, b) => CmdSave.AllowExecute = b;
         }
         #endregion
 
-        #region 命令方法
-        async Task<bool> Save()
+        #region 保存
+        async void Save()
+        {
+            if (_locked)
+                return;
+
+            try
+            {
+                _locked = true;
+                await SaveBody();
+            }
+            finally
+            {
+                _locked = false;
+            }
+        }
+
+        async Task<bool> SaveBody()
         {
             // 先保存表单数据
             if (!await Form.Save())
                 return false;
+
+            // 标题
+            string name = Form.GetPrcName();
+            if (name != PrcInst.Name)
+            {
+                PrcInst.Name = name;
+                ((Win)Form).Title = name;
+            }
 
             bool suc = true;
             if (PrcInst.IsAdded)
@@ -288,15 +348,34 @@ namespace Dt.App
         #region 发送
         async void Send()
         {
-            // 先保存
-            if (!await Save())
+            if (_locked)
                 return;
 
+            try
+            {
+                _locked = true;
+                await SendBody();
+            }
+            finally
+            {
+                _locked = false;
+            }
+        }
+
+        async Task SendBody()
+        {
+            // 先保存
+            if (!await SaveBody())
+                return;
+
+            await AtvInst.UpdateFinished();
+            WorkItem.Finished();
+
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
-            if (!await IsAtvFinished())
+            if (!AtvInst.IsFinished)
             {
                 // 活动未结束（不是最后一人），只结束当前工作项
-                await FinishCurItem(false);
+                await SaveWorkItem();
                 return;
             }
 
@@ -307,7 +386,7 @@ namespace Dt.App
             if (dt == null)
             {
                 // 结束当前工作项和活动
-                await FinishCurItem(true);
+                await SaveWorkItem();
                 return;
             }
 
@@ -385,7 +464,7 @@ namespace Dt.App
                         {
                             //if (row.IsSelected)
                             {
-                                var wi = await CreateWorkItem(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                                var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
                                 tblItems.Add(wi);
                                 cnt++;
                             }
@@ -409,7 +488,7 @@ namespace Dt.App
                         tblAtvs.Add(atvInst);
                         foreach (var row in ar.Recvs)
                         {
-                            var wi = await CreateWorkItem(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                            var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
@@ -469,13 +548,6 @@ namespace Dt.App
             #endregion
 
             #region 整理待保存数据
-            // 当前活动、工作项
-            AtvInst.Status = WfiAtvStatus.Finish;
-            AtvInst.Mtime = time;
-            WorkItem.Status = WfiItemStatus.Finish;
-            WorkItem.Mtime = time;
-            WorkItem.UserID = AtUser.ID;
-
             List<object> data = new List<object>();
             if (PrcInst.IsChanged)
                 data.Add(PrcInst);
@@ -501,34 +573,6 @@ namespace Dt.App
             {
                 AtKit.Warn("发送失败！");
             }
-        }
-
-        async Task<WfiItem> CreateWorkItem(
-            long p_atviID,
-            DateTime p_date,
-            bool p_isRole,
-            long p_receiver,
-            string p_note,
-            bool p_isBack)
-        {
-            WfiItem item = new WfiItem(
-                ID: await AtCm.NewID(),
-                AtviID: p_atviID,
-                AssignKind: (p_isBack ? WfiItemAssignKind.FallBack : WfiItemAssignKind.Normal),
-                Status: WfiItemStatus.Active,
-                IsAccept: false,
-                Sender: AtUser.Name,
-                Stime: p_date,
-                Ctime: p_date,
-                Mtime: p_date,
-                Note: p_note,
-                Dispidx: await AtCm.NewSeq("sq_wfi_item"));
-
-            if (p_isRole)
-                item.RoleID = p_receiver;
-            else
-                item.UserID = p_receiver;
-            return item;
         }
 
         /// <summary>
@@ -571,32 +615,19 @@ namespace Dt.App
         }
 
         /// <summary>
-        /// 将当前工作项置完成状态
+        /// 保存当前工作项置完成状态
         /// </summary>
-        /// <param name="p_isFinishedAtv">活动是否完成</param>
         /// <returns></returns>
-        async Task FinishCurItem(bool p_isFinishedAtv)
+        async Task SaveWorkItem()
         {
-            DateTime time = AtSys.Now;
-
-            if (p_isFinishedAtv)
-            {
-                // 当前活动已完成
-                AtvInst.Status = WfiAtvStatus.Finish;
-                AtvInst.Mtime = time;
-            }
-
-            WorkItem.Status = WfiItemStatus.Finish;
-            WorkItem.Mtime = time;
-            WorkItem.UserID = AtUser.ID;
-
             List<object> ls = new List<object>();
             if (AtvInst.IsChanged)
                 ls.Add(AtvInst);
             ls.Add(WorkItem);
+
             if (await AtCm.BatchSave(ls, false))
             {
-                AtKit.Msg(p_isFinishedAtv ? "任务结束" : "当前工作项完成");
+                AtKit.Msg(AtvInst.IsFinished ? "任务结束" : "当前工作项完成");
                 CloseWin();
             }
             else
@@ -605,39 +636,172 @@ namespace Dt.App
             }
         }
 
-        /// <summary>
-        /// 判断当前发送者是否为当前活动的最后一个发送者
-        /// </summary>
-        /// <returns></returns>
-        async Task<bool> IsAtvFinished()
-        {
-            int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = AtvInst.ID });
-            return (count + 1) >= AtvInst.InstCount;
-        }
-
         void CloseWin()
         {
             ((Win)Form).Close();
         }
         #endregion
 
-        #region 发送
-        void Rollback()
+        #region 回退
+        async void Rollback()
         {
+            if (_locked)
+                return;
 
+            try
+            {
+                _locked = true;
+                await RollbackBody();
+            }
+            finally
+            {
+                _locked = false;
+            }
         }
 
-        void ToggleAccept()
+        async Task RollbackBody()
         {
+            // 获得前一活动实例
+            var pre = await AtvInst.GetRollbackAtv();
+            if (pre == null)
+            {
+                AtKit.Msg("该活动不允许进行回退！");
+                return;
+            }
 
+            // 活动执行者多于一人时，不允许进行回退
+            if (AtvInst.InstCount > 1)
+            {
+                AtKit.Msg("该活动执行者多于一人，不允许进行回退！");
+                return;
+            }
+
+            DateTime time = AtSys.Now;
+            var newAtvInst = new WfiAtv(
+                ID: await AtCm.NewID(),
+                PrciID: PrcInst.ID,
+                AtvdID: pre.AtvdID,
+                Status: WfiAtvStatus.Active,
+                InstCount: 1,
+                Ctime: time,
+                Mtime: time);
+
+            // 创建迁移实例
+            var newTrs = await CreateAtvTrs(pre.AtvdID, newAtvInst.ID, time, true);
+
+            // 全部完成时，将当前活动实例状态置成完成
+            await AtvInst.UpdateFinished();
+
+            // 当前活动项置成完成状态
+            WorkItem.Finished();
+
+            Dict dict = new Dict();
+            dict["name"] = await GetSender();
+            long userId = await AtCm.GetScalar<long>("流程-获取用户ID", dict);
+            var newItem = await WfiItem.Create(newAtvInst.ID, time, false, userId, null, true);
+
+            List<object> ls = new List<object>();
+            if (AtvInst.IsChanged)
+                ls.Add(AtvInst);
+            ls.Add(WorkItem);
+            ls.Add(newAtvInst);
+            ls.Add(newItem);
+            ls.Add(newTrs);
+
+            if (await AtCm.BatchSave(ls, false))
+            {
+                AtKit.Msg("回退成功！");
+                CloseWin();
+            }
+            else
+            {
+                AtKit.Msg("回退失败！");
+            }
         }
 
+        async Task<string> GetSender()
+        {
+            string sender = WorkItem.Sender;
+            if (WorkItem.AssignKind == WfiItemAssignKind.Back)
+            {
+                Dict dt = new Dict();
+                dt["prciid"] = AtvInst.PrciID;
+                dt["atvdid"] = AtvInst.AtvdID;
+                long id = await AtCm.GetScalar<long>("流程-最后已完成活动ID", dt);
+                if (id != 0)
+                {
+                    dt = new Dict();
+                    dt["atviid"] = id;
+                    sender = await AtCm.GetScalar<string>("流程-活动发送者", dt);
+                }
+            }
+            return sender;
+        }
+        #endregion
+
+        #region 签收
+        async void ToggleAccept()
+        {
+            if (WorkItem.IsAccept)
+            {
+                WorkItem.IsAccept = false;
+                WorkItem.AcceptTime = null;
+                if (await AtCm.Save(WorkItem, false))
+                    AtKit.Msg("已取消签收！");
+            }
+            else
+            {
+                WorkItem.IsAccept = true;
+                WorkItem.AcceptTime = AtSys.Now;
+                if (await AtCm.Save(WorkItem, false))
+                    AtKit.Msg("已签收！");
+            }
+        }
+        #endregion
+
+        #region 删除
+        async void Delete()
+        {
+            if (_locked)
+                return;
+
+            try
+            {
+                _locked = true;
+                await DeleteBody();
+            }
+            finally
+            {
+                _locked = false;
+            }
+        }
+
+        async Task DeleteBody()
+        {
+            if (AtvDef == null ||
+                (!AtvDef.CanDelete && AtvDef.Type != WfdAtvType.Start))
+            {
+                AtKit.Warn("您无权删除当前表单！请回退或发送到其他用户进行删除。");
+                return;
+            }
+
+            if (!await AtKit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
+                return;
+
+
+            if (await Form.Delete())
+            {
+                if (await AtCm.Delete(PrcInst, false))
+                    AtKit.Msg("表单删除成功！");
+                else
+                    AtKit.Warn("表单已删除，未找到待删除的流程实例！");
+                CloseWin();
+            }
+        }
+        #endregion
+
+        #region 日志
         void OpenLog()
-        {
-
-        }
-
-        void Delete()
         {
 
         }
@@ -688,7 +852,8 @@ namespace Dt.App
 
             PrcInst = new WfiPrc(
                 ID: await AtCm.NewID(),
-                PrcdID: _prcID);
+                PrcdID: _prcID,
+                Name: PrcDef.Name);
 
             AtvInst = new WfiAtv(
                 ID: await AtCm.NewID(),

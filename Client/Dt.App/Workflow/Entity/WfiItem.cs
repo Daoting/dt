@@ -14,6 +14,44 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Workflow
 {
+    public partial class WfiItem
+    {
+        public static async Task<WfiItem> Create(
+            long p_atviID,
+            DateTime p_date,
+            bool p_isRole,
+            long p_receiver,
+            string p_note,
+            bool p_isBack)
+        {
+            WfiItem item = new WfiItem(
+                ID: await AtCm.NewID(),
+                AtviID: p_atviID,
+                AssignKind: (p_isBack ? WfiItemAssignKind.Back : WfiItemAssignKind.Normal),
+                Status: WfiItemStatus.Active,
+                IsAccept: false,
+                Sender: AtUser.Name,
+                Stime: p_date,
+                Ctime: p_date,
+                Mtime: p_date,
+                Note: p_note,
+                Dispidx: await AtCm.NewSeq("sq_wfi_item"));
+
+            if (p_isRole)
+                item.RoleID = p_receiver;
+            else
+                item.UserID = p_receiver;
+            return item;
+        }
+
+        public void Finished()
+        {
+            Status = WfiItemStatus.Finish;
+            Mtime = AtSys.Now;
+            UserID = AtUser.ID;
+        }
+    }
+
     #region 自动生成
     [Tbl("cm_wfi_item")]
     public partial class WfiItem : Entity
