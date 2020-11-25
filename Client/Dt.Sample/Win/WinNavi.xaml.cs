@@ -28,5 +28,10 @@ namespace Dt.Sample
         {
             NaviTo((string)((Button)sender).Content);
         }
+
+        void OnClosWin(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

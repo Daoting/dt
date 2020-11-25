@@ -462,6 +462,23 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 关闭窗口所属的所有导航页
+        /// </summary>
+        void CloseAllNaviPages()
+        {
+            var frame = SysVisual.RootFrame;
+            if (frame.BackStackDepth > _frameStartIndex)
+            {
+                // 向后导航
+                for (int i = frame.BackStackDepth; i > _frameStartIndex; i--)
+                {
+                    if (frame.CanGoBack)
+                        frame.GoBack();
+                }
+            }
+        }
+
+        /// <summary>
         /// 初次加载多页Tab，可用于动态选择Tab
         /// </summary>
         /// <param name="p_tabs"></param>
@@ -514,95 +531,35 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 激活旧窗口或打开新窗口
+        /// </summary>
+        public void Open()
+        {
+            if (AtSys.IsPhoneUI)
+                NaviToHome();
+            else if (!Desktop.Inst.ActiveWin(this))
+                Desktop.Inst.ShowNewWin(this);
+        }
+
+        /// <summary>
+        /// 关闭窗口
+        /// </summary>
+        /// <param name="p_win"></param>
+        /// <returns></returns>
+        public void Close()
+        {
+            if (AtSys.IsPhoneUI)
+                CloseAllNaviPages();
+            else
+                _ = Desktop.Inst.CloseWin(this);
+        }
+
+        /// <summary>
         /// 恢复默认布局
         /// </summary>
         public void LoadDefaultLayout()
         {
             _layout?.LoadDefaultLayout();
-        }
-
-        /// <summary>
-        /// 删除所有ToolWindow
-        /// </summary>
-        internal void ClearWindows()
-        {
-            if (_popupPanel == null || _popupPanel.Children.Count == 0)
-                return;
-
-            int index = 0;
-            while (index < _popupPanel.Children.Count)
-            {
-                ToolWindow win = _popupPanel.Children[index] as ToolWindow;
-                if (win != null)
-                {
-                    // 先移除当前项，再清除子项，不可颠倒！
-                    _popupPanel.Children.RemoveAt(index);
-                    WinItem di = win.Content as WinItem;
-                    if (di != null)
-                        LayoutManager.ClearItems(di);
-                }
-                else
-                {
-                    index++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 窗口内容是否可停靠
-        /// </summary>
-        /// <param name="p_win"></param>
-        /// <returns></returns>
-        internal static bool CheckIsDockable(ToolWindow p_win)
-        {
-            return ((p_win != null) && CheckIsDockable(p_win.Content as WinItem));
-        }
-
-        /// <summary>
-        /// WinItem内容是否可停靠
-        /// </summary>
-        /// <param name="p_dockItem"></param>
-        /// <returns></returns>
-        internal static bool CheckIsDockable(WinItem p_dockItem)
-        {
-            if ((p_dockItem == null) || (p_dockItem.Items.Count <= 0))
-                return false;
-
-            Tabs sect;
-            return (((sect = p_dockItem.Items[0] as Tabs) != null && CheckIsDockable(sect))
-                || CheckIsDockable(p_dockItem.Items[0] as WinItem));
-        }
-
-        /// <summary>
-        /// 内容是否可停靠
-        /// </summary>
-        /// <param name="p_sect"></param>
-        /// <returns></returns>
-        internal static bool CheckIsDockable(Tabs p_sect)
-        {
-            return (p_sect != null
-                && p_sect.Items.Count > 0
-                && CheckIsDockable(p_sect.Items[0] as Tab));
-        }
-
-        /// <summary>
-        /// 内容是否可停靠
-        /// </summary>
-        /// <param name="pane"></param>
-        /// <returns></returns>
-        internal static bool CheckIsDockable(Tab pane)
-        {
-            return ((pane != null) && pane.CanDock);
-        }
-
-        /// <summary>
-        /// 内容是否可停靠
-        /// </summary>
-        /// <param name="header"></param>
-        /// <returns></returns>
-        internal static bool CheckIsDockable(TabHeader header)
-        {
-            return ((header != null) && CheckIsDockable(header.Owner as Tabs));
         }
         #endregion
 
@@ -1105,6 +1062,90 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
+        /// <summary>
+        /// 删除所有ToolWindow
+        /// </summary>
+        internal void ClearWindows()
+        {
+            if (_popupPanel == null || _popupPanel.Children.Count == 0)
+                return;
+
+            int index = 0;
+            while (index < _popupPanel.Children.Count)
+            {
+                ToolWindow win = _popupPanel.Children[index] as ToolWindow;
+                if (win != null)
+                {
+                    // 先移除当前项，再清除子项，不可颠倒！
+                    _popupPanel.Children.RemoveAt(index);
+                    WinItem di = win.Content as WinItem;
+                    if (di != null)
+                        LayoutManager.ClearItems(di);
+                }
+                else
+                {
+                    index++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 窗口内容是否可停靠
+        /// </summary>
+        /// <param name="p_win"></param>
+        /// <returns></returns>
+        internal static bool CheckIsDockable(ToolWindow p_win)
+        {
+            return ((p_win != null) && CheckIsDockable(p_win.Content as WinItem));
+        }
+
+        /// <summary>
+        /// WinItem内容是否可停靠
+        /// </summary>
+        /// <param name="p_dockItem"></param>
+        /// <returns></returns>
+        internal static bool CheckIsDockable(WinItem p_dockItem)
+        {
+            if ((p_dockItem == null) || (p_dockItem.Items.Count <= 0))
+                return false;
+
+            Tabs sect;
+            return (((sect = p_dockItem.Items[0] as Tabs) != null && CheckIsDockable(sect))
+                || CheckIsDockable(p_dockItem.Items[0] as WinItem));
+        }
+
+        /// <summary>
+        /// 内容是否可停靠
+        /// </summary>
+        /// <param name="p_sect"></param>
+        /// <returns></returns>
+        internal static bool CheckIsDockable(Tabs p_sect)
+        {
+            return (p_sect != null
+                && p_sect.Items.Count > 0
+                && CheckIsDockable(p_sect.Items[0] as Tab));
+        }
+
+        /// <summary>
+        /// 内容是否可停靠
+        /// </summary>
+        /// <param name="pane"></param>
+        /// <returns></returns>
+        internal static bool CheckIsDockable(Tab pane)
+        {
+            return ((pane != null) && pane.CanDock);
+        }
+
+        /// <summary>
+        /// 内容是否可停靠
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns></returns>
+        internal static bool CheckIsDockable(TabHeader header)
+        {
+            return ((header != null) && CheckIsDockable(header.Owner as Tabs));
+        }
+
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.NewSize.Width != e.PreviousSize.Width)

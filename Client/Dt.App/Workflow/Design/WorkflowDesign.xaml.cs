@@ -141,9 +141,17 @@ namespace Dt.App.Workflow
             return Task.FromResult(true);
         }
 
-        void OnDel(object sender, Mi e)
+        async void OnDel(object sender, Mi e)
         {
-
+            if (await AtKit.Confirm($"确认要删除流程模板[{_prc.Name}]吗？"))
+            {
+                if (await AtCm.Delete(_prc))
+                    Close();
+            }
+            else
+            {
+                AtKit.Msg("已取消删除！");
+            }
         }
         #endregion
 
