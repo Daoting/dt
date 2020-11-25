@@ -109,7 +109,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiItemStatus Status
         {
-            get { return (WfiItemStatus)this["Status"]; }
+            get { return (WfiItemStatus)((byte)this["Status"]); }
             set { this["Status"] = (byte)value; }
         }
 
@@ -118,7 +118,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiItemAssignKind AssignKind
         {
-            get { return (WfiItemAssignKind)this["AssignKind"]; }
+            get { return (WfiItemAssignKind)((byte)this["AssignKind"]); }
             set { this["AssignKind"] = (byte)value; }
         }
 

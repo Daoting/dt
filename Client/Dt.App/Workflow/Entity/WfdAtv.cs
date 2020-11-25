@@ -68,7 +68,7 @@ namespace Dt.App.Workflow
         }
 
         /// <summary>
-        /// 活动名称，同时作为状态名称，可重复
+        /// 活动名称，同时作为状态名称
         /// </summary>
         public string Name
         {
@@ -81,7 +81,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvType Type
         {
-            get { return (WfdAtvType)this["Type"]; }
+            get { return (WfdAtvType)((byte)this["Type"]); }
             set { this["Type"] = (byte)value; }
         }
 
@@ -90,7 +90,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvExecScope ExecScope
         {
-            get { return (WfdAtvExecScope)this["ExecScope"]; }
+            get { return (WfdAtvExecScope)((byte)this["ExecScope"]); }
             set { this["ExecScope"] = (byte)value; }
         }
 
@@ -99,7 +99,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvExecLimit ExecLimit
         {
-            get { return (WfdAtvExecLimit)this["ExecLimit"]; }
+            get { return (WfdAtvExecLimit)((byte)this["ExecLimit"]); }
             set { this["ExecLimit"] = (byte)value; }
         }
 
@@ -153,7 +153,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvTransKind TransKind
         {
-            get { return (WfdAtvTransKind)this["TransKind"]; }
+            get { return (WfdAtvTransKind)((byte)this["TransKind"]); }
             set { this["TransKind"] = (byte)value; }
         }
 
@@ -162,7 +162,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvJoinKind JoinKind
         {
-            get { return (WfdAtvJoinKind)this["JoinKind"]; }
+            get { return (WfdAtvJoinKind)((byte)this["JoinKind"]); }
             set { this["JoinKind"] = (byte)value; }
         }
 

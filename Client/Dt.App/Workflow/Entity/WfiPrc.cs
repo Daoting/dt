@@ -66,7 +66,7 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiAtvStatus Status
         {
-            get { return (WfiAtvStatus)this["Status"]; }
+            get { return (WfiAtvStatus)((byte)this["Status"]); }
             set { this["Status"] = (byte)value; }
         }
 

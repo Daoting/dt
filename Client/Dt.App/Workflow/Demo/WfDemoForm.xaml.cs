@@ -24,8 +24,8 @@ namespace Dt.App.Workflow
         public WfDemoForm(WfFormInfo p_info)
         {
             InitializeComponent();
-            //_tab.Menu = p_info.GetDefaultMenu(_fv);
-            p_info.ApplyMenuCmd(_tab.Menu, _fv);
+            _tab.Menu = p_info.GetDefaultMenu(_fv);
+            //p_info.ApplyMenuCmd(_tab.Menu, _fv);
 
             var r = new Row();
             r.AddCell("txt", "abc");

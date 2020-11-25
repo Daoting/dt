@@ -134,7 +134,7 @@ namespace Dt.App.Publish
         /// </summary>
         public PostTempType TempType
         {
-            get { return (PostTempType)this["TempType"]; }
+            get { return (PostTempType)((byte)this["TempType"]); }
             set { this["TempType"] = (byte)value; }
         }
 

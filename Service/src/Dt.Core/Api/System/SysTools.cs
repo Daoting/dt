@@ -291,7 +291,10 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
+            if (isEnum)
+                p_sb.AppendLine($"get {{ return ({tpName})((byte)this[\"{p_col.Name}\"]); }}");
+            else
+                p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
             AppendTabSpace(p_sb, 3);
             if (isEnum)
                 p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = (byte)value; }}");

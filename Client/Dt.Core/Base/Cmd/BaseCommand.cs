@@ -90,9 +90,9 @@ namespace Dt.Core
         /// <summary>
         /// 定义用于确定此命令是否可以在其当前状态下执行的方法
         /// </summary>
-        /// <param name="p_parameter">执行参数（无参请给null）</param>
+        /// <param name="p_parameter">执行参数</param>
         /// <returns>是否允许执行</returns>
-        public bool CanExecute(object p_parameter)
+        public bool CanExecute(object p_parameter = null)
         {
             return _allowExecute;
         }
@@ -100,8 +100,8 @@ namespace Dt.Core
         /// <summary>
         /// 定义在调用此命令时调用的方法
         /// </summary>
-        /// <param name="p_parameter">执行参数（无参请给null）</param>
-        public void Execute(object p_parameter)
+        /// <param name="p_parameter">执行参数</param>
+        public void Execute(object p_parameter = null)
         {
             if (_allowExecute)
             {
@@ -121,7 +121,7 @@ namespace Dt.Core
         /// 撤消
         /// </summary>
         /// <param name="p_parameter"></param>
-        public void Undo(object p_parameter)
+        public void Undo(object p_parameter = null)
         {
             if (_allowExecute)
                 DoUndo(p_parameter);
@@ -131,7 +131,7 @@ namespace Dt.Core
         /// 重做
         /// </summary>
         /// <param name="p_parameter"></param>
-        public void Redo(object p_parameter)
+        public void Redo(object p_parameter = null)
         {
             if (_allowExecute)
             {
