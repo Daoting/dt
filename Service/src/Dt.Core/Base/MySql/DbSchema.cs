@@ -53,7 +53,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 加载系统用户和应用用户的表结构信息（已调整到最优）
+        /// 加载表结构信息（已调整到最优）
         /// </summary>
         /// <returns>返回加载结果信息</returns>
         public static string LoadSchema()
@@ -61,8 +61,7 @@ namespace Dt.Core
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             var schema = new Dictionary<string, TableSchema>();
-            MySqlDataReader reader = null;
-            using (MySqlConnection conn = new MySqlConnection(Glb.Config["Db"]))
+            using (MySqlConnection conn = new MySqlConnection(MySqlAccess.DefaultConnStr))
             {
                 conn.Open();
                 Database = conn.Database;
@@ -73,6 +72,7 @@ namespace Dt.Core
                     // 所有表名
                     cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
                     List<string> tbls = new List<string>();
+                    MySqlDataReader reader;
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -144,7 +144,7 @@ namespace Dt.Core
             }
             stopwatch.Stop();
             Schema = schema;
-            return $"加载[{Database}]表结构用时 {stopwatch.ElapsedMilliseconds} 毫秒";
+            return $"加载 {Database} 的表结构用时 {stopwatch.ElapsedMilliseconds} 毫秒";
         }
 
         /// <summary>

@@ -413,7 +413,7 @@ namespace Dt.Core.Sqlite
 
                 foreach (var p in toBeAdded)
                 {
-                    var addCol = "alter table \"" + map.TableName + "\" add column " + TableMapping.SqlDecl(p, false);
+                    var addCol = "alter table \"" + map.TableName + "\" add column " + TableMapping.SqlDecl(p);
                     Execute(addCol);
                 }
             }

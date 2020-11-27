@@ -72,7 +72,7 @@ namespace Dt.Base
             Dict cfg;
             try
             {
-                cfg = await new UnaryRpc(p_svcName, "Entry.GetConfig").Call<Dict>();
+                cfg = await new UnaryRpc(p_svcName, "ModelMgr.GetConfig").Call<Dict>();
                 AtSys.SyncTime(cfg.Date("now"));
             }
             catch

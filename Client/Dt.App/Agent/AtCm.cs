@@ -23,30 +23,18 @@ namespace Dt.App
     {
         #region Entry
         /// <summary>
-        /// 获取参数配置，包括模型文件版本号、服务器时间
-        /// </summary>
-        /// <returns></returns>
-        public static Task<Dict> GetConfig()
-        {
-            return new UnaryRpc(
-                "cm",
-                "Entry.GetConfig"
-            ).Call<Dict>();
-        }
-
-        /// <summary>
         /// 密码登录
         /// </summary>
         /// <param name="p_phone">手机号</param>
-        /// <param name="p_password">密码</param>
+        /// <param name="p_pwd">密码</param>
         /// <returns></returns>
-        public static Task<Dict> LoginByPwd(string p_phone, string p_password)
+        public static Task<Dict> LoginByPwd(string p_phone, string p_pwd)
         {
             return new UnaryRpc(
                 "cm",
                 "Entry.LoginByPwd",
                 p_phone,
-                p_password
+                p_pwd
             ).Call<Dict>();
         }
 
@@ -78,6 +66,20 @@ namespace Dt.App
                 "Entry.CreateVerificationCode",
                 p_phone
             ).Call<string>();
+        }
+
+        /// <summary>
+        /// 获取菜单项的数字提示信息
+        /// </summary>
+        /// <param name="p_menuIDs"></param>
+        /// <returns></returns>
+        public static Task<Dict> GetMenuTips(List<long> p_menuIDs)
+        {
+            return new UnaryRpc(
+                "cm",
+                "Entry.GetMenuTips",
+                p_menuIDs
+            ).Call<Dict>();
         }
         #endregion
 

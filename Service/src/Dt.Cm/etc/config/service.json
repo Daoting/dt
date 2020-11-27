@@ -1,7 +1,50 @@
 ﻿{
-  "Db": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;",
-  "DbList": {},
+  "DbConn": "bs0",
   "CacheSql": false,
   "TraceSql": true,
-  "TraceRpc": false
+  "TraceRpc": false,
+
+  "SqliteModel": {
+    "OmMenu": {
+      "Create": [
+        "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,SrvName text,Note text,DispIdx integer,primary key (ID))",
+        "create index if not exists \"OmMenu_ParentID\" on \"OmMenu\"(\"ParentID\")"
+      ],
+      "Data": "select * from cm_menu where islocked=0 order by dispidx"
+    },
+    "OmBaseCode": {
+      "Create": [
+        "create table if not exists OmBaseCode (ID text not null,Grp text,primary key (ID))",
+        "create index if not exists \"OmBaseCode_Grp\" on \"OmBaseCode\"(\"Grp\")"
+      ],
+      "Data": "select id,grp from cm_res order by dispidx",
+      "DbConn": "bs0"
+    },
+    "OmReport": {
+      "Create": [
+        "create table if not exists OmReport (ID integer not null,Name text,Define text,primary key (ID))"
+      ],
+      "Data": "select id,name,define from cm_rpt"
+    },
+    "RoleMenu": {
+      "Create": [
+        "create table if not exists RoleMenu (RoleID integer,MenuID integer)",
+        "create index if not exists \"RoleMenu_RoleID\" on \"RoleMenu\"(\"RoleID\")"
+      ],
+      "Data": "select a.* from cm_rolemenu a,cm_menu b where a.menuid=b.id and b.islocked=0"
+    },
+    "RolePrv": {
+      "Create": [
+        "create table if not exists RolePrv (RoleID integer,PrvID text)"
+      ],
+      "Data": "select * from cm_roleprv"
+    },
+    "Notice": {
+      "Create": [
+        "create table if not exists Notice (ID text not null,Title text,Ctime text,primary key (ID))"
+      ],
+      "Data": "select * from dt_notice",
+      "DbConn": "dt0"
+    }
+  }
 }

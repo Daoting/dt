@@ -36,7 +36,7 @@ namespace Dt.Core
             var ls = new List<string>();
             ls.Add($"{Glb.SvcName.Substring(0, 1).ToUpper()}{Glb.SvcName.Substring(1)} API目录");
             ls.Add(GetTopbarHtml());
-            ls.Add(GetGroupApi("基础API"));
+            ls.Add(GetGroupApi("API"));
             return ls;
         }
 
@@ -207,7 +207,7 @@ namespace Dt.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($"<span style=\"font-size:20px;\">{Glb.SvcName.Substring(0, 1).ToUpper()}{Glb.SvcName.Substring(1)}服务({Silo.Methods.Count})</span>");
-            foreach (var item in Silo.GroupMethods)
+            foreach (var item in Silo.GroupMethods.OrderBy((p) => p.Key))
             {
                 if (item.Value.Count > 0)
                     sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", item.Key);

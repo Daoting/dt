@@ -60,7 +60,7 @@ namespace Dt.Core
         /// <summary>
         /// 其他数据源连接串 + 设置是否自动关闭连接
         /// </summary>
-        /// <param name="p_dbKey">数据源键名，在json配置DbList节</param>
+        /// <param name="p_dbKey">数据源键名，在global.json的MySql节</param>
         /// <param name="p_autoClose">调用每个公共方法后是否自动关闭连接，false时切记最后手动关闭！</param>
         public MySqlAccess(string p_dbKey, bool p_autoClose = true)
         {
@@ -776,7 +776,7 @@ namespace Dt.Core
             if (_conn == null)
             {
                 // 数据源键名在json配置中
-                _conn = new MySqlConnection(string.IsNullOrEmpty(_dbKey) ? DefaultConnStr : Glb.Config["DbList:" + _dbKey]);
+                _conn = new MySqlConnection(string.IsNullOrEmpty(_dbKey) ? DefaultConnStr : Glb.Config["MySql:" + _dbKey]);
                 await _conn.OpenAsync();
             }
         }

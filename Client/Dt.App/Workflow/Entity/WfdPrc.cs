@@ -57,6 +57,7 @@ namespace Dt.App.Workflow
             {
                 // Atvs和Trss集合变化会触发CmdChanged，无需重复判断
                 return IsChanged
+                    || Atvs.IsChanged
                     || Trss.ExistDeleted
                     || Trss.ExistAdded
                     || AtvRoles.ExistDeleted
@@ -79,6 +80,7 @@ namespace Dt.App.Workflow
         {
             Changed += (s, e) => OnModified();
             Atvs.StartRecordDelRows();
+            Atvs.Changed += (s, e) => OnModified();
 
             Trss.StartRecordDelRows();
             Trss.CollectionChanged += (s, e) => OnModified();

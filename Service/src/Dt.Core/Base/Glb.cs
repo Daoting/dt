@@ -161,7 +161,7 @@ namespace Dt.Core
 
         static void ApplyConfig()
         {
-            MySqlAccess.DefaultConnStr = _config.GetValue("Db", "");
+            MySqlAccess.DefaultConnStr = _config["MySql:" + _config["DbConn"]];
             MySqlAccess.TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
         }
@@ -175,7 +175,7 @@ namespace Dt.Core
         /// <returns>服务对象</returns>
         public static T GetSvc<T>()
         {
-            return _svcProvider.GetRequiredService<T>();
+            return _svcProvider.GetService<T>();
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Dt.Core
         /// <returns>服务对象</returns>
         public static object GetSvc(Type p_svcType)
         {
-            return _svcProvider.GetRequiredService(p_svcType);
+            return _svcProvider.GetService(p_svcType);
         }
 
         /// <summary>

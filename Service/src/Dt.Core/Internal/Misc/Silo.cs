@@ -372,7 +372,7 @@ namespace Dt.Core
             List<string> grpMethods = null;
             if (p_apiAttr != null)
             {
-                string grpName = string.IsNullOrEmpty(p_apiAttr.GroupName) ? "基础API" : p_apiAttr.GroupName;
+                string grpName = string.IsNullOrEmpty(p_apiAttr.GroupName) ? "API" : p_apiAttr.GroupName;
                 if (GroupMethods.TryGetValue(grpName, out List<string> ls))
                 {
                     grpMethods = ls;

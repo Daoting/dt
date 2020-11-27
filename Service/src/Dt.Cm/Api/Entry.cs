@@ -27,15 +27,6 @@ namespace Dt.Cm
         const string _prefixCode = "vercode";
 
         /// <summary>
-        /// 获取参数配置，包括模型文件版本号、服务器时间
-        /// </summary>
-        /// <returns></returns>
-        public Dict GetConfig()
-        {
-            return new Dict { { "ver", Glb.GetSvc<SqliteModelHandler>().Version }, { "now", Glb.Now } };
-        }
-
-        /// <summary>
         /// 密码登录
         /// </summary>
         /// <param name="p_phone">手机号</param>

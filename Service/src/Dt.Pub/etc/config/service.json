@@ -1,6 +1,5 @@
 ﻿{
-  "Db": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;",
-  "DbList": {},
+  "DbConn": "bs0",
   "CacheSql": false,
   "TraceSql": true,
   "TraceRpc": false
