@@ -69,12 +69,20 @@
             </a:Tab>
             <a:Tab Title="拥有菜单">
                 <a:Tab.Menu>
-                    <a:Menu>
+                    <a:Menu x:Name="_mMenu">
                         <a:Mi ID="添加" Icon="加号" Click="OnAddMenu" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
-                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu" IsEnabled="{Binding HasSelected,ElementName=_lvMenu}" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu" IsEnabled="{Binding HasSelected,ElementName=_lvMenu}" Visibility="Collapsed" />
+                        <a:Mi ID="全选" Icon="正确" Click="OnMenuSelectAll" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="详细" Click="OnMenuMultiMode" />
+                        <a:Mi ID="取消" Icon="详细" Click="OnMenuCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvMenu">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu2" />
+                        </a:Menu>
+                    </a:Ex.Menu>
                     <DataTemplate>
                         <a:Dot ID="name" Margin="10,0,10,0" />
                     </DataTemplate>
@@ -82,12 +90,20 @@
             </a:Tab>
             <a:Tab Title="授予权限">
                 <a:Tab.Menu>
-                    <a:Menu>
+                    <a:Menu x:Name="_rMenu">
                         <a:Mi ID="添加" Icon="加号" Click="OnAddPrv" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
-                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemovePrv" IsEnabled="{Binding HasSelected,ElementName=_lvPrv}" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemovePrv" IsEnabled="{Binding HasSelected,ElementName=_lvPrv}" Visibility="Collapsed" />
+                        <a:Mi ID="全选" Icon="正确" Click="OnPrvSelectAll" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="详细" Click="OnPrvMultiMode" />
+                        <a:Mi ID="取消" Icon="详细" Click="OnPrvCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvPrv">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemovePrv2" />
+                        </a:Menu>
+                    </a:Ex.Menu>
                     <DataTemplate>
                         <a:Dot ID="prvid" Margin="10,0,10,0" />
                     </DataTemplate>

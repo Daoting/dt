@@ -93,11 +93,30 @@ namespace Dt.App.Model
             _lvRole.Data = null;
         }
 
+        void OnMultiMode(object sender, Mi e)
+        {
+            _lvRole.SelectionMode = SelectionMode.Multiple;
+            _rMenu.Hide("添加", "选择");
+            _rMenu.Show("移除", "全选", "取消");
+        }
+
+        void OnCancelMulti(object sender, Mi e)
+        {
+            _lvRole.SelectionMode = SelectionMode.Single;
+            _rMenu.Show("添加", "选择");
+            _rMenu.Hide("移除", "全选", "取消");
+        }
+
+        void OnSelectAll(object sender, Mi e)
+        {
+            _lvRole.SelectAll();
+        }
+
         async void OnAddRole(object sender, Mi e)
         {
             string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             SelectRolesDlg dlg = new SelectRolesDlg();
-            
+
             if (await dlg.Show(RoleRelations.Prv, prvID, e))
             {
                 List<RolePrv> ls = new List<RolePrv>();
@@ -113,12 +132,28 @@ namespace Dt.App.Model
             }
         }
 
-        async void OnRemoveRole(object sender, Mi e)
+        void OnRemoveRole(object sender, Mi e)
+        {
+            RemoveRole(_lvRole.SelectedRows);
+        }
+
+        void OnRemoveRole2(object sender, Mi e)
+        {
+            if (_lvRole.SelectionMode == SelectionMode.Multiple)
+                RemoveRole(_lvRole.SelectedRows);
+            else
+                RemoveRole(new List<Row> { e.Row });
+        }
+
+        async void RemoveRole(IEnumerable<Row> p_rows)
         {
             string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
-            var rp = new RolePrv(_lvRole.SelectedRow.Long("roleid"), prvID);
-            rp.AcceptChanges();
-            if (await AtCm.Delete(rp, false))
+            List<RolePrv> ls = new List<RolePrv>();
+            foreach (var row in p_rows)
+            {
+                ls.Add(new RolePrv(row.Long("roleid"), prvID));
+            }
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
             {
                 RefreshRelation(prvID);
                 AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");

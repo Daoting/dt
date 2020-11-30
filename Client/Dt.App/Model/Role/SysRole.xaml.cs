@@ -112,6 +112,7 @@ namespace Dt.App.Model
             _lvPrv.Data = null;
         }
 
+        #region User
         async void OnAddUser(object sender, Mi e)
         {
             var dlg = new SelectUserDlg();
@@ -168,6 +169,27 @@ namespace Dt.App.Model
             if (users.Count > 0 && await AtCm.RemoveRoleUsers(roleID, users))
                 _lvUser.Data = await AtCm.Query("角色-关联用户", new { roleid = roleID });
         }
+        #endregion
+
+        #region Menu
+        void OnMenuMultiMode(object sender, Mi e)
+        {
+            _lvMenu.SelectionMode = SelectionMode.Multiple;
+            _mMenu.Hide("添加", "选择");
+            _mMenu.Show("移除", "全选", "取消");
+        }
+
+        void OnMenuCancelMulti(object sender, Mi e)
+        {
+            _lvMenu.SelectionMode = SelectionMode.Single;
+            _mMenu.Show("添加", "选择");
+            _mMenu.Hide("移除", "全选", "取消");
+        }
+
+        void OnMenuSelectAll(object sender, Mi e)
+        {
+            _lvMenu.SelectAll();
+        }
 
         async void OnAddMenu(object sender, Mi e)
         {
@@ -188,15 +210,53 @@ namespace Dt.App.Model
             }
         }
 
-        async void OnRemoveMenu(object sender, Mi e)
+        void OnRemoveMenu(object sender, Mi e)
         {
-            var rm = new RoleMenu(_lvRole.SelectedRow.ID, _lvMenu.SelectedRow.Long("menuid"));
-            rm.AcceptChanges();
-            if (await AtCm.Delete(rm, false))
+            RemoveMenu(_lvMenu.SelectedRows);
+        }
+
+        void OnRemoveMenu2(object sender, Mi e)
+        {
+            if (_lvMenu.SelectionMode == SelectionMode.Multiple)
+                RemoveMenu(_lvMenu.SelectedRows);
+            else
+                RemoveMenu(new List<Row> { e.Row });
+        }
+
+        async void RemoveMenu(IEnumerable<Row> p_rows)
+        {
+            long roleID = _lvRole.SelectedRow.ID;
+            List<RoleMenu> ls = new List<RoleMenu>();
+            foreach (var row in p_rows)
             {
-                _lvMenu.DeleteSelection();
+                ls.Add(new RoleMenu(roleID, row.Long("menuid")));
+            }
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            {
+                _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
                 AtApp.PromptForUpdateModel("移除菜单授权成功，需要更新模型才生效");
             }
+        }
+        #endregion
+
+        #region Prv
+        void OnPrvMultiMode(object sender, Mi e)
+        {
+            _lvPrv.SelectionMode = SelectionMode.Multiple;
+            _rMenu.Hide("添加", "选择");
+            _rMenu.Show("移除", "全选", "取消");
+        }
+
+        void OnPrvCancelMulti(object sender, Mi e)
+        {
+            _lvPrv.SelectionMode = SelectionMode.Single;
+            _rMenu.Show("添加", "选择");
+            _rMenu.Hide("移除", "全选", "取消");
+        }
+
+        void OnPrvSelectAll(object sender, Mi e)
+        {
+            _lvPrv.SelectAll();
         }
 
         async void OnAddPrv(object sender, Mi e)
@@ -218,15 +278,33 @@ namespace Dt.App.Model
             }
         }
 
-        async void OnRemovePrv(object sender, Mi e)
+        void OnRemovePrv(object sender, Mi e)
         {
-            var rp = new RolePrv(_lvRole.SelectedRow.ID, _lvPrv.SelectedRow.Str("prvid"));
-            rp.AcceptChanges();
-            if (await AtCm.Delete(rp, false))
+            RemovePrv(_lvPrv.SelectedRows);
+        }
+
+        void OnRemovePrv2(object sender, Mi e)
+        {
+            if (_lvPrv.SelectionMode == SelectionMode.Multiple)
+                RemovePrv(_lvPrv.SelectedRows);
+            else
+                RemovePrv(new List<Row> { e.Row });
+        }
+
+        async void RemovePrv(IEnumerable<Row> p_rows)
+        {
+            long roleID = _lvRole.SelectedRow.ID;
+            List<RolePrv> ls = new List<RolePrv>();
+            foreach (var row in p_rows)
             {
-                _lvPrv.DeleteSelection();
+                ls.Add(new RolePrv(roleID, row.Str("prvid")));
+            }
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            {
+                _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
                 AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");
             }
         }
+        #endregion
     }
 }
