@@ -63,7 +63,7 @@ namespace Dt.Core.Sqlite
             }
             else
             {
-                Log.Error("模型文件不存在，请刷新创建");
+                Log.Error("模型文件不存在，请[更新模型]创建模型文件");
             }
             _isInited = true;
         }

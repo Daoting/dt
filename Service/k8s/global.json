@@ -1,8 +1,7 @@
 ﻿{
   "App": "baisui",
   "MySql": {
-    "bs0": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;",
-    "dt0": "Server=10.10.1.2;Database=dt0;Uid=dt;Pwd=dt;"
+    "bs0": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;"
   },
   "RabbitMq": {
     "HostName": "10.10.1.2",

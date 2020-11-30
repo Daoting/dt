@@ -143,10 +143,11 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Menu>()))
+            if (await AtCm.Save(_fv.Data.To<Menu>(), false))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
+                AtApp.PromptForUpdateModel("菜单保存成功，需要更新模型才生效");
             }
         }
 
@@ -169,7 +170,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await AtCm.Delete(p_row))
+            if (await AtCm.Delete(p_row, false))
             {
                 long id = p_row.ID;
                 Row tvRow = (from tr in (Table)_tv.Data
@@ -178,6 +179,7 @@ namespace Dt.App.Model
                 if (tvRow != null)
                     _tv.DeleteItem(tvRow);
                 _fv.Data = _tv.SelectedItem;
+                AtApp.PromptForUpdateModel("菜单删除成功，需要更新模型才生效");
             }
         }
 
@@ -193,11 +195,6 @@ namespace Dt.App.Model
             MenuKit.OpenMenu(menu);
         }
 
-        void OnRefreshModel(object sender, Mi e)
-        {
-            ModelKit.UpdateModel();
-        }
-
         async void OnAddRole(object sender, Mi e)
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
@@ -209,15 +206,21 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(row.ID, menuID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                {
                     _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
+                    AtApp.PromptForUpdateModel("菜单授权成功，需要更新模型才生效");
+                }
             }
         }
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            if (await AtCm.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
+            if (await AtCm.Delete(_lvRole.SelectedItem.To<RoleMenu>(), false))
+            {
                 _lvRole.DeleteSelection();
+                AtApp.PromptForUpdateModel("移除菜单授权成功，需要更新模型才生效");
+            }
         }
 
         async void OnLoadTreeGroup(object sender, AsyncEventArgs e)
@@ -228,26 +231,35 @@ namespace Dt.App.Model
             }
         }
 
-        async void OnMoveUp(object sender, Mi e)
+        void OnMoveUp(object sender, Mi e)
         {
             var src = e.Data.To<Menu>();
             if (src.ID == 0)
                 return;
 
             var tgt = _tv.GetTopBrother(src) as Menu;
-            if (tgt != null && await AtCm.ExchangeDispidx(src, tgt))
-                LoadTreeData();
+            if (tgt != null)
+                Exchange(src, tgt);
         }
 
-        async void OnMoveDown(object sender, Mi e)
+        void OnMoveDown(object sender, Mi e)
         {
             var src = e.Data.To<Menu>();
             if (src.ID == 0)
                 return;
 
             var tgt = _tv.GetFollowingBrother(src) as Menu;
-            if (tgt != null && await AtCm.ExchangeDispidx(src, tgt))
+            if (tgt != null)
+                Exchange(src, tgt);
+        }
+
+        async void Exchange(Menu src, Menu tgt)
+        {
+            if (await AtCm.ExchangeDispidx(src, tgt))
+            {
                 LoadTreeData();
+                AtApp.PromptForUpdateModel("菜单调序成功，需要更新模型才生效");
+            }
         }
 
         void OnListDel(object sender, Mi e)

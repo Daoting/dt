@@ -33,16 +33,11 @@ namespace Dt.Core
         /// 刷新模型版本
         /// </summary>
         /// <returns></returns>
-        public bool 更新模型文件()
+        public bool 更新模型()
         {
             var handler = Glb.GetSvc<SqliteModelHandler>();
             Throw.IfNull(handler, SqliteModelHandler.Warning);
             return handler.Refresh();
-        }
-
-        public string 更新表结构缓存()
-        {
-            return DbSchema.LoadSchema();
         }
     }
 }

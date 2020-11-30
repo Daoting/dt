@@ -41,12 +41,13 @@ namespace Dt.Core.Sqlite
             // 刷新标志，避免重复刷新
             SqliteModelHandler.Refreshing = true;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("刷新模型文件");
+            sb.AppendLine("准备更新模型...");
             sb.AppendFormat("模型版本 {0}\r\n", p_event.Version);
 
             // 刷新表结构缓存
             Stopwatch watch = new Stopwatch();
             watch.Start();
+            sb.AppendLine(DbSchema.LoadSchema());
 
             // 创建Data目录
             string path = SqliteModelHandler.ModelPath;

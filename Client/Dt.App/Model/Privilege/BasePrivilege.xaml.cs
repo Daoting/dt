@@ -105,8 +105,11 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(row.ID, prvID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                {
                     RefreshRelation(prvID);
+                    AtApp.PromptForUpdateModel("角色授权成功，需要更新模型才生效");
+                }
             }
         }
 
@@ -115,8 +118,11 @@ namespace Dt.App.Model
             string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             var rp = new RolePrv(_lvRole.SelectedRow.Long("roleid"), prvID);
             rp.AcceptChanges();
-            if (await AtCm.Delete(rp))
+            if (await AtCm.Delete(rp, false))
+            {
                 RefreshRelation(prvID);
+                AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");
+            }
         }
     }
 }

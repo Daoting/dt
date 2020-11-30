@@ -180,8 +180,11 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(roleID, row.ID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                {
                     _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
+                    AtApp.PromptForUpdateModel("菜单授权成功，需要更新模型才生效");
+                }
             }
         }
 
@@ -189,8 +192,11 @@ namespace Dt.App.Model
         {
             var rm = new RoleMenu(_lvRole.SelectedRow.ID, _lvMenu.SelectedRow.Long("menuid"));
             rm.AcceptChanges();
-            if (await AtCm.Delete(rm))
+            if (await AtCm.Delete(rm, false))
+            {
                 _lvMenu.DeleteSelection();
+                AtApp.PromptForUpdateModel("移除菜单授权成功，需要更新模型才生效");
+            }
         }
 
         async void OnAddPrv(object sender, Mi e)
@@ -204,8 +210,11 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(roleID, row.Str("id")));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                {
                     _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
+                    AtApp.PromptForUpdateModel("角色授权成功，需要更新模型才生效");
+                }
             }
         }
 
@@ -213,13 +222,11 @@ namespace Dt.App.Model
         {
             var rp = new RolePrv(_lvRole.SelectedRow.ID, _lvPrv.SelectedRow.Str("prvid"));
             rp.AcceptChanges();
-            if (await AtCm.Delete(rp))
+            if (await AtCm.Delete(rp, false))
+            {
                 _lvPrv.DeleteSelection();
-        }
-
-        void OnRefreshModel(object sender, Mi e)
-        {
-            ModelKit.UpdateModel();
+                AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");
+            }
         }
     }
 }

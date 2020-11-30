@@ -19,11 +19,6 @@
     <a:WinCenter>
         <a:Tabs>
             <a:Tab Title="列表">
-                <a:Tab.Menu>
-                    <a:Menu>
-                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
-                    </a:Menu>
-                </a:Tab.Menu>
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
                     <a:Ex.Menu>
                         <a:Menu>

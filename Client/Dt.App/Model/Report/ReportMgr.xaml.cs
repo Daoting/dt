@@ -68,9 +68,10 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Rpt>()))
+            if (await AtCm.Save(_fv.Data.To<Rpt>(), false))
             {
                 _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
+                AtApp.PromptForUpdateModel("报表模板保存成功，需要更新模型才生效");
             }
         }
 
@@ -104,10 +105,11 @@ namespace Dt.App.Model
             {
                 _fv.Data = null;
             }
-            else if (await AtCm.DelByID<Rpt>(rpt.ID))
+            else if (await AtCm.DelByID<Rpt>(rpt.ID, false))
             {
                 _fv.Data = null;
                 LoadAll();
+                AtApp.PromptForUpdateModel("报表模板删除成功，需要更新模型才生效");
             }
         }
 
@@ -126,11 +128,6 @@ namespace Dt.App.Model
         void EditTemplate(Rpt p_rpt)
         {
             _ = AtRpt.ShowDesign(new AppRptDesignInfo(p_rpt));
-        }
-
-        void OnRefreshModel(object sender, Mi e)
-        {
-            ModelKit.UpdateModel();
         }
     }
 }

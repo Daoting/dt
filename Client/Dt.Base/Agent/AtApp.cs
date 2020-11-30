@@ -72,6 +72,7 @@ namespace Dt.Base
             Dict cfg;
             try
             {
+                _modelSvcName = p_svcName;
                 cfg = await new UnaryRpc(p_svcName, "ModelMgr.GetConfig").Call<Dict>();
                 AtSys.SyncTime(cfg.Date("now"));
             }
@@ -128,6 +129,34 @@ namespace Dt.Base
                 return "打开模型库失败！" + ex.Message;
             }
             return null;
+        }
+
+        static string _modelSvcName;
+
+        /// <summary>
+        /// 提示需要更新模型
+        /// </summary>
+        /// <param name="p_msg">提示消息</param>
+        public static void PromptForUpdateModel(string p_msg)
+        {
+            if (string.IsNullOrEmpty(_modelSvcName))
+                return;
+
+            var notify = new NotifyInfo();
+            notify.Message = p_msg;
+            notify.DelaySeconds = 5;
+            notify.Link = "更新模型";
+            notify.LinkCallback = async(e) =>
+            {
+                if (await AtKit.Confirm("确认要更新模型吗？"))
+                {
+                    if (await new UnaryRpc(_modelSvcName, "ModelMgr.更新模型").Call<bool>())
+                        AtKit.Msg("更新模型成功！");
+                    else
+                        AtKit.Warn("更新模型失败！");
+                }
+            };
+            SysVisual.NotifyList.Add(notify);
         }
         #endregion
 

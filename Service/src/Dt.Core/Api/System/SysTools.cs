@@ -24,14 +24,6 @@ namespace Dt.Core
     public class SysTools
     {
         /// <summary>
-        /// 重新加载Cache.db中的sql语句
-        /// </summary>
-        public void 刷新sql缓存()
-        {
-            Silo.LoadCacheSql();
-        }
-
-        /// <summary>
         /// 生成实体类
         /// </summary>
         /// <param name="p_tblName">表名</param>
@@ -253,6 +245,19 @@ namespace Dt.Core
             sb.AppendLine("}");
 
             return sb.ToString();
+        }
+
+        public string 更新表结构缓存()
+        {
+            return DbSchema.LoadSchema();
+        }
+
+        /// <summary>
+        /// 重新加载Cache.db中的sql语句
+        /// </summary>
+        public void 刷新sql缓存()
+        {
+            Silo.LoadCacheSql();
         }
 
         public Task<List<string>> 所有微服务()

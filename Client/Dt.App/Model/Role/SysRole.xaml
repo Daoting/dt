@@ -72,7 +72,6 @@
                     <a:Menu>
                         <a:Mi ID="添加" Icon="加号" Click="OnAddMenu" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu" IsEnabled="{Binding HasSelected,ElementName=_lvMenu}" />
-                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvMenu">

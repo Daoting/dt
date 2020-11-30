@@ -38,7 +38,6 @@
                         <a:Mi ID="保存" Icon="保存" Click="OnSave" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
                         <a:Mi ID="删除" Icon="删除" Click="OnDel" />
                         <a:Mi ID="打开菜单" Icon="点击" Click="OnOpen" />
-                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
@@ -70,7 +69,6 @@
                     <a:Menu x:Name="_mRole">
                         <a:Mi ID="添加" Icon="加号" Click="OnAddRole" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveRole" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
-                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvRole">

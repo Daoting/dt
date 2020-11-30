@@ -8,20 +8,9 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Base.Report;
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.App.Model
@@ -56,7 +45,8 @@ namespace Dt.App.Model
                 _rpt["mtime"] = AtSys.Now;
             }
 
-            await AtCm.Save(_rpt);
+            if (await AtCm.Save(_rpt, false))
+                AtApp.PromptForUpdateModel("报表模板保存成功，需要更新模型才生效");
         }
     }
 }
