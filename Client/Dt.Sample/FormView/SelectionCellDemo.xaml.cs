@@ -40,6 +40,7 @@ namespace Dt.Sample
                 { "listint" },
                 { "listobj", typeof(Person) },
                 { "listrow" },
+                { "code" },
                 { "sex" },
                 { "sexname" },
 

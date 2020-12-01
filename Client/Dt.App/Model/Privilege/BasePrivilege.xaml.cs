@@ -124,10 +124,10 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(row.ID, prvID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     RefreshRelation(prvID);
-                    AtApp.PromptForUpdateModel("角色授权成功，需要更新模型才生效");
+                    AtApp.PromptForUpdateModel();
                 }
             }
         }
@@ -153,10 +153,10 @@ namespace Dt.App.Model
             {
                 ls.Add(new RolePrv(row.Long("roleid"), prvID));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 RefreshRelation(prvID);
-                AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
     }

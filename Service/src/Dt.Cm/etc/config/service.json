@@ -5,12 +5,12 @@
   "TraceRpc": false,
 
   "SqliteModel": {
-    "OmBaseCode": {
+    "OmOption": {
       "Create": [
-        "create table if not exists OmBaseCode (ID text not null,Grp text,primary key (ID))",
-        "create index if not exists \"OmBaseCode_Grp\" on \"OmBaseCode\"(\"Grp\")"
+        "create table if not exists OmOption (Name text not null,Category text not null,primary key (Name,Category))",
+        "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
       ],
-      "Data": "select id,grp from cm_res order by dispidx"
+      "Data": "select Name,Category from cm_option order by Category,Dispidx"
     },
     "OmReport": {
       "Create": [

@@ -143,11 +143,11 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Menu>(), false))
+            if (await AtCm.Save(_fv.Data.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
-                AtApp.PromptForUpdateModel("菜单保存成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
 
@@ -170,7 +170,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (await AtCm.Delete(p_row, false))
+            if (await AtCm.Delete(p_row))
             {
                 long id = p_row.ID;
                 Row tvRow = (from tr in (Table)_tv.Data
@@ -179,7 +179,7 @@ namespace Dt.App.Model
                 if (tvRow != null)
                     _tv.DeleteItem(tvRow);
                 _fv.Data = _tv.SelectedItem;
-                AtApp.PromptForUpdateModel("菜单删除成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
 
@@ -230,7 +230,7 @@ namespace Dt.App.Model
             if (await AtCm.ExchangeDispidx(src, tgt))
             {
                 LoadTreeData();
-                AtApp.PromptForUpdateModel("菜单调序成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel("菜单调序成功");
             }
         }
 
@@ -270,10 +270,10 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(row.ID, menuID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
-                    AtApp.PromptForUpdateModel("菜单授权成功，需要更新模型才生效");
+                    AtApp.PromptForUpdateModel();
                 }
             }
         }
@@ -299,10 +299,10 @@ namespace Dt.App.Model
             {
                 ls.Add(new RoleMenu(row.Long("roleid"), menuID));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
-                AtApp.PromptForUpdateModel("移除菜单授权成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
         #endregion

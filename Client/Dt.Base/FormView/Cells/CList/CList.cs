@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 列表选择格
     /// 数据源优先级：
     /// 1. 外部直接设置Data
-    /// 2. 基础代码
+    /// 2. 基础选项
     /// 3. Sql查询
     /// 4. Sql语句键值
     /// 5. 外部设置的Enum数据
@@ -39,8 +39,8 @@ namespace Dt.Base
     public partial class CList : FvCell
     {
         #region 静态内容
-        public readonly static DependencyProperty CodeProperty = DependencyProperty.Register(
-            "Code",
+        public readonly static DependencyProperty OptionProperty = DependencyProperty.Register(
+            "Option",
             typeof(string),
             typeof(CList),
             new PropertyMetadata(null, OnClearData));
@@ -199,13 +199,13 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置基础代码
+        /// 获取设置基础选项
         /// </summary>
-        [CellParam("基础代码")]
-        public string Code
+        [CellParam("基础选项")]
+        public string Option
         {
-            get { return (string)GetValue(CodeProperty); }
-            set { SetValue(CodeProperty, value); }
+            get { return (string)GetValue(OptionProperty); }
+            set { SetValue(OptionProperty, value); }
         }
 
         /// <summary>

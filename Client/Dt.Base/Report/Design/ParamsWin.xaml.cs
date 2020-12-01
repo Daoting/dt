@@ -143,7 +143,7 @@ namespace Dt.Base.Report
             "</a:CList>\n\n" +
             "属性：\n" +
             "IsEditable=\"True\"\n" +
-            "Code=\"基础代码\"\n" +
+            "Option=\"基础选项\"\n" +
             "Sql=\"Cm:select * from dt_log\"\n" +
             "Enum=\"Dt.Base.CtType,Dt.Base\"\n" +
             "RefreshData=\"True\"\n" +

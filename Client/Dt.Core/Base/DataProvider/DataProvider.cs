@@ -242,7 +242,7 @@ namespace Dt.Core
             if (model.OnSaving != null)
             {
                 // 保存前外部校验，不合格在外部抛出异常
-                if (!await OnSaving(model, p_entity, p_isNotify))
+                if (!await OnSaving(model, p_entity))
                     return false;
             }
 
@@ -340,7 +340,7 @@ namespace Dt.Core
             {
                 foreach (var item in p_list)
                 {
-                    if (item != null && !await OnSaving(model, item, p_isNotify))
+                    if (item != null && !await OnSaving(model, item))
                         return false;
                 }
             }
@@ -397,7 +397,7 @@ namespace Dt.Core
                         var model = EntitySchema.Get(item.GetType());
                         if (model.OnSaving != null)
                         {
-                            if (!await OnSaving(model, entity, p_isNotify))
+                            if (!await OnSaving(model, entity))
                                 return false;
                         }
 
@@ -415,7 +415,7 @@ namespace Dt.Core
                         {
                             foreach (var ci in clist)
                             {
-                                if (!await OnSaving(model, ci, p_isNotify))
+                                if (!await OnSaving(model, ci))
                                     return false;
                             }
                         }
@@ -477,9 +477,8 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_model"></param>
         /// <param name="p_entity"></param>
-        /// <param name="p_isNotify"></param>
         /// <returns></returns>
-        static async Task<bool> OnSaving(EntitySchema p_model, object p_entity, bool p_isNotify)
+        static async Task<bool> OnSaving(EntitySchema p_model, object p_entity)
         {
             try
             {
@@ -490,13 +489,10 @@ namespace Dt.Core
             }
             catch (Exception ex)
             {
-                if (p_isNotify)
-                {
-                    if (ex.InnerException is KnownException kex)
-                        AtKit.Warn(kex.Message);
-                    else
-                        AtKit.Warn(ex.Message);
-                }
+                if (ex.InnerException is KnownException kex)
+                    AtKit.Warn(kex.Message);
+                else
+                    AtKit.Warn(ex.Message);
                 return false;
             }
             return true;
@@ -524,7 +520,7 @@ namespace Dt.Core
             var model = EntitySchema.Get(typeof(TEntity));
             if (model.OnDeleting != null)
             {
-                if (!await OnDeleting(model, p_entity, p_isNotify))
+                if (!await OnDeleting(model, p_entity))
                     return false;
             }
 
@@ -647,7 +643,7 @@ namespace Dt.Core
             {
                 foreach (var item in p_list)
                 {
-                    if (item != null && !await OnDeleting(model, item, p_isNotify))
+                    if (item != null && !await OnDeleting(model, item))
                         return false;
                 }
             }
@@ -680,7 +676,7 @@ namespace Dt.Core
                     var model = EntitySchema.Get(item.GetType());
                     if (model.OnDeleting != null)
                     {
-                        if (!await OnDeleting(model, entity, p_isNotify))
+                        if (!await OnDeleting(model, entity))
                             return false;
                     }
 
@@ -697,7 +693,7 @@ namespace Dt.Core
                         {
                             foreach (var ci in clist)
                             {
-                                if (!await OnDeleting(model, ci, p_isNotify))
+                                if (!await OnDeleting(model, ci))
                                     return false;
                             }
                         }
@@ -731,9 +727,8 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_model"></param>
         /// <param name="p_entity"></param>
-        /// <param name="p_isNotify"></param>
         /// <returns></returns>
-        static async Task<bool> OnDeleting(EntitySchema p_model, object p_entity, bool p_isNotify)
+        static async Task<bool> OnDeleting(EntitySchema p_model, object p_entity)
         {
             try
             {
@@ -744,13 +739,10 @@ namespace Dt.Core
             }
             catch (Exception ex)
             {
-                if (p_isNotify)
-                {
-                    if (ex.InnerException is KnownException kex)
-                        AtKit.Warn(kex.Message);
-                    else
-                        AtKit.Warn(ex.Message);
-                }
+                if (ex.InnerException is KnownException kex)
+                    AtKit.Warn(kex.Message);
+                else
+                    AtKit.Warn(ex.Message);
                 return false;
             }
             return true;

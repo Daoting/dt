@@ -285,6 +285,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 深亮遮罩}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />

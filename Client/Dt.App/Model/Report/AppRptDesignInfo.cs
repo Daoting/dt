@@ -45,8 +45,8 @@ namespace Dt.App.Model
                 _rpt["mtime"] = AtSys.Now;
             }
 
-            if (await AtCm.Save(_rpt, false))
-                AtApp.PromptForUpdateModel("报表模板保存成功，需要更新模型才生效");
+            if (await AtCm.Save(_rpt))
+                AtApp.PromptForUpdateModel();
         }
     }
 }

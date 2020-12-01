@@ -74,10 +74,10 @@ namespace Dt.Base.FormView
             {
                 // 外部自定义数据源
             }
-            else if (!string.IsNullOrEmpty(_owner.Code))
+            else if (!string.IsNullOrEmpty(_owner.Option))
             {
-                // 基础代码
-                lv.Data = AtLocal.QueryModel($"select id,name from OmBaseCode where grp=\"{_owner.Code}\"");
+                // 基础选项
+                lv.Data = AtLocal.QueryModel($"select name from OmOption where Category=\"{_owner.Option}\"");
             }
             else if (!string.IsNullOrEmpty(_owner.Sql))
             {

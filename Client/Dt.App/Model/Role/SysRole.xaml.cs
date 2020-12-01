@@ -202,10 +202,10 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(roleID, row.ID));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
-                    AtApp.PromptForUpdateModel("菜单授权成功，需要更新模型才生效");
+                    AtApp.PromptForUpdateModel();
                 }
             }
         }
@@ -231,10 +231,10 @@ namespace Dt.App.Model
             {
                 ls.Add(new RoleMenu(roleID, row.Long("menuid")));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
-                AtApp.PromptForUpdateModel("移除菜单授权成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
         #endregion
@@ -270,10 +270,10 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RolePrv(roleID, row.Str("id")));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls, false))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
-                    AtApp.PromptForUpdateModel("角色授权成功，需要更新模型才生效");
+                    AtApp.PromptForUpdateModel();
                 }
             }
         }
@@ -299,10 +299,10 @@ namespace Dt.App.Model
             {
                 ls.Add(new RolePrv(roleID, row.Str("prvid")));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls, false))
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
-                AtApp.PromptForUpdateModel("移除角色授权成功，需要更新模型才生效");
+                AtApp.PromptForUpdateModel();
             }
         }
         #endregion

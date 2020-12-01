@@ -44,7 +44,7 @@ namespace Dt.Base
             _info.Close = CloseInternal;
             if (!string.IsNullOrEmpty(_info.Link))
             {
-                Button btn = new Button { Content = _info.Link, Style = AtRes.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right };
+                Button btn = new Button { Content = _info.Link, Style = AtRes.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
                 if (_info.LinkCallback != null)
                     btn.Click += (s, e) => _info.LinkCallback(_info);
                 _sp.Children.Add(btn);

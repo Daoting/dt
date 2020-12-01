@@ -162,7 +162,7 @@ namespace Dt.Shell
             { "任务", typeof(Dt.App.Workflow.TasksView) },
             { "发布管理", typeof(Dt.App.Publish.PublishMgr) },
             { "发布", typeof(Dt.App.Publish.PublishView) },
-            { "基础代码", typeof(Dt.App.Model.BaseCode) },
+            { "基础选项", typeof(Dt.App.Model.BaseOption) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },

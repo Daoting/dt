@@ -51,6 +51,7 @@
                             </Grid>
                         </DataTemplate>
                     </a:CList>
+                    <a:CList ID="code" Title="基础选项" Option="民族" />
                     <a:CList ID="sexname" Title="性别" SrcID="id" TgtID="sex">
                         <a:CList.Items>
                             <a:IDStr ID="1" Str="男" />
