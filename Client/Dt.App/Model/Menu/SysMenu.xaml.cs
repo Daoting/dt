@@ -273,7 +273,7 @@ namespace Dt.App.Model
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
-                    AtApp.PromptForUpdateModel();
+                    await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
                 }
             }
         }
@@ -302,7 +302,7 @@ namespace Dt.App.Model
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
-                AtApp.PromptForUpdateModel();
+                await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
             }
         }
         #endregion

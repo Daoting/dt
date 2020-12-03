@@ -9,9 +9,9 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
@@ -56,7 +56,7 @@ namespace Dt.Cm
             res["phone"] = p_phone;
             res["name"] = user.Name;
             res["photo"] = user.Photo;
-            res["roles"] = await new UserRoleCache().GetRoles(user.ID);
+            res["ver"] = await GetAllVers(user.ID);
             return res;
         }
 
@@ -93,9 +93,9 @@ namespace Dt.Cm
                 res["userid"] = user.ID;
                 res["phone"] = p_phone;
                 res["name"] = user.Name;
-                res["roles"] = await new UserRoleCache().GetRoles(user.ID);
                 res["pwd"] = user.Pwd;
                 res["photo"] = user.Photo;
+                res["ver"] = await GetAllVers(user.ID);
                 return res;
             }
 
@@ -106,9 +106,9 @@ namespace Dt.Cm
             res["userid"] = user.ID;
             res["phone"] = p_phone;
             res["name"] = user.Name;
-            res["roles"] = "1"; // 任何人
             res["pwd"] = user.Pwd;
             res["photo"] = user.Photo;
+            res["ver"] = ""; // 无版本信息
             return res;
         }
 
@@ -139,6 +139,21 @@ namespace Dt.Cm
         public Dict GetMenuTips(List<long> p_menuIDs)
         {
             return null;
+        }
+
+        static async Task<string> GetAllVers(long p_userID)
+        {
+            var arr = await Redis.Db.HashGetAllAsync($"ver:{p_userID}");
+            StringBuilder sb = new StringBuilder();
+            foreach (var en in arr)
+            {
+                if (sb.Length > 0)
+                    sb.Append(",");
+                sb.Append(en.Name);
+                sb.Append("+");
+                sb.Append(en.Value);
+            }
+            return sb.ToString();
         }
     }
 }

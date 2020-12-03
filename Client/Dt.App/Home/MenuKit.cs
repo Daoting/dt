@@ -9,6 +9,8 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
+using Dt.Core.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,15 +143,10 @@ namespace Dt.App
         /// <summary>
         /// 加载当前登录用户的菜单，性能已调优
         /// </summary>
-        public static void LoadMenus()
+        public static async Task LoadMenus()
         {
             // 所有可访问项
-            List<long> idsAll = new List<long>();
-            var ids = AtLocal.DeferredQueryModel<RoleMenu>(string.Format("select distinct(menuid) from RoleMenu where roleid in ({0})", AtUser.SqlRoles));
-            foreach (var rm in ids)
-            {
-                idsAll.Add(rm.MenuID);
-            }
+            List<long> idsAll = await GetAllUserMenus();
 
             // 常用组菜单项(最多共8项)：固定项 + 点击次数最多的前n项
             _favMenus.Clear();
@@ -328,6 +325,46 @@ namespace Dt.App
         }
 
         /// <summary>
+        /// 获取用户可访问的菜单
+        /// </summary>
+        /// <returns></returns>
+        static async Task<List<long>> GetAllUserMenus()
+        {
+            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='menu'");
+            if (cnt == 0)
+            {
+                // 查询服务端
+                Dict dt = await AtCm.GetMenus(AtUser.ID);
+
+                // 记录版本号
+                var ver = new DataVersion
+                {
+                    ID = "menu",
+                    Ver = dt.Str("ver"),
+                };
+                AtLocal.Save(ver);
+
+                // 清空旧数据
+                AtLocal.Execute("delete from UserMenu");
+
+                // 插入新数据
+                var ls = (List<long>)dt["result"];
+                if (ls != null && ls.Count > 0)
+                {
+                    List<Dict> dts = new List<Dict>();
+                    foreach (var id in ls)
+                    {
+                        dts.Add(new Dict { { "id", id } });
+                    }
+                    AtLocal.BatchExecute("insert into UserMenu (id) values (:id)", dts);
+                }
+                return ls;
+            }
+
+            return AtLocal.GetCol<long>("select id from UserMenu");
+        }
+
+        /// <summary>
         /// 递归判断是否存在下级菜单
         /// </summary>
         /// <param name="p_parentMenu"></param>
@@ -346,5 +383,15 @@ namespace Dt.App
             return false;
         }
         #endregion
+    }
+
+    /// <summary>
+    /// 用户可访问的菜单
+    /// </summary>
+    [StateTable]
+    public class UserMenu
+    {
+        [PrimaryKey]
+        public long ID { get; set; }
     }
 }

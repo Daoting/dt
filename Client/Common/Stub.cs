@@ -164,10 +164,11 @@ namespace Dt.Shell
             { "发布", typeof(Dt.App.Publish.PublishView) },
             { "基础选项", typeof(Dt.App.Model.BaseOption) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
+            { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
+            { "参数定义", typeof(Dt.App.Model.UserParams) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },
             { "系统角色", typeof(Dt.App.Model.SysRole) },
-            { "参数定义", typeof(Dt.App.Model.UserParams) },
             { "用户账号", typeof(Dt.App.Model.UserAccount) },
             { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.App.Chat.ChatHome) },
@@ -199,6 +200,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
             { "menufav", typeof(Dt.App.MenuFav) },
+            { "usermenu", typeof(Dt.App.UserMenu) },
             { "readfilehistory", typeof(Dt.App.File.ReadFileHistory) },
             { "chatmember", typeof(Dt.Base.ChatMember) },
             { "letter", typeof(Dt.Base.Letter) },
@@ -207,12 +209,14 @@ namespace Dt.Shell
             { "searchfvhis", typeof(Dt.Base.FormView.SearchFvHis) },
             { "clientlog", typeof(Dt.Core.Model.ClientLog) },
             { "clientcookie", typeof(Dt.Core.Model.ClientCookie) },
+            { "dataversion", typeof(Dt.Core.Model.DataVersion) },
+            { "userprivilege", typeof(Dt.Core.Model.UserPrivilege) },
         };
 
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "5cb90c74d13b600087112c85be55dae6";
+        public string StateDbVer => "2e6077df7f518d5cff3e1f4c6d8f3ec8";
         #endregion
     }
 }

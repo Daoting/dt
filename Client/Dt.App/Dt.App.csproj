@@ -7,12 +7,44 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Model\Params\GroupMenu.xaml" />
+    <None Remove="Model\Params\MyParamsSetting.xaml" />
+    <None Remove="Model\Params\SelectUserDlg.xaml" />
+    <None Remove="Model\Params\UserParamsDlg.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Model\Params\GroupMenu.xaml" />
+    <UpToDateCheckInput Remove="Model\Params\MyParamsSetting.xaml" />
+    <UpToDateCheckInput Remove="Model\Params\SelectUserDlg.xaml" />
+    <UpToDateCheckInput Remove="Model\Params\UserParamsDlg.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="..\Common\实体类模板.txt" Link="实体类模板.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Model\Params\MyParamsSetting.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+    <Compile Update="Model\Params\UserParamsDlg.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Model\Params\GroupMenu.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Model\Params\SelectUserDlg.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

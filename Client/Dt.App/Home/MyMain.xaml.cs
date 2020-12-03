@@ -70,5 +70,24 @@ namespace Dt.App.Home
                 LoadInfo();
             }
         }
+
+        void OnSetting(object sender, EventArgs e)
+        {
+            Type tp = AtApp.GetViewType("我的设置");
+            if (tp == null)
+            {
+                AtKit.Msg("未找到设置视图！");
+                return;
+            }
+
+            var dlg = new Dlg { Title = "设置" };
+            if (!AtSys.IsPhoneUI)
+            {
+                dlg.Width = 400;
+                dlg.Height = 500;
+            }
+            dlg.Content = Activator.CreateInstance(tp);
+            dlg.Show();
+        }
     }
 }

@@ -23,7 +23,7 @@
         <a:CBar />
         <a:CLink Title="我的二维码" />
         <a:CLink Title="修改密码" />
-        <a:CLink Title="存储空间" />
+        <a:CLink Title="设置" Click="OnSetting" />
         <a:CLink Title="关于" />
         <a:CBar>
             <Button Content="清除缓存" Click="OnClearLocalFile" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

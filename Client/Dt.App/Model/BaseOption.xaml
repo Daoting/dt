@@ -38,7 +38,7 @@
         <a:Tabs>
             <a:Tab Title="选项">
                 <a:Tab.Menu>
-                    <a:Menu x:Name="_uMenu">
+                    <a:Menu>
                         <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
                         <a:Mi ID="保存" Icon="保存" Click="OnSave" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
                         <a:Mi ID="删除" Icon="删除" Click="OnDel" />

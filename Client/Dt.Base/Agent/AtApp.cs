@@ -156,7 +156,7 @@ namespace Dt.Base
                         AtKit.Warn("更新模型失败！");
                 }
             };
-            SysVisual.NotifyList.Add(notify);
+            AtKit.RunAsync(() => SysVisual.NotifyList.Add(notify));
         }
         #endregion
 

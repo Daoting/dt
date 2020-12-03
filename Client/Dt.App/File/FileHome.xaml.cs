@@ -25,10 +25,14 @@ namespace Dt.App.File
         public FileHome()
         {
             InitializeComponent();
+            LoadContent();
+        }
 
+        async void LoadContent()
+        {
             var setting = new FileMgrSetting
             {
-                AllowEdit = AtUser.HasPrv("公共文件管理"),
+                AllowEdit = await AtUser.HasPrv("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });

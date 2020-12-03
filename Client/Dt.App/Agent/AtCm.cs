@@ -83,7 +83,60 @@ namespace Dt.App
         }
         #endregion
 
-        #region UserRoleApi
+        #region UserRelated
+        /// <summary>
+        /// 获取用户可访问的菜单，更新数据版本号
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns>返回版本号和菜单id串</returns>
+        public static Task<Dict> GetMenus(long p_userID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.GetMenus",
+                p_userID
+            ).Call<Dict>();
+        }
+
+        /// <summary>
+        /// 获取用户具有的权限，更新数据版本号
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns>返回版本号和权限id串</returns>
+        public static Task<Dict> GetPrivileges(long p_userID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.GetPrivileges",
+                p_userID
+            ).Call<Dict>();
+        }
+
+        public static Task<Dict> GetParams(long p_userID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.GetParams",
+                p_userID
+            ).Call<Dict>();
+        }
+
+        /// <summary>
+        /// 删除角色列表中所有用户的指定数据类型的版本号
+        /// </summary>
+        /// <param name="p_roleIDs"></param>
+        /// <param name="p_key"></param>
+        /// <returns></returns>
+        public static Task<bool> DeleteDataVer(List<long> p_roleIDs, string p_key)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.DeleteDataVer",
+                p_roleIDs,
+                p_key
+            ).Call<bool>();
+        }
+
         /// <summary>
         /// 删除用户关联的多个角色
         /// </summary>
@@ -94,7 +147,7 @@ namespace Dt.App
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.RemoveUserRoles",
+                "UserRelated.RemoveUserRoles",
                 p_userID,
                 p_roleIDs
             ).Call<bool>();
@@ -110,7 +163,7 @@ namespace Dt.App
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.RemoveRoleUsers",
+                "UserRelated.RemoveRoleUsers",
                 p_roleID,
                 p_userIDs
             ).Call<bool>();
@@ -126,7 +179,7 @@ namespace Dt.App
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.AddUserRole",
+                "UserRelated.AddUserRole",
                 p_userID,
                 p_roleIDs
             ).Call<bool>();
@@ -142,7 +195,7 @@ namespace Dt.App
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.AddRoleUser",
+                "UserRelated.AddRoleUser",
                 p_roleID,
                 p_userIDs
             ).Call<bool>();
@@ -157,7 +210,7 @@ namespace Dt.App
         {
             return new UnaryRpc(
                 "cm",
-                "UserRoleApi.DeleteRole",
+                "UserRelated.DeleteRole",
                 p_roleID
             ).Call<bool>();
         }

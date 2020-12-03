@@ -127,7 +127,7 @@ namespace Dt.App.Model
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     RefreshRelation(prvID);
-                    AtApp.PromptForUpdateModel();
+                    await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace Dt.App.Model
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 RefreshRelation(prvID);
-                AtApp.PromptForUpdateModel();
+                await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");
             }
         }
     }

@@ -56,8 +56,8 @@
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="报表名称" />
                     <a:CText ID="note" Title="报表描述" />
-                    <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
-                    <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
+                    <a:CTip ID="ctime" Title="创建时间" />
+                    <a:CTip ID="mtime" Title="修改时间" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

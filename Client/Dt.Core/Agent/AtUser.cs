@@ -7,8 +7,11 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Model;
 using Dt.Core.Rpc;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -55,9 +58,8 @@ namespace Dt.Core
             Name = p_info.Str("name");
             Photo = p_info.Str("photo");
 
-            if (p_info.TryGetValue("roles", out var r))
-                InitRoles((string)r);
             BaseRpc.RefreshHeader();
+            UpdateDataVersion(p_info.Str("ver"));
         }
 
         /// <summary>
@@ -72,6 +74,31 @@ namespace Dt.Core
 
             BaseRpc.RefreshHeader();
         }
+
+        static void UpdateDataVersion(string p_ver)
+        {
+            if (!string.IsNullOrEmpty(p_ver))
+            {
+                var ls = p_ver.Split(',');
+                var tbl = AtLocal.Query("select id,ver from DataVersion");
+                if (tbl != null && tbl.Count > 0)
+                {
+                    foreach (var row in tbl)
+                    {
+                        if (!ls.Contains($"{row[0]}+{row[1]}"))
+                        {
+                            // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
+                            AtLocal.Execute($"delete from DataVersion where id='{row.Str(0)}'");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // 所有缓存数据失效
+                AtLocal.Execute("delete from DataVersion");
+            }
+        }
         #endregion
 
         #region 头像路径
@@ -81,65 +108,48 @@ namespace Dt.Core
         public const string DefaultPhoto = "photo/profilephoto.jpg";
         #endregion
 
-        #region 角色
-        /// <summary>
-        /// 用户角色列表
-        /// </summary>
-        public static List<long> Roles { get; private set; }
-
-        /// <summary>
-        /// 用在sql中的角色串，格式 1,2,3
-        /// </summary>
-        public static string SqlRoles { get; private set; }
-
-        static void InitRoles(string p_roles)
-        {
-            // 任何人角色ID
-            if (string.IsNullOrEmpty(p_roles))
-                p_roles = "1";
-
-            List<long> ls = new List<long>();
-            long roleid;
-            foreach (string id in p_roles.Split(','))
-            {
-                if (long.TryParse(id, out roleid))
-                    ls.Add(roleid);
-            }
-            Roles = ls;
-            SqlRoles = p_roles;
-        }
-        #endregion
-
         #region 权限
-        static List<string> _prvs;
-
-        /// <summary>
-        /// 获取当前登录用户的权限列表
-        /// </summary>
-        public static List<string> Prvs
-        {
-            get
-            {
-                if (_prvs == null)
-                {
-                    _prvs = new List<string>();
-                    foreach (var rp in AtLocal.QueryModel(string.Format("select PrvID from roleprv where roleid in ({0})", SqlRoles)))
-                    {
-                        _prvs.Add(rp.Str("PrvID"));
-                    }
-                }
-                return _prvs;
-            }
-        }
-
         /// <summary>
         /// 判断当前登录用户是否具有指定权限
         /// </summary>
         /// <param name="p_id">权限ID</param>
         /// <returns>true 表示有权限</returns>
-        public static bool HasPrv(string p_id)
+        public static async Task<bool> HasPrv(string p_id)
         {
-            return Prvs.Contains(p_id);
+            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
+            if (cnt == 0)
+            {
+                // 查询服务端
+                Dict dt = await new UnaryRpc(
+                    "cm",
+                    "UserRelated.GetPrivileges",
+                    ID
+                ).Call<Dict>();
+
+                // 记录版本号
+                var ver = new DataVersion
+                {
+                    ID = "privilege",
+                    Ver = dt.Str("ver"),
+                };
+                AtLocal.Save(ver);
+
+                // 清空旧数据
+                AtLocal.Execute("delete from UserPrivilege");
+                // 插入新数据
+                var ls = (List<string>)dt["result"];
+                if (ls != null && ls.Count > 0)
+                {
+                    List<Dict> dts = new List<Dict>();
+                    foreach (var prv in ls)
+                    {
+                        dts.Add(new Dict { { "prv", prv } });
+                    }
+                    AtLocal.BatchExecute("insert into UserPrivilege (prv) values (:prv)", dts);
+                }
+            }
+
+            return AtLocal.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
         }
         #endregion
     }

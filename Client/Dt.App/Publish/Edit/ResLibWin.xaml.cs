@@ -19,10 +19,14 @@ namespace Dt.App.Publish
         public ResLibWin()
         {
             InitializeComponent();
+            LoadContent();
+        }
 
+        async void LoadContent()
+        {
             var setting = new FileMgrSetting
             {
-                AllowEdit = AtUser.HasPrv("素材库管理"),
+                AllowEdit = await AtUser.HasPrv("素材库管理"),
                 SaveHistory = false,
             };
             _tab.Content = new FolderPage(new ResFileMgr { Setting = setting });

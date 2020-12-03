@@ -205,7 +205,7 @@ namespace Dt.App.Model
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
-                    AtApp.PromptForUpdateModel();
+                    await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace Dt.App.Model
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvMenu.Data = await AtCm.Query("角色-关联的菜单", new { roleid = roleID });
-                AtApp.PromptForUpdateModel();
+                await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
             }
         }
         #endregion
@@ -273,7 +273,7 @@ namespace Dt.App.Model
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
                     _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
-                    AtApp.PromptForUpdateModel();
+                    await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");
                 }
             }
         }
@@ -302,7 +302,7 @@ namespace Dt.App.Model
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
                 _lvPrv.Data = await AtCm.Query("角色-关联的权限", new { roleid = roleID });
-                AtApp.PromptForUpdateModel();
+                await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");
             }
         }
         #endregion

@@ -31,7 +31,12 @@ namespace Dt.App.Home
         public RootMenu()
         {
             InitializeComponent();
-            MenuKit.LoadMenus();
+            LoadMenus();
+        }
+
+        async void LoadMenus()
+        {
+            await MenuKit.LoadMenus();
             _lv.Data = MenuKit.RootPageMenus;
             _lv.Loaded += OnLoaded;
         }
@@ -53,14 +58,14 @@ namespace Dt.App.Home
             _host.NaviTo(new SearchMenu());
         }
 
-        void OnReset(object sender, Mi e)
+        async void OnReset(object sender, Mi e)
         {
             if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
             {
                 var cnt = AtLocal.Execute($"delete from menufav where userid={AtUser.ID}");
                 if (cnt > 0)
                 {
-                    MenuKit.LoadMenus();
+                    await MenuKit.LoadMenus();
                     _lv.Data = MenuKit.RootPageMenus;
                     e.Visibility = Visibility.Collapsed;
                     AtKit.Msg("重置常用菜单成功！");

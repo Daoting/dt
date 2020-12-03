@@ -8,6 +8,7 @@
 
 #region 引用命名
 using StackExchange.Redis;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,9 +50,9 @@ namespace Dt.Core.Caches
         /// </summary>
         /// <param name="p_key">不带前缀的键名</param>
         /// <returns></returns>
-        public Task<bool> Remove(string p_key)
+        public Task<bool> Remove(object p_key)
         {
-            if (!string.IsNullOrEmpty(p_key))
+            if (p_key != null)
                 return _db.KeyDeleteAsync(GetFullKey(p_key));
             return Task.FromResult(false);
         }
@@ -61,13 +62,19 @@ namespace Dt.Core.Caches
         /// </summary>
         /// <param name="p_keys"></param>
         /// <returns></returns>
-        public Task BatchRemove(IEnumerable<string> p_keys)
+        public Task BatchRemove(IList p_keys)
         {
-            if (p_keys == null || p_keys.Count() == 0)
+            if (p_keys == null || p_keys.Count == 0)
                 return Task.FromResult(false);
 
-            var keys = p_keys.Select(p => (RedisKey)GetFullKey(p));
-            return _db.KeyDeleteAsync(keys.ToArray());
+            RedisKey[] keys = new RedisKey[p_keys.Count];
+            for (int i = 0; i < p_keys.Count; i++)
+            {
+                var obj = p_keys[i];
+                if (obj != null)
+                    keys[i] = GetFullKey(obj);
+            }
+            return _db.KeyDeleteAsync(keys);
         }
 
         /// <summary>
@@ -83,11 +90,11 @@ namespace Dt.Core.Caches
         /// </summary>
         /// <param name="p_key"></param>
         /// <returns></returns>
-        protected string GetFullKey(string p_key)
+        protected string GetFullKey(object p_key)
         {
-            if (string.IsNullOrEmpty(_keyPrefix))
-                return p_key;
-            return $"{_keyPrefix}:{p_key}";
+            if (p_key != null)
+                return $"{_keyPrefix}:{p_key}";
+            return _keyPrefix;
         }
     }
 }

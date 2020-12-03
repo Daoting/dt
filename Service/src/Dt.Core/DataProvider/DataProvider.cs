@@ -82,6 +82,17 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 以参数值方式执行Sql语句，返回Row枚举，高性能
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回Row枚举</returns>
+        public Task<IEnumerable<Row>> EachRow(string p_keyOrSql, object p_params = null)
+        {
+            return _db.EachRow(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
         /// 以参数值方式执行Sql语句，返回实体枚举，高性能
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>

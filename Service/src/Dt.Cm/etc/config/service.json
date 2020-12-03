@@ -24,19 +24,6 @@
         "create index if not exists \"OmMenu_ParentID\" on \"OmMenu\"(\"ParentID\")"
       ],
       "Data": "select * from cm_menu where islocked=0 order by dispidx"
-    },
-    "RoleMenu": {
-      "Create": [
-        "create table if not exists RoleMenu (RoleID integer,MenuID integer)",
-        "create index if not exists \"RoleMenu_RoleID\" on \"RoleMenu\"(\"RoleID\")"
-      ],
-      "Data": "select a.* from cm_rolemenu a,cm_menu b where a.menuid=b.id and b.islocked=0"
-    },
-    "RolePrv": {
-      "Create": [
-        "create table if not exists RolePrv (RoleID integer,PrvID text)"
-      ],
-      "Data": "select * from cm_roleprv"
     }
   }
 }

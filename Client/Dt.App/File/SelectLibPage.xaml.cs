@@ -28,9 +28,9 @@ namespace Dt.App.File
             _owner = p_owner;
         }
 
-        void OnPublicFile(object sender, RoutedEventArgs e)
+        async void OnPublicFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = AtUser.HasPrv("公共文件管理") };
+            var setting = new FileMgrSetting { AllowEdit = await AtUser.HasPrv("公共文件管理") };
             _host.NaviTo(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
@@ -39,9 +39,9 @@ namespace Dt.App.File
             _host.NaviTo(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = true } }, _owner));
         }
 
-        void OnResFile(object sender, RoutedEventArgs e)
+        async void OnResFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = AtUser.HasPrv("素材库管理") };
+            var setting = new FileMgrSetting { AllowEdit = await AtUser.HasPrv("素材库管理") };
             _host.NaviTo(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         

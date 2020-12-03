@@ -37,14 +37,21 @@ namespace Dt.Core.Caches
         /// <typeparam name="T">缓存类型</typeparam>
         /// <param name="p_key">不带前缀的键</param>
         /// <returns>缓存对象</returns>
-        public async Task<T> Get<T>(string p_key)
+        public async Task<T> Get<T>(object p_key)
             where T : class
         {
-            if (string.IsNullOrEmpty(p_key))
-                return default;
-
             var hashVal = await _db.HashGetAllAsync(GetFullKey(p_key));
             return FromHashEntry<T>(hashVal);
+        }
+
+        /// <summary>
+        /// 根据键查询所有field-value数组
+        /// </summary>
+        /// <param name="p_key"></param>
+        /// <returns></returns>
+        public Task<HashEntry[]> GetAll(object p_key)
+        {
+            return _db.HashGetAllAsync(GetFullKey(p_key));
         }
 
         /// <summary>
@@ -55,14 +62,14 @@ namespace Dt.Core.Caches
         /// <param name="p_value">待缓存对象</param>
         /// <param name="p_expiry">过期时间</param>
         /// <returns></returns>
-        public async Task Set<T>(string p_key, T p_value, TimeSpan? p_expiry = null)
+        public Task Set<T>(object p_key, T p_value, TimeSpan? p_expiry = null)
             where T : class
         {
-            if (string.IsNullOrEmpty(p_key) || p_value == null)
-                return;
+            if (p_value == null)
+                return Task.CompletedTask;
 
             HashEntry[] val = ToHashEntry(p_value);
-            await _db.HashSetAsync(GetFullKey(p_key), val);
+            return _db.HashSetAsync(GetFullKey(p_key), val);
         }
 
         /// <summary>
@@ -86,9 +93,9 @@ namespace Dt.Core.Caches
         /// <param name="p_key">不带前缀的键名</param>
         /// <param name="p_field">hash中的field，大小写敏感</param>
         /// <returns>field对应的value</returns>
-        public async Task<T> GetField<T>(string p_key, string p_field)
+        public async Task<T> GetField<T>(object p_key, string p_field)
         {
-            if (string.IsNullOrEmpty(p_key) || string.IsNullOrEmpty(p_field))
+            if (string.IsNullOrEmpty(p_field))
                 return default;
 
             var hashVal = await _db.HashGetAsync(GetFullKey(p_key), p_field);
@@ -110,12 +117,25 @@ namespace Dt.Core.Caches
         /// <param name="p_field">hash中的field，大小写敏感</param>
         /// <param name="p_value">field对应的value</param>
         /// <returns></returns>
-        public Task SetField(string p_key, string p_field, object p_value)
+        public Task SetField(object p_key, string p_field, object p_value)
         {
-            if (string.IsNullOrEmpty(p_key))
+            if (string.IsNullOrEmpty(p_field))
                 return Task.CompletedTask;
 
-            return _db.HashSetAsync(GetFullKey(p_key), new HashEntry[] { new HashEntry(p_field, p_value.ToString()) });
+            return _db.HashSetAsync(GetFullKey(p_key), new HashEntry[] { new HashEntry(p_field, p_value == null ? null : p_value.ToString()) });
+        }
+
+        /// <summary>
+        /// 删除指定键名hash中的field
+        /// </summary>
+        /// <param name="p_key"></param>
+        /// <param name="p_field"></param>
+        /// <returns></returns>
+        public Task<bool> DeleteField(object p_key, string p_field)
+        {
+            if (string.IsNullOrEmpty(p_field))
+                return Task.FromResult(false);
+            return _db.HashDeleteAsync(GetFullKey(p_key), p_field);
         }
 
         T FromHashEntry<T>(HashEntry[] p_hashVal)

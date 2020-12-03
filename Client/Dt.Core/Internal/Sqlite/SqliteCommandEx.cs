@@ -159,6 +159,29 @@ namespace Dt.Core.Sqlite
         }
 
         /// <summary>
+        /// 返回第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public List<T> GetFirstCol<T>()
+        {
+            List<T> rtn = new List<T>();
+            SqliteDataReader dataReader = ExecuteReader();
+            if (dataReader != null && dataReader.FieldCount > 0)
+            {
+                while (dataReader.Read())
+                {
+                    var val = GetFieldValue(dataReader, 0, typeof(T));
+                    if (val == null)
+                        rtn.Add(default(T));
+                    else
+                        rtn.Add((T)val);
+                }
+            }
+            return rtn;
+        }
+
+        /// <summary>
         /// 根据类型（class）T的公共属性填充Dictionary
         /// </summary>
         /// <typeparam name="T"></typeparam>

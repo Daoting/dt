@@ -36,12 +36,14 @@ namespace Dt.App.Model
         async void OnCateClick(object sender, ItemClickArgs e)
         {
             _lv.Data = await AtCm.Query<Option>("选项-分类选项", new { Category = _lvCate.SelectedRow.Str(0) });
+            SelectTab("选项列表");
         }
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             var op = _lv.SelectedRow.To<Option>();
             _fv.Data = await AtCm.Get<Option>("选项-选项", new { Category = op.Category, Name = op.Name });
+            SelectTab("选项");
         }
 
         void OnMoveUp(object sender, Mi e)

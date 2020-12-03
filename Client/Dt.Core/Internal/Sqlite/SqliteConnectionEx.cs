@@ -314,6 +314,19 @@ namespace Dt.Core.Sqlite
             }
         }
 
+        public List<T> GetFirstCol<T>(string p_sql, Dict p_params = null)
+        {
+            if (string.IsNullOrEmpty(p_sql))
+                throw new Exception(_errQuery);
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = p_sql;
+                WrapParams(cmd.Parameters, p_params);
+                return cmd.GetFirstCol<T>();
+            }
+        }
+
         /// <summary>
         /// 获取库中的所有表名
         /// </summary>
@@ -364,6 +377,35 @@ namespace Dt.Core.Sqlite
                 WrapParams(cmd.Parameters, p_params);
                 return cmd.ExecuteNonQuery();
             }
+        }
+
+        public int BatchExecute(string p_sql, List<Dict> p_list)
+        {
+            if (p_list == null || p_list.Count == 0)
+                throw new Exception(_errQuery);
+
+            int cnt = 0;
+            RunInTransaction(() =>
+            {
+                using (var cmd = CreateCmd())
+                {
+                    cmd.CommandText = p_sql;
+                    foreach (var item in p_list[0])
+                    {
+                        cmd.Parameters.Add(item.Key, item.Value == null ? SqliteType.Text : ToDbType(item.Value.GetType()));
+                    }
+                    
+                    foreach (var dt in p_list)
+                    {
+                        foreach (var item in dt)
+                        {
+                            cmd.Parameters[item.Key].Value = item.Value;
+                        }
+                        cnt += cmd.ExecuteNonQuery();
+                    }
+                }
+            });
+            return cnt;
         }
         #endregion
 

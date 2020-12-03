@@ -148,6 +148,18 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 查询状态库，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns>返回可枚举列表</returns>
+        public static List<T> GetCol<T>(string p_sql, Dict p_params = null)
+        {
+            return _stateDb.GetFirstCol<T>(p_sql, p_params);
+        }
+
+        /// <summary>
         /// 查询本地存储的Cookie值
         /// </summary>
         /// <param name="p_key"></param>
@@ -298,6 +310,17 @@ namespace Dt.Core
         public static int Execute(string p_sql, Dict p_params = null)
         {
             return _stateDb.Execute(p_sql, p_params);
+        }
+
+        /// <summary>
+        /// 事务内批量执行SQL语句
+        /// </summary>
+        /// <param name="p_sql"></param>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        public static int BatchExecute(string p_sql, List<Dict> p_list)
+        {
+            return _stateDb.BatchExecute(p_sql, p_list);
         }
 
         /// <summary>
