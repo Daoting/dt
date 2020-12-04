@@ -30,7 +30,7 @@ namespace Dt.App.Model
         {
             if (p_userID > 0)
             {
-                _fv.Data = await AtCm.Get<User>("用户-编辑", new { id = p_userID });
+                _fv.Data = await AtCm.First<User>("用户-编辑", new { id = p_userID });
             }
             else
             {

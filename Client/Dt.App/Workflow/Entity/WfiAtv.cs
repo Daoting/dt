@@ -53,7 +53,7 @@ namespace Dt.App.Workflow
             dt["prciid"] = PrciID;
             dt["SrcAtvID"] = AtvdID;
 
-            var atv = await AtCm.Get<WfiAtv>("流程-回退活动实例", dt);
+            var atv = await AtCm.First<WfiAtv>("流程-回退活动实例", dt);
             if (atv != null && atv.Status != WfiAtvStatus.Sync)
             {
                 // 存在同步的活动，不允许进行回退。(优先级大于设置的可以回退)

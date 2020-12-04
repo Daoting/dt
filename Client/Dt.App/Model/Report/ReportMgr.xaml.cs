@@ -38,7 +38,7 @@ namespace Dt.App.Model
                 rpt.RejectChanges();
             }
 
-            _fv.Data = await AtCm.Get<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
+            _fv.Data = await AtCm.First<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
             SelectTab("编辑");
         }
 

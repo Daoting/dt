@@ -33,7 +33,7 @@ namespace Dt.Cm
         {
             List<long> ls = new List<long>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.EachRow("用户-可访问的菜单", new { userid = p_userID });
+            var rows = await _dp.Each("用户-可访问的菜单", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -61,7 +61,7 @@ namespace Dt.Cm
         {
             List<string> ls = new List<string>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.EachRow("用户-具有的权限", new { userid = p_userID });
+            var rows = await _dp.Each("用户-具有的权限", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -112,11 +112,11 @@ namespace Dt.Cm
             if (p_roleIDs.Contains(1))
             {
                 // 包含任何人
-                ls = await _dp.EachItem<long>("select id from cm_user");
+                ls = await _dp.EachFirstCol<long>("select id from cm_user");
             }
             else
             {
-                ls = await _dp.EachItem<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await _dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
             }
 
             var db = GetVerCache();
@@ -238,8 +238,8 @@ namespace Dt.Cm
         {
             if (await _dp.Delete(new Role(p_roleID)))
             {
-                var ls = await _dp.EachItem<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
-                await GetVerCache().BatchRemove(ls.ToList());
+                var ls = await _dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
+                await GetVerCache().BatchRemove(ls);
                 return true;
             }
             return false;

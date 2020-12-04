@@ -138,11 +138,11 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public static Task<Row> GetRow(string p_keyOrSql, object p_params = null)
+        public static Task<Row> First(string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
                 typeof(TSvc).Name,
-                "Da.GetRow",
+                "Da.First",
                 p_keyOrSql,
                 p_params
             ).Call<Row>();
@@ -155,15 +155,33 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> Get<TEntity>(string p_keyOrSql, object p_params = null)
+        public static Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
             return new UnaryRpc(
                 typeof(TSvc).Name,
-                "Da.GetRow",
+                "Da.First",
                 p_keyOrSql,
                 p_params
                 ).Call<TEntity>();
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型列表</returns>
+        public static Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            return new UnaryRpc(
+                typeof(TSvc).Name,
+                "Da.FirstCol",
+                typeof(T).FullName,
+                p_keyOrSql,
+                p_params
+                ).Call<List<T>>();
         }
 
         /// <summary>
@@ -175,7 +193,7 @@ namespace Dt.Core
         public static Task<TEntity> GetByID<TEntity>(string p_id)
             where TEntity : Entity
         {
-            return Get<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
+            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
         }
 
         /// <summary>
@@ -187,7 +205,7 @@ namespace Dt.Core
         public static Task<TEntity> GetByID<TEntity>(long p_id)
             where TEntity : Entity
         {
-            return Get<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
+            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
         }
 
         /// <summary>

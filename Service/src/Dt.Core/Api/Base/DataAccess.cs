@@ -46,6 +46,29 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 以参数值方式执行Sql语句，只返回第一行数据
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一行Row或null</returns>
+        public Task<Row> First(string p_keyOrSql, object p_params = null)
+        {
+            return new MySqlAccess().First(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <param name="p_type">第一列数据类型</param>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型列表</returns>
+        public Task<object> FirstCol(string p_type, string p_keyOrSql, object p_params = null)
+        {
+            return new MySqlAccess().FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
+        }
+
+        /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
@@ -65,17 +88,6 @@ namespace Dt.Core
         public Task<object> GetScalar(string p_keyOrSql, object p_params = null)
         {
             return new MySqlAccess().GetScalar<object>(p_keyOrSql, p_params);
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一行数据
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行Row或null</returns>
-        public Task<Row> GetRow(string p_keyOrSql, object p_params = null)
-        {
-            return new MySqlAccess().GetRow(p_keyOrSql, p_params);
         }
 
         /// <summary>

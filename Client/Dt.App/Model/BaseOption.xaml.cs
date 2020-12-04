@@ -42,7 +42,7 @@ namespace Dt.App.Model
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             var op = _lv.SelectedRow.To<Option>();
-            _fv.Data = await AtCm.Get<Option>("选项-选项", new { Category = op.Category, Name = op.Name });
+            _fv.Data = await AtCm.First<Option>("选项-选项", new { Category = op.Category, Name = op.Name });
             SelectTab("选项");
         }
 
@@ -150,7 +150,7 @@ namespace Dt.App.Model
             Throw.If(string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Category), "选项名称和所属分类不可为空！");
             if (Cells["Name"].IsChanged || Cells["Category"].IsChanged)
             {
-                var op = await AtCm.Get<Option>("选项-选项", new { Category = Category, Name = Name });
+                var op = await AtCm.First<Option>("选项-选项", new { Category = Category, Name = Name });
                 Throw.If(op != null, "选项重复！");
             }
         }

@@ -35,7 +35,7 @@ namespace Dt.App.Workflow
         public static async Task<WfdPrc> Get(long p_id)
         {
             var dt = new Dict { { "prcid", p_id } };
-            var prc = await AtCm.Get<WfdPrc>("流程-编辑流程模板", dt);
+            var prc = await AtCm.First<WfdPrc>("流程-编辑流程模板", dt);
             prc.Atvs = await AtCm.Query<WfdAtv>("流程-编辑活动模板", dt);
             prc.Trss = await AtCm.Query<WfdTrs>("流程-编辑迁移模板", dt);
             prc.AtvRoles = await AtCm.Query<WfdAtvrole>("流程-编辑活动授权", dt);

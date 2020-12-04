@@ -11,6 +11,7 @@ using Dapper;
 using MySql.Data.MySqlClient;
 using Serilog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -104,7 +105,7 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public Task<IEnumerable<Row>> EachRow(string p_keyOrSql, object p_params = null)
+        public Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
         {
             return ForEachRow<Row>(p_keyOrSql, p_params);
         }
@@ -128,7 +129,7 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public async Task<Row> GetRow(string p_keyOrSql, object p_params = null)
+        public async Task<Row> First(string p_keyOrSql, object p_params = null)
         {
             return (await ForEachRow<Row>(p_keyOrSql, p_params)).FirstOrDefault();
         }
@@ -140,7 +141,7 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public async Task<TEntity> Get<TEntity>(string p_keyOrSql, object p_params = null)
+        public async Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
             return (await ForEachRow<TEntity>(p_keyOrSql, p_params)).FirstOrDefault();
@@ -170,6 +171,82 @@ namespace Dt.Core
             {
                 ReleaseConnection();
             }
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型列表</returns>
+        public async Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            return (List<T>)await FirstCol(typeof(T), p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <param name="p_type">第一列数据类型</param>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型列表</returns>
+        public async Task<object> FirstCol(Type p_type, string p_keyOrSql, object p_params = null)
+        {
+            Throw.IfNull(p_type);
+            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            try
+            {
+                await OpenConnection();
+                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
+                {
+                    // Dapper2.0 改版
+                    MySqlDataReader reader = (MySqlDataReader)wrappedReader.Reader;
+
+                    Type tp = typeof(List<>).MakeGenericType(p_type);
+                    var ls = Activator.CreateInstance(tp) as IList;
+                    var cols = reader.GetColumnSchema();
+                    if (cols[0].DataType == p_type)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            ls.Add(reader.GetValue(0));
+                        }
+                    }
+                    else
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            ls.Add(Convert.ChangeType(reader.GetValue(0), p_type));
+                        }
+                    }
+                    return ls;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw GetSqlException(cmd, ex);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回第一列枚举，高性能
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回泛型枚举</returns>
+        public async Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            var cmd = CreateCommand(p_keyOrSql, p_params, true);
+            await OpenConnection();
+            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
+            return ForEachFirstCol<T>(reader);
         }
 
         async Task QueryInternal<TRow>(Table p_tbl, string p_keyOrSql, object p_params = null)
@@ -225,7 +302,7 @@ namespace Dt.Core
         async Task<IEnumerable<TRow>> ForEachRow<TRow>(string p_keyOrSql, object p_params = null)
             where TRow : Row
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            var cmd = CreateCommand(p_keyOrSql, p_params, true);
             await OpenConnection();
             var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
             return ForEachRow<TRow>(reader);
@@ -260,6 +337,38 @@ namespace Dt.Core
                                 new Cell(row, col.ColumnName, colType, reader.GetValue(i));
                         }
                         yield return row;
+                    }
+                }
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
+        IEnumerable<T> ForEachFirstCol<T>(IWrappedDataReader p_wrappedReader)
+        {
+            // yield无法使用await，无法在含catch的try内
+            // 一定要使用using 或 finally方式释放资源，不然foreach内部break时资源无法释放！！！
+            try
+            {
+                using (p_wrappedReader)
+                {
+                    MySqlDataReader reader = (MySqlDataReader)p_wrappedReader.Reader;
+                    var cols = reader.GetColumnSchema();
+                    if (cols[0].DataType == typeof(T))
+                    {
+                        while (reader.Read())
+                        {
+                            yield return reader.GetFieldValue<T>(0);
+                        }
+                    }
+                    else
+                    {
+                        while (reader.Read())
+                        {
+                            yield return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
+                        }
                     }
                 }
             }

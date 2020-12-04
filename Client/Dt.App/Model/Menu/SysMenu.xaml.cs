@@ -65,7 +65,7 @@ namespace Dt.App.Model
         {
             var id = e.Row.ID;
             if (id > 0)
-                _fv.Data = await AtCm.Get<Menu>("菜单-id菜单项", new { id = id });
+                _fv.Data = await AtCm.First<Menu>("菜单-id菜单项", new { id = id });
             else
                 _fv.Data = _tv.FixedRoot;
             NaviTo("菜单项,菜单授权");

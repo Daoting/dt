@@ -71,25 +71,14 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 返回所有实体列表
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public Task<Table<TEntity>> GetAll<TEntity>()
-            where TEntity : Entity
-        {
-            return _db.Query<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectAllSql(), null);
-        }
-
-        /// <summary>
         /// 以参数值方式执行Sql语句，返回Row枚举，高性能
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public Task<IEnumerable<Row>> EachRow(string p_keyOrSql, object p_params = null)
+        public Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
         {
-            return _db.EachRow(p_keyOrSql, p_params);
+            return _db.Each(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -106,15 +95,62 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 以参数值方式执行Sql语句，返回泛型枚举，高性能，一般用来查询单列
+        /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <typeparam name="T">ORM类型，单列时可直接指定列类型</typeparam>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回泛型枚举</returns>
-        public Task<IEnumerable<T>> EachItem<T>(string p_keyOrSql, object p_params = null)
+        /// <returns>返回第一行Row或null</returns>
+        public Task<Row> First(string p_keyOrSql, object p_params = null)
         {
-            return _db.EachItem<T>(p_keyOrSql, p_params);
+            return _db.First(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回第一个实体对象，实体属性由Sql决定，不存在时返回null
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回实体对象或null</returns>
+        public Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
+            where TEntity : Entity
+        {
+            return _db.First<TEntity>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型列表</returns>
+        public Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            return _db.FirstCol<T>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回第一列枚举，高性能
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型枚举</returns>
+        public Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            return _db.EachFirstCol<T>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 返回所有实体列表
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns></returns>
+        public Task<Table<TEntity>> GetAll<TEntity>()
+            where TEntity : Entity
+        {
+            return _db.Query<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectAllSql(), null);
         }
 
         /// <summary>
@@ -126,30 +162,6 @@ namespace Dt.Core
         public Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
             return _db.GetScalar<T>(p_keyOrSql, p_params);
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，返回第一个实体对象，实体属性由Sql决定，不存在时返回null
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> Get<TEntity>(string p_keyOrSql, object p_params = null)
-            where TEntity : Entity
-        {
-            return _db.Get<TEntity>(p_keyOrSql, p_params);
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一行数据
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行Row或null</returns>
-        public Task<Row> GetRow(string p_keyOrSql, object p_params = null)
-        {
-            return _db.GetRow(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -196,7 +208,7 @@ namespace Dt.Core
 
             if (entity == null)
             {
-                entity = await _db.Get<TEntity>(
+                entity = await _db.First<TEntity>(
                     $"select * from `{model.Schema.Name}` where {p_keyName}=@{p_keyName}",
                     new Dict { { p_keyName, p_keyVal } });
 
@@ -506,7 +518,7 @@ namespace Dt.Core
 
                 if (entity == null)
                 {
-                    entity = await _db.Get<TEntity>(
+                    entity = await _db.First<TEntity>(
                         $"select * from `{model.Schema.Name}` where {p_keyName}=@{p_keyName}",
                         new Dict { { p_keyName, p_keyVal } });
                 }

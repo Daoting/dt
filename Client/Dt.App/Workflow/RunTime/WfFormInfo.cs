@@ -371,7 +371,7 @@ namespace Dt.App
 
         async Task CreateWorkItem()
         {
-            AtvDef = await AtCm.Get<WfdAtv>("流程-起始活动", new { prcid = _prcID });
+            AtvDef = await AtCm.First<WfdAtv>("流程-起始活动", new { prcid = _prcID });
 
             PrcInst = new WfiPrc(
                 ID: await AtCm.NewID(),
@@ -397,8 +397,8 @@ namespace Dt.App
         async Task LoadWorkItem()
         {
             Dict dt = new Dict { { "itemid", _itemID } };
-            PrcInst = await AtCm.Get<WfiPrc>("流程-工作项的流程实例", dt);
-            AtvInst = await AtCm.Get<WfiAtv>("流程-工作项的活动实例", dt);
+            PrcInst = await AtCm.First<WfiPrc>("流程-工作项的流程实例", dt);
+            AtvInst = await AtCm.First<WfiAtv>("流程-工作项的活动实例", dt);
             WorkItem = await AtCm.GetByID<WfiItem>(_itemID);
             AtvDef = await AtCm.GetByID<WfdAtv>(AtvInst.AtvdID);
         }

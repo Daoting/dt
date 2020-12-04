@@ -171,7 +171,7 @@ namespace Dt.Core
         {
             try
             {
-                var ls = new MySqlAccess().EachRow($"select id,`sql` from {Glb.SvcName}_sql").Result;
+                var ls = new MySqlAccess().Each($"select id,`sql` from {Glb.SvcName}_sql").Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");

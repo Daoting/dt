@@ -53,7 +53,7 @@ namespace Dt.App.Publish
 
         async void LoadPost(long p_id)
         {
-            _fv.Data = await AtPublish.Get<Post>("文章-编辑", new { id = p_id });
+            _fv.Data = await AtPublish.First<Post>("文章-编辑", new { id = p_id });
             LoadKeyword(p_id);
             LoadAlbum(p_id);
         }
