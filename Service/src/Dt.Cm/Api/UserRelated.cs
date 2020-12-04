@@ -24,6 +24,7 @@ namespace Dt.Cm
     [Api]
     public class UserRelated : BaseApi
     {
+        #region 缓存数据
         /// <summary>
         /// 获取用户可访问的菜单，更新数据版本号
         /// </summary>
@@ -77,22 +78,71 @@ namespace Dt.Cm
             return new Dict { { "result", ls }, { "ver", ver } };
         }
 
+        /// <summary>
+        /// 获取用户的所有参数值，更新数据版本号
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns></returns>
         public async Task<Dict> GetParams(long p_userID)
         {
+            var tblAll = await _dp.Query("SELECT id,value FROM cm_params");
+            var tblMy = await _dp.Query("SELECT paramid,value FROM cm_userparams where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
-            var tbl = await _dp.Query("用户-所有参数值", new { userid = p_userID });
-            foreach (var row in tbl)
+            foreach (var row in tblAll)
             {
+                string id = row.Str(0);
+                if (tblMy.Count > 0)
+                {
+                    foreach (var r in tblMy)
+                    {
+                        if (r.Str(0) == id)
+                        {
+                            row.InitVal(1, r[1]);
+                            break;
+                        }
+                    }
+                }
+
                 if (sb.Length > 0)
                     sb.Append(",");
-                sb.Append(row.Str(0));
+                sb.Append(id);
                 sb.Append(row.Str(1));
             }
 
             string ver = Kit.GetMD5(sb.ToString()).Substring(8, 16);
             await GetVerCache().SetField(p_userID, "params", ver);
 
-            return new Dict { { "result", tbl }, { "ver", ver } };
+            return new Dict { { "result", tblAll }, { "ver", ver } };
+        }
+
+        /// <summary>
+        /// 保存用户参数值
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_paramID"></param>
+        /// <param name="p_value"></param>
+        /// <returns></returns>
+        [Transaction]
+        public async Task<bool> SaveParams(long p_userID, string p_paramID, string p_value)
+        {
+            Throw.IfNullOrEmpty(p_paramID, "参数名不可为空！");
+
+            Userparams up = new Userparams(
+                UserID: p_userID,
+                ParamID: p_paramID,
+                Value: p_value,
+                Mtime: Glb.Now);
+            await _dp.Delete(up);
+
+            var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
+            if (defVal != p_value)
+            {
+                // 和默认值不同
+                if (!await _dp.Save(up))
+                    return false;
+            }
+            await GetVerCache().DeleteField(p_userID, "params");
+            return true;
         }
 
         /// <summary>
@@ -127,6 +177,12 @@ namespace Dt.Cm
             }
             return true;
         }
+
+        HashCache GetVerCache()
+        {
+            return new HashCache("ver");
+        }
+        #endregion
 
         #region 用户角色
         /// <summary>
@@ -245,11 +301,5 @@ namespace Dt.Cm
             return false;
         }
         #endregion
-
-
-        HashCache GetVerCache()
-        {
-            return new HashCache("ver");
-        }
     }
 }

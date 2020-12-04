@@ -165,7 +165,7 @@ namespace Dt.Shell
             { "基础选项", typeof(Dt.App.Model.BaseOption) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
-            { "参数定义", typeof(Dt.App.Model.UserParams) },
+            { "参数定义", typeof(Dt.App.Model.UserParamsMgr) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },
             { "系统角色", typeof(Dt.App.Model.SysRole) },
@@ -210,13 +210,14 @@ namespace Dt.Shell
             { "clientlog", typeof(Dt.Core.Model.ClientLog) },
             { "clientcookie", typeof(Dt.Core.Model.ClientCookie) },
             { "dataversion", typeof(Dt.Core.Model.DataVersion) },
+            { "userparams", typeof(Dt.Core.Model.UserParams) },
             { "userprivilege", typeof(Dt.Core.Model.UserPrivilege) },
         };
 
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "2e6077df7f518d5cff3e1f4c6d8f3ec8";
+        public string StateDbVer => "3910e85d001b57a07dccb63e2ca29f44";
         #endregion
     }
 }

@@ -89,5 +89,11 @@ namespace Dt.App.Home
             dlg.Content = Activator.CreateInstance(tp);
             dlg.Show();
         }
+
+        async void OnAbout(object sender, EventArgs e)
+        {
+            var b = await AtUser.GetParam<string>("接收新任务");
+            var c = await AtUser.GetParam<bool>("接收新发布通知");
+        }
     }
 }

@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core.Model;
 using Dt.Core.Rpc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -150,6 +151,78 @@ namespace Dt.Core
             }
 
             return AtLocal.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
+        }
+        #endregion
+
+        #region 用户参数
+        /// <summary>
+        /// 获取参数值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_paramID"></param>
+        /// <returns></returns>
+        public static async Task<T> GetParam<T>(string p_paramID)
+        {
+            await Init();
+
+            var row = AtLocal.First($"select val from UserParams where id='{p_paramID}'");
+            Throw.IfNull(row, $"无参数【{p_paramID}】");
+
+            string val = row.Str(0);
+            if (string.IsNullOrEmpty(val))
+                return default;
+
+            Type type = typeof(T);
+            if (type == typeof(string))
+                return (T)(object)val;
+
+            object result;
+            try
+            {
+                result = Convert.ChangeType(val, type);
+            }
+            catch
+            {
+                throw new Exception(string.Format("参数【{0}】的值转换异常：无法将【{1}】转换到【{2}】类型！", p_paramID, val, type));
+            }
+            return (T)result;
+        }
+
+        static async Task Init()
+        {
+            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='params'");
+            if (cnt > 0)
+                return;
+
+            // 查询服务端
+            Dict dt = await new UnaryRpc(
+                    "cm",
+                    "UserRelated.GetParams",
+                    ID
+                ).Call<Dict>();
+
+            // 记录版本号
+            var ver = new DataVersion
+            {
+                ID = "params",
+                Ver = dt.Str("ver"),
+            };
+            AtLocal.Save(ver);
+
+            // 清空旧数据
+            AtLocal.Exec("delete from UserParams");
+
+            // 插入新数据
+            var tbl = (Table)dt["result"];
+            if (tbl != null && tbl.Count > 0)
+            {
+                List<Dict> dts = new List<Dict>();
+                foreach (var row in tbl)
+                {
+                    dts.Add(new Dict { { "id", row.Str(0) }, { "val", row.Str(1) } });
+                }
+                AtLocal.BatchExec("insert into UserParams (id,val) values (:id, :val)", dts);
+            }
         }
         #endregion
     }

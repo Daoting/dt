@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -23,7 +24,29 @@ namespace Dt.App.Model
         public MyParamsSetting()
         {
             InitializeComponent();
-            
+            LoadVals();
+        }
+
+        async void LoadVals()
+        {
+            Dict dt = await AtCm.GetParams(AtUser.ID);
+            Table tbl = (Table)dt["result"];
+            if (tbl == null || tbl.Count == 0)
+                return;
+
+            Row row = new Row();
+            foreach (var r in tbl)
+            {
+                row.AddCell(r.Str(0), r.Str(1));
+            }
+            _fv.Data = row;
+            row.Changed += OnValChanged;
+        }
+
+        async void OnValChanged(object sender, Cell e)
+        {
+            if (await AtCm.SaveParams(AtUser.ID, e.ID, e.GetVal<string>()))
+                e.AcceptChanges();
         }
     }
 }

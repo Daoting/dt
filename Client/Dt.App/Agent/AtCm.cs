@@ -112,6 +112,11 @@ namespace Dt.App
             ).Call<Dict>();
         }
 
+        /// <summary>
+        /// 获取用户的所有参数值，更新数据版本号
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns></returns>
         public static Task<Dict> GetParams(long p_userID)
         {
             return new UnaryRpc(
@@ -119,6 +124,24 @@ namespace Dt.App
                 "UserRelated.GetParams",
                 p_userID
             ).Call<Dict>();
+        }
+
+        /// <summary>
+        /// 保存用户参数值
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_paramID"></param>
+        /// <param name="p_value"></param>
+        /// <returns></returns>
+        public static Task<bool> SaveParams(long p_userID, string p_paramID, string p_value)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.SaveParams",
+                p_userID,
+                p_paramID,
+                p_value
+            ).Call<bool>();
         }
 
         /// <summary>

@@ -18,6 +18,7 @@
     <UpToDateCheckInput Remove="Model\Params\MyParamsSetting.xaml" />
     <UpToDateCheckInput Remove="Model\Params\SelectUserDlg.xaml" />
     <UpToDateCheckInput Remove="Model\Params\UserParamsDlg.xaml" />
+    <UpToDateCheckInput Remove="Model\Params\UserParamsMgr.xaml" />
   </ItemGroup>
 
   <ItemGroup>
