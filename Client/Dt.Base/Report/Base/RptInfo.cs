@@ -60,7 +60,7 @@ namespace Dt.Base
         {
             return Task.Run(() =>
             {
-                string define = AtLocal.GetModelScalar<string>("select define from OmReport where name=:name", new Dict { { "name", Name } });
+                string define = AtLocal.ModelGetScalar<string>("select define from OmReport where name=:name", new Dict { { "name", Name } });
                 if (string.IsNullOrEmpty(define))
                     AtKit.Warn($"未找到报表模板【{Name}】！");
                 return define;

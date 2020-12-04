@@ -138,7 +138,7 @@ namespace Dt.Base
             if (OtherID < 0)
                 return;
 
-            _other = AtLocal.GetFirst<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
+            _other = AtLocal.First<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
             // 不是好友时无法发送
             _inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -165,7 +165,7 @@ namespace Dt.Base
                 limit = cnt - e.PageNo * e.PageSize;
 
             Nl<Letter> data = new Nl<Letter>();
-            var ls = AtLocal.DeferredQuery<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+            var ls = AtLocal.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
                 l.Photo = l.IsReceived ? _other.Photo : AtUser.Photo;
@@ -369,7 +369,7 @@ namespace Dt.Base
         void OnDelMsg(object sender, Mi e)
         {
             var l = (Letter)e.DataContext;
-            AtLocal.Execute($"delete from Letter where ID={l.ID}");
+            AtLocal.Exec($"delete from Letter where ID={l.ID}");
             _lv.Data.Remove(l);
         }
 

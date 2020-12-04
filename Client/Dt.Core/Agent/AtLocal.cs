@@ -49,54 +49,17 @@ namespace Dt.Core
         #endregion
 
         #region 状态库
-        #region ORM
-        /// <summary>
-        /// 将给定的对象插入到ORM对应的表，确保存在主键
-        /// <para>1. 若存在相同主键的行则更新原行，相当于Update</para>
-        /// <para>2. 若无相同主键则执行Insert</para>
-        /// <para>3. 基本可以替代Insert和Update</para>
-        /// <para>*. 若有自增主键插入数据时请使用Insert</para>
-        /// </summary>
-        /// <param name="p_obj">待保存对象</param>
-        /// <returns>返回影响的行数</returns>
-        public static int Save(object p_obj)
-        {
-            return _stateDb.Insert(p_obj, true);
-        }
 
+        #region 查询
         /// <summary>
-        /// 事务内批量保存对象，确保存在主键
-        /// <para>1. 若存在相同主键的行则更新原行，相当于Update</para>
-        /// <para>2. 若无相同主键则执行Insert</para>
-        /// <para>3. 基本可以替代Insert和Update</para>
-        /// <para>*. 若有自增主键插入数据时请使用Insert</para>
+        /// 查询状态库返回Table
         /// </summary>
-        /// <param name="p_list">对象列表</param>
-        /// <returns>返回影响的行数</returns>
-        public static int SaveAll<T>(IEnumerable<T> p_list)
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns>返回Table</returns>
+        public static Table Query(string p_sql, Dict p_params = null)
         {
-            return _stateDb.BatchInsert(p_list, true);
-        }
-
-        /// <summary>
-        /// 将给定的对象插入到ORM对应的表
-        /// </summary>
-        /// <param name="p_obj">待插入的对象</param>
-        /// <returns>返回影响的行数</returns>
-        public static int Insert(object p_obj)
-        {
-            return _stateDb.Insert(p_obj, false);
-        }
-
-        /// <summary>
-        /// 事务内批量插入数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="p_list">待插入的对象列表</param>
-        /// <returns>返回影响的行数</returns>
-        public static int InsertAll<T>(IEnumerable<T> p_list)
-        {
-            return _stateDb.BatchInsert(p_list, false);
+            return _stateDb.Query(p_sql, p_params);
         }
 
         /// <summary>
@@ -118,9 +81,20 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static IEnumerable<T> DeferredQuery<T>(string p_sql, Dict p_params = null) where T : class
+        public static IEnumerable<T> Each<T>(string p_sql, Dict p_params = null) where T : class
         {
             return _stateDb.DeferredQuery<T>(p_sql, p_params);
+        }
+
+        /// <summary>
+        /// SQL查询，只返回第一行数据
+        /// </summary>
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns></returns>
+        public static Row First(string p_sql, Dict p_params = null)
+        {
+            return _stateDb.GetRow(p_sql, p_params);
         }
 
         /// <summary>
@@ -130,9 +104,21 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static T GetFirst<T>(string p_sql, Dict p_params = null) where T : class
+        public static T First<T>(string p_sql, Dict p_params = null) where T : class
         {
             return _stateDb.DeferredQuery<T>(p_sql, p_params).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 查询状态库，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns>返回可枚举列表</returns>
+        public static List<T> FirstCol<T>(string p_sql, Dict p_params = null)
+        {
+            return _stateDb.GetFirstCol<T>(p_sql, p_params);
         }
 
         /// <summary>
@@ -146,19 +132,134 @@ namespace Dt.Core
         {
             return _stateDb.ExecuteScalar<T>(p_sql, p_params);
         }
+        #endregion
 
+        #region 增删改
         /// <summary>
-        /// 查询状态库，返回符合条件的第一列数据，并转换为指定类型
+        /// 将给定的对象插入到ORM对应的表，确保存在主键
+        /// <para>1. 若存在相同主键的行则更新原行，相当于Update</para>
+        /// <para>2. 若无相同主键则执行Insert</para>
+        /// <para>3. 基本可以替代Insert和Update</para>
+        /// <para>*. 若有自增主键插入数据时请使用Insert</para>
         /// </summary>
-        /// <typeparam name="T">第一列数据类型</typeparam>
-        /// <param name="p_sql">sql语句</param>
-        /// <param name="p_params">参数值列表</param>
-        /// <returns>返回可枚举列表</returns>
-        public static List<T> GetCol<T>(string p_sql, Dict p_params = null)
+        /// <param name="p_obj">待保存对象</param>
+        /// <returns>返回影响的行数</returns>
+        public static int Save(object p_obj)
         {
-            return _stateDb.GetFirstCol<T>(p_sql, p_params);
+            return _stateDb.Insert(p_obj, true);
         }
 
+        /// <summary>
+        /// 保存Row到对应的表
+        /// </summary>
+        /// <param name="p_row">数据</param>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public static int Save(Row p_row, string p_tblName)
+        {
+            return _stateDb.InsertRow(p_row, p_tblName);
+        }
+
+        /// <summary>
+        /// 事务内批量保存对象，确保存在主键
+        /// <para>1. 若存在相同主键的行则更新原行，相当于Update</para>
+        /// <para>2. 若无相同主键则执行Insert</para>
+        /// <para>3. 基本可以替代Insert和Update</para>
+        /// <para>*. 若有自增主键插入数据时请使用Insert</para>
+        /// </summary>
+        /// <param name="p_list">对象列表</param>
+        /// <returns>返回影响的行数</returns>
+        public static int BatchSave<T>(IEnumerable<T> p_list)
+        {
+            return _stateDb.BatchInsert(p_list, true);
+        }
+
+        /// <summary>
+        /// 保存表格数据到对应的表
+        /// </summary>
+        /// <param name="p_tbl">数据</param>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public static int BatchSave(Table p_tbl, string p_tblName)
+        {
+            return _stateDb.InsertTable(p_tbl, p_tblName);
+        }
+
+        /// <summary>
+        /// 将给定的对象插入到ORM对应的表
+        /// </summary>
+        /// <param name="p_obj">待插入的对象</param>
+        /// <returns>返回影响的行数</returns>
+        public static int Insert(object p_obj)
+        {
+            return _stateDb.Insert(p_obj, false);
+        }
+
+        /// <summary>
+        /// 事务内批量插入数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_list">待插入的对象列表</param>
+        /// <returns>返回影响的行数</returns>
+        public static int BatchInsert<T>(IEnumerable<T> p_list)
+        {
+            return _stateDb.BatchInsert(p_list, false);
+        }
+
+        /// <summary>
+        /// 删除行数据
+        /// </summary>
+        /// <param name="p_rows">数据</param>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public static bool Delete(IEnumerable<Row> p_rows, string p_tblName)
+        {
+            if (p_rows == null || string.IsNullOrEmpty(p_tblName))
+                throw new Exception("待删除的数据和表名不可为空！");
+
+            bool suc = true;
+            TableMapping map = _stateDb.GetTblMapping(p_tblName);
+            var pk = map.PK;
+            if (pk == null || !p_rows.First().Contains(pk.Name))
+                throw new Exception("无法删除无主键列的数据！");
+
+            _stateDb.RunInTransaction(() =>
+            {
+                var sql = $"delete from {map.TableName} where {pk.Name}=:pkVal";
+                Dict par = new Dict();
+                foreach (Row dr in p_rows)
+                {
+                    par["pkVal"] = dr.Str(pk.Name);
+                    Exec(sql, par);
+                }
+            });
+            return suc;
+        }
+
+        /// <summary>
+        /// 在状态库执行SQL语句
+        /// </summary>
+        /// <param name="p_sql">SQL语句</param>
+        /// <param name="p_params">参数列表</param>
+        /// <returns>返回影响的行数</returns>
+        public static int Exec(string p_sql, Dict p_params = null)
+        {
+            return _stateDb.Execute(p_sql, p_params);
+        }
+
+        /// <summary>
+        /// 事务内批量执行SQL语句
+        /// </summary>
+        /// <param name="p_sql"></param>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        public static int BatchExec(string p_sql, List<Dict> p_list)
+        {
+            return _stateDb.BatchExecute(p_sql, p_list);
+        }
+        #endregion
+
+        #region 其他
         /// <summary>
         /// 查询本地存储的Cookie值
         /// </summary>
@@ -224,104 +325,6 @@ namespace Dt.Core
         {
             _stateDb.Execute("delete from ClientCookie where key='AutoStart'");
         }
-        #endregion
-
-        #region Table
-        /// <summary>
-        /// 保存Row到对应的表
-        /// </summary>
-        /// <param name="p_row">数据</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public static int Save(Row p_row, string p_tblName)
-        {
-            return _stateDb.InsertRow(p_row, p_tblName);
-        }
-
-        /// <summary>
-        /// 保存表格数据到对应的表
-        /// </summary>
-        /// <param name="p_tbl">数据</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public static int Save(Table p_tbl, string p_tblName)
-        {
-            return _stateDb.InsertTable(p_tbl, p_tblName);
-        }
-
-        /// <summary>
-        /// 删除行数据
-        /// </summary>
-        /// <param name="p_rows">数据</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public static bool Delete(IEnumerable<Row> p_rows, string p_tblName)
-        {
-            if (p_rows == null || string.IsNullOrEmpty(p_tblName))
-                throw new Exception("待删除的数据和表名不可为空！");
-
-            bool suc = true;
-            TableMapping map = _stateDb.GetTblMapping(p_tblName);
-            var pk = map.PK;
-            if (pk == null || !p_rows.First().Contains(pk.Name))
-                throw new Exception("无法删除无主键列的数据！");
-
-            _stateDb.RunInTransaction(() =>
-            {
-                var sql = $"delete from {map.TableName} where {pk.Name}=:pkVal";
-                Dict par = new Dict();
-                foreach (Row dr in p_rows)
-                {
-                    par["pkVal"] = dr.Str(pk.Name);
-                    Execute(sql, par);
-                }
-            });
-            return suc;
-        }
-
-        /// <summary>
-        /// 查询状态库返回Table
-        /// </summary>
-        /// <param name="p_sql">sql语句</param>
-        /// <param name="p_params">参数值列表</param>
-        /// <returns>返回Table</returns>
-        public static Table Query(string p_sql, Dict p_params = null)
-        {
-            return _stateDb.Query(p_sql, p_params);
-        }
-
-        /// <summary>
-        /// SQL查询，只返回第一行数据
-        /// </summary>
-        /// <param name="p_sql">sql语句</param>
-        /// <param name="p_params">参数值列表</param>
-        /// <returns></returns>
-        public static Row GetRow(string p_sql, Dict p_params = null)
-        {
-            return _stateDb.GetRow(p_sql, p_params);
-        }
-
-        /// <summary>
-        /// 在状态库执行SQL语句
-        /// </summary>
-        /// <param name="p_sql">SQL语句</param>
-        /// <param name="p_params">参数列表</param>
-        /// <returns>返回影响的行数</returns>
-        public static int Execute(string p_sql, Dict p_params = null)
-        {
-            return _stateDb.Execute(p_sql, p_params);
-        }
-
-        /// <summary>
-        /// 事务内批量执行SQL语句
-        /// </summary>
-        /// <param name="p_sql"></param>
-        /// <param name="p_list"></param>
-        /// <returns></returns>
-        public static int BatchExecute(string p_sql, List<Dict> p_list)
-        {
-            return _stateDb.BatchExecute(p_sql, p_list);
-        }
 
         /// <summary>
         /// 查询状态库中所有表名
@@ -344,6 +347,7 @@ namespace Dt.Core
             return _stateDb.GetTblMapping(p_tblName);
         }
         #endregion
+
         #endregion
 
         #region 模型库
@@ -353,7 +357,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static Table QueryModel(string p_sql, Dict p_params = null)
+        public static Table ModelQuery(string p_sql, Dict p_params = null)
         {
             return _modelDb.Query(p_sql, p_params);
         }
@@ -365,7 +369,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static List<T> QueryModel<T>(string p_sql, Dict p_params = null) where T : class
+        public static List<T> ModelQuery<T>(string p_sql, Dict p_params = null) where T : class
         {
             return _modelDb.Query<T>(p_sql, p_params);
         }
@@ -377,14 +381,9 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static IEnumerable<T> DeferredQueryModel<T>(string p_sql, Dict p_params = null) where T : class
+        public static IEnumerable<T> ModelEach<T>(string p_sql, Dict p_params = null) where T : class
         {
             return _modelDb.DeferredQuery<T>(p_sql, p_params);
-        }
-
-        public static IEnumerable<T> DeferredQueryModel<T>(string p_sql) where T : class
-        {
-            return _modelDb.DeferredQuery<T>(p_sql);
         }
 
         /// <summary>
@@ -394,7 +393,7 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static T QueryModelFirst<T>(string p_sql, Dict p_params = null) where T : class
+        public static T ModelFirst<T>(string p_sql, Dict p_params = null) where T : class
         {
             return _modelDb.DeferredQuery<T>(p_sql, p_params).FirstOrDefault();
         }
@@ -406,7 +405,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static T GetModelScalar<T>(string p_sql, Dict p_params = null)
+        public static T ModelGetScalar<T>(string p_sql, Dict p_params = null)
         {
             return _modelDb.ExecuteScalar<T>(p_sql, p_params);
         }
@@ -417,7 +416,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static int ExecuteModel(string p_sql, Dict p_params = null)
+        public static int ModelExec(string p_sql, Dict p_params = null)
         {
             return _modelDb.Execute(p_sql, p_params);
         }

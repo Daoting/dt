@@ -95,7 +95,7 @@ namespace Dt.Sample
             else if (_fv1.Data is ClientLog log)
             {
                 if (log.ID != 0)
-                    AtLocal.Execute($"delete from ClientLog where id={log.ID}");
+                    AtLocal.Exec($"delete from ClientLog where id={log.ID}");
                 _fv1.Data = null;
             }
             AtKit.Msg("删除成功！");

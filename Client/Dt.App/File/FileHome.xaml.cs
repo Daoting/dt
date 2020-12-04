@@ -51,7 +51,7 @@ namespace Dt.App.File
         {
             AtKit.RunAsync(() =>
             {
-                var ls = AtLocal.DeferredQuery<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
+                var ls = AtLocal.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
                 StringBuilder sb = new StringBuilder();
                 foreach (var file in ls)
                 {
@@ -82,7 +82,7 @@ namespace Dt.App.File
 
             if (await AtKit.Confirm("确认要清空历史记录吗？"))
             {
-                AtLocal.Execute("delete from ReadFileHistory");
+                AtLocal.Exec("delete from ReadFileHistory");
                 _fl.Data = null;
             }
         }
@@ -91,7 +91,7 @@ namespace Dt.App.File
         {
             if (await AtKit.Confirm("确认要删除当前历史记录吗？"))
             {
-                if (AtLocal.Execute("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
+                if (AtLocal.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
                     LoadHistory();
             }
         }

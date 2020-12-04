@@ -62,7 +62,7 @@ namespace Dt.App.Home
         {
             if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
             {
-                var cnt = AtLocal.Execute($"delete from menufav where userid={AtUser.ID}");
+                var cnt = AtLocal.Exec($"delete from menufav where userid={AtUser.ID}");
                 if (cnt > 0)
                 {
                     await MenuKit.LoadMenus();

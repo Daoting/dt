@@ -77,7 +77,7 @@ namespace Dt.Base.FormView
             else if (!string.IsNullOrEmpty(_owner.Option))
             {
                 // 基础选项
-                lv.Data = AtLocal.QueryModel($"select name from OmOption where Category=\"{_owner.Option}\"");
+                lv.Data = AtLocal.ModelQuery($"select name from OmOption where Category=\"{_owner.Option}\"");
             }
             else if (!string.IsNullOrEmpty(_owner.Sql))
             {

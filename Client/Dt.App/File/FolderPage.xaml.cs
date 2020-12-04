@@ -59,7 +59,7 @@ namespace Dt.App.File
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = AtLocal.GetFirst<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
+                var his = AtLocal.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
                 if (his == null)
                 {
                     his = new ReadFileHistory();

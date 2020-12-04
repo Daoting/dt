@@ -103,15 +103,15 @@ namespace Dt.App
             {
                 Task.Run(() =>
                 {
-                    if (AtLocal.GetModelScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+                    if (AtLocal.ModelGetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
                     {
                         // 点击次数保存在客户端
                         Dict dt = new Dict();
                         dt["userid"] = AtUser.ID;
                         dt["menuid"] = p_menu.ID;
-                        int cnt = AtLocal.Execute("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
+                        int cnt = AtLocal.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
                         if (cnt == 0)
-                            AtLocal.Execute("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
+                            AtLocal.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
                     }
                     // 收集使用频率
                     //await AtAuth.ClickMenu(p_menu.ID);
@@ -162,13 +162,13 @@ namespace Dt.App
             // 点击次数最多的前n项
             if (_favMenus.Count < _maxFixed)
             {
-                var favMenu = AtLocal.DeferredQuery<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc");
+                var favMenu = AtLocal.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc");
                 foreach (var fav in favMenu)
                 {
                     // 过滤无权限的项
                     if (idsAll.Contains(fav.MenuID))
                     {
-                        var om = AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                        var om = AtLocal.ModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
                         _favMenus.Add(om);
                         if (_favMenus.Count >= _maxFixed)
                             break;
@@ -184,7 +184,7 @@ namespace Dt.App
             var roots = new List<OmMenu>();
 
             // 整理菜单项
-            foreach (var item in AtLocal.DeferredQueryModel<OmMenu>("select * from OmMenu"))
+            foreach (var item in AtLocal.ModelEach<OmMenu>("select * from OmMenu"))
             {
                 // 过滤无权限的项，保留所有分组
                 if (!item.IsGroup && !idsAll.Contains(item.ID))
@@ -345,7 +345,7 @@ namespace Dt.App
                 AtLocal.Save(ver);
 
                 // 清空旧数据
-                AtLocal.Execute("delete from UserMenu");
+                AtLocal.Exec("delete from UserMenu");
 
                 // 插入新数据
                 var ls = (List<long>)dt["result"];
@@ -356,12 +356,12 @@ namespace Dt.App
                     {
                         dts.Add(new Dict { { "id", id } });
                     }
-                    AtLocal.BatchExecute("insert into UserMenu (id) values (:id)", dts);
+                    AtLocal.BatchExec("insert into UserMenu (id) values (:id)", dts);
                 }
                 return ls;
             }
 
-            return AtLocal.GetCol<long>("select id from UserMenu");
+            return AtLocal.FirstCol<long>("select id from UserMenu");
         }
 
         /// <summary>

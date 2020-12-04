@@ -62,11 +62,11 @@ namespace Dt.Base
             // 撤回消息
             if (p_letter.LetterType == LetterType.Undo)
             {
-                var letter = AtLocal.GetFirst<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
+                var letter = AtLocal.First<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
                 if (letter != null)
                 {
                     // 删除
-                    AtLocal.Execute($"delete from Letter where ID={letter.ID}");
+                    AtLocal.Exec($"delete from Letter where ID={letter.ID}");
                     UndoLetter?.Invoke(letter);
                 }
                 return;
@@ -172,7 +172,7 @@ namespace Dt.Base
         {
             AtKit.RunAsync(() =>
             {
-                int cnt = AtLocal.Execute("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
+                int cnt = AtLocal.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
                     new Dict
                     {
                         { "otherid", p_otherid },
@@ -292,7 +292,7 @@ namespace Dt.Base
                 SendTime = AtSys.Now
             };
             await AtMsg.SendLetter(p_letter.OtherID, li);
-            AtLocal.Execute($"delete from Letter where ID={p_letter.ID}");
+            AtLocal.Exec($"delete from Letter where ID={p_letter.ID}");
             return true;
         }
         #endregion

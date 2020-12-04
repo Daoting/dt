@@ -24,7 +24,7 @@ namespace Dt.Base.Tools
         void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvData.Data = AtLocal.QueryModel(string.Format("select * from {0}", e.Row.Str("name")));
+                _lvData.Data = AtLocal.ModelQuery(string.Format("select * from {0}", e.Row.Str("name")));
             NaviTo("数据");
         }
     }

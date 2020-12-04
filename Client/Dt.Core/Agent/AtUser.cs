@@ -88,7 +88,7 @@ namespace Dt.Core
                         if (!ls.Contains($"{row[0]}+{row[1]}"))
                         {
                             // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
-                            AtLocal.Execute($"delete from DataVersion where id='{row.Str(0)}'");
+                            AtLocal.Exec($"delete from DataVersion where id='{row.Str(0)}'");
                         }
                     }
                 }
@@ -96,7 +96,7 @@ namespace Dt.Core
             else
             {
                 // 所有缓存数据失效
-                AtLocal.Execute("delete from DataVersion");
+                AtLocal.Exec("delete from DataVersion");
             }
         }
         #endregion
@@ -135,7 +135,7 @@ namespace Dt.Core
                 AtLocal.Save(ver);
 
                 // 清空旧数据
-                AtLocal.Execute("delete from UserPrivilege");
+                AtLocal.Exec("delete from UserPrivilege");
                 // 插入新数据
                 var ls = (List<string>)dt["result"];
                 if (ls != null && ls.Count > 0)
@@ -145,7 +145,7 @@ namespace Dt.Core
                     {
                         dts.Add(new Dict { { "prv", prv } });
                     }
-                    AtLocal.BatchExecute("insert into UserPrivilege (prv) values (:prv)", dts);
+                    AtLocal.BatchExec("insert into UserPrivilege (prv) values (:prv)", dts);
                 }
             }
 

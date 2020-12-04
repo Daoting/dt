@@ -566,7 +566,7 @@ namespace Dt.Base
                     if (val == null || string.IsNullOrEmpty(val.ToString()))
                     {
                         // 为空时删除记录，避免造成不一致情况
-                        AtLocal.Execute($"delete from CellLastVal where id=\"{id}\"");
+                        AtLocal.Exec($"delete from CellLastVal where id=\"{id}\"");
                     }
                     else
                     {

@@ -92,7 +92,7 @@ namespace Dt.Base
             Row row = e.Row;
             if (await AtKit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
             {
-                AtLocal.Execute($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
+                AtLocal.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
                 LoadData();
             }
         }

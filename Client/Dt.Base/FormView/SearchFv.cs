@@ -120,7 +120,7 @@ namespace Dt.Base
         {
             _lastText = p_text;
             // 删除重复
-            AtLocal.Execute($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
+            AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
 
             SearchFvHis his = new SearchFvHis();
             his.BaseUri = _baseUri;
@@ -140,7 +140,7 @@ namespace Dt.Base
             {
                 RemoveAllHis();
             }
-            AtLocal.Execute($"delete from SearchFvHis where BaseUri='{_baseUri}'");
+            AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}'");
         }
 
         void RemoveAllHis()
@@ -160,7 +160,7 @@ namespace Dt.Base
         void OnDelHis(object sender, RoutedEventArgs e)
         {
             SearchFvHis his = (SearchFvHis)((Button)sender).DataContext;
-            if (AtLocal.Execute($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
+            if (AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
             {
                 for (int i = _hisStart; i < Items.Count; i++)
                 {
@@ -220,7 +220,7 @@ namespace Dt.Base
 
         void LoadHisItems()
         {
-            var his = AtLocal.DeferredQuery<SearchFvHis>($"select * from SearchFvHis where BaseUri='{_baseUri}' order by id desc");
+            var his = AtLocal.Each<SearchFvHis>($"select * from SearchFvHis where BaseUri='{_baseUri}' order by id desc");
             foreach (var item in his)
             {
                 Grid grid = new Grid();

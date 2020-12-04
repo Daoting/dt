@@ -59,9 +59,9 @@ namespace Dt.App.Chat
             _lv.Data = tbl;
 
             // 将新列表缓存到本地库
-            AtLocal.Execute("delete from ChatMember");
+            AtLocal.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
-                AtLocal.Save(tbl, "ChatMember");
+                AtLocal.BatchSave(tbl, "ChatMember");
 
             // 记录刷新时间
             AtLocal.SaveCookie(_refreshKey, AtSys.Now.ToString());

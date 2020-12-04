@@ -59,16 +59,10 @@ namespace Dt.Sample
             Throw.IfNullOrEmpty(null);
         }
 
-        class AtCm : DataProvider<cm>
-        { }
-
-        class cm { }
-
         #region 服务端异常
         async void TestException(object sender, RoutedEventArgs e)
         {
-            //await AtTest.ThrowException();
-            var ls = await AtCm.Query("select name,id,phone from cm_user");
+            await AtTest.ThrowException();
         }
 
         async void TestSerializeException(object sender, RoutedEventArgs e)

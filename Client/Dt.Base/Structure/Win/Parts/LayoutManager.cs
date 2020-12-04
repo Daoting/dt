@@ -58,7 +58,7 @@ namespace Dt.Base.Docking
         public void LoadDefaultLayout()
         {
             if (AllowSaveLayout())
-                AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                AtLocal.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -108,7 +108,7 @@ namespace Dt.Base.Docking
                 // 宽度足够，加载历史布局或默认布局
                 DockLayout cookie;
                 if (AllowSaveLayout()
-                    && (cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
+                    && (cookie = AtLocal.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
                     && ApplyLayout(cookie.Layout))
                 {
                     _owner.AllowResetLayout = true;
@@ -160,7 +160,7 @@ namespace Dt.Base.Docking
             SaveDefaultXml();
             if (AllowSaveLayout())
             {
-                DockLayout cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                DockLayout cookie = AtLocal.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
                 if (cookie != null)
                 {
                     // 加载历史布局
@@ -517,7 +517,7 @@ namespace Dt.Base.Docking
             {
                 succ = false;
                 if (AllowSaveLayout())
-                    AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                    AtLocal.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             }
             finally
             {
