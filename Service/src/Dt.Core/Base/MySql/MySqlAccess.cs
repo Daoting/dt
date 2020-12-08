@@ -276,7 +276,8 @@ namespace Dt.Core
                     while (await reader.ReadAsync())
                     {
                         // 整行已读到内存，官方推荐使用同步方法获取值，比异步性能更好！
-                        var row = Activator.CreateInstance<TRow>();
+                        // 无参数构造方法可能为private，如实体类型
+                        var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             var col = p_tbl.Columns[i];
@@ -321,7 +322,8 @@ namespace Dt.Core
                     var cols = reader.GetColumnSchema();
                     while (reader.Read())
                     {
-                        TRow row = Activator.CreateInstance<TRow>();
+                        // 无参数构造方法可能为private，如实体类型
+                        TRow row = (TRow)Activator.CreateInstance(typeof(TRow), true);
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             var col = cols[i];

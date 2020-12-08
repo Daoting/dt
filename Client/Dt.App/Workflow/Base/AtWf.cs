@@ -25,7 +25,7 @@ namespace Dt.App
         /// 打开流程表单窗口（创建、编辑或浏览表单）
         /// </summary>
         /// <param name="p_info">流程表单描述信息</param>
-        public static async void ShowForm(WfFormInfo p_info)
+        public static async void OpenFormWin(WfFormInfo p_info)
         {
             Throw.IfNull(p_info, "流程表单描述信息不可为空！");
 
@@ -46,5 +46,17 @@ namespace Dt.App
             p_info.Form = (IWfForm)AtApp.OpenWin(p_info.FormType, p_info.PrcInst.Name, Icons.None, p_info);
         }
 
+        /// <summary>
+        /// 创建流程表单窗口
+        /// </summary>
+        /// <param name="p_info">流程表单描述信息</param>
+        /// <returns></returns>
+        public static async Task<IWfForm> CreateFormWin(WfFormInfo p_info)
+        {
+            await p_info.Init();
+            var win = (IWfForm)Activator.CreateInstance(p_info.FormType, p_info);
+            p_info.Form = win;
+            return win;
+        }
     }
 }

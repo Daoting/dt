@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 #endregion
 
 namespace Dt.App.Workflow
@@ -21,30 +22,36 @@ namespace Dt.App.Workflow
         public StartWorkflow()
         {
             InitializeComponent();
+            Load();
         }
 
-        public async void Open()
+        async void Load()
         {
             _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = AtUser.ID });
-
-            if (!AtSys.IsPhoneUI)
-            {
-                MaxHeight = 400;
-                MaxWidth = 300;
-            }
-            Show();
         }
 
         void OnItemDoubleClick(object sender, object e)
         {
-            Close();
-            AtWf.ShowForm(new WfFormInfo(e.To<Row>().ID, -1));
+            StartNew(e.To<Row>().ID);
         }
 
         void OnStart(object sender, Mi e)
         {
-            Close();
-            AtWf.ShowForm(new WfFormInfo(_lv.SelectedRow.ID, -1));
+            StartNew(_lv.SelectedRow.ID);
+        }
+
+        async void StartNew(long p_prcID)
+        {
+            var info = new WfFormInfo(p_prcID, -1);
+            if (InputManager.IsCtrlPressed)
+            {
+                AtWf.OpenFormWin(info);
+            }
+            else
+            {
+                var win = await AtWf.CreateFormWin(info);
+                LoadCenter(win);
+            }
         }
     }
 }

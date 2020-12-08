@@ -201,14 +201,11 @@ namespace Dt.App.Workflow
                     {
                         // 手动发送，已选择项可能为用户或角色
                         int cnt = 0;
-                        foreach (var row in ar.Recvs)
+                        foreach (var recvID in ar.SelectedRecvs)
                         {
-                            //if (row.IsSelected)
-                            {
-                                var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
-                                tblItems.Add(wi);
-                                cnt++;
-                            }
+                            var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
+                            tblItems.Add(wi);
+                            cnt++;
                         }
 
                         // 无选择项时移除活动实例

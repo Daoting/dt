@@ -149,9 +149,19 @@ namespace Dt.Base.ListView
             // 分割线及选择背景
             Border bd;
             if (_owner.ShowItemBorder)
-                bd = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+            {
+                bd = new Border { BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+                // 设置宽度或最大宽度时显示右边框
+                if (!AtSys.IsPhoneUI && (!double.IsPositiveInfinity(_owner.MaxWidth) || !double.IsNaN(_owner.Width)))
+                    bd.BorderThickness = new Thickness(0, 0, 1, 1);
+                else
+                    bd.BorderThickness = new Thickness(0, 0, 0, 1);
+            }
             else
+            {
                 bd = new Border { IsHitTestVisible = false };
+            }
+
             if (_owner.SelectionMode != SelectionMode.None)
             {
                 bd.SetBinding(Border.BackgroundProperty, new Binding

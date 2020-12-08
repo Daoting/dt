@@ -146,9 +146,9 @@
       <Project>{25744ee1-b117-4141-b9a8-5ca1cbebcd98}</Project>
       <Name>Dt.Sample</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fz\Dt.Fz.csproj">
-      <Project>{e9c48931-cc12-4f49-8fbb-ebefc628dfc6}</Project>
-      <Name>Dt.Fz</Name>
+    <ProjectReference Include="..\Oa\Dt.Oa.csproj">
+      <Project>{73876c51-5275-4bde-8202-530c0f3317a0}</Project>
+      <Name>Dt.Oa</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

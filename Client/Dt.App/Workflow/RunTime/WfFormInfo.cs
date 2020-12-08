@@ -64,6 +64,22 @@ namespace Dt.App
         }
 
         /// <summary>
+        /// 业务数据主键，也是流程实例主键
+        /// </summary>
+        public long ID
+        {
+            get { return PrcInst.ID; }
+        }
+
+        /// <summary>
+        /// 是否为新表单
+        /// </summary>
+        public bool IsNew
+        {
+            get { return _itemID < 0; }
+        }
+
+        /// <summary>
         /// 获取流程模板定义
         /// </summary>
         public WfdPrc PrcDef { get; private set; }
@@ -102,11 +118,11 @@ namespace Dt.App
         }
 
         /// <summary>
-        /// 是否为新启动工作项
+        /// 是否为开始活动工作项
         /// </summary>
-        public bool IsNewItem
+        public bool IsStartItem
         {
-            get { return _itemID < 0; }
+            get { return AtvDef.Type == WfdAtvType.Start; }
         }
         #endregion
 
@@ -182,7 +198,7 @@ namespace Dt.App
             if (AtvDef.CanDelete || AtvDef.Type == WfdAtvType.Start)
                 m.Items.Add(new Mi { ID = "删除", Icon = Icons.垃圾箱, Cmd = CmdDelete });
 
-            if (!IsNewItem)
+            if (!IsStartItem)
             {
                 m.Items.Insert(1, new Mi { ID = "回退", Icon = Icons.追回, Cmd = CmdRollback });
 
@@ -209,7 +225,7 @@ namespace Dt.App
                 return;
             }
 
-            if (IsNewItem)
+            if (IsStartItem)
             {
                 // 隐藏无用的项
                 foreach (var mi in p_menu.Items)
@@ -307,7 +323,7 @@ namespace Dt.App
             return new WfiTrs(
                 ID: await AtCm.NewID(),
                 TrsdID: trsdid,
-                SrcAtviID: AtvInst.AtvdID,
+                SrcAtviID: AtvInst.ID,
                 TgtAtviID: p_tatviid,
                 IsRollback: p_rollback,
                 Ctime: p_date);

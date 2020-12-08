@@ -10,6 +10,7 @@
 using Dt.App.Workflow;
 using Dt.Core;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 #endregion
 
@@ -34,6 +35,11 @@ namespace Dt.App
         /// 获取设置接收者(角色或用户)列表
         /// </summary>
         public Table Recvs { get; set; }
+
+        /// <summary>
+        /// 已选择的接收者id(角色或用户)
+        /// </summary>
+        public List<long> SelectedRecvs { get; set; }
 
         /// <summary>
         /// 获取设置发送时的备注

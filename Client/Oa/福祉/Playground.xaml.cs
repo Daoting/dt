@@ -1,0 +1,73 @@
+﻿using Dt.Core;
+using Dt.Core.Rpc;
+using Dt.Core.Sqlite;
+using Microsoft.Data.Sqlite;
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+
+namespace Dt.Fz
+{
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame. 
+    /// </summary>
+    public sealed partial class Playground : Page
+	{
+		public Playground()
+		{
+
+			this.InitializeComponent();
+
+		}
+
+        void OnTest(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        ResponseReader _reader;
+        async void OnServerStream(object sender, RoutedEventArgs e)
+        {
+            _reader = await new ServerStreamRpc(
+                "cm",
+                "TestRpc.OnServerStream",
+                "hello"
+            ).Call();
+            while (await _reader.MoveNext())
+            {
+                Console.WriteLine($"收到：{_reader.Val<string>()}");
+            }
+            Console.WriteLine("结束");
+        }
+
+        void OnStopStream(object sender, RoutedEventArgs e)
+        {
+            if (_reader != null)
+                _reader.Close();
+        }
+
+
+        async void OnClientStream(object sender, RoutedEventArgs e)
+        {
+            var writer = await new ClientStreamRpc(
+                "cm",
+                "TestRpc.OnClientStream",
+                "hello"
+            ).Call();
+
+            int i = 0;
+            while (true)
+            {
+                var msg = $"hello {i++}";
+                if (!await writer.Write(msg) || i > 50)
+                    break;
+                Console.WriteLine(msg);
+                await Task.Delay(1000);
+            }
+        }
+    }
+}

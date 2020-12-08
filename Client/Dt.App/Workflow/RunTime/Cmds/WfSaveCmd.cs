@@ -75,11 +75,6 @@ namespace Dt.App.Workflow
 
             if (ls.Count > 0)
                 suc = await AtCm.BatchSave(ls, false);
-
-            if (suc)
-                AtKit.Msg("表单保存成功！");
-            else
-                AtKit.Warn("表单保存失败！");
             return suc;
         }
     }

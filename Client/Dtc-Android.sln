@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.App", "Dt.App\Dt.App.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Sample", "Dt.Sample\Dt.Sample.csproj", "{93969B47-F11C-42D6-9735-C41345F6803D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Fz", "Fz\Dt.Fz.csproj", "{4C3367FB-EA14-452C-958B-8C68355B8ECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Oa", "Oa\Dt.Oa.csproj", "{4C3367FB-EA14-452C-958B-8C68355B8ECA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dt.Shell.Droid", "Dt.Shell.Droid\Dt.Shell.Droid.csproj", "{CD97CCD6-E470-48F3-A69F-C6E434AB7333}"
 EndProject

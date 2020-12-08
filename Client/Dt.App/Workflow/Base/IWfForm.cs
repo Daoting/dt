@@ -27,7 +27,7 @@ namespace Dt.App
         string GetPrcName();
 
         /// <summary>
-        /// 保存表单数据，成功不提示，失败提示错误信息
+        /// 保存表单数据
         /// </summary>
         /// <returns></returns>
         Task<bool> Save();

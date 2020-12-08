@@ -3,14 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
+    AutoSaveLayout="False"
     Home="功能目录">
 
     <a:WinItem DockState="DockedLeft" InitWidth="240">
         <a:Tabs>
             <a:Tab Title="功能目录">
-                <StackPanel>
-                    <a:BtnItem Icon="播放" Title="发起新任务" Desc="启动新工作流程" Click="OnStart" />
-                </StackPanel>
+                <a:Lv x:Name="_lv" Style="{StaticResource CenterInfoLv}" ItemClick="OnCenterInfoClick" />
             </a:Tab>
         </a:Tabs>
     </a:WinItem>

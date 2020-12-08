@@ -1,0 +1,40 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+
+  <PropertyGroup>
+    <Description>福祉堂</Description>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+
+  <ItemGroup>
+    <None Remove="收文\WfDemoForm.xaml" />
+    <None Remove="收文\收文表单.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="收文\WfDemoForm.xaml" />
+    <UpToDateCheckInput Remove="收文\收文表单.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="收文\收文表单.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="收文\WfDemoForm.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="福祉\" />
+  </ItemGroup>
+</Project>

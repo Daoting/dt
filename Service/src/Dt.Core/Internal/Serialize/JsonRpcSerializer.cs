@@ -232,7 +232,7 @@ namespace Dt.Core
                     {
                         if (p_tgtType == null || p_tgtType == typeof(string))
                             return p_reader.GetString();
-                        if (p_tgtType == typeof(DateTime))
+                        if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                             return p_reader.GetDateTime();
                         // base64编码的字节数组
                         if (p_tgtType == typeof(byte[]))
