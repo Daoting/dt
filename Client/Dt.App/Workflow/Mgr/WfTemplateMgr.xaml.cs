@@ -13,10 +13,9 @@ using Dt.Core;
 
 namespace Dt.App.Workflow
 {
-    [View("流程设计")]
-    public partial class WorkflowMgr : Win
+    public partial class WfTemplateMgr : Win
     {
-        public WorkflowMgr()
+        public WfTemplateMgr()
         {
             InitializeComponent();
             LoadAll();
@@ -63,7 +62,7 @@ namespace Dt.App.Workflow
 
         void EditTemplate(string p_title, long p_id)
         {
-            AtApp.OpenWin(typeof(WorkflowDesign), p_title, Icons.双绞线, p_id);
+            AtApp.OpenWin(typeof(WorkflowDesign), p_title, Icons.修改, p_id);
         }
 
         async void OnDelContext(object sender, Mi e)
@@ -79,6 +78,11 @@ namespace Dt.App.Workflow
             {
                 LoadAll();
             }
+        }
+
+        void OnShowInst(object sender, Mi e)
+        {
+            new PrcInstDlg().Show(e.Data.To<WfdPrc>().ID);
         }
     }
 }

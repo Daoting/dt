@@ -377,26 +377,19 @@ namespace Dt.Base
         /// <param name="source"></param>
         public static void ClearParent(this FrameworkElement source)
         {
-            FrameworkElement parent = source.GetParent();
+            var parent = VisualTreeHelper.GetParent(source) as UIElement;
             if (parent == null)
                 return;
 
-            Panel panel = parent as Panel;
-            if (panel != null)
+            if (parent is Panel panel)
             {
                 panel.Children.Remove(source);
-                return;
             }
-
-            ContentPresenter pre = parent as ContentPresenter;
-            if (pre != null)
+            else if (parent is ContentPresenter pre)
             {
                 pre.Content = null;
-                return;
             }
-
-            ContentControl con = parent as ContentControl;
-            if (con != null)
+            else if (parent is ContentControl con)
             {
                 con.Content = null;
             }

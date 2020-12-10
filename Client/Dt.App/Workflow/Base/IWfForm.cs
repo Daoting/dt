@@ -34,7 +34,6 @@ namespace Dt.App
 
         /// <summary>
         /// 删除表单数据，禁止删除或删除失败时可返回false
-        /// <para>成功不提示，失败提示错误信息</para>
         /// </summary>
         /// <returns></returns>
         Task<bool> Delete();

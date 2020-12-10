@@ -74,7 +74,11 @@ namespace Dt.Oa
 
         public Task<bool> Delete()
         {
-            throw new NotImplementedException();
+            var data = _fv.Data.To<收文>();
+            if (!data.IsAdded)
+                return AtCm.Delete(data);
+
+            return Task.FromResult(true);
         }
 
         public string GetPrcName()

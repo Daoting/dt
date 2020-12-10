@@ -2,8 +2,7 @@
     x:Class="Dt.App.Workflow.CurrentTasks"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    AutoSaveLayout="False">
+    xmlns:a="using:Dt.Base">
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>

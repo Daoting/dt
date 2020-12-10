@@ -719,6 +719,7 @@ namespace Dt.Base
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
+            Focus(FocusState.Programmatic);
             if (CapturePointer(e.Pointer))
             {
                 _pointerID = e.Pointer.PointerId;

@@ -59,24 +59,24 @@ namespace Dt.App.Workflow
                 }
                 else if (_info.AtvDef.TransKind == WfdAtvTransKind.全部)
                 {
-                    AtKit.Msg(ar.Def.Name + "的执行者不能为空！");
+                    AtKit.Warn($"未选择{ar.Def.Name}的执行者！");
                     return;
                 }
             }
 
             if (_info.AtvDef.TransKind == WfdAtvTransKind.自由选择 && count == 0)
             {
-                AtKit.Msg("请至少选择一个活动的执行者！");
+                AtKit.Warn("请至少选择一个活动的执行者！");
                 return;
             }
             if (_info.AtvDef.TransKind == WfdAtvTransKind.独占式选择 && count == 0)
             {
-                AtKit.Msg("请选择一个活动的执行者！");
+                AtKit.Warn("请选择一个活动的执行者！");
                 return;
             }
             if (_info.AtvDef.TransKind == WfdAtvTransKind.独占式选择 && count > 1)
             {
-                AtKit.Msg("【" + _info.AtvDef.Name + "】只能选择一个后续活动！");
+                AtKit.Warn("只能选择一个活动的执行者！");
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace Dt.App.Workflow
                 },
             };
 
-            Lv lv = new Lv { View = Resources["ViewTemp"], ViewMode = ViewMode.Tile, Data = p_ar.Recvs, Tag = p_ar };
+            Lv lv = new Lv { View = Resources["ViewTemp"], ViewMode = ViewMode.Tile, Data = p_ar.Recvs, Tag = p_ar, Margin = new Thickness(0, 0, 0, 20) };
             if (p_ar.MultiSelection)
             {
                 var sp = new StackPanel { Orientation = Orientation.Horizontal };

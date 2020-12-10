@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -26,8 +27,11 @@ namespace Dt.Base.FormView
         {
             _cv.SelectedDatesChanged -= OnSelectedDatesChanged;
             _cv.SelectedDates.Clear();
-            _cv.SelectedDates.Add(Owner.Value);
-            _cv.SetDisplayDate(Owner.Value);
+            if (Owner.Value != default)
+            {
+                _cv.SelectedDates.Add(Owner.Value);
+                _cv.SetDisplayDate(Owner.Value);
+            }
             _cv.SelectedDatesChanged += OnSelectedDatesChanged;
             Show();
         }

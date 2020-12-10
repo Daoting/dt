@@ -85,6 +85,12 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(false, OnIsActivedChanged));
 
+        static readonly DependencyProperty OwnTabProperty = DependencyProperty.Register(
+            "OwnTab",
+            typeof(Tab),
+            typeof(Win),
+            new PropertyMetadata(null));
+
         static void OnIsActivedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Win win = (Win)d;
@@ -220,6 +226,14 @@ namespace Dt.Base
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 是否为内嵌窗口
+        /// </summary>
+        internal bool IsInnerWin
+        {
+            get { return GetValue(OwnTabProperty) != null; }
         }
 
         /// <summary>
@@ -542,16 +556,28 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 关闭窗口
+        /// 关闭窗口，三种情况：
+        /// <para>PhoneUI关闭窗口所有导航页</para>
+        /// <para>关闭独立的桌面窗口</para>
+        /// <para>作为内嵌窗口时自动移除</para>
         /// </summary>
-        /// <param name="p_win"></param>
-        /// <returns></returns>
         public void Close()
         {
             if (AtSys.IsPhoneUI)
+            {
+                // 关闭窗口所有导航页
                 CloseAllNaviPages();
+            }
+            else if (GetValue(OwnTabProperty) is Tab tab)
+            {
+                // 移除内嵌窗口
+                tab.Content = null;
+            }
             else
+            {
+                // 关闭独立的桌面窗口
                 _ = Desktop.Inst.CloseWin(this);
+            }
         }
 
         /// <summary>
@@ -1041,9 +1067,13 @@ namespace Dt.Base
             // 切换内容
             if (tab.Content != p_content)
             {
-                // 为重合边线
                 if (p_content is Win win)
+                {
+                    // 为重合边线
                     win.Margin = new Thickness(-1, -1, 0, 0);
+                    // 关闭时用
+                    win.SetValue(OwnTabProperty, tab);
+                }
                 tab.Content = p_content;
             }
         }

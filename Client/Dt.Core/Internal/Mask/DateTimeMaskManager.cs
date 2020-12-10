@@ -76,7 +76,7 @@ namespace Dt.Core.Mask
         int _cachedIndex;
 
         DateTime _cachedValue;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -101,12 +101,12 @@ namespace Dt.Core.Mask
         /// 
         /// </summary>
         protected DateTime? _fInitialEditValue;
-        
+
         /// <summary>
         /// 
         /// </summary>
         protected string _fInitialMask;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -337,13 +337,19 @@ namespace Dt.Core.Mask
         /// <param name="initialEditValue"></param>
         public override void SetInitialEditValue(object initialEditValue)
         {
-            if ((initialEditValue is DateTime) || (initialEditValue == null))
+            if (initialEditValue == null)
             {
-                SetInitialEditValue((DateTime?)initialEditValue);
+                SetInitialEditValue(null);
             }
-            else if (initialEditValue is TimeSpan)
+            else if (initialEditValue is DateTime dt)
             {
-                TimeSpan span = (TimeSpan)initialEditValue;
+                if (dt == default)
+                    SetInitialEditValue(null);
+                else
+                    SetInitialEditValue(dt);
+            }
+            else if (initialEditValue is TimeSpan span)
+            {
                 SetInitialEditValue((DateTime?)new DateTime(span.Ticks));
             }
             else
@@ -838,7 +844,7 @@ namespace Dt.Core.Mask
             }
             return inserted;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -891,7 +897,7 @@ namespace Dt.Core.Mask
         /// </summary>
         /// <returns></returns>
         public abstract bool Delete();
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -910,7 +916,7 @@ namespace Dt.Core.Mask
         /// </summary>
         /// <returns></returns>
         public abstract bool SpinDown();
-        
+
         /// <summary>
         /// 
         /// </summary>

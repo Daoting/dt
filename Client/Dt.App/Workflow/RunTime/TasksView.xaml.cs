@@ -25,7 +25,7 @@ namespace Dt.App.Workflow
             {
                 new CenterInfo(Icons.信件, "待办任务", typeof(CurrentTasks), "新发起、流转、回退、追回的任务"),
                 new CenterInfo(Icons.拆信, "历史任务", typeof(HistoryTasks), "所有参与过的任务"),
-                new CenterInfo(Icons.展开, "任务目录", typeof(HistoryTasks), "任务表单查询"),
+                new CenterInfo(Icons.展开, "任务目录", typeof(WfDataList), "任务表单查询"),
                 new CenterInfo(Icons.播放, "发起新任务", typeof(StartWorkflow), "启动新工作流程"),
             };
             _lv.Data = ls;

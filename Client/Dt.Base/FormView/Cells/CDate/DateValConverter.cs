@@ -72,4 +72,22 @@ namespace Dt.Base
             throw new NotImplementedException();
         }
     }
+
+    /// <summary>
+    /// 源CDate.Value，目标MaskBox
+    /// </summary>
+    class ValMaskConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value == null)
+                return default(DateTime);
+            return value;
+        }
+    }
 }

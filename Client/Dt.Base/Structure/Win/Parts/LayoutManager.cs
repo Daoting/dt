@@ -1228,7 +1228,11 @@ namespace Dt.Base.Docking
 
         bool AllowSaveLayout()
         {
-            return _owner.AutoSaveLayout && _owner.BaseUri != null && _fitCols == -1;
+            // 为内嵌窗口时不保存布局
+            return _owner.AutoSaveLayout
+                && _owner.BaseUri != null
+                && _fitCols == -1
+                && !_owner.IsInnerWin;
         }
         #endregion
     }

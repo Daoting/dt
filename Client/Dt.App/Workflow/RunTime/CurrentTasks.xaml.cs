@@ -48,7 +48,9 @@ namespace Dt.App.Workflow
             }
             else if (e.IsChanged)
             {
-                var win = await AtWf.CreateFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid")));
+                var info = new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"));
+                var win = await AtWf.CreateFormWin(info);
+                info.FormClosed += (s, arg) => Refresh();
                 LoadCenter(win);
             }
         }

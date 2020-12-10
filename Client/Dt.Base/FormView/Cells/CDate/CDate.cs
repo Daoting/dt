@@ -205,6 +205,7 @@ namespace Dt.Base
                 {
                     Path = new PropertyPath("Value"),
                     Mode = BindingMode.TwoWay,
+                    Converter = new ValMaskConverter(),
                     Source = this
                 };
                 box.SetBinding(MaskBox.ValueProperty, bind);

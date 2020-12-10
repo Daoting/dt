@@ -52,6 +52,10 @@ namespace Dt.App
         /// </summary>
         public EventHandler<WfSendingArgs> Sending;
 
+        /// <summary>
+        /// 表单关闭事件
+        /// </summary>
+        public EventHandler FormClosed;
         #endregion
 
         #region 属性
@@ -343,6 +347,7 @@ namespace Dt.App
         internal void CloseWin()
         {
             ((Win)Form).Close();
+            FormClosed?.Invoke(Form, EventArgs.Empty);
         }
         #endregion
 

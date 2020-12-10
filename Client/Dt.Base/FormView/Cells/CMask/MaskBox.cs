@@ -176,12 +176,12 @@ namespace Dt.Base
 
             _tb = new TextBox { BorderThickness = new Thickness(0), Padding = new Thickness(10) };
             _tb.TextChanged += OnTextChanged;
-            _tb.KeyDown += OnKeyDown;
+            _tb.AddHandler(KeyDownEvent, (KeyEventHandler)OnKeyDown, true);
             _tb.PointerWheelChanged += OnPointerWheelChanged;
             _tb.GotFocus += OnGotFocus;
             _tb.LostFocus += OnLostFocus;
-            _tb.PointerPressed += OnPointerPressed;
-            _tb.PointerReleased += OnPointerReleased;
+            _tb.AddHandler(PointerPressedEvent, (PointerEventHandler)OnPointerPressed, true);
+            _tb.AddHandler(PointerReleasedEvent, (PointerEventHandler)OnPointerReleased, true);
             // 默认输入范围为英文模式
             _tb.InputScope = CreateAlphaScope();
 
@@ -397,12 +397,13 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!_isSavedStateValid)
-            {
-                // 未保存状态
-                RaiseTextChanged(e);
-                return;
-            }
+            // 注释原因：DateTime类型在点击TextBox右侧x按钮删除内容时无效！
+            //if (!_isSavedStateValid)
+            //{
+            //    // 未保存状态
+            //    RaiseTextChanged(e);
+            //    return;
+            //}
 
             _isSavedStateValid = false;
             if (string.IsNullOrEmpty(Text))

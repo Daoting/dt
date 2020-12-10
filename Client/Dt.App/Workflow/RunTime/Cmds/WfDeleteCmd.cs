@@ -43,13 +43,13 @@ namespace Dt.App.Workflow
             if (!await AtKit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
-
             if (await _info.Form.Delete())
             {
-                if (await AtCm.Delete(_info.PrcInst, false))
-                    AtKit.Msg("表单删除成功！");
-                else
-                    AtKit.Warn("表单已删除，未找到待删除的流程实例！");
+                if (!_info.PrcInst.IsAdded)
+                {
+                    if (!await AtCm.Delete(_info.PrcInst, false))
+                        AtKit.Warn("表单已删除，未找到待删除的流程实例！");
+                }
                 _info.CloseWin();
             }
         }
