@@ -81,6 +81,11 @@ namespace Dt.Base
         /// <summary>
         /// 显示为文件列表链接
         /// </summary>
-        File
+        File,
+
+        /// <summary>
+        /// 显示为枚举类型的名称
+        /// </summary>
+        Enum,
     }
 }

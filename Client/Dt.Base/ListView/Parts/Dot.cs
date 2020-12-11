@@ -27,6 +27,12 @@ namespace Dt.Base
             typeof(Dot),
             new PropertyMetadata(CellUIType.Default));
 
+        public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
+            "Format",
+            typeof(string),
+            typeof(Dot),
+            new PropertyMetadata(null));
+
         public Dot()
         {
             SetBinding(ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = this, Mode = BindingMode.OneTime });
@@ -45,6 +51,15 @@ namespace Dt.Base
         {
             get { return (CellUIType)GetValue(UITypeProperty); }
             set { SetValue(UITypeProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置格式串，null或空时按默认显示，如：时间格式、小数位格式、枚举类型名称
+        /// </summary>
+        public string Format
+        {
+            get { return (string)GetValue(FormatProperty); }
+            set { SetValue(FormatProperty, value); }
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)

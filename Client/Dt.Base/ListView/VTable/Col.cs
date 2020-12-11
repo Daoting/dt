@@ -44,6 +44,12 @@ namespace Dt.Base
             typeof(Col),
             new PropertyMetadata(CellUIType.Default));
 
+        public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
+            "Format",
+            typeof(string),
+            typeof(Col),
+            new PropertyMetadata(null));
+
         public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
             "Foreground",
             typeof(SolidColorBrush),
@@ -119,6 +125,15 @@ namespace Dt.Base
         {
             get { return (CellUIType)GetValue(UITypeProperty); }
             set { SetValue(UITypeProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置格式串，null或空时按默认显示，如：时间格式、小数位格式、枚举类型名称
+        /// </summary>
+        public string Format
+        {
+            get { return (string)GetValue(FormatProperty); }
+            set { SetValue(FormatProperty, value); }
         }
 
         /// <summary>

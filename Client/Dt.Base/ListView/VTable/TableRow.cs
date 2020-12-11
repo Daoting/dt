@@ -104,7 +104,7 @@ namespace Dt.Base.ListView
                 ((UIElement)Children[cols.Count + 1]).Arrange(new Rect(headerWidth, 0, cols.TotalWidth, finalSize.Height));
 
             // 交互背景
-            _rcPointer.Arrange(new Rect(new Point(), finalSize));
+            _rcPointer.Arrange(new Rect(0, 0, headerWidth + cols.TotalWidth, finalSize.Height));
             return finalSize;
         }
 

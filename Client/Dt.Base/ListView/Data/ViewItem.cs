@@ -231,7 +231,7 @@ namespace Dt.Base
                 if (_data is Row dr && dr.Contains(p_cell.ID))
                 {
                     // 从Row取
-                    elem = CreateCellUI(dr.Cells[p_cell.ID]);
+                    elem = CreateCellUI(dr.Cells[p_cell.ID], p_cell);
                 }
                 else if (p_cell.ID == "#")
                 {
@@ -243,7 +243,7 @@ namespace Dt.Base
                     // 输出对象属性
                     var pi = _data.GetType().GetProperty(p_cell.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (pi != null && (val = pi.GetValue(_data)) != null)
-                        elem = CreatePropertyUI(pi, val);
+                        elem = CreatePropertyUI(pi, val, p_cell);
                 }
             }
             else if ((val = this[p_cell.ID]) != null)
@@ -262,6 +262,9 @@ namespace Dt.Base
                         break;
                     case CellUIType.File:
                         elem = CreateFileLink(val);
+                        break;
+                    case CellUIType.Enum:
+                        elem = CreateEnumText(val, p_cell);
                         break;
                 }
             }
@@ -289,8 +292,9 @@ namespace Dt.Base
         /// 根据Cell创建UI
         /// </summary>
         /// <param name="p_dc"></param>
+        /// <param name="p_cellUI"></param>
         /// <returns></returns>
-        static UIElement CreateCellUI(Cell p_dc)
+        static UIElement CreateCellUI(Cell p_dc, ICellUI p_cellUI)
         {
             TextBlock tb;
             if (p_dc.Type == typeof(string))
@@ -320,7 +324,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = p_dc.GetVal<double>().ToString("n2"),
+                    Text = p_dc.GetVal<double>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
                 return tb;
@@ -344,7 +348,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = p_dc.GetVal<DateTime>().ToString("yyyy-MM-dd"),
+                    Text = p_dc.GetVal<DateTime>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
                 return tb;
             }
@@ -395,8 +399,9 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_pi"></param>
         /// <param name="p_val"></param>
+        /// <param name="p_cellUI"></param>
         /// <returns></returns>
-        static UIElement CreatePropertyUI(PropertyInfo p_pi, object p_val)
+        static UIElement CreatePropertyUI(PropertyInfo p_pi, object p_val, ICellUI p_cellUI)
         {
             TextBlock tb;
             if (p_pi.PropertyType == typeof(string))
@@ -426,7 +431,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = ((double)p_val).ToString("n2"),
+                    Text = ((double)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
                 return tb;
@@ -450,7 +455,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = ((DateTime)p_val).ToString("yyyy-MM-dd"),
+                    Text = ((DateTime)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
                 return tb;
             }
@@ -523,7 +528,7 @@ namespace Dt.Base
                 TextAlignment = TextAlignment.Center,
             };
 
-            if (p_val is int)
+            if (p_val is int || p_val is byte)
                 tb.Text = AtRes.GetIconChar((Icons)p_val);
             else
                 tb.Text = AtRes.ParseIconChar(p_val.ToString());
@@ -589,6 +594,26 @@ namespace Dt.Base
 
             tb.PointerPressed += OnFileLinkPressed;
             return tb;
+        }
+
+        TextBlock CreateEnumText(object p_val, ICellUI p_cellUI)
+        {
+            string tpName = p_cellUI.Format;
+            if (string.IsNullOrEmpty(tpName))
+                return new TextBlock { Style = AtRes.LvTextBlock, Text = "无枚举" };
+
+            // 将byte int等数值类型转成枚举类型，显示枚举项
+            Type type = Type.GetType(tpName, false, true);
+            if (type != null)
+            {
+                try
+                {
+                    var txt = Enum.ToObject(type, p_val).ToString();
+                    return new TextBlock { Style = AtRes.LvTextBlock, Text = txt };
+                }
+                catch { }
+            }
+            return new TextBlock { Style = AtRes.LvTextBlock, Text = "无枚举" };
         }
 
         void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)
