@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="功能列表">
 
-    <a:WinItem DockState="DockedLeft" InitWidth="240">
+    <a:Pane InitWidth="240">
         <a:Tabs>
             <a:Tab Title="功能列表">
                 <StackPanel>
@@ -23,5 +23,5 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

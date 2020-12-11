@@ -22,79 +22,79 @@ using Windows.UI.Xaml.Markup;
 namespace Dt.Base
 {
     /// <summary>
-    /// 可停靠项，内部子项为 Tabs 或 WinItem
+    /// 可停靠项，内部子项为 Tabs 或 Pane
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class WinItem : DtControl, IWinItemList
+    public partial class Pane : DtControl, IPaneList
     {
         #region 静态内容
-        public static readonly DependencyProperty DockStateProperty = DependencyProperty.Register(
-            "DockState",
-            typeof(WinItemState),
-            typeof(WinItem),
-            new PropertyMetadata(WinItemState.DockedLeft, OnDockStateChanged));
+        public static readonly DependencyProperty PosProperty = DependencyProperty.Register(
+            "Pos",
+            typeof(PanePosition),
+            typeof(Pane),
+            new PropertyMetadata(PanePosition.Left, OnPosChanged));
 
         public static readonly DependencyProperty InitWidthProperty = DependencyProperty.Register(
             "InitWidth",
             typeof(double),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(400.0));
 
         public static readonly DependencyProperty InitHeightProperty = DependencyProperty.Register(
             "InitHeight",
             typeof(double),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(300.0));
 
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             "Orientation",
             typeof(Orientation),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(Orientation.Vertical, OnOrientationChanged));
 
         public static readonly DependencyProperty FloatPosProperty = DependencyProperty.Register(
             "FloatPos",
             typeof(FloatPosition),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(FloatPosition.Center));
 
         public static readonly DependencyProperty ResizerPlacementProperty = DependencyProperty.Register(
             "ResizerPlacement",
             typeof(ItemPlacement?),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(ItemPlacement.Right));
 
         public static readonly DependencyProperty FloatLocationProperty = DependencyProperty.Register(
             "FloatLocation",
             typeof(Point),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(new Point(0.0, 0.0)));
 
         public static readonly DependencyProperty FloatSizeProperty = DependencyProperty.Register(
             "FloatSize",
             typeof(Size),
-            typeof(WinItem),
+            typeof(Pane),
             new PropertyMetadata(new Size(300.0, 300.0)));
 
 
-        static void OnDockStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        static void OnPosChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            WinItem item = (WinItem)sender;
-            switch (item.DockState)
+            Pane item = (Pane)sender;
+            switch (item.Pos)
             {
-                case WinItemState.DockedLeft:
+                case PanePosition.Left:
                     item.ResizerPlacement = ItemPlacement.Right;
                     break;
 
-                case WinItemState.DockedBottom:
+                case PanePosition.Bottom:
                     item.ResizerPlacement = ItemPlacement.Top;
                     break;
 
-                case WinItemState.DockedRight:
+                case PanePosition.Right:
                     item.ResizerPlacement = ItemPlacement.Left;
                     break;
 
-                case WinItemState.DockedTop:
+                case PanePosition.Top:
                     item.ResizerPlacement = ItemPlacement.Bottom;
                     break;
 
@@ -112,7 +112,7 @@ namespace Dt.Base
 
         static void OnOrientationChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            WinItem item = (WinItem)sender;
+            Pane item = (Pane)sender;
             if (item._isLoaded)
             {
                 item._itemsPanel.Orientation = (Orientation)e.NewValue;
@@ -130,22 +130,22 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        public WinItem()
+        public Pane()
         {
             // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
             if (!AtSys.IsPhoneUI)
-                DefaultStyleKey = typeof(WinItem);
+                DefaultStyleKey = typeof(Pane);
         }
         #endregion
 
         #region 属性
         /// <summary>
-        /// 获取设置停靠状态
+        /// 获取设置停靠位置
         /// </summary>
-        public WinItemState DockState
+        public PanePosition Pos
         {
-            get { return (WinItemState)GetValue(DockStateProperty); }
-            set { SetValue(DockStateProperty, value); }
+            get { return (PanePosition)GetValue(PosProperty); }
+            set { SetValue(PosProperty, value); }
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取尺寸调节器的位置，由DockState决定
+        /// 获取尺寸调节器的位置，由Pos决定
         /// </summary>
         public ItemPlacement? ResizerPlacement
         {
@@ -214,7 +214,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
-        public WinItemList Items { get; } = new WinItemList();
+        public PaneList Items { get; } = new PaneList();
 
         /// <summary>
         /// 获取设置当前是否停靠在中部
@@ -233,7 +233,7 @@ namespace Dt.Base
                         {
                             tabs.IsInCenter = _isInCenter;
                         }
-                        else if (item is WinItem wi)
+                        else if (item is Pane wi)
                         {
                             wi.IsInCenter = _isInCenter;
                         }
@@ -259,7 +259,7 @@ namespace Dt.Base
                         {
                             tabs.IsInWindow = _isInWindow;
                         }
-                        else if (item is WinItem wi)
+                        else if (item is Pane wi)
                         {
                             wi.IsInWindow = _isInWindow;
                         }
@@ -282,7 +282,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 在WinItemPanel中占的区域，iOS中Bounds与基类重名
+        /// 在PanePanel中占的区域，iOS中Bounds与基类重名
         /// </summary>
         internal Rect Region { get; set; }
         #endregion
@@ -297,7 +297,7 @@ namespace Dt.Base
             foreach (object item in Items)
             {
                 Tabs childSect;
-                WinItem childDockItem;
+                Pane childDockItem;
                 if ((childSect = item as Tabs) != null)
                 {
                     foreach (Tab child in childSect.Items)
@@ -306,7 +306,7 @@ namespace Dt.Base
                             yield return child;
                     }
                 }
-                else if ((childDockItem = item as WinItem) != null)
+                else if ((childDockItem = item as Pane) != null)
                 {
                     foreach (Tab child in childDockItem.GetAllTabItems())
                     {
@@ -326,12 +326,12 @@ namespace Dt.Base
             foreach (object item in Items)
             {
                 Tabs childSect;
-                WinItem childDockItem;
+                Pane childDockItem;
                 if ((childSect = item as Tabs) != null)
                 {
                     yield return childSect;
                 }
-                else if ((childDockItem = item as WinItem) != null)
+                else if ((childDockItem = item as Pane) != null)
                 {
                     foreach (Tabs child in childDockItem.GetAllTabs())
                     {
@@ -343,17 +343,17 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 将目标WinItem相对与Tabs停靠在一边
+        /// 将目标Pane相对与Tabs停靠在一边
         /// </summary>
-        /// <param name="p_dockItem">要停靠的WinItem</param>
+        /// <param name="p_dockItem">要停靠的Pane</param>
         /// <param name="p_dockPosition">停靠位置</param>
         /// <param name="p_relativeTo">相对与Tabs</param>
-        public void AddItem(WinItem p_dockItem, DockPosition p_dockPosition, Tabs p_relativeTo)
+        public void AddItem(Pane p_dockItem, DockPosition p_dockPosition, Tabs p_relativeTo)
         {
             if (p_dockItem == null || p_relativeTo == null || p_dockPosition == DockPosition.Center)
                 return;
 
-            p_dockItem.ClearValue(WinItem.DockStateProperty);
+            p_dockItem.ClearValue(Pane.PosProperty);
 
             // 调整排序方式
             if (Orientation == Orientation.Vertical
@@ -369,7 +369,7 @@ namespace Dt.Base
                 Orientation = Orientation.Vertical;
             }
 
-            WinItem newItem;
+            Pane newItem;
             int index = Items.IndexOf(p_relativeTo);
             if (Orientation == Orientation.Vertical)
             {
@@ -385,7 +385,7 @@ namespace Dt.Base
 
                     case DockPosition.Left:
                         Items.Remove(p_relativeTo);
-                        newItem = new WinItem();
+                        newItem = new Pane();
                         newItem.Orientation = Orientation.Horizontal;
                         newItem.Items.Add(p_dockItem);
                         newItem.Items.Add(p_relativeTo);
@@ -394,7 +394,7 @@ namespace Dt.Base
 
                     case DockPosition.Right:
                         Items.Remove(p_relativeTo);
-                        newItem = new WinItem();
+                        newItem = new Pane();
                         newItem.Orientation = Orientation.Horizontal;
                         newItem.Items.Add(p_relativeTo);
                         newItem.Items.Add(p_dockItem);
@@ -408,7 +408,7 @@ namespace Dt.Base
                 {
                     case DockPosition.Top:
                         Items.Remove(p_relativeTo);
-                        newItem = new WinItem();
+                        newItem = new Pane();
                         newItem.Orientation = Orientation.Vertical;
                         newItem.Items.Add(p_dockItem);
                         newItem.Items.Add(p_relativeTo);
@@ -417,7 +417,7 @@ namespace Dt.Base
 
                     case DockPosition.Bottom:
                         Items.Remove(p_relativeTo);
-                        newItem = new WinItem();
+                        newItem = new Pane();
                         newItem.Orientation = Orientation.Vertical;
                         newItem.Items.Add(p_relativeTo);
                         newItem.Items.Add(p_dockItem);
@@ -438,7 +438,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 从父容器中移除当前WinItem
+        /// 从父容器中移除当前Pane
         /// </summary>
         void RemoveFromParent()
         {
@@ -448,7 +448,7 @@ namespace Dt.Base
             {
                 panel.Owner?.Items.Remove(this);
             }
-            else if (Parent is WinItemPanel winPnl)
+            else if (Parent is PanePanel winPnl)
             {
                 OwnWin?.Items.Remove(this);
             }
@@ -459,7 +459,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 无子项时直接移除当前WinItem
+        /// 无子项时直接移除当前Pane
         /// </summary>
         internal void RemoveUnused()
         {
@@ -529,14 +529,14 @@ namespace Dt.Base
                 tabs.IsInCenter = _isInCenter;
                 tabs.IsInWindow = _isInWindow;
             }
-            else if (p_item is WinItem wi)
+            else if (p_item is Pane wi)
             {
                 wi.IsInCenter = _isInCenter;
                 wi.IsInWindow = _isInWindow;
             }
             else
             {
-                throw new Exception("WinItem子项类型为Tabs或WinItem！");
+                throw new Exception("Pane子项类型为Tabs或Pane！");
             }
             _itemsPanel.Children.Insert(p_index, elem);
         }
@@ -556,7 +556,7 @@ namespace Dt.Base
             }
             else
             {
-                throw new Exception("WinItem不支持子项重置！");
+                throw new Exception("Pane不支持子项重置！");
             }
         }
         #endregion
@@ -610,7 +610,7 @@ namespace Dt.Base
                         tabs.ResizerPlacement = null;
                     }
                 }
-                else if (element is WinItem wi)
+                else if (element is Pane wi)
                 {
                     if (!isFirst)
                     {

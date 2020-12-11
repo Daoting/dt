@@ -11,7 +11,7 @@
         </DataTemplate>
     </a:Win.Resources>
     
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="图表样例">
                 <a:Chart x:Name="_chart" ChartType="Column">
@@ -25,8 +25,8 @@
                 </a:Chart>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="属性">
                 <StackPanel>
@@ -38,5 +38,5 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

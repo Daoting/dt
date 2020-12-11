@@ -28,18 +28,18 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <!--内容区域面板-->
-                        <docking:WinItemPanel x:Name="RootPanel" Grid.Row="1" Grid.Column="1" />
+                        <docking:PanePanel x:Name="RootPanel" Grid.Row="1" Grid.Column="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!--WinItem-->
-    <Style TargetType="a:WinItem">
+    <!--Pane-->
+    <Style TargetType="a:Pane">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="a:WinItem">
+                <ControlTemplate TargetType="a:Pane">
                     <Grid>
                         <docking:TabItemPanel x:Name="TabItemPanel" Orientation="{TemplateBinding Orientation}" />
                         <docking:GridResizer x:Name="Resizer" Placement="{TemplateBinding ResizerPlacement}" />
@@ -232,7 +232,7 @@
     </Style>
 
     <!--窗口主区内容描述列表-->
-    <Style x:Key="CenterInfoLv" TargetType="a:Lv">
+    <Style x:Key="MainInfoLv" TargetType="a:Lv">
         <Setter Property="View">
             <Setter.Value>
                 <DataTemplate>

@@ -131,7 +131,7 @@ namespace Dt.Base.Docking
         /// 深度清除所有子项
         /// </summary>
         /// <param name="p_items"></param>
-        public static void ClearItems(IWinItemList p_items)
+        public static void ClearItems(IPaneList p_items)
         {
             // 不可使用Items.Clear
             while (p_items.Items.Count > 0)
@@ -139,7 +139,7 @@ namespace Dt.Base.Docking
                 // 先移除当前项，再清除子项，不可颠倒！
                 var item = p_items.Items[0];
                 p_items.Items.RemoveAt(0);
-                if (item is IWinItemList child)
+                if (item is IPaneList child)
                     ClearItems(child);
                 else if (item is TabControl tabs)
                     tabs.Items.Clear();
@@ -186,11 +186,11 @@ namespace Dt.Base.Docking
             _owner.IsReseting = true;
 
             // 按类型提取各项
-            List<WinCenter> centers = new List<WinCenter>();
-            List<WinItem> lefts = new List<WinItem>();
-            List<WinItem> rights = new List<WinItem>();
-            List<WinItem> topBottom = new List<WinItem>();
-            List<WinItem> floats = new List<WinItem>();
+            List<Main> centers = new List<Main>();
+            List<Pane> lefts = new List<Pane>();
+            List<Pane> rights = new List<Pane>();
+            List<Pane> topBottom = new List<Pane>();
+            List<Pane> floats = new List<Pane>();
             List<Tab> leftHide = new List<Tab>();
             List<Tab> rightHide = new List<Tab>();
             List<Tab> topHide = new List<Tab>();
@@ -200,10 +200,10 @@ namespace Dt.Base.Docking
                 object obj = _owner.Items[0];
                 _owner.Items.RemoveAt(0);
 
-                if (obj is WinItem di)
+                if (obj is Pane di)
                 {
                     ExtractItems(di);
-                    if (di.DockState == WinItemState.Floating)
+                    if (di.Pos == PanePosition.Floating)
                     {
                         floats.Add(di);
                     }
@@ -212,13 +212,13 @@ namespace Dt.Base.Docking
                         // 在停靠中挑出自动隐藏项
                         foreach (Tab tab in GetHideItems(di))
                         {
-                            if (di.DockState == WinItemState.DockedLeft)
+                            if (di.Pos == PanePosition.Left)
                                 leftHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedRight)
+                            else if (di.Pos == PanePosition.Right)
                                 rightHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedTop)
+                            else if (di.Pos == PanePosition.Top)
                                 topHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedBottom)
+                            else if (di.Pos == PanePosition.Bottom)
                                 bottomHide.Add(tab);
                         }
 
@@ -226,16 +226,16 @@ namespace Dt.Base.Docking
                         {
                             RemoveUnused(di);
 
-                            if (di.DockState == WinItemState.DockedLeft)
+                            if (di.Pos == PanePosition.Left)
                                 lefts.Add(di);
-                            else if (di.DockState == WinItemState.DockedRight)
+                            else if (di.Pos == PanePosition.Right)
                                 rights.Add(di);
                             else
                                 topBottom.Add(di);
                         }
                     }
                 }
-                else if (obj is WinCenter center)
+                else if (obj is Main center)
                 {
                     ExtractItems(center);
                     centers.Add(center);
@@ -249,7 +249,7 @@ namespace Dt.Base.Docking
                     // 4. 不显示恢复默认布局按钮
                     // 5. 一般为单视图窗口
                     _owner.AutoSaveLayout = false;
-                    WinCenter wc = new WinCenter();
+                    Main wc = new Main();
                     Tabs tabs = new Tabs { ShowHeader = false };
                     tabs.Items.Add(new Tab { Content = obj });
                     wc.Items.Add(tabs);
@@ -302,7 +302,7 @@ namespace Dt.Base.Docking
                 if (centers.Count > 0)
                 {
                     writer.WriteStartElement("Center");
-                    foreach (WinCenter center in centers)
+                    foreach (Main center in centers)
                     {
                         WriteCenter(writer, center.Items);
                         // 挪到CenterItem，特殊处理！
@@ -376,7 +376,7 @@ namespace Dt.Base.Docking
                 if (floats.Count > 0)
                 {
                     writer.WriteStartElement("Float");
-                    foreach (WinItem wi in floats)
+                    foreach (Pane wi in floats)
                     {
                         WriteWinItem(wi, writer);
                         OpenInWindow(wi);
@@ -436,7 +436,7 @@ namespace Dt.Base.Docking
                     XElement elem = doc.Root.Element("Win");
                     foreach (XElement item in elem.Elements())
                     {
-                        WinItem winItem = CreateWinItem(item);
+                        Pane winItem = CreateWinItem(item);
                         _owner.Items.Add(winItem);
                         _owner.RootPanel.Children.Add(winItem);
                     }
@@ -449,7 +449,7 @@ namespace Dt.Base.Docking
                         {
                             if (item.Name == "Tabs")
                                 _owner.CenterItem.Items.Add(CreateTabs(item));
-                            else if (item.Name == "WinItem")
+                            else if (item.Name == "Pane")
                                 _owner.CenterItem.Items.Add(CreateWinItem(item));
                         }
                     }
@@ -547,11 +547,11 @@ namespace Dt.Base.Docking
                     XElement elem = doc.Root.Element("Win");
                     foreach (XElement item in elem.Elements())
                     {
-                        WinItem di = CreateWinItem(item);
+                        Pane di = CreateWinItem(item);
                         if (index >= start && index < end)
                         {
                             // 范围之内的放入两侧自动隐藏
-                            MoveToAutoHide(di, di.DockState);
+                            MoveToAutoHide(di, di.Pos);
                         }
                         else
                         {
@@ -569,7 +569,7 @@ namespace Dt.Base.Docking
                         {
                             if (item.Name == "Tabs")
                                 _owner.CenterItem.Items.Add(CreateTabs(item));
-                            else if (item.Name == "WinItem")
+                            else if (item.Name == "Pane")
                                 _owner.CenterItem.Items.Add(CreateWinItem(item));
                         }
                     }
@@ -639,12 +639,12 @@ namespace Dt.Base.Docking
             }
         }
 
-        WinItem CreateWinItem(XElement p_elem)
+        Pane CreateWinItem(XElement p_elem)
         {
-            WinItem item = new WinItem();
-            XAttribute attr = p_elem.Attribute("DockState");
+            Pane item = new Pane();
+            XAttribute attr = p_elem.Attribute("Pos");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                item.DockState = (WinItemState)Enum.Parse(typeof(WinItemState), attr.Value);
+                item.Pos = (PanePosition)Enum.Parse(typeof(PanePosition), attr.Value);
 
             attr = p_elem.Attribute("InitWidth");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
@@ -692,7 +692,7 @@ namespace Dt.Base.Docking
             {
                 if (elem.Name == "Tabs")
                     item.Items.Add(CreateTabs(elem));
-                else if (elem.Name == "WinItem")
+                else if (elem.Name == "Pane")
                     item.Items.Add(CreateWinItem(elem));
             }
 
@@ -815,7 +815,7 @@ namespace Dt.Base.Docking
 
                 // 停靠项
                 writer.WriteStartElement("Win");
-                foreach (WinItem wi in _owner.Items.OfType<WinItem>())
+                foreach (Pane wi in _owner.Items.OfType<Pane>())
                 {
                     WriteWinItem(wi, writer);
                 }
@@ -875,7 +875,7 @@ namespace Dt.Base.Docking
 
                 // 浮动项
                 writer.WriteStartElement("Float");
-                foreach (WinItem wi in _owner.FloatItems)
+                foreach (Pane wi in _owner.FloatItems)
                 {
                     WriteWinItem(wi, writer);
                 }
@@ -887,7 +887,7 @@ namespace Dt.Base.Docking
             return xml.ToString();
         }
 
-        void WriteCenter(XmlWriter p_writer, WinItemList p_items)
+        void WriteCenter(XmlWriter p_writer, PaneList p_items)
         {
             foreach (var obj in p_items)
             {
@@ -895,31 +895,31 @@ namespace Dt.Base.Docking
                 {
                     WriteTabs(tabs, p_writer);
                 }
-                else if (obj is WinItem wi)
+                else if (obj is Pane wi)
                 {
                     WriteWinItem(wi, p_writer);
                 }
             }
         }
 
-        void WriteWinItem(WinItem p_item, XmlWriter p_writer)
+        void WriteWinItem(Pane p_item, XmlWriter p_writer)
         {
-            p_writer.WriteStartElement("WinItem");
+            p_writer.WriteStartElement("Pane");
 
-            if (p_item.ReadLocalValue(WinItem.DockStateProperty) != DependencyProperty.UnsetValue)
-                p_writer.WriteAttributeString("DockState", p_item.DockState.ToString());
+            if (p_item.ReadLocalValue(Pane.PosProperty) != DependencyProperty.UnsetValue)
+                p_writer.WriteAttributeString("Pos", p_item.Pos.ToString());
 
             if (!double.IsNaN(p_item.ActualWidth) && p_item.ActualWidth > 0)
                 p_writer.WriteAttributeString("InitWidth", p_item.ActualWidth.ToString());
-            else if (p_item.ReadLocalValue(WinItem.InitWidthProperty) != DependencyProperty.UnsetValue)
+            else if (p_item.ReadLocalValue(Pane.InitWidthProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("InitWidth", p_item.InitWidth.ToString());
 
             if (!double.IsNaN(p_item.ActualHeight) && p_item.ActualHeight > 0)
                 p_writer.WriteAttributeString("InitHeight", p_item.ActualHeight.ToString());
-            else if (p_item.ReadLocalValue(WinItem.InitHeightProperty) != DependencyProperty.UnsetValue)
+            else if (p_item.ReadLocalValue(Pane.InitHeightProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("InitHeight", p_item.InitHeight.ToString());
 
-            if (p_item.ReadLocalValue(WinItem.OrientationProperty) != DependencyProperty.UnsetValue)
+            if (p_item.ReadLocalValue(Pane.OrientationProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("Orientation", p_item.Orientation.ToString());
 
             ToolWindow win = p_item.Parent as ToolWindow;
@@ -930,12 +930,12 @@ namespace Dt.Base.Docking
             }
             else
             {
-                if (p_item.ReadLocalValue(WinItem.FloatLocationProperty) != DependencyProperty.UnsetValue)
+                if (p_item.ReadLocalValue(Pane.FloatLocationProperty) != DependencyProperty.UnsetValue)
                     p_writer.WriteAttributeString("FloatLocation", string.Format("{0},{1}", p_item.FloatLocation.X, p_item.FloatLocation.Y));
-                else if (p_item.ReadLocalValue(WinItem.FloatPosProperty) != DependencyProperty.UnsetValue)
+                else if (p_item.ReadLocalValue(Pane.FloatPosProperty) != DependencyProperty.UnsetValue)
                     p_writer.WriteAttributeString("FloatPos", p_item.FloatPos.ToString());
 
-                if (p_item.ReadLocalValue(WinItem.FloatSizeProperty) != DependencyProperty.UnsetValue)
+                if (p_item.ReadLocalValue(Pane.FloatSizeProperty) != DependencyProperty.UnsetValue)
                     p_writer.WriteAttributeString("FloatSize", string.Format("{0},{1}", p_item.FloatSize.Width, p_item.FloatSize.Height));
             }
 
@@ -951,7 +951,7 @@ namespace Dt.Base.Docking
                 {
                     WriteTabs(tabs, p_writer);
                 }
-                else if (obj is WinItem wi)
+                else if (obj is Pane wi)
                 {
                     WriteWinItem(wi, p_writer);
                 }
@@ -1025,7 +1025,7 @@ namespace Dt.Base.Docking
         /// 深度查找所有Tab项，构造以Tab.Title为键以Tab为值的字典，Title不为空
         /// </summary>
         /// <param name="p_items"></param>
-        void ExtractItems(IWinItemList p_items)
+        void ExtractItems(IPaneList p_items)
         {
             foreach (var item in p_items.Items)
             {
@@ -1040,7 +1040,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if (item is IWinItemList child)
+                else if (item is IPaneList child)
                 {
                     ExtractItems(child);
                 }
@@ -1067,7 +1067,7 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <returns></returns>
-        IEnumerable<Tab> GetHideItems(IWinItemList p_items)
+        IEnumerable<Tab> GetHideItems(IPaneList p_items)
         {
             foreach (var item in p_items.Items)
             {
@@ -1088,7 +1088,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if (item is IWinItemList child)
+                else if (item is IPaneList child)
                 {
                     foreach (Tab si in GetHideItems(child))
                     {
@@ -1103,7 +1103,7 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <param name="p_state"></param>
-        void MoveToAutoHide(IWinItemList p_items, WinItemState p_state)
+        void MoveToAutoHide(IPaneList p_items, PanePosition p_state)
         {
             foreach (var item in p_items.Items)
             {
@@ -1116,13 +1116,13 @@ namespace Dt.Base.Docking
                         if (si != null)
                         {
                             tabs.Items.RemoveAt(index);
-                            if (p_state == WinItemState.DockedLeft)
+                            if (p_state == PanePosition.Left)
                             {
                                 if (_owner.LeftAutoHide == null)
                                     _owner.CreateLeftAutoHideTab();
                                 _owner.LeftAutoHide.Unpin(si);
                             }
-                            else if (p_state == WinItemState.DockedRight)
+                            else if (p_state == PanePosition.Right)
                             {
                                 if (_owner.RightAutoHide == null)
                                     _owner.CreateRightAutoHideTab();
@@ -1135,7 +1135,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if (item is IWinItemList child)
+                else if (item is IPaneList child)
                 {
                     MoveToAutoHide(child, p_state);
                 }
@@ -1143,14 +1143,14 @@ namespace Dt.Base.Docking
         }
 
         /// <summary>
-        /// 构造ToolWindow承载WinItem
+        /// 构造ToolWindow承载Pane
         /// </summary>
         /// <param name="p_winItem"></param>
         /// <returns></returns>
-        ToolWindow OpenInWindow(WinItem p_winItem)
+        ToolWindow OpenInWindow(Pane p_winItem)
         {
             ToolWindow win = _owner.CreateWindow(p_winItem.FloatSize, p_winItem.FloatLocation);
-            if (p_winItem.ReadLocalValue(WinItem.FloatLocationProperty) == DependencyProperty.UnsetValue)
+            if (p_winItem.ReadLocalValue(Pane.FloatLocationProperty) == DependencyProperty.UnsetValue)
             {
                 // 默认位置
                 switch (p_winItem.FloatPos)
@@ -1184,21 +1184,21 @@ namespace Dt.Base.Docking
         }
 
         /// <summary>
-        /// 判断WinItem是否需要从布局中移除
+        /// 判断Pane是否需要从布局中移除
         /// </summary>
         /// <param name="p_di"></param>
         /// <returns></returns>
-        bool IsRemoved(WinItem p_di)
+        bool IsRemoved(Pane p_di)
         {
             foreach (object item in p_di.Items)
             {
-                WinItem di;
+                Pane di;
                 Tabs tabs = item as Tabs;
 
                 // 因之前已将IsPinned = false的所有Tab移除
                 if (tabs != null && tabs.Items.Count > 0)
                     return false;
-                else if ((di = item as WinItem) != null)
+                else if ((di = item as Pane) != null)
                 {
                     if (!IsRemoved(di))
                         return false;
@@ -1208,16 +1208,16 @@ namespace Dt.Base.Docking
         }
 
         /// <summary>
-        /// 移除当前WinItem子项中不需要的WinItem
+        /// 移除当前Pane子项中不需要的Pane
         /// </summary>
         /// <param name="p_di"></param>
-        void RemoveUnused(WinItem p_di)
+        void RemoveUnused(Pane p_di)
         {
             var dis = from item in p_di.Items
-                      where item is WinItem
-                      select (item as WinItem);
+                      where item is Pane
+                      select (item as Pane);
 
-            foreach (WinItem di in dis)
+            foreach (Pane di in dis)
             {
                 if (IsRemoved(di))
                     p_di.Items.Remove(di);

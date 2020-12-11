@@ -34,13 +34,13 @@ namespace Dt.Base.Report
             InitializeComponent();
             _info = p_info;
             _design = new RptDesignWin(_info);
-            LoadCenter(_design);
+            LoadMain(_design);
             _btnSave.Command = new SaveCmd(_info);
         }
 
         void OnEditTemplate(object sender, RoutedEventArgs e)
         {
-            LoadCenter(_design);
+            LoadMain(_design);
         }
 
         void OnExport(object sender, RoutedEventArgs e)
@@ -53,7 +53,7 @@ namespace Dt.Base.Report
             }
                 
             _tbXaml.Text = AtRpt.SerializeTemplate(_info.Root);
-            LoadCenter(_tbXaml);
+            LoadMain(_tbXaml);
         }
 
         async void OnImport(object sender, RoutedEventArgs e)
@@ -99,35 +99,35 @@ namespace Dt.Base.Report
         {
             if (_pageSetting == null)
                 _pageSetting = new PageSettingWin(_info);
-            LoadCenter(_pageSetting);
+            LoadMain(_pageSetting);
         }
 
         void OnViewSetting(object sender, RoutedEventArgs e)
         {
             if (_viewSetting == null)
                 _viewSetting = new ViewSettingWin(_info);
-            LoadCenter(_viewSetting);
+            LoadMain(_viewSetting);
         }
 
         void OnParams(object sender, RoutedEventArgs e)
         {
             if (_params == null)
                 _params = new ParamsWin(_info);
-            LoadCenter(_params);
+            LoadMain(_params);
         }
 
         void OnDbData(object sender, RoutedEventArgs e)
         {
             if (_dbData == null)
                 _dbData = new DbDataWin(_info);
-            LoadCenter(_dbData);
+            LoadMain(_dbData);
         }
 
         void OnScriptData(object sender, RoutedEventArgs e)
         {
             if (_scriptData == null)
                 _scriptData = new ScriptDataWin(_info);
-            LoadCenter(_scriptData);
+            LoadMain(_scriptData);
         }
 
         void OnSave(object sender, RoutedEventArgs e)

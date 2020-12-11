@@ -32,7 +32,7 @@ namespace Dt.Base.Report
                 searchForm = p_info.ScriptObj.GetSearchForm(p_info);
             }
 
-            WinCenter wc = new WinCenter();
+            Main wc = new Main();
             var tabs = new Tabs();
             var tab = new Tab { Title = "内容" };
             tab.Content = _view;
@@ -58,7 +58,7 @@ namespace Dt.Base.Report
             if (setting.ShowSearchForm
                 && (searchForm != null || p_info.Root.Params.ExistXaml))
             {
-                WinItem wi = new WinItem { DockState = WinItemState.DockedLeft };
+                Pane wi = new Pane();
                 tabs = new Tabs();
                 tab = new Tab { Title = "查询" };
 
@@ -89,7 +89,7 @@ namespace Dt.Base.Report
             }
 
             LoadRptView();
-            WinItem wi = new WinItem { DockState = WinItemState.DockedLeft };
+            Pane wi = new Pane();
             var tabs = new Tabs();
             tabs.SelectedChanged += OnSelectedTabChanged;
             foreach (var info in p_infos)
@@ -164,7 +164,7 @@ namespace Dt.Base.Report
 
         void LoadRptView()
         {
-            WinCenter wc = new WinCenter();
+            Main wc = new Main();
             var tabs = new Tabs();
             _tabCenter = new Tab { Title = "内容" };
             _tabCenter.Content = _view;

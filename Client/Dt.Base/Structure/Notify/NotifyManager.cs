@@ -30,11 +30,11 @@ namespace Dt.Base
         {
         }
 
-        static void OnItemsChanged(ItemList<NotifyInfo> sender, ItemListChangedArgs e)
+        static void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
             if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
             {
-                var info = sender[e.Index];
+                var info = ((ItemList<NotifyInfo>)sender)[e.Index];
                 SysVisual.InsertNotifyItem(e.Index, new NotifyItem(info));
             }
             else if (e.CollectionChange == CollectionChange.ItemRemoved)

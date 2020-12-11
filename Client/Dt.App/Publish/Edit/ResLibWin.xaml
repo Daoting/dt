@@ -6,9 +6,9 @@
     AutoSaveLayout="False"
     Home="素材库">
 
-    <a:WinItem DockState="DockedLeft" InitWidth="600">
+    <a:Pane InitWidth="600">
         <a:Tabs>
             <a:Tab x:Name="_tab" Title="素材库" />
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

@@ -15,19 +15,19 @@ namespace Dt.Base
     /// <summary>
     /// 窗口主区内容描述
     /// </summary>
-    public class CenterInfo
+    public class MainInfo
     {
-        public CenterInfo()
+        public MainInfo()
         { }
 
         /// <summary>
-        /// 
+        /// 窗口主区
         /// </summary>
         /// <param name="p_icon">图标</param>
         /// <param name="p_title">标题</param>
         /// <param name="p_winType">窗口类型</param>
         /// <param name="p_desc">描述信息</param>
-        public CenterInfo(Icons p_icon, string p_title, Type p_winType, string p_desc = null)
+        public MainInfo(Icons p_icon, string p_title, Type p_winType, string p_desc = null)
         {
             Icon = p_icon;
             Title = p_title;

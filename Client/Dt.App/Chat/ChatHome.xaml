@@ -6,7 +6,7 @@
     xmlns:chat="using:Dt.App.Chat"
     Home="消息,联系人">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="消息">
                 <a:ChatList ItemClick="OnItemClick" />
@@ -15,12 +15,12 @@
                 <chat:ChatMemberList ItemClick="OnItemClick" />
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="聊天内容">
                 <a:ChatDetail x:Name="_detail" />
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

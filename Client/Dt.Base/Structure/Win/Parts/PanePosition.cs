@@ -13,29 +13,29 @@
 namespace Dt.Base.Docking
 {
     /// <summary>
-    /// WinItem的停靠状态
+    /// Pane的停靠状态
     /// </summary>
-    public enum WinItemState
+    public enum PanePosition
     {
         /// <summary>
         /// 停靠在左侧
         /// </summary>
-        DockedLeft,
+        Left,
 
         /// <summary>
         /// 停靠在下侧
         /// </summary>
-        DockedBottom,
+        Bottom,
 
         /// <summary>
         /// 停靠在右侧
         /// </summary>
-        DockedRight,
+        Right,
 
         /// <summary>
         /// 停靠在上侧
         /// </summary>
-        DockedTop,
+        Top,
 
         /// <summary>
         /// 浮动

@@ -6,9 +6,9 @@
     AutoSaveLayout="False"
     Home="目录">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab x:Name="_tab" Title="目录" HideTitleBar="True" />
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

@@ -8,7 +8,7 @@
     AutoSaveLayout="False"
     Home="主页,训练,关心,我的">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab x:Name="_tabMain" Title="主页" Icon="主页" HideTitleBar="True">
 
@@ -20,12 +20,12 @@
 
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem DockState="DockedRight">
+    </a:Pane>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="我的" Icon="个人信息" HideTitleBar="True">
                 <home:MyMain x:Name="_my" />
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

@@ -5,11 +5,11 @@
     xmlns:a="using:Dt.Base"
     Home="功能列表">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="功能列表">
-                <a:Lv x:Name="_lv" Style="{StaticResource CenterInfoLv}" ItemClick="OnCenterInfoClick" />
+                <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

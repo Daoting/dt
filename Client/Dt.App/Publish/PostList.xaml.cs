@@ -55,7 +55,7 @@ namespace Dt.App.Publish
             if (_detail == null)
                 _detail = new PostDetail();
             _detail.Refresh(e.Row);
-            _win.LoadCenter(_detail);
+            _win.LoadMain(_detail);
         }
 
         async void OnNextPage(PageData e)

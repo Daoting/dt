@@ -7,25 +7,25 @@
     AutoSaveLayout="False"
     Home="开始,动态,我的">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="开始">
                 <home:RootMenu x:Name="_menu" />
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="动态">
                 
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="我的">
                 <home:MyMain x:Name="_my" />
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

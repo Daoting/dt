@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="图表样例,属性">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="图表样例">
                 <a:Chart x:Name="_chart" ChartType="Line">
@@ -13,8 +13,8 @@
                 </a:Chart>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="属性">
                 <StackPanel>
@@ -35,5 +35,5 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

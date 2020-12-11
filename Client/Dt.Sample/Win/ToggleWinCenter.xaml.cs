@@ -23,15 +23,15 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            _lv.Data = new Nl<CenterInfo>
+            _lv.Data = new Nl<MainInfo>
             {
-                new CenterInfo(Icons.公告, "内容为窗口", typeof(SingleViewWin), null),
-                new CenterInfo(Icons.田字格, "内容为嵌套窗口", typeof(ToggleWinCenter), null),
-                new CenterInfo(Icons.饼图, "内容为UserControl", typeof(TabNav1), null),
-                new CenterInfo(Icons.详细, "内容为空", null, null),
+                new MainInfo(Icons.公告, "内容为窗口", typeof(SingleViewWin), null),
+                new MainInfo(Icons.田字格, "内容为嵌套窗口", typeof(ToggleWinCenter), null),
+                new MainInfo(Icons.饼图, "内容为UserControl", typeof(TabNav1), null),
+                new MainInfo(Icons.详细, "内容为空", null, null),
             };
 
-            LoadCenter(new Button { Content = "abc" });
+            LoadMain(new Button { Content = "abc" });
         }
 
         void OnChanged(object sender, RoutedEventArgs e)
@@ -39,7 +39,7 @@ namespace Dt.Sample
             var btn = (BtnItem)sender;
             if (btn.Tag != null)
             {
-                LoadCenter(btn.Tag);
+                LoadMain(btn.Tag);
             }
             else
             {
@@ -48,14 +48,14 @@ namespace Dt.Sample
                 {
                     var obj = Activator.CreateInstance(tp);
                     btn.Tag = obj;
-                    LoadCenter(obj);
+                    LoadMain(obj);
                 }
             }
         }
 
         void OnCenterNull(object sender, RoutedEventArgs e)
         {
-            LoadCenter(null);
+            LoadMain(null);
         }
 
         void OnCenterBtn(object sender, RoutedEventArgs e)
@@ -63,7 +63,7 @@ namespace Dt.Sample
             var btn = (BtnItem)sender;
             if (btn.Tag == null)
                 btn.Tag = new Button { Content = "按钮", Margin = new Thickness(40) };
-            LoadCenter(btn.Tag);
+            LoadMain(btn.Tag);
         }
 
         void OnCenterStr(object sender, RoutedEventArgs e)
@@ -71,7 +71,7 @@ namespace Dt.Sample
             var btn = (BtnItem)sender;
             if (btn.Tag == null)
                 btn.Tag = "字符串";
-            LoadCenter(btn.Tag);
+            LoadMain(btn.Tag);
         }
     }
 }

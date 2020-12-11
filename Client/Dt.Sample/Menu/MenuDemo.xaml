@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="工具栏菜单">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab>
                 <a:Tab.Menu>
@@ -61,5 +61,5 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

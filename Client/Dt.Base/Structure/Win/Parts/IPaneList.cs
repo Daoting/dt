@@ -14,8 +14,8 @@ namespace Dt.Base.Docking
     /// <summary>
     /// 含子项集合的接口
     /// </summary>
-    public interface IWinItemList
+    public interface IPaneList
     {
-        WinItemList Items { get; }
+        PaneList Items { get; }
     }
 }

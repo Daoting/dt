@@ -6,14 +6,14 @@
     Title="模型库"
     Home="表">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="数据">
                 <a:Lv x:Name="_lvData" AutoCreateCol="True" />
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="表">
                 <a:Lv x:Name="_lvTbl">
@@ -23,5 +23,5 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

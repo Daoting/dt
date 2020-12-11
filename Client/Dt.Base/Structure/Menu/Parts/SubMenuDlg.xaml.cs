@@ -89,7 +89,7 @@ namespace Dt.Base.MenuView
                 _mi.Owner.Close();
         }
 
-        void OnItemsChanged(ItemList<Mi> sender, ItemListChangedArgs e)
+        void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
             _panel.Children.Clear();
         }

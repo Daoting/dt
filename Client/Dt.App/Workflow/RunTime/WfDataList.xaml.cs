@@ -41,7 +41,7 @@ namespace Dt.App.Workflow
             var row = e.Row;
             if (row.Tag != null)
             {
-                LoadCenter(row.Tag);
+                LoadMain(row.Tag);
                 return;
             }
 

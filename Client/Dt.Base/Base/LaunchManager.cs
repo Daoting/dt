@@ -220,7 +220,7 @@ namespace Dt.Base
 
             if (!AtSys.IsPhoneUI)
             {
-                Tabs tabs = (Tabs)p_win.GetValue(Win.CenterTabsProperty);
+                Tabs tabs = (Tabs)p_win.GetValue(Win.MainTabsProperty);
                 if (tabs != null
                     && tabs.Items.Count > 0
                     && ((Tab)tabs.Items[0]).Content is Win win)

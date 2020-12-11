@@ -6,7 +6,7 @@
     xmlns:sample="using:Dt.Sample"
     Home="主区">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="主区">
                 <StackPanel Margin="10">
@@ -16,8 +16,8 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem InitWidth="500" DockState="DockedLeft">
+    </a:Main>
+    <a:Pane InitWidth="500">
         <a:Tabs InitHeight="600">
             <a:Tab Title="Tab内部导航">
                 <sample:TabNav1 x:Name="_nav1" />
@@ -44,8 +44,8 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem InitWidth="300" DockState="DockedRight">
+    </a:Pane>
+    <a:Pane InitWidth="300" Pos="Right">
         <a:Tabs>
             <a:Tab Title="右侧">
                 <StackPanel Margin="10">
@@ -60,8 +60,8 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem InitHeight="200" DockState="DockedBottom">
+    </a:Pane>
+    <a:Pane InitHeight="200" Pos="Bottom">
         <a:Tabs>
             <a:Tab Title="底部">
                 <StackPanel Margin="10">
@@ -70,5 +70,5 @@
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

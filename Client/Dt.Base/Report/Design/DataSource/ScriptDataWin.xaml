@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="数据源,编辑">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="数据源">
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
@@ -18,8 +18,8 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="编辑">
                 <a:Tab.Menu>
@@ -36,5 +36,5 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

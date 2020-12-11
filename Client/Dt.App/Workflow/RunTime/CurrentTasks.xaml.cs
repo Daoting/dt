@@ -51,7 +51,7 @@ namespace Dt.App.Workflow
                 var info = new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"));
                 var win = await AtWf.CreateFormWin(info);
                 info.FormClosed += (s, arg) => Refresh();
-                LoadCenter(win);
+                LoadMain(win);
             }
         }
     }

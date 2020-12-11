@@ -189,7 +189,7 @@ namespace Dt.Base
         public Mi()
         {
             DefaultStyleKey = typeof(Mi);
-            Items = new ItemList<Mi>();
+            Items = new MiList();
             IsEnabledChanged += OnIsEnabledChanged;
         }
         #endregion
@@ -308,7 +308,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取子菜单集合
         /// </summary>
-        public ItemList<Mi> Items { get; }
+        public MiList Items { get; }
 
         /// <summary>
         /// 递归获取所有子级菜单项
@@ -444,11 +444,11 @@ namespace Dt.Base
             }
         }
 
-        void OnItemsChanged(ItemList<Mi> sender, ItemListChangedArgs e)
+        void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
             if (e.CollectionChange == CollectionChange.ItemInserted)
             {
-                Mi mi = sender[e.Index];
+                Mi mi = ((MiList)sender)[e.Index];
                 mi.InitOwner(Owner, this);
             }
             else if (e.CollectionChange == CollectionChange.Reset)

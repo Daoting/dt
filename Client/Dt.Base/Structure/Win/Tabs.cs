@@ -35,7 +35,7 @@ namespace Dt.Base
             new PropertyMetadata(true));
 
         /// <summary>
-        /// 尺寸调节器的位置，由父容器WinItem的Orientation决定
+        /// 尺寸调节器的位置，由父容器Pane的Orientation决定
         /// </summary>
         public static readonly DependencyProperty ResizerPlacementProperty = DependencyProperty.Register(
             "ResizerPlacement",
@@ -87,7 +87,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取尺寸调节器的位置，由父容器WinItem的Orientation决定
+        /// 获取尺寸调节器的位置，由父容器Pane的Orientation决定
         /// </summary>
         public ItemPlacement? ResizerPlacement
         {
@@ -161,9 +161,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 所属WinItem
+        /// 所属Pane
         /// </summary>
-        internal WinItem OwnWinItem
+        internal Pane OwnWinItem
         {
             get
             {
@@ -184,18 +184,18 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
-        /// 将目标WinItem的项停靠，合并到当前Tabs或停靠在一边
+        /// 将目标Pane的项停靠，合并到当前Tabs或停靠在一边
         /// </summary>
         /// <param name="p_winItem"></param>
         /// <param name="p_dockPosition"></param>
-        public void AddItem(WinItem p_winItem, DockPosition p_dockPosition)
+        public void AddItem(Pane p_winItem, DockPosition p_dockPosition)
         {
             if (p_winItem == null)
                 return;
 
             if (p_dockPosition == DockPosition.Center)
             {
-                // 停靠在中部，合并WinItem中的所有标签项
+                // 停靠在中部，合并Pane中的所有标签项
                 var ls = GetAllChildTab(p_winItem);
                 LayoutManager.ClearItems(p_winItem);
                 foreach (Tab item in ls)
@@ -261,7 +261,7 @@ namespace Dt.Base
         /// <param name="p_dockPos"></param>
         /// <param name="p_dockItem"></param>
         /// <returns></returns>
-        internal Rect GetRectDimenstion(DockPosition p_dockPos, WinItem p_dockItem)
+        internal Rect GetRectDimenstion(DockPosition p_dockPos, Pane p_dockItem)
         {
             Point topLeft = new Point();
             Size parentSize = Size.Empty;
@@ -432,7 +432,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_winItem"></param>
         /// <returns></returns>
-        List<Tab> GetAllChildTab(WinItem p_winItem)
+        List<Tab> GetAllChildTab(Pane p_winItem)
         {
             List<Tab> ls = new List<Tab>();
             if (p_winItem != null && p_winItem.Items.Count > 0)
@@ -443,7 +443,7 @@ namespace Dt.Base
                     {
                         ls.AddRange(childTabs.Items.OfType<Tab>());
                     }
-                    else if (item is WinItem childWinItem)
+                    else if (item is Pane childWinItem)
                     {
                         ls.AddRange(GetAllChildTab(childWinItem));
                     }

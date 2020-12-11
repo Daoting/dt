@@ -49,7 +49,7 @@ namespace Dt.Base
         // 代码创建控件对象时：在添加到可视树时才调用ApplyTemplate
         // 设置Style时：直接调用ApplyTemplate，在构造方法中设置也一样，DefaultStyleKey则不同
         //
-        // 因此控件不再可视树时无需指定 DefaultStyleKey 或 Style！如PhoneUI模式的Win, WinItem, Tabs等
+        // 因此控件不再可视树时无需指定 DefaultStyleKey 或 Style！如PhoneUI模式的Win, Pane, Tabs等
         /***********************************************************************************************************************************************************/
 
 

@@ -4,11 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab x:Name="_tab" Title="表单">
                 
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

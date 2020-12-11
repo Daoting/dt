@@ -5,14 +5,14 @@
     xmlns:a="using:Dt.Base"
     Home="Excel,属性">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="Excel">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="属性">
                 <a:Fv>
@@ -29,5 +29,5 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

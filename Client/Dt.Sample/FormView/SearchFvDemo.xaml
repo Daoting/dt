@@ -5,14 +5,14 @@
     xmlns:a="using:Dt.Base"
     Home="查询面板">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="属性">
                 
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="查询面板">
                 <a:SearchFv x:Name="_fv" Placeholder="姓名或拼音简码" Search="OnSearch">
@@ -25,5 +25,5 @@
                 </a:SearchFv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

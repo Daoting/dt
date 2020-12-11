@@ -27,7 +27,7 @@ namespace Dt.Core
         /// <summary>
         /// 集合更改事件
         /// </summary>
-        public event ItemListChangedHandler<T> ItemsChanged;
+        public event ItemListChangedHandler ItemsChanged;
 
         /// <summary>
         /// 延迟触发ItemsChanged事件
@@ -213,7 +213,7 @@ namespace Dt.Core
     /// <typeparam name="T"></typeparam>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public delegate void ItemListChangedHandler<T>(ItemList<T> sender, ItemListChangedArgs e);
+    public delegate void ItemListChangedHandler(object sender, ItemListChangedArgs e);
 
     /// <summary>
     /// 集合改变参数

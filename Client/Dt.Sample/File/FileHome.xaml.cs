@@ -23,14 +23,14 @@ namespace Dt.Sample
         public FileHome()
         {
             InitializeComponent();
-            _lv.Data = new Nl<CenterInfo>
+            _lv.Data = new Nl<MainInfo>
             {
-                new CenterInfo(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
-                new CenterInfo(Icons.保存, "拍照录像", typeof(CameraCaptureDemo), "拍照、录像生成文件"),
-                new CenterInfo(Icons.日历, "FileList上传下载", typeof(FileListDemo), "跨平台文件上传下载"),
-                new CenterInfo(Icons.文件, "文件格", typeof(FileCellDemo), "文件格、图像格"),
-                new CenterInfo(Icons.文件夹, "Lv的文件列表", typeof(FileLvDemo), "文件格、图像格"),
-                new CenterInfo(Icons.图片, "图像资源", typeof(ImgFileDemo), "不同类型图像资源的显示"),
+                new MainInfo(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
+                new MainInfo(Icons.保存, "拍照录像", typeof(CameraCaptureDemo), "拍照、录像生成文件"),
+                new MainInfo(Icons.日历, "FileList上传下载", typeof(FileListDemo), "跨平台文件上传下载"),
+                new MainInfo(Icons.文件, "文件格", typeof(FileCellDemo), "文件格、图像格"),
+                new MainInfo(Icons.文件夹, "Lv的文件列表", typeof(FileLvDemo), "文件格、图像格"),
+                new MainInfo(Icons.图片, "图像资源", typeof(ImgFileDemo), "不同类型图像资源的显示"),
             };
         }
     }

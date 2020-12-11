@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="格,属性">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="格">
                 <a:Fv x:Name="_fv">
@@ -59,8 +59,8 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="属性">
                 <Grid>
@@ -87,5 +87,5 @@
                 </Grid>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

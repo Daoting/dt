@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="查找,列表">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="查找">
                 <a:SearchFv Placeholder="关键字名称" Search="OnSearch">
@@ -14,8 +14,8 @@
                 </a:SearchFv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="列表">
                 <a:Tab.Menu>
@@ -42,5 +42,5 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

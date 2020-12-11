@@ -28,7 +28,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : DtControl, IWinItemList
+    public partial class Win : DtControl, IPaneList
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -67,14 +67,14 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(false));
 
-        internal static readonly DependencyProperty CenterTabsProperty = DependencyProperty.Register(
-            "CenterTabs",
+        internal static readonly DependencyProperty MainTabsProperty = DependencyProperty.Register(
+            "MainTabs",
             typeof(Tabs),
             typeof(Win),
             new PropertyMetadata(null));
 
-        static readonly DependencyProperty PhoneCenterTabProperty = DependencyProperty.Register(
-            "PhoneCenterTab",
+        static readonly DependencyProperty PhoneMainTabProperty = DependencyProperty.Register(
+            "PhoneMainTab",
             typeof(Tab),
             typeof(Win),
             new PropertyMetadata(null));
@@ -189,7 +189,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
-        public WinItemList Items { get; } = new WinItemList();
+        public PaneList Items { get; } = new PaneList();
 
         /// <summary>
         /// 获取是否允许恢复默认布局
@@ -212,7 +212,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取所有浮动项
         /// </summary>
-        public IEnumerable<WinItem> FloatItems
+        public IEnumerable<Pane> FloatItems
         {
             get
             {
@@ -220,7 +220,7 @@ namespace Dt.Base
                 {
                     foreach (ToolWindow win in _popupPanel.Children.OfType<ToolWindow>())
                     {
-                        WinItem item = win.Content as WinItem;
+                        Pane item = win.Content as Pane;
                         if (item != null)
                             yield return item;
                     }
@@ -239,7 +239,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取内部停靠面板
         /// </summary>
-        internal WinItemPanel RootPanel { get; set; }
+        internal PanePanel RootPanel { get; set; }
 
         /// <summary>
         /// 获取左侧隐藏面板
@@ -269,7 +269,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取中部停靠容器
         /// </summary>
-        internal WinItem CenterItem { get; } = new WinItem { IsInCenter = true };
+        internal Pane CenterItem { get; } = new Pane { IsInCenter = true };
         #endregion
 
         #region PhoneUI
@@ -504,7 +504,7 @@ namespace Dt.Base
         /// 深度查找所有Tab项，构造以Tab.Title为键名以Tab为值的字典
         /// </summary>
         /// <param name="p_items"></param>
-        void ExtractItems(IWinItemList p_items)
+        void ExtractItems(IPaneList p_items)
         {
             foreach (var obj in p_items.Items)
             {
@@ -524,7 +524,7 @@ namespace Dt.Base
                     }
                     tabs.Items.Clear();
                 }
-                else if (obj is IWinItemList ic)
+                else if (obj is IPaneList ic)
                 {
                     ExtractItems(ic);
                 }
@@ -592,7 +592,7 @@ namespace Dt.Base
         #region 加载过程
         protected override void OnLoadTemplate()
         {
-            RootPanel = (WinItemPanel)GetTemplateChild("RootPanel");
+            RootPanel = (PanePanel)GetTemplateChild("RootPanel");
             RootPanel.Init(CenterItem);
 
             _layout = new LayoutManager(this);
@@ -608,9 +608,9 @@ namespace Dt.Base
             // RootPanel.Children的0位置是CenterItem，比Items多一个元素！
             if (e.CollectionChange == CollectionChange.ItemInserted)
             {
-                WinItem item = Items[e.Index] as WinItem;
+                Pane item = Items[e.Index] as Pane;
                 if (item != null
-                    && item.DockState != WinItemState.Floating
+                    && item.Pos != PanePosition.Floating
                     && !RootPanel.Children.Contains(item))
                 {
                     RootPanel.Children.Insert(e.Index + 1, item);
@@ -675,7 +675,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 构造ToolWindow承载Tab，结构 ToolWindow -> WinItem -> Tabs -> Tab
+        /// 构造ToolWindow承载Tab，结构 ToolWindow -> Pane -> Tabs -> Tab
         /// </summary>
         /// <param name="p_tab"></param>
         /// <returns></returns>
@@ -691,9 +691,9 @@ namespace Dt.Base
             }
             else
             {
-                WinItem oldContainer = null;
+                Pane oldContainer = null;
                 if (p_tab.OwnTabs != null)
-                    oldContainer = p_tab.OwnTabs.Parent as WinItem;
+                    oldContainer = p_tab.OwnTabs.Parent as Pane;
 
                 if (oldContainer != null)
                 {
@@ -704,8 +704,8 @@ namespace Dt.Base
             p_tab.RemoveFromParent();
 
             ToolWindow win = CreateWindow(initSize, initPos);
-            WinItem dockItem = new WinItem();
-            dockItem.DockState = WinItemState.Floating;
+            Pane dockItem = new Pane();
+            dockItem.Pos = PanePosition.Floating;
             Tabs sect = new Tabs();
             sect.Items.Add(p_tab);
             dockItem.Items.Add(sect);
@@ -715,7 +715,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 构造ToolWindow承载Tabs，直接将Tabs移动到新WinItem
+        /// 构造ToolWindow承载Tabs，直接将Tabs移动到新Pane
         /// </summary>
         /// <param name="p_tabs"></param>
         /// <returns></returns>
@@ -731,8 +731,8 @@ namespace Dt.Base
             }
 
             ToolWindow win = CreateWindow(initSize, initPos);
-            WinItem dockItem = new WinItem();
-            dockItem.DockState = WinItemState.Floating;
+            Pane dockItem = new Pane();
+            dockItem.Pos = PanePosition.Floating;
             p_tabs.RemoveFromParent();
             dockItem.Items.Add(p_tabs);
             win.Content = dockItem;
@@ -879,8 +879,8 @@ namespace Dt.Base
             bool showCue = false;
             if (_compass.DockPosition != DockPosition.None && _sectWithCompass != null)
             {
-                // 在WinItem内部停靠
-                rect = _sectWithCompass.GetRectDimenstion(_compass.DockPosition, p_win.Content as WinItem);
+                // 在Pane内部停靠
+                rect = _sectWithCompass.GetRectDimenstion(_compass.DockPosition, p_win.Content as Pane);
                 Point topLeft = GetElementPositionRelatedToPopup(_sectWithCompass.OwnWinItem);
                 rect.X += topLeft.X;
                 rect.Y += topLeft.Y;
@@ -889,7 +889,7 @@ namespace Dt.Base
             else if (_rootCompass.DockPosition != DockPosition.None && _rootCompass.DockPosition != DockPosition.Center)
             {
                 // 最外层停靠
-                WinItem dockItem = p_win.Content as WinItem;
+                Pane dockItem = p_win.Content as Pane;
                 Size relativeSize = new Size(dockItem.InitWidth, dockItem.InitHeight);
                 switch (_rootCompass.DockPosition)
                 {
@@ -963,10 +963,10 @@ namespace Dt.Base
             if (p_toolWin == null)
                 return;
 
-            WinItem winItem = p_toolWin.Content as WinItem;
+            Pane winItem = p_toolWin.Content as Pane;
             if (_sectWithCompass != null && _compass.DockPosition != DockPosition.None)
             {
-                // 停靠在WinItem内部
+                // 停靠在Pane内部
                 p_toolWin.ClearValue(ContentControl.ContentProperty);
                 _sectWithCompass.AddItem(winItem, _compass.DockPosition);
             }
@@ -977,16 +977,16 @@ namespace Dt.Base
                 switch (_rootCompass.DockPosition)
                 {
                     case DockPosition.Top:
-                        winItem.DockState = WinItemState.DockedTop;
+                        winItem.Pos = PanePosition.Top;
                         break;
                     case DockPosition.Bottom:
-                        winItem.DockState = WinItemState.DockedBottom;
+                        winItem.Pos = PanePosition.Bottom;
                         break;
                     case DockPosition.Left:
-                        winItem.DockState = WinItemState.DockedLeft;
+                        winItem.Pos = PanePosition.Left;
                         break;
                     case DockPosition.Right:
-                        winItem.DockState = WinItemState.DockedRight;
+                        winItem.Pos = PanePosition.Right;
                         break;
                 }
                 Items.Insert(0, winItem);
@@ -1012,15 +1012,15 @@ namespace Dt.Base
         /// 动态切换主区内容
         /// </summary>
         /// <param name="p_content"></param>
-        public void LoadCenter(object p_content)
+        public void LoadMain(object p_content)
         {
             if (AtSys.IsPhoneUI)
-                LoadPhoneCenter(p_content);
+                LoadPhoneMain(p_content);
             else
-                LoadWinCenter(p_content);
+                LoadWinMain(p_content);
         }
 
-        void LoadPhoneCenter(object p_content)
+        void LoadPhoneMain(object p_content)
         {
             // 未加载win的Home页前不导航
             if (_tabs == null)
@@ -1033,28 +1033,28 @@ namespace Dt.Base
             }
             else
             {
-                Tab tab = (Tab)GetValue(PhoneCenterTabProperty);
+                Tab tab = (Tab)GetValue(PhoneMainTabProperty);
                 if (tab == null)
                 {
                     tab = new Tab();
-                    SetValue(PhoneCenterTabProperty, tab);
+                    SetValue(PhoneMainTabProperty, tab);
                 }
                 tab.Content = p_content;
                 PhonePage.Show(tab);
             }
         }
 
-        void LoadWinCenter(object p_content)
+        void LoadWinMain(object p_content)
         {
             Tab tab;
-            Tabs tabs = (Tabs)GetValue(CenterTabsProperty);
+            Tabs tabs = (Tabs)GetValue(MainTabsProperty);
             if (tabs == null || tabs.Items.Count == 0)
             {
                 // 初次加载 或 恢复默认布局后
                 tabs = new Tabs { ShowHeader = false };
                 tab = new Tab();
                 tabs.Items.Add(tab);
-                SetValue(CenterTabsProperty, tabs);
+                SetValue(MainTabsProperty, tabs);
 
                 // 已应用模板
                 CenterItem.Items.Add(tabs);
@@ -1079,15 +1079,15 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Lv中数据源为CenterInfo列表时，ItemClick默认事件处理
+        /// Lv中数据源为MainInfo列表时，ItemClick默认事件处理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void OnCenterInfoClick(object sender, ItemClickArgs e)
+        protected void OnMainInfoClick(object sender, ItemClickArgs e)
         {
-            var info = e.Data as CenterInfo;
+            var info = e.Data as MainInfo;
             if (info != null)
-                LoadCenter(info.GetCenter());
+                LoadMain(info.GetCenter());
         }
         #endregion
 
@@ -1108,7 +1108,7 @@ namespace Dt.Base
                 {
                     // 先移除当前项，再清除子项，不可颠倒！
                     _popupPanel.Children.RemoveAt(index);
-                    WinItem di = win.Content as WinItem;
+                    Pane di = win.Content as Pane;
                     if (di != null)
                         LayoutManager.ClearItems(di);
                 }
@@ -1126,22 +1126,22 @@ namespace Dt.Base
         /// <returns></returns>
         internal static bool CheckIsDockable(ToolWindow p_win)
         {
-            return ((p_win != null) && CheckIsDockable(p_win.Content as WinItem));
+            return ((p_win != null) && CheckIsDockable(p_win.Content as Pane));
         }
 
         /// <summary>
-        /// WinItem内容是否可停靠
+        /// Pane内容是否可停靠
         /// </summary>
         /// <param name="p_dockItem"></param>
         /// <returns></returns>
-        internal static bool CheckIsDockable(WinItem p_dockItem)
+        internal static bool CheckIsDockable(Pane p_dockItem)
         {
             if ((p_dockItem == null) || (p_dockItem.Items.Count <= 0))
                 return false;
 
             Tabs sect;
             return (((sect = p_dockItem.Items[0] as Tabs) != null && CheckIsDockable(sect))
-                || CheckIsDockable(p_dockItem.Items[0] as WinItem));
+                || CheckIsDockable(p_dockItem.Items[0] as Pane));
         }
 
         /// <summary>
@@ -1199,7 +1199,7 @@ namespace Dt.Base
             return GetParentWindow(p_sect?.OwnWinItem);
         }
 
-        static ToolWindow GetParentWindow(WinItem p_winItem)
+        static ToolWindow GetParentWindow(Pane p_winItem)
         {
             if (p_winItem != null)
             {
@@ -1227,7 +1227,7 @@ namespace Dt.Base
                 if (autoHide != null)
                 {
                     autoHide.Pin(item);
-                    WinItemState dockState = GetDockState(autoHide.TabStripPlacement);
+                    PanePosition dockState = GetDockState(autoHide.TabStripPlacement);
                     Tabs sect = FindPinSect(dockState);
                     if (sect != null)
                     {
@@ -1236,8 +1236,8 @@ namespace Dt.Base
                     }
                     else
                     {
-                        WinItem dockItem = new WinItem();
-                        dockItem.DockState = dockState;
+                        Pane dockItem = new Pane();
+                        dockItem.Pos = dockState;
                         sect = new Tabs();
                         dockItem.Items.Add(sect);
                         sect.Items.Add(item);
@@ -1248,27 +1248,27 @@ namespace Dt.Base
             else
             {
                 Tabs sect = item.Owner as Tabs;
-                WinItem dockItem;
+                Pane dockItem;
                 if (sect != null && (dockItem = sect.OwnWinItem) != null)
                 {
-                    switch (dockItem.DockState)
+                    switch (dockItem.Pos)
                     {
-                        case WinItemState.DockedLeft:
+                        case PanePosition.Left:
                             if (LeftAutoHide == null)
                                 CreateLeftAutoHideTab();
                             LeftAutoHide.Unpin(item);
                             break;
-                        case WinItemState.DockedBottom:
+                        case PanePosition.Bottom:
                             if (BottomAutoHide == null)
                                 CreateBottomAutoHideTab();
                             BottomAutoHide.Unpin(item);
                             break;
-                        case WinItemState.DockedRight:
+                        case PanePosition.Right:
                             if (RightAutoHide == null)
                                 CreateRightAutoHideTab();
                             RightAutoHide.Unpin(item);
                             break;
-                        case WinItemState.DockedTop:
+                        case PanePosition.Top:
                             if (TopAutoHide == null)
                                 CreateTopAutoHideTab();
                             TopAutoHide.Unpin(item);
@@ -1284,11 +1284,11 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_dockState"></param>
         /// <returns></returns>
-        Tabs FindPinSect(WinItemState p_dockState)
+        Tabs FindPinSect(PanePosition p_dockState)
         {
             Tabs sect = null;
-            WinItem item = (from dockItem in Items.OfType<WinItem>()
-                            where dockItem.DockState == p_dockState
+            Pane item = (from dockItem in Items.OfType<Pane>()
+                            where dockItem.Pos == p_dockState
                             select dockItem).FirstOrDefault();
             if (item != null)
             {
@@ -1298,23 +1298,23 @@ namespace Dt.Base
             return sect;
         }
 
-        WinItemState GetDockState(ItemPlacement p_dockState)
+        PanePosition GetDockState(ItemPlacement p_dockState)
         {
             switch (p_dockState)
             {
                 case ItemPlacement.Left:
-                    return WinItemState.DockedLeft;
+                    return PanePosition.Left;
 
                 case ItemPlacement.Right:
-                    return WinItemState.DockedRight;
+                    return PanePosition.Right;
 
                 case ItemPlacement.Top:
-                    return WinItemState.DockedTop;
+                    return PanePosition.Top;
 
                 case ItemPlacement.Bottom:
-                    return WinItemState.DockedBottom;
+                    return PanePosition.Bottom;
             }
-            return WinItemState.DockedLeft;
+            return PanePosition.Left;
         }
 
         internal void CreateLeftAutoHideTab()

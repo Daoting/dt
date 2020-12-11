@@ -26,12 +26,12 @@ namespace Dt.Base.Tools
         {
             InitializeComponent();
             Title = "本地库";
-            _lv.Data = new Nl<CenterInfo>
+            _lv.Data = new Nl<MainInfo>
             {
-                new CenterInfo(Icons.分组, "状态库", typeof(StateDb), "State.db"),
-                new CenterInfo(Icons.详细, "模型库", typeof(ModelDb), "xxxx.db"),
-                new CenterInfo(Icons.排列, "状态库备份", typeof(StateDbBackup), "将数据文件State.db复制到指定位置"),
-                new CenterInfo(Icons.排列, "状态库恢复", typeof(StateDbUpdate), "选择加载已备份的数据文件恢复到当前系统"),
+                new MainInfo(Icons.分组, "状态库", typeof(StateDb), "State.db"),
+                new MainInfo(Icons.详细, "模型库", typeof(ModelDb), "xxxx.db"),
+                new MainInfo(Icons.排列, "状态库备份", typeof(StateDbBackup), "将数据文件State.db复制到指定位置"),
+                new MainInfo(Icons.排列, "状态库恢复", typeof(StateDbUpdate), "选择加载已备份的数据文件恢复到当前系统"),
             };
         }
     }

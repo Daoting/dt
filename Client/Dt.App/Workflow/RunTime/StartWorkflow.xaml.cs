@@ -50,7 +50,7 @@ namespace Dt.App.Workflow
             else
             {
                 var win = await AtWf.CreateFormWin(info);
-                LoadCenter(win);
+                LoadMain(win);
             }
         }
     }

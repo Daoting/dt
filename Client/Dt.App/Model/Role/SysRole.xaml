@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="角色列表">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="查找角色">
                 <a:SearchFv Placeholder="角色名称" Search="OnSearch">
@@ -15,8 +15,8 @@
                 </a:SearchFv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="角色列表">
                 <a:Tab.Menu>
@@ -43,8 +43,8 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="关联用户">
                 <a:Tab.Menu>
@@ -110,5 +110,5 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

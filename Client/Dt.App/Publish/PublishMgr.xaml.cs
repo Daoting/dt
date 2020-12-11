@@ -19,13 +19,13 @@ namespace Dt.App.Publish
         public PublishMgr()
         {
             InitializeComponent();
-            _lv.Data = new Nl<CenterInfo>
+            _lv.Data = new Nl<MainInfo>
             {
-                new CenterInfo(Icons.书籍, "文章管理", typeof(PostMgr), ""),
-                new CenterInfo(Icons.留言, "评论管理", typeof(KeywordMgr), ""),
-                new CenterInfo(Icons.展开, "关键字", typeof(KeywordMgr), ""),
-                new CenterInfo(Icons.文件, "文章专辑", typeof(AlbumMgr), ""),
-                new CenterInfo(Icons.词典, "素材库", typeof(ResLibWin), ""),
+                new MainInfo(Icons.书籍, "文章管理", typeof(PostMgr), ""),
+                new MainInfo(Icons.留言, "评论管理", typeof(KeywordMgr), ""),
+                new MainInfo(Icons.展开, "关键字", typeof(KeywordMgr), ""),
+                new MainInfo(Icons.文件, "文章专辑", typeof(AlbumMgr), ""),
+                new MainInfo(Icons.词典, "素材库", typeof(ResLibWin), ""),
             };
         }
     }

@@ -34,7 +34,7 @@ namespace Dt.Base
         public Menu()
         {
             DefaultStyleKey = typeof(Menu);
-            Items = new ItemList<Mi>();
+            Items = new MiList();
         }
         #endregion
 
@@ -101,7 +101,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取子菜单集合
         /// </summary>
-        public ItemList<Mi> Items { get; }
+        public MiList Items { get; }
 
         /// <summary>
         /// 递归获取所有子级菜单项
@@ -347,4 +347,10 @@ namespace Dt.Base
         }
         #endregion
     }
+
+    /// <summary>
+    /// 子项列表，直接用泛型在xaml设计时异常
+    /// </summary>
+    public class MiList : ItemList<Mi>
+    { }
 }

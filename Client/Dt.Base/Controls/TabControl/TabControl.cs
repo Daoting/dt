@@ -152,7 +152,7 @@ namespace Dt.Base
         public TabControl()
         {
             DefaultStyleKey = typeof(TabControl);
-            Items = new ItemList<TabItem>();
+            Items = new TabItemsList();
             _selector = new SelectionChanger(this);
         }
         #endregion
@@ -166,9 +166,9 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取子菜单集合
+        /// 获取子项集合
         /// </summary>
-        public ItemList<TabItem> Items { get; }
+        public TabItemsList Items { get; }
 
         /// <summary>
         /// 获取或设置 TabItem 标题相对于内容的对齐方式
@@ -278,7 +278,7 @@ namespace Dt.Base
         #endregion
 
         #region Items管理
-        void OnItemsChanged(ItemList<TabItem> sender, ItemListChangedArgs e)
+        void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
             if (e.CollectionChange == CollectionChange.ItemInserted)
             {
@@ -950,4 +950,10 @@ namespace Dt.Base
             get { return _selectItem; }
         }
     }
+
+    /// <summary>
+    /// 子项列表，直接用泛型在xaml设计时异常
+    /// </summary>
+    public class TabItemsList : ItemList<TabItem>
+    { }
 }

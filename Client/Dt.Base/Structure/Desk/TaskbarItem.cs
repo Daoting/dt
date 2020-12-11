@@ -159,7 +159,7 @@ namespace Dt.Base
                 else
                 {
                     // 主区内容为Win
-                    Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
+                    Tabs tabs = (Tabs)win.GetValue(Win.MainTabsProperty);
                     if (tabs != null
                         && tabs.Items.Count > 0
                         && tabs.Items[0].Content is Win cw
@@ -195,7 +195,7 @@ namespace Dt.Base
             Win win = _currentItem._win;
 
             // 主区内容为Win时，先恢复
-            Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
+            Tabs tabs = (Tabs)win.GetValue(Win.MainTabsProperty);
             if (tabs != null
                 && tabs.Items.Count > 0
                 && tabs.Items[0].Content is Win cw

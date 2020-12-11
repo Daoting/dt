@@ -17,14 +17,14 @@ using Windows.UI.Xaml.Controls;
 namespace Dt.Base.Docking
 {
     /// <summary>
-    /// WinItem布局面板，内部子元素为 WinItem
+    /// Pane布局面板，内部子元素为 Pane
     /// </summary>
-    public partial class WinItemPanel : Panel
+    public partial class PanePanel : Panel
     {
         // 中部主区，始终在Children的0位置
-        WinItem _centerItem;
+        Pane _centerItem;
 
-        internal void Init(WinItem p_centerItem)
+        internal void Init(Pane p_centerItem)
         {
             _centerItem = p_centerItem;
             Children.Add(_centerItem);
@@ -53,13 +53,13 @@ namespace Dt.Base.Docking
             // 初始化时Children已按 中左右上下 的顺序，但拖拽调整后顺序打乱，只有_centerItem始终0位置
             for (int i = 1; i < Children.Count; i++)
             {
-                WinItem item = (WinItem)Children[i];
+                Pane item = (Pane)Children[i];
 
-                // 根据停靠位置设置WinItem宽或高
-                switch (item.DockState)
+                // 根据停靠位置设置Pane宽或高
+                switch (item.Pos)
                 {
-                    case WinItemState.DockedLeft:
-                    case WinItemState.DockedRight:
+                    case PanePosition.Left:
+                    case PanePosition.Right:
                         if (double.IsNaN(item.Width))
                         {
                             if (double.IsNaN(item.InitWidth) && !double.IsInfinity(width))
@@ -68,8 +68,8 @@ namespace Dt.Base.Docking
                                 item.Width = item.InitWidth;
                         }
                         break;
-                    case WinItemState.DockedTop:
-                    case WinItemState.DockedBottom:
+                    case PanePosition.Top:
+                    case PanePosition.Bottom:
                         if (double.IsNaN(item.Height))
                         {
                             // 未设置初始高度时自动占一半
@@ -82,21 +82,21 @@ namespace Dt.Base.Docking
                 }
 
                 item.Measure(new Size(Math.Max(0.0, width - usedLeft - usedRight), Math.Max(0.0, height - usedTop - usedBottom)));
-                switch (item.DockState)
+                switch (item.Pos)
                 {
-                    case WinItemState.DockedLeft:
+                    case PanePosition.Left:
                         item.Region = new Rect(usedLeft, usedTop, item.Width, height - usedTop - usedBottom);
                         usedLeft += item.DesiredSize.Width;
                         break;
-                    case WinItemState.DockedRight:
+                    case PanePosition.Right:
                         usedRight += item.DesiredSize.Width;
                         item.Region = new Rect(Math.Max(0.0, width - usedRight), usedTop, item.Width, height - usedTop - usedBottom);
                         break;
-                    case WinItemState.DockedTop:
+                    case PanePosition.Top:
                         item.Region = new Rect(usedLeft, usedTop, width - usedLeft - usedRight, item.Height);
                         usedTop += item.DesiredSize.Height;
                         break;
-                    case WinItemState.DockedBottom:
+                    case PanePosition.Bottom:
                         usedBottom += item.DesiredSize.Height;
                         item.Region = new Rect(usedLeft, Math.Max(0.0, height - usedBottom), width - usedLeft - usedRight, item.Height);
                         break;
@@ -114,7 +114,7 @@ namespace Dt.Base.Docking
         {
             for (int i = 0; i < Children.Count; i++)
             {
-                WinItem item = (WinItem)Children[i];
+                Pane item = (Pane)Children[i];
                 item.Arrange(item.Region);
             }
             return finalSize;

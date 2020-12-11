@@ -19,7 +19,7 @@ namespace Dt.Base.Docking
 {
     /// <summary>
     /// 类似StackPanel布局，增加附加依赖项属性
-    /// 内部子元素为 Tabs 或 WinItem
+    /// 内部子元素为 Tabs 或 Pane
     /// </summary>
     public partial class TabItemPanel : Panel
     {
@@ -239,7 +239,7 @@ namespace Dt.Base.Docking
             set { SetValue(OrientationProperty, value); }
         }
 
-        internal WinItem Owner { get; set; }
+        internal Pane Owner { get; set; }
 
         bool IsHorizontal
         {
@@ -256,12 +256,12 @@ namespace Dt.Base.Docking
         {
             double length = 0;
             Tabs sect;
-            WinItem dockItem;
+            Pane dockItem;
             if ((sect = p_child as Tabs) != null)
             {
                 length = p_isHor ? sect.InitWidth : sect.InitHeight;
             }
-            else if ((dockItem = p_child as WinItem) != null)
+            else if ((dockItem = p_child as Pane) != null)
             {
                 length = p_isHor ? dockItem.InitWidth : dockItem.InitHeight;
             }

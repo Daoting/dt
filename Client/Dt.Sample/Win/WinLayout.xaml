@@ -6,7 +6,7 @@
     Home="窗口属性,Tab属性"
     x:Name="_win">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs x:Name="_tabs" >
             <a:Tab Title="窗口属性">
                 <StackPanel Margin="10">
@@ -20,8 +20,8 @@
             </a:Tab>
             <a:Tab Title="不可拖动" CanFloat="False"/>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem InitWidth="500" DockState="DockedLeft">
+    </a:Main>
+    <a:Pane InitWidth="500">
         <a:Tabs InitHeight="600">
             <a:Tab x:Name="_tabAttr" Title="Tab属性">
                 <a:Tab.Menu>
@@ -42,8 +42,8 @@
             <a:Tab Title="左下一" />
             <a:Tab Title="左下二" />
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem InitWidth="300" DockState="DockedRight">
+    </a:Pane>
+    <a:Pane InitWidth="300" Pos="Right">
         <a:Tabs>
             <a:Tab Title="右侧标签一" />
             <a:Tab Title="右侧标签二" />
@@ -52,17 +52,17 @@
             <a:Tab Title="右停靠一" IsPinned="False"/>
             <a:Tab Title="右停靠二" IsPinned="False"/>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem InitHeight="200" DockState="DockedBottom">
+    </a:Pane>
+    <a:Pane InitHeight="200" Pos="Bottom">
         <a:Tabs>
             <a:Tab Title="底部标签一" />
             <a:Tab Title="底部标签二" />
         </a:Tabs>
-    </a:WinItem>
-    <a:WinItem DockState="Floating" FloatPos="Center" FloatSize="400, 300">
+    </a:Pane>
+    <a:Pane Pos="Floating" FloatPos="Center" FloatSize="400, 300">
         <a:Tabs>
             <a:Tab Title="浮动标签一" />
             <a:Tab Title="浮动标签二" />
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

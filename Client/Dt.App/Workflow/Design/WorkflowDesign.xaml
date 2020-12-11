@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="流程,流程图,属性">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="流程">
                 <a:Tab.Menu>
@@ -27,8 +27,8 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="流程图">
                 <a:Tab.Menu>
@@ -44,10 +44,10 @@
                           IsReadOnly="False" />
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab x:Name="_tab" Title="属性" />
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

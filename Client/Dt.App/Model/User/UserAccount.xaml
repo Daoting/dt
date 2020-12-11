@@ -33,7 +33,7 @@
         </DataTemplate>
     </a:Win.Resources>
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="查找用户">
                 <a:SearchFv Placeholder="姓名或手机号" Search="OnSearch">
@@ -43,8 +43,8 @@
                 </a:SearchFv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="用户列表">
                 <a:Tab.Menu>
@@ -67,8 +67,8 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="关联角色">
                 <a:Tab.Menu>
@@ -106,5 +106,5 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

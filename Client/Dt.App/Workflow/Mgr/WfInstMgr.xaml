@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="查找">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="查找">
                 <a:Tab.Menu>
@@ -35,8 +35,8 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="流程实例">
                 <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick">
@@ -54,8 +54,8 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="活动实例">
                 <a:Lv x:Name="_lvAtv" ViewMode="Table" ItemClick="OnAtvClick">
@@ -80,5 +80,5 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

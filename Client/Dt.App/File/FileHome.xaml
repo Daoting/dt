@@ -5,12 +5,12 @@
     xmlns:a="using:Dt.Base"
     Home="最近使用,公共文件,我的文件">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab x:Name="_tabPub" Title="公共文件" />
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="最近使用">
                 <a:Tab.Menu>
@@ -29,10 +29,10 @@
                 </a:FileList>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab x:Name="_tabMy" Title="我的文件" />
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

@@ -254,7 +254,7 @@ namespace Dt.Sample
                     p_cmd.Tag = win;
                 }
             }
-            LoadCenter(p_cmd.Tag);
+            LoadMain(p_cmd.Tag);
         }
     }
 }

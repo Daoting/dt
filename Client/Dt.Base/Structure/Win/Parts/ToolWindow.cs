@@ -122,7 +122,7 @@ namespace Dt.Base.Docking
         {
             get
             {
-                WinItem dockItem = Content as WinItem;
+                Pane dockItem = Content as Pane;
                 if (dockItem == null)
                     return false;
 
@@ -164,7 +164,7 @@ namespace Dt.Base.Docking
         /// </summary>
         internal void UpdateHeader()
         {
-            WinItem dockItem = Content as WinItem;
+            Pane dockItem = Content as Pane;
             if (dockItem == null)
                 return;
 
@@ -230,8 +230,8 @@ namespace Dt.Base.Docking
         protected override void OnContentChanged(object oldContent, object newContent)
         {
             base.OnContentChanged(oldContent, newContent);
-            WinItem oldItem = oldContent as WinItem;
-            WinItem newItem = newContent as WinItem;
+            Pane oldItem = oldContent as Pane;
+            Pane newItem = newContent as Pane;
             if (oldItem != null)
                 oldItem.IsInWindow = false;
 

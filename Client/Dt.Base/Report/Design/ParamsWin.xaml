@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Home="参数列表,编辑,预览">
 
-    <a:WinItem DockState="DockedLeft">
+    <a:Pane>
         <a:Tabs>
             <a:Tab Title="参数列表">
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
@@ -15,8 +15,8 @@
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
-    <a:WinCenter>
+    </a:Pane>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="编辑">
                 <a:Tab.Menu>
@@ -74,8 +74,8 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab x:Name="_tab" Title="预览">
                 <a:Tab.Menu>
@@ -85,5 +85,5 @@
                 </a:Tab.Menu>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>

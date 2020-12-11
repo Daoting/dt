@@ -72,7 +72,7 @@
         </DataTemplate>
     </a:Win.Resources>
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="系统监视">
                 <a:Tab.Menu>
@@ -113,5 +113,5 @@
                 </Grid>
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
+    </a:Main>
 </a:Win>

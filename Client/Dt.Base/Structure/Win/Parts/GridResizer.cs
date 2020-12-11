@@ -97,7 +97,7 @@ namespace Dt.Base.Docking
         }
 
         /// <summary>
-        /// 父容器，WinItem或Tabs
+        /// 父容器，Pane或Tabs
         /// </summary>
         internal Control Owner { get; set; }
         #endregion
@@ -232,7 +232,7 @@ namespace Dt.Base.Docking
                     }
                 }
             }
-            else if (Owner is WinItem wi)
+            else if (Owner is Pane wi)
             {
                 win = wi.OwnWin;
                 if (wi.Parent is TabItemPanel pnl && pnl.Owner != null)
@@ -250,7 +250,7 @@ namespace Dt.Base.Docking
             }
             else
             {
-                throw new Exception("GridResizer只放在Tabs或WinItem中");
+                throw new Exception("GridResizer只放在Tabs或Pane中");
             }
 
             var center = win.CenterItem;
@@ -412,7 +412,7 @@ namespace Dt.Base.Docking
             {
                 tabs.OwnWin.OnLayoutChangeEnded(this);
             }
-            else if (Owner is WinItem wi)
+            else if (Owner is Pane wi)
             {
                 wi.OwnWin.OnLayoutChangeEnded(this);
             }

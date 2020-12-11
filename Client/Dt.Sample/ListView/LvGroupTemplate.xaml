@@ -5,14 +5,14 @@
     xmlns:a="using:Dt.Base"
     Home="列表,属性">
 
-    <a:WinCenter>
+    <a:Main>
         <a:Tabs>
             <a:Tab Title="列表">
                 <a:Lv x:Name="_lv" SelectionMode="None" ShowItemBorder="False" />
             </a:Tab>
         </a:Tabs>
-    </a:WinCenter>
-    <a:WinItem DockState="DockedRight">
+    </a:Main>
+    <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="属性">
                 <a:Fv Data="{Binding ElementName=_lv}">
@@ -20,5 +20,5 @@
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
-    </a:WinItem>
+    </a:Pane>
 </a:Win>
