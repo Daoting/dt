@@ -17,19 +17,10 @@ namespace Dt.App.Workflow
     /// </summary>
     public enum WfiPrcStatus
     {
-        /// <summary>
-        /// 活动
-        /// </summary>
-        Active,
+        活动,
 
-        /// <summary>
-        /// 结束
-        /// </summary>
-        Finish,
+        结束,
 
-        /// <summary>
-        /// 终止
-        /// </summary>
-        Terminate,
+        终止,
     }
 }

@@ -44,11 +44,11 @@ namespace Dt.App.Workflow
         {
             if (InputManager.IsCtrlPressed)
             {
-                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid")));
+                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Edit));
             }
             else if (e.IsChanged)
             {
-                var info = new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"));
+                var info = new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Edit);
                 var win = await AtWf.CreateFormWin(info);
                 info.FormClosed += (s, arg) => Refresh();
                 LoadMain(win);
@@ -85,7 +85,7 @@ namespace Dt.App.Workflow
             var kind = (WfiItemAssignKind)p_item.Row.Int("AssignKind");
             switch (kind)
             {
-                case WfiItemAssignKind.Start:
+                case WfiItemAssignKind.起始指派:
                     rc = new Rectangle { Fill = AtRes.绿色背景 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
@@ -95,7 +95,7 @@ namespace Dt.App.Workflow
                     grid.Children.Add(tb);
                     break;
 
-                case WfiItemAssignKind.Back:
+                case WfiItemAssignKind.回退:
                     rc = new Rectangle { Fill = AtRes.醒目红色 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
@@ -105,7 +105,7 @@ namespace Dt.App.Workflow
                     grid.Children.Add(tb);
                     break;
 
-                case WfiItemAssignKind.Rollback:
+                case WfiItemAssignKind.追回:
                     rc = new Rectangle { Fill = AtRes.醒目蓝色 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
@@ -115,7 +115,7 @@ namespace Dt.App.Workflow
                     grid.Children.Add(tb);
                     break;
 
-                case WfiItemAssignKind.Jump:
+                case WfiItemAssignKind.跳转:
                     rc = new Rectangle { Fill = AtRes.BlackBrush };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);

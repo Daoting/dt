@@ -29,7 +29,6 @@
                         <a:Menu>
                             <a:Mi ID="流程编辑" Icon="双绞线" Click="OnEditTemplateContext" />
                             <a:Mi ID="删除" Icon="删除" Click="OnDelContext" />
-                            <a:Mi ID="查看实例" Icon="详细" Click="OnShowInst" />
                         </a:Menu>
                     </a:Ex.Menu>
                     <DataTemplate>

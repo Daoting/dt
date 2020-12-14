@@ -27,8 +27,8 @@ namespace Dt.App.Workflow
             WfiItem item = new WfiItem(
                 ID: await AtCm.NewID(),
                 AtviID: p_atviID,
-                AssignKind: (p_isBack ? WfiItemAssignKind.Back : WfiItemAssignKind.Normal),
-                Status: WfiItemStatus.Active,
+                AssignKind: (p_isBack ? WfiItemAssignKind.回退 : WfiItemAssignKind.普通指派),
+                Status: WfiItemStatus.活动,
                 IsAccept: false,
                 Sender: AtUser.Name,
                 Stime: p_date,
@@ -46,7 +46,7 @@ namespace Dt.App.Workflow
 
         public void Finished()
         {
-            Status = WfiItemStatus.Finish;
+            Status = WfiItemStatus.结束;
             Mtime = AtSys.Now;
             UserID = AtUser.ID;
         }

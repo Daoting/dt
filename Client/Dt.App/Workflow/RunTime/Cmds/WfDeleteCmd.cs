@@ -33,8 +33,15 @@ namespace Dt.App.Workflow
 
         async Task Delete()
         {
-            if (_info.AtvDef == null ||
-                (!_info.AtvDef.CanDelete && _info.AtvDef.Type != WfdAtvType.Start))
+            if (_info.Usage == WfFormUsage.Read)
+            {
+                AtKit.Warn("禁止删除表单！");
+                return;
+            }
+
+            // 管理时始终可删除
+            if (_info.Usage == WfFormUsage.Edit
+                && (_info.AtvDef == null || (!_info.AtvDef.CanDelete && _info.AtvDef.Type != WfdAtvType.Start)))
             {
                 AtKit.Warn("您无权删除当前表单！请回退或发送到其他用户进行删除。");
                 return;
@@ -43,7 +50,7 @@ namespace Dt.App.Workflow
             if (!await AtKit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
-            if (await _info.Form.Delete())
+            if (await _info.FormWin.Delete())
             {
                 if (!_info.PrcInst.IsAdded)
                 {

@@ -17,24 +17,12 @@ namespace Dt.App.Workflow
     /// </summary>
     public enum WfiAtvStatus
     {
-        /// <summary>
-        /// 活动
-        /// </summary>
-        Active,
+        活动,
 
-        /// <summary>
-        /// 结束
-        /// </summary>
-        Finish,
+        结束,
 
-        /// <summary>
-        /// 终止
-        /// </summary>
-        Terminate,
+        终止,
 
-        /// <summary>
-        /// 同步活动
-        /// </summary>
-        Sync
+        同步
     }
 }

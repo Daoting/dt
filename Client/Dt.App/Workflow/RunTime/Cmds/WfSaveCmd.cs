@@ -36,15 +36,15 @@ namespace Dt.App.Workflow
         public async Task<bool> Save()
         {
             // 先保存表单数据
-            if (!await _info.Form.Save())
+            if (!await _info.FormWin.Save())
                 return false;
 
             // 标题
-            string name = _info.Form.GetPrcName();
+            string name = _info.FormWin.GetPrcName();
             if (name != _info.PrcInst.Name)
             {
                 _info.PrcInst.Name = name;
-                ((Win)_info.Form).Title = name;
+                _info.FormWin.Title = name;
             }
 
             bool suc = true;

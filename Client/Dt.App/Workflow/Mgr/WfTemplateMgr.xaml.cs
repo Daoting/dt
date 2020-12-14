@@ -79,10 +79,5 @@ namespace Dt.App.Workflow
                 LoadAll();
             }
         }
-
-        void OnShowInst(object sender, Mi e)
-        {
-            new PrcInstDlg().Show(e.Data.To<WfdPrc>().ID);
-        }
     }
 }

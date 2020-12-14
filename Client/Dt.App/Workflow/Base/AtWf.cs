@@ -7,6 +7,7 @@
 #endregion
 
 #region 命名空间
+using Dt.App.Workflow;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Rpc;
@@ -34,7 +35,9 @@ namespace Dt.App
                 // 因p_info.Init耗时，先激活已打开的窗口，AtApp.OpenWin中也有判断
                 foreach (var win in Desktop.Inst.Items)
                 {
-                    if (win.Params != null && win.Params.Equals(p_info))
+                    if (win.GetType() == typeof(WfFormWin)
+                        && win.Params != null
+                        && win.Params.Equals(p_info))
                     {
                         Desktop.Inst.ActiveWin(win);
                         return;
@@ -43,7 +46,7 @@ namespace Dt.App
             }
 
             await p_info.Init();
-            p_info.Form = (IWfForm)AtApp.OpenWin(p_info.FormType, p_info.PrcInst.Name, Icons.None, p_info);
+            p_info.FormWin = (WfFormWin)AtApp.OpenWin(typeof(WfFormWin), p_info.PrcInst.Name, Icons.None, p_info);
         }
 
         /// <summary>
@@ -51,11 +54,11 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_info">流程表单描述信息</param>
         /// <returns></returns>
-        public static async Task<IWfForm> CreateFormWin(WfFormInfo p_info)
+        public static async Task<WfFormWin> CreateFormWin(WfFormInfo p_info)
         {
             await p_info.Init();
-            var win = (IWfForm)Activator.CreateInstance(p_info.FormType, p_info);
-            p_info.Form = win;
+            var win = new WfFormWin(p_info);
+            p_info.FormWin = win;
             return win;
         }
     }

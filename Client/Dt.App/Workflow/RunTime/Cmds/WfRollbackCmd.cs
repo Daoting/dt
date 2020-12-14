@@ -55,7 +55,7 @@ namespace Dt.App.Workflow
                 ID: await AtCm.NewID(),
                 PrciID: _info.PrcInst.ID,
                 AtvdID: pre.AtvdID,
-                Status: WfiAtvStatus.Active,
+                Status: WfiAtvStatus.活动,
                 InstCount: 1,
                 Ctime: time,
                 Mtime: time);
@@ -96,7 +96,7 @@ namespace Dt.App.Workflow
         async Task<string> GetSender()
         {
             string sender = _info.WorkItem.Sender;
-            if (_info.WorkItem.AssignKind == WfiItemAssignKind.Back)
+            if (_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
             {
                 Dict dt = new Dict();
                 dt["prciid"] = _info.AtvInst.PrciID;

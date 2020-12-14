@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.App
@@ -32,10 +31,11 @@ namespace Dt.App
         #endregion
 
         #region 构造方法
-        public WfFormInfo(long p_prcID, long p_itemID)
+        public WfFormInfo(long p_prcID, long p_itemID, WfFormUsage p_usage)
         {
             _prcID = p_prcID;
             _itemID = p_itemID;
+            Usage = p_usage;
 
             CmdSave = new WfSaveCmd(this);
             CmdSend = new WfSendCmd(this);
@@ -64,7 +64,13 @@ namespace Dt.App
         /// </summary>
         public string State
         {
-            get { return AtvDef.Name; }
+            get
+            {
+                // 管理时无状态
+                if (Usage == WfFormUsage.Manage)
+                    return null;
+                return AtvDef.Name;
+            }
         }
 
         /// <summary>
@@ -82,6 +88,16 @@ namespace Dt.App
         {
             get { return _itemID < 0; }
         }
+
+        /// <summary>
+        /// 获取设置表单的使用场景
+        /// </summary>
+        public WfFormUsage Usage { get; }
+
+        /// <summary>
+        /// 获取表单菜单
+        /// </summary>
+        public Menu Menu { get; internal set; }
 
         /// <summary>
         /// 获取流程模板定义
@@ -109,16 +125,11 @@ namespace Dt.App
         public WfiItem WorkItem { get; private set; }
 
         /// <summary>
-        /// 获取设置表单是否只读
-        /// </summary>
-        public bool IsReadOnly { get; set; }
-
-        /// <summary>
         /// 获取是否为回退活动
         /// </summary>
         public bool IsRollback
         {
-            get { return WorkItem != null && WorkItem.AssignKind == WfiItemAssignKind.Rollback; }
+            get { return WorkItem != null && WorkItem.AssignKind == WfiItemAssignKind.追回; }
         }
 
         /// <summary>
@@ -134,10 +145,10 @@ namespace Dt.App
         /// <summary>
         /// 流程表单窗口
         /// </summary>
-        internal IWfForm Form { get; set; }
+        internal WfFormWin FormWin { get; set; }
 
         /// <summary>
-        /// 表单窗口类型
+        /// 表单类型
         /// </summary>
         internal Type FormType { get; private set; }
 
@@ -180,104 +191,6 @@ namespace Dt.App
         #endregion
 
         #region 外部方法
-        /// <summary>
-        /// 获取默认菜单，自动绑定命令
-        /// </summary>
-        /// <param name="p_fv"></param>
-        /// <returns></returns>
-        public Menu GetDefaultMenu(Fv p_fv)
-        {
-            if (IsReadOnly)
-                return null;
-
-            Menu m = new Menu();
-            m.Items.Add(new Mi { ID = "发送", Icon = Icons.发出, Cmd = CmdSend });
-
-            // 合并IsDirty属性
-            CmdSave.AllowExecute = p_fv.IsDirty;
-            p_fv.Dirty += (s, b) => CmdSave.AllowExecute = b;
-            m.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, Cmd = CmdSave });
-            m.Items.Add(new Mi { ID = "撤消", Icon = Icons.撤消, Cmd = p_fv.CmdUndo });
-
-            if (AtvDef.CanDelete || AtvDef.Type == WfdAtvType.Start)
-                m.Items.Add(new Mi { ID = "删除", Icon = Icons.垃圾箱, Cmd = CmdDelete });
-
-            if (!IsStartItem)
-            {
-                m.Items.Insert(1, new Mi { ID = "回退", Icon = Icons.追回, Cmd = CmdRollback });
-
-                Mi mi = new Mi { ID = "签收", Icon = Icons.锁卡, IsCheckable = true, Cmd = CmdAccept };
-                if (WorkItem.IsAccept)
-                    mi.IsChecked = true;
-                m.Items.Insert(2, mi);
-
-                m.Items.Add(new Mi { ID = "日志", Icon = Icons.审核, Cmd = CmdLog });
-            }
-            return m;
-        }
-
-        /// <summary>
-        /// 为菜单项绑定命令
-        /// </summary>
-        /// <param name="p_menu"></param>
-        /// <param name="p_fv"></param>
-        public void ApplyMenuCmd(Menu p_menu, Fv p_fv)
-        {
-            if (IsReadOnly)
-            {
-                p_menu.Visibility = Visibility.Collapsed;
-                return;
-            }
-
-            if (IsStartItem)
-            {
-                // 隐藏无用的项
-                foreach (var mi in p_menu.Items)
-                {
-                    var exp = mi.GetBindingExpression(Mi.CmdProperty);
-                    if (exp != null)
-                    {
-                        var path = exp.ParentBinding.Path.Path;
-                        if (path == "CmdRollback"
-                            || path == "CmdAccept"
-                            || path == "CmdLog")
-                        {
-                            mi.Visibility = Visibility.Collapsed;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // 整理菜单项
-                foreach (var mi in p_menu.Items)
-                {
-                    var exp = mi.GetBindingExpression(Mi.CmdProperty);
-                    if (exp != null)
-                    {
-                        var path = exp.ParentBinding.Path.Path;
-                        if (path == "CmdAccept")
-                        {
-                            if (!mi.IsCheckable)
-                                mi.IsCheckable = true;
-                            mi.IsChecked = WorkItem.IsAccept;
-                        }
-                        else if (path == "CmdDelete")
-                        {
-                            if (!AtvDef.CanDelete)
-                                mi.Visibility = Visibility.Collapsed;
-                        }
-                    }
-                }
-            }
-
-            // 合并IsDirty属性
-            CmdSave.AllowExecute = p_fv.IsDirty;
-            p_fv.Dirty += (s, b) => CmdSave.AllowExecute = b;
-
-            p_menu.DataContext = this;
-        }
-
         internal async void RunCmd(Func<Task> p_func)
         {
             if (_locked)
@@ -346,8 +259,8 @@ namespace Dt.App
 
         internal void CloseWin()
         {
-            ((Win)Form).Close();
-            FormClosed?.Invoke(Form, EventArgs.Empty);
+            FormWin.Close();
+            FormClosed?.Invoke(FormWin, EventArgs.Empty);
         }
         #endregion
 
@@ -365,11 +278,11 @@ namespace Dt.App
                 _prcDefs[_prcID] = PrcDef;
             }
 
-            Throw.IfNullOrEmpty(PrcDef.FormType, "流程定义中未设置表单窗口类型！");
+            Throw.IfNullOrEmpty(PrcDef.FormType, "流程定义中未设置表单类型！");
             FormType = Type.GetType(PrcDef.FormType);
-            Throw.IfNull(FormType, $"表单窗口类型[{PrcDef.FormType}]不存在！");
+            Throw.IfNull(FormType, $"表单类型[{PrcDef.FormType}]不存在！");
             if (FormType.GetInterface("IWfForm") != typeof(IWfForm))
-                Throw.Msg("流程表单窗口需要实现IWfForm接口！");
+                Throw.Msg("流程表单类型需要继承自WfForm！");
 
             // 加载活动定义、流程实例、活动实例、工作项
             if (_itemID < 0)
@@ -379,7 +292,7 @@ namespace Dt.App
 
             // 自动签收
             if (_itemID > 0
-                && !IsReadOnly
+                && Usage == WfFormUsage.Edit
                 && AtvDef.AutoAccept
                 && !WorkItem.IsAccept)
             {
@@ -408,9 +321,9 @@ namespace Dt.App
             WorkItem = new WfiItem(
                 ID: await AtCm.NewID(),
                 AtviID: AtvInst.ID,
-                AssignKind: WfiItemAssignKind.Start,
+                AssignKind: WfiItemAssignKind.起始指派,
                 IsAccept: true,
-                Status: WfiItemStatus.Active,
+                Status: WfiItemStatus.活动,
                 UserID: AtUser.ID,
                 Sender: AtUser.Name);
         }

@@ -17,25 +17,13 @@ namespace Dt.App.Workflow
     /// </summary>
     public enum WfiItemStatus
     {
-        /// <summary>
-        /// 活动
-        /// </summary>
-        Active,
+        活动,
 
-        /// <summary>
-        /// 结束
-        /// </summary>
-        Finish,
+        结束,
 
-        /// <summary>
-        /// 终止
-        /// </summary>
-        Terminate,
+        终止,
 
-        /// <summary>
-        /// 同步活动
-        /// </summary>
-        Sync
+        同步
     }
 
     /// <summary>
@@ -43,34 +31,16 @@ namespace Dt.App.Workflow
     /// </summary>
     public enum WfiItemAssignKind
     {
-        /// <summary>
-        /// 普通指派
-        /// </summary>
-        Normal,
+        普通指派,
 
-        /// <summary>
-        /// 起始指派
-        /// </summary>
-        Start,
+        起始指派,
 
-        /// <summary>
-        /// 回退
-        /// </summary>
-        Back,
+        回退,
 
-        /// <summary>
-        /// 跳转
-        /// </summary>
-        Jump,
+        跳转,
 
-        /// <summary>
-        /// 追回
-        /// </summary>
-        Rollback,
+        追回,
 
-        /// <summary>
-        /// 回退指派
-        /// </summary>
-        FallBack
+        回退指派
     }
 }

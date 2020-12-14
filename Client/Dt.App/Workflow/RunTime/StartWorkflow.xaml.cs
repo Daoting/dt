@@ -42,7 +42,7 @@ namespace Dt.App.Workflow
 
         async void StartNew(long p_prcID)
         {
-            var info = new WfFormInfo(p_prcID, -1);
+            var info = new WfFormInfo(p_prcID, -1, WfFormUsage.Edit);
             if (InputManager.IsCtrlPressed)
             {
                 AtWf.OpenFormWin(info);

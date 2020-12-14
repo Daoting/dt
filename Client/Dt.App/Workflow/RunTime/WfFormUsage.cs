@@ -17,25 +17,23 @@ using System.Threading.Tasks;
 namespace Dt.App
 {
     /// <summary>
-    /// 流程表单接口
+    /// 流程表单的使用场景
     /// </summary>
-    public interface IWfForm
+    public enum WfFormUsage
     {
         /// <summary>
-        /// 任务单名称
+        /// 填写发送表单
         /// </summary>
-        string GetPrcName();
+        Edit,
 
         /// <summary>
-        /// 保存表单数据
+        /// 浏览表单
         /// </summary>
-        /// <returns></returns>
-        Task<bool> Save();
+        Read,
 
         /// <summary>
-        /// 删除表单数据，禁止删除或删除失败时可返回false
+        /// 管理表单
         /// </summary>
-        /// <returns></returns>
-        Task<bool> Delete();
+        Manage
     }
 }

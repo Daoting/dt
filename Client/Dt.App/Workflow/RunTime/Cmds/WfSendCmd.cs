@@ -193,7 +193,7 @@ namespace Dt.App.Workflow
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: ar.Def.ID,
-                        Status: WfiAtvStatus.Active,
+                        Status: WfiAtvStatus.活动,
                         Ctime: time,
                         Mtime: time);
 
@@ -242,7 +242,7 @@ namespace Dt.App.Workflow
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: ar.Def.ID,
-                        Status: WfiAtvStatus.Sync,
+                        Status: WfiAtvStatus.同步,
                         InstCount: 1,
                         Ctime: time,
                         Mtime: time);
@@ -252,8 +252,8 @@ namespace Dt.App.Workflow
                     WfiItem item = new WfiItem(
                         ID: await AtCm.NewID(),
                         AtviID: atvInst.ID,
-                        AssignKind: WfiItemAssignKind.Normal,
-                        Status: WfiItemStatus.Sync,
+                        AssignKind: WfiItemAssignKind.普通指派,
+                        Status: WfiItemStatus.同步,
                         IsAccept: false,
                         UserID: AtUser.ID,
                         Sender: AtUser.Name,
@@ -266,7 +266,7 @@ namespace Dt.App.Workflow
                 else if (atvType == WfdAtvType.Finish)
                 {
                     // 完成
-                    _info.PrcInst.Status = WfiAtvStatus.Finish;
+                    _info.PrcInst.Status = WfiAtvStatus.结束;
                     _info.PrcInst.Mtime = time;
                 }
 
@@ -281,7 +281,7 @@ namespace Dt.App.Workflow
             // 发送是否有效
             // 1. 只有'完成'时有效
             // 2. 至少含有一个活动实例时有效
-            if (tblAtvs.Count == 0 && _info.PrcInst.Status != WfiAtvStatus.Finish)
+            if (tblAtvs.Count == 0 && _info.PrcInst.Status != WfiAtvStatus.结束)
             {
                 AtKit.Msg("所有后续活动均无接收者，发送失败！");
                 return;

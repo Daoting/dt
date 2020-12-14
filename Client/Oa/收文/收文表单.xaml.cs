@@ -19,22 +19,19 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Oa
 {
-    public partial class 收文表单 : Win, IWfForm
+    public partial class 收文表单 : UserControl, IWfForm
     {
-        readonly WfFormInfo _info;
+        WfFormInfo _info;
 
-        public 收文表单(WfFormInfo p_info)
+        public 收文表单()
         {
             InitializeComponent();
-
-            _info = p_info;
-            _tab.Menu = p_info.GetDefaultMenu(_fv);
-            //p_info.ApplyMenuCmd(_tab.Menu, _fv);
-            Load();
         }
 
-        async void Load()
+        public async void Init(WfFormInfo p_info)
         {
+            _info = p_info;
+
             if (_info.IsNew)
             {
                 _fv.Data = new 收文(

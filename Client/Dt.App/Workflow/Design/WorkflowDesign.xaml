@@ -17,8 +17,8 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="流程名称" />
-                    <a:CText ID="FormType" Title="表单窗口类" />
-                    <a:CText ID="ListType" Title="列表窗口类" />
+                    <a:CText ID="FormType" Title="表单类型" />
+                    <a:CText ID="ListType" Title="列表类型" />
                     <a:CBool ID="IsLocked" Title="锁定不可创建实例" />
                     <a:CBool ID="Singleton" Title="同一时刻只可单例" />
                     <a:CText ID="note" Title="描述" />

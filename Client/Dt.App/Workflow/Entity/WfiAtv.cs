@@ -18,7 +18,7 @@ namespace Dt.App.Workflow
     {
         public bool IsFinished
         {
-            get { return Status == WfiAtvStatus.Finish; }
+            get { return Status == WfiAtvStatus.结束; }
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Dt.App.Workflow
         {
             if (InstCount == 1)
             {
-                Status = WfiAtvStatus.Finish;
+                Status = WfiAtvStatus.结束;
                 Mtime = AtSys.Now;
             }
             else
@@ -37,7 +37,7 @@ namespace Dt.App.Workflow
                 int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = ID });
                 if ((count + 1) >= InstCount)
                 {
-                    Status = WfiAtvStatus.Finish;
+                    Status = WfiAtvStatus.结束;
                     Mtime = AtSys.Now;
                 }
             }
@@ -54,7 +54,7 @@ namespace Dt.App.Workflow
             dt["SrcAtvID"] = AtvdID;
 
             var atv = await AtCm.First<WfiAtv>("流程-回退活动实例", dt);
-            if (atv != null && atv.Status != WfiAtvStatus.Sync)
+            if (atv != null && atv.Status != WfiAtvStatus.同步)
             {
                 // 存在同步的活动，不允许进行回退。(优先级大于设置的可以回退)
                 return atv;

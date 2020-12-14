@@ -67,19 +67,23 @@ namespace Dt.App.Workflow
             _fv.Row["end"] = new DateTime(time.Year, 12, 31, 23, 59, 59);
         }
 
-        void OnShowInst(object sender, Mi e)
+        async void OnShowInst(object sender, Mi e)
         {
-
+            long itemID = await AtCm.GetScalar<long>("流程-最后工作项", new { prciID = e.Row.ID });
+            var info = new WfFormInfo(e.Row.Long("PrcdID"), itemID, WfFormUsage.Manage);
+            AtWf.OpenFormWin(info);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(object sender, ItemClickArgs e)
         {
-
+            if (e.IsChanged)
+                _lvAtv.Data = await AtCm.Query("流程-流程实例的活动实例", new { prciID = e.Row.ID });
         }
 
-        void OnAtvClick(object sender, ItemClickArgs e)
+        async void OnAtvClick(object sender, ItemClickArgs e)
         {
-
+            if (e.IsChanged)
+                _lvItem.Data = await AtCm.Query("流程-活动实例的工作项", new { atviID = e.Row.ID });
         }
     }
 }
