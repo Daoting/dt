@@ -236,6 +236,7 @@ namespace Dt.App
                     trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
                 }
             }
+            Throw.If(trsdid == 0, "未找到流程迁移模板");
 
             return new WfiTrs(
                 ID: await AtCm.NewID(),
@@ -257,6 +258,22 @@ namespace Dt.App
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 加载流程定义
+        /// </summary>
+        /// <param name="p_prcID"></param>
+        /// <returns></returns>
+        internal static async Task<WfdPrc> GetPrcDef(long p_prcID)
+        {
+            WfdPrc def;
+            if (!_prcDefs.TryGetValue(p_prcID, out def))
+            {
+                def = await AtCm.GetByID<WfdPrc>(p_prcID);
+                _prcDefs[p_prcID] = def;
+            }
+            return def;
+        }
+
         internal void CloseWin()
         {
             FormWin.Close();
@@ -268,15 +285,7 @@ namespace Dt.App
         internal async Task Init()
         {
             // 加载流程定义
-            if (_prcDefs.TryGetValue(_prcID, out var def))
-            {
-                PrcDef = def;
-            }
-            else
-            {
-                PrcDef = await AtCm.GetByID<WfdPrc>(_prcID);
-                _prcDefs[_prcID] = PrcDef;
-            }
+            PrcDef = await GetPrcDef(_prcID);
 
             Throw.IfNullOrEmpty(PrcDef.FormType, "流程定义中未设置表单类型！");
             FormType = Type.GetType(PrcDef.FormType);

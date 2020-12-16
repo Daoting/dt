@@ -16,31 +16,26 @@ namespace Dt.App.Workflow
 {
     public partial class WfiAtv
     {
-        public bool IsFinished
-        {
-            get { return Status == WfiAtvStatus.结束; }
-        }
-
         /// <summary>
         /// 判断当前活动是否完成，发送者是否为当前活动的最后一个发送者
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateFinished()
+        public async Task<bool> IsFinished()
         {
             if (InstCount == 1)
-            {
-                Status = WfiAtvStatus.结束;
-                Mtime = AtSys.Now;
-            }
-            else
-            {
-                int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = ID });
-                if ((count + 1) >= InstCount)
-                {
-                    Status = WfiAtvStatus.结束;
-                    Mtime = AtSys.Now;
-                }
-            }
+                return true;
+
+            int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = ID });
+            return (count + 1) >= InstCount;
+        }
+
+        /// <summary>
+        /// 结束当前活动
+        /// </summary>
+        public void Finished()
+        {
+            Status = WfiAtvStatus.结束;
+            Mtime = AtSys.Now;
         }
 
         /// <summary>

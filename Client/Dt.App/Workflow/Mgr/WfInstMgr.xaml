@@ -39,7 +39,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Title="流程实例">
-                <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick">
+                <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick" ItemDoubleClick="OnItemDoubleClick">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="查看表单" Icon="详细" Click="OnShowInst" />

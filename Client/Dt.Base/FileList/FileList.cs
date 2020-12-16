@@ -523,20 +523,53 @@ namespace Dt.Base
         #region 外部方法
         /// <summary>
         /// 通过从库中选择文件添加，无上传过程，只更新文件信息
+        /// 每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
         /// </summary>
         /// <param name="p_fileJson"></param>
-        public void AddExistFiles(string p_fileJson)
+        public void AddExistFiles(List<string> p_filesJson)
         {
-            if (string.IsNullOrEmpty(p_fileJson)
-                || !p_fileJson.StartsWith('[')
-                || !p_fileJson.EndsWith(']'))
+            if (p_filesJson == null || p_filesJson.Count == 0)
                 return;
+
+            if (MaxFileCount == 1)
+            {
+                if (p_filesJson.Count > 1)
+                {
+                    AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                    return;
+                }
+
+                Data = "[" + p_filesJson[0] + "]";
+                return;
+            }
+
+            if (p_filesJson.Count + _pnl.Children.Count > MaxFileCount)
+            {
+                AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var file in p_filesJson)
+            {
+                if (string.IsNullOrEmpty(file)
+                    || !file.StartsWith('[')
+                    || !file.EndsWith(']'))
+                {
+                    AtKit.Warn($"文件描述json错误！");
+                    return;
+                }
+
+                if (sb.Length > 0)
+                    sb.Append(",");
+                sb.Append(file);
+            }
 
             string data = Data;
             if (string.IsNullOrEmpty(data) || data == "[]")
-                Data = "[" + p_fileJson + "]";
+                Data = "[" + sb.ToString() + "]";
             else
-                Data = data.Insert(data.Length - 1, "," + p_fileJson);
+                Data = data.Insert(data.Length - 1, "," + sb.ToString());
         }
 
         /// <summary>

@@ -42,14 +42,11 @@ namespace Dt.App.Workflow
             if (!await _info.CmdSave.Save())
                 return;
 
-            await _info.AtvInst.UpdateFinished();
-            _info.WorkItem.Finished();
-
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
-            if (!_info.AtvInst.IsFinished)
+            if (!await _info.AtvInst.IsFinished())
             {
                 // 活动未结束（不是最后一人），只结束当前工作项
-                await SaveWorkItem();
+                await SaveWorkItem(false);
                 return;
             }
 
@@ -58,7 +55,7 @@ namespace Dt.App.Workflow
             if (nextAtvs.Count == 0)
             {
                 // 无后续活动，结束当前工作项和活动
-                await SaveWorkItem();
+                await SaveWorkItem(true);
                 return;
             }
 
@@ -83,13 +80,17 @@ namespace Dt.App.Workflow
             var nextRecvs = new AtvRecvs();
             foreach (var atv in nextAtvs)
             {
+                AtvRecv ar = new AtvRecv();
+                ar.Def = atv;
+
                 // 同步活动 或 结束活动
                 var tp = atv.Type;
                 if (tp == WfdAtvType.Sync || tp == WfdAtvType.Finish)
+                {
+                    nextRecvs.Add(ar);
                     continue;
+                }
 
-                AtvRecv ar = new AtvRecv();
-                ar.Def = atv;
                 if (atv.ExecLimit == WfdAtvExecLimit.无限制)
                 {
                     // 无限制
@@ -162,18 +163,27 @@ namespace Dt.App.Workflow
 
             if (_info.NextRecvs != null && _info.NextRecvs.Count > 0)
             {
-                // 手动选择后发送
                 if (manualSend)
-                    new WfSendDlg().Show(_info);
+                {
+                    // 手动选择后发送
+                    if (await new WfSendDlg().Show(_info))
+                        DoSend(true);
+                }
                 else
+                {
                     DoSend(false);
+                }
+            }
+            else
+            {
+                AtKit.Warn("无后续活动接收者，请检查流程授权是否合理！");
             }
         }
 
         /// <summary>
         /// 执行发送
         /// </summary>
-        internal async void DoSend(bool p_manualSend)
+        async void DoSend(bool p_manualSend)
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
@@ -292,7 +302,11 @@ namespace Dt.App.Workflow
             List<object> data = new List<object>();
             if (_info.PrcInst.IsChanged)
                 data.Add(_info.PrcInst);
+
+            _info.AtvInst.Finished();
             data.Add(_info.AtvInst);
+
+            _info.WorkItem.Finished();
             data.Add(_info.WorkItem);
 
             if (tblAtvs.Count > 0)
@@ -312,6 +326,10 @@ namespace Dt.App.Workflow
             }
             else
             {
+                // 避免保存失败后，再次点击发送时和保存表单一起被保存，造成状态错误！
+                _info.PrcInst.RejectChanges();
+                _info.AtvInst.RejectChanges();
+                _info.WorkItem.RejectChanges();
                 AtKit.Warn("发送失败！");
             }
         }
@@ -319,9 +337,14 @@ namespace Dt.App.Workflow
         /// <summary>
         /// 保存当前工作项置完成状态
         /// </summary>
+        /// <param name="p_isFinished"></param>
         /// <returns></returns>
-        async Task SaveWorkItem()
+        async Task SaveWorkItem(bool p_isFinished)
         {
+            if (p_isFinished)
+                _info.AtvInst.Finished();
+            _info.WorkItem.Finished();
+
             List<object> ls = new List<object>();
             if (_info.AtvInst.IsChanged)
                 ls.Add(_info.AtvInst);
@@ -329,7 +352,7 @@ namespace Dt.App.Workflow
 
             if (await AtCm.BatchSave(ls, false))
             {
-                AtKit.Msg(_info.AtvInst.IsFinished ? "任务结束" : "当前工作项完成");
+                AtKit.Msg(p_isFinished ? "任务结束" : "当前工作项完成");
                 _info.CloseWin();
             }
             else

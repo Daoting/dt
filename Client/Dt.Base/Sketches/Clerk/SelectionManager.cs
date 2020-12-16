@@ -251,8 +251,11 @@ namespace Dt.Base.Sketches
         /// </summary>
         public void Clear()
         {
-            ClearNode();
-            ClearLine();
+            if (_nodeSelector != null)
+            {
+                ClearNode();
+                ClearLine();
+            }
         }
 
         /// <summary>

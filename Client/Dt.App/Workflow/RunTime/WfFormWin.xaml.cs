@@ -92,11 +92,7 @@ namespace Dt.App.Workflow
             {
                 fv.IsReadOnly = true;
             }
-
-            if (!p_info.IsStartItem)
-            {
-                m.Items.Add(new Mi { ID = "日志", Icon = Icons.审核, Cmd = p_info.CmdLog });
-            }
+            m.Items.Add(new Mi { ID = "日志", Icon = Icons.审核, Cmd = p_info.CmdLog });
 
             p_info.Menu = m;
             _tab.Menu = m;

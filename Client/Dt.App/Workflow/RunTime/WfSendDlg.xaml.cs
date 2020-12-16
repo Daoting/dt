@@ -11,6 +11,7 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -29,7 +30,7 @@ namespace Dt.App.Workflow
             InitializeComponent();
         }
 
-        public void Show(WfFormInfo p_info)
+        public Task<bool> Show(WfFormInfo p_info)
         {
             _info = p_info;
             if (!AtSys.IsPhoneUI)
@@ -40,9 +41,10 @@ namespace Dt.App.Workflow
 
             foreach (var recv in _info.NextRecvs)
             {
-                CreateItem(recv);
+                if (recv.Recvs != null && recv.Recvs.Count > 0)
+                    CreateItem(recv);
             }
-            Show();
+            return ShowAsync();
         }
 
         void OnSend(object sender, Mi e)
@@ -51,6 +53,7 @@ namespace Dt.App.Workflow
             foreach (var lv in _pnl.Children.OfType<Lv>())
             {
                 AtvRecv ar = (AtvRecv)lv.Tag;
+                ar.SelectedRecvs = null;
                 if (lv.SelectedCount > 0)
                 {
                     count++;
@@ -79,9 +82,7 @@ namespace Dt.App.Workflow
                 AtKit.Warn("只能选择一个活动的执行者！");
                 return;
             }
-
-            _info.CmdSend.DoSend(true);
-            Close();
+            Close(true);
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace Dt.App.Workflow
             {
                 Background = AtRes.浅灰背景,
                 BorderBrush = AtRes.浅灰边框,
-                BorderThickness = new Thickness(0, 0, 0, 1),
+                BorderThickness = new Thickness(0, 1, 0, 1),
                 ColumnDefinitions =
                 {
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
@@ -115,24 +116,26 @@ namespace Dt.App.Workflow
                         }
                     },
                 },
+                Height = 40,
             };
 
             Lv lv = new Lv { View = Resources["ViewTemp"], ViewMode = ViewMode.Tile, Data = p_ar.Recvs, Tag = p_ar, Margin = new Thickness(0, 0, 0, 20) };
-            if (p_ar.MultiSelection)
+            var sp = new StackPanel { Orientation = Orientation.Horizontal };
+            var btn = new Button { Content = "清除", Tag = lv, Background = AtRes.TransparentBrush };
+            btn.Click += OnClearSelection;
+            sp.Children.Add(btn);
+
+            if (p_ar.MultiSelection && p_ar.Recvs.Count > 1)
             {
-                var sp = new StackPanel { Orientation = Orientation.Horizontal };
-                var btn = new Button { Content = "全选", Tag = lv, Background = AtRes.TransparentBrush };
+                btn = new Button { Content = "全选", Tag = lv, Background = AtRes.TransparentBrush };
                 btn.Click += OnSelectAll;
                 sp.Children.Add(btn);
-                btn = new Button { Content = "清除", Tag = lv, Background = AtRes.TransparentBrush };
-                btn.Click += OnClearSelection;
-                sp.Children.Add(btn);
-
-                Grid.SetColumn(sp, 1);
-                grid.Children.Add(sp);
-
                 lv.SelectionMode = Base.SelectionMode.Multiple;
             }
+
+            Grid.SetColumn(sp, 1);
+            grid.Children.Add(sp);
+
             _pnl.Children.Add(grid);
             _pnl.Children.Add(lv);
         }

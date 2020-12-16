@@ -67,13 +67,6 @@ namespace Dt.App.Workflow
             _fv.Row["end"] = new DateTime(time.Year, 12, 31, 23, 59, 59);
         }
 
-        async void OnShowInst(object sender, Mi e)
-        {
-            long itemID = await AtCm.GetScalar<long>("流程-最后工作项", new { prciID = e.Row.ID });
-            var info = new WfFormInfo(e.Row.Long("PrcdID"), itemID, WfFormUsage.Manage);
-            AtWf.OpenFormWin(info);
-        }
-
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
@@ -84,6 +77,23 @@ namespace Dt.App.Workflow
         {
             if (e.IsChanged)
                 _lvItem.Data = await AtCm.Query("流程-活动实例的工作项", new { atviID = e.Row.ID });
+        }
+
+        void OnShowInst(object sender, Mi e)
+        {
+            ShowFormWin(e.Row);
+        }
+
+        void OnItemDoubleClick(object sender, object e)
+        {
+            ShowFormWin((Row)e);
+        }
+
+        async void ShowFormWin(Row p_row)
+        {
+            long itemID = await AtCm.GetScalar<long>("流程-最后工作项", new { prciID = p_row.ID });
+            var info = new WfFormInfo(p_row.Long("PrcdID"), itemID, WfFormUsage.Manage);
+            AtWf.OpenFormWin(info);
         }
     }
 }

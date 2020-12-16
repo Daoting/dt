@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -220,7 +221,7 @@ namespace Dt.Base
                 && dlg.SelectedFiles != null
                 && dlg.SelectedFiles.Count > 0)
             {
-                _fl.AddExistFiles(dlg.SelectedFiles[0]);
+                _fl.AddExistFiles(new List<string> { dlg.SelectedFiles[0] });
             }
         }
         #endregion

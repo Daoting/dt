@@ -35,9 +35,10 @@ namespace Dt.App.Workflow
             _info.RunCmd(OpenLog);
         }
 
-        async Task OpenLog()
+        Task OpenLog()
         {
-
+            new WfLogDlg().Show(_info.PrcDef.ID, _info.PrcInst.ID);
+            return Task.CompletedTask;
         }
     }
 }

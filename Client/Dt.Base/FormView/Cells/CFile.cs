@@ -186,6 +186,14 @@ namespace Dt.Base
             get { return (bool)GetValue(ShowDefaultMenuProperty); }
             set { SetValue(ShowDefaultMenuProperty, value); }
         }
+
+        /// <summary>
+        /// 获取内部的文件列表
+        /// </summary>
+        public FileList FileList
+        {
+            get { return _fl; }
+        }
         #endregion
 
         #region 重写方法
@@ -311,14 +319,7 @@ namespace Dt.Base
                 && dlg.SelectedFiles != null
                 && dlg.SelectedFiles.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
-                foreach (var file in dlg.SelectedFiles)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(",");
-                    sb.Append(file);
-                }
-                _fl.AddExistFiles(sb.ToString());
+                _fl.AddExistFiles(dlg.SelectedFiles);
             }
         }
         #endregion

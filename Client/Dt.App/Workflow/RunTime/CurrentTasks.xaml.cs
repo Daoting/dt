@@ -27,7 +27,7 @@ namespace Dt.App.Workflow
             InitializeComponent();
 
             _lv.CellEx = typeof(ViewEx1);
-            Refresh();
+            _lv.Loaded += (s, e) => Refresh();
         }
 
         async void Refresh()

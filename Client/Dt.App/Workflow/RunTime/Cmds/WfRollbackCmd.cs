@@ -63,10 +63,10 @@ namespace Dt.App.Workflow
             // 创建迁移实例
             var newTrs = await _info.CreateAtvTrs(pre.AtvdID, newAtvInst.ID, time, true);
 
-            // 全部完成时，将当前活动实例状态置成完成
-            await _info.AtvInst.UpdateFinished();
+            // 当前活动完成状态
+            _info.AtvInst.Finished();
 
-            // 当前活动项置成完成状态
+            // 当前工作项置成完成状态
             _info.WorkItem.Finished();
 
             Dict dict = new Dict();

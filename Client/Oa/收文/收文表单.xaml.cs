@@ -12,6 +12,8 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -47,6 +49,7 @@ namespace Dt.Oa
             {
                 case "接收文件":
                     _fv.Hide("市场部经理意见", "综合部经理意见", "收文完成时间");
+                    _fv.Data.To<收文>().Cells["文件附件"].PropertyChanged += OnUploaded;
                     break;
                 case "市场部":
                     _fv.Hide("综合部经理意见", "收文完成时间");
@@ -57,6 +60,16 @@ namespace Dt.Oa
                 case "返回收文人":
                     _fv.Hide("收文完成时间");
                     break;
+            }
+        }
+
+        void OnUploaded(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Val")
+            {
+                var fi = _fv["文件附件"].To<CFile>().FileList.Items.FirstOrDefault();
+                if (fi != null)
+                    _fv.Data.To<收文>().文件标题 = fi.Title;
             }
         }
 
@@ -80,7 +93,7 @@ namespace Dt.Oa
 
         public string GetPrcName()
         {
-            return "请假单";
+            return _fv.Data.To<收文>().文件标题;
         }
     }
 }

@@ -14,6 +14,14 @@ using System.Threading.Tasks;
 
 namespace Dt.Oa
 {
+    public partial class 收文
+    {
+        void OnSaving()
+        {
+            Throw.IfNullOrEmpty(文件标题, "文件标题不可为空");
+        }
+    }
+
     public enum 密级
     {
         普通,

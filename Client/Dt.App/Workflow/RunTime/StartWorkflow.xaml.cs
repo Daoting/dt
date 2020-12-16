@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using System;
 #endregion
 
 namespace Dt.App.Workflow
@@ -23,6 +22,7 @@ namespace Dt.App.Workflow
         {
             InitializeComponent();
             Load();
+            _lv.Loaded += (s, e) => LoadMain(null);
         }
 
         async void Load()
