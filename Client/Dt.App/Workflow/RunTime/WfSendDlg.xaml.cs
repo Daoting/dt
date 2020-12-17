@@ -39,11 +39,19 @@ namespace Dt.App.Workflow
                 Width = 500;
             }
 
-            foreach (var recv in _info.NextRecvs)
+            // 普通活动
+            foreach (var recv in _info.NextRecvs.Atvs)
             {
                 if (recv.Recvs != null && recv.Recvs.Count > 0)
                     CreateItem(recv);
             }
+
+            // 同步活动
+            if (_info.NextRecvs.SyncAtv != null)
+                CreateItem(_info.NextRecvs.SyncAtv);
+
+            if (_info.NextRecvs.FinishedAtv != null)
+                _m[1].Visibility = Visibility.Visible;
             return ShowAsync();
         }
 
@@ -148,6 +156,12 @@ namespace Dt.App.Workflow
         void OnClearSelection(object sender, RoutedEventArgs e)
         {
             ((Lv)((Button)sender).Tag).ClearSelection();
+        }
+
+        void OnFinish(object sender, Mi e)
+        {
+            _info.NextRecvs.FinishedAtv.IsSelected = true;
+            Close(true);
         }
     }
 }

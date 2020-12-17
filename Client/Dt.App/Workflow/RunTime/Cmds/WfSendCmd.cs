@@ -59,100 +59,62 @@ namespace Dt.App.Workflow
                 return;
             }
 
-            List<WfdAtv> atvs = new List<WfdAtv>();
-            // 合并同步活动的后续活动，同步的后续活动不可回退！
-            foreach (var atv in nextAtvs)
-            {
-                // 同步且可激活后续活动时合并
-                if (atv.Type == WfdAtvType.Sync && await IsActive(atv))
-                {
-                    var tblNext = await AtCm.Query<WfdAtv>("流程-后续活动", new { atvid = atv.ID });
-                    if (tblNext.Count > 0)
-                    {
-                        atvs.AddRange(tblNext);
-                    }
-                }
-            }
-            if (atvs.Count > 0)
-                atvs.ForEach(a => nextAtvs.Add(a));
-
             bool manualSend = false;
             var nextRecvs = new AtvRecvs();
             foreach (var atv in nextAtvs)
             {
-                AtvRecv ar = new AtvRecv();
-                ar.Def = atv;
-
-                // 同步活动 或 结束活动
-                var tp = atv.Type;
-                if (tp == WfdAtvType.Sync || tp == WfdAtvType.Finish)
+                switch (atv.Type)
                 {
-                    nextRecvs.Add(ar);
-                    continue;
-                }
-
-                if (atv.ExecLimit == WfdAtvExecLimit.无限制)
-                {
-                    // 无限制
-                    if (atv.ExecScope == WfdAtvExecScope.一组用户 || atv.ExecScope == WfdAtvExecScope.单个用户)
-                    {
-                        // 一组用户或单个用户，所有授权用户为被选项
-                        manualSend = true;
-                        ar.IsRole = false;
-                        ar.Recvs = await GetAtvUsers(atv.ID);
-                    }
-                    else
-                    {
-                        // 所有用户或任一用户，按角色发
-                        ar.IsRole = true;
-                        ar.Recvs = await AtCm.Query("流程-活动的所有授权角色", new Dict { { "atvid", atv.ID } });
-                    }
-                }
-                else
-                {
-                    // 有限制，按过滤后的用户发送
-                    ar.IsRole = false;
-                    var users = await GetAtvUsers(atv.ID);
-                    if (users.Count > 0)
-                    {
-                        long atvdid = (atv.ExecLimit == WfdAtvExecLimit.已完成活动的执行者 || atv.ExecLimit == WfdAtvExecLimit.已完成活动的同部门执行者) ? atv.ExecAtvID.Value : atv.ID;
-                        var limitUsers = await GetLimitUsers(atvdid, atv.ExecLimit);
-                        if (limitUsers.Count > 0)
+                    case WfdAtvType.Normal:
+                        // 普通活动
+                        var recv = await LoadRecvs(atv);
+                        if (recv.Recvs != null && recv.Recvs.Count > 0)
                         {
-                            // 取已授权用户和符合限制用户的交集
-                            Table tblJoin = new Table
+                            AtvRecv ar = new AtvRecv { Def = atv, IsRole = recv.IsRole, Recvs = recv.Recvs };
+                            nextRecvs.Atvs.Add(ar);
+
+                            if (recv.IsManualSend)
+                                manualSend = true;
+                        }
+                        break;
+
+                    case WfdAtvType.Sync:
+                        // 同步活动 且 可激活后续活动时
+                        if (await IsActive(atv))
+                        {
+                            // 同步活动只支持一个后续活动！
+                            var syncNext = await AtCm.First<WfdAtv>("流程-后续活动", new { atvid = atv.ID });
+                            if (syncNext != null)
                             {
-                                {"id", typeof(long) },
-                                {"name" }
-                            };
-                            foreach (var l in limitUsers)
-                            {
-                                foreach (var r in users)
+                                recv = await LoadRecvs(syncNext);
+                                if (recv.Recvs != null && recv.Recvs.Count > 0)
                                 {
-                                    if (r.Long("id") == l.Long(0))
+                                    nextRecvs.SyncAtv = new AtvSyncRecv
                                     {
-                                        tblJoin.AddRow(new { id = l.Long(0), name = r["name"] });
-                                        break;
-                                    }
+                                        SyncDef = atv,
+                                        Def = syncNext,
+                                        IsRole = recv.IsRole,
+                                        Recvs = recv.Recvs
+                                    };
+
+                                    if (recv.IsManualSend)
+                                        manualSend = true;
                                 }
                             }
-                            ar.Recvs = tblJoin;
                         }
-                    }
+                        break;
 
-                    // 除‘所有用户’外其余手动发送
-                    if (atv.ExecScope != WfdAtvExecScope.所有用户)
-                        manualSend = true;
+                    case WfdAtvType.Finish:
+                        // 结束活动
+                        nextRecvs.FinishedAtv = new AtvFinishedRecv { Def = atv };
+                        break;
                 }
-
-                if (ar.Recvs != null && ar.Recvs.Count > 0)
-                    nextRecvs.Add(ar);
             }
 
             // 当后续迁移活动为独占式选择且后续活动多于一个时手动选择
             if (!manualSend
-                && nextRecvs.Count > 1
-                && _info.AtvDef.TransKind == WfdAtvTransKind.独占式选择)
+                && _info.AtvDef.TransKind == WfdAtvTransKind.独占式选择
+                && nextRecvs.AtvCount > 1)
             {
                 manualSend = true;
             }
@@ -161,7 +123,8 @@ namespace Dt.App.Workflow
             // 触发外部自定义执行者范围事件
             await _info.OnSending();
 
-            if (_info.NextRecvs != null && _info.NextRecvs.Count > 0)
+            // 外部可以修改接收者列表
+            if (_info.NextRecvs != null && _info.NextRecvs.AtvCount > 0)
             {
                 if (manualSend)
                 {
@@ -183,6 +146,7 @@ namespace Dt.App.Workflow
         /// <summary>
         /// 执行发送
         /// </summary>
+        /// <param name="p_manualSend">是否手动选择接收者</param>
         async void DoSend(bool p_manualSend)
         {
             #region 后续活动
@@ -192,76 +156,78 @@ namespace Dt.App.Workflow
             var tblTrs = Table<WfiTrs>.Create();
             DateTime time = AtSys.Now;
 
-            foreach (AtvRecv ar in _info.NextRecvs)
+            if (_info.NextRecvs.FinishedAtv != null
+                && (!p_manualSend || _info.NextRecvs.FinishedAtv.IsSelected))
             {
-                WfiAtv atvInst = null;
-                var atvType = ar.Def.Type;
-                if (atvType == WfdAtvType.Normal)
+                // 完成
+                _info.PrcInst.Status = WfiAtvStatus.结束;
+                _info.PrcInst.Mtime = time;
+            }
+            else
+            {
+                // 普通活动
+                foreach (AtvRecv ar in _info.NextRecvs.Atvs)
                 {
-                    // 活动实例
-                    atvInst = new WfiAtv(
+                    // 手动无选择时
+                    if (p_manualSend
+                        && (ar.SelectedRecvs == null || ar.SelectedRecvs.Count == 0))
+                        continue;
+
+                    var atvInst = new WfiAtv(
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: ar.Def.ID,
                         Status: WfiAtvStatus.活动,
                         Ctime: time,
                         Mtime: time);
+                    tblAtvs.Add(atvInst);
 
                     if (p_manualSend)
                     {
                         // 手动发送，已选择项可能为用户或角色
-                        int cnt = 0;
-                        if (ar.SelectedRecvs != null)
+                        atvInst.InstCount = ar.SelectedRecvs.Count;
+                        foreach (var recvID in ar.SelectedRecvs)
                         {
-                            foreach (var recvID in ar.SelectedRecvs)
-                            {
-                                var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
-                                tblItems.Add(wi);
-                                cnt++;
-                            }
-                        }
-
-                        // 无选择项时移除活动实例
-                        if (cnt == 0)
-                        {
-                            atvInst = null;
-                        }
-                        else
-                        {
-                            atvInst.InstCount = cnt;
-                            tblAtvs.Add(atvInst);
+                            var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
+                            tblItems.Add(wi);
                         }
                     }
                     else
                     {
                         // 自动发送，按角色
                         atvInst.InstCount = ar.Recvs.Count;
-                        tblAtvs.Add(atvInst);
                         foreach (var row in ar.Recvs)
                         {
                             var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
+
+                    // 增加迁移实例
+                    var trs = await _info.CreateAtvTrs(ar.Def.ID, atvInst.ID, time, false);
+                    tblTrs.Add(trs);
                 }
-                else if (atvType == WfdAtvType.Sync)
+
+                // 同步活动
+                var syncAtv = _info.NextRecvs.SyncAtv;
+                if (syncAtv != null
+                    && (!p_manualSend || (syncAtv.SelectedRecvs != null && syncAtv.SelectedRecvs.Count > 0)))
                 {
-                    // 同步
-                    // 活动实例
-                    atvInst = new WfiAtv(
+                    // 同步实例
+                    var syncInst = new WfiAtv(
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
-                        AtvdID: ar.Def.ID,
+                        AtvdID: syncAtv.SyncDef.ID,
                         Status: WfiAtvStatus.同步,
                         InstCount: 1,
                         Ctime: time,
                         Mtime: time);
-                    tblAtvs.Add(atvInst);
+                    tblAtvs.Add(syncInst);
 
-                    // 工作项
+                    // 同步工作项
                     WfiItem item = new WfiItem(
                         ID: await AtCm.NewID(),
-                        AtviID: atvInst.ID,
+                        AtviID: syncInst.ID,
                         AssignKind: WfiItemAssignKind.普通指派,
                         Status: WfiItemStatus.同步,
                         IsAccept: false,
@@ -272,18 +238,70 @@ namespace Dt.App.Workflow
                         Mtime: time,
                         Dispidx: await AtCm.NewSeq("sq_wfi_item"));
                     tblItems.Add(item);
-                }
-                else if (atvType == WfdAtvType.Finish)
-                {
-                    // 完成
-                    _info.PrcInst.Status = WfiAtvStatus.结束;
-                    _info.PrcInst.Mtime = time;
-                }
 
-                // 增加迁移实例
-                if (atvInst != null)
-                {
-                    var trs = await _info.CreateAtvTrs(ar.Def.ID, atvInst.ID, time, false);
+                    // 同步迁移实例
+                    Dict dt = new Dict();
+                    dt["prcid"] = _info.PrcInst.PrcdID;
+                    dt["SrcAtvID"] = _info.AtvInst.AtvdID;
+                    dt["TgtAtvID"] = syncAtv.SyncDef.ID;
+                    dt["IsRollback"] = false;
+                    long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+                    
+                    var trs = new WfiTrs(
+                        ID: await AtCm.NewID(),
+                        TrsdID: trsdid,
+                        SrcAtviID: _info.AtvInst.ID,
+                        TgtAtviID: syncInst.ID,
+                        IsRollback: false,
+                        Ctime: time);
+                    tblTrs.Add(trs);
+
+                    // 同步活动的后续活动实例
+                    var nextInst = new WfiAtv(
+                        ID: await AtCm.NewID(),
+                        PrciID: _info.PrcInst.ID,
+                        AtvdID: syncAtv.Def.ID,
+                        Status: WfiAtvStatus.活动,
+                        Ctime: time,
+                        Mtime: time);
+                    tblAtvs.Add(nextInst);
+
+                    if (p_manualSend)
+                    {
+                        // 手动发送，已选择项可能为用户或角色
+                        nextInst.InstCount = syncAtv.SelectedRecvs.Count;
+                        foreach (var recvID in syncAtv.SelectedRecvs)
+                        {
+                            var wi = await WfiItem.Create(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
+                            tblItems.Add(wi);
+                        }
+                    }
+                    else
+                    {
+                        // 自动发送，按角色
+                        nextInst.InstCount = syncAtv.Recvs.Count;
+                        foreach (var row in syncAtv.Recvs)
+                        {
+                            var wi = await WfiItem.Create(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
+                            tblItems.Add(wi);
+                        }
+                    }
+
+                    // 增加迁移实例
+                    dt = new Dict();
+                    dt["prcid"] = _info.PrcInst.PrcdID;
+                    dt["SrcAtvID"] = syncAtv.SyncDef.ID;
+                    dt["TgtAtvID"] = syncAtv.Def.ID;
+                    dt["IsRollback"] = false;
+                    trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+
+                    trs = new WfiTrs(
+                        ID: await AtCm.NewID(),
+                        TrsdID: trsdid,
+                        SrcAtviID: syncInst.ID,
+                        TgtAtviID: nextInst.ID,
+                        IsRollback: false,
+                        Ctime: time);
                     tblTrs.Add(trs);
                 }
             }
@@ -359,6 +377,70 @@ namespace Dt.App.Workflow
             {
                 AtKit.Warn("工作项保存失败");
             }
+        }
+
+        /// <summary>
+        /// 加载活动的接收者
+        /// </summary>
+        /// <param name="p_atv"></param>
+        /// <returns></returns>
+        async Task<RecvDef> LoadRecvs(WfdAtv p_atv)
+        {
+            RecvDef recv = new RecvDef();
+            if (p_atv.ExecLimit == WfdAtvExecLimit.无限制)
+            {
+                // 无限制
+                if (p_atv.ExecScope == WfdAtvExecScope.一组用户 || p_atv.ExecScope == WfdAtvExecScope.单个用户)
+                {
+                    // 一组用户或单个用户，所有授权用户为被选项
+                    recv.IsManualSend = true;
+                    recv.IsRole = false;
+                    recv.Recvs = await GetAtvUsers(p_atv.ID);
+                }
+                else
+                {
+                    // 所有用户或任一用户，按角色发
+                    recv.IsRole = true;
+                    recv.Recvs = await AtCm.Query("流程-活动的所有授权角色", new Dict { { "atvid", p_atv.ID } });
+                }
+            }
+            else
+            {
+                // 有限制，按过滤后的用户发送
+                recv.IsRole = false;
+                var users = await GetAtvUsers(p_atv.ID);
+                if (users.Count > 0)
+                {
+                    long atvdid = (p_atv.ExecLimit == WfdAtvExecLimit.已完成活动的执行者 || p_atv.ExecLimit == WfdAtvExecLimit.已完成活动的同部门执行者) ? p_atv.ExecAtvID.Value : p_atv.ID;
+                    var limitUsers = await GetLimitUsers(atvdid, p_atv.ExecLimit);
+                    if (limitUsers.Count > 0)
+                    {
+                        // 取已授权用户和符合限制用户的交集
+                        Table tblJoin = new Table
+                        {
+                            {"id", typeof(long) },
+                            {"name" }
+                        };
+                        foreach (var l in limitUsers)
+                        {
+                            foreach (var r in users)
+                            {
+                                if (r.Long("id") == l.Long(0))
+                                {
+                                    tblJoin.AddRow(new { id = l.Long(0), name = r["name"] });
+                                    break;
+                                }
+                            }
+                        }
+                        recv.Recvs = tblJoin;
+                    }
+                }
+
+                // 除‘所有用户’外其余手动发送
+                if (p_atv.ExecScope != WfdAtvExecScope.所有用户)
+                    recv.IsManualSend = true;
+            }
+            return recv;
         }
 
         /// <summary>
@@ -483,6 +565,15 @@ namespace Dt.App.Workflow
                     break;
             }
             return AtCm.Query(key, new { prciId = _info.PrcInst.ID, atvdid = p_atvdid });
+        }
+
+        class RecvDef
+        {
+            public bool IsRole { get; set; }
+
+            public Table Recvs { get; set; }
+
+            public bool IsManualSend { get; set; }
         }
     }
 }

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.App.Workflow
@@ -25,6 +26,7 @@ namespace Dt.App.Workflow
         {
             InitializeComponent();
             LoadSearchData();
+            _lv.CellEx = typeof(HistoryTaskView);
         }
 
         void LoadSearchData()
@@ -81,9 +83,50 @@ namespace Dt.App.Workflow
             AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Read));
         }
 
+        void OnItemDoubleClick(object sender, object e)
+        {
+            Row row = (Row)e;
+            AtWf.OpenFormWin(new WfFormInfo(row.Long("prcdid"), row.Long("itemid"), WfFormUsage.Read));
+        }
+
         void OnRetrieve(object sender, Mi e)
         {
 
+        }
+    }
+
+    public class HistoryTaskView
+    {
+        public static Grid title(ViewItem p_item)
+        {
+            Grid grid = new Grid
+            {
+                ColumnDefinitions =
+                        {
+                            new ColumnDefinition { Width = GridLength.Auto },
+                            new ColumnDefinition { Width = GridLength.Auto },
+                        },
+                Children =
+                        {
+                            new TextBlock { Text = p_item.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
+                        }
+            };
+
+            var rc = new Rectangle();
+            int status = p_item.Row.Int("status");
+            if (status == 0)
+                rc.Fill = AtRes.绿色背景;
+            else if (status == 1)
+                rc.Fill = AtRes.深灰边框;
+            else
+                rc.Fill = AtRes.BlackBrush;
+            Grid.SetColumn(rc, 1);
+            grid.Children.Add(rc);
+
+            var tb = new TextBlock { Text = p_item.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+            Grid.SetColumn(tb, 1);
+            grid.Children.Add(tb);
+            return grid;
         }
     }
 }

@@ -17,66 +17,31 @@ using System.Collections.ObjectModel;
 namespace Dt.App
 {
     /// <summary>
-    /// 后续活动接收者信息
-    /// </summary>
-    public class AtvRecv
-    {
-        /// <summary>
-        /// 获取设置活动标识
-        /// </summary>
-        public WfdAtv Def { get; set; }
-
-        /// <summary>
-        /// 获取设置是否按角色接收
-        /// </summary>
-        public bool IsRole { get; set; }
-
-        /// <summary>
-        /// 获取设置接收者(角色或用户)列表
-        /// </summary>
-        public Table Recvs { get; set; }
-
-        /// <summary>
-        /// 已选择的接收者id(角色或用户)
-        /// </summary>
-        public List<long> SelectedRecvs { get; set; }
-
-        /// <summary>
-        /// 获取设置发送时的备注
-        /// </summary>
-        public string Note { get; set; }
-
-        /// <summary>
-        /// 获取是否可多选
-        /// </summary>
-        public bool MultiSelection
-        {
-            get { return Def.ExecScope == WfdAtvExecScope.一组用户 || Def.ExecScope == WfdAtvExecScope.所有用户; }
-        }
-
-        /// <summary>
-        /// 获取是否为只读(不可手动选择)
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get { return IsRole || Def.ExecScope == WfdAtvExecScope.所有用户; }
-        }
-    }
-
-    /// <summary>
     /// 后续活动列表
     /// </summary>
-    public class AtvRecvs : KeyedCollection<string, AtvRecv>
+    public class AtvRecvs
     {
-        public AtvRecvs()
-            : base(StringComparer.OrdinalIgnoreCase)
-        { }
+        /// <summary>
+        /// 普遍活动的后续活动列表
+        /// </summary>
+        public List<AtvRecv> Atvs { get; } = new List<AtvRecv>();
 
-        protected override string GetKeyForItem(AtvRecv p_item)
+        /// <summary>
+        /// 同步活动的后续活动
+        /// </summary>
+        public AtvSyncRecv SyncAtv { get; set; }
+
+        /// <summary>
+        /// 结束活动
+        /// </summary>
+        public AtvFinishedRecv FinishedAtv { get; set; }
+
+        /// <summary>
+        /// 后续活动数
+        /// </summary>
+        public int AtvCount
         {
-            if (p_item != null && p_item.Def != null)
-                return p_item.Def.ID.ToString();
-            throw new Exception("后续活动接收者信息不可空！");
+            get { return Atvs.Count + (SyncAtv == null ? 0 : 1) + (FinishedAtv == null ? 0 : 1); }
         }
     }
 }

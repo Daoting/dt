@@ -223,19 +223,6 @@ namespace Dt.App
             dt["TgtAtvID"] = p_tatvid;
             dt["IsRollback"] = p_rollback;
             long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
-
-            // 存在同步
-            if (trsdid == 0)
-            {
-                var sync = (from ar in NextRecvs
-                            where ar.Def.Type == WfdAtvType.Sync
-                            select ar.Def).FirstOrDefault();
-                if (sync != null)
-                {
-                    dt["SrcAtvID"] = sync.ID;
-                    trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
-                }
-            }
             Throw.If(trsdid == 0, "未找到流程迁移模板");
 
             return new WfiTrs(
