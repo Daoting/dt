@@ -158,10 +158,13 @@ namespace Dt.App.Workflow
             ((Lv)((Button)sender).Tag).ClearSelection();
         }
 
-        void OnFinish(object sender, Mi e)
+        async void OnFinish(object sender, Mi e)
         {
-            _info.NextRecvs.FinishedAtv.IsSelected = true;
-            Close(true);
+            if (await AtKit.Confirm("任务结束(完成)后将不可修改，确认完成吗？"))
+            {
+                _info.NextRecvs.FinishedAtv.IsSelected = true;
+                Close(true);
+            }
         }
     }
 }

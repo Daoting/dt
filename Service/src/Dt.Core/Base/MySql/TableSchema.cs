@@ -190,12 +190,24 @@ namespace Dt.Core
         /// <returns></returns>
         internal List<Dict> GetBatchSaveSql(IList p_rows)
         {
-            // 不再重复判断
-            //if (p_rows == null || p_rows.Count == 0)
-            //    throw new Exception(_saveError);
+            if (p_rows == null)
+                return null;
+
+            Row first;
+            if (p_rows.Count == 0)
+            {
+                // Table<Entity>只包含删除列表的情况！
+                if (p_rows is Table tb && tb.ExistDeleted)
+                    first = tb.DeletedRows[0];
+                else
+                    return null;
+            }
+            else
+            {
+                first = p_rows[0] as Row;
+            }
 
             // 检查是否包含主键
-            var first = p_rows[0] as Row;
             foreach (var col in PrimaryKey)
             {
                 if (!first.Contains(col.Name))

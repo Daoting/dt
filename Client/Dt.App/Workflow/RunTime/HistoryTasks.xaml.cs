@@ -89,9 +89,94 @@ namespace Dt.App.Workflow
             AtWf.OpenFormWin(new WfFormInfo(row.Long("prcdid"), row.Long("itemid"), WfFormUsage.Read));
         }
 
-        void OnRetrieve(object sender, Mi e)
+        async void OnRetrieve(object sender, Mi e)
         {
+            Row row = e.Row;
+            var status = (WfiPrcStatus)row.Int("status");
+            if (status != WfiPrcStatus.活动)
+            {
+                AtKit.Warn($"该任务已{status}，无法追回");
+                return;
+            }
+            if (row.Int("reCount") > 0)
+            {
+                AtKit.Warn("含回退，无法追回");
+                return;
+            }
 
+            var tbl = await AtCm.Query("流程-后续活动工作项", new { atvdid = row.Long("atvdid"), prciid = row.Long("prciid") });
+            if (tbl.Count == 0)
+            {
+                AtKit.Warn("无后续活动，无法追回");
+                return;
+            }
+
+            HashSet<long> ls = new HashSet<long>();
+            foreach (var r in tbl)
+            {
+                var itemState = (WfiItemStatus)r.Int("Status");
+                if (itemState == WfiItemStatus.同步)
+                {
+                    AtKit.Warn("后续活动包含同步，无法追回");
+                    return;
+                }
+
+                if (itemState != WfiItemStatus.活动
+                    || r.Bool("IsAccept"))
+                {
+                    AtKit.Warn("已签收无法追回！");
+                    return;
+                }
+                ls.Add(r.Long("atviid"));
+            }
+
+            // 更新当前实例状态为活动
+            DateTime time = AtSys.Now;
+            WfiAtv curAtvi = await AtCm.GetByID<WfiAtv>(row.Long("atviid"));
+            curAtvi.Status = WfiAtvStatus.活动;
+            curAtvi.InstCount += 1;
+            curAtvi.Mtime = time;
+
+            // 根据当前工作项创建新工作项并更改指派方式
+            var curItem = await AtCm.GetByID<WfiItem>(row.Long("itemid"));
+            var newItem = new WfiItem(
+                ID: await AtCm.NewID(),
+                AtviID: curItem.AtviID,
+                Status: WfiItemStatus.活动,
+                AssignKind: WfiItemAssignKind.追回,
+                Sender: curItem.Sender,
+                Stime: curItem.Stime,
+                IsAccept: false,
+                RoleID: curItem.RoleID,
+                UserID: curItem.UserID,
+                Note: curItem.Note,
+                Dispidx: await AtCm.NewSeq("sq_wfi_item"),
+                Ctime: time,
+                Mtime: time);
+
+            // 删除已发送的后续活动实例，关联删除工作项及迁移实例
+            Table<WfiAtv> nextAtvs = new Table<WfiAtv>();
+            nextAtvs.StartRecordDelRows();
+            foreach (var id in ls)
+            {
+                nextAtvs.DeletedRows.Add(new WfiAtv(id));
+            }
+
+            // 一个事务批量保存
+            List<object> data = new List<object>();
+            data.Add(nextAtvs);
+            data.Add(curAtvi);
+            data.Add(newItem);
+            bool suc = await AtCm.BatchSave(data, false);
+            if (suc)
+            {
+                AtKit.Msg("追回成功");
+                OnSearch(null, null);
+            }
+            else
+            {
+                AtKit.Warn("追回失败");
+            }
         }
     }
 

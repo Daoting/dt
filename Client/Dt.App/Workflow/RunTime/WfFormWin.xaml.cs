@@ -27,9 +27,7 @@ namespace Dt.App.Workflow
             _form = (IWfForm)Activator.CreateInstance(p_info.FormType);
             _tab.Content = _form;
             _tab.Title = p_info.PrcDef.Name;
-
             LoadMenu(p_info);
-            _form.Init(p_info);
         }
 
         public Task<bool> Save()
@@ -50,7 +48,7 @@ namespace Dt.App.Workflow
         /// <summary>
         /// 加载默认菜单，自动绑定命令
         /// </summary>
-        void LoadMenu(WfFormInfo p_info)
+        async void LoadMenu(WfFormInfo p_info)
         {
             var fv = ((FrameworkElement)_form).FindChildByType<Fv>();
             if (fv == null)
@@ -64,6 +62,19 @@ namespace Dt.App.Workflow
             {
                 m.Items.Add(new Mi { ID = "发送", Icon = Icons.发出, Cmd = p_info.CmdSend });
 
+                if (await p_info.AllowRollback())
+                {
+                    m.Items.Add(new Mi { ID = "回退", Icon = Icons.追回, Cmd = p_info.CmdRollback });
+                }
+
+                if (!p_info.IsStartItem)
+                {
+                    Mi mi = new Mi { ID = "签收", Icon = Icons.锁卡, IsCheckable = true, Cmd = p_info.CmdAccept };
+                    if (p_info.WorkItem.IsAccept)
+                        mi.IsChecked = true;
+                    m.Items.Add(mi);
+                }
+
                 // 合并IsDirty属性
                 p_info.CmdSave.AllowExecute = fv.IsDirty;
                 fv.Dirty += (s, b) => p_info.CmdSave.AllowExecute = b;
@@ -72,16 +83,6 @@ namespace Dt.App.Workflow
 
                 if (p_info.AtvDef.CanDelete || p_info.AtvDef.Type == WfdAtvType.Start)
                     m.Items.Add(new Mi { ID = "删除", Icon = Icons.垃圾箱, Cmd = p_info.CmdDelete });
-
-                if (!p_info.IsStartItem)
-                {
-                    m.Items.Insert(1, new Mi { ID = "回退", Icon = Icons.追回, Cmd = p_info.CmdRollback });
-
-                    Mi mi = new Mi { ID = "签收", Icon = Icons.锁卡, IsCheckable = true, Cmd = p_info.CmdAccept };
-                    if (p_info.WorkItem.IsAccept)
-                        mi.IsChecked = true;
-                    m.Items.Insert(2, mi);
-                }
             }
             else if (p_info.Usage == WfFormUsage.Manage)
             {
@@ -96,6 +97,8 @@ namespace Dt.App.Workflow
 
             p_info.Menu = m;
             _tab.Menu = m;
+
+            _form.Init(p_info);
         }
     }
 }

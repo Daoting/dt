@@ -261,6 +261,18 @@ namespace Dt.App
             return def;
         }
 
+        /// <summary>
+        /// 是否允许回退
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<bool> AllowRollback()
+        {
+            if (AtvDef.Type == WfdAtvType.Start || AtvInst.InstCount > 1)
+                return false;
+            var pre = await AtvInst.GetRollbackAtv();
+            return pre != null;
+        }
+
         internal void CloseWin()
         {
             FormWin.Close();

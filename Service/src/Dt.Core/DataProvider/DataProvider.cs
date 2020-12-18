@@ -328,8 +328,9 @@ namespace Dt.Core
                         dts.Add(model.Schema.GetSaveSql(entity));
                     }
                 }
-                else if (item is IList clist && clist.Count > 0)
+                else if (item is IList clist)
                 {
+                    // 不判断列表项数0，因可能Table<Entity>只包含删除列表的情况！
                     Type tp = item.GetType();
                     if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                     {

@@ -35,20 +35,23 @@ namespace Dt.App.Workflow
 
         async Task Rollback()
         {
+            // 活动执行者多于一人时，不允许进行回退
+            if (_info.AtvInst.InstCount > 1)
+            {
+                AtKit.Msg("该活动执行者多于一人，不允许回退！");
+                return;
+            }
+
             // 获得前一活动实例
             var pre = await _info.AtvInst.GetRollbackAtv();
             if (pre == null)
             {
-                AtKit.Msg("该活动不允许进行回退！");
+                AtKit.Msg("该活动不允许回退！");
                 return;
             }
 
-            // 活动执行者多于一人时，不允许进行回退
-            if (_info.AtvInst.InstCount > 1)
-            {
-                AtKit.Msg("该活动执行者多于一人，不允许进行回退！");
+            if (!await AtKit.Confirm("确认要回退吗？"))
                 return;
-            }
 
             DateTime time = AtSys.Now;
             var newAtvInst = new WfiAtv(
