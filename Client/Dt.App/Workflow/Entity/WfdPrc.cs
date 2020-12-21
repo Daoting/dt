@@ -169,7 +169,7 @@ namespace Dt.App.Workflow
         }
 
         /// <summary>
-        /// 表单窗口类
+        /// 表单类型
         /// </summary>
         public string FormType
         {
@@ -178,7 +178,7 @@ namespace Dt.App.Workflow
         }
 
         /// <summary>
-        /// 列表窗口类
+        /// 表单查询类型
         /// </summary>
         public string ListType
         {

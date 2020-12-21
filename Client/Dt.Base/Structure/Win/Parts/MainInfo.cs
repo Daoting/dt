@@ -36,6 +36,21 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 窗口主区
+        /// </summary>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_callback">外部回调方法</param>
+        /// <param name="p_desc">描述信息</param>
+        public MainInfo(Icons p_icon, string p_title, Action p_callback, string p_desc = null)
+        {
+            Icon = p_icon;
+            Title = p_title;
+            Callback = p_callback;
+            Desc = p_desc;
+        }
+
+        /// <summary>
         /// 获取设置图标
         /// </summary>
         public Icons Icon { get; set; }
@@ -54,6 +69,11 @@ namespace Dt.Base
         /// 获取设置主区内容类型
         /// </summary>
         public Type Type { get; set; }
+
+        /// <summary>
+        /// 获取设置外部回调方法
+        /// </summary>
+        public Action Callback { get; set; }
 
         object _obj;
         internal object GetCenter()

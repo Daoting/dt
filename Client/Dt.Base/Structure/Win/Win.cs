@@ -1087,7 +1087,13 @@ namespace Dt.Base
         {
             var info = e.Data as MainInfo;
             if (info != null)
-                LoadMain(info.GetCenter());
+            {
+                if (info.Type != null)
+                    LoadMain(info.GetCenter());
+                else
+                    info.Callback?.Invoke();
+            }
+                
         }
         #endregion
 

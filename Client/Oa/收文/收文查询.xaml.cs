@@ -19,12 +19,20 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Oa
 {
-    public partial class 收文列表 : Win
+    public partial class 收文查询 : Win
     {
-        public 收文列表()
+        public 收文查询()
         {
             InitializeComponent();
 
+            _fv.Data = new 收文(ID: 0);
+            AtWf.AddMenu(_lv);
+        }
+
+        async void OnSearch(object sender, Mi e)
+        {
+            _lv.Data = await AtCm.GetAll<收文>();
+            NaviTo("结果");
         }
 
     }

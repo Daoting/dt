@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="收文\WfDemoForm.xaml" />
+    <UpToDateCheckInput Remove="收文\收文查询.xaml" />
     <UpToDateCheckInput Remove="收文\收文表单.xaml" />
   </ItemGroup>
 

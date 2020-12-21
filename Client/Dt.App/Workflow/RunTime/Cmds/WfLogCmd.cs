@@ -7,11 +7,7 @@
 #endregion
 
 #region 命名空间
-using Dt.App.Workflow;
-using Dt.Base;
 using Dt.Core;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -37,7 +33,7 @@ namespace Dt.App.Workflow
 
         Task OpenLog()
         {
-            new WfLogDlg().Show(_info.PrcDef.ID, _info.PrcInst.ID);
+            AtWf.ShowLog(_info.PrcInst.ID, _info.PrcDef.ID);
             return Task.CompletedTask;
         }
     }

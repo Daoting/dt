@@ -32,9 +32,14 @@ namespace Dt.App.Workflow
             InitializeComponent();
         }
 
-        public async void Show(long p_prcID, long p_prciID)
+        public async void Show(long p_prciID, long p_prcID)
         {
             _prciID = p_prciID;
+
+            // 查询流程模板id
+            if (p_prcID <= 0)
+                p_prcID = await AtCm.GetScalar<long>("流程-实例id获取模板id", new { id = p_prciID });
+
             var def = await WfFormInfo.GetPrcDef(p_prcID);
             if (string.IsNullOrEmpty(def.Diagram))
             {

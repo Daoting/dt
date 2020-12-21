@@ -89,10 +89,9 @@ namespace Dt.App.Workflow
             ShowFormWin((Row)e);
         }
 
-        async void ShowFormWin(Row p_row)
+        void ShowFormWin(Row p_row)
         {
-            long itemID = await AtCm.GetScalar<long>("流程-最后工作项", new { prciID = p_row.ID });
-            var info = new WfFormInfo(p_row.Long("PrcdID"), itemID, WfFormUsage.Manage);
+            var info = new WfFormInfo(p_row.Long("id"), WfFormUsage.Manage);
             AtWf.OpenFormWin(info);
         }
     }

@@ -8,7 +8,17 @@
     <a:Pane InitWidth="240">
         <a:Tabs>
             <a:Tab Title="功能目录">
-                <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
+                <ScrollViewer>
+                    <StackPanel>
+                        <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
+                        <a:CBar Title="表单查询" Margin="0,-1,0,0" />
+                        <a:Lv x:Name="_lvTask" ItemClick="OnTaskItemClick">
+                            <DataTemplate>
+                                <a:Dot ID="name" Margin="10" />
+                            </DataTemplate>
+                        </a:Lv>
+                    </StackPanel>
+                </ScrollViewer>
             </a:Tab>
         </a:Tabs>
     </a:Pane>

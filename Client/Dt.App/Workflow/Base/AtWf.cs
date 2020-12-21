@@ -61,5 +61,36 @@ namespace Dt.App
             p_info.FormWin = win;
             return win;
         }
+
+        /// <summary>
+        /// 查看日志(流程图)
+        /// </summary>
+        /// <param name="p_prcID">流程实例id</param>
+        /// <param name="p_prciID">流程模板id，-1时内部查询</param>
+        public static void ShowLog(long p_prciID, long p_prcID = -1)
+        {
+            new WfLogDlg().Show(p_prciID, p_prcID);
+        }
+
+        /// <summary>
+        /// 为Lv增加默认上下文菜单
+        /// </summary>
+        /// <param name="p_lv"></param>
+        public static void AddMenu(Lv p_lv)
+        {
+            Throw.IfNull(p_lv);
+            p_lv.ItemDoubleClick += (s, e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
+
+            Menu menu = new Menu();
+            var mi = new Mi { ID = "查看表单", Icon = Icons.详细 };
+            mi.Click += (s, e) => OpenFormWin(new WfFormInfo(e.Row.Long("id")));
+            menu.Items.Add(mi);
+
+            mi = new Mi { ID = "日志", Icon = Icons.审核 };
+            mi.Click += (s, e) => ShowLog(e.Row.Long("id"));
+            menu.Items.Add(mi);
+            Ex.SetMenu(p_lv, menu);
+        }
+
     }
 }

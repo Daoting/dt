@@ -22,11 +22,15 @@ namespace Dt.App.Workflow
         {
             InitializeComponent();
             Load();
-            _lv.Loaded += (s, e) => LoadMain(null);
         }
 
         async void Load()
         {
+            if (!AtSys.IsPhoneUI)
+            {
+                Height = 600;
+                Width = 400;
+            }
             _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = AtUser.ID });
         }
 
@@ -40,18 +44,10 @@ namespace Dt.App.Workflow
             StartNew(_lv.SelectedRow.ID);
         }
 
-        async void StartNew(long p_prcID)
+        void StartNew(long p_prcID)
         {
-            var info = new WfFormInfo(p_prcID, -1, WfFormUsage.Edit);
-            if (InputManager.IsCtrlPressed)
-            {
-                AtWf.OpenFormWin(info);
-            }
-            else
-            {
-                var win = await AtWf.CreateFormWin(info);
-                LoadMain(win);
-            }
+            Close();
+            AtWf.OpenFormWin(new WfFormInfo(p_prcID, -1, WfFormUsage.Edit));
         }
     }
 }

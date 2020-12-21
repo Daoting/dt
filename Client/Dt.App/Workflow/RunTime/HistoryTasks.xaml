@@ -42,6 +42,7 @@
                         <a:Menu>
                             <a:Mi ID="查看表单" Icon="详细" Click="OnShowInst" />
                             <a:Mi ID="追回" Icon="追回" Click="OnRetrieve" />
+                            <a:Mi ID="日志" Icon="审核" Click="OnShowLog" />
                         </a:Menu>
                     </a:Ex.Menu>
                     <DataTemplate>

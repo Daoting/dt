@@ -12,7 +12,6 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
@@ -26,8 +25,16 @@ namespace Dt.App
         #region 成员变量
         static readonly Dictionary<long, WfdPrc> _prcDefs = new Dictionary<long, WfdPrc>();
         long _prcID;
+        long _prciID;
         long _itemID;
         bool _locked;
+
+        WfSaveCmd _cmdSave;
+        WfSendCmd _cmdSend;
+        WfRollbackCmd _cmdRollback;
+        WfAcceptCmd _cmdAccept;
+        WfDeleteCmd _cmdDelete;
+        WfLogCmd _cmdLog;
         #endregion
 
         #region 构造方法
@@ -35,14 +42,17 @@ namespace Dt.App
         {
             _prcID = p_prcID;
             _itemID = p_itemID;
+            _prciID = -1;
             Usage = p_usage;
+        }
 
-            CmdSave = new WfSaveCmd(this);
-            CmdSend = new WfSendCmd(this);
-            CmdRollback = new WfRollbackCmd(this);
-            CmdAccept = new WfAcceptCmd(this);
-            CmdDelete = new WfDeleteCmd(this);
-            CmdLog = new WfLogCmd(this);
+        public WfFormInfo(long p_prciID, WfFormUsage p_usage = WfFormUsage.Read)
+        {
+            // 流程模板id 和 最后工作项id根据流程实例id查询
+            _prciID = p_prciID;
+            _prcID = -1;
+            _itemID = -1;
+            Usage = p_usage;
         }
         #endregion
 
@@ -162,32 +172,80 @@ namespace Dt.App
         /// <summary>
         /// 发送命令
         /// </summary>
-        public WfSendCmd CmdSend { get; }
+        public WfSendCmd CmdSend
+        {
+            get
+            {
+                if (_cmdSend == null)
+                    _cmdSend = new WfSendCmd(this);
+                return _cmdSend;
+            }
+        }
 
         /// <summary>
         /// 回退命令
         /// </summary>
-        public WfRollbackCmd CmdRollback { get; }
+        public WfRollbackCmd CmdRollback
+        {
+            get
+            {
+                if (_cmdRollback == null)
+                    _cmdRollback = new WfRollbackCmd(this);
+                return _cmdRollback;
+            }
+        }
 
         /// <summary>
         /// 签收/取消签收命令
         /// </summary>
-        public WfAcceptCmd CmdAccept { get; }
+        public WfAcceptCmd CmdAccept
+        {
+            get
+            {
+                if (_cmdAccept == null)
+                    _cmdAccept = new WfAcceptCmd(this);
+                return _cmdAccept;
+            }
+        }
 
         /// <summary>
         /// 保存表单命令
         /// </summary>
-        public WfSaveCmd CmdSave { get; }
+        public WfSaveCmd CmdSave
+        {
+            get
+            {
+                if (_cmdSave == null)
+                    _cmdSave = new WfSaveCmd(this);
+                return _cmdSave;
+            }
+        }
 
         /// <summary>
         /// 删除流程实例命令
         /// </summary>
-        public WfDeleteCmd CmdDelete { get; }
+        public WfDeleteCmd CmdDelete
+        {
+            get
+            {
+                if (_cmdDelete == null)
+                    _cmdDelete = new WfDeleteCmd(this);
+                return _cmdDelete;
+            }
+        }
 
         /// <summary>
         /// 查看日志(流程图)命令
         /// </summary>
-        public WfLogCmd CmdLog { get; }
+        public WfLogCmd CmdLog
+        {
+            get
+            {
+                if (_cmdLog == null)
+                    _cmdLog = new WfLogCmd(this);
+                return _cmdLog;
+            }
+        }
         #endregion
 
         #region 外部方法
@@ -283,6 +341,14 @@ namespace Dt.App
         #region 初始化
         internal async Task Init()
         {
+            // 根据流程实例id获取流程id 和 最后工作项id
+            if (_prciID > 0)
+            {
+                var row = await AtCm.First("流程-最后工作项", new { prciID = _prciID });
+                _prcID = row.Long("prcID");
+                _itemID = row.Long("itemID");
+            }
+
             // 加载流程定义
             PrcDef = await GetPrcDef(_prcID);
 
@@ -290,7 +356,7 @@ namespace Dt.App
             FormType = Type.GetType(PrcDef.FormType);
             Throw.IfNull(FormType, $"表单类型[{PrcDef.FormType}]不存在！");
             if (FormType.GetInterface("IWfForm") != typeof(IWfForm))
-                Throw.Msg("流程表单类型需要继承自WfForm！");
+                Throw.Msg("任务表单类型需要继承自WfForm！");
 
             // 加载活动定义、流程实例、活动实例、工作项
             if (_itemID < 0)

@@ -178,6 +178,11 @@ namespace Dt.App.Workflow
                 AtKit.Warn("追回失败");
             }
         }
+
+        void OnShowLog(object sender, Mi e)
+        {
+            AtWf.ShowLog(e.Row.Long("prciid"), e.Row.Long("prcdid"));
+        }
     }
 
     public class HistoryTaskView
