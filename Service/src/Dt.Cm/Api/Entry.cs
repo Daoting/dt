@@ -134,11 +134,16 @@ namespace Dt.Cm
         /// <summary>
         /// 获取菜单项的数字提示信息
         /// </summary>
-        /// <param name="p_menuIDs"></param>
+        /// <param name="p_menuID"></param>
+        /// <param name="p_userID"></param>
         /// <returns></returns>
-        public Dict GetMenuTips(List<long> p_menuIDs)
+        public Task<int> GetMenuTip(long p_menuID, long p_userID)
         {
-            return null;
+            if (p_menuID == 3000)
+            {
+                return _dp.GetScalar<int>("流程-待办任务总数", new { userid = p_userID });
+            }
+            return Task.FromResult(0);
         }
 
         static async Task<string> GetAllVers(long p_userID)

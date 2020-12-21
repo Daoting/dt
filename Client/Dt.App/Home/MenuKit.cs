@@ -29,8 +29,6 @@ namespace Dt.App
     public static class MenuKit
     {
         #region 成员变量
-        // 常用组菜单项的上限
-        const int _maxFixed = 8;
         // 所有菜单项 = _rootPageMenus + _leaveMenus
         static Nl<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
@@ -148,7 +146,7 @@ namespace Dt.App
             // 所有可访问项
             List<long> idsAll = await GetAllUserMenus();
 
-            // 常用组菜单项(最多共8项)：固定项 + 点击次数最多的前n项
+            // 常用组菜单项：固定项 + 点击次数最多的前n项
             _favMenus.Clear();
             if (FixedMenus != null)
             {
@@ -160,19 +158,15 @@ namespace Dt.App
             }
 
             // 点击次数最多的前n项
-            if (_favMenus.Count < _maxFixed)
+            var favMenu = AtLocal.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT 10");
+            foreach (var fav in favMenu)
             {
-                var favMenu = AtLocal.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc");
-                foreach (var fav in favMenu)
+                // 过滤无权限的项
+                if (idsAll.Contains(fav.MenuID))
                 {
-                    // 过滤无权限的项
-                    if (idsAll.Contains(fav.MenuID))
-                    {
-                        var om = AtLocal.ModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
-                        _favMenus.Add(om);
-                        if (_favMenus.Count >= _maxFixed)
-                            break;
-                    }
+                    var om = AtLocal.ModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                    _favMenus.Add(om);
+                    idsAll.Remove(fav.MenuID);
                 }
             }
 

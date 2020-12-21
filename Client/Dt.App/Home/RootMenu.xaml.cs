@@ -11,8 +11,6 @@ using Dt.Base;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -87,44 +85,14 @@ namespace Dt.App.Home
             _dtLast = DateTime.Now;
             AtKit.RunAsync(async () =>
             {
-                // 只取收藏项的提示信息
-                var items = new Dictionary<string, List<long>>();
+                // 只取常用组菜单项的提示信息
                 foreach (var mi in MenuKit.FavMenus)
                 {
-                    if (string.IsNullOrEmpty(mi.SrvName))
+                    if (string.IsNullOrEmpty(mi.SvcName))
                         continue;
 
-                    List<long> ls;
-                    if (!items.TryGetValue(mi.SrvName, out ls))
-                    {
-                        ls = new List<long>();
-                        items[mi.SrvName] = ls;
-                    }
-                    ls.Add(mi.ID);
-                }
-                if (items.Count == 0)
-                    return;
-
-                // 确保服务存在Api：Entry.GetMenuTips
-                foreach (var item in items)
-                {
-                    Dict dt = await new UnaryRpc(item.Key, "Entry.GetMenuTips", item.Value).Call<Dict>();
-                    if (dt == null || dt.Count == 0)
-                        continue;
-
-                    foreach (var obj in dt)
-                    {
-                        if (long.TryParse(obj.Key, out var id)
-                            && obj.Value != null
-                            && int.TryParse(obj.Value.ToString(), out int num))
-                        {
-                            OmMenu om = (from mi in MenuKit.FavMenus
-                                         where mi.ID == id
-                                         select mi).FirstOrDefault();
-                            if (om != null)
-                                om.SetWarningNum(num);
-                        }
-                    }
+                    int num = await new UnaryRpc(mi.SvcName, "Entry.GetMenuTip", mi.ID, AtUser.ID).Call<int>();
+                    mi.SetWarningNum(num);
                 }
             });
         }

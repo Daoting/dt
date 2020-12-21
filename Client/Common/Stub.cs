@@ -131,7 +131,8 @@ namespace Dt.Shell
                     ID = 3000,
                     Name = "任务",
                     Icon = "双绞线",
-                    ViewName = "任务"
+                    ViewName = "任务",
+                    SvcName = "cm"
                 },
                 new OmMenu
                 {
@@ -146,6 +147,13 @@ namespace Dt.Shell
                     Name = "发布",
                     Icon = "公告",
                     ViewName = "发布"
+                },
+                new OmMenu
+                {
+                    ID = 1,
+                    Name = "控件样例",
+                    Icon = "词典",
+                    ViewName = "控件样例"
                 },
             };
         }

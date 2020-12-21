@@ -75,7 +75,7 @@ namespace Dt.App
         /// <summary>
         /// 提供提示信息的服务名称，空表示无提示信息
         /// </summary>
-        public string SrvName { get; set; }
+        public string SvcName { get; set; }
 
         /// <summary>
         /// 菜单描述

@@ -48,7 +48,7 @@ namespace Dt.App.Model
             string ViewName = default,
             string Params = default,
             string Icon = default,
-            string SrvName = default,
+            string SvcName = default,
             string Note = default,
             int Dispidx = default,
             bool IsLocked = false,
@@ -62,7 +62,7 @@ namespace Dt.App.Model
             AddCell<string>("ViewName", ViewName);
             AddCell<string>("Params", Params);
             AddCell<string>("Icon", Icon);
-            AddCell<string>("SrvName", SrvName);
+            AddCell<string>("SvcName", SvcName);
             AddCell<string>("Note", Note);
             AddCell<int>("Dispidx", Dispidx);
             AddCell<bool>("IsLocked", IsLocked);
@@ -131,10 +131,10 @@ namespace Dt.App.Model
         /// <summary>
         /// 提供提示信息的服务名称，空表示无提示信息
         /// </summary>
-        public string SrvName
+        public string SvcName
         {
-            get { return (string)this["SrvName"]; }
-            set { this["SrvName"] = value; }
+            get { return (string)this["SvcName"]; }
+            set { this["SvcName"] = value; }
         }
 
         /// <summary>
