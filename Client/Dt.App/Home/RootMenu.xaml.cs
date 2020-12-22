@@ -86,6 +86,7 @@ namespace Dt.App.Home
             AtKit.RunAsync(async () =>
             {
                 // 只取常用组菜单项的提示信息
+                // 原来采用每个服务批量获取的方式，现改为简单方式，互不影响！
                 foreach (var mi in MenuKit.FavMenus)
                 {
                     if (string.IsNullOrEmpty(mi.SvcName))
