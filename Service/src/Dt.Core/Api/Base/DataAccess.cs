@@ -134,10 +134,10 @@ namespace Dt.Core
                 await db.CommitTrans();
                 return cnt;
             }
-            catch (Exception ex)
+            catch
             {
                 await db.RollbackTrans();
-                throw ex;
+                throw;
             }
         }
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
 
   <PropertyGroup>
     <Description>DT框架库</Description>
@@ -7,7 +7,7 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <Content Include="..\Common\实体类模板.txt" Link="实体类模板.txt" />
+    <None Include="..\Common\实体类模板.txt" Link="实体类模板.txt" />
   </ItemGroup>
 
   <ItemGroup>

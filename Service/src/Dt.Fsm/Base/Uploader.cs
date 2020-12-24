@@ -228,7 +228,7 @@ namespace Dt.Fsm
                 }
                 await _db.Exec("上传文件", desc);
             }
-            catch (Exception ex)
+            catch
             {
                 FileInfo fi = new FileInfo(fullPath);
                 if (fi.Exists)
@@ -239,7 +239,7 @@ namespace Dt.Fsm
                     }
                     catch { }
                 }
-                throw ex;
+                throw;
             }
             return desc;
         }

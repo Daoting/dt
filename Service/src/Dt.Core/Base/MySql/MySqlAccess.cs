@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dapper;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Serilog;
 using System;
 using System.Collections;

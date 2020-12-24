@@ -354,7 +354,7 @@ namespace Dt.Core.EventBus
             EventWrapper body;
             try
             {
-                body = JsonSerializer.Deserialize<EventWrapper>(p_args.Body, JsonOptions.UnsafeSerializer);
+                body = JsonSerializer.Deserialize<EventWrapper>(p_args.Body.Span, JsonOptions.UnsafeSerializer);
             }
             catch (Exception e)
             {

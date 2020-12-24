@@ -10,7 +10,7 @@
 using Dt.Core.EventBus;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -133,10 +133,10 @@ namespace Dt.Core.Sqlite
 
                 Log.Information(sb.ToString());
             }
-            catch (Exception ex)
+            catch
             {
                 watch.Stop();
-                throw ex;
+                throw;
             }
             finally
             {
