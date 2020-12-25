@@ -123,7 +123,6 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>
         {
-            { "基础代码", typeof(BaseCode) },
             { "菜单管理", typeof(SysMenu) },
             { "基础权限", typeof(BasePrivilege) },
             { "系统角色", typeof(SysRole) },
@@ -132,7 +131,6 @@ namespace Dt.Shell
             { "主页", typeof(SamplesMain) },
             { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
-            { "文章管理", typeof(Fz.PostMgr) },
             { "福祉主页", typeof(Fz.ClientHome) },
         };
 

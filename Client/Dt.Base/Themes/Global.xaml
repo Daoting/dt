@@ -5,10 +5,9 @@
     xmlns:ios="http://uno.ui/ios"
     xmlns:android="http://uno.ui/android"
     xmlns:wasm="http://uno.ui/wasm"
-    xmlns:not_wasm="http://uno.ui/not_wasm"
     xmlns:a="using:Dt.Base"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="ios android wasm not_wasm">
+    mc:Ignorable="ios android wasm">
 
     <!-- 全局公共部分，包括常量、公共画刷、转换器 -->
 
@@ -24,8 +23,10 @@
 
     <!--自定义图标字体库-->
     <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
-    <not_wasm:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</not_wasm:FontFamily>
-    <wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>
+    <ios:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
+    <android:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
+    <!--前缀wasm not_wasm netstdref都无效，wasm在App.cs使用代码添加字体库-->
+    <!--<wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>-->
 
     <!-- 行外高，含边框1 -->
     <x:Double x:Key="RowOuterHeight">41</x:Double>

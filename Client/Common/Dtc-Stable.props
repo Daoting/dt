@@ -1,6 +1,6 @@
 <Project ToolsVersion="Current">
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.18362;monoandroid10.0;xamarinios10;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>uap10.0.18362;monoandroid10.0;xamarinios10;net5.0</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>
@@ -24,12 +24,12 @@
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
     <DefineConstants>$(DefineConstants);WASM;__WASM__</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' ">
-    <PackageReference Include="Uno.UI" Version="3.0.12" />
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='net5.0' ">
+    <PackageReference Include="Uno.UI" Version="3.4.0" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">

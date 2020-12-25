@@ -9,8 +9,10 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Shell
@@ -27,6 +29,11 @@ namespace Dt.Shell
         public App()
         {
             InitializeComponent();
+
+#if __WASM__
+            // 自定义图标字体库，因Global.xaml中前缀无效无法定义
+            Resources["IconFont"] = new FontFamily("DtIcon");
+#endif
             AtSys.Startup(new Stub(), this);
         }
 

@@ -4,8 +4,8 @@
      <!-- 加uap为xaml智能提示 -->
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;net5.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10;net5.0</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>
@@ -28,12 +28,11 @@
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
     <DefineConstants>$(DefineConstants);WASM;__WASM__</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
     <!--修改Excel或Chart时引用项目-->
@@ -41,9 +40,13 @@
     <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />-->
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' ">
-    <PackageReference Include="Uno.UI" Version="3.1.6" />
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='net5.0' ">
+    <PackageReference Include="Uno.UI" Version="3.4.0" />
   </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='uap10.0.18362' ">
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup> 
   
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">
     <Reference Include="System" />

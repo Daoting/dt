@@ -57,7 +57,18 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_list">对象列表</param>
         /// <returns>返回影响的行数</returns>
-        public static int SaveAll<T>(IEnumerable<T> p_list)
+        public static int BatchSave<T>(IEnumerable<T> p_list)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// 保存表格数据到对应的表
+        /// </summary>
+        /// <param name="p_tbl">数据</param>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public static int BatchSave(Table p_tbl, string p_tblName)
         {
             return 0;
         }
@@ -102,7 +113,18 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static IEnumerable<T> DeferredQuery<T>(string p_sql, Dict p_params = null) where T : class
+        public static IEnumerable<T> Each<T>(string p_sql, Dict p_params = null) where T : class
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// SQL查询，只返回第一行数据
+        /// </summary>
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns></returns>
+        public static Row First(string p_sql, Dict p_params = null)
         {
             return null;
         }
@@ -114,9 +136,21 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static T GetFirst<T>(string p_sql, Dict p_params = null) where T : class
+        public static T First<T>(string p_sql, Dict p_params = null) where T : class
         {
-            return default;
+            return null;
+        }
+
+        /// <summary>
+        /// 查询状态库，返回符合条件的第一列数据，并转换为指定类型
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns>返回可枚举列表</returns>
+        public static List<T> FirstCol<T>(string p_sql, Dict p_params = null)
+        {
+            return null;
         }
 
         /// <summary>
@@ -245,7 +279,18 @@ namespace Dt.Core
         /// <param name="p_sql">SQL语句</param>
         /// <param name="p_params">参数列表</param>
         /// <returns>返回影响的行数</returns>
-        public static int Execute(string p_sql, Dict p_params = null)
+        public static int Exec(string p_sql, Dict p_params = null)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// 事务内批量执行SQL语句
+        /// </summary>
+        /// <param name="p_sql"></param>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        public static int BatchExec(string p_sql, List<Dict> p_list)
         {
             return 0;
         }
@@ -278,7 +323,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static Table QueryModel(string p_sql, Dict p_params = null)
+        public static Table ModelQuery(string p_sql, Dict p_params = null)
         {
             return null;
         }
@@ -290,7 +335,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static List<T> QueryModel<T>(string p_sql, Dict p_params = null) where T : class
+        public static List<T> ModelQuery<T>(string p_sql, Dict p_params = null) where T : class
         {
             return null;
         }
@@ -302,12 +347,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static IEnumerable<T> DeferredQueryModel<T>(string p_sql, Dict p_params = null) where T : class
-        {
-            return null;
-        }
-
-        public static IEnumerable<T> DeferredQueryModel<T>(string p_sql) where T : class
+        public static IEnumerable<T> ModelEach<T>(string p_sql, Dict p_params = null) where T : class
         {
             return null;
         }
@@ -319,9 +359,9 @@ namespace Dt.Core
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>返回可枚举列表</returns>
-        public static T QueryModelFirst<T>(string p_sql, Dict p_params = null) where T : class
+        public static T ModelFirst<T>(string p_sql, Dict p_params = null) where T : class
         {
-            return null;
+            return default;
         }
 
         /// <summary>
@@ -331,7 +371,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static T GetModelScalar<T>(string p_sql, Dict p_params = null)
+        public static T ModelGetScalar<T>(string p_sql, Dict p_params = null)
         {
             return default;
         }
@@ -342,7 +382,7 @@ namespace Dt.Core
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public static int ExecuteModel(string p_sql, Dict p_params = null)
+        public static int ModelExec(string p_sql, Dict p_params = null)
         {
             return 0;
         }
