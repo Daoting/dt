@@ -1,5 +1,17 @@
 ﻿# 版本说明
 
+
+## Release 1.9
+
+### 功能 
+* wasm
+
+### 变更 
+
+
+### Bug修改 
+
+
 ## Release 1.5
 
 ### 功能 
@@ -33,8 +45,12 @@
 * Lv增加IRowView支持
 * FileList增加EnableClick 
 * FileList增加 Spacing
-
-*  Msg服务增加心跳包包
+* Msg服务增加心跳包
+* 文件管理
+* 发布系统，合并到App
+* 富文本格，插入图片、视频
+* 工作流
+* 所有服务升级到.net5.0
 
 ### 变更 
 * 移除Newtonsoft.Json，使用System.Text.Json 
@@ -43,6 +59,7 @@
 * uno升级到2.2.0，Holding事件可用
 * uno升级到2.4.4
 * 所有Holding事件转换成RightTapped，长按效果好且能和Tapped分开
+* uno升级到3.1.6
 
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题

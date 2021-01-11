@@ -3,48 +3,47 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-dec3fff-22584-Release.zip</NetCoreWasmSDKUri>
-    <!-- 两种模式的sdk，必须完整路径 -->
-    <!--<MonoWasmSDKUri>d:\dt\client\Common\wasm\mono-wasm-610.zip</MonoWasmSDKUri>-->
-    <!--<MonoWasmAOTSDKUri>d:\dt\client\Common\wasm\mono-wasm-610-aot.zip</MonoWasmAOTSDKUri>-->
-    <WasmHead>true</WasmHead>
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
     <NoWarn>NU1701</NoWarn>
+
+    <!-- 必须sdk完整路径 -->
+    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-dec3fff-22584-Release.zip</NetCoreWasmSDKUri>
+
     <!-- 默认Interpreter -->
     <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
     <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
-    <!-- 生成InterpreterAndAOT模式的AOT配置文件 -->
+
+    <!-- InterpreterAndAOT模式第一步，生成AOT配置文件 -->
     <!--<WasmShellGenerateAOTProfile>true</WasmShellGenerateAOTProfile>-->
-    <!-- 默认true，不链接dotnet.wasm文件变大 -->
-    <!--<WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>-->
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <!-- Debug模式启用调试 -->
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
     <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Fonts\icon.woff2" />
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
     <EmbeddedResource Include="WasmScripts\AppManifest.js" />
   </ItemGroup>
-
-  <ItemGroup>
-    <!-- InterpreterAndAOT模式时不AOT的dll -->
-    <!--<MonoRuntimeMixedModeExcludedAssembly Include="Dt.Core" />-->
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- 能够反射出类型的dll都需要link -->
-    <LinkerDescriptor Include="LinkerConfig.xml" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <None Include="Program.cs" />
     <None Include="LinkerConfig.xml" />
     <None Include="wwwroot\web.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Interpreter模式有效，能够反射出类型的dll都需要link -->
+    <LinkerDescriptor Include="LinkerConfig.xml" />
+
+    <!-- InterpreterAndAOT模式时不AOT的dll -->
+    <!--<MonoRuntimeMixedModeExcludedAssembly Include="Dt.Core" />-->
   </ItemGroup>
 
   <ItemGroup>

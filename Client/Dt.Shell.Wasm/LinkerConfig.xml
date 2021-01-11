@@ -5,7 +5,7 @@
   <assembly fullname="Dt.Sample" />
   <assembly fullname="Dt.Oa" />
   <assembly fullname="Dt.Shell.Wasm" />
-  
+
   <assembly fullname="Uno.UI" />
   <assembly fullname="System.Core">
 	<!-- This is required by JSon.NET and any expression.Compile caller -->
