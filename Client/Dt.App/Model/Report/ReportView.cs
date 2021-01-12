@@ -36,7 +36,7 @@ namespace Dt.App
             Icons icon = p_icon == Icons.None ? Icons.折线图 : p_icon;
             string title = string.IsNullOrEmpty(p_title) ? param : p_title;
 
-            var ls = param.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var ls = param.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (ls.Length == 1)
             {
                 AtRpt.Show(new RptInfo { Name = ls[0] }, title, icon);

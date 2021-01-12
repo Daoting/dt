@@ -553,8 +553,8 @@ namespace Dt.Base
             foreach (var file in p_filesJson)
             {
                 if (string.IsNullOrEmpty(file)
-                    || !file.StartsWith('[')
-                    || !file.EndsWith(']'))
+                    || !file.StartsWith("[")
+                    || !file.EndsWith("]"))
                 {
                     AtKit.Warn($"文件描述json错误！");
                     return;
