@@ -10,6 +10,10 @@
     <DefineConstants>TRACE;SERVER</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;SERVER</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Res\tls.pfx" />
   </ItemGroup>
