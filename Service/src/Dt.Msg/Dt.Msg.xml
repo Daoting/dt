@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dt.Msg</name>
+    </assembly>
+    <members>
+        <member name="T:Dt.Msg.CmdMsg">
+            <summary>
+            指令消息Api
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.CmdMsg.SendCmd(System.Int64,Dt.Core.MsgInfo)">
+            <summary>
+            向某用户的客户端推送指令信息
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_msg"></param>
+            <returns>true 在线推送</returns>
+        </member>
+        <member name="M:Dt.Msg.CmdMsg.BatchSendCmd(System.Collections.Generic.List{System.Int64},Dt.Core.MsgInfo)">
+            <summary>
+            向用户列表的所有客户端推送指令信息
+            </summary>
+            <param name="p_userIDs">用户列表</param>
+            <param name="p_msg">待推送信息</param>
+            <returns>在线推送列表</returns>
+        </member>
+        <member name="T:Dt.Msg.InstantMsg">
+            <summary>
+            即时消息Api
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.InstantMsg.SendMsg(System.Int64,System.String)">
+            <summary>
+            向某用户的客户端推送系统消息
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_msg"></param>
+            <returns>true 在线推送</returns>
+        </member>
+        <member name="M:Dt.Msg.InstantMsg.BatchSendMsg(System.Collections.Generic.List{System.Int64},System.String)">
+            <summary>
+            向用户列表的所有客户端推送系统消息
+            </summary>
+            <param name="p_userIDs">用户列表</param>
+            <param name="p_msg">待推送信息</param>
+            <returns>在线推送列表</returns>
+        </member>
+        <member name="M:Dt.Msg.InstantMsg.SendMsgToOnline(System.String)">
+            <summary>
+            向所有副本的所有在线用户广播信息
+            </summary>
+            <param name="p_msg"></param>
+        </member>
+        <member name="M:Dt.Msg.InstantMsg.SendLetter(System.Int64,Dt.Core.LetterInfo)">
+            <summary>
+            向某用户的客户端推送聊天信息，可通过指定LetterInfo.LetterType为Undo撤回信息
+            </summary>
+            <param name="p_userID">目标用户</param>
+            <param name="p_letter">聊天信息</param>
+            <returns>true 在线推送</returns>
+        </member>
+        <member name="M:Dt.Msg.InstantMsg.BatchSendLetter(System.Collections.Generic.List{System.Int64},Dt.Core.LetterInfo)">
+            <summary>
+            向用户列表的所有客户端推送聊天信息，可通过指定LetterInfo.LetterType为Undo撤回信息
+            </summary>
+            <param name="p_userIDs">用户列表</param>
+            <param name="p_letter">聊天信息</param>
+            <returns>在线推送列表</returns>
+        </member>
+        <member name="T:Dt.Msg.Pusher">
+            <summary>
+            消息推送Api
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.Pusher.Register(Dt.Core.Dict,Dt.Core.Rpc.ResponseWriter)">
+            <summary>
+            客户端注册在线推送
+            </summary>
+            <param name="p_deviceInfo">客户端设备信息</param>
+            <param name="p_writer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.Pusher.Unregister">
+            <summary>
+            注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.Pusher.IsOnline(System.Int64)">
+            <summary>
+            判断用户是否在线，查询所有副本
+            </summary>
+            <param name="p_userID"></param>
+            <returns>null 不在线</returns>
+        </member>
+        <member name="M:Dt.Msg.Pusher.GetOnlineCount">
+            <summary>
+            实时获取所有副本的在线用户总数
+            </summary>
+            <returns>Dict结构：key为副本id，value为副本会话总数</returns>
+        </member>
+        <member name="T:Dt.Msg.SubscribeMsg">
+            <summary>
+            订阅消息Api
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.SubscribeMsg.Publish(System.Int64,System.String,System.String)">
+            <summary>
+            发布订阅信息
+            </summary>
+            <param name="p_subscribeID">订阅号标识</param>
+            <param name="p_msg">信息内容</param>
+            <param name="p_offlineTip">离线推送时的提示信息</param>
+            <returns>在线收到的人数</returns>
+        </member>
+        <member name="F:Dt.Msg.MsgKit.MsgQueueKey">
+            <summary>
+            用户未推送消息列表 msg:userid = list(msginfo)
+            </summary>
+        </member>
+        <member name="F:Dt.Msg.MsgKit.IsMultipleReplicas">
+            <summary>
+            Msg服务是否正在运行多个副本，当前从service.json中取，可否使用KubeClient?
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.MsgKit.Push(System.Collections.Generic.List{System.Int64},Dt.Core.MsgInfo)">
+            <summary>
+            向用户列表中的在线用户推送信息
+            </summary>
+            <param name="p_userIDs">用户列表</param>
+            <param name="p_msg">待推送信息</param>
+            <returns>在线推送列表</returns>
+        </member>
+        <member name="M:Dt.Msg.MsgKit.PushToOnline(Dt.Core.MsgInfo)">
+            <summary>
+            向所有副本的所有在线用户广播信息
+            </summary>
+            <param name="p_msg"></param>
+        </member>
+        <member name="T:Dt.Msg.Offline">
+            <summary>
+            离线推送类
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.Offline.Add(System.Collections.Generic.List{System.Int64},Dt.Core.MsgInfo)">
+            <summary>
+            增加待推送信息
+            </summary>
+            <param name="p_userIDs"></param>
+            <param name="p_msg"></param>
+        </member>
+        <member name="M:Dt.Msg.Offline.PushMsg">
+            <summary>
+            后台推送任务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.Offline.PushHandler(Dt.Msg.OfflineItem)">
+            <summary>
+            执行推送
+            </summary>
+            <param name="p_item"></param>
+        </member>
+        <member name="T:Dt.Msg.OfflineItem">
+            <summary>
+            待离线推送项
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.OfflineItem.Users">
+            <summary>
+            待推送的用户列表
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.OfflineItem.Msg">
+            <summary>
+            待推送内容
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.WnsHandler">
+            <summary>
+            WNS推送类
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.WnsHandler.PostToWns(System.String,System.Byte[])">
+            <summary>
+            Post到WNS，实现toast推送
+            </summary>
+            <param name="p_uri">设备通道Uri</param>
+            <param name="p_data">推送内容</param>
+            <returns>通道 URI 是否有效，无效时后续删除</returns>
+        </member>
+        <member name="M:Dt.Msg.WnsHandler.GetWnsToken">
+            <summary>
+            获取Wns访问令牌
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.BroadcastEvent">
+            <summary>
+            向所有会话广播消息的事件
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.ClientInfo">
+            <summary>
+            客户端会话
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.Context">
+            <summary>
+            http请求上下文
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.UserID">
+            <summary>
+            当前用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.Platform">
+            <summary>
+            客户端系统
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.Version">
+            <summary>
+            客户端系统版本
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.DeviceName">
+            <summary>
+            客户端设备名称
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.DeviceModel">
+            <summary>
+            客户端设备
+            </summary>
+        </member>
+        <member name="P:Dt.Msg.ClientInfo.StartTime">
+            <summary>
+            开始时间
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.SendOfflineMsg">
+            <summary>
+            发送当前用户的离线信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.AddMsg(System.String)">
+            <summary>
+            增加待推送信息
+            </summary>
+            <param name="p_msg"></param>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.SendMsg">
+            <summary>
+            推送信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.StopPush">
+            <summary>
+            通知客户端退出
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.Close">
+            <summary>
+            关闭推送，取消本次请求
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.Exit">
+            <summary>
+            会话结束，未通知客户端退出，也未取消本次请求，只是SendMsg()方法返回false结束长连接会话
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.ClientInfoEvent">
+            <summary>
+            获取用户会话信息的事件
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.Online">
+            <summary>
+            在线推送类
+            </summary>
+        </member>
+        <member name="F:Dt.Msg.Online._all">
+            <summary>
+            当前服务的所有在线用户
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.Online.Register(Dt.Msg.ClientInfo)">
+            <summary>
+            注册新会话，注销同一用户的旧会话，向新会话发送离线信息
+            </summary>
+            <param name="p_client"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.Online.GetClient(System.Int64)">
+            <summary>
+            获取指定用户的会话对象
+            </summary>
+            <param name="p_userID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Msg.Online.RemoveClient(System.Int64)">
+            <summary>
+            移除指定用户的会话对象
+            </summary>
+            <param name="p_userID"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Dt.Msg.Online.All">
+            <summary>
+            当前服务的所有在线用户，只读
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.OnlineCountEvent">
+            <summary>
+            统计各副本会话总数的事件
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.OnlinePushEvent">
+            <summary>
+            在线推送事件
+            </summary>
+        </member>
+        <member name="T:Dt.Msg.Stub">
+            <summary>
+            服务存根
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.Stub.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            定义全局服务
+            </summary>
+            <param name="p_services"></param>
+        </member>
+        <member name="M:Dt.Msg.Stub.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Collections.Generic.IDictionary{System.String,Microsoft.AspNetCore.Http.RequestDelegate})">
+            <summary>
+            自定义请求处理或定义请求管道的中间件
+            </summary>
+            <param name="p_app"></param>
+            <param name="p_handlers">注册自定义请求处理</param>
+        </member>
+    </members>
+</doc>

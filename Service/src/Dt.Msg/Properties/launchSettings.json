@@ -2,19 +2,19 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "https://localhost:40002/"
+    "iis": {
+      "applicationUrl": "http://localhost/baisui/msg",
+      "sslPort": 0
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+    "IIS": {
+      "commandName": "IIS"
     },
     "Dt.Msg": {
       "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": ".admin",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

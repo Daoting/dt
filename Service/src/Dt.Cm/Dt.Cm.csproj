@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Dt.Cm.xml</DocumentationFile>
+    <DocumentationFile>D:\Dt\Service\src\Dt.Cm\Dt.Cm.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dt.Cm.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\..\Client\Common\实体类模板.txt" Link="实体类模板.txt" />
@@ -19,5 +23,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
   </ItemGroup>
-
+  
 </Project>

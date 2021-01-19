@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Dt.Pub.xml</DocumentationFile>
+    <DocumentationFile>D:\Dt\Service\src\Dt.Pub\Dt.Pub.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dt.Pub.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\k8s\global.json" Link="etc\config\global.json">

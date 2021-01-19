@@ -3,5 +3,6 @@
   "CacheSql": false,
   "TraceSql": false,
   "TraceRpc": false,
-  "FixedVolume": "photo;chat"
+  "FixedVolume": "photo;chat",
+  "MaxRequestBodySize": 1024000000
 }

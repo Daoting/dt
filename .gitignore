@@ -353,6 +353,7 @@ Service/src/Dt.Cm/etc/log/
 Service/src/Dt.Cm/etc/model/
 Service/src/Dt.Msg/etc/log/
 Service/src/Dt.Fsm/etc/log/
+Service/publish/
 Client/Common/wasm/
 Client/Common/nupkg/
 !Client/Dt.App/Publish/

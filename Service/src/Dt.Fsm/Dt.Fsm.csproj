@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Dt.Fsm.xml</DocumentationFile>
+    <DocumentationFile>D:\Dt\Service\src\Dt.Fsm\Dt.Fsm.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dt.Fsm.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
@@ -45,4 +49,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

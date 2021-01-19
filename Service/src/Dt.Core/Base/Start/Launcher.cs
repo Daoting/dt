@@ -10,13 +10,11 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Formatting.Compact;
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 #endregion
 
 namespace Dt.Core
@@ -106,45 +104,23 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 启动Kestrel
+        /// 启动Web服务器
         /// </summary>
         /// <param name="p_args">启动参数</param>
         static void RunWebHost(string[] p_args)
         {
             try
             {
-                var host = WebHost.CreateDefaultBuilder(p_args)
-                    .ConfigureKestrel(options =>
-                    {
-                        // 未使用Listen方法，因无法应用外部设置的端口！
-                        options.ConfigureEndpointDefaults(listenOptions =>
-                        {
-                            // 默认http2
-                            listenOptions.Protocols = HttpProtocols.Http2;
-
-                            // X509证书为嵌入的资源
-                            Stream stream = typeof(Launcher).Assembly.GetManifestResourceStream("Dt.Core.Res.tls.pfx");
-                            byte[] pfx = new byte[stream.Length];
-                            stream.Read(pfx, 0, (int)stream.Length);
-                            listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
-                        });
-
-                        // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
-                        options.Limits.MinRequestBodyDataRate = null;
-                        options.Limits.MinResponseDataRate = null;
-
-                        // 不限制post的body大小，默认28.6M
-                        options.Limits.MaxRequestBodySize = null;
-                    })
-                    .UseStartup<Startup>()
+                // 部署在IIS进程内模式时创建 IISHttpServer
+                // 其他情况创建 KestrelServer
+                // 两种 Web服务器的配置在Startup.ConfigureServices
+                WebHost.CreateDefaultBuilder<Startup>(p_args)
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
                     .UseSerilog()
                     // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
-                    .Build();
-                Log.Information($"启动 {Glb.SvcName} 成功");
-
-                // 内部调用WebHost.StartAsync()
-                host.Run();
+                    .Build()
+                    // 内部调用WebHost.StartAsync()
+                    .Run();
             }
             catch (Exception e)
             {

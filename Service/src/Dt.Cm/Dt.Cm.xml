@@ -1,0 +1,571 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dt.Cm</name>
+    </assembly>
+    <members>
+        <member name="T:Dt.Cm.Entry">
+            <summary>
+            入口Api
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Entry.LoginByPwd(System.String,System.String)">
+            <summary>
+            密码登录
+            </summary>
+            <param name="p_phone">手机号</param>
+            <param name="p_pwd">密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Entry.LoginByCode(System.String,System.String)">
+            <summary>
+            验证码登录
+            </summary>
+            <param name="p_phone">手机号</param>
+            <param name="p_code">验证码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Entry.CreateVerificationCode(System.String)">
+            <summary>
+            创建验证码
+            </summary>
+            <param name="p_phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Entry.GetMenuTip(System.Int64,System.Int64)">
+            <summary>
+            获取菜单项的数字提示信息
+            </summary>
+            <param name="p_menuID"></param>
+            <param name="p_userID"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.UserRelated">
+            <summary>
+            用户相关的Api
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.GetMenus(System.Int64)">
+            <summary>
+            获取用户可访问的菜单，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns>返回版本号和菜单id串</returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.GetPrivileges(System.Int64)">
+            <summary>
+            获取用户具有的权限，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns>返回版本号和权限id串</returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.GetParams(System.Int64)">
+            <summary>
+            获取用户的所有参数值，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.SaveParams(System.Int64,System.String,System.String)">
+            <summary>
+            保存用户参数值
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_paramID"></param>
+            <param name="p_value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.DeleteDataVer(System.Collections.Generic.List{System.Int64},System.String)">
+            <summary>
+            删除角色列表中所有用户的指定数据类型的版本号
+            </summary>
+            <param name="p_roleIDs"></param>
+            <param name="p_key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.RemoveUserRoles(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            删除用户关联的多个角色
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_roleIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.RemoveRoleUsers(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            删除角色关联的多个用户
+            </summary>
+            <param name="p_roleID"></param>
+            <param name="p_userIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.AddUserRole(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            批量增加用户关联的角色
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_roleIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.AddRoleUser(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            批量增加角色关联的用户
+            </summary>
+            <param name="p_roleID"></param>
+            <param name="p_userIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.UserRelated.DeleteRole(System.Int64)">
+            <summary>
+            删除角色，同步缓存
+            </summary>
+            <param name="p_roleID"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.Stub">
+            <summary>
+            服务存根
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Stub.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            定义全局服务
+            </summary>
+            <param name="p_services"></param>
+        </member>
+        <member name="M:Dt.Cm.Stub.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Collections.Generic.IDictionary{System.String,Microsoft.AspNetCore.Http.RequestDelegate})">
+            <summary>
+            自定义请求处理或定义请求管道的中间件
+            </summary>
+            <param name="p_app"></param>
+            <param name="p_handlers">注册自定义请求处理</param>
+        </member>
+        <member name="T:Dt.Cm.TestAuth">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.TestCache">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.TestException">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.TestIntercept">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.TestIntercept.CallInline">
+            <summary>
+            不拦截内嵌方法
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestIntercept.NotIntercept">
+            <summary>
+            外层不拦截，拦截内嵌方法
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestIntercept.ThrowException">
+            <summary>
+            调用过程异常
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.Interceptor1">
+            <summary>
+            拦截器
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.TestSerialize">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetString">
+            <summary>
+            返回字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetString(System.String)">
+            <summary>
+            字符串参数
+            </summary>
+            <param name="p_str"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetBool">
+            <summary>
+            返回bool值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetBool(System.Boolean)">
+            <summary>
+            bool参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetInt">
+            <summary>
+            返回int值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetInt(System.Int32)">
+            <summary>
+            int参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetLong">
+            <summary>
+            返回long值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetLong(System.Int64)">
+            <summary>
+            long参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetDouble">
+            <summary>
+            返回double值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetDouble(System.Double)">
+            <summary>
+            double参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetDateTime">
+            <summary>
+            返回DateTime值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetDateTime(System.DateTime)">
+            <summary>
+            DateTime参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetByteArray">
+            <summary>
+            返回byte[]值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetByteArray(System.Byte[])">
+            <summary>
+            byte[]参数
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetMsgInfo">
+            <summary>
+            返回MsgInfo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetMsgInfo(Dt.Core.MsgInfo)">
+            <summary>
+            MsgInfo参数
+            </summary>
+            <param name="p_msg"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetStringList">
+            <summary>
+            返回字符串数组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetStringList(System.Collections.Generic.List{System.String})">
+            <summary>
+            字符串列表
+            </summary>
+            <param name="p_ls"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetBoolList">
+            <summary>
+            返回bool值列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetBoolList(System.Collections.Generic.List{System.Boolean})">
+            <summary>
+            bool值列表
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetIntList">
+            <summary>
+            返回int值列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetIntList(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            int列表
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetLongList">
+            <summary>
+            返回long值列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetLongList(System.Collections.Generic.List{System.Int64})">
+            <summary>
+            long列表
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetDoubleList">
+            <summary>
+            返回double值列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetDoubleList(System.Collections.Generic.List{System.Double})">
+            <summary>
+            double列表
+            </summary>
+            <param name="p_val"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetDateTimeList">
+            <summary>
+            DateTime列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetDateTimeList(System.Collections.Generic.List{System.DateTime})">
+            <summary>
+            
+            </summary>
+            <param name="p_times"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetObjectList">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetObjectList(System.Collections.Generic.List{System.Object})">
+            <summary>
+            
+            </summary>
+            <param name="p_ls"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetTable">
+            <summary>
+            返回Table到客户端
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetDataTable(Dt.Core.Table)">
+            <summary>
+            由外部传递Table
+            </summary>
+            <param name="p_tbl"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetRow">
+            <summary>
+            返回Row到客户端
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetRow(Dt.Core.Row)">
+            <summary>
+            由外部传递Row
+            </summary>
+            <param name="p_row"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetTableDict">
+            <summary>
+            返回多个Table到客户端
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetTableDict(Dt.Core.Dict)">
+            <summary>
+            由外部传递多个Table
+            </summary>
+            <param name="p_dict"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetTableList">
+            <summary>
+            返回多个Table到客户端
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetTableList(System.Collections.Generic.List{Dt.Core.Table})">
+            <summary>
+            由外部传递多个Table
+            </summary>
+            <param name="p_ls"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetBaseDict">
+            <summary>
+            返回基本数据类型的Dict
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetCombineDict">
+            <summary>
+            返回基本数据类型的Dict
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SendDict(Dt.Core.Dict)">
+            <summary>
+            本数据类型的Dict
+            </summary>
+            <param name="p_dict"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetDictList">
+            <summary>
+            返回Dict列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SendDictList(System.Collections.Generic.List{Dt.Core.Dict})">
+            <summary>
+            发送Dict列表
+            </summary>
+            <param name="p_dicts"></param>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetCustomBase">
+            <summary>
+            返回基础自定义类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetCustomBase(Dt.Cm.Product)">
+            <summary>
+            由外部传递基础自定义类型
+            </summary>
+            <param name="p_product"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetCustomCombine">
+            <summary>
+            返回复杂自定义类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetCustomCombine(Dt.Cm.Student)">
+            <summary>
+            由外部传递复杂自定义类型
+            </summary>
+            <param name="p_person"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.GetContainCustom">
+            <summary>
+            返回嵌套自定义类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.TestSerialize.SetContainCustom(Dt.Cm.Department)">
+            <summary>
+            由外部传递嵌套自定义类型
+            </summary>
+            <param name="p_dept"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Dt.Cm.Role.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Role.Note">
+            <summary>
+            角色描述
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Phone">
+            <summary>
+            手机号，唯一
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Pwd">
+            <summary>
+            密码的md5
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Sex">
+            <summary>
+            性别，0女1男
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Photo">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Expired">
+            <summary>
+            是否停用
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userparams.UserID">
+            <summary>
+            用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userparams.ParamID">
+            <summary>
+            参数标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userparams.Value">
+            <summary>
+            参数值
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userparams.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userrole.UserID">
+            <summary>
+            用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Userrole.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+    </members>
+</doc>
