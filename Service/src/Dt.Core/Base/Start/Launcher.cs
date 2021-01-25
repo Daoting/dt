@@ -66,7 +66,8 @@ namespace Dt.Core
                 string path = Path.Combine(AppContext.BaseDirectory, "etc/log", fileName);
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
-                    .WriteTo.Console()
+                    //.WriteTo.Console()
+                    .WriteTo.Html()
                     // 输出json文件，默认最大1G、最多保存31个文件、实时写、文件独占方式
                     .WriteTo.File(
                         new CompactJsonFormatter(),

@@ -207,7 +207,7 @@ namespace Dt.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($"<span style=\"font-size:20px;\">{Glb.SvcName.Substring(0, 1).ToUpper()}{Glb.SvcName.Substring(1)}服务({Silo.Methods.Count})</span>");
-            foreach (var item in Silo.GroupMethods.OrderBy((p) => p.Key))
+            foreach (var item in Silo.GroupMethods.OrderBy((p) => p.Key, StringComparer.OrdinalIgnoreCase))
             {
                 if (item.Value.Count > 0)
                     sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", item.Key);
@@ -582,6 +582,27 @@ namespace Dt.Core
                     p_sb.Append("/// </returns>\r\n");
                 }
             }
+        }
+        #endregion
+
+        #region 日志
+        /// <summary>
+        /// 实时获取日志
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> GetRealtimeLog()
+        {
+            return HtmlLogHub.GetLog();
+        }
+
+        public Task<string> GetHistoryLogFile()
+        {
+            return Task.FromResult("日志内容");
+        }
+
+        public Task<string> GetLogFileContent(string p_fileName)
+        {
+            return Task.FromResult("日志内容");
         }
         #endregion
     }

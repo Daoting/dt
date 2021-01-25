@@ -4,7 +4,10 @@
 ## Release 1.9
 
 ### 功能 
-* wasm
+* wasm的Dt.Cells包升级到.net5.0，解决wasm的图标字体库 
+* 部署到iis的安装脚本、更新pfx证书、调试、fsm上传文件大小1g
+* admin页面支持浏览器前进/后退、显示实时日志
+* 为Serilog增加输出html功能
 
 ### 变更 
 
