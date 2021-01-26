@@ -22,11 +22,6 @@ namespace Dt.Core.HtmlLog
         {
             switch (style)
             {
-                case HtmlThemeStyle.Text:
-                case HtmlThemeStyle.LevelInformation:
-                    output.Write("<span style=\"color: white\">");
-                    break;
-
                 case HtmlThemeStyle.LevelVerbose:
                 case HtmlThemeStyle.LevelDebug:
                 case HtmlThemeStyle.SecondaryText:
@@ -66,12 +61,14 @@ namespace Dt.Core.HtmlLog
                     output.Write("<span style=\"color: white; background: red;\">");
                     break;
             }
-            return new StyleReset(this, output);
+            return new StyleReset(this, output, style);
         }
 
-        public virtual void Reset(TextWriter output)
+        public virtual void Reset(TextWriter output, HtmlThemeStyle style)
         {
-            output.Write("</span>");
+            // 默认为黑底白字
+            if (style != HtmlThemeStyle.Text && style != HtmlThemeStyle.LevelInformation)
+                output.Write("</span>");
         }
     }
 
@@ -79,12 +76,12 @@ namespace Dt.Core.HtmlLog
     {
         public override StyleReset Apply(TextWriter output, HtmlThemeStyle style)
         {
-            return new StyleReset(this, output);
+            return new StyleReset(this, output, style);
         }
 
-        public override void Reset(TextWriter output)
+        public override void Reset(TextWriter output, HtmlThemeStyle style)
         {
-            
+
         }
     }
 }

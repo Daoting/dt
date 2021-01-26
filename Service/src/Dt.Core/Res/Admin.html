@@ -389,16 +389,24 @@
             }
         }
 
+        var logRequest = null;
+
         function receiveLog()
         {
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = "arraybuffer";
-            xhr.open("post", _rpcUrl, true);
-            xhr.onload = function ()
+            if (logRequest !== null)
             {
-                if (xhr.status == 200)
+                logRequest.abort();
+                logRequest = null;
+            }
+
+            logRequest = new XMLHttpRequest();
+            logRequest.responseType = "arraybuffer";
+            logRequest.open("post", _rpcUrl, true);
+            logRequest.onload = function ()
+            {
+                if (logRequest.status == 200)
                 {
-                    var txt = readFrame(xhr.response);
+                    var txt = readFrame(logRequest.response);
                     var result = JSON.parse(txt);
                     if (result.length == 3)
                         $("log").innerHTML += result[2];
@@ -407,12 +415,17 @@
                         receiveLog();
                 }
             };
-            xhr.send(writeFrame('["Admin.GetRealtimeLog"]'));
+            logRequest.send(writeFrame('["Admin.GetRealtimeLog"]'));
         }
 
         function closeLog()
         {
             $("divLog").style.visibility = "hidden";
+            if (logRequest !== null)
+            {
+                logRequest.abort();
+                logRequest = null;
+            }
         }
 
         function clearLog()

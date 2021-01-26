@@ -17,16 +17,18 @@ namespace Dt.Core.HtmlLog
     {
         readonly HtmlTheme _theme;
         readonly TextWriter _output;
+        readonly HtmlThemeStyle _style;
 
-        public StyleReset(HtmlTheme theme, TextWriter output)
+        public StyleReset(HtmlTheme theme, TextWriter output, HtmlThemeStyle style)
         {
             _theme = theme;
             _output = output;
+            _style = style;
         }
 
         public void Dispose()
         {
-            _theme.Reset(_output);
+            _theme.Reset(_output, _style);
         }
     }
 }

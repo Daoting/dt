@@ -7,49 +7,45 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.HtmlLog;
-using Serilog;
-using Serilog.Configuration;
-using Serilog.Events;
 using System;
 using System.Collections.Concurrent;
-using System.Net;
 using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
 {
-    /// <summary>
-    /// 
-    /// </summary>
     static class HtmlLogHub
     {
-        static readonly ConcurrentBag<TaskCompletionSource<string>> _queue = new ConcurrentBag<TaskCompletionSource<string>>();
+        static readonly ConcurrentDictionary<string, TaskCompletionSource<string>> _queue = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
 
         public static bool ExistListener
         {
-            get { return _queue.Count > 0; }
+            get { return !_queue.IsEmpty; }
         }
 
         public static void AddLog(string p_msg)
         {
-            lock (_queue)
+            foreach (var waiter in _queue.Values)
             {
-                TaskCompletionSource<string> waiter;
-                while (_queue.TryTake(out waiter))
-                {
-                    waiter.SetResult(p_msg);
-                }
+                waiter.SetResult(p_msg);
             }
+            _queue.Clear();
         }
 
         public static Task<string> GetLog()
         {
-            lock (_queue)
+            string id = Guid.NewGuid().ToString();
+            try
             {
                 var waiter = new TaskCompletionSource<string>();
-                _queue.Add(waiter);
-                return waiter.Task;
+                _queue[id] = waiter;
+                waiter.Task.Wait(Bag.Context.RequestAborted);
+                return Task.FromResult(waiter.Task.Result);
+            }
+            catch
+            {
+                _queue.TryRemove(id, out _);
+                throw;
             }
         }
     }

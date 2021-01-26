@@ -30,7 +30,7 @@ namespace Dt.Core.Rpc
         protected override async Task<bool> CallMethod()
         {
             object result = null;
-            bool isSuc = true;
+            UnaryResult resultType = UnaryResult.Success;
             ApiResponseType responseType = ApiResponseType.Success;
             string error = null;
 
@@ -43,13 +43,14 @@ namespace Dt.Core.Rpc
                 if (mi.ReturnType == typeof(Task))
                 {
                     // 异步无返回值时
-                    await (Task)mi.Invoke(_tgt, _invoker.Args);
+                    var task = (Task)mi.Invoke(_tgt, _invoker.Args);
+                    task.Wait(_invoker.Context.RequestAborted);
                 }
                 else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
                 {
                     // 异步有返回值
                     var task = (Task)mi.Invoke(_tgt, _invoker.Args);
-                    await task;
+                    task.Wait(_invoker.Context.RequestAborted);
                     result = task.GetType().GetProperty("Result").GetValue(task);
                 }
                 else
@@ -60,31 +61,40 @@ namespace Dt.Core.Rpc
             }
             catch (Exception ex)
             {
-                isSuc = false;
-                KnownException rpcEx = ex.InnerException as KnownException;
-                if (rpcEx == null)
-                    rpcEx = ex as KnownException;
-
-                if (rpcEx != null)
+                if (ex is OperationCanceledException
+                    || ex.InnerException is OperationCanceledException)
                 {
-                    // 业务异常，在客户端作为提示消息，不记日志
-                    responseType = ApiResponseType.Warning;
-                    error = rpcEx.Message;
+                    // 客户端取消请求，不记录日志，不Response
+                    resultType = UnaryResult.Cancel;
                 }
                 else
                 {
-                    // 程序执行过程的错误，将异常记录日志
-                    responseType = ApiResponseType.Error;
-                    error = $"调用{_invoker.ApiName}出错";
-                    if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                    resultType = UnaryResult.Error;
+                    KnownException rpcEx = ex.InnerException as KnownException;
+                    if (rpcEx == null)
+                        rpcEx = ex as KnownException;
+
+                    if (rpcEx != null)
                     {
-                        _invoker.Log.Error(ex.InnerException, error);
-                        error += "\r\n" + ex.InnerException.Message;
+                        // 业务异常，在客户端作为提示消息，不记日志
+                        responseType = ApiResponseType.Warning;
+                        error = rpcEx.Message;
                     }
                     else
                     {
-                        _invoker.Log.Error(ex, error);
-                        error += "\r\n" + ex.Message;
+                        // 程序执行过程的错误，将异常记录日志
+                        responseType = ApiResponseType.Error;
+                        error = $"调用{_invoker.ApiName}出错";
+                        if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                        {
+                            _invoker.Log.Error(ex.InnerException, error);
+                            error += "\r\n" + ex.InnerException.Message;
+                        }
+                        else
+                        {
+                            _invoker.Log.Error(ex, error);
+                            error += "\r\n" + ex.Message;
+                        }
                     }
                 }
             }
@@ -93,11 +103,32 @@ namespace Dt.Core.Rpc
                 stopwatch.Stop();
             }
 
-            if (TraceRpc)
-                _invoker.Log.Information($"{_invoker.ApiName} — {stopwatch.ElapsedMilliseconds}ms");
+            if (resultType != UnaryResult.Cancel)
+            {
+                if (TraceRpc)
+                    _invoker.Log.Information($"{_invoker.ApiName} — {stopwatch.ElapsedMilliseconds}ms");
 
-            await _invoker.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
-            return isSuc;
+                await _invoker.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
+            }
+            return resultType == UnaryResult.Success;
         }
+    }
+
+    enum UnaryResult
+    {
+        /// <summary>
+        /// 调用成功
+        /// </summary>
+        Success = 0,
+
+        /// <summary>
+        /// 调用过程中出错
+        /// </summary>
+        Error = 1,
+
+        /// <summary>
+        /// 取消调用
+        /// </summary>
+        Cancel = 2,
     }
 }

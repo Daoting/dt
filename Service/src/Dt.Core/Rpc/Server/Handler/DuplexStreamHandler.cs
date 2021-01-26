@@ -27,7 +27,7 @@ namespace Dt.Core.Rpc
         /// 调用服务方法
         /// </summary>
         /// <returns></returns>
-        protected override async Task<bool> CallMethod()
+        protected override Task<bool> CallMethod()
         {
             try
             {
@@ -37,15 +37,23 @@ namespace Dt.Core.Rpc
                     _invoker.Args[_invoker.Args.Length - 2] = new RequestReader(_invoker);
                     _invoker.Args[_invoker.Args.Length - 1] = new ResponseWriter(_invoker);
                 }
-                
-                await (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
+
+                var task = (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
+                task.Wait(_invoker.Context.RequestAborted);
+            }
+            catch (OperationCanceledException)
+            {
+                // 客户端取消请求，属于调用成功
             }
             catch (Exception ex)
             {
-                LogCallError(ex);
-                return false;
+                if (!(ex.InnerException is OperationCanceledException))
+                {
+                    LogCallError(ex);
+                    return Task.FromResult(false);
+                }
             }
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
