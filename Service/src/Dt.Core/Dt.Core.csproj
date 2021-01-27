@@ -15,14 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Res\tls.pfx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Res\404.html" />
     <EmbeddedResource Include="Res\Admin.html" />
     <EmbeddedResource Include="Res\Error.html" />
-    <EmbeddedResource Include="Res\tls.pfx" />
   </ItemGroup>
 
   <ItemGroup>

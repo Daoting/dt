@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 #endregion
 
@@ -38,11 +39,21 @@ namespace Dt.Core
                     // 默认http2
                     listenOptions.Protocols = HttpProtocols.Http2;
 
-                    // X509证书为嵌入的资源
-                    var stream = typeof(Launcher).Assembly.GetManifestResourceStream("Dt.Core.Res.tls.pfx");
-                    byte[] pfx = new byte[stream.Length];
-                    stream.Read(pfx, 0, (int)stream.Length);
-                    listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
+                    // 为Kestrel加载X509证书，证书名称tls.pfx，位置在根目录，默认证书为localhost，生成环境可替换
+                    var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "tls.pfx"));
+                    if (tls.Exists)
+                    {
+                        using (var stream = tls.OpenRead())
+                        {
+                            byte[] pfx = new byte[tls.Length];
+                            stream.Read(pfx, 0, (int)stream.Length);
+                            listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
+                        }
+                    }
+                    else
+                    {
+                        Log.Error("Kestrel缺少X509证书文件tls.pfx");
+                    }
                 });
 
                 // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
