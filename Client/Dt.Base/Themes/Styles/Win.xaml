@@ -241,9 +241,14 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border Background="{StaticResource 主题蓝色}" Height="50" Width="50" VerticalAlignment="Center">
-                            <a:Dot ID="Icon" FontSize="30" Foreground="White" />
-                        </Border>
+                        <a:Dot ID="Icon"
+                               FontSize="30"
+                               Foreground="White"
+                               Background="{StaticResource 主题蓝色}"
+                               Height="50"
+                               Width="50"
+                               VerticalAlignment="Center"
+                               HorizontalContentAlignment="Center" />
                         <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
                             <a:Dot ID="Title" />
                             <a:Dot ID="Desc" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" />
