@@ -52,6 +52,11 @@
             font-size: 20px;
             margin-left: 20px;
         }
+
+        .logTitle {
+            background: green;
+            padding: 4px 4px 4px 4px;
+        }
     </style>
     <script>
         // 解压gzip，https://cdn.bootcss.com/pako/1.0.9/pako_inflate.min.js
@@ -439,22 +444,32 @@
             {
                 var result = JSON.parse(txt);
                 if (result.length == 3)
-                    $("log").innerHTML += "\n" + result[2];
+                {
+                    $("log").innerHTML += '\n<span class="logTitle">历史日志文件</span>\n' + result[2] + '\n';
+                }
             });
         }
 
-        function copyLogFileContent(fileName)
+        function downloadLogFile(fileName)
         {
-            call('["Admin.GetLogFileContent",' + fileName + ']').then(function (txt)
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "blob";
+            xhr.open("post", location.href.substr(0, location.href.lastIndexOf("/")) + "/.download", true);
+            xhr.onload = function ()
             {
-                var result = JSON.parse(txt);
-                if (result.length == 3 && window.clipboardData)
+                if (xhr.status == 200)
                 {
-                    window.clipboardData.clearData();
-                    window.clipboardData.setData("Text", result[2]);
-                    $("log").innerHTML += "\n已复制到剪切板";
+                    var elink = document.createElement('a');
+                    elink.download = fileName;
+                    elink.style.display = 'none';
+                    var blob = new Blob([xhr.response]);
+                    elink.href = URL.createObjectURL(blob);
+                    document.body.appendChild(elink);
+                    elink.click();
+                    document.body.removeChild(elink);
                 }
-            });
+            };
+            xhr.send("etc\\log\\" + fileName);
         }
 
         var oldX,

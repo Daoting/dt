@@ -9,9 +9,11 @@
 #region 引用命名
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 #endregion
 
@@ -49,6 +51,8 @@ namespace Dt.Core
                 return new ApiInvoker(p_context).Handle();
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
+            if (path == "/.download")
+                return DownloadFile(p_context);
             if (path == "/.error")
                 return ResponseErrorPage(p_context);
 
@@ -104,6 +108,42 @@ namespace Dt.Core
             }
             p_context.Response.ContentType = "text/html";
             await p_context.Response.WriteAsync(_errorPage);
+        }
+
+        /// <summary>
+        /// 下载文件，如：admin页面下载日志
+        /// </summary>
+        /// <param name="p_context"></param>
+        /// <returns></returns>
+        static async Task DownloadFile(HttpContext p_context)
+        {
+            string filePath;
+            using (StreamReader sr = new StreamReader(p_context.Request.Body))
+            {
+                // 客户端提供完整路径
+                filePath = Path.Combine(AppContext.BaseDirectory, await sr.ReadToEndAsync());
+            }
+
+            FileInfo fileInfo = new FileInfo(filePath);
+            if (!fileInfo.Exists)
+            {
+                p_context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
+                Log.Information("文件不存在：" + filePath);
+                return;
+            }
+
+            var response = p_context.Response;
+            response.Headers["Content-Type"] = "application/octet-stream";
+            response.Headers["Content-Transfer-Encoding"] = "binary";
+            response.Headers["Content-Length"] = fileInfo.Length.ToString();
+            // 不以附件形式下载
+            //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
+
+            try
+            {
+                await response.SendFileAsync(filePath, p_context.RequestAborted);
+            }
+            catch { }
         }
     }
 }

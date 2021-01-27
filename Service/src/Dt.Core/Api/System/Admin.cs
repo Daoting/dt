@@ -595,14 +595,27 @@ namespace Dt.Core
             return HtmlLogHub.GetLog();
         }
 
+        /// <summary>
+        /// 获取日志文件列表
+        /// </summary>
+        /// <returns></returns>
         public Task<string> GetHistoryLogFile()
         {
-            return Task.FromResult("日志内容");
-        }
-
-        public Task<string> GetLogFileContent(string p_fileName)
-        {
-            return Task.FromResult("日志内容");
+            return Task.Run(() =>
+            {
+                var dir = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "etc", "log"));
+                if (dir.Exists)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var fl in dir.GetFiles().OrderByDescending(fl => fl.CreationTime))
+                    {
+                        sb.AppendFormat("<a onclick=\"downloadLogFile('{0}')\" href=\"javascript:void(0);\" style=\"color: white; text-decoration:underline;\">{0} 下载</a>", fl.Name);
+                        sb.AppendLine();
+                    }
+                    return sb.ToString();
+                }
+                return "";
+            });
         }
         #endregion
     }

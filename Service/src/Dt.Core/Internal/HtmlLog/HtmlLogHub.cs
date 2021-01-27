@@ -35,10 +35,11 @@ namespace Dt.Core
         public static Task<string> GetLog()
         {
             string id = Guid.NewGuid().ToString();
+            var waiter = new TaskCompletionSource<string>();
+            _queue[id] = waiter;
+
             try
             {
-                var waiter = new TaskCompletionSource<string>();
-                _queue[id] = waiter;
                 waiter.Task.Wait(Bag.Context.RequestAborted);
                 return Task.FromResult(waiter.Task.Result);
             }
