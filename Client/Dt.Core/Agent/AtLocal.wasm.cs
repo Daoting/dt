@@ -32,6 +32,15 @@ namespace Dt.Core
         /// </summary>
         public const string StateDbName = "State.db";
 
+        #region 构造方法
+        static AtLocal()
+        {
+            // 创建本地文件存放目录
+            if (!Directory.Exists(CachePath))
+                Directory.CreateDirectory(CachePath);
+        }
+        #endregion
+
         #region 状态库
         #region ORM
         /// <summary>
@@ -436,30 +445,23 @@ namespace Dt.Core
         /// 本地文件的根路径
         /// uwp：C:\Users\...\LocalState
         /// android：/data/user/0/App.Droid/files
+        /// wasm：/local
         /// </summary>
         public static string RootPath
         {
-            get
-            {
-#if UWP
-                return ApplicationData.Current.LocalFolder.Path;
-#else
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-#endif
-            }
+            get { return ApplicationData.Current.LocalFolder.Path; }
         }
 
         /// <summary>
         /// 本地缓存文件的存放路径
         /// uwp：C:\Users\...\LocalState\.doc
         /// android：/data/user/0/App.Droid/files/.doc
+        /// wasm：/local/.doc
         /// </summary>
-        public static string CachePath { get; } =
-#if UWP
-            Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc");
-#else
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".doc");
-#endif
+        public static string CachePath
+        {
+            get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc"); }
+        }
 
         /// <summary>
         /// 清空所有存放在.doc路径的缓存文件

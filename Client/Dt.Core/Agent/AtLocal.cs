@@ -458,6 +458,8 @@ namespace Dt.Core
          * LocalFolder
          * uwp：C:\Users\hdt\AppData\Local\Packages\4e169f82-ed49-494f-8c23-7dab11228222_dm57000t4aqw0\LocalState
          * android：/data/user/0/App.Droid/files
+         * ios：/Users/usrname/Library/Developer/CoreSimulator/Devices/xxx/data/Containers/Data/Application/yyy/Library/Data
+         * wasm：/local
          * 
          * RoamingFolder
          * android：/data/user/0/App.Droid/files/.config
@@ -472,30 +474,25 @@ namespace Dt.Core
         /// 本地文件的根路径
         /// uwp：C:\Users\...\LocalState
         /// android：/data/user/0/App.Droid/files
+        /// ios：/Users/usrname/Library/Developer/CoreSimulator/Devices/xxx/data/Containers/Data/Application/yyy/Library/Data
+        /// wasm：/local
         /// </summary>
         public static string RootPath
         {
-            get
-            {
-#if UWP
-                return ApplicationData.Current.LocalFolder.Path;
-#else
-                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-#endif
-            }
+            get { return ApplicationData.Current.LocalFolder.Path; }
         }
 
         /// <summary>
         /// 本地缓存文件的存放路径
         /// uwp：C:\Users\...\LocalState\.doc
         /// android：/data/user/0/App.Droid/files/.doc
+        /// ios：/Users/usrname/Library/Developer/CoreSimulator/Devices/xxx/data/Containers/Data/Application/yyy/Library/Data/.doc
+        /// wasm：/local/.doc
         /// </summary>
-        public static string CachePath { get; } =
-#if UWP
-            Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc");
-#else
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".doc");
-#endif
+        public static string CachePath
+        {
+            get { return Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc"); }
+        }
 
         /// <summary>
         /// 清空所有存放在.doc路径的缓存文件

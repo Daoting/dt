@@ -29,12 +29,14 @@ namespace Dt.Base
     {
         static readonly AsyncLocker _locker = new AsyncLocker();
 
-#if UWP || WASM
+#if UWP
         readonly static HttpClient _client = new HttpClient(new HttpClientHandler
         {
             // 验证时服务端证书始终有效！
             ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
         });
+#elif WASM
+        readonly static HttpClient _client = new HttpClient();
 #else
         readonly static HttpClient _client = new HttpClient(new NativeMessageHandler());
 #endif
