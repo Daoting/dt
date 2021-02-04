@@ -41,7 +41,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/icon.ttf</string>
-		<string>Fonts/winjs-symbols.ttf</string>
+		<string>Fonts/uno-fluentui-assets.ttf</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

@@ -75,6 +75,9 @@
     <BundleResource Include="Assets\SplashScreen%402x.png" />
     <BundleResource Include="Assets\SplashScreen%403x.png" />
     <BundleResource Include="Assets\logo.png" />
+    <BundleResource Include="..\Common\Fonts\uno-fluentui-assets.ttf">
+      <Link>Assets\Fonts\uno-fluentui-assets.ttf</Link>
+    </BundleResource>
     <None Include="iOS说明.txt" />
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Contents.json">
       <Visible>false</Visible>
@@ -106,9 +109,6 @@
     <Content Include="Entitlements.plist" />
     <BundleResource Include="..\Common\Fonts\icon.ttf">
       <Link>Assets\Fonts\icon.ttf</Link>
-    </BundleResource>
-    <BundleResource Include="..\Common\Fonts\winjs-symbols.ttf">
-      <Link>Assets\Fonts\winjs-symbols.ttf</Link>
     </BundleResource>
     <None Include="Info.plist">
       <SubType>Designer</SubType>

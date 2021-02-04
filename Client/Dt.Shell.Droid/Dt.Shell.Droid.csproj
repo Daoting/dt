@@ -57,7 +57,7 @@
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Core" /> 
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -76,8 +76,8 @@
     <AndroidAsset Include="..\Common\Fonts\icon.ttf">
       <Link>Assets\Fonts\icon.ttf</Link>
     </AndroidAsset>
-    <AndroidAsset Include="..\Common\Fonts\winjs-symbols.ttf">
-      <Link>Assets\Fonts\winjs-symbols.ttf</Link>
+    <AndroidAsset Include="..\Common\Fonts\uno-fluentui-assets.ttf">
+      <Link>Assets\Fonts\uno-fluentui-assets.ttf</Link>
     </AndroidAsset>
     <None Include="Properties\AndroidManifest.xml">
       <SubType>Designer</SubType>
@@ -87,7 +87,7 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.5.0-dev.223" /> 
+    <PackageReference Include="Uno.UI" Version="3.5.0-dev.223" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
   </ItemGroup>

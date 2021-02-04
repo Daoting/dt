@@ -33,6 +33,7 @@ namespace Dt.Shell
 #if __WASM__
             // 自定义图标字体库，因Global.xaml中前缀无效无法定义
             Resources["IconFont"] = new FontFamily("DtIcon");
+            Resources["Symbols"] = new FontFamily("Symbols");
 #endif
             AtSys.Startup(new Stub(), this);
         }

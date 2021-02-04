@@ -21,6 +21,11 @@
     <x:Double x:Key="中字号">15</x:Double>
     <x:Double x:Key="小字号">12</x:Double>
 
+    <!-- 行外高，含边框1 -->
+    <x:Double x:Key="RowOuterHeight">41</x:Double>
+    <!-- 行内容高度 -->
+    <x:Double x:Key="RowInnerHeight">40</x:Double>
+
     <!--自定义图标字体库-->
     <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
     <ios:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
@@ -28,10 +33,9 @@
     <!--前缀wasm not_wasm netstdref都无效，wasm在App.cs使用代码添加字体库-->
     <!--<wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>-->
 
-    <!-- 行外高，含边框1 -->
-    <x:Double x:Key="RowOuterHeight">41</x:Double>
-    <!-- 行内容高度 -->
-    <x:Double x:Key="RowInnerHeight">40</x:Double>
+    <!--uno中标准控件用到的字体库-->
+    <ios:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</ios:FontFamily>
+    <android:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</android:FontFamily>
     
     <!--
     *****************************************************************
