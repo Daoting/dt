@@ -257,7 +257,7 @@ namespace Dt.Base
 
             if (_toolbar == null)
             {
-                Button btn = new Button { Content = "\uE080", Style = AtRes.字符按钮 };
+                Button btn = new Button { Content = "\uE038", Style = AtRes.字符按钮 };
                 if (Type.GetType(FileItem.SelectFileDlgType) != null)
                 {
                     var menu = new Menu { Placement = MenuPosition.BottomLeft };
@@ -265,7 +265,7 @@ namespace Dt.Base
                     mi.Click += (s, e) => OnAddFile();
                     menu.Items.Add(mi);
 
-                    mi = new Mi { ID = "选择文件", Icon = Icons.详细 };
+                    mi = new Mi { ID = "选择文件", Icon = Icons.文件夹 };
                     mi.Click += OnSelectFiles;
                     menu.Items.Add(mi);
                     Ex.SetMenu(btn, menu);

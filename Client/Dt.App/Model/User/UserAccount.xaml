@@ -17,16 +17,16 @@
         <DataTemplate x:Key="TileView">
             <StackPanel Padding="6">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE03C;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
+                    <TextBlock Text="&#xE060;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
                     <a:Dot ID="name" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="&#xE0A5;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
+                    <TextBlock Text="&#xE0C0;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
                     <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <a:Dot ID="ctime" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                    <TextBlock Text="&#xE0C3;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="&#xE005;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
                     <a:Dot ID="mtime" FontSize="12" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
@@ -58,7 +58,7 @@
                 <a:Lv x:Name="_lvUser" ViewMode="Table" PhoneViewMode="List" ItemClick="OnItemClick" DataChanged="OnUserDataChanged">
                     <a:Ex.Menu>
                         <a:Menu>
-                            <a:Mi ID="编辑" Icon="铅笔" Click="OnEditUser" />
+                            <a:Mi ID="编辑" Icon="编辑" Click="OnEditUser" />
                             <a:Mi ID="重置密码" Icon="钥匙" Click="OnResetPwd" />
                             <a:Mi ID="停用/启用" Icon="禁止登记" Click="OnToggleExpired" />
                             <a:Mi ID="删除" Icon="删除" Click="OnDelUser" />
@@ -76,8 +76,8 @@
                         <a:Mi ID="添加" Icon="加号" Click="OnAddRole" IsEnabled="{Binding HasSelected,ElementName=_lvUser}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveRole" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" Visibility="Collapsed" />
                         <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
-                        <a:Mi ID="选择" Icon="详细" Click="OnMultiMode" />
-                        <a:Mi ID="取消" Icon="详细" Click="OnCancelMulti" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
+                        <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvRole">

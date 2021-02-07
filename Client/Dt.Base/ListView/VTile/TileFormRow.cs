@@ -85,7 +85,7 @@ namespace Dt.Base.ListView
                 if (!cols.HideIndex)
                 {
                     StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
-                    TextBlock tb = new TextBlock { Text = "\uE0DA", Margin = TableRow.TextMargin, VerticalAlignment = VerticalAlignment.Center, FontFamily = AtRes.IconFont };
+                    TextBlock tb = new TextBlock { Text = "\uE013", Margin = TableRow.TextMargin, VerticalAlignment = VerticalAlignment.Center, FontFamily = AtRes.IconFont };
                     sp.Children.Add(tb);
                     tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
                     tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("FullIndex") });

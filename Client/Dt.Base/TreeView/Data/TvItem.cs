@@ -124,7 +124,7 @@ namespace Dt.Base
                     _btnExpanded = new Button { Style = AtRes.字符按钮, Margin = new Thickness(0, 0, 0, 1) };
                     _btnExpanded.Click += (s, e) => IsExpanded = !IsExpanded;
                     _btnExpanded.DoubleTapped += (s, e) => e.Handled = true;
-                    _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE0DA" : "\uE086";
+                    _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE013" : "\uE011";
                     return _btnExpanded;
                 }
 
@@ -173,7 +173,7 @@ namespace Dt.Base
                         && (_expandedState == TvItemExpandedState.Expanded || _expandedState == TvItemExpandedState.NotExpanded))
                     {
                         // 解决点击展开/折叠按钮时切换按钮闪烁的问题
-                        _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE0DA" : "\uE086";
+                        _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE013" : "\uE011";
                     }
                     else
                     {

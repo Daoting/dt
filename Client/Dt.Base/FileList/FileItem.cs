@@ -75,7 +75,7 @@ namespace Dt.Base
             "Icon",
             typeof(string),
             typeof(FileItem),
-            new PropertyMetadata("\uE004"));
+            new PropertyMetadata("\uE002"));
 
         public static readonly DependencyProperty ProgressWidthProperty = DependencyProperty.Register(
             "ProgressWidth",
@@ -990,7 +990,7 @@ namespace Dt.Base
             else if (FileFilter.UwpAudio.Contains(p_ext))
             {
                 FileType = FileItemType.Sound;
-                Icon = "\uE078";
+                Icon = "\uE0A6";
                 Title = _itemInfo.FileDesc;
                 ExtInfo = $"{AtKit.GetFileSizeDesc(_itemInfo.Length)}\r\n{_itemInfo.Uploader}\r\n{_itemInfo.Date}";
             }
@@ -1308,7 +1308,7 @@ namespace Dt.Base
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
+            var btn = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!AtSys.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

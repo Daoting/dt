@@ -30,7 +30,7 @@
                 <a:Lv x:Name="_lvRole" ItemClick="OnItemClick" DataChanged="OnDataChanged">
                     <a:Ex.Menu>
                         <a:Menu>
-                            <a:Mi ID="编辑" Icon="铅笔" Click="OnEditRole" />
+                            <a:Mi ID="编辑" Icon="编辑" Click="OnEditRole" />
                             <a:Mi ID="删除" Icon="删除" Click="OnDelRole" />
                         </a:Menu>
                     </a:Ex.Menu>
@@ -52,8 +52,8 @@
                         <a:Mi ID="添加" Icon="加号" Click="OnAddUser" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveUser" IsEnabled="{Binding HasSelected,ElementName=_lvUser}" Visibility="Collapsed" />
                         <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
-                        <a:Mi ID="选择" Icon="详细" Click="OnMultiMode" />
-                        <a:Mi ID="取消" Icon="详细" Click="OnCancelMulti" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
+                        <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvUser">
@@ -73,8 +73,8 @@
                         <a:Mi ID="添加" Icon="加号" Click="OnAddMenu" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu" IsEnabled="{Binding HasSelected,ElementName=_lvMenu}" Visibility="Collapsed" />
                         <a:Mi ID="全选" Icon="正确" Click="OnMenuSelectAll" Visibility="Collapsed" />
-                        <a:Mi ID="选择" Icon="详细" Click="OnMenuMultiMode" />
-                        <a:Mi ID="取消" Icon="详细" Click="OnMenuCancelMulti" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="全选" Click="OnMenuMultiMode" />
+                        <a:Mi ID="取消" Icon="全选" Click="OnMenuCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvMenu">
@@ -94,8 +94,8 @@
                         <a:Mi ID="添加" Icon="加号" Click="OnAddPrv" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemovePrv" IsEnabled="{Binding HasSelected,ElementName=_lvPrv}" Visibility="Collapsed" />
                         <a:Mi ID="全选" Icon="正确" Click="OnPrvSelectAll" Visibility="Collapsed" />
-                        <a:Mi ID="选择" Icon="详细" Click="OnPrvMultiMode" />
-                        <a:Mi ID="取消" Icon="详细" Click="OnPrvCancelMulti" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="全选" Click="OnPrvMultiMode" />
+                        <a:Mi ID="取消" Icon="全选" Click="OnPrvCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvPrv">

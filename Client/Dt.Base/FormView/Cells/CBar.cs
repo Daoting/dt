@@ -121,7 +121,7 @@ namespace Dt.Base
             if (Content is string title)
             {
                 StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
-                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE045", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
+                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
                 sp.Children.Add(tb);
                 tb = new TextBlock { Text = title, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);

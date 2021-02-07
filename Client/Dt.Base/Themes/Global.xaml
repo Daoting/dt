@@ -349,7 +349,7 @@
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
                         <Rectangle x:Name="Rect" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" />
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE013;"
+                            <TextBlock Text="&#xE00B;"
                                        FontFamily="{StaticResource IconFont}"
                                        Foreground="{StaticResource 默认前景}"
                                        VerticalAlignment="Center" />

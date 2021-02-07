@@ -280,7 +280,7 @@ namespace Dt.Base.ListView
                 }
             }
             _owner.Lv.SortDesc = new SortDescription(Col.ID, dir);
-            SortState = (dir == ListSortDirection.Ascending) ? "\uE060" : "\uE061";
+            SortState = (dir == ListSortDirection.Ascending) ? "\uE017" : "\uE018";
         }
 
         Col GetLeftCol()

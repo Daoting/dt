@@ -87,7 +87,7 @@ namespace Dt.Base.ListView
                 {
                     _tbDrag = new TextBlock
                     {
-                        Text = "\uE061",
+                        Text = "\uE018",
                         FontFamily = AtRes.IconFont,
                         FontSize = 20,
                         Foreground = AtRes.RedBrush,

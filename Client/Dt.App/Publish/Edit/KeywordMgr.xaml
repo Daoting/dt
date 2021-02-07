@@ -26,7 +26,7 @@
                 <a:Lv x:Name="_lv">
                     <a:Ex.Menu>
                         <a:Menu>
-                            <a:Mi ID="编辑" Icon="铅笔" Click="OnEdit" />
+                            <a:Mi ID="编辑" Icon="编辑" Click="OnEdit" />
                             <a:Mi ID="删除" Icon="删除" Click="OnDel" />
                         </a:Menu>
                     </a:Ex.Menu>

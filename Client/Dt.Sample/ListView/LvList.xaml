@@ -20,7 +20,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Border Background="{StaticResource 主题蓝色}" Height="50" Width="50" VerticalAlignment="Center">
-                                <TextBlock Text="&#xE03C;"
+                                <TextBlock Text="&#xE060;"
                                            FontFamily="{StaticResource IconFont}"
                                            FontSize="30"
                                            Foreground="White"

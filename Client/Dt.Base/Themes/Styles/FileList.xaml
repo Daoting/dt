@@ -108,7 +108,7 @@
     <!--FileItem图片模板-->
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid">
-            <TextBlock Text="&#xE054;" Foreground="{StaticResource 深灰边框}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Text="&#xE08A;" Foreground="{StaticResource 深灰边框}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <Grid x:Name="ContentGrid" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="{TemplateBinding ImageStretch}" />
             </Grid>
@@ -156,7 +156,7 @@
                 <Image Source="{TemplateBinding Bitmap}" />
                 <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />
-                    <TextBlock x:Name="IconBlock" Text="&#xE045;" Foreground="White" FontFamily="{StaticResource IconFont}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock x:Name="IconBlock" Text="&#xE02D;" Foreground="White" FontFamily="{StaticResource IconFont}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
                 <TextBlock Text="{TemplateBinding ExtInfo}" Foreground="White" Margin="0,0,0,20" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>

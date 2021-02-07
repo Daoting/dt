@@ -113,7 +113,7 @@ namespace Dt.Base.FormView
                     // 红星
                     _tbNeeded = new TextBlock
                     {
-                        Text = "\uE0CD",
+                        Text = "\uE0DE",
                         FontFamily = AtRes.IconFont,
                         Foreground = AtRes.RedBrush,
                         VerticalAlignment = VerticalAlignment.Center

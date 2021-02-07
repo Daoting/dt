@@ -184,7 +184,7 @@
                                     Visibility="{TemplateBinding PinButtonVisibility}"
                                     Style="{StaticResource 字符按钮}"
                                     Foreground="{StaticResource 默认背景}"
-                                    Content="&#xE085;"
+                                    Content="&#xE010;"
                                     VerticalAlignment="Stretch"
                                     Width="50" />
                             <!--标题，不再加窗口标题作为后缀-->

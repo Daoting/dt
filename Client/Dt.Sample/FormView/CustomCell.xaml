@@ -16,7 +16,7 @@
                     <a:CFree Title="自动行高" RowSpan="-1">
                         <TextBox AcceptsReturn="True" MinHeight="130" />
                     </a:CFree>
-                    <Button Content="&#xE11A;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                    <Button Content="&#xE06E;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
                     <CheckBox Content="选择框" />
                     <a:CFree Title="选择框">
                         <CheckBox />

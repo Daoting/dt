@@ -38,7 +38,7 @@ namespace Dt.Sample
                 Style = AtRes.LvTextBlock,
                 FontFamily = AtRes.IconFont,
                 TextAlignment = TextAlignment.Center,
-                Text = (p_item.Children.Count > 0) ? "\uE016" : "\uE004",
+                Text = (p_item.Children.Count > 0) ? "\uE067" : "\uE002",
             };
         }
 

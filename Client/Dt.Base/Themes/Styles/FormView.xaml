@@ -188,7 +188,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <!--内容动态增加-->
-                            <TextBlock Text="&#xE0DA;"
+                            <TextBlock Text="&#xE013;"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
                                        Margin="10,0,10,0"
@@ -383,7 +383,7 @@
                                    Margin="0,0,-1,-1"
                                    IsHitTestVisible="False"
                                    Grid.ColumnSpan="2" />
-                        <TextBlock Text="&#xE086;"
+                        <TextBlock Text="&#xE011;"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="20"
                                    Margin="10,0,10,0"

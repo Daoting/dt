@@ -20,9 +20,9 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE045;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
                                 <TextBlock Text="表格" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
                             </Grid>
                             <a:Lv x:Name="_lvTbl" ViewMode="Table">
                                 <a:Ex.Menu>
@@ -48,9 +48,9 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE045;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
                                 <TextBlock Text="列表" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
                             </Grid>
                             <a:Lv x:Name="_lvList">
                                 <a:Ex.Menu>
@@ -109,9 +109,9 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE045;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
                                 <TextBlock Text="磁贴" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
                             </Grid>
                             <a:Lv x:Name="_lvTile" ViewMode="Tile" SelectionMode="None">
                                 <a:Ex.Menu>

@@ -78,7 +78,7 @@
                         <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                             <!--wasm中启动时测量的宽高不对，直接固定宽高-->
-                            <TextBlock Text="&#xE019;"
+                            <TextBlock Text="&#xE001;"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
                                        Width="20"
@@ -125,7 +125,7 @@
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="Transparent">
                         <TextBlock x:Name="ElementTitle"
-                                   Text="&#xE018;"
+                                   Text="&#xE009;"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="16"
                                    Foreground="{StaticResource 灰色边框}" />
@@ -256,13 +256,13 @@
                 <ControlTemplate TargetType="a:Splitter">
                     <Grid Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="1">
                         <StackPanel x:Name="GripDotsPanel" VerticalAlignment="Center" >
-                            <Button x:Name="CloseLeftButton" Content="&#xE062;" Style="{StaticResource SplitterCloseButton}" />
+                            <Button x:Name="CloseLeftButton" Content="&#xE015;" Style="{StaticResource SplitterCloseButton}" />
                             <StackPanel x:Name="DragPanel" Padding="0,20,0,20" Margin="8,0,8,0" Background="Transparent">
                                 <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" />
                                 <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" Margin="0,10,0,10" />
                                 <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" />
                             </StackPanel>
-                            <Button x:Name="CloseRightButton" Content="&#xE063;" Style="{StaticResource SplitterCloseButton}" />
+                            <Button x:Name="CloseRightButton" Content="&#xE016;" Style="{StaticResource SplitterCloseButton}" />
                         </StackPanel>
                         <Rectangle x:Name="BorderLine" Width="4" Fill="{StaticResource 醒目红色}" Visibility="Collapsed" IsHitTestVisible="False" />
                         

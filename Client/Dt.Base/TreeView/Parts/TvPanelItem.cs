@@ -371,7 +371,7 @@ namespace Dt.Base.TreeView
         void CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            _btnMenu = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
+            _btnMenu = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
             _btnMenu.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!AtSys.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

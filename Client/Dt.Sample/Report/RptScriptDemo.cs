@@ -140,7 +140,7 @@ namespace Dt.Sample
 
         public override void InitMenu(Menu p_menu)
         {
-            Mi mi = new Mi { ID = "后退", Icon = Icons.左 };
+            Mi mi = new Mi { ID = "后退", Icon = Icons.向左 };
             mi.Click += OnBack;
             p_menu.Items.Insert(0, mi);
             p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
@@ -151,7 +151,7 @@ namespace Dt.Sample
             Mi back = p_contextMenu["后退"];
             if (back == null)
             {
-                back = new Mi { ID = "后退", Icon = Icons.左 };
+                back = new Mi { ID = "后退", Icon = Icons.向左 };
                 back.Click += OnBack;
                 p_contextMenu.Items.Insert(0, back);
             }

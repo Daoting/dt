@@ -119,7 +119,7 @@ namespace Dt.Base
             "HeaderButtonText",
             typeof(string),
             typeof(Dlg),
-            new PropertyMetadata("\uE018"));
+            new PropertyMetadata("\uE009"));
 
         public static readonly DependencyProperty ContentTransitionsProperty = DependencyProperty.Register(
             "ContentTransitions",
@@ -814,9 +814,9 @@ namespace Dt.Base
             if (_naviCache != null)
             {
                 if (_naviCache.Count == 1)
-                    HeaderButtonText = "\uE085";
+                    HeaderButtonText = "\uE010";
                 else if (_naviCache.Count == 0)
-                    HeaderButtonText = "\uE018";
+                    HeaderButtonText = "\uE009";
             }
 
             // 外部可设置Menu和Title

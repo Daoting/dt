@@ -36,7 +36,7 @@
                  ScrollViewer.VerticalScrollMode="Auto"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Grid.Column="1" />
-        <Button Click="OnAudioCapture" Content="&#xE070;" Style="{StaticResource ChatButton}" />
-        <Button Click="OnShowExtPanel" Content="&#xE080;" Style="{StaticResource ChatButton}" Grid.Column="2" />
+        <Button Click="OnAudioCapture" Content="&#xE082;" Style="{StaticResource ChatButton}" />
+        <Button Click="OnShowExtPanel" Content="&#xE038;" Style="{StaticResource ChatButton}" Grid.Column="2" />
     </Grid>
 </UserControl>

@@ -216,7 +216,7 @@ namespace Dt.Base
                     _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                     _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
 
-                    Button btn = new Button { Style = AtRes.字符按钮, Content = "\uE05A" };
+                    Button btn = new Button { Style = AtRes.字符按钮, Content = "\uE047" };
                     Grid.SetColumn(btn, 1);
                     btn.Click += OnShowCalendar;
                     _grid.Children.Add(btn);

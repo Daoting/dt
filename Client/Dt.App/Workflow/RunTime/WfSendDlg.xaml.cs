@@ -119,7 +119,7 @@ namespace Dt.App.Workflow
                         Margin = new Thickness(10, 0, 10, 0),
                         Children =
                         {
-                            new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE045", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) },
+                            new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) },
                             new TextBlock { Text = p_ar.Def.Name, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center }
                         }
                     },

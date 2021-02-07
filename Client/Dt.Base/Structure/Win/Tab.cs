@@ -96,7 +96,7 @@ namespace Dt.Base
             "HeaderButtonText",
             typeof(string),
             typeof(Tab),
-            new PropertyMetadata("\uE022"));
+            new PropertyMetadata("\uE028"));
 
         public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
             "Menu",
@@ -389,9 +389,9 @@ namespace Dt.Base
             if (_naviCache != null)
             {
                 if (_naviCache.Count == 1)
-                    HeaderButtonText = "\uE085";
+                    HeaderButtonText = "\uE010";
                 else if (_naviCache.Count == 0)
-                    HeaderButtonText = IsPinned ? "\uE022" : "\uE021";
+                    HeaderButtonText = IsPinned ? "\uE028" : "\uE027";
             }
 
             // 外部可设置Menu和Title
@@ -442,7 +442,7 @@ namespace Dt.Base
 
         void OnIsPinnedChanged()
         {
-            HeaderButtonText = IsPinned ? "\uE022" : "\uE021";
+            HeaderButtonText = IsPinned ? "\uE028" : "\uE027";
             if (_isLoaded)
             {
                 if (!IsPinned && (IsFloating || IsInCenter))

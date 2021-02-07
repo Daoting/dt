@@ -7,7 +7,7 @@
 
     <a:Mi ID="插入起始活动" Icon="播放" Click="OnStartNode" />
     <a:Mi ID="插入普通活动" Icon="发出" Click="OnAtvNode" />
-    <a:Mi ID="插入同步活动" Icon="详细" Click="OnSyncNode" />
+    <a:Mi ID="插入同步活动" Icon="全选" Click="OnSyncNode" />
     <a:Mi ID="插入结束活动" Icon="最后" Click="OnEndNode" />
     <a:Mi ID="插入普通文本" Icon="文件" Click="OnTextNode" />
 </a:Menu>

@@ -5,7 +5,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
 
     <StackPanel Spacing="10" Margin="10">
-        <TextBlock Text="&#xE00B;" FontFamily="{StaticResource IconFont}" FontSize="40" />
+        <TextBlock Text="&#xE004;" FontFamily="{StaticResource IconFont}" FontSize="40" />
         <Button Click="OnTest" Content="Test" />
         <Button Content="启动ServerStream" Click="OnServerStream" />
         <Button Content="停止ServerStream" Click="OnStopStream" />

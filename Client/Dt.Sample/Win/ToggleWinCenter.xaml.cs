@@ -28,7 +28,7 @@ namespace Dt.Sample
                 new MainInfo(Icons.公告, "内容为窗口", typeof(SingleViewWin)),
                 new MainInfo(Icons.田字格, "内容为嵌套窗口", typeof(ToggleWinCenter)),
                 new MainInfo(Icons.饼图, "内容为UserControl", typeof(TabNav1)),
-                new MainInfo(Icons.详细, "内容为空", default(Type)),
+                new MainInfo(Icons.全选, "内容为空", default(Type)),
             };
 
             LoadMain(new Button { Content = "abc" });

@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Windows.System;
@@ -20,12 +19,10 @@ namespace Dt.Base.FormView
 {
     public sealed partial class IconDlg : Dlg
     {
-        static Nl<IconItem> _icons;
-
         public IconDlg()
         {
             InitializeComponent();
-            _lv.Data = GetIconList();
+            _lv.Data = IconItem.GetAllIcons();
             _lv.ItemClick += OnItemClick;
             _lv.Filter = OnFilter;
         }
@@ -38,22 +35,6 @@ namespace Dt.Base.FormView
             Close();
         }
 
-        static Nl<IconItem> GetIconList()
-        {
-            if (_icons == null)
-            {
-                _icons = new Nl<IconItem>();
-                Type type = typeof(Icons);
-                foreach (var fi in from f in type.GetRuntimeFields()
-                                   where f.IsLiteral
-                                   select f)
-                {
-                    _icons.Add(new IconItem((Icons)fi.GetValue(type)));
-                }
-            }
-            return _icons;
-        }
-
         void OnSearch(object sender, string e)
         {
             _lv.Refresh();
@@ -61,14 +42,7 @@ namespace Dt.Base.FormView
 
         bool OnFilter(object p_obj)
         {
-            string txt = _sb.Text;
-            if (string.IsNullOrEmpty(txt))
-                return true;
-#if UWP
-            return ((IconItem)p_obj).Name.Contains(txt, StringComparison.OrdinalIgnoreCase);
-#else
-            return ((IconItem)p_obj).Name.Contains(txt);
-#endif
+            return ((IconItem)p_obj).IsMatched(_sb.Text);
         }
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
@@ -86,15 +60,75 @@ namespace Dt.Base.FormView
 
     public class IconItem
     {
+        static Nl<IconItem> _icons;
+        readonly string _pinyin;
+
         public IconItem(Icons p_icon)
         {
             Icon = p_icon;
-            string hex = Convert.ToString(0xE000 + (int)p_icon, 16).ToUpper();
-            Name = $"{p_icon} ({hex})";
+            Hex = Convert.ToString(0xE000 + (int)p_icon, 16).ToUpper();
+            _pinyin = AtKit.GetPinYin(p_icon.ToString());
         }
 
-        public Icons Icon { get; set; }
+        /// <summary>
+        /// 图标
+        /// </summary>
+        public Icons Icon { get; }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// 图标名称
+        /// </summary>
+        public string Name
+        {
+            get { return Icon.ToString(); }
+        }
+
+        /// <summary>
+        /// 16进制值
+        /// </summary>
+        public string Hex { get; }
+
+        /// <summary>
+        /// 完整名称
+        /// </summary>
+        public string FullName
+        {
+            get { return $"{Icon} ({Hex})"; }
+        }
+
+        /// <summary>
+        /// 获取所有图标项列表
+        /// </summary>
+        /// <returns></returns>
+        public static Nl<IconItem> GetAllIcons()
+        {
+            if (_icons == null)
+            {
+                _icons = new Nl<IconItem>();
+                Type type = typeof(Icons);
+                foreach (var fi in from f in type.GetRuntimeFields()
+                                   where f.IsLiteral
+                                   select f)
+                {
+                    _icons.Add(new IconItem((Icons)fi.GetValue(type)));
+                }
+            }
+            return _icons;
+        }
+
+        /// <summary>
+        /// 是否匹配名称
+        /// </summary>
+        /// <param name="p_txt"></param>
+        /// <returns></returns>
+        public bool IsMatched(string p_txt)
+        {
+            if (string.IsNullOrEmpty(p_txt))
+                return true;
+
+            return _pinyin.Contains(p_txt, StringComparison.OrdinalIgnoreCase)
+                || Name.Contains(p_txt, StringComparison.OrdinalIgnoreCase)
+                || Hex.Contains(p_txt, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

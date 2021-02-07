@@ -232,7 +232,7 @@ namespace Dt.Base
                 btn.Click += OnClickHis;
                 grid.Children.Add(btn);
 
-                btn = new Button { Content = "\uE018", Style = AtRes.字符按钮 };
+                btn = new Button { Content = "\uE009", Style = AtRes.字符按钮 };
                 btn.Click += OnDelHis;
                 Grid.SetColumn(btn, 1);
                 grid.Children.Add(btn);
@@ -250,13 +250,13 @@ namespace Dt.Base
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10, 0, 10, 0) };
-            TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE045", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
+            TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
             sp.Children.Add(tb);
             tb = new TextBlock { Text = "搜索历史", TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
             sp.Children.Add(tb);
             grid.Children.Add(sp);
 
-            Button btn = new Button { Content = "\uE007", Style = AtRes.字符按钮 };
+            Button btn = new Button { Content = "\uE00A", Style = AtRes.字符按钮 };
             btn.Click += OnClearHis;
             Grid.SetColumn(btn, 1);
             grid.Children.Add(btn);

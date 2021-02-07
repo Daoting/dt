@@ -28,7 +28,7 @@ namespace Dt.Sample
                 new MainInfo(Icons.词典, "基础格", typeof(BaseCellDemo), "基本格、日期格、布尔格、链接格，可通过属性编辑器动态设置格属"),
                 new MainInfo(Icons.分组, "选择格", typeof(SelectionCellDemo), "列表格、树形格、图标格、颜色格"),
                 new MainInfo(Icons.图片, "文件格", typeof(FileCellDemo), "文件格、图像格"),
-                new MainInfo(Icons.详细, "数据操作", typeof(FvData), "对二维表格数据的增删改或对普通对象的修改"),
+                new MainInfo(Icons.全选, "数据操作", typeof(FvData), "对二维表格数据的增删改或对普通对象的修改"),
                 new MainInfo(Icons.小图标, "属性编辑器", typeof(FvObjData), "对控件或普通对象的属性进行编辑"),
                 new MainInfo(Icons.排列, "自动生成格", typeof(FvAutoCell), "根据数据源列类型生成对应格"),
                 new MainInfo(Icons.数据库, "多类型数据源", typeof(FvDataSource), "支持二维数据行和对普通对象作为数据源"),

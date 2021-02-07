@@ -336,7 +336,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = p_dc.GetVal<bool>() ? "\uE06A" : "\uE068",
+                    Text = p_dc.GetVal<bool>() ? "\uE059" : "\uE057",
                     FontFamily = AtRes.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
@@ -443,7 +443,7 @@ namespace Dt.Base
                 tb = new TextBlock
                 {
                     Style = AtRes.LvTextBlock,
-                    Text = (bool)p_val ? "\uE06A" : "\uE068",
+                    Text = (bool)p_val ? "\uE059" : "\uE057",
                     FontFamily = AtRes.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
@@ -555,7 +555,7 @@ namespace Dt.Base
                 string temp = p_val.ToString().ToLower();
                 b = (temp == "1" || temp == "true");
             }
-            tb.Text = b ? "\uE06A" : "\uE068";
+            tb.Text = b ? "\uE059" : "\uE057";
             return tb;
         }
 

@@ -70,8 +70,8 @@
                         <a:Mi ID="添加" Icon="加号" Click="OnAddRole" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveRole" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" Visibility="Collapsed" />
                         <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
-                        <a:Mi ID="选择" Icon="详细" Click="OnMultiMode" />
-                        <a:Mi ID="取消" Icon="详细" Click="OnCancelMulti" Visibility="Collapsed" />
+                        <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
+                        <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvRole">

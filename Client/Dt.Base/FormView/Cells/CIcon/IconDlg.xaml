@@ -10,12 +10,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:SearchBox x:Name="_sb" Search="OnSearch" IsRealtime="True" />
+        <a:SearchBox x:Name="_sb" Search="OnSearch" Placeholder="请输入名称或简码" IsRealtime="True" />
         <a:Lv x:Name="_lv" Grid.Row="1">
             <DataTemplate>
                 <StackPanel Orientation="Horizontal" Height="60" Margin="10,0,10,0">
                     <a:Dot ID="Icon" FontSize="40" Width="40" VerticalAlignment="Center" />
-                    <a:Dot ID="Name" Margin="20,0,0,0" VerticalAlignment="Center" />
+                    <a:Dot ID="FullName" Margin="20,0,0,0" VerticalAlignment="Center" />
                 </StackPanel>
             </DataTemplate>
         </a:Lv>

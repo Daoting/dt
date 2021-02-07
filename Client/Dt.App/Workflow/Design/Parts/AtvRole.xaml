@@ -11,9 +11,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="&#xE045;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
             <TextBlock Text="角色授权" VerticalAlignment="Center" Grid.Column="1" />
-            <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" Click="OnAddRole" HorizontalAlignment="Right" Grid.Column="2" />
+            <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" Click="OnAddRole" HorizontalAlignment="Right" Grid.Column="2" />
         </Grid>
         <a:Lv x:Name="_lv">
             <a:Ex.Menu>

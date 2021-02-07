@@ -44,7 +44,7 @@
                                        VerticalAlignment="Center"
                                        Grid.Column="1" />
                             <TextBlock x:Name="ElementSub"
-                                       Text="&#xE086;"
+                                       Text="&#xE011;"
                                        FontFamily="{StaticResource IconFont}"
                                        Visibility="Collapsed"
                                        VerticalAlignment="Center"

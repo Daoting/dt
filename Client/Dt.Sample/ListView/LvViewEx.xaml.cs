@@ -75,7 +75,7 @@ namespace Dt.Sample
         public static TextBlock xb(ViewItem p_item)
         {
             TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-            tb.Text = p_item.Row.Str("xb") == "男" ? "\uE03C" : "\uE0c8";
+            tb.Text = p_item.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
             return tb;
         }
 

@@ -21,12 +21,12 @@
             </StackPanel>
             <TextBlock Text="字符按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="&#xE00B;" Style="{StaticResource 字符按钮}" />
-                <Button Content="&#xE005;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
-                <Button Content="&#xE005;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="60" />
+                <Button Content="&#xE004;" Style="{StaticResource 字符按钮}" />
+                <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
+                <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="60" />
 
-                <Button Content="&#xE038;" Tag="分享" Style="{StaticResource 字符按钮}" />
-                <Button Content="&#xE038;" Tag="分享" Style="{StaticResource 字符按钮}" Foreground="{StaticResource 深灰边框}" BorderThickness="0" FontSize="15" />
+                <Button Content="&#xE050;" Tag="分享" Style="{StaticResource 字符按钮}" />
+                <Button Content="&#xE050;" Tag="分享" Style="{StaticResource 字符按钮}" Foreground="{StaticResource 深灰边框}" BorderThickness="0" FontSize="15" />
             </StackPanel>
             <TextBlock Text="浅色按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10" Background="Black">
@@ -55,7 +55,7 @@
                             <TextBlock Text="2" Style="{StaticResource 小字}" Margin="4,0,0,0" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
-                            <TextBlock Text="&#xE08F;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" FontSize="12" />
+                            <TextBlock Text="&#xE054;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" FontSize="12" />
                             <TextBlock Text="18" FontSize="12" VerticalAlignment="Center" />
                         </StackPanel>
                     </Grid>

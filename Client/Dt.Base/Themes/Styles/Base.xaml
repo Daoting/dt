@@ -198,7 +198,7 @@
                                  BorderThickness="0"
                                  Padding="10" />
                         <Button x:Name="Button"
-                                Content="&#xE013;"
+                                Content="&#xE00B;"
                                 Style="{StaticResource 字符按钮}"
                                 Grid.Column="1" />
                     </Grid>

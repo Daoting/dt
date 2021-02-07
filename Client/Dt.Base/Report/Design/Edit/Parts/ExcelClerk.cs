@@ -250,7 +250,7 @@ namespace Dt.Base.Report
             chartCell.HorizontalAlignment = CellHorizontalAlignment.Center;
             chartCell.FontFamily = AtRes.IconFont;
             chartCell.FontSize = 40;
-            chartCell.Text = "\uE035";
+            chartCell.Text = "\uE08D";
         }
 
         /// <summary>

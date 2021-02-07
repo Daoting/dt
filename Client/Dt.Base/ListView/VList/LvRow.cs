@@ -220,7 +220,7 @@ namespace Dt.Base.ListView
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
+            var btn = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!AtSys.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

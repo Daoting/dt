@@ -31,9 +31,9 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Content="&#xE038;" Tag="分享" Click="OnShare" Style="{StaticResource ExBtn}" />
-                        <Button Content="&#xE072;" Tag="评论" Style="{StaticResource ExBtn}" IsEnabled="{Binding [AllowComment]}" Grid.Column="1" />
-                        <Button Content="&#xE031;" Tag="收藏" Style="{StaticResource ExBtn}" Grid.Column="2" />
+                        <Button Content="&#xE050;" Tag="分享" Click="OnShare" Style="{StaticResource ExBtn}" />
+                        <Button Content="&#xE07F;" Tag="评论" Style="{StaticResource ExBtn}" IsEnabled="{Binding [AllowComment]}" Grid.Column="1" />
+                        <Button Content="&#xE052;" Tag="收藏" Style="{StaticResource ExBtn}" Grid.Column="2" />
                     </Grid>
                 </StackPanel>
                 <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />

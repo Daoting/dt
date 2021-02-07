@@ -26,7 +26,7 @@ namespace Dt.Sample
             _lv.Data = new Nl<MainInfo>
             {
                 new MainInfo(Icons.分组, "数据表操作", typeof(TableAccess), "Table, Row, Column, Cell的常用方法"),
-                new MainInfo(Icons.详细, "序列化类型", typeof(SerializeDemo), ""),
+                new MainInfo(Icons.全选, "序列化类型", typeof(SerializeDemo), ""),
                 new MainInfo(Icons.警告, "异常处理", typeof(ExceptionDemo), ""),
                 new MainInfo(Icons.传真, "实体类业务逻辑", typeof(EntityDemo), ""),
                 new MainInfo(Icons.耳麦, "远程过程调用", typeof(RpcDemo), ""),

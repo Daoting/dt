@@ -22,8 +22,8 @@ namespace Dt.Base.TreeView
         {
             bool? selected = (bool?)value;
             if (selected.HasValue)
-                return selected.Value ? "\uE06A" : "\uE068";
-            return "\uE069";
+                return selected.Value ? "\uE059" : "\uE057";
+            return "\uE058";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

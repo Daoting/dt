@@ -8,7 +8,7 @@
     <a:Win.Resources>
         <DataTemplate x:Key="Folder">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="&#xE016;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
                 <a:Dot ID="name" VerticalAlignment="Center" />
                 <TextBlock Text="{Binding Children.Count,Mode=OneTime}" Margin="10,0,0,0" VerticalAlignment="Center" />
             </StackPanel>
@@ -16,7 +16,7 @@
 
         <DataTemplate x:Key="File">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="&#xE004;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE002;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
                 <a:Dot ID="name" />
             </StackPanel>
         </DataTemplate>

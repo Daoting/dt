@@ -179,8 +179,7 @@ namespace Dt.Sample
                 {
                     Title = "图标",
                     Note = "内置的矢量文字，可用作图标、提示",
-                    Tag = typeof(IconDemo),
-                    Callback = OnNaviTo
+                    Tag = typeof(IconDemo)
                 },
                 new DataCmd
                 {

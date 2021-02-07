@@ -723,7 +723,7 @@ namespace Dt.Base.ListView
                 Button btn = new Button
                 {
                     Style = AtRes.字符按钮,
-                    Content = "\uE08A",
+                    Content = "\uE020",
                 };
                 ToolTipService.SetToolTip(btn, "全选");
                 btn.Click += (s, e) => _owner.SelectAll();
@@ -732,7 +732,7 @@ namespace Dt.Base.ListView
                 btn = new Button
                 {
                     Style = AtRes.字符按钮,
-                    Content = "\uE018",
+                    Content = "\uE009",
                 };
                 ToolTipService.SetToolTip(btn, "清除所选");
                 btn.Click += (s, e) => _owner.ClearSelection();

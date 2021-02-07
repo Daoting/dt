@@ -127,7 +127,7 @@ namespace Dt.Base
             Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) });
-            grid.Children.Add(new TextBlock { Text = "\uE04F", FontFamily = AtRes.IconFont, Foreground = AtRes.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
+            grid.Children.Add(new TextBlock { Text = "\uE037", FontFamily = AtRes.IconFont, Foreground = AtRes.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
             var tb = new TextBlock { Text = p_content, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(tb, 1);
             grid.Children.Add(tb);

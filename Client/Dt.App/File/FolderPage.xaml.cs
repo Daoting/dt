@@ -268,7 +268,7 @@ namespace Dt.App.File
                 mi.Click += OnSelectAll;
                 _menuMulti.Items.Add(mi);
 
-                mi = new Mi { ID = "取消", Icon = Icons.详细 };
+                mi = new Mi { ID = "取消", Icon = Icons.复选未选 };
                 mi.Click += OnCancelMulti;
                 _menuMulti.Items.Add(mi);
             }
@@ -312,7 +312,7 @@ namespace Dt.App.File
                 mi.Click += OnAddFolder;
                 _menu.Items.Add(mi);
 
-                mi = new Mi { ID = "选择", Icon = Icons.详细 };
+                mi = new Mi { ID = "选择", Icon = Icons.全选 };
                 mi.Click += OnMultiMode;
                 _menu.Items.Add(mi);
             }

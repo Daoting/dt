@@ -32,7 +32,7 @@
                         Height="50"
                         Width="50"
                         VerticalAlignment="Center">
-                    <TextBlock Text="&#xE03C;"
+                    <TextBlock Text="&#xE060;"
                                FontFamily="{StaticResource IconFont}"
                                FontSize="30"
                                Foreground="White"
@@ -63,7 +63,7 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE03C;"
+                <TextBlock Text="&#xE060;"
                             FontFamily="{StaticResource IconFont}"
                             FontSize="30"
                             VerticalAlignment="Center"

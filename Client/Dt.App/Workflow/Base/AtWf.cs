@@ -82,7 +82,7 @@ namespace Dt.App
             p_lv.ItemDoubleClick += (s, e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
 
             Menu menu = new Menu();
-            var mi = new Mi { ID = "查看表单", Icon = Icons.详细 };
+            var mi = new Mi { ID = "查看表单", Icon = Icons.全选 };
             mi.Click += (s, e) => OpenFormWin(new WfFormInfo(e.Row.Long("id")));
             menu.Items.Add(mi);
 

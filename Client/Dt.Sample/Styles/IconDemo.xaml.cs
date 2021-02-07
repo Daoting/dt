@@ -8,8 +8,11 @@
 
 #region 引用命名
 using Dt.Base;
+using Dt.Base.FormView;
+using Dt.Core;
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -18,115 +21,52 @@ namespace Dt.Sample
 {
     public sealed partial class IconDemo : Win
     {
-        const int ItemWidth = 70;
-        const int ItemHeight = 100;
-        List<StackPanel> _icons = new List<StackPanel>();
-
         public IconDemo()
         {
             InitializeComponent();
-            _container.Loaded += OnLoaded;
+            _lv.Data = IconItem.GetAllIcons();
+            _lv.Filter = OnFilter;
         }
 
-        /// <summary>
-        /// 加载后生成图标及排列图标
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
+        void OnSearch(object sender, string e)
         {
-            _container.Loaded -= OnLoaded;
-            GenIcons();
-            LoadIcons();
-            SizeChanged += OnSizeChanged;
+            _lv.Refresh();
         }
 
-        /// <summary>
-        /// 页面大小改变时，改变图标排列
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        bool OnFilter(object p_obj)
         {
-            if (e.PreviousSize.Width == e.NewSize.Width)
-                return;
-
-            LoadIcons();
+            return ((IconItem)p_obj).IsMatched(_sb.Text);
         }
 
-        /// <summary>
-        /// 生成列并排列图标
-        /// </summary>
-        void LoadIcons()
+        void OnCopyIcons(object sender, Mi e)
         {
-            GenColmns();
-            ArrangeIcons();
+            ToClipboard($"Icons.{((IconItem)e.Data).Name}");
         }
 
-        /// <summary>
-        /// 排列图标
-        /// </summary>
-        void ArrangeIcons()
+        void OnCopyName(object sender, Mi e)
         {
-            if (_container.ColumnDefinitions.Count <= 0)
-                return;
-
-            _container.Children.Clear();
-            _container.RowDefinitions.Clear();
-            int row = -1;
-            for (int i = 0; i < _icons.Count; i++)
-            {
-                int col = i % _container.ColumnDefinitions.Count;
-                if (col == 0)
-                {
-                    _container.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(ItemHeight) });
-                    row += 1;
-                }
-                _icons[i].SetValue(Grid.ColumnProperty, col);
-                _icons[i].SetValue(Grid.RowProperty, row);
-                _container.Children.Add(_icons[i]);
-            }
+            ToClipboard(((IconItem)e.Data).Name);
         }
 
-        /// <summary>
-        /// 生成图标展示页面元素
-        /// </summary>
-        void GenIcons()
+        void OnCopyButton(object sender, Mi e)
         {
-            string[] iconNames = Enum.GetNames(typeof(Icons));
-            foreach (string item in iconNames)
-            {
-                string tmpIcon = AtRes.GetIconChar((Icons)Enum.Parse(typeof(Icons), item));
-                if (string.IsNullOrEmpty(tmpIcon))
-                    continue;
-
-                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-                TextBlock tName = new TextBlock() { Text = item, FontSize = 12 };
-                TextBlock tIcon = new TextBlock() { Text = tmpIcon, Style = AtRes.字符, FontSize = 40 };
-                TextBlock tCode = new TextBlock() { Text = Convert.ToString((Int32)tmpIcon.ToCharArray()[0], 16), FontSize = 12 };
-                stackPanel.Children.Add(tName);
-                stackPanel.Children.Add(tIcon);
-                stackPanel.Children.Add(tCode);
-                _icons.Add(stackPanel);
-            }
+            var icon = (IconItem)e.Data;
+            ToClipboard($"<Button Content=\"&#x{icon.Hex};\" Style=\"{{StaticResource 字符按钮}}\" />");
         }
 
-        /// <summary>
-        /// 生成容器列
-        /// </summary>
-        void GenColmns()
+        void OnCopyBlock(object sender, Mi e)
         {
-            double width = ActualWidth - 20;
-            if (width <= 0)
-                return;
-
-            _container.ColumnDefinitions.Clear();
-            int colCount = (int)(width / ItemWidth);
-            double colWidth = width / colCount;
-            for (int i = 0; i < colCount; i++)
-            {
-                _container.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(colWidth) });
-            }
+            var icon = (IconItem)e.Data;
+            ToClipboard($"<TextBlock Text=\"&#x{icon.Hex};\" FontFamily=\"{{StaticResource IconFont}}\" />");
         }
+
+        void ToClipboard(string p_content)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_content);
+            Clipboard.SetContent(data);
+            AtKit.Msg(string.Format("已复制到剪贴板：\r\n{0}", p_content));
+        }
+
     }
 }
