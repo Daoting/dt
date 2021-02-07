@@ -939,8 +939,17 @@ namespace Dt.Base
         /// <param name="p_subtree"></param>
         /// <param name="p_parent"></param>
         /// <returns></returns>
-        static Tabs GetHitSect(Point p_pos, UIElement p_subtree, UIElement p_parent)
+        static Tabs GetHitSect(Point p_pos, FrameworkElement p_subtree, UIElement p_parent)
         {
+#if WASM
+            // uno中的FindElementsInHostCoordinates无值
+            var ls = p_subtree.FindChildrenByType<Tabs>();
+            foreach (var sect in ls)
+            {
+                if (sect.ContainPoint(p_pos) && CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnWinItem))
+                    return sect;
+            }
+#else
             if (p_subtree != null && p_parent != null)
             {
                 Point pt = p_subtree.TransformToVisual(null).TransformPoint(p_pos);
@@ -948,6 +957,7 @@ namespace Dt.Base
                         where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnWinItem)
                         select sect).FirstOrDefault();
             }
+#endif
             return null;
         }
 
@@ -1093,7 +1103,7 @@ namespace Dt.Base
                 else
                     info.Callback?.Invoke();
             }
-                
+
         }
         #endregion
 
@@ -1294,8 +1304,8 @@ namespace Dt.Base
         {
             Tabs sect = null;
             Pane item = (from dockItem in Items.OfType<Pane>()
-                            where dockItem.Pos == p_dockState
-                            select dockItem).FirstOrDefault();
+                         where dockItem.Pos == p_dockState
+                         select dockItem).FirstOrDefault();
             if (item != null)
             {
                 sect = (from obj in item.GetAllTabs()

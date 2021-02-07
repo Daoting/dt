@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -31,6 +32,285 @@ namespace Dt.Base
     /// </summary>
     public static class UIElementExt
     {
+        #region 查询子元素
+        /// <summary>
+        /// 查询给定类型的第一个子元素
+        /// </summary>
+        /// <typeparam name="T">要查询的子元素类型</typeparam>
+        /// <param name="source">要查询的起点元素</param>
+        /// <param name="p_checkItself">是事包含当前元素</param>
+        /// <returns>第一个符合类型的子元素</returns>
+        public static T FindChildByType<T>(this UIElement source, bool p_checkItself = false)
+            where T : class
+        {
+            return (from item in source.FindChildren(p_checkItself)
+                    let elem = item as T
+                    where elem != null
+                    select elem).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 查询给定类型的所有子元素
+        /// </summary>
+        /// <typeparam name="T">要查询的子元素类型</typeparam>
+        /// <param name="source">要查询的起点元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <returns>所有符合类型子元素</returns>
+        public static IEnumerable<T> FindChildrenByType<T>(this UIElement source, bool p_checkItself = false)
+            where T : class
+        {
+            return (from item in source.FindChildren(p_checkItself)
+                    let elem = item as T
+                    where elem != null
+                    select elem).Distinct();
+        }
+
+        /// <summary>
+        /// 根据给定名称的子元素，注意有部分名称在加载时空，如没被选择的TabItem内容
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <param name="p_name">要查询的子元素名称</param>
+        /// <returns>返回第一个符合条件的子元素</returns>
+        public static UIElement FindChildByName(this UIElement source, string p_name, bool p_checkItself = false)
+        {
+            return (from item in source.FindChildren(p_checkItself)
+                    where item is FrameworkElement elem && elem.Name.Equals(p_name)
+                    select item).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据给定子元素的Tag串查询
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <param name="p_tag">子元素的Tag串</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <returns>返回第一个符合条件的子元素</returns>
+        public static UIElement FindChildByTag(this UIElement source, string p_tag, bool p_checkItself = false)
+        {
+            if (string.IsNullOrEmpty(p_tag))
+                return null;
+
+            return (from item in source.FindChildren(p_checkItself)
+                    where item is FrameworkElement elem && p_tag.Equals(elem.Tag)
+                    select item).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取给定元素的子元素列表，为提高效率只查询出VisualTreeHelper给出的子元素
+        /// 转为非递归调用
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <returns>返回所有子元素列表</returns>
+        public static IEnumerable<UIElement> FindChildren(this UIElement source, bool p_checkItself = false)
+        {
+            if (p_checkItself)
+                yield return source;
+
+            Queue<UIElement> qu = new Queue<UIElement>();
+            qu.Enqueue(source);
+            while (qu.Count > 0)
+            {
+                var item = qu.Dequeue();
+                int childrenCount = VisualTreeHelper.GetChildrenCount(item);
+                if (childrenCount > 0)
+                {
+                    // 通过系统的可视树查询
+                    for (int childIndex = 0; childIndex < childrenCount; childIndex++)
+                    {
+                        var child = VisualTreeHelper.GetChild(item, childIndex) as UIElement;
+                        if (child != null)
+                        {
+                            qu.Enqueue(child);
+                            yield return child;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 查询父元素
+        /// <summary>
+        /// 在可视树向上查询第一个匹配类型的父元素
+        /// 转为非递归调用，能查询出所有的可视父元素
+        /// </summary>
+        /// <typeparam name="T">
+        /// 父元素类型
+        /// </typeparam>
+        /// <param name="source">起点元素</param>
+        /// <param name="p_endParent">终点父元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <returns>找到返回父元素，否则返回 null.</returns>
+        public static T FindParentByType<T>(this UIElement source, UIElement p_endParent = null, bool p_checkItself = false)
+            where T : class
+        {
+            return (from item in source.FindParentsByType<T>(p_endParent, p_checkItself)
+                    select item).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 查询给定类型的所有父元素
+        /// </summary>
+        /// <typeparam name="T">父元素类型</typeparam>
+        /// <param name="source">起点元素</param>
+        /// <param name="p_endParent">终点父元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <returns></returns>
+        public static IEnumerable<T> FindParentsByType<T>(this UIElement source, UIElement p_endParent = null, bool p_checkItself = false)
+            where T : class
+        {
+            T tgt;
+            if (p_checkItself && (tgt = source as T) != null)
+                yield return tgt;
+
+            var parent = source;
+            do
+            {
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+                if (parent == null || parent == p_endParent)
+                {
+                    break;
+                }
+
+                tgt = parent as T;
+                if (tgt != null)
+                {
+                    yield return tgt;
+                }
+            }
+            while (true);
+        }
+
+        /// <summary>
+        /// 从父容器中移除当前元素
+        /// </summary>
+        /// <param name="source"></param>
+        public static void ClearParent(this UIElement source)
+        {
+            var parent = VisualTreeHelper.GetParent(source) as UIElement;
+            if (parent == null)
+                return;
+
+            if (parent is Panel panel)
+            {
+                panel.Children.Remove(source);
+            }
+            else if (parent is ContentPresenter pre)
+            {
+                pre.Content = null;
+            }
+            else if (parent is ContentControl con)
+            {
+                con.Content = null;
+            }
+        }
+
+        /// <summary>
+        /// 根据给定子元素的名称的查询，注意有部分名称在加载时空，如没被选择的TabItem内容
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <param name="p_checkItself">结果中是否包含自已</param>
+        /// <param name="p_name">要查询的父元素名称</param>
+        /// <returns>返回第一个符合条件的父元素</returns>
+        public static UIElement FindParentByName(this UIElement source, string p_name, bool p_checkItself = false)
+        {
+            return (from item in source.FindParents(null, p_checkItself)
+                    where item is FrameworkElement elem && elem.Name == p_name
+                    select item).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取当前元素的所有父元素
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <param name="p_endParent">终点父元素</param>
+        /// <param name="p_checkItself">结果中是否包含自己</param>
+        /// <returns>返回所有父元素列表</returns>
+        public static IEnumerable<UIElement> FindParents(this UIElement source, UIElement p_endParent = null, bool p_checkItself = false)
+        {
+            if (p_checkItself)
+                yield return source;
+
+            var parent = source;
+            do
+            {
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+                if (parent == null || parent == p_endParent)
+                    break;
+                yield return parent;
+            }
+            while (true);
+        }
+
+        /// <summary>
+        /// 获取当前元素的父元素
+        /// </summary>
+        /// <param name="source">要查询的元素</param>
+        /// <returns>找到返回父元素，否则为空</returns>
+        public static UIElement GetParent(this UIElement source)
+        {
+            if (source != null)
+                return VisualTreeHelper.GetParent(source) as UIElement;
+            return null;
+        }
+
+        /// <summary>
+        /// 在Win内查询第一个匹配类型的父元素
+        /// </summary>
+        /// <typeparam name="T">父元素类型</typeparam>
+        /// <param name="source"></param>
+        /// <returns>找到返回父元素，否则返回 null</returns>
+        public static T FindParentInWin<T>(this UIElement source)
+        {
+            DependencyObject parent = source;
+            while (true)
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+                if (parent == null)
+                    break;
+
+                // 也可查询SizedPresenter
+                if (parent is T tgt)
+                    return tgt;
+
+                // 查询范围SizedPresenter，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                if (parent.GetType() == typeof(SizedPresenter))
+                    break;
+            }
+            return default;
+        }
+        #endregion
+
+        #region 焦点
+        /// <summary>
+        /// 判断焦点是否在内部
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns>true 在内部</returns>
+        public static bool IsFocusInside(this UIElement source)
+        {
+            var focusedElement = FocusManager.GetFocusedElement() as UIElement;
+            while ((focusedElement != null) && (focusedElement != source))
+            {
+                focusedElement = focusedElement.GetParent();
+            }
+            return (focusedElement == source);
+        }
+
+        /// <summary>
+        /// 判断焦点是否在当前元素上，不判断是否在内部！
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns>true 在当前元素上</returns>
+        public static bool IsFocused(this UIElement source)
+        {
+            return ((source != null) && (source == FocusManager.GetFocusedElement()));
+        }
+        #endregion
+
+        #region 截图
         ///// <summary>
         ///// 获取当前界面元素的截图，uno不支持RenderTargetBitmap，废弃
         ///// </summary>
@@ -135,6 +415,7 @@ namespace Dt.Base
             }
             return saveFile;
         }
+        #endregion
 
         /// <summary>
         /// 判断source是否为p_element的祖先元素
@@ -275,26 +556,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取控件测量大小的整数值尺寸！（不同于DesiredSize）
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns>尺寸值</returns>
-        public static Size GetDesiredSize(this UIElement source)
-        {
-            return GetVisualSize(source.DesiredSize);
-        }
-
-        /// <summary>
-        /// 获取控件最终呈现大小的整数值尺寸！（不同于RenderSize）
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns>尺寸值</returns>
-        public static Size GetRenderSize(this UIElement source)
-        {
-            return GetVisualSize(source.RenderSize);
-        }
-
-        /// <summary>
         /// 获取UIElement是否可见
         /// </summary>
         /// <param name="source"></param>
@@ -347,16 +608,6 @@ namespace Dt.Base
             clonedImage.VerticalAlignment = VerticalAlignment.Stretch;
             clonedImage.Source = originalImage.Source;
             return clonedImage;
-        }
-
-        /// <summary>
-        /// 转换原有的double值到最小整数值尺寸
-        /// </summary>
-        /// <param name="size">原尺寸</param>
-        /// <returns>转换后的尺寸</returns>
-        static Size GetVisualSize(Size size)
-        {
-            return new Size(Math.Ceiling(size.Width), Math.Ceiling(size.Height));
         }
     }
 }

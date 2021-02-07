@@ -103,7 +103,7 @@ namespace Dt.Base
                     break;
             }
 
-            FrameworkElement parent = item.GetParent();
+            var parent = item.GetParent();
             if (parent != null)
             {
                 parent.InvalidateMeasure();

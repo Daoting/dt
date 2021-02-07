@@ -196,7 +196,7 @@ namespace Dt.Base.Sketches
         {
             Point point = new Point(0.0, 0.0);
 
-            Size size = UIElementExt.GetDesiredSize(label);//  new Size(Math.Ceiling(label.Bounds.Width), Math.Ceiling(label.Bounds.Height));
+            Size size = new Size(Math.Ceiling(label.DesiredSize.Width), Math.Ceiling(label.DesiredSize.Height));
             if (Ruler.Orientation == Orientation.Horizontal)
             {
                 _labelPosition.Rotation = 0.0;

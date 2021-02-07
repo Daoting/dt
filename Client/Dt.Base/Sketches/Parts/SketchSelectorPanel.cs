@@ -42,7 +42,7 @@ namespace Dt.Base.Sketches
                     continue;
                 }
 
-                Size size = UIElementExt.GetDesiredSize(element);
+                Size size = new Size(Math.Ceiling(element.DesiredSize.Width), Math.Ceiling(element.DesiredSize.Height));
                 if (element.Name == "PART_Link")
                 {
                     element.Arrange(new Rect(-50 - (size.Width / 2.0), finalSize.Height - (size.Height / 2.0), size.Width, size.Height));
