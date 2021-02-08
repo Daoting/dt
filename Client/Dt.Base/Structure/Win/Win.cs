@@ -802,7 +802,7 @@ namespace Dt.Base
 
             if (CheckIsDockable(p_toolWin))
             {
-                Point pos = p_pointer.GetCurrentPoint(_popupPanel).Position;
+                Point pos = p_pointer.GetCurrentPoint(null).Position;
                 UpdateCompass(pos, p_toolWin);
                 UpdateRootCompass(pos);
                 AdjustCueSize(p_toolWin);
@@ -939,28 +939,19 @@ namespace Dt.Base
         /// <param name="p_subtree"></param>
         /// <param name="p_parent"></param>
         /// <returns></returns>
-        static Tabs GetHitSect(Point p_pos, FrameworkElement p_subtree, UIElement p_parent)
+        static Tabs GetHitSect(Point p_pos, UIElement p_subtree, UIElement p_parent)
         {
-#if WASM
-            // uno中的FindElementsInHostCoordinates无值
+            // uno中的 VisualTreeHelper.FindElementsInHostCoordinates 无值
             var ls = p_subtree.FindChildrenByType<Tabs>();
-            foreach (var sect in ls)
+            foreach (var tabs in ls)
             {
-                if (sect.ContainPoint(p_pos) && CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnWinItem))
-                    return sect;
+                if (tabs.ContainPoint(p_pos)
+                    && CheckIsDockable(tabs)
+                    && !p_parent.IsAncestorOf(tabs.OwnWinItem))
+                    return tabs;
             }
-#else
-            if (p_subtree != null && p_parent != null)
-            {
-                Point pt = p_subtree.TransformToVisual(null).TransformPoint(p_pos);
-                return (from sect in VisualTreeHelper.FindElementsInHostCoordinates(pt, p_subtree).OfType<Tabs>()
-                        where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnWinItem)
-                        select sect).FirstOrDefault();
-            }
-#endif
             return null;
         }
-
         #endregion
 
         #region 拖动结束

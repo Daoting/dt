@@ -84,6 +84,9 @@ namespace Dt.Base
         /// <returns>true 表包含该点</returns>
         public static bool ContainPoint(this FrameworkElement source, Point p_point)
         {
+            if (source == null)
+                return false;
+
             try
             {
                 bool result = false;

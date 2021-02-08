@@ -289,11 +289,10 @@ namespace Dt.Base.Docking
         void OnheaderElementPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             Point pt1 = e.GetCurrentPoint(_panel).Position;
-            if (GetResizeDirection(pt1) == ResizeDirection.None)
+            if (GetResizeDirection(pt1) == ResizeDirection.None && CapturePointer(e.Pointer))
             {
                 _isHeadPressed = true;
                 _startPoint = new Point(pt1.X - HorizontalOffset, pt1.Y - VerticalOffset);
-                CapturePointer(e.Pointer);
             }
         }
 
@@ -305,17 +304,16 @@ namespace Dt.Base.Docking
         void OnRootGridPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             Point mousePosition = e.GetCurrentPoint(_panel).Position;
-            if (GetResizeDirection(mousePosition) != ResizeDirection.None)
+            if (GetResizeDirection(mousePosition) != ResizeDirection.None && _rootGrid.CapturePointer(e.Pointer))
             {
                 _isHeadPressed = false;
-                ReleasePointerCapture(e.Pointer);
                 Point offset = TransformToVisual(_panel).TransformPoint(new Point(0.0, 0.0));
                 _isResizing = true;
                 _resizeDirection = GetResizeDirection(mousePosition);
                 _startPoint = mousePosition;
                 _initRect = new Rect(offset.X, offset.Y, ActualWidth, ActualHeight);
                 UpdateMouseCursor(_resizeDirection);
-                _rootGrid.CapturePointer(e.Pointer);
+                e.Handled = true;
             }
         }
 
@@ -338,6 +336,7 @@ namespace Dt.Base.Docking
                 double minHeight = double.IsNaN(MinHeight) ? 0.0 : MinHeight;
                 double maxWidth = double.IsNaN(MaxWidth) ? double.PositiveInfinity : MaxWidth;
                 double maxHeight = double.IsNaN(MaxHeight) ? double.PositiveInfinity : MaxHeight;
+                e.Handled = true;
                 switch (_resizeDirection)
                 {
                     case ResizeDirection.Left:
@@ -403,6 +402,7 @@ namespace Dt.Base.Docking
         {
             if (_isResizing)
             {
+                e.Handled = true;
                 UpdateMouseCursor(ResizeDirection.None);
                 _isResizing = false;
                 _rootGrid.ReleasePointerCapture(e.Pointer);

@@ -39,44 +39,44 @@ namespace Dt.Base.Docking
         /// </summary>
         public static readonly DependencyProperty ShowBottomIndicatorProperty = DependencyProperty.Register(
             "ShowBottomIndicator",
-            typeof(bool), 
-            typeof(Compass), 
+            typeof(bool),
+            typeof(Compass),
             new PropertyMetadata(true, OnStateChanged));
-        
+
         /// <summary>
         /// 中部指示器是否可见
         /// </summary>
         public static readonly DependencyProperty ShowCenterIndicatorProperty = DependencyProperty.Register(
-            "ShowCenterIndicator", 
-            typeof(bool), 
-            typeof(Compass), 
+            "ShowCenterIndicator",
+            typeof(bool),
+            typeof(Compass),
             new PropertyMetadata(true, OnStateChanged));
-        
+
         /// <summary>
         /// 左部指示器是否可见
         /// </summary>
         public static readonly DependencyProperty ShowLeftIndicatorProperty = DependencyProperty.Register(
-            "ShowLeftIndicator", 
-            typeof(bool), 
-            typeof(Compass), 
+            "ShowLeftIndicator",
+            typeof(bool),
+            typeof(Compass),
             new PropertyMetadata(true, OnStateChanged));
-        
+
         /// <summary>
         /// 右部指示器是否可见
         /// </summary>
         public static readonly DependencyProperty ShowRightIndicatorProperty = DependencyProperty.Register(
-            "ShowRightIndicator", 
-            typeof(bool), 
-            typeof(Compass), 
+            "ShowRightIndicator",
+            typeof(bool),
+            typeof(Compass),
             new PropertyMetadata(true, OnStateChanged));
-        
+
         /// <summary>
         /// 顶部指示器是否可见
         /// </summary>
         public static readonly DependencyProperty ShowTopIndicatorProperty = DependencyProperty.Register(
-            "ShowTopIndicator", 
-            typeof(bool), 
-            typeof(Compass), 
+            "ShowTopIndicator",
+            typeof(bool),
+            typeof(Compass),
             new PropertyMetadata(true, OnStateChanged));
 
         static void OnStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -86,7 +86,6 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 成员变量
-        FrameworkElement _rootPart;
         FrameworkElement _leftIndicator;
         FrameworkElement _rightIndicator;
         FrameworkElement _topIndicator;
@@ -164,14 +163,36 @@ namespace Dt.Base.Docking
         /// <summary>
         /// Win停靠位置
         /// </summary>
-        /// <param name="position"></param>
-        public void ChangeDockPosition(Point position)
+        /// <param name="pos"></param>
+        public void ChangeDockPosition(Point pos)
         {
-            DockPosition = (from dpElem in
-                                (from frElem in GetElementsInHostCoordinates((Parent as FrameworkElement), position)
-                                 select GetCompassPosition(frElem))
-                            where dpElem != DockPosition.None
-                            select dpElem).FirstOrDefault();
+            if (_leftIndicator == null)
+                return;
+
+            if (_leftIndicator.ContainPoint(pos))
+            {
+                DockPosition = Docking.DockPosition.Left;
+            }
+            else if (_topIndicator.ContainPoint(pos))
+            {
+                DockPosition = Docking.DockPosition.Top;
+            }
+            else if (_rightIndicator.ContainPoint(pos))
+            {
+                DockPosition = Docking.DockPosition.Right;
+            }
+            else if (_bottomIndicator.ContainPoint(pos))
+            {
+                DockPosition = Docking.DockPosition.Bottom;
+            }
+            else if (_centerIndicator.ContainPoint(pos))
+            {
+                DockPosition = Docking.DockPosition.Center;
+            }
+            else
+            {
+                DockPosition = Docking.DockPosition.None;
+            }
         }
 
         /// <summary>
@@ -195,7 +216,6 @@ namespace Dt.Base.Docking
             _rightIndicator = GetTemplateChild("PART_RightIndicator") as FrameworkElement;
             _bottomIndicator = GetTemplateChild("PART_BottomIndicator") as FrameworkElement;
             _centerIndicator = GetTemplateChild("PART_CenterIndicator") as FrameworkElement;
-            _rootPart = GetTemplateChild("PART_Center") as FrameworkElement;
             ChangeVisualState();
         }
         #endregion
@@ -237,48 +257,6 @@ namespace Dt.Base.Docking
             }
         }
 
-        DockPosition GetCompassPosition(FrameworkElement element)
-        {
-            if (element == _leftIndicator)
-            {
-                return Docking.DockPosition.Left;
-            }
-            if (element == _topIndicator)
-            {
-                return Docking.DockPosition.Top;
-            }
-            if (element == _rightIndicator)
-            {
-                return Docking.DockPosition.Right;
-            }
-            if (element == _bottomIndicator)
-            {
-                return Docking.DockPosition.Bottom;
-            }
-            if (element == _centerIndicator) 
-            {
-                return Docking.DockPosition.Center;
-            }
-            return Docking.DockPosition.None;
-        }
-
-        IEnumerable<FrameworkElement> GetElementsInHostCoordinates(FrameworkElement subtree, Point localPosition)
-        {
-            subtree = GetSubtree(subtree);
-            GeneralTransform generalTransform = subtree.TransformToVisual(null);
-            Transform transform = generalTransform as Transform;
-            if (transform == null) 
-            {
-                Point p = generalTransform.TransformPoint(new Point(0.0, 0.0));
-                transform = new TranslateTransform() 
-                {
-                    X = p.X ,
-                    Y = p.Y 
-                };
-            }
-            return VisualTreeHelper.FindElementsInHostCoordinates(transform.TransformPoint(localPosition), subtree).OfType<FrameworkElement>();
-        }
-
         FrameworkElement GetSubtree(FrameworkElement element)
         {
             Windows.UI.Xaml.Controls.Primitives.Popup popup = element as Windows.UI.Xaml.Controls.Primitives.Popup;
@@ -291,7 +269,7 @@ namespace Dt.Base.Docking
             }
             return testElement;
         }
-        
+
         FrameworkElement GetRootVisual(DependencyObject element)
         {
             DependencyObject parent = null;
