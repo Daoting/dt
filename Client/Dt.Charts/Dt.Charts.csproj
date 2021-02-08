@@ -4,10 +4,6 @@
     <Description>DT平台图表控件库</Description>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="PlotElement\" />
-  </ItemGroup>
-
   <Import Project="..\Common\Dtc-Stable.props" />
   
 </Project>

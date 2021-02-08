@@ -219,7 +219,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:CHtml">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <Button x:Name="BtnEdit" Content="&#xE00A;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                        <Button x:Name="BtnEdit" Content="&#xE006;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
                     </fv:CellPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -236,7 +236,7 @@
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
                         <Grid x:Name="Grid" Background="Transparent">
                             <Button x:Name="BtnAdd"
-                                    Content="&#xE080;"
+                                    Content="&#xE08A;"
                                     Style="{StaticResource 字符按钮}"
                                     HorizontalAlignment="Center"
                                     Visibility="{Binding ReadOnlyBinding,Converter={StaticResource CvBoolToCollapsed},RelativeSource={RelativeSource TemplatedParent}}" />
@@ -352,7 +352,7 @@
                                        Margin="10,0,0,0"
                                        IsTextSelectionEnabled="True"
                                        VerticalAlignment="Center" />
-                            <TextBlock Text="&#xE055;"
+                            <TextBlock Text="&#xE102;"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
                                        Margin="10,0,10,0"

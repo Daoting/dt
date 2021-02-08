@@ -418,7 +418,7 @@ namespace Dt.Base
                         Background = BrushRes.浅灰背景,
                         Child = new TextBlock
                         {
-                            Text = "\uE063",
+                            Text = "\uE016",
                             // 居中在android上位置不对
                             Margin = new Thickness(9, 7, 0, 0),
                             //HorizontalAlignment = HorizontalAlignment.Center,
@@ -455,7 +455,7 @@ namespace Dt.Base
                         Background = BrushRes.浅灰背景,
                         Child = new TextBlock
                         {
-                            Text = "\uE061",
+                            Text = "\uE018",
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
                             FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
