@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='net5.0' ">
-    <PackageReference Include="Uno.UI" Version="3.5.0-dev.223" />
+    <PackageReference Include="Uno.UI" Version="3.5.1" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">
