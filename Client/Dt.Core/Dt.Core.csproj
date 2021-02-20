@@ -7,14 +7,18 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.3" />
   </ItemGroup>
-  
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0' ">
+    <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0' ">
     <PackageReference Include="Square.OkHttp3" Version="3.12.3" />
     <PackageReference Include="Square.OkIO" version="1.17.4" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Sqlite\Model\OmColumn.cs" Link="Internal\SqliteModel\OmColumn.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />

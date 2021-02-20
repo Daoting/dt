@@ -1,5 +1,4 @@
-﻿#if !WASM
-#region 文件描述
+﻿#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
@@ -39,8 +38,15 @@ namespace Dt.Core
         #region 构造方法
         static AtLocal()
         {
+#if WASM
+            // .net5.0 只能引用 SQLite3Provider_sqlite3，DllImport("sqlite3")
+            // 默认为 SQLite3Provider_e_sqlite3 引用时出错！
+            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
+#else
             // 初始化不同平台的包绑定！V2支持类型和属性的绑定
+            // 内部调用 SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
             SQLitePCL.Batteries_V2.Init();
+#endif
 
             // 创建本地文件存放目录
             if (!Directory.Exists(CachePath))
@@ -657,4 +663,3 @@ namespace Dt.Core
         #endregion
     }
 }
-#endif

@@ -45,7 +45,7 @@
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' != 'net5.0' ">
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup> 
   
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">
