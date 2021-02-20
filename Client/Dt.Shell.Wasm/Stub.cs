@@ -34,7 +34,7 @@ namespace Dt.Shell
         /// <summary>
         /// 服务器地址
         /// </summary>
-        public string ServerUrl => "http://localhost/baisui";
+        public string ServerUrl => "http://localhost/fz";
 
         /// <summary>
         /// 系统标题

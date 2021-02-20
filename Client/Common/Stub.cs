@@ -26,7 +26,7 @@ namespace Dt.Shell
         /// <summary>
         /// 服务器地址
         /// </summary>
-        public string ServerUrl => "https://10.10.1.16/baisui";
+        public string ServerUrl => "https://10.10.1.16/fz";
 
         /// <summary>
         /// 系统标题

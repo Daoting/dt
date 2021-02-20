@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/baisui/msg",
+      "applicationUrl": "https://localhost/fz/msg",
       "sslPort": 0
     }
   },

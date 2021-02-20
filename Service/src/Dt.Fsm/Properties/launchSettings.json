@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/baisui/fsm",
+      "applicationUrl": "https://localhost/fz/fsm",
       "sslPort": 0
     }
   },

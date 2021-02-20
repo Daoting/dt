@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/baisui/pub",
+      "applicationUrl": "https://localhost/fz/pub",
       "sslPort": 0
     }
   },
