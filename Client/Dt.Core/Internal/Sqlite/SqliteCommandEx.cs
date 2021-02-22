@@ -289,7 +289,7 @@ namespace Dt.Core.Sqlite
             }
             if (type == typeof(TimeSpan))
             {
-                if (p_dataReader.GetDataTypeName(p_ordinal).ToLower() == "varchar")
+                if (p_dataReader.GetFieldType(p_ordinal) == typeof(string))
                 {
                     return TimeSpan.Parse(p_dataReader.GetString(p_ordinal));
                 }
@@ -315,8 +315,7 @@ namespace Dt.Core.Sqlite
 
         /// <summary>
         /// 根据SqliteDataReader的结果字段生成Table的列结构信息.
-        /// 数据列的类型与tablemapping中创建表时候的数据列类型保持一致，服务器端的tablemapping和客户端
-        /// 的是一致的。程序中一般情况下禁止使用SqliteDataReader 的 GetFieldType方法，返回结果在表的首行数据出现dbnull的时候不正确。
+        /// 数据列的类型与tablemapping中创建表时候的数据列类型保持一致，服务器端的tablemapping和客户端的是一致的。
         /// </summary>
         /// <param name="p_dr"></param>
         /// <returns></returns>
@@ -326,32 +325,36 @@ namespace Dt.Core.Sqlite
             var cols = dt.Columns;
             for (int i = 0; i < p_dr.FieldCount; i++)
             {
-                string colTypeName = p_dr.GetDataTypeName(i).ToLower();
-                switch (colTypeName)
-                {
-                    case "integer":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(int)));
-                        break;
-                    case "bigint":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(long)));
-                        break;
-                    case "float":
-                    case "real":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(double)));
-                        break;
-                    case "text":
-                    case "varchar":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(string)));
-                        break;
-                    case "datetime":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(DateTime)));
-                        break;
-                    case "blob":
-                        cols.Add(new Column(p_dr.GetName(i), typeof(byte[])));
-                        break;
-                    default:
-                        throw new Exception("意外的数据类型。");
-                }
+                // Microsoft.Data.Sqlite 升级5.0.3后使用 GetFieldType 方法，因通过GetDataTypeName无bigint类型！
+                cols.Add(new Column(p_dr.GetName(i), p_dr.GetFieldType(i)));
+
+                // 程序中一般情况下禁止使用SqliteDataReader 的 GetFieldType方法，返回结果在表的首行数据出现dbnull的时候不正确。
+                //string colTypeName = p_dr.GetDataTypeName(i).ToLower();
+                //switch (colTypeName)
+                //{
+                //    case "integer":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(int)));
+                //        break;
+                //    case "bigint":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(long)));
+                //        break;
+                //    case "float":
+                //    case "real":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(double)));
+                //        break;
+                //    case "text":
+                //    case "varchar":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(string)));
+                //        break;
+                //    case "datetime":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(DateTime)));
+                //        break;
+                //    case "blob":
+                //        cols.Add(new Column(p_dr.GetName(i), typeof(byte[])));
+                //        break;
+                //    default:
+                //        throw new Exception("意外的数据类型。");
+                //}
             }
             return dt;
         }

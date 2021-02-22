@@ -189,15 +189,15 @@ namespace Dt.Base
             }
             else if (e.NewValue is Table tbl)
             {
+                lv._dataView = new LvDataView(lv, tbl);
                 if (lv.AutoCreateCol)
                     lv.OnAutoCreateCol(tbl);
-                lv._dataView = new LvDataView(lv, tbl);
             }
             else if (e.NewValue is INotifyList ls)
             {
+                lv._dataView = new LvDataView(lv, ls);
                 if (lv.AutoCreateCol && ls.Count > 0)
                     lv.OnAutoCreateProp(ls[0].GetType());
-                lv._dataView = new LvDataView(lv, ls);
             }
             lv.OnDataChanged();
         }
