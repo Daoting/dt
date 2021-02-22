@@ -26,6 +26,8 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
+        // 注意uno中存在诡异现象，在UI主线程调用Throw抛出异常时，
+        // 如在Button.Click事件方法中调用，若方法是同步，不catch也没能抛出未处理异常，方法加async就能正常抛出！
 
         async void ThrowIf(object sender, RoutedEventArgs e)
         {
@@ -37,26 +39,30 @@ namespace Dt.Sample
             await Task.CompletedTask;
         }
 
-        void ThrowIfNull(object sender, RoutedEventArgs e)
+        async void ThrowIfNull(object sender, RoutedEventArgs e)
         {
             TextBlock tb = null;
             Throw.IfNull(tb, "对象null时的异常警告");
+            await Task.CompletedTask;
         }
 
-        void ThrowIfNullOrEmpty(object sender, RoutedEventArgs e)
+        async void ThrowIfNullOrEmpty(object sender, RoutedEventArgs e)
         {
             Throw.IfNullOrEmpty(null, "字符串空或null的异常警告");
+            await Task.CompletedTask;
         }
 
-        void ThrowMsg(object sender, RoutedEventArgs e)
+        async void ThrowMsg(object sender, RoutedEventArgs e)
         {
             Throw.Msg("直接业务异常消息");
+            await Task.CompletedTask;
         }
 
-        void ThrowUnhandle(object sender, RoutedEventArgs e)
+        async void ThrowUnhandle(object sender, RoutedEventArgs e)
         {
             //Throw.If(true);
             Throw.IfNullOrEmpty(null);
+            await Task.CompletedTask;
         }
 
         #region 服务端异常

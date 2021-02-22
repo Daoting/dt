@@ -122,12 +122,15 @@ namespace Dt.Core
             p_app.Resuming += OnResuming;
 
             // 异常处理
-#if UWP || WASM
+#if UWP
             p_app.UnhandledException += OnUwpUnhandledException;
 #elif ANDROID
             Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
 #elif IOS
             // 在iOS项目的Main函数处理
+#elif WASM
+            TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
 #endif
 
             // 打开状态库
