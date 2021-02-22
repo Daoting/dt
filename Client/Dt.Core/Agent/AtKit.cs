@@ -864,31 +864,6 @@ namespace Dt.Core
         }
         #endregion
 
-        #region wasm
-#if WASM
-        /// <summary>
-        /// 执行js内容，相当于eval
-        /// </summary>
-        /// <param name="p_js">js语句串</param>
-        /// <returns>调用结果</returns>
-        public static string InvokeJS(string p_js)
-        {
-            var escaped = p_js;
-
-            var r = WebAssembly.Runtime.InvokeJS(escaped, out var exceptionResult);
-            if (exceptionResult != 0)
-            {
-                Console.Error.WriteLine($"Error #{exceptionResult} \"{r}\" executing javascript: \"{p_js}\"");
-            }
-            else
-            {
-                // Console.WriteLine($"InvokeJS: [{str}]: {r}");
-            }
-            return r;
-        }
-#endif
-        #endregion
-
         #region 内部方法
         /// <summary>
         /// 创建Trace数据源表

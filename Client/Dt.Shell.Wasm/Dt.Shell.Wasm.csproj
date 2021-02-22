@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+    <DefineConstants>$(DefineConstants);__WASM__;WASM</DefineConstants>
     <NoWarn>NU1701</NoWarn>
 
     <!-- 必须sdk完整路径 -->
@@ -26,6 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Assets\logo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Fonts\icon.woff2" />
     <Content Include="Fonts\uno-fluentui-assets.woff2" />
@@ -58,6 +59,7 @@
 
   <ItemGroup>
     <Compile Include="..\Common\App.xaml.cs" Link="App.xaml.cs" />
+    <Compile Include="..\Common\Stub.cs" Link="Stub.cs" />
     <Page Include="..\Common\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <Link>App.xaml</Link>

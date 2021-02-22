@@ -217,5 +217,10 @@ namespace Dt.App
                 _tbPwd.Visibility = Visibility.Visible;
             }
         }
+
+        void OnShowTrace(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            Dt.Base.Tools.SysTrace.ShowBox();
+        }
     }
 }
