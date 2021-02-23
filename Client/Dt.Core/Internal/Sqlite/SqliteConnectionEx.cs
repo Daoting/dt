@@ -346,6 +346,10 @@ namespace Dt.Core.Sqlite
         /// <param name="p_action"></param>
         public void RunInTransaction(Action p_action)
         {
+#if WASM
+            // 5.0.3∞Ê±æ÷– BeginTransaction “Ï≥££°
+            p_action();
+#else
             using (var trans = BeginTransaction())
             {
                 try
@@ -358,6 +362,7 @@ namespace Dt.Core.Sqlite
                     trans.Rollback();
                 }
             }
+#endif
         }
 
         /// <summary>
@@ -394,7 +399,7 @@ namespace Dt.Core.Sqlite
                     {
                         cmd.Parameters.Add(item.Key, item.Value == null ? SqliteType.Text : ToDbType(item.Value.GetType()));
                     }
-                    
+
                     foreach (var dt in p_list)
                     {
                         foreach (var item in dt)
