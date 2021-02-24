@@ -105,7 +105,7 @@ namespace Dt.Core.Rpc
                 // 部署在k8s时内部DNS通过服务名即可
                 RequestUri = new Uri(Glb.IsInDocker ? $"https://{Glb.AppName}-{_svcName}/.c" : $"https://localhost/{Glb.AppName}/{_svcName}/.c"),
 #else
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{_svcName}/.c"),
+                RequestUri = new Uri($"{AtSys.Stub.ServerUrl}/{_svcName}/.c"),
 #endif
             };
         }

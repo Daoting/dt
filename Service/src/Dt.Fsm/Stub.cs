@@ -54,17 +54,13 @@ namespace Dt.Fsm
             p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
 
             // 设置可浏览目录的根目录，测试用
-            var dir = new DirectoryBrowserOptions();
-            dir.FileProvider = new PhysicalFileProvider(Cfg.Root);
-            p_app.UseDirectoryBrowser(dir);
+            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions { FileProvider = new PhysicalFileProvider(Cfg.Root) });
 
-            // 增加浏览次数
+            // 增加浏览次数，无缩略图时自动取原图
             p_app.UseMiddleware<AddBrowseCount>();
 
             // 指定根目录，代替wwwroot
-            var fileOption = new StaticFileOptions();
-            fileOption.FileProvider = new PhysicalFileProvider(Cfg.Root);
-            p_app.UseStaticFiles(fileOption);
+            p_app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Cfg.Root) });
         }
     }
 }

@@ -29,7 +29,8 @@ namespace Dt.App.Publish
         public void Refresh(Row p_row)
         {
             _tab.Title = p_row.Str("title");
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/g/{p_row.Str("url")}");
+            // Android ios上WebView的 https 需要有效证书，临时用http！
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.Replace("https:", "http:")}/pub/g/{p_row.Str("url")}");
         }
 
         async void OnShare(object sender, Mi e)

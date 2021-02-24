@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Dt.Fsm
 {
     /// <summary>
-    /// 增加浏览次数
+    /// 增加浏览次数，无缩略图时自动取原图
     /// </summary>
     public class AddBrowseCount
     {
@@ -30,13 +30,44 @@ namespace Dt.Fsm
 
         public async Task Invoke(HttpContext p_context)
         {
-            string path = p_context.Request.Path.Value;
-            if (!path.EndsWith("-t.jpg"))
+            string path = p_context.Request.Path.Value.TrimStart('/');
+            FileInfo fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
+
+            // 缩略图
+            bool isThumb = false;
+            if (path.EndsWith(Cfg.ThumbPostfix))
             {
-                var str = Path.Combine(Cfg.Root, path.TrimStart('/'));
-                if (File.Exists(str))
-                    await new MySqlAccess().Exec("增加下载次数", new { path = path });
+                if (fileInfo.Exists)
+                {
+                    isThumb = true;
+                }
+                else
+                {
+                    // 未找到缩略图，取原图，视频不处理
+                    string originPath = path.Substring(0, path.Length - Cfg.ThumbPostfix.Length);
+                    int index = originPath.LastIndexOf('.');
+                    if (index > -1)
+                    {
+                        string ext = originPath.Substring(index + 1).ToLower();
+                        if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "bmp" || ext == "gif" || ext == "tif")
+                        {
+                            // 取原图
+                            path = originPath;
+                            p_context.Request.Path = new PathString("/" + path);
+                            fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
+                        }
+                    }
+                }
             }
+
+            if (!fileInfo.Exists)
+            {
+                p_context.Response.StatusCode = 404;
+                return;
+            }
+
+            if (!isThumb)
+                await new MySqlAccess().Exec("增加下载次数", new { path = path });
             await _next(p_context);
         }
     }

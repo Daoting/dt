@@ -136,7 +136,7 @@ namespace Dt.Base
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u")
+                RequestUri = new Uri($"{AtSys.Stub.ServerUrl}/fsm/.u")
             };
 
             if (AtUser.IsLogon)

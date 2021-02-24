@@ -99,7 +99,7 @@ namespace Dt.Base
                 try
                 {
                     // 下载模型文件，下载地址如 https://localhost/app/cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{p_svcName}/.model"))
+                    using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl}/{p_svcName}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                     using (var fs = File.Create(Path.Combine(AtLocal.RootPath, modelFile), 262140, FileOptions.WriteThrough))

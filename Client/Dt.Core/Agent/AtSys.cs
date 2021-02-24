@@ -129,7 +129,7 @@ namespace Dt.Core
 #elif IOS
             // 在iOS项目的Main函数处理
 #elif WASM
-            TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
+            //TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
             AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
 #endif
 

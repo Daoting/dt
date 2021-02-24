@@ -26,6 +26,32 @@ namespace Dt.Base
     /// </summary>
     public static class ImgKit
     {
+#if WASM
+        /// <summary>
+        /// 加载文件服务的图片，支持路径 或 FileList中json格式
+        /// </summary>
+        /// <param name="p_path">路径或FileList中json格式</param>
+        /// <param name="p_img"></param>
+        public static Task LoadImage(string p_path, Image p_img = null)
+        {
+            if (string.IsNullOrEmpty(p_path))
+                return Task.CompletedTask;
+
+            // 按照FileList中json格式获取路径，如：
+            // [["photo/E3/18/58108158862553088.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-03-09 16:21"]]
+            if (p_path.StartsWith("["))
+            {
+                int i = p_path.IndexOf("\",");
+                if (i <= 3)
+                    return Task.CompletedTask;
+                p_path = p_path.Substring(3, i - 3);
+            }
+
+            // 图片无缓存
+            p_img.Source = new BitmapImage(new Uri($"{AtSys.Stub.ServerUrl}/fsm/{p_path}"));
+            return Task.CompletedTask;
+        }
+#else
         static readonly AsyncLocker _locker = new AsyncLocker();
 
         /// <summary>
@@ -33,7 +59,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public static async Task<BitmapImage> LoadImage(string p_path, Image p_img = null)
+        public static async Task LoadImage(string p_path, Image p_img = null)
         {
             // 加载过程：
             // 1. 本地.doc目录是否存在
@@ -42,7 +68,7 @@ namespace Dt.Base
             // 4. 下载成功，加载本地图片
             // 
             if (string.IsNullOrEmpty(p_path))
-                return null;
+                return;
 
             // 按照FileList中json格式获取路径，如：
             // [["photo/E3/18/58108158862553088.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-03-09 16:21"]]
@@ -50,14 +76,14 @@ namespace Dt.Base
             {
                 int i = p_path.IndexOf("\",");
                 if (i <= 3)
-                    return null;
+                    return;
                 p_path = p_path.Substring(3, i - 3);
             }
 
             // 文件服务的路径肯定含/
             int index = p_path.LastIndexOf('/');
             if (index <= 0)
-                return null;
+                return;
 
             // 减轻并发下载时服务端的压力，避免异步下载、显示同一图片时异常
             using (await _locker.LockAsync())
@@ -67,27 +93,27 @@ namespace Dt.Base
                 if (!System.IO.File.Exists(path))
                 {
                     if (!await Downloader.GetAndCacheFile(p_path))
-                        return null;
+                        return;
                 }
 
                 var bmp = await GetLocalImage(fileName);
                 if (p_img != null)
                     p_img.Source = bmp;
-                return bmp;
             }
         }
+#endif
 
         /// <summary>
         /// 获取存放在.doc路径的本地图片
         /// </summary>
         /// <param name="p_fileName">文件名</param>
         /// <returns></returns>
-        public static async Task<BitmapImage> GetLocalImage(string p_fileName)
+        static async Task<BitmapImage> GetLocalImage(string p_fileName)
         {
             string path = Path.Combine(AtLocal.CachePath, p_fileName);
             if (!File.Exists(path))
                 return null;
-
+            
             BitmapImage bmp = new BitmapImage();
 #if UWP
             StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
@@ -113,7 +139,8 @@ namespace Dt.Base
                 await bmp.SetSourceAsync(stream);
             }
 #elif WASM
-
+            // 不支持本地文件
+            await Task.CompletedTask;
 #endif
             return bmp;
         }

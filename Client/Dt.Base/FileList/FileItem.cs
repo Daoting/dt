@@ -41,6 +41,11 @@ namespace Dt.Base
     public partial class FileItem : Control, IUploadUI
     {
         #region 静态成员
+        /// <summary>
+        /// 缩略图后缀名
+        /// </summary>
+        const string ThumbPostfix = "-t.jpg";
+
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
@@ -672,6 +677,9 @@ namespace Dt.Base
                         await bmp.SetSourceAsync(stream);
                     }
                 }
+#elif WASM
+                // 暂未实现
+                await Task.CompletedTask;
 #endif
                 Bitmap = bmp;
             }
@@ -799,14 +807,13 @@ namespace Dt.Base
             if (p_priorThumbnail)
             {
                 // 优先下载缩略图时，先判断是否存在
-                downloadThumb = await AtFile.Exists(ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg");
+                downloadThumb = await AtFile.Exists(ID + ThumbPostfix);
                 // 缩略图不存在时，若为视频文件不下载
                 if (!downloadThumb && FileType != FileItemType.Image)
                     return false;
             }
 
-            string name = downloadThumb ? GetThumbName() : GetFileName();
-            string path = Path.Combine(AtLocal.CachePath, name);
+            string path = Path.Combine(AtLocal.CachePath, downloadThumb ? GetThumbName() : GetFileName());
             FileStream stream = null;
             try
             {
@@ -825,7 +832,7 @@ namespace Dt.Base
             State = FileItemState.Downloading;
             DownloadInfo info = new DownloadInfo
             {
-                Path = downloadThumb ? ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg" : ID,
+                Path = downloadThumb ? ID + ThumbPostfix : ID,
                 TgtStream = stream,
                 Progress = OnDownloadProgress,
             };
@@ -946,6 +953,14 @@ namespace Dt.Base
             SetBinding(ImageStretchProperty, new Binding { Path = new PropertyPath("ImageStretch"), Source = _owner, Mode = BindingMode.OneWay });
         }
 
+#if WASM
+        Task LoadImage()
+        {
+            var path = new Uri($"{AtSys.Stub.ServerUrl}/fsm/{ID}{ThumbPostfix}");
+            Bitmap = new BitmapImage(path);
+            return Task.CompletedTask;
+        }
+#else
         async Task LoadImage()
         {
             string thumbName = Path.Combine(AtLocal.CachePath, GetThumbName());
@@ -973,6 +988,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(path))
                 Bitmap = new BitmapImage(new Uri(path));
         }
+#endif
         #endregion
 
         #region 更新UI
@@ -1080,10 +1096,7 @@ namespace Dt.Base
         string GetThumbName()
         {
             if (!string.IsNullOrEmpty(ID))
-            {
-                int start = ID.LastIndexOf('/') + 1;
-                return ID.Substring(start, ID.LastIndexOf('.') - start) + "-t.jpg";
-            }
+                return ID.Substring(ID.LastIndexOf('/') + 1) + ThumbPostfix;
             return null;
         }
 

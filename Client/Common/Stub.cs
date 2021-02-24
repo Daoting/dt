@@ -35,7 +35,7 @@ namespace Dt.Shell
         }
 #else
         /// <summary>
-        /// 服务器地址
+        /// 服务器地址，末尾不包含'/'
         /// </summary>
         public string ServerUrl => "https://10.10.1.16/fz";
 #endif

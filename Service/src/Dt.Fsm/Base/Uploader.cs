@@ -126,11 +126,11 @@ namespace Dt.Fsm
                     {
                         if (fileSection.Name == "thumbnail")
                         {
-                            // 将缩略图复制到同路径，命名：xxx-t.jpg
-                            int index;
-                            if (lastFile != null && (index = lastFile.Path.LastIndexOf('.')) > 0)
+                            if (lastFile != null)
                             {
-                                string fullPath = Path.Combine(Cfg.Root, lastFile.Path.Substring(0, index) + Cfg.ThumbPostfix);
+                                // 将缩略图复制到同路径
+                                // 命名规则：原文件名添加后缀"-t.jpg"，如 143203944767549440.wmv-t.jpg
+                                string fullPath = Path.Combine(Cfg.Root, lastFile.Path + Cfg.ThumbPostfix);
                                 try
                                 {
                                     using (var writeStream = File.Create(fullPath))

@@ -31,18 +31,15 @@ namespace Dt.Sample
         public TestDemo1()
         {
             InitializeComponent();
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/ws/editor/default.html");
         }
 
-        async void OnSave(object sender, RoutedEventArgs e)
+        void OnSave(object sender, RoutedEventArgs e)
         {
-            var ret = await _wv.InvokeScriptAsync("getHtml", null);
 
         }
 
-        async void OnSetHtml(object sender, RoutedEventArgs e)
+        void OnSetHtml(object sender, RoutedEventArgs e)
         {
-            await _wv.InvokeScriptAsync("setHtml", new string[] { "<p>12345</p>" });
         }
     }
 }

@@ -25,7 +25,7 @@
         </member>
         <member name="T:Dt.Fsm.AddBrowseCount">
             <summary>
-            增加浏览次数
+            增加浏览次数，无缩略图时自动取原图
             </summary>
         </member>
         <member name="T:Dt.Fsm.Cfg">

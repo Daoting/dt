@@ -25,7 +25,7 @@ namespace Dt.Base.FormView
         {
             InitializeComponent();
 
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/html/default.html");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl}/pub/editor/html/default.html");
             if (Type.GetType(FileItem.SelectFileDlgType) == null)
             {
                 _menu.Hide("图片", "视频");
