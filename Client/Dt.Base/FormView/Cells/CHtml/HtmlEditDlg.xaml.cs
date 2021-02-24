@@ -16,8 +16,8 @@ namespace Dt.Base.FormView
 {
     public sealed partial class HtmlEditDlg : Dlg
     {
-        const string _insertVideo = "<video src=\"../../fsm/{0}\" poster=\"../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
-        const string _insertImg = "../../fsm/{0}";
+        const string _insertVideo = "<video src=\"../../../fsm/{0}\" poster=\"../../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
+        const string _insertImg = "../../../fsm/{0}";
         IHtmlEditHost _host;
         bool _saved;
 
@@ -25,7 +25,7 @@ namespace Dt.Base.FormView
         {
             InitializeComponent();
 
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/default.html");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/html/default.html");
             if (Type.GetType(FileItem.SelectFileDlgType) == null)
             {
                 _menu.Hide("图片", "视频");
@@ -87,7 +87,7 @@ namespace Dt.Base.FormView
                     if (index > 2)
                     {
                         string id = file.Substring(2, index - 2);
-                        string thumb = id.Substring(0, id.LastIndexOf('.')) + "-t.jpg";
+                        string thumb = id + "-t.jpg";
                         await _wv.InvokeScriptAsync("insertVideo", new string[] { string.Format(_insertVideo, id, thumb) });
                     }
                 }

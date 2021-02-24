@@ -19,7 +19,7 @@ namespace Dt.Base.FormView
         public HtmlViewDlg()
         {
             InitializeComponent();
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/readonly.html");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/html/readonly.html");
         }
 
         public async void ShowDlg(CHtml p_owner)

@@ -189,6 +189,7 @@ namespace Dt.App.Publish
 
         Task<bool> IHtmlEditHost.SaveHtml(string p_html)
         {
+            ((Post)_fv.Data).Content = p_html;
             return SavePost();
         }
         #endregion

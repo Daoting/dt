@@ -18,10 +18,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\editor\template.html" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />

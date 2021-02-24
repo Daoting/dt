@@ -28,7 +28,7 @@ namespace Dt.Pub
             "<head>\n" +
             "    <meta charset=\"utf-8\">\n" +
             "    <title>{0}</title>\n" +
-            "    <link rel=\"stylesheet\" href=\"../css/froala.pkgd.min.css\">\n" +
+            "    <link rel=\"stylesheet\" href=\"../froala.css\">\n" +
             "</head>\n" +
             "<body>\n" +
             "    <div class=\"fr-element fr-view\">\n" +
@@ -60,8 +60,8 @@ namespace Dt.Pub
                     // 删除旧文件
                     try
                     {
-                        string path = Path.Combine(AppContext.BaseDirectory, "wwwroot", p_post.Url);
-                        if (!File.Exists(path))
+                        string path = Path.Combine(GetRootPath(), p_post.Url);
+                        if (File.Exists(path))
                             File.Delete(path);
                         p_post.Url = null;
                     }
@@ -117,8 +117,7 @@ namespace Dt.Pub
             string pageName = $"{Id.New()}.html";
             try
             {
-                // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
-                string path = Path.Combine(AppContext.BaseDirectory, "wwwroot", p_folder);
+                string path = Path.Combine(GetRootPath(), p_folder);
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
@@ -134,6 +133,12 @@ namespace Dt.Pub
                 return null;
             }
             return $"{p_folder}/{pageName}";
+        }
+
+        string GetRootPath()
+        {
+            // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
+            return Path.Combine(AppContext.BaseDirectory, "wwwroot\\g");
         }
     }
 }

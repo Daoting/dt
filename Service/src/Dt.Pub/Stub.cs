@@ -8,11 +8,13 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using System;
 using System.Collections.Generic;
+using System.IO;
 #endregion
 
 namespace Dt.Pub
@@ -28,7 +30,7 @@ namespace Dt.Pub
         /// <param name="p_services"></param>
         public void ConfigureServices(IServiceCollection p_services)
         {
-            
+
         }
 
         /// <summary>
@@ -38,9 +40,15 @@ namespace Dt.Pub
         /// <param name="p_handlers">注册自定义请求处理</param>
         public void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            // 默认页和静态页面
-            p_app.UseDefaultFiles();
-            p_app.UseStaticFiles();
+            // 可浏览动态生成的页面目录，测试用
+            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(AppContext.BaseDirectory, "wwwroot\\g")),
+                RequestPath = "/g"
+            });
+
+            // 静态页面，默认根目录为wwwroot，但开发时把项目的wwwroot作为静态页面根目录，为一致需指定dll所在目录的wwwroot！
+            p_app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Path.Combine(AppContext.BaseDirectory, "wwwroot")) });
         }
     }
 }

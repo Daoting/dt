@@ -29,7 +29,7 @@ namespace Dt.App.Publish
         public void Refresh(Row p_row)
         {
             _tab.Title = p_row.Str("title");
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.Replace("https:", "http:").TrimEnd('/')}/pub/{p_row.Str("url")}");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/g/{p_row.Str("url")}");
         }
 
         async void OnShare(object sender, Mi e)
