@@ -169,7 +169,7 @@ namespace Dt.Base
         public string ID { get; set; }
 
         /// <summary>
-        /// 获取设置标题，普通文件未名称，音频文件为时长
+        /// 获取设置标题，普通文件为名称，音频文件为时长
         /// </summary>
         public string Title
         {
@@ -213,7 +213,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdDelete == null)
-                    _cmdDelete = new BaseCommand((e) => _ = Delete());
+                    _cmdDelete = new BaseCommand((e) => _ = DeleteFile());
                 return _cmdDelete;
             }
         }
@@ -226,7 +226,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdOpenFile == null)
-                    _cmdOpenFile = new BaseCommand((e) => _ = Open());
+                    _cmdOpenFile = new BaseCommand((e) => _ = OpenFile());
                 return _cmdOpenFile;
             }
         }
@@ -252,7 +252,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdDownload == null)
-                    _cmdDownload = new BaseCommand((e) => _ = Download());
+                    _cmdDownload = new BaseCommand((e) => DownloadFile());
                 return _cmdDownload;
             }
         }
@@ -342,12 +342,13 @@ namespace Dt.Base
         #endregion
 
         #region 文件操作
+#if !WASM
         /// <summary>
         /// 打开文件
         /// <para>先检查本地有没有，有打开本地，没有先下载；</para>
         /// <para>内部支持音视频的预览，其它类型文件用默认关联程序打开；</para>
         /// </summary>
-        public async Task Open()
+        public async Task OpenFile()
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
                 return;
@@ -414,52 +415,6 @@ namespace Dt.Base
                 Title = title,
                 File = new ShareFile(fileName)
             });
-        }
-
-        /// <summary>
-        /// 更新文件
-        /// </summary>
-        public async Task UpdateFile()
-        {
-            if (State != FileItemState.None)
-                return;
-
-            if (Type.GetType(SelectFileDlgType) != null)
-            {
-                int result = await new UpdateFileDlg().ShowDlg();
-                if (result < 0)
-                    return;
-
-                if (result == 0)
-                {
-                    // 通过从库中选择文件进行更新，无需上传
-                    string ext = null;
-                    if (FileType == FileItemType.Image)
-                        ext = ImageExt;
-                    else if (FileType == FileItemType.Video)
-                        ext = VideoExt;
-
-                    var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(SelectFileDlgType));
-                    if (await dlg.Show(false, ext)
-                        && dlg.SelectedFiles != null
-                        && dlg.SelectedFiles.Count > 0)
-                    {
-                        _owner.UpdateExistFiles(dlg.SelectedFiles[0], this);
-                    }
-                    return;
-                }
-            }
-
-            // 上传同类型文件
-            FileData file;
-            if (FileType == FileItemType.Image)
-                file = await CrossKit.PickImage();
-            else if (FileType == FileItemType.Video)
-                file = await CrossKit.PickVideo();
-            else
-                file = await CrossKit.PickFile();
-            if (file != null)
-                await _owner.UpdateFile(file, this);
         }
 
         /// <summary>
@@ -575,9 +530,64 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 下载文件
+        /// </summary>
+        public void DownloadFile()
+        {
+            _ = Download();
+        }
+#endif
+
+        /// <summary>
+        /// 更新文件
+        /// </summary>
+        public async Task UpdateFile()
+        {
+            if (State != FileItemState.None)
+                return;
+
+            if (Type.GetType(SelectFileDlgType) != null)
+            {
+                int result = await new UpdateFileDlg().ShowDlg();
+                if (result < 0)
+                    return;
+
+                if (result == 0)
+                {
+                    // 通过从库中选择文件进行更新，无需上传
+                    string ext = null;
+                    if (FileType == FileItemType.Image)
+                        ext = ImageExt;
+                    else if (FileType == FileItemType.Video)
+                        ext = VideoExt;
+
+                    var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(SelectFileDlgType));
+                    if (await dlg.Show(false, ext)
+                        && dlg.SelectedFiles != null
+                        && dlg.SelectedFiles.Count > 0)
+                    {
+                        _owner.UpdateExistFiles(dlg.SelectedFiles[0], this);
+                    }
+                    return;
+                }
+            }
+
+            // 上传同类型文件
+            FileData file;
+            if (FileType == FileItemType.Image)
+                file = await CrossKit.PickImage();
+            else if (FileType == FileItemType.Video)
+                file = await CrossKit.PickVideo();
+            else
+                file = await CrossKit.PickFile();
+            if (file != null)
+                await _owner.UpdateFile(file, this);
+        }
+
+        /// <summary>
         /// 删除已上传的文件
         /// </summary>
-        public async Task<bool> Delete()
+        public async Task<bool> DeleteFile()
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
             {
@@ -953,14 +963,7 @@ namespace Dt.Base
             SetBinding(ImageStretchProperty, new Binding { Path = new PropertyPath("ImageStretch"), Source = _owner, Mode = BindingMode.OneWay });
         }
 
-#if WASM
-        Task LoadImage()
-        {
-            var path = new Uri($"{AtSys.Stub.ServerUrl}/fsm/{ID}{ThumbPostfix}");
-            Bitmap = new BitmapImage(path);
-            return Task.CompletedTask;
-        }
-#else
+#if !WASM
         async Task LoadImage()
         {
             string thumbName = Path.Combine(AtLocal.CachePath, GetThumbName());
@@ -1142,7 +1145,7 @@ namespace Dt.Base
             switch (State)
             {
                 case FileItemState.None:
-                    _ = Open();
+                    _ = OpenFile();
                     break;
                 case FileItemState.UploadWaiting:
                 case FileItemState.Uploading:

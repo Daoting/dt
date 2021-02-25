@@ -27,7 +27,7 @@
     <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Ex.Menu>
             <a:Menu x:Name="_m" Opening="OnMenuOpening">
-                <a:Mi ID="另存为" Icon="保存" Click="OnSaveAs"/>
+                <a:Mi ID="保存" Icon="保存" Click="OnSaveAs"/>
                 <a:Mi ID="分享" Icon="分享" Click="OnShare" />
                 <a:Mi ID="重命名" Icon="审核" Click="OnEditFolder" />
                 <a:Mi ID="移到" Icon="导入" Click="OnMove" />

@@ -221,7 +221,7 @@ namespace Dt.App.File
             {
                 if (_fileMgr.Setting.AllowEdit)
                 {
-                    _m["另存为"].Visibility = Visibility.Collapsed;
+                    _m["保存"].Visibility = Visibility.Collapsed;
                     _m["分享"].Visibility = Visibility.Collapsed;
                     _m["重命名"].Visibility = Visibility.Visible;
                     _m["移到"].Visibility = Visibility.Visible;
@@ -235,7 +235,7 @@ namespace Dt.App.File
             }
             else if (_fileMgr.Setting.AllowEdit)
             {
-                _m["另存为"].Visibility = Visibility.Visible;
+                _m["保存"].Visibility = Visibility.Visible;
                 _m["分享"].Visibility = Visibility.Visible;
                 _m["重命名"].Visibility = Visibility.Collapsed;
                 _m["移到"].Visibility = Visibility.Visible;
@@ -243,7 +243,7 @@ namespace Dt.App.File
             }
             else
             {
-                _m["另存为"].Visibility = Visibility.Visible;
+                _m["保存"].Visibility = Visibility.Visible;
                 _m["分享"].Visibility = Visibility.Visible;
                 _m["重命名"].Visibility = Visibility.Collapsed;
                 _m["移到"].Visibility = Visibility.Collapsed;

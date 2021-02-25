@@ -22,6 +22,8 @@ namespace Dt.Core
     /// </summary>
     public static class AtWasm
     {
+        const string _jsDownload = "var a = document.createElement(\"a\");a.href = \"{0}\";a.download = \"{1}\";a.click();";
+
         /// <summary>
         /// 执行js内容，相当于eval
         /// </summary>
@@ -55,6 +57,16 @@ namespace Dt.Core
 
             Console.Error.WriteLine("服务器地址格式错误！");
             return "";
+        }
+
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="p_url">文件完整路径</param>
+        /// <param name="p_name">文件名称</param>
+        public static void Download(string p_url, string p_name)
+        {
+            InvokeJS(string.Format(_jsDownload, p_url, p_name));
         }
     }
 }

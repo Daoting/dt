@@ -1,5 +1,7 @@
 ﻿# 版本说明
 
+wasm未实现MediaPlayerElement  FileOpenPicker(计划 3.6实现), 影响FileItem
+
 
 ## Release 1.9
 
@@ -9,9 +11,17 @@
 * admin页面支持浏览器前进/后退、显示实时日志
 * 为Serilog增加输出html功能
 * admin页面历史日志功能 
+* wasm版sqlite终于可用了
+* wasm部署到iis，支持调试
+* wasm动态获取服务器地址
+* wasm中未处理异常统一到异常处理
+* 解决sqlite的GetFieldType错误
+* wasm版sqlite不支持事务
+* wasm中显示图片
 
 ### 变更 
-
+* 修改fsm中缩略图命名标准，完整文件名加后缀"-t.jpg"
+* 调整pub服务部署目录
 
 ### Bug修改 
 
