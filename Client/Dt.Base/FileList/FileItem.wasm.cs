@@ -51,7 +51,7 @@ namespace Dt.Base
             switch (FileType)
             {
                 case FileItemType.Image:
-                    AtKit.Msg("未实现图片浏览功能");
+                    AtKit.Warn("未实现图片浏览功能");
                     break;
 
                 case FileItemType.Video:
@@ -73,11 +73,11 @@ namespace Dt.Base
                     //    grid.Children.Add(mediaPlayer);
                     //    mediaPlayer.Source = MediaSource.CreateFromUri(new Uri($"{AtSys.Stub.ServerUrl}/fsm/{ID}"));
                     //}
-                    AtKit.Msg("wasm版未实现MediaPlayerElement");
+                    AtKit.Warn("wasm版未实现MediaPlayerElement");
                     break;
 
                 case FileItemType.Sound:
-                    AtKit.Msg("wasm版未实现MediaPlayerElement");
+                    AtKit.Warn("wasm版未实现MediaPlayerElement");
                     break;
 
                 default:
@@ -91,39 +91,10 @@ namespace Dt.Base
         /// <summary>
         /// 共享文件
         /// </summary>
-        public async Task ShareFile()
+        public Task ShareFile()
         {
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
-            if (!File.Exists(fileName))
-            {
-                // 先下载
-                bool suc = await Download();
-                if (!suc)
-                    return;
-            }
-
-            string title;
-            switch (FileType)
-            {
-                case FileItemType.Image:
-                    title = "分享图片";
-                    break;
-                case FileItemType.Video:
-                    title = "分享视频";
-                    break;
-                case FileItemType.Sound:
-                    title = "分享音乐";
-                    break;
-                default:
-                    title = "分享文件";
-                    break;
-            }
-
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = title,
-                File = new ShareFile(fileName)
-            });
+            AtKit.Warn("wasm版未实现分享功能");
+            return Task.CompletedTask;
         }
 
         /// <summary>
