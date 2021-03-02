@@ -47,6 +47,7 @@ namespace Dt.Core.Rpc
                     // 一定是ResponseHeadersRead，否则只在结束时收到一次！！！众里寻他千百度
                     var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
                     response.EnsureSuccessStatusCode();
+                    // wasm 此方法异常！
                     responseStream = await response.Content.ReadAsStreamAsync();
                 }
             }

@@ -42,6 +42,15 @@ namespace Dt.Base
         {
             try
             {
+#if WASM
+                Dict dt = new Dict
+                {
+                    { "model", "wasm" },
+                    { "name", "Chrome" },
+                    { "platform", "Browser" },
+                    { "version", "11.0" },
+                };
+#else
                 Dict dt = new Dict
                 {
                     { "model", DeviceInfo.Model },
@@ -49,6 +58,8 @@ namespace Dt.Base
                     { "platform", DeviceInfo.Platform.ToString() },
                     { "version", DeviceInfo.VersionString },
                 };
+#endif
+
                 var reader = await AtMsg.Register(dt);
                 _retryTimes = 0;
                 while (await reader.MoveNext())
@@ -65,7 +76,7 @@ namespace Dt.Base
                 _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, _retryTimes))).ContinueWith((t) => Register());
             }
         }
-        #endregion
+#endregion
 
         public void Call(string p_msg)
         {

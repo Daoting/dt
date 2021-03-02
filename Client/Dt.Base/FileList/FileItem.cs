@@ -343,6 +343,7 @@ namespace Dt.Base
 
         #region 文件操作
 #if !WASM
+        
         /// <summary>
         /// 打开文件
         /// <para>先检查本地有没有，有打开本地，没有先下载；</para>
@@ -363,19 +364,26 @@ namespace Dt.Base
                     return;
             }
 
-            var tp = FileType;
-            if (tp == FileItemType.Sound || tp == FileItemType.Video)
+            switch (FileType)
             {
-                Play(fileName);
+                case FileItemType.Image:
+                    await new ImageFileView().ShowDlg(_owner, this);
+                    break;
+
+                case FileItemType.Video:
+                case FileItemType.Sound:
+                    Play(fileName);
+                    break;
+
+                default:
+                    // 默认关联程序打开
+                    await Launcher.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(fileName)
+                    });
+                    break;
             }
-            else
-            {
-                // 默认关联程序打开
-                await Launcher.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(fileName)
-                });
-            }
+
             _owner.OnOpenedFile(this);
         }
 
@@ -535,6 +543,17 @@ namespace Dt.Base
         public void DownloadFile()
         {
             _ = Download();
+        }
+
+        internal async Task<string> EnsureFileExists()
+        {
+            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            if (!File.Exists(fileName))
+            {
+                // 先下载
+                await Download();
+            }
+            return fileName;
         }
 #endif
 
