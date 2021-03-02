@@ -51,7 +51,7 @@ namespace Dt.Base
             switch (FileType)
             {
                 case FileItemType.Image:
-                    AtKit.Warn("未实现图片浏览功能");
+                    await new ImageFileView().ShowDlg(_owner, this);
                     break;
 
                 case FileItemType.Video:
@@ -112,6 +112,11 @@ namespace Dt.Base
         public void DownloadFile()
         {
             AtWasm.Download($"{AtSys.Stub.ServerUrl}/fsm/{ID}", Title);
+        }
+
+        internal Task<string> EnsureFileExists()
+        {
+            return Task.FromResult($"{AtSys.Stub.ServerUrl}/fsm/{ID}");
         }
 
         Task LoadImage()

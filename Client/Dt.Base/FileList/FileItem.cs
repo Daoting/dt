@@ -343,7 +343,6 @@ namespace Dt.Base
 
         #region 文件操作
 #if !WASM
-        
         /// <summary>
         /// 打开文件
         /// <para>先检查本地有没有，有打开本地，没有先下载；</para>

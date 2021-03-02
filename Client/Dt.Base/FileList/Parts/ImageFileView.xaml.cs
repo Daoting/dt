@@ -34,7 +34,7 @@ namespace Dt.Base.FileLists
         {
             InitializeComponent();
 
-            _img.PointerWheelChanged += OnPointerWheelChanged;
+            // 只鼠标有效
             _img.PointerPressed += OnPointerPressed;
             _img.PointerMoved += OnPointerMoved;
             _img.PointerReleased += OnPointerReleased;
@@ -125,21 +125,10 @@ namespace Dt.Base.FileLists
             GotoNextImg();
         }
 
-        void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            // Ctrl + 鼠标滚轮 缩放
-            if (!InputManager.IsCtrlPressed || _img.Source == null)
-                return;
-
-            float delta = (float)(e.GetCurrentPoint(null).Properties.MouseWheelDelta * 0.001);
-            if (_sv.ZoomFactor + delta > 0.1)
-                _sv.ChangeView(null, null, _sv.ZoomFactor + delta);
-        }
-
-
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse && _img.CapturePointer(e.Pointer))
+            // 禁止捕获鼠标，不然双击失效！
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
                 e.Handled = true;
                 _ptStart = e.GetCurrentPoint(null).Position;
@@ -161,16 +150,46 @@ namespace Dt.Base.FileLists
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (!_isDragging)
-                return;
-
-            _img.ReleasePointerCapture(e.Pointer);
             _isDragging = false;
         }
 
         void OnSave(object sender, Mi e)
         {
             _curItem?.SaveAs();
+        }
+
+        void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var pos = e.GetPosition(_img);
+            var svPos = e.GetPosition(_sv);
+#if UWP
+            // UWP中缩放不影响位置
+            if (Math.Abs(_sv.ZoomFactor - 1.0f) > 0.09f)
+            {
+                double x = Math.Max(pos.X - svPos.X, 0);
+                double y = Math.Max(pos.Y - svPos.Y, 0);
+                _sv.ChangeView(x, y, 1);
+            }
+            else
+            {
+                double x = Math.Max(pos.X * 2f - svPos.X, 0);
+                double y = Math.Max(pos.Y * 2f - svPos.Y, 0);
+                _sv.ChangeView(x, y, 2);
+            }
+#else
+            if (Math.Abs(_sv.ZoomFactor - 1.0f) > 0.09f)
+            {
+                double x = Math.Max(pos.X / _sv.ZoomFactor - svPos.X, 0);
+                double y = Math.Max(pos.Y / _sv.ZoomFactor - svPos.Y, 0);
+                _sv.ChangeView(x, y, 1);
+            }
+            else
+            {
+                double x = Math.Max(pos.X * 2 / _sv.ZoomFactor - svPos.X, 0);
+                double y = Math.Max(pos.Y * 2 / _sv.ZoomFactor - svPos.Y, 0);
+                _sv.ChangeView(x, y, 2);
+            }
+#endif
         }
     }
 }

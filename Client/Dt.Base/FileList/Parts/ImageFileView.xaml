@@ -2,7 +2,8 @@
     x:Class="Dt.Base.FileLists.ImageFileView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    Title="图片预览">
 
     <a:Dlg.Menu>
         <a:Menu>
@@ -17,7 +18,9 @@
                       VerticalScrollMode="Enabled"
                       VerticalScrollBarVisibility="Auto"
                       IsHorizontalRailEnabled="False"
-                      IsVerticalRailEnabled="False">
+                      IsVerticalRailEnabled="False"
+                      ZoomMode="Enabled"
+                      DoubleTapped="OnDoubleTapped">
             <Image x:Name="_img" Stretch="None" />
         </ScrollViewer>
         <Button x:Name="_btnPre" Content="&#xE010;" Style="{StaticResource 字符按钮}" Click="OnPreClick" HorizontalAlignment="Left" VerticalAlignment="Center" />
