@@ -9,14 +9,14 @@
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Title="开始">
+            <a:Tab Title="开始" Icon="主页">
                 <home:RootMenu x:Name="_menu" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="动态">
+            <a:Tab Title="动态" Icon="心电">
                 
             </a:Tab>
         </a:Tabs>

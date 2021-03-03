@@ -7,10 +7,15 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -24,6 +29,7 @@ namespace Dt.Base
         Grid _root;
         readonly Grid _grid;
         Button _selected;
+        bool _isDragging;
         #endregion
 
         public PhoneTabs()
@@ -32,6 +38,7 @@ namespace Dt.Base
 
             _grid = new Grid { BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = AtRes.浅灰边框, Background = AtRes.浅灰背景 };
             Grid.SetRow(_grid, 1);
+            ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateInertia;
         }
 
         /// <summary>
@@ -143,12 +150,106 @@ namespace Dt.Base
             {
                 if (_root.Children.Count > 1)
                     _root.Children.RemoveAt(1);
+
                 _root.Children.Add((UIElement)p_btn.DataContext);
                 foreach (var btn in _grid.Children.OfType<Button>())
                 {
                     btn.IsEnabled = (btn != p_btn);
                 }
             }
+        }
+
+        protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
+        {
+            base.OnManipulationStarted(e);
+            if (!e.Handled && _selected != null)
+            {
+                ((UIElement)_selected.DataContext).RenderTransform = new TranslateTransform();
+                _isDragging = true;
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
+        {
+            base.OnManipulationDelta(e);
+            if (_isDragging)
+            {
+                Log.Debug(e.Delta.Translation.X.ToString());
+                e.Handled = true;
+                var trans = (TranslateTransform)((UIElement)_selected.DataContext).RenderTransform;
+                trans.X += e.Delta.Translation.X;
+                if (e.IsInertial)
+                {
+                    e.Complete();
+                    SwitchPage();
+                    _isDragging = false;
+                }
+            }
+        }
+
+        protected override void OnManipulationCompleted(ManipulationCompletedRoutedEventArgs e)
+        {
+            base.OnManipulationCompleted(e);
+            if (_isDragging)
+            {
+                e.Handled = true;
+                var con = (FrameworkElement)_selected.DataContext;
+                if (Math.Abs(((TranslateTransform)con.RenderTransform).X) > con.ActualWidth / 2)
+                    SwitchPage();
+                else
+                    CancelPaging();
+                _isDragging = false;
+            }
+        }
+
+        void SwitchPage()
+        {
+            var trans = (TranslateTransform)((UIElement)_selected.DataContext).RenderTransform;
+            int index = _grid.Children.IndexOf(_selected);
+            if (trans.X > 0)
+                index = (index <= 0) ? _grid.Children.Count - 1 : index - 1;
+            else
+                index = (index == _grid.Children.Count - 1) ? 0 : index + 1;
+
+            // 增加动画，平衡切换时间
+            Storyboard sb = new Storyboard();
+            DoubleAnimation da = new DoubleAnimation();
+            Storyboard.SetTarget(da, trans);
+            Storyboard.SetTargetProperty(da, "X");
+            da.Duration = new Duration(TimeSpan.FromSeconds(0.2));
+            da.From = trans.X;
+            var con = (FrameworkElement)_selected.DataContext;
+            da.To = (trans.X > 0) ? con.ActualWidth : -con.ActualWidth;
+            da.EasingFunction = new QuadraticEase();
+            da.EnableDependentAnimation = true;
+            sb.Children.Add(da);
+            sb.Begin();
+            sb.Completed += (sender, e) =>
+            {
+                ((UIElement)_selected.DataContext).RenderTransform = null;
+                SelectItem((Button)_grid.Children[index]);
+            };
+        }
+
+        /// <summary>
+        /// 不换页移动回原位置
+        /// </summary>
+        void CancelPaging()
+        {
+            var trans = (TranslateTransform)((UIElement)_selected.DataContext).RenderTransform;
+            Storyboard sb = new Storyboard();
+            DoubleAnimation da = new DoubleAnimation();
+            Storyboard.SetTarget(da, trans);
+            Storyboard.SetTargetProperty(da, "X");
+            da.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+            da.From = trans.X;
+            da.To = 0;
+            da.EasingFunction = new QuadraticEase();
+            da.EnableDependentAnimation = true;
+            sb.Children.Add(da);
+            sb.Begin();
+            sb.Completed += (sender, e) => ((UIElement)_selected.DataContext).RenderTransform = null;
         }
     }
 }
