@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -151,7 +150,9 @@ namespace Dt.Base
                 if (_root.Children.Count > 1)
                     _root.Children.RemoveAt(1);
 
-                _root.Children.Add((UIElement)p_btn.DataContext);
+                var elem = (UIElement)p_btn.DataContext;
+                elem.RenderTransform = new TranslateTransform();
+                _root.Children.Add(elem);
                 foreach (var btn in _grid.Children.OfType<Button>())
                 {
                     btn.IsEnabled = (btn != p_btn);
@@ -159,12 +160,13 @@ namespace Dt.Base
             }
         }
 
+        #region 左右滑动
         protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
         {
             base.OnManipulationStarted(e);
             if (!e.Handled && _selected != null)
             {
-                ((UIElement)_selected.DataContext).RenderTransform = new TranslateTransform();
+                // 不可在此处重置RenderTransform，uno中当内部包含ScollViewer且内嵌面板有背景色时会造成delta莫名变大！很难发现问题原因
                 _isDragging = true;
                 e.Handled = true;
             }
@@ -175,7 +177,6 @@ namespace Dt.Base
             base.OnManipulationDelta(e);
             if (_isDragging)
             {
-                Log.Debug(e.Delta.Translation.X.ToString());
                 e.Handled = true;
                 var trans = (TranslateTransform)((UIElement)_selected.DataContext).RenderTransform;
                 trans.X += e.Delta.Translation.X;
@@ -249,7 +250,8 @@ namespace Dt.Base
             da.EnableDependentAnimation = true;
             sb.Children.Add(da);
             sb.Begin();
-            sb.Completed += (sender, e) => ((UIElement)_selected.DataContext).RenderTransform = null;
+            sb.Completed += (sender, e) => ((UIElement)_selected.DataContext).RenderTransform = new TranslateTransform();
         }
+        #endregion
     }
 }

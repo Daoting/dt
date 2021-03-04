@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -305,9 +304,9 @@ namespace Dt.Base.TreeView
             }
             tvItems.Dispose();
         }
-#endregion
+        #endregion
 
-#region 真实行
+        #region 真实行
         Size MeasureRealRows()
         {
             MeasureInfo info = new MeasureInfo();
@@ -406,9 +405,9 @@ namespace Dt.Base.TreeView
             public int Index;
             public Size FinalSize;
         }
-#endregion
+        #endregion
 
-#region 内部方法
+        #region 内部方法
         /// <summary>
         /// 加载虚拟模式的所有行
         /// </summary>
@@ -498,6 +497,6 @@ namespace Dt.Base.TreeView
                 row.SetItem(p_item, false);
             return row;
         }
-#endregion
+        #endregion
     }
 }
