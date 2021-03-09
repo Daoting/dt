@@ -10,6 +10,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -25,9 +26,11 @@ namespace Dt.Base
     public partial class PhoneTabs : Control, IPhonePage
     {
         #region 成员变量
+        const double _minDeltaX = 80;
         Grid _root;
         readonly Grid _grid;
         Button _selected;
+        double _deltaX;
         bool _isDragging;
         #endregion
 
@@ -163,45 +166,49 @@ namespace Dt.Base
         #region 左右滑动
         protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
         {
-            base.OnManipulationStarted(e);
-            if (!e.Handled && _selected != null)
+            if (e.PointerDeviceType == PointerDeviceType.Touch && !e.Handled && _selected != null)
             {
                 // 不可在此处重置RenderTransform，uno中当内部包含ScollViewer且内嵌面板有背景色时会造成delta莫名变大！很难发现问题原因
-                _isDragging = true;
                 e.Handled = true;
+                _deltaX = e.Cumulative.Translation.X;
+                _isDragging = false;
             }
         }
 
         protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
         {
-            base.OnManipulationDelta(e);
-            if (_isDragging)
+            if (e.PointerDeviceType != PointerDeviceType.Touch)
+                return;
+
+            e.Handled = true;
+            _deltaX += e.Delta.Translation.X;
+            if (_isDragging || Math.Abs(_deltaX) > _minDeltaX)
             {
-                e.Handled = true;
-                var trans = (TranslateTransform)((UIElement)_selected.DataContext).RenderTransform;
-                trans.X += e.Delta.Translation.X;
-                if (e.IsInertial)
-                {
-                    e.Complete();
-                    SwitchPage();
-                    _isDragging = false;
-                }
+                _isDragging = true;
+                ((TranslateTransform)((UIElement)_selected.DataContext).RenderTransform).X = _deltaX;
+
+                // uno中无惯性！
+                //if (e.IsInertial)
+                //{
+                //    e.Complete();
+                //    SwitchPage();
+                //}
             }
         }
 
         protected override void OnManipulationCompleted(ManipulationCompletedRoutedEventArgs e)
         {
-            base.OnManipulationCompleted(e);
-            if (_isDragging)
-            {
-                e.Handled = true;
-                var con = (FrameworkElement)_selected.DataContext;
-                if (Math.Abs(((TranslateTransform)con.RenderTransform).X) > con.ActualWidth / 2)
-                    SwitchPage();
-                else
-                    CancelPaging();
-                _isDragging = false;
-            }
+            if (e.PointerDeviceType != PointerDeviceType.Touch)
+                return;
+
+            e.Handled = true;
+            var con = (FrameworkElement)_selected.DataContext;
+            if (Math.Abs(_deltaX) > con.ActualWidth / 2)
+                SwitchPage();
+            else if (_isDragging)
+                CancelPaging();
+            _deltaX = 0;
+            _isDragging = false;
         }
 
         void SwitchPage()

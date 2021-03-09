@@ -1,7 +1,7 @@
 ﻿# 版本说明
 
 wasm未实现MediaPlayerElement  FileOpenPicker(计划 3.6实现), 影响FileItem
-ios版Manipulation 事件，内部有ScrollViewer时始终不触发
+ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
 
 ocr 开源库：tesseract-ocr
 
@@ -21,7 +21,7 @@ ocr 开源库：tesseract-ocr
 * wasm版sqlite不支持事务
 * wasm中显示图片
 * FileList图片预览
-* PhoneTabs左右滑动
+* PhoneTabs左右滑动，只支持触摸，滑动设最小阈值
 
 ### 变更 
 * 修改fsm中缩略图命名标准，完整文件名加后缀"-t.jpg"
