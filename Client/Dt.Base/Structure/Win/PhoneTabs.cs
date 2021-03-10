@@ -26,12 +26,11 @@ namespace Dt.Base
     public partial class PhoneTabs : Control, IPhonePage
     {
         #region 成员变量
-        const double _minDeltaX = 80;
         Grid _root;
         readonly Grid _grid;
         Button _selected;
-        double _deltaX;
-        bool _isDragging;
+        SlideState _state;
+        ScrollViewer _innerScroll;
         #endregion
 
         public PhoneTabs()
@@ -40,7 +39,7 @@ namespace Dt.Base
 
             _grid = new Grid { BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = AtRes.浅灰边框, Background = AtRes.浅灰背景 };
             Grid.SetRow(_grid, 1);
-            ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateInertia;
+            ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
         }
 
         /// <summary>
@@ -170,45 +169,72 @@ namespace Dt.Base
             {
                 // 不可在此处重置RenderTransform，uno中当内部包含ScollViewer且内嵌面板有背景色时会造成delta莫名变大！很难发现问题原因
                 e.Handled = true;
-                _deltaX = e.Cumulative.Translation.X;
-                _isDragging = false;
+                _innerScroll = this.FindChildByType<ScrollViewer>();
+                _state = SlideState.Start;
             }
         }
 
         protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
         {
-            if (e.PointerDeviceType != PointerDeviceType.Touch)
+            if (e.PointerDeviceType != PointerDeviceType.Touch
+                || e.Delta.Translation.X == 0.0
+                || _state == SlideState.LockY
+                || _state == SlideState.None)
                 return;
 
-            e.Handled = true;
-            _deltaX += e.Delta.Translation.X;
-            if (_isDragging || Math.Abs(_deltaX) > _minDeltaX)
+            if (_innerScroll != null)
             {
-                _isDragging = true;
-                ((TranslateTransform)((UIElement)_selected.DataContext).RenderTransform).X = _deltaX;
+                // 滚动栏垂直方向有移动时不算！保证垂直正常滚动
+                if (e.Delta.Translation.Y != 0
+                    && _state != SlideState.LockX
+                    && _innerScroll.ScrollableHeight > 0
+                    && Math.Abs(e.Delta.Translation.X) < Math.Abs(e.Delta.Translation.Y) * 3
+                    && ((e.Delta.Translation.Y < 0 && _innerScroll.VerticalOffset < _innerScroll.ScrollableHeight)
+                        || (e.Delta.Translation.Y > 0 && _innerScroll.VerticalOffset > 0)))
+                {
+                    _state = SlideState.LockY;
+                    return;
+                }
 
-                // uno中无惯性！
-                //if (e.IsInertial)
-                //{
-                //    e.Complete();
-                //    SwitchPage();
-                //}
+                if (_innerScroll.ScrollableWidth == 0
+                    || (e.Delta.Translation.X < 0 && _innerScroll.HorizontalOffset >= _innerScroll.ScrollableWidth)
+                    || (e.Delta.Translation.X > 0 && _innerScroll.HorizontalOffset <= 0))
+                {
+                    SetLockX(e);
+                }
             }
+            else
+            {
+                SetLockX(e);
+            }
+        }
+
+        void SetLockX(ManipulationDeltaRoutedEventArgs e)
+        {
+            // 水平滑动距离是垂直的n倍
+            if (_state == SlideState.Start
+                && Math.Abs(e.Delta.Translation.X) > Math.Abs(e.Delta.Translation.Y) * 3)
+            {
+                _state = SlideState.LockX;
+            }
+
+            if (_state == SlideState.LockX)
+                ((TranslateTransform)((UIElement)_selected.DataContext).RenderTransform).X += e.Delta.Translation.X;
         }
 
         protected override void OnManipulationCompleted(ManipulationCompletedRoutedEventArgs e)
         {
-            if (e.PointerDeviceType != PointerDeviceType.Touch)
-                return;
-
-            e.Handled = true;
-            var con = (FrameworkElement)_selected.DataContext;
-            if (Math.Abs(_deltaX) > con.ActualWidth / 2)
-                SwitchPage();
-            else if (_isDragging)
-                CancelPaging();
-            _deltaX = 0;
-            _isDragging = false;
+            if (e.PointerDeviceType == PointerDeviceType.Touch && _state == SlideState.LockX)
+            {
+                e.Handled = true;
+                var con = (FrameworkElement)_selected.DataContext;
+                double deltaX = ((TranslateTransform)((UIElement)_selected.DataContext).RenderTransform).X;
+                if (Math.Abs(deltaX) > con.ActualWidth / 2)
+                    SwitchPage();
+                else if (deltaX != 0)
+                    CancelPaging();
+            }
+            _state = SlideState.None;
         }
 
         void SwitchPage()
@@ -258,6 +284,23 @@ namespace Dt.Base
             sb.Children.Add(da);
             sb.Begin();
             sb.Completed += (sender, e) => ((UIElement)_selected.DataContext).RenderTransform = new TranslateTransform();
+        }
+
+        enum SlideState
+        {
+            None,
+
+            Start,
+
+            /// <summary>
+            /// 锁定水平滑动，内部有滚动栏时也可以同步垂直滑动
+            /// </summary>
+            LockX,
+
+            /// <summary>
+            /// 锁定只可内部有滚动栏垂直滑动
+            /// </summary>
+            LockY
         }
         #endregion
     }
