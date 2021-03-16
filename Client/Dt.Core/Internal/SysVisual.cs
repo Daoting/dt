@@ -26,10 +26,18 @@ namespace Dt.Core
     internal static class SysVisual
     {
         #region 成员变量
+        //**************************************************************************
+        // 响应式设计：三种布局方式对应三种界面宽度
+        // 1. 界面宽度 <= 640px，PhoneUI模式，4"到6"设备 或 缩小的窗口，只一列面板
+        // 2. 界面宽度在 641px ~ 1007px，7"到12"设备 或 缩小的窗口，最多两列面板
+        // 3. 界面宽度 >= 1008px，13"及更大设备，最多三列面板
+        // Win中的LayoutManager已对后两种宽度自动处理
+        //**************************************************************************
+
         /// <summary>
         /// PhoneUI模式的最大宽度
         /// </summary>
-        const double _maxPhoneUIWidth = 600;
+        const double _maxPhoneUIWidth = 640;
 
         /// <summary>
         /// Window.Current.Content内容，根Grid
