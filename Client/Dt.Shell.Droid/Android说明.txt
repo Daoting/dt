@@ -29,4 +29,4 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 》App标题定义有两处：AndroidManifest.xml Stub.Title
 
 
-》生成手机apk：选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择签名 -> 分发成功
+》生成手机apk：选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择或创建签名 -> 密码around -> 分发成功
