@@ -99,7 +99,7 @@ namespace Dt.Core
             }
             catch (Exception e)
             {
-                Log.Fatal($"读取配置失败：{e.Message}");
+                Log.Fatal(e, "读取配置失败！");
                 throw;
             }
         }
@@ -125,7 +125,7 @@ namespace Dt.Core
             }
             catch (Exception e)
             {
-                Log.Fatal(e, $"启动 {Glb.SvcName} 失败");
+                Log.Fatal(e, "启动 {0} 失败", Glb.SvcName);
                 throw;
             }
         }

@@ -44,19 +44,19 @@ namespace Dt.Msg
                 if (old.DeviceModel == p_client.DeviceModel && old.DeviceName == p_client.DeviceName)
                 {
                     // 同一设备多次注册
+                    Log.Debug("{0}({1}) 同一设备重复连接", userID, p_client.Context.GetClientIpPort());
                     old.Exit();
-                    Log.Debug($"重复注册：{userID}  旧连接({old.Context.Connection.Id})  新连接({p_client.Context.Connection.Id})");
                 }
                 else
                 {
+                    Log.Debug("{0}({1}) 重复连接", userID, p_client.Context.GetClientIpPort());
                     old.StopPush();
                     old.Close();
-                    Log.Debug($"替换：{userID}  旧连接({old.Context.Connection.Id})  新连接({p_client.Context.Connection.Id})");
                 }
             }
             else
             {
-                Log.Debug($"+{p_client.Context.Connection.Id}：{userID}  ");
+                Log.Debug("{0}({1}) 在线", userID, p_client.Context.GetClientIpPort());
             }
 
             _all[userID] = p_client;

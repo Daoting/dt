@@ -7,7 +7,9 @@
 #endregion
 
 #region 引用命名
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 #endregion
@@ -27,6 +29,21 @@ namespace Dt.Core
         public static string NewID
         {
             get { return Guid.NewGuid().ToString("N"); }
+        }
+
+        /// <summary>
+        /// 获取客户端的ip地址
+        /// </summary>
+        /// <param name="p_context"></param>
+        /// <returns></returns>
+        public static string GetClientIpPort(this HttpContext p_context)
+        {
+            var ip = p_context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = $"{p_context.Connection.RemoteIpAddress}:{p_context.Connection.RemotePort}";
+            }
+            return ip;
         }
 
         /// <summary>

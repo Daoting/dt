@@ -64,11 +64,11 @@ namespace Dt.Fsm
             if (!fileInfo.Exists)
             {
                 _context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
-                Log.Information("文件不存在：" + path);
+                Log.Information("文件不存在：{0}", path);
                 return;
             }
 
-            Log.Information("下载：" + path);
+            Log.Information("下载：{0}", path);
             if (!isThumb)
                 await new MySqlAccess().Exec("增加下载次数", new { path = path });
 

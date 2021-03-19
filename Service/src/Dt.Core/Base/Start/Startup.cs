@@ -67,7 +67,7 @@ namespace Dt.Core
                     options.Limits.MaxRequestBodySize = maxSize;
                 }
                 
-                Log.Information($"启动 {Glb.SvcName} 成功 (KestrelServer)");
+                Log.Information("启动 {0} 成功 (KestrelServer)", Glb.SvcName);
             });
 
             // 配置 IISHttpServer
@@ -81,7 +81,7 @@ namespace Dt.Core
                     options.MaxRequestBodySize = maxSize;
                 }
 
-                Log.Information($"启动 {Glb.SvcName} 成功 (IISHttpServer)");
+                Log.Information("启动 {0} 成功 (IISHttpServer)", Glb.SvcName);
             });
 
             Glb.ConfigureServices(p_services);

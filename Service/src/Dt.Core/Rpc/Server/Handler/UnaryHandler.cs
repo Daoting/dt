@@ -106,7 +106,7 @@ namespace Dt.Core.Rpc
             if (resultType != UnaryResult.Cancel)
             {
                 if (TraceRpc)
-                    _invoker.Log.Information($"{_invoker.ApiName} — {stopwatch.ElapsedMilliseconds}ms");
+                    _invoker.Log.Information("{0} — {1}ms", _invoker.ApiName, stopwatch.ElapsedMilliseconds);
 
                 await _invoker.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
             }

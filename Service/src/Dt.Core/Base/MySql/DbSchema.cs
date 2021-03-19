@@ -47,7 +47,7 @@ namespace Dt.Core
             }
             catch (Exception e)
             {
-                Log.Fatal($"同步时间失败：{e.Message}");
+                Log.Fatal(e, "同步时间失败！");
                 throw;
             }
         }

@@ -180,7 +180,7 @@ namespace Dt.Core
             }
             catch (Exception e)
             {
-                Log.Fatal($"缓存Sql失败：{e.Message}");
+                Log.Fatal(e, "缓存Sql失败！");
                 throw;
             }
         }

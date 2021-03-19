@@ -102,7 +102,7 @@ namespace Dt.Fsm
                     {
                         // 无此固定卷，状态码：未满足前提条件
                         _context.Response.StatusCode = 412;
-                        Log.Information($"不存在固定卷 {_volume}，上传失败");
+                        Log.Information("不存在固定卷 {0}，上传失败！", _volume);
                         return;
                     }
                     section = await reader.ReadNextSectionAsync(_context.RequestAborted);
@@ -251,7 +251,7 @@ namespace Dt.Fsm
 
             _context.Response.BodyWriter.Write(RpcKit.GetObjectBytes(_result));
             await _context.Response.BodyWriter.FlushAsync();
-            Log.Information($"接收 {_result.Count} 个文件");
+            Log.Information("接收 {0} 个文件", _result.Count);
         }
 
         /// <summary>

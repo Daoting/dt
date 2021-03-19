@@ -97,7 +97,7 @@ namespace Dt.Msg
                 }
                 catch (Exception ex)
                 {
-                    Log.Warning(ex, $"向{UserID}发送离线信息异常");
+                    Log.Warning(ex, "向{0}发送离线信息异常", UserID);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace Dt.Msg
             {
                 // 客户端取消请求时触发 OperationCanceledException 异常，推送结束
                 var msg = _queue.Take(Context.RequestAborted);
-                Log.Debug($"推送：{UserID}  {msg}");
+                Log.Debug("向{0}推送：\r\n{1}", UserID, msg);
                 return _writer.Write(msg);
             }
             catch { }
