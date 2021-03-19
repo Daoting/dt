@@ -7,14 +7,11 @@
 #endregion
 
 #region 引用命名
-using Serilog;
-using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
 #endregion
 
@@ -37,9 +34,6 @@ namespace Dt.Core.HtmlLog
 
         public void Emit(LogEvent logEvent)
         {
-            if (!HtmlLogHub.ExistListener)
-                return;
-
             lock (_syncRoot)
             {
                 var sw = new StringWriter(new StringBuilder(DefaultWriteBufferCapacity));

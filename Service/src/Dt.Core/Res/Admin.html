@@ -395,6 +395,8 @@
         }
 
         var logRequest = null;
+        var logIndex = 0;
+        var _logUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.log?index=";
 
         function receiveLog()
         {
@@ -405,22 +407,24 @@
             }
 
             logRequest = new XMLHttpRequest();
-            logRequest.responseType = "arraybuffer";
-            logRequest.open("post", _rpcUrl, true);
+            logRequest.open("get", _logUrl + logIndex, true);
             logRequest.onload = function ()
             {
                 if (logRequest.status == 200)
                 {
-                    var txt = readFrame(logRequest.response);
-                    var result = JSON.parse(txt);
-                    if (result.length == 3)
-                        $("log").innerHTML += result[2];
+                    // 返回格式：日志索引+日志列表
+                    var split = logRequest.response.indexOf("+");
+                    if (split > -1)
+                    {
+                        logIndex = logRequest.response.substring(0, split);
+                        $("log").innerHTML += logRequest.response.substring(split + 1);
+                    }
 
                     if ($("divLog").style.visibility == "visible")
                         receiveLog();
                 }
             };
-            logRequest.send(writeFrame('["Admin.GetRealtimeLog"]'));
+            logRequest.send();
         }
 
         function closeLog()

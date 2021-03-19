@@ -22,6 +22,7 @@ ocr 开源库：tesseract-ocr
 * wasm中显示图片
 * FileList图片预览
 * PhoneTabs左右滑动，只支持触摸，滑动设最小阈值
+* 解决admin页面实时日志在频繁输出时漏项的bug，服务端缓存最近50条log
 
 ### 变更 
 * 修改fsm中缩略图命名标准，完整文件名加后缀"-t.jpg"

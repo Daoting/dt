@@ -9,6 +9,9 @@
 #region 引用命名
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
@@ -16,37 +19,95 @@ namespace Dt.Core
 {
     static class HtmlLogHub
     {
-        static readonly ConcurrentDictionary<string, TaskCompletionSource<string>> _queue = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
-
-        public static bool ExistListener
-        {
-            get { return !_queue.IsEmpty; }
-        }
+        const int _maxMsgCount = 50;
+        static readonly ConcurrentDictionary<string, HtmlLogClient> _clientQueue = new ConcurrentDictionary<string, HtmlLogClient>();
+        static int _topIndex = 0;
+        static readonly ConcurrentQueue<string> _msgQueue = new ConcurrentQueue<string>();
 
         public static void AddLog(string p_msg)
         {
-            foreach (var waiter in _queue.Values)
+            _msgQueue.Enqueue(p_msg);
+            if (_msgQueue.Count >= _maxMsgCount)
             {
-                waiter.SetResult(p_msg);
+                // 队列超长，移除最前
+                _msgQueue.TryDequeue(out _);
+                _topIndex++;
             }
-            _queue.Clear();
+
+            if (_clientQueue.Count > 0)
+            {
+                // 队列可能变化
+                var ls = _clientQueue.Values.ToList();
+                foreach (var client in ls)
+                {
+                    client.Update();
+                }
+            }
         }
 
-        public static Task<string> GetLog()
+        /// <summary>
+        /// 实时获取日志
+        /// </summary>
+        /// <param name="p_startIndex">起始索引</param>
+        /// <returns></returns>
+        public static Task<string> GetLog(int p_startIndex)
         {
-            string id = Guid.NewGuid().ToString();
-            var waiter = new TaskCompletionSource<string>();
-            _queue[id] = waiter;
+            HtmlLogClient client = new HtmlLogClient(p_startIndex);
+            if (!client.Update())
+            {
+                string id = Guid.NewGuid().ToString();
+                _clientQueue[id] = client;
 
-            try
-            {
-                waiter.Task.Wait(Bag.Context.RequestAborted);
-                return Task.FromResult(waiter.Task.Result);
+                try
+                {
+                    client.Wait(Glb.HttpContext.RequestAborted);
+                }
+                catch { }
+                finally
+                {
+                    _clientQueue.TryRemove(id, out _);
+                }
             }
-            catch
+            return Task.FromResult(client.Result);
+        }
+
+        class HtmlLogClient
+        {
+            TaskCompletionSource<bool> _waiter;
+
+            public HtmlLogClient(int p_startIndex)
             {
-                _queue.TryRemove(id, out _);
-                throw;
+                StartIndex = p_startIndex;
+            }
+
+            public int StartIndex { get; }
+
+            public string Result { get; private set; }
+
+            public void Wait(CancellationToken p_cancel)
+            {
+                _waiter = new TaskCompletionSource<bool>();
+                _waiter.Task.Wait(p_cancel);
+            }
+
+            public bool Update()
+            {
+                int start = Math.Max(0, StartIndex - _topIndex);
+                if (start >= _msgQueue.Count)
+                    return false;
+
+                StringBuilder sb = new StringBuilder();
+                // 本次读取的末索引
+                sb.Append(_topIndex + _msgQueue.Count);
+                sb.Append("+");
+                foreach (var msg in _msgQueue.Skip(start))
+                {
+                    sb.Append(msg);
+                }
+
+                Result = sb.ToString();
+                _waiter?.TrySetResult(true);
+                return true;
             }
         }
     }

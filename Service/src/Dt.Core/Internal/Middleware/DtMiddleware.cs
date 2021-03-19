@@ -51,6 +51,8 @@ namespace Dt.Core
                 return new ApiInvoker(p_context).Handle();
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
+            if (path == "/.log")
+                return ResponseLog(p_context);
             if (path == "/.download")
                 return DownloadFile(p_context);
             if (path == "/.error")
@@ -108,6 +110,28 @@ namespace Dt.Core
             }
             p_context.Response.ContentType = "text/html";
             await p_context.Response.WriteAsync(_errorPage);
+        }
+
+        /// <summary>
+        /// 实时获取日志内容，未使用.c的rpc方式，因为方法内部若输出日志会造成死循环！
+        /// </summary>
+        /// <param name="p_context"></param>
+        /// <returns></returns>
+        static async Task ResponseLog(HttpContext p_context)
+        {
+            try
+            {
+                string msg = null;
+                p_context.Response.ContentType = "text/html";
+                if (p_context.Request.Query.TryGetValue("index", out var val)
+                    && int.TryParse(val, out int index))
+                {
+                    // 实时获取日志
+                    msg = await HtmlLogHub.GetLog(index);
+                }
+                await p_context.Response.WriteAsync(msg == null ? "" : msg, p_context.RequestAborted);
+            }
+            catch { }
         }
 
         /// <summary>

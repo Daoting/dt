@@ -587,15 +587,6 @@ namespace Dt.Core
 
         #region 日志
         /// <summary>
-        /// 实时获取日志
-        /// </summary>
-        /// <returns></returns>
-        public Task<string> GetRealtimeLog()
-        {
-            return HtmlLogHub.GetLog();
-        }
-
-        /// <summary>
         /// 获取日志文件列表
         /// </summary>
         /// <returns></returns>

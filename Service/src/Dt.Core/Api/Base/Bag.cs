@@ -71,7 +71,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取当前http请求上下文
         /// </summary>
-        public static HttpContext Context => ((Bag)Glb.HttpContext.Items[_lcName])._invoker.Context;
+        public static HttpContext Context => Glb.HttpContext;
 
         /// <summary>
         /// 添加共享数据项，在整个请求期间有效
