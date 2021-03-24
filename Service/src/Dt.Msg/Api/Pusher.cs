@@ -52,27 +52,28 @@ namespace Dt.Msg
             Log.Debug("{0} 离线", ci.UserID);
         }
 
-        /// <summary>
-        /// 注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
-        /// </summary>
-        /// <returns></returns>
-        public Task Unregister()
-        {
-            ClientInfo ci = Online.GetClient(Bag.UserID);
-            if (ci != null)
-            {
-                ci.Close();
-                return Task.CompletedTask;
-            }
+        ///// <summary>
+        ///// 注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
+        ///// 升级道.net 5.0后不再出现该现象，客户端关闭时无需再调用该方法！！！
+        ///// </summary>
+        ///// <returns></returns>
+        //public Task Unregister()
+        //{
+        //    ClientInfo ci = Online.GetClient(Bag.UserID);
+        //    if (ci != null)
+        //    {
+        //        ci.Close();
+        //        return Task.CompletedTask;
+        //    }
 
-            // 查询所有其他副本
-            if (MsgKit.IsMultipleReplicas)
-            {
+        //    // 查询所有其他副本
+        //    if (MsgKit.IsMultipleReplicas)
+        //    {
 
-                return Task.Delay(50);
-            }
-            return Task.CompletedTask;
-        }
+        //        return Task.Delay(50);
+        //    }
+        //    return Task.CompletedTask;
+        //}
 
         /// <summary>
         /// 判断用户是否在线，查询所有副本

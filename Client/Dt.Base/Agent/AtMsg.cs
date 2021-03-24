@@ -38,18 +38,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
-        /// </summary>
-        /// <returns></returns>
-        public static Task Unregister()
-        {
-            return new UnaryRpc(
-                "msg",
-                "Pusher.Unregister"
-            ).Call<object>();
-        }
-
-        /// <summary>
         /// 判断用户是否在线，查询所有副本
         /// </summary>
         /// <param name="p_userID"></param>

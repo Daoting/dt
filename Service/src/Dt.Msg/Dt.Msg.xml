@@ -81,12 +81,6 @@
             <param name="p_writer"></param>
             <returns></returns>
         </member>
-        <member name="M:Dt.Msg.Pusher.Unregister">
-            <summary>
-            注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Dt.Msg.Pusher.IsOnline(System.Int64)">
             <summary>
             判断用户是否在线，查询所有副本

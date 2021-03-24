@@ -148,29 +148,34 @@ namespace Dt.Base
         /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
         /// </summary>
         /// <returns></returns>
-        public async Task OnSuspending()
+        public Task OnSuspending()
         {
-            // 取消正在进行的上传
-            Uploader.Cancel();
+            // ios在转入后台有180s的处理时间，过后停止所有操作，http连接瞬间自动断开
+            // android各版本不同
+            return Task.CompletedTask;
 
-            if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
-            {
-                // 停止在线推送
-                PushHandler.RetryState = PushRetryState.Stop;
-                await AtMsg.Unregister();
-            }
+            // 取消正在进行的上传
+            //Uploader.Cancel();
+
+            // asp.net core2.2时因客户端直接关闭app时会造成服务器端http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort来停止在线推送
+            // 升级道.net 5.0后不再出现该现象！无需再通过服务端Abort
+            //if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
+            //{
+            //    PushHandler.RetryState = PushRetryState.Stop;
+            //    await AtMsg.Unregister();
+            //}
         }
 
         /// <summary>
         /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
         /// </summary>
-        public async void OnResuming()
+        public void OnResuming()
         {
-            if (AtUser.IsLogon && PushHandler.RetryState != PushRetryState.Disable)
+            if (AtUser.IsLogon && !PushHandler.StopRetry)
             {
-                // 启动在线推送
-                PushHandler.RetryState = PushRetryState.Enable;
-                await PushHandler.Register();
+                // 在线推送可能被停止，重新启动
+                PushHandler.RetryTimes = 0;
+                _ = PushHandler.Register();
             }
         }
     }

@@ -26,13 +26,17 @@ namespace Dt.Base
     {
         #region 静态内容
         static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
-        // 连接推送的重试次数
-        static int _retryTimes;
+        static bool _connected;
 
         /// <summary>
-        /// 服务器推送连接断开后的重连策略
+        /// 连接推送的重试次数
         /// </summary>
-        public static PushRetryState RetryState = PushRetryState.Enable;
+        public static int RetryTimes;
+
+        /// <summary>
+        /// 服务器推送连接断开后的是否停止重连
+        /// </summary>
+        public static bool StopRetry;
 
         /// <summary>
         /// 处理服务器推送
@@ -40,43 +44,55 @@ namespace Dt.Base
         /// <returns></returns>
         public static async Task Register()
         {
-            try
+            if (_connected)
             {
+                //AtKit.Msg("已连接");
+                return;
+            }
+
+            _connected = true;
 #if WASM
-                Dict dt = new Dict
-                {
-                    { "model", "wasm" },
-                    { "name", "Chrome" },
-                    { "platform", "Browser" },
-                    { "version", "11.0" },
-                };
+            Dict dt = new Dict
+            {
+                { "model", "wasm" },
+                { "name", "Chrome" },
+                { "platform", "Browser" },
+                { "version", "11.0" },
+            };
 #else
-                Dict dt = new Dict
-                {
-                    { "model", DeviceInfo.Model },
-                    { "name", DeviceInfo.Name },
-                    { "platform", DeviceInfo.Platform.ToString() },
-                    { "version", DeviceInfo.VersionString },
-                };
+            Dict dt = new Dict
+            {
+                { "model", DeviceInfo.Model },
+                { "name", DeviceInfo.Name },
+                { "platform", DeviceInfo.Platform.ToString() },
+                { "version", DeviceInfo.VersionString },
+            };
 #endif
 
+            try
+            {
                 var reader = await AtMsg.Register(dt);
-                _retryTimes = 0;
+                RetryTimes = 0;
                 while (await reader.MoveNext())
                 {
                     new PushHandler().Call(reader.Val<string>());
                 }
             }
             catch { }
+            finally
+            {
+                _connected = false;
+            }
 
             // 未停止接收推送时重连
-            if (RetryState == PushRetryState.Enable && _retryTimes < 5)
+            if (!StopRetry && RetryTimes < 5)
             {
-                _retryTimes++;
-                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, _retryTimes))).ContinueWith((t) => Register());
+                RetryTimes++;
+                //AtKit.Msg($"第{RetryTimes}次重连");
+                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, RetryTimes))).ContinueWith((t) => Register());
             }
         }
-#endregion
+        #endregion
 
         public void Call(string p_msg)
         {
@@ -152,26 +168,5 @@ namespace Dt.Base
             }
             return null;
         }
-    }
-
-    /// <summary>
-    /// 服务器推送连接断开后的重连策略
-    /// </summary>
-    enum PushRetryState
-    {
-        /// <summary>
-        /// 允许重连
-        /// </summary>
-        Enable,
-
-        /// <summary>
-        /// 停止重连
-        /// </summary>
-        Stop,
-
-        /// <summary>
-        /// 禁止重连
-        /// </summary>
-        Disable
     }
 }
