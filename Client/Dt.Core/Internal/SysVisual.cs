@@ -76,7 +76,7 @@ namespace Dt.Core
             TextBlock tb = new TextBlock
             {
                 Text = "正在启动...",
-                FontSize = 15,
+                FontSize = 20,
                 Foreground = new SolidColorBrush(Windows.UI.Colors.White),
                 Margin = new Thickness(40, 0, 40, 0),
                 HorizontalAlignment = HorizontalAlignment.Center,
