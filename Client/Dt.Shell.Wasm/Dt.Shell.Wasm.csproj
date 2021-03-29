@@ -7,7 +7,7 @@
     <NoWarn>NU1701</NoWarn>
 
     <!-- 必须sdk完整路径 -->
-    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-92b14c2-24993-Sqlite.zip</NetCoreWasmSDKUri>
+    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-7c765ae-25536-Sqlite.zip</NetCoreWasmSDKUri>
 
     <!-- 默认Interpreter -->
     <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
@@ -52,9 +52,10 @@
     <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="3.5.1" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.167" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.167" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

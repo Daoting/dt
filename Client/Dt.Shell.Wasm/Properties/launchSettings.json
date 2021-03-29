@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/fz/ui",
+      "applicationUrl": "https://localhost/fz/ui/",
       "sslPort": 0
     }
   },
