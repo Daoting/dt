@@ -75,6 +75,9 @@ namespace Dt.Core
                         rollingInterval: RollingInterval.Day, // 文件名末尾加日期
                         rollOnFileSizeLimit: true) // 超过1G时新文件名末尾加序号
                     .CreateLogger();
+
+                var version = Glb.Stub.GetType().Assembly.GetName().Version;
+                Log.Information($"启动{Glb.SvcName}({version})...");
             }
             catch (Exception e)
             {

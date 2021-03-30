@@ -67,7 +67,7 @@ namespace Dt.Core
                     options.Limits.MaxRequestBodySize = maxSize;
                 }
                 
-                Log.Information("启动 {0} 成功 (KestrelServer)", Glb.SvcName);
+                Log.Information("启动 KestrelServer 成功");
             });
 
             // 配置 IISHttpServer
@@ -81,7 +81,7 @@ namespace Dt.Core
                     options.MaxRequestBodySize = maxSize;
                 }
 
-                Log.Information("启动 {0} 成功 (IISHttpServer)", Glb.SvcName);
+                Log.Information("启动 IISHttpServer 成功");
             });
 
             Glb.ConfigureServices(p_services);
@@ -113,6 +113,9 @@ namespace Dt.Core
 
             // 订阅事件
             RemoteEventBus.Subscribe(p_app.ApplicationServices);
+
+            var version = Glb.Stub.GetType().Assembly.GetName().Version;
+            Log.Information("---启动完毕---");
         }
     }
 }
