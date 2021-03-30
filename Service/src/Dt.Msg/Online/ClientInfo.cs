@@ -37,6 +37,7 @@ namespace Dt.Msg
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;
+            LastMsgTime = StartTime;
         }
 
         /// <summary>
@@ -75,6 +76,11 @@ namespace Dt.Msg
         public DateTime StartTime { get; }
 
         /// <summary>
+        /// 最后一次的发送时间
+        /// </summary>
+        public DateTime LastMsgTime { get; private set; }
+
+        /// <summary>
         /// 发送当前用户的离线信息
         /// </summary>
         /// <returns></returns>
@@ -108,7 +114,10 @@ namespace Dt.Msg
         /// <param name="p_msg"></param>
         public bool AddMsg(string p_msg)
         {
-            return _queue.TryAdd(p_msg);
+            bool suc = _queue.TryAdd(p_msg);
+            if (suc)
+                LastMsgTime = DateTime.Now;
+            return suc;
         }
 
         /// <summary>
@@ -154,6 +163,23 @@ namespace Dt.Msg
         {
             // 触发_queue.Take()异常，会话结束
             _queue.CompleteAdding();
+        }
+
+        /// <summary>
+        /// 发送心跳包
+        /// </summary>
+        public void OnHeartbeat()
+        {
+            try
+            {
+                RpcServerKit.WriteFrame(Context.Response.BodyWriter, RpcKit.ShakeHands, false);
+                LastMsgTime = DateTime.Now;
+            }
+            catch
+            {
+                // 发送失败，退出
+                Exit();
+            }
         }
     }
 }

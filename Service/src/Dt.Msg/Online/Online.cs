@@ -92,5 +92,38 @@ namespace Dt.Msg
         {
             get { return _all; }
         }
+
+        #region 心跳包
+        //*******************************************
+        // 心跳包为解决两个数据包之间超时的问题，因以下原因不再需要
+        // 服务端 Startup.ConfigureServices 中设置Kestrel不限制请求/响应的速率（MinResponseDataRate），部署在IIS时设置应用池的"闲置超时(分钟)"为0即可
+        // UWP、Android无超时限制
+        // iOS 在NativeMessageHandler.ios.cs设置 TimeoutIntervalForRequest 为300s，闲置5分钟重连一次
+        //*******************************************
+
+        //static int _heartbeatInterval;
+
+        //static Online()
+        //{
+        //    // 心跳包间隔
+        //    _heartbeatInterval = Glb.GetCfg("HeartbeatInterval", 0) * 1000;
+        //    if (_heartbeatInterval > 0)
+        //    {
+        //        var timer = new Timer(SendHeartbeatPkg, null, _heartbeatInterval, _heartbeatInterval);
+        //        GC.KeepAlive(timer);
+        //    }
+        //}
+
+        //static void SendHeartbeatPkg(object source)
+        //{
+        //    // 客户端过多时，若总的发送心跳时间超过检查间隔，此处有问题！
+        //    DateTime now = DateTime.Now;
+        //    foreach (var ci in _all.Values)
+        //    {
+        //        if ((now - ci.LastMsgTime).TotalMilliseconds >= _heartbeatInterval)
+        //            ci.OnHeartbeat();
+        //    }
+        //}
+        #endregion
     }
 }

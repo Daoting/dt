@@ -234,6 +234,11 @@
             开始时间
             </summary>
         </member>
+        <member name="P:Dt.Msg.ClientInfo.LastMsgTime">
+            <summary>
+            最后一次的发送时间
+            </summary>
+        </member>
         <member name="M:Dt.Msg.ClientInfo.SendOfflineMsg">
             <summary>
             发送当前用户的离线信息
@@ -266,6 +271,11 @@
         <member name="M:Dt.Msg.ClientInfo.Exit">
             <summary>
             会话结束，未通知客户端退出，也未取消本次请求，只是SendMsg()方法返回false结束长连接会话
+            </summary>
+        </member>
+        <member name="M:Dt.Msg.ClientInfo.OnHeartbeat">
+            <summary>
+            发送心跳包
             </summary>
         </member>
         <member name="T:Dt.Msg.ClientInfoEvent">

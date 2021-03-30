@@ -42,6 +42,10 @@ namespace Dt.Core.Rpc
         {
             var configuration = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
+            // 两个数据包之间的时间大于该时间则认为超时，默认60秒
+            // 为减少服务器推送模式时的重连次数，增大超时限制
+            configuration.TimeoutIntervalForRequest = 300;
+
             // System.Net.ServicePointManager.SecurityProtocol provides a mechanism for specifying supported protocol types
             // for System.Net. Since iOS only provides an API for a minimum and maximum protocol we are not able to port
             // this configuration directly and instead use the specified minimum value when one is specified.
