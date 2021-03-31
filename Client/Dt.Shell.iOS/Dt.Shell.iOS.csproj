@@ -128,7 +128,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.5.1" />
+    <PackageReference Include="Uno.UI" Version="3.6.6" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
