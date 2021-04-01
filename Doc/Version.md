@@ -1,6 +1,9 @@
 ﻿# 版本说明
 
-wasm未实现MediaPlayerElement  FileOpenPicker(计划 3.6实现), 影响FileItem
+wasm未实现
+日期选择CalendarView、DatePickerFlyout、TimePickerFlyout未实现
+FileItem上传、分享、MediaPlayerElement等功能未实现
+
 ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
 
 ocr 开源库：tesseract-ocr
@@ -24,7 +27,7 @@ ocr 开源库：tesseract-ocr
 * PhoneTabs左右滑动，只支持触摸，滑动设最小阈值
 * 解决admin页面实时日志在频繁输出时漏项的bug，服务端缓存最近50条log
 * msg服务停用心跳包，ios设置5分钟超时 
-
+* uno升级到3.6.6，确认FileOpenPicker功能
 
 ### 变更 
 * 修改fsm中缩略图命名标准，完整文件名加后缀"-t.jpg"

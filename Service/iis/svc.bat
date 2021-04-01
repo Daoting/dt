@@ -15,5 +15,5 @@ echo 删除旧应用、应用池
 %SystemRoot%\system32\inetsrv\appcmd delete apppool /apppool.name:%poolName%
 
 echo 创建新应用池、应用
-%SystemRoot%\system32\inetsrv\appcmd add apppool /name:%poolName% /managedRuntimeVersion: /startMode:AlwaysRunning
+%SystemRoot%\system32\inetsrv\appcmd add apppool /name:%poolName% /managedRuntimeVersion: /startMode:AlwaysRunning /processModel.idleTimeout:00:00:00
 %SystemRoot%\system32\inetsrv\appcmd add app /site.name:%siteName% /path:/%appName%/%svcName% /physicalPath:%path% /applicationpool:%poolName%
