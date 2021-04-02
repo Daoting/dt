@@ -6,7 +6,7 @@ FileItem上传、分享、MediaPlayerElement等功能未实现
 
 ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
 
-ocr 开源库：tesseract-ocr
+3.6.6 DatePicker TimePicker因系统语言原因不工作，已提交#5657
 
 ## Release 1.9
 
@@ -28,6 +28,7 @@ ocr 开源库：tesseract-ocr
 * 解决admin页面实时日志在频繁输出时漏项的bug，服务端缓存最近50条log
 * msg服务停用心跳包，ios设置5分钟超时 
 * uno升级到3.6.6，确认FileOpenPicker功能
+* android升到11.0，vs升到16.9.3，修改android升级后的警告
 
 ### 变更 
 * 修改fsm中缩略图命名标准，完整文件名加后缀"-t.jpg"

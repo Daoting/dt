@@ -282,7 +282,7 @@ namespace Dt.Base
         /// <returns>file name part</returns>
         string GetFileName(Context context, Android.Net.Uri uri)
         {
-            string[] projection = { MediaStore.MediaColumns.DisplayName };
+            string[] projection = { Android.Provider.MediaStore.IMediaColumns.DisplayName };
 
             var resolver = context.ContentResolver;
             var name = "";

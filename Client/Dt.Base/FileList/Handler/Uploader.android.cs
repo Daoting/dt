@@ -95,7 +95,7 @@ namespace Dt.Base
             foreach (var uf in p_uploadFiles)
             {
                 Java.IO.File file = new Java.IO.File(uf.FilePath);
-                RequestBody rb = RequestBody.Create(MediaType.Parse("application/octet-stream"), file);
+                RequestBody rb = RequestBody.Create(file, MediaType.Parse("application/octet-stream"));
                 // 包一层实现进度
                 ProgressRequestBody progress = new ProgressRequestBody(rb, uf.UploadUI.UploadProgress);
                 bodyBuilder.AddFormDataPart(uf.Desc, uf.FileName, progress);
@@ -104,7 +104,7 @@ namespace Dt.Base
                 if (!string.IsNullOrEmpty(uf.ThumbPath))
                 {
                     var thumbFile = new Java.IO.File(uf.ThumbPath);
-                    var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), thumbFile);
+                    var thumb = RequestBody.Create(thumbFile, MediaType.Parse("application/octet-stream"));
                     bodyBuilder.AddFormDataPart("thumbnail", "thumbnail.jpg", thumb);
                 }
             }
