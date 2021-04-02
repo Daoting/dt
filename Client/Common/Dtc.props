@@ -2,10 +2,10 @@
   <PropertyGroup>
     <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Uwp.sln' ">uap10.0.18362</TargetFramework>
      <!-- 加uap为xaml智能提示 -->
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid11.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;net5.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10;net5.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid11.0;xamarinios10;net5.0</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>
@@ -24,7 +24,7 @@
     <DefineConstants>$(DefineConstants);IOS</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid10.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid11.0'">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
 
@@ -48,7 +48,7 @@
     <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup> 
   
-  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid11.0' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -61,7 +61,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid10.0' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid11.0' ">
     <Reference Include="Mono.Android" />
   </ItemGroup>
 

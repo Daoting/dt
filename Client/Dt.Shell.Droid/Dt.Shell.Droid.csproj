@@ -17,7 +17,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidUseIntermediateDesignerFile>True</AndroidUseIntermediateDesignerFile>
   </PropertyGroup>
@@ -32,6 +32,7 @@
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidSupportedAbis>x86</AndroidSupportedAbis>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -91,6 +92,9 @@
     <PackageReference Include="Uno.UI" Version="3.6.6" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
+    <!-- 不引用会造成缺少Xamarin.Kotlin.StdLib库，确保和Dt.Core中的版本一致 -->
+    <PackageReference Include="Square.OkHttp3" Version="4.9.0" />
+    <PackageReference Include="Square.OkIO" version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dt.App\Dt.App.csproj">

@@ -14,9 +14,9 @@
     <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0' ">
-    <PackageReference Include="Square.OkHttp3" Version="3.14.4" />
-    <PackageReference Include="Square.OkIO" version="1.17.4" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid11.0' ">
+    <PackageReference Include="Square.OkHttp3" Version="4.9.0" />
+    <PackageReference Include="Square.OkIO" version="2.8.0" />
   </ItemGroup>
   
   <ItemGroup>
