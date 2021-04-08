@@ -100,11 +100,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
-    <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
-    <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
-    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
-    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+    <!--PrivateAssets避免引用项目的 nuget 包-->
+    <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">

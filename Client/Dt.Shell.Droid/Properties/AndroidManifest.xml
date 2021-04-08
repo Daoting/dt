@@ -15,7 +15,7 @@
 	<uses-feature android:name="android.hardware.camera" android:required="false" />
 	<uses-feature android:name="android.hardware.camera.front" android:required="false" />
   <uses-feature android:name="android.hardware.microphone" android:required="false" />
-	<application android:label="福祉堂"
+	<application android:label="搬运工"
                android:icon="@mipmap/ic_launcher"
                android:roundIcon="@mipmap/ic_launcher_round"
                android:theme="@style/AppTheme"

@@ -23,3 +23,5 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 \LaunchScreen.storyboard 启动动画定义
 
 \Main.cs 入口
+
+mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/

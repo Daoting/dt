@@ -36,8 +36,12 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
     <!--修改Excel或Chart时引用项目-->
-    <!--<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
-    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />-->
+    <!--<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" PrivateAssets="all" />-->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362' ">

@@ -3,7 +3,6 @@
   <assembly fullname="Dt.Base" />
   <assembly fullname="Dt.App" />
   <assembly fullname="Dt.Sample" />
-  <assembly fullname="Dt.Oa" />
   <assembly fullname="Dt.Shell.Wasm" />
 
   <assembly fullname="Uno.UI" />

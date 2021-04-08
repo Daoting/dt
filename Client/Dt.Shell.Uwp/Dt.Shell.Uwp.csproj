@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dt.Shell</RootNamespace>
     <AssemblyName>Dt.Shell.Uwp</AssemblyName>
-    <DefaultLanguage>en-us</DefaultLanguage>
+    <DefaultLanguage>zh-cn</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
@@ -145,10 +145,6 @@
     <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj">
       <Project>{25744ee1-b117-4141-b9a8-5ca1cbebcd98}</Project>
       <Name>Dt.Sample</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Oa\Dt.Oa.csproj">
-      <Project>{73876c51-5275-4bde-8202-530c0f3317a0}</Project>
-      <Name>Dt.Oa</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -43,13 +43,13 @@ namespace Dt.Shell
         /// <summary>
         /// 系统标题
         /// </summary>
-        public string Title => "福祉堂";
+        public string Title => "搬运工";
 
         /// <summary>
         /// 登录页面
         /// </summary>
         /// <returns></returns>
-        public UIElement LoginPage => new Login { Desc = "吉林省现代信息技术有限公司\r\nCopyright 2017-2020 版权所有" };
+        public UIElement LoginPage => new Login { Desc = "搬运工平台基础样例" };
 
         /// <summary>
         /// 系统启动
@@ -59,7 +59,7 @@ namespace Dt.Shell
         {
             // 设置固定菜单项
             CreateFixedMenus();
-
+            
             if (ViewTypes.TryGetValue("主页", out var type) && type == typeof(DefaultHome))
             {
                 // 联网模式
@@ -126,13 +126,6 @@ namespace Dt.Shell
             {
                 new OmMenu
                 {
-                    ID = 2000,
-                    Name = "福祉主页",
-                    Icon = "主页",
-                    ViewName = "福祉主页"
-                },
-                new OmMenu
-                {
                     ID = 1110,
                     Name = "通讯录",
                     Icon = "留言",
@@ -192,7 +185,6 @@ namespace Dt.Shell
             { "用户账号", typeof(Dt.App.Model.UserAccount) },
             { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.App.Chat.ChatHome) },
-            { "福祉主页", typeof(Dt.Fz.ClientHome) },
             { "控件样例", typeof(Dt.Sample.SamplesMain) },
         };
 
