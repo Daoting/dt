@@ -81,7 +81,7 @@ namespace Dt.Core
         /// <summary>
         /// 系统回调
         /// </summary>
-        internal static ICallback Callback { get; set; }
+        internal static ICallback Callback { get; private set; }
 
         /// <summary>
         /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
@@ -111,19 +111,21 @@ namespace Dt.Core
         /// 系统初始化
         /// </summary>
         /// <param name="p_stub">系统存根</param>
-        /// <param name="p_app"></param>
-        public static void Startup(IStub p_stub, Application p_app)
+        /// <param name="p_callback"></param>
+        internal static void Startup(IStub p_stub, ICallback p_callback)
         {
             Stub = p_stub;
+            Callback = p_callback;
             if (Stub.SerializeTypes != null)
                 SerializeTypeAlias.Merge(Stub.SerializeTypes);
 
-            p_app.Suspending += OnSuspending;
-            p_app.Resuming += OnResuming;
+            var app = Application.Current;
+            app.Suspending += OnSuspending;
+            app.Resuming += OnResuming;
 
             // 异常处理
 #if UWP
-            p_app.UnhandledException += OnUwpUnhandledException;
+            app.UnhandledException += OnUwpUnhandledException;
 #elif ANDROID
             Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
 #elif IOS

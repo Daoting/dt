@@ -128,8 +128,10 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.6.6" />
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
+    <!-- 确保版本和Dt.Base中的一致 -->
+    <PackageReference Include="Uno.UI" Version="3.6.6" />
+    <PackageReference Include="GMImagePicker.Xamarin" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\Common\App.xaml">

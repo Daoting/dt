@@ -7,20 +7,17 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.Tools;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -33,14 +30,14 @@ namespace Dt.Base
         #region 启动
         /// <summary>
         /// 应用程序启动
-        /// </param>
-        public static void Run(LaunchActivatedEventArgs args)
+        /// </summary>
+        /// <typeparam name="T">存根类型</typeparam>
+        /// <param name="args">启动参数</param>
+        public static void Run<T>(LaunchActivatedEventArgs args)
+            where T : IStub
         {
-            // 系统回调
-            AtSys.Callback = new DefaultCallback();
-
-            // 初始根元素用来提示信息，其他元素表示已启动过
-            if (!(SysVisual.RootContent is TextBlock))
+            // 非null表示app已启动过
+            if (AtSys.Stub != null)
             {
                 // 带参数启动
                 if (!string.IsNullOrEmpty(args.Arguments))
@@ -48,15 +45,28 @@ namespace Dt.Base
                 return;
             }
 
+            IStub stub = Activator.CreateInstance<T>();
+            AtSys.Startup(stub, new DefaultCallback());
+
+            // 加载资源
+            var res = Application.Current.Resources;
+            res.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Generic.xaml") });
+#if WASM
+            // 自定义图标字体库，因Global.xaml中前缀无效无法定义
+            res["IconFont"] = new FontFamily("DtIcon");
+            res["Symbols"] = new FontFamily("Symbols");
+#endif
+
             InputManager.Init();
             NotifyManager.Init();
             LaunchManager.Arguments = args.Arguments;
 
-            // WinUI模式与PhoneUI模式切换
+            // 设置WinUI模式与PhoneUI模式切换的回调方法
+            // 此处调用会通过SysVisual的静态构造方法创建整个系统可视树
             SysVisual.UIModeChanged = OnUIModeChanged;
 
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-            AtSys.Stub.OnStartup(new StartupInfo());
+            stub.OnStartup(new StartupInfo());
         }
 
         /// <summary>
