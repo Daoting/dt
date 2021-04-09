@@ -20,12 +20,9 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 * wasm部署到iis，支持调试
 * wasm动态获取服务器地址
 * wasm中未处理异常统一到异常处理
-* 解决sqlite的GetFieldType错误
-* wasm版sqlite不支持事务
 * wasm中显示图片
 * FileList图片预览
 * PhoneTabs左右滑动，只支持触摸，滑动设最小阈值
-* 解决admin页面实时日志在频繁输出时漏项的bug，服务端缓存最近50条log
 * msg服务停用心跳包，ios设置5分钟超时 
 * uno升级到3.6.6，确认FileOpenPicker功能
 * android升到11.0，vs升到16.9.3，修改android升级后的警告
@@ -35,7 +32,9 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 * 调整pub服务部署目录
 
 ### Bug修改 
-
+* 解决sqlite的GetFieldType错误
+* wasm版sqlite不支持事务
+* 解决admin页面实时日志在频繁输出时漏项的bug，服务端缓存最近50条log 
 
 ## Release 1.5
 
