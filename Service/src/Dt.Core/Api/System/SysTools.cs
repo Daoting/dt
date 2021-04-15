@@ -111,9 +111,10 @@ namespace Dt.Core
             foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
             {
                 AppendTabSpace(sb, 3);
-                sb.Append("AddCell<");
-                sb.Append(GetTypeName(col.Type));
-                sb.Append(">(\"");
+                sb.Append("AddCell(\"");
+                // 简化写法不需要类型
+                //sb.Append(GetTypeName(col.Type));
+                //sb.Append(">(\"");
                 sb.Append(col.Name);
                 sb.Append("\", ");
                 if (IsEnumCol(col))
