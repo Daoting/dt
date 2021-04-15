@@ -30,6 +30,19 @@ namespace Dt.Core.Sqlite
     /// </summary>
     public class ModelRefreshHandler : IRemoteHandler<ModelRefreshEvent>
     {
+        #region 成员变量
+        const string _createOmColumn = "CREATE TABLE OmColumn (\n" +
+                                            "ID integer primary key autoincrement not null,\n" +
+                                            "TabName text,\n" +
+                                            "ColName text,\n" +
+                                            "DbType text,\n" +
+                                            "IsPrimary integer,\n" +
+                                            "Length integer,\n" +
+                                            "Nullable integer,\n" +
+                                            "Comments text)";
+        const string _insertOmColumn = "insert into OmColumn (TabName,ColName,DbType,IsPrimary,Length,Nullable,Comments) values (:TabName,:ColName,:DbType,:IsPrimary,:Length,:Nullable,:Comments)";
+        #endregion
+
         public async Task Handle(ModelRefreshEvent p_event)
         {
             if (SqliteModelHandler.Refreshing)
@@ -60,7 +73,7 @@ namespace Dt.Core.Sqlite
             MySqlAccess.TraceSql = false;
             try
             {
-                using (SqliteConnectionEx conn = new SqliteConnectionEx($"Data Source={dbFile}"))
+                using (var conn = new SqliteConnection($"Data Source={dbFile}"))
                 {
                     conn.Open();
                     sb.AppendLine("开始导出模型及数据");
@@ -68,13 +81,18 @@ namespace Dt.Core.Sqlite
                     using var tran = conn.BeginTransaction();
 
                     // 加载global.json中MySql配置节的所有库的表结构
-                    conn.CreateTable(typeof(OmColumn));
+                    // 创建OmColumn表结构
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = _createOmColumn;
+                        cmd.ExecuteNonQuery();
+                    }
                     List<OmColumn> cols = new List<OmColumn>();
                     foreach (var item in Glb.Config.GetSection("MySql").GetChildren())
                     {
                         LoadSchema(item.Value, cols);
                     }
-                    conn.BatchInsert(cols);
+                    InsertSchema(conn, cols);
                     sb.AppendFormat("创建表OmColumn成功，导出{0}行\r\n", cols.Count);
 
                     // 加载service.json配置节 SqliteModel 的缓存数据
@@ -161,7 +179,7 @@ namespace Dt.Core.Sqlite
             catch { }
         }
 
-        async Task<int> ImportData(string p_tblName, SqliteConnectionEx p_conn)
+        async Task<int> ImportData(string p_tblName, SqliteConnection p_conn)
         {
             var dbConn = Glb.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbConn");
             var select = Glb.Config.GetValue<string>($"SqliteModel:{p_tblName}:Data");
@@ -306,6 +324,81 @@ namespace Dt.Core.Sqlite
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 批量插入表结构信息
+        /// </summary>
+        /// <param name="p_conn"></param>
+        /// <param name="p_cols"></param>
+        static void InsertSchema(SqliteConnection p_conn, List<OmColumn> p_cols)
+        {
+            using (var cmd = p_conn.CreateCommand())
+            {
+                cmd.Parameters.Add("TabName", SqliteType.Text);
+                cmd.Parameters.Add("ColName", SqliteType.Text);
+                cmd.Parameters.Add("DbType", SqliteType.Text);
+                cmd.Parameters.Add("IsPrimary", SqliteType.Integer);
+                cmd.Parameters.Add("Length", SqliteType.Integer);
+                cmd.Parameters.Add("Nullable", SqliteType.Integer);
+                cmd.Parameters.Add("Comments", SqliteType.Text);
+
+                cmd.CommandText = _insertOmColumn;
+                foreach (var col in p_cols)
+                {
+                    cmd.Parameters["TabName"].Value = col.TabName;
+                    cmd.Parameters["ColName"].Value = col.ColName;
+                    cmd.Parameters["DbType"].Value = col.DbType;
+                    cmd.Parameters["IsPrimary"].Value = col.IsPrimary;
+                    cmd.Parameters["Length"].Value = col.Length;
+                    cmd.Parameters["Nullable"].Value = col.Nullable;
+                    cmd.Parameters["Comments"].Value = col.Comments;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        class OmColumn
+        {
+            /// <summary>
+            /// 主键
+            /// </summary>
+            public int ID { get; set; }
+
+            /// <summary>
+            /// 所属表名
+            /// </summary>
+            public string TabName { get; set; }
+
+            /// <summary>
+            /// 列名
+            /// </summary>
+            public string ColName { get; set; }
+
+            /// <summary>
+            /// 数据类型
+            /// </summary>
+            public string DbType { get; set; }
+
+            /// <summary>
+            /// 是否为主键
+            /// </summary>
+            public bool IsPrimary { get; set; }
+
+            /// <summary>
+            /// 列长度，只字符类型有效
+            /// </summary>
+            public int Length { get; set; }
+
+            /// <summary>
+            /// 列是否允许为空
+            /// </summary>
+            public bool Nullable { get; set; }
+
+            /// <summary>
+            /// 列注释
+            /// </summary>
+            public string Comments { get; set; }
         }
     }
 }
