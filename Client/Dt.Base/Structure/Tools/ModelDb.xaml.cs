@@ -17,14 +17,14 @@ namespace Dt.Base.Tools
         public ModelDb()
         {
             InitializeComponent();
-            _lvTbl.Data = AtLocal.QueryModelTblsName();
+            _lvTbl.Data = AtModel.GetAllTables();
             _lvTbl.ItemClick += OnTblClick;
         }
 
         void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvData.Data = AtLocal.ModelQuery(string.Format("select * from {0}", e.Row.Str("name")));
+                _lvData.Data = AtModel.Query(string.Format("select * from {0}", e.Row.Str("name")));
             NaviTo("数据");
         }
     }

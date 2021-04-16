@@ -59,15 +59,13 @@ namespace Dt.App.File
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = AtLocal.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
+                var his = AtState.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
                 if (his == null)
                 {
-                    his = new ReadFileHistory();
-                    his.ID = row.ID;
-                    his.Info = row.Str("info");
+                    his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
                 }
                 his.LastReadTime = AtSys.Now;
-                if (AtLocal.Save(his) == 1)
+                if (AtState.Save(his, false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
         }

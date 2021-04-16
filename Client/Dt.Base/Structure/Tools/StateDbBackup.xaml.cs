@@ -62,16 +62,17 @@ namespace Dt.Base.Tools
             }
             else
             {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(AtLocal.StateDbName);
-                if (file == null)
-                {
-                    _tb.Text += "\r\n备份失败，未找到数据文件！";
-                    return;
-                }
-                var prop = await file.GetBasicPropertiesAsync();
-                _tb.Text += string.Format("\r\n{0}    {1}", file.Name, AtKit.GetFileSizeDesc(prop.Size));
-                await file.CopyAsync(tgtRoot);
-                _tb.Text += "\r\n备份结束！";
+                // 已换目录！
+                //var file = await ApplicationData.Current.LocalFolder.GetFileAsync(AtState.StateDbName);
+                //if (file == null)
+                //{
+                //    _tb.Text += "\r\n备份失败，未找到数据文件！";
+                //    return;
+                //}
+                //var prop = await file.GetBasicPropertiesAsync();
+                //_tb.Text += string.Format("\r\n{0}    {1}", file.Name, AtKit.GetFileSizeDesc(prop.Size));
+                //await file.CopyAsync(tgtRoot);
+                //_tb.Text += "\r\n备份结束！";
             }
         }
 

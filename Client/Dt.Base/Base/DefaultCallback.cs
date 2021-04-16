@@ -57,8 +57,8 @@ namespace Dt.Base
             // 注销时清空用户信息
             AtUser.Reset();
 
-            AtLocal.DeleteCookie("LoginPhone");
-            AtLocal.DeleteCookie("LoginPwd");
+            AtState.DeleteCookie("LoginPhone");
+            AtState.DeleteCookie("LoginPwd");
 
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;

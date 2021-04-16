@@ -16,29 +16,62 @@ namespace Dt.Core.Model
     /// <summary>
     /// 客户端日志
     /// </summary>
-    [StateTable]
-    public class ClientLog
+    [Sqlite("state")]
+    public class ClientLog : Entity
     {
+        #region 构造方法
+        ClientLog() { }
+
+        public ClientLog(
+            LogEventLevel Level = default,
+            string Content = default,
+            DateTime Ctime = default)
+        {
+            AddCell("ID", 0);
+            AddCell("Level", Level);
+            AddCell("Content", Content);
+            AddCell("Ctime", Ctime);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
         /// <summary>
         /// 日志主键
         /// </summary>
         [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
+        new public int ID
+        {
+            get { return (int)this["ID"]; }
+            set { this["ID"] = value; }
+        }
 
         /// <summary>
         /// 日志级别
         /// </summary>
-        public LogEventLevel Level { get; set; }
+        public LogEventLevel Level
+        {
+            get { return (LogEventLevel)this["Level"]; }
+            set { this["Level"] = value; }
+        }
 
         /// <summary>
         /// 日志内容
         /// </summary>
-        public string Content { get; set; }
+        public string Content
+        {
+            get { return (string)this["Content"]; }
+            set { this["Content"] = value; }
+        }
 
         /// <summary>
         /// 日志记录时间
         /// </summary>
-        public DateTime CTime { get; set; }
+        public DateTime Ctime
+        {
+            get { return (DateTime)this["CTime"]; }
+            set { this["CTime"] = value; }
+        }
     }
 
     /// <summary>

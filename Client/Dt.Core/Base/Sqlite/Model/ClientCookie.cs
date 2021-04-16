@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core.Sqlite;
-using System;
 #endregion
 
 namespace Dt.Core.Model
@@ -16,18 +15,40 @@ namespace Dt.Core.Model
     /// <summary>
     /// 客户端Cookie字典
     /// </summary>
-    [StateTable]
-    public class ClientCookie
+    [Sqlite("state")]
+    public class ClientCookie : Entity
     {
+        #region 构造方法
+        ClientCookie() { }
+
+        public ClientCookie(
+            string Key,
+            string Val = default)
+        {
+            AddCell("Key", Key);
+            AddCell("Val", Val);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
         /// <summary>
         /// 键
         /// </summary>
         [PrimaryKey]
-        public string Key { get; set; }
+        public string Key
+        {
+            get { return (string)this["Key"]; }
+            set { this["Key"] = value; }
+        }
 
         /// <summary>
         /// 值
         /// </summary>
-        public string Val { get; set; }
+        public string Val
+        {
+            get { return (string)this["Val"]; }
+            set { this["Val"] = value; }
+        }
     }
 }

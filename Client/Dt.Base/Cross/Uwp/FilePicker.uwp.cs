@@ -184,7 +184,7 @@ namespace Dt.Base
             // 生成缩略图
             if (existThumb)
             {
-                fd.ThumbPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
+                fd.ThumbPath = Path.Combine(AtSys.CachePath, AtKit.NewID + "-t.jpg");
                 using (var fs = File.Create(fd.ThumbPath))
                 {
                     // 默认根据DPI调整缩略图大小

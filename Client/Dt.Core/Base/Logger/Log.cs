@@ -104,13 +104,11 @@ namespace Dt.Core
             Console.Error.WriteLine(msg);
 #endif
 
-            ClientLog log = new ClientLog
-            {
-                Level = p_level,
-                Content = msg,
-                CTime = DateTime.Now
-            };
-            AtLocal.Insert(log);
+            ClientLog log = new ClientLog(
+                Level: p_level,
+                Content: msg,
+                Ctime: DateTime.Now);
+            AtState.Save(log);
         }
     }
 }

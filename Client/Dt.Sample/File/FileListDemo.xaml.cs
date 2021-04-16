@@ -17,7 +17,7 @@ namespace Dt.Sample
         public FileListDemo()
         {
             InitializeComponent();
-            var xml = AtLocal.GetCookie("FileTransDemo");
+            var xml = AtState.GetCookie("FileTransDemo");
             if (!string.IsNullOrEmpty(xml))
             {
                 _fl.Data = xml;
@@ -32,18 +32,18 @@ namespace Dt.Sample
         void OnUploadFinished(object sender, bool suc)
         {
             if (suc)
-                AtLocal.SaveCookie("FileTransDemo", _fl.Data);
+                AtState.SaveCookie("FileTransDemo", _fl.Data);
         }
 
         void OnClear(object sender, RoutedEventArgs e)
         {
-            AtLocal.DeleteCookie("FileTransDemo");
+            AtState.DeleteCookie("FileTransDemo");
             _fl.Data = null;
         }
 
         void OnDelTemp(object sender, RoutedEventArgs e)
         {
-            AtLocal.ClearAllFiles();
+            AtSys.ClearCacheFiles();
         }
 
         void OnAddPadding(object sender, RoutedEventArgs e)

@@ -85,7 +85,7 @@ namespace Dt.Base
         public static void ShowDlg(long p_otherID, string p_otherName = null)
         {
             if (string.IsNullOrEmpty(p_otherName))
-                p_otherName = AtLocal.GetScalar<string>($"select name from ChatMember where id={p_otherID}");
+                p_otherName = AtState.GetScalar<string>($"select name from ChatMember where id={p_otherID}");
 
             Dlg dlg;
             if (AtSys.IsPhoneUI)
@@ -138,7 +138,7 @@ namespace Dt.Base
             if (OtherID < 0)
                 return;
 
-            _other = AtLocal.First<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
+            _other = AtState.First<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
             // 不是好友时无法发送
             _inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -152,7 +152,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnNextPage(PageData e)
         {
-            int cnt = AtLocal.GetScalar<int>("select count(*) from Letter where otherid=@otherid and loginid=@loginid",
+            int cnt = AtState.GetScalar<int>("select count(*) from Letter where otherid=@otherid and loginid=@loginid",
                 new Dict
                 {
                     { "otherid", OtherID },
@@ -165,7 +165,7 @@ namespace Dt.Base
                 limit = cnt - e.PageNo * e.PageSize;
 
             Nl<Letter> data = new Nl<Letter>();
-            var ls = AtLocal.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+            var ls = AtState.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
                 l.Photo = l.IsReceived ? _other.Photo : AtUser.Photo;
@@ -369,7 +369,7 @@ namespace Dt.Base
         void OnDelMsg(object sender, Mi e)
         {
             var l = (Letter)e.DataContext;
-            AtLocal.Exec($"delete from Letter where ID={l.ID}");
+            AtState.Exec($"delete from Letter where ID={l.ID}");
             _lv.Data.Remove(l);
         }
 

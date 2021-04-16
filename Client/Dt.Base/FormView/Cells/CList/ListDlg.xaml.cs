@@ -77,7 +77,7 @@ namespace Dt.Base.FormView
             else if (!string.IsNullOrEmpty(_owner.Option))
             {
                 // 基础选项
-                lv.Data = AtLocal.ModelQuery($"select name from OmOption where Category=\"{_owner.Option}\"");
+                lv.Data = AtModel.Query($"select name from OmOption where Category=\"{_owner.Option}\"");
             }
             else if (!string.IsNullOrEmpty(_owner.Sql))
             {
@@ -283,7 +283,7 @@ namespace Dt.Base.FormView
             Table data;
             string sql = string.IsNullOrEmpty(p_filter) ? info[1] : $"select * from ({info[1]}) a where {p_filter}";
             if (info[0].ToLower() == "local")
-                data = AtLocal.Query(sql);
+                data = AtState.Query(sql);
             else
                 data = await new UnaryRpc(info[0], "Da.Query", sql, null).Call<Table>();
             return data;

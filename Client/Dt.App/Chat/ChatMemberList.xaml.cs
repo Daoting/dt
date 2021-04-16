@@ -42,7 +42,7 @@ namespace Dt.App.Chat
 
             // 超过10小时需要刷新
             bool refresh = true;
-            string val = AtLocal.GetCookie(_refreshKey);
+            string val = AtState.GetCookie(_refreshKey);
             if (!string.IsNullOrEmpty(val) && DateTime.TryParse(val, out var last))
                 refresh = (AtSys.Now - last).TotalHours >= 10;
 
@@ -55,21 +55,21 @@ namespace Dt.App.Chat
         async void RefreshList()
         {
             // 暂时取所有，后续增加好友功能
-            var tbl = await AtCm.Query("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
+            var tbl = await AtCm.Query<ChatMember>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
             _lv.Data = tbl;
 
             // 将新列表缓存到本地库
-            AtLocal.Exec("delete from ChatMember");
+            AtState.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
-                AtLocal.BatchSave(tbl, "ChatMember");
+                AtState.BatchSave(tbl, false);
 
             // 记录刷新时间
-            AtLocal.SaveCookie(_refreshKey, AtSys.Now.ToString());
+            AtState.SaveCookie(_refreshKey, AtSys.Now.ToString());
         }
 
         void LoadLocalList()
         {
-            _lv.Data = AtLocal.Query("select * from chatmember");
+            _lv.Data = AtState.Query("select * from chatmember");
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

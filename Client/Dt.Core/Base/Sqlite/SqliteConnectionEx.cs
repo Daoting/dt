@@ -128,91 +128,6 @@ namespace Dt.Core.Sqlite
             });
             return cnt;
         }
-
-        /// <summary>
-        /// 插入或自动更新一条记录
-        /// </summary>
-        /// <param name="p_row">数据</param>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        internal int InsertRow(Row p_row, string p_tblName)
-        {
-            if (p_row == null || string.IsNullOrEmpty(p_tblName))
-                throw new Exception("待保存的数据和表名不可为空！");
-
-            int cnt = 0;
-            TableMapping map = GetTblMapping(p_tblName);
-
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = map.GetInsertSql(true);
-                foreach (var col in map.Columns)
-                {
-                    cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType)).Value = GetColVal(p_row, col);
-                }
-                cnt = cmd.ExecuteNonQuery();
-
-                // 自增列
-                if (p_row.IsAdded && map.HasAutoIncPK)
-                {
-                    cmd.CommandText = _lastRowid;
-                    cmd.Parameters.Clear();
-                    long id = (long)cmd.ExecuteScalar();
-                    p_row[map.PK.Name] = id;
-                }
-            }
-            return cnt;
-        }
-
-        /// <summary>
-        /// 事务内插入或更新Table
-        /// </summary>
-        /// <param name="p_tbl"></param>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        internal int InsertTable(Table p_tbl, string p_tblName)
-        {
-            if (p_tbl == null || string.IsNullOrEmpty(p_tblName))
-                throw new Exception("待保存的数据和表名不可为空！");
-
-            int cnt = 0;
-            TableMapping map = GetTblMapping(p_tblName);
-
-            RunInTransaction(() =>
-            {
-                using (var cmd = CreateCmd())
-                {
-                    cmd.CommandText = map.GetInsertSql(true);
-                    foreach (var col in map.Columns)
-                    {
-                        cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
-                    }
-
-                    SqliteCommand idCmd = null;
-                    foreach (var r in p_tbl)
-                    {
-                        foreach (var col in map.Columns)
-                        {
-                            cmd.Parameters[col.Name].Value = GetColVal(r, col);
-                        }
-                        cnt += cmd.ExecuteNonQuery();
-
-                        // 自增列
-                        if (r.IsAdded && map.HasAutoIncPK)
-                        {
-                            if (idCmd == null)
-                                idCmd = new SqliteCommand(_lastRowid, this, Transaction);
-                            long id = (long)idCmd.ExecuteScalar();
-                            r[map.PK.Name] = id;
-                        }
-                    }
-
-                    if (idCmd != null)
-                        idCmd.Dispose();
-                }
-            });
-            return cnt;
-        }
         #endregion
 
         #region 查询
@@ -223,7 +138,8 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>对象列表</returns>
-        public List<T> Query<T>(string p_sql, Dict p_params = null) where T : class
+        public Table<TEntity> Query<TEntity>(string p_sql, object p_params = null)
+            where TEntity : Entity
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -232,7 +148,7 @@ namespace Dt.Core.Sqlite
             {
                 cmd.CommandText = p_sql;
                 WrapParams(cmd.Parameters, p_params);
-                return cmd.ExecuteQuery<T>();
+                return cmd.ExecuteQuery<TEntity>();
             }
         }
 
@@ -242,7 +158,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>Table</returns>
-        public Table Query(string p_sql, Dict p_params = null)
+        public Table Query(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -256,13 +172,34 @@ namespace Dt.Core.Sqlite
         }
 
         /// <summary>
+        /// 查询，返回可枚举对象列表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_sql"></param>
+        /// <param name="p_params"></param>
+        /// <returns></returns>
+        public IEnumerable<TRow> ForEach<TRow>(string p_sql, object p_params = null)
+            where TRow : Row
+        {
+            if (string.IsNullOrEmpty(p_sql))
+                throw new Exception(_errQuery);
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = p_sql;
+                WrapParams(cmd.Parameters, p_params);
+                return cmd.ForEach<TRow>();
+            }
+        }
+
+        /// <summary>
         /// 查询单个值
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public T ExecuteScalar<T>(string p_sql, Dict p_params = null)
+        public T ExecuteScalar<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -276,45 +213,13 @@ namespace Dt.Core.Sqlite
         }
 
         /// <summary>
-        /// 查询，返回可枚举对象列表
+        /// 返回符合条件的第一列数据，并转换为指定类型
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public IEnumerable<T> DeferredQuery<T>(string p_sql, Dict p_params = null) where T : class
-        {
-            if (string.IsNullOrEmpty(p_sql))
-                throw new Exception(_errQuery);
-
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = p_sql;
-                WrapParams(cmd.Parameters, p_params);
-                return cmd.DeferredQuery<T>();
-            }
-        }
-
-        /// <summary>
-        /// SQL查询，只返回第一行
-        /// </summary>
-        /// <param name="p_sql"></param>
-        /// <param name="p_params"></param>
-        /// <returns></returns>
-        public Row GetRow(string p_sql, Dict p_params = null)
-        {
-            if (string.IsNullOrEmpty(p_sql))
-                throw new Exception(_errQuery);
-
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = p_sql;
-                WrapParams(cmd.Parameters, p_params);
-                return cmd.GetFirstRow();
-            }
-        }
-
-        public List<T> GetFirstCol<T>(string p_sql, Dict p_params = null)
+        public List<T> GetFirstCol<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -324,6 +229,26 @@ namespace Dt.Core.Sqlite
                 cmd.CommandText = p_sql;
                 WrapParams(cmd.Parameters, p_params);
                 return cmd.GetFirstCol<T>();
+            }
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回第一列枚举，高性能
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_sql"></param>
+        /// <param name="p_params"></param>
+        /// <returns></returns>
+        public IEnumerable<T> EachFirstCol<T>(string p_sql, object p_params = null)
+        {
+            if (string.IsNullOrEmpty(p_sql))
+                throw new Exception(_errQuery);
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = p_sql;
+                WrapParams(cmd.Parameters, p_params);
+                return cmd.EachFirstCol<T>();
             }
         }
 
@@ -371,7 +296,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public int Execute(string p_sql, Dict p_params = null)
+        public int Execute(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -418,27 +343,28 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 初始化库表结构
         /// </summary>
-        internal void InitStateDb()
+        /// <param name="p_types">映射类型</param>
+        internal void InitDb(IList<Type> p_types)
         {
-            var tps = AtSys.Stub.StateTbls;
-            if (tps == null || tps.Count == 0)
+            if (p_types == null || p_types.Count == 0)
                 return;
 
-            foreach (var item in tps)
+            foreach (var item in p_types)
             {
-                CreateStateTable(item.Value);
+                CreateTable(item);
             }
         }
 
         /// <summary>
-        /// 创建状态库表
+        /// 根据类型创建表结构
         /// </summary>
         /// <param name="p_type"></param>
-        void CreateStateTable(Type p_type)
+        void CreateTable(Type p_type)
         {
             TableMapping map = GetMapping(p_type);
-            List<ColumnInfo> cols = GetTableInfo(p_type.Name);
 
+            // 查询所有列名，原来使用 pragma table_info(tblName)
+            var cols = GetFirstCol<string>($"select name from pragma_table_info('{p_type.Name}')");
             if (cols.Count > 0)
             {
                 // 若表存在，判断是否需要增加列
@@ -446,9 +372,9 @@ namespace Dt.Core.Sqlite
                 foreach (var p in map.Columns)
                 {
                     var found = false;
-                    foreach (var c in cols)
+                    foreach (var col in cols)
                     {
-                        found = (string.Compare(p.Name, c.Name, StringComparison.OrdinalIgnoreCase) == 0);
+                        found = (string.Compare(p.Name, col, StringComparison.OrdinalIgnoreCase) == 0);
                         if (found)
                             break;
                     }
@@ -502,17 +428,6 @@ namespace Dt.Core.Sqlite
             }
         }
 
-        /// <summary>
-        /// 根据表名获得表信息（列信息集合）
-        /// </summary>
-        /// <param name="p_tableName"></param>
-        /// <returns></returns>
-        List<ColumnInfo> GetTableInfo(string p_tableName)
-        {
-            var query = "pragma table_info(\"" + p_tableName + "\")";
-            return Query<ColumnInfo>(query);
-        }
-
         public struct IndexInfo
         {
             public List<IndexedColumn> Columns;
@@ -526,43 +441,9 @@ namespace Dt.Core.Sqlite
             public string ColumnName;
             public int Order;
         }
-
-        public class ColumnInfo
-        {
-            public ColumnInfo()
-            {
-            }
-
-            [Column("name")]
-            public string Name { get; set; }
-            public int notnull { get; set; }
-
-            public override string ToString()
-            {
-                return Name;
-            }
-        }
         #endregion
 
         #region 内部方法
-        /// <summary>
-        /// 根据表名获取TableMapping
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        internal TableMapping GetTblMapping(string p_tblName)
-        {
-            if (string.IsNullOrEmpty(p_tblName))
-                throw new Exception("获取本地库映射未提供表名！");
-
-            // 表名->类型->获取映射
-            Type tp;
-            var tps = AtSys.Stub.StateTbls;
-            if (tps != null && tps.TryGetValue(p_tblName.ToLower(), out tp))
-                return GetMapping(tp);
-            throw new Exception(string.Format("本地库无【{0}】！", p_tblName));
-        }
-
         /// <summary>
         /// 根据类型获取TableMapping
         /// </summary>
@@ -623,13 +504,21 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <param name="p_collection"></param>
         /// <param name="p_param"></param>
-        void WrapParams(SqliteParameterCollection p_collection, Dict p_param)
+        void WrapParams(SqliteParameterCollection p_collection, object p_param)
         {
-            if (p_param != null && p_param.Count > 0)
+            if (p_param is Dict dt && dt.Count > 0)
             {
-                foreach (var item in p_param)
+                foreach (var item in dt)
                 {
                     p_collection.AddWithValue(item.Key, item.Value);
+                }
+            }
+            else if (p_param != null)
+            {
+                // 匿名对象无法在GetProperty时指定BindingFlags！
+                foreach (var prop in p_param.GetType().GetProperties())
+                {
+                    p_collection.AddWithValue(prop.Name, prop.GetValue(p_param));
                 }
             }
         }

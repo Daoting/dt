@@ -15,12 +15,34 @@ namespace Dt.Core.Model
     /// <summary>
     /// 用户参数
     /// </summary>
-    [StateTable]
-    public class UserParams
+    [Sqlite("state")]
+    public class UserParams : Entity
     {
-        [PrimaryKey]
-        public string ID { get; set; }
+        #region 构造方法
+        UserParams() { }
 
-        public string Val { get; set; }
+        public UserParams(
+            string ID,
+            string Val = default)
+        {
+            AddCell("ID", ID);
+            AddCell("Val", Val);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
+        [PrimaryKey]
+        new public string ID
+        {
+            get { return (string)this["ID"]; }
+            set { this["ID"] = value; }
+        }
+
+        public string Val
+        {
+            get { return (string)this["Val"]; }
+            set { this["Val"] = value; }
+        }
     }
 }

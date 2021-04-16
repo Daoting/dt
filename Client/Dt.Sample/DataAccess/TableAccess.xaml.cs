@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -54,7 +55,7 @@ namespace Dt.Sample
 
         void OnCreateTableByLocalName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.CreateLocal("ClientLog");
+            Table tbl = Table.Create(new ClientLog());
             WriteColumns(tbl);
         }
 

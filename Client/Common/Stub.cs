@@ -71,8 +71,8 @@ namespace Dt.Shell
                     return;
                 }
 
-                string phone = AtLocal.GetCookie("LoginPhone");
-                string pwd = AtLocal.GetCookie("LoginPwd");
+                string phone = AtState.GetCookie("LoginPhone");
+                string pwd = AtState.GetCookie("LoginPwd");
                 if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
                 {
                     // 自动登录
@@ -124,42 +124,36 @@ namespace Dt.Shell
         {
             MenuKit.FixedMenus = new List<OmMenu>
             {
-                new OmMenu
-                {
-                    ID = 1110,
-                    Name = "通讯录",
-                    Icon = "留言",
-                    ViewName = "通讯录"
-                },
-                new OmMenu
-                {
-                    ID = 3000,
-                    Name = "任务",
-                    Icon = "双绞线",
-                    ViewName = "任务",
-                    SvcName = "cm"
-                },
-                new OmMenu
-                {
-                    ID = 4000,
-                    Name = "文件",
-                    Icon = "文件夹",
-                    ViewName = "文件"
-                },
-                new OmMenu
-                {
-                    ID = 5000,
-                    Name = "发布",
-                    Icon = "公告",
-                    ViewName = "发布"
-                },
-                new OmMenu
-                {
-                    ID = 1,
-                    Name = "控件样例",
-                    Icon = "词典",
-                    ViewName = "控件样例"
-                },
+                new OmMenu(
+                    ID: 1110,
+                    Name: "通讯录",
+                    Icon: "留言",
+                    ViewName: "通讯录"),
+
+                new OmMenu(
+                    ID: 3000,
+                    Name: "任务",
+                    Icon: "双绞线",
+                    ViewName: "任务",
+                    SvcName: "cm"),
+
+                new OmMenu(
+                    ID: 4000,
+                    Name: "文件",
+                    Icon: "文件夹",
+                    ViewName: "文件"),
+
+                new OmMenu(
+                    ID: 5000,
+                    Name: "发布",
+                    Icon: "公告",
+                    ViewName: "发布"),
+
+                new OmMenu(
+                    ID: 1,
+                    Name: "控件样例",
+                    Icon: "词典",
+                    ViewName: "控件样例"),
             };
         }
 
@@ -167,7 +161,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取视图字典
         /// </summary>
-        public Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>
+        public Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>
         {
             { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
@@ -191,7 +185,7 @@ namespace Dt.Shell
         /// <summary>
         /// 处理服务器推送的类型字典
         /// </summary>
-        public Dictionary<string, Type> PushHandlers => new Dictionary<string, Type>
+        public Dictionary<string, Type> PushHandlers { get; } = new Dictionary<string, Type>
         {
             { "syspushapi", typeof(Dt.Base.SysPushApi) },
         };
@@ -199,7 +193,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取自定义可序列化类型字典
         /// </summary>
-        public Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>
+        public Dictionary<string, Type> SerializeTypes { get; } = new Dictionary<string, Type>
         {
             { "产品", typeof(Dt.Sample.Product) },
             { "学生", typeof(Dt.Sample.Student) },
@@ -207,29 +201,35 @@ namespace Dt.Shell
         };
 
         /// <summary>
-        /// 获取状态库表类型
+        /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
         /// </summary>
-        public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
+        public Dictionary<string, SqliteTblsInfo> SqliteDb { get; } = new Dictionary<string, SqliteTblsInfo>
         {
-            { "menufav", typeof(Dt.App.MenuFav) },
-            { "usermenu", typeof(Dt.App.UserMenu) },
-            { "readfilehistory", typeof(Dt.App.File.ReadFileHistory) },
-            { "chatmember", typeof(Dt.Base.ChatMember) },
-            { "letter", typeof(Dt.Base.Letter) },
-            { "docklayout", typeof(Dt.Base.Docking.DockLayout) },
-            { "celllastval", typeof(Dt.Base.FormView.CellLastVal) },
-            { "searchfvhis", typeof(Dt.Base.FormView.SearchFvHis) },
-            { "clientlog", typeof(Dt.Core.Model.ClientLog) },
-            { "clientcookie", typeof(Dt.Core.Model.ClientCookie) },
-            { "dataversion", typeof(Dt.Core.Model.DataVersion) },
-            { "userparams", typeof(Dt.Core.Model.UserParams) },
-            { "userprivilege", typeof(Dt.Core.Model.UserPrivilege) },
+            {
+                "state",
+                new SqliteTblsInfo
+                {
+                    Version = "fb870916510cceb33282093c12a11311",
+                    Tables = new List<Type>
+                    {
+                        typeof(Dt.App.MenuFav),
+                        typeof(Dt.App.UserMenu),
+                        typeof(Dt.App.File.ReadFileHistory),
+                        typeof(Dt.Base.ChatMember),
+                        typeof(Dt.Base.Letter),
+                        typeof(Dt.Base.Docking.DockLayout),
+                        typeof(Dt.Base.FormView.CellLastVal),
+                        typeof(Dt.Base.FormView.SearchFvHis),
+                        typeof(Dt.Core.Model.ClientLog),
+                        typeof(Dt.Core.Model.ClientCookie),
+                        typeof(Dt.Core.Model.DataVersion),
+                        typeof(Dt.Core.Model.UserParams),
+                        typeof(Dt.Core.Model.UserPrivilege),
+                    }
+                }
+            },
         };
 
-        /// <summary>
-        /// 获取状态库版本号，和本地不同时自动更新
-        /// </summary>
-        public string StateDbVer => "3910e85d001b57a07dccb63e2ca29f44";
         #endregion
     }
 }

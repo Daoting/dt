@@ -77,13 +77,8 @@ namespace Dt.Core
         Dictionary<string, Type> SerializeTypes { get; }
 
         /// <summary>
-        /// 获取状态库版本号，和本地不同时自动更新
+        /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
         /// </summary>
-        string StateDbVer { get; }
-
-        /// <summary>
-        /// 获取状态库表类型，键值为小写类型名
-        /// </summary>
-        Dictionary<string, Type> StateTbls { get; }
+        Dictionary<string, SqliteTblsInfo> SqliteDb { get; }
     }
 }

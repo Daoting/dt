@@ -354,7 +354,7 @@ namespace Dt.Base
                 return;
 
             // 打开本地文件
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -391,7 +391,7 @@ namespace Dt.Base
         /// </summary>
         public async Task ShareFile()
         {
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -433,7 +433,7 @@ namespace Dt.Base
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
                 return;
 
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -450,7 +450,8 @@ namespace Dt.Base
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
-                StorageFile temp = await AtLocal.GetStorageFile(GetFileName());
+                var folder = await StorageFolder.GetFolderFromPathAsync(AtSys.CachePath);
+                var temp = await folder.TryGetItemAsync(GetFileName()) as StorageFile;
                 if (temp != null)
                 {
                     await temp.CopyAndReplaceAsync(file);
@@ -546,7 +547,7 @@ namespace Dt.Base
 
         internal async Task<string> EnsureFileExists()
         {
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -727,7 +728,7 @@ namespace Dt.Base
                 // 删除服务器端旧文件
                 await AtFile.Delete(ID);
                 // 删除本地旧文件
-                AtLocal.DeleteFile(GetFileName());
+                AtSys.DeleteCacheFile(GetFileName());
             }
 
             ID = p_id;
@@ -746,7 +747,7 @@ namespace Dt.Base
                 catch { }
             }
 #endif
-            if (filePath.StartsWith(AtLocal.CachePath))
+            if (filePath.StartsWith(AtSys.CachePath))
             {
                 try
                 {
@@ -754,7 +755,7 @@ namespace Dt.Base
                     if (fi.Exists)
                     {
                         // 重命名免去再次下载
-                        string newPath = Path.Combine(AtLocal.CachePath, GetFileName());
+                        string newPath = Path.Combine(AtSys.CachePath, GetFileName());
                         fi.MoveTo(newPath);
                         UpdateCachedFlag();
                     }
@@ -770,7 +771,7 @@ namespace Dt.Base
                     FileInfo fi = new FileInfo(p_file.ThumbPath);
                     if (fi.Exists)
                     {
-                        string newPath = Path.Combine(AtLocal.CachePath, GetThumbName());
+                        string newPath = Path.Combine(AtSys.CachePath, GetThumbName());
                         fi.MoveTo(newPath);
                     }
                 }
@@ -841,7 +842,7 @@ namespace Dt.Base
                     return false;
             }
 
-            string path = Path.Combine(AtLocal.CachePath, downloadThumb ? GetThumbName() : GetFileName());
+            string path = Path.Combine(AtSys.CachePath, downloadThumb ? GetThumbName() : GetFileName());
             FileStream stream = null;
             try
             {
@@ -984,8 +985,8 @@ namespace Dt.Base
 #if !WASM
         async Task LoadImage()
         {
-            string thumbName = Path.Combine(AtLocal.CachePath, GetThumbName());
-            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            string thumbName = Path.Combine(AtSys.CachePath, GetThumbName());
+            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
             string path = null;
             if (File.Exists(thumbName))
             {
@@ -1098,7 +1099,7 @@ namespace Dt.Base
             string state = "NoCache";
             if (!string.IsNullOrEmpty(ID) && (index = ID.LastIndexOf('/')) > 0)
             {
-                string path = System.IO.Path.Combine(AtLocal.CachePath, ID.Substring(index + 1));
+                string path = System.IO.Path.Combine(AtSys.CachePath, ID.Substring(index + 1));
                 if (System.IO.File.Exists(path))
                     state = "Cached";
             }

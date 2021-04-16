@@ -134,7 +134,7 @@ namespace Dt.Base
                 _menu.Items.Add(item);
             }
 
-            var autoStart = AtLocal.GetAutoStart();
+            var autoStart = AtState.GetAutoStart();
             Win win = _currentItem._win;
             if (autoStart != null
                 && win != null

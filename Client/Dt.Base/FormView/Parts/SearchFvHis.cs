@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Sqlite;
 #endregion
 
@@ -15,23 +16,50 @@ namespace Dt.Base.FormView
     /// <summary>
     /// 查询面板历史
     /// </summary>
-    [StateTable]
-    public class SearchFvHis
+    [Sqlite("state")]
+    public class SearchFvHis : Entity
     {
+        #region 构造方法
+        SearchFvHis() { }
+
+        public SearchFvHis(
+            string BaseUri = default,
+            string Content = default)
+        {
+            AddCell("ID", 0);
+            AddCell("BaseUri", BaseUri);
+            AddCell("Content", Content);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
         /// <summary>
         /// 主键
         /// </summary>
         [PrimaryKey, AutoIncrement]
-        public int ID { get; set; }
+        new public int ID
+        {
+            get { return (int)this["ID"]; }
+            set { this["ID"] = value; }
+        }
 
         /// <summary>
         /// 控件所属的xaml位置
         /// </summary>
-        public string BaseUri { get; set; }
+        public string BaseUri
+        {
+            get { return (string)this["BaseUri"]; }
+            set { this["BaseUri"] = value; }
+        }
 
         /// <summary>
         /// 搜索内容
         /// </summary>
-        public string Content { get; set; }
+        public string Content
+        {
+            get { return (string)this["Content"]; }
+            set { this["Content"] = value; }
+        }
     }
 }

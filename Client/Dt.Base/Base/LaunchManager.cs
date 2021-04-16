@@ -57,7 +57,7 @@ namespace Dt.Base
                 LaunchFreely(Arguments);
                 Arguments = null;
             }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
+            else if ((autoStart = AtState.GetAutoStart()) != null)
             {
                 // 用户设置的自启动
                 bool suc = false;
@@ -90,7 +90,7 @@ namespace Dt.Base
                     catch { }
                 }
                 if (!suc)
-                    AtLocal.DelAutoStart();
+                    AtState.DelAutoStart();
             }
         }
 
@@ -123,7 +123,7 @@ namespace Dt.Base
                 LaunchFreely(Arguments);
                 Arguments = null;
             }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
+            else if ((autoStart = AtState.GetAutoStart()) != null)
             {
                 // 用户设置的自启动
                 bool suc = false;
@@ -157,7 +157,7 @@ namespace Dt.Base
                     catch { }
                 }
                 if (!suc)
-                    AtLocal.DelAutoStart();
+                    AtState.DelAutoStart();
             }
 
             if (desktop.MainWin == null)
@@ -239,7 +239,7 @@ namespace Dt.Base
                 info.Params = JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer);
                 info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
             }
-            AtLocal.SaveAutoStart(info);
+            AtState.SaveAutoStart(info);
             AtKit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
 
@@ -248,7 +248,7 @@ namespace Dt.Base
         /// </summary>
         public static void DelAutoStart()
         {
-            AtLocal.DelAutoStart();
+            AtState.DelAutoStart();
             AtKit.Msg("已取消自启动设置！");
         }
     }

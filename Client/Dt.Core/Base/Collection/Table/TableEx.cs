@@ -21,19 +21,6 @@ namespace Dt.Core
     /// </summary>
     public partial class Table : ITreeData, INotifyList
     {
-        #region 创建表结构
-        /// <summary>
-        /// 根据本地库表名创建空Table
-        /// </summary>
-        /// <param name="p_tblName">本地库表名</param>
-        /// <returns></returns>
-        public static Table CreateLocal(string p_tblName)
-        {
-            Throw.IfNullOrEmpty(p_tblName);
-            return AtLocal.Query($"select * from {p_tblName} where 1!=1");
-        }
-        #endregion
-
         #region INotifyList
         /// <summary>
         /// 在末尾批量添加数据，统一触发 NotifyCollectionChangedAction.Add

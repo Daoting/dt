@@ -42,7 +42,7 @@ namespace Dt.Base
         public string FileName { get; }
 
         /// <summary>
-        /// 完整路径，UWP时若不在AtLocal.CachePath则为安全访问ID
+        /// 完整路径，UWP时若不在AtSys.CachePath则为安全访问ID
         /// </summary>
         public string FilePath { get; }
 

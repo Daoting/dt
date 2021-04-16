@@ -82,7 +82,7 @@ namespace Dt.Core
         internal static TableSchema GetTableSchema(string p_tblName)
         {
             TableSchema schema = new TableSchema(p_tblName.ToLower());
-            foreach (var oc in AtLocal.QueryColumns(p_tblName.ToLower()))
+            foreach (var oc in AtModel.EachColumns(p_tblName.ToLower()))
             {
                 TableCol col = new TableCol();
                 col.Name = oc.ColName;

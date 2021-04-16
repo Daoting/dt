@@ -62,32 +62,30 @@ namespace Dt.Base
             // 撤回消息
             if (p_letter.LetterType == LetterType.Undo)
             {
-                var letter = AtLocal.First<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
+                var letter = AtState.First<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
                 if (letter != null)
                 {
                     // 删除
-                    AtLocal.Exec($"delete from Letter where ID={letter.ID}");
+                    AtState.Exec($"delete from Letter where ID={letter.ID}");
                     UndoLetter?.Invoke(letter);
                 }
                 return;
             }
 
             // 新消息
-            Letter l = new Letter();
-            l.LoginID = AtUser.ID;
-
-            l.MsgID = p_letter.ID;
-            l.OtherID = p_letter.SenderID;
-            l.OtherName = p_letter.SenderName;
-            l.LetterType = p_letter.LetterType;
-            l.Content = p_letter.Content;
-            l.STime = p_letter.SendTime;
-
-            l.IsReceived = true;
-            l.Unread = true;
+            Letter l = new Letter(
+                LoginID: AtUser.ID,
+                MsgID: p_letter.ID,
+                OtherID: p_letter.SenderID,
+                OtherName: p_letter.SenderName,
+                LetterType: p_letter.LetterType,
+                Content: p_letter.Content,
+                STime: p_letter.SendTime,
+                IsReceived: true,
+                Unread: true);
 
             // 自增主键插入后自动赋值
-            AtLocal.Insert(l);
+            AtState.Save(l, false);
 
             // 外部可修改 Unread 状态
             NewLetter?.Invoke(l);
@@ -101,7 +99,7 @@ namespace Dt.Base
             else
             {
                 // Unread状态被修改
-                AtLocal.Save(l);
+                AtState.Save(l, false);
             }
         }
 
@@ -172,7 +170,7 @@ namespace Dt.Base
         {
             AtKit.RunAsync(() =>
             {
-                int cnt = AtLocal.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
+                int cnt = AtState.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
                     new Dict
                     {
                         { "otherid", p_otherid },
@@ -216,20 +214,20 @@ namespace Dt.Base
             bool isOnline = await AtMsg.SendLetter(p_recvID, li);
 
             // 本地记录
-            Letter l = new Letter();
-            l.LoginID = AtUser.ID;
-            l.MsgID = li.ID;
-            l.OtherID = p_recvID;
-            l.OtherName = p_recvName;
-            l.OtherIsOnline = isOnline;
-            l.IsReceived = false;
-            l.Unread = false;
-            l.LetterType = p_type;
-            l.Content = p_content;
-            l.STime = li.SendTime;
+            Letter l = new Letter(
+                LoginID: AtUser.ID,
+                MsgID: li.ID,
+                OtherID: p_recvID,
+                OtherName: p_recvName,
+                OtherIsOnline: isOnline,
+                IsReceived: false,
+                Unread: false,
+                LetterType: p_type,
+                Content: p_content,
+                STime: li.SendTime);
 
             // 自增主键插入后自动赋值
-            AtLocal.Insert(l);
+            AtState.Save(l, false);
 
             NewLetter?.Invoke(l);
             return l;
@@ -292,7 +290,7 @@ namespace Dt.Base
                 SendTime = AtSys.Now
             };
             await AtMsg.SendLetter(p_letter.OtherID, li);
-            AtLocal.Exec($"delete from Letter where ID={p_letter.ID}");
+            AtState.Exec($"delete from Letter where ID={p_letter.ID}");
             return true;
         }
         #endregion

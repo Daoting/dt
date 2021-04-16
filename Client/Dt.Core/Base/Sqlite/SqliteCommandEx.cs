@@ -8,17 +8,15 @@
 
 #region 引用命名
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core.Sqlite
 {
-    public class SqliteCommandEx : SqliteCommand
+    class SqliteCommandEx : SqliteCommand
     {
+        #region 构造方法
         public SqliteCommandEx()
         {
         }
@@ -37,56 +35,89 @@ namespace Dt.Core.Sqlite
             : base(commandText, connection, transaction)
         {
         }
+        #endregion
 
+        #region 返回Table
         /// <summary>
-        /// 执行查询，返回类型List。
+        /// 执行查询，返回数据集
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> ExecuteQuery<T>() where T : class
+        public Table<TEntity> ExecuteQuery<TEntity>()
+            where TEntity : Entity
         {
-            List<T> rtn = new List<T>();
-            SqliteDataReader dataReader = ExecuteReader();
-            Dictionary<String, PropertyInfo> dataColumns = GetDataColumns<T>(dataReader);
-
-            if (dataColumns.Count > 0)
-            {
-                while (dataReader.Read())
-                {
-                    T temp = Activator.CreateInstance<T>();
-                    int colIndex = 0;
-                    foreach (var item in dataColumns)
-                    {
-                        colIndex = dataReader.GetOrdinal(item.Key);
-                        item.Value.SetValue(temp, GetFieldValue(dataReader, colIndex, item.Value.PropertyType));
-                    }
-                    rtn.Add(temp);
-                }
-            }
-            return rtn;
+            Table<TEntity> tbl = new Table<TEntity>();
+            QueryInternal<TEntity>(tbl);
+            return tbl;
         }
 
         /// <summary>
-        /// 延时返回查询对象，利于性能提升。
+        /// 执行查询，返回数据集
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<T> DeferredQuery<T>() where T : class
+        public Table ExecuteQuery()
         {
-            SqliteDataReader dataReader = ExecuteReader();
-            Dictionary<String, PropertyInfo> dataColumns = GetDataColumns<T>(dataReader);
-            if (dataColumns.Count > 0)
+            Table tbl = new Table();
+            QueryInternal<Row>(tbl);
+            return tbl;
+        }
+
+        void QueryInternal<TRow>(Table p_tbl)
+            where TRow : Row
+        {
+            var reader = ExecuteReader();
+            if (reader != null && reader.FieldCount > 0)
             {
-                while (dataReader.Read())
+                // 列定义
+                for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    T temp = Activator.CreateInstance<T>();
-                    int colIndex = 0;
-                    foreach (var item in dataColumns)
+                    // Microsoft.Data.Sqlite 升级5.0.3后使用 GetFieldType 方法，因通过GetDataTypeName无bigint类型！
+                    // 原方法参见ComposeDt
+                    p_tbl.Add(reader.GetName(i), reader.GetFieldType(i));
+                }
+
+                while (reader.Read())
+                {
+                    // 无参数构造方法可能为private，如实体类型
+                    var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
+                    for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        colIndex = dataReader.GetOrdinal(item.Key);
-                        item.Value.SetValue(temp, GetFieldValue(dataReader, colIndex, item.Value.PropertyType));
+                        var col = p_tbl.Columns[i];
+                        if (reader.IsDBNull(i))
+                            new Cell(row, col.ID, col.Type);
+                        else
+                            new Cell(row, col.ID, col.Type, reader.GetValue(i));
                     }
-                    yield return temp;
+                    p_tbl.Add(row);
+                }
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 延时返回查询对象，利于性能提升
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        public IEnumerable<TRow> ForEach<TRow>()
+            where TRow : Row
+        {
+            var reader = ExecuteReader();
+            if (reader != null && reader.FieldCount > 0)
+            {
+                while (reader.Read())
+                {
+                    // 无参数构造方法可能为private，如实体类型
+                    var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        // 未处理可为null的值类型！
+                        if (reader.IsDBNull(i))
+                            new Cell(row, reader.GetName(i), reader.GetFieldType(i));
+                        else
+                            new Cell(row, reader.GetName(i), reader.GetFieldType(i), reader.GetValue(i));
+                    }
+                    yield return row;
                 }
             }
         }
@@ -98,64 +129,17 @@ namespace Dt.Core.Sqlite
         /// <returns></returns>
         public T ExecuteScalar<T>()
         {
-            SqliteDataReader dataReader = ExecuteReader();
-            if (dataReader.Read())
+            var reader = ExecuteReader();
+            if (reader != null
+                && reader.FieldCount > 0
+                && reader.Read())
             {
-                var rtn = GetFieldValue(dataReader, 0, typeof(T));
-                if (rtn == null)
-                    return default(T);
-                return (T)rtn;
+                if (reader.GetFieldType(0) == typeof(T))
+                    return reader.GetFieldValue<T>(0);
+
+                return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
             }
             return default(T);
-        }
-
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        /// <returns></returns>
-        public Table ExecuteQuery()
-        {
-            Table dt = null;
-            SqliteDataReader dataReader = ExecuteReader();
-            if (dataReader != null && dataReader.FieldCount > 0)
-            {
-                Row tmpDr = null;
-                dt = ComposeDt(dataReader);
-                while (dataReader.Read())
-                {
-                    tmpDr = dt.AddRow();
-                    tmpDr.IsAdded = false;
-                    for (int i = 0; i < dataReader.FieldCount; i++)
-                    {
-                        tmpDr.Cells[i].InitVal(dataReader[i] == DBNull.Value ? null : dataReader[i]);
-                    }
-                }
-            }
-            return dt;
-        }
-
-        /// <summary>
-        /// 只返回第一行
-        /// </summary>
-        /// <returns></returns>
-        public Row GetFirstRow()
-        {
-            Row dr = null;
-            SqliteDataReader dataReader = ExecuteReader();
-            if (dataReader != null && dataReader.FieldCount > 0)
-            {
-                Table dt = ComposeDt(dataReader);
-                if (dataReader.Read())
-                {
-                    dr = dt.AddRow();
-                    dr.IsAdded = false;
-                    for (int i = 0; i < dataReader.FieldCount; i++)
-                    {
-                        dr.Cells[i].InitVal(dataReader[i] == DBNull.Value ? null : dataReader[i]);
-                    }
-                }
-            }
-            return dr;
         }
 
         /// <summary>
@@ -165,47 +149,56 @@ namespace Dt.Core.Sqlite
         /// <returns></returns>
         public List<T> GetFirstCol<T>()
         {
-            List<T> rtn = new List<T>();
-            SqliteDataReader dataReader = ExecuteReader();
-            if (dataReader != null && dataReader.FieldCount > 0)
+            List<T> ls = new List<T>();
+            var reader = ExecuteReader();
+            if (reader != null && reader.FieldCount > 0)
             {
-                while (dataReader.Read())
+                if (reader.GetFieldType(0) == typeof(T))
                 {
-                    var val = GetFieldValue(dataReader, 0, typeof(T));
-                    if (val == null)
-                        rtn.Add(default(T));
-                    else
-                        rtn.Add((T)val);
+                    while (reader.Read())
+                    {
+                        ls.Add(reader.GetFieldValue<T>(0));
+                    }
+                }
+                else
+                {
+                    while (reader.Read())
+                    {
+                        ls.Add((T)Convert.ChangeType(reader.GetValue(0), typeof(T)));
+                    }
                 }
             }
-            return rtn;
+            return ls;
         }
 
         /// <summary>
-        /// 根据类型（class）T的公共属性填充Dictionary
+        /// 返回第一列枚举，高性能
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="dataReader"></param>
         /// <returns></returns>
-        Dictionary<String, PropertyInfo> GetDataColumns<T>(SqliteDataReader p_dataReader) where T : class
+        public IEnumerable<T> EachFirstCol<T>()
         {
-            if (p_dataReader == null || p_dataReader.FieldCount == 0)
-                return null;
-
-            Dictionary<String, PropertyInfo> dataColumns = new Dictionary<String, PropertyInfo>();
-            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
-            for (int i = 0; i < p_dataReader.FieldCount; i++)
+            var reader = ExecuteReader();
+            if (reader != null && reader.FieldCount > 0)
             {
-                string name = p_dataReader.GetName(i);
-                var prop = (from item in props
-                            where item.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-                            select item).FirstOrDefault();
-                if (prop != null)
-                    dataColumns.Add(name, prop);
+                if (reader.GetFieldType(0) == typeof(T))
+                {
+                    while (reader.Read())
+                    {
+                        yield return reader.GetFieldValue<T>(0);
+                    }
+                }
+                else
+                {
+                    while (reader.Read())
+                    {
+                        yield return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
+                    }
+                }
             }
-            return dataColumns;
         }
 
+        /*
         /// <summary>
         /// 根据需要返回的类型，查询数据库中的值，以object的形式返回
         /// </summary>
@@ -217,7 +210,7 @@ namespace Dt.Core.Sqlite
         {
             if (p_dataReader.IsDBNull(p_ordinal) && (!p_type.IsValueType || (p_type.IsGenericType && p_type.GetGenericTypeDefinition() == typeof(Nullable<>))))
                 return null;
-            
+
             // 由于上一句排除了dbnull的情况，此时用GetFieldType方法会获得正确结果。
             if (p_dataReader.GetFieldType(p_ordinal) == p_type)
                 return p_dataReader[p_ordinal];
@@ -312,6 +305,55 @@ namespace Dt.Core.Sqlite
             }
             return p_dataReader.GetValue(p_ordinal);
         }
+        
+        /// <summary>
+        /// 只返回第一行
+        /// </summary>
+        /// <returns></returns>
+        public Row GetFirstRow()
+        {
+            Row dr = null;
+            SqliteDataReader dataReader = ExecuteReader();
+            if (dataReader != null && dataReader.FieldCount > 0)
+            {
+                Table dt = ComposeDt(dataReader);
+                if (dataReader.Read())
+                {
+                    dr = dt.AddRow();
+                    dr.IsAdded = false;
+                    for (int i = 0; i < dataReader.FieldCount; i++)
+                    {
+                        dr.Cells[i].InitVal(dataReader[i] == DBNull.Value ? null : dataReader[i]);
+                    }
+                }
+            }
+            return dr;
+        }
+
+        /// <summary>
+        /// 根据类型（class）T的公共属性填充Dictionary
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dataReader"></param>
+        /// <returns></returns>
+        Dictionary<String, PropertyInfo> GetDataColumns<T>(SqliteDataReader p_dataReader) where T : class
+        {
+            if (p_dataReader == null || p_dataReader.FieldCount == 0)
+                return null;
+
+            Dictionary<String, PropertyInfo> dataColumns = new Dictionary<String, PropertyInfo>();
+            var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
+            for (int i = 0; i < p_dataReader.FieldCount; i++)
+            {
+                string name = p_dataReader.GetName(i);
+                var prop = (from item in props
+                            where item.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                            select item).FirstOrDefault();
+                if (prop != null)
+                    dataColumns.Add(name, prop);
+            }
+            return dataColumns;
+        }
 
         /// <summary>
         /// 根据SqliteDataReader的结果字段生成Table的列结构信息.
@@ -358,5 +400,6 @@ namespace Dt.Core.Sqlite
             }
             return dt;
         }
+        */
     }
 }

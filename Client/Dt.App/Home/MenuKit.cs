@@ -101,15 +101,15 @@ namespace Dt.App
             {
                 Task.Run(() =>
                 {
-                    if (AtLocal.ModelGetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+                    if (AtModel.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
                     {
                         // 点击次数保存在客户端
                         Dict dt = new Dict();
                         dt["userid"] = AtUser.ID;
                         dt["menuid"] = p_menu.ID;
-                        int cnt = AtLocal.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
+                        int cnt = AtState.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
                         if (cnt == 0)
-                            AtLocal.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
+                            AtState.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
                     }
                     // 收集使用频率
                     //await AtAuth.ClickMenu(p_menu.ID);
@@ -158,13 +158,13 @@ namespace Dt.App
             }
 
             // 点击次数最多的前n项
-            var favMenu = AtLocal.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT 10");
+            var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT 10");
             foreach (var fav in favMenu)
             {
                 // 过滤无权限的项
                 if (idsAll.Contains(fav.MenuID))
                 {
-                    var om = AtLocal.ModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                    var om = AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
                     _favMenus.Add(om);
                     idsAll.Remove(fav.MenuID);
                 }
@@ -178,7 +178,7 @@ namespace Dt.App
             var roots = new List<OmMenu>();
 
             // 整理菜单项
-            foreach (var item in AtLocal.ModelEach<OmMenu>("select * from OmMenu"))
+            foreach (var item in AtModel.Each<OmMenu>("select * from OmMenu"))
             {
                 // 过滤无权限的项，保留所有分组
                 if (!item.IsGroup && !idsAll.Contains(item.ID))
@@ -324,22 +324,18 @@ namespace Dt.App
         /// <returns></returns>
         static async Task<List<long>> GetAllUserMenus()
         {
-            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='menu'");
+            int cnt = AtState.GetScalar<int>("select count(*) from DataVersion where id='menu'");
             if (cnt == 0)
             {
                 // 查询服务端
                 Dict dt = await AtCm.GetMenus(AtUser.ID);
 
                 // 记录版本号
-                var ver = new DataVersion
-                {
-                    ID = "menu",
-                    Ver = dt.Str("ver"),
-                };
-                AtLocal.Save(ver);
+                var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));
+                AtState.Save(ver, false);
 
                 // 清空旧数据
-                AtLocal.Exec("delete from UserMenu");
+                AtState.Exec("delete from UserMenu");
 
                 // 插入新数据
                 var ls = (List<long>)dt["result"];
@@ -350,12 +346,12 @@ namespace Dt.App
                     {
                         dts.Add(new Dict { { "id", id } });
                     }
-                    AtLocal.BatchExec("insert into UserMenu (id) values (:id)", dts);
+                    AtState.BatchExec("insert into UserMenu (id) values (:id)", dts);
                 }
                 return ls;
             }
 
-            return AtLocal.FirstCol<long>("select id from UserMenu");
+            return AtState.FirstCol<long>("select id from UserMenu");
         }
 
         /// <summary>
@@ -382,10 +378,25 @@ namespace Dt.App
     /// <summary>
     /// 用户可访问的菜单
     /// </summary>
-    [StateTable]
-    public class UserMenu
+    [Sqlite("state")]
+    public class UserMenu : Entity
     {
+        #region 构造方法
+        UserMenu() { }
+
+        public UserMenu(long ID)
+        {
+            AddCell("ID", ID);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
         [PrimaryKey]
-        public long ID { get; set; }
+        new public long ID
+        {
+            get { return (long)this["ID"]; }
+            set { this["ID"] = value; }
+        }
     }
 }

@@ -97,8 +97,8 @@ namespace Dt.App
                     }
 
                     // 保存以备自动登录
-                    AtLocal.SaveCookie("LoginPhone", phone);
-                    AtLocal.SaveCookie("LoginPwd", pwd);
+                    AtState.SaveCookie("LoginPhone", phone);
+                    AtState.SaveCookie("LoginPwd", pwd);
                     AtApp.LoginSuccess(dt, this.FindParentByType<Dlg>());
                 }
                 catch

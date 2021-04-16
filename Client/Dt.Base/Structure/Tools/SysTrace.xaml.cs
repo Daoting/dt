@@ -219,8 +219,7 @@ namespace Dt.Base.Tools
         Dictionary<string, Type> _viewTypes;
         Dictionary<string, Type> _pushHandlers;
         Dictionary<string, Type> _serializeTypes;
-        Dictionary<string, Type> _stateTbls;
-        StringBuilder _sbState;
+        Dictionary<string, SqliteDbTbls> _sqliteTbls;
 
         /// <summary>
         /// 生成存根代码
@@ -232,8 +231,7 @@ namespace Dt.Base.Tools
             _viewTypes = new Dictionary<string, Type>();
             _pushHandlers = new Dictionary<string, Type>();
             _serializeTypes = new Dictionary<string, Type>();
-            _stateTbls = new Dictionary<string, Type>();
-            _sbState = new StringBuilder();
+            _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
 
             StorageFile exeFile = null;
             IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
@@ -259,33 +257,26 @@ namespace Dt.Base.Tools
             sb.AppendLine("\t\t/// <summary>");
             sb.AppendLine("\t\t/// 获取视图字典");
             sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>");
             BuildStubDict(sb, _viewTypes);
 
             sb.AppendLine("\t\t/// <summary>");
             sb.AppendLine("\t\t/// 处理服务器推送的类型字典");
             sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> PushHandlers => new Dictionary<string, Type>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> PushHandlers { get; } = new Dictionary<string, Type>");
             BuildStubDict(sb, _pushHandlers);
 
             sb.AppendLine("\t\t/// <summary>");
             sb.AppendLine("\t\t/// 获取自定义可序列化类型字典");
             sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> SerializeTypes { get; } = new Dictionary<string, Type>");
             BuildStubDict(sb, _serializeTypes);
 
             sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 获取状态库表类型");
+            sb.AppendLine("\t\t/// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
             sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> StateTbls => new Dictionary<string, Type>");
-            BuildStubDict(sb, _stateTbls);
-
-            // 所有状态库类型和属性的字符串，取MD5值以区分每次的变化
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 获取状态库版本号，和本地不同时自动更新");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendFormat("\t\tpublic string StateDbVer => \"{0}\";", AtKit.GetMD5(_sbState.ToString()));
-            sb.AppendLine();
+            sb.AppendLine("\t\tpublic Dictionary<string, SqliteTblsInfo> SqliteDb { get; } = new Dictionary<string, SqliteTblsInfo>");
+            BuildSqliteDict(sb);
 
             sb.Append("\t\t#endregion");
 
@@ -297,7 +288,7 @@ namespace Dt.Base.Tools
             _viewTypes.Clear();
             _pushHandlers.Clear();
             _serializeTypes.Clear();
-            _stateTbls.Clear();
+            _sqliteTbls.Clear();
         }
 
         /// <summary>
@@ -327,15 +318,21 @@ namespace Dt.Base.Tools
                             // 可序列化类型
                             _serializeTypes[ja.Alias] = tp;
                         }
-                        else if (attr is StateTableAttribute)
+                        else if (attr is SqliteAttribute sqlite)
                         {
-                            // 本地状态库类型
-                            _stateTbls[tp.Name.ToLower()] = tp;
-                            _sbState.Append(tp.Name);
+                            // 本地sqlite库类型
+                            SqliteDbTbls tbls;
+                            if (!_sqliteTbls.TryGetValue(sqlite.DbName, out tbls))
+                            {
+                                tbls = new SqliteDbTbls();
+                                _sqliteTbls[sqlite.DbName] = tbls;
+                            }
+                                
+                            tbls.Tbls.Add(tp);
                             foreach (var pro in tp.GetRuntimeProperties())
                             {
                                 if (pro.GetCustomAttribute<IgnoreAttribute>(false) == null)
-                                    _sbState.Append(pro.Name);
+                                    tbls.Cols.Append(pro.Name);
                             }
                         }
                         else if (attr is PushApiAttribute)
@@ -383,6 +380,51 @@ namespace Dt.Base.Tools
             p_sb.AppendLine();
         }
 
+        void BuildSqliteDict(StringBuilder p_sb)
+        {
+            if (_sqliteTbls.Count == 0)
+            {
+                p_sb.AppendLine("\t\t{};");
+                p_sb.AppendLine();
+                return;
+            }
+
+            p_sb.AppendLine("\t\t{");
+            foreach (var item in _sqliteTbls)
+            {
+                p_sb.AppendLine("\t\t\t{");
+                p_sb.AppendLine($"\t\t\t\t\"{item.Key}\",");
+
+                p_sb.AppendLine("\t\t\t\tnew SqliteTblsInfo");
+                p_sb.AppendLine("\t\t\t\t{");
+                p_sb.AppendLine($"\t\t\t\t\tVersion = \"{item.Value.GetVer()}\",");
+                p_sb.AppendLine("\t\t\t\t\tTables = new List<Type>");
+                p_sb.AppendLine("\t\t\t\t\t{");
+
+                foreach (var tp in item.Value.Tbls)
+                {
+                    p_sb.AppendLine($"\t\t\t\t\t\ttypeof({tp.FullName}),");
+                }
+
+                p_sb.AppendLine("\t\t\t\t\t}");
+                p_sb.AppendLine("\t\t\t\t}");
+                p_sb.AppendLine("\t\t\t},");
+            }
+            p_sb.AppendLine("\t\t};");
+            p_sb.AppendLine();
+        }
+
+        class SqliteDbTbls
+        {
+            public List<Type> Tbls { get; } = new List<Type>();
+
+            public StringBuilder Cols { get; } = new StringBuilder();
+
+            public string GetVer()
+            {
+                return AtKit.GetMD5(Cols.ToString());
+            }
+        }
 #else
         void OnStub(object sender, Mi e)
         {

@@ -28,40 +28,14 @@ namespace Dt.Sample
         }
 
         #region 本地库
-        void OnNewLocalRow(object sender, Mi e)
+        void OnNewLocal(object sender, Mi e)
         {
-            _fv1.Data = Table.CreateLocal("ClientLog").AddRow(new
-            {
-                Content = "admin",
-                CTime = DateTime.Now
-            });
-        }
-
-        void OnNewLocalObj(object sender, Mi e)
-        {
-            _fv1.Data = new ClientLog
-            {
-                Content = "hdt",
-                CTime = DateTime.Now,
-            };
+            _fv1.Data = new ClientLog(Content: "hdt", Ctime: DateTime.Now);
         }
 
         void OnLocalSave(object sender, Mi e)
         {
-            int cnt = 0;
-            if (_fv1.Data is Row row)
-            {
-                cnt = AtLocal.Save(row, "ClientLog");
-            }
-            else if (_fv1.Data is ClientLog log)
-            {
-                if (log.ID == 0)
-                    cnt = AtLocal.Insert(log);
-                else
-                    cnt = AtLocal.Save(log);
-            }
-
-            if (cnt > 0)
+            if (AtState.Save((ClientLog)_fv1.Data, false))
             {
                 _fv1.AcceptChanges();
                 AtKit.Msg("本地库保存成功！");
@@ -74,7 +48,7 @@ namespace Dt.Sample
 
         void OnQueryLocal(object sender, Mi e)
         {
-            Table tbl = AtLocal.Query("select * from ClientLog limit 1");
+            Table tbl = AtState.Query("select * from ClientLog limit 1");
             if (tbl.Count > 0)
                 _fv1.Data = tbl[0];
             else
@@ -83,22 +57,11 @@ namespace Dt.Sample
 
         async void OnLocalDel(object sender, Mi e)
         {
-            if (!await AtKit.Confirm("确认要删除码？"))
-                return;
-
-            if (_fv1.Data is Row row)
+            if (await AtKit.Confirm("确认要删除码？"))
             {
-                if (!row.IsAdded)
-                    AtLocal.Delete(new List<Row> { row }, "ClientLog");
-                _fv1.Data = null;
+                if (AtState.Delete((ClientLog)_fv1.Data))
+                    _fv1.Data = null;
             }
-            else if (_fv1.Data is ClientLog log)
-            {
-                if (log.ID != 0)
-                    AtLocal.Exec($"delete from ClientLog where id={log.ID}");
-                _fv1.Data = null;
-            }
-            AtKit.Msg("删除成功！");
         }
         #endregion
 

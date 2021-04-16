@@ -156,7 +156,7 @@ namespace Dt.Core
                 tbl._columns.Add(new Column(col.Name, col.Type));
             }
 #else
-            foreach (var col in AtLocal.QueryColumns(p_tblName))
+            foreach (var col in AtModel.EachColumns(p_tblName))
             {
                 tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));
             }

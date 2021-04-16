@@ -120,12 +120,10 @@ namespace Dt.Base
         {
             _lastText = p_text;
             // 删除重复
-            AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
+            AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
 
-            SearchFvHis his = new SearchFvHis();
-            his.BaseUri = _baseUri;
-            his.Content = p_text;
-            AtLocal.Insert(his);
+            SearchFvHis his = new SearchFvHis(BaseUri: _baseUri, Content: p_text);
+            AtState.Save(his, false);
 
             using (Items.Defer())
             {
@@ -140,7 +138,7 @@ namespace Dt.Base
             {
                 RemoveAllHis();
             }
-            AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}'");
+            AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}'");
         }
 
         void RemoveAllHis()
@@ -160,11 +158,11 @@ namespace Dt.Base
         void OnDelHis(object sender, RoutedEventArgs e)
         {
             SearchFvHis his = (SearchFvHis)((Button)sender).DataContext;
-            if (AtLocal.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
+            if (AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
             {
                 for (int i = _hisStart; i < Items.Count; i++)
                 {
-                    if (Items[i].DataContext == his)
+                    if (((Button)sender).DataContext == Items[i].DataContext)
                     {
                         Items.RemoveAt(i);
                         break;
@@ -220,7 +218,7 @@ namespace Dt.Base
 
         void LoadHisItems()
         {
-            var his = AtLocal.Each<SearchFvHis>($"select * from SearchFvHis where BaseUri='{_baseUri}' order by id desc");
+            var his = AtState.Each<SearchFvHis>($"select * from SearchFvHis where BaseUri='{_baseUri}' order by id desc");
             foreach (var item in his)
             {
                 Grid grid = new Grid();

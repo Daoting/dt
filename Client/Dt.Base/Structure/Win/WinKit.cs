@@ -51,7 +51,7 @@ namespace Dt.Base
                     _menu.Items.Add(item);
                 }
 
-                var autoStart = AtLocal.GetAutoStart();
+                var autoStart = AtState.GetAutoStart();
                 if (autoStart != null
                     && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
                     && (p_win.Params == null || autoStart.Params == JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer)))

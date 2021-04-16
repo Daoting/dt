@@ -53,7 +53,7 @@ namespace Dt.App.Home
         {
             if (await AtKit.Confirm("清除缓存后再次用到时需要重新下载，建议存储空间充足时不必清除。\r\n确认要清除吗？"))
             {
-                AtLocal.ClearAllFiles();
+                AtSys.ClearCacheFiles();
                 AtKit.Msg("清除完毕！");
             }
         }

@@ -15,10 +15,28 @@ namespace Dt.Core.Model
     /// <summary>
     /// 用户具有的权限
     /// </summary>
-    [StateTable]
-    public class UserPrivilege
+    [Sqlite("state")]
+    public class UserPrivilege : Entity
     {
+        #region 构造方法
+        UserPrivilege() { }
+
+        public UserPrivilege(string Prv)
+        {
+            AddCell("Prv", Prv);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
+        /// <summary>
+        /// 权限
+        /// </summary>
         [PrimaryKey]
-        public string Prv { get; set; }
+        public string Prv
+        {
+            get { return (string)this["Prv"]; }
+            set { this["Prv"] = value; }
+        }
     }
 }

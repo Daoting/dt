@@ -566,16 +566,12 @@ namespace Dt.Base
                     if (val == null || string.IsNullOrEmpty(val.ToString()))
                     {
                         // 为空时删除记录，避免造成不一致情况
-                        AtLocal.Exec($"delete from CellLastVal where id=\"{id}\"");
+                        AtState.Exec($"delete from CellLastVal where id=\"{id}\"");
                     }
                     else
                     {
-                        CellLastVal cookie = new CellLastVal
-                        {
-                            ID = id,
-                            Val = val.ToString()
-                        };
-                        AtLocal.Save(cookie);
+                        CellLastVal cookie = new CellLastVal(id, val.ToString());
+                        AtState.Save(cookie, false);
                     }
                 });
             }

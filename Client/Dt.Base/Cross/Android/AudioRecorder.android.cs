@@ -42,7 +42,7 @@ namespace Dt.Base
             _recorder.SetAudioSource(AudioSource.Mic);
             _recorder.SetOutputFormat(OutputFormat.Mpeg4);
             _recorder.SetAudioEncoder(AudioEncoder.Aac);
-            _audioFilePath = Path.Combine(AtLocal.CachePath, AtKit.NewID + ".m4a");
+            _audioFilePath = Path.Combine(AtSys.CachePath, AtKit.NewID + ".m4a");
             _recorder.SetOutputFile(_audioFilePath);
             _recorder.Prepare();
             _recorder.Start();

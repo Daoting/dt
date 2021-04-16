@@ -19,14 +19,14 @@ namespace Dt.Base.Tools
         public StateDb()
         {
             InitializeComponent();
-            _lvTbl.Data = AtLocal.QueryStateTblsName();
+            _lvTbl.Data = AtState.GetAllTables();
             _lvTbl.ItemClick += OnTblClick;
         }
 
         void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvData.Data = AtLocal.Query($"select * from {e.Row.Str("name")}");
+                _lvData.Data = AtState.Query($"select * from {e.Row.Str("name")}");
             NaviTo("数据");
         }
 
@@ -35,10 +35,9 @@ namespace Dt.Base.Tools
             if (!await AtKit.Confirm($"确认要删除这{_lvData.SelectedCount}行吗？"))
                 return;
 
-            if (AtLocal.Delete(_lvData.SelectedItems.Cast<Row>(), _lvTbl.SelectedRow.Str("name")))
+            if (AtState.BatchDelete(_lvTbl.SelectedRow.Str("name"), _lvData.SelectedRows))
             {
                 _lvData.DeleteSelection();
-                AtKit.Msg("删除成功！");
             }
         }
     }

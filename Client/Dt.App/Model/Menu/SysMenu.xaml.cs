@@ -186,12 +186,12 @@ namespace Dt.App.Model
         void OnOpen(object sender, Mi e)
         {
             var row = _fv.Data.To<Menu>();
-            OmMenu menu = new OmMenu();
-            menu.ID = row.ID;
-            menu.Name = row.Name;
-            menu.Icon = row.Icon;
-            menu.ViewName = row.ViewName;
-            menu.Params = row.Params;
+            OmMenu menu = new OmMenu(
+                ID: row.ID,
+                Name: row.Name,
+                Icon: row.Icon,
+                ViewName: row.ViewName,
+                Params: row.Params);
             MenuKit.OpenMenu(menu);
         }
 

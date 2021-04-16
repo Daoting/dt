@@ -81,7 +81,7 @@ namespace Dt.Core
             if (!string.IsNullOrEmpty(p_ver))
             {
                 var ls = p_ver.Split(',');
-                var tbl = AtLocal.Query("select id,ver from DataVersion");
+                var tbl = AtState.Query("select id,ver from DataVersion");
                 if (tbl != null && tbl.Count > 0)
                 {
                     foreach (var row in tbl)
@@ -89,7 +89,7 @@ namespace Dt.Core
                         if (!ls.Contains($"{row[0]}+{row[1]}"))
                         {
                             // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
-                            AtLocal.Exec($"delete from DataVersion where id='{row.Str(0)}'");
+                            AtState.Exec($"delete from DataVersion where id='{row.Str(0)}'");
                         }
                     }
                 }
@@ -97,7 +97,7 @@ namespace Dt.Core
             else
             {
                 // 所有缓存数据失效
-                AtLocal.Exec("delete from DataVersion");
+                AtState.Exec("delete from DataVersion");
             }
         }
         #endregion
@@ -117,7 +117,7 @@ namespace Dt.Core
         /// <returns>true 表示有权限</returns>
         public static async Task<bool> HasPrv(string p_id)
         {
-            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
+            int cnt = AtState.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
             if (cnt == 0)
             {
                 // 查询服务端
@@ -128,15 +128,11 @@ namespace Dt.Core
                 ).Call<Dict>();
 
                 // 记录版本号
-                var ver = new DataVersion
-                {
-                    ID = "privilege",
-                    Ver = dt.Str("ver"),
-                };
-                AtLocal.Save(ver);
+                var ver = new DataVersion(ID: "privilege", Ver: dt.Str("ver"));
+                AtState.Save(ver);
 
                 // 清空旧数据
-                AtLocal.Exec("delete from UserPrivilege");
+                AtState.Exec("delete from UserPrivilege");
                 // 插入新数据
                 var ls = (List<string>)dt["result"];
                 if (ls != null && ls.Count > 0)
@@ -146,11 +142,11 @@ namespace Dt.Core
                     {
                         dts.Add(new Dict { { "prv", prv } });
                     }
-                    AtLocal.BatchExec("insert into UserPrivilege (prv) values (:prv)", dts);
+                    AtState.BatchExec("insert into UserPrivilege (prv) values (:prv)", dts);
                 }
             }
 
-            return AtLocal.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
+            return AtState.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
         }
         #endregion
 
@@ -165,7 +161,7 @@ namespace Dt.Core
         {
             await Init();
 
-            var row = AtLocal.First($"select val from UserParams where id='{p_paramID}'");
+            var row = AtState.First($"select val from UserParams where id='{p_paramID}'");
             Throw.IfNull(row, $"无参数【{p_paramID}】");
 
             string val = row.Str(0);
@@ -190,7 +186,7 @@ namespace Dt.Core
 
         static async Task Init()
         {
-            int cnt = AtLocal.GetScalar<int>("select count(*) from DataVersion where id='params'");
+            int cnt = AtState.GetScalar<int>("select count(*) from DataVersion where id='params'");
             if (cnt > 0)
                 return;
 
@@ -202,15 +198,11 @@ namespace Dt.Core
                 ).Call<Dict>();
 
             // 记录版本号
-            var ver = new DataVersion
-            {
-                ID = "params",
-                Ver = dt.Str("ver"),
-            };
-            AtLocal.Save(ver);
+            var ver = new DataVersion(ID: "params", Ver: dt.Str("ver"));
+            AtState.Save(ver);
 
             // 清空旧数据
-            AtLocal.Exec("delete from UserParams");
+            AtState.Exec("delete from UserParams");
 
             // 插入新数据
             var tbl = (Table)dt["result"];
@@ -221,7 +213,7 @@ namespace Dt.Core
                 {
                     dts.Add(new Dict { { "id", row.Str(0) }, { "val", row.Str(1) } });
                 }
-                AtLocal.BatchExec("insert into UserParams (id,val) values (:id, :val)", dts);
+                AtState.BatchExec("insert into UserParams (id,val) values (:id, :val)", dts);
             }
         }
         #endregion

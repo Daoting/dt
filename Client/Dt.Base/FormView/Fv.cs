@@ -461,7 +461,7 @@ namespace Dt.Base
                 return null;
 
             string path = $"{BaseUri.AbsolutePath}+{Name}+{cell.ID}";
-            return AtLocal.GetScalar<string>($"select val from CellLastVal where id=\"{path}\"");
+            return AtState.GetScalar<string>($"select val from CellLastVal where id=\"{path}\"");
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace Dt.Base
         /// </summary>
         void LoadData()
         {
-            _lv.Data = AtLocal.Query(
+            _lv.Data = AtState.Query(
                 "select l.*, \n" +
                 "       m.photo \n" +
                 "from   (select id, \n" +
@@ -92,7 +92,7 @@ namespace Dt.Base
             Row row = e.Row;
             if (await AtKit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
             {
-                AtLocal.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
+                AtState.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
                 LoadData();
             }
         }

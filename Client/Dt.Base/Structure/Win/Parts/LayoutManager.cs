@@ -58,7 +58,7 @@ namespace Dt.Base.Docking
         public void LoadDefaultLayout()
         {
             if (AllowSaveLayout())
-                AtLocal.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                AtState.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -74,10 +74,8 @@ namespace Dt.Base.Docking
 
             AtKit.RunAsync(() =>
             {
-                DockLayout cookie = new DockLayout();
-                cookie.BaseUri = _owner.BaseUri.AbsolutePath;
-                cookie.Layout = WriteXml();
-                AtLocal.Save(cookie);
+                DockLayout cookie = new DockLayout(_owner.BaseUri.AbsolutePath, WriteXml());
+                AtState.Save(cookie, false);
                 _owner.AllowResetLayout = true;
             });
         }
@@ -115,7 +113,7 @@ namespace Dt.Base.Docking
                 // 宽度足够，加载历史布局或默认布局
                 DockLayout cookie;
                 if (AllowSaveLayout()
-                    && (cookie = AtLocal.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
+                    && (cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
                     && ApplyLayout(cookie.Layout))
                 {
                     _owner.AllowResetLayout = true;
@@ -167,7 +165,7 @@ namespace Dt.Base.Docking
             SaveDefaultXml();
             if (AllowSaveLayout())
             {
-                DockLayout cookie = AtLocal.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                DockLayout cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
                 if (cookie != null)
                 {
                     // 加载历史布局
@@ -524,7 +522,7 @@ namespace Dt.Base.Docking
             {
                 succ = false;
                 if (AllowSaveLayout())
-                    AtLocal.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                    AtState.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             }
             finally
             {

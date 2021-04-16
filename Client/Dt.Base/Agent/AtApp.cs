@@ -92,18 +92,16 @@ namespace Dt.Base
             }
 
             // 更新模型文件
-            string modelFile = cfg.Str("ver") + ".db";
-            bool existFile = File.Exists(Path.Combine(AtLocal.RootPath, modelFile));
-            if (!existFile)
+            string modelVer = Path.Combine(AtSys.DataPath, $"model-{cfg.Str("ver")}.ver");
+            if (!File.Exists(modelVer))
             {
-                // 关闭模型库，打开时无法删除文件
-                AtLocal.CloseModelDb();
-
-                // 删除旧版的模型文件
-                foreach (var file in new DirectoryInfo(AtLocal.RootPath).GetFiles())
+                string modelFile = Path.Combine(AtSys.DataPath, "model.db");
+                
+                // 删除旧版的模型文件和版本号文件
+                try { File.Delete(modelFile); } catch { }
+                foreach (var file in new DirectoryInfo(AtSys.DataPath).GetFiles($"model-*.ver"))
                 {
-                    if (file.Extension == ".db" && file.Name != "State.db")
-                        try { file.Delete(); } catch { }
+                    try { file.Delete(); } catch { }
                 }
 
                 try
@@ -112,17 +110,20 @@ namespace Dt.Base
                     using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl}/{p_svcName}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
-                    using (var fs = File.Create(Path.Combine(AtLocal.RootPath, modelFile), 262140, FileOptions.WriteThrough))
+                    using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))
                     {
                         gzipStream.CopyTo(fs);
                         fs.Flush();
                     }
+
+                    // 版本号文件
+                    File.Create(modelVer);
                 }
                 catch (Exception ex)
                 {
                     try
                     {
-                        File.Delete(Path.Combine(AtLocal.RootPath, modelFile));
+                        File.Delete(modelFile);
                     }
                     catch { }
                     return "下载模型文件失败！" + ex.Message;
@@ -132,7 +133,7 @@ namespace Dt.Base
             // 打开模型库
             try
             {
-                AtLocal.OpenModelDb(modelFile);
+                AtModel.OpenDb();
             }
             catch (Exception ex)
             {
@@ -156,7 +157,7 @@ namespace Dt.Base
             notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
             notify.DelaySeconds = 5;
             notify.Link = "更新模型";
-            notify.LinkCallback = async(e) =>
+            notify.LinkCallback = async (e) =>
             {
                 if (await AtKit.Confirm("确认要更新模型吗？"))
                 {

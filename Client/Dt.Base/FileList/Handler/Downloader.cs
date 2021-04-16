@@ -131,7 +131,7 @@ namespace Dt.Base
             if (index <= 0)
                 return false;
 
-            string path = Path.Combine(AtLocal.CachePath, p_path.Substring(index + 1));
+            string path = Path.Combine(AtSys.CachePath, p_path.Substring(index + 1));
             FileStream stream = File.Create(path);
             DownloadInfo info = new DownloadInfo
             {

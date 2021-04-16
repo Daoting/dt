@@ -7,8 +7,8 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Sqlite;
-using System;
 #endregion
 
 namespace Dt.Base.FormView
@@ -16,18 +16,40 @@ namespace Dt.Base.FormView
     /// <summary>
     /// 记录Fv单元格最后编辑的值
     /// </summary>
-    [StateTable]
-    public class CellLastVal
+    [Sqlite("state")]
+    public class CellLastVal : Entity
     {
+        #region 构造方法
+        CellLastVal() { }
+
+        public CellLastVal(
+            string ID,
+            string Val = default)
+        {
+            AddCell("ID", ID);
+            AddCell("Val", Val);
+            IsAdded = true;
+            AttachHook();
+        }
+        #endregion
+
         /// <summary>
         /// 单元格唯一标识：BaseUri + Fv.Name + FvCell.ID
         /// </summary>
         [PrimaryKey]
-        public string ID { get; set; }
+        new public string ID
+        {
+            get { return (string)this["ID"]; }
+            set { this["ID"] = value; }
+        }
 
         /// <summary>
         /// 单元格最后编辑的值
         /// </summary>
-        public string Val { get; set; }
+        public string Val
+        {
+            get { return (string)this["Val"]; }
+            set { this["Val"] = value; }
+        }
     }
 }

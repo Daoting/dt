@@ -71,7 +71,7 @@ namespace Dt.Base
                 return null;
 
             var fileExt = ((info[UIImagePickerController.ReferenceUrl] as NSUrl)?.PathExtension == "PNG") ? "png" : "jpg";
-            var path = System.IO.Path.Combine(AtLocal.CachePath, $"{AtKit.NewID}.{fileExt}");
+            var path = System.IO.Path.Combine(AtSys.CachePath, $"{AtKit.NewID}.{fileExt}");
 
             // 此处与 https://github.com/jamesmontemagno/MediaPlugin 大改动
             // 直接保存，未使用后面方法处理参数
@@ -103,7 +103,7 @@ namespace Dt.Base
             {
                 try
                 {
-                    thumbPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
+                    thumbPath = Path.Combine(AtSys.CachePath, AtKit.NewID + "-t.jpg");
                     // 等比例缩放
                     var scale = Math.Max((float)FileData.ThumbSize / width, (float)FileData.ThumbSize / height);
                     if (scale < 1)
@@ -275,7 +275,7 @@ namespace Dt.Base
                 }
             }
 
-            var path = System.IO.Path.Combine(AtLocal.CachePath, AtKit.NewID + ".mp4");
+            var path = System.IO.Path.Combine(AtSys.CachePath, AtKit.NewID + ".mp4");
             try
             {
                 File.Move(url.Path, path);

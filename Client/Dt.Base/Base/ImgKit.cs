@@ -89,7 +89,7 @@ namespace Dt.Base
             using (await _locker.LockAsync())
             {
                 string fileName = p_path.Substring(index + 1);
-                string path = System.IO.Path.Combine(AtLocal.CachePath, fileName);
+                string path = System.IO.Path.Combine(AtSys.CachePath, fileName);
                 if (!System.IO.File.Exists(path))
                 {
                     if (!await Downloader.GetAndCacheFile(p_path))
@@ -110,7 +110,7 @@ namespace Dt.Base
         /// <returns></returns>
         static async Task<BitmapImage> GetLocalImage(string p_fileName)
         {
-            string path = Path.Combine(AtLocal.CachePath, p_fileName);
+            string path = Path.Combine(AtSys.CachePath, p_fileName);
             if (!File.Exists(path))
                 return null;
             

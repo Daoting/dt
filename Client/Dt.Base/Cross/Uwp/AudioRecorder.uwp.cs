@@ -53,7 +53,7 @@ namespace Dt.Base
                     throw new Exception($"Audio recording failed: {errorEventArgs.Code}. {errorEventArgs.Message}");
                 };
 
-                _audioFilePath = Path.Combine(AtLocal.CachePath, AtKit.NewID + ".m4a");
+                _audioFilePath = Path.Combine(AtSys.CachePath, AtKit.NewID + ".m4a");
                 var file = await StorageFile.GetFileFromPathAsync(_audioFilePath);
                 await _mediaCapture.StartRecordToStorageFileAsync(MediaEncodingProfile.CreateM4a(AudioEncodingQuality.Auto), file);
             }
