@@ -9,9 +9,11 @@
 #region 引用命名
 using Microsoft.Data.Sqlite;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 #endregion
 
 namespace Dt.Core.Sqlite
@@ -21,9 +23,11 @@ namespace Dt.Core.Sqlite
     /// </summary>
     public class SqliteConnectionEx : SqliteConnection
     {
+        #region 成员变量
         const string _errQuery = "查询语句不能为空";
         const string _lastRowid = "select last_insert_rowid()";
-        static ConcurrentDictionary<string, TableMapping> _mappings = null;
+        static readonly ConcurrentDictionary<string, TableMapping> _mappings = new ConcurrentDictionary<string, TableMapping>();
+        #endregion
 
         #region 构造方法
         public SqliteConnectionEx()
@@ -36,101 +40,26 @@ namespace Dt.Core.Sqlite
         }
         #endregion
 
-        #region 插入
+        #region 查询
         /// <summary>
-        /// 向数据库中插入某对象的数据。
+        /// SQL查询，返回Table
         /// </summary>
-        /// <param name="p_obj">数据对象</param>
-        /// <param name="p_autoUpdate">bool 类型，为true时，产生的sql语句带 or replace </param>
-        /// <returns></returns>
-        public int Insert(object p_obj, bool p_autoUpdate)
+        /// <param name="p_sql">sql语句</param>
+        /// <param name="p_params">参数值列表</param>
+        /// <returns>Table</returns>
+        public Table Query(string p_sql, object p_params = null)
         {
-            if (p_obj == null)
-                return 0;
-
-            var map = GetMapping(p_obj.GetType());
-            var cols = p_autoUpdate ? map.Columns : map.InsertColumns;
-            int cnt = 0;
+            if (string.IsNullOrEmpty(p_sql))
+                throw new Exception(_errQuery);
 
             using (var cmd = CreateCmd())
             {
-                cmd.CommandText = map.GetInsertSql(p_autoUpdate);
-                foreach (var col in cols)
-                {
-                    cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType)).Value = col.GetValue(p_obj);
-                }
-                cnt = cmd.ExecuteNonQuery();
-
-                // 自增列
-                if (map.HasAutoIncPK)
-                {
-                    cmd.CommandText = _lastRowid;
-                    cmd.Parameters.Clear();
-                    long id = (long)cmd.ExecuteScalar();
-                    map.SetAutoIncPK(p_obj, id);
-                }
+                cmd.CommandText = p_sql;
+                WrapParams(cmd.Parameters, p_params);
+                return cmd.ExecuteQuery();
             }
-            return cnt;
         }
 
-        /// <summary>
-        /// 事务内插入多个对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="p_list"></param>
-        /// <param name="p_autoUpdate"></param>
-        /// <returns></returns>
-        public int BatchInsert<T>(IEnumerable<T> p_list, bool p_autoUpdate)
-        {
-            if (p_list == null || p_list.Count() == 0)
-                return 0;
-
-            var map = GetMapping(typeof(T));
-            var cols = p_autoUpdate ? map.Columns : map.InsertColumns;
-            int cnt = 0;
-
-            RunInTransaction(() =>
-            {
-                using (var cmd = CreateCmd())
-                {
-                    cmd.CommandText = map.GetInsertSql(p_autoUpdate);
-                    foreach (var col in cols)
-                    {
-                        cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
-                    }
-
-                    SqliteCommand idCmd = null;
-                    foreach (var r in p_list)
-                    {
-                        if (r == null)
-                            continue;
-
-                        foreach (var col in cols)
-                        {
-                            cmd.Parameters[col.Name].Value = col.GetValue(r);
-                        }
-                        cnt += cmd.ExecuteNonQuery();
-
-                        // 自增列
-                        if (map.HasAutoIncPK)
-                        {
-                            // 不能使用cmd！
-                            if (idCmd == null)
-                                idCmd = new SqliteCommand(_lastRowid, this, Transaction);
-                            long id = (long)idCmd.ExecuteScalar();
-                            map.SetAutoIncPK(r, id);
-                        }
-                    }
-
-                    if (idCmd != null)
-                        idCmd.Dispose();
-                }
-            });
-            return cnt;
-        }
-        #endregion
-
-        #region 查询
         /// <summary>
         /// SQL查询，返回对象列表
         /// </summary>
@@ -149,25 +78,6 @@ namespace Dt.Core.Sqlite
                 cmd.CommandText = p_sql;
                 WrapParams(cmd.Parameters, p_params);
                 return cmd.ExecuteQuery<TEntity>();
-            }
-        }
-
-        /// <summary>
-        /// SQL查询，返回Table
-        /// </summary>
-        /// <param name="p_sql">sql语句</param>
-        /// <param name="p_params">参数值列表</param>
-        /// <returns>Table</returns>
-        public Table Query(string p_sql, object p_params = null)
-        {
-            if (string.IsNullOrEmpty(p_sql))
-                throw new Exception(_errQuery);
-
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = p_sql;
-                WrapParams(cmd.Parameters, p_params);
-                return cmd.ExecuteQuery();
             }
         }
 
@@ -199,7 +109,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public T ExecuteScalar<T>(string p_sql, object p_params = null)
+        public T GetScalar<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -264,32 +174,465 @@ namespace Dt.Core.Sqlite
                 return cmd.ExecuteQuery();
             }
         }
+        #endregion
+
+        #region 保存
+        /// <summary>
+        /// 保存实体数据，根据实体状态确定插入或更新
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="p_entity">实体</param>
+        /// <returns></returns>
+        public bool Save<TEntity>(TEntity p_entity)
+            where TEntity : Entity
+        {
+            Throw.IfNull(p_entity);
+
+            bool suc = false;
+            if (p_entity.IsAdded)
+                suc = Insert(p_entity) > 0;
+            else if (p_entity.IsChanged)
+                suc = Update(p_entity) > 0;
+
+            if (suc)
+                p_entity.AcceptChanges();
+            return suc;
+        }
 
         /// <summary>
-        /// 在事务中执行过程
+        /// 一个事务内批量保存实体数据，根据实体状态执行增改，Table&lt;Entity&gt;支持删除，列表类型支持：
+        /// <para>Table&lt;Entity&gt;，单表增删改</para>
+        /// <para>List&lt;Entity&gt;，单表增改</para>
+        /// <para>IList，多表增删改，成员可为Entity,List&lt;Entity&gt;,Table&lt;Entity&gt;的混合</para>
         /// </summary>
-        /// <param name="p_action"></param>
-        public void RunInTransaction(Action p_action)
+        /// <param name="p_list">待保存列表</param>
+        /// <returns></returns>
+        public bool BatchSave(IList p_list)
         {
-#if WASM
-            // 5.0.3版本中 BeginTransaction 异常！
-            p_action();
-#else
+            if (p_list == null || p_list.Count == 0)
+                return false;
+
+            bool suc = false;
             using (var trans = BeginTransaction())
             {
                 try
                 {
-                    p_action();
-                    trans.Commit();
+                    Type tp = p_list.GetType();
+                    if (tp.IsGenericType
+                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        suc = BatchSaveSameType(p_list) > 0;
+                        if (p_list is Table tbl)
+                        {
+                            tbl.AcceptChanges();
+                        }
+                        else
+                        {
+                            foreach (var row in p_list.OfType<Row>())
+                            {
+                                if (row.IsChanged || row.IsAdded)
+                                    row.AcceptChanges();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        suc = BatchSaveMultiTypes(p_list) > 0;
+                        if (suc)
+                        {
+                            foreach (var item in p_list)
+                            {
+                                if (item is Entity entity)
+                                {
+                                    entity.AcceptChanges();
+                                }
+                                else if (item is Table tbl)
+                                {
+                                    tbl.AcceptChanges();
+                                    tbl.DeletedRows?.Clear();
+                                }
+                                else if (item is IList clist && clist.Count > 0)
+                                {
+                                    foreach (var ci in clist)
+                                    {
+                                        if (ci is Row row
+                                            && (row.IsAdded || row.IsChanged))
+                                        {
+                                            row.AcceptChanges();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (suc)
+                        trans.Commit();
+                    else
+                        trans.Rollback();
                 }
                 catch
                 {
                     trans.Rollback();
                 }
             }
-#endif
+            return suc;
         }
 
+        int Insert<TEntity>(TEntity p_entity)
+            where TEntity : Entity
+        {
+            var map = GetMapping(typeof(TEntity));
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                StringBuilder insertCol = new StringBuilder();
+                StringBuilder insertVal = new StringBuilder();
+                foreach (var col in map.InsertColumns)
+                {
+                    if (!p_entity.Contains(col.Name))
+                        continue;
+
+                    if (insertCol.Length > 0)
+                        insertCol.Append(",");
+                    insertCol.Append(col.Name);
+
+                    if (insertVal.Length > 0)
+                        insertVal.Append(",");
+                    insertVal.Append("@");
+                    insertVal.Append(col.Name);
+
+                    cmd.Parameters.AddWithValue(col.Name, p_entity[col.Name]);
+                }
+                cmd.CommandText = $"insert into '{map.TableName}'({insertCol}) values ({insertVal})";
+                cnt = cmd.ExecuteNonQuery();
+
+                // 自增列
+                if (map.HasAutoIncPK)
+                {
+                    cmd.CommandText = _lastRowid;
+                    cmd.Parameters.Clear();
+                    long id = (long)cmd.ExecuteScalar();
+                    map.SetAutoIncPK(p_entity, id);
+                }
+            }
+            return cnt;
+        }
+
+        int Update<TEntity>(TEntity p_entity)
+            where TEntity : Entity
+        {
+            var map = GetMapping(typeof(TEntity));
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                StringBuilder updateVal = new StringBuilder();
+                int updateIndex = 1;
+                foreach (var col in map.Columns)
+                {
+                    if (!p_entity.Contains(col.Name) || !p_entity.Cells[col.Name].IsChanged)
+                        continue;
+
+                    // 只更新变化的列
+                    if (updateVal.Length > 0)
+                        updateVal.Append(", ");
+                    updateVal.Append(col.Name);
+                    updateVal.Append("=@");
+                    updateVal.Append(updateIndex);
+
+                    // 更新主键时避免重复
+                    cmd.Parameters.AddWithValue(updateIndex.ToString(), p_entity[col.Name]);
+                    updateIndex++;
+                }
+
+                // 主键可能被更新，不支持复合主键
+                cmd.Parameters.AddWithValue(map.PK.Name, p_entity.Cells[map.PK.Name].OriginalVal);
+
+                cmd.CommandText = $"update '{map.TableName}' set {updateVal} where {map.PK.Name}=@{map.PK.Name}";
+                cnt = cmd.ExecuteNonQuery();
+            }
+            return cnt;
+        }
+
+        int BatchSaveSameType(IList p_list)
+        {
+            var map = GetMapping(p_list.GetType().GetGenericArguments()[0]);
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                // 先处理插入
+                bool update = false;
+                SqliteCommand idCmd = null;
+                foreach (Entity r in p_list)
+                {
+                    if (!r.IsAdded)
+                    {
+                        if (r.IsChanged)
+                            update = true;
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(cmd.CommandText))
+                        LoadInsertSql(r, map, cmd);
+
+                    foreach (var col in map.InsertColumns)
+                    {
+                        if (r.Contains(col.Name))
+                            cmd.Parameters[col.Name].Value = r[col.Name];
+                    }
+                    cnt += cmd.ExecuteNonQuery();
+
+                    // 自增列
+                    if (map.HasAutoIncPK)
+                    {
+                        // 不能使用cmd！
+                        if (idCmd == null)
+                            idCmd = new SqliteCommand(_lastRowid, this, Transaction);
+                        long id = (long)idCmd.ExecuteScalar();
+                        map.SetAutoIncPK(r, id);
+                    }
+                }
+                if (idCmd != null)
+                    idCmd.Dispose();
+
+                // 更新
+                if (update)
+                {
+                    foreach (Entity r in p_list)
+                    {
+                        if (r.IsAdded || !r.IsChanged)
+                            continue;
+
+                        LoadUpdateSql(r, map, cmd);
+                        cnt += cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // 删除
+                if (p_list is Table tbl && tbl.ExistDeleted)
+                {
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = $"delete from '{map.TableName}' where {map.PK.Name}=@{map.PK.Name}";
+                    cmd.Parameters.Add(map.PK.Name, ToDbType(map.PK.ColumnType));
+                    foreach (var r in tbl.DeletedRows)
+                    {
+                        cmd.Parameters[map.PK.Name].Value = r[map.PK.Name];
+                        cnt += cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            return cnt;
+        }
+
+        int BatchSaveMultiTypes(IList p_list)
+        {
+            int cnt = 0;
+            foreach (var item in p_list)
+            {
+                if (item is Entity entity)
+                {
+                    if (entity.IsAdded)
+                        cnt += Insert(entity);
+                    else if (entity.IsChanged)
+                        cnt += Update(entity);
+                }
+                else if (item is IList clist
+                    && item.GetType().IsGenericType
+                    && item.GetType().GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                {
+                    cnt += BatchSaveSameType(clist);
+                }
+                else
+                {
+                    throw new Exception($"批量保存不支持[{item.GetType().Name}]类型！");
+                }
+            }
+            return cnt;
+        }
+
+        void LoadInsertSql(Entity p_entity, TableMapping p_map, SqliteCommandEx p_cmd)
+        {
+            StringBuilder insertCol = new StringBuilder();
+            StringBuilder insertVal = new StringBuilder();
+            foreach (var col in p_map.InsertColumns)
+            {
+                if (!p_entity.Contains(col.Name))
+                    continue;
+
+                if (insertCol.Length > 0)
+                    insertCol.Append(",");
+                insertCol.Append(col.Name);
+
+                if (insertVal.Length > 0)
+                    insertVal.Append(",");
+                insertVal.Append("@");
+                insertVal.Append(col.Name);
+
+                p_cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
+            }
+            p_cmd.CommandText = $"insert into '{p_map.TableName}'({insertCol}) values ({insertVal})";
+        }
+
+        void LoadUpdateSql(Entity p_entity, TableMapping p_map, SqliteCommandEx p_cmd)
+        {
+            StringBuilder updateVal = new StringBuilder();
+            int updateIndex = 1;
+            p_cmd.Parameters.Clear();
+            foreach (var col in p_map.Columns)
+            {
+                if (!p_entity.Contains(col.Name) || !p_entity.Cells[col.Name].IsChanged)
+                    continue;
+
+                // 只更新变化的列
+                if (updateVal.Length > 0)
+                    updateVal.Append(", ");
+                updateVal.Append(col.Name);
+                updateVal.Append("=@");
+                updateVal.Append(updateIndex);
+
+                // 更新主键时避免重复
+                p_cmd.Parameters.AddWithValue(updateIndex.ToString(), p_entity[col.Name]);
+                updateIndex++;
+            }
+
+            // 主键可能被更新，不支持复合主键
+            p_cmd.Parameters.AddWithValue(p_map.PK.Name, p_entity.Cells[p_map.PK.Name].OriginalVal);
+            p_cmd.CommandText = $"update '{p_map.TableName}' set {updateVal} where {p_map.PK.Name}=@{p_map.PK.Name}";
+        }
+        #endregion
+
+        #region 删除
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">待删除的行</param>
+        /// <returns>true 删除成功</returns>
+        public bool Delete<TEntity>(TEntity p_entity)
+            where TEntity : Entity
+        {
+            Throw.IfNull(p_entity);
+            var map = GetMapping(typeof(TEntity));
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = $"delete from '{map.TableName}' where {map.PK.Name}=@{map.PK.Name}";
+                cmd.Parameters.AddWithValue(map.PK.Name, p_entity[map.PK.Name]);
+                cnt = cmd.ExecuteNonQuery();
+            }
+            return cnt > 0;
+        }
+
+        /// <summary>
+        /// 根据主键删除实体对象，仅支持单主键，主键列名内部确定
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_id">主键值</param>
+        /// <returns></returns>
+        public bool DelByPK<TEntity>(object p_id)
+            where TEntity : Entity
+        {
+            var map = GetMapping(typeof(TEntity));
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = $"delete from '{map.TableName}' where {map.PK.Name}=@{map.PK.Name}";
+                cmd.Parameters.AddWithValue(map.PK.Name, p_id);
+                cnt = cmd.ExecuteNonQuery();
+            }
+            return cnt > 0;
+        }
+
+        /// <summary>
+        /// 批量删除实体，单表或多表，列表类型支持：
+        /// <para>Table&lt;Entity&gt;，单表删除</para>
+        /// <para>List&lt;Entity&gt;，单表删除</para>
+        /// <para>IList，多表删除，成员可为Entity,List&lt;Entity&gt;,Table&lt;Entity&gt;的混合</para>
+        /// </summary>
+        /// <param name="p_list">待删除实体列表</param>
+        /// <returns>true 删除成功</returns>
+        public bool BatchDelete(IList p_list)
+        {
+            if (p_list == null || p_list.Count == 0)
+                return false;
+
+            bool suc = false;
+            using (var trans = BeginTransaction())
+            {
+                try
+                {
+                    Type tp = p_list.GetType();
+                    if (tp.IsGenericType
+                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        suc = BatchDeleteSameType(p_list) > 0;
+                    }
+                    else
+                    {
+                        suc = BatchDeleteMultiTypes(p_list) > 0;
+                    }
+
+                    if (suc)
+                        trans.Commit();
+                    else
+                        trans.Rollback();
+                }
+                catch
+                {
+                    trans.Rollback();
+                }
+            }
+            return suc;
+        }
+
+        int BatchDeleteSameType(IList p_list)
+        {
+            var map = GetMapping(p_list.GetType().GetGenericArguments()[0]);
+            int cnt = 0;
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = $"delete from '{map.TableName}' where {map.PK.Name}=@{map.PK.Name}";
+                cmd.Parameters.Add(map.PK.Name, ToDbType(map.PK.ColumnType));
+                foreach (Row r in p_list)
+                {
+                    cmd.Parameters[map.PK.Name].Value = r[map.PK.Name];
+                    cnt += cmd.ExecuteNonQuery();
+                }
+            }
+            return cnt;
+        }
+
+        int BatchDeleteMultiTypes(IList p_list)
+        {
+            int cnt = 0;
+            foreach (var item in p_list)
+            {
+                if (item is Entity entity)
+                {
+                    cnt += Delete(entity) ? 1 : 0;
+                }
+                else if (item is IList clist
+                    && item.GetType().IsGenericType
+                    && item.GetType().GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                {
+                    cnt += BatchDeleteSameType(clist);
+                }
+                //else
+                //{
+                //    throw new Exception($"批量保存不支持[{item.GetType().Name}]类型！");
+                //}
+            }
+            return cnt;
+        }
+        #endregion
+
+        #region 执行
         /// <summary>
         /// 执行查询操作，返回影响的数据行数
         /// </summary>
@@ -309,6 +652,12 @@ namespace Dt.Core.Sqlite
             }
         }
 
+        /// <summary>
+        /// 批量执行
+        /// </summary>
+        /// <param name="p_sql"></param>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
         public int BatchExecute(string p_sql, List<Dict> p_list)
         {
             if (p_list == null || p_list.Count == 0)
@@ -336,6 +685,31 @@ namespace Dt.Core.Sqlite
                 }
             });
             return cnt;
+        }
+
+        /// <summary>
+        /// 在事务中执行过程
+        /// </summary>
+        /// <param name="p_action"></param>
+        public void RunInTransaction(Action p_action)
+        {
+#if WASM
+            // 5.0.3版本中 BeginTransaction 异常！
+            p_action();
+#else
+            using (var trans = BeginTransaction())
+            {
+                try
+                {
+                    p_action();
+                    trans.Commit();
+                }
+                catch
+                {
+                    trans.Rollback();
+                }
+            }
+#endif
         }
         #endregion
 
@@ -449,10 +823,8 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        TableMapping GetMapping(Type type)
+        static TableMapping GetMapping(Type type)
         {
-            if (_mappings == null)
-                _mappings = new ConcurrentDictionary<string, TableMapping>();
             return _mappings.GetOrAdd(type.FullName, (name) => new TableMapping(type));
         }
 

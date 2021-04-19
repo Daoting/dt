@@ -95,7 +95,7 @@ namespace Dt.Core
         /// <returns>返回第一个单元格数据</returns>
         public static T GetScalar<T>(string p_sql, object p_params = null)
         {
-            return GetDb().ExecuteScalar<T>(p_sql, p_params);
+            return GetDb().GetScalar<T>(p_sql, p_params);
         }
 
         /// <summary>
@@ -195,9 +195,34 @@ namespace Dt.Core
         /// <param name="p_entity">待保存的实体</param>
         /// <param name="p_isNotify">是否提示保存结果</param>
         /// <returns>是否成功</returns>
-        public static bool Save<TEntity>(TEntity p_entity, bool p_isNotify = true)
+        public static async Task<bool> Save<TEntity>(TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
+            if (p_entity == null
+                || (!p_entity.IsAdded && !p_entity.IsChanged))
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_unchangedMsg);
+                return false;
+            }
+
+            var model = SqliteEntitySchema.Get(typeof(TEntity));
+            if (model.OnSaving != null)
+            {
+                // 保存前外部校验，不合格在外部抛出异常
+                if (!await OnSaving(model, p_entity))
+                    return false;
+            }
+
+            if (GetDb().Save(p_entity))
+            {
+                if (p_isNotify)
+                    AtKit.Msg("保存成功！");
+                return true;
+            }
+
+            if (p_isNotify)
+                AtKit.Warn("保存失败！");
             return false;
         }
 
@@ -210,24 +235,148 @@ namespace Dt.Core
         /// <param name="p_list">待保存列表</param>
         /// <param name="p_isNotify">是否提示保存结果</param>
         /// <returns>true 保存成功</returns>
-        public static bool BatchSave(IList p_list, bool p_isNotify = true)
+        public static async Task<bool> BatchSave(IList p_list, bool p_isNotify = true)
         {
+            if (p_list == null || p_list.Count == 0)
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_unchangedMsg);
+                return false;
+            }
+
+            // 触发外部保存前处理
+            Type tp = p_list.GetType();
+            if (tp.IsGenericType
+                && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+            {
+                // 单表增删改，列表中的实体类型相同
+
+                // 不判断列表项数0，因可能Table<Entity>只包含删除列表的情况！
+                // IList<Entity> 或 Table<Entity>
+                var model = SqliteEntitySchema.Get(tp.GetGenericArguments()[0]);
+                if (model.OnSaving != null)
+                {
+                    foreach (var ci in p_list)
+                    {
+                        if (!await OnSaving(model, ci))
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                // 多表增删改
+                foreach (var item in p_list)
+                {
+                    if (item is Entity entity)
+                    {
+                        if (entity.IsAdded || entity.IsChanged)
+                        {
+                            var model = SqliteEntitySchema.Get(item.GetType());
+                            if (model.OnSaving != null)
+                            {
+                                if (!await OnSaving(model, entity))
+                                    return false;
+                            }
+                        }
+                    }
+                    else if (item is IList clist
+                        && (tp = item.GetType()) != null
+                        && tp.IsGenericType
+                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        // 不判断列表项数0，因可能Table<Entity>只包含删除列表的情况！
+                        // IList<Entity> 或 Table<Entity>
+                        var model = SqliteEntitySchema.Get(tp.GetGenericArguments()[0]);
+                        if (model.OnSaving != null)
+                        {
+                            foreach (var ci in clist)
+                            {
+                                if (!await OnSaving(model, ci))
+                                    return false;
+                            }
+                        }
+                    }
+                    //else
+                    //{
+                    //    throw new Exception($"批量保存不支持[{item.GetType().Name}]类型！");
+                    //}
+                }
+            }
+
+            if (GetDb().BatchSave(p_list))
+            {
+                if (p_isNotify)
+                    AtKit.Msg("保存成功！");
+                return true;
+            }
+
+            if (p_isNotify)
+                AtKit.Warn("保存失败！");
             return false;
+        }
+
+        /// <summary>
+        /// 保存前外部校验，不合格在外部抛出异常
+        /// </summary>
+        /// <param name="p_model"></param>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        static async Task<bool> OnSaving(SqliteEntitySchema p_model, object p_entity)
+        {
+            try
+            {
+                if (p_model.OnSaving.ReturnType == typeof(Task))
+                    await (Task)p_model.OnSaving.Invoke(p_entity, null);
+                else
+                    p_model.OnSaving.Invoke(p_entity, null);
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException is KnownException kex)
+                    AtKit.Warn(kex.Message);
+                else
+                    AtKit.Warn(ex.Message);
+                return false;
+            }
+            return true;
         }
         #endregion
 
         #region 删除
         /// <summary>
-        /// 删除实体，依靠数据库的级联删除自动删除子实体
+        /// 删除实体
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_entity">待删除的行</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public static bool Delete<TEntity>(TEntity p_entity, bool p_isNotify = true)
+        public static async Task<bool> Delete<TEntity>(TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
-            return false;
+            if (p_entity == null || p_entity.IsAdded)
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_saveError);
+                return false;
+            }
+
+            var model = SqliteEntitySchema.Get(typeof(TEntity));
+            if (model.OnDeleting != null)
+            {
+                if (!await OnDeleting(model, p_entity))
+                    return false;
+            }
+
+            bool suc = GetDb().Delete(p_entity);
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("删除成功！");
+                else
+                    AtKit.Warn("删除失败！");
+            }
+            return suc;
         }
 
         /// <summary>
@@ -239,77 +388,117 @@ namespace Dt.Core
         /// <param name="p_list">待删除实体列表</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public static bool BatchDelete(IList p_list, bool p_isNotify = true)
+        public static async Task<bool> BatchDelete(IList p_list, bool p_isNotify = true)
         {
+            if (p_list == null || p_list.Count == 0)
+            {
+                if (p_isNotify)
+                    AtKit.Warn(_saveError);
+                return false;
+            }
+
+            // 触发外部删除前处理
+            Type tp = p_list.GetType();
+            if (tp.IsGenericType
+                && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+            {
+                // 列表中的实体类型相同
+                var model = SqliteEntitySchema.Get(tp.GetGenericArguments()[0]);
+                if (model.OnDeleting != null)
+                {
+                    foreach (var ci in p_list)
+                    {
+                        if (!await OnDeleting(model, ci))
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                // 多类型
+                foreach (var item in p_list)
+                {
+                    if (item is Entity entity)
+                    {
+                        var model = SqliteEntitySchema.Get(item.GetType());
+                        if (model.OnDeleting != null)
+                        {
+                            if (!await OnDeleting(model, entity))
+                                return false;
+                        }
+                    }
+                    else if (item is IList clist
+                        && clist.Count > 0
+                        && (tp = item.GetType()) != null
+                        && tp.IsGenericType
+                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    {
+                        // IList<Entity> 或 Table<Entity>
+                        var model = SqliteEntitySchema.Get(tp.GetGenericArguments()[0]);
+                        if (model.OnDeleting != null)
+                        {
+                            foreach (var ci in clist)
+                            {
+                                if (!await OnDeleting(model, ci))
+                                    return false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (GetDb().BatchDelete(p_list))
+            {
+                if (p_isNotify)
+                    AtKit.Msg("删除成功！");
+                return true;
+            }
+
+            if (p_isNotify)
+                AtKit.Warn("删除失败！");
             return false;
         }
 
         /// <summary>
-        /// 批量删除行数据
-        /// </summary>
-        /// <param name="p_rows">数据</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public static bool BatchDelete(string p_tblName, IEnumerable<Row> p_rows, bool p_isNotify = true)
-        {
-            return true;
-            //if (p_rows == null || string.IsNullOrEmpty(p_tblName))
-            //    throw new Exception("待删除的数据和表名不可为空！");
-
-            //bool suc = true;
-            //TableMapping map = _stateDb.GetTblMapping(p_tblName);
-            //var pk = map.PK;
-            //if (pk == null || !p_rows.First().Contains(pk.Name))
-            //    throw new Exception("无法删除无主键列的数据！");
-
-            //_stateDb.RunInTransaction(() =>
-            //{
-            //    var sql = $"delete from {map.TableName} where {pk.Name}=:pkVal";
-            //    Dict par = new Dict();
-            //    foreach (Row dr in p_rows)
-            //    {
-            //        par["pkVal"] = dr.Str(pk.Name);
-            //        Exec(sql, par);
-            //    }
-            //});
-            //return suc;
-        }
-
-        /// <summary>
-        /// 根据主键删除实体对象，仅支持单主键id，依靠数据库的级联删除自动删除子实体
+        /// 根据主键值删除实体对象，仅支持单主键，主键列名内部确定
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
+        /// <param name="p_id">主键值</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public static bool DelByID<TEntity>(string p_id, bool p_isNotify = true)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// 根据主键删除实体对象，仅支持单主键id，依靠数据库的级联删除自动删除子实体
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <param name="p_isNotify">是否提示删除结果</param>
-        /// <returns>true 删除成功</returns>
-        public static bool DelByID<TEntity>(long p_id, bool p_isNotify = true)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// 根据单主键或唯一索引列删除实体，同步删除缓存，依靠数据库的级联删除自动删除子实体
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyName">主键或唯一索引列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <returns>实际删除行数</returns>
-        public static bool DelByKey<TEntity>(string p_keyName, string p_keyVal)
+        public static bool DelByID<TEntity>(object p_id, bool p_isNotify = true)
             where TEntity : Entity
         {
-            return false;
+            bool suc = GetDb().DelByPK<TEntity>(p_id);
+            if (p_isNotify)
+                AtKit.Msg(suc ? "删除成功！" : "删除失败！");
+            return suc;
+        }
+
+        /// <summary>
+        /// 删除前外部校验，不合格在外部抛出异常
+        /// </summary>
+        /// <param name="p_model"></param>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        static async Task<bool> OnDeleting(SqliteEntitySchema p_model, object p_entity)
+        {
+            try
+            {
+                if (p_model.OnDeleting.ReturnType == typeof(Task))
+                    await (Task)p_model.OnDeleting.Invoke(p_entity, null);
+                else
+                    p_model.OnDeleting.Invoke(p_entity, null);
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException is KnownException kex)
+                    AtKit.Warn(kex.Message);
+                else
+                    AtKit.Warn(ex.Message);
+                return false;
+            }
+            return true;
         }
         #endregion
 
@@ -347,8 +536,6 @@ namespace Dt.Core
         #endregion
 
         #region 库管理
-        static readonly Dictionary<string, SqliteConnectionEx> _dbs = new Dictionary<string, SqliteConnectionEx>();
-
         /// <summary>
         /// 打开Sqlite库，自动创建、同步库表结构
         /// </summary>
@@ -428,7 +615,7 @@ namespace Dt.Core
             {
                 sb.Append(item.Key);
                 sb.Append("　　----");
-                int cnt = item.Value.ExecuteScalar<int>("select count(*) from sqlite_master where type='table'");
+                int cnt = item.Value.GetScalar<int>("select count(*) from sqlite_master where type='table'");
                 sb.Append(cnt);
                 sb.Append("表");
                 try
@@ -442,6 +629,13 @@ namespace Dt.Core
             }
             return sb.ToString();
         }
+        #endregion
+
+        #region 成员变量
+        const string _unchangedMsg = "没有需要保存的数据！";
+        const string _saveError = "数据源不可为空！";
+        static readonly Dictionary<string, SqliteConnectionEx> _dbs = new Dictionary<string, SqliteConnectionEx>();
+
         #endregion
     }
 }

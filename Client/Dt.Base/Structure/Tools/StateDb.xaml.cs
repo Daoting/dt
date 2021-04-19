@@ -35,10 +35,10 @@ namespace Dt.Base.Tools
             if (!await AtKit.Confirm($"确认要删除这{_lvData.SelectedCount}行吗？"))
                 return;
 
-            if (AtState.BatchDelete(_lvTbl.SelectedRow.Str("name"), _lvData.SelectedRows))
-            {
-                _lvData.DeleteSelection();
-            }
+            //if (AtState.BatchDelete(_lvTbl.SelectedRow.Str("name"), _lvData.SelectedRows))
+            //{
+            //    _lvData.DeleteSelection();
+            //}
         }
     }
 }

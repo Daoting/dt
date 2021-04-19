@@ -2,21 +2,13 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-11-20 创建
+* 日志: 2021-04-16 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 using Dt.Core.Model;
-using Dt.Core.Rpc;
-using Dt.Core.Sqlite;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -33,7 +25,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static string GetCookie(string p_key)
         {
-            string val = GetDb().ExecuteScalar<string>($"select val from ClientCookie where key='{p_key}'");
+            string val = GetDb().GetScalar<string>($"select val from ClientCookie where key='{p_key}'");
             return val == null ? string.Empty : val;
         }
 
@@ -44,7 +36,7 @@ namespace Dt.Core
         /// <param name="p_val"></param>
         public static void SaveCookie(string p_key, string p_val)
         {
-            GetDb().Insert(new ClientCookie(p_key, p_val), true);
+            GetDb().Save(new ClientCookie(p_key, p_val));
         }
 
         /// <summary>
@@ -64,7 +56,7 @@ namespace Dt.Core
         {
             try
             {
-                string json = GetDb().ExecuteScalar<string>("select val from ClientCookie where key='AutoStart'");
+                string json = GetDb().GetScalar<string>("select val from ClientCookie where key='AutoStart'");
                 return JsonSerializer.Deserialize<AutoStartInfo>(json);
             }
             catch { }
@@ -80,7 +72,7 @@ namespace Dt.Core
             if (p_info != null)
             {
                 string json = JsonSerializer.Serialize(p_info, JsonOptions.UnsafeSerializer);
-                GetDb().Insert(new ClientCookie("AutoStart", json), true);
+                GetDb().Save(new ClientCookie("AutoStart", json));
             }
         }
 
@@ -93,6 +85,9 @@ namespace Dt.Core
         }
     }
 
+    /// <summary>
+    /// Sqlite_为前缀，后面为文件名
+    /// </summary>
     public class Sqlite_state
     { }
 }

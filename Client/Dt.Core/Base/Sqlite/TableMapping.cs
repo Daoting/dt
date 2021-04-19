@@ -24,9 +24,9 @@ namespace Dt.Core.Sqlite
         Type _type;
         string _tableName;
         Column _autoPk = null;
-        Column[] _insertColumns = null;
         string _sqlInsert;
         string _sqlInsertOrUpdate;
+        string _sqlGetByPK;
 
         public TableMapping(Type type)
         {
@@ -36,36 +36,28 @@ namespace Dt.Core.Sqlite
             // 不包括继承的属性
             var props = _type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
             var cols = new List<Column>();
+            var insertCols = new List<Column>();
             foreach (var p in props)
             {
                 if (p.CanWrite && p.GetCustomAttribute<IgnoreAttribute>(false) == null)
                 {
-                    cols.Add(new Column(p));
-                }
-            }
-            Columns = cols.ToArray();
-            foreach (var c in Columns)
-            {
-                if (c.IsAutoInc && c.IsPK)
-                {
-                    _autoPk = c;
-                }
-                if (c.IsPK)
-                {
-                    PK = c;
-                }
-            }
+                    var c = new Column(p);
+                    cols.Add(c);
+                    if (!c.IsAutoInc)
+                        insertCols.Add(c);
 
-            HasAutoIncPK = _autoPk != null;
-
-            if (PK != null)
-            {
-                GetByPrimaryKeySql = $"select * from \"{_tableName}\" where \"{PK.Name}\" = ?";
+                    if (c.IsAutoInc && c.IsPK)
+                    {
+                        _autoPk = c;
+                    }
+                    if (c.IsPK)
+                    {
+                        PK = c;
+                    }
+                }
             }
-            else
-            {
-                GetByPrimaryKeySql = $"select * from \"{_tableName}\" limit 1";
-            }
+            Columns = cols;
+            InsertColumns = insertCols;
         }
 
         /// <summary>
@@ -79,7 +71,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 所有列
         /// </summary>
-        public Column[] Columns { get; set; }
+        public List<Column> Columns { get; }
 
         /// <summary>
         /// 主键列
@@ -89,12 +81,25 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 根据主键列获取数据的sql
         /// </summary>
-        public string GetByPrimaryKeySql { get; set; }
+        public string SqlGetByPK
+        {
+            get
+            {
+                if (_sqlGetByPK == null)
+                {
+                    if (PK != null)
+                        _sqlGetByPK = $"select * from \"{_tableName}\" where \"{PK.Name}\" = ?";
+                    else
+                        _sqlGetByPK = $"select * from \"{_tableName}\" limit 1";
+                }
+                return _sqlGetByPK;
+            }
+        }
 
         /// <summary>
         /// 是否有自增主键
         /// </summary>
-        public bool HasAutoIncPK { get; set; }
+        public bool HasAutoIncPK => _autoPk != null;
 
         /// <summary>
         /// 设置自增主键的值
@@ -110,15 +115,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 获取除自增列外的所有列
         /// </summary>
-        public Column[] InsertColumns
-        {
-            get
-            {
-                if (_insertColumns == null)
-                    _insertColumns = Columns.Where(c => !c.IsAutoInc).ToArray();
-                return _insertColumns;
-            }
-        }
+        public List<Column> InsertColumns { get; }
 
         /// <summary>
         /// 查找列

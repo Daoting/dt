@@ -108,7 +108,7 @@ namespace Dt.Core
                 Level: p_level,
                 Content: msg,
                 Ctime: DateTime.Now);
-            AtState.Save(log);
+            _ = AtState.Save(log, false);
         }
     }
 }

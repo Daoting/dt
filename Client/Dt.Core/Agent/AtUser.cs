@@ -129,7 +129,7 @@ namespace Dt.Core
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "privilege", Ver: dt.Str("ver"));
-                AtState.Save(ver);
+                await AtState.Save(ver, false);
 
                 // 清空旧数据
                 AtState.Exec("delete from UserPrivilege");
@@ -199,7 +199,7 @@ namespace Dt.Core
 
             // 记录版本号
             var ver = new DataVersion(ID: "params", Ver: dt.Str("ver"));
-            AtState.Save(ver);
+            await AtState.Save(ver, false);
 
             // 清空旧数据
             AtState.Exec("delete from UserParams");
