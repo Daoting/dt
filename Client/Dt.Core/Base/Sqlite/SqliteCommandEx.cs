@@ -47,7 +47,51 @@ namespace Dt.Core.Sqlite
             where TEntity : Entity
         {
             Table<TEntity> tbl = new Table<TEntity>();
-            QueryInternal<TEntity>(tbl);
+            var map = SqliteConnectionEx.GetMapping(typeof(TEntity));
+
+            // 列定义
+            foreach (var col in map.Columns)
+            {
+                tbl.Add(col.Name, col.ColumnType);
+            }
+
+            var reader = ExecuteReader();
+            if (reader != null && reader.FieldCount > 0)
+            {
+                while (reader.Read())
+                {
+                    // 无参数构造方法可能为private，如实体类型
+                    var row = (TEntity)Activator.CreateInstance(typeof(TEntity), true);
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        var name = reader.GetName(i);
+                        var col = map.FindColumn(name);
+
+                        if (col == null)
+                        {
+                            // 映射类型中不存在该属性，使用数据的实际类型
+                            Cell cell;
+                            if (reader.IsDBNull(i))
+                                cell = new Cell(row, name, typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                            else
+                                cell = new Cell(row, name, reader.GetFieldType(i), reader.GetValue(i));
+
+                            // 补充缺少的列
+                            if (!tbl.Columns.Contains(name))
+                                tbl.Add(name, cell.Type);
+                        }
+                        else
+                        {
+                            // 有映射属性的以属性类型为准，因sqlie数据类型少，无可空类型、bool、DateTime等
+                            if (reader.IsDBNull(i))
+                                new Cell(row, name, col.ColumnType);
+                            else
+                                new Cell(row, name, col.ColumnType, reader.GetValue(i));
+                        }
+                    }
+                    tbl.Add(row);
+                }
+            }
             return tbl;
         }
 
@@ -58,13 +102,6 @@ namespace Dt.Core.Sqlite
         public Table ExecuteQuery()
         {
             Table tbl = new Table();
-            QueryInternal<Row>(tbl);
-            return tbl;
-        }
-
-        void QueryInternal<TRow>(Table p_tbl)
-            where TRow : Row
-        {
             var reader = ExecuteReader();
             if (reader != null && reader.FieldCount > 0)
             {
@@ -73,24 +110,31 @@ namespace Dt.Core.Sqlite
                 {
                     // Microsoft.Data.Sqlite 升级5.0.3后使用 GetFieldType 方法，因通过GetDataTypeName无bigint类型！
                     // 原方法参见ComposeDt
-                    p_tbl.Add(reader.GetName(i), reader.GetFieldType(i));
+                    tbl.Add(reader.GetName(i), reader.GetFieldType(i));
                 }
 
                 while (reader.Read())
                 {
-                    // 无参数构造方法可能为private，如实体类型
-                    var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
+                    var row = new Row();
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        var col = p_tbl.Columns[i];
+                        var col = tbl.Columns[i];
                         if (reader.IsDBNull(i))
+                        {
+                            // 列为可空类型时重置，因sqlie无可空类型
+                            if (Nullable.GetUnderlyingType(col.Type) == null)
+                                col.Type = typeof(Nullable<>).MakeGenericType(col.Type);
                             new Cell(row, col.ID, col.Type);
+                        }
                         else
+                        {
                             new Cell(row, col.ID, col.Type, reader.GetValue(i));
+                        }
                     }
-                    p_tbl.Add(row);
+                    tbl.Add(row);
                 }
             }
+            return tbl;
         }
         #endregion
 
@@ -105,17 +149,45 @@ namespace Dt.Core.Sqlite
             var reader = ExecuteReader();
             if (reader != null && reader.FieldCount > 0)
             {
+                var map = typeof(TRow).IsSubclassOf(typeof(Entity)) ? SqliteConnectionEx.GetMapping(typeof(TRow)) : null;
                 while (reader.Read())
                 {
                     // 无参数构造方法可能为private，如实体类型
                     var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        // 未处理可为null的值类型！
-                        if (reader.IsDBNull(i))
-                            new Cell(row, reader.GetName(i), reader.GetFieldType(i));
+                        if (map == null)
+                        {
+                            // Row
+                            // sqlite中无可空类型，只能遇到DBNull按可空类型，会造成所有Row的列类型不同！
+                            if (reader.IsDBNull(i))
+                                new Cell(row, reader.GetName(i), typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                            else
+                                new Cell(row, reader.GetName(i), reader.GetFieldType(i), reader.GetValue(i));
+                        }
                         else
-                            new Cell(row, reader.GetName(i), reader.GetFieldType(i), reader.GetValue(i));
+                        {
+                            // Entity
+                            var name = reader.GetName(i);
+                            var col = map.FindColumn(name);
+
+                            if (col == null)
+                            {
+                                // 映射类型中不存在该属性，使用数据的实际类型
+                                if (reader.IsDBNull(i))
+                                    new Cell(row, name, typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                                else
+                                    new Cell(row, name, reader.GetFieldType(i), reader.GetValue(i));
+                            }
+                            else
+                            {
+                                // 有映射属性的以属性类型为准，因sqlie数据类型少，无可空类型、bool、DateTime等
+                                if (reader.IsDBNull(i))
+                                    new Cell(row, name, col.ColumnType);
+                                else
+                                    new Cell(row, name, col.ColumnType, reader.GetValue(i));
+                            }
+                        }
                     }
                     yield return row;
                 }

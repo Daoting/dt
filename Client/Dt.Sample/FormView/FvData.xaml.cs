@@ -33,9 +33,9 @@ namespace Dt.Sample
             _fv1.Data = new ClientLog(Content: "hdt", Ctime: DateTime.Now);
         }
 
-        void OnLocalSave(object sender, Mi e)
+        async void OnLocalSave(object sender, Mi e)
         {
-            if (AtState.Save((ClientLog)_fv1.Data, false))
+            if (await AtState.Save((ClientLog)_fv1.Data, false))
             {
                 _fv1.AcceptChanges();
                 AtKit.Msg("本地库保存成功！");
@@ -59,7 +59,7 @@ namespace Dt.Sample
         {
             if (await AtKit.Confirm("确认要删除码？"))
             {
-                if (AtState.Delete((ClientLog)_fv1.Data))
+                if (await AtState.Delete((ClientLog)_fv1.Data))
                     _fv1.Data = null;
             }
         }

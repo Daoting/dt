@@ -11,8 +11,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Save" Click="OnSave" />
-            <Button Content="SetHtml" Click="OnSetHtml" />
+            <Button Content="测试1" Click="OnTest1" />
+            <Button Content="测试2" Click="OnTest2" />
         </StackPanel>
     </Grid>
 </a:Win>

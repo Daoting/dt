@@ -39,21 +39,21 @@ namespace Dt.Core.Sqlite
             var insertCols = new List<Column>();
             foreach (var p in props)
             {
-                if (p.CanWrite && p.GetCustomAttribute<IgnoreAttribute>(false) == null)
-                {
-                    var c = new Column(p);
-                    cols.Add(c);
-                    if (!c.IsAutoInc)
-                        insertCols.Add(c);
+                if (!p.CanWrite || p.GetCustomAttribute<IgnoreAttribute>(false) != null)
+                    continue;
 
-                    if (c.IsAutoInc && c.IsPK)
-                    {
-                        _autoPk = c;
-                    }
-                    if (c.IsPK)
-                    {
-                        PK = c;
-                    }
+                var c = new Column(p);
+                cols.Add(c);
+                if (!c.IsAutoInc)
+                    insertCols.Add(c);
+
+                if (c.IsAutoInc && c.IsPK)
+                {
+                    _autoPk = c;
+                }
+                if (c.IsPK)
+                {
+                    PK = c;
                 }
             }
             Columns = cols;
@@ -223,7 +223,7 @@ namespace Dt.Core.Sqlite
             {
                 _prop = prop;
                 Name = prop.Name;
-                ColumnType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                ColumnType = prop.PropertyType;
                 IsPK = IsPK(prop);
                 IsAutoInc = IsAutoInc(prop);
                 Indices = GetIndices(prop);

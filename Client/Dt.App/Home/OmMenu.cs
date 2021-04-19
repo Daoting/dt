@@ -56,6 +56,15 @@ namespace Dt.App
         /// <summary>
         /// 父菜单项ID
         /// </summary>
+        new public long ID
+        {
+            get { return (long)this["ID"]; }
+            set { this["ID"] = value; }
+        }
+
+        /// <summary>
+        /// 父菜单项ID
+        /// </summary>
         public long? ParentID
         {
             get { return (long?)this["ParentID"]; }
@@ -103,7 +112,7 @@ namespace Dt.App
         /// </summary>
         public string Icon
         {
-            get 
+            get
             {
                 var icon = (string)this["Icon"];
                 if (string.IsNullOrEmpty(icon))
@@ -145,7 +154,12 @@ namespace Dt.App
         /// </summary>
         public string Warning
         {
-            get { return (string)this["Warning"]; }
+            get
+            {
+                if (!Contains("Warning"))
+                    AddCell("Warning", "");
+                return (string)this["Warning"];
+            }
         }
 
         /// <summary>
@@ -162,7 +176,10 @@ namespace Dt.App
             else
                 msg = "┅";
 
-            this["Warning"] = msg;
+            if (!Contains("Warning"))
+                AddCell("Warning", msg);
+            else
+                this["Warning"] = msg;
         }
     }
 }

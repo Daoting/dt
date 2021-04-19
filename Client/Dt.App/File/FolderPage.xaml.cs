@@ -55,7 +55,7 @@ namespace Dt.App.File
             if (!_fileMgr.Setting.SaveHistory)
                 return;
 
-            AtKit.RunAsync(() =>
+            AtKit.RunAsync(async () =>
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
@@ -65,7 +65,7 @@ namespace Dt.App.File
                     his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
                 }
                 his.LastReadTime = AtSys.Now;
-                if (AtState.Save(his, false))
+                if (await AtState.Save(his, false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
         }

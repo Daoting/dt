@@ -227,7 +227,7 @@ namespace Dt.Base
                 STime: li.SendTime);
 
             // 自增主键插入后自动赋值
-            AtState.Save(l, false);
+            await AtState.Save(l, false);
 
             NewLetter?.Invoke(l);
             return l;

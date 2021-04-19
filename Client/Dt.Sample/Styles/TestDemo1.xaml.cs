@@ -33,12 +33,12 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        void OnSave(object sender, RoutedEventArgs e)
+        void OnTest1(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
-        void OnSetHtml(object sender, RoutedEventArgs e)
+        void OnTest2(object sender, RoutedEventArgs e)
         {
         }
     }

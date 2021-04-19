@@ -61,7 +61,7 @@ namespace Dt.App.Chat
             // 将新列表缓存到本地库
             AtState.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
-                AtState.BatchSave(tbl, false);
+                await AtState.BatchSave(tbl, false);
 
             // 记录刷新时间
             AtState.SaveCookie(_refreshKey, AtSys.Now.ToString());

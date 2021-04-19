@@ -823,7 +823,7 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        static TableMapping GetMapping(Type type)
+        internal static TableMapping GetMapping(Type type)
         {
             return _mappings.GetOrAdd(type.FullName, (name) => new TableMapping(type));
         }

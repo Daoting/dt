@@ -332,7 +332,7 @@ namespace Dt.App
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));
-                AtState.Save(ver, false);
+                await AtState.Save(ver, false);
 
                 // 清空旧数据
                 AtState.Exec("delete from UserMenu");
