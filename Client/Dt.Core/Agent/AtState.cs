@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
 using System.Text.Json;
 #endregion
 
@@ -25,7 +24,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static string GetCookie(string p_key)
         {
-            string val = GetDb().GetScalar<string>($"select val from ClientCookie where key='{p_key}'");
+            string val = _db.GetScalar<string>($"select val from ClientCookie where key='{p_key}'");
             return val == null ? string.Empty : val;
         }
 
@@ -36,7 +35,7 @@ namespace Dt.Core
         /// <param name="p_val"></param>
         public static void SaveCookie(string p_key, string p_val)
         {
-            GetDb().Save(new ClientCookie(p_key, p_val));
+            _db.Execute($"insert OR REPLACE into ClientCookie (key,val) values ('{p_key}','{p_val}')");
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace Dt.Core
         /// <param name="p_key"></param>
         public static void DeleteCookie(string p_key)
         {
-            GetDb().Execute($"delete from ClientCookie where key='{p_key}'");
+            _db.Execute($"delete from ClientCookie where key='{p_key}'");
         }
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Dt.Core
         {
             try
             {
-                string json = GetDb().GetScalar<string>("select val from ClientCookie where key='AutoStart'");
+                string json = _db.GetScalar<string>("select val from ClientCookie where key='AutoStart'");
                 return JsonSerializer.Deserialize<AutoStartInfo>(json);
             }
             catch { }
@@ -72,7 +71,7 @@ namespace Dt.Core
             if (p_info != null)
             {
                 string json = JsonSerializer.Serialize(p_info, JsonOptions.UnsafeSerializer);
-                GetDb().Save(new ClientCookie("AutoStart", json));
+                _db.Execute($"insert OR REPLACE into ClientCookie (key,val) values ('AutoStart','{json}')");
             }
         }
 
@@ -81,7 +80,7 @@ namespace Dt.Core
         /// </summary>
         internal static void DelAutoStart()
         {
-            GetDb().Execute("delete from ClientCookie where key='AutoStart'");
+            _db.Execute("delete from ClientCookie where key='AutoStart'");
         }
     }
 

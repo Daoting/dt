@@ -32,7 +32,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static IEnumerable<OmColumn> EachColumns(string p_tblName)
         {
-            return GetDb().ForEach<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
+            return _db.ForEach<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
         }
 
     }

@@ -170,7 +170,7 @@ namespace Dt.Core.Sqlite
         {
             using (var cmd = CreateCmd())
             {
-                cmd.CommandText = "select name from sqlite_master where type='table' order by name";
+                cmd.CommandText = "select name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name";
                 return cmd.ExecuteQuery();
             }
         }

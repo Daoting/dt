@@ -12,14 +12,14 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 
 ### 功能 
 * 因sqlite调整重构生成存根代码
-* 本地sqlite的备份与恢复
+* 本地sqlite数据的备份与删除
 
 ### 变更 
 * 服务端导出sqlite模型只使用Microsoft.Data.Sqlite，无类型映射
 * 重构sqlite客户端代码，调整为DataProvider 风格，映射类型转Entity，支持自定义sqlite库
 
 ### Bug修改 
-* 
+* Lv自动生成列时，切换数据源报无旧数据源列的 警告
 
 ## Release 1.9
 

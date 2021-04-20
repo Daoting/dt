@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
 using Dt.Core.Sqlite;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 #endregion
 
@@ -36,7 +34,7 @@ namespace Dt.Core
         /// <returns>返回Table数据</returns>
         public static Table Query(string p_sql, object p_params = null)
         {
-            return GetDb().Query(p_sql, p_params);
+            return _db.Query(p_sql, p_params);
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Dt.Core
         public static Table<TEntity> Query<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            return GetDb().Query<TEntity>(p_sql, p_params);
+            return _db.Query<TEntity>(p_sql, p_params);
         }
 
         /// <summary>
@@ -60,7 +58,7 @@ namespace Dt.Core
         public static Table<TEntity> GetAll<TEntity>()
             where TEntity : Entity
         {
-            return GetDb().Query<TEntity>($"select * from `{typeof(TEntity).Name}`");
+            return _db.Query<TEntity>($"select * from `{typeof(TEntity).Name}`");
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace Dt.Core
         /// <returns>返回Row枚举</returns>
         public static IEnumerable<Row> Each(string p_sql, object p_params = null)
         {
-            return GetDb().ForEach<Row>(p_sql, p_params);
+            return _db.ForEach<Row>(p_sql, p_params);
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace Dt.Core
         public static IEnumerable<TEntity> Each<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            return GetDb().ForEach<TEntity>(p_sql, p_params);
+            return _db.ForEach<TEntity>(p_sql, p_params);
         }
 
         /// <summary>
@@ -95,7 +93,7 @@ namespace Dt.Core
         /// <returns>返回第一个单元格数据</returns>
         public static T GetScalar<T>(string p_sql, object p_params = null)
         {
-            return GetDb().GetScalar<T>(p_sql, p_params);
+            return _db.GetScalar<T>(p_sql, p_params);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace Dt.Core
         /// <returns>返回第一行Row或null</returns>
         public static Row First(string p_sql, object p_params = null)
         {
-            return GetDb().ForEach<Row>(p_sql, p_params).FirstOrDefault();
+            return _db.ForEach<Row>(p_sql, p_params).FirstOrDefault();
         }
 
         /// <summary>
@@ -119,7 +117,7 @@ namespace Dt.Core
         public static TEntity First<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            return GetDb().ForEach<TEntity>(p_sql, p_params).FirstOrDefault();
+            return _db.ForEach<TEntity>(p_sql, p_params).FirstOrDefault();
         }
 
         /// <summary>
@@ -131,7 +129,7 @@ namespace Dt.Core
         /// <returns>返回第一列数据的泛型列表</returns>
         public static List<T> FirstCol<T>(string p_sql, object p_params = null)
         {
-            return GetDb().GetFirstCol<T>(p_sql, p_params);
+            return _db.GetFirstCol<T>(p_sql, p_params);
         }
 
         /// <summary>
@@ -143,7 +141,7 @@ namespace Dt.Core
         /// <returns>返回第一列数据的泛型枚举</returns>
         public static IEnumerable<T> EachFirstCol<T>(string p_sql, object p_params = null)
         {
-            return GetDb().EachFirstCol<T>(p_sql, p_params);
+            return _db.EachFirstCol<T>(p_sql, p_params);
         }
 
         /// <summary>
@@ -181,7 +179,7 @@ namespace Dt.Core
         public static TEntity GetByKey<TEntity>(string p_keyName, string p_keyVal)
             where TEntity : Entity
         {
-            return GetDb().ForEach<TEntity>(
+            return _db.ForEach<TEntity>(
                 $"select * from `{typeof(TEntity).Name}` where {p_keyName}='{p_keyVal}'")
                 .FirstOrDefault();
         }
@@ -214,7 +212,7 @@ namespace Dt.Core
                     return false;
             }
 
-            if (GetDb().Save(p_entity))
+            if (_db.Save(p_entity))
             {
                 if (p_isNotify)
                     AtKit.Msg("保存成功！");
@@ -304,7 +302,7 @@ namespace Dt.Core
                 }
             }
 
-            if (GetDb().BatchSave(p_list))
+            if (_db.BatchSave(p_list))
             {
                 if (p_isNotify)
                     AtKit.Msg("保存成功！");
@@ -368,7 +366,7 @@ namespace Dt.Core
                     return false;
             }
 
-            bool suc = GetDb().Delete(p_entity);
+            bool suc = _db.Delete(p_entity);
             if (p_isNotify)
             {
                 if (suc)
@@ -447,7 +445,7 @@ namespace Dt.Core
                 }
             }
 
-            if (GetDb().BatchDelete(p_list))
+            if (_db.BatchDelete(p_list))
             {
                 if (p_isNotify)
                     AtKit.Msg("删除成功！");
@@ -469,7 +467,7 @@ namespace Dt.Core
         public static bool DelByID<TEntity>(object p_id, bool p_isNotify = true)
             where TEntity : Entity
         {
-            bool suc = GetDb().DelByPK<TEntity>(p_id);
+            bool suc = _db.DelByPK<TEntity>(p_id);
             if (p_isNotify)
                 AtKit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
@@ -511,7 +509,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public static int Exec(string p_sql, object p_params = null)
         {
-            return GetDb().Execute(p_sql, p_params);
+            return _db.Execute(p_sql, p_params);
         }
 
         /// <summary>
@@ -522,7 +520,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public static int BatchExec(string p_sql, List<Dict> p_list)
         {
-            return GetDb().BatchExecute(p_sql, p_list);
+            return _db.BatchExecute(p_sql, p_list);
         }
 
         /// <summary>
@@ -531,7 +529,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table GetAllTables()
         {
-            return GetDb().QueryTblsName();
+            return _db.QueryTblsName();
         }
         #endregion
 
@@ -542,15 +540,15 @@ namespace Dt.Core
         public static void OpenDb()
         {
             var dbName = GetDbName();
-            if (_dbs.ContainsKey(dbName))
+            if (_db != null)
                 throw new Exception($"sqlite库[{dbName}]重复打开！");
 
             try
             {
                 var path = Path.Combine(AtSys.DataPath, dbName + ".db");
                 bool exists = File.Exists(path);
-                var db = new SqliteConnectionEx("Data Source=" + path);
-                db.Open();
+                _db = new SqliteConnectionEx("Data Source=" + path);
+                _db.Open();
 
                 // 初次运行、库表结构版本变化或文件被删除时创建库表结构
                 if (AtSys.Stub.SqliteDb.TryGetValue(dbName, out var dbInfo))
@@ -558,7 +556,7 @@ namespace Dt.Core
                     path = Path.Combine(AtSys.DataPath, $"{dbName}-{dbInfo.Version}.ver");
                     if (!exists || !File.Exists(path))
                     {
-                        db.InitDb(dbInfo.Tables);
+                        _db.InitDb(dbInfo.Tables);
 
                         // 删除旧版本号文件
                         foreach (var file in new DirectoryInfo(AtSys.DataPath).GetFiles($"{dbName}-*.ver"))
@@ -571,7 +569,7 @@ namespace Dt.Core
                     }
                 }
 
-                _dbs[dbName] = db;
+                SqliteDbs.All[dbName] = _db;
             }
             catch (Exception ex)
             {
@@ -584,58 +582,63 @@ namespace Dt.Core
         /// </summary>
         public static void CloseDb()
         {
-            var db = GetDb();
-            if (db != null)
+            if (_db != null)
             {
-                db.Close();
-                _dbs.Remove(GetDbName());
+                _db.Close();
+                _db = null;
+                SqliteDbs.All.Remove(GetDbName());
             }
-        }
-
-        protected static SqliteConnectionEx GetDb()
-        {
-            if (_dbs.TryGetValue(typeof(Sqlite_name).Name.Substring(7), out var db))
-                return db;
-            throw new Exception($"sqlite库[{typeof(Sqlite_name).Name.Substring(7)}]未打开！");
         }
 
         protected static string GetDbName()
         {
             return typeof(Sqlite_name).Name.Substring(7);
         }
-
-        /// <summary>
-        /// 获取所有已打开库的描述信息
-        /// </summary>
-        /// <returns></returns>
-        public static string GetAllDbInfo()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (var item in _dbs)
-            {
-                sb.Append(item.Key);
-                sb.Append("　　----");
-                int cnt = item.Value.GetScalar<int>("select count(*) from sqlite_master where type='table'");
-                sb.Append(cnt);
-                sb.Append("表");
-                try
-                {
-                    FileInfo fi = new FileInfo(Path.Combine(AtSys.DataPath, item.Key + ".db"));
-                    sb.Append("，");
-                    sb.Append(AtKit.GetFileSizeDesc((ulong)fi.Length));
-                }
-                catch { }
-                sb.AppendLine();
-            }
-            return sb.ToString();
-        }
         #endregion
 
         #region 成员变量
         const string _unchangedMsg = "没有需要保存的数据！";
         const string _saveError = "数据源不可为空！";
-        static readonly Dictionary<string, SqliteConnectionEx> _dbs = new Dictionary<string, SqliteConnectionEx>();
-
+        protected static SqliteConnectionEx _db;
         #endregion
+    }
+
+    /// <summary>
+    /// 管理所有已打开的Sqlite库，不可合并到SqliteProvider！
+    /// </summary>
+    public static class SqliteDbs
+    {
+        /// <summary>
+        /// 所有已打开的Sqlite库
+        /// </summary>
+        internal static readonly Dictionary<string, SqliteConnectionEx> All = new Dictionary<string, SqliteConnectionEx>();
+
+        /// <summary>
+        /// 获取已打开的Sqlite库
+        /// </summary>
+        /// <param name="p_dbName">库名</param>
+        /// <returns></returns>
+        public static SqliteConnectionEx GetDb(string p_dbName)
+        {
+            if (All.TryGetValue(p_dbName, out var db))
+                return db;
+            return null;
+        }
+
+        /// <summary>
+        /// 获取所有已打开库的描述信息
+        /// </summary>
+        /// <returns></returns>
+        public static Table GetAllDbInfo()
+        {
+            var tbl = new Table { { "name" }, { "info" } };
+            foreach (var item in All)
+            {
+                int cnt = item.Value.GetScalar<int>("select count(*) from sqlite_master where type='table'");
+                FileInfo fi = new FileInfo(Path.Combine(AtSys.DataPath, item.Key + ".db"));
+                tbl.AddRow(new { name = item.Key, info = $"{cnt - 1}张表，{AtKit.GetFileSizeDesc((ulong)fi.Length)}" });
+            }
+            return tbl;
+        }
     }
 }
