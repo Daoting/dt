@@ -263,6 +263,7 @@ namespace Dt.Base
                 var nl = await LetterManager.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
                 l.ID = nl.ID;
                 l.MsgID = nl.MsgID;
+                l.Content = nl.Content;
             }
             else
             {
