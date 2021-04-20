@@ -189,15 +189,22 @@ namespace Dt.Base
             }
             else if (e.NewValue is Table tbl)
             {
-                lv._dataView = new LvDataView(lv, tbl);
                 if (lv.AutoCreateCol)
+                {
+                    lv.ClearAllRows();
                     lv.OnAutoCreateCol(tbl);
+                }
+                lv._dataView = new LvDataView(lv, tbl);
             }
             else if (e.NewValue is INotifyList ls)
             {
+                if (lv.AutoCreateCol)
+                {
+                    lv.ClearAllRows();
+                    if (ls.Count > 0)
+                        lv.OnAutoCreateProp(ls[0].GetType());
+                }
                 lv._dataView = new LvDataView(lv, ls);
-                if (lv.AutoCreateCol && ls.Count > 0)
-                    lv.OnAutoCreateProp(ls[0].GetType());
             }
             lv.OnDataChanged();
         }
@@ -1101,7 +1108,7 @@ namespace Dt.Base
         // UWP：UpdateLayout内部会依次 > MeasureOverride > ArrangeOverride > SizeChanged
         // uno: UpdateLayout调用时未同步调用上述方法，内部异步测量布局，和InvalidateMeasure功能相似
         /************************************************************************************************************************************/
-        
+
         /// <summary>
         /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
         /// </summary>

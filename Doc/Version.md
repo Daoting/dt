@@ -19,7 +19,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 * 重构sqlite客户端代码，调整为DataProvider 风格，映射类型转Entity，支持自定义sqlite库
 
 ### Bug修改 
-* Lv自动生成列时，切换数据源报无旧数据源列的 警告
+* Lv自动生成列时，切换数据源报无旧数据源列的警告
 
 ## Release 1.9
 
