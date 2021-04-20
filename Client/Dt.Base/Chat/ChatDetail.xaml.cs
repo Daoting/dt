@@ -118,7 +118,6 @@ namespace Dt.Base
         #region 加载消息
         void OnLoaded(object sender, RoutedEventArgs e)
         {
-            LoadMsg();
             LetterManager.NewLetter += OnNewLetter;
             LetterManager.UndoLetter += OnRecvUndoLetter;
         }

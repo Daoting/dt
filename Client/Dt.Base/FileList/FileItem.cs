@@ -460,34 +460,34 @@ namespace Dt.Base
                 }
             }
 #elif ANDROID
-            string savePath;
-            string msg;
-            if (FileType == FileItemType.Image)
-            {
-                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).AbsolutePath;
-                msg = "照片";
-            }
-            else if (FileType == FileItemType.Video)
-            {
-                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryMovies).AbsolutePath;
-                msg = "电影";
-            }
-            else if (FileType == FileItemType.Sound)
-            {
-                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryMusic).AbsolutePath;
-                msg = "音乐";
-            }
-            else
-            {
-                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
-                msg = "文件目录";
-            }
-
-            // 复制本地文件
+            //string savePath;
+            //string msg;
+            //if (FileType == FileItemType.Image)
+            //{
+            //    savePath = IOUtil.GetPicturesPath();
+            //    msg = "照片";
+            //}
+            //else if (FileType == FileItemType.Video)
+            //{
+            //    savePath = IOUtil.GetMoviesPath();
+            //    msg = "电影";
+            //}
+            //else if (FileType == FileItemType.Sound)
+            //{
+            //    savePath = IOUtil.GetMusicPath();
+            //    msg = "音乐";
+            //}
+            //else
+            //{
+            //    savePath = IOUtil.GetDownloadsPath();
+            //    msg = "下载";
+            //}
             try
             {
-                File.Copy(fileName, Path.Combine(savePath, GetFileName()), true);
-                AtKit.Msg($"已保存到{msg}！");
+                // 复制本地文件
+                // android 11.0 因放在其他公共目录时被过滤显示，统一放在下载
+                File.Copy(fileName, Path.Combine(IOUtil.GetDownloadsPath(), GetFileName()), true);
+                AtKit.Msg("已保存到下载目录！");
             }
             catch
             {

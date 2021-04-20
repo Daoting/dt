@@ -159,8 +159,18 @@ namespace Dt.Base
         [Ignore]
         public string Photo
         {
-            get { return (string)this["Photo"]; }
-            set { this["Photo"] = value; }
+            get
+            {
+                if (!Contains("Photo"))
+                    AddCell("Photo", "");
+                return (string)this["Photo"];
+            }
+            set
+            {
+                if (!Contains("Photo"))
+                    AddCell("Photo", "");
+                this["Photo"] = value;
+            }
         }
     }
 }

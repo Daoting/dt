@@ -27,7 +27,6 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        #region 本地库
         void OnNewLocal(object sender, Mi e)
         {
             _fv1.Data = new ClientLog(Content: "hdt", Ctime: DateTime.Now);
@@ -62,27 +61,6 @@ namespace Dt.Sample
                 if (await AtState.Delete((ClientLog)_fv1.Data))
                     _fv1.Data = null;
             }
-        }
-        #endregion
-
-        void OnNewRow(object sender, Mi e)
-        {
-            _fv2.Data = Table.Create("dt_log").AddRow(new
-            {
-                id = 1,
-                loglevel = "1",
-                service = _fv2.GetCookie("service"),
-                timestamp = DateTime.Now,
-            });
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-        }
-
-        void OnDel(object sender, Mi e)
-        {
-
         }
     }
 }

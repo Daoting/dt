@@ -11,7 +11,6 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.ComponentModel;
-using System.IO;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -61,7 +60,13 @@ namespace Dt.App.Chat
             // 将新列表缓存到本地库
             AtState.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
+            {
+                foreach (var r in tbl)
+                {
+                    r.IsAdded = true;
+                }
                 await AtState.BatchSave(tbl, false);
+            }
 
             // 记录刷新时间
             AtState.SaveCookie(_refreshKey, AtSys.Now.ToString());

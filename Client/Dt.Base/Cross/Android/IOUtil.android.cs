@@ -240,6 +240,51 @@ namespace Dt.Base
 
             return type;
         }
+
+        /// <summary>
+        /// 公共下载目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDownloadsPath()
+        {
+            return System.IO.Path.Combine(GetRootPath(), Android.OS.Environment.DirectoryDownloads);
+        }
+
+        /// <summary>
+        /// 公共照片目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPicturesPath()
+        {
+            return System.IO.Path.Combine(GetRootPath(), Android.OS.Environment.DirectoryDcim);
+        }
+
+        /// <summary>
+        /// 公共视频目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetMoviesPath()
+        {
+            return System.IO.Path.Combine(GetRootPath(), Android.OS.Environment.DirectoryMovies);
+        }
+
+        /// <summary>
+        /// 公共音频目录
+        /// </summary>
+        /// <returns></returns>
+        public static string GetMusicPath()
+        {
+            return System.IO.Path.Combine(GetRootPath(), Android.OS.Environment.DirectoryMusic);
+        }
+
+        public static string GetRootPath()
+        {
+            var root = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath;
+            int index = root.IndexOf("/Android/");
+            if (index > 0)
+                return root.Substring(0, index);
+            return root;
+        }
     }
 }
 #endif

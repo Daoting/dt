@@ -571,7 +571,7 @@ namespace Dt.Base
                     else
                     {
                         CellLastVal cookie = new CellLastVal(id, val.ToString());
-                        AtState.Save(cookie, false);
+                        _ = AtState.Save(cookie, false);
                     }
                 });
             }

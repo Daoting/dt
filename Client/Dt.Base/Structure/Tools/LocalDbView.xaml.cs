@@ -11,6 +11,7 @@ using Dt.Core;
 using Dt.Core.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -41,6 +42,7 @@ namespace Dt.Base.Tools
             NaviTo("表");
         }
 
+#if UWP
         async void OnBackup(object sender, RoutedEventArgs e)
         {
             var row = ((LvItem)((Button)sender).DataContext).Row;
@@ -62,6 +64,29 @@ namespace Dt.Base.Tools
                 }
             }
         }
+#elif ANDROID
+        void OnBackup(object sender, RoutedEventArgs e)
+        {
+            var row = ((LvItem)((Button)sender).DataContext).Row;
+            try
+            {
+                var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+                var tgtName = $"{row.Str("name")}-{Guid.NewGuid().ToString().Substring(0, 8)}.db";
+                File.Copy(dbFile, Path.Combine(IOUtil.GetDownloadsPath(), tgtName));
+                AtKit.Msg("已保存到下载目录：\r\n" + tgtName);
+            }
+            catch
+            {
+                AtKit.Warn("文件保存失败！");
+            }
+        }
+#elif IOS
+        void OnBackup(object sender, RoutedEventArgs e)
+        {}
+#elif WASM
+        void OnBackup(object sender, RoutedEventArgs e)
+        {}
+#endif
 
         void OnTblClick(object sender, ItemClickArgs e)
         {

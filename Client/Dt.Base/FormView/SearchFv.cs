@@ -116,14 +116,14 @@ namespace Dt.Base
             }
         }
 
-        void SaveCookie(string p_text)
+        async void SaveCookie(string p_text)
         {
             _lastText = p_text;
             // 删除重复
             AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
 
             SearchFvHis his = new SearchFvHis(BaseUri: _baseUri, Content: p_text);
-            AtState.Save(his, false);
+            await AtState.Save(his, false);
 
             using (Items.Defer())
             {

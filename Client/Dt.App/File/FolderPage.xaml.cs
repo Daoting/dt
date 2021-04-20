@@ -59,11 +59,9 @@ namespace Dt.App.File
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = AtState.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
+                var his = AtState.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new { id = row.ID });
                 if (his == null)
-                {
                     his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
-                }
                 his.LastReadTime = AtSys.Now;
                 if (await AtState.Save(his, false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();

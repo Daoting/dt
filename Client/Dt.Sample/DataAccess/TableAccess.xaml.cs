@@ -49,7 +49,7 @@ namespace Dt.Sample
 
         void OnCreateTableByName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create("dt_menu");
+            Table tbl = Table.Create("cm_menu");
             WriteColumns(tbl);
         }
 

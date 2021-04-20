@@ -54,7 +54,7 @@ namespace Dt.Base
         /// 接收服务器推送的聊天信息
         /// </summary>
         /// <param name="p_letter"></param>
-        internal static void ReceiveLetter(LetterInfo p_letter)
+        internal static async void ReceiveLetter(LetterInfo p_letter)
         {
             if (p_letter == null || string.IsNullOrEmpty(p_letter.ID))
                 return;
@@ -85,7 +85,7 @@ namespace Dt.Base
                 Unread: true);
 
             // 自增主键插入后自动赋值
-            AtState.Save(l, false);
+            await AtState.Save(l, false);
 
             // 外部可修改 Unread 状态
             NewLetter?.Invoke(l);
@@ -99,7 +99,7 @@ namespace Dt.Base
             else
             {
                 // Unread状态被修改
-                AtState.Save(l, false);
+                await AtState.Save(l, false);
             }
         }
 
