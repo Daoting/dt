@@ -17,6 +17,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Base.Tools
@@ -81,8 +82,16 @@ namespace Dt.Base.Tools
             }
         }
 #elif IOS
-        void OnBackup(object sender, RoutedEventArgs e)
-        {}
+        async void OnBackup(object sender, RoutedEventArgs e)
+        {
+            var row = ((LvItem)((Button)sender).DataContext).Row;
+            var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = row.Str("name") + ".db",
+                File = new ShareFile(dbFile)
+            });
+        }
 #elif WASM
         void OnBackup(object sender, RoutedEventArgs e)
         {}

@@ -521,19 +521,12 @@ namespace Dt.Base
                         });
                     }
                 }
-                return;
             }
-            // 如何存到"文件"？
-            //var doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), GetFileName());
-            //try
-            //{
-            //    File.Copy(fileName, doc, true);
-            //    AtKit.Msg($"已保存到文件！");
-            //}
-            //catch
-            //{
-            //    AtKit.Warn("文件保存失败！");
-            //}
+            else
+            {
+                // 普通文件以共享方式保存
+                await ShareFile();
+            }
 #endif
         }
 
