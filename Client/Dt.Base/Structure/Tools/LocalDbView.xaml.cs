@@ -61,7 +61,6 @@ namespace Dt.Base.Tools
                 {
                     await temp.CopyAndReplaceAsync(file);
                     AtKit.Msg("文件备份成功！");
-                    return;
                 }
             }
         }
@@ -93,8 +92,29 @@ namespace Dt.Base.Tools
             });
         }
 #elif WASM
-        void OnBackup(object sender, RoutedEventArgs e)
-        {}
+        async void OnBackup(object sender, RoutedEventArgs e)
+        {
+            var row = ((LvItem)((Button)sender).DataContext).Row;
+            FileSavePicker picker = new FileSavePicker();
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
+            var fileName = row.Str("name") + ".db";
+            picker.SuggestedFileName = fileName;
+            StorageFile file = await picker.PickSaveFileAsync();
+            if (file != null)
+            {
+                var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+                var data = File.ReadAllBytes(dbFile);
+                Log.Debug($"长度：{data.Length}");
+                Log.Debug($"路径：{file.Path}");
+                // 内容能读出，无法正常保存
+                //File.WriteAllBytes(file.Path, data);
+
+                //var folder = await StorageFolder.GetFolderFromPathAsync(AtSys.DataPath);
+                //var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
+                //File.Copy(temp.Path, file.Path);
+            }
+        }
 #endif
 
         void OnTblClick(object sender, ItemClickArgs e)
