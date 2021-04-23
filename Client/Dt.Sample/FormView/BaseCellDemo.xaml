@@ -14,7 +14,7 @@
                     <a:CText ID="txtlong" Title="长文本" AcceptsReturn="True" RowSpan="2" UpdateTimely="False" />
                     <a:CText ID="txtpy" Title="拼音码" UpdateTimely="False" Changed="OnPyChanged" />
                     <a:CText ID="tgtpy" Title="输出拼音码" IsReadOnly="True" />
-                    <a:CNum ID="num" Title="数值" />
+                    <a:CNum ID="num" Title="数值" Decimals="4" />
                     <a:CMask ID="mask" Title="掩码" />
                     <a:CPassword ID="pwd" Title="密码" />
                     <a:CHtml ID="html" Title="富文本" />

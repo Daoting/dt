@@ -23,6 +23,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ### Bug修改 
 * Lv自动生成列时，切换数据源报无旧数据源列的警告
 * ios版System.Text.Json 序列化json串时异常，将nuget包system.text.encodings.web的netstandard2.1 下的dll用2.0的替换解决
+* CNum.Scale因和UIElement.Scale重名，xaml中赋值时异常，改名Decimals
 
 ## Release 1.9
 

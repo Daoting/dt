@@ -46,8 +46,8 @@ namespace Dt.Base
         /// <summary>
         /// 小数位数
         /// </summary>
-        public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(
-            "Scale",
+        public static readonly DependencyProperty DecimalsProperty = DependencyProperty.Register(
+            "Decimals",
             typeof(int),
             typeof(CNum),
             new PropertyMetadata(-1, OnUpdateText));
@@ -335,10 +335,10 @@ namespace Dt.Base
         /// 获取设置小数位数
         /// </summary>
         [CellParam("小数位数")]
-        new public int Scale
+        public int Decimals
         {
-            get { return (int)GetValue(ScaleProperty); }
-            set { SetValue(ScaleProperty, value); }
+            get { return (int)GetValue(DecimalsProperty); }
+            set { SetValue(DecimalsProperty, value); }
         }
 
         /// <summary>
@@ -768,9 +768,9 @@ namespace Dt.Base
             {
                 numberDecimalDigits = 0;
             }
-            else if (Scale > -1)
+            else if (Decimals > -1)
             {
-                numberDecimalDigits = Scale;
+                numberDecimalDigits = Decimals;
             }
             else
             {
@@ -838,7 +838,7 @@ namespace Dt.Base
 
         bool AllowDecimalSeparator
         {
-            get { return (!IsInteger && (Scale != 0)); }
+            get { return (!IsInteger && (Decimals != 0)); }
         }
 
         void CoerceMaximum()

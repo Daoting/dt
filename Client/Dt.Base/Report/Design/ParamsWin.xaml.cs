@@ -116,7 +116,7 @@ namespace Dt.Base.Report
             "<a:CNum Title=\"标题\" />\n\n" +
             "属性：\n" +
             "IsInteger=\"True\"\n" +
-            "Scale=\"4\"\n" +
+            "Decimals=\"4\"\n" +
             "Maximum=\"100\"\n" +
             "Minimum=\"-100\"\n" +
             "NullValue=\"为空时的串\"\n";
