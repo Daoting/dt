@@ -539,10 +539,10 @@ namespace Dt.Core
         /// </summary>
         public static void OpenDb()
         {
-            var dbName = GetDbName();
             if (_db != null)
-                throw new Exception($"sqlite库[{dbName}]重复打开！");
+                return;
 
+            var dbName = GetDbName();
             try
             {
                 var path = Path.Combine(AtSys.DataPath, dbName + ".db");
