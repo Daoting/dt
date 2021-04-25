@@ -150,38 +150,23 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <returns>返回实体对象或null</returns>
-        public static TEntity GetByID<TEntity>(string p_id)
+        public static TEntity GetByID<TEntity>(object p_id)
             where TEntity : Entity
         {
-            return GetByKey<TEntity>("id", p_id);
-        }
-
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键id，不存在时返回null
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static TEntity GetByID<TEntity>(long p_id)
-            where TEntity : Entity
-        {
-            return GetByKey<TEntity>("id", p_id.ToString());
-        }
-
-        /// <summary>
-        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键
-        /// 不存在时返回null，启用缓存时首先从缓存中获取
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyName">主键列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <returns>返回实体对象或null</returns>
-        public static TEntity GetByKey<TEntity>(string p_keyName, string p_keyVal)
-            where TEntity : Entity
-        {
+            var pkName = SqliteConnectionEx.GetMapping(typeof(TEntity)).PK.Name;
             return _db.ForEach<TEntity>(
-                $"select * from `{typeof(TEntity).Name}` where {p_keyName}='{p_keyVal}'")
+                $"select * from `{typeof(TEntity).Name}` where {pkName}=@id", new { id = p_id })
                 .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取表的主键名称
+        /// </summary>
+        /// <param name="p_type">实体类型</param>
+        /// <returns></returns>
+        public static string GetPrimaryKey(Type p_type)
+        {
+            return SqliteConnectionEx.GetMapping(p_type).PK.Name;
         }
         #endregion
 
