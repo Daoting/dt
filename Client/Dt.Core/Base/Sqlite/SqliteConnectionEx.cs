@@ -878,11 +878,14 @@ namespace Dt.Core.Sqlite
         /// <param name="p_param"></param>
         void WrapParams(SqliteParameterCollection p_collection, object p_param)
         {
-            if (p_param is Dict dt && dt.Count > 0)
+            if (p_param is Dict dt)
             {
-                foreach (var item in dt)
+                if (dt.Count > 0)
                 {
-                    p_collection.AddWithValue(item.Key, item.Value);
+                    foreach (var item in dt)
+                    {
+                        p_collection.AddWithValue(item.Key, item.Value);
+                    }
                 }
             }
             else if (p_param != null)
