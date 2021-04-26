@@ -244,6 +244,24 @@ namespace Dt.Core
             IsChanged = false;
             return true;
         }
+
+        /// <summary>
+        /// ID是否匹配给定列表中的任一名称，忽略大小写
+        /// </summary>
+        /// <param name="p_ids">一个或多个id名称</param>
+        /// <returns>true 匹配任一</returns>
+        public bool IsID(params string[] p_ids)
+        {
+            if (p_ids == null || p_ids.Length == 0)
+                return false;
+
+            foreach (var id in p_ids)
+            {
+                if (string.Equals(id, ID, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
         #endregion
 
         #region 内部方法

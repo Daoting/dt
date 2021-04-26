@@ -64,5 +64,12 @@ namespace Dt.Core
         /// <typeparam name="T">将值转换为指定的类型</typeparam>
         /// <returns>指定类型的值</returns>
         T GetVal<T>();
+
+        /// <summary>
+        /// ID是否匹配给定列表中的任一名称，忽略大小写
+        /// </summary>
+        /// <param name="p_ids">一个或多个id名称</param>
+        /// <returns>true 匹配任一</returns>
+        bool IsID(params string[] p_ids);
     }
 }
