@@ -109,6 +109,7 @@ namespace Dt.Core.Sqlite
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     // Microsoft.Data.Sqlite 升级5.0.3后使用 GetFieldType 方法，因通过GetDataTypeName无bigint类型！
+                    // 返回结果在表的首行数据出现dbnull的时候不正确！
                     // 原方法参见ComposeDt
                     tbl.Add(reader.GetName(i), reader.GetFieldType(i));
                 }
@@ -122,8 +123,16 @@ namespace Dt.Core.Sqlite
                         if (reader.IsDBNull(i))
                         {
                             // 列为可空类型时重置，因sqlie无可空类型
-                            if (Nullable.GetUnderlyingType(col.Type) == null)
+                            if (col.Type == typeof(byte[]))
+                            {
+                                // 返回结果的首行数据出现dbnull时列类型不正确！
+                                if (tbl.Count == 0)
+                                    col.Type = typeof(string);
+                            }
+                            else if (Nullable.GetUnderlyingType(col.Type) == null)
+                            {
                                 col.Type = typeof(Nullable<>).MakeGenericType(col.Type);
+                            }
                             new Cell(row, col.ID, col.Type);
                         }
                         else
