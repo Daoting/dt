@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Markup;
 namespace Dt.Base
 {
     /// <summary>
-    /// 单元格分隔行
+    /// 单元格分隔行，可以Fv之外单独使用
     /// </summary>
     [ContentProperty(Name = "Content")]
     public partial class CBar : DtControl, IFvCell
@@ -118,22 +118,22 @@ namespace Dt.Base
             if (root.Children.Count > 1)
                 root.Children.RemoveAt(0);
 
-            if (Content is string title)
-            {
-                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
-                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
-                sp.Children.Add(tb);
-                tb = new TextBlock { Text = title, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
-                sp.Children.Add(tb);
-                root.Children.Insert(0, sp);
-            }
-            else if (Content is FrameworkElement con)
+            if (Content is FrameworkElement con)
             {
                 CFree.ApplyCellStyle(con);
                 // 左上空出边线
                 var margin = con.Margin;
                 con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
                 root.Children.Insert(0, con);
+            }
+            else
+            {
+                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
+                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
+                sp.Children.Add(tb);
+                tb = new TextBlock { Text = (Content != null ? Content.ToString() : ""), TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
+                sp.Children.Add(tb);
+                root.Children.Insert(0, sp);
             }
         }
     }
