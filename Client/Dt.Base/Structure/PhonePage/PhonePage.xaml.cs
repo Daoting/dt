@@ -62,6 +62,11 @@ namespace Dt.Base
             if (p_content == null || !(p_content is FrameworkElement))
                 throw new Exception("PhonePage内容不是可视元素！");
 
+            // 避免自己导航到自己的情况
+            if (SysVisual.RootFrame.Content is PhonePage page
+                && page.Content == p_content)
+                return;
+
             _newParam = new PhonePageParameter(p_content, null);
             SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
         }
@@ -74,6 +79,11 @@ namespace Dt.Base
         {
             if (p_content == null || !(p_content is FrameworkElement))
                 throw new Exception("PhonePage内容不是可视元素！");
+
+            // 避免自己导航到自己的情况
+            if (SysVisual.RootFrame.Content is PhonePage page
+                && page.Content == p_content)
+                return Task.CompletedTask;
 
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PhonePageParameter(p_content, taskSrc);

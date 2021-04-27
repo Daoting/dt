@@ -53,7 +53,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Tab.PhoneBar>
-                    <Button x:Name="_btnSearch" Content="查找用户" Click="OnNaviToSearch" />
+                    <Button Content="查找用户" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvUser" ViewMode="Table" PhoneViewMode="List" ItemClick="OnItemClick" DataChanged="OnUserDataChanged">
                     <a:Ex.Menu>

@@ -25,7 +25,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Tab.PhoneBar>
-                    <Button x:Name="_btnSearch" Content="查找角色" Click="OnNaviToSearch" />
+                    <Button Content="查找角色" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvRole" ItemClick="OnItemClick" DataChanged="OnDataChanged">
                     <a:Ex.Menu>

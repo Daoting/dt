@@ -24,7 +24,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Tab.PhoneBar>
-                    <Button x:Name="_btnSearch" Content="查找权限" Click="OnNaviToSearch" />
+                    <Button Content="查找权限" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvPrv" ItemClick="OnItemClick" DataChanged="OnDataChanged">
                     <a:Ex.Menu>

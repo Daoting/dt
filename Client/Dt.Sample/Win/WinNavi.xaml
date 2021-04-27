@@ -40,7 +40,7 @@
             <a:Tab Title="左下">
                 <StackPanel Margin="10">
                     <Button Content="底部" Click="OnNavi" />
-                    <Button Content="右侧" Click="OnNavi" />
+                    <Button Content="左下,右停靠" Click="OnNavi" />
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
@@ -50,7 +50,7 @@
             <a:Tab Title="右侧">
                 <StackPanel Margin="10">
                     <Button Content="左上" Click="OnNavi" />
-                    <Button Content="主区" Click="OnNavi" />
+                    <Button Content="右侧" Click="OnNavi" />
                 </StackPanel>
             </a:Tab>
             <a:Tab Title="右停靠" IsPinned="False">
