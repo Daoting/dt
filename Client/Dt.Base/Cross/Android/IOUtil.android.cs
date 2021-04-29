@@ -55,11 +55,15 @@ namespace Dt.Base
                 }
                 else if (IsDownloadsDocument(uri))
                 {
+                    // android 11 使用原来的方法已无法获取，采用先获取文件名，再合成路径
+                    string fileName = GetFileName(context, uri);
+                    if (!string.IsNullOrEmpty(fileName))
+                        return System.IO.Path.Combine(GetDownloadsPath(), fileName);
+
                     // DownloadsProvider
                     string id = DocumentsContract.GetDocumentId(uri);
 
-                    if (!string.IsNullOrEmpty(id) &&
-                        id.StartsWith("raw:"))
+                    if (!string.IsNullOrEmpty(id) && id.StartsWith("raw:"))
                     {
                         return id.Substring(4);
                     }
@@ -67,7 +71,8 @@ namespace Dt.Base
                     string[] contentUriPrefixesToTry = new string[]
                     {
                         "content://downloads/public_downloads",
-                        "content://downloads/my_downloads"
+                        "content://downloads/my_downloads",
+                        "content://downloads/all_downloads",
                     };
 
                     foreach (string contentUriPrefix in contentUriPrefixesToTry)
@@ -191,6 +196,37 @@ namespace Dt.Base
             }
 
             return null;
+        }
+
+        public static string GetFileName(Context context, Android.Net.Uri uri)
+        {
+            var mimeType = context.ContentResolver.GetType(uri);
+            string filename = null;
+            if (mimeType == null)
+            {
+                Java.IO.File file = new Java.IO.File(uri.ToString());
+                filename = file.Name;
+            }
+            else
+            {
+                ICursor cursor = null;
+                try
+                {
+                    cursor = context.ContentResolver.Query(uri, null, null, null);
+                    if (cursor != null && cursor.MoveToFirst())
+                    {
+                        int nameIndex = cursor.GetColumnIndex("_display_name");
+                        if (nameIndex > -1)
+                            filename = cursor.GetString(nameIndex);
+                    }
+                }
+                finally
+                {
+                    if (cursor != null)
+                        cursor.Close();
+                }
+            }
+            return filename;
         }
 
         /// <summary>

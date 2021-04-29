@@ -32,16 +32,27 @@ namespace Dt.Base
         /// 应用程序启动
         /// </summary>
         /// <typeparam name="T">存根类型</typeparam>
-        /// <param name="args">启动参数</param>
-        public static void Run<T>(LaunchActivatedEventArgs args)
+        /// <param name="p_launchArgs">启动参数</param>
+        /// <param name="p_shareInfo">接收分享的内容描述</param>
+        /// <returns></returns>
+        public static async Task Run<T>(string p_launchArgs, ShareInfo p_shareInfo)
             where T : IStub
         {
             // 非null表示app已启动过
             if (AtSys.Stub != null)
             {
                 // 带参数启动
-                if (!string.IsNullOrEmpty(args.Arguments))
-                    AtKit.RunAsync(() => LaunchManager.LaunchFreely(args.Arguments));
+                if (!string.IsNullOrEmpty(p_launchArgs))
+                    AtKit.RunAsync(() => LaunchManager.LaunchFreely(p_launchArgs));
+                Window.Current.Activate();
+
+                if (p_shareInfo != null)
+                {
+#if UWP
+                    await p_shareInfo.Init();
+#endif
+                    AtKit.RunAsync(() => AtSys.Stub.ReceiveShare(p_shareInfo));
+                }
                 return;
             }
 
@@ -59,14 +70,22 @@ namespace Dt.Base
 
             InputManager.Init();
             NotifyManager.Init();
-            LaunchManager.Arguments = args.Arguments;
+            LaunchManager.Arguments = p_launchArgs;
 
             // 设置WinUI模式与PhoneUI模式切换的回调方法
             // 此处调用会通过SysVisual的静态构造方法创建整个系统可视树
             SysVisual.UIModeChanged = OnUIModeChanged;
 
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-            stub.OnStartup(new StartupInfo());
+            await stub.OnStartup(new StartupInfo());
+
+            if (p_shareInfo != null)
+            {
+#if UWP
+                await p_shareInfo.Init();
+#endif
+                stub.ReceiveShare(p_shareInfo);
+            }
         }
 
         /// <summary>
@@ -96,7 +115,7 @@ namespace Dt.Base
             if (!File.Exists(modelVer))
             {
                 string modelFile = Path.Combine(AtSys.DataPath, "model.db");
-                
+
                 // 删除旧版的模型文件和版本号文件
                 try { File.Delete(modelFile); } catch { }
                 foreach (var file in new DirectoryInfo(AtSys.DataPath).GetFiles($"model-*.ver"))

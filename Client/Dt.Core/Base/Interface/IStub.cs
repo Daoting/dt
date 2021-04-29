@@ -41,7 +41,13 @@ namespace Dt.Core
         /// 系统启动
         /// </summary>
         /// <param name="p_info">提示信息</param>
-        void OnStartup(StartupInfo p_info);
+        Task OnStartup(StartupInfo p_info);
+
+        /// <summary>
+        /// 接收分享内容
+        /// </summary>
+        /// <param name="p_info">分享内容描述</param>
+        void ReceiveShare(ShareInfo p_info);
 
         /// <summary>
         /// 系统注销时的处理

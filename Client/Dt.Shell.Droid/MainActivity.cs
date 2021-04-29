@@ -1,17 +1,24 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using System;
+using Dt.Core;
+using Dt.Base;
 
 namespace App.Droid
 {
+    // 接收分享的内容
+    [IntentFilter(
+        new[] { Intent.ActionSend },
+        Categories = new[] { Intent.CategoryDefault },
+        DataMimeTypes = new[] { "image/*", "text/plain", "video/*", "audio/*", "*/*" })]
     [Activity(
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize,
-        WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden
-    )]
+        WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden)]
     public class MainActivity : Windows.UI.Xaml.ApplicationActivity
     {
         // styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
@@ -21,6 +28,42 @@ namespace App.Droid
             base.OnCreate(bundle);
             // 确保 Permissions.RequestAsync 调用时正常
             Xamarin.Essentials.Platform.Init(this, bundle);
+
+            // 接收分享内容
+            var it = Intent;
+            if (it.Action == Intent.ActionSend && it.Type != null)
+            {
+                ShareInfo info = new ShareInfo();
+                string tp = it.Type;
+
+                if (tp.StartsWith("text/"))
+                {
+                    info.DataType = ShareDataType.Text;
+                    info.Content = it.GetStringExtra(Intent.ExtraText);
+                }
+                else
+                {
+                    if (tp.StartsWith("image/"))
+                    {
+                        info.DataType = ShareDataType.Image;
+                    }
+                    else if (tp.StartsWith("video/"))
+                    {
+                        info.DataType = ShareDataType.Video;
+                    }
+                    else if (tp.StartsWith("audio/"))
+                    {
+                        info.DataType = ShareDataType.Audio;
+                    }
+                    else
+                    {
+                        info.DataType = ShareDataType.File;
+                    }
+                    Android.Net.Uri uri = (Android.Net.Uri)it.GetParcelableExtra(Intent.ExtraStream);
+                    info.FilePath = IOUtil.GetPath(Android.App.Application.Context, uri);
+                }
+                ((Dt.Shell.App)Windows.UI.Xaml.Application.Current).ReceiveShare(info);
+            }
         }
     }
 

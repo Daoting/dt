@@ -55,11 +55,11 @@ namespace Dt.Shell
         /// 系统启动
         /// </summary>
         /// <param name="p_info">提示信息</param>
-        public async void OnStartup(StartupInfo p_info)
+        public async Task OnStartup(StartupInfo p_info)
         {
             // 设置固定菜单项
             CreateFixedMenus();
-            
+
             if (ViewTypes.TryGetValue("主页", out var type) && type == typeof(DefaultHome))
             {
                 // 联网模式
@@ -93,6 +93,15 @@ namespace Dt.Shell
                 // 单机模式
                 AtApp.LoadRootUI();
             }
+        }
+
+        /// <summary>
+        /// 接收分享内容
+        /// </summary>
+        /// <param name="p_info">分享内容描述</param>
+        public void ReceiveShare(ShareInfo p_info)
+        {
+            AtApp.OpenWin(typeof(Dt.Sample.ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
 
         /// <summary>

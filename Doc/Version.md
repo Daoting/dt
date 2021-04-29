@@ -15,6 +15,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ### 功能 
 * 因sqlite调整重构生成存根代码
 * 本地sqlite数据的备份与删除
+* 添加接收分享功能 
 
 ### 变更 
 * 服务端导出sqlite模型只使用Microsoft.Data.Sqlite，无类型映射
