@@ -19,6 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -314,8 +315,8 @@ namespace Dt.Base
                 mi.Click += OnUndoMsg;
                 _msgMenu.Items.Add(mi);
 
-                mi = new Mi { ID = "转发", Icon = Icons.分享 };
-                mi.Click += OnRelayMsg;
+                mi = new Mi { ID = "分享", Icon = Icons.分享 };
+                mi.Click += OnShareMsg;
                 _msgMenu.Items.Add(mi);
 
                 mi = new Mi { ID = "删除", Icon = Icons.删除 };
@@ -350,7 +351,7 @@ namespace Dt.Base
             var l = (Letter)e.DataContext;
             DataPackage data = new DataPackage();
             data.SetText(l.Content);
-            Clipboard.SetContent(data);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
         }
 
         async void OnUndoMsg(object sender, Mi e)
@@ -373,9 +374,14 @@ namespace Dt.Base
             _lv.Data.Remove(l);
         }
 
-        void OnRelayMsg(object sender, Mi e)
+        async void OnShareMsg(object sender, Mi e)
         {
-
+            var l = (Letter)e.DataContext;
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Text = l.Content,
+                Title = "分享内容"
+            });
         }
 
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)

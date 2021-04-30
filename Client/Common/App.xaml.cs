@@ -28,9 +28,24 @@ namespace Dt.Shell
         }
 
 #if UWP
-        protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs p_args)
         {
-            await AtApp.Run<Stub>(null, new ShareInfo(args.ShareOperation));
+            var info = new ShareInfo();
+            await info.Init(p_args.ShareOperation);
+            await AtApp.Run<Stub>(null, info);
+        }
+#elif __IOS__
+        public override bool OpenUrl(UIKit.UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
+        {
+            p_url.StartAccessingSecurityScopedResource();
+            var doc = new UIKit.UIDocument(p_url);
+            string path = doc.FileUrl?.Path;
+            if (!string.IsNullOrEmpty(path))
+            {
+                _ = AtApp.Run<Stub>(null, new ShareInfo(path));
+            }
+            p_url.StopAccessingSecurityScopedResource();
+            return true;
         }
 #else
         public async void ReceiveShare(ShareInfo p_shareInfo)

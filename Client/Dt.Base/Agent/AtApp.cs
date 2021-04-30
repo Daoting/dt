@@ -47,12 +47,7 @@ namespace Dt.Base
                 Window.Current.Activate();
 
                 if (p_shareInfo != null)
-                {
-#if UWP
-                    await p_shareInfo.Init();
-#endif
                     AtKit.RunAsync(() => AtSys.Stub.ReceiveShare(p_shareInfo));
-                }
                 return;
             }
 
@@ -80,12 +75,7 @@ namespace Dt.Base
             await stub.OnStartup(new StartupInfo());
 
             if (p_shareInfo != null)
-            {
-#if UWP
-                await p_shareInfo.Init();
-#endif
                 stub.ReceiveShare(p_shareInfo);
-            }
         }
 
         /// <summary>

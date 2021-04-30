@@ -9,6 +9,7 @@
             <a:Tab Title="分享内容">
                 <StackPanel Padding="10">
                     <TextBlock x:Name="_tb" />
+                    <Button Content="复制文件" Click="OnCopy" />
                     <Button Content="分享结束" Click="OnEnd" />
                 </StackPanel>
             </a:Tab>

@@ -36,15 +36,17 @@ namespace Dt.Core
         public string Content { get; set; }
 
         /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string FilePath { get; set; }
+
+        /// <summary>
         /// 分享的文件名，包括扩展名
         /// </summary>
         public string FileName
         {
             get
             {
-#if UWP
-                return _sf?.Name;
-#elif ANDROID
                 if (!string.IsNullOrEmpty(FilePath))
                 {
                     int index = FilePath.LastIndexOf('/');
@@ -52,11 +54,6 @@ namespace Dt.Core
                         return FilePath.Substring(index + 1);
                 }
                 return "";
-#elif IOS
-                return null;
-#elif WASM
-                return null;
-#endif
             }
         }
 
@@ -67,9 +64,6 @@ namespace Dt.Core
         {
             get
             {
-#if UWP
-                return _sf?.FileType;
-#elif ANDROID
                 if (!string.IsNullOrEmpty(FilePath))
                 {
                     int index = FilePath.LastIndexOf('.');
@@ -77,11 +71,6 @@ namespace Dt.Core
                         return FilePath.Substring(index);
                 }
                 return "";
-#elif IOS
-                return null;
-#elif WASM
-                return null;
-#endif
             }
         }
 
@@ -96,7 +85,7 @@ namespace Dt.Core
 #elif ANDROID
             return System.IO.File.OpenRead(FilePath);
 #elif IOS
-            return null;
+            return new FileStream(FilePath, FileMode.Open, FileAccess.Read);
 #elif WASM
             return null;
 #endif
@@ -120,21 +109,14 @@ namespace Dt.Core
 #endif
         }
 
-#if UWP
-        static readonly string[] _image = new string[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif" };
-        static readonly string[] _video = new string[] { ".mp4", ".wmv", ".mov" };
-        static readonly string[] _audio = new string[] { ".m4a", ".mp3", ".wav", ".wma" };
 
+#if UWP
         ShareOperation _shareOperation;
         StorageFile _sf;
 
-        public ShareInfo(ShareOperation p_shareOperation)
+        public async Task Init(ShareOperation p_shareOperation)
         {
             _shareOperation = p_shareOperation;
-        }
-
-        internal async Task Init()
-        {
             var data = _shareOperation.Data;
             if (data.Contains(StandardDataFormats.StorageItems))
             {
@@ -142,6 +124,7 @@ namespace Dt.Core
                 if (files != null && files.Count > 0 && files[0] is StorageFile sf)
                 {
                     _sf = sf;
+                    FilePath = _sf.Path;
                     if (_image.Contains(_sf.FileType))
                         DataType = ShareDataType.Image;
                     else if (_video.Contains(_sf.FileType))
@@ -163,12 +146,25 @@ namespace Dt.Core
                 Content = await data.GetTextAsync();
             }
         }
-#elif ANDROID
-        public string FilePath { get; set; }
-
 #elif IOS
-
+        public ShareInfo(string p_path)
+        {
+            FilePath = p_path;
+            var ext = FileExt;
+            if (_image.Contains(ext))
+                DataType = ShareDataType.Image;
+            else if (_video.Contains(ext))
+                DataType = ShareDataType.Video;
+            else if (_audio.Contains(ext))
+                DataType = ShareDataType.Audio;
+            else
+                DataType = ShareDataType.File;
+        }
 #endif
+
+        static readonly string[] _image = new string[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif" };
+        static readonly string[] _video = new string[] { ".mp4", ".wmv", ".mov" };
+        static readonly string[] _audio = new string[] { ".m4a", ".mp3", ".wav", ".wma" };
     }
 
     /// <summary>

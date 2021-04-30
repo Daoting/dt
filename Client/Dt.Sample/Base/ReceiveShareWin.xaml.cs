@@ -11,6 +11,7 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -41,6 +42,20 @@ namespace Dt.Sample
         void OnEnd(object sender, RoutedEventArgs e)
         {
             _info.ShareCompleted();
+        }
+
+        async void OnCopy(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_info.FilePath))
+                return;
+
+            string id = AtKit.NewID + _info.FileExt;
+            using (var stream = _info.GetStream())
+            using (var fs = File.Create(Path.Combine(AtSys.CachePath, id)))
+            {
+                await stream.CopyToAsync(fs);
+                AtKit.Msg("复制成功！");
+            }
         }
     }
 }
