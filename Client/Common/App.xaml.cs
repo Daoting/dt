@@ -37,14 +37,11 @@ namespace Dt.Shell
 #elif __IOS__
         public override bool OpenUrl(UIKit.UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
         {
-            p_url.StartAccessingSecurityScopedResource();
             var doc = new UIKit.UIDocument(p_url);
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
-            {
                 _ = AtApp.Run<Stub>(null, new ShareInfo(path));
-            }
-            p_url.StopAccessingSecurityScopedResource();
+
             return true;
         }
 #else
