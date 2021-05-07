@@ -380,7 +380,7 @@ namespace Dt.Base
             await Share.RequestAsync(new ShareTextRequest
             {
                 Text = l.Content,
-                Title = "分享内容"
+                Subject = "分享内容"
             });
         }
 

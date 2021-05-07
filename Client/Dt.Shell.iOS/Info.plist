@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleIdentifier</key>
 	<string>dt.Shell</string>
+  <key>CFBundleDisplayName</key>
+  <string>搬运工</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
@@ -62,8 +64,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>CFBundleDisplayName</key>
-	<string>搬运工</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -75,16 +75,6 @@
       <key>LSHandlerRank</key>
       <string>Alternate</string>
 		</dict>
-    <dict>
-      <key>CFBundleTypeName</key>
-      <string>Image</string>
-      <key>LSHandlerRank</key>
-      <string>Alternate</string>
-      <key>LSItemContentTypes</key>
-      <array>
-        <string>public.image</string>
-      </array>
-    </dict>
 	</array>
 </dict>
 </plist>

@@ -25,3 +25,9 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 \Main.cs 入口
 
 mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/
+
+
+接收“分享”有两种情况实现，主要取决于发起“分享”的app的实现方式：
+1. 使用UIDocumentInterationController发起的分享，接收时只需要在Info.plist中配置CFBundleDocumentTypes，并在App.xaml.cs中重写OpenUrl，如app 文件；
+2. 使用UIActivityViewController发起的分享，接收时需要在独立的dll项目中实现Share Extension，iOS8.0 以后增加的方式，如 照片 邮箱；
+本系统只处理第一种情况！未实现“照片”中的接收分享功能
