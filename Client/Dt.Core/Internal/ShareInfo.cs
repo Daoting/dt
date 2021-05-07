@@ -83,6 +83,8 @@ namespace Dt.Core
 #if UWP
             return _sf?.OpenStreamForReadAsync().Result;
 #elif ANDROID
+            if (FilePath.StartsWith("content://"))
+                return Android.App.Application.Context.ContentResolver.OpenInputStream(Android.Net.Uri.Parse(FilePath));
             return System.IO.File.OpenRead(FilePath);
 #elif IOS
             return new FileStream(FilePath, FileMode.Open, FileAccess.Read);

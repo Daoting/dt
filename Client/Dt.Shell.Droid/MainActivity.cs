@@ -59,8 +59,13 @@ namespace App.Droid
                     {
                         info.DataType = ShareDataType.File;
                     }
+
                     Android.Net.Uri uri = (Android.Net.Uri)it.GetParcelableExtra(Intent.ExtraStream);
-                    info.FilePath = IOUtil.GetPath(Android.App.Application.Context, uri);
+                    var path = IOUtil.GetPath(Android.App.Application.Context, uri);
+                    // 通过FileProvider分享时无法获取路径但可读取文件内容，参见ShareInfo.GetStream
+                    if (string.IsNullOrEmpty(path))
+                        path = uri.ToString();
+                    info.FilePath = path;
                 }
                 ((Dt.Shell.App)Windows.UI.Xaml.Application.Current).ReceiveShare(info);
             }
