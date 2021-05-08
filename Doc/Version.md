@@ -27,6 +27,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * CNum.Scale因和UIElement.Scale重名，xaml中赋值时异常，改名Decimals
 * sqlite第一行含空时的列类型错误 
 * 避免win内部导航时自己导航到自己的情况 
+* SqliteCommandEx 可空列bug
 
 ## Release 1.9
 

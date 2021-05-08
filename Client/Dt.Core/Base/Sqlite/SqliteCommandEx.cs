@@ -71,10 +71,26 @@ namespace Dt.Core.Sqlite
                         {
                             // 映射类型中不存在该属性，使用数据的实际类型
                             Cell cell;
+                            var tp = reader.GetFieldType(i);
                             if (reader.IsDBNull(i))
-                                cell = new Cell(row, name, typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                            {
+                                // 列为可空类型时重置，因sqlie无可空类型
+                                if (tp == typeof(byte[]))
+                                {
+                                    // 返回结果的首行数据出现dbnull时列类型不正确！
+                                    if (tbl.Count == 0)
+                                        tp = typeof(string);
+                                }
+                                else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
+                                {
+                                    tp = typeof(Nullable<>).MakeGenericType(tp);
+                                }
+                                cell = new Cell(row, name, tp);
+                            }
                             else
-                                cell = new Cell(row, name, reader.GetFieldType(i), reader.GetValue(i));
+                            {
+                                cell = new Cell(row, name, tp, reader.GetValue(i));
+                            }
 
                             // 补充缺少的列
                             if (!tbl.Columns.Contains(name))
@@ -129,7 +145,7 @@ namespace Dt.Core.Sqlite
                                 if (tbl.Count == 0)
                                     col.Type = typeof(string);
                             }
-                            else if (Nullable.GetUnderlyingType(col.Type) == null)
+                            else if (col.Type.IsValueType && Nullable.GetUnderlyingType(col.Type) == null)
                             {
                                 col.Type = typeof(Nullable<>).MakeGenericType(col.Type);
                             }
@@ -168,11 +184,26 @@ namespace Dt.Core.Sqlite
                         if (map == null)
                         {
                             // Row
-                            // sqlite中无可空类型，只能遇到DBNull按可空类型，会造成所有Row的列类型不同！
+                            var tp = reader.GetFieldType(i);
                             if (reader.IsDBNull(i))
-                                new Cell(row, reader.GetName(i), typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                            {
+                                // sqlite中无可空类型，只能遇到DBNull按可空类型，会造成所有Row的列类型不同！
+                                // 列为可空类型时重置，因sqlie无可空类型
+                                if (tp == typeof(byte[]))
+                                {
+                                    // 返回结果的首行数据出现dbnull时列类型不正确！
+                                    tp = typeof(string);
+                                }
+                                else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
+                                {
+                                    tp = typeof(Nullable<>).MakeGenericType(tp);
+                                }
+                                new Cell(row, reader.GetName(i), tp);
+                            }
                             else
-                                new Cell(row, reader.GetName(i), reader.GetFieldType(i), reader.GetValue(i));
+                            {
+                                new Cell(row, reader.GetName(i), tp, reader.GetValue(i));
+                            }
                         }
                         else
                         {
@@ -183,10 +214,25 @@ namespace Dt.Core.Sqlite
                             if (col == null)
                             {
                                 // 映射类型中不存在该属性，使用数据的实际类型
+                                var tp = reader.GetFieldType(i);
                                 if (reader.IsDBNull(i))
-                                    new Cell(row, name, typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i)));
+                                {
+                                    // 列为可空类型时重置，因sqlie无可空类型
+                                    if (tp == typeof(byte[]))
+                                    {
+                                        // 返回结果的首行数据出现dbnull时列类型不正确！
+                                        tp = typeof(string);
+                                    }
+                                    else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
+                                    {
+                                        tp = typeof(Nullable<>).MakeGenericType(tp);
+                                    }
+                                    new Cell(row, name, tp);
+                                }
                                 else
-                                    new Cell(row, name, reader.GetFieldType(i), reader.GetValue(i));
+                                {
+                                    new Cell(row, name, tp, reader.GetValue(i));
+                                }
                             }
                             else
                             {
