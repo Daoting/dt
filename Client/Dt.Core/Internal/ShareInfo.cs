@@ -49,7 +49,11 @@ namespace Dt.Core
             {
                 if (!string.IsNullOrEmpty(FilePath))
                 {
+#if UWP
+                    int index = FilePath.LastIndexOf('\\');
+#else
                     int index = FilePath.LastIndexOf('/');
+#endif
                     if (index > -1)
                         return FilePath.Substring(index + 1);
                 }
