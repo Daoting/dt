@@ -358,4 +358,8 @@ Service/publish/
 Client/Common/wasm/
 Client/Common/nupkg/
 !Client/Dt.App/Publish/
+Client/Dt.Cells/Dt.Cells.xml 
+Client/Dt.Charts/Dt.Charts.xml
+Client/Dt.Core/Dt.Core.xml
+Client/Dt.Base/Dt.Base.xml
 Client/Dt.App/Dt.App.xml
