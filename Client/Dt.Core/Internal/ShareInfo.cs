@@ -79,6 +79,21 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 文件大小
+        /// </summary>
+        public ulong FileLength
+        {
+            get
+            {
+#if UWP
+                return _length;
+#else
+                return (ulong)(new FileInfo(FilePath)).Length;
+#endif
+            }
+        }
+
+        /// <summary>
         /// 文件流
         /// </summary>
         /// <returns></returns>
@@ -119,6 +134,7 @@ namespace Dt.Core
 #if UWP
         ShareOperation _shareOperation;
         StorageFile _sf;
+        ulong _length;
 
         public async Task Init(ShareOperation p_shareOperation)
         {
@@ -131,6 +147,7 @@ namespace Dt.Core
                 {
                     _sf = sf;
                     FilePath = _sf.Path;
+                    _length = (await _sf.GetBasicPropertiesAsync()).Size;
                     if (_image.Contains(_sf.FileType))
                         DataType = ShareDataType.Image;
                     else if (_video.Contains(_sf.FileType))
