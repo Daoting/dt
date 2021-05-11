@@ -358,3 +358,4 @@ Service/publish/
 Client/Common/wasm/
 Client/Common/nupkg/
 !Client/Dt.App/Publish/
+Client/Dt.App/Dt.App.xml

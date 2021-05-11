@@ -1780,28 +1780,40 @@
             </summary>
             <param name="p_files"></param>
         </member>
-        <member name="M:Dt.Base.ChatDetail.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.ChatDetail.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.ChatDetail.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChatDetail.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.ChatInputBar">
             <summary>
             聊天目录
             </summary>
         </member>
-        <member name="M:Dt.Base.ChatInputBar.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.ChatInputBar.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.ChatInputBar.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChatInputBar.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.ChatList">
             <summary>
@@ -1813,14 +1825,20 @@
             每次加载时刷新目录
             </summary>
         </member>
-        <member name="M:Dt.Base.ChatList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.ChatList.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.ChatList.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChatList.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.ChatMember">
             <summary>
@@ -2035,15 +2053,6 @@
             获取设置按钮描述信息
             </summary>
         </member>
-        <member name="M:Dt.Base.BtnItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.DockPanel">
             <summary>
             可停靠面板
@@ -2054,7 +2063,7 @@
             停靠位置依赖项属性
             </summary>
         </member>
-        <member name="M:Dt.Base.DockPanel.GetDock(Android.Views.View)">
+        <member name="M:Dt.Base.DockPanel.GetDock(Windows.UI.Xaml.UIElement)">
             <summary>
             获取停靠位置属性值
             </summary>
@@ -2095,15 +2104,6 @@
             获取设置内容区域是否采用填充方式
             </summary>
         </member>
-        <member name="M:Dt.Base.DockPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.DtControl">
             <summary>
             为屏蔽不同平台主事件调用顺序的不同
@@ -2119,15 +2119,6 @@
             <summary>
             只在第一次Loaded事件时调用，始终在OnLoadTemplate后调用
             </summary>
-        </member>
-        <member name="M:Dt.Base.DtControl.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.SearchBox">
             <summary>
@@ -2163,15 +2154,6 @@
             <summary>
             获取查询内容
             </summary>
-        </member>
-        <member name="M:Dt.Base.SearchBox.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ItemPlacement">
             <summary>
@@ -2213,15 +2195,6 @@
             获取设置内容的旋转方式
             </summary>
         </member>
-        <member name="M:Dt.Base.RotateContent.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ContentRotate">
             <summary>
             内容旋转方式
@@ -2251,15 +2224,6 @@
             <summary>
             内容的有效区域
             </summary>
-        </member>
-        <member name="M:Dt.Base.SizedPresenter.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.TabControl">
             <summary>
@@ -2433,15 +2397,6 @@
             同步现有的选择项
             </summary>
         </member>
-        <member name="M:Dt.Base.TabControl.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.SelectedChangedEventArgs">
             <summary>
             选择项变化事件参数
@@ -2611,15 +2566,6 @@
             按下
             </summary>
         </member>
-        <member name="M:Dt.Base.TabItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.TestInvoke">
             <summary>
             测试不同平台主事件的调用顺序
@@ -2630,260 +2576,25 @@
             获取设置标题
             </summary>
         </member>
-        <member name="M:Dt.Base.TestInvoke.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
-        <member name="F:Dt.Base.AudioRecorder.CanRecordAudio">
-            <summary>
-            是否有麦克风
-            </summary>
-        </member>
-        <member name="P:Dt.Base.AudioRecorder.IsRecording">
-            <summary>
-            是否正在录音
-            </summary>
-        </member>
-        <member name="F:Dt.Base.CameraCaptureActivity.ExtraIsPhoto">
-            <summary>
-            是否为拍照
-            </summary>
-        </member>
-        <member name="F:Dt.Base.CameraCaptureActivity.ExtraFront">
-            <summary>
-            是否用前置摄像头
-            </summary>
-        </member>
-        <member name="T:Dt.Base.FilePicker">
-            <summary>
-            Android版文件选择
-            </summary>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickImage">
-            <summary>
-            选择单个图片
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickImages">
-            <summary>
-            选择多个图片
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickVideo">
-            <summary>
-            选择单个视频
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickVideos">
-            <summary>
-            选择多个视频
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickAudio">
-            <summary>
-            选择单个音频文件
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickAudios">
-            <summary>
-            选择多个音频文件
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickMedia">
-            <summary>
-            选择单个媒体文件
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickMedias">
-            <summary>
-            选择多个媒体文件
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickFile(System.String[])">
-            <summary>
-            选择单个文件
-            </summary>
-            <param name="p_fileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FilePicker.PickFiles(System.String[])">
-            <summary>
-            选择多个文件
-            </summary>
-            <param name="p_fileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
-            <returns></returns>
-        </member>
-        <member name="T:Dt.Base.FilePickerActivity">
-            <summary>
-            Activity that is shown in order to start Android file picking using ActionGetContent
-            intent.
-            </summary>
-        </member>
-        <member name="F:Dt.Base.FilePickerActivity.ExtraAllowedTypes">
-            <summary>
-            Intent Extra constant to pass list of allowed types to FilePicker activity.
-            </summary>
-        </member>
-        <member name="F:Dt.Base.FilePickerActivity.RequestStorage">
-            <summary>
-            This variable gets passed when the request for the permission to access storage
-            gets send and then gets again read whne the request gets answered.
-            </summary>
-        </member>
-        <member name="F:Dt.Base.FilePickerActivity._context">
-            <summary>
-            Android context to be used for opening file picker
-            </summary>
-        </member>
-        <member name="M:Dt.Base.FilePickerActivity.OnCreate(Android.OS.Bundle)">
-            <summary>
-            Called when activity is about to be created; immediately starts file picker intent
-            when permission is available, otherwise requests permission on API level >= 23 or
-            throws an error if the API level is below.
-            </summary>
-            <param name="savedInstanceState">saved instance state; unused</param>
-        </member>
-        <member name="M:Dt.Base.FilePickerActivity.OnRequestPermissionsResult(System.Int32,System.String[],Android.Content.PM.Permission[])">
-            <summary>
-            Receives the answer from the dialog that asks for the READ_EXTERNAL_STORAGE permission
-            and starts the FilePicker if it's granted or otherwise closes this activity.
-            </summary>
-            <param name="requestCode">requestCode; shows us that the dialog we requested is responsible for this answer</param>
-            <param name="permissions">permissions; unused</param>
-            <param name="grantResults">grantResults; contains the result of the dialog to request the permission</param>
-        </member>
-        <member name="M:Dt.Base.FilePickerActivity.StartPicker">
-            <summary>
-            Sends an intent to start the FilePicker
-            </summary>
-        </member>
-        <member name="M:Dt.Base.FilePickerActivity.OnActivityResult(System.Int32,Android.App.Result,Android.Content.Intent)">
-            <summary>
-            Called when activity started with StartActivityForResult() returns.
-            </summary>
-            <param name="requestCode">request code used in StartActivityForResult()</param>
-            <param name="resultCode">result code</param>
-            <param name="data">intent data from file picking</param>
-        </member>
-        <member name="M:Dt.Base.FilePickerActivity.GetFileName(Android.Content.Context,Android.Net.Uri)">
-            <summary>
-            Retrieves file name part from given Uri
-            </summary>
-            <param name="context">Android context to access content resolver</param>
-            <param name="uri">Uri to get filename for</param>
-            <returns>file name part</returns>
-        </member>
-        <member name="T:Dt.Base.IOUtil">
-            <summary>
-            Android I/O utility functions
-            </summary>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetPath(Android.Content.Context,Android.Net.Uri)">
-            <summary>
-            Tries to find a file system path for given Uri. Note that this isn't always possible,
-            since the content referenced by the Uri may not be stored on a file system, but is
-            returned by the responsible app by using a ContentProvider. In this case, the method
-            returns null, and access to the content is only possible by opening a stream.
-            </summary>
-            <param name="context">Android context to access content resolver</param>
-            <param name="uri">Uri to use</param>
-            <returns>full file system path, or null</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.IsMediaStore(System.String)">
-            <summary>
-            Checks if the scheme part of the URL matches the content:// scheme
-            </summary>
-            <param name="scheme">scheme part of URL</param>
-            <returns>true when it matches, false when not</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetDataColumn(Android.Content.Context,Android.Net.Uri,System.String,System.String[])">
-            <summary>
-            Returns the "data" column of an Uri from the content resolver.
-            </summary>
-            <param name="context">Android context to access content resolver</param>
-            <param name="uri">content Uri</param>
-            <param name="selection">selection 'where' clause, or null</param>
-            <param name="selectionArgs">selection arguments, or null</param>
-            <returns>data column text, or null when query contained no data column</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.IsExternalStorageDocument(Android.Net.Uri)">
-            <summary>
-            Returns if the given Uri is an ExternalStorageProvider Uri
-            </summary>
-            <param name="uri">the Uri to check</param>
-            <returns>whether the Uri authority is an ExternalStorageProvider</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.IsDownloadsDocument(Android.Net.Uri)">
-            <summary>
-            Returns if the given Uri is a DownloadsProvider Uri
-            </summary>
-            <param name="uri">the Uri to check</param>
-            <returns>whether the Uri authority is a DownloadsProvider</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.IsMediaDocument(Android.Net.Uri)">
-            <summary>
-            Returns if the given Uri is a MediaProvider Uri
-            </summary>
-            <param name="uri">the Uri to check</param>
-            <returns>whether the Uri authority is a MediaProvider</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetMimeType(System.String)">
-            <summary>
-            Returns MIME type for given Url
-            </summary>
-            <param name="url">Url to check</param>
-            <returns>MIME type, or null when none can be determined</returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetDownloadsPath">
-            <summary>
-            公共下载目录
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetPicturesPath">
-            <summary>
-            公共照片目录
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetMoviesPath">
-            <summary>
-            公共视频目录
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Dt.Base.IOUtil.GetMusicPath">
-            <summary>
-            公共音频目录
-            </summary>
-            <returns></returns>
-        </member>
         <member name="P:Dt.Base.AudioRecordDlg.Duration">
             <summary>
             录音时长
             </summary>
         </member>
-        <member name="M:Dt.Base.AudioRecordDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.AudioRecordDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.AudioRecordDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.AudioRecordDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.FileData">
             <summary>
@@ -3132,6 +2843,83 @@
             </summary>
             <param name="p_filePath">文件完整路径</param>
         </member>
+        <member name="F:Dt.Base.AudioRecorder.CanRecordAudio">
+            <summary>
+            是否有麦克风
+            </summary>
+        </member>
+        <member name="P:Dt.Base.AudioRecorder.IsRecording">
+            <summary>
+            是否正在录音
+            </summary>
+        </member>
+        <member name="T:Dt.Base.FilePicker">
+            <summary>
+            Uwp版文件选择
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickImage">
+            <summary>
+            选择单个图片
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickImages">
+            <summary>
+            选择多个图片
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickVideo">
+            <summary>
+            选择单个视频
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickVideos">
+            <summary>
+            选择多个视频
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickAudio">
+            <summary>
+            选择单个音频文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickAudios">
+            <summary>
+            选择多个音频文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickMedia">
+            <summary>
+            选择单个媒体文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickMedias">
+            <summary>
+            选择多个媒体文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickFile(System.String[])">
+            <summary>
+            选择单个文件
+            </summary>
+            <param name="p_fileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Base.FilePicker.PickFiles(System.String[])">
+            <summary>
+            选择多个文件
+            </summary>
+            <param name="p_fileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+            <returns></returns>
+        </member>
         <member name="T:Dt.Base.FileItem">
             <summary>
             上传下载文件描述
@@ -3364,15 +3152,6 @@
             </summary>
             <param name="p_writer"></param>
         </member>
-        <member name="M:Dt.Base.FileItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.FileList">
             <summary>
             文件上传下载编辑器
@@ -3589,15 +3368,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.FileList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Downloader">
             <summary>
             文件下载，三平台合一
@@ -3683,7 +3453,7 @@
         </member>
         <member name="T:Dt.Base.Uploader">
             <summary>
-            Android版文件上传
+            UWP版文件上传
             </summary>
         </member>
         <member name="M:Dt.Base.Uploader.Send(System.Collections.Generic.IList{Dt.Base.FileData},System.String,System.Threading.CancellationTokenSource)">
@@ -3780,23 +3550,35 @@
             视频
             </summary>
         </member>
-        <member name="M:Dt.Base.FileLists.ImageFileView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FileLists.ImageFileView.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FileLists.UpdateFileDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FileLists.ImageFileView.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.FileLists.ImageFileView.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FileLists.UpdateFileDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FileLists.UpdateFileDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FileLists.UpdateFileDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.FileListPanel">
             <summary>
@@ -3809,15 +3591,6 @@
             </summary>
             <param name="availableSize"></param>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FileListPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.CBar">
             <summary>
@@ -3864,15 +3637,6 @@
             在面板上的布局区域
             </summary>
         </member>
-        <member name="M:Dt.Base.CBar.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CBool">
             <summary>
             bool格
@@ -3908,15 +3672,6 @@
             获取设置False时的值
             </summary>
         </member>
-        <member name="M:Dt.Base.CBool.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CColor">
             <summary>
             颜色选择格
@@ -3949,59 +3704,80 @@
             </summary>
             <param name="p_brush"></param>
         </member>
-        <member name="M:Dt.Base.CColor.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.ColorDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FormView.ColorDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.ColorDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FormView.CalendarDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.ColorDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FormView.HtmlEditDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.CalendarDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FormView.HtmlViewDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.CalendarDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.FormView.IconDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.CalendarDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlEditDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlEditDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlEditDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlViewDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlViewDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.HtmlViewDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.IconDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.IconDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.IconDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.Base.FormView.IconItem.Icon">
             <summary>
@@ -4075,14 +3851,20 @@
             <param name="p_filter"></param>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.FormView.ListDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.ListDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.FormView.ListDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.ListDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.FormView.NumValConverter">
             <summary>
@@ -4123,14 +3905,20 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.FormView.TreeDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.FormView.TreeDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.FormView.TreeDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.FormView.TreeDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.FormView.FvUndoCmd">
             <summary>
@@ -4191,15 +3979,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.FormView.CellPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.FormView.CellParamAttribute">
             <summary>
             格参数标志
@@ -4238,15 +4017,6 @@
             <param name="p_colWidth">列宽</param>
             <param name="p_measure">是否测量</param>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.FormView.FormPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.FormView.ObjectView">
             <summary>
@@ -4407,15 +4177,6 @@
             获取设置日期时间
             </summary>
         </member>
-        <member name="M:Dt.Base.CDate.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.DateValConverter">
             <summary>
             源CDate.Data，目标CDate.Value
@@ -4496,15 +4257,6 @@
             切换上下文菜单或修改触发事件种类时通知宿主刷新
             </summary>
         </member>
-        <member name="M:Dt.Base.CFile.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="P:Dt.Base.ISelectFileDlg.SelectedFiles">
             <summary>
             已选择的文件列表，每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
@@ -4539,15 +4291,6 @@
             </summary>
             <param name="p_obj"></param>
         </member>
-        <member name="M:Dt.Base.CFree.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CHtml">
             <summary>
             富文本格
@@ -4557,15 +4300,6 @@
             <summary>
             保存事件
             </summary>
-        </member>
-        <member name="M:Dt.Base.CHtml.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.IHtmlEditHost">
             <summary>
@@ -4622,15 +4356,6 @@
             </summary>
             <param name="p_icon"></param>
         </member>
-        <member name="M:Dt.Base.CIcon.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CImage">
             <summary>
             图像格
@@ -4666,15 +4391,6 @@
             切换上下文菜单或修改触发事件种类时通知宿主刷新
             </summary>
         </member>
-        <member name="M:Dt.Base.CImage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CLink">
             <summary>
             链接格
@@ -4689,15 +4405,6 @@
             <summary>
             切换内容
             </summary>
-        </member>
-        <member name="M:Dt.Base.CLink.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.CList">
             <summary>
@@ -4836,15 +4543,6 @@
             </summary>
             <param name="p_selectedItem"></param>
         </member>
-        <member name="M:Dt.Base.CList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.IDStr">
             <summary>
             描述显示和实际值类
@@ -4919,15 +4617,6 @@
             <summary>
             忽略空格
             </summary>
-        </member>
-        <member name="M:Dt.Base.CMask.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.MaskBox">
             <summary>
@@ -5189,15 +4878,6 @@
             输入范围为数字
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.MaskBox.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.MaskBoxState">
             <summary>
@@ -5647,15 +5327,6 @@
             </summary>
             <returns>正在编辑时的内容串</returns>
         </member>
-        <member name="M:Dt.Base.CNum.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ValueChangedEventArgs`1">
             <summary>
             值变化事件参数
@@ -5721,15 +5392,6 @@
             获取设置最大字符数
             </summary>
         </member>
-        <member name="M:Dt.Base.CPassword.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CText">
             <summary>
             普通文本格
@@ -5772,15 +5434,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.CText.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.CTip">
             <summary>
             只读信息格，始终只读
@@ -5790,15 +5443,6 @@
             <summary>
             获取设置格式串，默认 yyyy-MM-dd，完整如：yyyy-MM-dd HH:mm:ss
             </summary>
-        </member>
-        <member name="M:Dt.Base.CTip.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.TipValConverter">
             <summary>
@@ -5882,15 +5526,6 @@
             触发选择后事件
             </summary>
             <param name="p_selectedItem"></param>
-        </member>
-        <member name="M:Dt.Base.CTree.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.IFreeCell">
             <summary>
@@ -6159,15 +5794,6 @@
             </summary>
             <param name="p_cell"></param>
         </member>
-        <member name="M:Dt.Base.Fv.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.FvCell">
             <summary>
             单元格
@@ -6393,15 +6019,6 @@
             数据源绑定编辑器
             </summary>
         </member>
-        <member name="M:Dt.Base.FvCell.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.FvItems">
             <summary>
             Fv单元格集合，列表 + 字典 + 集合更改事件
@@ -6562,15 +6179,6 @@
             <summary>
             获取设置查询框提示内容
             </summary>
-        </member>
-        <member name="M:Dt.Base.SearchFv.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.CellUIConverter">
             <summary>
@@ -6867,28 +6475,10 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.ListView.LvPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.GroupHeader">
             <summary>
             分组导航头
             </summary>
-        </member>
-        <member name="M:Dt.Base.ListView.GroupHeader.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.GroupHeaderCell">
             <summary>
@@ -6910,15 +6500,6 @@
             水平位置
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.GroupHeaderCell.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.GroupRow">
             <summary>
             分组行
@@ -6939,15 +6520,6 @@
             在面板上的垂直位置
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.GroupRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.ListFormRow">
             <summary>
             表单列表的行
@@ -6959,42 +6531,15 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.ListView.ListFormRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.ListPanel">
             <summary>
             列表面板
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.ListPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.ListRow">
             <summary>
             普通列表的行
             </summary>
-        </member>
-        <member name="M:Dt.Base.ListView.ListRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.LvRow">
             <summary>
@@ -7039,28 +6584,10 @@
             滚动时异步设置DataContext，提高流畅性
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.LvRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.ColHeader">
             <summary>
             顶部的列头面板
             </summary>
-        </member>
-        <member name="M:Dt.Base.ListView.ColHeader.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.ColHeaderCell">
             <summary>
@@ -7077,42 +6604,15 @@
             获取设置排序标志
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.ColHeaderCell.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.TablePanel">
             <summary>
             表格面板
             </summary>
         </member>
-        <member name="M:Dt.Base.ListView.TablePanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.TableRow">
             <summary>
             表格视图的行
             </summary>
-        </member>
-        <member name="M:Dt.Base.ListView.TableRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.TileFormRow">
             <summary>
@@ -7124,15 +6624,6 @@
             加载表单列表
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.ListView.TileFormRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ListView.TilePanel">
             <summary>
@@ -7146,28 +6637,10 @@
             <param name="p_index"></param>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.ListView.TilePanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.ListView.TileRow">
             <summary>
             磁贴的行
             </summary>
-        </member>
-        <member name="M:Dt.Base.ListView.TileRow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.IRowView">
             <summary>
@@ -7332,21 +6805,6 @@
             </summary>
             <param name="p_pageNo"></param>
         </member>
-        <member name="M:Dt.Base.PageData.ClearBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.PageData.RestoreBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.PageData.ApplyCompiledBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
         <member name="F:Dt.Base.PageDataState.Normal">
             <summary>
             未加载数据
@@ -7490,21 +6948,6 @@
             触发属性变化事件
             </summary>
             <param name="propertyName">通知更改时的属性名称</param>
-        </member>
-        <member name="M:Dt.Base.ViewItem.ClearBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.ViewItem.RestoreBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.ViewItem.ApplyCompiledBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
         </member>
         <member name="T:Dt.Base.Lv">
             <summary>
@@ -7876,15 +7319,6 @@
             触发切换数据源事件
             </summary>
         </member>
-        <member name="M:Dt.Base.Lv.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Dot">
             <summary>
             列表中行模板的占位格
@@ -7904,15 +7338,6 @@
             <summary>
             获取设置格式串，null或空时按默认显示，如：时间格式、小数位格式、枚举类型名称
             </summary>
-        </member>
-        <member name="M:Dt.Base.Dot.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ICellUI">
             <summary>
@@ -8102,21 +7527,6 @@
         <member name="P:Dt.Base.Col.Left">
             <summary>
             水平位置
-            </summary>
-        </member>
-        <member name="M:Dt.Base.Col.ClearBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.Col.RestoreBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
-            </summary>
-        </member>
-        <member name="M:Dt.Base.Col.ApplyCompiledBindings">
-            <summary>
-            Obsolete method kept for binary compatibility
             </summary>
         </member>
         <member name="T:Dt.Base.Cols">
@@ -8391,23 +7801,35 @@
             <param name="p_row"></param>
             <param name="p_writer"></param>
         </member>
-        <member name="M:Dt.Base.Report.DbDataWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.DbDataWin.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.ScriptDataWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.DbDataWin.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Report.DbDataWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ScriptDataWin.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ScriptDataWin.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ScriptDataWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Report.CopyItemCmd">
             <summary>
@@ -8993,41 +8415,65 @@
             适合于大部分图表使用
             </summary>
         </member>
-        <member name="M:Dt.Base.Report.ChartForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.ChartForm.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.DataSourceDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.ChartForm.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.GlobalParamDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.ChartForm.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.MatrixForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.DataSourceDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Report.DataSourceDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.DataSourceDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.GlobalParamDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.GlobalParamDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.GlobalParamDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="M:Dt.Base.Report.MatrixLevelForm.IsOverLap">
             <summary>
@@ -9035,59 +8481,125 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.Report.MatrixLevelForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixLevelForm.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.MatrixSubtitleForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixLevelForm.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.MatrixSubtotalForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixLevelForm.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.ParamSelectionDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixSubtitleForm.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.TableForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixSubtitleForm.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.TextForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.MatrixSubtitleForm.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixSubtotalForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixSubtotalForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.MatrixSubtotalForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamSelectionDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamSelectionDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamSelectionDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TableForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TableForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TableForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TextForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TextForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.TextForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.BlankAreaMenu.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.BlankAreaMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.BlankAreaMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.HeaderFooterMenu.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.HeaderFooterMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.HeaderFooterMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Report.ExcelClerk">
             <summary>
@@ -9305,50 +8817,80 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.Report.RptDesignWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.RptDesignWin.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.PageSettingWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.RptDesignWin.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.ParamsWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.RptDesignWin.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.RptDesignHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.PageSettingWin.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.Base.Report.ViewSettingWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.PageSettingWin.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Report.PageSettingWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamsWin.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamsWin.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ParamsWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.RptDesignHome.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.RptDesignHome.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.RptDesignHome.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ViewSettingWin.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ViewSettingWin.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.ViewSettingWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Report.PageDefine">
             <summary>
@@ -10190,14 +9732,20 @@
             查询面板菜单
             </summary>
         </member>
-        <member name="M:Dt.Base.Report.RptSearchForm.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Report.RptSearchForm.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Report.RptSearchForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Report.RptSearchForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Report.RptViewWin">
             <summary>
@@ -10210,15 +9758,6 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
-        </member>
-        <member name="M:Dt.Base.Report.RptViewWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Report.RptChart">
             <summary>
@@ -13023,14 +12562,20 @@
             </summary>
             <param name="p_show"></param>
         </member>
-        <member name="M:Dt.Base.RptView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.RptView.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.RptView.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.RptView.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Sketches.SketchInputManager">
             <summary>
@@ -13463,15 +13008,6 @@
             <param name="p_rc"></param>
             <param name="p_isHor"></param>
         </member>
-        <member name="M:Dt.Base.Sketches.GridLinePanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Sketches.LengthUnit">
             <summary>
             提供不同长度单位之间的转换
@@ -13497,15 +13033,6 @@
             设置有效点
             </summary>
             <param name="p_pos"></param>
-        </member>
-        <member name="M:Dt.Base.Sketches.LinkPrompt.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Sketches.NodeSelector">
             <summary>
@@ -13558,15 +13085,6 @@
             </summary>
             <param name="p_thumb"></param>
         </member>
-        <member name="M:Dt.Base.Sketches.NodeSelector.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Sketches.Ruler">
             <summary>
             水平垂直尺子控件
@@ -13617,15 +13135,6 @@
             获取设置尺子水平时的高度或垂直时的宽度
             </summary>
         </member>
-        <member name="M:Dt.Base.Sketches.Ruler.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Sketches.RulerSegment">
             <summary>
             尺子段，如100px为一段，包括5个刻度线一个数字
@@ -13646,28 +13155,10 @@
             获取设置起始刻度值
             </summary>
         </member>
-        <member name="M:Dt.Base.Sketches.RulerSegment.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Sketches.SketchSelectorPanel">
             <summary>
             
             </summary>
-        </member>
-        <member name="M:Dt.Base.Sketches.SketchSelectorPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Sketches.Tick">
             <summary>
@@ -14093,15 +13584,6 @@
             触发删除后事件
             </summary>
             <param name="e"></param>
-        </member>
-        <member name="M:Dt.Base.Sketch.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.ContentPresenterSelector">
             <summary>
@@ -14619,15 +14101,6 @@
             点在矩形外面
             </summary>
         </member>
-        <member name="M:Dt.Base.SLine.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.SNode">
             <summary>
             流程图节点
@@ -14813,15 +14286,6 @@
             点击位置
             </summary>
         </member>
-        <member name="M:Dt.Base.SNode.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Desktop">
             <summary>
             桌面容器
@@ -14922,28 +14386,10 @@
             重置任务栏按扭的宽度
             </summary>
         </member>
-        <member name="M:Dt.Base.Desktop.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.HomebarItem">
             <summary>
             主页按钮
             </summary>
-        </member>
-        <member name="M:Dt.Base.HomebarItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Splitter">
             <summary>
@@ -14960,28 +14406,10 @@
             关闭右侧区域事件
             </summary>
         </member>
-        <member name="M:Dt.Base.Splitter.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.TaskbarItem">
             <summary>
             任务栏按扭
             </summary>
-        </member>
-        <member name="M:Dt.Base.TaskbarItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Dlg">
             <summary>
@@ -15229,15 +14657,6 @@
             切换鼠标样式
             </summary>
             <param name="direction"></param>
-        </member>
-        <member name="M:Dt.Base.Dlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.DlgEx">
             <summary>
@@ -15673,15 +15092,6 @@
             </summary>
             <param name="p_mi"></param>
         </member>
-        <member name="M:Dt.Base.Menu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.MiList">
             <summary>
             子项列表，直接用泛型在xaml设计时异常
@@ -15817,43 +15227,16 @@
             递归关闭所有子窗口
             </summary>
         </member>
-        <member name="M:Dt.Base.Mi.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.MiSplit">
             <summary>
             菜单分割行
             </summary>
-        </member>
-        <member name="M:Dt.Base.MiSplit.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="M:Dt.Base.MenuView.ContextMenuDlg.OnOuterPressed(Windows.Foundation.Point)">
             <summary>
             点击对话框外部时
             </summary>
             <param name="p_point">外部点击位置</param>
-        </member>
-        <member name="M:Dt.Base.MenuView.ContextMenuDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.MenuView.MenuPanel">
             <summary>
@@ -15878,15 +15261,6 @@
             </summary>
             <param name="p_index"></param>
         </member>
-        <member name="M:Dt.Base.MenuView.MenuPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="M:Dt.Base.MenuView.SubMenuDlg.OnBlankPressed">
             <summary>
             在空白处点击(所有对话框外部)
@@ -15898,14 +15272,20 @@
             </summary>
             <param name="p_point">外部点击位置</param>
         </member>
-        <member name="M:Dt.Base.MenuView.SubMenuDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.MenuView.SubMenuDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.MenuView.SubMenuDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.MenuView.SubMenuDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.IMenuHost">
             <summary>
@@ -16085,14 +15465,20 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.Base.NotifyItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.NotifyItem.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.NotifyItem.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.NotifyItem.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.NotifyManager">
             <summary>
@@ -16149,14 +15535,20 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.PhonePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.PhonePage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.PhonePage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.PhonePage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.PhonePageEx">
             <summary>
@@ -16188,14 +15580,20 @@
             系统工具列表
             </summary>
         </member>
-        <member name="M:Dt.Base.Tools.LocalDbView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Tools.LocalDbView.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Tools.LocalDbView.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Tools.LocalDbView.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Tools.SysTrace">
             <summary>
@@ -16235,14 +15633,20 @@
             </summary>
             <param name="p_asm">程序集</param>
         </member>
-        <member name="M:Dt.Base.Tools.SysTrace.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.Base.Tools.SysTrace.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.Base.Tools.SysTrace.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Tools.SysTrace.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.Base.Main">
             <summary>
@@ -16253,15 +15657,6 @@
             <summary>
             获取内容元素集合
             </summary>
-        </member>
-        <member name="M:Dt.Base.Main.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Pane">
             <summary>
@@ -16384,15 +15779,6 @@
             更新窗口标题
             </summary>
         </member>
-        <member name="M:Dt.Base.Pane.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Docking.AutoHideTab">
             <summary>
             自动隐藏区域
@@ -16419,15 +15805,6 @@
             <summary>
             增删子项
             </summary>
-        </member>
-        <member name="M:Dt.Base.Docking.AutoHideTab.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.Compass">
             <summary>
@@ -16509,15 +15886,6 @@
             <summary>
             恢复原始状态
             </summary>
-        </member>
-        <member name="M:Dt.Base.Docking.Compass.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.DockLayout">
             <summary>
@@ -16664,15 +16032,6 @@
             <summary>
             取消调整
             </summary>
-        </member>
-        <member name="M:Dt.Base.Docking.GridResizer.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.IPaneList">
             <summary>
@@ -16888,15 +16247,6 @@
             清空除中部区域的子元素
             </summary>
         </member>
-        <member name="M:Dt.Base.Docking.PanePanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Docking.PanePosition">
             <summary>
             Pane的停靠状态
@@ -16943,15 +16293,6 @@
             </summary>
             <param name="p_resizer"></param>
         </member>
-        <member name="M:Dt.Base.Docking.PreviewControl.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Docking.RootCompass">
             <summary>
             全局停靠导航，最底层四个停靠位置
@@ -16961,15 +16302,6 @@
             <summary>
             构造函数
             </summary>
-        </member>
-        <member name="M:Dt.Base.Docking.RootCompass.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.TabHeader">
             <summary>
@@ -16985,15 +16317,6 @@
             <summary>
             获取所属Tabs
             </summary>
-        </member>
-        <member name="M:Dt.Base.Docking.TabHeader.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.TabItemPanel">
             <summary>
@@ -17032,15 +16355,6 @@
             <param name="p_child"></param>
             <param name="p_isHor"></param>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.Docking.TabItemPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Docking.ToolWindow">
             <summary>
@@ -17169,15 +16483,6 @@
             </summary>
             <param name="direction"></param>
         </member>
-        <member name="M:Dt.Base.Docking.ToolWindow.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.MainInfo">
             <summary>
             窗口主区内容描述
@@ -17289,15 +16594,6 @@
             <summary>
             锁定只可内部有滚动栏垂直滑动
             </summary>
-        </member>
-        <member name="M:Dt.Base.PhoneTabs.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Tab">
             <summary>
@@ -17422,15 +16718,6 @@
             从父容器中移除当前Tab
             </summary>
         </member>
-        <member name="M:Dt.Base.Tab.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.Tabs">
             <summary>
             包含标题栏的TabControl：
@@ -17528,15 +16815,6 @@
             </summary>
             <param name="p_winItem"></param>
             <returns></returns>
-        </member>
-        <member name="M:Dt.Base.Tabs.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.Win">
             <summary>
@@ -17878,15 +17156,6 @@
             触发布局变化结束事件
             </summary>
         </member>
-        <member name="M:Dt.Base.Win.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.WinKit">
             <summary>
             UI交互代理类
@@ -18026,15 +17295,6 @@
             <param name="p_item"></param>
             <returns></returns>
         </member>
-        <member name="M:Dt.Base.TreeView.TvPanel.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
-        </member>
         <member name="T:Dt.Base.TreeView.TvPanelItem">
             <summary>
             树节点面板
@@ -18070,15 +17330,6 @@
             </summary>
             <param name="p_pos"></param>
             <param name="p_tgt"></param>
-        </member>
-        <member name="M:Dt.Base.TreeView.TvPanelItem.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
-            <summary>
-            Native constructor, do not use explicitly.
-            </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
         <member name="T:Dt.Base.TvItem">
             <summary>
@@ -18418,18 +17669,24 @@
             触发切换数据源事件
             </summary>
         </member>
-        <member name="M:Dt.Base.Tv.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="T:Dt.Base.Dt_Base_XamlTypeInfo.XamlMetaDataProvider">
             <summary>
-            Native constructor, do not use explicitly.
+            Main class for providing metadata for the app or library
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="T:Dt.Base.GlobalStaticResources">
+        <member name="M:Dt.Base.Dt_Base_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
             <summary>
-            Contains all the static resources defined for the application
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Dt_Base_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Dt_Base_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
             </summary>
         </member>
     </members>

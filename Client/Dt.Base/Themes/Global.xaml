@@ -242,21 +242,14 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Margin="{TemplateBinding Padding}">
-                            <TextBlock Text="{TemplateBinding Content}"
-                                       FontFamily="{StaticResource IconFont}"
-                                       FontSize="{TemplateBinding FontSize}"
-                                       VerticalAlignment="Center" />
-                            <TextBlock Text="{TemplateBinding Tag}"
-                                       Visibility="{Binding Tag,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CvTextToVisible}}"
-                                       FontSize="{TemplateBinding FontSize}"
-                                       Margin="4,0,0,0"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
+                        <Border x:Name="Rect"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                IsHitTestVisible="False" />
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   FontFamily="{StaticResource IconFont}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Margin="{TemplateBinding Padding}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

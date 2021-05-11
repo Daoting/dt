@@ -126,51 +126,75 @@
             通讯录
             </summary>
         </member>
-        <member name="M:Dt.App.Chat.ChatHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Chat.ChatHome.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Chat.ChatHome.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Chat.ChatHome.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Chat.ChatMemberList">
             <summary>
             聊天人员列表
             </summary>
         </member>
-        <member name="M:Dt.App.Chat.ChatMemberList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Chat.ChatMemberList.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.File.EditFolderDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Chat.ChatMemberList.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Chat.ChatMemberList.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.EditFolderDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.EditFolderDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.EditFolderDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.FileHome">
             <summary>
             文件
             </summary>
         </member>
-        <member name="M:Dt.App.File.FileHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.FileHome.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.FileHome.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.FileHome.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.FileMgrSetting">
             <summary>
@@ -197,14 +221,20 @@
             文件夹内容
             </summary>
         </member>
-        <member name="M:Dt.App.File.FolderPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.FolderPage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.FolderPage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.FolderPage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.IFileMgr">
             <summary>
@@ -289,28 +319,40 @@
             <param name="p_tbl"></param>
             <param name="p_target"></param>
         </member>
-        <member name="M:Dt.App.File.MoveFileDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.MoveFileDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.MoveFileDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.MoveFileDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.MoveFilePage">
             <summary>
             选择移动到的目标文件夹
             </summary>
         </member>
-        <member name="M:Dt.App.File.MoveFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.MoveFilePage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.MoveFilePage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.MoveFilePage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.File.Myfile.ParentID">
             <summary>
@@ -412,14 +454,20 @@
             搜索文件
             </summary>
         </member>
-        <member name="M:Dt.App.File.SearchFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.SearchFilePage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.SearchFilePage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SearchFilePage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.File.SelectFileDlg.SelectedFiles">
             <summary>
@@ -434,98 +482,140 @@
             <param name="p_typeFilter">按文件扩展名过滤</param>
             <returns></returns>
         </member>
-        <member name="M:Dt.App.File.SelectFileDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.SelectFileDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.SelectFileDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectFileDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.SelectFilePage">
             <summary>
             选择移动到的目标文件夹
             </summary>
         </member>
-        <member name="M:Dt.App.File.SelectFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.SelectFilePage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.SelectFilePage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectFilePage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.SelectLibPage">
             <summary>
             选择库
             </summary>
         </member>
-        <member name="M:Dt.App.File.SelectLibPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.SelectLibPage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.SelectLibPage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectLibPage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.File.SelectSearchPage">
             <summary>
             搜索文件
             </summary>
         </member>
-        <member name="M:Dt.App.File.SelectSearchPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.File.SelectSearchPage.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.File.SelectSearchPage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectSearchPage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.DefaultHome">
             <summary>
             主页
             </summary>
         </member>
-        <member name="M:Dt.App.DefaultHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.DefaultHome.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.DefaultHome.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.DefaultHome.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Home.GroupMenu">
             <summary>
             分组菜单项页面
             </summary>
         </member>
-        <member name="M:Dt.App.Home.GroupMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Home.GroupMenu.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Home.GroupMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.GroupMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Home.MyMain">
             <summary>
             我的
             </summary>
         </member>
-        <member name="M:Dt.App.Home.MyMain.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Home.MyMain.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Home.MyMain.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.MyMain.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Home.RootMenu">
             <summary>
@@ -539,14 +629,20 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.App.Home.RootMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Home.RootMenu.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Home.RootMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.RootMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Home.SearchMenu">
             <summary>
@@ -560,14 +656,20 @@
             <param name="sender"></param>
             <param name="p_filter"></param>
         </member>
-        <member name="M:Dt.App.Home.SearchMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Home.SearchMenu.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Home.SearchMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.SearchMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Login">
             <summary>
@@ -591,14 +693,20 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.App.Login.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Login.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Login.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Login.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.MenuFav">
             <summary>
@@ -772,14 +880,20 @@
             </summary>
             <param name="p_num"></param>
         </member>
-        <member name="M:Dt.App.Model.BaseOption.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.BaseOption.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.BaseOption.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.BaseOption.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.Option.Name">
             <summary>
@@ -873,28 +987,40 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:Dt.App.Model.SysMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SysMenu.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SysMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SysMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Model.MyParamsSetting">
             <summary>
             分组菜单项页面
             </summary>
         </member>
-        <member name="M:Dt.App.Model.MyParamsSetting.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.MyParamsSetting.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.MyParamsSetting.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.MyParamsSetting.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.Params.ID">
             <summary>
@@ -921,41 +1047,65 @@
             修改时间
             </summary>
         </member>
-        <member name="M:Dt.App.Model.UserParamsDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.UserParamsDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.UserParamsMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.UserParamsDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.BasePrivilege.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.UserParamsDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.EditPrvDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.UserParamsMgr.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.UserParamsMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.UserParamsMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.BasePrivilege.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.BasePrivilege.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.BasePrivilege.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditPrvDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditPrvDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditPrvDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.Prv.ID">
             <summary>
@@ -967,14 +1117,20 @@
             权限描述
             </summary>
         </member>
-        <member name="M:Dt.App.Model.ReportMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.ReportMgr.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.ReportMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.ReportMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.Rpt.Name">
             <summary>
@@ -1001,14 +1157,20 @@
             修改时间
             </summary>
         </member>
-        <member name="M:Dt.App.Model.EditRoleDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.EditRoleDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.EditRoleDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditRoleDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.Role.Name">
             <summary>
@@ -1030,50 +1192,80 @@
             权限标识
             </summary>
         </member>
-        <member name="M:Dt.App.Model.SelectRoleMenuDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SelectRoleMenuDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.SelectRolePrvDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SelectRoleMenuDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.SelectUserDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SelectRoleMenuDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.SysRole.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SelectRolePrvDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Model.SelectRolesDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.SelectRolePrvDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolePrvDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectUserDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectUserDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectUserDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SysRole.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SysRole.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SysRole.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolesDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolesDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolesDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Model.RoleRelations">
             <summary>
@@ -1100,14 +1292,20 @@
             流程中的活动
             </summary>
         </member>
-        <member name="M:Dt.App.Model.EditUserDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.EditUserDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.EditUserDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditUserDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Model.User.Phone">
             <summary>
@@ -1149,14 +1347,20 @@
             修改时间
             </summary>
         </member>
-        <member name="M:Dt.App.Model.UserAccount.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Model.UserAccount.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.UserAccount.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.UserAccount.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.ReportView">
             <summary>
@@ -1347,113 +1551,185 @@
             关键字
             </summary>
         </member>
-        <member name="M:Dt.App.Publish.AlbumMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.AlbumMgr.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.EditAlbumDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.AlbumMgr.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.EditKeywordDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.AlbumMgr.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.KeywordMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditAlbumDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.PostMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditAlbumDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.ResLibWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditAlbumDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.SelectAlbumDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditKeywordDlg.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.SelectKeywordDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditKeywordDlg.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.PostDetail.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.EditKeywordDlg.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.PostList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.KeywordMgr.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.PublishMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.KeywordMgr.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Publish.PublishView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Publish.KeywordMgr.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PostMgr.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.ResLibWin.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.ResLibWin.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.ResLibWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectAlbumDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectAlbumDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectAlbumDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectKeywordDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectKeywordDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.SelectKeywordDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostDetail.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostDetail.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostDetail.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostList.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostList.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PostList.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishMgr.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishView.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishView.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.PublishView.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.AtvRecv">
             <summary>
@@ -1675,6 +1951,36 @@
             刷新_sketch
             </summary>
         </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfDeleteMenu.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfDeleteMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfDeleteMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="M:Dt.App.Workflow.WfInsertMenu.OnStartNode(System.Object,Dt.Base.Mi)">
             <summary>
             执行插入开始菜单
@@ -1723,6 +2029,21 @@
             <param name="p_shapetype"></param>
             <returns></returns>
         </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.AtvRole">
             <summary>
             活动授权
@@ -1735,9 +2056,39 @@
             <param name="row"></param>
             <returns></returns>
         </member>
+        <member name="M:Dt.App.Workflow.AtvRole.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AtvRole.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AtvRole.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.WfAtvForm">
             <summary>
             普通活动模板表单
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfAtvForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfAtvForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfAtvForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:Dt.App.Workflow.WfEndAtvForm">
@@ -1745,9 +2096,39 @@
             结束活动表单
             </summary>
         </member>
+        <member name="M:Dt.App.Workflow.WfEndAtvForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfEndAtvForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfEndAtvForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.WfNodeProperty">
             <summary>
             图元属性面板
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfNodeProperty.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfNodeProperty.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfNodeProperty.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:Dt.App.Workflow.WfStartAtvForm">
@@ -1755,9 +2136,39 @@
             起始活动模板表单
             </summary>
         </member>
+        <member name="M:Dt.App.Workflow.WfStartAtvForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfStartAtvForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfStartAtvForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.WfSyncAtvForm">
             <summary>
             同步活动表单
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSyncAtvForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSyncAtvForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSyncAtvForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:Dt.App.Workflow.WfTextForm">
@@ -1765,9 +2176,39 @@
             图元属性面板
             </summary>
         </member>
+        <member name="M:Dt.App.Workflow.WfTextForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTextForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTextForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.WfTrsForm">
             <summary>
             迁移属性表单
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTrsForm.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTrsForm.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTrsForm.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="M:Dt.App.Workflow.WorkflowDesign.LoadAtvForm(Dt.Base.SNode)">
@@ -1788,14 +2229,20 @@
             </summary>
             <param name="p_tb"></param>
         </member>
-        <member name="M:Dt.App.Workflow.WorkflowDesign.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.WorkflowDesign.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="P:Dt.App.Workflow.WfdAtv.PrcID">
             <summary>
@@ -2234,32 +2681,50 @@
             迁移时间
             </summary>
         </member>
-        <member name="M:Dt.App.Workflow.WfInstMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.WfInstMgr.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Workflow.WfTemplateMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.WfInstMgr.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Workflow.WorkflowMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.WfInstMgr.GetBindingConnector(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            GetBindingConnector(int connectionId, object target)
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTemplateMgr.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTemplateMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTemplateMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowMgr.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowMgr.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowMgr.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Workflow.WfAcceptCmd">
             <summary>
@@ -2339,51 +2804,90 @@
             <param name="p_atvid"></param>
             <returns></returns>
         </member>
-        <member name="M:Dt.App.Workflow.CurrentTasks.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.CurrentTasks.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
         </member>
-        <member name="M:Dt.App.Workflow.HistoryTasks.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.CurrentTasks.Connect(System.Int32,System.Object)">
             <summary>
-            Native constructor, do not use explicitly.
+            Connect()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.CurrentTasks.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.HistoryTasks.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.HistoryTasks.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.HistoryTasks.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Workflow.StartWorkflow">
             <summary>
             发起任务
             </summary>
         </member>
-        <member name="M:Dt.App.Workflow.TasksView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.StartWorkflow.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.StartWorkflow.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.StartWorkflow.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.TasksView.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.TasksView.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.TasksView.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="M:Dt.App.Workflow.WfFormWin.LoadMenu(Dt.App.WfFormInfo)">
             <summary>
             加载默认菜单，自动绑定命令
             </summary>
         </member>
-        <member name="M:Dt.App.Workflow.WfFormWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+        <member name="M:Dt.App.Workflow.WfFormWin.InitializeComponent">
             <summary>
-            Native constructor, do not use explicitly.
+            InitializeComponent()
             </summary>
-            <remarks>
-            Used by the Xamarin Runtime to materialize native 
-            objects that may have been collected in the managed world.
-            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WfFormWin.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfFormWin.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.Workflow.WfLogDlg">
             <summary>
@@ -2405,6 +2909,21 @@
             <param name="p_row"></param>
             <returns></returns>
         </member>
+        <member name="M:Dt.App.Workflow.WfLogDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfLogDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfLogDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:Dt.App.Workflow.WfSendDlg">
             <summary>
             发起任务
@@ -2416,6 +2935,21 @@
             </summary>
             <param name="p_ar"></param>
             <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendDlg.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendDlg.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendDlg.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
         </member>
         <member name="T:Dt.App.WfFormInfo">
             <summary>
@@ -2580,9 +3114,24 @@
             管理表单
             </summary>
         </member>
-        <member name="T:Dt.App.GlobalStaticResources">
+        <member name="T:Dt.App.Dt_App_XamlTypeInfo.XamlMetaDataProvider">
             <summary>
-            Contains all the static resources defined for the application
+            Main class for providing metadata for the app or library
+            </summary>
+        </member>
+        <member name="M:Dt.App.Dt_App_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
+            <summary>
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Dt_App_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Dt_App_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
             </summary>
         </member>
     </members>
