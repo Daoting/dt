@@ -4,6 +4,10 @@
     <Description>DT控件库</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>D:\Dt\Client\Dt.Base\Dt.Base.xml</DocumentationFile>
+  </PropertyGroup>
+
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">

@@ -444,6 +444,7 @@ namespace Dt.Base
         /// <summary>
         /// 键盘按下事件处理
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -459,6 +460,7 @@ namespace Dt.Base
         /// <summary>
         /// 鼠标滚轮事件
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
@@ -469,6 +471,7 @@ namespace Dt.Base
         /// <summary>
         /// 鼠标按下修改光标位置
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -479,6 +482,7 @@ namespace Dt.Base
         /// <summary>
         /// 获得焦点时更新要显示的文本
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnGotFocus(object sender, RoutedEventArgs e)
         {
@@ -492,6 +496,7 @@ namespace Dt.Base
         /// <summary>
         /// 鼠标抬起修改选中内容的光标位置
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
@@ -501,6 +506,7 @@ namespace Dt.Base
         /// <summary>
         /// 失去焦点时更新要显示的文本和实际值
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnLostFocus(object sender, RoutedEventArgs e)
         {

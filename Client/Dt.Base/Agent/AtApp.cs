@@ -355,7 +355,7 @@ namespace Dt.Base
 
         #region UI模式切换
         /// <summary>
-        /// WinUI模式 <-> PhoneUI模式切换
+        /// WinUI模式 和 PhoneUI模式切换
         /// </summary>
         static void OnUIModeChanged()
         {

@@ -63,7 +63,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// SQL查询，返回对象列表
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
+        /// <typeparam name="TEntity">对象类型</typeparam>
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>对象列表</returns>
@@ -84,7 +84,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 查询，返回可枚举对象列表
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TRow"></typeparam>
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>

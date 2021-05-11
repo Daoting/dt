@@ -4,6 +4,10 @@
     <Description>DT内核库</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>D:\Dt\Client\Dt.Core\Dt.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>

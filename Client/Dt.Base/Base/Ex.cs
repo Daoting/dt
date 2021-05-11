@@ -65,7 +65,7 @@ namespace Dt.Base
 
         #region Lv多选状态
         /// <summary>
-        /// 双向绑定 Lv.SelectionMode <=> Mi.IsChecked，附加到Mi上
+        /// 双向绑定 Lv.SelectionMode 和 Mi.IsChecked，附加到Mi上
         /// </summary>
         public static readonly DependencyProperty LvMultiSelectProperty =
             DependencyProperty.RegisterAttached(

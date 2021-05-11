@@ -41,7 +41,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 执行查询，返回数据集
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
         public Table<TEntity> ExecuteQuery<TEntity>()
             where TEntity : Entity
@@ -166,7 +166,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 延时返回查询对象，利于性能提升
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TRow"></typeparam>
         /// <returns></returns>
         public IEnumerable<TRow> ForEach<TRow>()
             where TRow : Row

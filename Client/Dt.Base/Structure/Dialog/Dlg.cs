@@ -857,6 +857,7 @@ namespace Dt.Base
         /// <summary>
         /// 移动
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnHeaderPointerMoved(object sender, PointerRoutedEventArgs e)
         {
@@ -871,6 +872,7 @@ namespace Dt.Base
         /// <summary>
         /// 抬起
         /// </summary>
+        /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnHeaderPointerReleased(object sender, PointerRoutedEventArgs e)
         {

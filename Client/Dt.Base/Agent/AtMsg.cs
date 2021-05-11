@@ -26,7 +26,6 @@ namespace Dt.Base
         /// 客户端注册在线推送
         /// </summary>
         /// <param name="p_deviceInfo">客户端设备信息</param>
-        /// <param name="p_writer"></param>
         /// <returns></returns>
         public static Task<ResponseReader> Register(Dict p_deviceInfo)
         {

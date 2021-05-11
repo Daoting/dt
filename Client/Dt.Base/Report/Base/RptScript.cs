@@ -64,7 +64,7 @@ namespace Dt.Base
         /// <summary>
         /// RptView中打开上下文菜单
         /// </summary>
-        /// <param name="rightMenu"></param>
+        /// <param name="p_contextMenu"></param>
         public virtual void OpenContextMenu(Menu p_contextMenu)
         {
         }

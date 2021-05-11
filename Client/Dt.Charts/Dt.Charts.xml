@@ -1,0 +1,677 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dt.Charts</name>
+    </assembly>
+    <members>
+        <member name="T:Dt.Base.BubbleSeries">
+            <summary>
+            气泡图表，可以自定义气泡大小
+            </summary>
+        </member>
+        <member name="F:Dt.Base.BubbleSeries.SizeValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.BubbleSeries.SizeValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.Chart.HeaderProperty">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="E:Dt.Base.Chart.ActionEnter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.Chart.ActionLeave">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.Chart.LegendChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.Chart.ChartType">
+            <summary>
+            获取设置图表类型
+            </summary>
+        </member>
+        <member name="P:Dt.Base.Chart.Data">
+            <summary>
+            获取设置图表数据，始终不为null！
+            </summary>
+        </member>
+        <member name="P:Dt.Base.Chart.View">
+            <summary>
+            获取图表的视图对象
+            </summary>
+        </member>
+        <member name="P:Dt.Base.Chart.Header">
+            <summary>
+            获取设置图表标题内容
+            </summary>
+        </member>
+        <member name="P:Dt.Base.Chart.Palette">
+            <summary>
+            获取设置图表调色板
+            </summary>
+        </member>
+        <member name="M:Dt.Base.Chart.RebuildRenderer(Dt.Charts.IRenderer)">
+            <summary>
+            绘制图表
+            </summary>
+            <param name="renderer"></param>
+        </member>
+        <member name="F:Dt.Base.ChartData.ItemNamesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.ItemsSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.LoadAnimationProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.RendererProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.SelectionActionProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.SeriesItemsSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.ChartData.SeriesItemTemplateProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.ChartData.DataChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.ChartData.PropertyChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartData.ItemsSource">
+            <summary>
+            获取设置图表数据的数据源
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartData.ItemNameBinding">
+            <summary>
+            获取设置数据项名称绑定，ItemNames为null且指定ItemsSource时有效
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartData.ItemNames">
+            <summary>
+            获取设置数据项名称
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChartData.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChartData.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Base.ChartData.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="T:Dt.Base.ChartLegend">
+            <summary>
+            图例说明
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartLegend.Title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartLegend.Orientation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartLegend.OverlapChart">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartLegend.Position">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.ChartLegend.Chart">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ChartTypeProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionFillProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionStrokeDashesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionStrokeProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionStrokeThicknessProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ConnectionStyleProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.DisplayProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ItemsSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.LabelProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.PointLabelTemplateProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.PointTooltipTemplateProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SelectedItemLabelTemplateProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SelectedItemStyleProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolFillProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolMarkerProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolSizeProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolStrokeDashesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolStrokeProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolStrokeThicknessProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.SymbolStyleProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.DataSeries.ValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.DataSeries.PlotElementLoaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.DataSeries.PlotElementUnloaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="E:Dt.Base.DataSeries.PropertyChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Base.DataSeries.PointLabelTemplate">
+            <summary>
+            获取设置自定义标签模板
+            </summary>
+        </member>
+        <member name="P:Dt.Base.DataSeries.PointTooltipTemplate">
+            <summary>
+            获取设置Tooltip模板
+            </summary>
+        </member>
+        <member name="T:Dt.Base.HighLowOpenCloseSeries">
+            <summary>
+            财务图表
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowOpenCloseSeries.CloseValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowOpenCloseSeries.CloseValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowOpenCloseSeries.OpenValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowOpenCloseSeries.OpenValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Dt.Base.HighLowSeries">
+            <summary>
+            甘特图图表
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowSeries.HighValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowSeries.HighValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowSeries.LowValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.HighLowSeries.LowValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Dt.Base.TextToVisibleConverter">
+            <summary>
+            两种情况：
+            有文本内容时显示，无文本内容时隐藏(不占空间)
+            </summary>
+        </member>
+        <member name="P:Dt.Base.TextToVisibleConverter.Visible">
+            <summary>
+            获取设置目标有文本内容时是否显示
+            </summary>
+        </member>
+        <member name="M:Dt.Base.TextToVisibleConverter.Convert(System.Object,System.Type,System.Object,System.String)">
+            <summary>
+            返回是否显示
+            </summary>
+            <param name="value">正传递到目标的源数据</param>
+            <param name="targetType">目标依赖项属性需要的数据的 Type</param>
+            <param name="parameter">要在转换器逻辑中使用的可选参数</param>
+            <param name="language">语言</param>
+            <returns>要传递到目标依赖项属性的值</returns>
+        </member>
+        <member name="M:Dt.Base.TextToVisibleConverter.ConvertBack(System.Object,System.Type,System.Object,System.String)">
+            <summary>
+            单向绑定
+            </summary>
+            <param name="value">正传递到源的目标数据</param>
+            <param name="targetType">源对象需要的数据的 Type</param>
+            <param name="parameter">要在转换器逻辑中使用的可选参数</param>
+            <param name="language">语言</param>
+            <returns>要传递到源对象的值</returns>
+        </member>
+        <member name="T:Dt.Base.XYDataSeries">
+            <summary>
+            极线图表
+            </summary>
+        </member>
+        <member name="F:Dt.Base.XYDataSeries.XValuesProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Base.XYDataSeries.XValuesSourceProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Charts.ChartView.InvertedProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Dt.Charts.ChartView.PlotBackgroundProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.ChartView.Inverted">
+            <summary>
+            获取设置是否转换XY轴
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.ChartView.AxisX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.ChartView.AxisY">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.ChartView.Viewport">
+            <summary>
+            图表实际的可视内容
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.ChartViewport2D.CurrentSize">
+            <summary>
+            当前视口大小
+            </summary>
+        </member>
+        <member name="T:Dt.Charts.UnoControl">
+            <summary>
+            为屏蔽不同平台主事件调用顺序的不同，避免和DtControl重名
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.UnoControl.OnLoadTemplate">
+            <summary>
+            UWP：OnApplyTemplate时调用
+            uno：只在第一次Loaded事件时调用
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.UnoControl.OnControlLoaded">
+            <summary>
+            只在第一次Loaded事件时调用，始终在OnLoadTemplate后调用
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.Action.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.Action.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.Action.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="F:Dt.Charts.Axis.FontSizeProperty">
+            <summary>
+            调整为12，原NaN
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.Axis.Title">
+            <summary>
+            获取设置坐标轴标题
+            </summary>
+        </member>
+        <member name="P:Dt.Charts.Axis.MajorUnit">
+            <summary>
+            获取设置坐标轴单位
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BarColumnOptions.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BarColumnOptions.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BarColumnOptions.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BubbleOptions.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BubbleOptions.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.BubbleOptions.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.ChartPanelObjectCollection.#ctor">
+            <summary>
+            XamlTyp用，hdt
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.LineAreaOptions.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.LineAreaOptions.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.LineAreaOptions.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PieOptions.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PieOptions.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PieOptions.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotArea.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotArea.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotArea.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaColumnDefinition.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaColumnDefinition.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaColumnDefinition.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaRowDefinition.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaRowDefinition.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotAreaRowDefinition.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotElementAnimation.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotElementAnimation.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PlotElementAnimation.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PolarRadarOptions.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PolarRadarOptions.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.PolarRadarOptions.ApplyCompiledBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:Dt.Charts.SystemInfoEstimate.GetHalDevice(System.String[])">
+            <summary>
+            hdt
+            </summary>
+            <param name="properties"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Charts.SystemInfoEstimate.GetProcessorArchitectureAsync">
+            <summary>
+            hdt
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Charts.SystemInfoEstimate.GetRootDeviceInfoAsync(System.String)">
+            <summary>
+            hdt
+            </summary>
+            <param name="propertyKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Charts.SystemInfoEstimate.GetWindowsVersionAsync">
+            <summary>
+            hdt
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Charts.PlotElement">
+            <summary>
+            基础图元，继承Path时在uno中只支持Data为PathGeometry！
+            </summary>
+        </member>
+        <member name="T:Dt.Charts.GlobalStaticResources">
+            <summary>
+            Contains all the static resources defined for the application
+            </summary>
+        </member>
+    </members>
+</doc>

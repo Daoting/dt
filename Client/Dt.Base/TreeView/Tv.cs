@@ -1192,7 +1192,8 @@ namespace Dt.Base
         /// <summary>
         /// 触发单击行事件
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="p_data"></param>
+        /// <param name="p_oldData"></param>
         internal void OnItemClick(object p_data, object p_oldData)
         {
             ItemClick?.Invoke(this, new ItemClickArgs(p_data, p_oldData));

@@ -7,6 +7,10 @@
     <Version>1.9.1</Version>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>D:\Dt\Client\Dt.App\Dt.App.xml</DocumentationFile>
+  </PropertyGroup>
+
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>

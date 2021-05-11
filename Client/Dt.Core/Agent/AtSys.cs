@@ -235,7 +235,7 @@ namespace Dt.Core
         /// <summary>
         /// 同步服务器时间
         /// </summary>
-        /// <param name="p_cfg"></param>
+        /// <param name="p_serverTime"></param>
         internal static void SyncTime(DateTime p_serverTime)
         {
             // 与服务器时差

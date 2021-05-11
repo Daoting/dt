@@ -488,7 +488,7 @@ namespace Dt.Base.TreeView
         /// <summary>
         /// 生成行内容
         /// </summary>
-        /// <param name="p_vr"></param>
+        /// <param name="p_item"></param>
         /// <returns></returns>
         TvPanelItem CreateVirRow(TvItem p_item)
         {

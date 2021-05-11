@@ -6,6 +6,10 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>D:\Dt\Client\Dt.Cells\Dt.Cells.xml</DocumentationFile>
+  </PropertyGroup>
+
   <Import Project="..\Common\Dtc-Stable.props" />
 
   <ItemGroup>

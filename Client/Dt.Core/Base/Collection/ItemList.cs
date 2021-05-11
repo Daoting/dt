@@ -210,7 +210,6 @@ namespace Dt.Core
     /// <summary>
     /// 集合更改事件原型
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public delegate void ItemListChangedHandler(object sender, ItemListChangedArgs e);

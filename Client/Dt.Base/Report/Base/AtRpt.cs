@@ -32,6 +32,7 @@ namespace Dt.Base
         /// 打开新窗口显示报表
         /// </summary>
         /// <param name="p_info">报表描述信息</param>
+        /// <param name="p_winTitle"></param>
         /// <param name="p_icon">图标</param>
         public static async void Show(RptInfo p_info, string p_winTitle = null, Icons p_icon = Icons.折线图)
         {

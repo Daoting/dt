@@ -130,16 +130,17 @@ namespace Dt.Base.Report
         /// <summary>
         /// 输出图表
         /// </summary>
+        /// <param name="p_ws"></param>
         /// <param name="p_row"></param>
         /// <param name="p_col"></param>
-        public void Render(Worksheet _ws, int p_row, int p_col)
+        public void Render(Worksheet p_ws, int p_row, int p_col)
         {
             if (!ValidFilds())
                 return;
 
-            Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, RowSpan, ColSpan));
+            Rect rc = p_ws.GetRangeLocation(new CellRange(p_row, p_col, RowSpan, ColSpan));
             var chartType = GetChartType();
-            SpreadChart c = _ws.AddChart("chart" + _ws.Charts.Count.ToString(), chartType, rc.Left, rc.Top, rc.Width, rc.Height);
+            SpreadChart c = p_ws.AddChart("chart" + p_ws.Charts.Count.ToString(), chartType, rc.Left, rc.Top, rc.Width, rc.Height);
             // 锁定图表，禁止拖动缩放
             c.Locked = true;
 

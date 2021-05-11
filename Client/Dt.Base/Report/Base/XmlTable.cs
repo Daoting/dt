@@ -33,7 +33,9 @@ namespace Dt.Base.Report
         ///   /Param>
         /// /Params>
         /// </summary>
+        /// <param name="p_tbl"></param>
         /// <param name="p_reader"></param>
+        /// <param name="p_cdataCol"></param>
         public static void ReadXml(this Table p_tbl, XmlReader p_reader, string p_cdataCol)
         {
             if (p_reader == null)
@@ -76,6 +78,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 按指定元素名称序列化行数据xml
         /// </summary>
+        /// <param name="p_tbl"></param>
         /// <param name="p_writer"></param>
         /// <param name="p_rootName">根节点名称</param>
         /// <param name="p_rowName">行节点名称</param>
@@ -107,6 +110,7 @@ namespace Dt.Base.Report
         /// 读取xml中的单元格数据，元素名称任意，xml内容形如：
         ///   Param id="参数标识" name="参数名" type="double"
         /// </summary>
+        /// <param name="p_row"></param>
         /// <param name="p_reader"></param>
         public static void ReadXml(this Row p_row, XmlReader p_reader)
         {
@@ -126,6 +130,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 序列化行数据xml
         /// </summary>
+        /// <param name="p_row"></param>
         /// <param name="p_writer"></param>
         public static void WriteXml(this Row p_row, XmlWriter p_writer)
         {

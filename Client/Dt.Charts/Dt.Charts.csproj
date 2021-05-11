@@ -4,6 +4,10 @@
     <Description>DT平台图表控件库</Description>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>D:\Dt\Client\Dt.Charts\Dt.Charts.xml</DocumentationFile>
+  </PropertyGroup>
+
   <Import Project="..\Common\Dtc-Stable.props" />
   
 </Project>

@@ -229,7 +229,6 @@ namespace Dt.Base
         /// <summary>
         /// 增删子项
         /// </summary>
-        /// <param name="e"></param>
         protected override void OnItemsChanged()
         {
             UpdateTabStrip();

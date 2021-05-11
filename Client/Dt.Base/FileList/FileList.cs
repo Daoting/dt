@@ -446,7 +446,7 @@ namespace Dt.Base
         /// <summary>
         /// 处理多文件上传
         /// </summary>
-        /// <param name="p_vfs"></param>
+        /// <param name="p_files"></param>
         async Task<bool> HandleUpload(IList<FileData> p_files)
         {
             UploadStarted?.Invoke(this, EventArgs.Empty);
@@ -525,7 +525,7 @@ namespace Dt.Base
         /// 通过从库中选择文件添加，无上传过程，只更新文件信息
         /// 每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
         /// </summary>
-        /// <param name="p_fileJson"></param>
+        /// <param name="p_filesJson"></param>
         public void AddExistFiles(List<string> p_filesJson)
         {
             if (p_filesJson == null || p_filesJson.Count == 0)

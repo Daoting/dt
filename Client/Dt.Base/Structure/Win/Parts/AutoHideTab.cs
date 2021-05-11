@@ -99,7 +99,6 @@ namespace Dt.Base.Docking
         /// <summary>
         /// 增删子项
         /// </summary>
-        /// <param name="e"></param>
         protected override void OnItemsChanged()
         {
             ResetMargin();

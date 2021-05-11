@@ -1,0 +1,2589 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dt.App</name>
+    </assembly>
+    <members>
+        <member name="T:Dt.App.AtCm">
+            <summary>
+            内核模型服务Api代理类（自动生成）
+            </summary>
+        </member>
+        <member name="M:Dt.App.AtCm.LoginByPwd(System.String,System.String)">
+            <summary>
+            密码登录
+            </summary>
+            <param name="p_phone">手机号</param>
+            <param name="p_pwd">密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.LoginByCode(System.String,System.String)">
+            <summary>
+            验证码登录
+            </summary>
+            <param name="p_phone">手机号</param>
+            <param name="p_code">验证码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.CreateVerificationCode(System.String)">
+            <summary>
+            创建验证码
+            </summary>
+            <param name="p_phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.GetMenuTips(System.Collections.Generic.List{System.Int64})">
+            <summary>
+            获取菜单项的数字提示信息
+            </summary>
+            <param name="p_menuIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.GetMenus(System.Int64)">
+            <summary>
+            获取用户可访问的菜单，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns>返回版本号和菜单id串</returns>
+        </member>
+        <member name="M:Dt.App.AtCm.GetPrivileges(System.Int64)">
+            <summary>
+            获取用户具有的权限，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns>返回版本号和权限id串</returns>
+        </member>
+        <member name="M:Dt.App.AtCm.GetParams(System.Int64)">
+            <summary>
+            获取用户的所有参数值，更新数据版本号
+            </summary>
+            <param name="p_userID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.SaveParams(System.Int64,System.String,System.String)">
+            <summary>
+            保存用户参数值
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_paramID"></param>
+            <param name="p_value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.DeleteDataVer(System.Collections.Generic.List{System.Int64},System.String)">
+            <summary>
+            删除角色列表中所有用户的指定数据类型的版本号
+            </summary>
+            <param name="p_roleIDs"></param>
+            <param name="p_key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.RemoveUserRoles(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            删除用户关联的多个角色
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_roleIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.RemoveRoleUsers(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            删除角色关联的多个用户
+            </summary>
+            <param name="p_roleID"></param>
+            <param name="p_userIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.AddUserRole(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            批量增加用户关联的角色
+            </summary>
+            <param name="p_userID"></param>
+            <param name="p_roleIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.AddRoleUser(System.Int64,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            批量增加角色关联的用户
+            </summary>
+            <param name="p_roleID"></param>
+            <param name="p_userIDs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtCm.DeleteRole(System.Int64)">
+            <summary>
+            删除角色，同步缓存
+            </summary>
+            <param name="p_roleID"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.cm">
+            <summary>
+            内核模型服务，只为规范服务名称
+            </summary>
+        </member>
+        <member name="T:Dt.App.Chat.ChatHome">
+            <summary>
+            通讯录
+            </summary>
+        </member>
+        <member name="M:Dt.App.Chat.ChatHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Chat.ChatMemberList">
+            <summary>
+            聊天人员列表
+            </summary>
+        </member>
+        <member name="M:Dt.App.Chat.ChatMemberList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.File.EditFolderDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.FileHome">
+            <summary>
+            文件
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.FileHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.FileMgrSetting">
+            <summary>
+            文件管理的参数设置
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.FileMgrSetting.AllowEdit">
+            <summary>
+            允许编辑
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.FileMgrSetting.SaveHistory">
+            <summary>
+            是否记录已读文件
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.FileMgrSetting.OnOpenedFile">
+            <summary>
+            打开文件后的回调方法
+            </summary>
+        </member>
+        <member name="T:Dt.App.File.FolderPage">
+            <summary>
+            文件夹内容
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.FolderPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.IFileMgr">
+            <summary>
+            文件管理接口
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.IFileMgr.FolderID">
+            <summary>
+            当前文件夹标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.IFileMgr.FolderName">
+            <summary>
+            当前文件夹
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.IFileMgr.Setting">
+            <summary>
+            参数设置
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.GetChildren">
+            <summary>
+            获取所有子项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.GetChildFolders">
+            <summary>
+            获取子文件夹
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.GetChildrenByType(System.String)">
+            <summary>
+            获取所有子文件夹和指定扩展名的文件
+            </summary>
+            <param name="p_typeFilter">文件扩展名，逗号隔开</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.SearchFiles(System.String)">
+            <summary>
+            查询文件
+            </summary>
+            <param name="p_name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.SaveFolder(System.Int64,System.String)">
+            <summary>
+            保存文件夹
+            </summary>
+            <param name="p_id"></param>
+            <param name="p_name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.SaveFile(Dt.Core.Row)">
+            <summary>
+            上传文件
+            </summary>
+            <param name="p_row"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.Delete(System.Collections.Generic.IEnumerable{Dt.Core.Row})">
+            <summary>
+            删除
+            </summary>
+            <param name="p_rows"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.IFileMgr.MoveFiles(System.Collections.Generic.IEnumerable{Dt.Core.Row},System.Int64)">
+            <summary>
+            移到
+            </summary>
+            <param name="p_files"></param>
+            <param name="p_folderID">目标文件夹</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.MoveFileDlg.RemoveSelection(Dt.Core.Table,Dt.App.File.IFileMgr)">
+            <summary>
+            过滤已选择的文件夹，避免移到自己的子目录！
+            </summary>
+            <param name="p_tbl"></param>
+            <param name="p_target"></param>
+        </member>
+        <member name="M:Dt.App.File.MoveFileDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.MoveFilePage">
+            <summary>
+            选择移动到的目标文件夹
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.MoveFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.File.Myfile.ParentID">
+            <summary>
+            上级目录，根目录的parendid为空
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.IsFolder">
+            <summary>
+            是否为文件夹
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.ExtName">
+            <summary>
+            文件扩展名
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.Info">
+            <summary>
+            文件描述信息
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Myfile.UserID">
+            <summary>
+            所属用户
+            </summary>
+        </member>
+        <member name="T:Dt.App.File.MyFileMgr">
+            <summary>
+            个人文件管理
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.ParentID">
+            <summary>
+            上级目录，根目录的parendid为空
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.IsFolder">
+            <summary>
+            是否为文件夹
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.ExtName">
+            <summary>
+            文件扩展名
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.Info">
+            <summary>
+            文件描述信息
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.Pubfile.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.File.PubFileMgr">
+            <summary>
+            公共文件管理
+            </summary>
+        </member>
+        <member name="T:Dt.App.File.ReadFileHistory">
+            <summary>
+            打开过的文件历史
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.ReadFileHistory.ID">
+            <summary>
+            文件标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.ReadFileHistory.Info">
+            <summary>
+            文件描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.File.ReadFileHistory.LastReadTime">
+            <summary>
+            最后打开时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.File.SearchFilePage">
+            <summary>
+            搜索文件
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SearchFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.File.SelectFileDlg.SelectedFiles">
+            <summary>
+            已选择的文件列表，每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectFileDlg.Show(System.Boolean,System.String)">
+            <summary>
+            显示文件选择对话框
+            </summary>
+            <param name="p_isMultiSelection">是否允许多选</param>
+            <param name="p_typeFilter">按文件扩展名过滤</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.File.SelectFileDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.SelectFilePage">
+            <summary>
+            选择移动到的目标文件夹
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectFilePage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.SelectLibPage">
+            <summary>
+            选择库
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectLibPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.File.SelectSearchPage">
+            <summary>
+            搜索文件
+            </summary>
+        </member>
+        <member name="M:Dt.App.File.SelectSearchPage.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.DefaultHome">
+            <summary>
+            主页
+            </summary>
+        </member>
+        <member name="M:Dt.App.DefaultHome.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Home.GroupMenu">
+            <summary>
+            分组菜单项页面
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.GroupMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Home.MyMain">
+            <summary>
+            我的
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.MyMain.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Home.RootMenu">
+            <summary>
+            根级菜单项页面(带分组)
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.RootMenu.OnLoaded(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            每次加载时刷新提示信息
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Home.RootMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Home.SearchMenu">
+            <summary>
+            搜索菜单项
+            </summary>
+        </member>
+        <member name="M:Dt.App.Home.SearchMenu.OnSearch(System.Object,System.String)">
+            <summary>
+            查询菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="p_filter"></param>
+        </member>
+        <member name="M:Dt.App.Home.SearchMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Login">
+            <summary>
+            登录页面
+            </summary>
+        </member>
+        <member name="P:Dt.App.Login.Desc">
+            <summary>
+            系统描述信息
+            </summary>
+        </member>
+        <member name="M:Dt.App.Login.OnLogin">
+            <summary>
+            登录
+            </summary>
+        </member>
+        <member name="M:Dt.App.Login.OnGetCode(System.Object,Windows.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            获取验证码
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Login.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.MenuFav">
+            <summary>
+            收藏菜单项
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuFav.UserID">
+            <summary>
+            用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuFav.MenuID">
+            <summary>
+            菜单标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuFav.Clicks">
+            <summary>
+            点击次数，在常用列表中排序用，可以被重置
+            </summary>
+        </member>
+        <member name="T:Dt.App.MenuKit">
+            <summary>
+            当前登录用户相关的管理类，内容包括：
+            1. 登录用户基本信息
+            2. 菜单，收藏菜单
+            3. 权限
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuKit.RootPageMenus">
+            <summary>
+            获取当前登录用户的根页面菜单（包含一二级）
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuKit.FavMenus">
+            <summary>
+            获取当前登录用户的收藏菜单
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuKit.FixedMenus">
+            <summary>
+            获取默认固定菜单项
+            </summary>
+        </member>
+        <member name="P:Dt.App.MenuKit.FixedMenusCount">
+            <summary>
+            获取默认固定菜单项数
+            </summary>
+        </member>
+        <member name="M:Dt.App.MenuKit.OpenMenu(Dt.App.OmMenu)">
+            <summary>
+            打开菜单项窗口，可以由点击菜单项或直接代码构造Menu的方式调用
+            </summary>
+            <param name="p_menu">OmMenu实例</param>
+            <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.QueryMenu(System.Int64)">
+            <summary>
+            根据菜单ID查询菜单
+            </summary>
+            <param name="p_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.LoadMenus">
+            <summary>
+            加载当前登录用户的菜单，性能已调优
+            </summary>
+        </member>
+        <member name="M:Dt.App.MenuKit.LoadGroupMenus(Dt.App.OmMenu)">
+            <summary>
+            加载分组菜单下的菜单项
+            </summary>
+            <param name="p_parentMenu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.LoadMenusByName(System.String)">
+            <summary>
+            加载具有指定名称或拼音缩写的菜单项
+            </summary>
+            <param name="p_filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.GetMenuPath(Dt.App.OmMenu)">
+            <summary>
+            获取给定菜单的路径
+            </summary>
+            <param name="p_menu"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.GetAllUserMenus">
+            <summary>
+            获取用户可访问的菜单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.MenuKit.IsExistChild(Dt.App.OmMenu)">
+            <summary>
+            递归判断是否存在下级菜单
+            </summary>
+            <param name="p_parentMenu"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.UserMenu">
+            <summary>
+            用户可访问的菜单
+            </summary>
+        </member>
+        <member name="T:Dt.App.OmMenu">
+            <summary>
+            本地库业务菜单
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.ID">
+            <summary>
+            父菜单项ID
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.ParentID">
+            <summary>
+            父菜单项ID
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.IsGroup">
+            <summary>
+            菜单类型是否为分组
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.ViewName">
+            <summary>
+            菜单对应的视图名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.Params">
+            <summary>
+            菜单参数
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.SvcName">
+            <summary>
+            提供提示信息的服务名称，空表示无提示信息
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.Note">
+            <summary>
+            菜单描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.DispIdx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.OmMenu.Warning">
+            <summary>
+            菜单项醒目提示的数字
+            </summary>
+        </member>
+        <member name="M:Dt.App.OmMenu.SetWarningNum(System.Int32)">
+            <summary>
+            设置菜单项醒目提示的数字
+            </summary>
+            <param name="p_num"></param>
+        </member>
+        <member name="M:Dt.App.Model.BaseOption.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.Option.Name">
+            <summary>
+            选项名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Option.Category">
+            <summary>
+            所属分类
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Option.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.ParentID">
+            <summary>
+            父菜单标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.IsGroup">
+            <summary>
+            分组或实例。0表实例，1表分组
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.ViewName">
+            <summary>
+            视图名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Params">
+            <summary>
+            传递给菜单程序的参数
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.SvcName">
+            <summary>
+            提供提示信息的服务名称，空表示无提示信息
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Note">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.IsLocked">
+            <summary>
+            定义了菜单是否被锁定。0表未锁定，1表锁定不可用
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Menu.Mtime">
+            <summary>
+            最后修改时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.RoleMenu.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.RoleMenu.MenuID">
+            <summary>
+            菜单标识
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SysMenu.OnFvDataChanged(System.Object,System.Object)">
+            <summary>
+            表单切换数据源：驱动其它控件联动操作
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Model.SysMenu.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Model.MyParamsSetting">
+            <summary>
+            分组菜单项页面
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.MyParamsSetting.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.Params.ID">
+            <summary>
+            用户参数标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Params.Value">
+            <summary>
+            参数缺省值
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Params.Note">
+            <summary>
+            参数描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Params.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Params.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.UserParamsDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.UserParamsMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.BasePrivilege.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.EditPrvDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.Prv.ID">
+            <summary>
+            权限名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Prv.Note">
+            <summary>
+            权限描述
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.ReportMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.Rpt.Name">
+            <summary>
+            报表名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Rpt.Define">
+            <summary>
+            报表模板定义
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Rpt.Note">
+            <summary>
+            报表描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Rpt.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Rpt.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditRoleDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.Role.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.Role.Note">
+            <summary>
+            角色描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.RolePrv.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.RolePrv.PrvID">
+            <summary>
+            权限标识
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.SelectRoleMenuDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolePrvDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SelectUserDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SysRole.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Model.SelectRolesDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Model.RoleRelations">
+            <summary>
+            角色关联的种类
+            </summary>
+        </member>
+        <member name="F:Dt.App.Model.RoleRelations.Prv">
+            <summary>
+            权限
+            </summary>
+        </member>
+        <member name="F:Dt.App.Model.RoleRelations.User">
+            <summary>
+            用户
+            </summary>
+        </member>
+        <member name="F:Dt.App.Model.RoleRelations.Menu">
+            <summary>
+            菜单
+            </summary>
+        </member>
+        <member name="F:Dt.App.Model.RoleRelations.WfAtv">
+            <summary>
+            流程中的活动
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.EditUserDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Model.User.Phone">
+            <summary>
+            手机号，唯一
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Pwd">
+            <summary>
+            密码的md5
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Sex">
+            <summary>
+            性别，0女1男
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Photo">
+            <summary>
+            头像
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Expired">
+            <summary>
+            是否停用
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Model.User.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="M:Dt.App.Model.UserAccount.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.ReportView">
+            <summary>
+            报表预览视图，可由菜单命令启动或自定义启动
+            </summary>
+        </member>
+        <member name="M:Dt.App.ReportView.Run(System.String,Dt.Base.Icons,System.Object)">
+            <summary>
+            视图启动入口
+            </summary>
+            <param name="p_title">标题</param>
+            <param name="p_icon">图标</param>
+            <param name="p_params">启动参数</param>
+        </member>
+        <member name="P:Dt.App.Publish.Album.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Album.Creator">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Album.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.Publish.AtPublish">
+            <summary>
+            发布服务Api代理类（自动生成）
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.AtPublish.CreatePage(System.String,System.String)">
+            <summary>
+            创建静态页面
+            </summary>
+            <param name="p_title">页面标题</param>
+            <param name="p_content">页面内容</param>
+            <returns>返回静态页面的路径，生成失败返回null</returns>
+        </member>
+        <member name="M:Dt.App.Publish.AtPublish.CreateTestPage(System.String,System.String)">
+            <summary>
+            创建测试页面
+            </summary>
+            <param name="p_title">页面标题</param>
+            <param name="p_content">页面内容</param>
+            <returns>返回页面路径，生成失败返回null</returns>
+        </member>
+        <member name="T:Dt.App.Publish.pub">
+            <summary>
+            只为规范服务名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Keyword.ID">
+            <summary>
+            关键字
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Keyword.Creator">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Keyword.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Title">
+            <summary>
+            标题
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Cover">
+            <summary>
+            封面
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Summary">
+            <summary>
+            摘要
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Content">
+            <summary>
+            内容
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.TempType">
+            <summary>
+            在列表中显示时的模板类型
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.IsPublish">
+            <summary>
+            是否发布
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.AllowCoverClick">
+            <summary>
+            封面可点击
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.AllowComment">
+            <summary>
+            是否允许评论
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.AddAlbumLink">
+            <summary>
+            文章末尾是否添加同专辑链接
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.AddKeywordLink">
+            <summary>
+            文章末尾是否添加同关键字链接
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Url">
+            <summary>
+            文章地址
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.CreatorID">
+            <summary>
+            创建人ID
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Creator">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.LastEditorID">
+            <summary>
+            最后编辑人ID
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.LastEditor">
+            <summary>
+            最后编辑人
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.Mtime">
+            <summary>
+            最后修改时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.ReadCount">
+            <summary>
+            阅读次数
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Post.CommentCount">
+            <summary>
+            评论总数
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Postalbum.PostID">
+            <summary>
+            文章标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Postalbum.AlbumID">
+            <summary>
+            专辑标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Postkeyword.PostID">
+            <summary>
+            文章标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Publish.Postkeyword.Keyword">
+            <summary>
+            关键字
+            </summary>
+        </member>
+        <member name="M:Dt.App.Publish.AlbumMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.EditAlbumDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.EditKeywordDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.KeywordMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PostMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.ResLibWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.SelectAlbumDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.SelectKeywordDlg.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PostDetail.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PostList.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PublishMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Publish.PublishView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.AtvRecv">
+            <summary>
+            后续活动接收者信息
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.Def">
+            <summary>
+            获取设置活动定义
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.IsRole">
+            <summary>
+            获取设置是否按角色接收
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.Recvs">
+            <summary>
+            获取设置接收者(角色或用户)列表
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.SelectedRecvs">
+            <summary>
+            已选择的接收者id(角色或用户)
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.Note">
+            <summary>
+            获取设置发送时的备注
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.MultiSelection">
+            <summary>
+            获取是否可多选
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecv.IsReadOnly">
+            <summary>
+            获取是否为只读(不可手动选择)
+            </summary>
+        </member>
+        <member name="T:Dt.App.AtvSyncRecv">
+            <summary>
+            同步活动的后续活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvSyncRecv.SyncDef">
+            <summary>
+            同步活动定义
+            </summary>
+        </member>
+        <member name="T:Dt.App.AtvFinishedRecv">
+            <summary>
+            结束活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvFinishedRecv.Def">
+            <summary>
+            结束活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvFinishedRecv.IsSelected">
+            <summary>
+            是否选择结束活动
+            </summary>
+        </member>
+        <member name="T:Dt.App.AtvRecvs">
+            <summary>
+            后续活动列表
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecvs.Atvs">
+            <summary>
+            普遍活动的后续活动列表
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecvs.SyncAtv">
+            <summary>
+            同步活动的后续活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecvs.FinishedAtv">
+            <summary>
+            结束活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.AtvRecvs.AtvCount">
+            <summary>
+            后续活动数
+            </summary>
+        </member>
+        <member name="T:Dt.App.AtWf">
+            <summary>
+            流程功能代理类
+            </summary>
+        </member>
+        <member name="M:Dt.App.AtWf.OpenFormWin(Dt.App.WfFormInfo)">
+            <summary>
+            打开流程表单窗口（创建、编辑或浏览表单）
+            </summary>
+            <param name="p_info">流程表单描述信息</param>
+        </member>
+        <member name="M:Dt.App.AtWf.CreateFormWin(Dt.App.WfFormInfo)">
+            <summary>
+            创建流程表单窗口
+            </summary>
+            <param name="p_info">流程表单描述信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.AtWf.ShowLog(System.Int64,System.Int64)">
+            <summary>
+            查看日志(流程图)
+            </summary>
+            <param name="p_prcID">流程实例id</param>
+            <param name="p_prciID">流程模板id，-1时内部查询</param>
+        </member>
+        <member name="M:Dt.App.AtWf.AddMenu(Dt.Base.Lv)">
+            <summary>
+            为Lv增加默认上下文菜单
+            </summary>
+            <param name="p_lv"></param>
+        </member>
+        <member name="T:Dt.App.IWfForm">
+            <summary>
+            流程表单接口
+            </summary>
+        </member>
+        <member name="M:Dt.App.IWfForm.Init(Dt.App.WfFormInfo)">
+            <summary>
+            初始化表单
+            </summary>
+            <param name="p_info"></param>
+        </member>
+        <member name="M:Dt.App.IWfForm.Save">
+            <summary>
+            保存表单数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.IWfForm.Delete">
+            <summary>
+            删除表单数据，禁止删除或删除失败时可返回false
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.IWfForm.GetPrcName">
+            <summary>
+            任务单名称
+            </summary>
+        </member>
+        <member name="T:Dt.App.WfSendingArgs">
+            <summary>
+            发送前事件参数
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfSendingArgs.Recvs">
+            <summary>
+            获取后续活动相关内容
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignLeft(System.Object,Dt.Base.Mi)">
+            <summary>
+            左对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignRight(System.Object,Dt.Base.Mi)">
+            <summary>
+            右对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignTop(System.Object,Dt.Base.Mi)">
+            <summary>
+            上部对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignBottom(System.Object,Dt.Base.Mi)">
+            <summary>
+            底部对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignHorCenter(System.Object,Dt.Base.Mi)">
+            <summary>
+            水平居中对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnAlignVerCenter(System.Object,Dt.Base.Mi)">
+            <summary>
+            垂直居中对齐
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnHorSpace(System.Object,Dt.Base.Mi)">
+            <summary>
+            水平间距
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.OnVerSpace(System.Object,Dt.Base.Mi)">
+            <summary>
+            垂直间距
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.AlignMenu.RefreshSketch">
+            <summary>
+            刷新_sketch
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.OnStartNode(System.Object,Dt.Base.Mi)">
+            <summary>
+            执行插入开始菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.OnAtvNode(System.Object,Dt.Base.Mi)">
+            <summary>
+            执行插入任务菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.OnSyncNode(System.Object,Dt.Base.Mi)">
+            <summary>
+            执行插入延时菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.OnEndNode(System.Object,Dt.Base.Mi)">
+            <summary>
+            执行插入结束菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.OnTextNode(System.Object,Dt.Base.Mi)">
+            <summary>
+            执行插入文本项菜单
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.Insert(Windows.UI.Xaml.FrameworkElement)">
+            <summary>
+            执行插入方法
+            </summary>
+            <param name="p_elem"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInsertMenu.IsValidByShapetype(System.String)">
+            <summary>
+            在sketch中判断是否存在指定形状的Snode对象。
+            </summary>
+            <param name="p_shapetype"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.Workflow.AtvRole">
+            <summary>
+            活动授权
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.AtvRole.OnFilter(System.Object)">
+            <summary>
+            数据行过滤
+            </summary>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.Workflow.WfAtvForm">
+            <summary>
+            普通活动模板表单
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfEndAtvForm">
+            <summary>
+            结束活动表单
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfNodeProperty">
+            <summary>
+            图元属性面板
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfStartAtvForm">
+            <summary>
+            起始活动模板表单
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfSyncAtvForm">
+            <summary>
+            同步活动表单
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfTextForm">
+            <summary>
+            图元属性面板
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfTrsForm">
+            <summary>
+            迁移属性表单
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.LoadAtvForm(Dt.Base.SNode)">
+            <summary>
+            加载活动表单
+            </summary>
+            <param name="p_node"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.LoadTrsForm(Dt.Base.SLine)">
+            <summary>
+            加载迁移表单
+            </summary>
+            <param name="p_line"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.LoadTextForm(Windows.UI.Xaml.Controls.TextBlock)">
+            <summary>
+            加载TextBlock属性编辑
+            </summary>
+            <param name="p_tb"></param>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowDesign.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.PrcID">
+            <summary>
+            流程标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.Name">
+            <summary>
+            活动名称，同时作为状态名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.Type">
+            <summary>
+            活动类别 0:普通活动 1:开始活动 2:同步活动 3:结束活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.ExecScope">
+            <summary>
+            执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.ExecLimit">
+            <summary>
+            执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.ExecAtvID">
+            <summary>
+            在执行者限制为3或4时选择的活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.AutoAccept">
+            <summary>
+            是否自动签收，打开工作流视图时自动签收工作项
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.CanDelete">
+            <summary>
+            能否删除流程实例和业务数据，0否 1
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.CanTerminate">
+            <summary>
+            能否中止流程实例，中止一个流程是流程的一种非正常的结束，0否 1能
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.CanJumpInto">
+            <summary>
+            是否可作为跳转目标，0不可跳转 1可以
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.TransKind">
+            <summary>
+            当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.JoinKind">
+            <summary>
+            同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtv.Mtime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfdAtvType">
+            <summary>
+            活动类别
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvType.Normal">
+            <summary>
+            普通活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvType.Start">
+            <summary>
+            开始活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvType.Sync">
+            <summary>
+            同步活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvType.Finish">
+            <summary>
+            结束活动
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfdAtvExecLimit">
+            <summary>
+            执行者限制
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfdAtvExecScope">
+            <summary>
+            执行者范围
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvExecScope.一组用户">
+            <summary>
+            一个角色的所有用户中有一个或多个用户处理活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvExecScope.所有用户">
+            <summary>
+            一个角色的所有用户都必须处理活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvExecScope.单个用户">
+            <summary>
+            一个角色的所有用户中需要指定一个用户处理活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvExecScope.任一用户">
+            <summary>
+            角色的所有用户都可以接收活动，但只要有一个用户签收了活动，其他用户就不能处理活动
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfdAtvJoinKind">
+            <summary>
+            同步活动的聚合方式
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvJoinKind.全部任务">
+            <summary>
+            同步活动前的活动实例必须全部完成，才能激活后续活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvJoinKind.任一任务">
+            <summary>
+            只要同步活动前存在一个已完成的活动实例，就激活后续活动
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvJoinKind.即时同步">
+            <summary>
+            等待在开始活动到同步活动之间所有已激活的活动完成
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfdAtvTransKind">
+            <summary>
+            活动的后续迁移方式
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvTransKind.自由选择">
+            <summary>
+            自由选择后续迁移
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvTransKind.全部">
+            <summary>
+            活动的所有后续迁移都执行
+            </summary>
+        </member>
+        <member name="F:Dt.App.Workflow.WfdAtvTransKind.独占式选择">
+            <summary>
+            只允许选择一条后续迁移
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtvrole.AtvID">
+            <summary>
+            活动标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdAtvrole.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Name">
+            <summary>
+            流程名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Diagram">
+            <summary>
+            流程图
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.IsLocked">
+            <summary>
+            锁定标志，0表未锁定；1表锁定，不能创建流程实例，已启动的流程实例继续执行
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Singleton">
+            <summary>
+            同一时刻只允许有一个激活的流程实例，0表非单实例，1表单实例
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.FormType">
+            <summary>
+            表单类型
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.ListType">
+            <summary>
+            表单查询类型
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Note">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdPrc.Mtime">
+            <summary>
+            最后修改时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdTrs.PrcID">
+            <summary>
+            流程模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdTrs.SrcAtvID">
+            <summary>
+            起始活动模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdTrs.TgtAtvID">
+            <summary>
+            目标活动模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdTrs.IsRollback">
+            <summary>
+            是否为回退迁移
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfdTrs.TrsID">
+            <summary>
+            类别为回退迁移时对应的常规迁移标识
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfiAtv.IsFinished">
+            <summary>
+            判断当前活动是否完成，发送者是否为当前活动的最后一个发送者
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfiAtv.Finished">
+            <summary>
+            结束当前活动
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfiAtv.GetRollbackAtv">
+            <summary>
+            获得当前活动的回退活动
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.PrciID">
+            <summary>
+            流程实例标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.AtvdID">
+            <summary>
+            活动模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.Status">
+            <summary>
+            活动实例的状态 0活动 1结束 2终止 3同步活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.InstCount">
+            <summary>
+            活动实例在流程实例被实例化的次数
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiAtv.Mtime">
+            <summary>
+            最后一次状态改变的时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfiAtvStatus">
+            <summary>
+            活动实例状态
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.AtviID">
+            <summary>
+            活动实例标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Status">
+            <summary>
+            工作项状态 0活动 1结束 2终止 3同步活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.AssignKind">
+            <summary>
+            指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Sender">
+            <summary>
+            发送者
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Stime">
+            <summary>
+            发送时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.IsAccept">
+            <summary>
+            是否签收此项任务
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.AcceptTime">
+            <summary>
+            签收时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.RoleID">
+            <summary>
+            执行者角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.UserID">
+            <summary>
+            执行者用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Note">
+            <summary>
+            工作项备注
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiItem.Mtime">
+            <summary>
+            最后一次状态改变的时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfiItemStatus">
+            <summary>
+            工作项状态
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfiItemAssignKind">
+            <summary>
+            指派方式
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.PrcdID">
+            <summary>
+            流程模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.Name">
+            <summary>
+            流转单名称
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.Status">
+            <summary>
+            流程实例状态 0活动 1结束 2终止
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.Dispidx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.Ctime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiPrc.Mtime">
+            <summary>
+            最后一次状态改变的时间
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfiPrcStatus">
+            <summary>
+            流程实例状态
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiTrs.TrsdID">
+            <summary>
+            迁移模板标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiTrs.SrcAtviID">
+            <summary>
+            起始活动实例标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiTrs.TgtAtviID">
+            <summary>
+            目标活动实例标识
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiTrs.IsRollback">
+            <summary>
+            是否为回退迁移，1表回退
+            </summary>
+        </member>
+        <member name="P:Dt.App.Workflow.WfiTrs.Ctime">
+            <summary>
+            迁移时间
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfInstMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WfTemplateMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WorkflowMgr.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Workflow.WfAcceptCmd">
+            <summary>
+            签收命令
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfDeleteCmd">
+            <summary>
+            删除流程实例命令
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfLogCmd">
+            <summary>
+            查看日志(流程图)命令
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfRollbackCmd">
+            <summary>
+            回退命令
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfSaveCmd">
+            <summary>
+            保存命令
+            </summary>
+        </member>
+        <member name="T:Dt.App.Workflow.WfSendCmd">
+            <summary>
+            发送命令
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.DoSend(System.Boolean)">
+            <summary>
+            执行发送
+            </summary>
+            <param name="p_manualSend">是否手动选择接收者</param>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.SaveWorkItem(System.Boolean)">
+            <summary>
+            保存当前工作项置完成状态
+            </summary>
+            <param name="p_isFinished"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.LoadRecvs(Dt.App.Workflow.WfdAtv)">
+            <summary>
+            加载活动的接收者
+            </summary>
+            <param name="p_atv"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.IsActive(Dt.App.Workflow.WfdAtv)">
+            <summary>
+            是否激活后续活动
+            </summary>
+            <param name="p_atvSync">同步活动</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.GetAllFinish(Dt.Core.Table{Dt.App.Workflow.WfdTrs})">
+            <summary>
+            获得同步前的活动是否已经都完成
+            </summary>
+            <param name="p_trss"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.GetExistFinish(Dt.Core.Table{Dt.App.Workflow.WfdTrs})">
+            <summary>
+            同步前已存在的实例是否都完成
+            </summary>
+            <param name="p_trss"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendCmd.GetAtvUsers(System.Int64)">
+            <summary>
+            获取活动的所有可执行用户
+            </summary>
+            <param name="p_atvid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.CurrentTasks.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.HistoryTasks.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Workflow.StartWorkflow">
+            <summary>
+            发起任务
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.TasksView.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="M:Dt.App.Workflow.WfFormWin.LoadMenu(Dt.App.WfFormInfo)">
+            <summary>
+            加载默认菜单，自动绑定命令
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfFormWin.#ctor(System.IntPtr,Android.Runtime.JniHandleOwnership)">
+            <summary>
+            Native constructor, do not use explicitly.
+            </summary>
+            <remarks>
+            Used by the Xamarin Runtime to materialize native 
+            objects that may have been collected in the managed world.
+            </remarks>
+        </member>
+        <member name="T:Dt.App.Workflow.WfLogDlg">
+            <summary>
+            查看日志
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfLogDlg.GetWfLog(System.Int64,System.Int64)">
+            <summary>
+            获取指定流程的日志
+            </summary>
+            <param name="p_prciID">流程ID</param>
+            <param name="p_atvdID">活动ID（查询当前活动日志），0时为整个流程</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.Workflow.WfLogDlg.BuildNext(Dt.Core.Row)">
+            <summary>
+            构造当前数据的下一步骤
+            </summary>
+            <param name="p_row"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.Workflow.WfSendDlg">
+            <summary>
+            发起任务
+            </summary>
+        </member>
+        <member name="M:Dt.App.Workflow.WfSendDlg.CreateItem(Dt.App.AtvRecv)">
+            <summary>
+            每个活动接收者对应一个Lv
+            </summary>
+            <param name="p_ar"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.WfFormInfo">
+            <summary>
+            流程描述信息，加载流程表单的参数
+            </summary>
+        </member>
+        <member name="F:Dt.App.WfFormInfo.Sending">
+            <summary>
+            发送前事件，用于外部自定义执行者范围
+            </summary>
+        </member>
+        <member name="F:Dt.App.WfFormInfo.FormClosed">
+            <summary>
+            表单关闭事件
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.State">
+            <summary>
+            获取当前状态名称（即活动名称）
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.ID">
+            <summary>
+            业务数据主键，也是流程实例主键
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.IsNew">
+            <summary>
+            是否为新表单
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.Usage">
+            <summary>
+            获取设置表单的使用场景
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.Menu">
+            <summary>
+            获取表单菜单
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.PrcDef">
+            <summary>
+            获取流程模板定义
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.AtvDef">
+            <summary>
+            获取当前活动定义
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.PrcInst">
+            <summary>
+            获取流程实例
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.AtvInst">
+            <summary>
+            获取当前活动实例
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.WorkItem">
+            <summary>
+            获取当前工作项
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.IsRollback">
+            <summary>
+            获取是否为回退活动
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.IsStartItem">
+            <summary>
+            是否为开始活动工作项
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.FormWin">
+            <summary>
+            流程表单窗口
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.FormType">
+            <summary>
+            表单类型
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.NextRecvs">
+            <summary>
+            获取后续活动列表
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdSend">
+            <summary>
+            发送命令
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdRollback">
+            <summary>
+            回退命令
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdAccept">
+            <summary>
+            签收/取消签收命令
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdSave">
+            <summary>
+            保存表单命令
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdDelete">
+            <summary>
+            删除流程实例命令
+            </summary>
+        </member>
+        <member name="P:Dt.App.WfFormInfo.CmdLog">
+            <summary>
+            查看日志(流程图)命令
+            </summary>
+        </member>
+        <member name="M:Dt.App.WfFormInfo.CreateAtvTrs(System.Int64,System.Int64,System.DateTime,System.Boolean)">
+            <summary>
+            创建迁移实例
+            </summary>
+            <param name="p_tatvid">目标活动模板标识</param>
+            <param name="p_tatviid">目标活动实例标识</param>
+            <param name="p_date">创建时间</param>
+            <param name="p_rollback">是否回退</param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.WfFormInfo.GetPrcDef(System.Int64)">
+            <summary>
+            加载流程定义
+            </summary>
+            <param name="p_prcID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.App.WfFormInfo.AllowRollback">
+            <summary>
+            是否允许回退
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.App.WfFormUsage">
+            <summary>
+            流程表单的使用场景
+            </summary>
+        </member>
+        <member name="F:Dt.App.WfFormUsage.Edit">
+            <summary>
+            填写发送表单
+            </summary>
+        </member>
+        <member name="F:Dt.App.WfFormUsage.Read">
+            <summary>
+            浏览表单
+            </summary>
+        </member>
+        <member name="F:Dt.App.WfFormUsage.Manage">
+            <summary>
+            管理表单
+            </summary>
+        </member>
+        <member name="T:Dt.App.GlobalStaticResources">
+            <summary>
+            Contains all the static resources defined for the application
+            </summary>
+        </member>
+    </members>
+</doc>
