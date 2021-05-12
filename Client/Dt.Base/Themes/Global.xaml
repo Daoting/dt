@@ -249,6 +249,8 @@
                         <TextBlock Text="{TemplateBinding Content}"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="{TemplateBinding FontSize}"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                    Margin="{TemplateBinding Padding}" />
 
                         <VisualStateManager.VisualStateGroups>
