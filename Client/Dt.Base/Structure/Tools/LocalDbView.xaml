@@ -15,12 +15,14 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <StackPanel VerticalAlignment="Center">
                                 <a:Dot ID="name" />
                                 <a:Dot ID="info" FontSize="12" Foreground="{StaticResource 深灰边框}" />
                             </StackPanel>
                             <Button Content="备份" Click="OnBackup" VerticalAlignment="Center" Grid.Column="1" />
+                            <Button Content="分享" Click="OnShare" VerticalAlignment="Center" Grid.Column="2" />
                         </Grid>
                     </DataTemplate>
                 </a:Lv>

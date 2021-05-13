@@ -117,6 +117,17 @@ namespace Dt.Base.Tools
         }
 #endif
 
+        async void OnShare(object sender, RoutedEventArgs e)
+        {
+            var row = ((LvItem)((Button)sender).DataContext).Row;
+            var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = "分享文件",
+                File = new ShareFile(dbFile)
+            });
+        }
+
         void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
@@ -159,5 +170,6 @@ namespace Dt.Base.Tools
         {
             return SqliteDbs.GetDb(_lvDb.SelectedRow.Str("name"));
         }
+
     }
 }
