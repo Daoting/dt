@@ -43,6 +43,36 @@ namespace Dt.Sample
             {
                 new DataCmd
                 {
+                    Title = "空白窗口",
+                    Note = "整个窗口内容为空，完全自定义，相当于空白页面",
+                    Tag = typeof(BlankWin)
+                },
+                new DataCmd
+                {
+                    Title = "主区窗口",
+                    Note = "只包括主区，主区有标题栏，等同于有标题栏的空白窗口",
+                    Tag = typeof(SingleViewWin)
+                },
+                new DataCmd
+                {
+                    Title = "动态主区窗口",
+                    Note = "包括左区和主区，主区内容支持UserControl、窗口及所有可视元素，一般通过左区操作联动来切换主区内容",
+                    Tag = typeof(ToggleWinCenter)
+                },
+                new DataCmd
+                {
+                    Title = "两区窗口",
+                    Note = "包括左区和主区，每个区都支持多Tab页，各Tab页之间在Windows模式可联动、Phone模式时可导航",
+                    Tag = typeof(TwoPanelWin)
+                },
+                new DataCmd
+                {
+                    Title = "三区窗口",
+                    Note = "包括左区、主区、右区，每个区都支持多Tab页，各Tab页之间在Windows模式可联动、Phone模式时可导航",
+                    Tag = typeof(ThreePanelWin)
+                },
+                new DataCmd
+                {
                     Title = "窗口布局",
                     Note = "Windows模式：窗口分上下左右和主区五个区域，由Tab承载内容，拖动时自动停靠",
                     Tag = typeof(WinLayout)
@@ -55,20 +85,8 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "切换窗口主区",
-                    Note = "动态切换窗口主区的内容",
-                    Tag = typeof(ToggleWinCenter)
-                },
-                new DataCmd
-                {
-                    Title = "单视图窗口",
-                    Note = "只在主区显示一个Tab内容的窗口，整个窗口相当于一个页面",
-                    Tag = typeof(SingleViewWin)
-                },
-                new DataCmd
-                {
                     Title = "对话框",
-                    Note = "模拟传统对话框，PC上显示在窗口上层，可拖动、调整大小、自动关闭等，手机上承载在PhonePage内",
+                    Note = "模拟传统对话框，Windows模式显示在窗口上层，可拖动、调整大小、自动关闭等，Phone模式承载在PhonePage内",
                     Tag = typeof(DlgDemo),
                     Callback = OnNaviTo
                 },

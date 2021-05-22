@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Dt.Sample.BlankWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Padding="10">
+        <Button Content="切换图标" Click="OnToggleIcon" />
+        <Button Content="子窗口" Click="OnNewWin" />
+        <Button Content="带参数子窗口" Click="OnParamsWin" />
+        <CheckBox x:Name="_cbClosing" Content="禁止关闭" />
+    </StackPanel>
+</a:Win>

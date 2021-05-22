@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="$rootnamespace$.$safeitemname$"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:local="using:$rootnamespace$"
+    Title="$safeitemname$">
+
+    <Grid Padding="10">
+
+    </Grid>
+</a:Win>
