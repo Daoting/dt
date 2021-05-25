@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+        It is divided in different sections (e.g. command definition, command
+        placement, ...), with each defining a specific set of properties.
+        See the comment before each section for more details about how to
+        use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary
+        format that VisualStudio will consume) has the ability to run a preprocessor
+        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so
+        it is possible to define includes and macros with the same syntax used
+        in C++ files. Using this ability of the compiler here, we include some files
+        defining some of the constants that we will use inside the file. -->
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h" />
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h" />
+
+  <!--The Commands section is where commands, menus, and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidDtPackage">
+    <!-- Inside this section we have different sub-sections: one for the menus, another
+    for the menu groups, one for the buttons (the actual commands), one for the combos
+    and the last one for the bitmaps used. Each element is identified by a command id that
+    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
+    called "command set" and is used to group different command inside a logically related
+    group; your package should define its own command set in order to avoid collisions
+    with command ids defined by other packages. -->
+
+    <!-- In this section you can define new menu groups. A menu group is a container for
+         other menus or buttons (commands); from a visual point of view you can see the
+         group as the part of a menu contained between two lines. The parent of a group
+         must be a menu. -->
+    <Groups>
+      <!-- xaml编辑器上下文菜单的添加结构：
+           xaml上下文菜单 > MyXamlMenuGroup > MyXamlSubMenu > MyXamlMenuItemsGroup > Command Buttons
+      -->
+      <Group guid="guidDtPackageCmdSet" id="MyXamlMenuGroup" priority="0x01">
+        <Parent guid="guidXamlUiCmds" id="IDM_XAML_EDITOR" />
+      </Group>
+      <Group guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlSubMenu" />
+      </Group>
+      
+      <!-- 代码编辑器的分组菜单 -->
+      <Group guid="guidDtPackageCmdSet" id="MyCodeMenuGroup" priority="0x01">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+      </Group>
+      <Group guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyCodeSubMenu" />
+      </Group>
+    </Groups>
+
+    <Menus>
+      <Menu guid="guidDtPackageCmdSet" id="MyXamlSubMenu" type="Menu" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuGroup" />
+        <Strings>
+          <ButtonText>搬运工</ButtonText>
+        </Strings>
+      </Menu>
+      <Menu guid="guidDtPackageCmdSet" id="MyCodeSubMenu" type="Menu" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyCodeMenuGroup" />
+        <Strings>
+          <ButtonText>搬运工</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+    
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button
+        or combo box in a toolbar. -->
+    <Buttons>
+      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node /> -->
+      <Button guid="guidDtPackageCmdSet" id="LvCmdId" priority="0x0100" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Lv</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDtPackageCmdSet" id="FvCmdId" priority="0x0101" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Fv</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0101" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Lv.CellEx 类</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others:
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+            inside a button definition. An important aspect of this declaration is that the element id
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <Bitmap guid="guidImages" href="Resources\Icons.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+    </Bitmaps>
+  </Commands>
+
+  <Symbols>
+    <!-- 扩展包的guid. -->
+    <GuidSymbol name="guidDtPackage" value="{971c0ad9-3380-4f18-96b7-ef19536bc1c4}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidDtPackageCmdSet" value="{6ef30193-3795-49e0-b034-e320355b74ae}">
+      <IDSymbol name="MyXamlMenuGroup" value="0x1020" />
+      <IDSymbol name="MyXamlSubMenu" value="0x1021" />
+      <IDSymbol name="MyXamlMenuItemsGroup" value="0x1022" />
+      <IDSymbol name="MyCodeMenuGroup" value="0x1030" />
+      <IDSymbol name="MyCodeSubMenu" value="0x1031" />
+      <IDSymbol name="MyCodeMenuItemsGroup" value="0x1032" />
+      <IDSymbol name="LvCmdId" value="0x0100" />
+      <IDSymbol name="FvCmdId" value="0x0101" />
+      <IDSymbol name="LvCellExClsCmdId" value="0x2000" />
+    </GuidSymbol>
+
+    <!-- xaml编辑器上下文菜单的guid -->
+    <GuidSymbol name="guidXamlUiCmds" value="{4c87b692-1202-46aa-b64c-ef01faec53da}">
+      <IDSymbol name="IDM_XAML_EDITOR" value="0x103" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{be164e67-1932-4eca-9dc8-d61365887b2c}">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
