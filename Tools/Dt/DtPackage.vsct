@@ -95,6 +95,13 @@
           <ButtonText>Fv</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidDtPackageCmdSet" id="CellCmdId" priority="0x0102" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>格</ButtonText>
+        </Strings>
+      </Button>
     
       <Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0101" type="Button">
         <Parent guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" />
@@ -130,6 +137,7 @@
       <IDSymbol name="MyCodeMenuItemsGroup" value="0x1032" />
       <IDSymbol name="LvCmdId" value="0x0100" />
       <IDSymbol name="FvCmdId" value="0x0101" />
+      <IDSymbol name="CellCmdId" value="0x0102" />
       <IDSymbol name="LvCellExClsCmdId" value="0x2000" />
     </GuidSymbol>
 

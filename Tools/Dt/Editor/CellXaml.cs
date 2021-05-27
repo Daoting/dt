@@ -8,16 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Dt.Forms
+namespace Dt.Editor
 {
-    public partial class FvForm : Form
+    public partial class CellXaml : Form
     {
-        DtCmds _cmd;
-
-        internal FvForm(DtCmds p_cmd)
+        public CellXaml()
         {
             InitializeComponent();
-            _cmd = p_cmd;
         }
     }
 }

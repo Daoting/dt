@@ -1,4 +1,5 @@
-﻿using Dt.Forms;
+﻿using Dt.Editor;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
@@ -8,6 +9,7 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 using Window = System.Windows;
 
@@ -18,19 +20,18 @@ namespace Dt
     /// </summary>
     internal sealed class DtCmds
     {
+        const string _fvXaml = "<a:Fv x:Name=\"_fv\">\r\n\r\n</a:Fv>";
+        const string _cellExCls = "abc";
+
         const int LvCommandId = 0x0100;
         const int FvCommandId = 0x0101;
         const int LvCellExClsCmdId = 0x2000;
+        const int CellCmdId = 0x0102;
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
         public static readonly Guid CommandSet = new Guid("6ef30193-3795-49e0-b034-e320355b74ae");
-
-        /// <summary>
-        /// VS Package that provides this command, not null.
-        /// </summary>
-        private readonly AsyncPackage package;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DtCmds"/> class.
@@ -43,10 +44,71 @@ namespace Dt
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-            commandService.AddCommand(new MenuCommand(InsertLv, new CommandID(CommandSet, LvCommandId)));
-            commandService.AddCommand(new MenuCommand(InsertFv, new CommandID(CommandSet, FvCommandId)));
-            commandService.AddCommand(new MenuCommand(AddLvCellExCls, new CommandID(CommandSet, LvCellExClsCmdId)));
+            ThreadHelper.ThrowIfNotOnUIThread();
+            commandService.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
+            commandService.AddCommand(CmdPaste(FvCommandId, _fvXaml));
+            commandService.AddCommand(CmdCustom(CellCmdId, typeof(CellXaml)));
+            commandService.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
         }
+
+        /// <summary>
+        /// 显示标准编辑窗口
+        /// </summary>
+        /// <param name="p_cmdID"></param>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        MenuCommand CmdForm(int p_cmdID, Type p_type)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    // 显示编辑窗口
+                    new CmdForm(p_type).ShowDialog();
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        /// <summary>
+        /// 显示自定义编辑窗口
+        /// </summary>
+        /// <param name="p_cmdID"></param>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        MenuCommand CmdCustom(int p_cmdID, Type p_type)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    var dlg = Activator.CreateInstance(p_type) as Form;
+                    dlg.ShowDialog();
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        /// <summary>
+        /// 直接粘贴文本
+        /// </summary>
+        /// <param name="p_cmdID"></param>
+        /// <param name="p_txt"></param>
+        /// <returns></returns>
+        MenuCommand CmdPaste(int p_cmdID, string p_txt)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    Kit.Paste(p_txt);
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        #region 生成
+        /// <summary>
+        /// VS Package that provides this command, not null.
+        /// </summary>
+        private readonly AsyncPackage package;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -81,40 +143,6 @@ namespace Dt
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new DtCmds(package, commandService);
         }
-
-        /// <summary>
-        /// This function is the callback used to execute the command when the menu item is clicked.
-        /// See the constructor to see how the menu item is associated with this function using
-        /// OleMenuCommandService service and MenuCommand class.
-        /// </summary>
-        /// <param name="sender">Event sender.</param>
-        /// <param name="e">Event args.</param>
-        void InsertLv(object sender, EventArgs e)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "LvCmd";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-        }
-
-
-        void InsertFv(object sender, EventArgs e)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            new FvForm(this).ShowDialog();
-        }
-
-        void AddLvCellExCls(object sender, EventArgs e)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-        }
+        #endregion
     }
 }

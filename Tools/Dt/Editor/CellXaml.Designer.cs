@@ -1,7 +1,7 @@
 ﻿
-namespace Dt.Forms
+namespace Dt.Editor
 {
-    partial class FvForm
+    partial class CellXaml
     {
         /// <summary>
         /// Required designer variable.
@@ -29,10 +29,17 @@ namespace Dt.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CellXaml
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "FvForm";
+            this.ClientSize = new System.Drawing.Size(503, 450);
+            this.Name = "CellXaml";
+            this.Text = "CellXaml";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
