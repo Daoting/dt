@@ -97,17 +97,17 @@ namespace Dt.Editor
             // _autoCookie
             // 
             this._autoCookie.AutoSize = true;
-            this._autoCookie.Location = new System.Drawing.Point(3, 145);
+            this._autoCookie.Location = new System.Drawing.Point(3, 128);
             this._autoCookie.Name = "_autoCookie";
-            this._autoCookie.Size = new System.Drawing.Size(204, 16);
+            this._autoCookie.Size = new System.Drawing.Size(180, 16);
             this._autoCookie.TabIndex = 30;
-            this._autoCookie.Text = "自动加载最近编辑值(AutoCookie)";
+            this._autoCookie.Text = "自动加载历史值(AutoCookie)";
             this._autoCookie.UseVisualStyleBackColor = true;
             // 
             // _isReadOnly
             // 
             this._isReadOnly.AutoSize = true;
-            this._isReadOnly.Location = new System.Drawing.Point(224, 145);
+            this._isReadOnly.Location = new System.Drawing.Point(201, 128);
             this._isReadOnly.Name = "_isReadOnly";
             this._isReadOnly.Size = new System.Drawing.Size(120, 16);
             this._isReadOnly.TabIndex = 29;
@@ -127,7 +127,7 @@ namespace Dt.Editor
             // _isVerticalTitle
             // 
             this._isVerticalTitle.AutoSize = true;
-            this._isVerticalTitle.Location = new System.Drawing.Point(3, 107);
+            this._isVerticalTitle.Location = new System.Drawing.Point(3, 101);
             this._isVerticalTitle.Name = "_isVerticalTitle";
             this._isVerticalTitle.Size = new System.Drawing.Size(198, 16);
             this._isVerticalTitle.TabIndex = 27;
@@ -137,7 +137,7 @@ namespace Dt.Editor
             // _showStar
             // 
             this._showStar.AutoSize = true;
-            this._showStar.Location = new System.Drawing.Point(224, 107);
+            this._showStar.Location = new System.Drawing.Point(201, 101);
             this._showStar.Name = "_showStar";
             this._showStar.Size = new System.Drawing.Size(132, 16);
             this._showStar.TabIndex = 26;
@@ -171,7 +171,7 @@ namespace Dt.Editor
             this.Controls.Add(this._titleWidth);
             this.Controls.Add(this.label3);
             this.Name = "CellFooter";
-            this.Size = new System.Drawing.Size(380, 170);
+            this.Size = new System.Drawing.Size(380, 151);
             this.ResumeLayout(false);
             this.PerformLayout();
 

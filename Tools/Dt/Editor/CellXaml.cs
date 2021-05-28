@@ -35,7 +35,7 @@ namespace Dt.Editor
                 if (tp != null)
                 {
                     con = Activator.CreateInstance(tp) as Control;
-                    con.Location = new Point((_split.Panel2.ClientSize.Width - con.ClientSize.Width - (con.ClientSize.Height > _split.Panel2.ClientSize.Height ? 20 : 0)) / 2, 0);
+                    con.Location = new Point((_split.Panel2.ClientSize.Width - con.ClientSize.Width) / 2, 0);
                     _cur = con as ICellControl;
                     _ls[name] = con;
                 }

@@ -40,15 +40,28 @@ namespace Dt.Editor
             // 
             // _lb
             // 
+            this._lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this._lb.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lb.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this._lb.FormattingEnabled = true;
-            this._lb.ItemHeight = 12;
+            this._lb.ItemHeight = 16;
             this._lb.Items.AddRange(new object[] {
             "CBar",
             "CText",
             "CNum",
             "CBool",
-            "CList"});
+            "CList",
+            "CDate",
+            "CTip",
+            "CImage",
+            "CTree",
+            "CFile",
+            "CIcon",
+            "CColor",
+            "CMask",
+            "CHtml",
+            "CLink",
+            "CPassword"});
             this._lb.Location = new System.Drawing.Point(0, 0);
             this._lb.Name = "_lb";
             this._lb.Size = new System.Drawing.Size(123, 490);
@@ -64,10 +77,6 @@ namespace Dt.Editor
             // _split.Panel1
             // 
             this._split.Panel1.Controls.Add(this._lb);
-            // 
-            // _split.Panel2
-            // 
-            this._split.Panel2.AutoScroll = true;
             this._split.Size = new System.Drawing.Size(554, 490);
             this._split.SplitterDistance = 123;
             this._split.TabIndex = 1;

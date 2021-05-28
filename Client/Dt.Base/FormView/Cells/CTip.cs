@@ -50,7 +50,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置格式串，默认 yyyy-MM-dd，完整如：yyyy-MM-dd HH:mm:ss
+        /// 获取设置格式串，时间格式如：yyyy-MM-dd HH:mm:ss
         /// </summary>
         [CellParam("格式串")]
         public string Format

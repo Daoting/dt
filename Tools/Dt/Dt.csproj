@@ -45,6 +45,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Editor\CPassword.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CPassword.Designer.cs">
+      <DependentUpon>CPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CTip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CTip.Designer.cs">
+      <DependentUpon>CTip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CLink.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CLink.Designer.cs">
+      <DependentUpon>CLink.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CDate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CDate.Designer.cs">
+      <DependentUpon>CDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\CellFooter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -82,11 +106,47 @@
     <Compile Include="Editor\CellXaml.Designer.cs">
       <DependentUpon>CellXaml.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\CFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CFile.Designer.cs">
+      <DependentUpon>CFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CColor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CColor.Designer.cs">
+      <DependentUpon>CColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CHtml.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CHtml.Designer.cs">
+      <DependentUpon>CHtml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CIcon.Designer.cs">
+      <DependentUpon>CIcon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CImage.Designer.cs">
+      <DependentUpon>CImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\CList.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editor\CList.Designer.cs">
       <DependentUpon>CList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CMask.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CMask.Designer.cs">
+      <DependentUpon>CMask.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\CNum.cs">
       <SubType>UserControl</SubType>
@@ -99,6 +159,12 @@
     </Compile>
     <Compile Include="Editor\CText.Designer.cs">
       <DependentUpon>CText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CTree.Designer.cs">
+      <DependentUpon>CTree.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\ICmdForm.cs" />
     <Compile Include="Editor\LvXaml.cs">
@@ -200,6 +266,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editor\CPassword.resx">
+      <DependentUpon>CPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CTip.resx">
+      <DependentUpon>CTip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CLink.resx">
+      <DependentUpon>CLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CDate.resx">
+      <DependentUpon>CDate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\CellFooter.resx">
       <DependentUpon>CellFooter.cs</DependentUpon>
     </EmbeddedResource>
@@ -218,14 +296,35 @@
     <EmbeddedResource Include="Editor\CellXaml.resx">
       <DependentUpon>CellXaml.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CFile.resx">
+      <DependentUpon>CFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CColor.resx">
+      <DependentUpon>CColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CHtml.resx">
+      <DependentUpon>CHtml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CIcon.resx">
+      <DependentUpon>CIcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CImage.resx">
+      <DependentUpon>CImage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\CList.resx">
       <DependentUpon>CList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CMask.resx">
+      <DependentUpon>CMask.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\CNum.resx">
       <DependentUpon>CNum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\CText.resx">
       <DependentUpon>CText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CTree.resx">
+      <DependentUpon>CTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\LvXaml.resx">
       <DependentUpon>LvXaml.cs</DependentUpon>
