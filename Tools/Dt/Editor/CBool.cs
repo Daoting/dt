@@ -13,7 +13,7 @@ namespace Dt.Editor
         string ICellControl.GetText()
         {
             StringBuilder sb = new StringBuilder("<a:CBool");
-            _fv.GetText(sb);
+            _header.GetText(sb);
 
             var txt = _trueVal.Text.Trim();
             if (txt != "")
@@ -26,13 +26,15 @@ namespace Dt.Editor
             if (_isSwitch.Checked)
                 sb.Append(" IsSwitch=\"True\"");
 
+            _footer.GetText(sb);
             sb.AppendLine(" />");
             return sb.ToString();
         }
 
         void ICellControl.Reset()
         {
-            _fv.Reset();
+            _header.Reset();
+            _footer.Reset();
             _trueVal.Text = "";
             _falseVal.Text = "";
             _isSwitch.Checked = false;

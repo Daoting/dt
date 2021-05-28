@@ -29,23 +29,16 @@ namespace Dt.Editor
         /// </summary>
         private void InitializeComponent()
         {
-            this._fv = new Dt.Editor.FvCell();
             this._acceptsReturn = new System.Windows.Forms.CheckBox();
             this._updateTimely = new System.Windows.Forms.CheckBox();
+            this._header = new Dt.Editor.CellHeader();
+            this._footer = new Dt.Editor.CellFooter();
             this.SuspendLayout();
-            // 
-            // _fv
-            // 
-            this._fv.Dock = System.Windows.Forms.DockStyle.Top;
-            this._fv.Location = new System.Drawing.Point(0, 0);
-            this._fv.Name = "_fv";
-            this._fv.Size = new System.Drawing.Size(380, 267);
-            this._fv.TabIndex = 0;
             // 
             // _acceptsReturn
             // 
             this._acceptsReturn.AutoSize = true;
-            this._acceptsReturn.Location = new System.Drawing.Point(4, 274);
+            this._acceptsReturn.Location = new System.Drawing.Point(4, 52);
             this._acceptsReturn.Name = "_acceptsReturn";
             this._acceptsReturn.Size = new System.Drawing.Size(162, 16);
             this._acceptsReturn.TabIndex = 1;
@@ -55,31 +48,47 @@ namespace Dt.Editor
             // _updateTimely
             // 
             this._updateTimely.AutoSize = true;
-            this._updateTimely.Location = new System.Drawing.Point(200, 274);
+            this._updateTimely.Location = new System.Drawing.Point(200, 52);
             this._updateTimely.Name = "_updateTimely";
             this._updateTimely.Size = new System.Drawing.Size(168, 16);
             this._updateTimely.TabIndex = 2;
             this._updateTimely.Text = "实时更新值(UpdateTimely)";
             this._updateTimely.UseVisualStyleBackColor = true;
             // 
+            // _header
+            // 
+            this._header.Dock = System.Windows.Forms.DockStyle.Top;
+            this._header.Location = new System.Drawing.Point(0, 0);
+            this._header.Name = "_header";
+            this._header.Size = new System.Drawing.Size(380, 42);
+            this._header.TabIndex = 3;
+            // 
+            // _footer
+            // 
+            this._footer.Location = new System.Drawing.Point(0, 81);
+            this._footer.Name = "_footer";
+            this._footer.Size = new System.Drawing.Size(380, 170);
+            this._footer.TabIndex = 4;
+            // 
             // CText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._footer);
+            this.Controls.Add(this._header);
             this.Controls.Add(this._updateTimely);
             this.Controls.Add(this._acceptsReturn);
-            this.Controls.Add(this._fv);
             this.Name = "CText";
-            this.Size = new System.Drawing.Size(380, 340);
+            this.Size = new System.Drawing.Size(380, 258);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private FvCell _fv;
         private System.Windows.Forms.CheckBox _acceptsReturn;
         private System.Windows.Forms.CheckBox _updateTimely;
+        private CellHeader _header;
+        private CellFooter _footer;
     }
 }

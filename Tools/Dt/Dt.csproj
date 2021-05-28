@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Editor\CellFooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CellFooter.Designer.cs">
+      <DependentUpon>CellFooter.cs</DependentUpon>
+    </Compile>
     <Compile Include="CmdForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,11 +70,23 @@
     <Compile Include="Editor\CBool.Designer.cs">
       <DependentUpon>CBool.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\CellHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CellHeader.Designer.cs">
+      <DependentUpon>CellHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\CellXaml.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Editor\CellXaml.Designer.cs">
       <DependentUpon>CellXaml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CList.Designer.cs">
+      <DependentUpon>CList.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\CNum.cs">
       <SubType>UserControl</SubType>
@@ -81,12 +99,6 @@
     </Compile>
     <Compile Include="Editor\CText.Designer.cs">
       <DependentUpon>CText.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editor\FvCell.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editor\FvCell.Designer.cs">
-      <DependentUpon>FvCell.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\ICmdForm.cs" />
     <Compile Include="Editor\LvXaml.cs">
@@ -188,6 +200,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editor\CellFooter.resx">
+      <DependentUpon>CellFooter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CmdForm.resx">
       <DependentUpon>CmdForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -197,17 +212,20 @@
     <EmbeddedResource Include="Editor\CBool.resx">
       <DependentUpon>CBool.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CellHeader.resx">
+      <DependentUpon>CellHeader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editor\CellXaml.resx">
       <DependentUpon>CellXaml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CList.resx">
+      <DependentUpon>CList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\CNum.resx">
       <DependentUpon>CNum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\CText.resx">
       <DependentUpon>CText.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editor\FvCell.resx">
-      <DependentUpon>FvCell.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\LvXaml.resx">
       <DependentUpon>LvXaml.cs</DependentUpon>

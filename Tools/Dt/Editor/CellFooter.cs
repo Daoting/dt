@@ -3,24 +3,19 @@ using System.Windows.Forms;
 
 namespace Dt.Editor
 {
-    public partial class FvCell : UserControl
+    public partial class CellFooter : UserControl
     {
-        public FvCell()
+        public CellFooter()
         {
             InitializeComponent();
+
+            ToolTip tip = new ToolTip();
+            tip.SetToolTip(_rowSpan, "默认1行，-1时自动行高");
         }
 
         public void GetText(StringBuilder p_sb)
         {
-            var txt = _id.Text.Trim();
-            if (txt != "")
-                p_sb.Append($" ID=\"{txt}\"");
-
-            txt = _title.Text.Trim();
-            if (txt != "")
-                p_sb.Append($" Title=\"{txt}\"");
-
-            txt = _titleWidth.Text.Trim();
+            var txt = _titleWidth.Text.Trim();
             if (txt != "140")
                 p_sb.Append($" TitleWidth=\"{txt}\"");
 
@@ -53,8 +48,6 @@ namespace Dt.Editor
 
         public void Reset()
         {
-            _id.Text = "";
-            _title.Text = "";
             _titleWidth.Text = "140";
             _showTitle.Checked = true;
             _isHorStretch.Checked = false;

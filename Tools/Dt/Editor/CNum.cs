@@ -13,7 +13,7 @@ namespace Dt.Editor
         string ICellControl.GetText()
         {
             StringBuilder sb = new StringBuilder("<a:CNum");
-            _fv.GetText(sb);
+            _header.GetText(sb);
 
             var txt = _decimals.Text.Trim();
             if (txt != "-1")
@@ -55,13 +55,15 @@ namespace Dt.Editor
             if (!_autoReverse.Checked)
                 sb.Append(" AutoReverse=\"False\"");
 
+            _footer.GetText(sb);
             sb.AppendLine(" />");
             return sb.ToString();
         }
 
         void ICellControl.Reset()
         {
-            _fv.Reset();
+            _header.Reset();
+            _footer.Reset();
             _decimals.Text = "-1";
             _maximum.Text = "";
             _minimum.Text = "";

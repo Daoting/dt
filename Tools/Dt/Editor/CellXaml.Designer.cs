@@ -51,7 +51,7 @@ namespace Dt.Editor
             "CList"});
             this._lb.Location = new System.Drawing.Point(0, 0);
             this._lb.Name = "_lb";
-            this._lb.Size = new System.Drawing.Size(123, 455);
+            this._lb.Size = new System.Drawing.Size(123, 490);
             this._lb.TabIndex = 0;
             this._lb.SelectedIndexChanged += new System.EventHandler(this._lb_SelectedIndexChanged);
             // 
@@ -68,14 +68,14 @@ namespace Dt.Editor
             // _split.Panel2
             // 
             this._split.Panel2.AutoScroll = true;
-            this._split.Size = new System.Drawing.Size(554, 455);
+            this._split.Size = new System.Drawing.Size(554, 490);
             this._split.SplitterDistance = 123;
             this._split.TabIndex = 1;
             // 
             // _btn
             // 
             this._btn.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this._btn.Location = new System.Drawing.Point(0, 458);
+            this._btn.Location = new System.Drawing.Point(0, 488);
             this._btn.Name = "_btn";
             this._btn.Size = new System.Drawing.Size(554, 23);
             this._btn.TabIndex = 1;
@@ -87,7 +87,7 @@ namespace Dt.Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(554, 481);
+            this.ClientSize = new System.Drawing.Size(554, 511);
             this.Controls.Add(this._btn);
             this.Controls.Add(this._split);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

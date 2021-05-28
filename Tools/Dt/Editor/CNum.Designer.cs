@@ -29,7 +29,6 @@ namespace Dt.Editor
         /// </summary>
         private void InitializeComponent()
         {
-            this._fv = new Dt.Editor.FvCell();
             this._decimals = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this._maximum = new System.Windows.Forms.TextBox();
@@ -49,19 +48,13 @@ namespace Dt.Editor
             this._autoReverse = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this._valueFormat = new System.Windows.Forms.ComboBox();
+            this._header = new Dt.Editor.CellHeader();
+            this._footer = new Dt.Editor.CellFooter();
             this.SuspendLayout();
-            // 
-            // _fv
-            // 
-            this._fv.Dock = System.Windows.Forms.DockStyle.Top;
-            this._fv.Location = new System.Drawing.Point(0, 0);
-            this._fv.Name = "_fv";
-            this._fv.Size = new System.Drawing.Size(380, 267);
-            this._fv.TabIndex = 0;
             // 
             // _decimals
             // 
-            this._decimals.Location = new System.Drawing.Point(186, 263);
+            this._decimals.Location = new System.Drawing.Point(186, 41);
             this._decimals.Name = "_decimals";
             this._decimals.Size = new System.Drawing.Size(194, 21);
             this._decimals.TabIndex = 22;
@@ -69,7 +62,7 @@ namespace Dt.Editor
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(0, 263);
+            this.label5.Location = new System.Drawing.Point(0, 41);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(187, 21);
             this.label5.TabIndex = 21;
@@ -78,7 +71,7 @@ namespace Dt.Editor
             // 
             // _maximum
             // 
-            this._maximum.Location = new System.Drawing.Point(186, 283);
+            this._maximum.Location = new System.Drawing.Point(186, 61);
             this._maximum.Name = "_maximum";
             this._maximum.Size = new System.Drawing.Size(194, 21);
             this._maximum.TabIndex = 24;
@@ -86,7 +79,7 @@ namespace Dt.Editor
             // label1
             // 
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(0, 283);
+            this.label1.Location = new System.Drawing.Point(0, 61);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(187, 21);
             this.label1.TabIndex = 23;
@@ -95,7 +88,7 @@ namespace Dt.Editor
             // 
             // _minimum
             // 
-            this._minimum.Location = new System.Drawing.Point(186, 303);
+            this._minimum.Location = new System.Drawing.Point(186, 81);
             this._minimum.Name = "_minimum";
             this._minimum.Size = new System.Drawing.Size(194, 21);
             this._minimum.TabIndex = 26;
@@ -103,7 +96,7 @@ namespace Dt.Editor
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Location = new System.Drawing.Point(0, 303);
+            this.label2.Location = new System.Drawing.Point(0, 81);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(187, 21);
             this.label2.TabIndex = 25;
@@ -112,7 +105,7 @@ namespace Dt.Editor
             // 
             // _customUnit
             // 
-            this._customUnit.Location = new System.Drawing.Point(186, 323);
+            this._customUnit.Location = new System.Drawing.Point(186, 101);
             this._customUnit.Name = "_customUnit";
             this._customUnit.Size = new System.Drawing.Size(194, 21);
             this._customUnit.TabIndex = 28;
@@ -120,7 +113,7 @@ namespace Dt.Editor
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(0, 323);
+            this.label3.Location = new System.Drawing.Point(0, 101);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(187, 21);
             this.label3.TabIndex = 27;
@@ -129,7 +122,7 @@ namespace Dt.Editor
             // 
             // _nullValue
             // 
-            this._nullValue.Location = new System.Drawing.Point(186, 343);
+            this._nullValue.Location = new System.Drawing.Point(186, 121);
             this._nullValue.Name = "_nullValue";
             this._nullValue.Size = new System.Drawing.Size(194, 21);
             this._nullValue.TabIndex = 30;
@@ -137,7 +130,7 @@ namespace Dt.Editor
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(0, 343);
+            this.label4.Location = new System.Drawing.Point(0, 121);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(187, 21);
             this.label4.TabIndex = 29;
@@ -146,7 +139,7 @@ namespace Dt.Editor
             // 
             // _largeChange
             // 
-            this._largeChange.Location = new System.Drawing.Point(186, 363);
+            this._largeChange.Location = new System.Drawing.Point(186, 141);
             this._largeChange.Name = "_largeChange";
             this._largeChange.Size = new System.Drawing.Size(194, 21);
             this._largeChange.TabIndex = 32;
@@ -154,7 +147,7 @@ namespace Dt.Editor
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(0, 363);
+            this.label6.Location = new System.Drawing.Point(0, 141);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(187, 21);
             this.label6.TabIndex = 31;
@@ -163,7 +156,7 @@ namespace Dt.Editor
             // 
             // _smallChange
             // 
-            this._smallChange.Location = new System.Drawing.Point(186, 383);
+            this._smallChange.Location = new System.Drawing.Point(186, 161);
             this._smallChange.Name = "_smallChange";
             this._smallChange.Size = new System.Drawing.Size(194, 21);
             this._smallChange.TabIndex = 34;
@@ -171,7 +164,7 @@ namespace Dt.Editor
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Location = new System.Drawing.Point(0, 383);
+            this.label7.Location = new System.Drawing.Point(0, 161);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(187, 21);
             this.label7.TabIndex = 33;
@@ -181,7 +174,7 @@ namespace Dt.Editor
             // _isInteger
             // 
             this._isInteger.AutoSize = true;
-            this._isInteger.Location = new System.Drawing.Point(0, 439);
+            this._isInteger.Location = new System.Drawing.Point(0, 217);
             this._isInteger.Name = "_isInteger";
             this._isInteger.Size = new System.Drawing.Size(138, 16);
             this._isInteger.TabIndex = 35;
@@ -191,7 +184,7 @@ namespace Dt.Editor
             // _updateTimely
             // 
             this._updateTimely.AutoSize = true;
-            this._updateTimely.Location = new System.Drawing.Point(198, 439);
+            this._updateTimely.Location = new System.Drawing.Point(198, 217);
             this._updateTimely.Name = "_updateTimely";
             this._updateTimely.Size = new System.Drawing.Size(168, 16);
             this._updateTimely.TabIndex = 36;
@@ -201,7 +194,7 @@ namespace Dt.Editor
             // _autoReverse
             // 
             this._autoReverse.AutoSize = true;
-            this._autoReverse.Location = new System.Drawing.Point(0, 466);
+            this._autoReverse.Location = new System.Drawing.Point(0, 244);
             this._autoReverse.Name = "_autoReverse";
             this._autoReverse.Size = new System.Drawing.Size(174, 16);
             this._autoReverse.TabIndex = 37;
@@ -211,7 +204,7 @@ namespace Dt.Editor
             // label8
             // 
             this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label8.Location = new System.Drawing.Point(0, 403);
+            this.label8.Location = new System.Drawing.Point(0, 181);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(187, 20);
             this.label8.TabIndex = 38;
@@ -226,15 +219,32 @@ namespace Dt.Editor
             "Numeric",
             "Currency",
             "Percentage"});
-            this._valueFormat.Location = new System.Drawing.Point(186, 403);
+            this._valueFormat.Location = new System.Drawing.Point(186, 181);
             this._valueFormat.Name = "_valueFormat";
             this._valueFormat.Size = new System.Drawing.Size(194, 20);
             this._valueFormat.TabIndex = 39;
+            // 
+            // _header
+            // 
+            this._header.Dock = System.Windows.Forms.DockStyle.Top;
+            this._header.Location = new System.Drawing.Point(0, 0);
+            this._header.Name = "_header";
+            this._header.Size = new System.Drawing.Size(380, 42);
+            this._header.TabIndex = 40;
+            // 
+            // _footer
+            // 
+            this._footer.Location = new System.Drawing.Point(0, 282);
+            this._footer.Name = "_footer";
+            this._footer.Size = new System.Drawing.Size(380, 170);
+            this._footer.TabIndex = 41;
             // 
             // CNum
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._footer);
+            this.Controls.Add(this._header);
             this.Controls.Add(this._valueFormat);
             this.Controls.Add(this.label8);
             this.Controls.Add(this._autoReverse);
@@ -254,17 +264,14 @@ namespace Dt.Editor
             this.Controls.Add(this.label1);
             this.Controls.Add(this._decimals);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this._fv);
             this.Name = "CNum";
-            this.Size = new System.Drawing.Size(380, 511);
+            this.Size = new System.Drawing.Size(380, 460);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private FvCell _fv;
         private System.Windows.Forms.TextBox _decimals;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox _maximum;
@@ -284,5 +291,7 @@ namespace Dt.Editor
         private System.Windows.Forms.CheckBox _autoReverse;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox _valueFormat;
+        private CellHeader _header;
+        private CellFooter _footer;
     }
 }

@@ -20,7 +20,7 @@ namespace Dt.Editor
         string ICellControl.GetText()
         {
             StringBuilder sb = new StringBuilder("<a:CText");
-            _fv.GetText(sb);
+            _header.GetText(sb);
 
             if (_acceptsReturn.Checked)
                 sb.Append(" AcceptsReturn=\"True\"");
@@ -28,13 +28,15 @@ namespace Dt.Editor
             if (!_updateTimely.Checked)
                 sb.Append(" UpdateTimely=\"False\"");
 
+            _footer.GetText(sb);
             sb.AppendLine(" />");
             return sb.ToString();
         }
 
         void ICellControl.Reset()
         {
-            _fv.Reset();
+            _header.Reset();
+            _footer.Reset();
             _acceptsReturn.Checked = false;
             _updateTimely.Checked = true;
         }

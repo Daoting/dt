@@ -99,7 +99,7 @@
         <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
         <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
-          <ButtonText>格</ButtonText>
+          <ButtonText>Cell</ButtonText>
         </Strings>
       </Button>
     
