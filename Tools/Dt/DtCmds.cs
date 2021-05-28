@@ -21,12 +21,20 @@ namespace Dt
     internal sealed class DtCmds
     {
         const string _fvXaml = "<a:Fv x:Name=\"_fv\">\r\n\r\n</a:Fv>";
-        const string _cellExCls = "abc";
+        const string _cellExCls = "\r\n#region ViewEx\r\nclass ViewEx1\r\n{\r\npublic static void SetStyle(ViewItem p_item)\r\n{}\r\n\r\npublic static TextBlock xb(ViewItem p_item)\r\n{}\r\n}\r\n#endregion\r\n";
+        const string _tabMenu = "<a:Tab.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Tab.Menu>";
+        const string _contextMenu = "<a:Ex.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Ex.Menu>";
+        const string _dot = "<a:Dot ID=\"xx\" />";
+        const string _dotSmall = "<a:Dot ID=\"xx\" Foreground=\"{StaticResource 深灰边框}\" FontSize=\"12\" />";
 
         const int LvCommandId = 0x0100;
         const int FvCommandId = 0x0101;
         const int LvCellExClsCmdId = 0x2000;
         const int CellCmdId = 0x0102;
+        const int TabMenuCmdId = 0x0103;
+        const int ContextMenuCmdId = 0x0104;
+        const int DotCmdId = 0x0105;
+        const int DotSmallCmdId = 0x0106;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -49,6 +57,10 @@ namespace Dt
             commandService.AddCommand(CmdPaste(FvCommandId, _fvXaml));
             commandService.AddCommand(CmdCustom(CellCmdId, typeof(CellXaml)));
             commandService.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
+            commandService.AddCommand(CmdPaste(TabMenuCmdId, _tabMenu));
+            commandService.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
+            commandService.AddCommand(CmdPaste(DotCmdId, _dot));
+            commandService.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
         }
 
         /// <summary>

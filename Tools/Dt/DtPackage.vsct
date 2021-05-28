@@ -102,7 +102,35 @@
           <ButtonText>Cell</ButtonText>
         </Strings>
       </Button>
-    
+      <Button guid="guidDtPackageCmdSet" id="TabMenuCmdId" priority="0x0103" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Toolbar Menu</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDtPackageCmdSet" id="ContextMenuCmdId" priority="0x0104" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Context Menu</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDtPackageCmdSet" id="DotCmdId" priority="0x0105" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Dot 默认</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidDtPackageCmdSet" id="DotSmallCmdId" priority="0x0106" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Dot 小灰字</ButtonText>
+        </Strings>
+      </Button>
+      
       <Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0101" type="Button">
         <Parent guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" />
         <Icon guid="guidImages" id="bmpPic2" />
@@ -138,6 +166,10 @@
       <IDSymbol name="LvCmdId" value="0x0100" />
       <IDSymbol name="FvCmdId" value="0x0101" />
       <IDSymbol name="CellCmdId" value="0x0102" />
+      <IDSymbol name="TabMenuCmdId" value="0x0103" />
+      <IDSymbol name="ContextMenuCmdId" value="0x0104" />
+      <IDSymbol name="DotCmdId" value="0x0105" />
+      <IDSymbol name="DotSmallCmdId" value="0x0106" />
       <IDSymbol name="LvCellExClsCmdId" value="0x2000" />
     </GuidSymbol>
 
