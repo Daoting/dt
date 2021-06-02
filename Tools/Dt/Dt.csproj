@@ -222,6 +222,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\CommonLib\CommonLib.csproj">
+      <Project>{8BA7F8C8-F6A0-40C3-93FA-63FB6000738E}</Project>
+      <Name>CommonLib</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\Dialog\Dialog.csproj">
       <Project>{E574AB78-67E8-42B4-9F75-BAABDB36F1D4}</Project>
       <Name>Dialog</Name>

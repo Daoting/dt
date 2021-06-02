@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>跨平台库(搬运工)</Name>
+    <Description>该库基于Uno平台，跨平台支持Windows iOS Android和WebAssembly，包括Stub等模板文件</Description>
+    <SortOrder>10</SortOrder>
+    <Icon>Logo.ico</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <LanguageTag>csharp</LanguageTag>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <TemplateID>4a96ea4d-52d0-4dff-86d9-e4d268a7cf68</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Dt.MyLib</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <!-- 不加CreateInPlace，项目无Stub.cs -->
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="ProjectTemplate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="Stub.cs" OpenInEditor="true">Stub.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -25,6 +25,7 @@ namespace Dt.Editor
         {
             _id.Text = "";
             _title.Text = "";
+            _id.Focus();
         }
     }
 }
