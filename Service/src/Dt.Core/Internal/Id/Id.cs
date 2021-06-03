@@ -19,7 +19,7 @@ namespace Dt.Core
     public static class Id
     {
         static readonly SnowflakeId _snowflake = new SnowflakeId(GetWorkerId());
-        static readonly FlagId _flag = new FlagId(GetWorkerId());
+        //static readonly FlagId _flag = new FlagId(GetWorkerId());
 
         /// <summary>
         /// 产生新ID
@@ -30,27 +30,28 @@ namespace Dt.Core
             return _snowflake.NextId();
         }
 
-        /// <summary>
-        /// 产生含3位标志位的新ID
-        /// </summary>
-        /// <param name="p_flag">ID标志，取值范围0-7</param>
-        /// <returns></returns>
-        public static long New(int p_flag)
-        {
-            if (p_flag < 0 || p_flag > 7)
-                throw new Exception("ID标志超出范围(0-7)");
-            return _flag.NextId(p_flag);
-        }
+        // 不再使用带3位标志位的ID！
+        ///// <summary>
+        ///// 产生含3位标志位的新ID
+        ///// </summary>
+        ///// <param name="p_flag">ID标志，取值范围0-7</param>
+        ///// <returns></returns>
+        //public static long New(int p_flag)
+        //{
+        //    if (p_flag < 0 || p_flag > 7)
+        //        throw new Exception("ID标志超出范围(0-7)");
+        //    return _flag.NextId(p_flag);
+        //}
 
-        /// <summary>
-        /// 获取ID的标志值(低3位)
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-        public static int GetFlag(long p_id)
-        {
-            return (int)(p_id & 7);
-        }
+        ///// <summary>
+        ///// 获取ID的标志值(低3位)
+        ///// </summary>
+        ///// <param name="p_id"></param>
+        ///// <returns></returns>
+        //public static int GetFlag(long p_id)
+        //{
+        //    return (int)(p_id & 7);
+        //}
 
         static long GetWorkerId()
         {

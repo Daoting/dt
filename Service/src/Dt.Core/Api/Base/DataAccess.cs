@@ -144,13 +144,10 @@ namespace Dt.Core
         /// <summary>
         /// 获取新ID，默认无标志位
         /// </summary>
-        /// <param name="p_flag">取值范围0-7时，将产生含3位标志位的新ID，如userid采用标志位可识别出用户类型，默认无标志位</param>
         /// <returns></returns>
-        public long NewID(int p_flag = -1)
+        public long NewID()
         {
-            if (p_flag < 0 || p_flag > 7)
-                return Id.New();
-            return Id.New(p_flag);
+            return Id.New();
         }
 
         /// <summary>

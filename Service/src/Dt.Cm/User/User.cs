@@ -24,7 +24,7 @@ namespace Dt.Cm
         {
             // cm用户标志0
             return new User(
-                ID: Id.New(0),
+                ID: Id.New(),
                 Phone: p_phone,
                 Name: p_phone,
                 Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
