@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using Dt.Core.Rpc;
 using System;
 using Windows.UI.Xaml;
@@ -29,7 +30,11 @@ namespace Dt.App.Home
         public RootMenu()
         {
             InitializeComponent();
-            LoadMenus();
+
+            if (AtUser.IsLogon)
+                LoadMenus();
+            else
+                AtUser.LoginSuc += LoadMenus;
         }
 
         async void LoadMenus()
@@ -58,7 +63,8 @@ namespace Dt.App.Home
 
         async void OnReset(object sender, Mi e)
         {
-            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
+            int cntFixed = AtSys.Stub.FixedMenus == null ? 0 : AtSys.Stub.FixedMenus.Count;
+            if (MenuKit.FavMenus.Count > cntFixed)
             {
                 var cnt = AtState.Exec($"delete from menufav where userid={AtUser.ID}");
                 if (cnt > 0)
@@ -110,7 +116,9 @@ namespace Dt.App.Home
             Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
             mi.Click += OnSearch;
             menu.Items.Add(mi);
-            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
+
+            int cntFixed = AtSys.Stub.FixedMenus == null ? 0 : AtSys.Stub.FixedMenus.Count;
+            if (MenuKit.FavMenus.Count > cntFixed)
             {
                 mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
                 mi.Click += OnReset;

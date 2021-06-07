@@ -51,24 +51,6 @@ namespace Dt.App
         {
             get { return _favMenus; }
         }
-
-        /// <summary>
-        /// 获取默认固定菜单项
-        /// </summary>
-        public static List<OmMenu> FixedMenus { get; set; }
-
-        /// <summary>
-        /// 获取默认固定菜单项数
-        /// </summary>
-        public static int FixedMenusCount
-        {
-            get
-            {
-                if (FixedMenus != null)
-                    return FixedMenus.Count;
-                return 0;
-            }
-        }
         #endregion
 
         #region 菜单相关
@@ -146,27 +128,34 @@ namespace Dt.App
             // 所有可访问项
             List<long> idsAll = await GetAllUserMenus();
 
-            // 常用组菜单项：固定项 + 点击次数最多的前n项
+            // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
             _favMenus.Clear();
-            if (FixedMenus != null)
+            var fixedMenus = AtSys.Stub.FixedMenus;
+            if (fixedMenus != null)
             {
                 // 固定项
-                foreach (var om in FixedMenus)
+                foreach (var om in fixedMenus)
                 {
                     _favMenus.Add(om);
                 }
             }
 
             // 点击次数最多的前n项
-            var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT 10");
-            foreach (var fav in favMenu)
+            int maxFav = 8;
+            if (_favMenus.Count < maxFav)
             {
-                // 过滤无权限的项
-                if (idsAll.Contains(fav.MenuID))
+                var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT {maxFav}");
+                foreach (var fav in favMenu)
                 {
-                    var om = AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
-                    _favMenus.Add(om);
-                    idsAll.Remove(fav.MenuID);
+                    // 过滤无权限的项
+                    if (idsAll.Contains(fav.MenuID))
+                    {
+                        var om = AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                        _favMenus.Add(om);
+                        idsAll.Remove(fav.MenuID);
+                        if (_favMenus.Count >= maxFav)
+                            break;
+                    }
                 }
             }
 

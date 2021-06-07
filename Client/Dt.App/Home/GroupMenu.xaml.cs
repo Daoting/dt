@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using Windows.UI.Xaml.Controls;
 #endregion
 

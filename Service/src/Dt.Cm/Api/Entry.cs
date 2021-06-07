@@ -32,32 +32,32 @@ namespace Dt.Cm
         /// <param name="p_phone">手机号</param>
         /// <param name="p_pwd">密码</param>
         /// <returns></returns>
-        public async Task<Dict> LoginByPwd(string p_phone, string p_pwd)
+        public async Task<Row> LoginByPwd(string p_phone, string p_pwd)
         {
-            Dict res = new Dict();
+            Row result = new Row();
             if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_pwd))
             {
-                res["valid"] = false;
-                res["error"] = "手机号或密码不可为空！";
-                return res;
+                result.AddCell("IsSuc", false);
+                result.AddCell("Error", "手机号或密码不可为空！");
+                return result;
             }
 
             // 从缓存读取
             var user = await _dp.GetByKey<User>("phone", p_phone);
             if (user == null || user.Pwd != p_pwd)
             {
-                res["valid"] = false;
-                res["error"] = "手机号不存在或密码错误！";
-                return res;
+                result.AddCell("IsSuc", false);
+                result.AddCell("Error", "手机号不存在或密码错误！");
+                return result;
             }
 
-            res["valid"] = true;
-            res["userid"] = user.ID;
-            res["phone"] = p_phone;
-            res["name"] = user.Name;
-            res["photo"] = user.Photo;
-            res["ver"] = await GetAllVers(user.ID);
-            return res;
+            result.AddCell("IsSuc", true);
+            result.AddCell("UserID", user.ID);
+            result.AddCell("Phone", p_phone);
+            result.AddCell("Name", user.Name);
+            result.AddCell("Photo", user.Photo);
+            result.AddCell("Version", await GetAllVers(user.ID));
+            return result;
         }
 
         /// <summary>
@@ -66,50 +66,51 @@ namespace Dt.Cm
         /// <param name="p_phone">手机号</param>
         /// <param name="p_code">验证码</param>
         /// <returns></returns>
-        public async Task<Dict> LoginByCode(string p_phone, string p_code)
+        public async Task<Row> LoginByCode(string p_phone, string p_code)
         {
-            Dict res = new Dict();
+            Row result = new Row();
             if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_code))
             {
-                res["valid"] = false;
-                res["error"] = "手机号或验证码不可为空！";
-                return res;
+                result.AddCell("IsSuc", false);
+                result.AddCell("Error", "手机号或验证码不可为空！");
+                return result;
             }
 
             string code = await Cache.StringGet<string>(_prefixCode, p_phone);
             if (code != p_code)
             {
-                res["valid"] = false;
-                res["error"] = "验证码错误！";
-                return res;
+                result.AddCell("IsSuc", false);
+                result.AddCell("Error", "验证码错误！");
+                return result;
             }
 
-            res["valid"] = true;
+            result.AddCell("IsSuc", true);
 
             // 已注册
             var user = await _dp.GetByKey<User>("phone", p_phone);
             if (user != null)
             {
-                res["userid"] = user.ID;
-                res["phone"] = p_phone;
-                res["name"] = user.Name;
-                res["pwd"] = user.Pwd;
-                res["photo"] = user.Photo;
-                res["ver"] = await GetAllVers(user.ID);
-                return res;
+                result.AddCell("UserID", user.ID);
+                result.AddCell("Phone", p_phone);
+                result.AddCell("Name", user.Name);
+                result.AddCell("Photo", user.Photo);
+                result.AddCell("Version", await GetAllVers(user.ID));
+                result.AddCell("Pwd", user.Pwd);
             }
+            else
+            {
+                // 初次登录，创建账号，初始密码为手机号后4位
+                user = User.CreateByPhone(p_phone);
+                await _dp.Save(user);
 
-            // 初次登录，创建账号，初始密码为手机号后4位
-            user = User.CreateByPhone(p_phone);
-            await _dp.Save(user);
-
-            res["userid"] = user.ID;
-            res["phone"] = p_phone;
-            res["name"] = user.Name;
-            res["pwd"] = user.Pwd;
-            res["photo"] = user.Photo;
-            res["ver"] = ""; // 无版本信息
-            return res;
+                result.AddCell("UserID", user.ID);
+                result.AddCell("Phone", p_phone);
+                result.AddCell("Name", user.Name);
+                result.AddCell("Photo", user.Photo);
+                // 无版本信息
+                result.AddCell("Pwd", user.Pwd);
+            }
+            return result;
         }
 
         /// <summary>

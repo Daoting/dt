@@ -30,8 +30,7 @@ namespace Dt.Sample
                 new MainInfo(Icons.警告, "异常处理", typeof(ExceptionDemo), ""),
                 new MainInfo(Icons.传真, "实体类业务逻辑", typeof(EntityDemo), ""),
                 new MainInfo(Icons.耳麦, "远程过程调用", typeof(RpcDemo), ""),
-                new MainInfo(Icons.小图标, "增删改查", typeof(DbAccess), ""),
-                new MainInfo(Icons.排列, "本地库操作", typeof(LocalDbAccess), ""),
+                new MainInfo(Icons.小图标, "服务端Api授权控制", typeof(AuthAccess), ""),
             };
         }
     }

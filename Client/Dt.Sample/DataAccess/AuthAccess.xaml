@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Dt.Sample.AuthAccess"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel>
+        <Button Content="普通Api，无授权验证" Click="OnNoAuth" />
+        <Button Content="必须登录后可访问" Click="OnAuth" />
+        <Button Content="自定义验证，始终不通过" Click="OnCustomAuth" />
+    </StackPanel>
+</a:Win>

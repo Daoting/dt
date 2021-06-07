@@ -24,7 +24,7 @@ namespace Dt.Shell
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = AtApp.Run<Stub>(p_args.Arguments, null);
+            _ = Startup.Launch<Stub>(p_args.Arguments, null);
         }
 
 #if UWP
@@ -32,7 +32,7 @@ namespace Dt.Shell
         {
             var info = new ShareInfo();
             await info.Init(p_args.ShareOperation);
-            await AtApp.Run<Stub>(null, info);
+            await Startup.Launch<Stub>(null, info);
         }
 #elif __IOS__
         public override bool OpenUrl(UIKit.UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
@@ -40,14 +40,14 @@ namespace Dt.Shell
             var doc = new UIKit.UIDocument(p_url);
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
-                _ = AtApp.Run<Stub>(null, new ShareInfo(path));
+                _ = Startup.Launch<Stub>(null, new ShareInfo(path));
 
             return true;
         }
 #else
         public async void ReceiveShare(ShareInfo p_shareInfo)
         {
-            await AtApp.Run<Stub>(null, p_shareInfo);
+            await Startup.Launch<Stub>(null, p_shareInfo);
         }
 #endif
     }

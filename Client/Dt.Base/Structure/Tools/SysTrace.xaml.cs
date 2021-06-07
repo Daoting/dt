@@ -255,7 +255,7 @@ namespace Dt.Base.Tools
             sb.AppendLine("\t\t#region 自动生成");
 
             sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 获取视图字典");
+            sb.AppendLine("\t\t/// 视图名称与窗口类型的映射字典，主要菜单项用");
             sb.AppendLine("\t\t/// </summary>");
             sb.AppendLine("\t\tpublic Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>");
             BuildStubDict(sb, _viewTypes);

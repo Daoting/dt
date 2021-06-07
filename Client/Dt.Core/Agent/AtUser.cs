@@ -49,18 +49,25 @@ namespace Dt.Core
         public static bool IsLogon => ID > 0;
 
         /// <summary>
+        /// 成功登录后事件
+        /// </summary>
+        public static event Action LoginSuc;
+
+        /// <summary>
         /// 登录后初始化用户信息
         /// </summary>
-        /// <param name="p_info"></param>
-        public static void Init(Dict p_info)
+        /// <param name="p_result"></param>
+        public static void Init(LoginResult p_result)
         {
-            ID = p_info.Long("userid");
-            Phone = p_info.Str("phone");
-            Name = p_info.Str("name");
-            Photo = p_info.Str("photo");
+            ID = p_result.UserID;
+            Phone = p_result.Phone;
+            Name = p_result.Name;
+            Photo = p_result.Phone;
 
             BaseRpc.RefreshHeader();
-            UpdateDataVersion(p_info.Str("ver"));
+            if (p_result.Contains("Version"))
+                UpdateDataVersion(p_result.Version);
+            LoginSuc?.Invoke();
         }
 
         /// <summary>

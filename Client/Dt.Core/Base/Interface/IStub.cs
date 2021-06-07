@@ -7,11 +7,10 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Core
@@ -32,16 +31,19 @@ namespace Dt.Core
         string Title { get; }
 
         /// <summary>
-        /// 登录页面
+        /// 系统描述信息
         /// </summary>
-        /// <returns></returns>
-        UIElement LoginPage { get; }
+        string Desc { get; }
+
+        /// <summary>
+        /// 默认主页(DefaultHome)的固定菜单项
+        /// </summary>
+        IList<OmMenu> FixedMenus { get; }
 
         /// <summary>
         /// 系统启动
         /// </summary>
-        /// <param name="p_info">提示信息</param>
-        Task OnStartup(StartupInfo p_info);
+        Task OnStartup();
 
         /// <summary>
         /// 接收分享内容

@@ -10,10 +10,10 @@
 using Dt.App;
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Shell
@@ -46,53 +46,62 @@ namespace Dt.Shell
         public string Title => "搬运工";
 
         /// <summary>
-        /// 登录页面
+        /// 系统描述信息
         /// </summary>
-        /// <returns></returns>
-        public UIElement LoginPage => new Login { Desc = "搬运工平台基础样例" };
+        public string Desc => "搬运工平台基础样例";
+
+        /// <summary>
+        /// 默认主页(DefaultHome)的固定菜单项
+        /// </summary>
+        public IList<OmMenu> FixedMenus { get; } = new List<OmMenu>
+        {
+            new OmMenu(
+                ID: 1110,
+                Name: "通讯录",
+                Icon: "留言",
+                ViewName: "通讯录"),
+
+            new OmMenu(
+                ID: 3000,
+                Name: "任务",
+                Icon: "双绞线",
+                ViewName: "任务",
+                SvcName: "cm"),
+
+            new OmMenu(
+                ID: 4000,
+                Name: "文件",
+                Icon: "文件夹",
+                ViewName: "文件"),
+
+            new OmMenu(
+                ID: 5000,
+                Name: "发布",
+                Icon: "公告",
+                ViewName: "发布"),
+
+            new OmMenu(
+                ID: 1,
+                Name: "控件样例",
+                Icon: "词典",
+                ViewName: "控件样例"),
+        };
 
         /// <summary>
         /// 系统启动
         /// </summary>
-        /// <param name="p_info">提示信息</param>
-        public async Task OnStartup(StartupInfo p_info)
+        public async Task OnStartup()
         {
-            // 设置固定菜单项
-            CreateFixedMenus();
+            // 设置主页类型
+            Startup.HomePage = typeof(DefaultHome);
 
-            if (ViewTypes.TryGetValue("主页", out var type) && type == typeof(DefaultHome))
-            {
-                // 联网模式
-                // 更新打开模型库
-                string error = await AtApp.OpenModelDb("cm");
-                if (!string.IsNullOrEmpty(error))
-                {
-                    p_info.SetMessage(error);
-                    return;
-                }
+            // 1. 按默认流程启动
+            await Startup.Run(false);
 
-                string phone = AtState.GetCookie("LoginPhone");
-                string pwd = AtState.GetCookie("LoginPwd");
-                if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-                {
-                    // 自动登录
-                    Dict dt = await AtCm.LoginByPwd(phone, pwd);
-                    if (dt.Bool("valid"))
-                    {
-                        // 登录成功
-                        AtApp.LoginSuccess(dt);
-                        return;
-                    }
-                }
-
-                // 未登录或登录失败
-                AtSys.Login(false);
-            }
-            else
-            {
-                // 单机模式
-                AtApp.LoadRootUI();
-            }
+            // 2.后登录模式：启动时
+            
+            // 3.自定义模式
+            //p_startup.LoadHome(typeof(Sample.SamplesMain));
         }
 
         /// <summary>
@@ -129,50 +138,12 @@ namespace Dt.Shell
         {
         }
 
-        void CreateFixedMenus()
-        {
-            MenuKit.FixedMenus = new List<OmMenu>
-            {
-                new OmMenu(
-                    ID: 1110,
-                    Name: "通讯录",
-                    Icon: "留言",
-                    ViewName: "通讯录"),
-
-                new OmMenu(
-                    ID: 3000,
-                    Name: "任务",
-                    Icon: "双绞线",
-                    ViewName: "任务",
-                    SvcName: "cm"),
-
-                new OmMenu(
-                    ID: 4000,
-                    Name: "文件",
-                    Icon: "文件夹",
-                    ViewName: "文件"),
-
-                new OmMenu(
-                    ID: 5000,
-                    Name: "发布",
-                    Icon: "公告",
-                    ViewName: "发布"),
-
-                new OmMenu(
-                    ID: 1,
-                    Name: "控件样例",
-                    Icon: "词典",
-                    ViewName: "控件样例"),
-            };
-        }
-
         #region 自动生成
         /// <summary>
         /// 获取视图字典
         /// </summary>
         public Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>
         {
-            { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
             { "流程设计", typeof(Dt.App.Workflow.WorkflowMgr) },
             { "任务", typeof(Dt.App.Workflow.TasksView) },

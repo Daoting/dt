@@ -29,7 +29,7 @@ namespace Dt.Cm
         [Auth]
         public string Auth()
         {
-            return "所有登录用户都可访问";
+            return "必须登录后可访问";
         }
 
         [Auth(typeof(MyAuth))]
@@ -44,7 +44,7 @@ namespace Dt.Cm
         public Task<bool> IsAuthenticated(HttpContext p_context)
         {
             string userID = p_context.Request.Headers["uid"];
-            return Task.FromResult(true);
+            return Task.FromResult(false);
         }
     }
 }

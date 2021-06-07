@@ -57,11 +57,16 @@ namespace Dt.Core.Rpc
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
 #if !SERVER
-                    // 无权限时跳转到登录页面
+                    // 无权限时
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
+                        // 已登录则提示无权限
+                        if (AtUser.IsLogon)
+                            throw new KnownException($"⚡对【{_methodName}】无访问权限！");
+
+                        // 跳转到登录页面
                         AtSys.Login(true);
-                        return default(T);
+                        throw new KnownException("请先登录您的账号！");
                     }
 #endif
                     throw new ServerException($"服务器返回状态码：{response.StatusCode}", $"调用【{_methodName}】时返回状态码：{response.StatusCode}");

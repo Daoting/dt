@@ -27,31 +27,12 @@ namespace Dt.Base
         /// <param name="p_isPopup">是否为弹出式</param>
         public void Login(bool p_isPopup)
         {
-            if (!p_isPopup)
-            {
-                SysVisual.RootContent = AtSys.Stub.LoginPage;
-                return;
-            }
-
-            // 弹出式登录页面在未登录遇到需要登录的功能时
-            AtKit.RunAsync(() =>
-            {
-                var dlg = new Dlg
-                {
-                    Resizeable = false,
-                    HideTitleBar = true,
-                    PhonePlacement = DlgPlacement.Maximized,
-                    WinPlacement = DlgPlacement.Maximized,
-                    Content = AtSys.Stub.LoginPage,
-                };
-                dlg.Show();
-            });
+            Startup.ShowLoginPage(p_isPopup);
         }
 
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        /// <returns></returns>
         public async void Logout()
         {
             // 注销时清空用户信息
@@ -61,7 +42,7 @@ namespace Dt.Base
             AtState.DeleteCookie("LoginPwd");
 
             await AtSys.Stub.OnLogout();
-            SysVisual.RootContent = AtSys.Stub.LoginPage;
+            Startup.ShowLoginPage(false);
         }
 
         /// <summary>

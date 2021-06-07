@@ -22,27 +22,19 @@ using Windows.UI.Xaml.Input;
 namespace Dt.App
 {
     /// <summary>
-    /// 登录页面
+    /// 默认登录页面
     /// </summary>
-    public partial class Login : Page
+    public partial class DefaultLogin : Page
     {
-        public Login()
+        public DefaultLogin()
         {
             InitializeComponent();
 
-            _tbTitle.Text = AtSys.Stub.Title;
+            _tbTitle.Text = string.IsNullOrEmpty(AtSys.Stub.Title) ? "无标题" : AtSys.Stub.Title;
+            _tbDesc.Text = string.IsNullOrEmpty(AtSys.Stub.Desc) ? "" : AtSys.Stub.Desc;
             // 设置中间面板宽度
             LoginPanel.Width = Math.Min(Math.Floor(ApplicationView.GetForCurrentView().VisibleBounds.Width * 2 / 3), 340);
             Loaded += (s, e) => _tbPhone.Focus(FocusState.Programmatic);
-        }
-
-        /// <summary>
-        /// 系统描述信息
-        /// </summary>
-        public string Desc
-        {
-            get { return _tbDesc.Text; }
-            set { _tbDesc.Text = value; }
         }
 
         /// <summary>
@@ -75,31 +67,45 @@ namespace Dt.App
                 try
                 {
                     string pwd = null;
-                    Dict dt;
+                    LoginResult result;
                     if (isCode)
                     {
                         // 验证码登录
-                        dt = await AtCm.LoginByCode(phone, txt);
-                        if (dt.Bool("valid"))
-                            pwd = dt.Str("pwd");
+                        result = await AtCm.LoginByCode(phone, txt);
+                        if (result.IsSuc)
+                            pwd = result.Pwd;
                     }
                     else
                     {
                         // 密码登录
                         pwd = AtKit.GetMD5(txt);
-                        dt = await AtCm.LoginByPwd(phone, pwd);
+                        result = await AtCm.LoginByPwd(phone, pwd);
                     }
 
-                    if (!dt.Bool("valid"))
+                    if (!result.IsSuc)
                     {
-                        LoginFailed(dt.Str("error"));
+                        LoginFailed(result.Error);
                         return;
                     }
 
                     // 保存以备自动登录
                     AtState.SaveCookie("LoginPhone", phone);
                     AtState.SaveCookie("LoginPwd", pwd);
-                    AtApp.LoginSuccess(dt, this.FindParentByType<Dlg>());
+
+                    AtUser.Init(result);
+                    var dlg = this.FindParentByType<Dlg>();
+                    if (dlg != null)
+                    {
+                        // 中途登录后关闭对话框
+                        dlg.Close();
+                    }
+                    else
+                    {
+                        // 正常登录后切换到主页
+                        Startup.ShowHomePage();
+                    }
+                    // 接收服务器推送
+                    _ = PushHandler.Register();
                 }
                 catch
                 {

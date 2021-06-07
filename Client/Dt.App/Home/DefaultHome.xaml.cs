@@ -22,13 +22,11 @@ namespace Dt.App
     /// <summary>
     /// 主页
     /// </summary>
-    [View("主页")]
     public partial class DefaultHome : Win
     {
         public DefaultHome()
         {
             InitializeComponent();
-            
         }
     }
 }

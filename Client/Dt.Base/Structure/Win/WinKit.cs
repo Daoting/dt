@@ -39,7 +39,7 @@ namespace Dt.Base
                 {
                     _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
                     var item = new Mi { ID = "取消自启动" };
-                    item.Click += (o, a) => LaunchManager.DelAutoStart();
+                    item.Click += (o, a) => Startup.DelAutoStart();
                     _menu.Items.Add(item);
 
                     item = new Mi { ID = "设置自启动" };
@@ -71,7 +71,7 @@ namespace Dt.Base
 
         static void SetAutoStart(object sender, Mi e)
         {
-            LaunchManager.SetAutoStart(_currentWin);
+            Startup.SetAutoStart(_currentWin);
             _currentWin = null;
         }
     }

@@ -46,7 +46,7 @@ namespace Dt.App.Model
             }
 
             if (await AtCm.Save(_rpt))
-                AtApp.PromptForUpdateModel();
+                ModelKit.PromptForUpdateModel();
         }
     }
 }

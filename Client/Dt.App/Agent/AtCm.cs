@@ -28,14 +28,14 @@ namespace Dt.App
         /// <param name="p_phone">手机号</param>
         /// <param name="p_pwd">密码</param>
         /// <returns></returns>
-        public static Task<Dict> LoginByPwd(string p_phone, string p_pwd)
+        public static Task<LoginResult> LoginByPwd(string p_phone, string p_pwd)
         {
             return new UnaryRpc(
                 "cm",
                 "Entry.LoginByPwd",
                 p_phone,
                 p_pwd
-            ).Call<Dict>();
+            ).Call<LoginResult>();
         }
 
         /// <summary>
@@ -44,14 +44,14 @@ namespace Dt.App
         /// <param name="p_phone">手机号</param>
         /// <param name="p_code">验证码</param>
         /// <returns></returns>
-        public static Task<Dict> LoginByCode(string p_phone, string p_code)
+        public static Task<LoginResult> LoginByCode(string p_phone, string p_code)
         {
             return new UnaryRpc(
                 "cm",
                 "Entry.LoginByCode",
                 p_phone,
                 p_code
-            ).Call<Dict>();
+            ).Call<LoginResult>();
         }
 
         /// <summary>
@@ -71,15 +71,17 @@ namespace Dt.App
         /// <summary>
         /// 获取菜单项的数字提示信息
         /// </summary>
-        /// <param name="p_menuIDs"></param>
+        /// <param name="p_menuID"></param>
+        /// <param name="p_userID"></param>
         /// <returns></returns>
-        public static Task<Dict> GetMenuTips(List<long> p_menuIDs)
+        public static Task<int> GetMenuTip(long p_menuID, long p_userID)
         {
             return new UnaryRpc(
                 "cm",
-                "Entry.GetMenuTips",
-                p_menuIDs
-            ).Call<Dict>();
+                "Entry.GetMenuTip",
+                p_menuID,
+                p_userID
+            ).Call<int>();
         }
         #endregion
 

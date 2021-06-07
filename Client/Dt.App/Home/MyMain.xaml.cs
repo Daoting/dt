@@ -10,17 +10,9 @@
 using Dt.App.Model;
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.App.Home
@@ -33,7 +25,18 @@ namespace Dt.App.Home
         public MyMain()
         {
             InitializeComponent();
-            LoadInfo();
+
+            if (AtUser.IsLogon)
+            {
+                LoadInfo();
+            }
+            else
+            {
+                var btn = new Button { Content = "点击登录", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+                btn.Click += (s, e) => AtSys.Login(false);
+                Content = btn;
+                AtUser.LoginSuc += () => { Content = _fv; LoadInfo(); };
+            }
         }
 
         async void LoadInfo()

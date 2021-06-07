@@ -7,6 +7,10 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <UpToDateCheckInput Remove="DataAccess\AuthAccess.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Report\数据源\个人成绩.json" />
     <EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
     <EmbeddedResource Include="Report\数据源\图表表格.json" />
@@ -59,5 +63,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataAccess\AuthAccess.xaml.cs">
+      <DependentUpon>AuthAccess.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

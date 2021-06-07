@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 #endregion
@@ -147,7 +148,7 @@ namespace Dt.App.Model
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
-                AtApp.PromptForUpdateModel();
+                ModelKit.PromptForUpdateModel();
             }
         }
 
@@ -179,7 +180,7 @@ namespace Dt.App.Model
                 if (tvRow != null)
                     _tv.DeleteItem(tvRow);
                 _fv.Data = _tv.SelectedItem;
-                AtApp.PromptForUpdateModel();
+                ModelKit.PromptForUpdateModel();
             }
         }
 
@@ -230,7 +231,7 @@ namespace Dt.App.Model
             if (await AtCm.ExchangeDispidx(src, tgt))
             {
                 LoadTreeData();
-                AtApp.PromptForUpdateModel("菜单调序成功");
+                ModelKit.PromptForUpdateModel("菜单调序成功");
             }
         }
 
