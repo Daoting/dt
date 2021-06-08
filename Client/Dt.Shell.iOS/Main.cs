@@ -15,7 +15,7 @@ namespace App.iOS
             }
             catch (Exception ex)
             {
-                AtSys.OnUnhandledException(ex);
+                Kit.OnUnhandledException(ex);
                 RunLoop();
             }
         }
@@ -41,7 +41,7 @@ namespace App.iOS
                 catch (Exception ex)
                 {
                     hasException = true;
-                    AtSys.OnUnhandledException(ex);
+                    Kit.OnUnhandledException(ex);
                     break;
                 }
             }

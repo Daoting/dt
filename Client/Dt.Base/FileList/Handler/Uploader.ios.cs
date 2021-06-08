@@ -213,14 +213,14 @@ namespace Dt.Base
                     // 上传完毕
                     uf.IsCompleted = true;
                     // 可能会跨文件
-                    uf.File.UploadUI?.UploadProgress?.Invoke(size, size, size);
+                    ((IUploadUI)uf.File.UploadUI)?.UploadProgress?.Invoke(size, size, size);
                     startPos = uf.EndPosition;
                 }
                 else
                 {
                     // 上传部分，
                     long len = totalBytesSent - startPos;
-                    uf.File.UploadUI?.UploadProgress?.Invoke(len, len, size);
+                    ((IUploadUI)uf.File.UploadUI)?.UploadProgress?.Invoke(len, len, size);
                     break;
                 }
             }
