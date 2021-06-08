@@ -93,7 +93,6 @@ namespace Dt.Shell
         public async Task OnStartup()
         {
             // 1. 按默认流程启动
-            // 注册登录页和主页类型
             Startup.Register(null, typeof(DefaultHome));
             await Startup.Run(true);
 
