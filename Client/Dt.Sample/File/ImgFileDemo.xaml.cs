@@ -22,7 +22,7 @@ namespace Dt.Sample
 
         async void LoadImg()
         {
-            await ImgKit.LoadImage(Kit.DefaultUserPhoto, _imgFsm);
+            await Kit.LoadImage(Kit.DefaultUserPhoto, _imgFsm);
             _imgFsmNoCache.Source = await Downloader.GetImage("photo/profilephoto.jpg");
         }
     }

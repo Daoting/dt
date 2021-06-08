@@ -2,12 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-09-23 创建
+* 日志: 2021-06-08 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Core
 {
     /// <summary>
     /// 选择文件的文件信息
@@ -92,7 +91,7 @@ namespace Dt.Base
         /// <summary>
         /// 文件上传过程的UI
         /// </summary>
-        public IUploadUI UploadUI { get; set; }
+        public object UploadUI { get; set; }
 
 #if UWP
         /// <summary>

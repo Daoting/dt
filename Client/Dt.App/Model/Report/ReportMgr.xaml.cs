@@ -71,7 +71,7 @@ namespace Dt.App.Model
             if (await AtCm.Save(_fv.Data.To<Rpt>()))
             {
                 _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 
@@ -109,7 +109,7 @@ namespace Dt.App.Model
             {
                 _fv.Data = null;
                 LoadAll();
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 

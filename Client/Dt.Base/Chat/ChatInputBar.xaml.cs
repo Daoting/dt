@@ -94,7 +94,7 @@ namespace Dt.Base
             else
             {
                 // 直接选择文件
-                var files = await CrossKit.PickFiles();
+                var files = await Kit.PickFiles();
                 if (files != null && files.Count > 0)
                     Owner.SendFiles(files);
             }
@@ -102,35 +102,35 @@ namespace Dt.Base
 
         async void OnAddPhoto(object sender, Mi e)
         {
-            var files = await CrossKit.PickImages();
+            var files = await Kit.PickImages();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
 
         async void OnAddVideo(object sender, Mi e)
         {
-            var files = await CrossKit.PickMedias();
+            var files = await Kit.PickMedias();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
 
         async void OnTakeVideo(object sender, Mi e)
         {
-            var fd = await CrossKit.TakeVideo();
+            var fd = await Kit.TakeVideo();
             if (fd != null)
                 Owner.SendFiles(new List<FileData> { fd });
         }
 
         async void OnTakePhoto(object sender, Mi e)
         {
-            var fd = await CrossKit.TakePhoto();
+            var fd = await Kit.TakePhoto();
             if (fd != null)
                 Owner.SendFiles(new List<FileData> { fd });
         }
 
         async void OnAddFile(object sender, Mi e)
         {
-            var files = await CrossKit.PickFiles();
+            var files = await Kit.PickFiles();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
@@ -142,7 +142,7 @@ namespace Dt.Base
 #if IOS
             ResetTransform();
 #endif
-            var fileData = await CrossKit.StartRecording(Owner);
+            var fileData = await Kit.TakeAudio(Owner);
             if (fileData != null)
             {
                 Owner.SendFiles(new List<FileData> { fileData });

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Dt.Base;
+﻿using Dt.Base;
+using Dt.Core;
+using System;
 using Windows.Media.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Dt.Sample
@@ -22,7 +19,7 @@ namespace Dt.Sample
             CapturePhotoOptions op = new CapturePhotoOptions();
             if ((bool)_cbFront.IsChecked)
                 op.UseFrontCamera = true;
-            var fd = await CrossKit.TakePhoto(op);
+            var fd = await Kit.TakePhoto(op);
             if (fd != null)
                 _img.Source = new BitmapImage(new Uri(fd.FilePath));
             else
@@ -37,7 +34,7 @@ namespace Dt.Sample
             if ((bool)_cbSpan.IsChecked)
                 op.DesiredLength = TimeSpan.FromSeconds(6);
 
-            var fd = await CrossKit.TakeVideo(op);
+            var fd = await Kit.TakeVideo(op);
             if (fd != null)
             {
                 _mp.Source = MediaSource.CreateFromUri(new Uri(fd.FilePath));

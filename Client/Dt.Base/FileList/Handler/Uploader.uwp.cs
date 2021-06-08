@@ -70,7 +70,7 @@ namespace Dt.Base
                 {
                     // 带进度的流内容
                     var streamContent = new ProgressStreamContent(await file.GetStream(), CancellationToken.None);
-                    streamContent.Progress = file.UploadUI.UploadProgress;
+                    streamContent.Progress = ((IUploadUI)file.UploadUI).UploadProgress;
                     content.Add(streamContent, file.Desc, file.FileName);
 
                     // 含缩略图

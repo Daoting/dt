@@ -21,6 +21,29 @@ namespace Dt.App
     /// </summary>
     public class AtCm : DataProvider<cm>
     {
+        /// <summary>
+        /// 提示需要更新模型
+        /// </summary>
+        /// <param name="p_msg">提示消息</param>
+        public static void PromptForUpdateModel(string p_msg = null)
+        {
+            var notify = new NotifyInfo();
+            notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
+            notify.DelaySeconds = 5;
+            notify.Link = "更新模型";
+            notify.LinkCallback = async (e) =>
+            {
+                if (await Kit.Confirm("确认要更新模型吗？"))
+                {
+                    if (await new UnaryRpc("cm", "ModelMgr.更新模型").Call<bool>())
+                        Kit.Msg("更新模型成功，请重启应用！");
+                    else
+                        Kit.Warn("更新模型失败！");
+                }
+            };
+            Kit.RunAsync(() => SysVisual.NotifyList.Add(notify));
+        }
+
         #region Entry
         /// <summary>
         /// 密码登录

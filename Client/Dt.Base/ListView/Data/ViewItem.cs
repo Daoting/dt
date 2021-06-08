@@ -572,7 +572,7 @@ namespace Dt.Base
             else
             {
                 // 文件服务的路径，json格式同FileList
-                _ = ImgKit.LoadImage(path, img);
+                _ = Kit.LoadImage(path, img);
             }
             return img;
         }

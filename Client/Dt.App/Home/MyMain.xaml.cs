@@ -44,7 +44,7 @@ namespace Dt.App.Home
             _tbName.Text = Kit.UserName;
             _tbPhone.Text = Kit.UserPhone.Substring(0, 3) + "****" + Kit.UserPhone.Substring(7, 4);
             string photo = string.IsNullOrEmpty(Kit.UserPhoto) ? Kit.DefaultUserPhoto : Kit.UserPhoto;
-            await ImgKit.LoadImage(photo, _img);
+            await Kit.LoadImage(photo, _img);
         }
 
         void OnExit(object sender, RoutedEventArgs e)

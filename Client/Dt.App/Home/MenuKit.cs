@@ -26,7 +26,7 @@ namespace Dt.App
     /// 2. 菜单，收藏菜单
     /// 3. 权限
     /// </summary>
-    public static class MenuKit
+    static class MenuKit
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus

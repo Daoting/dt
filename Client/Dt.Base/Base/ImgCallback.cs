@@ -24,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 加载图片工具类
     /// </summary>
-    public static class ImgKit
+    internal partial class DefaultCallback : ICallback
     {
 #if WASM
         /// <summary>
@@ -32,7 +32,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public static Task LoadImage(string p_path, Image p_img = null)
+        public Task LoadImage(string p_path, Image p_img)
         {
             if (string.IsNullOrEmpty(p_path))
                 return Task.CompletedTask;
@@ -52,14 +52,14 @@ namespace Dt.Base
             return Task.CompletedTask;
         }
 #else
-        static readonly AsyncLocker _locker = new AsyncLocker();
+        readonly AsyncLocker _locker = new AsyncLocker();
 
         /// <summary>
         /// 加载文件服务的图片，优先加载缓存，支持路径 或 FileList中json格式
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public static async Task LoadImage(string p_path, Image p_img = null)
+        public async Task LoadImage(string p_path, Image p_img = null)
         {
             // 加载过程：
             // 1. 本地.doc目录是否存在

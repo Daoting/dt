@@ -77,7 +77,7 @@ namespace Dt.App.Model
             if (await AtCm.BatchSave(tbl))
             {
                 _lv.Data = await AtCm.Query<Option>("选项-分类选项", new { Category = p_src.Category });
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 
@@ -103,7 +103,7 @@ namespace Dt.App.Model
             {
                 LoadCategory();
                 _lv.Data = await AtCm.Query<Option>("选项-分类选项", new { Category = op.Category });
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 
@@ -138,7 +138,7 @@ namespace Dt.App.Model
                 LoadCategory();
                 _lv.Data = await AtCm.Query<Option>("选项-分类选项", new { Category = p_option.Category });
                 _fv.Data = null;
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
     }

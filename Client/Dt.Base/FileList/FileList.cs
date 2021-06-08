@@ -325,7 +325,7 @@ namespace Dt.Base
         /// </summary>
         public void AddImage()
         {
-            _ = AppendFile(() => CrossKit.PickImages(), () => CrossKit.PickImage());
+            _ = AppendFile(() => Kit.PickImages(), () => Kit.PickImage());
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Dt.Base
         /// </summary>
         public void AddVideo()
         {
-            _ = AppendFile(() => CrossKit.PickVideos(), () => CrossKit.PickVideo());
+            _ = AppendFile(() => Kit.PickVideos(), () => Kit.PickVideo());
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace Dt.Base
         /// </summary>
         public void AddAudio()
         {
-            _ = AppendFile(() => CrossKit.PickAudios(), () => CrossKit.PickAudio());
+            _ = AppendFile(() => Kit.PickAudios(), () => Kit.PickAudio());
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Dt.Base
         /// </summary>
         public void AddMedia()
         {
-            _ = AppendFile(() => CrossKit.PickMedias(), () => CrossKit.PickMedia());
+            _ = AppendFile(() => Kit.PickMedias(), () => Kit.PickMedia());
         }
 
         /// <summary>
@@ -363,21 +363,21 @@ namespace Dt.Base
             _ = AppendFile(
 
 #if UWP
-                () => CrossKit.PickFiles(p_uwpFileTypes),
+                () => Kit.PickFiles(p_uwpFileTypes),
 #elif ANDROID
-                () => CrossKit.PickFiles(p_androidFileTypes),
+                () => Kit.PickFiles(p_androidFileTypes),
 #elif IOS
-                () => CrossKit.PickFiles(p_iosFileTypes),
+                () => Kit.PickFiles(p_iosFileTypes),
 #elif WASM
                 () => Task.FromResult((List<FileData>)null),
 #endif
 
 #if UWP
-                () => CrossKit.PickFile(p_uwpFileTypes));
+                () => Kit.PickFile(p_uwpFileTypes));
 #elif ANDROID
-                () => CrossKit.PickFile(p_androidFileTypes));
+                () => Kit.PickFile(p_androidFileTypes));
 #elif IOS
-                () => CrossKit.PickFile(p_iosFileTypes));
+                () => Kit.PickFile(p_iosFileTypes));
 #elif WASM
                 () => Task.FromResult((FileData)null));
 #endif
@@ -413,7 +413,7 @@ namespace Dt.Base
             {
                 FileItem vf = new FileItem(this);
                 file.UploadUI = vf;
-                await file.UploadUI.InitUpload(file);
+                await ((IUploadUI)file.UploadUI).InitUpload(file);
                 _pnl.Children.Add(vf);
             }
 
@@ -439,7 +439,7 @@ namespace Dt.Base
 
             // 新文件属性
             p_file.UploadUI = p_vf;
-            await p_file.UploadUI.InitUpload(p_file);
+            await ((IUploadUI)p_file.UploadUI).InitUpload(p_file);
             return await HandleUpload(new List<FileData> { p_file });
         }
 
@@ -478,7 +478,7 @@ namespace Dt.Base
 
                 foreach (var vf in p_files)
                 {
-                    vf.UploadUI.UploadFail(vf);
+                    ((IUploadUI)vf.UploadUI).UploadFail(vf);
                 }
                 // 加载旧列表
                 ReadData(Data);
@@ -489,7 +489,7 @@ namespace Dt.Base
                 for (int i = 0; i < p_files.Count; i++)
                 {
                     var vf = p_files[i];
-                    await vf.UploadUI.UploadSuccess(result[i], vf);
+                    await ((IUploadUI)vf.UploadUI).UploadSuccess(result[i], vf);
                 }
                 WriteData();
             }
@@ -577,7 +577,7 @@ namespace Dt.Base
         /// </summary>
         public async void CaptureVoice()
         {
-            var fd = await CrossKit.StartRecording(this);
+            var fd = await Kit.TakeAudio(this);
             if (fd != null)
                 await UploadFiles(new List<FileData> { fd });
         }
@@ -587,7 +587,7 @@ namespace Dt.Base
         /// </summary>
         public async void TakePhoto()
         {
-            var fd = await CrossKit.TakePhoto();
+            var fd = await Kit.TakePhoto();
             if (fd != null)
                 await UploadFiles(new List<FileData> { fd });
         }
@@ -597,7 +597,7 @@ namespace Dt.Base
         /// </summary>
         public async void RecordVideo()
         {
-            var fd = await CrossKit.TakeVideo();
+            var fd = await Kit.TakeVideo();
             if (fd != null)
                 await UploadFiles(new List<FileData> { fd });
         }

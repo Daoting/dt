@@ -75,7 +75,7 @@ namespace Dt.App.File
 
         async void OnUpload(object sender, Mi e)
         {
-            var files = await CrossKit.PickFiles();
+            var files = await Kit.PickFiles();
             if (files == null || files.Count == 0)
                 return;
 

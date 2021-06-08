@@ -587,11 +587,11 @@ namespace Dt.Base
             // 上传同类型文件
             FileData file;
             if (FileType == FileItemType.Image)
-                file = await CrossKit.PickImage();
+                file = await Kit.PickImage();
             else if (FileType == FileItemType.Video)
-                file = await CrossKit.PickVideo();
+                file = await Kit.PickVideo();
             else
-                file = await CrossKit.PickFile();
+                file = await Kit.PickFile();
             if (file != null)
                 await _owner.UpdateFile(file, this);
         }

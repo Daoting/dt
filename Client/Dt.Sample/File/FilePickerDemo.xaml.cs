@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Dt.Base;
+using Dt.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Dt.Base;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 
 namespace Dt.Sample
@@ -18,42 +18,42 @@ namespace Dt.Sample
 
         void OnPickPhoto(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickImage());
+            Write(Kit.PickImage());
         }
 
         void OnPickPhotos(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickImages());
+            Write(Kit.PickImages());
         }
 
         void OnPickVideo(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickVideo());
+            Write(Kit.PickVideo());
         }
 
         void OnPickVideos(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickVideos());
+            Write(Kit.PickVideos());
         }
 
         void OnPickMedia(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickMedia());
+            Write(Kit.PickMedia());
         }
 
         void OnPickMedias(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickMedias());
+            Write(Kit.PickMedias());
         }
 
         void OnPickFile(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickFile(null));
+            Write(Kit.PickFile(null));
         }
 
         void OnPickFiles(object sender, RoutedEventArgs e)
         {
-            Write(CrossKit.PickFiles(null));
+            Write(Kit.PickFiles(null));
         }
 
         async void Write(Task<FileData> p_file)

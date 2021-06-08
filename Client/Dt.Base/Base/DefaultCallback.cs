@@ -20,7 +20,7 @@ namespace Dt.Base
     /// <summary>
     /// 默认系统回调
     /// </summary>
-    internal class DefaultCallback : ICallback
+    internal partial class DefaultCallback : ICallback
     {
         /// <summary>
         /// 显示登录页面

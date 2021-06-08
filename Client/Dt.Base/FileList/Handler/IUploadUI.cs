@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Rpc;
 using System.Threading.Tasks;
 #endregion

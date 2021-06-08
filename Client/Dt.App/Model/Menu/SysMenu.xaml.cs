@@ -148,7 +148,7 @@ namespace Dt.App.Model
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 
@@ -180,7 +180,7 @@ namespace Dt.App.Model
                 if (tvRow != null)
                     _tv.DeleteItem(tvRow);
                 _fv.Data = _tv.SelectedItem;
-                ModelKit.PromptForUpdateModel();
+                AtCm.PromptForUpdateModel();
             }
         }
 
@@ -231,7 +231,7 @@ namespace Dt.App.Model
             if (await AtCm.ExchangeDispidx(src, tgt))
             {
                 LoadTreeData();
-                ModelKit.PromptForUpdateModel("菜单调序成功");
+                AtCm.PromptForUpdateModel("菜单调序成功");
             }
         }
 
