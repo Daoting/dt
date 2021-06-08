@@ -97,7 +97,7 @@ namespace Dt.Base
                 Java.IO.File file = new Java.IO.File(uf.FilePath);
                 RequestBody rb = RequestBody.Create(file, MediaType.Parse("application/octet-stream"));
                 // 包一层实现进度
-                ProgressRequestBody progress = new ProgressRequestBody(rb, uf.UploadUI.UploadProgress);
+                ProgressRequestBody progress = new ProgressRequestBody(rb, ((IUploadUI)uf.UploadUI).UploadProgress);
                 bodyBuilder.AddFormDataPart(uf.Desc, uf.FileName, progress);
 
                 // 含缩略图

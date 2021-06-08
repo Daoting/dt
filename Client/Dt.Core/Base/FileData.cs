@@ -118,7 +118,7 @@ namespace Dt.Core
         /// <returns></returns>
         public Task<Stream> GetStream()
         {
-            if (IOUtil.IsMediaStore(FilePath))
+            if (FilePath.StartsWith("content"))
             {
                 var contentUri = Android.Net.Uri.Parse(FilePath);
                 return Task.FromResult(Android.App.Application.Context.ContentResolver.OpenInputStream(contentUri));

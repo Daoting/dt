@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362' ">
-    <PackageReference Include="Uno.UI" Version="3.6.6" />
+    <PackageReference Include="Uno.UI" Version="3.7.6" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' != 'net5.0' ">
