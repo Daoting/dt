@@ -111,7 +111,7 @@ namespace Dt.Base
                 {
                     AtUser.Init(result);
                     // 切换到主页
-                    ShowHomePage();
+                    ShowHome();
                     // 接收服务器推送
                     _ = PushHandler.Register();
                     return;
@@ -122,13 +122,24 @@ namespace Dt.Base
             if (p_loginFirst)
             {
                 // 强制先登录
-                ShowLoginPage(false);
+                ShowLogin(false);
             }
             else
             {
                 // 未登录先显示主页
-                ShowHomePage();
+                ShowHome();
             }
+        }
+
+        /// <summary>
+        /// 注册登录页和主页类型，以备 登录、注销、自动登录、中途登录时用
+        /// </summary>
+        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
+        /// <param name="p_homePageType">主页类型</param>
+        public static void Register(Type p_loginPageType, Type p_homePageType)
+        {
+            _loginPageType = p_loginPageType;
+            _homePageType = p_homePageType;
         }
         #endregion
 
@@ -224,18 +235,18 @@ namespace Dt.Base
         /// <summary>
         /// 登录页面类型，null时采用 DefaultLogin
         /// </summary>
-        public static Type LoginPage { get; set; }
+        static Type _loginPageType;
 
         /// <summary>
         /// 显示登录页面
         /// </summary>
         /// <param name="p_isPopup">是否为弹出式</param>
-        public static void ShowLoginPage(bool p_isPopup)
+        public static void ShowLogin(bool p_isPopup)
         {
             AtKit.RunAsync(() =>
             {
                 // 外部未指定时采用默认登录页
-                Type tp = LoginPage == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : LoginPage;
+                Type tp = _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType;
                 var page = Activator.CreateInstance(tp) as UIElement;
                 if (!p_isPopup)
                 {
@@ -263,12 +274,12 @@ namespace Dt.Base
         /// <summary>
         /// 主页类型
         /// </summary>
-        public static Type HomePage { get; set; }
+        static Type _homePageType;
 
         /// <summary>
         /// 加载根内容 Desktop/Frame 和主页
         /// </summary>
-        public static void ShowHomePage()
+        public static void ShowHome()
         {
             if (AtSys.IsPhoneUI)
                 LoadRootFrame();
@@ -284,9 +295,9 @@ namespace Dt.Base
             SysVisual.RootContent = new Frame();
 
             // 主页作为根
-            if (HomePage != null)
+            if (_homePageType != null)
             {
-                Win win = Activator.CreateInstance(HomePage) as Win;
+                Win win = Activator.CreateInstance(_homePageType) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -349,9 +360,9 @@ namespace Dt.Base
             Desktop desktop = new Desktop();
 
             // 主页
-            if (HomePage != null)
+            if (_homePageType != null)
             {
-                Win win = Activator.CreateInstance(HomePage) as Win;
+                Win win = Activator.CreateInstance(_homePageType) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -521,7 +532,7 @@ namespace Dt.Base
 
             // 重构根元素
             if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-                ShowHomePage();
+                ShowHome();
         }
         #endregion
     }

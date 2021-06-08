@@ -27,7 +27,7 @@ namespace Dt.Base
         /// <param name="p_isPopup">是否为弹出式</param>
         public void Login(bool p_isPopup)
         {
-            Startup.ShowLoginPage(p_isPopup);
+            Startup.ShowLogin(p_isPopup);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Dt.Base
             AtState.DeleteCookie("LoginPwd");
 
             await AtSys.Stub.OnLogout();
-            Startup.ShowLoginPage(false);
+            Startup.ShowLogin(false);
         }
 
         /// <summary>

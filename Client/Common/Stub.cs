@@ -92,16 +92,21 @@ namespace Dt.Shell
         /// </summary>
         public async Task OnStartup()
         {
-            // 设置主页类型
-            Startup.HomePage = typeof(DefaultHome);
-
             // 1. 按默认流程启动
-            await Startup.Run(false);
+            // 注册登录页和主页类型
+            Startup.Register(null, typeof(DefaultHome));
+            await Startup.Run(true);
 
-            // 2.后登录模式：启动时
-            
-            // 3.自定义模式
-            //p_startup.LoadHome(typeof(Sample.SamplesMain));
+            // 2. 自定义启动过程
+            //if (await Startup.OpenModelDb())
+            //{
+            //    Startup.Register(null, typeof(Sample.SamplesMain));
+            //    Startup.ShowHome();
+            //}
+
+            // 3. 完全不使用dt服务
+            //Startup.Register(null, typeof(Sample.SamplesMain));
+            //Startup.ShowHome();
         }
 
         /// <summary>

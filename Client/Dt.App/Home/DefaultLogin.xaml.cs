@@ -102,7 +102,7 @@ namespace Dt.App
                     else
                     {
                         // 正常登录后切换到主页
-                        Startup.ShowHomePage();
+                        Startup.ShowHome();
                     }
                     // 接收服务器推送
                     _ = PushHandler.Register();
