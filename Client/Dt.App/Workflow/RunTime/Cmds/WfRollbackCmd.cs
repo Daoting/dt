@@ -38,7 +38,7 @@ namespace Dt.App.Workflow
             // 活动执行者多于一人时，不允许进行回退
             if (_info.AtvInst.InstCount > 1)
             {
-                AtKit.Msg("该活动执行者多于一人，不允许回退！");
+                Kit.Msg("该活动执行者多于一人，不允许回退！");
                 return;
             }
 
@@ -46,14 +46,14 @@ namespace Dt.App.Workflow
             var pre = await _info.AtvInst.GetRollbackAtv();
             if (pre == null)
             {
-                AtKit.Msg("该活动不允许回退！");
+                Kit.Msg("该活动不允许回退！");
                 return;
             }
 
-            if (!await AtKit.Confirm("确认要回退吗？"))
+            if (!await Kit.Confirm("确认要回退吗？"))
                 return;
 
-            DateTime time = AtSys.Now;
+            DateTime time = Kit.Now;
             var newAtvInst = new WfiAtv(
                 ID: await AtCm.NewID(),
                 PrciID: _info.PrcInst.ID,
@@ -87,12 +87,12 @@ namespace Dt.App.Workflow
 
             if (await AtCm.BatchSave(ls, false))
             {
-                AtKit.Msg("回退成功！");
+                Kit.Msg("回退成功！");
                 _info.CloseWin();
             }
             else
             {
-                AtKit.Msg("回退失败！");
+                Kit.Msg("回退失败！");
             }
         }
 

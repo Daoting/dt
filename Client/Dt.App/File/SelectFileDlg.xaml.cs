@@ -41,7 +41,7 @@ namespace Dt.App.File
         {
             IsMultiSelection = p_isMultiSelection;
             TypeFilter = p_typeFilter;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Width = 400;
                 Height = 600;

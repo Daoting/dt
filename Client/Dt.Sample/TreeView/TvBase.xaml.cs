@@ -41,7 +41,7 @@ namespace Dt.Sample
             //DataPackage data = new DataPackage();
             //data.SetText(sb.ToString());
             //Clipboard.SetContent(data);
-            //AtKit.Msg("已复制到剪切板！");
+            //Kit.Msg("已复制到剪切板！");
         }
 
         void OnLoadData(object sender, RoutedEventArgs e)
@@ -62,12 +62,12 @@ namespace Dt.Sample
             if (e.Data is Row row)
             {
                 Row old = e.OldData as Row;
-                AtKit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{row.Str("name")}，\r\n上次行：{(old != null ? old.Str("name") : "无")}");
+                Kit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{row.Str("name")}，\r\n上次行：{(old != null ? old.Str("name") : "无")}");
             }
             else if (e.Data is MedTreeItem per)
             {
                 MedTreeItem old = e.OldData as MedTreeItem;
-                AtKit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{per.Name}，\r\n上次行：{(old != null ? old.Name : "无")}");
+                Kit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{per.Name}，\r\n上次行：{(old != null ? old.Name : "无")}");
             }
         }
 
@@ -81,7 +81,7 @@ namespace Dt.Sample
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AtKit.Msg($"增加选择{e.AddedItems.Count}行，取消选择{e.RemovedItems.Count}行");
+            Kit.Msg($"增加选择{e.AddedItems.Count}行，取消选择{e.RemovedItems.Count}行");
         }
 
         void OnRowDoubleClick(object sender, RoutedEventArgs e)
@@ -96,11 +96,11 @@ namespace Dt.Sample
         {
             if (e is Row row)
             {
-                AtKit.Msg($"双击行：{row.Str("name")}");
+                Kit.Msg($"双击行：{row.Str("name")}");
             }
             else if (e is MedTreeItem per)
             {
-                AtKit.Msg($"双击行：{per.Name}");
+                Kit.Msg($"双击行：{per.Name}");
             }
         }
 
@@ -121,7 +121,7 @@ namespace Dt.Sample
 
         void OnEnteredBrush(object sender, RoutedEventArgs e)
         {
-            _tv.EnteredBrush = AtRes.深黄遮罩;
+            _tv.EnteredBrush = Res.深黄遮罩;
         }
 
         void OnDefEnteredBrush(object sender, RoutedEventArgs e)
@@ -136,7 +136,7 @@ namespace Dt.Sample
 
         void OnPressedBrush(object sender, RoutedEventArgs e)
         {
-            _tv.PressedBrush = AtRes.深暗遮罩;
+            _tv.PressedBrush = Res.深暗遮罩;
         }
 
         void OnDefPressedBrush(object sender, RoutedEventArgs e)
@@ -150,7 +150,7 @@ namespace Dt.Sample
             {
                 int index = new Random().Next(0, tbl.Count);
                 _tv.SelectedItem = tbl[index];
-                AtKit.Msg($"已选择 {tbl[index].Str("name")}");
+                Kit.Msg($"已选择 {tbl[index].Str("name")}");
             }
         }
 

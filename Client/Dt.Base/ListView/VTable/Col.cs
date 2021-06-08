@@ -54,13 +54,13 @@ namespace Dt.Base
             "Foreground",
             typeof(SolidColorBrush),
             typeof(Col),
-            new PropertyMetadata(AtRes.默认前景));
+            new PropertyMetadata(Res.默认前景));
 
         public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
             "Background",
             typeof(SolidColorBrush),
             typeof(Col),
-            new PropertyMetadata(AtRes.TransparentBrush));
+            new PropertyMetadata(Res.TransparentBrush));
 
         public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register(
             "FontWeight",

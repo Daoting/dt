@@ -33,7 +33,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public void ShowSysWarning(string p_msg)
         {
-            AtKit.Warn($"【系统通知】\r\n{p_msg}");
+            Kit.Warn($"【系统通知】\r\n{p_msg}");
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Dt.Base
         public void StopPush()
         {
             PushHandler.StopRetry = true;
-            AtKit.Msg("您已从其它位置登录！");
+            Kit.Msg("您已从其它位置登录！");
         }
     }
 }

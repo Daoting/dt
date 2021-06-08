@@ -68,12 +68,12 @@ namespace Dt.Sample
             if (e.Data is Row row)
             {
                 Row old = e.OldData as Row;
-                AtKit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{row.Str("xm")}，\r\n上次行：{(old != null ? old.Str("xm") : "无")}");
+                Kit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{row.Str("xm")}，\r\n上次行：{(old != null ? old.Str("xm") : "无")}");
             }
             else if (e.Data is Person per)
             {
                 Person old = e.OldData as Person;
-                AtKit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{per.Xm}，\r\n上次行：{(old != null ? old.Xm : "无")}");
+                Kit.Msg($"{(e.IsChanged ? "切换行" : "未切换")} \r\n当前行：{per.Xm}，\r\n上次行：{(old != null ? old.Xm : "无")}");
             }
         }
 
@@ -87,7 +87,7 @@ namespace Dt.Sample
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            AtKit.Msg($"增加选择{e.AddedItems.Count}行，取消选择{e.RemovedItems.Count}行");
+            Kit.Msg($"增加选择{e.AddedItems.Count}行，取消选择{e.RemovedItems.Count}行");
         }
 
         void OnRowDoubleClick(object sender, RoutedEventArgs e)
@@ -102,11 +102,11 @@ namespace Dt.Sample
         {
             if (e is Row row)
             {
-                AtKit.Msg($"双击行：{row.Str("xm")}");
+                Kit.Msg($"双击行：{row.Str("xm")}");
             }
             else if (e is Person per)
             {
-                AtKit.Msg($"双击行：{per.Xm}");
+                Kit.Msg($"双击行：{per.Xm}");
             }
         }
 
@@ -173,7 +173,7 @@ namespace Dt.Sample
         {
             int index = new Random().Next(0, _lv.Data.Count);
             _lv.ScrollInto(index);
-            AtKit.Msg($"滚动到第 {index + 1} 行");
+            Kit.Msg($"滚动到第 {index + 1} 行");
         }
 
         void OnScrollTop(object sender, RoutedEventArgs e)
@@ -252,7 +252,7 @@ namespace Dt.Sample
 
         void OnEnteredBrush(object sender, RoutedEventArgs e)
         {
-            _lv.EnteredBrush = AtRes.深黄遮罩;
+            _lv.EnteredBrush = Res.深黄遮罩;
         }
 
         void OnDefEnteredBrush(object sender, RoutedEventArgs e)
@@ -267,7 +267,7 @@ namespace Dt.Sample
 
         void OnPressedBrush(object sender, RoutedEventArgs e)
         {
-            _lv.PressedBrush = AtRes.深暗遮罩;
+            _lv.PressedBrush = Res.深暗遮罩;
         }
 
         void OnDefPressedBrush(object sender, RoutedEventArgs e)

@@ -26,65 +26,65 @@ namespace Dt.App.Home
         {
             InitializeComponent();
 
-            if (AtUser.IsLogon)
+            if (Kit.IsLogon)
             {
                 LoadInfo();
             }
             else
             {
                 var btn = new Button { Content = "点击登录", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                btn.Click += (s, e) => AtSys.Login(false);
+                btn.Click += (s, e) => Kit.Login(false);
                 Content = btn;
-                AtUser.LoginSuc += () => { Content = _fv; LoadInfo(); };
+                Kit.LoginSuc += () => { Content = _fv; LoadInfo(); };
             }
         }
 
         async void LoadInfo()
         {
-            _tbName.Text = AtUser.Name;
-            _tbPhone.Text = AtUser.Phone.Substring(0, 3) + "****" + AtUser.Phone.Substring(7, 4);
-            string photo = string.IsNullOrEmpty(AtUser.Photo) ? AtUser.DefaultPhoto : AtUser.Photo;
+            _tbName.Text = Kit.UserName;
+            _tbPhone.Text = Kit.UserPhone.Substring(0, 3) + "****" + Kit.UserPhone.Substring(7, 4);
+            string photo = string.IsNullOrEmpty(Kit.UserPhoto) ? Kit.DefaultUserPhoto : Kit.UserPhoto;
             await ImgKit.LoadImage(photo, _img);
         }
 
         void OnExit(object sender, RoutedEventArgs e)
         {
-            AtSys.Logout();
+            Kit.Logout();
         }
 
         async void OnClearLocalFile(object sender, RoutedEventArgs e)
         {
-            if (await AtKit.Confirm("清除缓存后再次用到时需要重新下载，建议存储空间充足时不必清除。\r\n确认要清除吗？"))
+            if (await Kit.Confirm("清除缓存后再次用到时需要重新下载，建议存储空间充足时不必清除。\r\n确认要清除吗？"))
             {
-                AtSys.ClearCacheFiles();
-                AtKit.Msg("清除完毕！");
+                Kit.ClearCacheFiles();
+                Kit.Msg("清除完毕！");
             }
         }
 
         async void OnEditInfo(object sender, EventArgs e)
         {
             var dlg = new EditUserDlg();
-            if (await dlg.Show(AtUser.ID, false))
+            if (await dlg.Show(Kit.UserID, false))
             {
                 Row row = dlg.Info;
-                AtUser.Name = row.Str("name");
-                AtUser.Phone = row.Str("phone");
-                AtUser.Photo = row.Str("photo");
+                Kit.UserName = row.Str("name");
+                Kit.UserPhone = row.Str("phone");
+                Kit.UserPhoto = row.Str("photo");
                 LoadInfo();
             }
         }
 
         void OnSetting(object sender, EventArgs e)
         {
-            Type tp = AtApp.GetViewType("我的设置");
+            Type tp = Kit.GetViewType("我的设置");
             if (tp == null)
             {
-                AtKit.Msg("未找到设置视图！");
+                Kit.Msg("未找到设置视图！");
                 return;
             }
 
             var dlg = new Dlg { Title = "设置" };
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 dlg.Width = 400;
                 dlg.Height = 500;
@@ -95,8 +95,8 @@ namespace Dt.App.Home
 
         async void OnAbout(object sender, EventArgs e)
         {
-            var b = await AtUser.GetParam<string>("接收新任务");
-            var c = await AtUser.GetParam<bool>("接收新发布通知");
+            var b = await Kit.GetParam<string>("接收新任务");
+            var c = await Kit.GetParam<bool>("接收新发布通知");
         }
     }
 }

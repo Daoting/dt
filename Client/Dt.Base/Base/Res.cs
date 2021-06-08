@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Globalization;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Dt.Base
     /// <summary>
     /// 资源管理类
     /// </summary>
-    public static class AtRes
+    public static class Res
     {
         // 全局资源字典
         readonly static ResourceDictionary _dict = Application.Current.Resources;

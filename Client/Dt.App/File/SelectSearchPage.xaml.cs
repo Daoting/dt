@@ -38,9 +38,9 @@ namespace Dt.App.File
         async void OnSearch(object sender, string e)
         {
             if (string.IsNullOrEmpty(_owner.TypeFilter))
-                _lv.Data = await AtCm.Query("文件-搜索所有文件", new { name = $"%{e}%", userid = AtUser.ID });
+                _lv.Data = await AtCm.Query("文件-搜索所有文件", new { name = $"%{e}%", userid = Kit.UserID });
             else
-                _lv.Data = await AtCm.Query("文件-搜索扩展名文件", new { name = $"%{e}%", userid = AtUser.ID, extname = _owner.TypeFilter });
+                _lv.Data = await AtCm.Query("文件-搜索扩展名文件", new { name = $"%{e}%", userid = Kit.UserID, extname = _owner.TypeFilter });
         }
 
         void OnSelect(object sender, Mi e)

@@ -60,7 +60,7 @@ namespace Dt.Base.FileLists
             else
                 LoadImage();
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Height = SysVisual.ViewHeight / 2;
                 Width = SysVisual.ViewHeight / 2;

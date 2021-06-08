@@ -62,9 +62,9 @@ namespace Dt.App.Publish
             if (await IsUsed(album.ID))
                 return;
 
-            if (!await AtKit.Confirm($"确认要删除[{album.Name}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{album.Name}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace Dt.App.Publish
             int cnt = await AtPublish.GetScalar<int>("发布-专辑引用数", new { AlbumID = p_id });
             if (cnt > 0)
             {
-                AtKit.Warn("专辑已被引用，无法修改或删除！");
+                Kit.Warn("专辑已被引用，无法修改或删除！");
                 return true;
             }
             return false;

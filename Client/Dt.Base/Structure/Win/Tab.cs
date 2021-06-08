@@ -116,12 +116,12 @@ namespace Dt.Base
 
         static void OnPhoneBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (AtSys.IsPhoneUI
+            if (Kit.IsPhoneUI
                 && e.NewValue is Button btn
                 && btn.Style == null)
             {
                 // 默认搜索按钮样式
-                btn.Style = AtRes.PhonSearchButton;
+                btn.Style = Res.PhonSearchButton;
             }
         }
         #endregion
@@ -130,7 +130,7 @@ namespace Dt.Base
         public Tab()
         {
             // 两种UI模式样式不同，PhoneUI模式为缺省样式
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Tab);
             else
                 Style = (Style)Application.Current.Resources["WinTab"];
@@ -297,7 +297,7 @@ namespace Dt.Base
             if (p_content == null || (current = Content as INaviContent) == null)
                 return;
 
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 Tab tab = new Tab { OwnWin = OwnWin, Content = p_content };
                 PhonePage.Show(tab);
@@ -321,7 +321,7 @@ namespace Dt.Base
         /// </summary>
         void INaviHost.GoBack()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 InputManager.GoBack();
             else if (_naviCache != null && _naviCache.Count > 0)
                 Content = _naviCache.Pop();
@@ -355,7 +355,7 @@ namespace Dt.Base
         #region 加载过程
         protected override void OnLoadTemplate()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 InitPhoneUITemplate();
             else
                 base.OnLoadTemplate();
@@ -379,7 +379,7 @@ namespace Dt.Base
         /// </summary>
         protected override void OnContentChanged()
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 base.OnContentChanged();
 
             var navi = Content as INaviContent;

@@ -20,33 +20,33 @@ namespace Dt.Core
     /// <summary>
     /// 当前登录用户相关信息
     /// </summary>
-    public static class AtUser
+    public partial class Kit
     {
         #region 用户信息
         /// <summary>
         /// 用户ID
         /// </summary>
-        public static long ID { get; private set; } = -1;
+        public static long UserID { get; private set; } = -1;
 
         /// <summary>
         /// 姓名
         /// </summary>
-        public static string Name { get; set; }
+        public static string UserName { get; set; }
 
         /// <summary>
         /// 手机号码
         /// </summary>
-        public static string Phone { get; set; }
+        public static string UserPhone { get; set; }
 
         /// <summary>
         /// 头像
         /// </summary>
-        public static string Photo { get; set; }
+        public static string UserPhoto { get; set; }
 
         /// <summary>
         /// 是否已登录
         /// </summary>
-        public static bool IsLogon => ID > 0;
+        public static bool IsLogon => UserID > 0;
 
         /// <summary>
         /// 成功登录后事件
@@ -57,12 +57,12 @@ namespace Dt.Core
         /// 登录后初始化用户信息
         /// </summary>
         /// <param name="p_result"></param>
-        public static void Init(LoginResult p_result)
+        public static void InitUser(LoginResult p_result)
         {
-            ID = p_result.UserID;
-            Phone = p_result.Phone;
-            Name = p_result.Name;
-            Photo = p_result.Phone;
+            UserID = p_result.UserID;
+            UserPhone = p_result.Phone;
+            UserName = p_result.Name;
+            UserPhoto = p_result.Photo;
 
             BaseRpc.RefreshHeader();
             if (p_result.Contains("Version"))
@@ -73,12 +73,12 @@ namespace Dt.Core
         /// <summary>
         /// 注销时清空用户信息
         /// </summary>
-        public static void Reset()
+        public static void ResetUser()
         {
-            ID = -1;
-            Name = null;
-            Phone = null;
-            Photo = null;
+            UserID = -1;
+            UserName = null;
+            UserPhone = null;
+            UserPhoto = null;
 
             BaseRpc.RefreshHeader();
         }
@@ -113,7 +113,7 @@ namespace Dt.Core
         /// <summary>
         /// 缺省头像文件的路径
         /// </summary>
-        public const string DefaultPhoto = "photo/profilephoto.jpg";
+        public const string DefaultUserPhoto = "photo/profilephoto.jpg";
         #endregion
 
         #region 权限
@@ -131,7 +131,7 @@ namespace Dt.Core
                 Dict dt = await new UnaryRpc(
                     "cm",
                     "UserRelated.GetPrivileges",
-                    ID
+                    UserID
                 ).Call<Dict>();
 
                 // 记录版本号
@@ -166,7 +166,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task<T> GetParam<T>(string p_paramID)
         {
-            await Init();
+            await InitParams();
 
             var row = AtState.First($"select val from UserParams where id='{p_paramID}'");
             Throw.IfNull(row, $"无参数【{p_paramID}】");
@@ -191,7 +191,7 @@ namespace Dt.Core
             return (T)result;
         }
 
-        static async Task Init()
+        static async Task InitParams()
         {
             int cnt = AtState.GetScalar<int>("select count(*) from DataVersion where id='params'");
             if (cnt > 0)
@@ -201,7 +201,7 @@ namespace Dt.Core
             Dict dt = await new UnaryRpc(
                     "cm",
                     "UserRelated.GetParams",
-                    ID
+                    UserID
                 ).Call<Dict>();
 
             // 记录版本号

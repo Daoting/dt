@@ -34,7 +34,7 @@ namespace Dt.App.File
         {
             _fileMgr = p_fileMgr;
             _files = p_rows;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Width = 300;
                 Height = 400;
@@ -49,7 +49,7 @@ namespace Dt.App.File
         {
             if (_fileMgr.FolderID == p_target.FolderID)
             {
-                AtKit.Warn("不需要移动！");
+                Kit.Warn("不需要移动！");
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace Dt.App.File
             }
             else
             {
-                AtKit.Warn("移动失败！");
+                Kit.Warn("移动失败！");
             }
         }
 

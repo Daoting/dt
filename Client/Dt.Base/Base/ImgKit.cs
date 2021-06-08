@@ -48,7 +48,7 @@ namespace Dt.Base
             }
 
             // 图片无缓存
-            p_img.Source = new BitmapImage(new Uri($"{AtSys.Stub.ServerUrl}/fsm/{p_path}"));
+            p_img.Source = new BitmapImage(new Uri($"{Kit.Stub.ServerUrl}/fsm/{p_path}"));
             return Task.CompletedTask;
         }
 #else
@@ -89,7 +89,7 @@ namespace Dt.Base
             using (await _locker.LockAsync())
             {
                 string fileName = p_path.Substring(index + 1);
-                string path = System.IO.Path.Combine(AtSys.CachePath, fileName);
+                string path = System.IO.Path.Combine(Kit.CachePath, fileName);
                 if (!System.IO.File.Exists(path))
                 {
                     if (!await Downloader.GetAndCacheFile(p_path))
@@ -110,7 +110,7 @@ namespace Dt.Base
         /// <returns></returns>
         static async Task<BitmapImage> GetLocalImage(string p_fileName)
         {
-            string path = Path.Combine(AtSys.CachePath, p_fileName);
+            string path = Path.Combine(Kit.CachePath, p_fileName);
             if (!File.Exists(path))
                 return null;
             

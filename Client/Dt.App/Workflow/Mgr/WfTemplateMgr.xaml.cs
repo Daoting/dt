@@ -62,15 +62,15 @@ namespace Dt.App.Workflow
 
         void EditTemplate(string p_title, long p_id)
         {
-            AtApp.OpenWin(typeof(WorkflowDesign), p_title, Icons.修改, p_id);
+            Kit.OpenWin(typeof(WorkflowDesign), p_title, Icons.修改, p_id);
         }
 
         async void OnDelContext(object sender, Mi e)
         {
             var p_prc = e.Data.To<WfdPrc>();
-            if (!await AtKit.Confirm($"确认要删除流程模板[{p_prc.Name}]吗？"))
+            if (!await Kit.Confirm($"确认要删除流程模板[{p_prc.Name}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 

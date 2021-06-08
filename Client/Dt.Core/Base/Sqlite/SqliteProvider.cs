@@ -185,7 +185,7 @@ namespace Dt.Core
                 || (!p_entity.IsAdded && !p_entity.IsChanged))
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    Kit.Warn(_unchangedMsg);
                 return false;
             }
 
@@ -200,12 +200,12 @@ namespace Dt.Core
             if (_db.Save(p_entity))
             {
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -223,7 +223,7 @@ namespace Dt.Core
             if (p_list == null || p_list.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    Kit.Warn(_unchangedMsg);
                 return false;
             }
 
@@ -290,12 +290,12 @@ namespace Dt.Core
             if (_db.BatchSave(p_list))
             {
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -317,9 +317,9 @@ namespace Dt.Core
             catch (Exception ex)
             {
                 if (ex.InnerException is KnownException kex)
-                    AtKit.Warn(kex.Message);
+                    Kit.Warn(kex.Message);
                 else
-                    AtKit.Warn(ex.Message);
+                    Kit.Warn(ex.Message);
                 return false;
             }
             return true;
@@ -340,7 +340,7 @@ namespace Dt.Core
             if (p_entity == null || p_entity.IsAdded)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    Kit.Warn(_saveError);
                 return false;
             }
 
@@ -355,9 +355,9 @@ namespace Dt.Core
             if (p_isNotify)
             {
                 if (suc)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    Kit.Warn("删除失败！");
             }
             return suc;
         }
@@ -376,7 +376,7 @@ namespace Dt.Core
             if (p_list == null || p_list.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    Kit.Warn(_saveError);
                 return false;
             }
 
@@ -433,12 +433,12 @@ namespace Dt.Core
             if (_db.BatchDelete(p_list))
             {
                 if (p_isNotify)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("删除失败！");
+                Kit.Warn("删除失败！");
             return false;
         }
 
@@ -454,7 +454,7 @@ namespace Dt.Core
         {
             bool suc = _db.DelByPK<TEntity>(p_id);
             if (p_isNotify)
-                AtKit.Msg(suc ? "删除成功！" : "删除失败！");
+                Kit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
         }
 
@@ -476,9 +476,9 @@ namespace Dt.Core
             catch (Exception ex)
             {
                 if (ex.InnerException is KnownException kex)
-                    AtKit.Warn(kex.Message);
+                    Kit.Warn(kex.Message);
                 else
-                    AtKit.Warn(ex.Message);
+                    Kit.Warn(ex.Message);
                 return false;
             }
             return true;
@@ -530,21 +530,21 @@ namespace Dt.Core
             var dbName = GetDbName();
             try
             {
-                var path = Path.Combine(AtSys.DataPath, dbName + ".db");
+                var path = Path.Combine(Kit.DataPath, dbName + ".db");
                 bool exists = File.Exists(path);
                 _db = new SqliteConnectionEx("Data Source=" + path);
                 _db.Open();
 
                 // 初次运行、库表结构版本变化或文件被删除时创建库表结构
-                if (AtSys.Stub.SqliteDb.TryGetValue(dbName, out var dbInfo))
+                if (Kit.Stub.SqliteDb.TryGetValue(dbName, out var dbInfo))
                 {
-                    path = Path.Combine(AtSys.DataPath, $"{dbName}-{dbInfo.Version}.ver");
+                    path = Path.Combine(Kit.DataPath, $"{dbName}-{dbInfo.Version}.ver");
                     if (!exists || !File.Exists(path))
                     {
                         _db.InitDb(dbInfo.Tables);
 
                         // 删除旧版本号文件
-                        foreach (var file in new DirectoryInfo(AtSys.DataPath).GetFiles($"{dbName}-*.ver"))
+                        foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"{dbName}-*.ver"))
                         {
                             try { file.Delete(); } catch { }
                         }
@@ -620,8 +620,8 @@ namespace Dt.Core
             foreach (var item in All)
             {
                 int cnt = item.Value.GetScalar<int>("select count(*) from sqlite_master where type='table'");
-                FileInfo fi = new FileInfo(Path.Combine(AtSys.DataPath, item.Key + ".db"));
-                tbl.AddRow(new { name = item.Key, info = $"{cnt - 1}张表，{AtKit.GetFileSizeDesc((ulong)fi.Length)}" });
+                FileInfo fi = new FileInfo(Path.Combine(Kit.DataPath, item.Key + ".db"));
+                tbl.AddRow(new { name = item.Key, info = $"{cnt - 1}张表，{Kit.GetFileSizeDesc((ulong)fi.Length)}" });
             }
             return tbl;
         }

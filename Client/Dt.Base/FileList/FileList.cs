@@ -396,16 +396,16 @@ namespace Dt.Base
 
             if (p_files.Count + _pnl.Children.Count > MaxFileCount)
             {
-                AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                Kit.Warn($"最多可上传 {MaxFileCount} 个文件！");
                 return false;
             }
 
             var overlength = (from f in p_files
-                              where f.Size > AtKit.GB
+                              where f.Size > Kit.GB
                               select f).Any();
             if (overlength)
             {
-                AtKit.Warn("上传文件超过1GB限制！");
+                Kit.Warn("上传文件超过1GB限制！");
                 return false;
             }
 
@@ -431,9 +431,9 @@ namespace Dt.Base
             if (p_file == null || p_vf == null)
                 return false;
 
-            if (p_file.Size > AtKit.GB)
+            if (p_file.Size > Kit.GB)
             {
-                AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", p_file.DisplayName));
+                Kit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", p_file.DisplayName));
                 return false;
             }
 
@@ -472,9 +472,9 @@ namespace Dt.Base
             {
                 // 失败
                 if (_cts == null)
-                    AtKit.Msg("已取消上传！");
+                    Kit.Msg("已取消上传！");
                 else
-                    AtKit.Warn("😢上传失败，请重新上传！");
+                    Kit.Warn("😢上传失败，请重新上传！");
 
                 foreach (var vf in p_files)
                 {
@@ -535,7 +535,7 @@ namespace Dt.Base
             {
                 if (p_filesJson.Count > 1)
                 {
-                    AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                    Kit.Warn($"最多可上传 {MaxFileCount} 个文件！");
                     return;
                 }
 
@@ -545,7 +545,7 @@ namespace Dt.Base
 
             if (p_filesJson.Count + _pnl.Children.Count > MaxFileCount)
             {
-                AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                Kit.Warn($"最多可上传 {MaxFileCount} 个文件！");
                 return;
             }
 
@@ -556,7 +556,7 @@ namespace Dt.Base
                     || !file.StartsWith("[")
                     || !file.EndsWith("]"))
                 {
-                    AtKit.Warn($"文件描述json错误！");
+                    Kit.Warn($"文件描述json错误！");
                     return;
                 }
 
@@ -621,7 +621,7 @@ namespace Dt.Base
         /// <param name="p_vf"></param>
         internal void AfterDeleteItem(FileItem p_vf)
         {
-            _pnl.ChildrenTransitions = AtRes.AddDeleteTransition;
+            _pnl.ChildrenTransitions = Res.AddDeleteTransition;
             _pnl.Children.Remove(p_vf);
             _pnl.ChildrenTransitions = null;
 

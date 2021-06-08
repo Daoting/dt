@@ -361,12 +361,12 @@ namespace Dt.Base
 
                 try
                 {
-                    var folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(AtSys.Stub.Title, CreationCollisionOption.OpenIfExists);
+                    var folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(Kit.Stub.Title, CreationCollisionOption.OpenIfExists);
                     saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
                 }
                 catch
                 {
-                    AtKit.Error("无访问图片库权限，保存失败！");
+                    Kit.Error("无访问图片库权限，保存失败！");
                     return null;
                 }
             }

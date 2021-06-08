@@ -39,11 +39,11 @@ namespace Dt.Sample
             Icons icon = (Icons)_fv.Row["icon"];
             if (icon == Icons.None)
             {
-                AtKit.Msg("请选择图标");
+                Kit.Msg("请选择图标");
                 return;
             }
 
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
 
             // 字体 / 外框 = 0.8
             var folder = await OpenFolder($"{icon}_ios");
@@ -62,7 +62,7 @@ namespace Dt.Sample
             await SaveIcon(80, 80, 64, icon, "Icon-40@2x.png", folder);
             await SaveIcon(180, 180, 144, icon, "Icon-60@3x.png", folder);
             
-            AtKit.Msg("生成成功，路径: " + folder.Path);
+            Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
         async void OnDroid(object sender, RoutedEventArgs e)
@@ -70,7 +70,7 @@ namespace Dt.Sample
             Icons icon = (Icons)_fv.Row["icon"];
             if (icon == Icons.None)
             {
-                AtKit.Msg("请选择图标");
+                Kit.Msg("请选择图标");
                 return;
             }
 
@@ -91,7 +91,7 @@ namespace Dt.Sample
             //folder = await root.CreateFolderAsync("drawable-xxhdpi", CreationCollisionOption.OpenIfExists);
             //await SaveIcon(144, 144, 115, icon, "icon.png", folder);
 
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
             var folder = await root.CreateFolderAsync("drawable", CreationCollisionOption.OpenIfExists);
             await SaveIcon(640, 1136, 326, icon, "back.png", folder);
             await SaveIcon(50, 50, 40, icon, "logo.png", folder);
@@ -103,34 +103,34 @@ namespace Dt.Sample
             await SaveIcon(162, 162, 80, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-mdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
             await SaveIcon(48, 48, 38, icon, "ic_launcher.png", folder);
             await SaveIcon(48, 48, 38, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(108, 108, 54, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
             await SaveIcon(96, 96, 76, icon, "ic_launcher.png", folder);
             await SaveIcon(96, 96, 76, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(216, 216, 108, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xxhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
             await SaveIcon(144, 144, 96, icon, "ic_launcher.png", folder);
             await SaveIcon(144, 144, 96, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(324, 324, 162, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xxxhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = AtRes.主题蓝色;
+            _bd.Background = Res.主题蓝色;
             await SaveIcon(192, 192, 130, icon, "ic_launcher.png", folder);
             await SaveIcon(192, 192, 130, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(432, 432, 216, icon, "ic_launcher_foreground.png", folder);
 
-            AtKit.Msg("生成成功，路径: " + folder.Path);
+            Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
         async void OnUwp(object sender, RoutedEventArgs e)
@@ -138,7 +138,7 @@ namespace Dt.Sample
             Icons icon = (Icons)_fv.Row["icon"];
             if (icon == Icons.None)
             {
-                AtKit.Msg("请选择图标");
+                Kit.Msg("请选择图标");
                 return;
             }
 
@@ -150,7 +150,7 @@ namespace Dt.Sample
             await SaveIcon(88, 88, 70, icon, "Square44x44Logo.scale-200.png", folder);
             await SaveIcon(24, 24, 19, icon, "Square44x44Logo.targetsize-24_altform-unplated.png", folder);
             await SaveIcon(50, 50, 40, icon, "logo.png", folder);
-            AtKit.Msg("生成成功，路径: " + folder.Path);
+            Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
         async Task<StorageFolder> OpenFolder(string p_name)
@@ -161,7 +161,7 @@ namespace Dt.Sample
             }
             catch
             {
-                AtKit.Error("无访问图片库权限！");
+                Kit.Error("无访问图片库权限！");
                 return null;
             }
         }
@@ -177,7 +177,7 @@ namespace Dt.Sample
             _bd.Width = p_width;
             _bd.Height = p_height;
             _tb.FontSize = p_fontSize;
-            _tb.Text = AtRes.GetIconChar(p_icon);
+            _tb.Text = Res.GetIconChar(p_icon);
 
             RenderTargetBitmap bmp = new RenderTargetBitmap();
             await bmp.RenderAsync(_bd);
@@ -189,7 +189,7 @@ namespace Dt.Sample
             }
             catch
             {
-                AtKit.Error("创建图片文件失败！");
+                Kit.Error("创建图片文件失败！");
                 return null;
             }
 

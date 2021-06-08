@@ -150,7 +150,7 @@ namespace Dt.Base
             }
 
             // 相对位置显示
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 if (Placement == MenuPosition.Default)
                 {
@@ -169,7 +169,7 @@ namespace Dt.Base
             }
             _dlg.Show();
 
-            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
+            if (!Kit.IsPhoneUI && Placement == MenuPosition.Default)
             {
                 // 计算显示位置
                 double width = _dlg.DesiredSize.Width;
@@ -259,7 +259,7 @@ namespace Dt.Base
         void OnTargetRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
+            if (!Kit.IsPhoneUI && Placement == MenuPosition.Default)
                 _ = OpenContextMenu(e.GetPosition(null));
             else
                 _ = OpenContextMenu();
@@ -268,7 +268,7 @@ namespace Dt.Base
         void OnTargetTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
+            if (!Kit.IsPhoneUI && Placement == MenuPosition.Default)
                 _ = OpenContextMenu(e.GetPosition(null));
             else
                 _ = OpenContextMenu();
@@ -276,7 +276,7 @@ namespace Dt.Base
 
         void OnButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
+            if (!Kit.IsPhoneUI && Placement == MenuPosition.Default)
                 _ = OpenContextMenu(((Button)sender).GetAbsolutePosition());
             else
                 _ = OpenContextMenu();

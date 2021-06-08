@@ -58,7 +58,7 @@ namespace Dt.Base.FormView
                 {
                     _srcIDs = null;
                     _tgtIDs = null;
-                    AtKit.Error("数据填充：源列表、目标列表列个数不一致！");
+                    Kit.Error("数据填充：源列表、目标列表列个数不一致！");
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace Dt.Base.FormView
             }
 
             // phone模式先最大化
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 ClearValue(HideTitleBarProperty);
                 ClearValue(PhonePlacementProperty);
@@ -122,7 +122,7 @@ namespace Dt.Base.FormView
             Show();
 
             // phone模式选项内容不足半屏时在下部显示
-            if (AtSys.IsPhoneUI && DesiredSize.Height * 2 < SysVisual.ViewHeight)
+            if (Kit.IsPhoneUI && DesiredSize.Height * 2 < SysVisual.ViewHeight)
             {
                 HideTitleBar = true;
                 Top = SysVisual.ViewHeight - DesiredSize.Height;

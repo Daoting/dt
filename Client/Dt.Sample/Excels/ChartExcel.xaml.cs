@@ -223,14 +223,14 @@ namespace Dt.Sample
         {
             if (_excel.ActiveSheet.Selections.Count == 0)
             {
-                AtKit.Msg("请选择单元格区域！");
+                Kit.Msg("请选择单元格区域！");
                 return;
             }
 
             CellRange range = _excel.ActiveSheet.Selections[0];
             if (range.Row < 0 || range.Column < 0)
             {
-                AtKit.Msg("单元格区域无效！");
+                Kit.Msg("单元格区域无效！");
                 return;
             }
 
@@ -294,7 +294,7 @@ namespace Dt.Sample
                     fileFormat = ExcelFileFormat.XLS;
                 await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -317,7 +317,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SavePdf(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -332,7 +332,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SaveCSV(_excel.ActiveSheetIndex, stream, TextFileSaveFlags.AsViewed);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -347,7 +347,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SaveXmlAsync(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 

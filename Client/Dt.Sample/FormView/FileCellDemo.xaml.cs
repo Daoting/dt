@@ -58,7 +58,7 @@ namespace Dt.Sample
 
         void OnChanged(object sender, object e)
         {
-            AtKit.Msg("文件列表变化");
+            Kit.Msg("文件列表变化");
         }
     }
 }

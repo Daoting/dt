@@ -92,7 +92,7 @@ namespace Dt.App.File
                     ParentID: FolderID,
                     Name: p_name,
                     IsFolder: true,
-                    Ctime: AtSys.Now);
+                    Ctime: Kit.Now);
             }
             else
             {
@@ -113,7 +113,7 @@ namespace Dt.App.File
                     int cnt = await AtCm.GetScalar<int>("文件-子项个数", new { parentid = row.ID });
                     if (cnt > 0)
                     {
-                        AtKit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
+                        Kit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
                         return false;
                     }
                 }

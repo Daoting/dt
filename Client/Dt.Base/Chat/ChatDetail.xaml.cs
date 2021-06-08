@@ -89,7 +89,7 @@ namespace Dt.Base
                 p_otherName = AtState.GetScalar<string>($"select name from ChatMember where id={p_otherID}");
 
             Dlg dlg;
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 dlg = new Dlg { Title = p_otherName, };
             }
@@ -156,7 +156,7 @@ namespace Dt.Base
                 new Dict
                 {
                     { "otherid", OtherID },
-                    { "loginid",  AtUser.ID }
+                    { "loginid",  Kit.UserID }
                 });
 
             int start = cnt - (e.PageNo + 1) * e.PageSize;
@@ -165,10 +165,10 @@ namespace Dt.Base
                 limit = cnt - e.PageNo * e.PageSize;
 
             Nl<Letter> data = new Nl<Letter>();
-            var ls = AtState.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+            var ls = AtState.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={Kit.UserID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
-                l.Photo = l.IsReceived ? _other.Photo : AtUser.Photo;
+                l.Photo = l.IsReceived ? _other.Photo : Kit.UserPhoto;
                 data.Add(l);
             }
             e.LoadPageData(data);
@@ -196,7 +196,7 @@ namespace Dt.Base
             else if (p_letter.LetterType == LetterType.Text)
             {
                 // 当前登录人发出的，文件类型的行已经添加！
-                p_letter.Photo = AtUser.Photo;
+                p_letter.Photo = Kit.UserPhoto;
                 _lv.Data.Add(p_letter);
             }
         }
@@ -245,8 +245,8 @@ namespace Dt.Base
                 IsReceived = false,
                 Unread = false,
                 LetterType = GetLetterType(p_files),
-                STime = AtSys.Now,
-                Photo = AtUser.Photo,
+                STime = Kit.Now,
+                Photo = Kit.UserPhoto,
             };
             _lv.Data.Add(l);
 
@@ -329,7 +329,7 @@ namespace Dt.Base
             else
                 _msgMenu.Show("撤回");
             _msgMenu.DataContext = p_letter;
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 _ = _msgMenu.OpenContextMenu();
             }
@@ -357,9 +357,9 @@ namespace Dt.Base
         async void OnUndoMsg(object sender, Mi e)
         {
             var l = (Letter)e.DataContext;
-            if ((AtSys.Now - l.STime).TotalMinutes > 2)
+            if ((Kit.Now - l.STime).TotalMinutes > 2)
             {
-                AtKit.Warn("超过2分钟无法撤回");
+                Kit.Warn("超过2分钟无法撤回");
             }
             else if (await LetterManager.SendUndoLetter(l))
             {
@@ -443,7 +443,7 @@ namespace Dt.Base
                 mi.DataContext = letter;
             }
 
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 _ = _fileMenu.OpenContextMenu();
             else
                 _ = _fileMenu.OpenContextMenu(p_pos);

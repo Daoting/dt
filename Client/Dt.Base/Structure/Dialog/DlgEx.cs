@@ -29,7 +29,7 @@ namespace Dt.Base
         /// <param name="p_content"></param>
         public static void Msg(this FrameworkElement p_target, string p_content)
         {
-            ShowMessage(p_target, p_content, AtRes.BlackBrush);
+            ShowMessage(p_target, p_content, Res.BlackBrush);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Dt.Base
         /// <param name="p_content"></param>
         public static void Warn(this FrameworkElement p_target, string p_content)
         {
-            ShowMessage(p_target, p_content, AtRes.RedBrush);
+            ShowMessage(p_target, p_content, Res.RedBrush);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Dt.Base
                 PlacementTarget = p_target,
                 HideTitleBar = true,
                 Background = null,
-                Foreground = AtRes.WhiteBrush,
+                Foreground = Res.WhiteBrush,
                 BorderThickness = new Thickness(0),
                 Resizeable = false,
                 AutoAdjustPosition = false,

@@ -60,7 +60,7 @@ namespace Dt.App.Model
         protected override Task<bool> OnClosing()
         {
             if (_fv.Row.IsChanged)
-                return AtKit.Confirm("数据未保存，要放弃修改吗？");
+                return Kit.Confirm("数据未保存，要放弃修改吗？");
             return Task.FromResult(true);
         }
     }

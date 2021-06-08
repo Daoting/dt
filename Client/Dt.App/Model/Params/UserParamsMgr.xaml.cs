@@ -91,9 +91,9 @@ namespace Dt.App.Model
 
         async void DelParams(Params p_par)
         {
-            if (!await AtKit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace Dt.App.Model
             int cnt = await AtCm.GetScalar<int>("参数-用户设置数", new { ParamID = p_par.ID });
             if (cnt > 0)
             {
-                if (!await AtKit.Confirm("该参数已存在用户设置，确认要删除吗？"))
+                if (!await Kit.Confirm("该参数已存在用户设置，确认要删除吗？"))
                     return;
             }
 

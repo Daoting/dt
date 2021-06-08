@@ -371,9 +371,9 @@ namespace Dt.App
                 && !WorkItem.IsAccept)
             {
                 WorkItem.IsAccept = true;
-                WorkItem.AcceptTime = AtSys.Now;
+                WorkItem.AcceptTime = Kit.Now;
                 if (await AtCm.Save(WorkItem))
-                    AtKit.Msg("已自动签收！");
+                    Kit.Msg("已自动签收！");
             }
         }
 
@@ -398,8 +398,8 @@ namespace Dt.App
                 AssignKind: WfiItemAssignKind.起始指派,
                 IsAccept: true,
                 Status: WfiItemStatus.活动,
-                UserID: AtUser.ID,
-                Sender: AtUser.Name);
+                UserID: Kit.UserID,
+                Sender: Kit.UserName);
         }
 
         async Task LoadWorkItem()

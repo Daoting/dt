@@ -58,7 +58,7 @@ namespace Dt.Base.Report
 
         async void OnImport(object sender, RoutedEventArgs e)
         {
-            if (_info.IsDirty && !await AtKit.Confirm("当前模板已修改，导入新模板会丢失修改内容，继续导入吗？"))
+            if (_info.IsDirty && !await Kit.Confirm("当前模板已修改，导入新模板会丢失修改内容，继续导入吗？"))
                 return;
 
             FileOpenPicker picker = new FileOpenPicker();
@@ -86,7 +86,7 @@ namespace Dt.Base.Report
             // 比较窗口类型和初始参数，关闭旧窗口
             var info = new RptInfo { Name = _info.Name, Root = _info.Root };
             Win win;
-            if (!AtSys.IsPhoneUI
+            if (!Kit.IsPhoneUI
                 && (win = Desktop.Inst.ActiveWin(typeof(RptViewWin), info)) != null)
             {
                 win.Close();

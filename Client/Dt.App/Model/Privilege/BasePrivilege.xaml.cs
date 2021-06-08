@@ -63,9 +63,9 @@ namespace Dt.App.Model
         async void OnDelPrv(object sender, Mi e)
         {
             var prv = e.Data.To<Prv>();
-            if (!await AtKit.Confirm($"确认要删除[{prv.ID}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{prv.ID}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 

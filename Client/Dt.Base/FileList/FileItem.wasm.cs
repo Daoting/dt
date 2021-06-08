@@ -71,17 +71,17 @@ namespace Dt.Base
 
                     //    mediaPlayer.Height = ActualHeight;
                     //    grid.Children.Add(mediaPlayer);
-                    //    mediaPlayer.Source = MediaSource.CreateFromUri(new Uri($"{AtSys.Stub.ServerUrl}/fsm/{ID}"));
+                    //    mediaPlayer.Source = MediaSource.CreateFromUri(new Uri($"{Kit.Stub.ServerUrl}/fsm/{ID}"));
                     //}
-                    AtKit.Warn("wasm版未实现MediaPlayerElement");
+                    Kit.Warn("wasm版未实现MediaPlayerElement");
                     break;
 
                 case FileItemType.Sound:
-                    AtKit.Warn("wasm版未实现MediaPlayerElement");
+                    Kit.Warn("wasm版未实现MediaPlayerElement");
                     break;
 
                 default:
-                    if (await AtKit.Confirm($"要下载《{Title}》吗？"))
+                    if (await Kit.Confirm($"要下载《{Title}》吗？"))
                         DownloadFile();
                     break;
             }
@@ -93,7 +93,7 @@ namespace Dt.Base
         /// </summary>
         public Task ShareFile()
         {
-            AtKit.Warn("wasm版未实现分享功能");
+            Kit.Warn("wasm版未实现分享功能");
             return Task.CompletedTask;
         }
 
@@ -111,17 +111,17 @@ namespace Dt.Base
         /// <returns></returns>
         public void DownloadFile()
         {
-            AtWasm.Download($"{AtSys.Stub.ServerUrl}/fsm/{ID}", Title);
+            AtWasm.Download($"{Kit.Stub.ServerUrl}/fsm/{ID}", Title);
         }
 
         internal Task<string> EnsureFileExists()
         {
-            return Task.FromResult($"{AtSys.Stub.ServerUrl}/fsm/{ID}");
+            return Task.FromResult($"{Kit.Stub.ServerUrl}/fsm/{ID}");
         }
 
         Task LoadImage()
         {
-            var path = new Uri($"{AtSys.Stub.ServerUrl}/fsm/{ID}{ThumbPostfix}");
+            var path = new Uri($"{Kit.Stub.ServerUrl}/fsm/{ID}{ThumbPostfix}");
             Bitmap = new BitmapImage(path);
             return Task.CompletedTask;
         }

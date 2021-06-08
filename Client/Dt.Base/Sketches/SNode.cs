@@ -108,7 +108,7 @@ namespace Dt.Base
             }
             else
             {
-                var shape = AtRes.GetIcon(flag, 20, AtRes.WhiteBrush);
+                var shape = Res.GetIcon(flag, 20, Res.WhiteBrush);
                 shape.IsHitTestVisible = false;
                 node.FlagShape = shape;
             }
@@ -251,8 +251,8 @@ namespace Dt.Base
                     case "shape": Shape = p_reader.Value; break;
                     case "flag": Flag = (Icons)Enum.Parse(typeof(Icons), p_reader.Value); break;
                     case "content": Content = p_reader.Value; break;
-                    case "background": Background = new SolidColorBrush(AtRes.HexStringToColor(p_reader.Value)); break;
-                    case "borderbrush": BorderBrush = new SolidColorBrush(AtRes.HexStringToColor(p_reader.Value)); break;
+                    case "background": Background = new SolidColorBrush(Res.HexStringToColor(p_reader.Value)); break;
+                    case "borderbrush": BorderBrush = new SolidColorBrush(Res.HexStringToColor(p_reader.Value)); break;
                     case "left": Canvas.SetLeft(this, double.Parse(p_reader.Value)); break;
                     case "top": Canvas.SetTop(this, double.Parse(p_reader.Value)); break;
                     case "width": Width = double.Parse(p_reader.Value); break;
@@ -283,11 +283,11 @@ namespace Dt.Base
             {
                 p_writer.WriteAttributeString("content", Content.ToString());
             }
-            if ((Background as SolidColorBrush).Color != AtRes.主题蓝色.Color)
+            if ((Background as SolidColorBrush).Color != Res.主题蓝色.Color)
             {
                 p_writer.WriteAttributeString("background", (Background as SolidColorBrush).Color.ToString());
             }
-            if ((BorderBrush as SolidColorBrush).Color != AtRes.主题蓝色.Color)
+            if ((BorderBrush as SolidColorBrush).Color != Res.主题蓝色.Color)
             {
                 p_writer.WriteAttributeString("borderbrush", (BorderBrush as SolidColorBrush).Color.ToString());
             }
@@ -555,13 +555,13 @@ namespace Dt.Base
             switch (p_name)
             {
                 case "开始":
-                    return AtRes.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
+                    return Res.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
                 case "任务":
-                    return AtRes.ParsePath("M0,0 L30,0 L30,30 L0,30 z");
+                    return Res.ParsePath("M0,0 L30,0 L30,30 L0,30 z");
                 case "同步":
-                    return AtRes.ParsePath("M0,29.875 L0,0 L19.5,0 L19.5,0.011993 L21.5,0.011993 C26.6302,3.78024 30.0353,8.76554 30.0353,15.131 C30.0353,21.4964 26.7552,26.2318 21.625,30 z");
+                    return Res.ParsePath("M0,29.875 L0,0 L19.5,0 L19.5,0.011993 L21.5,0.011993 C26.6302,3.78024 30.0353,8.76554 30.0353,15.131 C30.0353,21.4964 26.7552,26.2318 21.625,30 z");
                 case "结束":
-                    return AtRes.ParsePath("M0,11.25 C0,4.69162 4.69162,0 11.25,0 L18.75,0 C25.3084,0 30,4.69162 30,11.25 L30,18.625 C30,25.1834 25.3084,30 18.75,30 L11.25,30 C4.69162,30 0,25.1834 0,18.625 z");
+                    return Res.ParsePath("M0,11.25 C0,4.69162 4.69162,0 11.25,0 L18.75,0 C25.3084,0 30,4.69162 30,11.25 L30,18.625 C30,25.1834 25.3084,30 18.75,30 L11.25,30 C4.69162,30 0,25.1834 0,18.625 z");
                 default:
                     return null;
             }

@@ -55,14 +55,14 @@ namespace Dt.App.File
             if (!_fileMgr.Setting.SaveHistory)
                 return;
 
-            AtKit.RunAsync(async () =>
+            Kit.RunAsync(async () =>
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
                 var his = AtState.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new { id = row.ID });
                 if (his == null)
                     his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
-                his.LastReadTime = AtSys.Now;
+                his.LastReadTime = Kit.Now;
                 if (await AtState.Save(his, false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
@@ -80,7 +80,7 @@ namespace Dt.App.File
                 return;
 
             int cnt = 0;
-            DateTime ctime = AtSys.Now;
+            DateTime ctime = Kit.Now;
             foreach (var file in files)
             {
                 Row row = new Row();
@@ -113,7 +113,7 @@ namespace Dt.App.File
                 else
                     cnt++;
             }
-            AtKit.Msg($"成功上传{cnt}个文件");
+            Kit.Msg($"成功上传{cnt}个文件");
         }
 
         async void OnAddFolder(object sender, Mi e)
@@ -175,9 +175,9 @@ namespace Dt.App.File
 
         async void DeleteFiles(IEnumerable<Row> p_rows)
         {
-            if (!await AtKit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
             }
             else if (await _fileMgr.Delete(p_rows))
             {

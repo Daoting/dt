@@ -32,7 +32,7 @@ namespace Dt.App.Model
             Rpt rpt = _fv.Data.To<Rpt>();
             if (rpt != null && rpt.IsChanged)
             {
-                if (!await AtKit.Confirm("数据已修改，确认要放弃修改吗？"))
+                if (!await Kit.Confirm("数据已修改，确认要放弃修改吗？"))
                     return;
 
                 rpt.RejectChanges();
@@ -95,9 +95,9 @@ namespace Dt.App.Model
                 return;
             }
 
-            if (!await AtKit.Confirm($"确认要删除报表[{rpt.Name}]吗？"))
+            if (!await Kit.Confirm($"确认要删除报表[{rpt.Name}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 

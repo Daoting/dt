@@ -250,7 +250,7 @@ namespace Dt.Core
                 || (!p_entity.IsAdded && !p_entity.IsChanged))
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    Kit.Warn(_unchangedMsg);
                 return false;
             }
 
@@ -268,12 +268,12 @@ namespace Dt.Core
             {
                 p_entity.AcceptChanges();
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -291,7 +291,7 @@ namespace Dt.Core
             if (p_list == null || p_list.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    Kit.Warn(_unchangedMsg);
                 return Task.FromResult(false);
             }
 
@@ -318,7 +318,7 @@ namespace Dt.Core
                 || (!p_entity.IsAdded && !p_entity.IsChanged))
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    Kit.Warn(_unchangedMsg);
                 return false;
             }
 
@@ -334,12 +334,12 @@ namespace Dt.Core
             {
                 p_entity.AcceptChanges();
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -366,7 +366,7 @@ namespace Dt.Core
             if (dts == null || dts.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Msg(_unchangedMsg);
+                    Kit.Msg(_unchangedMsg);
                 return false;
             }
 
@@ -386,12 +386,12 @@ namespace Dt.Core
                 }
 
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -448,7 +448,7 @@ namespace Dt.Core
             if (dts == null || dts.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Msg(_unchangedMsg);
+                    Kit.Msg(_unchangedMsg);
                 return true;
             }
 
@@ -480,12 +480,12 @@ namespace Dt.Core
                 }
 
                 if (p_isNotify)
-                    AtKit.Msg("保存成功！");
+                    Kit.Msg("保存成功！");
                 return true;
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                Kit.Warn("保存失败！");
             return false;
         }
 
@@ -507,9 +507,9 @@ namespace Dt.Core
             catch (Exception ex)
             {
                 if (ex.InnerException is KnownException kex)
-                    AtKit.Warn(kex.Message);
+                    Kit.Warn(kex.Message);
                 else
-                    AtKit.Warn(ex.Message);
+                    Kit.Warn(ex.Message);
                 return false;
             }
             return true;
@@ -530,7 +530,7 @@ namespace Dt.Core
             if (p_entity == null || p_entity.IsAdded)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    Kit.Warn(_saveError);
                 return false;
             }
 
@@ -546,9 +546,9 @@ namespace Dt.Core
             if (p_isNotify)
             {
                 if (suc)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    Kit.Warn("删除失败！");
             }
             return suc;
         }
@@ -567,7 +567,7 @@ namespace Dt.Core
             if (p_list == null || p_list.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    Kit.Warn(_saveError);
                 return Task.FromResult(false);
             }
 
@@ -593,7 +593,7 @@ namespace Dt.Core
             if (p_entity == null || p_entity.IsAdded)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    Kit.Warn(_saveError);
                 return false;
             }
 
@@ -608,9 +608,9 @@ namespace Dt.Core
             if (p_isNotify)
             {
                 if (suc)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    Kit.Warn("删除失败！");
             }
             return suc;
         }
@@ -627,7 +627,7 @@ namespace Dt.Core
             var model = EntitySchema.Get(typeof(TEntity));
             bool suc = await Exec(model.Schema.SqlDelete, new { id = p_id }) == 1;
             if (p_isNotify)
-                AtKit.Msg(suc ? "删除成功！" : "删除失败！");
+                Kit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
         }
 
@@ -643,7 +643,7 @@ namespace Dt.Core
             var model = EntitySchema.Get(typeof(TEntity));
             bool suc = await Exec(model.Schema.SqlDelete, new { id = p_id }) == 1;
             if (p_isNotify)
-                AtKit.Msg(suc ? "删除成功！" : "删除失败！");
+                Kit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
         }
 
@@ -670,9 +670,9 @@ namespace Dt.Core
             if (p_isNotify)
             {
                 if (suc)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    Kit.Warn("删除失败！");
             }
             return suc;
         }
@@ -724,7 +724,7 @@ namespace Dt.Core
             if (dts == null || dts.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Msg(_unchangedMsg);
+                    Kit.Msg(_unchangedMsg);
                 return true;
             }
 
@@ -732,9 +732,9 @@ namespace Dt.Core
             if (p_isNotify)
             {
                 if (suc)
-                    AtKit.Msg("删除成功！");
+                    Kit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    Kit.Warn("删除失败！");
             }
             return suc;
         }
@@ -757,9 +757,9 @@ namespace Dt.Core
             catch (Exception ex)
             {
                 if (ex.InnerException is KnownException kex)
-                    AtKit.Warn(kex.Message);
+                    Kit.Warn(kex.Message);
                 else
-                    AtKit.Warn(ex.Message);
+                    Kit.Warn(ex.Message);
                 return false;
             }
             return true;

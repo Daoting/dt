@@ -139,7 +139,7 @@ namespace Dt.App.Workflow
             }
             else
             {
-                AtKit.Warn("无后续活动接收者，请检查流程授权是否合理！");
+                Kit.Warn("无后续活动接收者，请检查流程授权是否合理！");
             }
         }
 
@@ -154,7 +154,7 @@ namespace Dt.App.Workflow
             var tblAtvs = Table<WfiAtv>.Create();
             var tblItems = Table<WfiItem>.Create();
             var tblTrs = Table<WfiTrs>.Create();
-            DateTime time = AtSys.Now;
+            DateTime time = Kit.Now;
 
             if (_info.NextRecvs.FinishedAtv != null
                 && (!p_manualSend || _info.NextRecvs.FinishedAtv.IsSelected))
@@ -231,8 +231,8 @@ namespace Dt.App.Workflow
                         AssignKind: WfiItemAssignKind.普通指派,
                         Status: WfiItemStatus.同步,
                         IsAccept: false,
-                        UserID: AtUser.ID,
-                        Sender: AtUser.Name,
+                        UserID: Kit.UserID,
+                        Sender: Kit.UserName,
                         Stime: time,
                         Ctime: time,
                         Mtime: time,
@@ -311,7 +311,7 @@ namespace Dt.App.Workflow
             // 2. 至少含有一个活动实例时有效
             if (tblAtvs.Count == 0 && _info.PrcInst.Status != WfiAtvStatus.结束)
             {
-                AtKit.Msg("所有后续活动均无接收者，发送失败！");
+                Kit.Msg("所有后续活动均无接收者，发送失败！");
                 return;
             }
             #endregion
@@ -337,7 +337,7 @@ namespace Dt.App.Workflow
 
             if (await AtCm.BatchSave(data, false))
             {
-                AtKit.Msg("发送成功！");
+                Kit.Msg("发送成功！");
                 _info.CloseWin();
                 // 推送客户端提醒
 
@@ -348,7 +348,7 @@ namespace Dt.App.Workflow
                 _info.PrcInst.RejectChanges();
                 _info.AtvInst.RejectChanges();
                 _info.WorkItem.RejectChanges();
-                AtKit.Warn("发送失败！");
+                Kit.Warn("发送失败！");
             }
         }
 
@@ -370,12 +370,12 @@ namespace Dt.App.Workflow
 
             if (await AtCm.BatchSave(ls, false))
             {
-                AtKit.Msg(p_isFinished ? "任务结束" : "当前工作项完成");
+                Kit.Msg(p_isFinished ? "任务结束" : "当前工作项完成");
                 _info.CloseWin();
             }
             else
             {
-                AtKit.Warn("工作项保存失败");
+                Kit.Warn("工作项保存失败");
             }
         }
 

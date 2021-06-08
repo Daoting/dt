@@ -51,7 +51,7 @@ namespace Dt.Base
         {
             var elem = sender as FrameworkElement;
             elem.Loaded -= OnContentLoaded;
-            AtKit.RunAsync(() => elem.AllowTranslateX());
+            Kit.RunAsync(() => elem.AllowTranslateX());
         }
     }
 }

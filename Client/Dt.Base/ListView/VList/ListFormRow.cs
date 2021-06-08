@@ -32,7 +32,7 @@ namespace Dt.Base.ListView
         protected override Size MeasureOverride(Size availableSize)
         {
             // 行最小高度41
-            double height = AtRes.RowOuterHeight;
+            double height = Res.RowOuterHeight;
             UIElement elem = (UIElement)Children[0];
             elem.Measure(availableSize);
             if (elem.DesiredSize.Height > height)
@@ -72,11 +72,11 @@ namespace Dt.Base.ListView
             Menu menu = Ex.GetMenu(_owner);
             if (!cols.HideIndex || _owner.SelectionMode == SelectionMode.Multiple || menu != null)
             {
-                Grid grid = new Grid { Height = AtRes.RowOuterHeight };
+                Grid grid = new Grid { Height = Res.RowOuterHeight };
                 var bd = new Border
                 {
-                    Background = AtRes.浅灰背景,
-                    BorderBrush = AtRes.浅灰边框,
+                    Background = Res.浅灰背景,
+                    BorderBrush = Res.浅灰边框,
                     BorderThickness = bdThickness,
                     IsHitTestVisible = false,
                 };
@@ -86,7 +86,7 @@ namespace Dt.Base.ListView
                 StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal };
                 if (_owner.SelectionMode == SelectionMode.Multiple)
                 {
-                    var tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = TableRow.TextMargin, FontFamily = AtRes.IconFont };
+                    var tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = TableRow.TextMargin, FontFamily = Res.IconFont };
                     var bind = new Binding
                     {
                         Path = new PropertyPath("IsSelected"),
@@ -123,7 +123,7 @@ namespace Dt.Base.ListView
                 Col col = cols[i];
                 Grid grid = new Grid
                 {
-                    Height = col.RowSpan * AtRes.RowOuterHeight,
+                    Height = col.RowSpan * Res.RowOuterHeight,
                     ColumnDefinitions =
                     {
                         new ColumnDefinition { Width = new GridLength(140) },
@@ -134,8 +134,8 @@ namespace Dt.Base.ListView
                 // 标题背景及边框
                 var bd = new Border
                 {
-                    Background = AtRes.浅灰背景,
-                    BorderBrush = AtRes.浅灰边框,
+                    Background = Res.浅灰背景,
+                    BorderBrush = Res.浅灰边框,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     IsHitTestVisible = false,
                 };
@@ -153,7 +153,7 @@ namespace Dt.Base.ListView
                 grid.Children.Add(tb);
 
                 // 内容
-                ContentPresenter pre = new ContentPresenter { Padding = TableRow.TextMargin, BorderBrush = AtRes.浅灰边框, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                ContentPresenter pre = new ContentPresenter { Padding = TableRow.TextMargin, BorderBrush = Res.浅灰边框, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 SetContentBinding(col, pre);
                 Grid.SetColumn(pre, 1);
                 grid.Children.Add(pre);

@@ -50,7 +50,7 @@ namespace Dt.App.Workflow
             bool suc = true;
             if (_info.PrcInst.IsAdded)
             {
-                DateTime time = AtSys.Now;
+                DateTime time = Kit.Now;
                 _info.PrcInst.Ctime = time;
                 _info.PrcInst.Mtime = time;
                 _info.PrcInst.Dispidx = await AtCm.NewSeq("sq_wfi_prc");

@@ -26,12 +26,12 @@ namespace Dt.App.Workflow
 
         async void Load()
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Height = 600;
                 Width = 400;
             }
-            _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = AtUser.ID });
+            _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = Kit.UserID });
         }
 
         void OnItemDoubleClick(object sender, object e)

@@ -46,7 +46,7 @@ namespace Dt.Base
         {
             if (_connected)
             {
-                //AtKit.Msg("已连接");
+                //Kit.Msg("已连接");
                 return;
             }
 
@@ -88,7 +88,7 @@ namespace Dt.Base
             if (!StopRetry && RetryTimes < 5)
             {
                 RetryTimes++;
-                //AtKit.Msg($"第{RetryTimes}次重连");
+                //Kit.Msg($"第{RetryTimes}次重连");
                 _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, RetryTimes))).ContinueWith((t) => Register());
             }
         }
@@ -138,12 +138,12 @@ namespace Dt.Base
                 Log.Warning(ex, "解析服务器推送时异常");
             }
 
-            AtKit.Trace(TraceOutType.ServerPush, $"{method}—推送", AtSys.TraceRpc ? p_msg : null);
+            Kit.Trace(TraceOutType.ServerPush, $"{method}—推送", Kit.TraceRpc ? p_msg : null);
 
             try
             {
                 object tgt = Activator.CreateInstance(mi.DeclaringType);
-                AtKit.RunAsync(() => mi.Invoke(tgt, args));
+                Kit.RunAsync(() => mi.Invoke(tgt, args));
             }
             catch (Exception ex)
             {
@@ -159,7 +159,7 @@ namespace Dt.Base
 
             Type tp;
             string[] arr = _method.Split('.');
-            if (arr.Length == 2 && AtSys.Stub.PushHandlers.TryGetValue(arr[0], out tp))
+            if (arr.Length == 2 && Kit.Stub.PushHandlers.TryGetValue(arr[0], out tp))
             {
                 mi = tp.GetMethod(arr[1], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (mi != null)

@@ -52,12 +52,12 @@ namespace Dt.Sample
             if (string.IsNullOrEmpty(_info.FilePath))
                 return;
 
-            string id = AtKit.NewID + _info.FileExt;
+            string id = Kit.NewID + _info.FileExt;
             using (var stream = _info.GetStream())
-            using (var fs = File.Create(Path.Combine(AtSys.CachePath, id)))
+            using (var fs = File.Create(Path.Combine(Kit.CachePath, id)))
             {
                 await stream.CopyToAsync(fs);
-                AtKit.Msg("复制成功！");
+                Kit.Msg("复制成功！");
             }
         }
     }

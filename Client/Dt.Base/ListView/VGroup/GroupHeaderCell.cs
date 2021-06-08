@@ -38,7 +38,7 @@ namespace Dt.Base.ListView
         static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // uno中Arrange中修改IsSelected时有多次布局警告
-            AtKit.RunAsync(() => VisualStateManager.GoToState((GroupHeaderCell)d, ((bool)e.NewValue) ? "Selected" : "Normal", true));
+            Kit.RunAsync(() => VisualStateManager.GoToState((GroupHeaderCell)d, ((bool)e.NewValue) ? "Selected" : "Normal", true));
         }
         #endregion
 

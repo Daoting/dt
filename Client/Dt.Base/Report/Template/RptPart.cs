@@ -140,7 +140,7 @@ namespace Dt.Base.Report
                         break;
                     default:
                         if (item == null)
-                            AtKit.Error(string.Format("反序列化报表模板时错误，无法识别报表项【{0}】！", p_reader.Name));
+                            Kit.Error(string.Format("反序列化报表模板时错误，无法识别报表项【{0}】！", p_reader.Name));
                         break;
                 }
                 item.ReadXml(p_reader);

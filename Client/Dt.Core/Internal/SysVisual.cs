@@ -108,7 +108,7 @@ namespace Dt.Core
             win.SizeChanged += OnWindowSizeChanged;
 
             // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
-            AtSys.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+            Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
             ApplyNotifyStyle();
         }
 
@@ -139,7 +139,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取提示信息列表，避免启动时AtKit的初始化
+        /// 获取提示信息列表，避免启动时Kit的初始化
         /// </summary>
         public static ItemList<NotifyInfo> NotifyList { get; }
 
@@ -178,7 +178,7 @@ namespace Dt.Core
                 return false;
 
             // 遮罩
-            if (AtSys.IsPhoneUI || ((IDlgOuterPressed)p_dlg).ShowWinVeil)
+            if (Kit.IsPhoneUI || ((IDlgOuterPressed)p_dlg).ShowWinVeil)
                 _dlgCanvas.Background = _veilBrush;
             _dlgCanvas.Children.Add(p_dlg);
             return true;
@@ -198,7 +198,7 @@ namespace Dt.Core
             _dlgCanvas.Children.Remove(p_dlg);
 
             // 移除遮罩
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 if (_dlgCanvas.Children.Count == 0)
                     _dlgCanvas.ClearValue(Panel.BackgroundProperty);
@@ -423,10 +423,10 @@ namespace Dt.Core
         static void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             bool isPhoneUI = e.Size.Width < _maxPhoneUIWidth;
-            if (isPhoneUI == AtSys.IsPhoneUI)
+            if (isPhoneUI == Kit.IsPhoneUI)
                 return;
 
-            AtSys.IsPhoneUI = isPhoneUI;
+            Kit.IsPhoneUI = isPhoneUI;
 
             // 调整对话框层
             _dlgCanvas.Children.Clear();
@@ -441,7 +441,7 @@ namespace Dt.Core
         /// </summary>
         static void ApplyNotifyStyle()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 _notifyPanel.Width = double.NaN;
                 _notifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -461,7 +461,7 @@ namespace Dt.Core
         //    // android项目的styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
         //    // 竖屏StatusBarHeight为0，但横屏为实际高度
         //    // 但横屏时ViewHeight需要去掉状态栏高度，诡异
-        //    if (AtSys.IsPhoneUI)
+        //    if (Kit.IsPhoneUI)
         //    {
         //        // 竖屏为0
         //        StatusBarHeight = 0;

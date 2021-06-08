@@ -159,7 +159,7 @@ namespace Dt.Sample
             }
             else // cell range selection
             {
-                AtKit.Msg("请选择行或列！");
+                Kit.Msg("请选择行或列！");
             }
         }
 
@@ -181,7 +181,7 @@ namespace Dt.Sample
             }
             else // cell range selection
             {
-                AtKit.Msg("请选择分组中的行或列！");
+                Kit.Msg("请选择分组中的行或列！");
             }
         }
 
@@ -217,7 +217,7 @@ namespace Dt.Sample
             }
             else // cell range selection
             {
-                AtKit.Msg("请选择分组中的行或列！");
+                Kit.Msg("请选择分组中的行或列！");
             }
         }
 
@@ -253,7 +253,7 @@ namespace Dt.Sample
             }
             else // cell range selection
             {
-                AtKit.Msg("请选择分组中的行或列！");
+                Kit.Msg("请选择分组中的行或列！");
             }
         }
 
@@ -315,7 +315,7 @@ namespace Dt.Sample
                     fileFormat = ExcelFileFormat.XLS;
                 await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -330,7 +330,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SavePdf(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -345,7 +345,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SaveXmlAsync(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
     }

@@ -45,7 +45,7 @@ namespace Dt.Sample
             DataPackage data = new DataPackage();
             data.SetText(p_xml);
             Clipboard.SetContent(data);
-            AtKit.Msg("已保存到剪切板！");
+            Kit.Msg("已保存到剪切板！");
         }
     }
 
@@ -116,7 +116,7 @@ namespace Dt.Sample
                 if (name == "根菜单")
                 {
                     p_cell.Value = name;
-                    p_cell.Foreground = AtRes.BlackBrush;
+                    p_cell.Foreground = Res.BlackBrush;
                 }
                 else
                 {
@@ -128,12 +128,12 @@ namespace Dt.Sample
                 if (p_args.Data.Bool("isgroup"))
                 {
                     p_cell.Value = "V";
-                    p_cell.Foreground = AtRes.GreenBrush;
+                    p_cell.Foreground = Res.GreenBrush;
                 }
                 else
                 {
                     p_cell.Value = "X";
-                    p_cell.Foreground = AtRes.RedBrush;
+                    p_cell.Foreground = Res.RedBrush;
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace Dt.Sample
             }
             else if (p_args.Col == 2)
             {
-                AtKit.Msg(row.Bool("isgroup") ? "分组菜单" : "实体菜单");
+                Kit.Msg(row.Bool("isgroup") ? "分组菜单" : "实体菜单");
             }
         }
 

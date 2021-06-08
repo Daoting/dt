@@ -170,10 +170,10 @@ namespace Dt.Base
 
             _panel.Child = null;
             _grid = new Grid();
-            if (AtSys.IsPhoneUI || AlwaysTouchPicker)
+            if (Kit.IsPhoneUI || AlwaysTouchPicker)
             {
                 // 触摸模式
-                _grid.Background = AtRes.TransparentBrush;
+                _grid.Background = Res.TransparentBrush;
                 TextBlock tb = new TextBlock { Margin = new Thickness(10, 0, 10, 0), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center };
                 var bind = new Binding
                 {
@@ -216,7 +216,7 @@ namespace Dt.Base
                     _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
                     _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
 
-                    Button btn = new Button { Style = AtRes.字符按钮, Content = "\uE047" };
+                    Button btn = new Button { Style = Res.字符按钮, Content = "\uE047" };
                     Grid.SetColumn(btn, 1);
                     btn.Click += OnShowCalendar;
                     _grid.Children.Add(btn);

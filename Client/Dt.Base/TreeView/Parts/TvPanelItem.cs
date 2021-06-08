@@ -88,7 +88,7 @@ namespace Dt.Base.TreeView
         protected override Size MeasureOverride(Size availableSize)
         {
             // 行最小高度41
-            double height = AtRes.RowOuterHeight;
+            double height = Res.RowOuterHeight;
             double usedWidth = 0;
             int index = 0;
 
@@ -183,7 +183,7 @@ namespace Dt.Base.TreeView
             // 多选框
             if (_owner.SelectionMode == SelectionMode.Multiple)
             {
-                var tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontFamily = AtRes.IconFont };
+                var tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, FontFamily = Res.IconFont };
                 tbCheck.SetBinding(TextBlock.TextProperty, new Binding
                 {
                     Path = new PropertyPath("IsSelected"),
@@ -216,7 +216,7 @@ namespace Dt.Base.TreeView
             // 分割线及选择背景
             Border bd;
             if (_owner.ShowRowLine)
-                bd = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+                bd = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
             else
                 bd = new Border { IsHitTestVisible = false };
             if (_owner.SelectionMode != SelectionMode.None)
@@ -364,16 +364,16 @@ namespace Dt.Base.TreeView
             if (await menu.OpenContextMenu(p_pos, p_tgt))
             {
                 _menuOpened = true;
-                _rcPointer.Fill = AtRes.深黄遮罩;
+                _rcPointer.Fill = Res.深黄遮罩;
             }
         }
 
         void CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            _btnMenu = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
+            _btnMenu = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框 };
             _btnMenu.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;
             Children.Add(_btnMenu);
         }

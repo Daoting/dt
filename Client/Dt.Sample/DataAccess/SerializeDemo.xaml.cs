@@ -552,7 +552,7 @@ namespace Dt.Sample
         {
             var person = new Student();
             person.Name = "John Smith";
-            person.LastModified = AtSys.Now;
+            person.LastModified = Kit.Now;
             person.Salary = new Dict();
             person.Salary.Add("一月", 2000);
             person.Salary.Add("二月", 3000);
@@ -593,7 +593,7 @@ namespace Dt.Sample
             Department dept = new Department() { Name = "人事部" };
             var employee = new Student();
             employee.Name = "John Smith";
-            employee.LastModified = AtSys.Now;
+            employee.LastModified = Kit.Now;
             employee.Salary = new Dict();
             employee.Salary.Add("一月", 2000);
             employee.Salary.Add("二月", 3000);

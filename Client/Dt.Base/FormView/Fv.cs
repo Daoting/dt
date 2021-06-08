@@ -538,11 +538,11 @@ namespace Dt.Base
             if (cell != null)
             {
                 if (!cell.ReceiveFocus())
-                    AtKit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
+                    Kit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
             }
             else
             {
-                AtKit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
+                Kit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
             }
         }
 
@@ -695,12 +695,12 @@ namespace Dt.Base
             _scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
             // 在 StackPanel 内时无法画出底线
-            if (AtSys.System == TargetSystem.Windows
+            if (Kit.OS == TargetSystem.Windows
                 && VisualTreeHelper.GetParent(this) is StackPanel sp
                 && ReadLocalValue(BorderThicknessProperty) == DependencyProperty.UnsetValue)
             {
                 BorderThickness = new Thickness(0, 0, 0, 1);
-                BorderBrush = AtRes.浅灰边框;
+                BorderBrush = Res.浅灰边框;
             }
 
             LoadAllItems();

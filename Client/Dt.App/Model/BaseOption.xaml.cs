@@ -121,9 +121,9 @@ namespace Dt.App.Model
 
         async void DelOption(Option p_option)
         {
-            if (!await AtKit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 

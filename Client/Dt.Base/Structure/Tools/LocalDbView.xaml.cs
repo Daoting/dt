@@ -55,12 +55,12 @@ namespace Dt.Base.Tools
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
-                var folder = await StorageFolder.GetFolderFromPathAsync(AtSys.DataPath);
+                var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
                 var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
                 if (temp != null)
                 {
                     await temp.CopyAndReplaceAsync(file);
-                    AtKit.Msg("文件备份成功！");
+                    Kit.Msg("文件备份成功！");
                 }
             }
         }
@@ -70,21 +70,21 @@ namespace Dt.Base.Tools
             var row = ((LvItem)((Button)sender).DataContext).Row;
             try
             {
-                var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+                var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
                 var tgtName = $"{row.Str("name")}-{Guid.NewGuid().ToString().Substring(0, 8)}.db";
                 File.Copy(dbFile, Path.Combine(IOUtil.GetDownloadsPath(), tgtName));
-                AtKit.Msg("已保存到下载目录：\r\n" + tgtName);
+                Kit.Msg("已保存到下载目录：\r\n" + tgtName);
             }
             catch
             {
-                AtKit.Warn("文件保存失败！");
+                Kit.Warn("文件保存失败！");
             }
         }
 #elif IOS
         async void OnBackup(object sender, RoutedEventArgs e)
         {
             var row = ((LvItem)((Button)sender).DataContext).Row;
-            var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = row.Str("name") + ".db",
@@ -103,14 +103,14 @@ namespace Dt.Base.Tools
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
-                var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+                var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
                 var data = File.ReadAllBytes(dbFile);
                 Log.Debug($"长度：{data.Length}");
                 Log.Debug($"路径：{file.Path}");
                 // 内容能读出，无法正常保存
                 //File.WriteAllBytes(file.Path, data);
 
-                //var folder = await StorageFolder.GetFolderFromPathAsync(AtSys.DataPath);
+                //var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
                 //var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
                 //File.Copy(temp.Path, file.Path);
             }
@@ -120,7 +120,7 @@ namespace Dt.Base.Tools
         async void OnShare(object sender, RoutedEventArgs e)
         {
             var row = ((LvItem)((Button)sender).DataContext).Row;
-            var dbFile = Path.Combine(AtSys.DataPath, row.Str("name") + ".db");
+            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = "分享文件",
@@ -139,11 +139,11 @@ namespace Dt.Base.Tools
         {
             if (_lvDb.SelectedRow.Str("name") == "model")
             {
-                AtKit.Warn("模型库禁止删除数据！");
+                Kit.Warn("模型库禁止删除数据！");
                 return;
             }
 
-            if (!await AtKit.Confirm($"确认要删除这{_lvData.SelectedCount}行吗？"))
+            if (!await Kit.Confirm($"确认要删除这{_lvData.SelectedCount}行吗？"))
                 return;
 
             var db = GetDb();
@@ -151,7 +151,7 @@ namespace Dt.Base.Tools
             var pk = db.GetScalar<string>($"select name from pragma_table_info('{tblName}') where pk=1");
             if (string.IsNullOrEmpty(pk))
             {
-                AtKit.Warn("该表无主键！");
+                Kit.Warn("该表无主键！");
                 return;
             }
 

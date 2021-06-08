@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Dt.Base
                 try
                 {
                     Icons icon = (Icons)value;
-                    return AtRes.GetIconChar(icon);
+                    return Res.GetIconChar(icon);
                 }
                 catch { }
             }
@@ -51,7 +52,7 @@ namespace Dt.Base
             Icons icon = Icons.None;
             if (value != null)
                 Enum.TryParse<Icons>(value.ToString(), true, out icon);
-            return AtRes.GetIconChar(icon);
+            return Res.GetIconChar(icon);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

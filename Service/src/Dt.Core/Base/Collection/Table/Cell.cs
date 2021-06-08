@@ -303,9 +303,9 @@ namespace Dt.Core
                     catch (Exception ex)
                     {
                         if (ex.InnerException is KnownException kex)
-                            AtKit.Warn(kex.Message);
+                            Kit.Warn(kex.Message);
                         else
-                            AtKit.Warn(ex.Message);
+                            Kit.Warn(ex.Message);
 
                         // 通知UI重置原值
                         if (PropertyChanged != null)
@@ -320,7 +320,7 @@ namespace Dt.Core
                             OriginalVal = old;
 #endif
                             // 立即调用时无效！
-                            AtKit.RunAsync(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
+                            Kit.RunAsync(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
                         }
                         // 直接返回，赋值失败
                         return;

@@ -85,7 +85,7 @@ namespace Dt.Base
         {
             if (!Platform.AppContext.PackageManager.HasSystemFeature(PackageManager.FeatureCamera))
             {
-                AtKit.Warn("无摄像头设备");
+                Kit.Warn("无摄像头设备");
                 return false;
             }
 
@@ -94,7 +94,7 @@ namespace Dt.Base
                 hasPer = await Permissions.RequestAsync<Permissions.Camera>();
             if (hasPer != PermissionStatus.Granted)
             {
-                AtKit.Warn("摄像头未授权！");
+                Kit.Warn("摄像头未授权！");
                 return false;
             }
 

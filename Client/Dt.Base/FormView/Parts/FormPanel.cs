@@ -38,22 +38,22 @@ namespace Dt.Base.FormView
 
         readonly Fv _owner;
         // 为uno节省可视树级数
-        readonly Rectangle _border = new Rectangle { Stroke = AtRes.浅灰边框, IsHitTestVisible = false };
+        readonly Rectangle _border = new Rectangle { Stroke = Res.浅灰边框, IsHitTestVisible = false };
         #endregion
 
         public FormPanel(Fv p_owner)
         {
             _owner = p_owner;
-            Background = AtRes.浅灰背景;
+            Background = Res.浅灰背景;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
 
             // 左上边距和容器凑成边框1的效果
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 Margin = new Thickness(-1, -1, 0, 0);
 
             // uno不画出界的线，右下边框1
-            if (AtSys.System == TargetSystem.Windows)
+            if (Kit.OS == TargetSystem.Windows)
                 _border.Margin = new Thickness(0, 0, -1, -1);
             Children.Add(_border);
         }
@@ -166,7 +166,7 @@ namespace Dt.Base.FormView
         double GetTotalHeight(int p_colCount, double p_colWidth, bool p_measure)
         {
             int rowIndex = 0;
-            Size szCollapsed = new Size(p_colWidth, AtRes.RowOuterHeight);
+            Size szCollapsed = new Size(p_colWidth, Res.RowOuterHeight);
 
             // 只一列
             if (p_colCount == 1)
@@ -190,15 +190,15 @@ namespace Dt.Base.FormView
                         // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
                         cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
                         // uno中高度莫名多出小数点后的
-                        rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / AtRes.RowOuterHeight);
+                        rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / Res.RowOuterHeight);
                     }
 
                     // 测量
                     if (p_measure)
                     {
-                        Size size = new Size(p_colWidth, AtRes.RowOuterHeight * rowSpan);
+                        Size size = new Size(p_colWidth, Res.RowOuterHeight * rowSpan);
                         cell.Bounds = new Rect(
-                            new Point(0, rowIndex * AtRes.RowOuterHeight),
+                            new Point(0, rowIndex * Res.RowOuterHeight),
                             size);
                         // 自动行高不再测量
                         if (cell.RowSpan > 0)
@@ -206,7 +206,7 @@ namespace Dt.Base.FormView
                     }
                     rowIndex += rowSpan;
                 }
-                return rowIndex * AtRes.RowOuterHeight;
+                return rowIndex * Res.RowOuterHeight;
             }
 
             // 多列情况
@@ -263,7 +263,7 @@ namespace Dt.Base.FormView
                     {
                         // 自动行高，计算占用行数
                         cell.Measure(new Size(p_colWidth * p_colCount, SysVisual.ViewHeight));
-                        rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / AtRes.RowOuterHeight);
+                        rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / Res.RowOuterHeight);
                     }
 
                     // 标志占用
@@ -281,9 +281,9 @@ namespace Dt.Base.FormView
                     // 测量
                     if (p_measure)
                     {
-                        Size size = new Size(p_colWidth * p_colCount, AtRes.RowOuterHeight * rowSpan);
+                        Size size = new Size(p_colWidth * p_colCount, Res.RowOuterHeight * rowSpan);
                         cell.Bounds = new Rect(
-                            new Point(0, rowIndex * AtRes.RowOuterHeight),
+                            new Point(0, rowIndex * Res.RowOuterHeight),
                             size);
                         // 自动行高不再测量
                         if (cell.RowSpan > 0)
@@ -324,7 +324,7 @@ namespace Dt.Base.FormView
                     {
                         // 自动行高，计算占用行数
                         cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
-                        rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / AtRes.RowOuterHeight);
+                        rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / Res.RowOuterHeight);
                     }
 
                     // 标志占用
@@ -338,9 +338,9 @@ namespace Dt.Base.FormView
                     // 测量
                     if (p_measure)
                     {
-                        Size size = new Size(p_colWidth, AtRes.RowOuterHeight * rowSpan);
+                        Size size = new Size(p_colWidth, Res.RowOuterHeight * rowSpan);
                         cell.Bounds = new Rect(
-                            new Point(colIndex * p_colWidth, rowIndex * AtRes.RowOuterHeight),
+                            new Point(colIndex * p_colWidth, rowIndex * Res.RowOuterHeight),
                             size);
                         // 自动行高不再测量
                         if (cell.RowSpan > 0)
@@ -357,7 +357,7 @@ namespace Dt.Base.FormView
                     }
                 }
             }
-            return map.Count * AtRes.RowOuterHeight;
+            return map.Count * Res.RowOuterHeight;
         }
     }
 }

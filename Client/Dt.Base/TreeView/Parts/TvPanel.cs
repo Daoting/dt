@@ -41,7 +41,7 @@ namespace Dt.Base.TreeView
         public TvPanel(Tv p_owner)
         {
             _owner = p_owner;
-            Background = AtRes.TransparentBrush;
+            Background = Res.TransparentBrush;
 
             if (!_owner.IsVirtualized)
                 LoaRealRows();

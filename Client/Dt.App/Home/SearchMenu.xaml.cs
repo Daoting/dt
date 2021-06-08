@@ -27,7 +27,7 @@ namespace Dt.App.Home
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)

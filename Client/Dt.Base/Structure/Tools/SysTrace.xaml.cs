@@ -46,11 +46,11 @@ namespace Dt.Base.Tools
                 Exception = (DataTemplate)Resources["Exception"],
             };
             _lv.CellEx = typeof(TraceViewEx);
-            _lv.Data = AtKit.TraceList;
+            _lv.Data = Kit.TraceList;
             _lv.ItemClick += OnOutputClick;
 
             // mono不支持 Stream.Position = 0，JsonRpc第136行！无法输出返回内容
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 _lv.Loaded += OnLoaded;
                 _lv.Unloaded += OnUnloaded;
@@ -77,7 +77,7 @@ namespace Dt.Base.Tools
             // phone模式
             if (SysVisual.RootContent is Frame)
             {
-                AtApp.OpenWin(typeof(SysTrace));
+                Kit.OpenWin(typeof(SysTrace));
                 return;
             }
 
@@ -91,7 +91,7 @@ namespace Dt.Base.Tools
                     Content = trace,
                     IsPinned = true,
                     WinPlacement = DlgPlacement.FromLeft,
-                    BorderBrush = AtRes.浅灰边框,
+                    BorderBrush = Res.浅灰边框,
                     Width = 400
                 };
             }
@@ -100,14 +100,14 @@ namespace Dt.Base.Tools
 
         void OnClear(object sender, Mi e)
         {
-            AtKit.TraceList.Clear();
+            Kit.TraceList.Clear();
         }
 
         void OnLocalDb(object sender, Mi e)
         {
-            if (AtSys.IsPhoneUI || SysVisual.RootContent is Desktop)
+            if (Kit.IsPhoneUI || SysVisual.RootContent is Desktop)
             {
-                AtApp.OpenWin(typeof(LocalDbView));
+                Kit.OpenWin(typeof(LocalDbView));
                 return;
             }
 
@@ -120,7 +120,7 @@ namespace Dt.Base.Tools
                     Content = new LocalDbView(),
                     IsPinned = true,
                     WinPlacement = DlgPlacement.Maximized,
-                    BorderBrush = AtRes.浅灰边框,
+                    BorderBrush = Res.浅灰边框,
                 };
             }
             _dlgDb.Show();
@@ -176,7 +176,7 @@ namespace Dt.Base.Tools
             DataPackage data = new DataPackage();
             data.SetText(p_text);
             Clipboard.SetContent(data);
-            AtKit.Msg("已复制到剪切板！");
+            Kit.Msg("已复制到剪切板！");
         }
 
         /// <summary>
@@ -206,12 +206,12 @@ namespace Dt.Base.Tools
 
         void OnLoaded(object sender, RoutedEventArgs e)
         {
-            AtSys.TraceRpc = true;
+            Kit.TraceRpc = true;
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            AtSys.TraceRpc = false;
+            Kit.TraceRpc = false;
         }
 
         #region 生成存根代码
@@ -283,7 +283,7 @@ namespace Dt.Base.Tools
             DataPackage data = new DataPackage();
             data.SetText(sb.ToString());
             Clipboard.SetContent(data);
-            AtKit.Msg("已复制到剪切板！");
+            Kit.Msg("已复制到剪切板！");
 
             _viewTypes.Clear();
             _pushHandlers.Clear();
@@ -422,7 +422,7 @@ namespace Dt.Base.Tools
 
             public string GetVer()
             {
-                return AtKit.GetMD5(Cols.ToString());
+                return Kit.GetMD5(Cols.ToString());
             }
         }
 #else

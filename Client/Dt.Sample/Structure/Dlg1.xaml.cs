@@ -40,13 +40,13 @@ namespace Dt.Sample
                 await Task.Delay(100);
                 e.Cancel = (bool)_cbClosing.IsChecked;
                 if (e.Cancel)
-                    AtKit.Msg("事件中设置禁止关闭");
+                    Kit.Msg("事件中设置禁止关闭");
             }
         }
 
         void OnClosed(object sender, EventArgs e)
         {
-            AtKit.Msg("关闭后事件");
+            Kit.Msg("关闭后事件");
         }
 
         void OnNewDlg(object sender, RoutedEventArgs e)

@@ -86,7 +86,7 @@ namespace Dt.Base.Report
 
             // 处理自动行高
             double height = 0;
-            AtKit.RunSync(() =>
+            Kit.RunSync(() =>
             {
                 // 测量文本的实际高度
                 TextBlock tb = new TextBlock();

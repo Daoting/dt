@@ -62,7 +62,7 @@ namespace Dt.Base
             {
                 string define = AtModel.GetScalar<string>("select define from OmReport where name=:name", new Dict { { "name", Name } });
                 if (string.IsNullOrEmpty(define))
-                    AtKit.Warn($"未找到报表模板【{Name}】！");
+                    Kit.Warn($"未找到报表模板【{Name}】！");
                 return define;
             });
         }
@@ -91,7 +91,7 @@ namespace Dt.Base
                 }
                 else
                 {
-                    AtKit.Warn($"未定义报表脚本，无法获取数据【{p_name}】");
+                    Kit.Warn($"未定义报表脚本，无法获取数据【{p_name}】");
                 }
             }
             else
@@ -185,7 +185,7 @@ namespace Dt.Base
             {
                 if (string.IsNullOrEmpty(Name))
                 {
-                    AtKit.Warn("未提供报表模板名称！");
+                    Kit.Warn("未提供报表模板名称！");
                 }
                 else if (CacheTemplate && _tempCache.TryGetValue(Name, out var temp))
                 {
@@ -208,7 +208,7 @@ namespace Dt.Base
                     }
                     catch (Exception ex)
                     {
-                        AtKit.Warn("加载报表模板时异常！\r\n" + ex.Message);
+                        Kit.Warn("加载报表模板时异常！\r\n" + ex.Message);
                     }
                 }
 
@@ -222,13 +222,13 @@ namespace Dt.Base
                 Type type = Type.GetType(Root.ViewSetting.Script);
                 if (type == null)
                 {
-                    AtKit.Warn($"缺少脚本类型【{Root.ViewSetting.Script}】");
+                    Kit.Warn($"缺少脚本类型【{Root.ViewSetting.Script}】");
                 }
                 else
                 {
                     ScriptObj = (RptScript)Activator.CreateInstance(type);
                     if (ScriptObj == null)
-                        AtKit.Warn($"脚本类型【{Root.ViewSetting.Script}】需继承RptScript");
+                        Kit.Warn($"脚本类型【{Root.ViewSetting.Script}】需继承RptScript");
                 }
             }
 
@@ -250,7 +250,7 @@ namespace Dt.Base
         {
             if (Root == null)
             {
-                AtKit.Msg("未加载报表模板，无法验证查询参数！");
+                Kit.Msg("未加载报表模板，无法验证查询参数！");
                 return false;
             }
 
@@ -262,7 +262,7 @@ namespace Dt.Base
             {
                 if (count > 0)
                 {
-                    AtKit.Msg(_paramsMsg);
+                    Kit.Msg(_paramsMsg);
                     return false;
                 }
                 return true;
@@ -271,7 +271,7 @@ namespace Dt.Base
             // 参数个数不够
             if (dt.Count < count)
             {
-                AtKit.Msg(_paramsMsg);
+                Kit.Msg(_paramsMsg);
                 return false;
             }
 
@@ -280,7 +280,7 @@ namespace Dt.Base
             {
                 if (!dt.ContainsKey(row.Str("name")))
                 {
-                    AtKit.Msg(_paramsMsg);
+                    Kit.Msg(_paramsMsg);
                     return false;
                 }
             }

@@ -129,13 +129,13 @@ namespace Dt.Base
 
         static void OnWinPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 ((Dlg)d).OnPlacementChanged();
         }
 
         static void OnPhonePlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 ((Dlg)d).OnPlacementChanged();
         }
 
@@ -156,7 +156,7 @@ namespace Dt.Base
 
         static void OnShowWinVeilChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 SysVisual.ToggleDlgWinVeil((Dlg)d);
         }
         #endregion
@@ -178,7 +178,7 @@ namespace Dt.Base
         public Dlg()
         {
             // 两种UI模式样式不同，PhoneUI模式为缺省样式
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Dlg);
             else
                 Style = (Style)Application.Current.Resources["WinDlg"];
@@ -416,7 +416,7 @@ namespace Dt.Base
             if (btn != null)
                 btn.Click += OnHeaderButtonClick;
 
-            if (AtSys.System == TargetSystem.Windows || AtSys.System == TargetSystem.Web)
+            if (Kit.OS == TargetSystem.Windows || Kit.OS == TargetSystem.Web)
             {
                 var grid = (Grid)GetTemplateChild("RootGrid");
                 if (grid != null)
@@ -464,7 +464,7 @@ namespace Dt.Base
         /// </summary>
         void ShowInCanvas()
         {
-            DlgPlacement placement = AtSys.IsPhoneUI ? PhonePlacement : WinPlacement;
+            DlgPlacement placement = Kit.IsPhoneUI ? PhonePlacement : WinPlacement;
 
             // 未能正确添加到可视树或采用相对位置时未设置目标
             if (!SysVisual.AddDlg(this)
@@ -711,7 +711,7 @@ namespace Dt.Base
         /// </summary>
         void OnPlacementChanged()
         {
-            DlgPlacement placement = AtSys.IsPhoneUI ? PhonePlacement : WinPlacement;
+            DlgPlacement placement = Kit.IsPhoneUI ? PhonePlacement : WinPlacement;
 
             Transitions = new TransitionCollection();
             switch (placement)
@@ -914,7 +914,7 @@ namespace Dt.Base
                     // 调整大小的外框
                     _bdResize = new Border
                     {
-                        BorderBrush = AtRes.醒目红色,
+                        BorderBrush = Res.醒目红色,
                         Width = ActualWidth,
                         Height = ActualHeight,
                         BorderThickness = new Thickness(2),

@@ -32,15 +32,15 @@ namespace Dt.Base.ListView
         public GroupHeader(Lv p_owner)
         {
             Lv = p_owner;
-            Background = AtRes.WhiteBrush;
+            Background = Res.WhiteBrush;
             foreach (var grp in p_owner.GroupRows)
             {
                 Children.Add(new GroupHeaderCell(grp, this));
             }
-            _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+            _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
             Children.Add(_border);
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 PointerWheelChanged += OnPointerWheelChanged;
         }
         #endregion
@@ -98,7 +98,7 @@ namespace Dt.Base.ListView
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            Size size = new Size(availableSize.Width, AtRes.RowOuterHeight);
+            Size size = new Size(availableSize.Width, Res.RowOuterHeight);
             double width = 0;
             foreach (var elem in Children.OfType<GroupHeaderCell>())
             {
@@ -120,9 +120,9 @@ namespace Dt.Base.ListView
                 if (left > finalSize.Width)
                     cell.Arrange(new Rect());
                 else if (left + cell.DesiredSize.Width > finalSize.Width)
-                    cell.Arrange(new Rect(left, 0, finalSize.Width - left, AtRes.RowOuterHeight));
+                    cell.Arrange(new Rect(left, 0, finalSize.Width - left, Res.RowOuterHeight));
                 else
-                    cell.Arrange(new Rect(left, 0, cell.DesiredSize.Width, AtRes.RowOuterHeight));
+                    cell.Arrange(new Rect(left, 0, cell.DesiredSize.Width, Res.RowOuterHeight));
                 cell.Left = left;
                 left += cell.DesiredSize.Width;
             }

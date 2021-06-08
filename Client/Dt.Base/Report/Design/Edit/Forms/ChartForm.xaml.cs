@@ -39,7 +39,7 @@ namespace Dt.Base.Report
                 return;
 
             _item = p_item;
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 _item.Data.Changed -= OnValueChanged;
                 _fv.Data = _item.Data;

@@ -61,11 +61,11 @@ namespace Dt.Core.Rpc
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         // 已登录则提示无权限
-                        if (AtUser.IsLogon)
+                        if (Kit.IsLogon)
                             throw new KnownException($"⚡对【{_methodName}】无访问权限！");
 
                         // 跳转到登录页面
-                        AtSys.Login(true);
+                        Kit.Login(true);
                         throw new KnownException("请先登录您的账号！");
                     }
 #endif
@@ -124,12 +124,12 @@ namespace Dt.Core.Rpc
 #if !SERVER
             // 输出监视信息
             string content = null;
-            if (AtSys.TraceRpc || result.ResultType == RpcResultType.Error)
+            if (Kit.TraceRpc || result.ResultType == RpcResultType.Error)
             {
                 // 输出详细内容
                 content = Encoding.UTF8.GetString(p_data);
             }
-            AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
+            Kit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
 
             // ⚡ 为服务器标志
             if (result.ResultType == RpcResultType.Message)

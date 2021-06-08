@@ -31,10 +31,10 @@ namespace Dt.App.Home
         {
             InitializeComponent();
 
-            if (AtUser.IsLogon)
+            if (Kit.IsLogon)
                 LoadMenus();
             else
-                AtUser.LoginSuc += LoadMenus;
+                Kit.LoginSuc += LoadMenus;
         }
 
         async void LoadMenus()
@@ -46,7 +46,7 @@ namespace Dt.App.Home
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
@@ -63,16 +63,16 @@ namespace Dt.App.Home
 
         async void OnReset(object sender, Mi e)
         {
-            int cntFixed = AtSys.Stub.FixedMenus == null ? 0 : AtSys.Stub.FixedMenus.Count;
+            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
             if (MenuKit.FavMenus.Count > cntFixed)
             {
-                var cnt = AtState.Exec($"delete from menufav where userid={AtUser.ID}");
+                var cnt = AtState.Exec($"delete from menufav where userid={Kit.UserID}");
                 if (cnt > 0)
                 {
                     await MenuKit.LoadMenus();
                     _lv.Data = MenuKit.RootPageMenus;
                     e.Visibility = Visibility.Collapsed;
-                    AtKit.Msg("重置常用菜单成功！");
+                    Kit.Msg("重置常用菜单成功！");
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace Dt.App.Home
                 return;
 
             _dtLast = DateTime.Now;
-            AtKit.RunAsync(async () =>
+            Kit.RunAsync(async () =>
             {
                 // 只取常用组菜单项的提示信息
                 // 原来采用每个服务批量获取的方式，现改为简单方式，互不影响！
@@ -98,7 +98,7 @@ namespace Dt.App.Home
                     if (string.IsNullOrEmpty(mi.SvcName))
                         continue;
 
-                    int num = await new UnaryRpc(mi.SvcName, "Entry.GetMenuTip", mi.ID, AtUser.ID).Call<int>();
+                    int num = await new UnaryRpc(mi.SvcName, "Entry.GetMenuTip", mi.ID, Kit.UserID).Call<int>();
                     mi.SetWarningNum(num);
                 }
             });
@@ -117,7 +117,7 @@ namespace Dt.App.Home
             mi.Click += OnSearch;
             menu.Items.Add(mi);
 
-            int cntFixed = AtSys.Stub.FixedMenus == null ? 0 : AtSys.Stub.FixedMenus.Count;
+            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
             if (MenuKit.FavMenus.Count > cntFixed)
             {
                 mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
@@ -136,9 +136,9 @@ namespace Dt.App.Home
             Icons icon = Icons.None;
             if (value != null)
                 Enum.TryParse<Icons>(value.ToString(), true, out icon);
-            string str = AtRes.GetIconChar(icon);
+            string str = Res.GetIconChar(icon);
             if (!string.IsNullOrEmpty(str))
-                return new TextBlock { Text = str, FontFamily = AtRes.IconFont, FontSize = 30, TextAlignment = TextAlignment.Center };
+                return new TextBlock { Text = str, FontFamily = Res.IconFont, FontSize = 30, TextAlignment = TextAlignment.Center };
             return null;
         }
 
@@ -159,8 +159,8 @@ namespace Dt.App.Home
             {
                 Children =
                 {
-                    new Ellipse { Fill = AtRes.RedBrush, Width = 20, Height = 20},
-                    new TextBlock {Text = value.ToString(), Foreground = AtRes.WhiteBrush, FontSize = 12, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
+                    new Ellipse { Fill = Res.RedBrush, Width = 20, Height = 20},
+                    new TextBlock {Text = value.ToString(), Foreground = Res.WhiteBrush, FontSize = 12, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
                 }
             };
         }

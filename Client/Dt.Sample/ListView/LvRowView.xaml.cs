@@ -36,7 +36,7 @@ namespace Dt.Sample
             {
                 Text = p_item.Row.Str("xm"),
                 Margin = new Thickness(10),
-                Foreground = (p_item.Row.Str("xb") == "男") ? AtRes.BlackBrush : AtRes.RedBrush,
+                Foreground = (p_item.Row.Str("xb") == "男") ? Res.BlackBrush : Res.RedBrush,
             };
         }
     }

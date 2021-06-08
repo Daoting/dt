@@ -98,7 +98,7 @@ namespace Dt.Base.ListView
         public LvPanel(Lv p_owner)
         {
             _owner = p_owner;
-            Background = AtRes.TransparentBrush;
+            Background = Res.TransparentBrush;
 
             // 为高效
             DefineCreateRowFunc();
@@ -109,7 +109,7 @@ namespace Dt.Base.ListView
 
             _owner.Scroll.ViewChanged += OnScrollViewChanged;
             SizeChanged += OnSizeChanged;
-            if (AtSys.System == TargetSystem.Windows)
+            if (Kit.OS == TargetSystem.Windows)
             {
                 // 屏蔽鼠标滚轮引起的抖动
                 PointerWheelChanged += OnPointerWheelChanged;
@@ -241,7 +241,7 @@ namespace Dt.Base.ListView
             ClearAllRows();
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
             SizeChanged -= OnSizeChanged;
-            if (AtSys.System == TargetSystem.Windows)
+            if (Kit.OS == TargetSystem.Windows)
             {
                 PointerWheelChanged -= OnPointerWheelChanged;
                 KeyDown -= OnKeyDown;

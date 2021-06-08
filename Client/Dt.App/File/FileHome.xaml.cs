@@ -32,7 +32,7 @@ namespace Dt.App.File
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await AtUser.HasPrv("公共文件管理"),
+                AllowEdit = await Kit.HasPrv("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });
@@ -49,7 +49,7 @@ namespace Dt.App.File
 
         void LoadHistory()
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 var ls = AtState.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
                 StringBuilder sb = new StringBuilder();
@@ -80,7 +80,7 @@ namespace Dt.App.File
             if (_fl.Items.Count() == 0)
                 return;
 
-            if (await AtKit.Confirm("确认要清空历史记录吗？"))
+            if (await Kit.Confirm("确认要清空历史记录吗？"))
             {
                 AtState.Exec("delete from ReadFileHistory");
                 _fl.Data = null;
@@ -89,7 +89,7 @@ namespace Dt.App.File
 
         async void OnDeleteHis(object sender, Mi e)
         {
-            if (await AtKit.Confirm("确认要删除当前历史记录吗？"))
+            if (await Kit.Confirm("确认要删除当前历史记录吗？"))
             {
                 if (AtState.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
                     LoadHistory();

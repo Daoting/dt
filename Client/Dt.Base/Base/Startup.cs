@@ -39,20 +39,20 @@ namespace Dt.Base
             where T : IStub
         {
             // 非null表示app已启动过
-            if (AtSys.Stub != null)
+            if (Kit.Stub != null)
             {
                 // 带参数启动
                 if (!string.IsNullOrEmpty(p_launchArgs))
-                    AtKit.RunAsync(() => LaunchFreely(p_launchArgs));
+                    Kit.RunAsync(() => LaunchFreely(p_launchArgs));
                 Window.Current.Activate();
 
                 if (p_shareInfo != null)
-                    AtKit.RunAsync(() => AtSys.Stub.ReceiveShare(p_shareInfo));
+                    Kit.RunAsync(() => Kit.Stub.ReceiveShare(p_shareInfo));
                 return;
             }
 
             IStub stub = Activator.CreateInstance<T>();
-            AtSys.Startup(stub, new DefaultCallback());
+            Kit.Startup(stub, new DefaultCallback());
 
             // 加载资源
             var res = Application.Current.Resources;
@@ -109,7 +109,7 @@ namespace Dt.Base
                 // 登录成功
                 if (result.IsSuc)
                 {
-                    AtUser.Init(result);
+                    Kit.InitUser(result);
                     // 切换到主页
                     ShowHome();
                     // 接收服务器推送
@@ -159,7 +159,7 @@ namespace Dt.Base
             try
             {
                 cfg = await new UnaryRpc(_svcName, "ModelMgr.GetConfig").Call<Dict>();
-                AtSys.SyncTime(cfg.Date("now"));
+                Kit.SyncTime(cfg.Date("now"));
             }
             catch
             {
@@ -168,14 +168,14 @@ namespace Dt.Base
             }
 
             // 更新模型文件
-            string modelVer = Path.Combine(AtSys.DataPath, $"model-{cfg.Str("ver")}.ver");
+            string modelVer = Path.Combine(Kit.DataPath, $"model-{cfg.Str("ver")}.ver");
             if (!File.Exists(modelVer))
             {
-                string modelFile = Path.Combine(AtSys.DataPath, "model.db");
+                string modelFile = Path.Combine(Kit.DataPath, "model.db");
 
                 // 删除旧版的模型文件和版本号文件
                 try { File.Delete(modelFile); } catch { }
-                foreach (var file in new DirectoryInfo(AtSys.DataPath).GetFiles($"model-*.ver"))
+                foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"model-*.ver"))
                 {
                     try { file.Delete(); } catch { }
                 }
@@ -183,7 +183,7 @@ namespace Dt.Base
                 try
                 {
                     // 下载模型文件，下载地址如 https://localhost/app/cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl}/{_svcName}/.model"))
+                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.Stub.ServerUrl}/{_svcName}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                     using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))
@@ -243,7 +243,7 @@ namespace Dt.Base
         /// <param name="p_isPopup">是否为弹出式</param>
         public static void ShowLogin(bool p_isPopup)
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 // 外部未指定时采用默认登录页
                 Type tp = _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType;
@@ -281,7 +281,7 @@ namespace Dt.Base
         /// </summary>
         public static void ShowHome()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 LoadRootFrame();
             else
                 LoadDesktop();
@@ -434,7 +434,7 @@ namespace Dt.Base
             var attr = root.Attribute("id");
             if (attr == null || string.IsNullOrEmpty(attr.Value))
             {
-                AtKit.Msg("自启动时标识不可为空！");
+                Kit.Msg("自启动时标识不可为空！");
                 return;
             }
 
@@ -465,7 +465,7 @@ namespace Dt.Base
             //    if (key != null && !string.IsNullOrEmpty(key.Value) && val != null)
             //        pars[key.Value] = val.Value;
             //}
-            AtApp.OpenView(viewName, title, icon);
+            Kit.OpenView(viewName, title, icon);
         }
         #endregion
 
@@ -479,7 +479,7 @@ namespace Dt.Base
             if (p_win == null)
                 return;
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Tabs tabs = (Tabs)p_win.GetValue(Win.MainTabsProperty);
                 if (tabs != null
@@ -501,7 +501,7 @@ namespace Dt.Base
                 info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
             }
             AtState.SaveAutoStart(info);
-            AtKit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
+            Kit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace Dt.Base
         internal static void DelAutoStart()
         {
             AtState.DelAutoStart();
-            AtKit.Msg("已取消自启动设置！");
+            Kit.Msg("已取消自启动设置！");
         }
         #endregion
 
@@ -522,9 +522,9 @@ namespace Dt.Base
         {
 #if UWP
             // 显示/隐藏后退按钮
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AtSys.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Kit.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
 #endif
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 // WinUI模式 -> PhoneUI模式
                 Desktop.Inst = null;

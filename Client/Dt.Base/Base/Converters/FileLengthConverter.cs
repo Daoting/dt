@@ -21,7 +21,7 @@ namespace Dt.Base
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return AtKit.GetFileSizeDesc((ulong)value);
+            return Kit.GetFileSizeDesc((ulong)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

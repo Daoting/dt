@@ -22,6 +22,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * 服务端导出sqlite模型只使用Microsoft.Data.Sqlite，无类型映射
 * 重构sqlite客户端代码，调整为DataProvider 风格，映射类型转Entity，支持自定义sqlite库
 * 服务端生成ID时去除3位标志位
+* AtSys AtKit AtUser AtApp合并为Kit
 
 ### Bug修改 
 * Lv自动生成列时，切换数据源报无旧数据源列的警告

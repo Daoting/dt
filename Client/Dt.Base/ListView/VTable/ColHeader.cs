@@ -88,9 +88,9 @@ namespace Dt.Base.ListView
                     _tbDrag = new TextBlock
                     {
                         Text = "\uE018",
-                        FontFamily = AtRes.IconFont,
+                        FontFamily = Res.IconFont,
                         FontSize = 20,
-                        Foreground = AtRes.RedBrush,
+                        Foreground = Res.RedBrush,
                         VerticalAlignment = VerticalAlignment.Center,
                     };
                     Children.Add(_tbDrag);
@@ -118,18 +118,18 @@ namespace Dt.Base.ListView
         {
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Measure(new Size(cell.Col.Width, AtRes.RowOuterHeight));
+                cell.Measure(new Size(cell.Col.Width, Res.RowOuterHeight));
             }
             if (_lastDrag > -1)
-                _tbDrag.Measure(new Size(20, AtRes.RowOuterHeight));
-            return new Size(Lv.Cols.TotalWidth, AtRes.RowOuterHeight);
+                _tbDrag.Measure(new Size(20, Res.RowOuterHeight));
+            return new Size(Lv.Cols.TotalWidth, Res.RowOuterHeight);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.Width, AtRes.RowOuterHeight));
+                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.Width, Res.RowOuterHeight));
             }
             if (_lastDrag > -1)
             {
@@ -139,7 +139,7 @@ namespace Dt.Base.ListView
                     left = Lv.Cols[_lastDrag].Left - 10;
                 else if (_lastDrag == cols.Count)
                     left = cols.TotalWidth - 10;
-                _tbDrag.Arrange(new Rect(left, 0, 20, AtRes.RowOuterHeight));
+                _tbDrag.Arrange(new Rect(left, 0, 20, Res.RowOuterHeight));
             }
             return finalSize;
         }

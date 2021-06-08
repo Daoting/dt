@@ -30,7 +30,7 @@ namespace Dt.App.Model
         {
             Title = p_paramid;
             _lv.Data = await AtCm.Query("参数-用户设置", new { paramid = p_paramid });
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Width = 500;
                 Height = 400;

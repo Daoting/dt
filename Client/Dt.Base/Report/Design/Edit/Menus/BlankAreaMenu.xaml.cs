@@ -58,7 +58,7 @@ namespace Dt.Base.Report
             range = new CellRange(range.Row, range.Column, 2, 2);
             if (RptItem.ValidEmptyRange(item.Part, range))
             {
-                AtKit.Error("对象创建后与其他对象位置冲突，请确认。");
+                Kit.Error("对象创建后与其他对象位置冲突，请确认。");
                 return;
             }
             _owner.Excel.ActiveSheet.SetSelection(range);

@@ -261,7 +261,7 @@ namespace Dt.Sample
 
         void OnTbKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            AtKit.Msg(e.Key.ToString());
+            Kit.Msg(e.Key.ToString());
         }
     }
 }

@@ -248,7 +248,7 @@ namespace Dt.Base.Report
         {
             if (string.IsNullOrEmpty(Tbl))
             {
-                AtKit.Msg("数据源不可为空。");
+                Kit.Msg("数据源不可为空。");
                 return false;
             }
 
@@ -259,7 +259,7 @@ namespace Dt.Base.Report
                     || string.IsNullOrEmpty(FieldX)
                     || string.IsNullOrEmpty(FieldY))
                 {
-                    AtKit.Msg("任务字段、起始时间字段及终止时间字段均不可为空，图表生成失败。");
+                    Kit.Msg("任务字段、起始时间字段及终止时间字段均不可为空，图表生成失败。");
                     return false;
                 }
             }
@@ -268,7 +268,7 @@ namespace Dt.Base.Report
                 if (string.IsNullOrEmpty(FieldX)
                     || string.IsNullOrEmpty(FieldY))
                 {
-                    AtKit.Msg("分类字段和值字段不可为空，图表生成失败。");
+                    Kit.Msg("分类字段和值字段不可为空，图表生成失败。");
                     return false;
                 }
             }

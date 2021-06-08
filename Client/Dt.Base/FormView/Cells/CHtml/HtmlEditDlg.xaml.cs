@@ -25,7 +25,7 @@ namespace Dt.Base.FormView
         {
             InitializeComponent();
 
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl}/pub/editor/html/default.html");
+            _wv.Source = new Uri($"{Kit.Stub.ServerUrl}/pub/editor/html/default.html");
             if (Type.GetType(FileItem.SelectFileDlgType) == null)
             {
                 _menu.Hide("图片", "视频");
@@ -35,11 +35,11 @@ namespace Dt.Base.FormView
         public async void ShowDlg(IHtmlEditHost p_host)
         {
             _host = p_host;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 ShowWinVeil = true;
-                Height = AtApp.ViewHeight - 140;
-                Width = Math.Min(900, AtApp.ViewWidth - 200);
+                Height = Kit.ViewHeight - 140;
+                Width = Math.Min(900, Kit.ViewWidth - 200);
             }
             Show();
 
@@ -102,7 +102,7 @@ namespace Dt.Base.FormView
                 if (_host.CurrentHtml == html)
                     return true;
 
-                return await AtKit.Confirm("关闭将丢失已修改的内容，确认要关闭？");
+                return await Kit.Confirm("关闭将丢失已修改的内容，确认要关闭？");
             }
             return true;
         }

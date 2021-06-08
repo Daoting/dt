@@ -85,7 +85,7 @@ namespace Dt.App.File
         async void OnAdd(object sender, Mi e)
         {
             Dlg dlg = new Dlg();
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 dlg.Width = 600;
                 dlg.Height = 600;

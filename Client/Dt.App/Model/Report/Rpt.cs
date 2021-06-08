@@ -28,11 +28,11 @@ namespace Dt.App.Model
 
             if (IsAdded)
             {
-                Ctime = Mtime = AtSys.Now;
+                Ctime = Mtime = Kit.Now;
             }
             else
             {
-                Mtime = AtSys.Now;
+                Mtime = Kit.Now;
             }
         }
     }

@@ -30,7 +30,7 @@ namespace Dt.Sample
 
         void OnItemClick(object sender, Mi e)
         {
-            AtKit.Msg(string.Format("点击菜单项：{0}", e.ID));
+            Kit.Msg(string.Format("点击菜单项：{0}", e.ID));
         }
 
         void OnSelectMi(object sender, ItemClickArgs e)

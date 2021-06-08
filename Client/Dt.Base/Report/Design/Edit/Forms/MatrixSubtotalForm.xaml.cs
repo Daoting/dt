@@ -62,7 +62,7 @@ namespace Dt.Base.Report
 
             if (isOverlap)
             {
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
                 return;
             }
 

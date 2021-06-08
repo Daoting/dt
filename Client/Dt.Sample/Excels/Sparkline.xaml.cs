@@ -309,7 +309,7 @@ namespace Dt.Sample
                     fileFormat = ExcelFileFormat.XLS;
                 await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -324,7 +324,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SavePdf(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 
@@ -339,7 +339,7 @@ namespace Dt.Sample
                 var stream = await storageFile.OpenStreamForWriteAsync();
                 await _excel.SaveXmlAsync(stream);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
     }

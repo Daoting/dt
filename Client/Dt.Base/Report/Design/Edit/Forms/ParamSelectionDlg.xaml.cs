@@ -25,7 +25,7 @@ namespace Dt.Base.Report
         internal async Task<bool> Show(FrameworkElement p_target, RptText p_item)
         {
             _lv.Data = p_item.Root.Params.Data;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetOuterLeftTop;
                 PlacementTarget = p_target;
@@ -45,7 +45,7 @@ namespace Dt.Base.Report
         {
             if (_lv.SelectedItem == null)
             {
-                AtKit.Warn("请选择参数名！");
+                Kit.Warn("请选择参数名！");
             }
             else
             {

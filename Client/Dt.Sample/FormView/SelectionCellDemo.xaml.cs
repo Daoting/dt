@@ -81,7 +81,7 @@ namespace Dt.Sample
 
                 color = Colors.Green,
                 colorstr = "#FF1BA1E2",
-                colorbrush = AtRes.YellowBrush
+                colorbrush = Res.YellowBrush
             });
         }
 
@@ -104,7 +104,7 @@ namespace Dt.Sample
 
         void OnSelectedRow(object sender, object e)
         {
-            AtKit.Msg($"填充ID：{((Row)_fv.Data).Str("listrowid")}");
+            Kit.Msg($"填充ID：{((Row)_fv.Data).Str("listrowid")}");
         }
 
         void OnLoadTreeData(object sender, AsyncEventArgs e)

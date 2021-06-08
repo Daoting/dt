@@ -37,11 +37,11 @@ namespace Dt.Sample
             if (await AtState.Save((ClientLog)_fv1.Data, false))
             {
                 _fv1.AcceptChanges();
-                AtKit.Msg("本地库保存成功！");
+                Kit.Msg("本地库保存成功！");
             }
             else
             {
-                AtKit.Msg("本地库保存失败！");
+                Kit.Msg("本地库保存失败！");
             }
         }
 
@@ -51,12 +51,12 @@ namespace Dt.Sample
             if (tbl.Count > 0)
                 _fv1.Data = tbl[0];
             else
-                AtKit.Msg("本地库无数据！");
+                Kit.Msg("本地库无数据！");
         }
 
         async void OnLocalDel(object sender, Mi e)
         {
-            if (await AtKit.Confirm("确认要删除码？"))
+            if (await Kit.Confirm("确认要删除码？"))
             {
                 if (await AtState.Delete((ClientLog)_fv1.Data))
                     _fv1.Data = null;

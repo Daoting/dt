@@ -53,7 +53,7 @@ namespace Dt.App.Workflow
             var fv = ((FrameworkElement)_form).FindChildByType<Fv>();
             if (fv == null)
             {
-                AtKit.Warn($"未找到流程表单【{p_info.PrcDef.Name}】！");
+                Kit.Warn($"未找到流程表单【{p_info.PrcDef.Name}】！");
                 return;
             }
 

@@ -167,13 +167,13 @@ namespace Dt.Base
 
             if (_audioRecorder.IsRecording)
             {
-                AtKit.Warn("已启动录音");
+                Kit.Warn("已启动录音");
                 return null;
             }
 
             if (!await _audioRecorder.CanRecordAudio)
             {
-                AtKit.Warn("无麦克风设备，无法录音！");
+                Kit.Warn("无麦克风设备，无法录音！");
                 return null;
             }
 
@@ -183,7 +183,7 @@ namespace Dt.Base
             }
             catch
             {
-                AtKit.Warn("设备禁止录音！");
+                Kit.Warn("设备禁止录音！");
                 return null;
             }
 

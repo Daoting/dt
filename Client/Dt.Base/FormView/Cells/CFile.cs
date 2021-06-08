@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base.FormView;
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -257,7 +258,7 @@ namespace Dt.Base
 
             if (_toolbar == null)
             {
-                Button btn = new Button { Content = "\uE038", Style = AtRes.字符按钮 };
+                Button btn = new Button { Content = "\uE038", Style = Res.字符按钮 };
                 if (Type.GetType(FileItem.SelectFileDlgType) != null)
                 {
                     var menu = new Menu { Placement = MenuPosition.BottomLeft };

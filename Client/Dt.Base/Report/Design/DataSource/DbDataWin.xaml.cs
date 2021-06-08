@@ -78,14 +78,14 @@ namespace Dt.Base.Report
             Fv fv = _tab.Content as Fv;
             if (fv == null)
             {
-                AtKit.Warn("请先刷新参数，填写参数值后再执行Sql！");
+                Kit.Warn("请先刷新参数，填写参数值后再执行Sql！");
                 return;
             }
 
             Row row = _fv.Row;
             if (row == null || row.Str("srv") == "" || row.Str("sql") == "")
             {
-                AtKit.Warn("无法执行Sql，服务名称和Sql不可为空！");
+                Kit.Warn("无法执行Sql，服务名称和Sql不可为空！");
                 return;
             }
 

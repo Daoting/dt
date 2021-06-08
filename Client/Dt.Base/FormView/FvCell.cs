@@ -383,7 +383,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public void Warn(string p_msg)
         {
-            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, AtRes.RedBrush);
+            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, Res.RedBrush);
         }
 
         /// <summary>
@@ -392,7 +392,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public void Msg(string p_msg)
         {
-            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, AtRes.BlackBrush);
+            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, Res.BlackBrush);
         }
         #endregion
 
@@ -513,7 +513,7 @@ namespace Dt.Base
                 if (!row.Contains(ID))
                 {
                     ClearValue(ValBindingProperty);
-                    // AtKit.Msg($"数据源中缺少【{ID}】列！");
+                    // Kit.Msg($"数据源中缺少【{ID}】列！");
                     return;
                 }
 
@@ -559,7 +559,7 @@ namespace Dt.Base
                     return;
 
                 // 记录单元格最近一次编辑值
-                AtKit.RunAsync(() =>
+                Kit.RunAsync(() =>
                 {
                     string id = string.Format("{0}+{1}+{2}", BaseUri.AbsolutePath, Owner.Name, ID);
                     object val = cell.Val;

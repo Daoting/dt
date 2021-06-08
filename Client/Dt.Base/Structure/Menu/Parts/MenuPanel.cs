@@ -46,7 +46,7 @@ namespace Dt.Base.MenuView
                 LoadContextItems();
                 _owner.Items.ItemsChanged += OnContextItemsChanged;
             }
-            else if (AtSys.IsPhoneUI)
+            else if (Kit.IsPhoneUI)
             {
                 LoadPhoneItems();
                 _owner.Items.ItemsChanged += (s, e) => LoadPhoneItems();
@@ -65,7 +65,7 @@ namespace Dt.Base.MenuView
         {
             if (!_owner.IsContextMenu)
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                     LoadPhoneItems();
                 else
                     LoadWinItems();
@@ -80,7 +80,7 @@ namespace Dt.Base.MenuView
 
             // win模式菜单在宽度变化或外部刷新布局时重新测量！
             if (!_owner.IsContextMenu
-                && !AtSys.IsPhoneUI
+                && !Kit.IsPhoneUI
                 && (_availableSize.Width != maxWidth || _updateWinItems))
             {
                 _availableSize = new Size(maxWidth, maxHeight);

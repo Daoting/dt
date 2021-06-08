@@ -247,7 +247,7 @@ namespace Dt.Base.Report
                     }
                     catch (Exception ex)
                     {
-                        AtKit.Warn($"报表参数【{name}】的xaml内容错误：{ex.Message}");
+                        Kit.Warn($"报表参数【{name}】的xaml内容错误：{ex.Message}");
                     }
                 }
             }
@@ -261,14 +261,14 @@ namespace Dt.Base.Report
                          select row).Any();
             if (fail)
             {
-                AtKit.Warn("参数标识不可为空！");
+                Kit.Warn("参数标识不可为空！");
                 return false;
             }
 
             fail = Data.GroupBy(r => r.Str("name")).Where(g => g.Count() > 1).Any();
             if (fail)
             {
-                AtKit.Warn("参数标识不可重复！");
+                Kit.Warn("参数标识不可重复！");
                 return false;
             }
             return true;

@@ -48,7 +48,7 @@ namespace Dt.Base
             if (ReadOnlyBinding)
             {
                 var dlg = new HtmlViewDlg();
-                if (!AtSys.IsPhoneUI)
+                if (!Kit.IsPhoneUI)
                 {
                     dlg.Height = SysVisual.ViewHeight - 140;
                     dlg.Width = Math.Min(800, SysVisual.ViewWidth - 200);
@@ -58,7 +58,7 @@ namespace Dt.Base
             else
             {
                 var dlg = new HtmlEditDlg();
-                if (!AtSys.IsPhoneUI)
+                if (!Kit.IsPhoneUI)
                 {
                     dlg.ShowWinVeil = true;
                     dlg.Height = SysVisual.ViewHeight - 140;

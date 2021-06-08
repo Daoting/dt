@@ -26,7 +26,7 @@ namespace Dt.App.Publish
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await AtUser.HasPrv("素材库管理"),
+                AllowEdit = await Kit.HasPrv("素材库管理"),
                 SaveHistory = false,
             };
             _tab.Content = new FolderPage(new ResFileMgr { Setting = setting });

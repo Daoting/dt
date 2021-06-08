@@ -90,14 +90,14 @@ namespace Dt.Base
                 }
 
                 // 照片或视频保存的文件
-                _path = System.IO.Path.Combine(AtSys.CachePath, AtKit.NewID + (isPhoto ? ".jpg" : ".mp4"));
+                _path = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + (isPhoto ? ".jpg" : ".mp4"));
                 var file = new Java.IO.File(_path);
                 file.CreateNewFile();
 
                 try
                 {
                     // 将访问受限的 file:// URI 转化为可以授权共享的 content:// URI
-                    // 已将AtSys.CachePath共享，配置见：AndroidManifest.xml 和 Resources\xml\file_path.xml
+                    // 已将Kit.CachePath共享，配置见：AndroidManifest.xml 和 Resources\xml\file_path.xml
                     var uri = FileProvider.GetUriForFile(this, _context.PackageName + ".fileprovider", file);
                     GrantUriPermissionsForIntent(intent, uri);
                     intent.AddFlags(ActivityFlags.GrantReadUriPermission);
@@ -181,7 +181,7 @@ namespace Dt.Base
                         //options.InPurgeable = true;
                         Bitmap bmp = BitmapFactory.DecodeFile(_path, options);
 
-                        fd.ThumbPath = System.IO.Path.Combine(AtSys.CachePath, AtKit.NewID + "-t.jpg");
+                        fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
                         using (var fs = System.IO.File.Create(fd.ThumbPath))
                         {
                             await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
@@ -208,7 +208,7 @@ namespace Dt.Base
 
                     // 帧缩略图
                     var bmp = await ThumbnailUtils.CreateVideoThumbnailAsync(_path, ThumbnailKind.MiniKind);
-                    fd.ThumbPath = System.IO.Path.Combine(AtSys.CachePath, AtKit.NewID + "-t.jpg");
+                    fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
                     using (var fs = System.IO.File.Create(fd.ThumbPath))
                     {
                         await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);

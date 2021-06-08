@@ -32,7 +32,7 @@ namespace Dt.Sample
                 return;
             }
 
-            AtKit.Msg("搜索：" + e);
+            Kit.Msg("搜索：" + e);
         }
     }
 }

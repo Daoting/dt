@@ -48,7 +48,7 @@ namespace Dt.Sample
         {
             var file = await _chart.SaveSnapshot();
             if (file != null)
-                AtKit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
+                Kit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
         }
 
         void OnMajorGrid(object sender, RoutedEventArgs e)

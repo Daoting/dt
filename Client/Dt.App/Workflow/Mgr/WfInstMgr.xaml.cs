@@ -40,21 +40,21 @@ namespace Dt.App.Workflow
         {
             var row = _fv.Row;
             if (row.Str("prcdid") == "")
-                AtKit.Warn("未选择流程模板！");
+                Kit.Warn("未选择流程模板！");
             else
                 _lv.Data = await AtCm.Query("流程-查找实例", row.ToDict());
         }
 
         void OnMonthClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            DateTime time = AtSys.Now;
+            DateTime time = Kit.Now;
             _fv.Row["start"] = new DateTime(time.Year, time.Month, 1, 0, 0, 0);
             _fv.Row["end"] = new DateTime(time.Year, time.Month, DateTime.DaysInMonth(time.Year, time.Month), 23, 59, 59);
         }
 
         void OnQuarterClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            DateTime time = AtSys.Now;
+            DateTime time = Kit.Now;
             int qMonth = (time.Month - 1) / 3 * 3 + 1;
             _fv.Row["start"] = new DateTime(time.Year, qMonth, 1, 0, 0, 0);
             _fv.Row["end"] = new DateTime(time.Year, qMonth + 2, DateTime.DaysInMonth(time.Year, qMonth + 2), 23, 59, 59);
@@ -62,7 +62,7 @@ namespace Dt.App.Workflow
 
         void OnYearClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            DateTime time = AtSys.Now;
+            DateTime time = Kit.Now;
             _fv.Row["start"] = new DateTime(time.Year, 1, 1, 0, 0, 0);
             _fv.Row["end"] = new DateTime(time.Year, 12, 31, 23, 59, 59);
         }

@@ -132,7 +132,7 @@ namespace Dt.Base
                         }
                         catch { }
                     }
-                    LoadColorUI(AtRes.BlackBrush);
+                    LoadColorUI(Res.BlackBrush);
                 }
                 else if (type == typeof(Color))
                 {
@@ -175,7 +175,7 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                 {
                     _dlg = new ColorDlg { Owner = this, Title = "选择颜色" };
                 }

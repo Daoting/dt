@@ -42,7 +42,7 @@ namespace Dt.Base
             get
             {
                 if (_arrowData == null)
-                    _arrowData = AtRes.ParseGeometry("M0,0 8,4 0,8 Z");
+                    _arrowData = Res.ParseGeometry("M0,0 8,4 0,8 Z");
                 return _arrowData;
             }
         }
@@ -52,7 +52,7 @@ namespace Dt.Base
             get
             {
                 if (_diamondData == null)
-                    _diamondData = AtRes.ParseGeometry("M-5,0 0,-5 5,0 0,5 Z");
+                    _diamondData = Res.ParseGeometry("M-5,0 0,-5 5,0 0,5 Z");
                 return _diamondData;
             }
         }
@@ -62,7 +62,7 @@ namespace Dt.Base
             get
             {
                 if (_circleData == null)
-                    _circleData = AtRes.ParseGeometry("M5,3C5,4.10456949966159,4.10456949966159,5,3,5C1.89543050033841,5,1,4.10456949966159,1,3C1,1.89543050033841,1.89543050033841,1,3,1C4.10456949966159,1,5,1.89543050033841,5,3z");
+                    _circleData = Res.ParseGeometry("M5,3C5,4.10456949966159,4.10456949966159,5,3,5C1.89543050033841,5,1,4.10456949966159,1,3C1,1.89543050033841,1.89543050033841,1,3,1C4.10456949966159,1,5,1.89543050033841,5,3z");
                 return _circleData;
             }
         }
@@ -852,13 +852,13 @@ namespace Dt.Base
                     geo = null;
                     break;
                 case LinkPortShapes.Arrow:
-                    geo = AtRes.CloneGeometry(ArrowData);
+                    geo = Res.CloneGeometry(ArrowData);
                     break;
                 case LinkPortShapes.Diamond:
-                    geo = AtRes.CloneGeometry(DiamondData);
+                    geo = Res.CloneGeometry(DiamondData);
                     break;
                 case LinkPortShapes.Circle:
-                    geo = AtRes.CloneGeometry(CircleData);
+                    geo = Res.CloneGeometry(CircleData);
                     break;
             }
 

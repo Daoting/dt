@@ -121,7 +121,7 @@ namespace Dt.Base
                 _btnExpanded = null;
                 if (_expandedState == TvItemExpandedState.Expanded || _expandedState == TvItemExpandedState.NotExpanded)
                 {
-                    _btnExpanded = new Button { Style = AtRes.字符按钮, Margin = new Thickness(0, 0, 0, 1) };
+                    _btnExpanded = new Button { Style = Res.字符按钮, Margin = new Thickness(0, 0, 0, 1) };
                     _btnExpanded.Click += (s, e) => IsExpanded = !IsExpanded;
                     _btnExpanded.DoubleTapped += (s, e) => e.Handled = true;
                     _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE013" : "\uE011";

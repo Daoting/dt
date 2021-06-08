@@ -145,7 +145,7 @@ namespace Dt.Sample
         void OnPyChanged(object sender, object e)
         {
             if (e != null)
-                _fv.Row["tgtpy"] = AtKit.GetPinYin(e.ToString());
+                _fv.Row["tgtpy"] = Kit.GetPinYin(e.ToString());
         }
 
         class CellData

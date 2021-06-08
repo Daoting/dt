@@ -24,7 +24,7 @@ namespace Dt.App.Model
         public UserAccount()
         {
             InitializeComponent();
-            _lvUser.View = Resources[AtSys.IsPhoneUI ? "TileView" : "TableView"];
+            _lvUser.View = Resources[Kit.IsPhoneUI ? "TileView" : "TableView"];
             _lvUser.CellEx = typeof(UserViewEx);
             LoadAll();
         }
@@ -53,9 +53,9 @@ namespace Dt.App.Model
 
         async void OnDelUser(object sender, Mi e)
         {
-            if (!await AtKit.Confirm($"确认要删除[{e.Row.Str("name")}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{e.Row.Str("name")}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
@@ -68,12 +68,12 @@ namespace Dt.App.Model
             var usr = new User(ID: e.Row.ID);
             usr.IsAdded = false;
             string phone = e.Row.Str("phone");
-            usr.Pwd = AtKit.GetMD5(phone.Substring(phone.Length - 4));
+            usr.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
 
             if (await AtCm.Save(usr, false))
-                AtKit.Msg("密码已重置为手机号后4位！");
+                Kit.Msg("密码已重置为手机号后4位！");
             else
-                AtKit.Msg("重置密码失败！");
+                Kit.Msg("重置密码失败！");
         }
 
         async void OnToggleExpired(object sender, Mi e)
@@ -86,12 +86,12 @@ namespace Dt.App.Model
             string act = expired ? "启用" : "停用";
             if (await AtCm.Save(usr, false))
             {
-                AtKit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
+                Kit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
                 LoadAll();
             }
             else
             {
-                AtKit.Msg(act + "失败！");
+                Kit.Msg(act + "失败！");
             }
         }
 
@@ -137,7 +137,7 @@ namespace Dt.App.Model
             {
                 if (p_item.Row.Bool("expired"))
                 {
-                    p_item.Foreground = AtRes.GrayBrush;
+                    p_item.Foreground = Res.GrayBrush;
                     p_item.FontStyle = Windows.UI.Text.FontStyle.Italic;
                 }
             }

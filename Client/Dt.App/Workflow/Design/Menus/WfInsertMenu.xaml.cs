@@ -79,8 +79,8 @@ namespace Dt.App.Workflow
                 Shape = "同步",
                 Width = 120,
                 Height = 60,
-                Background = AtRes.深灰背景,
-                BorderBrush = AtRes.深灰边框
+                Background = Res.深灰背景,
+                BorderBrush = Res.深灰边框
             };
             Insert(node);
         }
@@ -98,8 +98,8 @@ namespace Dt.App.Workflow
                 Shape = "结束",
                 Width = 80,
                 Height = 60,
-                Background = AtRes.深灰背景,
-                BorderBrush = AtRes.深灰边框
+                Background = Res.深灰背景,
+                BorderBrush = Res.深灰边框
             };
             Insert(node);
         }

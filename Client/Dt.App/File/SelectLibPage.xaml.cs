@@ -30,7 +30,7 @@ namespace Dt.App.File
 
         async void OnPublicFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = await AtUser.HasPrv("公共文件管理") };
+            var setting = new FileMgrSetting { AllowEdit = await Kit.HasPrv("公共文件管理") };
             _host.NaviTo(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
@@ -41,7 +41,7 @@ namespace Dt.App.File
 
         async void OnResFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = await AtUser.HasPrv("素材库管理") };
+            var setting = new FileMgrSetting { AllowEdit = await Kit.HasPrv("素材库管理") };
             _host.NaviTo(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         

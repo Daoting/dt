@@ -42,7 +42,7 @@ namespace Dt.Sample
             };
 
             Random rand = new Random();
-            DateTime birth = AtSys.Now;
+            DateTime birth = Kit.Now;
             for (int i = 0; i < 50; i++)
             {
                 tbl.AddRow(new

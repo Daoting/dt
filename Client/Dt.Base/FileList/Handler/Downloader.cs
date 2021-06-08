@@ -131,7 +131,7 @@ namespace Dt.Base
             if (index <= 0)
                 return false;
 
-            string path = Path.Combine(AtSys.CachePath, p_path.Substring(index + 1));
+            string path = Path.Combine(Kit.CachePath, p_path.Substring(index + 1));
             FileStream stream = File.Create(path);
             DownloadInfo info = new DownloadInfo
             {
@@ -218,7 +218,7 @@ namespace Dt.Base
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl}/fsm/.d/{p_act}"),
+                RequestUri = new Uri($"{Kit.Stub.ServerUrl}/fsm/.d/{p_act}"),
                 // 无内容时 okhttp 异常
                 Content = new StringContent("a")
             };

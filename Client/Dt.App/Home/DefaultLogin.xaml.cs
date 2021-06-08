@@ -30,8 +30,8 @@ namespace Dt.App
         {
             InitializeComponent();
 
-            _tbTitle.Text = string.IsNullOrEmpty(AtSys.Stub.Title) ? "无标题" : AtSys.Stub.Title;
-            _tbDesc.Text = string.IsNullOrEmpty(AtSys.Stub.Desc) ? "" : AtSys.Stub.Desc;
+            _tbTitle.Text = string.IsNullOrEmpty(Kit.Stub.Title) ? "无标题" : Kit.Stub.Title;
+            _tbDesc.Text = string.IsNullOrEmpty(Kit.Stub.Desc) ? "" : Kit.Stub.Desc;
             // 设置中间面板宽度
             LoginPanel.Width = Math.Min(Math.Floor(ApplicationView.GetForCurrentView().VisibleBounds.Width * 2 / 3), 340);
             Loaded += (s, e) => _tbPhone.Focus(FocusState.Programmatic);
@@ -78,7 +78,7 @@ namespace Dt.App
                     else
                     {
                         // 密码登录
-                        pwd = AtKit.GetMD5(txt);
+                        pwd = Kit.GetMD5(txt);
                         result = await AtCm.LoginByPwd(phone, pwd);
                     }
 
@@ -92,7 +92,7 @@ namespace Dt.App
                     AtState.SaveCookie("LoginPhone", phone);
                     AtState.SaveCookie("LoginPwd", pwd);
 
-                    AtUser.Init(result);
+                    Kit.InitUser(result);
                     var dlg = this.FindParentByType<Dlg>();
                     if (dlg != null)
                     {
@@ -118,7 +118,7 @@ namespace Dt.App
         {
             LoginPanel.Visibility = Visibility.Visible;
             InfoPanel.Visibility = Visibility.Collapsed;
-            AtKit.Warn(p_error);
+            Kit.Warn(p_error);
             _tbPhone.Focus(FocusState.Programmatic);
         }
 
@@ -173,7 +173,7 @@ namespace Dt.App
             if (!Regex.IsMatch(_tbPhone.Text.Trim(), "^1[34578]\\d{9}$"))
             {
                 _tbPhone.Focus(FocusState.Programmatic);
-                AtKit.Warn("手机号码格式错误！");
+                Kit.Warn("手机号码格式错误！");
                 return true;
             }
             return false;

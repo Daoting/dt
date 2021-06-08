@@ -62,9 +62,9 @@ namespace Dt.App.Publish
             if (await IsUsed(key.ID))
                 return;
 
-            if (!await AtKit.Confirm($"确认要删除[{key.ID}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{key.ID}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace Dt.App.Publish
             int cnt = await AtPublish.GetScalar<int>("发布-关键字引用数", new { keyword = p_keyword });
             if (cnt > 0)
             {
-                AtKit.Warn("关键字已被引用，无法修改或删除！");
+                Kit.Warn("关键字已被引用，无法修改或删除！");
                 return true;
             }
             return false;

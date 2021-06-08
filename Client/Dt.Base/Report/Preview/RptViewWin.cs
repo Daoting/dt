@@ -84,7 +84,7 @@ namespace Dt.Base.Report
         {
             if (p_infos == null || p_infos.Count < 2)
             {
-                AtKit.Warn("浏览报表组时描述信息不完整！");
+                Kit.Warn("浏览报表组时描述信息不完整！");
                 return;
             }
 

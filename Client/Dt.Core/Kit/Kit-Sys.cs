@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
 * 创建: Daoting
-* 摘要: 为支持Xamarin将实现部分转移到IPlatform
-* 日志: 2017-12-29 改名
+* 摘要: AtSys合并到Kit
+* 日志: 2021-06-08 改名
 ******************************************************************************/
 #endregion
 
@@ -21,17 +21,18 @@ namespace Dt.Core
     /// <summary>
     /// 系统相关管理类
     /// </summary>
-    public static class AtSys
+    public partial class Kit
     {
-        #region 成员变量
-        static TimeSpan _timeSpan;
-        #endregion
+        #region 系统基础
+        /// <summary>
+        /// 获取系统是否采用手机的UI模式
+        /// </summary>
+        public static bool IsPhoneUI { get; internal set; }
 
-        #region 系统信息
         /// <summary>
         /// 获取平台种类
         /// </summary>
-        public static TargetSystem System
+        public static TargetSystem OS
         {
             get
             {
@@ -46,11 +47,6 @@ namespace Dt.Core
 #endif
             }
         }
-
-        /// <summary>
-        /// 获取系统是否采用手机的UI模式
-        /// </summary>
-        public static bool IsPhoneUI { get; internal set; }
 
         /// <summary>
         /// 获取系统是否为触摸模式
@@ -68,17 +64,14 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取服务器端当前时间，根据时差计算所得
-        /// </summary>
-        public static DateTime Now
-        {
-            get { return DateTime.Now + _timeSpan; }
-        }
-
-        /// <summary>
         /// 获取系统存根
         /// </summary>
         public static IStub Stub { get; private set; }
+
+        /// <summary>
+        /// 显示监视窗口
+        /// </summary>
+        public static Action ShowTraceBox => Callback.ShowTraceBox;
 
         /// <summary>
         /// 系统回调
@@ -89,6 +82,27 @@ namespace Dt.Core
         /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
         /// </summary>
         internal static bool TraceRpc { get; set; }
+        #endregion
+
+        #region 当前时间
+        /// <summary>
+        /// 获取服务器端当前时间，根据时差计算所得
+        /// </summary>
+        public static DateTime Now
+        {
+            get { return DateTime.Now + _timeSpan; }
+        }
+
+        static TimeSpan _timeSpan;
+        /// <summary>
+        /// 同步服务器时间
+        /// </summary>
+        /// <param name="p_serverTime"></param>
+        internal static void SyncTime(DateTime p_serverTime)
+        {
+            // 与服务器时差
+            _timeSpan = p_serverTime - DateTime.Now;
+        }
         #endregion
 
         #region 本地文件
@@ -166,7 +180,7 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 外部UI方法
+        #region 登录注销
         /// <summary>
         /// 显示登录页面，参数：是否为弹出式
         /// </summary>
@@ -176,14 +190,9 @@ namespace Dt.Core
         /// 注销后重新登录
         /// </summary>
         public static Action Logout => Callback.Logout;
-
-        /// <summary>
-        /// 显示监视窗口
-        /// </summary>
-        public static Action ShowTraceBox => Callback.ShowTraceBox;
         #endregion
 
-        #region 平台方法
+        #region 平台启动
         /// <summary>
         /// 系统初始化
         /// </summary>
@@ -230,16 +239,6 @@ namespace Dt.Core
 
             // 打开状态库
             AtState.OpenDb();
-        }
-
-        /// <summary>
-        /// 同步服务器时间
-        /// </summary>
-        /// <param name="p_serverTime"></param>
-        internal static void SyncTime(DateTime p_serverTime)
-        {
-            // 与服务器时差
-            _timeSpan = p_serverTime - DateTime.Now;
         }
         #endregion
 
@@ -290,7 +289,7 @@ namespace Dt.Core
                 if ((kex = p_ex as KnownException) != null || (kex = p_ex.InnerException as KnownException) != null)
                 {
                     // 只警告，不保存日志
-                    AtKit.Warn(kex.Message);
+                    Kit.Warn(kex.Message);
                 }
                 else
                 {
@@ -321,7 +320,7 @@ namespace Dt.Core
                         notify.Close();
                     };
                     SysVisual.NotifyList.Add(notify);
-                    AtKit.Trace(TraceOutType.UnhandledException, title, msg);
+                    Kit.Trace(TraceOutType.UnhandledException, title, msg);
                     Log.Error(msg);
                 }
             }

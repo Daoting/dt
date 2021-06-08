@@ -56,7 +56,7 @@ namespace Dt.Core
             }
             else
             {
-                AtKit.Msg("没有可撤消的操作！");
+                Kit.Msg("没有可撤消的操作！");
             }
         }
 
@@ -75,7 +75,7 @@ namespace Dt.Core
             }
             else
             {
-                AtKit.Msg("无操作可重做！");
+                Kit.Msg("无操作可重做！");
             }
         }
 

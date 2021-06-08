@@ -32,6 +32,7 @@ namespace Dt.Base.Docking
     {
         #region 成员变量
         const double _centerWidth = 240;
+        static readonly XmlWriterSettings _writerSettings = new XmlWriterSettings() { OmitXmlDeclaration = true };
         Win _owner;
         string _default;
         readonly Dictionary<string, Tab> _tabs;
@@ -72,7 +73,7 @@ namespace Dt.Base.Docking
             if (!AllowSaveLayout())
                 return;
 
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 DockLayout cookie = new DockLayout(_owner.BaseUri.AbsolutePath, WriteXml());
                 AtState.Save(cookie, false);
@@ -263,7 +264,7 @@ namespace Dt.Base.Docking
             }
 
             StringBuilder xml = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(xml, AtKit.WriterSettings))
+            using (XmlWriter writer = XmlWriter.Create(xml, _writerSettings))
             {
                 writer.WriteStartElement("Items");
 
@@ -814,7 +815,7 @@ namespace Dt.Base.Docking
         string WriteXml()
         {
             StringBuilder xml = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(xml, AtKit.WriterSettings))
+            using (XmlWriter writer = XmlWriter.Create(xml, _writerSettings))
             {
                 writer.WriteStartElement("Items");
 

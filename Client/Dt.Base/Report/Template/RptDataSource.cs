@@ -90,14 +90,14 @@ namespace Dt.Base.Report
                          select row).Any();
             if (fail)
             {
-                AtKit.Warn("数据名称不可为空！");
+                Kit.Warn("数据名称不可为空！");
                 return false;
             }
 
             fail = DataSet.GroupBy(r => r.Str("name")).Where(g => g.Count() > 1).Any();
             if (fail)
             {
-                AtKit.Warn("数据名称不可重复！");
+                Kit.Warn("数据名称不可重复！");
                 return false;
             }
             return true;

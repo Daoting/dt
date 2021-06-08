@@ -248,7 +248,7 @@ namespace Dt.Base.Report
             chartCell.Background = new SolidColorBrush(Color.FromArgb(0XCC,0XFF,0XFD,0XC5));
             chartCell.VerticalAlignment = CellVerticalAlignment.Center;
             chartCell.HorizontalAlignment = CellHorizontalAlignment.Center;
-            chartCell.FontFamily = AtRes.IconFont;
+            chartCell.FontFamily = Res.IconFont;
             chartCell.FontSize = 40;
             chartCell.Text = "\uE08D";
         }

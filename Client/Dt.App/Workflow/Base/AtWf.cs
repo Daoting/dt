@@ -30,9 +30,9 @@ namespace Dt.App
         {
             Throw.IfNull(p_info, "流程表单描述信息不可为空！");
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
-                // 因p_info.Init耗时，先激活已打开的窗口，AtApp.OpenWin中也有判断
+                // 因p_info.Init耗时，先激活已打开的窗口，Kit.OpenWin中也有判断
                 foreach (var win in Desktop.Inst.Items)
                 {
                     if (win.GetType() == typeof(WfFormWin)
@@ -46,7 +46,7 @@ namespace Dt.App
             }
 
             await p_info.Init();
-            p_info.FormWin = (WfFormWin)AtApp.OpenWin(typeof(WfFormWin), p_info.PrcInst.Name, Icons.None, p_info);
+            p_info.FormWin = (WfFormWin)Kit.OpenWin(typeof(WfFormWin), p_info.PrcInst.Name, Icons.None, p_info);
         }
 
         /// <summary>

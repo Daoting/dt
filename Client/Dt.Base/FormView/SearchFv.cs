@@ -65,7 +65,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
 
             var btn = (Button)GetTemplateChild("CloseButton");
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 btn.Click += OnCloseClick;
             else
                 btn.Visibility = Visibility.Collapsed;
@@ -74,7 +74,7 @@ namespace Dt.Base
             // android只支持KeyUp，只在enter时触发！
             tb.KeyUp += OnTextKeyUp;
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 // 显示上边框
                 _panel.Margin = new Thickness(-1, 0, 0, 0);
@@ -174,7 +174,7 @@ namespace Dt.Base
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 var tab = this.FindParentByType<Tab>();
                 if (tab != null)
@@ -230,7 +230,7 @@ namespace Dt.Base
                 btn.Click += OnClickHis;
                 grid.Children.Add(btn);
 
-                btn = new Button { Content = "\uE009", Style = AtRes.字符按钮 };
+                btn = new Button { Content = "\uE009", Style = Res.字符按钮 };
                 btn.Click += OnDelHis;
                 Grid.SetColumn(btn, 1);
                 grid.Children.Add(btn);
@@ -243,18 +243,18 @@ namespace Dt.Base
         {
             CBar bar = new CBar();
 
-            Grid grid = new Grid { Background = AtRes.浅灰背景 };
+            Grid grid = new Grid { Background = Res.浅灰背景 };
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
             StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10, 0, 10, 0) };
-            TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
+            TextBlock tb = new TextBlock { FontFamily = Res.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
             sp.Children.Add(tb);
             tb = new TextBlock { Text = "搜索历史", TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
             sp.Children.Add(tb);
             grid.Children.Add(sp);
 
-            Button btn = new Button { Content = "\uE00A", Style = AtRes.字符按钮 };
+            Button btn = new Button { Content = "\uE00A", Style = Res.字符按钮 };
             btn.Click += OnClearHis;
             Grid.SetColumn(btn, 1);
             grid.Children.Add(btn);

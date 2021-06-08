@@ -30,7 +30,7 @@ namespace Dt.Sample
             var tbl = (Table)_tv.Data;
             int index = new Random().Next(0, tbl.Count);
             _tv.SelectedItem = tbl[index];
-            AtKit.Msg($"已选择 {tbl[index].Str("name")}");
+            Kit.Msg($"已选择 {tbl[index].Str("name")}");
         }
 
         void OnScrollTop(object sender, RoutedEventArgs e)

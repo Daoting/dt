@@ -111,11 +111,11 @@ namespace Dt.Base
             FileItem vf = (FileItem)d;
             FileItemType tp = (FileItemType)e.NewValue;
             if (tp == FileItemType.Image)
-                vf.Template = AtRes.VirImageTemplate;
+                vf.Template = Res.VirImageTemplate;
             else if (tp == FileItemType.Video)
-                vf.Template = AtRes.VirVideoTemplate;
+                vf.Template = Res.VirVideoTemplate;
             else
-                vf.Template = AtRes.VirFileTemplate;
+                vf.Template = Res.VirFileTemplate;
         }
 
         static void OnStatePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -354,7 +354,7 @@ namespace Dt.Base
                 return;
 
             // 打开本地文件
-            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
+            string fileName = Path.Combine(Kit.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -391,7 +391,7 @@ namespace Dt.Base
         /// </summary>
         public async Task ShareFile()
         {
-            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
+            string fileName = Path.Combine(Kit.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -433,7 +433,7 @@ namespace Dt.Base
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
                 return;
 
-            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
+            string fileName = Path.Combine(Kit.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -450,12 +450,12 @@ namespace Dt.Base
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
-                var folder = await StorageFolder.GetFolderFromPathAsync(AtSys.CachePath);
+                var folder = await StorageFolder.GetFolderFromPathAsync(Kit.CachePath);
                 var temp = await folder.TryGetItemAsync(GetFileName()) as StorageFile;
                 if (temp != null)
                 {
                     await temp.CopyAndReplaceAsync(file);
-                    AtKit.Msg("文件另存成功！");
+                    Kit.Msg("文件另存成功！");
                     return;
                 }
             }
@@ -487,11 +487,11 @@ namespace Dt.Base
                 // 复制本地文件
                 // android 11.0 因放在其他公共目录时被过滤显示，统一放在下载
                 File.Copy(fileName, Path.Combine(IOUtil.GetDownloadsPath(), GetFileName()), true);
-                AtKit.Msg("已保存到下载目录！");
+                Kit.Msg("已保存到下载目录！");
             }
             catch
             {
-                AtKit.Warn("文件保存失败！");
+                Kit.Warn("文件保存失败！");
             }
 #elif IOS
             if (FileType == FileItemType.Image || FileType == FileItemType.Video)
@@ -509,7 +509,7 @@ namespace Dt.Base
                         myImage.SaveToPhotosAlbum((image, error) =>
                         {
                             if (error == null)
-                                AtKit.Msg("已保存到照片！");
+                                Kit.Msg("已保存到照片！");
                         });
                     }
                     else
@@ -517,7 +517,7 @@ namespace Dt.Base
                         UIKit.UIVideo.SaveToPhotosAlbum(fileName, (image, error) =>
                         {
                             if (error == null)
-                                AtKit.Msg("已保存到照片！");
+                                Kit.Msg("已保存到照片！");
                         });
                     }
                 }
@@ -540,7 +540,7 @@ namespace Dt.Base
 
         internal async Task<string> EnsureFileExists()
         {
-            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
+            string fileName = Path.Combine(Kit.CachePath, GetFileName());
             if (!File.Exists(fileName))
             {
                 // 先下载
@@ -603,7 +603,7 @@ namespace Dt.Base
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
             {
-                AtKit.Warn("当前状态不允许删除文件！");
+                Kit.Warn("当前状态不允许删除文件！");
                 return false;
             }
 
@@ -611,7 +611,7 @@ namespace Dt.Base
             if (suc)
                 _owner.AfterDeleteItem(this);
             else
-                AtKit.Warn("删除文件失败！");
+                Kit.Warn("删除文件失败！");
             return suc;
         }
         #endregion
@@ -635,8 +635,8 @@ namespace Dt.Base
             _itemInfo.FileName = p_file.DisplayName;
             _itemInfo.FileDesc = p_file.Desc;
             _itemInfo.Length = p_file.Size;
-            _itemInfo.Uploader = AtUser.Name;
-            _itemInfo.Date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
+            _itemInfo.Uploader = Kit.UserName;
+            _itemInfo.Date = Kit.Now.ToString("yyyy-MM-dd HH:mm");
 
             // 更新控件模板及扩展信息
             UpdateTemplate(p_file.Ext);
@@ -721,7 +721,7 @@ namespace Dt.Base
                 // 删除服务器端旧文件
                 await AtFile.Delete(ID);
                 // 删除本地旧文件
-                AtSys.DeleteCacheFile(GetFileName());
+                Kit.DeleteCacheFile(GetFileName());
             }
 
             ID = p_id;
@@ -740,7 +740,7 @@ namespace Dt.Base
                 catch { }
             }
 #endif
-            if (filePath.StartsWith(AtSys.CachePath))
+            if (filePath.StartsWith(Kit.CachePath))
             {
                 try
                 {
@@ -748,7 +748,7 @@ namespace Dt.Base
                     if (fi.Exists)
                     {
                         // 重命名免去再次下载
-                        string newPath = Path.Combine(AtSys.CachePath, GetFileName());
+                        string newPath = Path.Combine(Kit.CachePath, GetFileName());
                         fi.MoveTo(newPath);
                         UpdateCachedFlag();
                     }
@@ -764,7 +764,7 @@ namespace Dt.Base
                     FileInfo fi = new FileInfo(p_file.ThumbPath);
                     if (fi.Exists)
                     {
-                        string newPath = Path.Combine(AtSys.CachePath, GetThumbName());
+                        string newPath = Path.Combine(Kit.CachePath, GetThumbName());
                         fi.MoveTo(newPath);
                     }
                 }
@@ -821,7 +821,7 @@ namespace Dt.Base
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
             {
                 if (p_prompt)
-                    AtKit.Warn("当前状态不可下载！");
+                    Kit.Warn("当前状态不可下载！");
                 return false;
             }
 
@@ -835,7 +835,7 @@ namespace Dt.Base
                     return false;
             }
 
-            string path = Path.Combine(AtSys.CachePath, downloadThumb ? GetThumbName() : GetFileName());
+            string path = Path.Combine(Kit.CachePath, downloadThumb ? GetThumbName() : GetFileName());
             FileStream stream = null;
             try
             {
@@ -846,7 +846,7 @@ namespace Dt.Base
             catch (Exception ex)
             {
                 if (p_prompt)
-                    AtKit.Warn("创建文件出错！");
+                    Kit.Warn("创建文件出错！");
                 Log.Error(ex, "下载前创建文件出错！");
                 return false;
             }
@@ -880,7 +880,7 @@ namespace Dt.Base
             if (!suc)
             {
                 if (p_prompt)
-                    AtKit.Warn(info.Error);
+                    Kit.Warn(info.Error);
 
                 // 未成功，删除缓存文件，避免打开时出错
                 try
@@ -978,8 +978,8 @@ namespace Dt.Base
 #if !WASM
         async Task LoadImage()
         {
-            string thumbName = Path.Combine(AtSys.CachePath, GetThumbName());
-            string fileName = Path.Combine(AtSys.CachePath, GetFileName());
+            string thumbName = Path.Combine(Kit.CachePath, GetThumbName());
+            string fileName = Path.Combine(Kit.CachePath, GetFileName());
             string path = null;
             if (File.Exists(thumbName))
             {
@@ -1023,7 +1023,7 @@ namespace Dt.Base
                 FileType = FileItemType.Sound;
                 Icon = "\uE0A6";
                 Title = _itemInfo.FileDesc;
-                ExtInfo = $"{AtKit.GetFileSizeDesc(_itemInfo.Length)}\r\n{_itemInfo.Uploader}\r\n{_itemInfo.Date}";
+                ExtInfo = $"{Kit.GetFileSizeDesc(_itemInfo.Length)}\r\n{_itemInfo.Uploader}\r\n{_itemInfo.Date}";
             }
             else if (FileFilter.UwpVideo.Contains(p_ext))
             {
@@ -1034,7 +1034,7 @@ namespace Dt.Base
             {
                 UpdateIcon(p_ext);
                 Title = _itemInfo.FileName;
-                ExtInfo = $"{_itemInfo.FileDesc}\r\n{AtKit.GetFileSizeDesc(_itemInfo.Length)}  {_itemInfo.Uploader}\r\n{_itemInfo.Date}";
+                ExtInfo = $"{_itemInfo.FileDesc}\r\n{Kit.GetFileSizeDesc(_itemInfo.Length)}  {_itemInfo.Uploader}\r\n{_itemInfo.Date}";
             }
 
             if (_loaded)
@@ -1051,34 +1051,34 @@ namespace Dt.Base
             {
                 case ".doc":
                 case ".docx":
-                    Icon = AtRes.GetIconChar(Icons.Word);
+                    Icon = Res.GetIconChar(Icons.Word);
                     break;
                 case ".xls":
                 case ".xlsx":
-                    Icon = AtRes.GetIconChar(Icons.Excel);
+                    Icon = Res.GetIconChar(Icons.Excel);
                     break;
                 case ".zip":
-                    Icon = AtRes.GetIconChar(Icons.Zip);
+                    Icon = Res.GetIconChar(Icons.Zip);
                     break;
                 case ".rar":
-                    Icon = AtRes.GetIconChar(Icons.Rar);
+                    Icon = Res.GetIconChar(Icons.Rar);
                     break;
                 case ".txt":
-                    Icon = AtRes.GetIconChar(Icons.文件);
+                    Icon = Res.GetIconChar(Icons.文件);
                     break;
                 case ".ppt":
                 case ".pptx":
-                    Icon = AtRes.GetIconChar(Icons.Ppt);
+                    Icon = Res.GetIconChar(Icons.Ppt);
                     break;
                 case ".htm":
                 case ".html":
-                    Icon = AtRes.GetIconChar(Icons.Html);
+                    Icon = Res.GetIconChar(Icons.Html);
                     break;
                 case ".exe":
-                    Icon = AtRes.GetIconChar(Icons.Exe);
+                    Icon = Res.GetIconChar(Icons.Exe);
                     break;
                 default:
-                    Icon = AtRes.GetIconChar(Icons.文件);
+                    Icon = Res.GetIconChar(Icons.文件);
                     break;
             }
         }
@@ -1092,7 +1092,7 @@ namespace Dt.Base
             string state = "NoCache";
             if (!string.IsNullOrEmpty(ID) && (index = ID.LastIndexOf('/')) > 0)
             {
-                string path = System.IO.Path.Combine(AtSys.CachePath, ID.Substring(index + 1));
+                string path = System.IO.Path.Combine(Kit.CachePath, ID.Substring(index + 1));
                 if (System.IO.File.Exists(path))
                     state = "Cached";
             }
@@ -1336,9 +1336,9 @@ namespace Dt.Base
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
+            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;
             return btn;
         }

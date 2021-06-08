@@ -30,15 +30,15 @@ namespace Dt.App
             notify.Link = "更新模型";
             notify.LinkCallback = async (e) =>
             {
-                if (await AtKit.Confirm("确认要更新模型吗？"))
+                if (await Kit.Confirm("确认要更新模型吗？"))
                 {
                     if (await new UnaryRpc("cm", "ModelMgr.更新模型").Call<bool>())
-                        AtKit.Msg("更新模型成功，请重启应用！");
+                        Kit.Msg("更新模型成功，请重启应用！");
                     else
-                        AtKit.Warn("更新模型失败！");
+                        Kit.Warn("更新模型失败！");
                 }
             };
-            AtKit.RunAsync(() => SysVisual.NotifyList.Add(notify));
+            Kit.RunAsync(() => SysVisual.NotifyList.Add(notify));
         }
     }
 }

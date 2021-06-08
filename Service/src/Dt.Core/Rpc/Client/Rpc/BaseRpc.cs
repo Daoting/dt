@@ -83,9 +83,9 @@ namespace Dt.Core.Rpc
         {
             var header = _client.DefaultRequestHeaders;
             header.Remove("uid");
-            if (AtUser.IsLogon)
+            if (Kit.IsLogon)
             {
-                header.Add("uid", AtUser.ID.ToString());
+                header.Add("uid", Kit.UserID.ToString());
             }
         }
 #endif
@@ -105,7 +105,7 @@ namespace Dt.Core.Rpc
                 // 部署在k8s时内部DNS通过服务名即可
                 RequestUri = new Uri(Glb.IsInDocker ? $"https://{Glb.AppName}-{_svcName}/.c" : $"https://localhost/{Glb.AppName}/{_svcName}/.c"),
 #else
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl}/{_svcName}/.c"),
+                RequestUri = new Uri($"{Kit.Stub.ServerUrl}/{_svcName}/.c"),
 #endif
             };
         }
@@ -122,7 +122,7 @@ namespace Dt.Core.Rpc
 
 #if !SERVER
             // 输出监视信息
-            AtKit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
+            Kit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
 #endif
 
             // 超过长度限制时执行压缩

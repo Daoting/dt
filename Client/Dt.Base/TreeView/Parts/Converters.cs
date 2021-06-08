@@ -41,8 +41,8 @@ namespace Dt.Base.TreeView
         {
             bool? selected = (bool?)value;
             if (selected.HasValue)
-                return selected.Value ? AtRes.暗遮罩 : null;
-            return AtRes.暗遮罩;
+                return selected.Value ? Res.暗遮罩 : null;
+            return Res.暗遮罩;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -58,7 +58,7 @@ namespace Dt.Base.FormView
                 {
                     _srcIDs = null;
                     _tgtIDs = null;
-                    AtKit.Error("数据填充：源列表、目标列表列个数不一致！");
+                    Kit.Error("数据填充：源列表、目标列表列个数不一致！");
                 }
             }
 

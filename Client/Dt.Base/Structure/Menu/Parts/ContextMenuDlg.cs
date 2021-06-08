@@ -20,7 +20,7 @@ namespace Dt.Base.MenuView
             HideTitleBar = true;
             Resizeable = false;
             Content = p_menu;
-            Background = AtRes.浅灰背景;
+            Background = Res.浅灰背景;
             MinWidth = 160;
         }
 
@@ -31,7 +31,7 @@ namespace Dt.Base.MenuView
         protected override void OnOuterPressed(Point p_point)
         {
             // PhoneUI模式 或 只有当前窗口
-            if (AtSys.IsPhoneUI || SysVisual.DlgCount == 1)
+            if (Kit.IsPhoneUI || SysVisual.DlgCount == 1)
                 base.OnOuterPressed(p_point);
 
             // WinUI模式不自动关闭

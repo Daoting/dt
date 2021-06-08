@@ -39,9 +39,9 @@ namespace Dt.Base
             Throw.IfNull(p_info, _assertMsg);
 
             if (await p_info.Init())
-                AtApp.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
+                Kit.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
             else
-                AtKit.Warn($"初始化报表模板[{p_info.Name}]出错！");
+                Kit.Warn($"初始化报表模板[{p_info.Name}]出错！");
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Dt.Base
                 // 使用 RptInfoList 只为识别窗口用
                 var ls = new RptInfoList();
                 ls.AddRange(p_infos);
-                AtApp.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle, p_icon, ls);
+                Kit.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle, p_icon, ls);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Dt.Base
             Throw.IfNull(p_info, _assertMsg);
             if (await p_info.InitTemplate())
             {
-                AtApp.OpenWin(typeof(RptDesignHome), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
+                Kit.OpenWin(typeof(RptDesignHome), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
                 return true;
             }
             return false;
@@ -100,7 +100,7 @@ namespace Dt.Base
                     {
                         using (StringReader stream = new StringReader(p_define))
                         {
-                            using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
+                            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
                             {
                                 reader.Read();
                                 root.ReadXml(reader);

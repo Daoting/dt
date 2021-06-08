@@ -35,7 +35,7 @@ namespace Dt.App.Workflow
         public void Finished()
         {
             Status = WfiAtvStatus.结束;
-            Mtime = AtSys.Now;
+            Mtime = Kit.Now;
         }
 
         /// <summary>

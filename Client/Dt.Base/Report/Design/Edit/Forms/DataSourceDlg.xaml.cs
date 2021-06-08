@@ -83,7 +83,7 @@ namespace Dt.Base.Report
                 }
             }
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;
                 PlacementTarget = p_target;
@@ -126,7 +126,7 @@ namespace Dt.Base.Report
         {
             if (_lv.SelectedItem == null)
             {
-                AtKit.Warn("请选择列名！");
+                Kit.Warn("请选择列名！");
             }
             else
             {

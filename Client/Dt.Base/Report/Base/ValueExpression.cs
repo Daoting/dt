@@ -72,74 +72,74 @@ namespace Dt.Base
             ValExp exp;
             if (!Enum.TryParse(p_expression, true, out exp))
             {
-                AtKit.Warn($"无法识别内置表达式【{p_expression}】!");
+                Kit.Warn($"无法识别内置表达式【{p_expression}】!");
                 return "";
             }
 
             switch (exp)
             {
                 case ValExp.UserID:
-                    return AtUser.ID.ToString();
+                    return Kit.UserID.ToString();
                 case ValExp.UserName:
-                    return AtUser.Name;
+                    return Kit.UserName;
                 case ValExp.Guid:
                     return Guid.NewGuid().ToString("N");
                 case ValExp.Now:
-                    return AtSys.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    return Kit.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 case ValExp.LastYear:
-                    return AtSys.Now.AddYears(-1).Year.ToString();
+                    return Kit.Now.AddYears(-1).Year.ToString();
                 case ValExp.Year:
-                    return AtSys.Now.Year.ToString();
+                    return Kit.Now.Year.ToString();
                 case ValExp.NextYear:
-                    return AtSys.Now.AddYears(1).Year.ToString();
+                    return Kit.Now.AddYears(1).Year.ToString();
                 case ValExp.LastQuarter:
-                    int thisQuarter = (AtSys.Now.Month - 1) / 3 + 1;
+                    int thisQuarter = (Kit.Now.Month - 1) / 3 + 1;
                     return thisQuarter == 1 ? "4" : (thisQuarter - 1).ToString();
                 case ValExp.Quarter:
-                    return ((AtSys.Now.Month - 1) / 3 + 1).ToString();
+                    return ((Kit.Now.Month - 1) / 3 + 1).ToString();
                 case ValExp.NextQuarter:
-                    int quarter = (AtSys.Now.Month - 1) / 3 + 1;
+                    int quarter = (Kit.Now.Month - 1) / 3 + 1;
                     return quarter == 4 ? "1" : (quarter + 1).ToString();
                 case ValExp.LastMonth:
-                    return AtSys.Now.AddMonths(-1).Month.ToString();
+                    return Kit.Now.AddMonths(-1).Month.ToString();
                 case ValExp.Month:
-                    return AtSys.Now.Month.ToString();
+                    return Kit.Now.Month.ToString();
                 case ValExp.NextMonth:
-                    return AtSys.Now.AddMonths(1).Month.ToString();
+                    return Kit.Now.AddMonths(1).Month.ToString();
                 case ValExp.Yesterday:
-                    return AtSys.Now.AddDays(-1).Day.ToString();
+                    return Kit.Now.AddDays(-1).Day.ToString();
                 case ValExp.Today:
-                    return AtSys.Now.Day.ToString();
+                    return Kit.Now.Day.ToString();
                 case ValExp.Tomorrow:
-                    return AtSys.Now.AddDays(1).Day.ToString();
+                    return Kit.Now.AddDays(1).Day.ToString();
                 case ValExp.StartOfToday:
-                    return AtSys.Now.ToString("yyyy-MM-dd 00:00:00");
+                    return Kit.Now.ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.EndOfToday:
-                    return AtSys.Now.ToString("yyyy-MM-dd 23:59:59");
+                    return Kit.Now.ToString("yyyy-MM-dd 23:59:59");
                 case ValExp.StartOfYesterday:
-                    return AtSys.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
+                    return Kit.Now.AddDays(-1).ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.EndOfYesterday:
-                    return AtSys.Now.AddDays(-1).ToString("yyyy-MM-dd 23:59:59");
+                    return Kit.Now.AddDays(-1).ToString("yyyy-MM-dd 23:59:59");
                 case ValExp.FirstDayOfMonth:
-                    DateTime dt = AtSys.Now;
+                    DateTime dt = Kit.Now;
                     return new DateTime(dt.Year, dt.Month, 1).ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.LastDayOfMonth:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month)).ToString("yyyy-MM-dd 23:59:59");
                 case ValExp.FirstDayOfLastMonth:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, dt.AddMonths(-1).Month, 1).ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.LastDayOfLastMonth:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, dt.AddMonths(-1).Month, DateTime.DaysInMonth(dt.Year, dt.AddMonths(-1).Month)).ToString("yyyy-MM-dd 23:59:59");
                 case ValExp.FirstDayOfYear:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, 1, 1).ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.FirstDayOfLastQuarter:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, GetFirstMonthInQuarter(dt.AddMonths(-3)), 1).ToString("yyyy-MM-dd 00:00:00");
                 case ValExp.LastDayOfLastQuarter:
-                    dt = AtSys.Now;
+                    dt = Kit.Now;
                     return new DateTime(dt.Year, GetFirstMonthInQuarter(dt.AddMonths(-3)) + 2, DateTime.DaysInMonth(dt.Year, GetFirstMonthInQuarter(dt) + 2)).ToString("yyyy-MM-dd 23:59:59");
             }
             return "";

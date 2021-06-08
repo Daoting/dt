@@ -67,7 +67,7 @@ namespace Dt.Sample
         {
             int index = new Random().Next(0, ((IList)_lv.Data).Count);
             _lv.ScrollInto(index);
-            AtKit.Msg($"滚动到第 {index + 1} 行");
+            Kit.Msg($"滚动到第 {index + 1} 行");
         }
     }
 }

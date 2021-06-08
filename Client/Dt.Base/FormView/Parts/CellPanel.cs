@@ -72,7 +72,7 @@ namespace Dt.Base.FormView
             // 内容边框
             _rcChild = new Rectangle
             {
-                Stroke = AtRes.浅灰边框,
+                Stroke = Res.浅灰边框,
                 IsHitTestVisible = false,
                 Margin = new Thickness(0, 0, -1, -1)
             };
@@ -104,8 +104,8 @@ namespace Dt.Base.FormView
                     // 标题背景及边框
                     _rcTitle = new Rectangle
                     {
-                        Fill = AtRes.浅灰背景,
-                        Stroke = AtRes.浅灰边框,
+                        Fill = Res.浅灰背景,
+                        Stroke = Res.浅灰边框,
                         IsHitTestVisible = false,
                         Margin = new Thickness(0, 0, -1, -1)
                     };
@@ -114,8 +114,8 @@ namespace Dt.Base.FormView
                     _tbNeeded = new TextBlock
                     {
                         Text = "\uE0DE",
-                        FontFamily = AtRes.IconFont,
-                        Foreground = AtRes.RedBrush,
+                        FontFamily = Res.IconFont,
+                        Foreground = Res.RedBrush,
                         VerticalAlignment = VerticalAlignment.Center
                     };
 
@@ -165,7 +165,7 @@ namespace Dt.Base.FormView
         /// <param name="p_isChanged"></param>
         internal void ToggleIsChanged(bool p_isChanged)
         {
-            _rcChild.Fill = p_isChanged ? AtRes.黄遮罩 : null;
+            _rcChild.Fill = p_isChanged ? Res.黄遮罩 : null;
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -185,7 +185,7 @@ namespace Dt.Base.FormView
                 child.Measure(new Size(conWidth - 1, height - 1));
                 // 自动行高
                 if (_owner.RowSpan == -1)
-                    height = child.DesiredSize.Height > 0 ? child.DesiredSize.Height : AtRes.RowOuterHeight;
+                    height = child.DesiredSize.Height > 0 ? child.DesiredSize.Height : Res.RowOuterHeight;
             }
 
             // 内容外框

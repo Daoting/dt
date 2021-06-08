@@ -50,9 +50,9 @@ namespace Dt.Sample
         {
             FvCell cell = p_fv[p_tgtCell.ID];
             if (cell != null)
-                AtKit.Msg($"{cell.Title}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
+                Kit.Msg($"{cell.Title}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
             else
-                AtKit.Msg($"{p_tgtCell.ID}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
+                Kit.Msg($"{p_tgtCell.ID}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
         }
     }
 }

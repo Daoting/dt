@@ -35,8 +35,8 @@ namespace Dt.Sample
         {
             return new TextBlock
             {
-                Style = AtRes.LvTextBlock,
-                FontFamily = AtRes.IconFont,
+                Style = Res.LvTextBlock,
+                FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
                 Text = (p_item.Children.Count > 0) ? "\uE067" : "\uE002",
             };
@@ -46,17 +46,17 @@ namespace Dt.Sample
         {
             var tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
+                Style = Res.LvTextBlock,
                 Text = $" ({p_item.Row.Str("code")})",
             };
             string code = p_item.Row.Str("code");
             if (code.Length < 4)
-                p_item.Foreground = AtRes.RedBrush;
+                p_item.Foreground = Res.RedBrush;
             else if (code.Length > 4)
-                p_item.Foreground = AtRes.GreenBrush;
+                p_item.Foreground = Res.GreenBrush;
 
             if (p_item.Children.Count > 4)
-                p_item.Background = AtRes.浅黄背景;
+                p_item.Background = Res.浅黄背景;
             return tb;
         }
     }

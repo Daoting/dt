@@ -103,7 +103,7 @@ namespace Dt.Base
                 if (type == typeof(Icons) || type == typeof(int))
                     LoadIconUI((Icons)data);
                 else if (type == typeof(string))
-                    LoadIconUI(AtRes.ParseIcon((string)data));
+                    LoadIconUI(Res.ParseIcon((string)data));
             }
             else
             {
@@ -125,7 +125,7 @@ namespace Dt.Base
         /// <param name="p_icon"></param>
         void LoadIconUI(Icons p_icon)
         {
-            IconChar = AtRes.GetIconChar(p_icon);
+            IconChar = Res.GetIconChar(p_icon);
             string hex = Convert.ToString(0xE000 + (int)p_icon, 16).ToUpper();
             Desc = $"{p_icon} ({hex})";
         }
@@ -138,7 +138,7 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                 {
                     _dlg = new IconDlg { Owner = this };
                 }

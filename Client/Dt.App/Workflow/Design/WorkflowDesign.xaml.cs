@@ -99,7 +99,7 @@ namespace Dt.App.Workflow
 
         async void OnSave(object sender, Mi e)
         {
-            DateTime now = AtSys.Now;
+            DateTime now = Kit.Now;
             _prc.Mtime = now;
             _prc.Diagram = _sketch.WriteXml();
 
@@ -136,21 +136,21 @@ namespace Dt.App.Workflow
         {
             if (IsChanged)
             {
-                return AtKit.Confirm("数据已修改，确认要放弃修改吗？");
+                return Kit.Confirm("数据已修改，确认要放弃修改吗？");
             }
             return Task.FromResult(true);
         }
 
         async void OnDel(object sender, Mi e)
         {
-            if (await AtKit.Confirm($"确认要删除流程模板[{_prc.Name}]吗？"))
+            if (await Kit.Confirm($"确认要删除流程模板[{_prc.Name}]吗？"))
             {
                 if (await AtCm.Delete(_prc))
                     Close();
             }
             else
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
             }
         }
         #endregion
@@ -203,8 +203,8 @@ namespace Dt.App.Workflow
                             CanJumpInto: false,
                             JoinKind: 0,
                             TransKind: 0,
-                            Ctime: AtSys.Now,
-                            Mtime: AtSys.Now);
+                            Ctime: Kit.Now,
+                            Mtime: Kit.Now);
 
                         node.Tag = atv;
                         _prc.Atvs.Add(atv);

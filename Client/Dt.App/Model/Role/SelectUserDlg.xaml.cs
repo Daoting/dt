@@ -34,7 +34,7 @@ namespace Dt.App.Model
         public async Task<bool> Show(long p_id, FrameworkElement p_target)
         {
             _lv.Data = await AtCm.Query("角色-未关联的用户", new { roleid = p_id });
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;
                 PlacementTarget = p_target;

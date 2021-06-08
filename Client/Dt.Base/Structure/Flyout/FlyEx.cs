@@ -27,7 +27,7 @@ namespace Dt.Base
     //    /// <param name="p_content"></param>
     //    public static void Msg(this FrameworkElement p_target, string p_content)
     //    {
-    //        ShowFly(p_target, p_content, AtRes.主题蓝色);
+    //        ShowFly(p_target, p_content, Res.主题蓝色);
     //    }
 
     //    /// <summary>
@@ -37,7 +37,7 @@ namespace Dt.Base
     //    /// <param name="p_content"></param>
     //    public static void Warn(this FrameworkElement p_target, string p_content)
     //    {
-    //        ShowFly(p_target, p_content, AtRes.RedBrush);
+    //        ShowFly(p_target, p_content, Res.RedBrush);
     //    }
 
     //    static void ShowFly(FrameworkElement p_target, string p_content, SolidColorBrush p_brush)
@@ -47,7 +47,7 @@ namespace Dt.Base
 
     //        Fly fly = new Fly();
     //        Grid grid = new Grid { Background = p_brush, Padding = new Thickness(10), MinWidth = 80d, MaxWidth = 240d };
-    //        TextBlock tb = new TextBlock { Text = p_content, Foreground = AtRes.WhiteBrush };
+    //        TextBlock tb = new TextBlock { Text = p_content, Foreground = Res.WhiteBrush };
     //        grid.Children.Add(tb);
     //        fly.Child = grid;
     //        fly.ShowAt(p_target);

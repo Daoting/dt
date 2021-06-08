@@ -250,13 +250,13 @@ namespace Dt.Sample
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 DataCmd dc = (DataCmd)e.Data;
                 if (dc.Callback != null)
                     dc.Callback(dc);
                 else if (dc.Tag is Type type)
-                    AtApp.OpenWin(type, dc.Title);
+                    Kit.OpenWin(type, dc.Title);
             });
         }
 

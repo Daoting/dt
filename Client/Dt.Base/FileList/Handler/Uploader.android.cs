@@ -112,9 +112,9 @@ namespace Dt.Base
 
             var request = new Request.Builder()
                 .Post(body)
-                .Url($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u");
-            if (AtUser.IsLogon)
-                request.Header("uid", AtUser.ID.ToString());
+                .Url($"{Kit.Stub.ServerUrl.TrimEnd('/')}/fsm/.u");
+            if (Kit.IsLogon)
+                request.Header("uid", Kit.UserID.ToString());
 
             var call = _client.NewCall(request.Build());
             p_tokenSource.Token.Register(() => Task.Run(() => call.Cancel()));

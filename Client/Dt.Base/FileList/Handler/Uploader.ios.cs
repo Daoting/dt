@@ -102,7 +102,7 @@ namespace Dt.Base
         async Task<List<string>> Upload(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
             _cancelToken = p_token;
-            _boundary = AtKit.NewID;
+            _boundary = Kit.NewID;
             _dataResponse = NSMutableData.Create();
 
             _cancelToken.ThrowIfCancellationRequested();
@@ -111,11 +111,11 @@ namespace Dt.Base
 
             _tempFile = await SaveToFile(p_uploadFiles, p_fixedvolume);
 
-            var request = new NSMutableUrlRequest(NSUrl.FromString($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u"));
+            var request = new NSMutableUrlRequest(NSUrl.FromString($"{Kit.Stub.ServerUrl.TrimEnd('/')}/fsm/.u"));
             request.HttpMethod = "POST";
             request["Content-Type"] = "multipart/form-data; boundary=" + _boundary;
-            if (AtUser.IsLogon)
-                request.Headers["uid"] = (NSString)AtUser.ID.ToString();
+            if (Kit.IsLogon)
+                request.Headers["uid"] = (NSString)Kit.UserID.ToString();
 
             var uploadTask = _session.CreateUploadTask(request, new NSUrl(_tempFile, false));
             uploadTask.Resume();
@@ -134,7 +134,7 @@ namespace Dt.Base
             return Task.Run(() =>
             {
                 _uploadFiles.Clear();
-                var multiPartPath = Path.Combine(AtSys.CachePath, AtKit.NewID);
+                var multiPartPath = Path.Combine(Kit.CachePath, Kit.NewID);
                 using (var fs = new FileStream(multiPartPath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 {
                     // UTF8.GetBytes的结果只一字节10，诡异！

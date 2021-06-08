@@ -48,7 +48,7 @@ namespace Dt.App.Model
                     _lv.Data = await AtCm.Query("流程-活动未关联的角色", new { atvid = p_tgtID });
                     break;
             }
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;
                 PlacementTarget = p_target;

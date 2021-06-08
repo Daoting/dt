@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Core
 {
     /// <summary>
     /// 系统内置图标

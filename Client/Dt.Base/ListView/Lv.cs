@@ -233,7 +233,7 @@ namespace Dt.Base
 
         static void OnPhoneViewModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 ((Lv)d).LoadPanel();
         }
 
@@ -795,7 +795,7 @@ namespace Dt.Base
 
         internal ViewMode CurrentViewMode
         {
-            get { return AtSys.IsPhoneUI ? (PhoneViewMode.HasValue ? PhoneViewMode.Value : ViewMode) : ViewMode; }
+            get { return Kit.IsPhoneUI ? (PhoneViewMode.HasValue ? PhoneViewMode.Value : ViewMode) : ViewMode; }
         }
 
         internal ScrollViewer Scroll { get; set; }
@@ -1123,7 +1123,7 @@ namespace Dt.Base
                 scroll = new ScrollViewer();
                 _root.Child = scroll;
             }
-            else if (AtSys.IsPhoneUI)
+            else if (Kit.IsPhoneUI)
             {
                 // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
                 // 因phone模式Lv所属的Tab始终不变

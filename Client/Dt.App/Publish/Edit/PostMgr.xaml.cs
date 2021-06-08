@@ -75,9 +75,9 @@ namespace Dt.App.Publish
                 Title: "新文章",
                 TempType: 0,
                 Dispidx: await AtPublish.NewSeq("sq_post"),
-                CreatorID: AtUser.ID,
-                Creator: AtUser.Name,
-                Ctime: AtSys.Now);
+                CreatorID: Kit.UserID,
+                Creator: Kit.UserName,
+                Ctime: Kit.Now);
             _fv.Data = post;
             _lvKeyword.Data = null;
             _lvAlbum.Data = null;
@@ -92,7 +92,7 @@ namespace Dt.App.Publish
             post.Url = await AtPublish.SavePost(post);
             _fv.Row.AcceptChanges();
             LoadAll();
-            AtKit.Msg("保存成功");
+            Kit.Msg("保存成功");
             return true;
         }
 
@@ -111,9 +111,9 @@ namespace Dt.App.Publish
         async void OnDelPost(object sender, Mi e)
         {
             Post post = (Post)_fv.Data;
-            if (!await AtKit.Confirm($"确认要删除[{post.Title}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{post.Title}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
@@ -132,9 +132,9 @@ namespace Dt.App.Publish
             if (post != null)
             {
                 if (string.IsNullOrEmpty(post.Url))
-                    AtKit.Warn("文章的标题和内容不可为空！");
+                    Kit.Warn("文章的标题和内容不可为空！");
                 else
-                    AtApp.OpenWin(typeof(PublishView), post.Title, Icons.公告, post.ID);
+                    Kit.OpenWin(typeof(PublishView), post.Title, Icons.公告, post.ID);
             }
         }
 

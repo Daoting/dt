@@ -34,7 +34,7 @@ namespace Dt.Base
             InitializeComponent();
 
             _info = p_info;
-            _grid.Background = _info.NotifyType == NotifyType.Information ? AtRes.BlackBrush : AtRes.RedBrush;
+            _grid.Background = _info.NotifyType == NotifyType.Information ? Res.BlackBrush : Res.RedBrush;
             _grid.PointerEntered += OnPointerEntered;
             _grid.PointerPressed += OnPointerPressed;
             _grid.PointerReleased += OnPointerReleased;
@@ -44,7 +44,7 @@ namespace Dt.Base
             _info.Close = CloseInternal;
             if (!string.IsNullOrEmpty(_info.Link))
             {
-                Button btn = new Button { Content = _info.Link, Style = AtRes.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
+                Button btn = new Button { Content = _info.Link, Style = Res.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
                 if (_info.LinkCallback != null)
                     btn.Click += (s, e) => _info.LinkCallback(_info);
                 _sp.Children.Add(btn);
@@ -55,7 +55,7 @@ namespace Dt.Base
 
             // 动画，uno暂时未实现
             TransitionCollection tc = new TransitionCollection();
-            tc.Add(new EdgeUIThemeTransition { Edge = AtSys.IsPhoneUI ? EdgeTransitionLocation.Top : EdgeTransitionLocation.Right });
+            tc.Add(new EdgeUIThemeTransition { Edge = Kit.IsPhoneUI ? EdgeTransitionLocation.Top : EdgeTransitionLocation.Right });
             _grid.Transitions = tc;
         }
 
@@ -79,7 +79,7 @@ namespace Dt.Base
 
         void OnTimerHandler(ThreadPoolTimer p_timer)
         {
-            AtKit.RunAsync(() => CloseInternal());
+            Kit.RunAsync(() => CloseInternal());
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Dt.Base
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             KillCloseTimer();
-            _rc.Fill = AtRes.亮遮罩;
+            _rc.Fill = Res.亮遮罩;
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Dt.Base
             {
                 e.Handled = true;
                 _captureID = e.Pointer.PointerId;
-                _rc.Fill = AtRes.深亮遮罩;
+                _rc.Fill = Res.深亮遮罩;
             }
         }
 

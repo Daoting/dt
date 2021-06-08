@@ -163,7 +163,7 @@ namespace Dt.Base.Report
 
             if (_drgItem.TestMovIntersect(e.Row, e.Column))
             {
-                AtKit.Warn("此对象移动后的位置后会与其他对象重叠，请先移动可能重叠的对象后重试。");
+                Kit.Warn("此对象移动后的位置后会与其他对象重叠，请先移动可能重叠的对象后重试。");
                 _drgItem = null;
                 return;
             }

@@ -41,7 +41,7 @@ namespace Dt.Base.ListView
         protected override Size MeasureOverride(Size availableSize)
         {
             // 行最小高度41
-            double height = AtRes.RowOuterHeight;
+            double height = Res.RowOuterHeight;
 
             // 行单元格
             Cols cols = _owner.Cols;
@@ -125,14 +125,14 @@ namespace Dt.Base.ListView
             Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
             foreach (var col in cols)
             {
-                ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = AtRes.浅灰边框, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = Res.浅灰边框, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 SetContentBinding(col, pre);
                 Children.Add(pre);
                 _cells[col.ID] = pre;
             }
 
             // 行头
-            Grid header = new Grid { Background = AtRes.浅灰背景 };
+            Grid header = new Grid { Background = Res.浅灰背景 };
             if (_owner.SelectionMode != SelectionMode.None)
             {
                 header.SetBinding(BackgroundProperty, new Binding
@@ -141,7 +141,7 @@ namespace Dt.Base.ListView
                     Converter = new HeaderBackgroundConverter(),
                 });
             }
-            var bd = new Border { BorderBrush = AtRes.浅灰边框, BorderThickness = borderLine, IsHitTestVisible = false };
+            var bd = new Border { BorderBrush = Res.浅灰边框, BorderThickness = borderLine, IsHitTestVisible = false };
             header.Children.Add(bd);
             TextBlock tb = new TextBlock { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("Index") });
@@ -152,7 +152,7 @@ namespace Dt.Base.ListView
                 header.Width = 81;
                 header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
                 header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                TextBlock tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextAlignment = Windows.UI.Xaml.TextAlignment.Center, FontFamily = AtRes.IconFont };
+                TextBlock tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextAlignment = Windows.UI.Xaml.TextAlignment.Center, FontFamily = Res.IconFont };
                 tbCheck.SetBinding(TextBlock.TextProperty, new Binding
                 {
                     Path = new PropertyPath("IsSelected"),

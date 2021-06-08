@@ -39,7 +39,7 @@ namespace Dt.Base.MenuView
 
             if (_mi.Owner.IsContextMenu)
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                 {
                     PhonePlacement = DlgPlacement.FromBottom;
                 }
@@ -57,7 +57,7 @@ namespace Dt.Base.MenuView
             }
             else
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                 {
                     PhonePlacement = (_mi.ParentMi == null) ? DlgPlacement.TargetBottomLeft : DlgPlacement.FromBottom;
                 }
@@ -77,7 +77,7 @@ namespace Dt.Base.MenuView
             }
 
             Closed -= OnClosed;
-            if (_mi.ParentMi == null || AtSys.IsPhoneUI)
+            if (_mi.ParentMi == null || Kit.IsPhoneUI)
                 Closed += OnClosed;
             Show();
         }
@@ -109,7 +109,7 @@ namespace Dt.Base.MenuView
         /// <param name="p_point">外部点击位置</param>
         protected override void OnOuterPressed(Point p_point)
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 base.OnOuterPressed(p_point);
 
             // WinUI模式不自动关闭

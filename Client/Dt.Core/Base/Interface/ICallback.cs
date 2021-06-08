@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System;
 using System.Threading.Tasks;
 #endregion
 
@@ -43,6 +44,26 @@ namespace Dt.Core
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
         void Error(string p_content, string p_title);
+
+        /// <summary>
+        /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
+        /// </summary>
+        /// <param name="p_type">窗口/视图类型</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">初始参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params);
+
+        /// <summary>
+        /// 根据视图名称激活旧窗口或打开新窗口
+        /// </summary>
+        /// <param name="p_viewName">窗口视图名称</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params);
 
         /// <summary>
         /// 显示监视窗口

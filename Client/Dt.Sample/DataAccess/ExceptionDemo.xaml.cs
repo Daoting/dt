@@ -35,7 +35,7 @@ namespace Dt.Sample
             int b = 12;
             string str = "avb";
             b += str.Length;
-            AtKit.Msg(b.ToString());
+            Kit.Msg(b.ToString());
             await Task.CompletedTask;
         }
 

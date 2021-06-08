@@ -61,7 +61,7 @@ namespace Dt.Base
         #region +按钮
         async void OnShowExtPanel(object sender, RoutedEventArgs e)
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
 #if IOS
                 ResetTransform();

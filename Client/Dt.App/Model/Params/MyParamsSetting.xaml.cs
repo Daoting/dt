@@ -29,7 +29,7 @@ namespace Dt.App.Model
 
         async void LoadVals()
         {
-            Dict dt = await AtCm.GetParams(AtUser.ID);
+            Dict dt = await AtCm.GetParams(Kit.UserID);
             Table tbl = (Table)dt["result"];
             if (tbl == null || tbl.Count == 0)
                 return;
@@ -45,7 +45,7 @@ namespace Dt.App.Model
 
         async void OnValChanged(object sender, Cell e)
         {
-            if (await AtCm.SaveParams(AtUser.ID, e.ID, e.GetVal<string>()))
+            if (await AtCm.SaveParams(Kit.UserID, e.ID, e.GetVal<string>()))
                 e.AcceptChanges();
         }
     }

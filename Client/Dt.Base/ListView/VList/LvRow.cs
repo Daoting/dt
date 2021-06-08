@@ -155,7 +155,7 @@ namespace Dt.Base.ListView
             if (await menu.OpenContextMenu(p_pos, p_tgt))
             {
                 _menuOpened = true;
-                _rcPointer.Fill = AtRes.深黄遮罩;
+                _rcPointer.Fill = Res.深黄遮罩;
             }
         }
 
@@ -220,9 +220,9 @@ namespace Dt.Base.ListView
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE03F", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
+            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框 };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;
             return btn;
         }

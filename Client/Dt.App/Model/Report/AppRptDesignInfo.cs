@@ -38,11 +38,11 @@ namespace Dt.App.Model
 
             if (_rpt.IsAdded)
             {
-                _rpt["ctime"] = _rpt["mtime"] = AtSys.Now;
+                _rpt["ctime"] = _rpt["mtime"] = Kit.Now;
             }
             else
             {
-                _rpt["mtime"] = AtSys.Now;
+                _rpt["mtime"] = Kit.Now;
             }
 
             if (await AtCm.Save(_rpt))

@@ -140,12 +140,12 @@ namespace Dt.Base.Report
         {
             if (ValidHeight - Root.Header.ActualHeight - Root.Footer.ActualHeight <= 0)
             {
-                AtKit.Warn("报表的可用页面高度不足，请确认！");
+                Kit.Warn("报表的可用页面高度不足，请确认！");
                 return false;
             }
             if (ValidWidth <= 0)
             {
-                AtKit.Warn("报表的可用页面宽度不足，请确认！");
+                Kit.Warn("报表的可用页面宽度不足，请确认！");
                 return false;
             }
             return true;

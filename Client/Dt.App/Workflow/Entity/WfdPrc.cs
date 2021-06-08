@@ -23,7 +23,7 @@ namespace Dt.App.Workflow
                 Name: "新流程",
                 IsLocked: true,
                 Dispidx: await AtCm.NewSeq("sq_wfd_prc"),
-                Ctime: AtSys.Now);
+                Ctime: Kit.Now);
 
             prc.Atvs = Table<WfdAtv>.Create();
             prc.Trss = Table<WfdTrs>.Create();

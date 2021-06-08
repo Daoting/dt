@@ -52,13 +52,13 @@ namespace Dt.Sample
         {
             var dlg = GetDlg();
             await dlg.ShowAsync();
-            AtKit.Msg($"返回值：{dlg.Result}");
+            Kit.Msg($"返回值：{dlg.Result}");
         }
 
         void OnShowPos(object sender, RoutedEventArgs e)
         {
             var dlg = GetDlg();
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
                 dlg.Top = _rnd.Next(0, 500);
@@ -75,15 +75,15 @@ namespace Dt.Sample
 
         async void OnClicked1(object sender, RoutedEventArgs e)
         {
-            if (await AtKit.Confirm("确认要删除所有数据吗?"))
-                AtKit.Msg("Yes");
+            if (await Kit.Confirm("确认要删除所有数据吗?"))
+                Kit.Msg("Yes");
             else
-                AtKit.Msg("No");
+                Kit.Msg("No");
         }
 
         void OnClicked2(object sender, RoutedEventArgs e)
         {
-            AtKit.Error("错误消息内容！");
+            Kit.Error("错误消息内容！");
         }
 
         void OnTextChanged(object sender, TextChangedEventArgs e)
@@ -112,7 +112,7 @@ namespace Dt.Sample
                 };
 
                 // 通过data描述的方式构建发杂path的方式如下行注释掉的方式调用
-                //Path path = AtRes.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
+                //Path path = Res.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
                 Ellipse path = new Ellipse
                 {
                     Height = 200,
@@ -131,7 +131,7 @@ namespace Dt.Sample
         {
             Dlg dlg = new Dlg();
             dlg.Content = new TabNav1();
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 dlg.Width = 300;
                 dlg.Height = 300;
@@ -150,7 +150,7 @@ namespace Dt.Sample
             Dlg1 dlg = new Dlg1();
             Row row = _fv.Row;
             var placement = (DlgPlacement)row["Placement"];
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 dlg.PhonePlacement = placement;
             else
                 dlg.WinPlacement = placement;

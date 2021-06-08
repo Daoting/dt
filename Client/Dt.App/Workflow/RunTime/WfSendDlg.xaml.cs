@@ -33,7 +33,7 @@ namespace Dt.App.Workflow
         public Task<bool> Show(WfFormInfo p_info)
         {
             _info = p_info;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Height = 400;
                 Width = 500;
@@ -70,24 +70,24 @@ namespace Dt.App.Workflow
                 }
                 else if (_info.AtvDef.TransKind == WfdAtvTransKind.全部)
                 {
-                    AtKit.Warn($"未选择{ar.Def.Name}的执行者！");
+                    Kit.Warn($"未选择{ar.Def.Name}的执行者！");
                     return;
                 }
             }
 
             if (_info.AtvDef.TransKind == WfdAtvTransKind.自由选择 && count == 0)
             {
-                AtKit.Warn("请至少选择一个活动的执行者！");
+                Kit.Warn("请至少选择一个活动的执行者！");
                 return;
             }
             if (_info.AtvDef.TransKind == WfdAtvTransKind.独占式选择 && count == 0)
             {
-                AtKit.Warn("请选择一个活动的执行者！");
+                Kit.Warn("请选择一个活动的执行者！");
                 return;
             }
             if (_info.AtvDef.TransKind == WfdAtvTransKind.独占式选择 && count > 1)
             {
-                AtKit.Warn("只能选择一个活动的执行者！");
+                Kit.Warn("只能选择一个活动的执行者！");
                 return;
             }
             Close(true);
@@ -103,8 +103,8 @@ namespace Dt.App.Workflow
             // 分组栏
             Grid grid = new Grid
             {
-                Background = AtRes.浅灰背景,
-                BorderBrush = AtRes.浅灰边框,
+                Background = Res.浅灰背景,
+                BorderBrush = Res.浅灰边框,
                 BorderThickness = new Thickness(0, 1, 0, 1),
                 ColumnDefinitions =
                 {
@@ -119,7 +119,7 @@ namespace Dt.App.Workflow
                         Margin = new Thickness(10, 0, 10, 0),
                         Children =
                         {
-                            new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) },
+                            new TextBlock { FontFamily = Res.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) },
                             new TextBlock { Text = p_ar.Def.Name, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center }
                         }
                     },
@@ -129,13 +129,13 @@ namespace Dt.App.Workflow
 
             Lv lv = new Lv { View = Resources["ViewTemp"], ViewMode = ViewMode.Tile, Data = p_ar.Recvs, Tag = p_ar, Margin = new Thickness(0, 0, 0, 20) };
             var sp = new StackPanel { Orientation = Orientation.Horizontal };
-            var btn = new Button { Content = "清除", Tag = lv, Background = AtRes.TransparentBrush };
+            var btn = new Button { Content = "清除", Tag = lv, Background = Res.TransparentBrush };
             btn.Click += OnClearSelection;
             sp.Children.Add(btn);
 
             if (p_ar.MultiSelection && p_ar.Recvs.Count > 1)
             {
-                btn = new Button { Content = "全选", Tag = lv, Background = AtRes.TransparentBrush };
+                btn = new Button { Content = "全选", Tag = lv, Background = Res.TransparentBrush };
                 btn.Click += OnSelectAll;
                 sp.Children.Add(btn);
                 lv.SelectionMode = Base.SelectionMode.Multiple;
@@ -160,7 +160,7 @@ namespace Dt.App.Workflow
 
         async void OnFinish(object sender, Mi e)
         {
-            if (await AtKit.Confirm("任务结束(完成)后将不可修改，确认完成吗？"))
+            if (await Kit.Confirm("任务结束(完成)后将不可修改，确认完成吗？"))
             {
                 _info.NextRecvs.FinishedAtv.IsSelected = true;
                 Close(true);

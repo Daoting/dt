@@ -43,7 +43,7 @@ namespace Dt.Sample
 
         void OnDelTemp(object sender, RoutedEventArgs e)
         {
-            AtSys.ClearCacheFiles();
+            Kit.ClearCacheFiles();
         }
 
         void OnAddPadding(object sender, RoutedEventArgs e)

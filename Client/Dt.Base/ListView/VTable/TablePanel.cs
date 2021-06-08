@@ -710,8 +710,8 @@ namespace Dt.Base.ListView
             {
                 Grid grid = new Grid
                 {
-                    Background = AtRes.浅灰背景,
-                    BorderBrush = AtRes.浅灰边框,
+                    Background = Res.浅灰背景,
+                    BorderBrush = Res.浅灰边框,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     ColumnDefinitions =
                     {
@@ -722,7 +722,7 @@ namespace Dt.Base.ListView
 
                 Button btn = new Button
                 {
-                    Style = AtRes.字符按钮,
+                    Style = Res.字符按钮,
                     Content = "\uE020",
                 };
                 ToolTipService.SetToolTip(btn, "全选");
@@ -731,7 +731,7 @@ namespace Dt.Base.ListView
 
                 btn = new Button
                 {
-                    Style = AtRes.字符按钮,
+                    Style = Res.字符按钮,
                     Content = "\uE009",
                 };
                 ToolTipService.SetToolTip(btn, "清除所选");
@@ -744,8 +744,8 @@ namespace Dt.Base.ListView
             {
                 _topLeft = new Border
                 {
-                    Background = AtRes.浅灰背景,
-                    BorderBrush = AtRes.浅灰边框,
+                    Background = Res.浅灰背景,
+                    BorderBrush = Res.浅灰边框,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     IsHitTestVisible = false,
                 };

@@ -30,7 +30,7 @@ namespace Dt.App.Workflow
                 AssignKind: (p_isBack ? WfiItemAssignKind.回退 : WfiItemAssignKind.普通指派),
                 Status: WfiItemStatus.活动,
                 IsAccept: false,
-                Sender: AtUser.Name,
+                Sender: Kit.UserName,
                 Stime: p_date,
                 Ctime: p_date,
                 Mtime: p_date,
@@ -47,8 +47,8 @@ namespace Dt.App.Workflow
         public void Finished()
         {
             Status = WfiItemStatus.结束;
-            Mtime = AtSys.Now;
-            UserID = AtUser.ID;
+            Mtime = Kit.Now;
+            UserID = Kit.UserID;
         }
     }
 

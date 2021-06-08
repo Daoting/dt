@@ -101,7 +101,7 @@ namespace Dt.Base.Report
             // 单元格不可编辑，图表可拖动
             _ws.LockCell = true;
             // Wp始终不可编辑
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 _ws.Protect = true;
             _info.Sheet = _ws;
 
@@ -241,7 +241,7 @@ namespace Dt.Base.Report
         void RenderImage(RptTextInst p_img, int p_row, int p_col)
         {
             RptText item = p_img.Item as RptText;
-            AtKit.RunSync(() =>
+            Kit.RunSync(() =>
             {
                 Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, item.RowSpan, item.ColSpan));
                 _ws.AddPicture(_ws.Pictures.Count.ToString(), new Uri(item.Val), rc.Left, rc.Top, rc.Width, rc.Height);

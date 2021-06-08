@@ -39,7 +39,7 @@ namespace Dt.Base.ListView
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double height = AtRes.RowOuterHeight;
+            double height = Res.RowOuterHeight;
             double width = 0;
             int index = 0;
 
@@ -125,7 +125,7 @@ namespace Dt.Base.ListView
             // 普通列表多选时
             if (_owner.SelectionMode == SelectionMode.Multiple)
             {
-                var tbCheck = new TextBlock { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontFamily = AtRes.IconFont };
+                var tbCheck = new TextBlock { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontFamily = Res.IconFont };
                 tbCheck.SetBinding(TextBlock.TextProperty, new Binding
                 {
                     Path = new PropertyPath("IsSelected"),
@@ -150,9 +150,9 @@ namespace Dt.Base.ListView
             Border bd;
             if (_owner.ShowItemBorder)
             {
-                bd = new Border { BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+                bd = new Border { BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
                 // 设置宽度或最大宽度时显示右边框
-                if (!AtSys.IsPhoneUI && (!double.IsPositiveInfinity(_owner.MaxWidth) || !double.IsNaN(_owner.Width)))
+                if (!Kit.IsPhoneUI && (!double.IsPositiveInfinity(_owner.MaxWidth) || !double.IsNaN(_owner.Width)))
                     bd.BorderThickness = new Thickness(0, 0, 1, 1);
                 else
                     bd.BorderThickness = new Thickness(0, 0, 0, 1);

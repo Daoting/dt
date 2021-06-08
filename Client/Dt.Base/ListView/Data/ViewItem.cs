@@ -35,13 +35,13 @@ namespace Dt.Base
             "Foreground",
             typeof(SolidColorBrush),
             typeof(ViewItem),
-            new PropertyMetadata(AtRes.默认前景, OnForegroundChanged));
+            new PropertyMetadata(Res.默认前景, OnForegroundChanged));
 
         public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
             "Background",
             typeof(SolidColorBrush),
             typeof(ViewItem),
-            new PropertyMetadata(AtRes.TransparentBrush, OnBackgroundChanged));
+            new PropertyMetadata(Res.TransparentBrush, OnBackgroundChanged));
 
         public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register(
             "FontWeight",
@@ -222,7 +222,7 @@ namespace Dt.Base
                     // uno中的Image不是继承UIElement！
                     elem = obj as DependencyObject;
                     if (elem == null)
-                        elem = new TextBlock { Style = AtRes.LvTextBlock, Text = obj.ToString(), };
+                        elem = new TextBlock { Style = Res.LvTextBlock, Text = obj.ToString(), };
                 }
             }
             else if (p_cell.UIType == CellUIType.Default)
@@ -301,7 +301,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<string>(),
                 };
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
@@ -312,7 +312,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<string>(),
                     TextAlignment = TextAlignment.Right,
                 };
@@ -323,7 +323,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<double>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
@@ -335,9 +335,9 @@ namespace Dt.Base
                 // 字符模拟CheckBox
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<bool>() ? "\uE059" : "\uE057",
-                    FontFamily = AtRes.IconFont,
+                    FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
                 return tb;
@@ -347,7 +347,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<DateTime>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
                 return tb;
@@ -358,9 +358,9 @@ namespace Dt.Base
                 // 图标
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
-                    Text = AtRes.GetIconChar(p_dc.GetVal<Icons>()),
-                    FontFamily = AtRes.IconFont,
+                    Style = Res.LvTextBlock,
+                    Text = Res.GetIconChar(p_dc.GetVal<Icons>()),
+                    FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
                 return tb;
@@ -388,7 +388,7 @@ namespace Dt.Base
 
             tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
+                Style = Res.LvTextBlock,
                 Text = p_dc.GetVal<string>(),
             };
             return tb;
@@ -408,7 +408,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = (string)p_val,
                 };
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
@@ -419,7 +419,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = p_val.ToString(),
                     TextAlignment = TextAlignment.Right,
                 };
@@ -430,7 +430,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = ((double)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
@@ -442,9 +442,9 @@ namespace Dt.Base
                 // 字符模拟CheckBox
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = (bool)p_val ? "\uE059" : "\uE057",
-                    FontFamily = AtRes.IconFont,
+                    FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
                 return tb;
@@ -454,7 +454,7 @@ namespace Dt.Base
             {
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
+                    Style = Res.LvTextBlock,
                     Text = ((DateTime)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
                 return tb;
@@ -465,9 +465,9 @@ namespace Dt.Base
                 // 图标
                 tb = new TextBlock
                 {
-                    Style = AtRes.LvTextBlock,
-                    Text = AtRes.GetIconChar((Icons)p_val),
-                    FontFamily = AtRes.IconFont,
+                    Style = Res.LvTextBlock,
+                    Text = Res.GetIconChar((Icons)p_val),
+                    FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
                 return tb;
@@ -495,7 +495,7 @@ namespace Dt.Base
 
             tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
+                Style = Res.LvTextBlock,
                 Text = p_val.ToString(),
             };
             return tb;
@@ -510,7 +510,7 @@ namespace Dt.Base
         {
             var tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
+                Style = Res.LvTextBlock,
                 Text = p_data.ToString(),
             };
             tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
@@ -523,15 +523,15 @@ namespace Dt.Base
         {
             var tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
-                FontFamily = AtRes.IconFont,
+                Style = Res.LvTextBlock,
+                FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
             };
 
             if (p_val is int || p_val is byte)
-                tb.Text = AtRes.GetIconChar((Icons)p_val);
+                tb.Text = Res.GetIconChar((Icons)p_val);
             else
-                tb.Text = AtRes.ParseIconChar(p_val.ToString());
+                tb.Text = Res.ParseIconChar(p_val.ToString());
             return tb;
         }
 
@@ -540,8 +540,8 @@ namespace Dt.Base
             // 字符模拟CheckBox
             var tb = new TextBlock
             {
-                Style = AtRes.LvTextBlock,
-                FontFamily = AtRes.IconFont,
+                Style = Res.LvTextBlock,
+                FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
             };
 
@@ -587,7 +587,7 @@ namespace Dt.Base
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Foreground = AtRes.主题蓝色,
+                Foreground = Res.主题蓝色,
                 Text = $"共{cnt}个文件",
                 Tag = p_val,
             };
@@ -600,7 +600,7 @@ namespace Dt.Base
         {
             string tpName = p_cellUI.Format;
             if (string.IsNullOrEmpty(tpName))
-                return new TextBlock { Style = AtRes.LvTextBlock, Text = "无枚举" };
+                return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
 
             // 将byte int等数值类型转成枚举类型，显示枚举项
             Type type = Type.GetType(tpName, false, true);
@@ -609,11 +609,11 @@ namespace Dt.Base
                 try
                 {
                     var txt = Enum.ToObject(type, p_val).ToString();
-                    return new TextBlock { Style = AtRes.LvTextBlock, Text = txt };
+                    return new TextBlock { Style = Res.LvTextBlock, Text = txt };
                 }
                 catch { }
             }
-            return new TextBlock { Style = AtRes.LvTextBlock, Text = "无枚举" };
+            return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
         }
 
         void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)
@@ -624,7 +624,7 @@ namespace Dt.Base
 
             Dlg dlg;
             e.Handled = true;
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 dlg = new Dlg { ClipElement = tb, Title = "文件列表", };
             }

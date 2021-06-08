@@ -29,7 +29,7 @@ namespace Dt.App.File
         public Task<Table> GetChildren()
         {
             if (FolderID == -1)
-                return AtCm.Query("个人文件-根目录", new { userid = AtUser.ID });
+                return AtCm.Query("个人文件-根目录", new { userid = Kit.UserID });
             return AtCm.Query("个人文件-所有子级", new { parentid = FolderID });
         }
 
@@ -41,13 +41,13 @@ namespace Dt.App.File
         public Task<Table> GetChildrenByType(string p_typeFilter)
         {
             if (FolderID == -1)
-                return AtCm.Query("个人文件-扩展名过滤根目录", new { userid = AtUser.ID, extname = p_typeFilter });
+                return AtCm.Query("个人文件-扩展名过滤根目录", new { userid = Kit.UserID, extname = p_typeFilter });
             return AtCm.Query("个人文件-扩展名过滤子级", new { parentid = FolderID, extname = p_typeFilter });
         }
 
         public Task<Table> SearchFiles(string p_name)
         {
-            return AtCm.Query("个人文件-搜索文件", new { name = $"%{p_name}%", userid = AtUser.ID });
+            return AtCm.Query("个人文件-搜索文件", new { name = $"%{p_name}%", userid = Kit.UserID });
         }
 
         public Task<bool> SaveFile(Row p_row)
@@ -60,7 +60,7 @@ namespace Dt.App.File
                 ExtName: p_row.Str("extname"),
                 Info: p_row.Str("info"),
                 Ctime: p_row.Date("ctime"),
-                UserID: AtUser.ID);
+                UserID: Kit.UserID);
             return AtCm.Save(file, false);
         }
 
@@ -74,8 +74,8 @@ namespace Dt.App.File
                     ParentID: FolderID == -1 ? (long?)null : FolderID,
                     Name: p_name,
                     IsFolder: true,
-                    Ctime: AtSys.Now,
-                    UserID: AtUser.ID);
+                    Ctime: Kit.Now,
+                    UserID: Kit.UserID);
             }
             else
             {
@@ -96,7 +96,7 @@ namespace Dt.App.File
                     int cnt = await AtCm.GetScalar<int>("个人文件-子项个数", new { parentid = row.ID });
                     if (cnt > 0)
                     {
-                        AtKit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
+                        Kit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
                         return false;
                     }
                 }

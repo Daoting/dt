@@ -38,7 +38,7 @@ namespace Dt.App.Workflow
 
         async void LoadTasks()
         {
-            _lvTask.Data = await AtCm.Query("流程-参与的流程", new { userid = AtUser.ID });
+            _lvTask.Data = await AtCm.Query("流程-参与的流程", new { userid = Kit.UserID });
         }
 
         void StartNewWf()

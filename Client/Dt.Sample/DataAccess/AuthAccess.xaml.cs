@@ -28,17 +28,17 @@ namespace Dt.Sample
 
         async void OnNoAuth(object sender, RoutedEventArgs e)
         {
-            AtKit.Msg(await NoAuth());
+            Kit.Msg(await NoAuth());
         }
 
         async void OnAuth(object sender, RoutedEventArgs e)
         {
-            AtKit.Msg(await Auth());
+            Kit.Msg(await Auth());
         }
 
         async void OnCustomAuth(object sender, RoutedEventArgs e)
         {
-            AtKit.Msg(await CustomAuth());
+            Kit.Msg(await CustomAuth());
         }
 
         #region TestAuth

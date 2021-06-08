@@ -362,7 +362,7 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                if (AtSys.IsPhoneUI)
+                if (Kit.IsPhoneUI)
                 {
                     _dlg = new ListDlg(this);
                 }

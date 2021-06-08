@@ -65,7 +65,7 @@ namespace Dt.Sample
             DataPackage data = new DataPackage();
             data.SetText(p_content);
             Clipboard.SetContent(data);
-            AtKit.Msg(string.Format("已复制到剪贴板：\r\n{0}", p_content));
+            Kit.Msg(string.Format("已复制到剪贴板：\r\n{0}", p_content));
         }
 
     }

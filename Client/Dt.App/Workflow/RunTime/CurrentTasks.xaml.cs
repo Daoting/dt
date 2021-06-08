@@ -32,7 +32,7 @@ namespace Dt.App.Workflow
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query("流程-待办任务", new { userID = AtUser.ID });
+            _lv.Data = await AtCm.Query("流程-待办任务", new { userID = Kit.UserID });
         }
 
         void OnRefresh(object sender, Mi e)
@@ -74,11 +74,11 @@ namespace Dt.App.Workflow
                         }
             };
 
-            var rc = new Rectangle { Fill = AtRes.深灰边框 };
+            var rc = new Rectangle { Fill = Res.深灰边框 };
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
-            var tb = new TextBlock { Text = p_item.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+            var tb = new TextBlock { Text = p_item.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
             Grid.SetColumn(tb, 1);
             grid.Children.Add(tb);
 
@@ -86,41 +86,41 @@ namespace Dt.App.Workflow
             switch (kind)
             {
                 case WfiItemAssignKind.起始指派:
-                    rc = new Rectangle { Fill = AtRes.绿色背景 };
+                    rc = new Rectangle { Fill = Res.绿色背景 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
-                    tb = new TextBlock { Text = "发起", Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+                    tb = new TextBlock { Text = "发起", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
                     Grid.SetColumn(tb, 2);
                     grid.Children.Add(tb);
                     break;
 
                 case WfiItemAssignKind.回退:
-                    rc = new Rectangle { Fill = AtRes.醒目红色 };
+                    rc = new Rectangle { Fill = Res.醒目红色 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
-                    tb = new TextBlock { Text = "回退", Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+                    tb = new TextBlock { Text = "回退", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
                     Grid.SetColumn(tb, 2);
                     grid.Children.Add(tb);
                     break;
 
                 case WfiItemAssignKind.追回:
-                    rc = new Rectangle { Fill = AtRes.醒目蓝色 };
+                    rc = new Rectangle { Fill = Res.醒目蓝色 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
-                    tb = new TextBlock { Text = "追回", Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+                    tb = new TextBlock { Text = "追回", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
                     Grid.SetColumn(tb, 2);
                     grid.Children.Add(tb);
                     break;
 
                 case WfiItemAssignKind.跳转:
-                    rc = new Rectangle { Fill = AtRes.BlackBrush };
+                    rc = new Rectangle { Fill = Res.BlackBrush };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
-                    tb = new TextBlock { Text = "跳转", Margin = new Thickness(4, 2, 4, 2), Foreground = AtRes.WhiteBrush };
+                    tb = new TextBlock { Text = "跳转", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
                     Grid.SetColumn(tb, 2);
                     grid.Children.Add(tb);
                     break;

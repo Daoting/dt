@@ -129,7 +129,7 @@ namespace Dt.Base
             else
             {
                 StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
-                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
+                TextBlock tb = new TextBlock { FontFamily = Res.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
                 sp.Children.Add(tb);
                 tb = new TextBlock { Text = (Content != null ? Content.ToString() : ""), TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);

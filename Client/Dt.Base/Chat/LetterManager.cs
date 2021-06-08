@@ -62,7 +62,7 @@ namespace Dt.Base
             // 撤回消息
             if (p_letter.LetterType == LetterType.Undo)
             {
-                var letter = AtState.First<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
+                var letter = AtState.First<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", Kit.UserID } });
                 if (letter != null)
                 {
                     // 删除
@@ -74,7 +74,7 @@ namespace Dt.Base
 
             // 新消息
             Letter l = new Letter(
-                LoginID: AtUser.ID,
+                LoginID: Kit.UserID,
                 MsgID: p_letter.ID,
                 OtherID: p_letter.SenderID,
                 OtherName: p_letter.SenderName,
@@ -124,9 +124,9 @@ namespace Dt.Base
                 foreach (var ni in SysVisual.NotifyList)
                 {
                     if (ni.Tag is Letter letter && letter.OtherID == l.OtherID)
-                        AtKit.CloseNotify(ni);
+                        Kit.CloseNotify(ni);
                 }
-                AtKit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
+                Kit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
             };
 
             switch (p_letter.LetterType)
@@ -168,13 +168,13 @@ namespace Dt.Base
         /// <param name="p_otherid">对方标识</param>
         public static void ClearUnreadFlag(long p_otherid)
         {
-            AtKit.RunAsync(() =>
+            Kit.RunAsync(() =>
             {
                 int cnt = AtState.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
                     new Dict
                     {
                         { "otherid", p_otherid },
-                        { "loginid", AtUser.ID }
+                        { "loginid", Kit.UserID }
                     });
 
                 if (cnt > 0)
@@ -204,18 +204,18 @@ namespace Dt.Base
 
             LetterInfo li = new LetterInfo
             {
-                ID = AtKit.NewID,
-                SenderID = AtUser.ID,
-                SenderName = AtUser.Name,
+                ID = Kit.NewID,
+                SenderID = Kit.UserID,
+                SenderName = Kit.UserName,
                 LetterType = p_type,
                 Content = p_content,
-                SendTime = AtSys.Now
+                SendTime = Kit.Now
             };
             bool isOnline = await AtMsg.SendLetter(p_recvID, li);
 
             // 本地记录
             Letter l = new Letter(
-                LoginID: AtUser.ID,
+                LoginID: Kit.UserID,
                 MsgID: li.ID,
                 OtherID: p_recvID,
                 OtherName: p_recvName,
@@ -284,10 +284,10 @@ namespace Dt.Base
             LetterInfo li = new LetterInfo
             {
                 ID = p_letter.MsgID,
-                SenderID = AtUser.ID,
-                SenderName = AtUser.Name,
+                SenderID = Kit.UserID,
+                SenderName = Kit.UserName,
                 LetterType = LetterType.Undo,
-                SendTime = AtSys.Now
+                SendTime = Kit.Now
             };
             await AtMsg.SendLetter(p_letter.OtherID, li);
             AtState.Exec($"delete from Letter where ID={p_letter.ID}");

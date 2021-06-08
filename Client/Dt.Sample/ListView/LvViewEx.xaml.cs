@@ -61,10 +61,10 @@ namespace Dt.Sample
             {
                 var row = p_item.Row;
                 if (row.Date("chushengrq").Month == 9)
-                    p_item.Background = AtRes.浅黄背景;
+                    p_item.Background = Res.浅黄背景;
 
                 if (row.Double("Shengao") > 1.75)
-                    p_item.Foreground = AtRes.RedBrush;
+                    p_item.Foreground = Res.RedBrush;
 
                 if (row.Str("bumen") == "循环门诊")
                     p_item.FontWeight = FontWeights.Bold;
@@ -74,7 +74,7 @@ namespace Dt.Sample
 
             public static TextBlock xb(ViewItem p_item)
             {
-                TextBlock tb = new TextBlock { FontFamily = AtRes.IconFont, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+                TextBlock tb = new TextBlock { FontFamily = Res.IconFont, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
                 tb.Text = p_item.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
                 return tb;
             }

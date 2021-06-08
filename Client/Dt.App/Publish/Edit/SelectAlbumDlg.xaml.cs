@@ -28,7 +28,7 @@ namespace Dt.App.Publish
         public async Task<bool> Show(long p_postID)
         {
             _postID = p_postID;
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 IsPinned = true;
                 Height = 400;
@@ -48,7 +48,7 @@ namespace Dt.App.Publish
             var selected = _lv.SelectedRows.ToList();
             if (selected.Count == 0)
             {
-                AtKit.Warn("未选择专辑！");
+                Kit.Warn("未选择专辑！");
                 return;
             }
 

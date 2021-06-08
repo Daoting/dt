@@ -50,24 +50,24 @@ namespace Dt.App.Model
         {
             if (e.Row.ID < 1000)
             {
-                AtKit.Msg("系统角色无法删除！");
+                Kit.Msg("系统角色无法删除！");
                 return;
             }
 
-            if (!await AtKit.Confirm($"确认要删除[{e.Row.Str("name")}]吗？"))
+            if (!await Kit.Confirm($"确认要删除[{e.Row.Str("name")}]吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 
             if (await AtCm.DeleteRole(e.Row.ID))
             {
-                AtKit.Msg("删除成功！");
+                Kit.Msg("删除成功！");
                 LoadAll();
             }
             else
             {
-                AtKit.Warn("删除失败！");
+                Kit.Warn("删除失败！");
             }
         }
 

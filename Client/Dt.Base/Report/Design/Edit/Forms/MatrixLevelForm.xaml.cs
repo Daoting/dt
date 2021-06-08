@@ -44,7 +44,7 @@ namespace Dt.Base.Report
                 isOverlap = IsOverLap();
 
             if (isOverlap)
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
             else
                 _info.ExecuteCmd(RptCmds.AddSubLevel, new SubLevelCmdArgs(_level.Parent as RptMtxHeader));
         }
@@ -52,7 +52,7 @@ namespace Dt.Base.Report
         void OnAddTotal(object sender, RoutedEventArgs e)
         {
             if (IsOverLap())
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
             else
                 _info.ExecuteCmd(RptCmds.AddSubTotal, new SubTotalCmdArgs(_level));
         }
@@ -64,7 +64,7 @@ namespace Dt.Base.Report
                 isOverlap = IsOverLap();
 
             if (isOverlap)
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
             else
                 _info.ExecuteCmd(RptCmds.AddSubTitle, new SubTitleCmdArgs(_level));
         }
@@ -72,7 +72,7 @@ namespace Dt.Base.Report
         void OnDelLevel(object sender, RoutedEventArgs e)
         {
             if ((_level.Parent as RptMtxHeader).Levels.IndexOf(_level) == 0)
-                AtKit.Warn("根层次不可删除！");
+                Kit.Warn("根层次不可删除！");
             else
                 _info.ExecuteCmd(RptCmds.DelSubLevel, new SubLevelCmdArgs(_level.Parent as RptMtxHeader, _level));
         }

@@ -25,14 +25,14 @@ namespace Dt.Sample
         void OnShowNotify(object sender, RoutedEventArgs e)
         {
             if ((bool)_cbWarning.IsChecked)
-                AtKit.Warn(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 5 : 0);
+                Kit.Warn(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 5 : 0);
             else
-                AtKit.Msg(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 3 : 0);
+                Kit.Msg(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 3 : 0);
         }
 
         void OnCustomNotify(object sender, RoutedEventArgs e)
         {
-            AtKit.Notify(GetInfo());
+            Kit.Notify(GetInfo());
         }
 
         NotifyInfo GetInfo()
@@ -48,7 +48,7 @@ namespace Dt.Sample
 
         void OnLink(NotifyInfo p_info)
         {
-            AtKit.Msg(string.Format("点击链接 [{0}]", p_info.Link));
+            Kit.Msg(string.Format("点击链接 [{0}]", p_info.Link));
         }
     }
 }

@@ -79,7 +79,7 @@ namespace Dt.Base
                 "       left join chatmember m \n" +
                 "              on l.otherid = m.id \n" +
                 "order  by stime desc",
-                new Dict { { "loginid", AtUser.ID } });
+                new Dict { { "loginid", Kit.UserID } });
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
@@ -90,9 +90,9 @@ namespace Dt.Base
         async void OnDelMsg(object sender, Mi e)
         {
             Row row = e.Row;
-            if (await AtKit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
+            if (await Kit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
             {
-                AtState.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
+                AtState.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={Kit.UserID}");
                 LoadData();
             }
         }

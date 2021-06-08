@@ -63,20 +63,20 @@ namespace Dt.App
         {
             if (p_menu == null)
             {
-                AtKit.Msg("打开菜单项不可为空！");
+                Kit.Msg("打开菜单项不可为空！");
                 return null;
             }
 
-            Type tp = AtApp.GetViewType(p_menu.ViewName);
+            Type tp = Kit.GetViewType(p_menu.ViewName);
             if (tp == null)
             {
-                AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
+                Kit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
                 return null;
             }
 
             Icons icon;
             Enum.TryParse(p_menu.Icon, out icon);
-            object win = AtApp.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
+            object win = Kit.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
 
             // 保存点击次数，用于确定哪些是收藏菜单
             if (win != null)
@@ -87,7 +87,7 @@ namespace Dt.App
                     {
                         // 点击次数保存在客户端
                         Dict dt = new Dict();
-                        dt["userid"] = AtUser.ID;
+                        dt["userid"] = Kit.UserID;
                         dt["menuid"] = p_menu.ID;
                         int cnt = AtState.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
                         if (cnt == 0)
@@ -130,7 +130,7 @@ namespace Dt.App
 
             // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
             _favMenus.Clear();
-            var fixedMenus = AtSys.Stub.FixedMenus;
+            var fixedMenus = Kit.Stub.FixedMenus;
             if (fixedMenus != null)
             {
                 // 固定项
@@ -144,7 +144,7 @@ namespace Dt.App
             int maxFav = 8;
             if (_favMenus.Count < maxFav)
             {
-                var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc LIMIT {maxFav}");
+                var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
                 foreach (var fav in favMenu)
                 {
                     // 过滤无权限的项
@@ -260,7 +260,7 @@ namespace Dt.App
                 foreach (var om in grp)
                 {
                     // 确保优先级，以搜索为开头的排在前
-                    string py = AtKit.GetPinYin(om.Name);
+                    string py = Kit.GetPinYin(om.Name);
                     if (om.Name.StartsWith(p_filter) || py.StartsWith(p_filter))
                         ls.Add(om);
                     else if (om.Name.Contains(p_filter) || py.Contains(p_filter))
@@ -273,7 +273,7 @@ namespace Dt.App
                 // 不包含分组
                 if (om.IsGroup)
                     continue;
-                string py = AtKit.GetPinYin(om.Name);
+                string py = Kit.GetPinYin(om.Name);
                 if (om.Name.StartsWith(p_filter) || py.StartsWith(p_filter))
                     ls.Add(om);
                 else if (om.Name.Contains(p_filter) || py.Contains(p_filter))
@@ -317,7 +317,7 @@ namespace Dt.App
             if (cnt == 0)
             {
                 // 查询服务端
-                Dict dt = await AtCm.GetMenus(AtUser.ID);
+                Dict dt = await AtCm.GetMenus(Kit.UserID);
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));

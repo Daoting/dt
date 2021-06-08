@@ -67,7 +67,7 @@ namespace Dt.Base.FormView
         {
             Icon = p_icon;
             Hex = Convert.ToString(0xE000 + (int)p_icon, 16).ToUpper();
-            _pinyin = AtKit.GetPinYin(p_icon.ToString());
+            _pinyin = Kit.GetPinYin(p_icon.ToString());
         }
 
         /// <summary>

@@ -113,7 +113,7 @@ namespace Dt.Base
         public Win()
         {
             // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Win);
         }
         #endregion
@@ -284,7 +284,7 @@ namespace Dt.Base
         /// </summary>
         public void NaviToHome()
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 return;
 
             if (_tabs == null)
@@ -303,7 +303,7 @@ namespace Dt.Base
         /// <param name="p_tabTitle">多个页面时用逗号隔开(自动以Tab形式显示)，null时自动导航到第一个Tab</param>
         public void NaviTo(string p_tabTitle)
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 return;
 
             // 导航到单页或多页Tab
@@ -321,7 +321,7 @@ namespace Dt.Base
         /// <param name="p_tabTitle"></param>
         public void SelectTab(string p_tabTitle)
         {
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 return;
 
             if (((PhonePage)SysVisual.RootFrame.Content).Content is PhoneTabs tabs)
@@ -517,7 +517,7 @@ namespace Dt.Base
                         {
                             // Tab未设置标题时使用窗口标题
                             tab.Title = Title;
-                            title = AtKit.NewID;
+                            title = Kit.NewID;
                         }
                         tab.OwnWin = this;
                         _tabs[title] = tab;
@@ -537,7 +537,7 @@ namespace Dt.Base
                         Title = Title,
                         OwnWin = this
                     };
-                    _tabs[AtKit.NewID] = tab;
+                    _tabs[Kit.NewID] = tab;
                 }
             }
         }
@@ -549,7 +549,7 @@ namespace Dt.Base
         /// </summary>
         public void Open()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 NaviToHome();
             else if (!Desktop.Inst.ActiveWin(this))
                 Desktop.Inst.ShowNewWin(this);
@@ -563,7 +563,7 @@ namespace Dt.Base
         /// </summary>
         public void Close()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 // 关闭窗口所有导航页
                 CloseAllNaviPages();
@@ -758,7 +758,7 @@ namespace Dt.Base
             _popupPanel = new Canvas();
 
             // 停靠区域提示
-            _dragCue = new Border { Background = AtRes.暗遮罩, BorderBrush = AtRes.深暗遮罩, BorderThickness = new Thickness(2), Visibility = Visibility.Collapsed };
+            _dragCue = new Border { Background = Res.暗遮罩, BorderBrush = Res.深暗遮罩, BorderThickness = new Thickness(2), Visibility = Visibility.Collapsed };
             Canvas.SetZIndex(_dragCue, 999997);
             _popupPanel.Children.Add(_dragCue);
 
@@ -1015,7 +1015,7 @@ namespace Dt.Base
         /// <param name="p_content"></param>
         public void LoadMain(object p_content)
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 LoadPhoneMain(p_content);
             else
                 LoadWinMain(p_content);

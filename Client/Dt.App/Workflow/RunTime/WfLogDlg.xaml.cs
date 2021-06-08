@@ -43,7 +43,7 @@ namespace Dt.App.Workflow
             var def = await WfFormInfo.GetPrcDef(p_prcID);
             if (string.IsNullOrEmpty(def.Diagram))
             {
-                AtKit.Warn("流程图模板内容为空！");
+                Kit.Warn("流程图模板内容为空！");
                 return;
             }
 
@@ -62,11 +62,11 @@ namespace Dt.App.Workflow
                         {
                             //活动
                             case "0":
-                                node.BorderBrush = AtRes.醒目红色;
+                                node.BorderBrush = Res.醒目红色;
                                 break;
                             //结束
                             case "1":
-                                node.BorderBrush = AtRes.GreenBrush;
+                                node.BorderBrush = Res.GreenBrush;
                                 break;
                         }
                         node.Click += OnNodeClick;
@@ -74,7 +74,7 @@ namespace Dt.App.Workflow
                 }
             }
 
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
             {
                 Height = 700;
                 Width = 500;
@@ -87,7 +87,7 @@ namespace Dt.App.Workflow
             SNode node = (SNode)sender;
             string msg = await GetWfLog(_prciID, (sender as SNode).ID);
             if (!string.IsNullOrEmpty(msg))
-                AtKit.Msg(string.Format("{0}\r\n{1}", node.Title, msg));
+                Kit.Msg(string.Format("{0}\r\n{1}", node.Title, msg));
         }
 
         async void OnLog(object sender, Mi e)

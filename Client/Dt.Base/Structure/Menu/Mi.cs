@@ -113,7 +113,7 @@ namespace Dt.Base
         static void OnScopeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Mi mi = (Mi)d;
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
                 mi.Visibility = ((MiScope)e.NewValue) == MiScope.Windows ? Visibility.Collapsed : Visibility.Visible;
             else
                 mi.Visibility = ((MiScope)e.NewValue) == MiScope.Phone ? Visibility.Collapsed : Visibility.Visible;
@@ -539,7 +539,7 @@ namespace Dt.Base
                     IsMouseOver = false;
                     ChangeState(MenuItemState.Normal);
                     // phone模式关闭上级窗口
-                    if (AtSys.IsPhoneUI && ParentMi != null && ParentMi.IsSubmenuOpen)
+                    if (Kit.IsPhoneUI && ParentMi != null && ParentMi.IsSubmenuOpen)
                         ParentMi.IsSubmenuOpen = false;
                     else
                         Owner?.Close();
@@ -589,7 +589,7 @@ namespace Dt.Base
             if (ParentMi != null)
             {
                 // 关闭同级已打开的菜单
-                if (AtSys.IsPhoneUI && ParentMi.IsSubmenuOpen)
+                if (Kit.IsPhoneUI && ParentMi.IsSubmenuOpen)
                 {
                     // phone模式关闭上级窗口
                     ParentMi.IsSubmenuOpen = false;
@@ -605,7 +605,7 @@ namespace Dt.Base
                 }
                 ParentMi._lastSelected = this;
             }
-            else if (AtSys.IsPhoneUI && Owner.IsContextMenu)
+            else if (Kit.IsPhoneUI && Owner.IsContextMenu)
             {
                 Owner.Close();
             }
@@ -694,7 +694,7 @@ namespace Dt.Base
 
         protected virtual void UpdateRoleState()
         {
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 if (ParentMi == null && !Owner.IsContextMenu)
                     VisualStateManager.GoToState(this, ShowInPhone.ToString(), true);
@@ -746,7 +746,7 @@ namespace Dt.Base
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             // 触摸时不自动打开下级菜单
-            if (Owner == null || AtSys.IsPhoneUI || e.IsTouch())
+            if (Owner == null || Kit.IsPhoneUI || e.IsTouch())
                 return;
 
             IsMouseOver = true;

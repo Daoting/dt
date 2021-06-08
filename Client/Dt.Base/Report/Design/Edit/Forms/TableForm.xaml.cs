@@ -75,7 +75,7 @@ namespace Dt.Base.Report
                 // 先测试扩展位置是否与其他控件冲突
                 if (_table.TestIncIntersect(1))
                 {
-                    AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                    Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
                     return;
                 }
                 _info.ExecuteCmd(RptCmds.ConHeadOrFoot, new ContainHeadOrFootCmdArgs(p_flag, _table));
@@ -110,7 +110,7 @@ namespace Dt.Base.Report
             // 先测试扩展位置是否与其他控件冲突
             if (_table.TestIncIntersect(2))
             {
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
                 return;
             }
 
@@ -139,7 +139,7 @@ namespace Dt.Base.Report
             // 先测试扩展位置是否与其他控件冲突
             if (_table.TestIncIntersect(1))
             {
-                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
                 return;
             }
 
@@ -158,7 +158,7 @@ namespace Dt.Base.Report
             // 先测试扩展位置是否与其他控件冲突
             if (_table.TestIncIntersect(0, 1))
             {
-                AtKit.Warn("增加列后与已有控件位置发生重叠，请调整控件位置后重试！");
+                Kit.Warn("增加列后与已有控件位置发生重叠，请调整控件位置后重试！");
                 return;
             }
 

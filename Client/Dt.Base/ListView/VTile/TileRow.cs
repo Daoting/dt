@@ -41,7 +41,7 @@ namespace Dt.Base.ListView
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double height = AtRes.RowOuterHeight;
+            double height = Res.RowOuterHeight;
 
             // 内容
             var elem = (UIElement)Children[0];
@@ -103,7 +103,7 @@ namespace Dt.Base.ListView
             // 分割线及选择背景
             Border bd;
             if (_owner.ShowItemBorder)
-                bd = new Border { BorderThickness = new Thickness(0, 0, 1, 1), BorderBrush = AtRes.浅灰边框, IsHitTestVisible = false };
+                bd = new Border { BorderThickness = new Thickness(0, 0, 1, 1), BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
             else
                 bd = new Border { IsHitTestVisible = false };
             if (_owner.SelectionMode != SelectionMode.None)

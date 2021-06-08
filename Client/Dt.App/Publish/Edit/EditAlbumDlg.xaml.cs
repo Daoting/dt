@@ -38,8 +38,8 @@ namespace Dt.App.Publish
             return new Album(
                 ID: await AtPublish.NewID(),
                 Name: "新专辑",
-                Creator: AtUser.Name,
-                Ctime: AtSys.Now);
+                Creator: Kit.UserName,
+                Ctime: Kit.Now);
         }
 
         async void OnSave(object sender, Mi e)
@@ -59,7 +59,7 @@ namespace Dt.App.Publish
         protected override Task<bool> OnClosing()
         {
             if (_fv.Row.IsChanged)
-                return AtKit.Confirm("数据未保存，要放弃修改吗？");
+                return Kit.Confirm("数据未保存，要放弃修改吗？");
             return Task.FromResult(true);
         }
     }

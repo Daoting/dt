@@ -43,7 +43,7 @@ namespace Dt.App.Chat
             bool refresh = true;
             string val = AtState.GetCookie(_refreshKey);
             if (!string.IsNullOrEmpty(val) && DateTime.TryParse(val, out var last))
-                refresh = (AtSys.Now - last).TotalHours >= 10;
+                refresh = (Kit.Now - last).TotalHours >= 10;
 
             if (refresh)
                 RefreshList();
@@ -69,7 +69,7 @@ namespace Dt.App.Chat
             }
 
             // 记录刷新时间
-            AtState.SaveCookie(_refreshKey, AtSys.Now.ToString());
+            AtState.SaveCookie(_refreshKey, Kit.Now.ToString());
         }
 
         void LoadLocalList()

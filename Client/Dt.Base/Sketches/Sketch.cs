@@ -722,7 +722,7 @@ namespace Dt.Base
                 return;
 
             using (StringReader stream = new StringReader(p_xml))
-            using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
+            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
             {
                 reader.Read();
 
@@ -767,7 +767,7 @@ namespace Dt.Base
 #else
                              case "fontweight": tb.FontWeight = new FontWeight(ushort.Parse(reader.Value));break;
 #endif
-                                case "foreground": tb.Foreground = new SolidColorBrush(AtRes.HexStringToColor(reader.Value)); break;
+                                case "foreground": tb.Foreground = new SolidColorBrush(Res.HexStringToColor(reader.Value)); break;
                                 case "fontstyle": tb.FontStyle = (FontStyle)int.Parse(reader.Value); break;
                                 case "fontfamily": tb.FontFamily = new FontFamily(reader.Value); break;
                                 case "left": Canvas.SetLeft(tb, double.Parse(reader.Value)); break;
@@ -807,7 +807,7 @@ namespace Dt.Base
         public string WriteXml()
         {
             StringBuilder sb = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(sb, AtKit.WriterSettings))
+            using (XmlWriter writer = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true }))
             {
                 writer.WriteStartElement("Sketch");
                 SNode node;
@@ -835,7 +835,7 @@ namespace Dt.Base
                         {
                             writer.WriteAttributeString("fontweight", tb.FontWeight.Weight.ToString());
                         }
-                        if ((tb.Foreground as SolidColorBrush).Color != AtRes.默认前景.Color)
+                        if ((tb.Foreground as SolidColorBrush).Color != Res.默认前景.Color)
                         {
                             writer.WriteAttributeString("foreground", (tb.Foreground as SolidColorBrush).Color.ToString());
                         }

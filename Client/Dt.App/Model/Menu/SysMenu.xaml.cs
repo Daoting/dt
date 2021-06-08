@@ -35,7 +35,7 @@ namespace Dt.App.Model
             LoadTreeData();
 
             Table tbl = new Table { { "name" }, { "desc" } };
-            foreach (var item in AtSys.Stub.ViewTypes)
+            foreach (var item in Kit.Stub.ViewTypes)
             {
                 if (item.Key == "报表")
                     tbl.AddRow(new { name = item.Key, desc = "视图参数中多个报表名称之间逗号隔开" });
@@ -136,8 +136,8 @@ namespace Dt.App.Model
                 IsGroup: p_isGroup,
                 ParentID: sel.ID > 0 ? (long?)sel.ID : null,
                 Dispidx: await AtCm.NewSeq("sq_menu"),
-                Ctime: AtSys.Now,
-                Mtime: AtSys.Now);
+                Ctime: Kit.Now,
+                Mtime: Kit.Now);
             m.AddCell("parentname", sel.Name);
             _fv.Data = m;
         }
@@ -159,9 +159,9 @@ namespace Dt.App.Model
 
         async void DelMenuRow(Menu p_row)
         {
-            if (!await AtKit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？"))
             {
-                AtKit.Msg("已取消删除！");
+                Kit.Msg("已取消删除！");
                 return;
             }
 

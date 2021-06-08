@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.Tools;
 using Dt.Core;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,12 +37,12 @@ namespace Dt.Base
         public async void Logout()
         {
             // 注销时清空用户信息
-            AtUser.Reset();
+            Kit.ResetUser();
 
             AtState.DeleteCookie("LoginPhone");
             AtState.DeleteCookie("LoginPwd");
 
-            await AtSys.Stub.OnLogout();
+            await Kit.Stub.OnLogout();
             Startup.ShowLogin(false);
         }
 
@@ -54,7 +55,7 @@ namespace Dt.Base
         public Task<bool> Confirm(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
                 dlg.Width = SysVisual.ViewWidth - 40;
@@ -93,7 +94,7 @@ namespace Dt.Base
         public void Error(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
-            if (AtSys.IsPhoneUI)
+            if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
                 dlg.Width = SysVisual.ViewWidth - 40;
@@ -108,12 +109,90 @@ namespace Dt.Base
             Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) });
-            grid.Children.Add(new TextBlock { Text = "\uE037", FontFamily = AtRes.IconFont, Foreground = AtRes.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
+            grid.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
             var tb = new TextBlock { Text = p_content, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(tb, 1);
             grid.Children.Add(tb);
             dlg.Content = grid;
             dlg.Show();
+        }
+
+        /// <summary>
+        /// 根据视图名称激活旧窗口或打开新窗口
+        /// </summary>
+        /// <param name="p_viewName">窗口视图名称</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
+        {
+            Type tp = Kit.GetViewType(p_viewName);
+            if (tp == null)
+            {
+                Kit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
+                return null;
+            }
+            return OpenWin(tp, p_title, p_icon, p_params);
+        }
+
+        /// <summary>
+        /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
+        /// </summary>
+        /// <param name="p_type">窗口/视图类型</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">初始参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params)
+        {
+            Throw.IfNull(p_type, "待显示的窗口类型不可为空！");
+
+            // 激活旧窗口，比较窗口类型和初始参数
+            Win win;
+            if (!Kit.IsPhoneUI
+                && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
+            {
+                return win;
+            }
+
+            // 打开新窗口
+            if (p_type.IsSubclassOf(typeof(Win)))
+            {
+                if (p_params == null)
+                    win = (Win)Activator.CreateInstance(p_type);
+                else
+                    win = (Win)Activator.CreateInstance(p_type, p_params);
+
+                if (string.IsNullOrEmpty(win.Title) && string.IsNullOrEmpty(p_title))
+                    win.Title = "无标题";
+                else if (!string.IsNullOrEmpty(p_title))
+                    win.Title = p_title;
+
+                if (p_icon != Icons.None)
+                    win.Icon = p_icon;
+
+                // 记录初始参数，设置自启动和win模式下识别窗口时使用
+                if (p_params != null)
+                    win.Params = p_params;
+
+                if (Kit.IsPhoneUI)
+                    win.NaviToHome();
+                else
+                    Desktop.Inst.ShowNewWin(win);
+                return win;
+            }
+
+            // 处理自定义启动情况
+            if (p_type.GetInterface("IView") == typeof(IView))
+            {
+                IView viewer = Activator.CreateInstance(p_type) as IView;
+                viewer.Run(p_title, p_icon, p_params);
+                return viewer;
+            }
+
+            Kit.Msg("打开窗口失败，窗口类型继承自Win或实现IView接口！");
+            return null;
         }
 
         /// <summary>
@@ -140,7 +219,7 @@ namespace Dt.Base
 
             // asp.net core2.2时因客户端直接关闭app时会造成服务器端http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort来停止在线推送
             // 升级道.net 5.0后不再出现该现象！无需再通过服务端Abort
-            //if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
+            //if (Kit.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
             //{
             //    PushHandler.RetryState = PushRetryState.Stop;
             //    await AtMsg.Unregister();
@@ -152,7 +231,7 @@ namespace Dt.Base
         /// </summary>
         public void OnResuming()
         {
-            if (AtUser.IsLogon && !PushHandler.StopRetry)
+            if (Kit.IsLogon && !PushHandler.StopRetry)
             {
                 // 在线推送可能被停止，重新启动
                 PushHandler.RetryTimes = 0;

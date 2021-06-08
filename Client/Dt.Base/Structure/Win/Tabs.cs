@@ -71,7 +71,7 @@ namespace Dt.Base
         public Tabs()
         {
             // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
-            if (!AtSys.IsPhoneUI)
+            if (!Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Tabs);
         }
         #endregion

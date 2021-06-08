@@ -116,7 +116,7 @@ namespace Dt.Base
             }
             catch
             {
-                AtKit.Warn("报表绘制异常！");
+                Kit.Warn("报表绘制异常！");
             }
             finally
             {
@@ -247,7 +247,7 @@ namespace Dt.Base
                     sheet[i, j].StyleName = "";
                 }
             }
-            SheetTable table = sheet.AddTable("table" + AtKit.NewID, p_range.Row, p_range.Column, p_range.RowCount, p_range.ColumnCount, TableStyles.Light21);
+            SheetTable table = sheet.AddTable("table" + Kit.NewID, p_range.Row, p_range.Column, p_range.RowCount, p_range.ColumnCount, TableStyles.Light21);
             sheet.SetActiveCell(0, 0, true);
             return table;
         }
@@ -262,7 +262,7 @@ namespace Dt.Base
             Rect rc = sheet.GetRangeLocation(p_range);
             string rangeFormula = sheet.Cells[p_range.Row, p_range.Column, p_range.RowCount + p_range.Row - 1, p_range.ColumnCount + p_range.Column - 1].ToString(this.Excel.ActiveSheet.Cells[0, 0]);
             rangeFormula = "'" + sheet.Name + "'!" + rangeFormula;
-            SpreadChart chart = sheet.AddChart("table" + AtKit.NewID, SpreadChartType.ColumnClustered, rangeFormula, rc.Left, rc.Top + rc.Height + 8, 600, 300);
+            SpreadChart chart = sheet.AddChart("table" + Kit.NewID, SpreadChartType.ColumnClustered, rangeFormula, rc.Left, rc.Top + rc.Height + 8, 600, 300);
             chart.Legend.Orientation = Orientation.Vertical;
             StringBuilder builder = new StringBuilder("chart");
             builder.Append(sheet.Charts.Count.ToString()).Append("!");
@@ -319,7 +319,7 @@ namespace Dt.Base
                         }
                         else
                         {
-                            AtKit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
+                            Kit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
                         }
                         idx++;
                     }
@@ -398,7 +398,7 @@ namespace Dt.Base
                             }
                             else
                             {
-                                AtKit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
+                                Kit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
                             }
                             idx++;
                         }
@@ -574,7 +574,7 @@ namespace Dt.Base
                     fileFormat = ExcelFileFormat.XLS;
                 await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
                 stream.Dispose();
-                AtKit.Msg("导出成功！");
+                Kit.Msg("导出成功！");
             }
         }
 

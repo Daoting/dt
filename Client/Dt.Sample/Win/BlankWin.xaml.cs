@@ -60,19 +60,19 @@ namespace Dt.Sample
                 _rnd = new Random().Next(1000);
                 ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
             }
-            AtApp.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
+            Kit.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
         }
 
         void OnClosing(object sender, AsyncCancelEventArgs e)
         {
             e.Cancel = (bool)_cbClosing.IsChecked;
             if (e.Cancel)
-                AtKit.Msg($"{Title} - 事件中设置禁止关闭");
+                Kit.Msg($"{Title} - 事件中设置禁止关闭");
         }
 
         void OnClosed(object sender, EventArgs e)
         {
-            AtKit.Msg($"{Title} - 关闭后事件");
+            Kit.Msg($"{Title} - 关闭后事件");
         }
     }
 }

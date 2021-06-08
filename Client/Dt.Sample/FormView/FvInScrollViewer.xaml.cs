@@ -39,7 +39,7 @@ namespace Dt.Sample
         {
             int index = new Random().Next(0, _fv.Items.Count);
             _fv.ScrollInto(index);
-            AtKit.Msg($"滚动到第 {index + 1} 个单元格");
+            Kit.Msg($"滚动到第 {index + 1} 个单元格");
         }
 
         void OnScrollTop(object sender, RoutedEventArgs e)
