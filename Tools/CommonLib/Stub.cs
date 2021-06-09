@@ -10,12 +10,10 @@
 using Dt.App;
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Shell
@@ -48,60 +46,41 @@ namespace Dt.Shell
         public string Title => "搬运工";
 
         /// <summary>
-        /// 登录页面
+        /// 系统描述信息
         /// </summary>
-        /// <returns></returns>
-        public UIElement LoginPage => new Login { Desc = "搬运工平台基础样例" };
+        public string Desc => "";
+
+        /// <summary>
+        /// 默认主页(DefaultHome)的固定菜单项
+        /// </summary>
+        public IList<OmMenu> FixedMenus { get; } = new List<OmMenu>
+        {
+            new OmMenu(
+                ID: 1110,
+                Name: "通讯录",
+                Icon: "留言",
+                ViewName: "通讯录"),
+        };
 
         /// <summary>
         /// 系统启动
         /// </summary>
-        /// <param name="p_info">提示信息</param>
-        public async Task OnStartup(StartupInfo p_info)
+        public async Task OnStartup()
         {
-            // 设置固定菜单项
-            MenuKit.FixedMenus = new List<OmMenu>
-            {
-                new OmMenu(
-                    ID: 1110,
-                    Name: "通讯录",
-                    Icon: "留言",
-                    ViewName: "通讯录"),
-            };
+            // 1. 按默认流程启动
+            Startup.Register(null, typeof(DefaultHome));
+            await Startup.Run(true);
 
-            if (ViewTypes.TryGetValue("主页", out var type) && type == typeof(DefaultHome))
-            {
-                // 联网模式
-                // 更新打开模型库
-                string error = await AtApp.OpenModelDb("cm");
-                if (!string.IsNullOrEmpty(error))
-                {
-                    p_info.SetMessage(error);
-                    return;
-                }
+            // 2. 自定义启动过程
+            //if (await Startup.OpenModelDb())
+            //{
+            //    Startup.Register(null, typeof(SamplesMain));
+            //    Startup.ShowHome();
+            //}
 
-                string phone = AtState.GetCookie("LoginPhone");
-                string pwd = AtState.GetCookie("LoginPwd");
-                if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-                {
-                    // 自动登录
-                    Dict dt = await AtCm.LoginByPwd(phone, pwd);
-                    if (dt.Bool("valid"))
-                    {
-                        // 登录成功
-                        AtApp.LoginSuccess(dt);
-                        return;
-                    }
-                }
-
-                // 未登录或登录失败
-                AtSys.Login(false);
-            }
-            else
-            {
-                // 单机模式
-                AtApp.LoadRootUI();
-            }
+            // 3. 完全不使用dt服务
+            //Startup.Register(null, typeof(SamplesMain));
+            //Startup.ShowHome();
         }
 
         /// <summary>
@@ -110,6 +89,7 @@ namespace Dt.Shell
         /// <param name="p_info">分享内容描述</param>
         public void ReceiveShare(ShareInfo p_info)
         {
+            //Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
 
         /// <summary>
@@ -143,7 +123,6 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>
         {
-            { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
             { "流程设计", typeof(Dt.App.Workflow.WorkflowMgr) },
             { "任务", typeof(Dt.App.Workflow.TasksView) },
@@ -173,8 +152,7 @@ namespace Dt.Shell
         /// 获取自定义可序列化类型字典
         /// </summary>
         public Dictionary<string, Type> SerializeTypes { get; } = new Dictionary<string, Type>
-        {
-        };
+        { };
 
         /// <summary>
         /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型

@@ -250,6 +250,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\Svc\Svc.csproj">
+      <Project>{CC44A804-F77B-4E52-9F66-DEB46D0F2DFA}</Project>
+      <Name>Svc</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\ThreePanelWin\ThreePanelWin.csproj">
       <Project>{2FAA32E5-8BB7-4191-9E34-A2D05D761A61}</Project>
       <Name>ThreePanelWin</Name>

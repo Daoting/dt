@@ -1,0 +1,24 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "https://localhost/fz/$safeprojectname$",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS": {
+      "commandName": "IIS"
+    },
+    "$safeprojectname$": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": ".admin",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:20201/"
+    }
+  }
+}
