@@ -1,8 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
 
   <PropertyGroup>
-    <PackageId>Dt</PackageId>
-    <Description>DT框架库</Description>    <!--将引用的项目合并打包-->
+    <PackageId>Dt.Client</PackageId>
+    <Description>搬运工客户端基础包</Description>    <!--将引用的项目合并打包-->
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     <Version>1.9.1</Version>
   </PropertyGroup>

@@ -356,7 +356,7 @@ Service/src/Dt.Fsm/etc/log/
 Service/publish/
 !Service/iis/tls.pfx
 Client/Common/wasm/
-Client/Common/nupkg/
+Package/
 !Client/Dt.App/Publish/
 Client/Dt.Cells/Dt.Cells.xml 
 Client/Dt.Charts/Dt.Charts.xml
