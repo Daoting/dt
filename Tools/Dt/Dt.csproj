@@ -215,6 +215,13 @@
     <None Include="Resources\Logo.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AgentClass\AgentClass.csproj">
+      <Project>{E3764406-BEFD-442F-BC84-F95922AD4D53}</Project>
+      <Name>AgentClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\BlankWin\BlankWin.csproj">
       <Project>{F010B6D2-48A8-4DDA-AFEA-715F1429A168}</Project>
       <Name>BlankWin</Name>
@@ -232,6 +239,13 @@
     <ProjectReference Include="..\Dialog\Dialog.csproj">
       <Project>{E574AB78-67E8-42B4-9F75-BAABDB36F1D4}</Project>
       <Name>Dialog</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\EntityClass\EntityClass.csproj">
+      <Project>{726D7C4A-54D3-4FF8-9C95-D550A9BFC2FC}</Project>
+      <Name>EntityClass</Name>
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>

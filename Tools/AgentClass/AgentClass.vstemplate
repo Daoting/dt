@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>Api代理类</Name>
+    <Description>服务Api代理类</Description>
+    <SortOrder>90</SortOrder>
+    <Icon>Logo.ico</Icon>
+    <TemplateID>6b7a0bec-690b-40e8-aaae-0ebca5fd4314</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>At.cs</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+    </References>
+    <ProjectItem TargetFileName="$fileinputname$.cs" ReplaceParameters="true">Class.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

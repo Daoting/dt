@@ -22,7 +22,6 @@ namespace Dt.Cm
     {
         public static User CreateByPhone(string p_phone)
         {
-            // cm用户标志0
             return new User(
                 ID: Id.New(),
                 Phone: p_phone,
