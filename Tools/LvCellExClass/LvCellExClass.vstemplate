@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>Lv.CellEx类</Name>
+    <Description>自定义Lv单元格的类型</Description>
+    <SortOrder>100</SortOrder>
+    <Icon>Logo.ico</Icon>
+    <TemplateID>9dc7f6cf-0f8e-407c-9e83-07a7bc523d07</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <DefaultName>ViewEx.cs</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+    </References>
+    <ProjectItem TargetFileName="$fileinputname$.cs" ReplaceParameters="true">Class.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

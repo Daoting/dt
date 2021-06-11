@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
   <TemplateData>
-    <Name>Entity子类</Name>
-    <Description>Entity子类模板，包含OnSaving OnDeleting</Description>
-    <SortOrder>80</SortOrder>
+    <Name>Api类</Name>
+    <Description>服务Api类</Description>
+    <SortOrder>110</SortOrder>
     <Icon>Logo.ico</Icon>
-    <TemplateID>76560c8f-5124-48a0-af75-fc6f2768fa70</TemplateID>
-    <!--也适用于asp.net core项目，参见：-->
-    <!--C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ItemTemplates\AspNetCore\Web\ASP.NET\1033\Middleware-->
+    <TemplateID>1afb79fa-ef3f-4a5c-874a-17e796dbb278</TemplateID>
     <TemplateGroupID>AspNetCore</TemplateGroupID>
     <ProjectType>CSharp</ProjectType>
     <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
-    <DefaultName>Entity.cs</DefaultName>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>Api.cs</DefaultName>
   </TemplateData>
   <TemplateContent>
     <References>
@@ -19,6 +18,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem TargetFileName="$fileinputname$.cs" ReplaceParameters="true">Entity.cs</ProjectItem>
+    <ProjectItem TargetFileName="$fileinputname$.cs" ReplaceParameters="true">Class.cs</ProjectItem>
   </TemplateContent>
 </VSTemplate>

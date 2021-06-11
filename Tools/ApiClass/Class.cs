@@ -16,13 +16,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
 
-namespace $safeprojectname$
+namespace $rootnamespace$
 {
     /// <summary>
     /// 
     /// </summary>
     [Api]
-    public class Api1 : BaseApi
+    public class $safeitemrootname$ : BaseApi
     {
         public Dict GetConfig()
         {

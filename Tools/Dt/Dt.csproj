@@ -222,6 +222,13 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
+    <ProjectReference Include="..\ApiClass\ApiClass.csproj">
+      <Project>{80F57BCC-9D54-4AD6-8A9A-D46237CB4178}</Project>
+      <Name>ApiClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\BlankWin\BlankWin.csproj">
       <Project>{F010B6D2-48A8-4DDA-AFEA-715F1429A168}</Project>
       <Name>BlankWin</Name>
@@ -246,6 +253,13 @@
     <ProjectReference Include="..\EntityClass\EntityClass.csproj">
       <Project>{726D7C4A-54D3-4FF8-9C95-D550A9BFC2FC}</Project>
       <Name>EntityClass</Name>
+      <VSIXSubPath>ItemTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\LvCellExClass\LvCellExClass.csproj">
+      <Project>{0D96B26A-485C-4A42-A938-6B79B887C5E3}</Project>
+      <Name>LvCellExClass</Name>
       <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
