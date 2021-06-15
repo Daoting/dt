@@ -105,7 +105,7 @@ namespace Dt.App
                         Startup.ShowHome();
                     }
                     // 接收服务器推送
-                    Kit.RegisterSysPush();
+                    Startup.RegisterSysPush();
                 }
                 catch
                 {

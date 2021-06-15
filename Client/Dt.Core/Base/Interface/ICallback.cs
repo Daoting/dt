@@ -86,11 +86,6 @@ namespace Dt.Core
         void OnResuming();
 
         /// <summary>
-        /// 注册接收服务器推送
-        /// </summary>
-        void RegisterSysPush();
-
-        /// <summary>
         /// 选择单个图片
         /// </summary>
         /// <returns></returns>

@@ -313,14 +313,6 @@ namespace Dt.Core
 
         #region 系统通知
         /// <summary>
-        /// 注册接收服务器推送
-        /// </summary>
-        public static void RegisterSysPush()
-        {
-            Callback.RegisterSysPush();
-        }
-
-        /// <summary>
         /// 显示系统通知
         /// </summary>
         /// <param name="p_content">内容</param>

@@ -114,7 +114,7 @@ namespace Dt.Base
                     // 切换到主页
                     ShowHome();
                     // 接收服务器推送
-                    Kit.RegisterSysPush();
+                    RegisterSysPush();
                     return;
                 }
             }
@@ -229,6 +229,17 @@ namespace Dt.Base
         {
             if (SysVisual.RootContent is TextBlock tb && p_msg != null)
                 tb.Text = p_msg;
+        }
+        #endregion
+
+        #region 注册接收推送
+        /// <summary>
+        /// 注册接收服务器推送
+        /// </summary>
+        public static void RegisterSysPush()
+        {
+            PushHandler.StopRetry = false;
+            _ = PushHandler.Register();
         }
         #endregion
 

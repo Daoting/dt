@@ -235,17 +235,8 @@ namespace Dt.Base
             {
                 // 在线推送可能被停止，重新启动
                 PushHandler.RetryTimes = 0;
-                RegisterSysPush();
+                Startup.RegisterSysPush();
             }
-        }
-
-        /// <summary>
-        /// 注册接收服务器推送
-        /// </summary>
-        public void RegisterSysPush()
-        {
-            PushHandler.StopRetry = false;
-            _ = PushHandler.Register();
         }
     }
 }
