@@ -114,7 +114,7 @@ namespace Dt.Base
                     // 切换到主页
                     ShowHome();
                     // 接收服务器推送
-                    _ = PushHandler.Register();
+                    Kit.RegisterSysPush();
                     return;
                 }
             }

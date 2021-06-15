@@ -22,7 +22,7 @@ namespace Dt.Base
     /// <summary>
     /// 处理服务器推送
     /// </summary>
-    internal class PushHandler
+    class PushHandler
     {
         #region 静态内容
         static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
@@ -35,8 +35,9 @@ namespace Dt.Base
 
         /// <summary>
         /// 服务器推送连接断开后的是否停止重连
+        /// 默认true，初始不注册接收时OnResuming也不连接
         /// </summary>
-        public static bool StopRetry;
+        public static bool StopRetry = true;
 
         /// <summary>
         /// 处理服务器推送
