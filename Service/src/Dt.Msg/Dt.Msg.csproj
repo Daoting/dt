@@ -5,13 +5,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Dt\Service\src\Dt.Msg\Dt.Msg.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Dt.Msg.xml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\k8s\global.json" Link="etc\config\global.json">

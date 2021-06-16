@@ -363,3 +363,5 @@ Client/Dt.Charts/Dt.Charts.xml
 Client/Dt.Core/Dt.Core.xml
 Client/Dt.Base/Dt.Base.xml
 Client/Dt.App/Dt.App.xml
+Service/src/Dt.Core/Dt.Core.xml
+Service/src/Dt.Cm/Dt.Cm.xml

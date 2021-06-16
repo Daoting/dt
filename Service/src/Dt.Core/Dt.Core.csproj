@@ -4,10 +4,12 @@
     <TargetFramework>net5.0</TargetFramework>
     <PackageId>Dt.Service</PackageId>
     <Description>搬运工服务端基础包</Description>
+    <!--输出包含pdb文件的nuget包-->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Dt.Core.xml</DocumentationFile>
+    <DocumentationFile>D:\Dt\Service\src\Dt.Core\Dt.Core.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <DefineConstants>TRACE;SERVER</DefineConstants>
   </PropertyGroup>
@@ -40,5 +42,4 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
   </ItemGroup>
-
 </Project>
