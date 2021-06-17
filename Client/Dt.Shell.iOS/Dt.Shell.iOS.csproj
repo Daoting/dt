@@ -130,7 +130,7 @@
   <ItemGroup>
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
     <!-- 确保版本和Dt.Base中的一致 -->
-    <PackageReference Include="Uno.UI" Version="3.7.6" />
+    <PackageReference Include="Uno.UI" Version="3.8.6" />
     <PackageReference Include="GMImagePicker.Xamarin" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>

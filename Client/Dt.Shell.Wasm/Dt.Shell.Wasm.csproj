@@ -53,7 +53,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.6.6" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.8.6" />
     <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
     <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" />
   </ItemGroup>
