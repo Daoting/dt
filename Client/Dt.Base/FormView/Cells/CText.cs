@@ -12,6 +12,7 @@ using Dt.Base.FormView;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -48,6 +49,12 @@ namespace Dt.Base
             typeof(bool),
             typeof(CText),
             new PropertyMetadata(true, OnUpdateTimelyChanged));
+
+        public static readonly DependencyProperty InputScopeProperty = DependencyProperty.Register(
+            "InputScope",
+            typeof(InputScope),
+            typeof(CText),
+            new PropertyMetadata(null));
 
         static void OnAcceptsReturnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -119,6 +126,15 @@ namespace Dt.Base
             set { SetValue(UpdateTimelyProperty, value); }
         }
 
+        /// <summary>
+        /// 获取设置输入法
+        /// </summary>
+        public InputScope InputScope
+        {
+            get { return (InputScope)GetValue(InputScopeProperty); }
+            set { SetValue(InputScopeProperty, value); }
+        }
+
         protected override void OnApplyCellTemplate()
         {
             // 原本放在控件模板中，因wasm中长文本对应textarea放入代码构造，跨平台就是一个妥协过程！
@@ -126,6 +142,7 @@ namespace Dt.Base
             _tb.SetBinding(TextBox.IsReadOnlyProperty, new Binding { Path = new PropertyPath("ReadOnlyBinding"), Source = this });
             _tb.SetBinding(TextBox.MaxLengthProperty, new Binding { Path = new PropertyPath("MaxLength"), Source = this });
             _tb.SetBinding(TextBox.PlaceholderTextProperty, new Binding { Path = new PropertyPath("Placeholder"), Source = this });
+            _tb.SetBinding(TextBox.InputScopeProperty, new Binding { Path = new PropertyPath("InputScope"), Source = this });
 
             if (UpdateTimely)
                 _tb.TextChanged += OnUpdateSource;

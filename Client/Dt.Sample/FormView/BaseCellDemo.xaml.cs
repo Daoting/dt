@@ -13,6 +13,7 @@ using Dt.Core;
 using System;
 using System.Reflection;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Sample
@@ -37,6 +38,7 @@ namespace Dt.Sample
             _tbl = new Table
             {
                 { "txt" },
+                { "txtinput" },
                 { "txtlong" },
                 { "txtpy" },
                 { "tgtpy" },
@@ -148,9 +150,25 @@ namespace Dt.Sample
                 _fv.Row["tgtpy"] = Kit.GetPinYin(e.ToString());
         }
 
+        void OnNum(object sender, RoutedEventArgs e)
+        {
+            ((CText)_fv["txtinput"]).InputScope = new InputScope { Names = { new InputScopeName { NameValue = InputScopeNameValue.Number } } };
+        }
+
+        void OnPhoneNum(object sender, RoutedEventArgs e)
+        {
+            ((CText)_fv["txtinput"]).InputScope = new InputScope { Names = { new InputScopeName { NameValue = InputScopeNameValue.TelephoneNumber } } };
+        }
+
+        void OnDefaultInput(object sender, RoutedEventArgs e)
+        {
+            ((CText)_fv["txtinput"]).InputScope = null;
+        }
+
         class CellData
         {
             public string Txt { get; set; }
+            public string TxtInput { get; set; }
             public string TxtLong { get; set; }
             public string Txtpy { get; set; }
             public double Num { get; set; }
