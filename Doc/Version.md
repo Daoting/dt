@@ -8,7 +8,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 
 
-3.6.6 DatePicker TimePicker因系统语言原因不工作，已提交#5657
+
 
 ## Release 1.9.6
 
@@ -32,6 +32,8 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * sqlite第一行含空时的列类型错误 
 * 避免win内部导航时自己导航到自己的情况 
 * SqliteCommandEx 可空列bug
+* 3.8.6 DatePicker TimePicker已 正常
+* Lv的分组导航头不显示时在android上也堆在一起绘制
 
 ## Release 1.9
 
