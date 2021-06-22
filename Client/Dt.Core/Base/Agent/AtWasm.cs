@@ -44,19 +44,22 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取服务器地址，形如："https://10.10.1.16/fz"
+        /// 根据当前浏览器的url获取服务地址，如：
+        /// <para> https://localhost/fz/ui/ 的服务地址 https://localhost/fz </para>
+        /// <para>因开发调试时使用IIS Express无法通过url获得服务地址，外部直接p_debugUrl设置服务地址</para>
         /// </summary>
-        /// <returns></returns>
-        public static string GetServerUrl()
+        /// <param name="p_debugUrl">开发调试时的服务地址</param>
+        /// <returns>形如："https://10.10.1.16/fz"</returns>
+        public static string GetServerUrl(string p_debugUrl)
         {
             // 获取浏览器中的地址
             var str = InvokeJS("location.href");
             var match = Regex.Match(str, @"^https://[^\s/]+/[^\s/]+");
             if (match.Success)
-                return match.Value;
+                p_debugUrl = match.Value;
 
-            Console.Error.WriteLine("服务器地址格式错误！");
-            return "";
+            Console.WriteLine($"服务器地址：{p_debugUrl}");
+            return p_debugUrl;
         }
 
         /// <summary>

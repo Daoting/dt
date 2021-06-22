@@ -23,21 +23,14 @@ namespace Dt.Shell
     /// </summary>
     public class Stub : IStub
     {
-#if WASM
-        readonly string _serverUrl = AtWasm.GetServerUrl();
-
-        /// <summary>
-        /// 服务器地址
-        /// </summary>
-        public string ServerUrl
-        {
-            get { return _serverUrl; }
-        }
-#else
         /// <summary>
         /// 服务器地址，末尾不包含'/'
         /// </summary>
-        public string ServerUrl => "https://10.10.1.16/fz";
+        public string ServerUrl { get; } =
+#if WASM
+            AtWasm.GetServerUrl("https://localhost/fz");
+#else
+            "https://10.10.1.16/fz";
 #endif
 
         /// <summary>

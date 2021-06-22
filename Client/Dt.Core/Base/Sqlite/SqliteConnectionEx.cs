@@ -213,69 +213,57 @@ namespace Dt.Core.Sqlite
                 return false;
 
             bool suc = false;
-            using (var trans = BeginTransaction())
+            RunInTransaction(() =>
             {
-                try
+                Type tp = p_list.GetType();
+                if (tp.IsGenericType
+                    && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                 {
-                    Type tp = p_list.GetType();
-                    if (tp.IsGenericType
-                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
+                    suc = BatchSaveSameType(p_list) > 0;
+                    if (p_list is Table tbl)
                     {
-                        suc = BatchSaveSameType(p_list) > 0;
-                        if (p_list is Table tbl)
-                        {
-                            tbl.AcceptChanges();
-                        }
-                        else
-                        {
-                            foreach (var row in p_list.OfType<Row>())
-                            {
-                                if (row.IsChanged || row.IsAdded)
-                                    row.AcceptChanges();
-                            }
-                        }
+                        tbl.AcceptChanges();
                     }
                     else
                     {
-                        suc = BatchSaveMultiTypes(p_list) > 0;
-                        if (suc)
+                        foreach (var row in p_list.OfType<Row>())
                         {
-                            foreach (var item in p_list)
+                            if (row.IsChanged || row.IsAdded)
+                                row.AcceptChanges();
+                        }
+                    }
+                }
+                else
+                {
+                    suc = BatchSaveMultiTypes(p_list) > 0;
+                    if (suc)
+                    {
+                        foreach (var item in p_list)
+                        {
+                            if (item is Entity entity)
                             {
-                                if (item is Entity entity)
+                                entity.AcceptChanges();
+                            }
+                            else if (item is Table tbl)
+                            {
+                                tbl.AcceptChanges();
+                                tbl.DeletedRows?.Clear();
+                            }
+                            else if (item is IList clist && clist.Count > 0)
+                            {
+                                foreach (var ci in clist)
                                 {
-                                    entity.AcceptChanges();
-                                }
-                                else if (item is Table tbl)
-                                {
-                                    tbl.AcceptChanges();
-                                    tbl.DeletedRows?.Clear();
-                                }
-                                else if (item is IList clist && clist.Count > 0)
-                                {
-                                    foreach (var ci in clist)
+                                    if (ci is Row row
+                                        && (row.IsAdded || row.IsChanged))
                                     {
-                                        if (ci is Row row
-                                            && (row.IsAdded || row.IsChanged))
-                                        {
-                                            row.AcceptChanges();
-                                        }
+                                        row.AcceptChanges();
                                     }
                                 }
                             }
                         }
                     }
-
-                    if (suc)
-                        trans.Commit();
-                    else
-                        trans.Rollback();
                 }
-                catch
-                {
-                    trans.Rollback();
-                }
-            }
+            });
             return suc;
         }
 
@@ -562,31 +550,19 @@ namespace Dt.Core.Sqlite
                 return false;
 
             bool suc = false;
-            using (var trans = BeginTransaction())
+            RunInTransaction(() =>
             {
-                try
+                Type tp = p_list.GetType();
+                if (tp.IsGenericType
+                    && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                 {
-                    Type tp = p_list.GetType();
-                    if (tp.IsGenericType
-                        && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
-                    {
-                        suc = BatchDeleteSameType(p_list) > 0;
-                    }
-                    else
-                    {
-                        suc = BatchDeleteMultiTypes(p_list) > 0;
-                    }
-
-                    if (suc)
-                        trans.Commit();
-                    else
-                        trans.Rollback();
+                    suc = BatchDeleteSameType(p_list) > 0;
                 }
-                catch
+                else
                 {
-                    trans.Rollback();
+                    suc = BatchDeleteMultiTypes(p_list) > 0;
                 }
-            }
+            });
             return suc;
         }
 

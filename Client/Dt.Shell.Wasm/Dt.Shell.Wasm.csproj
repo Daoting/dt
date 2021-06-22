@@ -7,7 +7,7 @@
     <NoWarn>NU1701</NoWarn>
 
     <!-- 必须sdk完整路径 -->
-    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-7c765ae-25536-Sqlite.zip</NetCoreWasmSDKUri>
+    <NetCoreWasmSDKUri>d:\dt\client\Common\wasm\dotnet-runtime-wasm-windows-9079e3a-89313ca0693-884011754-sqlite.zip</NetCoreWasmSDKUri>
 
     <!-- 默认Interpreter -->
     <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
@@ -49,13 +49,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
     <PackageReference Include="Uno.UI.WebAssembly" Version="3.8.6" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.0.0-dev.95" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.0.0-dev.95" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,4 +70,22 @@
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
   </ItemGroup>
+
+  <!-- 调试Uno.Wasm.Bootstrap -->
+  <!--
+  <Import Project="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap\build\Uno.Wasm.Bootstrap.targets" />
+  <Import Project="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap.DevServer\build\Uno.Wasm.Bootstrap.DevServer.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap.Cli\Uno.Wasm.Bootstrap.Cli.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <UndefineProperties>TargetFramework</UndefineProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap\Uno.Wasm.Bootstrap.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <UndefineProperties>TargetFramework</UndefineProperties>
+    </ProjectReference>
+  </ItemGroup>
+  -->
 </Project>

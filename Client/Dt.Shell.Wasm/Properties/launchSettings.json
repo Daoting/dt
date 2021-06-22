@@ -2,14 +2,14 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "https://localhost/fz/ui/",
+    "iisExpress": {
+      "applicationUrl": "http://localhost:2020/",
       "sslPort": 0
     }
   },
   "profiles": {
-    "IIS": {
-      "commandName": "IIS",
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
