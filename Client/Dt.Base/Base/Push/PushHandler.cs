@@ -97,15 +97,15 @@ namespace Dt.Base
             }
             catch { }
 
-            if (!_reader.ClosedBySelf)
+            if (!_reader.IsClosedBySelf)
             {
                 // 不是客户端主动关闭，重连
                 _ = Task.Run(() => Register());
             }
-            else
-            {
-                Kit.Msg("已停止接收推送！");
-            }
+            //else
+            //{
+            //    Kit.Msg("已停止接收推送！");
+            //}
         }
 
         /// <summary>
@@ -117,10 +117,14 @@ namespace Dt.Base
             if (_reader != null && !_reader.IsClosed)
             {
                 _reader.Close();
+
+#if !UWP
+                //AtMsg.Unregister(Kit.UserID);
+#endif
                 Kit.Msg("已停止接收推送！");
             }
         }
-        #endregion
+#endregion
 
         public void Call(string p_msg)
         {

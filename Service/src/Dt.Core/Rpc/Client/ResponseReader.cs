@@ -31,7 +31,7 @@ namespace Dt.Core.Rpc
         internal async Task InitStream()
         {
             // wasm中增加上述设置后返回 stream 正常！
-            _responseStream = await _response.Content.ReadAsStreamAsync();
+            _responseStream = await _response.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace Dt.Core.Rpc
         /// </summary>
         public void Close()
         {
-            ClosedBySelf = true;
+            IsClosedBySelf = true;
             Dispose();
         }
 
         /// <summary>
         /// 是否为客户端主动关闭
         /// </summary>
-        public bool ClosedBySelf { get; private set; }
+        public bool IsClosedBySelf { get; private set; }
 
         /// <summary>
         /// 是否已关闭

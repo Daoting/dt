@@ -22,11 +22,6 @@ namespace Dt.Base
     public static class AtMsg
     {
         #region Pusher
-        /// <summary>
-        /// 客户端注册在线推送
-        /// </summary>
-        /// <param name="p_deviceInfo">客户端设备信息</param>
-        /// <returns></returns>
         public static Task<ResponseReader> Register(Dict p_deviceInfo)
         {
             return new ServerStreamRpc(
@@ -36,11 +31,15 @@ namespace Dt.Base
             ).Call();
         }
 
-        /// <summary>
-        /// 判断用户是否在线，查询所有副本
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <returns>null 不在线</returns>
+        public static Task<bool> Unregister(long p_userID)
+        {
+            return new UnaryRpc(
+                "msg",
+                "Pusher.Unregister",
+                p_userID
+            ).Call<bool>();
+        }
+
         public static Task<Dict> IsOnline(long p_userID)
         {
             return new UnaryRpc(
@@ -50,10 +49,6 @@ namespace Dt.Base
             ).Call<Dict>();
         }
 
-        /// <summary>
-        /// 实时获取所有副本的在线用户总数
-        /// </summary>
-        /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
         public static Task<Dict> GetOnlineCount()
         {
             return new UnaryRpc(
