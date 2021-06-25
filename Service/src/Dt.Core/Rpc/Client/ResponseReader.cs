@@ -8,7 +8,7 @@
 
 #region 引用命名
 using System.IO;
-using System.Text.Json;
+using System.Net.Http;
 using System.Threading.Tasks;
 #endregion
 
@@ -19,12 +19,19 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class ResponseReader
     {
-        readonly Stream _responseStream;
+        HttpResponseMessage _response;
+        Stream _responseStream;
         object _val;
 
-        internal ResponseReader(Stream p_stream)
+        internal ResponseReader(HttpResponseMessage p_response)
         {
-            _responseStream = p_stream;
+            _response = p_response;
+        }
+
+        internal async Task InitStream()
+        {
+            // wasm中增加上述设置后返回 stream 正常！
+            _responseStream = await _response.Content.ReadAsStreamAsync();
         }
 
         /// <summary>
@@ -35,11 +42,16 @@ namespace Dt.Core.Rpc
         {
             try
             {
-                _val = RpcKit.ParseBytes<object>(await RpcClientKit.ReadFrame(_responseStream));
+                // _responseStream.ReadAsync 使用 CancellationToken 也只有第一次取消时有效，所以未使用！
+                // 此处只在服务端取消连接时抛出异常！
+                var data = await RpcClientKit.ReadFrame(_responseStream);
+                _val = RpcKit.ParseBytes<object>(data);
                 return true;
             }
-            catch { }
-
+            catch
+            {
+                Dispose();
+            }
             return false;
         }
 
@@ -58,7 +70,33 @@ namespace Dt.Core.Rpc
         /// </summary>
         public void Close()
         {
-            _responseStream.Close();
+            ClosedBySelf = true;
+            Dispose();
+        }
+
+        /// <summary>
+        /// 是否为客户端主动关闭
+        /// </summary>
+        public bool ClosedBySelf { get; private set; }
+
+        /// <summary>
+        /// 是否已关闭
+        /// </summary>
+        public bool IsClosed => _response == null;
+
+        void Dispose()
+        {
+            if (_responseStream != null)
+            {
+                _responseStream.Close();
+                _responseStream = null;
+            }
+
+            if (_response != null)
+            {
+                _response.Dispose();
+                _response = null;
+            }
         }
     }
 }

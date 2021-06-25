@@ -8,7 +8,6 @@
 
 #region 引用命名
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,24 +38,24 @@ namespace Dt.Core.Rpc
         {
             var request = CreateRequestMessage();
             var writer = CreateWriter(request);
-            var stream = await SendRequest(request);
-            return new DuplexStream(writer, new ResponseReader(stream));
+            var response = await SendRequest(request);
+            var reader = new ResponseReader(response);
+            await reader.InitStream();
+            return new DuplexStream(writer, reader);
         }
 
-        async Task<Stream> SendRequest(HttpRequestMessage p_request)
+        async Task<HttpResponseMessage> SendRequest(HttpRequestMessage p_request)
         {
-            Stream responseStream;
             try
             {
                 var response = await _client.SendAsync(p_request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
                 response.EnsureSuccessStatusCode();
-                responseStream = await response.Content.ReadAsStreamAsync();
+                return response;
             }
             catch (Exception ex)
             {
                 throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
             }
-            return responseStream;
         }
     }
 }

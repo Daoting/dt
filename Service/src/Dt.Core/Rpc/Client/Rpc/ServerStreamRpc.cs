@@ -8,7 +8,6 @@
 
 #region 引用命名
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +36,6 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         public async Task<ResponseReader> Call()
         {
-            Stream responseStream;
             try
             {
                 using (var request = CreateRequestMessage())
@@ -62,15 +60,16 @@ namespace Dt.Core.Rpc
                     var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
                     response.EnsureSuccessStatusCode();
 
-                    // wasm 增加上述设置后返回 stream 正常！
-                    responseStream = await response.Content.ReadAsStreamAsync();
+                    var reader = new ResponseReader(response);
+                    // wasm中增加上述设置后返回 stream 正常！
+                    await reader.InitStream();
+                    return reader;
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
             }
-            return new ResponseReader(responseStream);
         }
     }
 }

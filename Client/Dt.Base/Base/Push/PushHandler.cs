@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -25,8 +26,9 @@ namespace Dt.Base
     class PushHandler
     {
         #region 静态内容
+        const int _maxRetry = 4;
         static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
-        static bool _connected;
+        static ResponseReader _reader;
 
         /// <summary>
         /// 连接推送的重试次数
@@ -34,24 +36,17 @@ namespace Dt.Base
         public static int RetryTimes;
 
         /// <summary>
-        /// 服务器推送连接断开后的是否停止重连
-        /// 默认true，初始不注册接收时OnResuming也不连接
-        /// </summary>
-        public static bool StopRetry = true;
-
-        /// <summary>
         /// 处理服务器推送
         /// </summary>
         /// <returns></returns>
-        public static async Task Register()
+        public static async void Register()
         {
-            if (_connected)
+            if (_reader != null && !_reader.IsClosed)
             {
                 //Kit.Msg("已连接");
                 return;
             }
 
-            _connected = true;
 #if WASM
             Dict dt = new Dict
             {
@@ -72,25 +67,57 @@ namespace Dt.Base
 
             try
             {
-                var reader = await AtMsg.Register(dt);
-                RetryTimes = 0;
-                while (await reader.MoveNext())
+                _reader = await AtMsg.Register(dt);
+            }
+            catch
+            {
+                _reader = null;
+                // 小于最大重试次数重连
+                if (RetryTimes < _maxRetry)
                 {
-                    new PushHandler().Call(reader.Val<string>());
+                    RetryTimes++;
+                    //Kit.Msg($"第{RetryTimes}次重连");
+                    _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, RetryTimes))).ContinueWith((t) => Register());
+                }
+                else
+                {
+                    Kit.Warn($"已重试{_maxRetry + 1}次，无法接收推送！");
+                }
+                return;
+            }
+
+            // 连接成功，重连次数复位
+            RetryTimes = 0;
+            try
+            {
+                while (await _reader.MoveNext())
+                {
+                    new PushHandler().Call(_reader.Val<string>());
                 }
             }
             catch { }
-            finally
-            {
-                _connected = false;
-            }
 
-            // 未停止接收推送时重连
-            if (!StopRetry && RetryTimes < 5)
+            if (!_reader.ClosedBySelf)
             {
-                RetryTimes++;
-                //Kit.Msg($"第{RetryTimes}次重连");
-                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, RetryTimes))).ContinueWith((t) => Register());
+                // 不是客户端主动关闭，重连
+                _ = Task.Run(() => Register());
+            }
+            else
+            {
+                Kit.Msg("已停止接收推送！");
+            }
+        }
+
+        /// <summary>
+        /// 主动停止接收推送
+        /// </summary>
+        public static void StopRecvPush()
+        {
+            RetryTimes = 0;
+            if (_reader != null && !_reader.IsClosed)
+            {
+                _reader.Close();
+                Kit.Msg("已停止接收推送！");
             }
         }
         #endregion

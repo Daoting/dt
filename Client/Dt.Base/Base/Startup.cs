@@ -18,7 +18,6 @@ using System.Xml.Linq;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -114,7 +113,7 @@ namespace Dt.Base
                     // 切换到主页
                     ShowHome();
                     // 接收服务器推送
-                    RegisterSysPush();
+                    PushHandler.Register();
                     return;
                 }
             }
@@ -238,8 +237,15 @@ namespace Dt.Base
         /// </summary>
         public static void RegisterSysPush()
         {
-            PushHandler.StopRetry = false;
-            _ = PushHandler.Register();
+            PushHandler.Register();
+        }
+
+        /// <summary>
+        /// 主动停止接收推送
+        /// </summary>
+        public static void StopSysPush()
+        {
+            PushHandler.StopRecvPush();
         }
         #endregion
 

@@ -35,14 +35,5 @@ namespace Dt.Base
         {
             Kit.Warn($"【系统通知】\r\n{p_msg}");
         }
-
-        /// <summary>
-        /// 该账户从其它位置登录时停止接收推送
-        /// </summary>
-        public void StopPush()
-        {
-            PushHandler.StopRetry = true;
-            Kit.Msg("您已从其它位置登录！");
-        }
     }
 }

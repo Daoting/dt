@@ -38,6 +38,7 @@ namespace Dt.Base
         {
             // 注销时清空用户信息
             Kit.ResetUser();
+            PushHandler.StopRecvPush();
 
             AtState.DeleteCookie("LoginPhone");
             AtState.DeleteCookie("LoginPwd");
@@ -231,7 +232,7 @@ namespace Dt.Base
         /// </summary>
         public void OnResuming()
         {
-            if (Kit.IsLogon && !PushHandler.StopRetry)
+            if (Kit.IsLogon)
             {
                 // 在线推送可能被停止，重新启动
                 PushHandler.RetryTimes = 0;
