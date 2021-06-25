@@ -116,15 +116,12 @@ namespace Dt.Base
             RetryTimes = 0;
             if (_reader != null && !_reader.IsClosed)
             {
-                _reader.Close();
-
-#if !UWP
-                //AtMsg.Unregister(Kit.UserID);
-#endif
-                Kit.Msg("已停止接收推送！");
+                _reader.IsClosedBySelf = true;
+                // 只能通过服务端取消连接！！！
+                AtMsg.Unregister(Kit.UserID);
             }
         }
-#endregion
+        #endregion
 
         public void Call(string p_msg)
         {

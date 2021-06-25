@@ -22,6 +22,11 @@ namespace Dt.Base
     public static class AtMsg
     {
         #region Pusher
+        /// <summary>
+        /// 客户端注册在线推送
+        /// </summary>
+        /// <param name="p_deviceInfo">客户端设备信息</param>
+        /// <returns></returns>
         public static Task<ResponseReader> Register(Dict p_deviceInfo)
         {
             return new ServerStreamRpc(
@@ -31,6 +36,13 @@ namespace Dt.Base
             ).Call();
         }
 
+        /// <summary>
+        /// 注销客户端
+        /// 1. 早期版本在客户端关闭时会造成多个无关的ClientInfo收到Abort，只能从服务端Abort，升级到.net 5.0后不再出现该现象！！！
+        /// 2. 使用客户端 response.Dispose() 主动关闭时，不同平台现象不同，服务端能同步收到uwp关闭消息，但android ios上不行，
+        /// 直到再次推送时才发现客户端已关闭，为了保证客户端状态正确，主动关闭后需要调用该方法！！！
+        /// </summary>
+        /// <returns></returns>
         public static Task<bool> Unregister(long p_userID)
         {
             return new UnaryRpc(
@@ -40,6 +52,11 @@ namespace Dt.Base
             ).Call<bool>();
         }
 
+        /// <summary>
+        /// 判断用户是否在线，查询所有副本
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns>null 不在线</returns>
         public static Task<Dict> IsOnline(long p_userID)
         {
             return new UnaryRpc(
@@ -49,6 +66,10 @@ namespace Dt.Base
             ).Call<Dict>();
         }
 
+        /// <summary>
+        /// 实时获取所有副本的在线用户总数
+        /// </summary>
+        /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
         public static Task<Dict> GetOnlineCount()
         {
             return new UnaryRpc(

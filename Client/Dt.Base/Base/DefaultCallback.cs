@@ -36,9 +36,10 @@ namespace Dt.Base
         /// </summary>
         public async void Logout()
         {
+            // 先停止接收，再清空用户信息
+            PushHandler.StopRecvPush();
             // 注销时清空用户信息
             Kit.ResetUser();
-            PushHandler.StopRecvPush();
 
             AtState.DeleteCookie("LoginPhone");
             AtState.DeleteCookie("LoginPwd");

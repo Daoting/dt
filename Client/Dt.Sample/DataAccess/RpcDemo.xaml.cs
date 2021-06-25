@@ -37,11 +37,10 @@ namespace Dt.Sample
                 _tbInfo.Text = "OnSetString成功";
         }
 
-        ResponseReader _reader;
         async void OnServerStream(object sender, RoutedEventArgs e)
         {
             _tbInfo.Text = "ServerStream模式：";
-            _reader = await AtTestRpc.OnServerStream("hello");
+            var _reader = await AtTestRpc.OnServerStream("hello");
             while (await _reader.MoveNext())
             {
                 _tbInfo.Text += $"{Environment.NewLine}收到：{_reader.Val<string>()}";
@@ -49,11 +48,6 @@ namespace Dt.Sample
             _tbInfo.Text += Environment.NewLine + "结束";
         }
 
-        void OnStopStream(object sender, RoutedEventArgs e)
-        {
-            if (_reader != null)
-                _reader.Close();
-        }
     }
 
     internal static class AtTestRpc

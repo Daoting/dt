@@ -65,19 +65,20 @@ namespace Dt.Core.Rpc
             return RpcKit.GetVal<T>(_val);
         }
 
-        /// <summary>
-        /// 关闭流
-        /// </summary>
-        public void Close()
-        {
-            IsClosedBySelf = true;
-            Dispose();
-        }
+        // 客户端主动关闭时，android ios上异常 且 客户端在线状态未实时更新，只能统一手动调用服务关闭连接！！！
+        ///// <summary>
+        ///// 关闭流
+        ///// </summary>
+        //public void Close()
+        //{
+        //    IsClosedBySelf = true;
+        //    Dispose();
+        //}
 
         /// <summary>
         /// 是否为客户端主动关闭
         /// </summary>
-        public bool IsClosedBySelf { get; private set; }
+        public bool IsClosedBySelf { get; set; }
 
         /// <summary>
         /// 是否已关闭
