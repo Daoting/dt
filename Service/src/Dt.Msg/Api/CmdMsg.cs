@@ -29,7 +29,7 @@ namespace Dt.Msg
         public async Task<bool> SendCmd(long p_userID, MsgInfo p_msg)
         {
             var result = await MsgKit.Push(new List<long> { p_userID }, p_msg);
-            return result.Count == 1;
+            return result.Count > 0;
         }
 
         /// <summary>

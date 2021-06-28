@@ -76,11 +76,6 @@ namespace Dt.Core.Rpc
         //}
 
         /// <summary>
-        /// 是否为客户端主动关闭
-        /// </summary>
-        public bool IsClosedBySelf { get; set; }
-
-        /// <summary>
         /// 是否已关闭
         /// </summary>
         public bool IsClosed => _response == null;

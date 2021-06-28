@@ -31,7 +31,7 @@ namespace Dt.Msg
         public async Task<bool> SendMsg(long p_userID, string p_msg)
         {
             var result = await MsgKit.Push(new List<long> { p_userID }, WrapperMsg(p_msg));
-            return result.Count == 1;
+            return result.Count > 0;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Dt.Msg
         public async Task<bool> SendLetter(long p_userID, LetterInfo p_letter)
         {
             var result = await MsgKit.Push(new List<long> { p_userID }, WrapperLetter(p_letter));
-            return result.Count == 1;
+            return result.Count > 0;
         }
 
         /// <summary>

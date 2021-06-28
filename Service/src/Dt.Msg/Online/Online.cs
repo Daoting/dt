@@ -11,6 +11,7 @@ using Dt.Core;
 using Serilog;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
@@ -24,10 +25,10 @@ namespace Dt.Msg
         /// <summary>
         /// 当前服务的所有在线用户
         /// </summary>
-        static readonly ConcurrentDictionary<long, ClientInfo> _all = new ConcurrentDictionary<long, ClientInfo>();
+        static readonly ConcurrentDictionary<long, List<ClientInfo>> _all = new ConcurrentDictionary<long, List<ClientInfo>>();
 
         /// <summary>
-        /// 注册新会话，注销同一用户的旧会话，向新会话发送离线信息
+        /// 注册新会话，同一账号支持多个会话(但保证SessionID不同)，并向新会话发送离线信息
         /// </summary>
         /// <param name="p_client"></param>
         /// <returns></returns>
@@ -36,61 +37,111 @@ namespace Dt.Msg
             Throw.IfNull(p_client);
             long userID = p_client.UserID;
 
-            // 通知已注册的客户端关闭会话
-            // 同一用户在一个服务副本最后注册的有效，在不同副本时都有效！！！
-            if (_all.TryRemove(userID, out var old))
+            List<ClientInfo> ls;
+            if (!_all.TryGetValue(userID, out ls))
             {
-                // 旧会话
-                if (old.DeviceModel == p_client.DeviceModel && old.DeviceName == p_client.DeviceName)
+                ls = new List<ClientInfo>();
+                _all[userID] = ls;
+            }
+            if (ls.Count > 0)
+            {
+                // 若存在同一账号同一SessionID的会话，强制旧会话退出
+                // 在不同副本时暂时未处理！！！
+                var old = (from ci in ls
+                           where ci.SessionID == p_client.SessionID
+                           select ci).FirstOrDefault();
+                if (old != null)
                 {
-                    // 同一设备多次注册
-                    Log.Debug("{0}({1}) 同一设备重复连接", userID, p_client.Context.GetClientIpPort());
-                    old.Exit();
-                }
-                else
-                {
-                    Log.Debug("{0}({1}) 重复连接", userID, p_client.Context.GetClientIpPort());
-                    old.StopPush();
+                    Log.Debug("{0}({1}) 关闭重复连接", userID, old.Context.GetClientIpPort());
+                    ls.Remove(old);
                     old.Close();
                 }
             }
-            else
-            {
-                Log.Debug("{0}({1}) 在线", userID, p_client.Context.GetClientIpPort());
-            }
+            Log.Debug("{0}({1}) 在线", userID, p_client.Context.GetClientIpPort());
+            ls.Add(p_client);
 
-            _all[userID] = p_client;
             return p_client.SendOfflineMsg();
         }
 
         /// <summary>
-        /// 获取指定用户的会话对象
+        /// 获取指定账号的所有会话对象
         /// </summary>
         /// <param name="p_userID"></param>
         /// <returns></returns>
-        public static ClientInfo GetClient(long p_userID)
+        public static List<ClientInfo> GetSessions(long p_userID)
         {
-            if (_all.TryGetValue(p_userID, out var ci))
-                return ci;
+            if (_all.TryGetValue(p_userID, out var ls))
+                return ls;
             return null;
         }
 
         /// <summary>
-        /// 移除指定用户的会话对象
+        /// 获取指定账号的会话对象
         /// </summary>
         /// <param name="p_userID"></param>
+        /// <param name="p_sessionID">会话标识</param>
         /// <returns></returns>
-        public static bool RemoveClient(long p_userID)
+        public static ClientInfo GetSession(long p_userID, string p_sessionID)
         {
-            return _all.TryRemove(p_userID, out var ci);
+            if (_all.TryGetValue(p_userID, out var ls))
+            {
+                return (from ci in ls
+                        where ci.SessionID == p_sessionID
+                        select ci).FirstOrDefault();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 移除指定账号的会话对象
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_sessionID">会话标识</param>
+        /// <returns></returns>
+        public static bool RemoveSession(long p_userID, string p_sessionID)
+        {
+            if (!_all.TryGetValue(p_userID, out var ci))
+                return false;
+
+            bool suc = false;
+            for (int i = 0; i < ci.Count; i++)
+            {
+                var item = ci[i];
+                if (item.SessionID == p_sessionID)
+                {
+                    suc = true;
+                    ci.RemoveAt(i);
+                    break;
+                }
+            }
+
+            if (ci.Count == 0)
+                _all.TryRemove(p_userID, out _);
+            return suc;
         }
 
         /// <summary>
         /// 当前服务的所有在线用户，只读
         /// </summary>
-        public static IReadOnlyDictionary<long, ClientInfo> All
+        public static IReadOnlyDictionary<long, List<ClientInfo>> All
         {
             get { return _all; }
+        }
+
+        /// <summary>
+        /// 当前服务的所有会话总数，同一账号可有多个会话
+        /// </summary>
+        public static int TotalCount
+        {
+            get
+            {
+                int cnt = 0;
+                foreach (var item in _all)
+                {
+                    cnt += item.Value.Count;
+                }
+                return cnt;
+            }
         }
 
         #region 心跳包

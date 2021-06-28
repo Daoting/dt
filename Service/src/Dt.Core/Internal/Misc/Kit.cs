@@ -23,6 +23,16 @@ namespace Dt.Core
     {
         static string[] _hexDigits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
+        public static string Serialize(object p_object)
+        {
+            return "abc";
+        }
+
+        public static T Deserialize<T>(string p_content)
+        {
+            return default(T);
+        }
+
         /// <summary>
         /// 获取新Guid
         /// </summary>

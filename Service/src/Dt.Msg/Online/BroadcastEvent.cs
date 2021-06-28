@@ -27,9 +27,12 @@ namespace Dt.Msg
     {
         public Task Handle(BroadcastEvent p_event)
         {
-            foreach (var ci in Online.All.Values)
+            foreach (var ls in Online.All.Values)
             {
-                ci.AddMsg(p_event.Msg);
+                foreach (var ci in ls)
+                {
+                    ci.AddMsg(p_event.Msg);
+                }
             }
             return Task.CompletedTask;
         }

@@ -13,6 +13,7 @@ using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -33,7 +34,7 @@ namespace Dt.Msg
         public async Task Register(Dict p_deviceInfo, ResponseWriter p_writer)
         {
             var ci = new ClientInfo(p_deviceInfo, p_writer);
-            // 注册新会话，注销同一用户的旧会话，向新会话发送离线信息
+            // 注册新会话(同一账号支持多个会话)，并向新会话发送离线信息
             await Online.Register(ci);
 
             // 推送
@@ -41,14 +42,7 @@ namespace Dt.Msg
             { }
 
             // 推送结束，删除会话
-            var curClient = Online.GetClient(ci.UserID);
-            if (curClient != null && curClient == ci)
-            {
-                // 必须比较Online中该用户的会话是否与当前会话相同！
-                // 注册新会话时，若需要注销旧会话，存在删除新会话的可能！
-                Online.RemoveClient(ci.UserID);
-            }
-
+            Online.RemoveSession(ci.UserID, ci.SessionID);
             Log.Debug("{0} 离线", ci.UserID);
         }
 
@@ -56,22 +50,31 @@ namespace Dt.Msg
         /// 注销客户端
         /// 1. 早期版本在客户端关闭时会造成多个无关的ClientInfo收到Abort，只能从服务端Abort，升级到.net 5.0后不再出现该现象！！！
         /// 2. 使用客户端 response.Dispose() 主动关闭时，不同平台现象不同，服务端能同步收到uwp关闭消息，但android ios上不行，
-        ///    直到再次推送时才发现客户端已关闭，为了保证客户端状态正确，主动关闭后需要调用该方法！！！
+        ///    直到再次推送时才发现客户端已关闭，为了保证客户端在线状态实时更新，客户端只能调用该方法！！！
         /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_sessionID">会话标识，区分同一账号多个登录的情况</param>
         /// <returns></returns>
-        public bool Unregister(long p_userID)
+        public async Task<bool> Unregister(long p_userID, string p_sessionID)
         {
-            ClientInfo ci = Online.GetClient(p_userID);
+            var ci = Online.GetSession(p_userID, p_sessionID);
             if (ci != null)
             {
                 ci.Close();
                 return true;
             }
 
-            // 查询所有其他副本
+            // 查询所有其他副本，未测！
             if (MsgKit.IsMultipleReplicas)
             {
+                string key = $"msg:Unregister:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
+                Glb.GetSvc<RemoteEventBus>().Multicast(new UnregisterEvent { CacheKey = key, UserID = p_userID, SessionID = p_sessionID });
+                // 等待收集
+                await Task.Delay(500);
 
+                // 存在键值表示在线
+                if (await Redis.Db.KeyDeleteAsync(key))
+                    return true;
             }
             return false;
         }
@@ -80,29 +83,41 @@ namespace Dt.Msg
         /// 判断用户是否在线，查询所有副本
         /// </summary>
         /// <param name="p_userID"></param>
-        /// <returns>null 不在线</returns>
-        public async Task<Dict> IsOnline(long p_userID)
+        /// <returns>false 不在线</returns>
+        public async Task<bool> IsOnline(long p_userID)
         {
-            ClientInfo ci = Online.GetClient(p_userID);
-            if (ci != null)
-            {
-                return new Dict
-                {
-                    { "userid", ci.UserID },
-                    { "svcid", Glb.ID },
-                    { "starttime", ci.StartTime.ToString() },
-                    { "platform", ci.Platform },
-                    { "version", ci.Version },
-                    { "devicename", ci.DeviceName },
-                    { "devicemodel", ci.DeviceModel },
-                };
-            }
+            var ls = Online.GetSessions(p_userID);
+            if (ls != null && ls.Count > 0)
+                return true;
 
-            // 查询所有其他副本
+            // 查询所有其他副本，未测！
             if (MsgKit.IsMultipleReplicas)
             {
-                string key = $"ci:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Glb.GetSvc<RemoteEventBus>().Multicast(new ClientInfoEvent { CacheKey = key, UserID = p_userID }, Glb.SvcName);
+                string key = $"msg:IsOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
+                Glb.GetSvc<RemoteEventBus>().Multicast(new IsOnlineEvent { CacheKey = key, UserID = p_userID });
+                // 等待收集
+                await Task.Delay(500);
+
+                // 存在键值表示在线
+                if (await Redis.Db.KeyDeleteAsync(key))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 查询所有副本，获取某账号的所有会话信息
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <returns>会话信息列表</returns>
+        public async Task<List<Dict>> GetAllSessions(long p_userID)
+        {
+            List<Dict> result = new List<Dict>();
+            if (MsgKit.IsMultipleReplicas)
+            {
+                // 查询所有副本
+                string key = $"msg:Sessions:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
+                Glb.GetSvc<RemoteEventBus>().Multicast(new UserSessionsEvent { CacheKey = key, UserID = p_userID });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -111,10 +126,38 @@ namespace Dt.Msg
                 if (hash != null)
                 {
                     db.KeyDelete(key);
-                    return hash.ToDict();
+
+                    var dt = hash.ToDict();
+                    foreach (var item in dt)
+                    {
+                        var ss = Kit.Deserialize<List<Dict>>((string)item.Value);
+                        if (ss != null && ss.Count > 0)
+                            result.AddRange(ss);
+                    }
                 }
             }
-            return null;
+            else
+            {
+                // 当前单副本
+                var ls = Online.GetSessions(p_userID);
+                if (ls != null && ls.Count > 0)
+                {
+                    foreach (var ci in ls)
+                    {
+                        result.Add(new Dict
+                        {
+                            { "userid", ci.UserID },
+                            { "svcid", Glb.ID },
+                            { "starttime", ci.StartTime.ToString() },
+                            { "platform", ci.Platform },
+                            { "version", ci.Version },
+                            { "devicename", ci.DeviceName },
+                            { "devicemodel", ci.DeviceModel },
+                        });
+                    }
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -123,10 +166,12 @@ namespace Dt.Msg
         /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
         public async Task<Dict> GetOnlineCount()
         {
+            Dict result = null;
             if (MsgKit.IsMultipleReplicas)
             {
-                string key = "cicount:" + Guid.NewGuid().ToString().Substring(0, 6);
-                Glb.GetSvc<RemoteEventBus>().Multicast(new OnlineCountEvent { CacheKey = key }, Glb.SvcName);
+                // 所有副本
+                string key = "msg:OnlineCount:" + Guid.NewGuid().ToString().Substring(0, 6);
+                Glb.GetSvc<RemoteEventBus>().Multicast(new OnlineCountEvent { CacheKey = key });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -135,12 +180,15 @@ namespace Dt.Msg
                 if (hash != null)
                 {
                     db.KeyDelete(key);
-                    return hash.ToDict();
+                    result = hash.ToDict();
                 }
             }
-
-            // 单副本
-            return new Dict { { Glb.ID, Online.All.Count } };
+            else
+            {
+                // 当前单副本
+                result = new Dict { { Glb.ID, Online.TotalCount } };
+            }
+            return result;
         }
     }
 }

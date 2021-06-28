@@ -51,6 +51,11 @@ namespace Dt.Msg
         public long UserID { get; }
 
         /// <summary>
+        /// 会话标识，区分同一账号多个登录的情况
+        /// </summary>
+        public string SessionID => _deviceInfo.Str("sessionid");
+
+        /// <summary>
         /// 客户端系统
         /// </summary>
         public string Platform => _deviceInfo.Str("platform");
@@ -140,20 +145,14 @@ namespace Dt.Msg
         }
 
         /// <summary>
-        /// 通知客户端退出
-        /// </summary>
-        public void StopPush()
-        {
-            _queue.TryAdd("[\"SysPushApi.StopPush\"]");
-        }
-
-        /// <summary>
-        /// 关闭推送，取消本次请求
+        /// 关闭推送
         /// </summary>
         /// <returns></returns>
         public void Close()
         {
-            Context.Abort();
+            // 通知客户端退出 并 禁止重连
+            _queue.TryAdd(":Close");
+            Task.Delay(50).ContinueWith((t) => Context.Abort());
         }
 
         /// <summary>

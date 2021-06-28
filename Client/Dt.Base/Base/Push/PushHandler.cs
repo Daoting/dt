@@ -28,6 +28,8 @@ namespace Dt.Base
         #region 静态内容
         const int _maxRetry = 4;
         static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
+        // 会话标识，区分同一账号多个登录的情况
+        static readonly string _sessionID = Guid.NewGuid().ToString().Substring(0, 8);
         static ResponseReader _reader;
 
         /// <summary>
@@ -50,6 +52,7 @@ namespace Dt.Base
 #if WASM
             Dict dt = new Dict
             {
+                { "sessionid", _sessionID },
                 { "model", "wasm" },
                 { "name", "Chrome" },
                 { "platform", "Browser" },
@@ -58,6 +61,7 @@ namespace Dt.Base
 #else
             Dict dt = new Dict
             {
+                { "sessionid", _sessionID },
                 { "model", DeviceInfo.Model },
                 { "name", DeviceInfo.Name },
                 { "platform", DeviceInfo.Platform.ToString() },
@@ -88,18 +92,23 @@ namespace Dt.Base
 
             // 连接成功，重连次数复位
             RetryTimes = 0;
+            bool allowRetry = true;
             try
             {
                 while (await _reader.MoveNext())
                 {
-                    new PushHandler().Call(_reader.Val<string>());
+                    var msg = _reader.Val<string>();
+                    if (msg == ":Close")
+                        allowRetry = false;
+                    else
+                        new PushHandler().Call(msg);
                 }
             }
             catch { }
 
-            if (!_reader.IsClosedBySelf)
+            if (allowRetry)
             {
-                // 不是客户端主动关闭，重连
+                // 默认允许重连，除非服务端主动取消连接
                 _ = Task.Run(() => Register());
             }
             //else
@@ -116,9 +125,8 @@ namespace Dt.Base
             RetryTimes = 0;
             if (_reader != null && !_reader.IsClosed)
             {
-                _reader.IsClosedBySelf = true;
                 // 只能通过服务端取消连接！！！
-                AtMsg.Unregister(Kit.UserID);
+                AtMsg.Unregister(Kit.UserID, _sessionID);
             }
         }
         #endregion

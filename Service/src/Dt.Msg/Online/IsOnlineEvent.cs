@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.EventBus;
 using System.Threading.Tasks;
@@ -16,18 +15,24 @@ using System.Threading.Tasks;
 namespace Dt.Msg
 {
     /// <summary>
-    /// 统计各副本会话总数的事件
+    /// 获取用户是否在线的事件
     /// </summary>
-    public class OnlineCountEvent : IEvent
+    public class IsOnlineEvent : ExcludeEvent
     {
         public string CacheKey { get; set; }
+
+        public long UserID { get; set; }
     }
 
-    public class OnlineCountHandler : IRemoteHandler<OnlineCountEvent>
+    public class IsOnlineHandler : IRemoteHandler<IsOnlineEvent>
     {
-        public Task Handle(OnlineCountEvent p_event)
+        public async Task Handle(IsOnlineEvent p_event)
         {
-            return Redis.Db.HashSetAsync(p_event.CacheKey, Glb.ID, Online.TotalCount);
+            var ls = Online.GetSessions(p_event.UserID);
+            if (ls != null && ls.Count > 0)
+            {
+                await Redis.Db.StringSetAsync(p_event.CacheKey, "true");
+            }
         }
     }
 }

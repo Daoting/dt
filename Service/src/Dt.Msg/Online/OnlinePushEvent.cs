@@ -18,7 +18,7 @@ namespace Dt.Msg
     /// <summary>
     /// 在线推送事件
     /// </summary>
-    public class OnlinePushEvent : ExcludeEvent
+    public class OnlinePushEvent : IEvent
     {
         public string PrefixKey { get; set; }
 
@@ -37,11 +37,16 @@ namespace Dt.Msg
             StringCache cache = new StringCache(p_event.PrefixKey);
             foreach (var id in p_event.Receivers)
             {
-                var ci = Online.GetClient(id);
-                // 在线推送成功
-                if (ci != null && ci.AddMsg(p_event.Msg))
+                if (Online.All.TryGetValue(id, out var ls)
+                    && ls != null
+                    && ls.Count > 0)
                 {
-                    // 设置处理标志： 6位id前缀:userid = true
+                    // 在线推送，直接放入推送队列
+                    foreach (var ci in ls)
+                    {
+                        ci.AddMsg(p_event.Msg);
+                    }
+                    // 设置处理标志： msg:Push:6位id前缀:userid = true
                     await cache.Set(id.ToString(), true);
                 }
             }

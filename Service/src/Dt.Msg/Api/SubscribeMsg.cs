@@ -31,7 +31,7 @@ namespace Dt.Msg
         public async Task<int> Publish(long p_subscribeID, string p_msg, string p_offlineTip)
         {
             var db = Redis.Db;
-            string key = "submsg:" + p_subscribeID.ToString();
+            string key = "msg:Subscribe:" + p_subscribeID.ToString();
             var us = await db.SetMembersAsync(key);
             if (us == null || us.Length == 0)
                 return 0;

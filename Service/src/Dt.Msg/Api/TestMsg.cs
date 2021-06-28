@@ -11,6 +11,7 @@ using Dt.Core;
 using Dt.Core.Caches;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,10 +29,14 @@ namespace Dt.Msg.Api
         public int CloseAllOnline()
         {
             // 单副本
-            int cnt = Online.All.Count;
-            foreach (var item in Online.All)
+            int cnt = Online.TotalCount;
+            var ls = Online.All.Values.ToList();
+            foreach (var item in ls)
             {
-                item.Value.Close();
+                foreach (var ci in item)
+                {
+                    ci.Close();
+                }
             }
             return cnt;
         }
