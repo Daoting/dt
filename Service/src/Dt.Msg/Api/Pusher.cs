@@ -60,7 +60,7 @@ namespace Dt.Msg
             var ci = Online.GetSession(p_userID, p_sessionID);
             if (ci != null)
             {
-                ci.Close();
+                await ci.Close();
                 return true;
             }
 

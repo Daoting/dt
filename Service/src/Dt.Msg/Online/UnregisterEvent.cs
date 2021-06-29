@@ -33,8 +33,8 @@ namespace Dt.Msg
             var ci = Online.GetSession(p_event.UserID, p_event.SessionID);
             if (ci != null)
             {
-                ci.Close();
                 await Redis.Db.StringSetAsync(p_event.CacheKey, "true");
+                await ci.Close();
             }
         }
     }

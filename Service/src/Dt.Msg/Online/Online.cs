@@ -32,7 +32,7 @@ namespace Dt.Msg
         /// </summary>
         /// <param name="p_client"></param>
         /// <returns></returns>
-        public static Task Register(ClientInfo p_client)
+        public static async Task Register(ClientInfo p_client)
         {
             Throw.IfNull(p_client);
             long userID = p_client.UserID;
@@ -52,15 +52,15 @@ namespace Dt.Msg
                            select ci).FirstOrDefault();
                 if (old != null)
                 {
+                    // 关闭后在 Register 方法中删除账号，不需直接在此处删除！
+                    await old.Close();
                     Log.Debug("{0}({1}) 关闭重复连接", userID, old.Context.GetClientIpPort());
-                    ls.Remove(old);
-                    old.Close();
                 }
             }
             Log.Debug("{0}({1}) 在线", userID, p_client.Context.GetClientIpPort());
             ls.Add(p_client);
 
-            return p_client.SendOfflineMsg();
+            await p_client.SendOfflineMsg();
         }
 
         /// <summary>

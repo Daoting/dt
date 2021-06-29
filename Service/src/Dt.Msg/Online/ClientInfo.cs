@@ -148,11 +148,15 @@ namespace Dt.Msg
         /// 关闭推送
         /// </summary>
         /// <returns></returns>
-        public void Close()
+        public async Task Close()
         {
             // 通知客户端退出 并 禁止重连
             _queue.TryAdd(":Close");
-            Task.Delay(50).ContinueWith((t) => Context.Abort());
+            while (_queue.Count > 0)
+            {
+                await Task.Delay(20);
+            }
+            Context.Abort();
         }
 
         /// <summary>

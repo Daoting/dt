@@ -26,7 +26,7 @@ namespace Dt.Msg.Api
     [Api(GroupName = "功能测试")]
     public class TestMsg : BaseApi
     {
-        public int CloseAllOnline()
+        public async Task<int> CloseAllOnline()
         {
             // 单副本
             int cnt = Online.TotalCount;
@@ -35,7 +35,7 @@ namespace Dt.Msg.Api
             {
                 foreach (var ci in item)
                 {
-                    ci.Close();
+                    await ci.Close();
                 }
             }
             return cnt;
