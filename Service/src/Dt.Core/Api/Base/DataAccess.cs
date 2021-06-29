@@ -41,7 +41,7 @@ namespace Dt.Core
         /// <returns>返回Table数据</returns>
         public Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
-            string sql = $"select * from ({Glb.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
+            string sql = $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
             return new MySqlAccess().Query(sql, p_params);
         }
 
@@ -147,7 +147,7 @@ namespace Dt.Core
         /// <returns></returns>
         public long NewID()
         {
-            return Id.New();
+            return Kit.NewID;
         }
 
         /// <summary>

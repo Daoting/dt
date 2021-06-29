@@ -23,7 +23,7 @@ namespace Dt.Cm
         public static User CreateByPhone(string p_phone)
         {
             return new User(
-                ID: Id.New(),
+                ID: Kit.NewID,
                 Phone: p_phone,
                 Name: p_phone,
                 Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
@@ -43,11 +43,11 @@ namespace Dt.Cm
             {
                 // 初始密码为手机号后4位
                 Pwd = Kit.GetMD5(Phone.Substring(Phone.Length - 4));
-                Ctime = Mtime = Glb.Now;
+                Ctime = Mtime = Kit.Now;
             }
             else
             {
-                Mtime = Glb.Now;
+                Mtime = Kit.Now;
                 if (Cells["phone"].IsChanged)
                     AddDomainEvent(new UserPhoneChangedEvent { User = this });
             }

@@ -40,7 +40,7 @@ namespace Dt.Core.EventBus
         {
             _log = p_log;
 
-            var cfg = Glb.Config.GetSection("RabbitMq");
+            var cfg = Kit.Config.GetSection("RabbitMq");
             if (!cfg.Exists())
                 throw new InvalidOperationException("Œ¥’“µΩRabbitMq≈‰÷√Ω⁄£°");
 

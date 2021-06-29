@@ -43,7 +43,7 @@ namespace Dt.Base
                 return null;
 
             // 将文件移动到CachePath
-            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(Kit.CachePath), Kit.NewID + ".jpg");
+            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(Kit.CachePath), Kit.NewGuid + ".jpg");
 
             var fd = new FileData(result.Path, result.Name, (await result.GetBasicPropertiesAsync()).Size);
             var prop = await result.Properties.GetImagePropertiesAsync();
@@ -52,7 +52,7 @@ namespace Dt.Base
             // 生成缩略图
             if (prop.Width > FileData.ThumbSize || prop.Height > FileData.ThumbSize)
             {
-                fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+                fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
                 using (var fs = File.Create(fd.ThumbPath))
                 {
                     // 默认根据DPI调整缩略图大小
@@ -81,14 +81,14 @@ namespace Dt.Base
                 return null;
 
             // 将文件移动到CachePath
-            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(Kit.CachePath), Kit.NewID + ".mp4");
+            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(Kit.CachePath), Kit.NewGuid + ".mp4");
 
             var fd = new FileData(result.Path, result.Name, (await result.GetBasicPropertiesAsync()).Size);
             var prop = await result.Properties.GetVideoPropertiesAsync();
             fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(prop.Duration.Ticks), prop.Width, prop.Height);
 
             // 生成缩略图
-            fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+            fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
             using (var fs = File.Create(fd.ThumbPath))
             {
                 // 默认根据DPI调整缩略图大小

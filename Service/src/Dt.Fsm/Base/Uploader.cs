@@ -201,7 +201,7 @@ namespace Dt.Fsm
         async Task<FileDesc> ReceiveFile(FileMultipartSection p_section)
         {
             FileDesc desc = new FileDesc();
-            desc.ID = Id.New();
+            desc.ID = Kit.NewID;
             desc.Name = p_section.FileName;
             if (long.TryParse(_context.Request.Headers["uid"], out var id))
                 desc.Uploader = id;

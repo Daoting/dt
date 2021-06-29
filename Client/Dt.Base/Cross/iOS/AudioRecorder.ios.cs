@@ -39,7 +39,7 @@ namespace Dt.Base
         {
             InitAudioSession();
 
-            _audioFilePath = Path.Combine(Kit.CachePath, Kit.NewID + ".m4a");
+            _audioFilePath = Path.Combine(Kit.CachePath, Kit.NewGuid + ".m4a");
             var url = NSUrl.FromFilename(_audioFilePath);
             _recorder = AVAudioRecorder.Create(url, new AudioSettings(_settings), out var error);
             if (error != null)

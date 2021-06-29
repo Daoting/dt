@@ -171,7 +171,7 @@ namespace Dt.Core
         {
             try
             {
-                var ls = new MySqlAccess().Each($"select id,`sql` from {Glb.SvcName}_sql").Result;
+                var ls = new MySqlAccess().Each($"select id,`sql` from {Kit.SvcName}_sql").Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");
@@ -190,14 +190,14 @@ namespace Dt.Core
         /// </summary>
         public static void CacheSql()
         {
-            if (Glb.GetCfg("CacheSql", true))
+            if (Kit.GetCfg("CacheSql", true))
             {
-                Glb.Sql = GetDictSql;
+                Kit.Sql = GetDictSql;
                 LoadCacheSql();
             }
             else
             {
-                Glb.Sql = GetDebugSql;
+                Kit.Sql = GetDebugSql;
                 Log.Information("未缓存Sql, 调试状态");
             }
         }
@@ -207,17 +207,17 @@ namespace Dt.Core
         /// </summary>
         public static void OnConfigChanged()
         {
-            if (Glb.GetCfg("CacheSql", true))
+            if (Kit.GetCfg("CacheSql", true))
             {
-                Glb.Sql = GetDictSql;
+                Kit.Sql = GetDictSql;
                 LoadCacheSql();
                 Log.Information("切换到Sql缓存模式");
             }
-            else if (Glb.Sql != GetDictSql)
+            else if (Kit.Sql != GetDictSql)
             {
-                if (Glb.Sql != GetDebugSql)
+                if (Kit.Sql != GetDebugSql)
                 {
-                    Glb.Sql = GetDebugSql;
+                    Kit.Sql = GetDebugSql;
                     Log.Information("切换到Sql调试模式");
                 }
             }
@@ -260,7 +260,7 @@ namespace Dt.Core
 
             // 键名不包含空格！！！
             if (!string.IsNullOrEmpty(p_keyOrSql))
-                return new MySqlAccess().GetScalar<string>($"select `sql` from {Glb.SvcName}_sql where id='{p_keyOrSql}'").Result;
+                return new MySqlAccess().GetScalar<string>($"select `sql` from {Kit.SvcName}_sql where id='{p_keyOrSql}'").Result;
             return null;
         }
 
@@ -292,13 +292,13 @@ namespace Dt.Core
             builder.Populate(p_services);
 
             //// 提取有用类型，程序集包括Dt.Core、微服务、插件(以.Addin.dll结尾)
-            //List<Assembly> asms = new List<Assembly> { Glb.Stub.GetType().Assembly, typeof(Silo).Assembly };
+            //List<Assembly> asms = new List<Assembly> { Kit.Stub.GetType().Assembly, typeof(Silo).Assembly };
             //asms.AddRange(Directory
             //    .EnumerateFiles(Path.GetDirectoryName(typeof(Silo).Assembly.Location), "*.Addin.dll", SearchOption.TopDirectoryOnly)
             //    .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath));
 
             // 提取微服务和Dt.Core程序集
-            var types = Glb.Stub.GetType().Assembly.GetTypes()
+            var types = Kit.Stub.GetType().Assembly.GetTypes()
                 .Concat(typeof(Silo).Assembly.GetTypes())
                 .Where(type => type != null && type.IsClass && type.IsPublic && !type.IsAbstract);
 

@@ -90,7 +90,7 @@ namespace Dt.Base
                 }
 
                 // 照片或视频保存的文件
-                _path = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + (isPhoto ? ".jpg" : ".mp4"));
+                _path = System.IO.Path.Combine(Kit.CachePath, Kit.NewGuid + (isPhoto ? ".jpg" : ".mp4"));
                 var file = new Java.IO.File(_path);
                 file.CreateNewFile();
 
@@ -181,7 +181,7 @@ namespace Dt.Base
                         //options.InPurgeable = true;
                         Bitmap bmp = BitmapFactory.DecodeFile(_path, options);
 
-                        fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+                        fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
                         using (var fs = System.IO.File.Create(fd.ThumbPath))
                         {
                             await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
@@ -208,7 +208,7 @@ namespace Dt.Base
 
                     // 帧缩略图
                     var bmp = await ThumbnailUtils.CreateVideoThumbnailAsync(_path, ThumbnailKind.MiniKind);
-                    fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+                    fd.ThumbPath = System.IO.Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
                     using (var fs = System.IO.File.Create(fd.ThumbPath))
                     {
                         await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);

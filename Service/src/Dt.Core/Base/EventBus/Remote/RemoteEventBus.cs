@@ -34,7 +34,7 @@ namespace Dt.Core.EventBus
         internal static readonly Dictionary<string, Type> Events = new Dictionary<string, Type>();
 
         // 交换机名称
-        readonly string _exchangeName = Glb.AppName;
+        readonly string _exchangeName = Kit.AppName;
         readonly RabbitMQConnection _conn;
         readonly ILogger<RemoteEventBus> _log;
         readonly AsyncLock _mutex = new AsyncLock();
@@ -61,7 +61,7 @@ namespace Dt.Core.EventBus
             if (p_event == null)
                 return;
 
-            List<string> svcs = await Glb.GetCurrentSvcs(false);
+            List<string> svcs = await Kit.GetAllSvcs(false);
             foreach (var svc in svcs)
             {
                 if (p_isAllSvcInst)
@@ -94,7 +94,7 @@ namespace Dt.Core.EventBus
                 foreach (var svc in p_svcs)
                 {
                     if (!string.IsNullOrEmpty(svc))
-                        Publish(p_event, $"{Glb.AppName}.{svc.ToLower()}.All", true);
+                        Publish(p_event, $"{Kit.AppName}.{svc.ToLower()}.All", true);
                 }
             }
             else
@@ -103,7 +103,7 @@ namespace Dt.Core.EventBus
                 foreach (var svc in p_svcs)
                 {
                     if (!string.IsNullOrEmpty(svc))
-                        Publish(p_event, $"{Glb.AppName}.{svc.ToLower()}", false);
+                        Publish(p_event, $"{Kit.AppName}.{svc.ToLower()}", false);
                 }
             }
         }
@@ -119,8 +119,8 @@ namespace Dt.Core.EventBus
             if (p_event != null)
             {
                 if (string.IsNullOrEmpty(p_svcName))
-                    p_svcName = Glb.SvcName;
-                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.All", true);
+                    p_svcName = Kit.SvcName;
+                Publish(p_event, $"{Kit.AppName}.{p_svcName.ToLower()}.All", true);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Dt.Core.EventBus
         {
             // 进入第一队列
             if (p_event != null && !string.IsNullOrEmpty(p_svcName))
-                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}", false);
+                Publish(p_event, $"{Kit.AppName}.{p_svcName.ToLower()}", false);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Dt.Core.EventBus
         /// </summary>
         void CreateWorkConsumer()
         {
-            string queueName = $"{Glb.AppName}.{Glb.SvcName}";
+            string queueName = $"{Kit.AppName}.{Kit.SvcName}";
             IModel channel = _conn.CreateModel();
 
             // 声明队列
@@ -292,7 +292,7 @@ namespace Dt.Core.EventBus
         /// </summary>
         void CreateTopicConsumer()
         {
-            string queueName = $"{Glb.AppName}.{Glb.SvcName}.{Glb.ID}";
+            string queueName = $"{Kit.AppName}.{Kit.SvcName}.{Kit.SvcID}";
             IModel channel = _conn.CreateModel();
 
             // 声明队列
@@ -306,11 +306,11 @@ namespace Dt.Core.EventBus
             channel.QueueBind(
                 queue: queueName,        // 队列名称
                 exchange: _exchangeName,   // 绑定的交换机
-                routingKey: $"{Glb.AppName}.{Glb.SvcName}.*"); // 路由名称
+                routingKey: $"{Kit.AppName}.{Kit.SvcName}.*"); // 路由名称
             channel.QueueBind(
                 queue: queueName,           // 队列名称
                 exchange: _exchangeName,    // 绑定的交换机
-                routingKey: $"#.{Glb.ID}"); // 路由名称
+                routingKey: $"#.{Kit.SvcID}"); // 路由名称
 
             // 创建消费者
             var consumer = new EventingBasicConsumer(channel);
@@ -381,11 +381,11 @@ namespace Dt.Core.EventBus
             }
 
             // 组播时排除的副本
-            if (eventObj is ExcludeEvent ee && ee.ExcludeSvcID == Glb.ID)
+            if (eventObj is ExcludeEvent ee && ee.ExcludeSvcID == Kit.SvcID)
                 return;
 
             // 实例化所有Handler
-            var handlers = Glb.GetSvcs(hType);
+            var handlers = Kit.GetSvcs(hType);
             var mi = hType.GetMethod("Handle");
             foreach (var h in handlers)
             {

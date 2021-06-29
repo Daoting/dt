@@ -263,12 +263,12 @@ namespace Dt.Core
 
         public Task<List<string>> 所有微服务()
         {
-            return Glb.GetCurrentSvcs(false);
+            return Kit.GetAllSvcs(false);
         }
 
         public Task<List<string>> 所有微服务副本()
         {
-            return Glb.GetCurrentSvcs(true);
+            return Kit.GetAllSvcs(true);
         }
 
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)

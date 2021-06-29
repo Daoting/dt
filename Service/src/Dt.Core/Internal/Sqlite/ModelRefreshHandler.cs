@@ -67,7 +67,7 @@ namespace Dt.Core.Sqlite
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             string dbFile = System.IO.Path.Combine(path, p_event.Version + ".db");
-            var handler = Glb.GetSvc<SqliteModelHandler>();
+            var handler = Kit.GetSvc<SqliteModelHandler>();
 
             bool trace = MySqlAccess.TraceSql;
             MySqlAccess.TraceSql = false;
@@ -88,7 +88,7 @@ namespace Dt.Core.Sqlite
                         cmd.ExecuteNonQuery();
                     }
                     List<OmColumn> cols = new List<OmColumn>();
-                    foreach (var item in Glb.Config.GetSection("MySql").GetChildren())
+                    foreach (var item in Kit.Config.GetSection("MySql").GetChildren())
                     {
                         LoadSchema(item.Value, cols);
                     }
@@ -96,9 +96,9 @@ namespace Dt.Core.Sqlite
                     sb.AppendFormat("创建表OmColumn成功，导出{0}行\r\n", cols.Count);
 
                     // 加载service.json配置节 SqliteModel 的缓存数据
-                    foreach (var item in Glb.Config.GetSection("SqliteModel").GetChildren())
+                    foreach (var item in Kit.Config.GetSection("SqliteModel").GetChildren())
                     {
-                        var arr = Glb.Config.GetSection($"SqliteModel:{item.Key}:Create").Get<string[]>();
+                        var arr = Kit.Config.GetSection($"SqliteModel:{item.Key}:Create").Get<string[]>();
                         if (arr == null || arr.Length == 0)
                             continue;
 
@@ -181,8 +181,8 @@ namespace Dt.Core.Sqlite
 
         async Task<int> ImportData(string p_tblName, SqliteConnection p_conn)
         {
-            var dbConn = Glb.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbConn");
-            var select = Glb.Config.GetValue<string>($"SqliteModel:{p_tblName}:Data");
+            var dbConn = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbConn");
+            var select = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:Data");
             if (string.IsNullOrEmpty(select))
                 return 0;
 

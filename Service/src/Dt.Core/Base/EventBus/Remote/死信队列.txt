@@ -1,7 +1,7 @@
 
         #region À¿–≈∂”¡–
         /*
-        static string _retryExchangeName = $"{Glb.AppName}.Retry";
+        static string _retryExchangeName = $"{Kit.AppName}.Retry";
 
         IModel CreateDeadChannel(string p_eventName)
         {

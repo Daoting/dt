@@ -27,7 +27,7 @@ namespace Dt.Msg
         /// <summary>
         /// Msg服务是否正在运行多个副本，当前从service.json中取，可否使用KubeClient?
         /// </summary>
-        public static readonly bool IsMultipleReplicas = Glb.IsInDocker ? Glb.GetCfg("IsMultipleReplicas", false) : false;
+        public static readonly bool IsMultipleReplicas = Kit.IsInDocker ? Kit.GetCfg("IsMultipleReplicas", false) : false;
 
         /// <summary>
         /// 向用户列表中的在线用户推送信息
@@ -81,7 +81,7 @@ namespace Dt.Msg
             Throw.IfNull(p_msg);
 
             // 单副本也统一走 RemoteEventBus
-            Glb.GetSvc<RemoteEventBus>().Multicast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() });
+            Kit.GetSvc<RemoteEventBus>().Multicast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() });
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Dt.Msg
             // 推送结果的前缀键
             string prefixKey = "msg:Push:" + Guid.NewGuid().ToString().Substring(0, 6);
             // 通知所有副本推送
-            Glb.GetSvc<RemoteEventBus>().Multicast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = p_userIDs, Msg = p_msg });
+            Kit.GetSvc<RemoteEventBus>().Multicast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = p_userIDs, Msg = p_msg });
 
             // 收集未在线推送的
             // 等待推送完毕，时间？

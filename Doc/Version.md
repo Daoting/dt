@@ -17,6 +17,8 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * 本地sqlite数据的备份与删除
 * 添加接收分享功能 
 * 本地库增加分享库文件功能
+* msg服务支持同一账号多个会话
+* 远程事件组播时实现等待调用结束
 
 ### 变更 
 * 服务端导出sqlite模型只使用Microsoft.Data.Sqlite，无类型映射
@@ -24,6 +26,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * 服务端生成ID时去除3位标志位
 * AtSys AtKit AtUser AtApp合并为Kit
 * ImgKit CrossKit合并到Kit
+* 服务端Glb ID等合并到Kit
 
 ### Bug修改 
 * Lv自动生成列时，切换数据源报无旧数据源列的警告
@@ -34,6 +37,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * SqliteCommandEx 可空列bug
 * 3.8.6 DatePicker TimePicker已 正常
 * Lv的分组导航头不显示时在android上也堆在一起绘制
+* ios wasm注销时停止接收推送
 
 ## Release 1.9
 

@@ -757,7 +757,7 @@ namespace Dt.Core
             bool p_deferred,
             string p_splitOn)
         {
-            string sql = Glb.Sql(p_keyOrSql);
+            string sql = Kit.Sql(p_keyOrSql);
 
             try
             {
@@ -887,7 +887,7 @@ namespace Dt.Core
             if (_conn == null)
             {
                 // 数据源键名在json配置中
-                _conn = new MySqlConnection(string.IsNullOrEmpty(_dbKey) ? DefaultConnStr : Glb.Config["MySql:" + _dbKey]);
+                _conn = new MySqlConnection(string.IsNullOrEmpty(_dbKey) ? DefaultConnStr : Kit.Config["MySql:" + _dbKey]);
                 await _conn.OpenAsync();
             }
         }
@@ -915,12 +915,12 @@ namespace Dt.Core
         /// <returns></returns>
         CommandDefinition CreateCommand(string p_keyOrSql, object p_params, bool p_deferred)
         {
-            string sql = Glb.Sql(p_keyOrSql);
+            string sql = Kit.Sql(p_keyOrSql);
             if (TraceSql)
                 Log.Information(BuildSql(sql, p_params));
 
             return new CommandDefinition(
-                Glb.Sql(p_keyOrSql),
+                Kit.Sql(p_keyOrSql),
                 p_params,
                 _tran,
                 null,

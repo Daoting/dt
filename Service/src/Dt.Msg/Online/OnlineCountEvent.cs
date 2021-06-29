@@ -27,7 +27,7 @@ namespace Dt.Msg
     {
         public Task Handle(OnlineCountEvent p_event)
         {
-            return Redis.Db.HashSetAsync(p_event.CacheKey, Glb.ID, Online.TotalCount);
+            return Redis.Db.HashSetAsync(p_event.CacheKey, Kit.SvcID, Online.TotalCount);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Dt.Core
 
                 try
                 {
-                    client.Wait(Glb.HttpContext.RequestAborted);
+                    client.Wait(Kit.HttpContext.RequestAborted);
                 }
                 catch { }
                 finally

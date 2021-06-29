@@ -13,6 +13,7 @@ using System.Net;
 
 namespace Dt.Core
 {
+    /*
     /// <summary>
     /// 生成ID算法
     /// </summary>
@@ -90,4 +91,5 @@ namespace Dt.Core
             return workerId;
         }
     }
+    */
 }

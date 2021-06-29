@@ -98,6 +98,18 @@ namespace Dt.Core
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 获取给定字符串的MD5码字节数组
+        /// </summary>
+        /// <param name="p_str"></param>
+        /// <returns></returns>
+        public static byte[] GetMD5Bytes(string p_str)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(p_str);
+            MD5 md = new MD5CryptoServiceProvider();
+            return md.ComputeHash(bytes);
+        }
+
         static string EncodeUnit(params byte[] unit)
         {
             int[] obj = new int[4];

@@ -39,7 +39,7 @@ namespace Dt.Msg
                     result.Add(new Dict
                     {
                         { "userid", ci.UserID },
-                        { "svcid", Glb.ID },
+                        { "svcid", Kit.SvcID },
                         { "starttime", ci.StartTime.ToString() },
                         { "platform", ci.Platform },
                         { "version", ci.Version },

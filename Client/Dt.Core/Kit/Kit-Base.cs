@@ -183,12 +183,9 @@ namespace Dt.Core
 
         #region 工具方法
         /// <summary>
-        /// 获取新Guid
+        /// 获取新Guid，小写无连字符'-'
         /// </summary>
-        public static string NewID
-        {
-            get { return Guid.NewGuid().ToString("N"); }
-        }
+        public static string NewGuid => Guid.NewGuid().ToString("N");
 
         /// <summary>
         /// 将字节长度转成描述信息

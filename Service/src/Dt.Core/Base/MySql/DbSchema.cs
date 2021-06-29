@@ -139,7 +139,7 @@ namespace Dt.Core
 
                     // 取Db时间
                     cmd.CommandText = "select now()";
-                    Glb.Now = (DateTime)cmd.ExecuteScalar();
+                    Kit.Now = (DateTime)cmd.ExecuteScalar();
                 }
             }
             stopwatch.Stop();

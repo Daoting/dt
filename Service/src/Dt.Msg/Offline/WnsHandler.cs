@@ -125,8 +125,8 @@ namespace Dt.Msg
         {
             _wnsToken = null;
             // WNS获取令牌时的凭据，在【仪表盘->搬运工->推送通知->Live 服务网站(链接)】中获取
-            var urlEncodedSecret = HttpUtility.UrlEncode(Glb.GetCfg<string>("UwpClientSecret"));
-            var urlEncodedSid = HttpUtility.UrlEncode(Glb.GetCfg<string>("UwpPkgSID"));
+            var urlEncodedSecret = HttpUtility.UrlEncode(Kit.GetCfg<string>("UwpClientSecret"));
+            var urlEncodedSid = HttpUtility.UrlEncode(Kit.GetCfg<string>("UwpPkgSID"));
             string response = null;
             var body = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com", urlEncodedSid, urlEncodedSecret);
             try

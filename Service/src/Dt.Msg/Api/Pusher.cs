@@ -68,7 +68,7 @@ namespace Dt.Msg
             if (MsgKit.IsMultipleReplicas)
             {
                 string key = $"msg:Unregister:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Glb.GetSvc<RemoteEventBus>().Multicast(new UnregisterEvent { CacheKey = key, UserID = p_userID, SessionID = p_sessionID });
+                Kit.GetSvc<RemoteEventBus>().Multicast(new UnregisterEvent { CacheKey = key, UserID = p_userID, SessionID = p_sessionID });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -94,7 +94,7 @@ namespace Dt.Msg
             if (MsgKit.IsMultipleReplicas)
             {
                 string key = $"msg:IsOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Glb.GetSvc<RemoteEventBus>().Multicast(new IsOnlineEvent { CacheKey = key, UserID = p_userID });
+                Kit.GetSvc<RemoteEventBus>().Multicast(new IsOnlineEvent { CacheKey = key, UserID = p_userID });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -117,7 +117,7 @@ namespace Dt.Msg
             {
                 // 查询所有副本
                 string key = $"msg:Sessions:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Glb.GetSvc<RemoteEventBus>().Multicast(new UserSessionsEvent { CacheKey = key, UserID = p_userID });
+                Kit.GetSvc<RemoteEventBus>().Multicast(new UserSessionsEvent { CacheKey = key, UserID = p_userID });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -147,7 +147,7 @@ namespace Dt.Msg
                         result.Add(new Dict
                         {
                             { "userid", ci.UserID },
-                            { "svcid", Glb.ID },
+                            { "svcid", Kit.SvcID },
                             { "starttime", ci.StartTime.ToString() },
                             { "platform", ci.Platform },
                             { "version", ci.Version },
@@ -171,7 +171,7 @@ namespace Dt.Msg
             {
                 // 所有副本
                 string key = "msg:OnlineCount:" + Guid.NewGuid().ToString().Substring(0, 6);
-                Glb.GetSvc<RemoteEventBus>().Multicast(new OnlineCountEvent { CacheKey = key });
+                Kit.GetSvc<RemoteEventBus>().Multicast(new OnlineCountEvent { CacheKey = key });
                 // 等待收集
                 await Task.Delay(500);
 
@@ -186,7 +186,7 @@ namespace Dt.Msg
             else
             {
                 // 当前单副本
-                result = new Dict { { Glb.ID, Online.TotalCount } };
+                result = new Dict { { Kit.SvcID, Online.TotalCount } };
             }
             return result;
         }

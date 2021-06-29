@@ -85,7 +85,7 @@ namespace Dt.Msg
         {
             LetterInfo li = new LetterInfo
             {
-                ID = Kit.NewID,
+                ID = Kit.NewGuid,
                 SenderID = 0,
                 SenderName = "系统",
                 LetterType = LetterType.Text,

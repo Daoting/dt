@@ -24,9 +24,9 @@ namespace Dt.Core
         /// <returns></returns>
         public Dict GetConfig()
         {
-            var handler = Glb.GetSvc<SqliteModelHandler>();
+            var handler = Kit.GetSvc<SqliteModelHandler>();
             Throw.IfNull(handler, SqliteModelHandler.Warning);
-            return new Dict { { "ver", handler.GetVersion() }, { "now", Glb.Now } };
+            return new Dict { { "ver", handler.GetVersion() }, { "now", Kit.Now } };
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Dt.Core
         /// <returns></returns>
         public bool 更新模型()
         {
-            var handler = Glb.GetSvc<SqliteModelHandler>();
+            var handler = Kit.GetSvc<SqliteModelHandler>();
             Throw.IfNull(handler, SqliteModelHandler.Warning);
             return handler.Refresh();
         }

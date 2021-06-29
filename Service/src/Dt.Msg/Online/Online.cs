@@ -157,7 +157,7 @@ namespace Dt.Msg
         //static Online()
         //{
         //    // 心跳包间隔
-        //    _heartbeatInterval = Glb.GetCfg("HeartbeatInterval", 0) * 1000;
+        //    _heartbeatInterval = Kit.GetCfg("HeartbeatInterval", 0) * 1000;
         //    if (_heartbeatInterval > 0)
         //    {
         //        var timer = new Timer(SendHeartbeatPkg, null, _heartbeatInterval, _heartbeatInterval);

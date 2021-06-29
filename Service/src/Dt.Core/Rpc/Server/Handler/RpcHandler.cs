@@ -38,7 +38,7 @@ namespace Dt.Core.Rpc
         public Task<bool> Call()
         {
             // 创建服务实例
-            _tgt = Glb.GetSvc(_invoker.Api.Method.DeclaringType);
+            _tgt = Kit.GetSvc(_invoker.Api.Method.DeclaringType);
             if (_tgt == null)
             {
                 var msg = $"无法创建服务实例，类型{_invoker.Api.Method.DeclaringType.Name}！";

@@ -60,7 +60,7 @@ namespace Dt.Core
                 options.Limits.MinRequestBodyDataRate = null;
                 options.Limits.MinResponseDataRate = null;
 
-                long maxSize = Glb.GetCfg<long>("MaxRequestBodySize", 0);
+                long maxSize = Kit.GetCfg<long>("MaxRequestBodySize", 0);
                 if (maxSize > 0)
                 {
                     // 设置post的body的最大长度，默认28.6M
@@ -73,7 +73,7 @@ namespace Dt.Core
             // 配置 IISHttpServer
             p_services.Configure<IISServerOptions>(options =>
             {
-                long maxSize = Glb.GetCfg<long>("MaxRequestBodySize", 0);
+                long maxSize = Kit.GetCfg<long>("MaxRequestBodySize", 0);
                 if (maxSize > 0)
                 {
                     // 设置post的body的最大长度，默认28.6M
@@ -84,7 +84,7 @@ namespace Dt.Core
                 Log.Information("启动 IISHttpServer 成功");
             });
 
-            Glb.ConfigureServices(p_services);
+            Kit.ConfigureServices(p_services);
             return Silo.ConfigureServices(p_services);
         }
 
@@ -102,7 +102,7 @@ namespace Dt.Core
             p_app.UseMiddleware<DtMiddleware>();
 
             // 外部中间件
-            Glb.Configure(p_app);
+            Kit.Configure(p_app);
 
             // 默认页和静态页面改为在外部启用！
             //p_app.UseDefaultFiles();
@@ -114,7 +114,7 @@ namespace Dt.Core
             // 订阅事件
             RemoteEventBus.Subscribe(p_app.ApplicationServices);
 
-            var version = Glb.Stub.GetType().Assembly.GetName().Version;
+            var version = Kit.Stub.GetType().Assembly.GetName().Version;
             Log.Information("---启动完毕---");
         }
     }

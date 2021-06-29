@@ -134,7 +134,7 @@ namespace Dt.Base
                                 // 生成文件描述和缩略图
                                 var fd = ParseUrl(url);
                                 fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
-                                fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+                                fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
                                 img.AsJPEG().Save(fd.ThumbPath, true);
                                 result.Add(fd);
 
@@ -167,7 +167,7 @@ namespace Dt.Base
                                 fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
                                 if (asset.PixelWidth > FileData.ThumbSize || asset.PixelHeight > FileData.ThumbSize)
                                 {
-                                    fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewID + "-t.jpg");
+                                    fd.ThumbPath = Path.Combine(Kit.CachePath, Kit.NewGuid + "-t.jpg");
                                     img.AsJPEG().Save(fd.ThumbPath, true);
                                 }
                                 result.Add(fd);

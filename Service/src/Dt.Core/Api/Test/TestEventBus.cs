@@ -59,7 +59,7 @@ namespace Dt.Core
 
         public string TestLoadBalance()
         {
-            return Glb.ID;
+            return Kit.SvcID;
         }
     }
 

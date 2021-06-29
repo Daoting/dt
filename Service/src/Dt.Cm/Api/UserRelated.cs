@@ -131,7 +131,7 @@ namespace Dt.Cm
                 UserID: p_userID,
                 ParamID: p_paramID,
                 Value: p_value,
-                Mtime: Glb.Now);
+                Mtime: Kit.Now);
             await _dp.Delete(up);
 
             var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });

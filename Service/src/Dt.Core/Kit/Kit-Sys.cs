@@ -12,24 +12,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 全局静态类
+    /// 系统相关
     /// </summary>
-    public static class Glb
+    public partial class Kit
     {
         #region 成员变量
         static ISvcStub _stub;
@@ -50,7 +49,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取服务实例ID，k8s部署在同一Node上多个Pod副本时区分用，每次启动生成新ID，终生不变
         /// </summary>
-        public static string ID { get; } = Guid.NewGuid().ToString().Substring(0, 8);
+        public static string SvcID { get; } = Guid.NewGuid().ToString().Substring(0, 8);
 
         /// <summary>
         /// 获取服务存根
@@ -207,14 +206,13 @@ namespace Dt.Core
         {
             return _svcProvider.GetServices(p_svcType);
         }
-        #endregion
 
         /// <summary>
         /// 通过RabbitMQ队列，实时获取应用内正在运行的所有微服务
         /// </summary>
         /// <param name="p_isSvcInst">true表示所有微服务副本实例，false表示所有微服务</param>
         /// <returns>微服务列表</returns>
-        public static async Task<List<string>> GetCurrentSvcs(bool p_isSvcInst)
+        public static async Task<List<string>> GetAllSvcs(bool p_isSvcInst)
         {
             if (_mqClient == null)
             {
@@ -267,6 +265,7 @@ namespace Dt.Core
             }
             return ls;
         }
+        #endregion
 
         #region Startup
         internal static void ConfigureServices(IServiceCollection p_services)

@@ -65,7 +65,7 @@ namespace Dt.Fsm
                 dir.Create();
 
             // 固定卷
-            var fv = Glb.GetCfg<string>("FixedVolume");
+            var fv = Kit.GetCfg<string>("FixedVolume");
             StringBuilder sb = new StringBuilder("初始化固定卷");
             if (!string.IsNullOrEmpty(fv))
             {

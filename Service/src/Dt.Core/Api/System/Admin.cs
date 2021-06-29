@@ -34,7 +34,7 @@ namespace Dt.Core
         public List<string> GetInitInfo()
         {
             var ls = new List<string>();
-            ls.Add($"{Glb.SvcName.Substring(0, 1).ToUpper()}{Glb.SvcName.Substring(1)} API目录");
+            ls.Add($"{Kit.SvcName.Substring(0, 1).ToUpper()}{Kit.SvcName.Substring(1)} API目录");
             ls.Add(GetTopbarHtml());
             ls.Add(GetGroupApi("API"));
             return ls;
@@ -206,7 +206,7 @@ namespace Dt.Core
         string GetTopbarHtml()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"<span style=\"font-size:20px;\">{Glb.SvcName.Substring(0, 1).ToUpper()}{Glb.SvcName.Substring(1)}服务({Silo.Methods.Count})</span>");
+            sb.Append($"<span style=\"font-size:20px;\">{Kit.SvcName.Substring(0, 1).ToUpper()}{Kit.SvcName.Substring(1)}服务({Silo.Methods.Count})</span>");
             foreach (var item in Silo.GroupMethods.OrderBy((p) => p.Key, StringComparer.OrdinalIgnoreCase))
             {
                 if (item.Value.Count > 0)
@@ -249,7 +249,7 @@ namespace Dt.Core
             // 不同模式的服务名
             string serviceName;
             if (mode == AgentMode.Default)
-                serviceName = $"\"{Glb.SvcName}\"";
+                serviceName = $"\"{Kit.SvcName}\"";
             else if (mode == AgentMode.Generic)
                 serviceName = "typeof(TSvc).Name";
             else

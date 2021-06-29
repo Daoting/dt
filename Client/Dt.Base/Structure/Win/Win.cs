@@ -517,7 +517,7 @@ namespace Dt.Base
                         {
                             // Tab未设置标题时使用窗口标题
                             tab.Title = Title;
-                            title = Kit.NewID;
+                            title = Kit.NewGuid;
                         }
                         tab.OwnWin = this;
                         _tabs[title] = tab;
@@ -537,7 +537,7 @@ namespace Dt.Base
                         Title = Title,
                         OwnWin = this
                     };
-                    _tabs[Kit.NewID] = tab;
+                    _tabs[Kit.NewGuid] = tab;
                 }
             }
         }

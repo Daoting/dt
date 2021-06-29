@@ -50,7 +50,7 @@ namespace Dt.Core.EventBus
                 return;
 
             var mi = tp.GetMethod("Handle");
-            foreach (var h in Glb.GetSvcs(tp))
+            foreach (var h in Kit.GetSvcs(tp))
             {
                 try
                 {
@@ -76,7 +76,7 @@ namespace Dt.Core.EventBus
             if (p_request == null || !RequestEvents.TryGetValue(p_request.GetType(), out tp))
                 return Task.FromResult(default(TResponse));
 
-            object handler = Glb.GetSvc(tp);
+            object handler = Kit.GetSvc(tp);
             var mi = tp.GetMethod("Handle");
             try
             {

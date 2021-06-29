@@ -204,7 +204,7 @@ namespace Dt.Base
 
             LetterInfo li = new LetterInfo
             {
-                ID = Kit.NewID,
+                ID = Kit.NewGuid,
                 SenderID = Kit.UserID,
                 SenderName = Kit.UserName,
                 LetterType = p_type,

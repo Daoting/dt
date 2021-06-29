@@ -73,7 +73,7 @@ namespace Dt.Pub
                     string url = null;
                     if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
                     {
-                        url = await BuildHtmlPage(p_post.Title, p_post.Content, Glb.Now.ToString("yyyyMM"));
+                        url = await BuildHtmlPage(p_post.Title, p_post.Content, Kit.Now.ToString("yyyyMM"));
                     }
                     p_post.Url = url;
                 }
@@ -92,7 +92,7 @@ namespace Dt.Pub
         /// <returns>返回静态页面的路径，生成失败返回null</returns>
         public Task<string> CreatePage(string p_title, string p_content)
         {
-            return BuildHtmlPage(p_title, p_content, Glb.Now.ToString("yyyyMM"));
+            return BuildHtmlPage(p_title, p_content, Kit.Now.ToString("yyyyMM"));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Dt.Pub
                 return null;
 
             string pageContent = string.Format(_template, p_title, p_content);
-            string pageName = $"{Id.New()}.html";
+            string pageName = $"{Kit.NewID}.html";
             try
             {
                 string path = Path.Combine(GetRootPath(), p_folder);

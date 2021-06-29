@@ -102,7 +102,7 @@ namespace Dt.Base
         async Task<List<string>> Upload(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
             _cancelToken = p_token;
-            _boundary = Kit.NewID;
+            _boundary = Kit.NewGuid;
             _dataResponse = NSMutableData.Create();
 
             _cancelToken.ThrowIfCancellationRequested();
@@ -134,7 +134,7 @@ namespace Dt.Base
             return Task.Run(() =>
             {
                 _uploadFiles.Clear();
-                var multiPartPath = Path.Combine(Kit.CachePath, Kit.NewID);
+                var multiPartPath = Path.Combine(Kit.CachePath, Kit.NewGuid);
                 using (var fs = new FileStream(multiPartPath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 {
                     // UTF8.GetBytes的结果只一字节10，诡异！

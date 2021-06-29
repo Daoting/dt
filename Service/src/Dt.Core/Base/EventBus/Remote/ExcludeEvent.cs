@@ -19,6 +19,6 @@ namespace Dt.Core.EventBus
         /// <summary>
         /// 排除的服务副本ID
         /// </summary>
-        public virtual string ExcludeSvcID { get; } = Glb.ID;
+        public virtual string ExcludeSvcID { get; } = Kit.SvcID;
     }
 }

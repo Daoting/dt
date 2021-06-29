@@ -41,37 +41,37 @@ namespace Dt.Core
         /// <summary>
         /// 获取当前数据提供者
         /// </summary>
-        public static DataProvider Dp => ((Bag)Glb.HttpContext.Items[_lcName]).GetDataProvider();
+        public static DataProvider Dp => ((Bag)Kit.HttpContext.Items[_lcName]).GetDataProvider();
 
         /// <summary>
         /// 获取当前用户标识
         /// </summary>
-        public static long UserID => ((Bag)Glb.HttpContext.Items[_lcName])._invoker.UserID;
+        public static long UserID => ((Bag)Kit.HttpContext.Items[_lcName])._invoker.UserID;
 
         /// <summary>
         /// 日志对象，日志中比静态Log类多出Api名称和当前UserID
         /// </summary>
-        public static ILogger Log => ((Bag)Glb.HttpContext.Items[_lcName])._invoker.Log;
+        public static ILogger Log => ((Bag)Kit.HttpContext.Items[_lcName])._invoker.Log;
 
         /// <summary>
         /// 本地事件总线
         /// </summary>
-        public static LocalEventBus LocalEB => Glb.GetSvc<LocalEventBus>();
+        public static LocalEventBus LocalEB => Kit.GetSvc<LocalEventBus>();
 
         /// <summary>
         /// 远程事件总线
         /// </summary>
-        public static RemoteEventBus RemoteEB => Glb.GetSvc<RemoteEventBus>();
+        public static RemoteEventBus RemoteEB => Kit.GetSvc<RemoteEventBus>();
 
         /// <summary>
         /// 当前为匿名用户
         /// </summary>
-        public static bool IsAnonymous => ((Bag)Glb.HttpContext.Items[_lcName])._invoker.UserID == -1;
+        public static bool IsAnonymous => ((Bag)Kit.HttpContext.Items[_lcName])._invoker.UserID == -1;
 
         /// <summary>
         /// 获取当前http请求上下文
         /// </summary>
-        public static HttpContext Context => Glb.HttpContext;
+        public static HttpContext Context => Kit.HttpContext;
 
         /// <summary>
         /// 添加共享数据项，在整个请求期间有效
@@ -81,7 +81,7 @@ namespace Dt.Core
         public static void AddItem(string p_name, object p_value)
         {
             Throw.IfNullOrEmpty(p_name);
-            Bag bag = (Bag)Glb.HttpContext.Items[_lcName];
+            Bag bag = (Bag)Kit.HttpContext.Items[_lcName];
             if (bag._data == null)
                 bag._data = new ConcurrentDictionary<string, object>();
             bag._data[p_name] = p_value;
@@ -96,7 +96,7 @@ namespace Dt.Core
         public static T GetItem<T>(string p_name)
         {
             Throw.IfNullOrEmpty(p_name);
-            Bag bag = (Bag)Glb.HttpContext.Items[_lcName];
+            Bag bag = (Bag)Kit.HttpContext.Items[_lcName];
             if (bag._data != null && bag._data.TryGetValue(p_name, out var val))
                 return (T)val;
             return default(T);

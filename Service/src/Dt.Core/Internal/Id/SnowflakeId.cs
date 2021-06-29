@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Net;
 #endregion
 
 namespace Dt.Core
@@ -15,7 +16,7 @@ namespace Dt.Core
     /// <summary>
     /// Snowflake算法
     /// </summary>
-    public class SnowflakeId
+    class SnowflakeId
     {
         const int _sequenceBits = 12;
         const long _sequenceMask = -1L ^ (-1L << _sequenceBits);
@@ -33,14 +34,19 @@ namespace Dt.Core
         long _sequence = 0L;
         long _lastTimestamp = -1L;
 
-        internal SnowflakeId(long workerId)
+        public SnowflakeId(long workerId)
         {
             if (workerId > _maxWorkerId || workerId < 0)
                 throw new ArgumentException($"工作机器id在 0-{_maxWorkerId} 之间");
             _workerId = workerId;
         }
 
-        internal long NextId()
+        public SnowflakeId()
+        {
+            _workerId = GetWorkerId();
+        }
+
+        public long NextId()
         {
             lock (_syncRoot)
             {
@@ -83,6 +89,43 @@ namespace Dt.Core
         long TimeGen()
         {
             return (long)(DateTime.UtcNow - _startTime).TotalMilliseconds;
+        }
+
+        static long GetWorkerId()
+        {
+            int workerId = 0;
+
+            // 使用这种 IP 生成工作进程编号的方法，必须保证IP段相加不能重复！！！
+            try
+            {
+                var ips = Dns.GetHostAddresses(Dns.GetHostName());
+                for (int i = 0; i < ips.Length; i++)
+                {
+                    if (ips[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        // IPV4时采用IP段数值相加生成唯一的workerId，满足 < 1024，重复可能性小，凑合用！
+                        byte[] data = ips[i].GetAddressBytes();
+                        for (int j = 0; j < data.Length; j++)
+                        {
+                            workerId += data[j] & 0xFF;
+                        }
+                        break;
+                    }
+                    else if (ips[i].AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                    {
+                        // IPV6时将每个 Bit 位的后6位相加
+                        byte[] data = ips[i].GetAddressBytes();
+                        for (int j = 0; j < data.Length; j++)
+                        {
+                            workerId += data[j] & 0B111111;
+                        }
+                        break;
+                    }
+                }
+            }
+            catch { }
+
+            return workerId;
         }
     }
 }
