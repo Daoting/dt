@@ -34,7 +34,7 @@ namespace Dt.Cm
             Throw.If(!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"), "手机号码错误！");
 
             if ((IsAdded || Cells["phone"].IsChanged)
-                && await Bag.Dp.GetScalar<int>("用户-重复手机号", new { phone = Phone }) > 0)
+                && await Kit.ContextDp.GetScalar<int>("用户-重复手机号", new { phone = Phone }) > 0)
             {
                 Throw.Msg("手机号码重复！");
             }

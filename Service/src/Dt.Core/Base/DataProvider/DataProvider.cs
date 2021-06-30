@@ -772,8 +772,8 @@ namespace Dt.Core
             // 发布领域事件
             if (p_suc && _domainEvents != null)
             {
-                var localEB = Kit.GetSvc<LocalEventBus>();
-                var remoteEB = Kit.GetSvc<RemoteEventBus>();
+                var localEB = Kit.GetObj<LocalEventBus>();
+                var remoteEB = Kit.GetObj<RemoteEventBus>();
                 foreach (var de in _domainEvents)
                 {
                     if (de.IsRemoteEvent)

@@ -76,7 +76,7 @@ namespace Dt.Cm
                 return result;
             }
 
-            string code = await Cache.StringGet<string>(_prefixCode, p_phone);
+            string code = await Kit.StringGet<string>(_prefixCode, p_phone);
             if (code != p_code)
             {
                 result.AddCell("IsSuc", false);
@@ -125,7 +125,7 @@ namespace Dt.Cm
 
             string code = new Random().Next(1000, 9999).ToString();
             // 60秒失效
-            Cache.StringSet(_prefixCode, p_phone, code, TimeSpan.FromSeconds(60));
+            Kit.StringSet(_prefixCode, p_phone, code, TimeSpan.FromSeconds(60));
 
             // 发送短信
 

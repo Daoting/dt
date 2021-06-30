@@ -80,7 +80,7 @@ namespace Dt.Cm
             }
 
             isIntercepted = true;
-            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + Bag.UserID);
+            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + Kit.ContextUserID);
             var type = p_invocation.Method.ReturnType;
             try
             {

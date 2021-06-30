@@ -81,7 +81,7 @@ namespace Dt.Msg
             Throw.IfNull(p_msg);
 
             // 单副本也统一走 RemoteEventBus
-            Kit.GetSvc<RemoteEventBus>().Multicast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() });
+            Kit.RemoteMulticast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() });
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Dt.Msg
             // 推送结果的前缀键
             string prefixKey = "msg:Push:" + Guid.NewGuid().ToString().Substring(0, 6);
             // 通知所有副本推送
-            Kit.GetSvc<RemoteEventBus>().Multicast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = p_userIDs, Msg = p_msg });
+            Kit.RemoteMulticast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = p_userIDs, Msg = p_msg });
 
             // 收集未在线推送的
             // 等待推送完毕，时间？

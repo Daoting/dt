@@ -37,7 +37,6 @@ namespace Dt.Core
         static IDisposable _cfgCallback;
         static IServiceProvider _svcProvider;
         static IHttpContextAccessor _accessor;
-        static HttpClient _mqClient;
         #endregion
 
         #region 属性
@@ -166,13 +165,13 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 全局服务
+        #region 全局服务对象
         /// <summary>
         /// 在全局服务容器中获取指定类型的服务对象，服务类型不存在时异常
         /// </summary>
         /// <typeparam name="T">服务类型</typeparam>
         /// <returns>服务对象</returns>
-        public static T GetSvc<T>()
+        public static T GetObj<T>()
         {
             return _svcProvider.GetService<T>();
         }
@@ -182,7 +181,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_svcType"></param>
         /// <returns>服务对象</returns>
-        public static object GetSvc(Type p_svcType)
+        public static object GetObj(Type p_svcType)
         {
             return _svcProvider.GetService(p_svcType);
         }
@@ -192,7 +191,7 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="T">服务类型</typeparam>
         /// <returns>所有服务对象</returns>
-        public static IEnumerable<T> GetSvcs<T>()
+        public static IEnumerable<T> GetObjs<T>()
         {
             return _svcProvider.GetServices<T>();
         }
@@ -202,68 +201,9 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_svcType">服务类型</param>
         /// <returns>所有服务对象</returns>
-        public static IEnumerable<object> GetSvcs(Type p_svcType)
+        public static IEnumerable<object> GetObjs(Type p_svcType)
         {
             return _svcProvider.GetServices(p_svcType);
-        }
-
-        /// <summary>
-        /// 通过RabbitMQ队列，实时获取应用内正在运行的所有微服务
-        /// </summary>
-        /// <param name="p_isSvcInst">true表示所有微服务副本实例，false表示所有微服务</param>
-        /// <returns>微服务列表</returns>
-        public static async Task<List<string>> GetAllSvcs(bool p_isSvcInst)
-        {
-            if (_mqClient == null)
-            {
-                var cfg = Config.GetSection("RabbitMq");
-                if (!cfg.Exists())
-                    throw new InvalidOperationException("未找到RabbitMq配置节！");
-
-                _mqClient = new HttpClient();
-                // 必须base64编码
-                string bsc = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{cfg["UserName"]}:{cfg["Password"]}"));
-                _mqClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", bsc);
-                // 获取所有队列 /api/queues/
-                _mqClient.BaseAddress = new Uri($"http://{cfg["HostName"]}:{cfg["HttpPort"]}/api/queues/");
-            }
-
-            List<string> ls = new List<string>();
-            try
-            {
-                using (var response = await _mqClient.GetAsync(default(Uri)))
-                {
-                    response.EnsureSuccessStatusCode();
-                    var data = await response.Content.ReadAsByteArrayAsync();
-                    var root = JsonSerializer.Deserialize<JsonElement>(data);
-                    if (root.ValueKind == JsonValueKind.Array)
-                    {
-                        foreach (var elem in root.EnumerateArray())
-                        {
-                            if (elem.ValueKind == JsonValueKind.Object
-                                && elem.TryGetProperty("name", out var name)
-                                && name.ValueKind == JsonValueKind.String)
-                            {
-                                string val = name.GetString();
-                                string[] parts = val.Split('.');
-                                // 属于当前应用
-                                if (parts.Length > 1 && parts[0] == AppName)
-                                {
-                                    if (parts.Length == 2 && !p_isSvcInst)
-                                        ls.Add(val);
-                                    else if (parts.Length == 3 && p_isSvcInst)
-                                        ls.Add(val);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "获取RabbitMQ所有队列时异常！");
-            }
-            return ls;
         }
         #endregion
 

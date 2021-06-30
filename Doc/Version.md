@@ -27,6 +27,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * AtSys AtKit AtUser AtApp合并为Kit
 * ImgKit CrossKit合并到Kit
 * 服务端Glb ID等合并到Kit
+* Bag EventBus Cache合并到Kit 
 
 ### Bug修改 
 * Lv自动生成列时，切换数据源报无旧数据源列的警告

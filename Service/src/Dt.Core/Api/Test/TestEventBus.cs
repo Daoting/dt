@@ -24,37 +24,37 @@ namespace Dt.Core
     {
         public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {
-            Bag.RemoteEB.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
+            Kit.RemoteBroadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
         }
 
         public void Multicast(string p_svcName)
         {
-            Bag.RemoteEB.Multicast(new TestEventData(), p_svcName);
+            Kit.RemoteMulticast(new TestEventData(), p_svcName);
         }
 
         public void Push(string p_svcName)
         {
-            Bag.RemoteEB.Push(new TestEventData(), p_svcName);
+            Kit.RemotePush(new TestEventData(), p_svcName);
         }
 
         public void PushFixed(string p_svcID)
         {
-            Bag.RemoteEB.PushFixed(new TestEventData(), p_svcID);
+            Kit.RemotePushFixed(new TestEventData(), p_svcID);
         }
 
         public void PushGenericEvent(string p_name)
         {
-            Bag.RemoteEB.Multicast(new GenericEvent<EventData>(new EventData { Name = p_name }));
+            Kit.RemoteMulticast(new GenericEvent<EventData>(new EventData { Name = p_name }));
         }
 
         public void LocalPublish()
         {
-            Bag.LocalEB.Publish(new KesEvent());
+            Kit.LocalPublish(new KesEvent());
         }
 
         public Task<string> LocalCall(string p_name)
         {
-            return Bag.LocalEB.Call(new UyEvent { Name = p_name });
+            return Kit.LocalCall(new UyEvent { Name = p_name });
         }
 
         public string TestLoadBalance()

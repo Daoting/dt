@@ -385,7 +385,7 @@ namespace Dt.Core.EventBus
                 return;
 
             // 实例化所有Handler
-            var handlers = Kit.GetSvcs(hType);
+            var handlers = Kit.GetObjs(hType);
             var mi = hType.GetMethod("Handle");
             foreach (var h in handlers)
             {

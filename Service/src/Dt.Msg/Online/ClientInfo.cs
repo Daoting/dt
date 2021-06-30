@@ -32,8 +32,8 @@ namespace Dt.Msg
         {
             _deviceInfo = p_deviceInfo;
             _writer = p_writer;
-            Context = Bag.Context;
-            UserID = Bag.UserID;
+            Context = Kit.HttpContext;
+            UserID = Kit.ContextUserID;
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;

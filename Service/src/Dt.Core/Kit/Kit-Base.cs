@@ -13,7 +13,7 @@ using System;
 namespace Dt.Core
 {
     /// <summary>
-    /// 工具类
+    /// 工具方法
     /// </summary>
     public partial class Kit
     {

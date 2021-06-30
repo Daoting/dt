@@ -89,7 +89,7 @@ namespace Dt.Core.Sqlite
 
             // 远程事件通知刷新，服务可能存在多个副本！
             var ed = new ModelRefreshEvent { Version = Guid.NewGuid().ToString().Substring(0, 8) };
-            Kit.GetSvc<RemoteEventBus>().Multicast(ed, Kit.SvcName);
+            Kit.RemoteMulticast(ed, Kit.SvcName);
             return true;
         }
 

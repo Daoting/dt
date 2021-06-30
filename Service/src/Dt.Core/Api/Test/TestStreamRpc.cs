@@ -25,7 +25,7 @@ namespace Dt.Core
             {
                 var msg = $"{p_title} {i}";
                 await p_writer.Write(msg);
-                Log.Information("服务端写入：" + msg);
+                _log.Information("服务端写入：" + msg);
                 await Task.Delay(1000);
             }
         }
@@ -34,7 +34,7 @@ namespace Dt.Core
         {
             while (await p_reader.MoveNext())
             {
-                Log.Information("服务端读取：" + p_reader.Val<string>());
+                _log.Information("服务端读取：" + p_reader.Val<string>());
             }
         }
 
@@ -42,10 +42,10 @@ namespace Dt.Core
         {
             while (await p_reader.MoveNext())
             {
-                Log.Information("服务端读取：" + p_reader.Val<string>());
+                _log.Information("服务端读取：" + p_reader.Val<string>());
                 var msg = "++" + p_reader.Val<string>();
                 await p_writer.Write(msg);
-                Log.Information("服务端写入：" + msg);
+                _log.Information("服务端写入：" + msg);
             }
         }
     }

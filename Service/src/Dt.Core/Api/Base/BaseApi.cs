@@ -20,11 +20,11 @@ namespace Dt.Core
         /// <summary>
         /// 数据提供者
         /// </summary>
-        protected DataProvider _dp = Bag.Dp;
+        protected DataProvider _dp = Kit.ContextDp;
 
         /// <summary>
         /// 日志对象，日志中比静态Log类多出Api名称和当前UserID
         /// </summary>
-        protected ILogger Log => Bag.Log;
+        protected ILogger _log => Kit.ContextLog;
     }
 }

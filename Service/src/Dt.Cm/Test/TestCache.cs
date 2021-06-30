@@ -41,12 +41,12 @@ namespace Dt.Cm
             await cache.Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
             var obj = await cache.Get<TestCacheObject>(p_key);
             if (obj != null && !string.IsNullOrEmpty(obj.Name))
-                Log.Information(obj.Name);
+                _log.Information(obj.Name);
         }
 
         public Task CacheExpiry(string p_key, string p_val, int p_expiry)
         {
-            return Cache.StringSet("Test:Str", p_key, p_val, p_expiry > 0 ? TimeSpan.FromSeconds(p_expiry) : (TimeSpan?)null);
+            return Kit.StringSet("Test:Str", p_key, p_val, p_expiry > 0 ? TimeSpan.FromSeconds(p_expiry) : (TimeSpan?)null);
         }
 
         public Task BatchCacheStr()
@@ -56,17 +56,17 @@ namespace Dt.Cm
 
         public Task<string> GetStr(string p_key)
         {
-            return Cache.StringGet<string>("Test:Str", p_key);
+            return Kit.StringGet<string>("Test:Str", p_key);
         }
 
         public Task<long> GetLong(string p_key)
         {
-            return Cache.StringGet<long>("Test:Long", p_key);
+            return Kit.StringGet<long>("Test:Long", p_key);
         }
 
         public async Task<string> GetObjName(string p_key)
         {
-            var obj = await Cache.StringGet<TestCacheObject>("Test:StrObj", p_key);
+            var obj = await Kit.StringGet<TestCacheObject>("Test:StrObj", p_key);
             if (obj != null)
                 return obj.Name;
             return null;
@@ -82,12 +82,12 @@ namespace Dt.Cm
 
         public Task CacheHash(string p_key, string p_name, int p_age)
         {
-            return Cache.HashSet("Test:Hash", p_key, new TestCacheObject { Name = p_name, Age = p_age });
+            return Kit.HashSet("Test:Hash", p_key, new TestCacheObject { Name = p_name, Age = p_age });
         }
 
         public async Task<string> GetHash(string p_key)
         {
-            var obj = await Cache.HashGet<TestCacheObject>("Test:Hash", p_key);
+            var obj = await Kit.HashGet<TestCacheObject>("Test:Hash", p_key);
             if (obj != null)
                 return obj.Name;
             return null;
@@ -95,12 +95,12 @@ namespace Dt.Cm
 
         public Task<int> GetHashAge(string p_key)
         {
-            return Cache.HashGetField<int>("Test:Hash", p_key, "Age");
+            return Kit.HashGetField<int>("Test:Hash", p_key, "Age");
         }
 
         public Task SetHashAge(string p_key, int p_age)
         {
-            return Cache.HashSetField("Test:Hash", p_key, "Age", p_age);
+            return Kit.HashSetField("Test:Hash", p_key, "Age", p_age);
         }
     }
 
