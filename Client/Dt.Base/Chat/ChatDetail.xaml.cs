@@ -133,12 +133,20 @@ namespace Dt.Base
         /// <summary>
         /// 加载信息
         /// </summary>
-        void LoadMsg()
+        async void LoadMsg()
         {
             if (OtherID < 0)
                 return;
 
-            _other = AtState.First<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
+            string sql = $"select * from ChatMember where id={OtherID}";
+            _other = AtState.First<ChatMember>(sql);
+            if (_other == null)
+            {
+                // 初次打开，还未下载好友列表
+                await FriendMemberList.Refresh();
+                _other = AtState.First<ChatMember>(sql);
+            }
+
             // 不是好友时无法发送
             _inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 

@@ -22,8 +22,6 @@ namespace Dt.App.Chat
     /// </summary>
     public sealed partial class ChatMemberList : UserControl
     {
-        const string _refreshKey = "LastRefreshChatMember";
-
         public event EventHandler<long> ItemClick;
 
         public ChatMemberList()
@@ -35,41 +33,12 @@ namespace Dt.App.Chat
             Loaded += OnLoaded;
         }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
+        async void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
 
-            // 超过10小时需要刷新
-            bool refresh = true;
-            string val = AtState.GetCookie(_refreshKey);
-            if (!string.IsNullOrEmpty(val) && DateTime.TryParse(val, out var last))
-                refresh = (Kit.Now - last).TotalHours >= 10;
-
-            if (refresh)
-                RefreshList();
-            else
-                LoadLocalList();
-        }
-
-        async void RefreshList()
-        {
-            // 暂时取所有，后续增加好友功能
-            var tbl = await AtCm.Query<ChatMember>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
-            _lv.Data = tbl;
-
-            // 将新列表缓存到本地库
-            AtState.Exec("delete from ChatMember");
-            if (tbl != null && tbl.Count > 0)
-            {
-                foreach (var r in tbl)
-                {
-                    r.IsAdded = true;
-                }
-                await AtState.BatchSave(tbl, false);
-            }
-
-            // 记录刷新时间
-            AtState.SaveCookie(_refreshKey, Kit.Now.ToString());
+            await FriendMemberList.Refresh();
+            LoadLocalList();
         }
 
         void LoadLocalList()

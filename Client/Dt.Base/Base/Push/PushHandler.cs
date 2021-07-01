@@ -43,7 +43,8 @@ namespace Dt.Base
         /// <returns></returns>
         public static async void Register()
         {
-            if (_reader != null && !_reader.IsClosed)
+            if ((_reader != null && !_reader.IsClosed)
+                || !Kit.IsLogon)
             {
                 //Kit.Msg("已连接");
                 return;
