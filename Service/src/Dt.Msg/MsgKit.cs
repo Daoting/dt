@@ -19,6 +19,9 @@ namespace Dt.Msg
 {
     public static class MsgKit
     {
+        const int _maxRetry = 12;
+        const int _delayMilli = 100;
+
         /// <summary>
         /// 用户未推送消息列表 msg:Queue:userid = list(msginfo)
         /// </summary>
@@ -42,7 +45,7 @@ namespace Dt.Msg
             if (cnt > 1)
             {
                 // Msg服务多副本推送
-                await PushMultipleReplicas(p_userIDs, onlineMsg, onlines, offlines);
+                await PushMultipleReplicas(p_userIDs, onlineMsg, onlines, offlines, cnt);
             }
             else
             {
@@ -71,12 +74,28 @@ namespace Dt.Msg
         /// 向所有副本的所有在线用户广播信息
         /// </summary>
         /// <param name="p_msg"></param>
-        public static void PushToOnline(MsgInfo p_msg)
+        public static async Task PushToOnline(MsgInfo p_msg)
         {
             Throw.IfNull(p_msg);
 
-            // 单副本也统一走 RemoteEventBus
-            Kit.RemoteMulticast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() });
+            var msg = p_msg.GetOnlineMsg();
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
+            {
+                // 多副本推送
+                Kit.RemoteMulticast(new BroadcastEvent { Msg = msg });
+            }
+            else
+            {
+                // 本地单副本推送
+                foreach (var ls in Online.All.Values)
+                {
+                    foreach (var ci in ls)
+                    {
+                        ci.AddMsg(msg);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -86,7 +105,8 @@ namespace Dt.Msg
         /// <param name="p_msg">待推送信息</param>
         /// <param name="p_onlines"></param>
         /// <param name="p_offlines"></param>
-        static async Task PushMultipleReplicas(List<long> p_userIDs, string p_msg, List<long> p_onlines, List<long> p_offlines)
+        /// <param name="p_cnt"></param>
+        static async Task PushMultipleReplicas(List<long> p_userIDs, string p_msg, List<long> p_onlines, List<long> p_offlines, int p_cnt)
         {
             /* 
              * Msg服务多副本运行时，有以下两种处理方案：
@@ -101,15 +121,24 @@ namespace Dt.Msg
             // 通知所有副本推送
             Kit.RemoteMulticast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = p_userIDs, Msg = p_msg });
 
-            // 收集未在线推送的
-            // 等待推送完毕，时间？
-            await Task.Delay(500);
+            // 等待收集
+            int total, retry = 0;
+            var sc = new StringCache(prefixKey);
+            do
+            {
+                await Task.Delay(_delayMilli);
+                total = await sc.Get<int>("cnt");
+                retry++;
+            }
+            while (total < p_cnt && retry < _maxRetry);
 
-            StringCache cache = new StringCache(prefixKey);
+            // 删除统计总数
+            await sc.Delete("cnt");
+
             foreach (long id in p_userIDs)
             {
                 // 有记录的表示在线推送成功
-                if (await cache.Delete(id.ToString()))
+                if (await sc.Delete(id))
                     p_onlines.Add(id);
                 else
                     p_offlines.Add(id);

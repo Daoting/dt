@@ -31,25 +31,27 @@ namespace Dt.Msg
     {
         public async Task Handle(OnlinePushEvent p_event)
         {
-            if (p_event.Receivers == null || p_event.Receivers.Count == 0)
-                return;
-
-            StringCache cache = new StringCache(p_event.PrefixKey);
-            foreach (var id in p_event.Receivers)
+            StringCache sc = new StringCache(p_event.PrefixKey);
+            if (p_event.Receivers != null && p_event.Receivers.Count > 0)
             {
-                if (Online.All.TryGetValue(id, out var ls)
-                    && ls != null
-                    && ls.Count > 0)
+                foreach (var id in p_event.Receivers)
                 {
-                    // 在线推送，直接放入推送队列
-                    foreach (var ci in ls)
+                    if (Online.All.TryGetValue(id, out var ls)
+                        && ls != null
+                        && ls.Count > 0)
                     {
-                        ci.AddMsg(p_event.Msg);
+                        // 在线推送，直接放入推送队列
+                        foreach (var ci in ls)
+                        {
+                            ci.AddMsg(p_event.Msg);
+                        }
+                        // 设置处理标志： msg:Push:6位id前缀:userid = true
+                        await sc.Set(id, true);
                     }
-                    // 设置处理标志： msg:Push:6位id前缀:userid = true
-                    await cache.Set(id.ToString(), true);
                 }
             }
+            // 统计总数+1
+            await sc.Increment("cnt");
         }
     }
 }

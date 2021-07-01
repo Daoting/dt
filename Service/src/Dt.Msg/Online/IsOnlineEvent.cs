@@ -35,7 +35,7 @@ namespace Dt.Msg
             {
                 await sc.Set(null, "true");
             }
-            // 统计总数
+            // 统计总数+1
             await sc.Increment("cnt");
         }
     }

@@ -10,7 +10,6 @@
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
@@ -58,16 +57,22 @@ namespace Dt.Core.Caches
             if (arr == null || arr.Length == 0)
                 return default(List<TCacheItem>);
 
-            if (!NeedSerialize)
-            {
-                return arr.Cast<TCacheItem>().ToList();
-            }
-
             List<TCacheItem> ls = new List<TCacheItem>();
-            foreach (var val in arr)
+            if (NeedSerialize)
             {
-                var item = JsonSerializer.Deserialize<TCacheItem>(val, JsonOptions.UnsafeSerializer);
-                ls.Add(item);
+                foreach (var val in arr)
+                {
+                    var item = JsonSerializer.Deserialize<TCacheItem>(val, JsonOptions.UnsafeSerializer);
+                    ls.Add(item);
+                }
+            }
+            else
+            {
+                Type tp = typeof(TCacheItem);
+                foreach (var val in arr)
+                {
+                    ls.Add((TCacheItem)Convert.ChangeType(val, tp));
+                }
             }
             return ls;
         }

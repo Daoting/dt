@@ -51,7 +51,7 @@ namespace Dt.Msg
         /// <param name="p_msg"></param>
         public void SendMsgToOnline(string p_msg)
         {
-            MsgKit.PushToOnline(WrapperMsg(p_msg));
+            _ = MsgKit.PushToOnline(WrapperMsg(p_msg));
         }
         #endregion
 
