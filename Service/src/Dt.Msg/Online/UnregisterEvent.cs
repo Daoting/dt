@@ -30,12 +30,15 @@ namespace Dt.Msg
     {
         public async Task Handle(UnregisterEvent p_event)
         {
+            var sc = new StringCache(p_event.CacheKey);
             var ci = Online.GetSession(p_event.UserID, p_event.SessionID);
             if (ci != null)
             {
-                await Redis.Db.StringSetAsync(p_event.CacheKey, "true");
+                await sc.Set(null, "true");
                 await ci.Close();
             }
+            // 统计总数
+            await sc.Increment("cnt");
         }
     }
 }

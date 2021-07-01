@@ -33,6 +33,7 @@ namespace Dt.Core.Caches
 
         public BaseCache(string p_keyPrefix)
         {
+            Throw.IfNullOrEmpty(p_keyPrefix);
             _keyPrefix = p_keyPrefix;
         }
 
@@ -50,11 +51,9 @@ namespace Dt.Core.Caches
         /// </summary>
         /// <param name="p_key">不带前缀的键名</param>
         /// <returns></returns>
-        public Task<bool> Remove(object p_key)
+        public Task<bool> Delete(object p_key)
         {
-            if (p_key != null)
-                return _db.KeyDeleteAsync(GetFullKey(p_key));
-            return Task.FromResult(false);
+            return _db.KeyDeleteAsync(GetFullKey(p_key));
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Dt.Core.Caches
         /// </summary>
         /// <param name="p_keys"></param>
         /// <returns></returns>
-        public Task BatchRemove(IList p_keys)
+        public Task BatchDelete(IList p_keys)
         {
             if (p_keys == null || p_keys.Count == 0)
                 return Task.FromResult(false);

@@ -92,19 +92,18 @@ namespace Dt.Msg
         public async Task SendOfflineMsg()
         {
             // 所有离线信息
-            string key = MsgKit.MsgQueueKey + UserID.ToString();
-            var db = Redis.Db;
-            var ls = await db.ListRangeAsync(key);
-            if (ls != null && ls.Length > 0)
+            var lc = new ListCache<string>(MsgKit.MsgQueueKey);
+            var ls = await lc.GetRange(UserID);
+            if (ls != null && ls.Count > 0)
             {
                 try
                 {
                     foreach (var mi in ls)
                     {
-                        await _writer.Write((string)mi);
+                        await _writer.Write(mi);
                     }
                     // 删除避免重复推送
-                    await db.KeyDeleteAsync(key);
+                    await lc.Delete(UserID);
                 }
                 catch (Exception ex)
                 {

@@ -4,6 +4,5 @@
   "TraceSql": true,
   "TraceRpc": false,
   "UwpClientSecret": "",
-  "UwpPkgSID": "",
-  "IsMultipleReplicas": true
+  "UwpPkgSID": ""
 }

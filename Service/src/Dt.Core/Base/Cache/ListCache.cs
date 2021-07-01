@@ -7,6 +7,12 @@
 #endregion
 
 #region 引用命名
+using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Caches
@@ -20,6 +26,59 @@ namespace Dt.Core.Caches
         public ListCache(string p_keyPrefix)
             : base(p_keyPrefix)
         {
+        }
+
+        /// <summary>
+        /// 在尾部添加元素
+        /// </summary>
+        /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
+        /// <param name="p_value">待缓存对象</param>
+        /// <returns></returns>
+        public Task<long> RightPush(object p_key, TCacheItem p_value)
+        {
+            Throw.If(p_value == null);
+            RedisKey key = GetFullKey(p_key);
+            if (!NeedSerialize)
+                return _db.ListRightPushAsync(key, p_value.ToString());
+
+            return _db.ListRightPushAsync(key, JsonSerializer.Serialize(p_value, JsonOptions.UnsafeSerializer));
+        }
+
+        /// <summary>
+        /// 返回名称为key的list中start至end之间的元素
+        /// </summary>
+        /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
+        /// <param name="p_start"></param>
+        /// <param name="p_stop">-1表示最后一个元素</param>
+        /// <returns></returns>
+        public async Task<List<TCacheItem>> GetRange(object p_key, long p_start = 0, long p_stop = -1)
+        {
+            RedisKey key = GetFullKey(p_key);
+            var arr = await _db.ListRangeAsync(key, p_start, p_stop);
+            if (arr == null || arr.Length == 0)
+                return default(List<TCacheItem>);
+
+            if (!NeedSerialize)
+            {
+                return arr.Cast<TCacheItem>().ToList();
+            }
+
+            List<TCacheItem> ls = new List<TCacheItem>();
+            foreach (var val in arr)
+            {
+                var item = JsonSerializer.Deserialize<TCacheItem>(val, JsonOptions.UnsafeSerializer);
+                ls.Add(item);
+            }
+            return ls;
+        }
+
+        bool NeedSerialize
+        {
+            get
+            {
+                Type tp = typeof(TCacheItem);
+                return tp != typeof(string) && tp.IsClass;
+            }
         }
     }
 }

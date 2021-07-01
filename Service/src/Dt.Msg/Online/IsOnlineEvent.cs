@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.EventBus;
 using System.Threading.Tasks;
@@ -28,11 +29,14 @@ namespace Dt.Msg
     {
         public async Task Handle(IsOnlineEvent p_event)
         {
+            var sc = new StringCache(p_event.CacheKey);
             var ls = Online.GetSessions(p_event.UserID);
             if (ls != null && ls.Count > 0)
             {
-                await Redis.Db.StringSetAsync(p_event.CacheKey, "true");
+                await sc.Set(null, "true");
             }
+            // 统计总数
+            await sc.Increment("cnt");
         }
     }
 }

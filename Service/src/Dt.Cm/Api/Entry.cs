@@ -149,15 +149,18 @@ namespace Dt.Cm
 
         static async Task<string> GetAllVers(long p_userID)
         {
-            var arr = await Redis.Db.HashGetAllAsync($"ver:{p_userID}");
+            var arr = await Kit.HashGetAll("ver", p_userID);
             StringBuilder sb = new StringBuilder();
-            foreach (var en in arr)
+            if (arr != null && arr.Length > 0)
             {
-                if (sb.Length > 0)
-                    sb.Append(",");
-                sb.Append(en.Name);
-                sb.Append("+");
-                sb.Append(en.Value);
+                foreach (var en in arr)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(",");
+                    sb.Append(en.Name);
+                    sb.Append("+");
+                    sb.Append(en.Value);
+                }
             }
             return sb.ToString();
         }

@@ -78,7 +78,7 @@ namespace Dt.Core.Caches
         /// <typeparam name="T">缓存类型</typeparam>
         /// <param name="p_keys">不带前缀的键名列表</param>
         /// <returns>缓存对象列表</returns>
-        public Task<List<T>> BatchGet<T>(IEnumerable<string> p_keys)
+        public Task<List<T>> BatchGet<T>(IEnumerable<object> p_keys)
             where T : class
         {
             // if (p_keys == null || p_keys.Count() == 0)

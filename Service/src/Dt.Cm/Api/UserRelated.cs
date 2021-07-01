@@ -201,7 +201,7 @@ namespace Dt.Cm
                                  select new Userrole(p_userID, id)).ToList();
             if (await _dp.BatchDelete(ls) > 0)
             {
-                await GetVerCache().Remove(p_userID);
+                await GetVerCache().Delete(p_userID);
                 return true;
             }
             return false;
@@ -224,7 +224,7 @@ namespace Dt.Cm
                                  select new Userrole(id, p_roleID)).ToList();
             if (await _dp.BatchDelete(ls) > 0)
             {
-                await GetVerCache().BatchRemove(p_userIDs);
+                await GetVerCache().BatchDelete(p_userIDs);
                 return true;
             }
             return false;
@@ -255,7 +255,7 @@ namespace Dt.Cm
             if (!await _dp.BatchSave(ls))
                 return false;
 
-            await GetVerCache().Remove(p_userID);
+            await GetVerCache().Delete(p_userID);
             return true;
         }
 
@@ -281,7 +281,7 @@ namespace Dt.Cm
             if (!await _dp.BatchSave(ls))
                 return false;
 
-            await GetVerCache().BatchRemove(p_userIDs);
+            await GetVerCache().BatchDelete(p_userIDs);
             return true;
         }
 
@@ -295,7 +295,7 @@ namespace Dt.Cm
             if (await _dp.Delete(new Role(p_roleID)))
             {
                 var ls = await _dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
-                await GetVerCache().BatchRemove(ls);
+                await GetVerCache().BatchDelete(ls);
                 return true;
             }
             return false;

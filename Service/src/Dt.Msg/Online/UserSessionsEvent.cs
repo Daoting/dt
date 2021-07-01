@@ -28,7 +28,7 @@ namespace Dt.Msg
 
     public class UserSessionsHandler : IRemoteHandler<UserSessionsEvent>
     {
-        public Task Handle(UserSessionsEvent p_event)
+        public async Task Handle(UserSessionsEvent p_event)
         {
             var ls = Online.GetSessions(p_event.UserID);
             if (ls != null && ls.Count > 0)
@@ -48,9 +48,11 @@ namespace Dt.Msg
                     });
                 }
                 var msg = Kit.Serialize(result);
-                return Redis.Db.HashSetAsync(p_event.CacheKey, p_event.UserID, msg);
+                await Kit.HashSetField(p_event.CacheKey, null, p_event.UserID.ToString(), msg);
             }
-            return Task.CompletedTask;
+
+            // 统计总数
+            await Kit.StringIncrement(p_event.CacheKey, "cnt");
         }
     }
 }

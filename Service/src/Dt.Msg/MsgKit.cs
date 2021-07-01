@@ -22,12 +22,7 @@ namespace Dt.Msg
         /// <summary>
         /// 用户未推送消息列表 msg:Queue:userid = list(msginfo)
         /// </summary>
-        public const string MsgQueueKey = "msg:Queue:";
-
-        /// <summary>
-        /// Msg服务是否正在运行多个副本，当前从service.json中取，可否使用KubeClient?
-        /// </summary>
-        public static readonly bool IsMultipleReplicas = Kit.IsInDocker ? Kit.GetCfg("IsMultipleReplicas", false) : false;
+        public const string MsgQueueKey = "msg:Queue";
 
         /// <summary>
         /// 向用户列表中的在线用户推送信息
@@ -43,7 +38,8 @@ namespace Dt.Msg
             var onlines = new List<long>();
             var offlines = new List<long>();
             string onlineMsg = p_msg.GetOnlineMsg();
-            if (IsMultipleReplicas)
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
             {
                 // Msg服务多副本推送
                 await PushMultipleReplicas(p_userIDs, onlineMsg, onlines, offlines);
@@ -58,11 +54,10 @@ namespace Dt.Msg
             if (offlines.Count > 0)
             {
                 // 将消息保存到用户的未推送列表
-                var db = Redis.Db;
+                var lc = new ListCache<string>(MsgQueueKey);
                 foreach (long id in offlines)
                 {
-                    string key = MsgQueueKey + id.ToString();
-                    await db.ListRightPushAsync(key, onlineMsg);
+                    await lc.RightPush(id, onlineMsg);
                 }
 
                 // 推送离线提醒
@@ -114,7 +109,7 @@ namespace Dt.Msg
             foreach (long id in p_userIDs)
             {
                 // 有记录的表示在线推送成功
-                if (await cache.Remove(id.ToString()))
+                if (await cache.Delete(id.ToString()))
                     p_onlines.Add(id);
                 else
                     p_offlines.Add(id);

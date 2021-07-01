@@ -25,9 +25,10 @@ namespace Dt.Msg
 
     public class OnlineCountHandler : IRemoteHandler<OnlineCountEvent>
     {
-        public Task Handle(OnlineCountEvent p_event)
+        public async Task Handle(OnlineCountEvent p_event)
         {
-            return Redis.Db.HashSetAsync(p_event.CacheKey, Kit.SvcID, Online.TotalCount);
+            await Kit.HashSetField(p_event.CacheKey, null, Kit.SvcID, Online.TotalCount);
+            await Kit.StringIncrement(p_event.CacheKey, "cnt");
         }
     }
 }

@@ -25,6 +25,9 @@ namespace Dt.Msg
     [Api]
     public class Pusher
     {
+        const int _maxRetry = 12;
+        const int _delayMilli = 100;
+
         /// <summary>
         /// 客户端注册在线推送
         /// </summary>
@@ -64,16 +67,29 @@ namespace Dt.Msg
                 return true;
             }
 
-            // 查询所有其他副本，未测！
-            if (MsgKit.IsMultipleReplicas)
+            // 查询所有其他副本
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
             {
                 string key = $"msg:Unregister:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
                 Kit.RemoteMulticast(new UnregisterEvent { CacheKey = key, UserID = p_userID, SessionID = p_sessionID });
+
                 // 等待收集
-                await Task.Delay(500);
+                int total, retry = 0;
+                var sc = new StringCache(key);
+                do
+                {
+                    await Task.Delay(_delayMilli);
+                    total = await sc.Get<int>("cnt");
+                    retry++;
+                }
+                while (total < cnt && retry < _maxRetry);
+
+                // 删除统计总数
+                await sc.Delete("cnt");
 
                 // 存在键值表示在线
-                if (await Redis.Db.KeyDeleteAsync(key))
+                if (await sc.Delete(null))
                     return true;
             }
             return false;
@@ -90,16 +106,29 @@ namespace Dt.Msg
             if (ls != null && ls.Count > 0)
                 return true;
 
-            // 查询所有其他副本，未测！
-            if (MsgKit.IsMultipleReplicas)
+            // 查询所有其他副本
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
             {
                 string key = $"msg:IsOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
                 Kit.RemoteMulticast(new IsOnlineEvent { CacheKey = key, UserID = p_userID });
+
                 // 等待收集
-                await Task.Delay(500);
+                int total, retry = 0;
+                var sc = new StringCache(key);
+                do
+                {
+                    await Task.Delay(_delayMilli);
+                    total = await sc.Get<int>("cnt");
+                    retry++;
+                }
+                while (total < cnt && retry < _maxRetry);
+
+                // 删除统计总数
+                await sc.Delete("cnt");
 
                 // 存在键值表示在线
-                if (await Redis.Db.KeyDeleteAsync(key))
+                if (await sc.Delete(null))
                     return true;
             }
             return false;
@@ -113,19 +142,32 @@ namespace Dt.Msg
         public async Task<List<Dict>> GetAllSessions(long p_userID)
         {
             List<Dict> result = new List<Dict>();
-            if (MsgKit.IsMultipleReplicas)
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
             {
                 // 查询所有副本
                 string key = $"msg:Sessions:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
                 Kit.RemoteMulticast(new UserSessionsEvent { CacheKey = key, UserID = p_userID });
-                // 等待收集
-                await Task.Delay(500);
 
-                var db = Redis.Db;
-                var hash = db.HashGetAll(key);
-                if (hash != null)
+                // 等待收集
+                int total, retry = 0;
+                var sc = new StringCache(key);
+                do
                 {
-                    db.KeyDelete(key);
+                    await Task.Delay(_delayMilli);
+                    total = await sc.Get<int>("cnt");
+                    retry++;
+                }
+                while (total < cnt && retry < _maxRetry);
+
+                // 删除统计总数
+                await sc.Delete("cnt");
+
+                var hc = new HashCache(key);
+                var hash = await hc.GetAll(null);
+                if (hash != null && hash.Length > 0)
+                {
+                    await hc.Delete(null);
 
                     var dt = hash.ToDict();
                     foreach (var item in dt)
@@ -167,19 +209,32 @@ namespace Dt.Msg
         public async Task<Dict> GetOnlineCount()
         {
             Dict result = null;
-            if (MsgKit.IsMultipleReplicas)
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
             {
                 // 所有副本
                 string key = "msg:OnlineCount:" + Guid.NewGuid().ToString().Substring(0, 6);
                 Kit.RemoteMulticast(new OnlineCountEvent { CacheKey = key });
-                // 等待收集
-                await Task.Delay(500);
 
-                var db = Redis.Db;
-                var hash = db.HashGetAll(key);
-                if (hash != null)
+                // 等待收集
+                int total, retry = 0;
+                var sc = new StringCache(key);
+                do
                 {
-                    db.KeyDelete(key);
+                    await Task.Delay(_delayMilli);
+                    total = await sc.Get<int>("cnt");
+                    retry++;
+                }
+                while (total < cnt && retry < _maxRetry);
+
+                // 删除统计总数
+                await sc.Delete("cnt");
+
+                var hc = new HashCache(key);
+                var hash = await hc.GetAll(null);
+                if (hash != null && hash.Length > 0)
+                {
+                    await hc.Delete(null);
                     result = hash.ToDict();
                 }
             }

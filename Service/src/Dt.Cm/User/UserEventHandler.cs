@@ -36,7 +36,7 @@ namespace Dt.Cm
         public override Task Handle(DeleteEvent<User> p_event)
         {
             // 删除用户时同步删除缓存
-            return new HashCache("ver").Remove(p_event.Entity.ID);
+            return new HashCache("ver").Delete(p_event.Entity.ID);
         }
     }
 

@@ -30,17 +30,10 @@ namespace Dt.Msg
         /// <returns>在线收到的人数</returns>
         public async Task<int> Publish(long p_subscribeID, string p_msg, string p_offlineTip)
         {
-            var db = Redis.Db;
             string key = "msg:Subscribe:" + p_subscribeID.ToString();
-            var us = await db.SetMembersAsync(key);
-            if (us == null || us.Length == 0)
+            List<long> users = await Kit.ListRange<long>("msg:Subscribe", p_subscribeID);
+            if (users == null || users.Count == 0)
                 return 0;
-
-            List<long> users = new List<long>();
-            foreach (var id in us)
-            {
-                users.Add((long)id);
-            }
 
             var mi = new MsgInfo
             {
