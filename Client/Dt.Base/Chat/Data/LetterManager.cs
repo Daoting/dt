@@ -25,7 +25,7 @@ using Dt.Core.Sqlite;
 using System.Text;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 

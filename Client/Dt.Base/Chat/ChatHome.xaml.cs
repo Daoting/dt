@@ -17,7 +17,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.App.Chat
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 通讯录

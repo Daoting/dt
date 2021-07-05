@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 聊天目录
@@ -61,43 +61,67 @@ namespace Dt.Base
         #region +按钮
         async void OnShowExtPanel(object sender, RoutedEventArgs e)
         {
-            if (Kit.IsPhoneUI)
+#if UWP
+            // 直接选择文件
+            var files = await Kit.PickFiles();
+            if (files != null && files.Count > 0)
+                Owner.SendFiles(files);
+
+#elif WASM
+            if (_menu == null)
             {
+                _menu = new Menu { IsContextMenu = true };
+                Mi mi = new Mi { ID = "照片", Icon = Icons.图片 };
+                mi.Click += OnAddPhoto;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "拍摄", Icon = Icons.拍照 };
+                mi.Click += OnTakePhoto;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "视频通话", Icon = Icons.视频 };
+                mi.Click += OnWebRtc;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "文件", Icon = Icons.文件 };
+                mi.Click += OnAddFile;
+                _menu.Items.Add(mi);
+            }
+            _ = _menu.OpenContextMenu();
+#else
 #if IOS
-                ResetTransform();
+            ResetTransform();
 #endif
-                if (_menu == null)
-                {
-                    _menu = new Menu { IsContextMenu = true };
-                    Mi mi = new Mi { ID = "图片", Icon = Icons.图片 };
-                    mi.Click += OnAddPhoto;
-                    _menu.Items.Add(mi);
-
-                    mi = new Mi { ID = "拍照", Icon = Icons.拍照 };
-                    mi.Click += OnTakePhoto;
-                    _menu.Items.Add(mi);
-
-                    mi = new Mi { ID = "视频", Icon = Icons.视频 };
-                    mi.Click += OnAddVideo;
-                    _menu.Items.Add(mi);
-
-                    mi = new Mi { ID = "录像", Icon = Icons.录像 };
-                    mi.Click += OnTakeVideo;
-                    _menu.Items.Add(mi);
-
-                    mi = new Mi { ID = "文件", Icon = Icons.文件 };
-                    mi.Click += OnAddFile;
-                    _menu.Items.Add(mi);
-                }
-                _ = _menu.OpenContextMenu();
-            }
-            else
+            if (_menu == null)
             {
-                // 直接选择文件
-                var files = await Kit.PickFiles();
-                if (files != null && files.Count > 0)
-                    Owner.SendFiles(files);
+                _menu = new Menu { IsContextMenu = true };
+                Mi mi = new Mi { ID = "图片", Icon = Icons.图片 };
+                mi.Click += OnAddPhoto;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "拍照", Icon = Icons.拍照 };
+                mi.Click += OnTakePhoto;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "视频", Icon = Icons.视频 };
+                mi.Click += OnAddVideo;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "录像", Icon = Icons.录像 };
+                mi.Click += OnTakeVideo;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "文件", Icon = Icons.文件 };
+                mi.Click += OnAddFile;
+                _menu.Items.Add(mi);
             }
+            _ = _menu.OpenContextMenu();
+#endif
+        }
+
+        async void OnWebRtc(object sender, Mi e)
+        {
+            
         }
 
         async void OnAddPhoto(object sender, Mi e)

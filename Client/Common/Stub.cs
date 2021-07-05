@@ -28,7 +28,7 @@ namespace Dt.Shell
         /// </summary>
         public string ServerUrl { get; } =
 #if WASM
-            AtWasm.GetServerUrl("https://localhost/fz");
+            Kit.GetServerUrl("https://localhost/fz");
 #else
             "https://10.10.1.16/fz";
 #endif
@@ -137,7 +137,7 @@ namespace Dt.Shell
 
         #region 自动生成
         /// <summary>
-        /// 获取视图字典
+        /// 视图名称与窗口类型的映射字典，主要菜单项用
         /// </summary>
         public Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>
         {
@@ -155,7 +155,7 @@ namespace Dt.Shell
             { "系统角色", typeof(Dt.App.Model.SysRole) },
             { "用户账号", typeof(Dt.App.Model.UserAccount) },
             { "文件", typeof(Dt.App.File.FileHome) },
-            { "通讯录", typeof(Dt.App.Chat.ChatHome) },
+            { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
             { "控件样例", typeof(Dt.Sample.SamplesMain) },
         };
 
@@ -186,17 +186,17 @@ namespace Dt.Shell
                 "state",
                 new SqliteTblsInfo
                 {
-                    Version = "fb870916510cceb33282093c12a11311",
+                    Version = "f54911e74b7e9b6623f53fe0057441a3",
                     Tables = new List<Type>
                     {
                         typeof(Dt.App.MenuFav),
                         typeof(Dt.App.UserMenu),
                         typeof(Dt.App.File.ReadFileHistory),
-                        typeof(Dt.Base.ChatMember),
-                        typeof(Dt.Base.Letter),
                         typeof(Dt.Base.Docking.DockLayout),
                         typeof(Dt.Base.FormView.CellLastVal),
                         typeof(Dt.Base.FormView.SearchFvHis),
+                        typeof(Dt.Base.Chat.ChatMember),
+                        typeof(Dt.Base.Chat.Letter),
                         typeof(Dt.Core.Model.ClientLog),
                         typeof(Dt.Core.Model.ClientCookie),
                         typeof(Dt.Core.Model.DataVersion),

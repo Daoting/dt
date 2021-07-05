@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Chat;
 using Dt.Core;
 #endregion
 

@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Input;
 using Xamarin.Essentials;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 聊天内容

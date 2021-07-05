@@ -111,7 +111,7 @@ namespace Dt.Base
         /// <returns></returns>
         public void DownloadFile()
         {
-            AtWasm.Download($"{Kit.Stub.ServerUrl}/fsm/{ID}", Title);
+            Kit.Download($"{Kit.Stub.ServerUrl}/fsm/{ID}", Title);
         }
 
         internal Task<string> EnsureFileExists()

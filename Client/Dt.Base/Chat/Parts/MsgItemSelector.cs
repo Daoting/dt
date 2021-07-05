@@ -12,7 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 聊天消息模板选择器

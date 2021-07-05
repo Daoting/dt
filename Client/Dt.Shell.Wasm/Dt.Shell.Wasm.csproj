@@ -31,7 +31,7 @@
     <Content Include="Fonts\icon.woff2" />
     <Content Include="Fonts\uno-fluentui-assets.woff2" />
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
-    <EmbeddedResource Include="WasmScripts\AppManifest.js" />
+    <EmbeddedResource Include="WasmScripts\*.js" />
   </ItemGroup>
   
   <ItemGroup>

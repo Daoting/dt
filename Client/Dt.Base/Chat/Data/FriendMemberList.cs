@@ -14,7 +14,7 @@ using System;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 好友列表

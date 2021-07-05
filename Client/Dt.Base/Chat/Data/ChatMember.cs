@@ -12,7 +12,7 @@ using Dt.Core.Sqlite;
 using System;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 聊天人员信息

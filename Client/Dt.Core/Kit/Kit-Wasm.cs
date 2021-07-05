@@ -12,6 +12,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 #endregion
 
@@ -20,10 +21,8 @@ namespace Dt.Core
     /// <summary>
     /// wasm静态工具类
     /// </summary>
-    public static class AtWasm
+    public partial class Kit
     {
-        const string _jsDownload = "var a = document.createElement(\"a\");a.href = \"{0}\";a.download = \"{1}\";a.click();";
-
         /// <summary>
         /// 执行js内容，相当于eval
         /// </summary>
@@ -41,6 +40,89 @@ namespace Dt.Core
             //    Console.WriteLine($"InvokeJS: [{p_js}]: {r}");
             //}
             return r;
+        }
+
+        /// <summary>
+        /// js字符串转义
+        /// </summary>
+        /// <param name="p_str"></param>
+        /// <returns></returns>
+        public static string EscapeJs(string p_str)
+        {
+            if (p_str == null)
+            {
+                return "";
+            }
+
+            bool NeedsEscape(string s2)
+            {
+                for (int i = 0; i < s2.Length; i++)
+                {
+                    var c = s2[i];
+
+                    if (
+                        c > 255
+                        || c < 32
+                        || c == '\\'
+                        || c == '"'
+                        || c == '\r'
+                        || c == '\n'
+                        || c == '\t'
+                    )
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            if (NeedsEscape(p_str))
+            {
+                var r = new StringBuilder(p_str.Length);
+
+                foreach (var c in p_str)
+                {
+                    switch (c)
+                    {
+                        case '\\':
+                            r.Append("\\\\");
+                            continue;
+                        case '"':
+                            r.Append("\\\"");
+                            continue;
+                        case '\r':
+                            continue;
+                        case '\n':
+                            r.Append("\\n");
+                            continue;
+                        case '\t':
+                            r.Append("\\t");
+                            continue;
+                    }
+
+                    if (c < 32)
+                    {
+                        continue; // not displayable
+                    }
+
+                    if (c <= 255)
+                    {
+                        r.Append(c);
+                    }
+                    else
+                    {
+                        r.Append("\\u");
+                        r.Append(((ushort)c).ToString("X4"));
+                    }
+                }
+
+                return r.ToString();
+            }
+            else
+            {
+                return p_str;
+            }
         }
 
         /// <summary>
@@ -69,7 +151,7 @@ namespace Dt.Core
         /// <param name="p_name">文件名称</param>
         public static void Download(string p_url, string p_name)
         {
-            InvokeJS(string.Format(_jsDownload, p_url, p_name));
+            InvokeJS($"var a = document.createElement(\"a\");a.href = \"{p_url}\";a.download = \"{p_name}\";a.click();");
         }
     }
 }

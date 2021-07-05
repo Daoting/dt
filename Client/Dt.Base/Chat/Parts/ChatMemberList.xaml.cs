@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.App.Chat
+namespace Dt.Base.Chat
 {
     /// <summary>
     /// 聊天人员列表
