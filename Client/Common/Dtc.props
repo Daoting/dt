@@ -69,6 +69,10 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0' ">
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.8.6" />
+  </ItemGroup>  
+  
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">

@@ -209,6 +209,60 @@ namespace Dt.Base
         }
         #endregion
 
+        #region WebRtcMsg
+        /// <summary>
+        /// 向某在线用户的发送WebRTC的offer信息
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <param name="p_offer">offer内容</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public static Task<bool> SendRtcOffer(long p_fromUserID, long p_toUserID, string p_offer)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.SendRtcOffer",
+                p_fromUserID,
+                p_toUserID,
+                p_offer
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 向某用户的发送WebRTC的answer信息
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <param name="p_answer">answer内容</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public static Task<bool> SendRtcAnswer(long p_fromUserID, long p_toUserID, string p_answer)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.SendRtcAnswer",
+                p_fromUserID,
+                p_toUserID,
+                p_answer
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 拒绝接受某用户的WebRTC视频通话请求
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns></returns>
+        public static Task<bool> RefuseRtcOffer(long p_fromUserID, long p_toUserID)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.RefuseRtcOffer",
+                p_fromUserID,
+                p_toUserID
+            ).Call<bool>();
+        }
+        #endregion
+
         #region SubscribeMsg
         /// <summary>
         /// 发布订阅信息

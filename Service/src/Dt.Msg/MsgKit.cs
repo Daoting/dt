@@ -71,10 +71,61 @@ namespace Dt.Msg
         }
 
         /// <summary>
+        /// 若用户在线则推送消息，不在线返回false
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_msg"></param>
+        /// <returns>true 已在线推送，false不在线</returns>
+        public static async Task<bool> PushIfOnline(long p_userID, MsgInfo p_msg)
+        {
+            if (Online.All.TryGetValue(p_userID, out var ls)
+                && ls != null
+                && ls.Count > 0)
+            {
+                // 本地在线推送
+                ls[0].AddMsg(p_msg.GetOnlineMsg());
+                return true;
+            }
+
+            // 查询所有其他副本
+            int cnt = await Kit.GetSvcReplicaCount();
+            if (cnt > 1)
+            {
+                string key = $"msg:PushIfOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
+                Kit.RemoteMulticast(new OnlinePushEvent
+                {
+                    PrefixKey = key,
+                    Receivers = new List<long> { p_userID },
+                    Msg = p_msg.GetOnlineMsg(),
+                    PushFirstSession = true
+                });
+
+                // 等待收集
+                int total, retry = 0;
+                var sc = new StringCache(key);
+                do
+                {
+                    await Task.Delay(_delayMilli);
+                    total = await sc.Get<int>("cnt");
+                    retry++;
+                }
+                while (total < cnt && retry < _maxRetry);
+
+                // 删除统计总数
+                await sc.Delete("cnt");
+
+                // 存在键值表示在线
+                if (await sc.Delete(null))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 向所有副本的所有在线用户广播信息
         /// </summary>
         /// <param name="p_msg"></param>
-        public static async Task PushToOnline(MsgInfo p_msg)
+        public static async Task BroadcastAllOnline(MsgInfo p_msg)
         {
             Throw.IfNull(p_msg);
 

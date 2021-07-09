@@ -24,10 +24,6 @@ namespace Dt.Base.Chat
     /// </summary>
     public sealed partial class ChatInputBar : UserControl
     {
-        #region 成员变量
-        Menu _menu;
-        #endregion
-
         #region 构造方法
         public ChatInputBar()
         {
@@ -59,6 +55,10 @@ namespace Dt.Base.Chat
         #endregion
 
         #region +按钮
+#if !UWP
+        Menu _menu;
+#endif
+
         async void OnShowExtPanel(object sender, RoutedEventArgs e)
         {
 #if UWP
@@ -66,28 +66,21 @@ namespace Dt.Base.Chat
             var files = await Kit.PickFiles();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
-
 #elif WASM
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                Mi mi = new Mi { ID = "照片", Icon = Icons.图片 };
-                mi.Click += OnAddPhoto;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "拍摄", Icon = Icons.拍照 };
-                mi.Click += OnTakePhoto;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "视频通话", Icon = Icons.视频 };
+                Mi mi = new Mi { ID = "视频通话", Icon = Icons.视频 };
                 mi.Click += OnWebRtc;
                 _menu.Items.Add(mi);
 
                 mi = new Mi { ID = "文件", Icon = Icons.文件 };
                 mi.Click += OnAddFile;
                 _menu.Items.Add(mi);
+                if (!Kit.IsPhoneUI)
+                    _menu.Placement = MenuPosition.OuterTop;
             }
-            _ = _menu.OpenContextMenu();
+            await _menu.OpenContextMenu((Button)sender);
 #else
 #if IOS
             ResetTransform();
@@ -95,7 +88,7 @@ namespace Dt.Base.Chat
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                Mi mi = new Mi { ID = "图片", Icon = Icons.图片 };
+                Mi mi = new Mi { ID = "照片", Icon = Icons.图片 };
                 mi.Click += OnAddPhoto;
                 _menu.Items.Add(mi);
 
@@ -103,11 +96,7 @@ namespace Dt.Base.Chat
                 mi.Click += OnTakePhoto;
                 _menu.Items.Add(mi);
 
-                mi = new Mi { ID = "视频", Icon = Icons.视频 };
-                mi.Click += OnAddVideo;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "录像", Icon = Icons.录像 };
+                mi = new Mi { ID = "录视频", Icon = Icons.录像 };
                 mi.Click += OnTakeVideo;
                 _menu.Items.Add(mi);
 
@@ -115,25 +104,13 @@ namespace Dt.Base.Chat
                 mi.Click += OnAddFile;
                 _menu.Items.Add(mi);
             }
-            _ = _menu.OpenContextMenu();
+            await _menu.OpenContextMenu();
 #endif
-        }
-
-        async void OnWebRtc(object sender, Mi e)
-        {
-            
         }
 
         async void OnAddPhoto(object sender, Mi e)
         {
             var files = await Kit.PickImages();
-            if (files != null && files.Count > 0)
-                Owner.SendFiles(files);
-        }
-
-        async void OnAddVideo(object sender, Mi e)
-        {
-            var files = await Kit.PickMedias();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
@@ -158,6 +135,16 @@ namespace Dt.Base.Chat
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
+
+#if WASM
+        async void OnWebRtc(object sender, Mi e)
+        {
+            if (VideoCaller.Inst == null)
+            {
+                await new VideoCaller().ShowDlg(Owner);
+            }
+        }
+#endif
         #endregion
 
         #region 录音

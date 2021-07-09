@@ -40,6 +40,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * Lv的分组导航头不显示时在android上也堆在一起绘制
 * 解决msg服务离线消息异常
 * ios wasm注销时停止接收推送
+* ios  软键盘盖住 TextBox 的问题
 
 ## Release 1.9
 

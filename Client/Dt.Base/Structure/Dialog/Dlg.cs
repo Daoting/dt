@@ -653,7 +653,7 @@ namespace Dt.Base
         {
             // 屏蔽多次触发移除的情况
             // 如：关闭对话框前弹出确认对话框，点击确认对话框时可能触发OnOuterPressed，出现多次触发Closing事件！
-            if (_isRemoving)
+            if (_isRemoving || !SysVisual.ContainsDlg(this))
                 return;
 
             try

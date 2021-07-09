@@ -18,4 +18,13 @@
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' != 'net5.0' ">
+    <Page Remove="Chat\WebRTC\VideoCaller.xaml" />
+    <Compile Remove="Chat\WebRTC\VideoCaller.xaml.cs" />
+    <None Include="Chat\WebRTC\VideoCaller.xaml.cs" />
+    <Page Remove="Chat\WebRTC\VideoRecver.xaml" />
+    <Compile Remove="Chat\WebRTC\VideoRecver.xaml.cs" />
+    <None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
+  </ItemGroup>
+
 </Project>

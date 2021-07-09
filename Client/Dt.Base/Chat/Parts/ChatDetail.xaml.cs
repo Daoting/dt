@@ -71,10 +71,9 @@ namespace Dt.Base.Chat
             set { SetValue(OtherIDProperty, value); }
         }
 
-        internal Lv Lv
-        {
-            get { return _lv; }
-        }
+        internal ChatMember Other => _other;
+
+        internal Lv Lv => _lv;
         #endregion
 
         #region 外部方法

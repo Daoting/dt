@@ -25,6 +25,11 @@ namespace Dt.Msg
         public List<long> Receivers { get; set; }
 
         public string Msg { get; set; }
+
+        /// <summary>
+        /// 同一账号只发送给第一个session
+        /// </summary>
+        public bool PushFirstSession { get; set; }
     }
 
     public class OnlinePushHandler : IRemoteHandler<OnlinePushEvent>
@@ -41,12 +46,21 @@ namespace Dt.Msg
                         && ls.Count > 0)
                     {
                         // 在线推送，直接放入推送队列
-                        foreach (var ci in ls)
+                        if (p_event.PushFirstSession)
                         {
-                            ci.AddMsg(p_event.Msg);
+                            ls[0].AddMsg(p_event.Msg);
+                            await sc.Set(null, true);
                         }
-                        // 设置处理标志： msg:Push:6位id前缀:userid = true
-                        await sc.Set(id, true);
+                        else
+                        {
+                            foreach (var ci in ls)
+                            {
+                                ci.AddMsg(p_event.Msg);
+                            }
+
+                            // 设置处理标志： msg:Push:6位id前缀:userid = true
+                            await sc.Set(id, true);
+                        }
                     }
                 }
             }

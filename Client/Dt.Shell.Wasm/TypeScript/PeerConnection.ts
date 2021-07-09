@@ -1,98 +1,154 @@
-﻿namespace Uno.WebRTC {
+﻿namespace Dt
+{
+    export class PeerConnection
+    {
+        connection: RTCPeerConnection
 
-    export class PeerConnection {
+        private constructor(private element: HTMLElement)
+        {
+            this.connection = new RTCPeerConnection();
+            this.AttachEvent();
+        }
 
-        private constructor(private connection: RTCPeerConnection, private element: HTMLElement, private dataChannel?: RTCDataChannel|undefined) {
-            connection.addEventListener("icecandidate", msg => this.onIceCandidate(msg));
-            if (dataChannel) {
-                this.setDataChannel(dataChannel);
+        private AttachEvent()
+        {
+            this.connection.onicecandidate = ev =>
+            {
+                if (ev.candidate && ev.candidate.candidate)
+                    this.raiseEvent("IceCandidate", this.connection.localDescription);
+            };
+
+            this.connection.oniceconnectionstatechange = ev =>
+            {
+                console.log("ICE connection state：" + this.connection.connectionState);
+                switch (this.connection.connectionState)
+                {
+                    case "closed":
+                    case "failed":
+                    case "disconnected":
+                        this.raiseEvent("Closed");
+                        break;
+                }
+            };
+
+            this.connection.onicegatheringstatechange = ev =>
+            {
+                console.log("ICE gathering state：" + this.connection.iceGatheringState);
+            };
+
+            this.connection.onsignalingstatechange = ev =>
+            {
+                console.log("signaling state：" + this.connection.signalingState);
+                switch (this.connection.signalingState)
+                {
+                    case "closed":
+                        this.raiseEvent("Closed");
+                        break;
+                }
+            };
+
+            this.connection.onnegotiationneeded = ev =>
+            {
+                console.log("Negotiation needed：" + this.connection.signalingState);
+            };
+
+            this.connection.ontrack = ev =>
+            {
+                (document.getElementById("received_video") as HTMLMediaElement).srcObject = ev.streams[0];
+                this.raiseEvent("Track");
+            };
+        }
+
+        private async AddMediaTrack(): Promise<boolean>
+        {
+            try
+            {
+                const webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                (document.getElementById("local_video") as HTMLMediaElement).srcObject = webcamStream;
+                webcamStream.getTracks().forEach(track => this.connection.addTransceiver(track, { streams: [webcamStream] }));
+                return true;
             }
-        }
-
-        private setDataChannel(dataChannel: RTCDataChannel) {
-            if (this.dataChannel && this.dataChannel != dataChannel) {
-                this.dataChannel.close();
+            catch (err)
+            {
+                this.raiseEvent("DeviceError", err);
             }
-            this.dataChannel = dataChannel;
-
-            dataChannel.addEventListener("open", msg => this.onChannelOpened(msg));
-            dataChannel.addEventListener("message", msg => this.onChannelMessage(msg));
-            dataChannel.addEventListener("error", msg => this.onChannelError(msg));
-            dataChannel.addEventListener("close", msg => this.onChannelClosed(msg));
+            return false;
         }
 
-        private onChannelOpened(event: Event) {
-            this.raiseEvent("Opened");
-        }
-
-        private onChannelMessage(event: MessageEvent) {
-            this.raiseEvent("Message", event.data);
-        }
-
-        private onChannelError(event: RTCErrorEvent) {
-            this.raiseEvent("Error", event.error.errorDetail);
-        }
-
-        private onChannelClosed(event: Event) {
-            this.raiseEvent("Closed");
-        }
-
-        private onIceCandidate(event: RTCPeerConnectionIceEvent) {
-            this.raiseEvent("IceCandidate", this.connection.localDescription);
-        }
-
-        private raiseEvent(eventName: string, detail: any|undefined = undefined) {
-            if (detail) {
+        private raiseEvent(eventName: string, detail: any | undefined = undefined)
+        {
+            if (detail)
+            {
                 const eventToManagedCode = new CustomEvent(eventName, { detail: detail });
                 this.element.dispatchEvent(eventToManagedCode);
-            } else {
+            } else
+            {
                 const eventToManagedCode = new Event(eventName);
                 this.element.dispatchEvent(eventToManagedCode);
             }
         }
 
-        public async SetAnswer(spdAnswer: RTCSessionDescriptionInit) {
+        public async SetAnswer(spdAnswer: RTCSessionDescriptionInit)
+        {
             await this.connection.setRemoteDescription(spdAnswer);
         }
 
-        public async SendMessage(message: string): Promise<void> {
-            if (this.dataChannel) {
-                this.dataChannel.send(message);
+        public Close(): void
+        {
+            if (!this.connection)
+                return;
+
+            this.connection.onicecandidate =
+                this.connection.oniceconnectionstatechange =
+                this.connection.onicegatheringstatechange =
+                this.connection.onsignalingstatechange =
+                this.connection.onnegotiationneeded =
+                this.connection.ontrack = () => { };
+
+            this.connection.getTransceivers().forEach(transceiver => transceiver.stop());
+
+            const localVideo = (document.getElementById("local_video") as HTMLMediaElement);
+            if (localVideo.srcObject)
+            {
+                localVideo.pause();
+                (localVideo.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+            }
+
+            this.connection.close();
+            this.connection = null;
+        }
+
+        public static async CreateCaller(element: HTMLElement): Promise<PeerConnection>
+        {
+            const peer = new PeerConnection(element);
+            if (peer.AddMediaTrack())
+            {
+                const offer = await peer.connection.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: false });
+                await peer.connection.setLocalDescription(offer);
+                return peer;
+            }
+            else
+            {
+                peer.Close();
+                return null;
             }
         }
 
-        public Close(): void {
-            this.dataChannel.close();
-            this.connection.close();
-        }
-
-        public static async CreateInitiator(channelName: string, element: HTMLElement): Promise<PeerConnection> {
-
-            const connection = new RTCPeerConnection();
-            const dataChannel = connection.createDataChannel(channelName);
-            const peerConnection = new PeerConnection(connection, element, dataChannel);
-
-            const offer = await connection.createOffer();
-            connection.setLocalDescription(offer);
-
-            return peerConnection;
-        }
-
-        public static async CreateRemote(element: HTMLElement, iceOffer: RTCSessionDescriptionInit): Promise<PeerConnection> {
-
-            const connection = new RTCPeerConnection();
-            const peerConnection = new PeerConnection(connection, element);
-            connection.ondatachannel = msg => {
-                const dataChannel = msg.channel;
-                connection.ondatachannel = null;
-                peerConnection.setDataChannel(dataChannel);
-            };
-
-            await connection.setRemoteDescription(iceOffer);
-            const answer = await connection.createAnswer();
-            await connection.setLocalDescription(answer);
-
-            return peerConnection;
+        public static async CreateReceiver(element: HTMLElement, iceOffer: RTCSessionDescriptionInit): Promise<PeerConnection>
+        {
+            const peer = new PeerConnection(element);
+            if (peer.AddMediaTrack())
+            {
+                await peer.connection.setRemoteDescription(iceOffer);
+                const answer = await peer.connection.createAnswer();
+                await peer.connection.setLocalDescription(answer);
+                return peer;
+            }
+            else
+            {
+                peer.Close();
+                return null;
+            }
         }
     }
 }
