@@ -365,7 +365,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnPopClosed(object sender, object e)
+        void OnPopClosed(object sender, bool e)
         {
             SelectedIndex = -1;
         }

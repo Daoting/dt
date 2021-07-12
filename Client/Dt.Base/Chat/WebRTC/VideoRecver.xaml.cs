@@ -26,8 +26,6 @@ namespace Dt.Base.Chat
     public partial class VideoRecver : Dlg
     {
         ChatMember _other;
-        TaskCompletionSource<string> _iceTcs;
-        string _offer;
         Timer _timer;
         DateTime _startTime;
 
@@ -40,7 +38,7 @@ namespace Dt.Base.Chat
 
         public static VideoRecver Inst { get; private set; }
 
-        public async Task ShowDlg(long p_fromUserID, string p_offer)
+        public async Task ShowDlg(long p_fromUserID)
         {
             if (Kit.IsPhoneUI)
             {
@@ -53,65 +51,93 @@ namespace Dt.Base.Chat
                 Width = 600;
             }
 
-            _offer = p_offer;
             _other = AtState.First<ChatMember>($"select * from ChatMember where id={p_fromUserID}");
             _tbInfo.Text = $"[{_other.Name}] 邀请您视频通话...";
             await ShowAsync();
         }
 
+        async void OnAccept(object sender, RoutedEventArgs e)
+        {
+            // 确认设备权限
+            if (!await VideoCaller.ExistMediaDevice())
+            {
+                Close();
+                Kit.Warn("打开摄像头或麦克风出错！");
+                await AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
+                return;
+            }
+
+            await AtMsg.AcceptRtcConnection(Kit.UserID, _other.ID);
+            _gridBtn.Visibility = Visibility.Collapsed;
+            _tbInfo.Text = $"已接受 [{_other.Name}] 的邀请...";
+            _btnEnd.Visibility = Visibility.Visible;
+        }
+
         void OnRefuse(object sender, RoutedEventArgs e)
         {
             Close();
-            AtMsg.RefuseRtcOffer(Kit.UserID, _other.ID);
-        }
-
-        async void OnAccept(object sender, RoutedEventArgs e)
-        {
-            _gridBtn.Visibility = Visibility.Collapsed;
-            _tbInfo.Text = $"已接受 [{_other.Name}] 的邀请...";
-            var iceAnswer = await InitPeerRemoteConnection();
-            await AtMsg.SendRtcAnswer(Kit.UserID, _other.ID, iceAnswer);
-            _btnEnd.Visibility = Visibility.Visible;
+            AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
         }
 
         void OnEnd(object sender, RoutedEventArgs e)
         {
             Close();
+            AtMsg.HangUp(Kit.UserID, _other.ID, true);
         }
 
-        async Task<string> InitPeerRemoteConnection()
+        public void OnRecvOffer(string p_offer)
         {
             var js = $@"
 					(async () => {{
 						if(element.PeerConnection) {{
 							element.PeerConnection.Close();
 						}}
-						element.PeerConnection = await Dt.PeerConnection.CreateRemote(element, {_offer});
+						element.PeerConnection = await Dt.PeerConnection.CreateRemote(element, {p_offer});
 					}})();";
-            await this.ExecuteJavascriptAsync(js);
+            this.ExecuteJavascriptAsync(js);
+        }
 
-            _iceTcs = new TaskCompletionSource<string>();
-
-            var answer = await _iceTcs.Task;
-
-            return answer;
+        public void OnHangUp()
+        {
+            Close();
+            Kit.Warn("对方已挂断！");
         }
 
         #region DataChannel事件
         void InitHtml()
         {
-            _peer.SetHtmlContent("<video id=\"vPeer\" />");
-            _self.SetHtmlContent("<video id=\"vSelf\" />");
+            _gridRecv.SetHtmlContent("<video id=\"received_video\" autoplay></video>");
+            _gridLocal.SetHtmlContent("<video id=\"local_video\" autoplay muted></video>");
 
-            this.RegisterHtmlEventHandler("Opened", OnConnectionOpened);
-            this.RegisterHtmlCustomEventHandler("Error", OnConnectionError);
+            this.RegisterHtmlCustomEventHandler("DeviceError", OnDeviceError);
+            this.RegisterHtmlCustomEventHandler("Answer", OnAnswer, true);
+            this.RegisterHtmlCustomEventHandler("IceCandidate", OnIceCandidate, true);
+            this.RegisterHtmlEventHandler("Track", OnTrack);
             this.RegisterHtmlEventHandler("Closed", OnConnectionClosed);
-            this.RegisterHtmlCustomEventHandler("IceCandidate", OnConnectionIceCandidate, true);
         }
 
-        void OnConnectionOpened(object sender, EventArgs e)
+        void OnDeviceError(object sender, HtmlCustomEventArgs e)
         {
-            _tbInfo.Text = "已打开连接";
+            Close();
+            Kit.Warn("打开摄像头或麦克风出错：" + e.Detail);
+        }
+
+        async void OnAnswer(object sender, HtmlCustomEventArgs e)
+        {
+            if (!await AtMsg.SendRtcAnswer(Kit.UserID, _other.ID, e.Detail))
+            {
+                Close();
+                Kit.Warn($"呼叫失败，对方不在线！");
+            }
+        }
+
+        void OnIceCandidate(object sender, HtmlCustomEventArgs e)
+        {
+            AtMsg.SendIceCandidate(Kit.UserID, _other.ID, e.Detail, true);
+        }
+
+        void OnTrack(object sender, EventArgs e)
+        {
             _tbInfo.VerticalAlignment = VerticalAlignment.Bottom;
             _tbInfo.Margin = new Thickness(0, 0, 0, 40);
 
@@ -119,29 +145,25 @@ namespace Dt.Base.Chat
             _timer = new Timer(UpdateTimeStr, null, 0, 1000);
         }
 
-        void OnConnectionError(object sender, HtmlCustomEventArgs e)
-        {
-            _tbInfo.Text = "连接出错：" + e.Detail;
-        }
-
         void OnConnectionClosed(object sender, EventArgs e)
         {
             Close();
-        }
-
-        void OnConnectionIceCandidate(object sender, HtmlCustomEventArgs e)
-        {
-            _tbInfo.Text = $"正在回复 [{_other.Name}] ...";
-            var tcs = Interlocked.Exchange(ref _iceTcs, null);
-            tcs?.TrySetResult(e.Detail);
+            Kit.Warn("连线已断开！");
         }
         #endregion
 
-        protected override void OnClosed()
+        protected override Task<bool> OnClosing()
         {
             Inst = null;
-            this.ExecuteJavascriptAsync(@"(() => {{ if(element.PeerConnection) element.PeerConnection.Close(); }})();");
-            StopTimer();
+            var js = @"if(element.PeerConnection) element.PeerConnection.Close();";
+            this.ExecuteJavascript(js);
+
+            if (_timer != null)
+            {
+                _timer.Dispose();
+                _timer = null;
+            }
+            return Task.FromResult(true);
         }
 
         void UpdateTimeStr(object state)
@@ -151,15 +173,6 @@ namespace Dt.Base.Chat
                 TimeSpan span = DateTime.Now - _startTime;
                 _tbInfo.Text = string.Format("{0:mm:ss}", new DateTime(span.Ticks));
             });
-        }
-
-        void StopTimer()
-        {
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                _timer = null;
-            }
         }
     }
 }

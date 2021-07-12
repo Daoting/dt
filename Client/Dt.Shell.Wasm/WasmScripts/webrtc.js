@@ -9,7 +9,7 @@ var Dt;
         AttachEvent() {
             this.connection.onicecandidate = ev => {
                 if (ev.candidate && ev.candidate.candidate)
-                    this.raiseEvent("IceCandidate", this.connection.localDescription);
+                    this.raiseEvent("IceCandidate", ev.candidate);
             };
             this.connection.oniceconnectionstatechange = ev => {
                 console.log("ICE connection state：" + this.connection.connectionState);
@@ -63,7 +63,20 @@ var Dt;
             }
         }
         async SetAnswer(spdAnswer) {
-            await this.connection.setRemoteDescription(spdAnswer);
+            try {
+                await this.connection.setRemoteDescription(spdAnswer);
+            }
+            catch (err) {
+                console.error("setRemoteDescription 时异常：", err);
+            }
+        }
+        async AddIceCandidate(candidate) {
+            try {
+                await this.connection.addIceCandidate(new RTCIceCandidate({ candidate: candidate }));
+            }
+            catch (err) {
+                console.error("addIceCandidate 时异常：", err);
+            }
         }
         Close() {
             if (!this.connection)
@@ -88,6 +101,7 @@ var Dt;
             if (peer.AddMediaTrack()) {
                 const offer = await peer.connection.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: false });
                 await peer.connection.setLocalDescription(offer);
+                peer.raiseEvent("Offer", peer.connection.localDescription);
                 return peer;
             }
             else {
@@ -101,6 +115,7 @@ var Dt;
                 await peer.connection.setRemoteDescription(iceOffer);
                 const answer = await peer.connection.createAnswer();
                 await peer.connection.setLocalDescription(answer);
+                peer.raiseEvent("Answer", peer.connection.localDescription);
                 return peer;
             }
             else {

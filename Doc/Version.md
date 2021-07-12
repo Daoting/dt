@@ -19,6 +19,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 * 本地库增加分享库文件功能
 * msg服务支持同一账号多个会话
 * 远程事件组播时实现等待调用结束
+* 增加Dlg对话框关闭时的返回值，返回值传递给ShowAsync OnClosing OnClosed方法 和 Closing Closed事件
 
 ### 变更 
 * 服务端导出sqlite模型只使用Microsoft.Data.Sqlite，无类型映射

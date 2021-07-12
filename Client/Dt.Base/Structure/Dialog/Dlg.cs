@@ -189,12 +189,12 @@ namespace Dt.Base
         /// <summary>
         /// 对话框正在关闭事件，可以取消关闭
         /// </summary>
-        public event EventHandler<AsyncCancelEventArgs> Closing;
+        public event EventHandler<DlgClosingEventArgs> Closing;
 
         /// <summary>
         /// 对话框关闭后事件
         /// </summary>
-        public event EventHandler Closed;
+        public event EventHandler<bool> Closed;
         #endregion
 
         #region 属性
@@ -648,7 +648,7 @@ namespace Dt.Base
         /// <summary>
         /// 从对话框层移除
         /// </summary>
-        /// <param name="p_ok">传递给异步等待对话框关闭方法的返回值(通过ShowAsync方法)</param>
+        /// <param name="p_ok">对话框关闭时的返回值，返回值传递给ShowAsync OnClosing OnClosed方法 和 Closing Closed事件</param>
         async void RemoveFromCanvas(bool p_ok = false)
         {
             // 屏蔽多次触发移除的情况
@@ -662,13 +662,13 @@ namespace Dt.Base
                 // 关闭前
                 if (Closing != null)
                 {
-                    var args = new AsyncCancelEventArgs();
+                    var args = new DlgClosingEventArgs() { Result = p_ok };
                     Closing(this, args);
                     await args.EnsureAllCompleted();
                     if (args.Cancel)
                         return;
                 }
-                if (!await OnClosing())
+                if (!await OnClosing(p_ok))
                     return;
 
                 SysVisual.RemoveDlg(this);
@@ -681,8 +681,8 @@ namespace Dt.Base
                 }
 
                 // 关闭后
-                Closed?.Invoke(this, EventArgs.Empty);
-                OnClosed();
+                Closed?.Invoke(this, p_ok);
+                OnClosed(p_ok);
 
                 // 遗漏的外框
                 if (_bdResize != null)
@@ -757,8 +757,9 @@ namespace Dt.Base
         /// <summary>
         /// 关闭或后退之前，返回false表示禁止关闭
         /// </summary>
+        /// <param name="p_result">对话框关闭时的返回值</param>
         /// <returns>true 表允许关闭</returns>
-        protected virtual Task<bool> OnClosing()
+        protected virtual Task<bool> OnClosing(bool p_result)
         {
             return Task.FromResult(true);
         }
@@ -766,7 +767,8 @@ namespace Dt.Base
         /// <summary>
         /// 关闭或后退之后
         /// </summary>
-        protected virtual void OnClosed()
+        /// <param name="p_result">对话框关闭时的返回值</param>
+        protected virtual void OnClosed(bool p_result)
         {
         }
         #endregion

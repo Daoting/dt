@@ -165,6 +165,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> PushHandlers { get; } = new Dictionary<string, Type>
         {
             { "syspushapi", typeof(Dt.Base.SysPushApi) },
+            { "webrtcapi", typeof(Dt.Base.Chat.WebRtcApi) },
         };
 
         /// <summary>

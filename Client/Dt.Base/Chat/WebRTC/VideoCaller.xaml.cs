@@ -27,7 +27,6 @@ namespace Dt.Base.Chat
     {
         const string _deviceError = "DeviceError";
         ChatDetail _detail;
-        TaskCompletionSource<string> _iceTcs;
         Timer _timer;
         DateTime _startTime;
 
@@ -39,6 +38,8 @@ namespace Dt.Base.Chat
         }
 
         public static VideoCaller Inst { get; private set; }
+
+        public long OtherID => _detail.OtherID;
 
         public async Task ShowDlg(ChatDetail p_detail)
         {
@@ -57,20 +58,23 @@ namespace Dt.Base.Chat
             }
             var task = ShowAsync();
 
-            var offer = await InitCallerConnection();
-            if (offer == _deviceError)
+            // 确认设备权限
+            if (!await ExistMediaDevice())
             {
                 Close();
+                Kit.Warn("打开摄像头或麦克风出错！");
                 return;
             }
 
+            // 确认在线
             int retry = 1;
             while (true)
             {
-                bool suc = await AtMsg.SendRtcOffer(Kit.UserID, p_detail.OtherID, offer);
+                bool suc = await AtMsg.RequestRtcConnection(Kit.UserID, p_detail.OtherID);
                 if (suc)
                     break;
 
+                // 不在线重试
                 if (retry++ > 4)
                 {
                     Close();
@@ -86,25 +90,55 @@ namespace Dt.Base.Chat
             await task;
         }
 
-        public void OnAnswer(string p_answer)
+        public void OnAcceptConnection()
         {
-            _tbInfo.Text = "已接受邀请，正在加载视频...";
-            var js = $"element.PeerConnection.SetAnswer({p_answer});";
-            this.ExecuteJavascript(js);
+            _tbInfo.Text = "已接受邀请，正在连线...";
+            InitCallerConnection();
         }
 
-        public void OnRefuse()
+        public void OnHangUp()
         {
             Close();
             Kit.Warn("对方已挂断！");
         }
 
+        public void OnRecvAnswer(string p_answer)
+        {
+            var js = $"element.PeerConnection.SetAnswer({p_answer});";
+            this.ExecuteJavascript(js);
+        }
+
+        public void OnRecvIceCandidate(string p_iceCandidate)
+        {
+            var js = $"element.PeerConnection.AddIceCandidate({p_iceCandidate});";
+            this.ExecuteJavascript(js);
+        }
+
         void OnEnd(object sender, RoutedEventArgs e)
         {
             Close();
+            AtMsg.HangUp(Kit.UserID, _detail.OtherID, false);
         }
 
-        async Task<string> InitCallerConnection()
+        /// <summary>
+        /// 判断摄像头和麦克设备是否允许使用
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<bool> ExistMediaDevice()
+        {
+            var js = @"
+					(async () => {{
+						try {{
+                            await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                            return 'true';
+						}}
+                        catch (e) {{ }}
+                        return 'false';
+					}})();";
+            return await WebAssemblyRuntime.InvokeAsync(js) == "true";
+        }
+
+        void InitCallerConnection()
         {
             var js = @"
 					(async () => {{
@@ -113,13 +147,7 @@ namespace Dt.Base.Chat
 						}}
 						element.PeerConnection = await Dt.PeerConnection.CreateCaller(element);
 					}})();";
-            await this.ExecuteJavascriptAsync(js);
-
-            _iceTcs = new TaskCompletionSource<string>();
-
-            var offer = await _iceTcs.Task;
-
-            return offer;
+            this.ExecuteJavascriptAsync(js);
         }
 
         #region DataChannel事件
@@ -129,23 +157,27 @@ namespace Dt.Base.Chat
             _gridLocal.SetHtmlContent("<video id=\"local_video\" autoplay muted></video>");
 
             this.RegisterHtmlCustomEventHandler("DeviceError", OnDeviceError);
-            this.RegisterHtmlCustomEventHandler("IceCandidate", OnConnectionIceCandidate, true);
+            this.RegisterHtmlCustomEventHandler("Offer", OnOffer, true);
+            this.RegisterHtmlCustomEventHandler("IceCandidate", OnIceCandidate, true);
             this.RegisterHtmlEventHandler("Track", OnTrack);
             this.RegisterHtmlEventHandler("Closed", OnConnectionClosed);
         }
 
         void OnDeviceError(object sender, HtmlCustomEventArgs e)
         {
-            var tcs = Interlocked.Exchange(ref _iceTcs, null);
-            tcs?.TrySetResult(_deviceError);
+            Close();
             Kit.Warn("打开摄像头或麦克风出错：" + e.Detail);
         }
 
-        void OnConnectionIceCandidate(object sender, HtmlCustomEventArgs e)
+        void OnOffer(object sender, HtmlCustomEventArgs e)
         {
             _tbInfo.Text = $"正在呼叫 [{_detail.Other.Name}]...";
-            var tcs = Interlocked.Exchange(ref _iceTcs, null);
-            tcs?.TrySetResult(e.Detail);
+            AtMsg.SendRtcOffer(Kit.UserID, _detail.OtherID, e.Detail);
+        }
+
+        void OnIceCandidate(object sender, HtmlCustomEventArgs e)
+        {
+            AtMsg.SendIceCandidate(Kit.UserID, _detail.OtherID, e.Detail, false);
         }
 
         void OnTrack(object sender, EventArgs e)
@@ -160,10 +192,11 @@ namespace Dt.Base.Chat
         void OnConnectionClosed(object sender, EventArgs e)
         {
             Close();
+            Kit.Warn("连线已断开！");
         }
         #endregion
 
-        protected override Task<bool> OnClosing()
+        protected override void OnClosed(bool p_result)
         {
             Inst = null;
             var js = @"if(element.PeerConnection) element.PeerConnection.Close();";
@@ -182,7 +215,6 @@ namespace Dt.Base.Chat
             {
                 _detail.SendMsg("取消通话");
             }
-            return Task.FromResult(true);
         }
 
 

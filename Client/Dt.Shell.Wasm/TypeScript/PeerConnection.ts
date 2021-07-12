@@ -15,7 +15,7 @@
             this.connection.onicecandidate = ev =>
             {
                 if (ev.candidate && ev.candidate.candidate)
-                    this.raiseEvent("IceCandidate", this.connection.localDescription);
+                    this.raiseEvent("IceCandidate", ev.candidate);
             };
 
             this.connection.oniceconnectionstatechange = ev =>
@@ -90,7 +90,24 @@
 
         public async SetAnswer(spdAnswer: RTCSessionDescriptionInit)
         {
-            await this.connection.setRemoteDescription(spdAnswer);
+            try
+            {
+                await this.connection.setRemoteDescription(spdAnswer);
+            } catch (err)
+            {
+                console.error("setRemoteDescription 时异常：", err);
+            }
+        }
+
+        public async AddIceCandidate(candidate: string)
+        {
+            try
+            {
+                await this.connection.addIceCandidate(new RTCIceCandidate({ candidate: candidate }));
+            } catch (err)
+            {
+                console.error("addIceCandidate 时异常：", err);
+            }
         }
 
         public Close(): void
@@ -125,6 +142,7 @@
             {
                 const offer = await peer.connection.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: false });
                 await peer.connection.setLocalDescription(offer);
+                peer.raiseEvent("Offer", peer.connection.localDescription);
                 return peer;
             }
             else
@@ -142,6 +160,7 @@
                 await peer.connection.setRemoteDescription(iceOffer);
                 const answer = await peer.connection.createAnswer();
                 await peer.connection.setLocalDescription(answer);
+                peer.raiseEvent("Answer", peer.connection.localDescription);
                 return peer;
             }
             else

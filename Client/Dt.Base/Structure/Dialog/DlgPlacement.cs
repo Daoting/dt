@@ -81,4 +81,15 @@ namespace Dt.Base
         /// </summary>
         TargetOuterTop
     }
+
+    /// <summary>
+    /// 对话框关闭前事件参数
+    /// </summary>
+    public class DlgClosingEventArgs : AsyncCancelEventArgs
+    {
+        /// <summary>
+        /// 对话框关闭时的返回值
+        /// </summary>
+        public bool Result { get; internal set; }
+    }
 }

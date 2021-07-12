@@ -11,8 +11,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid x:Name="_peer" />
-        <Grid x:Name="_self" Height="150" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <Grid x:Name="_gridRecv" />
+        <Grid x:Name="_gridLocal" Height="150" HorizontalAlignment="Right" VerticalAlignment="Top" />
         <TextBlock x:Name="_tbInfo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <Grid x:Name="_gridBtn" Height="50" Grid.Row="1">
             <Grid.ColumnDefinitions>

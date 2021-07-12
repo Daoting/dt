@@ -211,6 +211,54 @@ namespace Dt.Base
 
         #region WebRtcMsg
         /// <summary>
+        /// 向某在线用户的发送 WebRTC 连接请求
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns>true 对方在线，false对方不在线</returns>
+        public static Task<bool> RequestRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.RequestRtcConnection",
+                p_fromUserID,
+                p_toUserID
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 向某在线用户的发送同意 WebRTC 连接
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public static Task<bool> AcceptRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.AcceptRtcConnection",
+                p_fromUserID,
+                p_toUserID
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 拒绝接受某用户的 WebRTC 连接请求
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns></returns>
+        public static Task<bool> RefuseRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.RefuseRtcConnection",
+                p_fromUserID,
+                p_toUserID
+            ).Call<bool>();
+        }
+
+        /// <summary>
         /// 向某在线用户的发送WebRTC的offer信息
         /// </summary>
         /// <param name="p_fromUserID">发送者</param>
@@ -247,18 +295,40 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 拒绝接受某用户的WebRTC视频通话请求
+        /// 向某在线用户的发送 WebRTC 的 IceCandidate 信息
         /// </summary>
         /// <param name="p_fromUserID">发送者</param>
         /// <param name="p_toUserID">接收者</param>
-        /// <returns></returns>
-        public static Task<bool> RefuseRtcOffer(long p_fromUserID, long p_toUserID)
+        /// <param name="p_iceCandidate"></param>
+        /// <param name="p_toCaller">是否发送给Caller</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public static Task<bool> SendIceCandidate(long p_fromUserID, long p_toUserID, string p_iceCandidate, bool p_toCaller)
         {
             return new UnaryRpc(
                 "msg",
-                "WebRtcMsg.RefuseRtcOffer",
+                "WebRtcMsg.SendIceCandidate",
                 p_fromUserID,
-                p_toUserID
+                p_toUserID,
+                p_iceCandidate,
+                p_toCaller
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 挂断电话
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <param name="p_toCaller">是否发送给Caller</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public static Task<bool> HangUp(long p_fromUserID, long p_toUserID, bool p_toCaller)
+        {
+            return new UnaryRpc(
+                "msg",
+                "WebRtcMsg.HangUp",
+                p_fromUserID,
+                p_toUserID,
+                p_toCaller
             ).Call<bool>();
         }
         #endregion

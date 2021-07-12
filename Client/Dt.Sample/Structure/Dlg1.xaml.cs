@@ -33,7 +33,7 @@ namespace Dt.Sample
             Close();
         }
 
-        async void OnClosing(object sender, AsyncCancelEventArgs e)
+        async void OnClosing(object sender, DlgClosingEventArgs e)
         {
             using (e.Wait())
             {
@@ -44,7 +44,7 @@ namespace Dt.Sample
             }
         }
 
-        void OnClosed(object sender, EventArgs e)
+        void OnClosed(object sender, bool e)
         {
             Kit.Msg("关闭后事件");
         }

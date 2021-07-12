@@ -82,7 +82,7 @@ namespace Dt.Base.MenuView
             Show();
         }
 
-        void OnClosed(object sender, EventArgs e)
+        void OnClosed(object sender, bool e)
         {
             _mi.IsSelected = false;
             if (!_mi.Owner.IsContextMenu)

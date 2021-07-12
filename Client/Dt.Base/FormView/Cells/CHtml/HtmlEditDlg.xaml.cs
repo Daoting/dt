@@ -94,7 +94,7 @@ namespace Dt.Base.FormView
             }
         }
 
-        protected override async Task<bool> OnClosing()
+        protected override async Task<bool> OnClosing(bool p_result)
         {
             if (!_saved)
             {

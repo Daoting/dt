@@ -57,7 +57,7 @@ namespace Dt.App.Model
             CreateRole();
         }
 
-        protected override Task<bool> OnClosing()
+        protected override Task<bool> OnClosing(bool p_result)
         {
             if (_fv.Row.IsChanged)
                 return Kit.Confirm("数据未保存，要放弃修改吗？");

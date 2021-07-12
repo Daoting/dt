@@ -25,6 +25,8 @@
     <Page Remove="Chat\WebRTC\VideoRecver.xaml" />
     <Compile Remove="Chat\WebRTC\VideoRecver.xaml.cs" />
     <None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
+    <Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
+    <None Include="Chat\WebRTC\WebRtcApi.cs" />
   </ItemGroup>
 
 </Project>

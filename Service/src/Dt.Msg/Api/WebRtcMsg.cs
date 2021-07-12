@@ -21,6 +21,54 @@ namespace Dt.Msg
     public class WebRtcMsg
     {
         /// <summary>
+        /// 向某在线用户的发送 WebRTC 连接请求
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns>true 对方在线，false对方不在线</returns>
+        public Task<bool> RequestRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            var mi = new MsgInfo
+            {
+                MethodName = "WebRtcApi.RequestRtcConnection",
+                Params = new List<object> { p_fromUserID },
+            };
+            return MsgKit.PushIfOnline(p_toUserID, mi);
+        }
+
+        /// <summary>
+        /// 向某在线用户的发送同意 WebRTC 连接
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public Task<bool> AcceptRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            var mi = new MsgInfo
+            {
+                MethodName = "WebRtcApi.AcceptRtcConnection",
+                Params = new List<object> { p_fromUserID },
+            };
+            return MsgKit.PushIfOnline(p_toUserID, mi);
+        }
+
+        /// <summary>
+        /// 拒绝接受某用户的 WebRTC 连接请求
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <returns></returns>
+        public Task<bool> RefuseRtcConnection(long p_fromUserID, long p_toUserID)
+        {
+            var mi = new MsgInfo
+            {
+                MethodName = "WebRtcApi.RefuseRtcConnection",
+                Params = new List<object> { p_fromUserID },
+            };
+            return MsgKit.PushIfOnline(p_toUserID, mi);
+        }
+
+        /// <summary>
         /// 向某在线用户的发送WebRTC的offer信息
         /// </summary>
         /// <param name="p_fromUserID">发送者</param>
@@ -31,7 +79,7 @@ namespace Dt.Msg
         {
             var mi = new MsgInfo
             {
-                MethodName = "SysPushApi.RecvRtcOffer",
+                MethodName = "WebRtcApi.RecvRtcOffer",
                 Params = new List<object> { p_fromUserID, p_offer },
             };
             return MsgKit.PushIfOnline(p_toUserID, mi);
@@ -48,24 +96,43 @@ namespace Dt.Msg
         {
             var mi = new MsgInfo
             {
-                MethodName = "SysPushApi.RecvRtcAnswer",
+                MethodName = "WebRtcApi.RecvRtcAnswer",
                 Params = new List<object> { p_fromUserID, p_answer },
             };
             return MsgKit.PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
-        /// 拒绝接受某用户的WebRTC视频通话请求
+        /// 向某在线用户的发送 WebRTC 的 IceCandidate 信息
         /// </summary>
         /// <param name="p_fromUserID">发送者</param>
         /// <param name="p_toUserID">接收者</param>
-        /// <returns></returns>
-        public Task<bool> RefuseRtcOffer(long p_fromUserID, long p_toUserID)
+        /// <param name="p_iceCandidate"></param>
+        /// <param name="p_toCaller">是否发送给Caller</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public Task<bool> SendIceCandidate(long p_fromUserID, long p_toUserID, string p_iceCandidate, bool p_toCaller)
         {
             var mi = new MsgInfo
             {
-                MethodName = "SysPushApi.RefuseRtcOffer",
-                Params = new List<object> { p_fromUserID },
+                MethodName = "WebRtcApi.RecvIceCandidate",
+                Params = new List<object> { p_fromUserID, p_iceCandidate, p_toCaller },
+            };
+            return MsgKit.PushIfOnline(p_toUserID, mi);
+        }
+
+        /// <summary>
+        /// 挂断电话
+        /// </summary>
+        /// <param name="p_fromUserID">发送者</param>
+        /// <param name="p_toUserID">接收者</param>
+        /// <param name="p_toCaller">是否发送给Caller</param>
+        /// <returns>true 在线发送成功，false对方不在线</returns>
+        public Task<bool> HangUp(long p_fromUserID, long p_toUserID, bool p_toCaller)
+        {
+            var mi = new MsgInfo
+            {
+                MethodName = "WebRtcApi.HangUp",
+                Params = new List<object> { p_fromUserID, p_toCaller },
             };
             return MsgKit.PushIfOnline(p_toUserID, mi);
         }
