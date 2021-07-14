@@ -405,6 +405,31 @@ namespace Dt.Base
         {
             Close(true);
         }
+
+        /// <summary>
+        /// 设置对话框的大小，内部限制在可视区之内
+        /// <para>值为0：整个可视区宽度或高度</para>
+        /// <para>值为负数：小于可视区大小的值</para>
+        /// <para>值超出可视区大小：采用可视区的宽度或高度</para>
+        /// </summary>
+        /// <param name="p_width">宽度</param>
+        /// <param name="p_height">高度</param>
+        public void SetSize(double p_width, double p_height)
+        {
+            if (p_width > Kit.ViewWidth)
+                Width = Kit.ViewWidth;
+            else if (p_width <= 0)
+                Width = Kit.ViewWidth + p_width;
+            else
+                Width = p_width;
+
+            if (p_height > Kit.ViewHeight)
+                Height = Kit.ViewHeight;
+            else if (p_height <= 0)
+                Height = Kit.ViewHeight + p_height;
+            else
+                Height = p_height;
+        }
         #endregion
 
         #region 重写方法

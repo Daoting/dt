@@ -18,8 +18,11 @@ namespace Dt.App.Model
     {
         void OnSaving()
         {
-            Throw.IfNullOrEmpty(Name, "名称不可为空！");
-            Throw.IfNullOrEmpty(Phone, "手机号不可为空！");
+            if (IsAdded || Cells["Name"].IsChanged)
+                Throw.IfNullOrEmpty(Name, "名称不可为空！");
+
+            if (IsAdded || Cells["Name"].IsChanged)
+                Throw.IfNullOrEmpty(Phone, "手机号不可为空！");
         }
     }
 

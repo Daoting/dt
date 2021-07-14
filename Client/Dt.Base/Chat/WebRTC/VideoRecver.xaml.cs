@@ -7,34 +7,32 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Uno.Extensions;
-using Uno.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace Dt.Base.Chat
 {
     public partial class VideoRecver : Dlg
     {
+        #region 成员变量
         ChatMember _other;
         Timer _timer;
         DateTime _startTime;
+        #endregion
 
+        #region 构造方法
         public VideoRecver()
         {
             InitializeComponent();
             InitHtml();
             Inst = this;
         }
+        #endregion
 
         public static VideoRecver Inst { get; private set; }
 
@@ -47,8 +45,7 @@ namespace Dt.Base.Chat
             else
             {
                 IsPinned = true;
-                Height = 800;
-                Width = 600;
+                SetSize(600, -60);
             }
 
             _other = AtState.First<ChatMember>($"select * from ChatMember where id={p_fromUserID}");
@@ -56,35 +53,7 @@ namespace Dt.Base.Chat
             await ShowAsync();
         }
 
-        async void OnAccept(object sender, RoutedEventArgs e)
-        {
-            // 确认设备权限
-            if (!await VideoCaller.ExistMediaDevice())
-            {
-                Close();
-                Kit.Warn("打开摄像头或麦克风出错！");
-                await AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
-                return;
-            }
-
-            await AtMsg.AcceptRtcConnection(Kit.UserID, _other.ID);
-            _gridBtn.Visibility = Visibility.Collapsed;
-            _tbInfo.Text = $"已接受 [{_other.Name}] 的邀请...";
-            _btnEnd.Visibility = Visibility.Visible;
-        }
-
-        void OnRefuse(object sender, RoutedEventArgs e)
-        {
-            Close();
-            AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
-        }
-
-        void OnEnd(object sender, RoutedEventArgs e)
-        {
-            Close();
-            AtMsg.HangUp(Kit.UserID, _other.ID, true);
-        }
-
+        #region 接收信令消息
         public void OnRecvOffer(string p_offer)
         {
             var js = $@"
@@ -92,22 +61,53 @@ namespace Dt.Base.Chat
 						if(element.PeerConnection) {{
 							element.PeerConnection.Close();
 						}}
-						element.PeerConnection = await Dt.PeerConnection.CreateRemote(element, {p_offer});
+						element.PeerConnection = await Dt.PeerConnection.CreateReceiver(element, {p_offer}, '{_gridLocal.GetHtmlId()}', '{_gridRecv.GetHtmlId()}');
 					}})();";
             this.ExecuteJavascriptAsync(js);
         }
 
         public void OnHangUp()
         {
-            Close();
+            Close(true);
             Kit.Warn("对方已挂断！");
         }
+        #endregion
 
-        #region DataChannel事件
+        #region 按钮事件
+        async void OnAccept(object sender, RoutedEventArgs e)
+        {
+            // 确认设备权限
+            if (!await VideoCaller.ExistMediaDevice())
+            {
+                Close(true);
+                Kit.Warn("打开摄像头或麦克风出错！");
+                await AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
+                return;
+            }
+
+            _tbInfo.Text = $"已接受 [{_other.Name}] 的邀请...";
+            await AtMsg.AcceptRtcConnection(Kit.UserID, _other.ID);
+            _gridBtn.Visibility = Visibility.Collapsed;
+            _btnEnd.Visibility = Visibility.Visible;
+        }
+
+        void OnRefuse(object sender, RoutedEventArgs e)
+        {
+            Close(true);
+            AtMsg.RefuseRtcConnection(Kit.UserID, _other.ID);
+        }
+
+        void OnEnd(object sender, RoutedEventArgs e)
+        {
+            Close(false);
+        }
+        #endregion
+
+        #region WebRTC事件
         void InitHtml()
         {
-            _gridRecv.SetHtmlContent("<video id=\"received_video\" autoplay></video>");
-            _gridLocal.SetHtmlContent("<video id=\"local_video\" autoplay muted></video>");
+            _gridRecv.SetHtmlContent("<video id=\"recverRemoteVideo\" autoplay></video>");
+            _gridLocal.SetHtmlContent("<video id=\"recverLocalVideo\" autoplay muted></video>");
 
             this.RegisterHtmlCustomEventHandler("DeviceError", OnDeviceError);
             this.RegisterHtmlCustomEventHandler("Answer", OnAnswer, true);
@@ -118,17 +118,13 @@ namespace Dt.Base.Chat
 
         void OnDeviceError(object sender, HtmlCustomEventArgs e)
         {
-            Close();
+            Close(false);
             Kit.Warn("打开摄像头或麦克风出错：" + e.Detail);
         }
 
         async void OnAnswer(object sender, HtmlCustomEventArgs e)
         {
-            if (!await AtMsg.SendRtcAnswer(Kit.UserID, _other.ID, e.Detail))
-            {
-                Close();
-                Kit.Warn($"呼叫失败，对方不在线！");
-            }
+            await AtMsg.SendRtcAnswer(Kit.UserID, _other.ID, e.Detail);
         }
 
         void OnIceCandidate(object sender, HtmlCustomEventArgs e)
@@ -147,14 +143,20 @@ namespace Dt.Base.Chat
 
         void OnConnectionClosed(object sender, EventArgs e)
         {
-            Close();
+            Close(true);
             Kit.Warn("连线已断开！");
         }
         #endregion
 
-        protected override Task<bool> OnClosing()
+        #region 内部方法
+        protected override void OnClosed(bool p_result)
         {
             Inst = null;
+
+            // 未挂断时，请求挂断
+            if (!p_result)
+                AtMsg.HangUp(Kit.UserID, _other.ID, true);
+
             var js = @"if(element.PeerConnection) element.PeerConnection.Close();";
             this.ExecuteJavascript(js);
 
@@ -163,7 +165,6 @@ namespace Dt.Base.Chat
                 _timer.Dispose();
                 _timer = null;
             }
-            return Task.FromResult(true);
         }
 
         void UpdateTimeStr(object state)
@@ -174,5 +175,6 @@ namespace Dt.Base.Chat
                 _tbInfo.Text = string.Format("{0:mm:ss}", new DateTime(span.Ticks));
             });
         }
+        #endregion
     }
 }

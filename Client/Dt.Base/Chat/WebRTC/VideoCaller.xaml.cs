@@ -7,37 +7,55 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Uno.Extensions;
 using Uno.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace Dt.Base.Chat
 {
     public partial class VideoCaller : Dlg
     {
-        const string _deviceError = "DeviceError";
+        #region 成员变量
         ChatDetail _detail;
         Timer _timer;
         DateTime _startTime;
+        #endregion
 
+        #region 构造方法
         public VideoCaller()
         {
             InitializeComponent();
             InitHtml();
             Inst = this;
         }
+        #endregion
 
+        #region 静态内容
         public static VideoCaller Inst { get; private set; }
+
+        /// <summary>
+        /// 判断摄像头和麦克设备是否允许使用
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<bool> ExistMediaDevice()
+        {
+            var js = @"
+					(async () => {{
+						try {{
+                            await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                            return 'true';
+						}}
+                        catch (e) {{ }}
+                        return 'false';
+					}})();";
+            return await WebAssemblyRuntime.InvokeAsync(js) == "true";
+        }
+        #endregion
 
         public long OtherID => _detail.OtherID;
 
@@ -53,15 +71,14 @@ namespace Dt.Base.Chat
             else
             {
                 IsPinned = true;
-                Height = 800;
-                Width = 600;
+                SetSize(600, -60);
             }
             var task = ShowAsync();
 
             // 确认设备权限
             if (!await ExistMediaDevice())
             {
-                Close();
+                Close(true);
                 Kit.Warn("打开摄像头或麦克风出错！");
                 return;
             }
@@ -77,7 +94,7 @@ namespace Dt.Base.Chat
                 // 不在线重试
                 if (retry++ > 4)
                 {
-                    Close();
+                    Close(true);
                     Kit.Warn($"等待已超时，[{p_detail.Other.Name}] 未接受邀请！");
                     return;
                 }
@@ -90,6 +107,7 @@ namespace Dt.Base.Chat
             await task;
         }
 
+        #region 接收信令消息
         public void OnAcceptConnection()
         {
             _tbInfo.Text = "已接受邀请，正在连线...";
@@ -98,7 +116,7 @@ namespace Dt.Base.Chat
 
         public void OnHangUp()
         {
-            Close();
+            Close(true);
             Kit.Warn("对方已挂断！");
         }
 
@@ -113,48 +131,13 @@ namespace Dt.Base.Chat
             var js = $"element.PeerConnection.AddIceCandidate({p_iceCandidate});";
             this.ExecuteJavascript(js);
         }
+        #endregion
 
-        void OnEnd(object sender, RoutedEventArgs e)
-        {
-            Close();
-            AtMsg.HangUp(Kit.UserID, _detail.OtherID, false);
-        }
-
-        /// <summary>
-        /// 判断摄像头和麦克设备是否允许使用
-        /// </summary>
-        /// <returns></returns>
-        public static async Task<bool> ExistMediaDevice()
-        {
-            var js = @"
-					(async () => {{
-						try {{
-                            await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                            return 'true';
-						}}
-                        catch (e) {{ }}
-                        return 'false';
-					}})();";
-            return await WebAssemblyRuntime.InvokeAsync(js) == "true";
-        }
-
-        void InitCallerConnection()
-        {
-            var js = @"
-					(async () => {{
-						if(element.PeerConnection) {{
-							element.PeerConnection.Close();
-						}}
-						element.PeerConnection = await Dt.PeerConnection.CreateCaller(element);
-					}})();";
-            this.ExecuteJavascriptAsync(js);
-        }
-
-        #region DataChannel事件
+        #region WebRTC事件
         void InitHtml()
         {
-            _gridRecv.SetHtmlContent("<video id=\"received_video\" autoplay></video>");
-            _gridLocal.SetHtmlContent("<video id=\"local_video\" autoplay muted></video>");
+            _gridRecv.SetHtmlContent("<video id=\"callerRemoteVideo\" autoplay></video>");
+            _gridLocal.SetHtmlContent("<video id=\"callerLocalVideo\" autoplay muted></video>");
 
             this.RegisterHtmlCustomEventHandler("DeviceError", OnDeviceError);
             this.RegisterHtmlCustomEventHandler("Offer", OnOffer, true);
@@ -165,7 +148,7 @@ namespace Dt.Base.Chat
 
         void OnDeviceError(object sender, HtmlCustomEventArgs e)
         {
-            Close();
+            Close(false);
             Kit.Warn("打开摄像头或麦克风出错：" + e.Detail);
         }
 
@@ -191,14 +174,20 @@ namespace Dt.Base.Chat
 
         void OnConnectionClosed(object sender, EventArgs e)
         {
-            Close();
+            Close(true);
             Kit.Warn("连线已断开！");
         }
         #endregion
 
+        #region 内部方法
         protected override void OnClosed(bool p_result)
         {
             Inst = null;
+
+            // 未挂断时，请求挂断
+            if (!p_result)
+                AtMsg.HangUp(Kit.UserID, _detail.OtherID, false);
+
             var js = @"if(element.PeerConnection) element.PeerConnection.Close();";
             this.ExecuteJavascript(js);
 
@@ -217,6 +206,22 @@ namespace Dt.Base.Chat
             }
         }
 
+        void OnEnd(object sender, RoutedEventArgs e)
+        {
+            Close(false);
+        }
+
+        void InitCallerConnection()
+        {
+            var js = $@"
+					(async () => {{
+						if(element.PeerConnection) {{
+							element.PeerConnection.Close();
+						}}
+						element.PeerConnection = await Dt.PeerConnection.CreateCaller(element, '{_gridLocal.GetHtmlId()}', '{_gridRecv.GetHtmlId()}');
+					}})();";
+            this.ExecuteJavascriptAsync(js);
+        }
 
         void UpdateTimeStr(object state)
         {
@@ -226,5 +231,6 @@ namespace Dt.Base.Chat
                 _tbInfo.Text = string.Format("{0:mm:ss}", new DateTime(span.Ticks));
             });
         }
+        #endregion
     }
 }

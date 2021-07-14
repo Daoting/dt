@@ -4,23 +4,147 @@
     {
         connection: RTCPeerConnection
 
-        private constructor(private element: HTMLElement)
+        private constructor(private element: HTMLElement, private isCaller: boolean, private localVideoId: string, private remoteVideoId: string)
         {
             this.connection = new RTCPeerConnection();
             this.AttachEvent();
         }
 
-        private AttachEvent()
+        public async SetAnswer(spdAnswer: RTCSessionDescriptionInit)
         {
+            try
+            {
+                await this.connection.setRemoteDescription(spdAnswer);
+            } catch (err)
+            {
+                console.error(this.getPrefix() + "setRemoteDescription 时异常：" + err);
+            }
+        }
+
+        public async AddIceCandidate(candidate: RTCIceCandidate)
+        {
+            try
+            {
+                await this.connection.addIceCandidate(candidate);
+            } catch (err)
+            {
+                console.error(this.getPrefix() + "addIceCandidate 时异常：" + err);
+            }
+        }
+
+        public Close(): void
+        {
+            if (!this.connection)
+                return;
+
+            this.connection.onicecandidate =
+                this.connection.oniceconnectionstatechange =
+                this.connection.onsignalingstatechange =
+                this.connection.onnegotiationneeded =
+                this.connection.ontrack = () => { };
+
+            var video = this.localVideo();
+            if (video && video.srcObject)
+            {
+                video.pause();
+                (video.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+            }
+
+            video = this.remoteVideo();
+            if (video && video.srcObject)
+            {
+                video.pause();
+                (video.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+            }
+
+            this.connection.close();
+            this.connection = null;
+        }
+
+        public static async CreateCaller(element: HTMLElement, localVideoId: string, remoteVideoId: string): Promise<PeerConnection>
+        {
+            const peer = new PeerConnection(element, true, localVideoId, remoteVideoId);
+            if (await peer.AddMediaTrack())
+                return peer;
+
+            peer.Close();
+            return null;
+        }
+
+        public static async CreateReceiver(element: HTMLElement, iceOffer: RTCSessionDescriptionInit, localVideoId: string, remoteVideoId: string): Promise<PeerConnection>
+        {
+            const peer = new PeerConnection(element, false, localVideoId, remoteVideoId);
+            await peer.connection.setRemoteDescription(iceOffer);
+
+            if (await peer.AddMediaTrack())
+            {
+                const answer = await peer.connection.createAnswer();
+                await peer.connection.setLocalDescription(answer);
+                peer.raiseEvent("Answer", peer.connection.localDescription);
+                console.log("【Recver】Create Answer");
+                return peer;
+            }
+            else
+            {
+                peer.Close();
+                return null;
+            }
+        }
+
+        //#region 事件
+        AttachEvent()
+        {
+            // 开始/重新进行ICE谈判事件，只在发起方触发
+            this.connection.onnegotiationneeded = async (ev) =>
+            {
+                console.log(this.getPrefix() + "Negotiation needed");
+                if (this.connection.signalingState === "stable")
+                {
+                    // 创建offer
+                    const offer = await this.connection.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: false });
+                    await this.connection.setLocalDescription(offer);
+
+                    // 向信令服务发送offer
+                    this.raiseEvent("Offer", this.connection.localDescription);
+                }
+            };
+
+            // 交换ICE候选事件
             this.connection.onicecandidate = ev =>
             {
                 if (ev.candidate && ev.candidate.candidate)
+                {
+                    console.log(this.getPrefix() + "Ice Candidate");
+                    // 通过信令服务发送给对方
                     this.raiseEvent("IceCandidate", ev.candidate);
+                }
             };
 
+            // 向连接中添加磁道事件
+            this.connection.ontrack = ev =>
+            {
+                console.log(this.getPrefix() + "Receive Track");
+                const video = this.remoteVideo()
+                video.oncanplay = ev =>
+                {
+                    // 开始播放事件，此时视频宽高已确定，只处理一次
+                    var div = document.getElementById(this.remoteVideoId);
+                    var height = (div.clientWidth / video.clientWidth) * video.clientHeight;
+
+                    video.setAttribute('width', div.clientWidth.toString());
+                    video.setAttribute('height', height.toString());
+                    video.oncanplay = null;
+                };
+                // 对方addTrack时的stream
+                video.srcObject = ev.streams[0];
+                // 外部可用来开始计时
+                this.raiseEvent("Track");
+            };
+
+            // ICE连接状态更改事件
             this.connection.oniceconnectionstatechange = ev =>
             {
-                console.log("ICE connection state：" + this.connection.connectionState);
+                console.log(this.getPrefix() + "ICE connection state：" + this.connection.connectionState);
                 switch (this.connection.connectionState)
                 {
                     case "closed":
@@ -31,14 +155,10 @@
                 }
             };
 
-            this.connection.onicegatheringstatechange = ev =>
-            {
-                console.log("ICE gathering state：" + this.connection.iceGatheringState);
-            };
-
+            // 信令进程的状态更改事件
             this.connection.onsignalingstatechange = ev =>
             {
-                console.log("signaling state：" + this.connection.signalingState);
+                console.log(this.getPrefix() + "signaling state：" + this.connection.signalingState);
                 switch (this.connection.signalingState)
                 {
                     case "closed":
@@ -47,35 +167,13 @@
                 }
             };
 
-            this.connection.onnegotiationneeded = ev =>
-            {
-                console.log("Negotiation needed：" + this.connection.signalingState);
-            };
-
-            this.connection.ontrack = ev =>
-            {
-                (document.getElementById("received_video") as HTMLMediaElement).srcObject = ev.streams[0];
-                this.raiseEvent("Track");
-            };
+            //this.connection.onicegatheringstatechange = ev =>
+            //{
+            //    console.log(this.getPrefix() + "ICE gathering state：" + this.connection.iceGatheringState);
+            //};
         }
 
-        private async AddMediaTrack(): Promise<boolean>
-        {
-            try
-            {
-                const webcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                (document.getElementById("local_video") as HTMLMediaElement).srcObject = webcamStream;
-                webcamStream.getTracks().forEach(track => this.connection.addTransceiver(track, { streams: [webcamStream] }));
-                return true;
-            }
-            catch (err)
-            {
-                this.raiseEvent("DeviceError", err);
-            }
-            return false;
-        }
-
-        private raiseEvent(eventName: string, detail: any | undefined = undefined)
+        raiseEvent(eventName: string, detail: any | undefined = undefined)
         {
             if (detail)
             {
@@ -87,87 +185,51 @@
                 this.element.dispatchEvent(eventToManagedCode);
             }
         }
+        //#endregion
 
-        public async SetAnswer(spdAnswer: RTCSessionDescriptionInit)
+        //#region 内部方法
+        async AddMediaTrack(): Promise<boolean>
         {
             try
             {
-                await this.connection.setRemoteDescription(spdAnswer);
-            } catch (err)
-            {
-                console.error("setRemoteDescription 时异常：", err);
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const video = this.localVideo();
+                video.oncanplay = ev =>
+                {
+                    // 开始播放事件，此时视频宽高已确定，只处理一次
+                    var div = document.getElementById(this.localVideoId);
+                    var height = (div.clientWidth / video.clientWidth) * video.clientHeight;
+
+                    video.setAttribute('width', div.clientWidth.toString());
+                    video.setAttribute('height', height.toString());
+                    video.oncanplay = null;
+                };
+                video.srcObject = stream;
+                // 添加一组媒体轨道传输给对方，stream是这一组轨道的同步流
+                stream.getTracks().forEach(track => this.connection.addTrack(track, stream));
+                return true;
             }
+            catch (err)
+            {
+                this.raiseEvent("DeviceError", err);
+            }
+            return false;
         }
 
-        public async AddIceCandidate(candidate: string)
+        getPrefix(): string
         {
-            try
-            {
-                await this.connection.addIceCandidate(new RTCIceCandidate({ candidate: candidate }));
-            } catch (err)
-            {
-                console.error("addIceCandidate 时异常：", err);
-            }
+            return this.isCaller ? "【Caller】" : "【Recver】";
         }
 
-        public Close(): void
+        localVideo(): HTMLMediaElement
         {
-            if (!this.connection)
-                return;
-
-            this.connection.onicecandidate =
-                this.connection.oniceconnectionstatechange =
-                this.connection.onicegatheringstatechange =
-                this.connection.onsignalingstatechange =
-                this.connection.onnegotiationneeded =
-                this.connection.ontrack = () => { };
-
-            this.connection.getTransceivers().forEach(transceiver => transceiver.stop());
-
-            const localVideo = (document.getElementById("local_video") as HTMLMediaElement);
-            if (localVideo.srcObject)
-            {
-                localVideo.pause();
-                (localVideo.srcObject as MediaStream).getTracks().forEach(track => track.stop());
-            }
-
-            this.connection.close();
-            this.connection = null;
+            return document.getElementById(this.isCaller ? "callerLocalVideo" : "recverLocalVideo") as HTMLMediaElement;
         }
 
-        public static async CreateCaller(element: HTMLElement): Promise<PeerConnection>
+        remoteVideo(): HTMLMediaElement
         {
-            const peer = new PeerConnection(element);
-            if (peer.AddMediaTrack())
-            {
-                const offer = await peer.connection.createOffer({ offerToReceiveVideo: true, offerToReceiveAudio: false });
-                await peer.connection.setLocalDescription(offer);
-                peer.raiseEvent("Offer", peer.connection.localDescription);
-                return peer;
-            }
-            else
-            {
-                peer.Close();
-                return null;
-            }
+            return document.getElementById(this.isCaller ? "callerRemoteVideo" : "recverRemoteVideo") as HTMLMediaElement;
         }
-
-        public static async CreateReceiver(element: HTMLElement, iceOffer: RTCSessionDescriptionInit): Promise<PeerConnection>
-        {
-            const peer = new PeerConnection(element);
-            if (peer.AddMediaTrack())
-            {
-                await peer.connection.setRemoteDescription(iceOffer);
-                const answer = await peer.connection.createAnswer();
-                await peer.connection.setLocalDescription(answer);
-                peer.raiseEvent("Answer", peer.connection.localDescription);
-                return peer;
-            }
-            else
-            {
-                peer.Close();
-                return null;
-            }
-        }
+        //#endregion
     }
 }

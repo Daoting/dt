@@ -11,7 +11,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid x:Name="_gridRecv" />
-        <Grid x:Name="_gridLocal" Height="150" Width="100" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="_gridLocal" Grid.Column="1" />
+        </Grid>
         <TextBlock x:Name="_tbInfo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
         <Button Content="挂    断"
                 Click="OnEnd"
