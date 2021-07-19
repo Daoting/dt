@@ -51,7 +51,6 @@ namespace Dt.App.Model
         async void CreateUser()
         {
             _fv.Data = new User(
-                // 3位标志用来识别用户类型，如管理者、消费者
                 ID: await AtCm.NewID(),
                 Name: "新用户");
         }
