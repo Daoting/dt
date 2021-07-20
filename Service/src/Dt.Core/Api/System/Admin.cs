@@ -469,8 +469,16 @@ namespace Dt.Core
                 tpName = "List<Table>";
             else if (p_type == typeof(List<Dict>))
                 tpName = "List<Dict>";
-            else if (p_type.IsGenericType && p_type.GetGenericTypeDefinition().FullName == "System.Threading.Tasks.Task`1")
-                tpName = GetRpcTypeName(p_type.GetGenericArguments()[0]);
+            else if (p_type.IsGenericType)
+            {
+                var name = p_type.GetGenericTypeDefinition().FullName;
+                if (name == "System.Threading.Tasks.Task`1")
+                    tpName = GetRpcTypeName(p_type.GetGenericArguments()[0]);
+                else if (name == "Dt.Core.Table`1")
+                    tpName = $"Table<{p_type.GetGenericArguments()[0].Name}>";
+                else
+                    tpName = p_type.Name;
+            }
             else if (p_type != typeof(void) && p_type != typeof(Task))
                 tpName = p_type.Name;
             return tpName;

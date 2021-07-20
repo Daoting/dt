@@ -75,20 +75,20 @@ namespace Dt.App.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<long>("AtviID", AtviID);
-            AddCell<byte>("Status", (byte)Status);
-            AddCell<byte>("AssignKind", (byte)AssignKind);
-            AddCell<string>("Sender", Sender);
-            AddCell<DateTime>("Stime", Stime);
-            AddCell<bool>("IsAccept", IsAccept);
-            AddCell<DateTime?>("AcceptTime", AcceptTime);
-            AddCell<long?>("RoleID", RoleID);
-            AddCell<long?>("UserID", UserID);
-            AddCell<string>("Note", Note);
-            AddCell<int>("Dispidx", Dispidx);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<DateTime>("Mtime", Mtime);
+            AddCell("ID", ID);
+            AddCell("AtviID", AtviID);
+            AddCell("Status", Status);
+            AddCell("AssignKind", AssignKind);
+            AddCell("Sender", Sender);
+            AddCell("Stime", Stime);
+            AddCell("IsAccept", IsAccept);
+            AddCell("AcceptTime", AcceptTime);
+            AddCell("RoleID", RoleID);
+            AddCell("UserID", UserID);
+            AddCell("Note", Note);
+            AddCell("Dispidx", Dispidx);
+            AddCell("Ctime", Ctime);
+            AddCell("Mtime", Mtime);
             IsAdded = true;
             AttachHook();
         }
@@ -109,8 +109,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiItemStatus Status
         {
-            get { return (WfiItemStatus)((byte)this["Status"]); }
-            set { this["Status"] = (byte)value; }
+            get { return (WfiItemStatus)this["Status"]; }
+            set { this["Status"] = value; }
         }
 
         /// <summary>
@@ -118,8 +118,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiItemAssignKind AssignKind
         {
-            get { return (WfiItemAssignKind)((byte)this["AssignKind"]); }
-            set { this["AssignKind"] = (byte)value; }
+            get { return (WfiItemAssignKind)this["AssignKind"]; }
+            set { this["AssignKind"] = value; }
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -587,6 +588,11 @@ namespace Dt.Core
                     return p_type.GetGenericArguments()[0].Name + "?";
                 throw new Exception("无法映射的数据类型:" + p_type.ToString());
             }
+
+            // tinyint(4)，无符号对应byte类型，程序中当作枚举类型
+            if (p_type.IsEnum)
+                return "Byte";
+
             return p_type.Name;
         }
 
@@ -729,6 +735,13 @@ namespace Dt.Core
         /// </summary>
         void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
+            // Entity类型
+            Type tpEntity = null;
+            if (GetType().IsGenericType)
+            {
+                tpEntity = GetType().GetGenericArguments()[0];
+            }
+
             // cols外层 [
             p_reader.Read();
             // 列[
@@ -750,9 +763,20 @@ namespace Dt.Core
                         break;
 
                     if (index == 0)
+                    {
                         colName = p_reader.GetString();
+                    }
                     else
+                    {
                         colType = GetColType(p_reader.GetString());
+                        if (colType == typeof(byte) && tpEntity != null)
+                        {
+                            // Entity 时根据属性类型将 byte 自动转为 enum 类型
+                            var prop = tpEntity.GetProperty(colName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
+                            if (prop != null)
+                                colType = prop.PropertyType;
+                        }
+                    }
                     index++;
                 }
                 _columns.Add(new Column(colName, colType));

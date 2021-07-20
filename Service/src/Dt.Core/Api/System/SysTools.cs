@@ -76,10 +76,8 @@ namespace Dt.Core
             foreach (var col in schema.Columns)
             {
                 AppendTabSpace(sb, 3);
-                if (col.Type == typeof(byte))
-                    sb.Append(GetEnumName(col));
-                else
-                    sb.Append(GetTypeName(col.Type));
+                var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
+                sb.Append(colType);
                 sb.Append(" ");
                 sb.Append(col.Name);
                 if (string.IsNullOrEmpty(col.Default))
@@ -97,6 +95,10 @@ namespace Dt.Core
                         sb.AppendLine("true,");
                     else
                         sb.AppendLine("false,");
+                }
+                else if (col.Type == typeof(byte) && colType != "byte")
+                {
+                    sb.AppendLine($" = ({colType}){col.Default},");
                 }
                 else
                 {
@@ -117,8 +119,9 @@ namespace Dt.Core
                 //sb.Append(">(\"");
                 sb.Append(col.Name);
                 sb.Append("\", ");
-                if (IsEnumCol(col))
-                    sb.Append("(byte)");
+                // 内部为enum类型
+                //if (IsEnumCol(col))
+                //    sb.Append("(byte)");
                 sb.Append(col.Name);
                 sb.AppendLine(");");
             }
@@ -297,15 +300,9 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 3);
-            if (isEnum)
-                p_sb.AppendLine($"get {{ return ({tpName})((byte)this[\"{p_col.Name}\"]); }}");
-            else
-                p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
+            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
             AppendTabSpace(p_sb, 3);
-            if (isEnum)
-                p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = (byte)value; }}");
-            else
-                p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
+            p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
         }

@@ -16,12 +16,7 @@
         <a:CImage ID="photo" Title="头像" Changed="OnPhotoChanged" />
         <a:CText ID="name" Title="姓名" />
         <a:CText ID="phone" Title="手机号" />
-        <a:CList ID="sexname" Title="性别" SrcID="id" TgtID="sex">
-            <a:CList.Items>
-                <a:IDStr ID="1" Str="男" />
-                <a:IDStr ID="0" Str="女" />
-            </a:CList.Items>
-        </a:CList>
+        <a:CList ID="sex" Title="性别" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
         <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
     </a:Fv>

@@ -37,6 +37,7 @@
     <Compile Include="..\..\Service\src\Dt.Core\Base\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Enums.cs" Link="Base\Enum\Enums.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />

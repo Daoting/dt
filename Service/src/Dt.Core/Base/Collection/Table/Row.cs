@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
@@ -259,15 +260,26 @@ namespace Dt.Core
         /// <returns>返回新独立实体</returns>
         public Row CloneTo(Type p_type)
         {
+            bool isEntity = p_type.IsSubclassOf(typeof(Entity));
+
             // 无参数构造方法可能为private，如实体类型
             Row row = (Row)Activator.CreateInstance(p_type, true);
             row.IsAdded = IsAdded;
             foreach (var item in _cells)
             {
+                var tp = item.Type;
+                if (tp == typeof(byte) && isEntity)
+                {
+                    // Entity 时根据属性类型将 byte 自动转为 enum 类型
+                    var prop = p_type.GetProperty(item.ID, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
+                    if (prop != null)
+                        tp = prop.PropertyType;
+                }
+
                 if (item.IsChanged)
-                    new Cell(row, item.ID, item.Type, item.OriginalVal).SetVal(item.Val);
+                    new Cell(row, item.ID, tp, item.OriginalVal).SetVal(item.Val);
                 else
-                    new Cell(row, item.ID, item.Type, item.OriginalVal);
+                    new Cell(row, item.ID, tp, item.OriginalVal);
             }
             return row;
         }
@@ -678,6 +690,7 @@ namespace Dt.Core
                     p_reader.Read();
                 }
 
+                bool isEntity = GetType().IsSubclassOf(typeof(Entity));
                 while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
                 {
                     string id = p_reader.GetString();
@@ -689,6 +702,13 @@ namespace Dt.Core
                         // 类型
                         p_reader.Read();
                         Type type = Table.GetColType(p_reader.GetString());
+                        if (type == typeof(byte) && isEntity)
+                        {
+                            // Entity 时根据属性类型将 byte 自动转为 enum 类型
+                            var prop = GetType().GetProperty(id, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
+                            if (prop != null)
+                                type = prop.PropertyType;
+                        }
 
                         // 当前值
                         p_reader.Read();

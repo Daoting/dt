@@ -283,7 +283,7 @@ namespace Dt.Sample
 
         async void SetTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await AtTest.SetDataTable(_tbl);
+            var tbl = await AtTest.SetTable(_tbl);
             _tbInfo.Text = tbl != null ? "调用成功！" : "调用不成功！";
         }
 
@@ -306,24 +306,38 @@ namespace Dt.Sample
 
         async void GetEntityRowTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await AtTest.GetTable<MyRow>();
+            var tbl = await AtTest.GetEntityTable();
             StringBuilder sb = new StringBuilder("调用成功：\r\n");
-            foreach (var row in tbl)
+            foreach (var r in tbl)
             {
-                MyRow r = (MyRow)row;
-                sb.Append("Col1:");
-                sb.Append(r.Col1);
-                sb.Append("    Col2:");
-                sb.Append(r.Col2);
+                sb.AppendLine($"Col1:  {r.Col1}");
+                sb.AppendLine($"Col2:  {r.Col2}");
+                sb.AppendLine($"Col3:  {r.Col3}");
+                sb.AppendLine($"Col4:  {r.Col4}");
+                sb.AppendLine($"Col5:  {r.Col5}");
+                sb.AppendLine($"Col6:  {r.Col6}");
+                sb.AppendLine($"Col7:  {r.Col7}");
                 sb.AppendLine();
             }
             _tbInfo.Text = sb.ToString();
         }
 
+        async void SetEntityTable(object sender, RoutedEventArgs e)
+        {
+            var suc = await AtTest.SetEntityTable(CreateEntityTable());
+            _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
+        }
+
         async void GetEntityRow(object sender, RoutedEventArgs e)
         {
-            var row = await AtTest.GetRow<MyRow>();
+            var row = await AtTest.GetEntity();
             _tbInfo.Text = row.Col1 + " " + row.Col2;
+        }
+
+        async void SetEntityRow(object sender, RoutedEventArgs e)
+        {
+            var suc = await AtTest.SetEntity(CreateEntityTable()[0]);
+            _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
         }
 
         /// <summary>
@@ -671,10 +685,39 @@ namespace Dt.Sample
 
         public static Table CreateTable()
         {
-            Table tbl = new Table { { "col1" }, { "col2", typeof(DateTime) }, { "col3", typeof(byte[]) } };
-            tbl.AddRow(new { col1 = "原始值", col2 = DateTime.Now, col3 = new byte[] { 10, 20, 30, 40 } });
-            tbl.AddRow(new { col1 = "列值21", col2 = DateTime.Now });
+            Table tbl = new Table
+            {
+                { "col1" },
+                { "col2", typeof(bool) },
+                { "col3", typeof(long) },
+                { "col4", typeof(DateTime) },
+                { "col5", typeof(Gender) },
+                { "col6", typeof(byte) },
+                { "col7", typeof(byte[]) }
+            };
+            tbl.AddRow(new { col1 = "原始值", col2 = true, col3 = 100L, col4 = DateTime.Now, col5 = Gender.男, col6 = 23, col7 = new byte[] { 10, 20, 30, 40 } });
+            tbl.AddRow(new { col1 = "列值21", col4 = DateTime.Now });
             tbl[0]["col1"] = "当前值";
+            return tbl;
+        }
+
+        public static Table<CustomEntity> CreateEntityTable()
+        {
+            var tbl = Table<CustomEntity>.Create();
+            tbl.Add(new CustomEntity(
+                Col1: "原始值",
+                Col2: true,
+                Col3: 100L,
+                Col4: DateTime.Now,
+                Col5: Gender.男,
+                Col6: 23,
+                Col7: new byte[] { 10, 20, 30, 40 }));
+
+            tbl.Add(new CustomEntity(
+                Col1: "列值21",
+                Col4: DateTime.Now));
+
+            tbl[0].Col1 = "当前值";
             return tbl;
         }
     }
@@ -714,21 +757,70 @@ namespace Dt.Sample
         public Student Employee { get; set; }
     }
 
-    public class MyRow : Entity
+    public class CustomEntity : Entity
     {
-        MyRow()
+        CustomEntity()
         { }
+
+        public CustomEntity(
+            string Col1 = default,
+            bool Col2 = default,
+            long Col3 = default,
+            DateTime Col4 = default,
+            Gender Col5 = default,
+            byte Col6 = default,
+            byte[] Col7 = default)
+        {
+            AddCell("Col1", Col1);
+            AddCell("Col2", Col2);
+            AddCell("Col3", Col3);
+            AddCell("Col4", Col4);
+            AddCell("Col5", Col5);
+            AddCell("Col6", Col6);
+            AddCell("Col7", Col7);
+            IsAdded = true;
+        }
 
         public string Col1
         {
-            get { return GetVal<string>("col1"); }
+            get { return (string)this["col1"]; }
             set { this["col1"] = value; }
         }
 
-        public string Col2
+        public bool Col2
         {
-            get { return GetVal<string>("col2"); }
+            get { return (bool)this["col2"]; }
             set { this["col2"] = value; }
+        }
+
+        public long Col3
+        {
+            get { return (long)this["col3"]; }
+            set { this["col3"] = value; }
+        }
+
+        public DateTime Col4
+        {
+            get { return (DateTime)this["col4"]; }
+            set { this["col4"] = value; }
+        }
+
+        public Gender Col5
+        {
+            get { return (Gender)this["col5"]; }
+            set { this["col5"] = value; }
+        }
+
+        public byte Col6
+        {
+            get { return (byte)this["col6"]; }
+            set { this["col6"] = value; }
+        }
+
+        public byte[] Col7
+        {
+            get { return (byte[])this["col7"]; }
+            set { this["col7"] = value; }
         }
     }
 }

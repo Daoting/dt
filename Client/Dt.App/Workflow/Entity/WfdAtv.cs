@@ -37,21 +37,21 @@ namespace Dt.App.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<long>("PrcID", PrcID);
-            AddCell<string>("Name", Name);
-            AddCell<byte>("Type", (byte)Type);
-            AddCell<byte>("ExecScope", (byte)ExecScope);
-            AddCell<byte>("ExecLimit", (byte)ExecLimit);
-            AddCell<long?>("ExecAtvID", ExecAtvID);
-            AddCell<bool>("AutoAccept", AutoAccept);
-            AddCell<bool>("CanDelete", CanDelete);
-            AddCell<bool>("CanTerminate", CanTerminate);
-            AddCell<bool>("CanJumpInto", CanJumpInto);
-            AddCell<byte>("TransKind", (byte)TransKind);
-            AddCell<byte>("JoinKind", (byte)JoinKind);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<DateTime>("Mtime", Mtime);
+            AddCell("ID", ID);
+            AddCell("PrcID", PrcID);
+            AddCell("Name", Name);
+            AddCell("Type", Type);
+            AddCell("ExecScope", ExecScope);
+            AddCell("ExecLimit", ExecLimit);
+            AddCell("ExecAtvID", ExecAtvID);
+            AddCell("AutoAccept", AutoAccept);
+            AddCell("CanDelete", CanDelete);
+            AddCell("CanTerminate", CanTerminate);
+            AddCell("CanJumpInto", CanJumpInto);
+            AddCell("TransKind", TransKind);
+            AddCell("JoinKind", JoinKind);
+            AddCell("Ctime", Ctime);
+            AddCell("Mtime", Mtime);
             IsAdded = true;
             AttachHook();
         }
@@ -81,8 +81,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvType Type
         {
-            get { return (WfdAtvType)((byte)this["Type"]); }
-            set { this["Type"] = (byte)value; }
+            get { return (WfdAtvType)this["Type"]; }
+            set { this["Type"] = value; }
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvExecScope ExecScope
         {
-            get { return (WfdAtvExecScope)((byte)this["ExecScope"]); }
-            set { this["ExecScope"] = (byte)value; }
+            get { return (WfdAtvExecScope)this["ExecScope"]; }
+            set { this["ExecScope"] = value; }
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvExecLimit ExecLimit
         {
-            get { return (WfdAtvExecLimit)((byte)this["ExecLimit"]); }
-            set { this["ExecLimit"] = (byte)value; }
+            get { return (WfdAtvExecLimit)this["ExecLimit"]; }
+            set { this["ExecLimit"] = value; }
         }
 
         /// <summary>
@@ -153,8 +153,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvTransKind TransKind
         {
-            get { return (WfdAtvTransKind)((byte)this["TransKind"]); }
-            set { this["TransKind"] = (byte)value; }
+            get { return (WfdAtvTransKind)this["TransKind"]; }
+            set { this["TransKind"] = value; }
         }
 
         /// <summary>
@@ -162,8 +162,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfdAtvJoinKind JoinKind
         {
-            get { return (WfdAtvJoinKind)((byte)this["JoinKind"]); }
-            set { this["JoinKind"] = (byte)value; }
+            get { return (WfdAtvJoinKind)this["JoinKind"]; }
+            set { this["JoinKind"] = value; }
         }
 
         /// <summary>

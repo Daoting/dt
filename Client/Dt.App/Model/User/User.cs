@@ -38,21 +38,21 @@ namespace Dt.App.Model
             string Phone = default,
             string Name = default,
             string Pwd = default,
-            bool Sex = true,
+            Gender Sex = (Gender)1,
             string Photo = default,
             bool Expired = false,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<string>("Phone", Phone);
-            AddCell<string>("Name", Name);
-            AddCell<string>("Pwd", Pwd);
-            AddCell<bool>("Sex", Sex);
-            AddCell<string>("Photo", Photo);
-            AddCell<bool>("Expired", Expired);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<DateTime>("Mtime", Mtime);
+            AddCell("ID", ID);
+            AddCell("Phone", Phone);
+            AddCell("Name", Name);
+            AddCell("Pwd", Pwd);
+            AddCell("Sex", Sex);
+            AddCell("Photo", Photo);
+            AddCell("Expired", Expired);
+            AddCell("Ctime", Ctime);
+            AddCell("Mtime", Mtime);
             IsAdded = true;
             AttachHook();
         }
@@ -87,11 +87,11 @@ namespace Dt.App.Model
         }
 
         /// <summary>
-        /// 性别，0女1男
+        /// 性别
         /// </summary>
-        public bool Sex
+        public Gender Sex
         {
-            get { return (bool)this["Sex"]; }
+            get { return (Gender)this["Sex"]; }
             set { this["Sex"] = value; }
         }
 

@@ -74,13 +74,13 @@ namespace Dt.App.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<long>("PrciID", PrciID);
-            AddCell<long>("AtvdID", AtvdID);
-            AddCell<byte>("Status", (byte)Status);
-            AddCell<int>("InstCount", InstCount);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<DateTime>("Mtime", Mtime);
+            AddCell("ID", ID);
+            AddCell("PrciID", PrciID);
+            AddCell("AtvdID", AtvdID);
+            AddCell("Status", Status);
+            AddCell("InstCount", InstCount);
+            AddCell("Ctime", Ctime);
+            AddCell("Mtime", Mtime);
             IsAdded = true;
             AttachHook();
         }
@@ -110,8 +110,8 @@ namespace Dt.App.Workflow
         /// </summary>
         public WfiAtvStatus Status
         {
-            get { return (WfiAtvStatus)((byte)this["Status"]); }
-            set { this["Status"] = (byte)value; }
+            get { return (WfiAtvStatus)this["Status"]; }
+            set { this["Status"] = value; }
         }
 
         /// <summary>

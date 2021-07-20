@@ -10,24 +10,6 @@ namespace Dt.Sample
 {
     public static class AtTest
     {
-        public static async Task<Table> GetTable<TEntity>()
-            where TEntity : Entity
-        {
-            return await new UnaryRpc(
-                "cm",
-                "TestSerialize.GetTable"
-            ).Call<Table<TEntity>>();
-        }
-
-        public static Task<TEntity> GetRow<TEntity>()
-            where TEntity : Entity
-        {
-            return new UnaryRpc(
-                "cm",
-                "TestSerialize.GetRow"
-            ).Call<TEntity>();
-        }
-
         #region TestSerialize
         /// <summary>
         /// 返回字符串
@@ -422,11 +404,11 @@ namespace Dt.Sample
         /// 由外部传递Table
         /// </summary>
         /// <param name="p_tbl"></param>
-        public static Task<Table> SetDataTable(Table p_tbl)
+        public static Task<Table> SetTable(Table p_tbl)
         {
             return new UnaryRpc(
                 "cm",
-                "TestSerialize.SetDataTable",
+                "TestSerialize.SetTable",
                 p_tbl
             ).Call<Table>();
         }
@@ -454,6 +436,40 @@ namespace Dt.Sample
                 "TestSerialize.SetRow",
                 p_row
             ).Call<Row>();
+        }
+
+        public static Task<Table<CustomEntity>> GetEntityTable()
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.GetEntityTable"
+            ).Call<Table<CustomEntity>>();
+        }
+
+        public static Task<bool> SetEntityTable(Table p_tbl)
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.SetEntityTable",
+                p_tbl
+            ).Call<bool>();
+        }
+
+        public static Task<CustomEntity> GetEntity()
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.GetEntity"
+            ).Call<CustomEntity>();
+        }
+
+        public static Task<bool> SetEntity(Row p_entity)
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.SetEntity",
+                p_entity
+            ).Call<bool>();
         }
 
         /// <summary>

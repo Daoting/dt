@@ -79,8 +79,12 @@
             <Button Content="发送Row" Click="SetRow" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="返回EntityRow的Table" Click="GetEntityRowTable" />
-            <Button Content="返回EntityRow" Click="GetEntityRow" />
+            <Button Content="返回Entity的Table" Click="GetEntityRowTable" />
+            <Button Content="发送Entity的Table" Click="SetEntityTable" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Entity" Click="GetEntityRow" />
+            <Button Content="发送Entity" Click="SetEntityRow" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Content="返多表Dict" Click="GetTableDict" />

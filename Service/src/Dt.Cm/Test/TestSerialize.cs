@@ -331,7 +331,7 @@ namespace Dt.Cm
         /// 由外部传递Table
         /// </summary>
         /// <param name="p_tbl"></param>
-        public Table SetDataTable(Table p_tbl)
+        public Table SetTable(Table p_tbl)
         {
             if (p_tbl != null)
                 p_tbl.AcceptChanges();
@@ -354,6 +354,26 @@ namespace Dt.Cm
         public Row SetRow(Row p_row)
         {
             return p_row;
+        }
+
+        public Table<CustomEntity> GetEntityTable()
+        {
+            return CreateEntityTable();
+        }
+
+        public bool SetEntityTable(Table<CustomEntity> p_tbl)
+        {
+            return p_tbl != null;
+        }
+
+        public CustomEntity GetEntity()
+        {
+            return CreateEntityTable()[0];
+        }
+
+        public bool SetEntity(CustomEntity p_entity)
+        {
+            return p_entity != null;
         }
 
         /// <summary>
@@ -410,10 +430,39 @@ namespace Dt.Cm
 
         Table CreateTable()
         {
-            Table tbl = new Table { { "col1" }, { "col2", typeof(DateTime) }, { "col3", typeof(byte[]) } };
-            tbl.AddRow(new { col1 = "原始值", col2 = DateTime.Now, col3 = new byte[] { 10, 20, 30, 40 } });
-            tbl.AddRow(new { col1 = "列值21", col2 = DateTime.Now });
+            Table tbl = new Table
+            {
+                { "col1" },
+                { "col2", typeof(bool) },
+                { "col3", typeof(long) },
+                { "col4", typeof(DateTime) },
+                { "col5", typeof(Gender) },
+                { "col6", typeof(byte) },
+                { "col7", typeof(byte[]) }
+            };
+            tbl.AddRow(new { col1 = "原始值", col2 = true, col3 = 100L, col4 = DateTime.Now, col5 = Gender.男, col6 = 23, col7 = new byte[] { 10, 20, 30, 40 } });
+            tbl.AddRow(new { col1 = "列值21", col4 = DateTime.Now });
             tbl[0]["col1"] = "当前值";
+            return tbl;
+        }
+
+        Table<CustomEntity> CreateEntityTable()
+        {
+            var tbl = Table<CustomEntity>.Create();
+            tbl.Add(new CustomEntity(
+                Col1: "原始值",
+                Col2: true,
+                Col3: 100L,
+                Col4: DateTime.Now,
+                Col5: Gender.男,
+                Col6: 23,
+                Col7: new byte[] { 10, 20, 30, 40 }));
+
+            tbl.Add(new CustomEntity(
+                Col1: "列值21",
+                Col4: DateTime.Now));
+
+            tbl[0].Col1 = "当前值";
             return tbl;
         }
         #endregion
@@ -646,5 +695,72 @@ namespace Dt.Cm
         public string Name { get; set; }
 
         public Student Employee { get; set; }
+    }
+
+    public class CustomEntity : Entity
+    {
+        CustomEntity()
+        { }
+
+        public CustomEntity(
+            string Col1 = default,
+            bool Col2 = default,
+            long Col3 = default,
+            DateTime Col4 = default,
+            Gender Col5 = default,
+            byte Col6 = default,
+            byte[] Col7 = default)
+        {
+            AddCell("Col1", Col1);
+            AddCell("Col2", Col2);
+            AddCell("Col3", Col3);
+            AddCell("Col4", Col4);
+            AddCell("Col5", Col5);
+            AddCell("Col6", Col6);
+            AddCell("Col7", Col7);
+            IsAdded = true;
+        }
+
+        public string Col1
+        {
+            get { return (string)this["col1"]; }
+            set { this["col1"] = value; }
+        }
+
+        public bool Col2
+        {
+            get { return (bool)this["col2"]; }
+            set { this["col2"] = value; }
+        }
+
+        public long Col3
+        {
+            get { return (long)this["col3"]; }
+            set { this["col3"] = value; }
+        }
+
+        public DateTime Col4
+        {
+            get { return (DateTime)this["col4"]; }
+            set { this["col4"] = value; }
+        }
+
+        public Gender Col5
+        {
+            get { return (Gender)this["col5"]; }
+            set { this["col5"] = value; }
+        }
+
+        public byte Col6
+        {
+            get { return (byte)this["col6"]; }
+            set { this["col6"] = value; }
+        }
+
+        public byte[] Col7
+        {
+            get { return (byte[])this["col7"]; }
+            set { this["col7"] = value; }
+        }
     }
 }

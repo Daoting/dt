@@ -31,7 +31,7 @@ namespace Dt.Pub
             string Cover = default,
             string Summary = default,
             string Content = default,
-            byte TempType = default,
+            PostTempType TempType = default,
             bool IsPublish = default,
             bool AllowCoverClick = default,
             bool AllowComment = default,
@@ -48,27 +48,27 @@ namespace Dt.Pub
             int ReadCount = default,
             int CommentCount = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<string>("Title", Title);
-            AddCell<string>("Cover", Cover);
-            AddCell<string>("Summary", Summary);
-            AddCell<string>("Content", Content);
-            AddCell<byte>("TempType", TempType);
-            AddCell<bool>("IsPublish", IsPublish);
-            AddCell<bool>("AllowCoverClick", AllowCoverClick);
-            AddCell<bool>("AllowComment", AllowComment);
-            AddCell<bool>("AddAlbumLink", AddAlbumLink);
-            AddCell<bool>("AddKeywordLink", AddKeywordLink);
-            AddCell<string>("Url", Url);
-            AddCell<int>("Dispidx", Dispidx);
-            AddCell<long>("CreatorID", CreatorID);
-            AddCell<string>("Creator", Creator);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<long?>("LastEditorID", LastEditorID);
-            AddCell<string>("LastEditor", LastEditor);
-            AddCell<DateTime?>("Mtime", Mtime);
-            AddCell<int>("ReadCount", ReadCount);
-            AddCell<int>("CommentCount", CommentCount);
+            AddCell("ID", ID);
+            AddCell("Title", Title);
+            AddCell("Cover", Cover);
+            AddCell("Summary", Summary);
+            AddCell("Content", Content);
+            AddCell("TempType", TempType);
+            AddCell("IsPublish", IsPublish);
+            AddCell("AllowCoverClick", AllowCoverClick);
+            AddCell("AllowComment", AllowComment);
+            AddCell("AddAlbumLink", AddAlbumLink);
+            AddCell("AddKeywordLink", AddKeywordLink);
+            AddCell("Url", Url);
+            AddCell("Dispidx", Dispidx);
+            AddCell("CreatorID", CreatorID);
+            AddCell("Creator", Creator);
+            AddCell("Ctime", Ctime);
+            AddCell("LastEditorID", LastEditorID);
+            AddCell("LastEditor", LastEditor);
+            AddCell("Mtime", Mtime);
+            AddCell("ReadCount", ReadCount);
+            AddCell("CommentCount", CommentCount);
             IsAdded = true;
             AttachHook();
         }
@@ -114,9 +114,9 @@ namespace Dt.Pub
         /// <summary>
         /// 在列表中显示时的模板类型
         /// </summary>
-        public byte TempType
+        public PostTempType TempType
         {
-            get { return (byte)this["TempType"]; }
+            get { return (PostTempType)this["TempType"]; }
             set { this["TempType"] = value; }
         }
 
@@ -257,4 +257,10 @@ namespace Dt.Pub
         #endregion
     }
     #endregion
+
+    public enum PostTempType
+    {
+        普通,
+        封面标题混合
+    }
 }

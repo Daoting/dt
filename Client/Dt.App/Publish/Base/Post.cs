@@ -66,27 +66,27 @@ namespace Dt.App.Publish
             int ReadCount = default,
             int CommentCount = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<string>("Title", Title);
-            AddCell<string>("Cover", Cover);
-            AddCell<string>("Summary", Summary);
-            AddCell<string>("Content", Content);
-            AddCell<byte>("TempType", (byte)TempType);
-            AddCell<bool>("IsPublish", IsPublish);
-            AddCell<bool>("AllowCoverClick", AllowCoverClick);
-            AddCell<bool>("AllowComment", AllowComment);
-            AddCell<bool>("AddAlbumLink", AddAlbumLink);
-            AddCell<bool>("AddKeywordLink", AddKeywordLink);
-            AddCell<string>("Url", Url);
-            AddCell<int>("Dispidx", Dispidx);
-            AddCell<long>("CreatorID", CreatorID);
-            AddCell<string>("Creator", Creator);
-            AddCell<DateTime>("Ctime", Ctime);
-            AddCell<long?>("LastEditorID", LastEditorID);
-            AddCell<string>("LastEditor", LastEditor);
-            AddCell<DateTime?>("Mtime", Mtime);
-            AddCell<int>("ReadCount", ReadCount);
-            AddCell<int>("CommentCount", CommentCount);
+            AddCell("ID", ID);
+            AddCell("Title", Title);
+            AddCell("Cover", Cover);
+            AddCell("Summary", Summary);
+            AddCell("Content", Content);
+            AddCell("TempType", TempType);
+            AddCell("IsPublish", IsPublish);
+            AddCell("AllowCoverClick", AllowCoverClick);
+            AddCell("AllowComment", AllowComment);
+            AddCell("AddAlbumLink", AddAlbumLink);
+            AddCell("AddKeywordLink", AddKeywordLink);
+            AddCell("Url", Url);
+            AddCell("Dispidx", Dispidx);
+            AddCell("CreatorID", CreatorID);
+            AddCell("Creator", Creator);
+            AddCell("Ctime", Ctime);
+            AddCell("LastEditorID", LastEditorID);
+            AddCell("LastEditor", LastEditor);
+            AddCell("Mtime", Mtime);
+            AddCell("ReadCount", ReadCount);
+            AddCell("CommentCount", CommentCount);
             IsAdded = true;
             AttachHook();
         }
@@ -134,8 +134,8 @@ namespace Dt.App.Publish
         /// </summary>
         public PostTempType TempType
         {
-            get { return (PostTempType)((byte)this["TempType"]); }
-            set { this["TempType"] = (byte)value; }
+            get { return (PostTempType)this["TempType"]; }
+            set { this["TempType"] = value; }
         }
 
         /// <summary>

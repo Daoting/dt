@@ -17,12 +17,12 @@
                 <wf:AtvRole x:Name="_atvRole" />
             </a:CBar>
             <a:CBar Title="执行者控制"/>
-            <a:CList ID="execscope" Title="执行者范围" Enum="Dt.App.Workflow.WfdAtvExecScope,Dt.App" />
-            <a:CList ID="execlimit" Title="执行者限制" Enum="Dt.App.Workflow.WfdAtvExecLimit,Dt.App" />
+            <a:CList ID="execscope" Title="执行者范围" />
+            <a:CList ID="execlimit" Title="执行者限制" />
             <a:CList ID="execatvid" Title="已完成活动" />
 
             <a:CBar Title="其它"/>
-            <a:CList ID="transkind" Title="后续迁移方式" Enum="Dt.App.Workflow.WfdAtvTransKind,Dt.App" />
+            <a:CList ID="transkind" Title="后续迁移方式" />
             <a:CBool ID="autoaccept" Title="自动签收" />
             <a:CBool ID="canjumpinto" Title="可接收跳转" />
             <a:CBool ID="canterminate" Title="可中止实例" />

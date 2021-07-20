@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -32,16 +33,41 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 创建空Table
+        /// 创建空Table，创建过程：
+        /// <para>Entity已指定Tbl标签时，根据表名查询表结构创建列</para>
+        /// <para>Tbl标签时，按照Entity属性创建列</para>
         /// </summary>
         /// <returns>空表</returns>
         public static Table<TEntity> Create()
         {
-            var model = EntitySchema.Get(typeof(TEntity));
             var tbl = new Table<TEntity>();
-            foreach (var col in model.Schema.PrimaryKey.Concat(model.Schema.Columns))
+
+            var tp = typeof(TEntity);
+            var attr = tp.GetCustomAttribute<TblAttribute>(false);
+            if (attr == null || string.IsNullOrEmpty(attr.Name))
             {
-                tbl.Columns.Add(new Column(col.Name, col.Type));
+                // 不包括继承的属性，含Set
+                var props = tp.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
+                foreach (var p in props)
+                {
+                    tbl.Columns.Add(new Column(p.Name, p.PropertyType));
+                }
+            }
+            else
+            {
+                PropertyInfo prop;
+                var model = EntitySchema.Get(tp);
+                foreach (var col in model.Schema.PrimaryKey.Concat(model.Schema.Columns))
+                {
+                    var colType = col.Type;
+                    if (colType == typeof(byte)
+                        && (prop = typeof(TEntity).GetProperty(col.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase)) != null)
+                    {
+                        // Entity 时根据属性类型将 byte 自动转为 enum 类型
+                        colType = prop.PropertyType;
+                    }
+                    tbl.Columns.Add(new Column(col.Name, colType));
+                }
             }
             return tbl;
         }
