@@ -21,6 +21,14 @@ namespace Dt.Base.MenuView
         public SubMenuDlg(Mi p_mi)
         {
             InitializeComponent();
+
+            Background = Res.浅灰背景;
+            MinWidth = 160;
+            HideTitleBar = true;
+            Resizeable = false;
+            // 不向下层对话框传递Press事件
+            AllowRelayPress = false;
+
             PlacementTarget = p_mi;
             ClipElement = p_mi;
             _mi = p_mi;
@@ -50,9 +58,6 @@ namespace Dt.Base.MenuView
                         WinPlacement = DlgPlacement.TargetOuterLeftTop;
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;
-
-                    // 不向下层对话框传递Press事件
-                    AllowRelayPress = false;
                 }
             }
             else
@@ -70,9 +75,6 @@ namespace Dt.Base.MenuView
                         WinPlacement = DlgPlacement.TargetOuterLeftTop;
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;
-
-                    // 不向下层对话框传递Press事件
-                    AllowRelayPress = false;
                 }
             }
 

@@ -378,6 +378,19 @@ namespace Dt.Base
         {
             get { return SysVisual.ContainsDlg(this); }
         }
+
+        /// <summary>
+        /// 对话框实际内容的设计尺寸，非UIElement.DesiredSize
+        /// </summary>
+        public new Size DesiredSize
+        {
+            get
+            {
+                if (_rootGrid != null)
+                    return _rootGrid.DesiredSize;
+                return new Size();
+            }
+        }
         #endregion
 
         #region 外部方法

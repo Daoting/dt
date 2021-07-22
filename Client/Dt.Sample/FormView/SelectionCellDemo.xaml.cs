@@ -41,8 +41,9 @@ namespace Dt.Sample
                 { "listobj", typeof(Person) },
                 { "listrow" },
                 { "code" },
-                { "sex" },
-                { "sexname" },
+                { "sex", typeof(Gender) },
+                { "idstr", typeof(int) },
+                { "idstrdsp" },
 
                 { "tree" },
                 { "treedata" },
@@ -68,8 +69,9 @@ namespace Dt.Sample
                 listint = "2",
                 listobj = default(Person),
                 listrow = "",
-                sex = 1,
-                sexname = "男",
+                sex = Gender.女,
+                idstr = 0,
+                idstrdsp = "选项一",
 
                 tree = "抗微生物药物",
                 treedata = "消化系统药",
