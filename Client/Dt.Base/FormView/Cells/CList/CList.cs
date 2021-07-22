@@ -357,8 +357,14 @@ namespace Dt.Base
         #region 内部方法
         void OnShowDlg(object sender, TappedRoutedEventArgs e)
         {
-            if (ReadOnlyBinding || (_dlg != null && _dlg.IsOpened))
+            if (ReadOnlyBinding)
                 return;
+
+            if (_dlg != null && _dlg.IsOpened)
+            {
+                _dlg.BringToTop();
+                return;
+            }
 
             if (_dlg == null)
             {

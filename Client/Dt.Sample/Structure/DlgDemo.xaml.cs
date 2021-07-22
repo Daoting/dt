@@ -37,9 +37,10 @@ namespace Dt.Sample
                 { "Pin", typeof(bool) },
                 { "HideBar", typeof(bool) },
                 { "Resize", typeof(bool) },
-                { "ShowWinVeil", typeof(bool) },
+                { "ShowVeil", typeof(bool) },
+                { "AllowRelayPress", typeof(bool) },
             };
-            _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen });
+            _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen, Resize = true, AllowRelayPress = true });
             Closed += OnClosed;
         }
 
@@ -70,6 +71,7 @@ namespace Dt.Sample
                 dlg.Top = _rnd.Next(0, 1000);
                 dlg.Left = _rnd.Next(0, 800);
             }
+
             dlg.Show();
         }
 
@@ -147,7 +149,7 @@ namespace Dt.Sample
 
         Dlg1 GetDlg()
         {
-            Dlg1 dlg = new Dlg1();
+            var dlg = new Dlg1();
             Row row = _fv.Row;
             var placement = (DlgPlacement)row["Placement"];
             if (Kit.IsPhoneUI)
@@ -158,7 +160,8 @@ namespace Dt.Sample
             dlg.IsPinned = row.Bool("Pin");
             dlg.HideTitleBar = row.Bool("HideBar");
             dlg.Resizeable = row.Bool("Resize");
-            dlg.ShowWinVeil = row.Bool("ShowWinVeil");
+            dlg.ShowVeil = row.Bool("ShowVeil");
+            dlg.AllowRelayPress = row.Bool("AllowRelayPress");
             return dlg;
         }
     }

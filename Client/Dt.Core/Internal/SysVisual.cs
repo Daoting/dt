@@ -54,7 +54,6 @@ namespace Dt.Core
         /// </summary>
         static readonly StackPanel _notifyPanel;
         static readonly PointerEventHandler _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
-        static readonly SolidColorBrush _veilBrush = new SolidColorBrush(Color.FromArgb(0x66, 0, 0, 0));
 
         /// <summary>
         /// 内容元素，桌面、Frame、登录页面等，在最底层
@@ -173,13 +172,10 @@ namespace Dt.Core
         public static bool AddDlg(UIElement p_dlg)
         {
             if (p_dlg == null
-                || !(p_dlg is IDlgOuterPressed)
+                || !(p_dlg is IDlgPressed)
                 || _dlgCanvas.Children.Contains(p_dlg))
                 return false;
 
-            // 遮罩
-            if (Kit.IsPhoneUI || ((IDlgOuterPressed)p_dlg).ShowWinVeil)
-                _dlgCanvas.Background = _veilBrush;
             _dlgCanvas.Children.Add(p_dlg);
             return true;
         }
@@ -191,65 +187,11 @@ namespace Dt.Core
         public static void RemoveDlg(UIElement p_dlg)
         {
             if (p_dlg == null
-                || !(p_dlg is IDlgOuterPressed)
+                || !(p_dlg is IDlgPressed)
                 || !_dlgCanvas.Children.Contains(p_dlg))
                 return;
 
             _dlgCanvas.Children.Remove(p_dlg);
-
-            // 移除遮罩
-            if (Kit.IsPhoneUI)
-            {
-                if (_dlgCanvas.Children.Count == 0)
-                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
-            }
-            else if (((IDlgOuterPressed)p_dlg).ShowWinVeil)
-            {
-                bool otherVeil = false;
-                foreach (var dlg in _dlgCanvas.Children.OfType<IDlgOuterPressed>())
-                {
-                    if (dlg.ShowWinVeil)
-                    {
-                        // 其他对话框有遮罩
-                        otherVeil = true;
-                        break;
-                    }
-                }
-                if (!otherVeil)
-                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
-            }
-        }
-
-        /// <summary>
-        /// 切换win模式下遮罩
-        /// </summary>
-        /// <param name="p_dlg"></param>
-        public static void ToggleDlgWinVeil(UIElement p_dlg)
-        {
-            if (p_dlg == null
-                || !(p_dlg is IDlgOuterPressed)
-                || !_dlgCanvas.Children.Contains(p_dlg))
-                return;
-
-            if (((IDlgOuterPressed)p_dlg).ShowWinVeil)
-            {
-                _dlgCanvas.Background = _veilBrush;
-            }
-            else
-            {
-                bool otherVeil = false;
-                foreach (var dlg in _dlgCanvas.Children.OfType<IDlgOuterPressed>())
-                {
-                    if (p_dlg != dlg && dlg.ShowWinVeil)
-                    {
-                        // 其他对话框有遮罩
-                        otherVeil = true;
-                        break;
-                    }
-                }
-                if (!otherVeil)
-                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
-            }
         }
 
         /// <summary>
@@ -303,11 +245,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 在空白处点击(所有对话框外部)，如打开多个菜单项对话框，点击空白处关闭所有
-        /// </summary>
-        public static Action BlankPressed { get; set; }
-
-        /// <summary>
         /// 对话框个数
         /// </summary>
         public static int DlgCount
@@ -325,36 +262,14 @@ namespace Dt.Core
             if (_dlgCanvas.Children.Count == 0)
                 return;
 
-            int cntOuter = 0;
+            // 将对话框按从上层到下层(ZIndex)的顺序保存到临时列表，因循环过程中会删除_dlgCanvas的元素！
+            var ls = _dlgCanvas.Children.OfType<IDlgPressed>().OrderByDescending((dlg) => Canvas.GetZIndex((UIElement)dlg)).ToList();
             var pt = e.GetCurrentPoint(null).Position;
-            // 临时列表，循环内部会删除_dlgCanvas的元素！
-            var ls = _dlgCanvas.Children.OfType<IDlgOuterPressed>().ToList();
             foreach (var dlg in ls)
             {
-                FrameworkElement elem = (FrameworkElement)dlg;
-                MatrixTransform trans = elem.TransformToVisual(null) as MatrixTransform;
-                if (trans == null)
-                    continue;
-
-                double offsetX = trans.Matrix.OffsetX;
-                double offsetY = trans.Matrix.OffsetY;
-                if (pt.X > offsetX
-                    && pt.X < offsetX + elem.ActualWidth
-                    && pt.Y > offsetY
-                    && pt.Y < offsetY + elem.ActualHeight)
-                {
-                    // 对话框内部不处理
-                }
-                else
-                {
-                    cntOuter++;
-                    dlg.OnOuterPressed(pt);
-                }
+                if (!dlg.OnPressed(pt))
+                    break;
             }
-
-            // 在所有对话框外部，即空白处
-            if (BlankPressed != null && cntOuter == ls.Count)
-                BlankPressed();
         }
         #endregion
 
@@ -430,7 +345,6 @@ namespace Dt.Core
 
             // 调整对话框层
             _dlgCanvas.Children.Clear();
-            _dlgCanvas.ClearValue(Panel.BackgroundProperty);
 
             ApplyNotifyStyle();
             UIModeChanged?.Invoke();
@@ -482,17 +396,13 @@ namespace Dt.Core
     /// <summary>
     /// 对话框处理点击接口
     /// </summary>
-    public interface IDlgOuterPressed
+    public interface IDlgPressed
     {
         /// <summary>
-        /// 获取设置win模式是否显示遮罩
-        /// </summary>
-        bool ShowWinVeil { get; }
-
-        /// <summary>
-        /// 点击对话框外部
+        /// 点击对话框
         /// </summary>
         /// <param name="p_point">点击位置点坐标</param>
-        void OnOuterPressed(Point p_point);
+        /// <returns>是否继续调用下层对话框的 OnPressed</returns>
+        bool OnPressed(Point p_point);
     }
 }

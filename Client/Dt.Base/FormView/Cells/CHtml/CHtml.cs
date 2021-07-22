@@ -60,7 +60,6 @@ namespace Dt.Base
                 var dlg = new HtmlEditDlg();
                 if (!Kit.IsPhoneUI)
                 {
-                    dlg.ShowWinVeil = true;
                     dlg.Height = SysVisual.ViewHeight - 140;
                     dlg.Width = Math.Min(900, SysVisual.ViewWidth - 200);
                 }

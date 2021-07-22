@@ -68,6 +68,9 @@ namespace Dt.Base.FormView
 
             if (tv.View == null)
                 tv.View = (tv.Data is Table) ? Application.Current.Resources["CListRowView"] : Application.Current.Resources["CListObjView"];
+
+            // 不向下层对话框传递Press事件
+            AllowRelayPress = false;
             Show();
         }
 

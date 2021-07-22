@@ -22,19 +22,9 @@ namespace Dt.Base.MenuView
             Content = p_menu;
             Background = Res.浅灰背景;
             MinWidth = 160;
-        }
 
-        /// <summary>
-        /// 点击对话框外部时
-        /// </summary>
-        /// <param name="p_point">外部点击位置</param>
-        protected override void OnOuterPressed(Point p_point)
-        {
-            // PhoneUI模式 或 只有当前窗口
-            if (Kit.IsPhoneUI || SysVisual.DlgCount == 1)
-                base.OnOuterPressed(p_point);
-
-            // WinUI模式不自动关闭
+            // 不向下层对话框传递Press事件
+            AllowRelayPress = false;
         }
     }
 }

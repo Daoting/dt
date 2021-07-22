@@ -296,9 +296,11 @@ namespace Dt.Base
                     Owner = this,
                     WinPlacement = DlgPlacement.TargetBottomLeft,
                     PlacementTarget = _grid,
-                    ClipElement = _grid,
+                    ClipElement = (Button)sender,
                     HideTitleBar = true,
                     Resizeable = false,
+                    // 不向下层对话框传递Press事件
+                    AllowRelayPress = false,
                 };
             }
             _dlg.ShowDlg();

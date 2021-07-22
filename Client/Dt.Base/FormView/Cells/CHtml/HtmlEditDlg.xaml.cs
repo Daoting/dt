@@ -37,9 +37,9 @@ namespace Dt.Base.FormView
             _host = p_host;
             if (!Kit.IsPhoneUI)
             {
-                ShowWinVeil = true;
                 Height = Kit.ViewHeight - 140;
                 Width = Math.Min(900, Kit.ViewWidth - 200);
+                ShowVeil = true;
             }
             Show();
 

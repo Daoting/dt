@@ -51,8 +51,8 @@ namespace Dt.Base.MenuView
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;
 
-                    // 打开多级后点击空白时一起关闭
-                    SysVisual.BlankPressed = OnBlankPressed;
+                    // 不向下层对话框传递Press事件
+                    AllowRelayPress = false;
                 }
             }
             else
@@ -71,8 +71,8 @@ namespace Dt.Base.MenuView
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;
 
-                    // 打开多级后点击空白时一起关闭
-                    SysVisual.BlankPressed = OnBlankPressed;
+                    // 不向下层对话框传递Press事件
+                    AllowRelayPress = false;
                 }
             }
 
@@ -95,24 +95,20 @@ namespace Dt.Base.MenuView
         }
 
         /// <summary>
-        /// 在空白处点击(所有对话框外部)
-        /// </summary>
-        void OnBlankPressed()
-        {
-            _mi.Owner?.Close();
-            SysVisual.BlankPressed = null;
-        }
-
-        /// <summary>
         /// 点击对话框外部时
         /// </summary>
         /// <param name="p_point">外部点击位置</param>
         protected override void OnOuterPressed(Point p_point)
         {
             if (Kit.IsPhoneUI)
+            {
                 base.OnOuterPressed(p_point);
-
-            // WinUI模式不自动关闭
+            }
+            else
+            {
+                // 在空白处点击关闭所有菜单项对话框
+                _mi.Owner?.Close();
+            }
         }
     }
 }

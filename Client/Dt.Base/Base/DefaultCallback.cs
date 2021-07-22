@@ -65,9 +65,9 @@ namespace Dt.Base
             else
             {
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
-                dlg.ShowWinVeil = true;
                 dlg.MinWidth = 300;
                 dlg.MaxWidth = SysVisual.ViewWidth / 4;
+                dlg.ShowVeil = true;
             }
             Grid grid = new Grid { Margin = new Thickness(10) };
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1.0, GridUnitType.Star) });
@@ -104,9 +104,9 @@ namespace Dt.Base
             else
             {
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
-                dlg.ShowWinVeil = true;
                 dlg.MinWidth = 300;
                 dlg.MaxWidth = SysVisual.ViewWidth / 4;
+                dlg.ShowVeil = true;
             }
             Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });

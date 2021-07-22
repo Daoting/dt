@@ -169,9 +169,14 @@ namespace Dt.Base
 
         void OnShowDlg(object sender, TappedRoutedEventArgs e)
         {
-            if (ReadOnlyBinding
-                || (_dlg != null && _dlg.IsOpened))
+            if (ReadOnlyBinding)
                 return;
+
+            if (_dlg != null && _dlg.IsOpened)
+            {
+                _dlg.BringToTop();
+                return;
+            }
 
             if (_dlg == null)
             {
@@ -193,6 +198,8 @@ namespace Dt.Base
                         Width = _grid.ActualWidth,
                     };
                 }
+                // 不向下层对话框传递Press事件
+                _dlg.AllowRelayPress = false;
             }
             _dlg.Show();
         }
