@@ -85,7 +85,11 @@ namespace Dt.Base.Chat
         public static void ShowDlg(long p_otherID, string p_otherName = null)
         {
             if (string.IsNullOrEmpty(p_otherName))
+            {
                 p_otherName = AtState.GetScalar<string>($"select name from ChatMember where id={p_otherID}");
+                if (string.IsNullOrEmpty(p_otherName))
+                    p_otherName = p_otherID.ToString();
+            }
 
             Dlg dlg;
             if (Kit.IsPhoneUI)
@@ -144,10 +148,19 @@ namespace Dt.Base.Chat
                 // 初次打开，还未下载好友列表
                 await FriendMemberList.Refresh();
                 _other = AtState.First<ChatMember>(sql);
+
+                // 不在好友列表时，创建虚拟
+                if (_other == null)
+                {
+                    _other = new ChatMember(
+                        ID: OtherID,
+                        Name: OtherID.ToString(),
+                        Photo: "photo/profilephoto.jpg");
+                }
             }
 
             // 不是好友时无法发送
-            _inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
+            //_inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 
             LetterManager.ClearUnreadFlag(OtherID);
             _lv.PageData = new PageData { NextPage = OnNextPage, InsertTop = true };
@@ -175,7 +188,10 @@ namespace Dt.Base.Chat
             var ls = AtState.Each<Letter>($"select * from Letter where otherid={OtherID} and loginid={Kit.UserID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
-                l.Photo = l.IsReceived ? _other.Photo : Kit.UserPhoto;
+                var photo = l.IsReceived ? _other.Photo : Kit.UserPhoto;
+                if (string.IsNullOrEmpty(photo))
+                    photo = "photo/profilephoto.jpg";
+                l.Photo = photo;
                 data.Add(l);
             }
             e.LoadPageData(data);

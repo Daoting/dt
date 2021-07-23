@@ -135,6 +135,6 @@
               AutoScrollBottom="True"
               EnteredBrush="{x:Null}"
               PressedBrush="{x:Null}" />
-        <chat:ChatInputBar x:Name="_inputBar" Visibility="Collapsed" Grid.Row="1" />
+        <chat:ChatInputBar x:Name="_inputBar" Grid.Row="1" />
     </Grid>
 </UserControl>
