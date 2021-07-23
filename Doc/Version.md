@@ -21,7 +21,8 @@ ios  软键盘盖住 TextBox 的问题
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！
-
+* Dlg 背景遮罩放在Dlg外部 
+* ChatMember .Sex 转Gender
 
 
 

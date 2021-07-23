@@ -27,7 +27,7 @@ namespace Dt.Base.Chat
             long ID,
             string Name = default,
             string Phone = default,
-            bool Sex = default,
+            Gender Sex = default,
             string Photo = default,
             DateTime Mtime = default)
         {
@@ -71,11 +71,11 @@ namespace Dt.Base.Chat
         }
 
         /// <summary>
-        /// 性别，0女1男
+        /// 性别
         /// </summary>
-        public bool Sex
+        public Gender Sex
         {
-            get { return (bool)this["Sex"]; }
+            get { return (Gender)this["Sex"]; }
             set { this["Sex"] = value; }
         }
 
