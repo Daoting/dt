@@ -60,9 +60,7 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
-                // 设置具体宽度会影响到遮罩
-                dlg.MinWidth = SysVisual.ViewWidth - 40;
-                dlg.MaxWidth = SysVisual.ViewWidth;
+                dlg.Width = SysVisual.ViewWidth - 40;
             }
             else
             {
@@ -101,9 +99,7 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
-                // 设置具体宽度会影响到遮罩
-                dlg.MinWidth = SysVisual.ViewWidth - 40;
-                dlg.MaxWidth = SysVisual.ViewWidth;
+                dlg.Width = SysVisual.ViewWidth - 40;
             }
             else
             {

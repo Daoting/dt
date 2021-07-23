@@ -165,43 +165,36 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 将对话框添加到可视树
+        /// 将对话框添加到可视树，Canvas作为对话框背景遮罩
         /// </summary>
-        /// <param name="p_dlg">对话框</param>
+        /// <param name="p_cvs">对话框遮罩容器</param>
         /// <returns></returns>
-        public static bool AddDlg(UIElement p_dlg)
+        public static bool AddDlg(Canvas p_cvs)
         {
-            if (p_dlg == null
-                || !(p_dlg is IDlgPressed)
-                || _dlgCanvas.Children.Contains(p_dlg))
+            if (p_cvs == null || _dlgCanvas.Children.Contains(p_cvs))
                 return false;
 
-            _dlgCanvas.Children.Add(p_dlg);
+            _dlgCanvas.Children.Add(p_cvs);
             return true;
         }
 
         /// <summary>
         /// 从可视树移除对话框
         /// </summary>
-        /// <param name="p_dlg">对话框</param>
-        public static void RemoveDlg(UIElement p_dlg)
+        /// <param name="p_cvs">对话框遮罩容器</param>
+        public static void RemoveDlg(Canvas p_cvs)
         {
-            if (p_dlg == null
-                || !(p_dlg is IDlgPressed)
-                || !_dlgCanvas.Children.Contains(p_dlg))
-                return;
-
-            _dlgCanvas.Children.Remove(p_dlg);
+            _dlgCanvas.Children.Remove(p_cvs);
         }
 
         /// <summary>
         /// 是否存在某对话框
         /// </summary>
-        /// <param name="p_dlg">对话框</param>
+        /// <param name="p_cvs">对话框遮罩容器</param>
         /// <returns></returns>
-        public static bool ContainsDlg(UIElement p_dlg)
+        public static bool ContainsDlg(Canvas p_cvs)
         {
-            return p_dlg != null && _dlgCanvas.Children.Contains(p_dlg);
+            return p_cvs != null && _dlgCanvas.Children.Contains(p_cvs);
         }
 
         /// <summary>
@@ -210,18 +203,21 @@ namespace Dt.Core
         /// <returns></returns>
         public static UIElement GetTopDlg()
         {
-            UIElement elem = null;
+            Canvas cvs = null;
             int z = -1;
-            foreach (var item in _dlgCanvas.Children.OfType<UIElement>())
+            foreach (var item in _dlgCanvas.Children.OfType<Canvas>())
             {
                 int index = Canvas.GetZIndex(item);
                 if (index > z)
                 {
                     z = index;
-                    elem = item;
+                    cvs = item;
                 }
             }
-            return elem;
+
+            if (cvs != null && cvs.Children.Count > 0)
+                return cvs.Children[0];
+            return null;
         }
 
         /// <summary>
@@ -263,12 +259,16 @@ namespace Dt.Core
                 return;
 
             // 将对话框按从上层到下层(ZIndex)的顺序保存到临时列表，因循环过程中会删除_dlgCanvas的元素！
-            var ls = _dlgCanvas.Children.OfType<IDlgPressed>().OrderByDescending((dlg) => Canvas.GetZIndex((UIElement)dlg)).ToList();
+            var ls = _dlgCanvas.Children.OfType<Canvas>().OrderByDescending((cvs) => Canvas.GetZIndex(cvs)).ToList();
             var pt = e.GetCurrentPoint(null).Position;
-            foreach (var dlg in ls)
+            foreach (var cvs in ls)
             {
-                if (!dlg.OnPressed(pt))
+                if (cvs.Children.Count > 0
+                    && cvs.Children[0] is IDlgPressed dlg
+                    && !dlg.OnPressed(pt))
+                {
                     break;
+                }
             }
         }
         #endregion

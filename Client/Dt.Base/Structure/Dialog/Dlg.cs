@@ -85,13 +85,13 @@ namespace Dt.Base
             "Left",
             typeof(double),
             typeof(Dlg),
-            new PropertyMetadata(0.0));
+            new PropertyMetadata(0.0, OnLeftChanged));
 
         public static readonly DependencyProperty TopProperty = DependencyProperty.Register(
             "Top",
             typeof(double),
             typeof(Dlg),
-            new PropertyMetadata(0.0));
+            new PropertyMetadata(0.0, OnTopChanged));
 
         public static readonly DependencyProperty ResizeableProperty = DependencyProperty.Register(
             "Resizeable",
@@ -162,12 +162,21 @@ namespace Dt.Base
         {
             ((Dlg)d).ApplyVeilBrush();
         }
+
+        static void OnLeftChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Canvas.SetLeft((Dlg)d, (double)e.NewValue);
+        }
+
+        static void OnTopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Canvas.SetTop((Dlg)d, (double)e.NewValue);
+        }
         #endregion
 
         #region 成员变量
         static int _currentZIndex = 1;
-        Canvas _canvas;
-        Grid _rootGrid;
+        readonly Canvas _canvas;
         Grid _headerGrid;
         bool _isHeadPressed;
         bool _isResizing;
@@ -182,6 +191,10 @@ namespace Dt.Base
         #region 构造方法
         public Dlg()
         {
+            // 用处：对话框的背景遮罩、位置
+            _canvas = new Canvas();
+            _canvas.Children.Add(this);
+
             // 两种UI模式样式不同，PhoneUI模式为缺省样式
             if (Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Dlg);
@@ -376,20 +389,7 @@ namespace Dt.Base
         /// </summary>
         public bool IsOpened
         {
-            get { return SysVisual.ContainsDlg(this); }
-        }
-
-        /// <summary>
-        /// 对话框实际内容的设计尺寸，非UIElement.DesiredSize
-        /// </summary>
-        public new Size DesiredSize
-        {
-            get
-            {
-                if (_rootGrid != null)
-                    return _rootGrid.DesiredSize;
-                return new Size();
-            }
+            get { return SysVisual.ContainsDlg(_canvas); }
         }
         #endregion
 
@@ -400,7 +400,7 @@ namespace Dt.Base
         /// <returns>true 正常打开；false 已显示无需再次打开</returns>
         public bool Show()
         {
-            if (!SysVisual.ContainsDlg(this))
+            if (!SysVisual.ContainsDlg(_canvas))
             {
                 ShowInCanvas();
                 return true;
@@ -414,7 +414,7 @@ namespace Dt.Base
         /// <returns>返回关闭时(通过Close方法)的参数值</returns>
         public Task<bool> ShowAsync()
         {
-            if (!SysVisual.ContainsDlg(this))
+            if (!SysVisual.ContainsDlg(_canvas))
             {
                 _taskSrc = new TaskCompletionSource<bool>();
                 ShowInCanvas();
@@ -472,8 +472,8 @@ namespace Dt.Base
         /// </summary>
         public void BringToTop()
         {
-            if (Canvas.GetZIndex(this) != _currentZIndex)
-                Canvas.SetZIndex(this, ++_currentZIndex);
+            if (Canvas.GetZIndex(_canvas) != _currentZIndex)
+                Canvas.SetZIndex(_canvas, ++_currentZIndex);
         }
         #endregion
 
@@ -486,17 +486,16 @@ namespace Dt.Base
             if (btn != null)
                 btn.Click += OnHeaderButtonClick;
 
-            _canvas = (Canvas)GetTemplateChild("Canvas");
-            _rootGrid = (Grid)GetTemplateChild("RootGrid");
-            if (_rootGrid != null && !Kit.IsPhoneUI)
+            var rootGrid = (Grid)GetTemplateChild("RootGrid");
+            if (rootGrid != null && !Kit.IsPhoneUI)
             {
-                _rootGrid.PointerPressed += OnRootGridPointerPressed;
-                _rootGrid.PointerMoved += OnRootGridPointerMoved;
-                _rootGrid.PointerReleased += OnRootGridPointerReleased;
-                _rootGrid.PointerExited += OnRootGridPointerExited;
+                rootGrid.PointerPressed += OnRootGridPointerPressed;
+                rootGrid.PointerMoved += OnRootGridPointerMoved;
+                rootGrid.PointerReleased += OnRootGridPointerReleased;
+                rootGrid.PointerExited += OnRootGridPointerExited;
 
                 // 禁止获得焦点时调整显示层次，太乱！
-                //_rootGrid.GotFocus += (s, e) => BringToTop();
+                //rootGrid.GotFocus += (s, e) => BringToTop();
             }
 
             _headerGrid = (Grid)GetTemplateChild("HeaderGrid");
@@ -506,6 +505,7 @@ namespace Dt.Base
                 _headerGrid.PointerMoved += OnHeaderPointerMoved;
                 _headerGrid.PointerReleased += OnHeaderPointerReleased;
             }
+            ApplyVeilBrush();
         }
         #endregion
 
@@ -518,24 +518,21 @@ namespace Dt.Base
             DlgPlacement placement = Kit.IsPhoneUI ? PhonePlacement : WinPlacement;
 
             // 未能正确添加到可视树 或 采用相对位置但未设置目标时
-            if (!SysVisual.AddDlg(this)
+            if (!SysVisual.AddDlg(_canvas)
                 || (placement > DlgPlacement.FromBottom && PlacementTarget == null))
                 return;
 
-            Canvas.SetZIndex(this, ++_currentZIndex);
-            ApplyTemplate();
-
+            Canvas.SetZIndex(_canvas, ++_currentZIndex);
             double maxWidth = SysVisual.ViewWidth;
             double maxHeight = SysVisual.ViewHeight;
 
             // 确保底层Canvas占用整个可视区域，遮罩效果
             _canvas.Width = maxWidth;
             _canvas.Height = maxHeight;
-            ApplyVeilBrush();
 
-            _rootGrid.Measure(new Size(maxWidth, maxHeight));
-            double actWidth = _rootGrid.DesiredSize.Width;
-            double actHeight = _rootGrid.DesiredSize.Height;
+            Measure(new Size(maxWidth, maxHeight));
+            double actWidth = DesiredSize.Width;
+            double actHeight = DesiredSize.Height;
 
             Rect rcTarget;
             switch (placement)
@@ -716,7 +713,7 @@ namespace Dt.Base
         {
             // 屏蔽多次触发移除的情况
             // 如：关闭对话框前弹出确认对话框，点击确认对话框时可能触发OnOuterPressed，出现多次触发Closing事件！
-            if (_isRemoving || !SysVisual.ContainsDlg(this))
+            if (_isRemoving || !SysVisual.ContainsDlg(_canvas))
                 return;
 
             try
@@ -734,7 +731,7 @@ namespace Dt.Base
                 if (!await OnClosing(p_ok))
                     return;
 
-                SysVisual.RemoveDlg(this);
+                SysVisual.RemoveDlg(_canvas);
 
                 // ShowAsync情况
                 if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
@@ -793,9 +790,6 @@ namespace Dt.Base
         /// </summary>
         void ApplyVeilBrush()
         {
-            if (_canvas == null)
-                return;
-
             if (ShowVeil)
             {
                 _canvas.Background = VeilBrush == null ? Res.深暗遮罩 : VeilBrush;
@@ -813,7 +807,7 @@ namespace Dt.Base
         /// <returns>是否继续调用下层对话框的 OnPressed</returns>
         bool IDlgPressed.OnPressed(Point p_point)
         {
-            if (!_rootGrid.ContainPoint(p_point))
+            if (!this.ContainPoint(p_point))
                 OnOuterPressed(p_point);
 
             // 无遮罩 且 允许传递时 继续调用下层对话框的 OnPressed
@@ -926,7 +920,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnHeaderPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (GetResizeDirection(e.GetCurrentPoint(_rootGrid).Position) == ResizeDirection.None && _headerGrid.CapturePointer(e.Pointer))
+            if (GetResizeDirection(e.GetCurrentPoint(this).Position) == ResizeDirection.None && _headerGrid.CapturePointer(e.Pointer))
             {
                 _isHeadPressed = true;
                 Point pt = e.GetCurrentPoint(null).Position;
@@ -974,7 +968,7 @@ namespace Dt.Base
             if (!Resizeable)
                 return;
 
-            var dir = GetResizeDirection(e.GetCurrentPoint(_rootGrid).Position);
+            var dir = GetResizeDirection(e.GetCurrentPoint(this).Position);
             if (dir != ResizeDirection.None)
             {
                 if (_isHeadPressed)
@@ -985,19 +979,19 @@ namespace Dt.Base
 
                 if (((Grid)sender).CapturePointer(e.Pointer))
                 {
-                    Point offset = _rootGrid.TransformToVisual(null).TransformPoint(new Point(0.0, 0.0));
+                    Point offset = this.TransformToVisual(null).TransformPoint(new Point(0.0, 0.0));
                     _isResizing = true;
                     _resizeDirection = dir;
                     _startPoint = e.GetCurrentPoint(null).Position;
-                    _initRect = new Rect(offset.X, offset.Y, _rootGrid.ActualWidth, _rootGrid.ActualHeight);
+                    _initRect = new Rect(offset.X, offset.Y, ActualWidth, ActualHeight);
                     UpdateMouseCursor(_resizeDirection);
 
                     // 调整大小的外框
                     _bdResize = new Border
                     {
                         BorderBrush = Res.醒目红色,
-                        Width = _rootGrid.ActualWidth,
-                        Height = _rootGrid.ActualHeight,
+                        Width = ActualWidth,
+                        Height = ActualHeight,
                         BorderThickness = new Thickness(2),
                     };
                     Canvas.SetLeft(_bdResize, offset.X);
@@ -1020,7 +1014,7 @@ namespace Dt.Base
 
             if (!_isResizing)
             {
-                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(_rootGrid).Position));
+                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(this).Position));
                 return;
             }
 
@@ -1125,19 +1119,19 @@ namespace Dt.Base
                 {
                     return ResizeDirection.TopLeft;
                 }
-                if ((p_position.Y > (_rootGrid.ActualHeight - resizerSize)) && (p_position.Y <= _rootGrid.ActualHeight))
+                if ((p_position.Y > (ActualHeight - resizerSize)) && (p_position.Y <= ActualHeight))
                 {
                     return ResizeDirection.BottomLeft;
                 }
                 return ResizeDirection.Left;
             }
-            if ((p_position.X > (_rootGrid.ActualWidth - resizerSize)) && (p_position.X <= _rootGrid.ActualWidth))
+            if ((p_position.X > (ActualWidth - resizerSize)) && (p_position.X <= ActualWidth))
             {
                 if ((p_position.Y >= 0.0) && (p_position.Y < resizerSize))
                 {
                     return ResizeDirection.TopRight;
                 }
-                if ((p_position.Y > (_rootGrid.ActualHeight - resizerSize)) && (p_position.Y <= _rootGrid.ActualHeight))
+                if ((p_position.Y > (ActualHeight - resizerSize)) && (p_position.Y <= ActualHeight))
                 {
                     return ResizeDirection.BottomRight;
                 }
@@ -1147,7 +1141,7 @@ namespace Dt.Base
             {
                 return ResizeDirection.Top;
             }
-            if ((p_position.Y > (_rootGrid.ActualHeight - resizerSize)) && (p_position.Y <= _rootGrid.ActualHeight))
+            if ((p_position.Y > (ActualHeight - resizerSize)) && (p_position.Y <= ActualHeight))
             {
                 return ResizeDirection.Bottom;
             }

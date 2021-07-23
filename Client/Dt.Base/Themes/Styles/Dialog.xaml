@@ -18,60 +18,48 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Dlg">
-                    <Canvas x:Name="Canvas">
-                        <!--长宽和Dlg绑定-->
-                        <Grid x:Name="RootGrid"
-                              Width="{TemplateBinding Width}"
-                              Height="{TemplateBinding Height}"
-                              MinWidth="{TemplateBinding MinWidth}"
-                              MaxWidth="{TemplateBinding MaxWidth}"
-                              MinHeight="{TemplateBinding MinHeight}"
-                              MaxHeight="{TemplateBinding MaxHeight}"
-                              Canvas.Left="{Binding Left, RelativeSource={RelativeSource TemplatedParent}}"
-                              Canvas.Top="{Binding Top, RelativeSource={RelativeSource TemplatedParent}}"
-                              Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid x:Name="HeaderGrid"
-                                  Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Background="{StaticResource 浅灰背景}"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  BorderThickness="0,0,0,1"
-                                  Height="{StaticResource RowOuterHeight}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <!--关闭-->
-                                <Button x:Name="CloseButton"
-                                        Style="{StaticResource 字符按钮}"
-                                        Content="{TemplateBinding HeaderButtonText}"
-                                        VerticalAlignment="Stretch" />
-                                <!--标题-->
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           VerticalAlignment="Center"
-                                           TextTrimming="CharacterEllipsis"
-                                           TextWrapping="NoWrap"
-                                           Margin="10,0,10,0"
-                                           Grid.Column="1" />
-                                <!--菜单-->
-                                <ContentPresenter Content="{TemplateBinding Menu}"
-                                                  Foreground="{StaticResource 默认前景}"
-                                                  Background="{StaticResource 浅灰背景}"
-                                                  Grid.Column="2"/>
-                            </Grid>
-                            <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
-                            <a:SizedPresenter Content="{TemplateBinding Content}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              HorizontalContentAlignment="Stretch"
-                                              VerticalContentAlignment="Stretch"
-                                              Grid.Row="1" />
-                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.RowSpan="2" />
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="HeaderGrid"
+                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
+                              Background="{StaticResource 浅灰背景}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="0,0,0,1"
+                              Height="{StaticResource RowOuterHeight}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--关闭-->
+                            <Button x:Name="CloseButton"
+                                    Style="{StaticResource 字符按钮}"
+                                    Content="{TemplateBinding HeaderButtonText}"
+                                    VerticalAlignment="Stretch" />
+                            <!--标题-->
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       Margin="10,0,10,0"
+                                       Grid.Column="1" />
+                            <!--菜单-->
+                            <ContentPresenter Content="{TemplateBinding Menu}"
+                                              Foreground="{StaticResource 默认前景}"
+                                              Background="{StaticResource 浅灰背景}"
+                                              Grid.Column="2"/>
                         </Grid>
-                    </Canvas>
+                        <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
+                        <a:SizedPresenter Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          Grid.Row="1" />
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.RowSpan="2" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -85,58 +73,47 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Dlg">
-                    <Canvas x:Name="Canvas">
-                        <Grid x:Name="RootGrid"
-                              Width="{TemplateBinding Width}"
-                              Height="{TemplateBinding Height}"
-                              MinWidth="{TemplateBinding MinWidth}"
-                              MaxWidth="{TemplateBinding MaxWidth}"
-                              MinHeight="{TemplateBinding MinHeight}"
-                              MaxHeight="{TemplateBinding MaxHeight}"
-                              Canvas.Left="{Binding Left, RelativeSource={RelativeSource TemplatedParent}}"
-                              Canvas.Top="{Binding Top, RelativeSource={RelativeSource TemplatedParent}}"
-                              Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid x:Name="HeaderGrid"
-                                  Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Background="{StaticResource 主题蓝色}"
-                                  Height="50">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <!--关闭-->
-                                <Button x:Name="CloseButton"
-                                        Style="{StaticResource 字符按钮}"
-                                        Foreground="{StaticResource 默认背景}"
-                                        Content="{TemplateBinding HeaderButtonText}"
-                                        VerticalAlignment="Stretch"
-                                        Width="50" />
-                                <!--标题-->
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           VerticalAlignment="Center"
-                                           Foreground="{StaticResource 默认背景}"
-                                           TextTrimming="CharacterEllipsis"
-                                           TextWrapping="NoWrap"
-                                           Margin="4,0,10,0"
-                                           Grid.Column="1" />
-                                <!--菜单-->
-                                <ContentPresenter Content="{TemplateBinding Menu}"
-                                                  Foreground="{StaticResource 默认背景}"
-                                                  Grid.Column="2"/>
-                            </Grid>
-                            <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
-                            <a:SizedPresenter Content="{TemplateBinding Content}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              HorizontalContentAlignment="Stretch"
-                                              VerticalContentAlignment="Stretch"
-                                              Grid.Row="1" />
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="HeaderGrid"
+                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
+                              Background="{StaticResource 主题蓝色}"
+                              Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--关闭-->
+                            <Button x:Name="CloseButton"
+                                    Style="{StaticResource 字符按钮}"
+                                    Foreground="{StaticResource 默认背景}"
+                                    Content="{TemplateBinding HeaderButtonText}"
+                                    VerticalAlignment="Stretch"
+                                    Width="50" />
+                            <!--标题-->
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource 默认背景}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       Margin="4,0,10,0"
+                                       Grid.Column="1" />
+                            <!--菜单-->
+                            <ContentPresenter Content="{TemplateBinding Menu}"
+                                              Foreground="{StaticResource 默认背景}"
+                                              Grid.Column="2"/>
                         </Grid>
-                    </Canvas>
+                        <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
+                        <a:SizedPresenter Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch"
+                                          Grid.Row="1" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
