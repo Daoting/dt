@@ -18,9 +18,10 @@ namespace Dt.App.Publish
 {
     public partial class Keyword
     {
-        void OnSaving()
+        Task OnSaving()
         {
             Throw.IfNullOrEmpty(ID, "关键字不可为空！");
+            return Task.CompletedTask;
         }
     }
 

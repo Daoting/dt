@@ -233,7 +233,7 @@ namespace Dt.Core
 
             var model = EntitySchema.Get(typeof(TEntity));
             if (model.OnSaving != null)
-                await OnSaving(model, p_entity);
+                await (Task)model.OnSaving.Invoke(p_entity, null);
 
             Dict dt = model.Schema.GetSaveSql(p_entity);
             if (await _db.Exec((string)dt["text"], (Dict)dt["params"]) != 1)
@@ -284,7 +284,7 @@ namespace Dt.Core
             {
                 foreach (var item in p_list)
                 {
-                    await OnSaving(model, item);
+                    await (Task)model.OnSaving.Invoke(item, null);
                 }
             }
             var dts = model.Schema.GetBatchSaveSql(p_list);
@@ -323,7 +323,7 @@ namespace Dt.Core
                     {
                         var model = EntitySchema.Get(item.GetType());
                         if (model.OnSaving != null)
-                            await OnSaving(model, entity);
+                            await (Task)model.OnSaving.Invoke(entity, null);
 
                         dts.Add(model.Schema.GetSaveSql(entity));
                     }
@@ -340,7 +340,7 @@ namespace Dt.Core
                         {
                             foreach (var ci in clist)
                             {
-                                await OnSaving(model, ci);
+                                await (Task)model.OnSaving.Invoke(ci, null);
                             }
                         }
 
@@ -402,20 +402,6 @@ namespace Dt.Core
             if (p_model.CacheHandler != null && !p_entity.IsAdded && p_entity.IsChanged)
                 await p_model.CacheHandler.Remove(p_entity);
         }
-
-        /// <summary>
-        /// 保存前外部校验，不合格在外部抛出异常
-        /// </summary>
-        /// <param name="p_model"></param>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        async Task OnSaving(EntitySchema p_model, object p_entity)
-        {
-            if (p_model.OnSaving.ReturnType == typeof(Task))
-                await (Task)p_model.OnSaving.Invoke(p_entity, null);
-            else
-                p_model.OnSaving.Invoke(p_entity, null);
-        }
         #endregion
 
         #region 删除
@@ -432,7 +418,7 @@ namespace Dt.Core
 
             var model = EntitySchema.Get(typeof(TEntity));
             if (model.OnDeleting != null)
-                await OnDeleting(model, p_entity);
+                await (Task)model.OnDeleting.Invoke(p_entity, null);
 
             Dict dt = model.Schema.GetDeleteSql(new List<Entity> { p_entity });
             return await BatchExecDelete(dt, new List<Entity> { p_entity }, model) == 1;
@@ -546,7 +532,7 @@ namespace Dt.Core
             {
                 foreach (var item in p_list)
                 {
-                    await OnDeleting(model, item);
+                    await (Task)model.OnDeleting.Invoke(item, null);
                 }
             }
 
@@ -568,7 +554,7 @@ namespace Dt.Core
                 {
                     var model = EntitySchema.Get(item.GetType());
                     if (model.OnDeleting != null)
-                        await OnDeleting(model, item);
+                        await (Task)model.OnDeleting.Invoke(item, null);
 
                     var ls = new List<Row> { entity };
                     Dict dt = model.Schema.GetDeleteSql(ls);
@@ -585,7 +571,7 @@ namespace Dt.Core
                         {
                             foreach (var ci in clist)
                             {
-                                await OnDeleting(model, item);
+                                await (Task)model.OnDeleting.Invoke(item, null);
                             }
                         }
 
@@ -625,20 +611,6 @@ namespace Dt.Core
                 }
             }
             return cnt;
-        }
-
-        /// <summary>
-        /// 删除前外部校验，不合格在外部抛出异常
-        /// </summary>
-        /// <param name="p_model"></param>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        async Task OnDeleting(EntitySchema p_model, object p_entity)
-        {
-            if (p_model.OnDeleting.ReturnType == typeof(Task))
-                await (Task)p_model.OnDeleting.Invoke(p_entity, null);
-            else
-                p_model.OnDeleting.Invoke(p_entity, null);
         }
         #endregion
 

@@ -25,9 +25,10 @@ namespace Dt.App.Publish
             return true;
         }
 
-        void OnDeleting()
+        Task OnDeleting()
         {
             Throw.If(IsPublish, "已发布的文章不可删除");
+            return Task.CompletedTask;
         }
 
         void SetIsPublish(bool p_value)

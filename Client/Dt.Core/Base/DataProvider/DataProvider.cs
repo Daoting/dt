@@ -499,10 +499,7 @@ namespace Dt.Core
         {
             try
             {
-                if (p_model.OnSaving.ReturnType == typeof(Task))
-                    await (Task)p_model.OnSaving.Invoke(p_entity, null);
-                else
-                    p_model.OnSaving.Invoke(p_entity, null);
+                await (Task)p_model.OnSaving.Invoke(p_entity, null);
             }
             catch (Exception ex)
             {
@@ -749,10 +746,7 @@ namespace Dt.Core
         {
             try
             {
-                if (p_model.OnDeleting.ReturnType == typeof(Task))
-                    await (Task)p_model.OnDeleting.Invoke(p_entity, null);
-                else
-                    p_model.OnDeleting.Invoke(p_entity, null);
+                await (Task)p_model.OnDeleting.Invoke(p_entity, null);
             }
             catch (Exception ex)
             {

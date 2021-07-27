@@ -18,9 +18,10 @@ namespace Dt.App.Publish
 {
     public partial class Album
     {
-        void OnSaving()
+        Task OnSaving()
         {
             Throw.IfNullOrEmpty(Name, "名称不可为空！");
+            return Task.CompletedTask;
         }
     }
 

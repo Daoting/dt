@@ -16,13 +16,14 @@ namespace Dt.App.Model
 {
     public partial class User
     {
-        void OnSaving()
+        Task OnSaving()
         {
             if (IsAdded || Cells["Name"].IsChanged)
                 Throw.IfNullOrEmpty(Name, "名称不可为空！");
 
             if (IsAdded || Cells["Name"].IsChanged)
                 Throw.IfNullOrEmpty(Phone, "手机号不可为空！");
+            return Task.CompletedTask;
         }
     }
 

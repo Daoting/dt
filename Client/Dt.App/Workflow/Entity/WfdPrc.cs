@@ -65,11 +65,6 @@ namespace Dt.App.Workflow
             }
         }
 
-        void OnSaving()
-        {
-
-        }
-
         async Task OnDeleting()
         {
             int cnt = await AtCm.GetScalar<int>("流程-流程实例数", new { PrcdID = ID });

@@ -16,11 +16,12 @@ namespace Dt.App.Model
 {
     public partial class Menu
     {
-        void OnSaving()
+        Task OnSaving()
         {
             // 调序时无name列
             if (Contains("Name"))
                 Throw.IfNullOrEmpty(Name, "菜单名称不可为空！");
+            return Task.CompletedTask;
         }
 
         async Task OnDeleting()

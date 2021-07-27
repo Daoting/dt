@@ -8,13 +8,14 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
+* wasm版Chat的Canvas重写测量，uno不打算修改 
 
 
 ## Release 1.9.9 
 ### 功能 
 *  实体类中增加enum的支持，包括sql查询、序列化反序列化 
 * Dlg修改为独立遮罩，无遮罩时也可控制是否允许将点击事件传递到下层对话框 
-
+* Entity的OnSaving  OnDeleting 返回值Task，不再支持void，因服务端通过EntityAccess 时异常内容无法获取
 
 ### 变更 
 
