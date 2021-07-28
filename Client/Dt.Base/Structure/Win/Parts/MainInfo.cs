@@ -9,6 +9,8 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.ComponentModel;
+using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Base
@@ -16,8 +18,15 @@ namespace Dt.Base
     /// <summary>
     /// 窗口主区内容描述
     /// </summary>
-    public class MainInfo
+    public class MainInfo : INotifyPropertyChanged
     {
+        #region 成员变量
+        Icons _icon;
+        string _title;
+        string _desc;
+        #endregion
+
+        #region 构造方法
         public MainInfo()
         { }
 
@@ -31,10 +40,10 @@ namespace Dt.Base
         /// <param name="p_cache">是否缓存主区内容</param>
         public MainInfo(Icons p_icon, string p_title, Type p_winType, string p_desc = null, bool p_cache = true)
         {
-            Icon = p_icon;
-            Title = p_title;
+            _icon = p_icon;
+            _title = p_title;
+            _desc = p_desc;
             Type = p_winType;
-            Desc = p_desc;
             Cache = p_cache;
         }
 
@@ -48,27 +57,61 @@ namespace Dt.Base
         /// <param name="p_cache">是否缓存主区内容</param>
         public MainInfo(Icons p_icon, string p_title, Action p_callback, string p_desc = null, bool p_cache = true)
         {
-            Icon = p_icon;
-            Title = p_title;
+            _icon = p_icon;
+            _title = p_title;
+            _desc = p_desc;
             Callback = p_callback;
-            Desc = p_desc;
             Cache = p_cache;
         }
+        #endregion
 
         /// <summary>
         /// 获取设置图标
         /// </summary>
-        public Icons Icon { get; set; }
+        public Icons Icon
+        {
+            get { return _icon; }
+            set
+            {
+                if (_icon != value)
+                {
+                    _icon = value;
+                    OnPropertyChanged("Icon");
+                }
+            }
+        }
 
         /// <summary>
         /// 获取设置标题
         /// </summary>
-        public string Title { get; set; }
+        public string Title
+        {
+            get { return _title; }
+            set
+            {
+                if (_title != value)
+                {
+                    _title = value;
+                    OnPropertyChanged("Title");
+                }
+            }
+        }
 
         /// <summary>
         /// 获取设置描述信息
         /// </summary>
-        public string Desc { get; set; }
+        public string Desc
+        {
+            get { return _desc; }
+            set
+            {
+                if (_desc != value)
+                {
+                    _desc = value;
+                    OnPropertyChanged("Desc");
+                }
+            }
+        }
 
         /// <summary>
         /// 获取设置主区内容类型
@@ -98,5 +141,18 @@ namespace Dt.Base
                 _obj = Activator.CreateInstance(Type);
             return _obj;
         }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// 触发属性变化事件
+        /// </summary>
+        /// <param name="propertyName">通知更改时的属性名称</param>
+        protected void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }

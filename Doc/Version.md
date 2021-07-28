@@ -16,7 +16,7 @@ ios  软键盘盖住 TextBox 的问题
 *  实体类中增加enum的支持，包括sql查询、序列化反序列化 
 * Dlg修改为独立遮罩，无遮罩时也可控制是否允许将点击事件传递到下层对话框 
 * Entity的OnSaving  OnDeleting 返回值Task，不再支持void，因服务端通过EntityAccess 时异常内容无法获取
-* MainInfo增加Cache属性 
+* MainInfo增加Cache属性，实现INotifyPropertyChanged
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
