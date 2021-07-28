@@ -28,12 +28,14 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         /// <param name="p_winType">窗口类型</param>
         /// <param name="p_desc">描述信息</param>
-        public MainInfo(Icons p_icon, string p_title, Type p_winType, string p_desc = null)
+        /// <param name="p_cache">是否缓存主区内容</param>
+        public MainInfo(Icons p_icon, string p_title, Type p_winType, string p_desc = null, bool p_cache = true)
         {
             Icon = p_icon;
             Title = p_title;
             Type = p_winType;
             Desc = p_desc;
+            Cache = p_cache;
         }
 
         /// <summary>
@@ -43,12 +45,14 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         /// <param name="p_callback">外部回调方法</param>
         /// <param name="p_desc">描述信息</param>
-        public MainInfo(Icons p_icon, string p_title, Action p_callback, string p_desc = null)
+        /// <param name="p_cache">是否缓存主区内容</param>
+        public MainInfo(Icons p_icon, string p_title, Action p_callback, string p_desc = null, bool p_cache = true)
         {
             Icon = p_icon;
             Title = p_title;
             Callback = p_callback;
             Desc = p_desc;
+            Cache = p_cache;
         }
 
         /// <summary>
@@ -76,9 +80,17 @@ namespace Dt.Base
         /// </summary>
         public Action Callback { get; set; }
 
+        /// <summary>
+        /// 获取设置是否缓存主区内容
+        /// </summary>
+        public bool Cache { get; set; }
+
         object _obj;
         internal object GetCenter()
         {
+            if (!Cache)
+                return Activator.CreateInstance(Type);
+
             if (_obj != null)
                 return _obj;
 

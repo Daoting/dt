@@ -68,7 +68,8 @@ namespace Dt.Core
             foreach (var col in schema.PrimaryKey)
             {
                 AppendTabSpace(sb, 3);
-                sb.Append(GetTypeName(col.Type));
+                var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
+                sb.Append(colType);
                 sb.Append(" ");
                 sb.Append(col.Name);
                 sb.AppendLine(",");
