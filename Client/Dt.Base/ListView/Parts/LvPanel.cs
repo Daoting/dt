@@ -552,12 +552,13 @@ namespace Dt.Base.ListView
         /// </summary>
         void DefineCreateRowFunc()
         {
+            var mode = _owner.CurrentViewMode;
             if (_owner.View is Cols cols)
             {
                 // 由列定义生成
-                if (_owner.ViewMode == ViewMode.Table)
+                if (mode == ViewMode.Table)
                     _createLvRow = CreateTableRow;
-                else if (_owner.ViewMode == ViewMode.List)
+                else if (mode == ViewMode.List)
                     _createLvRow = CreateListFormRow;
                 else
                     _createLvRow = CreateTileFormItem;
@@ -565,7 +566,7 @@ namespace Dt.Base.ListView
             else if (_owner.View is DataTemplate)
             {
                 // 由模板生成
-                if (_owner.ViewMode == ViewMode.List)
+                if (mode == ViewMode.List)
                     _createLvRow = CreateListRowByTemplate;
                 else
                     _createLvRow = CreateTileItemByTemplate;
@@ -573,7 +574,7 @@ namespace Dt.Base.ListView
             else if (_owner.View is DataTemplateSelector)
             {
                 // 由模板选择器生成
-                if (_owner.ViewMode == ViewMode.List)
+                if (mode == ViewMode.List)
                     _createLvRow = CreateListRowBySelector;
                 else
                     _createLvRow = CreateTileItemBySelector;
@@ -581,7 +582,7 @@ namespace Dt.Base.ListView
             else if (_owner.View is IRowView)
             {
                 // 动态创建行UI
-                if (_owner.ViewMode == ViewMode.List)
+                if (mode == ViewMode.List)
                     _createLvRow = CreateListRowByRowView;
                 else
                     _createLvRow = CreateTileItemByRowView;

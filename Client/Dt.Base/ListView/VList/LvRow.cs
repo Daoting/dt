@@ -130,12 +130,33 @@ namespace Dt.Base.ListView
         protected Button AttachContextMenu(Menu p_menu)
         {
             Button _btnMenu = null;
-            if (p_menu.TriggerEvent == TriggerEvent.RightTapped)
-                RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-            else if (p_menu.TriggerEvent == TriggerEvent.LeftTapped)
-                Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+            var trigger = p_menu.TriggerEvent;
+            if (Kit.IsPhoneUI)
+            {
+                if (!p_menu.ExistLocalValue(Menu.TriggerEventProperty)
+                    || trigger == TriggerEvent.Custom)
+                {
+                    // 因 长按 和 ItemClick 同时触发无法区分，phone模式默认为按钮
+                    _btnMenu = CreateMenuButton(p_menu);
+                }
+                else if (trigger == TriggerEvent.RightTapped)
+                {
+                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                }
+                else if (trigger == TriggerEvent.LeftTapped)
+                {
+                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                }
+            }
             else
-                _btnMenu = CreateMenuButton(p_menu);
+            {
+                if (trigger == TriggerEvent.RightTapped)
+                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                else if (trigger == TriggerEvent.LeftTapped)
+                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                else
+                    _btnMenu = CreateMenuButton(p_menu);
+            }
             return _btnMenu;
         }
 

@@ -63,6 +63,8 @@ namespace Dt.Sample
             if (menu != null)
             {
                 menu.Placement = MenuPosition.Default;
+                // 因TriggerEvent默认值RightTapped，不触发变化事件，先设置Custom
+                menu.TriggerEvent = TriggerEvent.Custom;
                 menu.TriggerEvent = TriggerEvent.RightTapped;
             }
         }

@@ -18,7 +18,7 @@ ios  软键盘盖住 TextBox 的问题
 * Entity的OnSaving  OnDeleting 返回值Task，不再支持void，因服务端通过EntityAccess 时异常内容无法获取
 
 ### 变更 
-
+* Lv的上下文菜单在Phone模式默认为按钮触发
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

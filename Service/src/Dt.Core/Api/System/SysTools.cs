@@ -360,6 +360,8 @@ namespace Dt.Core
                 return "int";
             if (p_type == typeof(long))
                 return "long";
+            if (p_type == typeof(double))
+                return "double";
             if (p_type == typeof(byte))
                 return "byte";
             if (p_type == typeof(sbyte))
