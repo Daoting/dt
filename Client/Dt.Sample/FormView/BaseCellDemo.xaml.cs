@@ -162,7 +162,7 @@ namespace Dt.Sample
 
         void OnDefaultInput(object sender, RoutedEventArgs e)
         {
-            ((CText)_fv["txtinput"]).InputScope = null;
+            ((CText)_fv["txtinput"]).InputScope = new InputScope { Names = { new InputScopeName { NameValue = InputScopeNameValue.Default } } };
         }
 
         class CellData

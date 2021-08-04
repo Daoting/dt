@@ -18,6 +18,7 @@ ios  软键盘盖住 TextBox 的问题
 * Entity的OnSaving  OnDeleting 返回值Task，不再支持void，因服务端通过EntityAccess 时异常内容无法获取
 * MainInfo增加Cache属性，实现INotifyPropertyChanged
 * 增加首次运行向导页功能 
+* 手机默认只支持竖屏，始终为PhoneUI模式 
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
@@ -26,7 +27,7 @@ ios  软键盘盖住 TextBox 的问题
 * Dlg禁止获得焦点时调整显示层次，太乱！
 * Dlg 背景遮罩放在Dlg外部 
 * ChatMember .Sex 转Gender
-
+* CText内部的TextBox的清空按钮无效，输入法
 
 
 
