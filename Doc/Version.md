@@ -28,7 +28,7 @@ ios  软键盘盖住 TextBox 的问题
 * Dlg 背景遮罩放在Dlg外部 
 * ChatMember .Sex 转Gender
 * CText内部的TextBox的清空按钮无效，输入法
-
+* ios wasm 中 Fv的 CText 长文本回车跳格的问题
 
 
 ## Release 1.9.6

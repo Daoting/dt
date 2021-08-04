@@ -289,6 +289,11 @@ namespace Dt.Base.FormView
                     e.Handled = true;
                     break;
                 case VirtualKey.Enter:
+#if IOS || WASM
+                    // uno中长文本回车跳格无法输入换行的bug
+                    if (e.OriginalSource is TextBox tb && tb.AcceptsReturn == true)
+                        return;
+#endif
                     fv.GotoNextCell(_owner);
                     e.Handled = true;
                     break;
