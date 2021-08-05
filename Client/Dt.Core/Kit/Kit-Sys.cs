@@ -30,20 +30,20 @@ namespace Dt.Core
         public static bool IsPhoneUI { get; internal set; }
 
         /// <summary>
-        /// 获取平台种类
+        /// 获取宿主操作系统类型
         /// </summary>
-        public static TargetSystem OS
+        public static HostOS HostOS
         {
             get
             {
 #if UWP
-                return TargetSystem.Windows;
+                return HostOS.Windows;
 #elif IOS
-                return TargetSystem.iOS;
+                return HostOS.iOS;
 #elif ANDROID
-                return TargetSystem.Android;
+                return HostOS.Android;
 #elif WASM
-                return TargetSystem.Web;
+                return GetHostOS();
 #endif
             }
         }

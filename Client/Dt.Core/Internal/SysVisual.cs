@@ -104,10 +104,30 @@ namespace Dt.Core
             Window win = Window.Current;
             win.Content = _rootGrid;
             win.Activate();
-            win.SizeChanged += OnWindowSizeChanged;
 
-            // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
-            Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+#if UWP
+            // 支持UI自适应
+            win.SizeChanged += OnWindowSizeChanged;
+#elif WASM
+            if (Kit.HostOS == HostOS.Windows
+                || Kit.HostOS == HostOS.Mac
+                || Kit.HostOS == HostOS.Linux)
+            {
+                // 支持UI自适应
+                win.SizeChanged += OnWindowSizeChanged;
+                // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
+                Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+            }
+            else
+            {
+                // ios android 不支持UI自适应
+                Kit.IsPhoneUI = true;
+            }
+#else
+            // ios android 不支持UI自适应
+            Kit.IsPhoneUI = true;
+#endif
+
             ApplyNotifyStyle();
         }
 

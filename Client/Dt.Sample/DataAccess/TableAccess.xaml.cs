@@ -38,7 +38,7 @@ namespace Dt.Sample
                 { "chushengrq", typeof(DateTime) },
                 { "hunfou", typeof(bool) },
                 { "shengao", typeof(double) },
-                { "bumen", typeof(TargetSystem) },
+                { "bumen", typeof(Gender) },
             };
         }
 
@@ -115,7 +115,7 @@ namespace Dt.Sample
                 chushengrq = DateTime.Now,
                 hunfou = true,
                 shengao = 1.80,
-                bumen = TargetSystem.Windows
+                bumen = Gender.女
             });
             WriteRows(tbl);
         }
@@ -137,7 +137,7 @@ namespace Dt.Sample
                 chushengrq = DateTime.Now,
                 hunfou = true,
                 shengao = 1.80,
-                bumen = TargetSystem.Windows
+                bumen = Gender.未知
             });
             var clone = row.Clone();
             _tbInfo.Text = "克隆行: row.Clone()";
@@ -175,7 +175,7 @@ namespace Dt.Sample
                     chushengrq = DateTime.Now,
                     hunfou = true,
                     shengao = 1.80,
-                    bumen = TargetSystem.Windows
+                    bumen = Gender.未知
                 });
             }
             return tbl;

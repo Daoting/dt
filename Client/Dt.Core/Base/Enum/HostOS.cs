@@ -9,9 +9,9 @@
 namespace Dt.Core
 {
     /// <summary>
-    /// 系统平台种类
+    /// 宿主操作系统类型
     /// </summary>
-    public enum TargetSystem
+    public enum HostOS
     {
         /// <summary>
         /// Windows系统
@@ -29,8 +29,18 @@ namespace Dt.Core
         Android,
 
         /// <summary>
-        /// Webassembly系统
+        /// Mac系统，wasm有效
         /// </summary>
-        Web
+        Mac,
+
+        /// <summary>
+        /// Linux系统，wasm有效
+        /// </summary>
+        Linux,
+
+        /// <summary>
+        /// 其他操作系统，wasm有效
+        /// </summary>
+        Other
     }
 }

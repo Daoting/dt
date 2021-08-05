@@ -109,12 +109,12 @@ namespace Dt.Base.ListView
 
             _owner.Scroll.ViewChanged += OnScrollViewChanged;
             SizeChanged += OnSizeChanged;
-            if (Kit.OS == TargetSystem.Windows)
-            {
-                // 屏蔽鼠标滚轮引起的抖动
-                PointerWheelChanged += OnPointerWheelChanged;
-                KeyDown += OnKeyDown;
-            }
+
+#if UWP
+            // 屏蔽鼠标滚轮引起的抖动
+            PointerWheelChanged += OnPointerWheelChanged;
+            KeyDown += OnKeyDown;
+#endif
         }
         #endregion
 
@@ -241,11 +241,11 @@ namespace Dt.Base.ListView
             ClearAllRows();
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
             SizeChanged -= OnSizeChanged;
-            if (Kit.OS == TargetSystem.Windows)
-            {
-                PointerWheelChanged -= OnPointerWheelChanged;
-                KeyDown -= OnKeyDown;
-            }
+
+#if UWP
+            PointerWheelChanged -= OnPointerWheelChanged;
+            KeyDown -= OnKeyDown;
+#endif
         }
 
         /// <summary>

@@ -694,14 +694,15 @@ namespace Dt.Base
             _scroll.VerticalScrollMode = ScrollMode.Auto;
             _scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
+#if UWP
             // 在 StackPanel 内时无法画出底线
-            if (Kit.OS == TargetSystem.Windows
-                && VisualTreeHelper.GetParent(this) is StackPanel sp
+            if (VisualTreeHelper.GetParent(this) is StackPanel sp
                 && ReadLocalValue(BorderThicknessProperty) == DependencyProperty.UnsetValue)
             {
                 BorderThickness = new Thickness(0, 0, 0, 1);
                 BorderBrush = Res.浅灰边框;
             }
+#endif
 
             LoadAllItems();
             Items.ItemsChanged += OnItemsChanged;

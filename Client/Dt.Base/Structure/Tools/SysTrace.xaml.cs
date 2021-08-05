@@ -167,6 +167,11 @@ namespace Dt.Base.Tools
             CopyToClipboard(_tb.Text);
         }
 
+        void OnHostOS(object sender, Mi e)
+        {
+            Kit.Msg(Kit.HostOS.ToString());
+        }
+
         /// <summary>
         /// 将文本复制到剪贴板
         /// </summary>

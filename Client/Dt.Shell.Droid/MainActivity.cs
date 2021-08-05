@@ -20,9 +20,7 @@ namespace App.Droid
         // 横竖屏模式改变、屏幕大小变化、键盘可用性改变时不重新启动activity
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.KeyboardHidden,
         // 控制软键盘
-        WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden,
-        // 始终竖屏
-        ScreenOrientation = ScreenOrientation.Portrait),]
+        WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden),]
     public class MainActivity : Windows.UI.Xaml.ApplicationActivity
     {
         // styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation

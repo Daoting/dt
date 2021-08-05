@@ -153,6 +153,28 @@ namespace Dt.Core
         {
             InvokeJS($"var a = document.createElement(\"a\");a.href = \"{p_url}\";a.download = \"{p_name}\";a.click();");
         }
+
+        static HostOS GetHostOS()
+        {
+            string os = InvokeJS("navigator.userAgent.toLowerCase()");
+            Console.WriteLine($"UserAgent：{os}");
+            if (os.IndexOf("win") > -1)
+                return HostOS.Windows;
+
+            if (os.IndexOf("iphone") > -1)
+                return HostOS.iOS;
+
+            if (os.IndexOf("android") > -1)
+                return HostOS.Android;
+
+            if (os.IndexOf("mac") > -1)
+                return HostOS.Mac;
+
+            if (os.IndexOf("linux") > -1)
+                return HostOS.Linux;
+
+            return HostOS.Other;
+        }
     }
 }
 

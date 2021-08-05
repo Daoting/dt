@@ -28,13 +28,13 @@ namespace Dt.Base
         {
             var view = SystemNavigationManager.GetForCurrentView();
             view.BackRequested += OnBackRequested;
-            if (Kit.OS == TargetSystem.Windows)
-            {
-                if (Kit.IsPhoneUI)
-                    view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-                // 全局快捷键
-                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += AcceleratorKeyActivated;
-            }
+
+#if UWP
+            if (Kit.IsPhoneUI)
+                view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            // 全局快捷键
+            Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += AcceleratorKeyActivated;
+#endif
         }
 
         /// <summary>

@@ -53,8 +53,9 @@ namespace Dt.Base.FormView
                 Margin = new Thickness(-1, -1, 0, 0);
 
             // uno不画出界的线，右下边框1
-            if (Kit.OS == TargetSystem.Windows)
-                _border.Margin = new Thickness(0, 0, -1, -1);
+#if UWP
+            _border.Margin = new Thickness(0, 0, -1, -1);
+#endif
             Children.Add(_border);
         }
 
