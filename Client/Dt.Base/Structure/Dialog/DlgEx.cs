@@ -79,7 +79,7 @@ namespace Dt.Base
                 BorderThickness = new Thickness(0),
                 MinHeight = 40,
                 MinWidth = 100,
-                MaxWidth = 200,
+                MaxWidth = 300,
                 Child = new TextBlock { Text = p_msg, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10) },
             });
 
