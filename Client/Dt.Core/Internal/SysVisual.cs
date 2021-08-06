@@ -108,6 +108,7 @@ namespace Dt.Core
 #if UWP
             // 支持UI自适应
             win.SizeChanged += OnWindowSizeChanged;
+            Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
 #elif WASM
             if (Kit.HostOS == HostOS.Windows
                 || Kit.HostOS == HostOS.Mac
