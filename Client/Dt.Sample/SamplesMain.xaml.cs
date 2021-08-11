@@ -208,6 +208,20 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
+                    Title = "字体",
+                    Note = "常用字体大小",
+                    Tag = typeof(FontDemo),
+                    Callback = OnNaviTo
+                },
+                new DataCmd
+                {
+                    Title = "标准控件",
+                    Note = "系统常用控件的样式",
+                    Tag = typeof(StyleDemo),
+                    Callback = OnNaviTo
+                },
+                new DataCmd
+                {
                     Title = "常用画刷",
                     Note = "",
                     Tag = typeof(BrushDemo),

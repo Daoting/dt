@@ -343,24 +343,39 @@ namespace Dt.Base
         public static FontFamily IconFont => (FontFamily)_dict["IconFont"];
 
         /// <summary>
-        /// 标题样式
-        /// </summary>
-        public static Style 标题 => (Style)_dict["标题"];
-
-        /// <summary>
-        /// 小字样式
-        /// </summary>
-        public static Style 小字 => (Style)_dict["小字"];
-
-        /// <summary>
-        /// 字符文本样式
-        /// </summary>
-        public static Style 字符 => (Style)_dict["字符"];
-
-        /// <summary>
         /// Lv中默认文本
         /// </summary>
         public static Style LvTextBlock => (Style)_dict["LvTextBlock"];
+
+        /// <summary>
+        /// 小一，32px
+        /// </summary>
+        public static double 特大字 => (double)_dict["特大字"];
+
+        /// <summary>
+        /// 小二，24px
+        /// </summary>
+        public static double 大字 => (double)_dict["大字"];
+
+        /// <summary>
+        /// 小三，20px
+        /// </summary>
+        public static double 标题字 => (double)_dict["标题字"];
+
+        /// <summary>
+        /// 小四，16px
+        /// </summary>
+        public static double 默认字 => (double)_dict["默认字"];
+
+        /// <summary>
+        /// 五号，14px
+        /// </summary>
+        public static double 小字 => (double)_dict["小字"];
+
+        /// <summary>
+        /// 小五，12px
+        /// </summary>
+        public static double 特小字 => (double)_dict["特小字"];
 
         /// <summary>
         /// 默认行外高，含边框1

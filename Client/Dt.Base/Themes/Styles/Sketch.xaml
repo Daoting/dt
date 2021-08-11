@@ -263,13 +263,12 @@
                                 </Grid.ColumnDefinitions>
                                 <ContentPresenter Content="{TemplateBinding IconShape}" VerticalAlignment="Center" />
                                 <TextBlock Text="{TemplateBinding Title}"
-                                           Style="{StaticResource 正文}"
                                            VerticalAlignment="Center"
                                            Grid.Column="1" />
                             </Grid>
                             <ContentPresenter Content="{TemplateBinding Content}"
                                               ContentTemplateSelector="{StaticResource ContentPresenterSelector}"
-                                              FontSize="{StaticResource 小字号}"
+                                              FontSize="{StaticResource 小字}"
                                               Margin="0,5,0,0"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

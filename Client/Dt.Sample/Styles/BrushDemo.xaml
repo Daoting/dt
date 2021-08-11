@@ -9,59 +9,66 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="IsTextSelectionEnabled" Value="True" />
+            <Setter Property="Margin" Value="0,20,0,20" />
         </Style>
     </a:Win.Resources>
-    
-    <a:Fv>
-        <Border Background="{StaticResource 主题蓝色}">
-            <TextBlock Text="主题蓝色" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 暗遮罩}" BorderBrush="{StaticResource 深暗遮罩}" BorderThickness="4">
-            <TextBlock Text="暗遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 亮遮罩}" BorderBrush="{StaticResource 深亮遮罩}" BorderThickness="4">
-            <TextBlock Text="亮遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 黄遮罩}" BorderBrush="{StaticResource 深黄遮罩}" BorderThickness="4">
-            <TextBlock Text="黄遮罩 深黄遮罩" Style="{StaticResource DefaultBlock}" />
-        </Border>
 
-        <Border Background="{StaticResource 灰色背景}" BorderBrush="{StaticResource 灰色边框}" BorderThickness="4">
-            <TextBlock Text="灰色背景 灰色边框" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="4">
-            <TextBlock Text="浅灰背景 浅灰边框" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 深灰背景}" BorderBrush="{StaticResource 深灰边框}" BorderThickness="4">
-            <TextBlock Text="深灰背景 深灰边框" Style="{StaticResource DefaultBlock}" />
-        </Border>
+    <ScrollViewer HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Disabled">
+        <StackPanel Margin="20" Spacing="20">
+            <Border Background="{StaticResource 主题蓝色}">
+                <TextBlock Text="主题蓝色" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 暗遮罩}" BorderBrush="{StaticResource 深暗遮罩}" BorderThickness="4">
+                <TextBlock Text="暗遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 亮遮罩}" BorderBrush="{StaticResource 深亮遮罩}" BorderThickness="4">
+                <TextBlock Text="亮遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 黄遮罩}" BorderBrush="{StaticResource 深黄遮罩}" BorderThickness="4">
+                <TextBlock Text="黄遮罩 深黄遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
 
-        <Border Background="{StaticResource 黄色背景}">
-            <TextBlock Text="黄色背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 浅黄背景}">
-            <TextBlock Text="浅黄背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 绿色背景}">
-            <TextBlock Text="绿色背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 浅绿背景}">
-            <TextBlock Text="浅绿背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 浅湖蓝背景}">
-            <TextBlock Text="浅湖蓝背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 淡蓝背景}">
-            <TextBlock Text="淡蓝背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 深蓝背景}">
-            <TextBlock Text="深蓝背景" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 醒目蓝色}">
-            <TextBlock Text="醒目蓝色" Style="{StaticResource DefaultBlock}" />
-        </Border>
-        <Border Background="{StaticResource 醒目红色}">
-            <TextBlock Text="醒目红色" Style="{StaticResource DefaultBlock}" />
-        </Border>
-    </a:Fv>
+            <Border Background="{StaticResource 灰色背景}" BorderBrush="{StaticResource 灰色边框}" BorderThickness="4">
+                <TextBlock Text="灰色背景 灰色边框" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="4">
+                <TextBlock Text="浅灰背景 浅灰边框" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深灰背景}" BorderBrush="{StaticResource 深灰边框}" BorderThickness="4">
+                <TextBlock Text="深灰背景 深灰边框" Style="{StaticResource DefaultBlock}" />
+            </Border>
+
+            <Border Background="{StaticResource 黄色背景}">
+                <TextBlock Text="黄色背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 浅黄背景}">
+                <TextBlock Text="浅黄背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 绿色背景}">
+                <TextBlock Text="绿色背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 浅绿背景}">
+                <TextBlock Text="浅绿背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 浅湖蓝背景}">
+                <TextBlock Text="浅湖蓝背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 淡蓝背景}">
+                <TextBlock Text="淡蓝背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深蓝背景}">
+                <TextBlock Text="深蓝背景" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 醒目蓝色}">
+                <TextBlock Text="醒目蓝色" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 醒目红色}">
+                <TextBlock Text="醒目红色" Style="{StaticResource DefaultBlock}" />
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
 </a:Win>

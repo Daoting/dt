@@ -14,7 +14,7 @@
                 <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" FontSize="30" Margin="4,0,10,0" VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding [name]}" TextWrapping="NoWrap" />
-                    <TextBlock Text="{Binding [ctime], Converter={StaticResource CvAutoDate}}" FontSize="{StaticResource 小字号}" Foreground="{StaticResource 深灰边框}"/>
+                    <TextBlock Text="{Binding [ctime], Converter={StaticResource CvAutoDate}}" FontSize="{StaticResource 小字}" Foreground="{StaticResource 深灰边框}"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>

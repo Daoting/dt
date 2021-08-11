@@ -17,10 +17,19 @@
     *****************************************************************
     -->
     <!-- 字体大小 -->
-    <x:Double x:Key="大字号">32</x:Double>
-    <x:Double x:Key="中字号">15</x:Double>
-    <x:Double x:Key="小字号">12</x:Double>
-
+    <!-- 小一，24磅 -->
+    <x:Double x:Key="特大字">32</x:Double>
+    <!-- 小二，18磅 -->
+    <x:Double x:Key="大字">24</x:Double>
+    <!-- 小三，15磅 -->
+    <x:Double x:Key="标题字">20</x:Double>
+    <!-- 小四，12磅 -->
+    <x:Double x:Key="默认字">16</x:Double>
+    <!-- 五号，10.5磅 -->
+    <x:Double x:Key="小字">14</x:Double>
+    <!-- 小五，9磅 -->
+    <x:Double x:Key="特小字">12</x:Double>
+    
     <!-- 行外高，含边框1 -->
     <x:Double x:Key="RowOuterHeight">41</x:Double>
     <!-- 行内容高度 -->
@@ -139,37 +148,6 @@
     -->
 
     <!--**************************** TextBlock【不要设置全局样式！】****************************-->
-    <!--正文-->
-    <Style x:Key="正文" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
-        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-    </Style>
-
-    <!--标题-->
-    <Style x:Key="标题" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource 大字号}"/>
-        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="TextWrapping" Value="NoWrap"/>
-    </Style>
-
-    <!--小字-->
-    <Style x:Key="小字" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource 小字号}"/>
-        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-    </Style>
-
-    <!--字符文本-->
-    <Style x:Key="字符" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{StaticResource IconFont}"/>
-        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
-        <Setter Property="Foreground" Value="{StaticResource 深灰背景}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="Margin" Value="0,0,4,0"/>
-    </Style>
-
     <!--Lv中默认文本-->
     <Style x:Key="LvTextBlock" TargetType="TextBlock">
         <!--不要设置字体大小-->
@@ -182,7 +160,7 @@
     <Style x:Key="默认按钮" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 主题蓝色}"/>
-        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -284,7 +262,7 @@
     <Style x:Key="浅色按钮" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="BorderBrush" Value="{StaticResource 深亮遮罩}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
@@ -335,7 +313,7 @@
     <Style x:Key="PhonSearchButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 默认前景}"/>
-        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">

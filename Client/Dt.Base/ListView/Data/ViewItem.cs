@@ -59,7 +59,7 @@ namespace Dt.Base
             "FontSize",
             typeof(double),
             typeof(ViewItem),
-            new PropertyMetadata(15d, OnFontSizeChanged));
+            new PropertyMetadata(16d, OnFontSizeChanged));
 
         static void OnForegroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

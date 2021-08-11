@@ -12,7 +12,7 @@
                   VerticalScrollMode="Auto"
                   VerticalScrollBarVisibility="Auto"
                   ZoomMode="Disabled">
-        <StackPanel Spacing="10" Margin="10">
+        <StackPanel Spacing="10" Margin="20">
             <TextBlock Text="默认按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="默认按钮" />
@@ -49,7 +49,7 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Ellipse Fill="Red" Height="10" Width="10" VerticalAlignment="Center" IsHitTestVisible="False" />
-                            <TextBlock Text="2" Style="{StaticResource 小字}" Margin="4,0,0,0" />
+                            <TextBlock Text="2" FontSize="{StaticResource 小字}" Margin="4,0,0,0" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
                             <TextBlock Text="&#xE054;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" FontSize="12" />

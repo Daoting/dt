@@ -32,8 +32,6 @@ namespace Dt.Base
 
         public PhonePage()
         {
-            // Control默认11，系统默认15
-            FontSize = 15;
             _param = _newParam;
 
             // 原来在OnNavigatedFrom方法中卸载内容以便下次重用，但会造成页面返回时无动画！！！

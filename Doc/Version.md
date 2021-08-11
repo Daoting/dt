@@ -8,7 +8,6 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
-* wasm版Chat的Canvas重写测量，uno不打算修改 
 
 
 ## Release 1.9.9 
@@ -22,6 +21,7 @@ ios  软键盘盖住 TextBox 的问题
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
+* 调整默认字体大小，15 -> 16
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！
@@ -29,7 +29,7 @@ ios  软键盘盖住 TextBox 的问题
 * ChatMember .Sex 转Gender
 * CText内部的TextBox的清空按钮无效，输入法
 * ios wasm 中 Fv的 CText 长文本回车跳格的问题
-
+* wasm版Chat的子Canvas不绘制的bug，uno已解决a
 
 ## Release 1.9.6
 

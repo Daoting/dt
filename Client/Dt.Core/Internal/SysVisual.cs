@@ -22,6 +22,11 @@ namespace Dt.Core
 {
     /// <summary>
     /// 系统可视树管理类，三层：桌面层/页面层、对话框层、提示信息层
+    /// uwp的完整UI树：ScrollViewer - Border - app UI
+    /// uno的完整UI树：Grid - Border - app UI
+    /// app UI：Grid - 桌面层/页面层
+    ///              - 对话框层
+    ///              - 提示信息层
     /// </summary>
     internal static class SysVisual
     {
@@ -66,6 +71,7 @@ namespace Dt.Core
         public static int StatusBarHeight;
         #endregion
 
+        #region 静态构造
         static SysVisual()
         {
             // 根Grid，背景主题蓝色
@@ -131,7 +137,9 @@ namespace Dt.Core
 
             ApplyNotifyStyle();
         }
+        #endregion
 
+        #region 基础
         /// <summary>
         /// 获取设置桌面层/页面层的内容元素，桌面、Frame、登录页面，在最底层
         /// </summary>
@@ -142,9 +150,9 @@ namespace Dt.Core
             {
                 if (value != null && value != _rootContent)
                 {
-                    if (_rootContent != null)
-                        _rootGrid.Children.Remove(_rootContent);
+                    _rootGrid.Children.Remove(_rootContent);
                     _rootContent = value;
+                    SetDefaultStyle(_rootContent as Control);
                     _rootGrid.Children.Insert(0, value);
                 }
             }
@@ -175,6 +183,7 @@ namespace Dt.Core
         {
             get { return _rootGrid.Dispatcher; }
         }
+        #endregion
 
         #region 对话框
         /// <summary>
@@ -192,9 +201,12 @@ namespace Dt.Core
         /// <returns></returns>
         public static bool AddDlg(Canvas p_cvs)
         {
-            if (p_cvs == null || _dlgCanvas.Children.Contains(p_cvs))
+            if (p_cvs == null
+                || _dlgCanvas.Children.Contains(p_cvs)
+                || p_cvs.Children.Count != 1)
                 return false;
 
+            SetDefaultStyle(p_cvs.Children[0] as Control);
             _dlgCanvas.Children.Add(p_cvs);
             return true;
         }
@@ -300,8 +312,9 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_index"></param>
         /// <param name="p_item"></param>
-        public static void InsertNotifyItem(int p_index, UIElement p_item)
+        public static void InsertNotifyItem(int p_index, Control p_item)
         {
+            SetDefaultStyle(p_item);
             _notifyPanel.Children.Insert(p_index, p_item);
         }
 
@@ -411,6 +424,18 @@ namespace Dt.Core
         //    }
         //}
         //#endif
+        #endregion
+
+        #region 设置默认样式
+        static void SetDefaultStyle(Control p_con)
+        {
+            if (p_con != null)
+            {
+                // 统一设置默认字体大小
+                // 原系统的默认大小：Control为11，TextBlock为14，Frame为15
+                p_con.FontSize = 16;
+            }
+        }
         #endregion
     }
 
