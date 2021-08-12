@@ -25,9 +25,9 @@
                     <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <a:Dot ID="ctime" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                    <TextBlock Text="&#xE005;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                    <a:Dot ID="mtime" FontSize="12" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <a:Dot ID="ctime" Font="小灰" />
+                    <TextBlock Text="&#xE005;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" Style="{StaticResource 小灰}" />
+                    <a:Dot ID="mtime" Font="小灰" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </DataTemplate>

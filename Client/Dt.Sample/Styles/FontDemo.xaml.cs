@@ -20,9 +20,5 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        private void OnTest(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            
-        }
     }
 }

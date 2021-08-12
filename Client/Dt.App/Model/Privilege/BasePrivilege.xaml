@@ -36,7 +36,7 @@
                     <DataTemplate>
                         <StackPanel Padding="10">
                             <a:Dot ID="id" />
-                            <a:Dot ID="note" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                            <a:Dot ID="note" Font="小灰" />
                         </StackPanel>
                     </DataTemplate>
                 </a:Lv>

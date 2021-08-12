@@ -31,8 +31,7 @@
                         </Grid.RowDefinitions>
                         <a:Dot ID="Name" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         <a:Dot ID="Note"
-                               FontSize="12"
-                               Foreground="{StaticResource 深灰边框}"
+                               Font="小灰"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left"
                                Grid.Row="1"/>

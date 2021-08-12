@@ -468,6 +468,17 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 自定义页面
+        /// <summary>
+        /// 显示自定义页面
+        /// </summary>
+        /// <param name="p_page"></param>
+        public static void ShowCustom(Control p_page)
+        {
+            SysVisual.RootContent = p_page;
+        }
+        #endregion
+
         #region 带参数启动
         /// <summary>
         /// 以参数方式自启动，通常从Toast启动

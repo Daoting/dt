@@ -9,7 +9,7 @@
     <a:Pane InitWidth="630">
         <a:Tabs>
             <a:Tab Title="列表">
-                <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="90">
+                <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="100">
                     <DataTemplate>
                         <Grid Padding="10">
                             <Grid.RowDefinitions>
@@ -17,7 +17,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <a:Dot ID="Title" HorizontalAlignment="Center" />
-                            <a:Dot ID="Note" FontSize="12" Foreground="{StaticResource 深灰边框}" TextWrapping="Wrap" Grid.Row="1" />
+                            <a:Dot ID="Note" Font="小灰" TextWrapping="Wrap" Grid.Row="1" />
                         </Grid>
                     </DataTemplate>
                 </a:Lv>

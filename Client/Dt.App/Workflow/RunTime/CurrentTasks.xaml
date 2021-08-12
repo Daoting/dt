@@ -17,10 +17,10 @@
                         <StackPanel Padding="10">
                             <a:Dot ID="title" />
                             <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
-                                <a:Dot ID="sender" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                                <TextBlock Text="{Binding [stime],Converter={StaticResource CvDateTime}}" Margin="10,0,0,0" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                                <a:Dot ID="sender" Font="小灰" />
+                                <TextBlock Text="{Binding [stime],Converter={StaticResource CvDateTime}}" Margin="10,0,0,0" Style="{StaticResource 小灰}" />
                             </StackPanel>
-                            <a:Dot ID="prcname" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                            <a:Dot ID="prcname" Font="小灰" />
                         </StackPanel>
                     </DataTemplate>
                 </a:Lv>

@@ -23,7 +23,7 @@
     <x:Double x:Key="大字">24</x:Double>
     <!-- 小三，15磅 -->
     <x:Double x:Key="标题字">20</x:Double>
-    <!-- 小四，12磅 -->
+    <!-- 小四，12磅，SysVisual.SetDefaultStyle已对根元素设置 -->
     <x:Double x:Key="默认字">16</x:Double>
     <!-- 五号，10.5磅 -->
     <x:Double x:Key="小字">14</x:Double>
@@ -154,6 +154,11 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="小灰" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+        <Setter Property="FontSize" Value="{StaticResource 小字}" />
     </Style>
 
     <!--**************************** Button ****************************-->

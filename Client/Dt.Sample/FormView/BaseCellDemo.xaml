@@ -46,8 +46,8 @@
                         <StackPanel Orientation="Horizontal">
                             <Image Source="ms-appx:///Assets/logo.png" Width="50" Height="50" Margin="0,0,20,0" Stretch="Uniform" />
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="李世杰" Foreground="Black" FontSize="20" />
-                                <TextBlock Text="1870****504" Foreground="{StaticResource 深灰边框}" />
+                                <TextBlock Text="李世杰" Foreground="Black" />
+                                <TextBlock Text="1870****504" Style="{StaticResource 小灰}" />
                             </StackPanel>
                         </StackPanel>
                     </a:CLink>

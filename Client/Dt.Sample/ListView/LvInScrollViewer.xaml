@@ -50,9 +50,7 @@
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
                     <a:Dot ID="shenfenzh" />
                     <a:Dot ID="bumen" />
-                    <a:Dot ID="note"
-                           Foreground="{StaticResource 深灰边框}"
-                           FontSize="12" />
+                    <a:Dot ID="note" Font="小灰" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

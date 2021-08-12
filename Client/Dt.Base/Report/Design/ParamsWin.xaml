@@ -41,7 +41,7 @@
                         <DataTemplate>
                             <StackPanel Padding="10">
                                 <a:Dot ID="name" />
-                                <a:Dot ID="desc" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                                <a:Dot ID="desc" Font="小灰" />
                             </StackPanel>
                         </DataTemplate>
                     </a:CList>

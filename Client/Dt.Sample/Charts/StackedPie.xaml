@@ -7,7 +7,7 @@
     <a:Win.Resources>
         <DataTemplate x:Key="lbl">
             <Border Background="White" CornerRadius="2" BorderBrush="Black" BorderThickness="0.5">
-                <TextBlock Foreground="Black" FontSize="15" Margin="2">
+                <TextBlock Foreground="Black" Margin="2">
                   <Run Text="{Binding Name}" />
                   <Run Text="{Binding}" />
                   <Run Text="%" />
@@ -15,7 +15,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="lbl1">
-            <TextBlock FontSize="12" Text="{Binding DataObject.Version}" />
+            <TextBlock FontSize="{StaticResource 小字}" Text="{Binding DataObject.Version}" />
         </DataTemplate>
     </a:Win.Resources>
     

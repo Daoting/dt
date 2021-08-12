@@ -28,7 +28,7 @@ namespace Dt.Base.Report
     {
         #region 成员变量
         public const string DefaultFontName = "Segoe UI";
-        public const double DefaultFontSize = 15.0;
+        public const double DefaultFontSize = 16.0;
         public const string ScriptValue = "#script#";
         const string _defaultForeground = "#ff000000";
         const string _defaultBackground = "#00ffffff";

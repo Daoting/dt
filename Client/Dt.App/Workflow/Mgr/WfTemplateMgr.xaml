@@ -36,14 +36,14 @@
                             <a:Dot ID="name" />
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                 <a:Dot ID="IsLocked" UIType="CheckBox" Foreground="{StaticResource 深灰边框}" />
-                                <TextBlock Text="锁定" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="4,0,0,0" />
+                                <TextBlock Text="锁定" VerticalAlignment="Center" Style="{StaticResource 小灰}" Margin="4,0,0,0" />
                                 <a:Dot ID="Singleton" UIType="CheckBox" Foreground="{StaticResource 深灰边框}" Margin="30,0,0,0" />
-                                <TextBlock Text="单例" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="4,0,0,0" />
+                                <TextBlock Text="单例" VerticalAlignment="Center" Style="{StaticResource 小灰}" Margin="4,0,0,0" />
 
-                                <TextBlock Text="创建：" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="30,0,0,0" />
-                                <a:Dot ID="ctime" Foreground="{StaticResource 深灰边框}" FontSize="12" />
-                                <TextBlock Text="最后修改：" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="30,0,0,0"  />
-                                <a:Dot ID="mtime" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                                <TextBlock Text="创建：" Style="{StaticResource 小灰}" Margin="30,0,0,0" />
+                                <a:Dot ID="ctime" Font="小灰" />
+                                <TextBlock Text="最后修改：" Style="{StaticResource 小灰}" Margin="30,0,0,0"  />
+                                <a:Dot ID="mtime" Font="小灰" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

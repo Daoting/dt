@@ -51,10 +51,9 @@
 
                                 <TextBlock Text="{TemplateBinding Desc}"
                                            Visibility="{Binding Text, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource Self}}"
-                                           FontSize="{StaticResource 小字}"
                                            TextTrimming="CharacterEllipsis"
                                            TextWrapping="Wrap"
-                                           Foreground="{StaticResource 深灰边框}"
+                                           Style="{StaticResource 小灰}"
                                            VerticalAlignment="Top"
                                            HorizontalAlignment="Left"/>
                             </StackPanel>

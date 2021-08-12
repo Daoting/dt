@@ -176,7 +176,7 @@ namespace Dt.Base
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             };
 
-            _pre = new ContentPresenter { FontSize = 15 };
+            _pre = new ContentPresenter { FontSize = 16 };
             _pre.SetBinding(ContentPresenter.ContentProperty, new Binding { Path = new PropertyPath("Child"), Source = this });
 
             _sv.Content = _pre;

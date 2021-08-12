@@ -26,9 +26,9 @@
                         </Grid.ColumnDefinitions>
                         <a:Dot ID="OtherName" />
                         <Ellipse Visibility="{Binding [Unread], Converter={StaticResource CvBoolToVisible}}" Fill="Red" Height="8" Width="8" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" />
-                        <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Foreground="{StaticResource 深灰边框}" FontSize="12" VerticalAlignment="Center" Grid.Column="2" />
+                        <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Style="{StaticResource 小灰}" VerticalAlignment="Center" Grid.Column="2" />
                     </Grid>
-                    <a:Dot ID="msg" Foreground="{StaticResource 深灰边框}" FontSize="12" Height="15" />
+                    <a:Dot ID="msg" Font="小灰" Height="18" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

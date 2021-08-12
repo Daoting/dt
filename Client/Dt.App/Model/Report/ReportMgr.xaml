@@ -29,7 +29,7 @@
                     <DataTemplate>
                         <StackPanel Padding="10">
                             <a:Dot ID="name" />
-                            <a:Dot ID="note" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                            <a:Dot ID="note" Font="小灰" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="创建：" />
                                 <a:Dot ID="ctime" FontSize="12" />

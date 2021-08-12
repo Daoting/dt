@@ -10,7 +10,7 @@
         <DataTemplate x:Key="Normal">
             <StackPanel Background="Black" Padding="10,6" Margin="0,6">
                 <a:Dot ID="title" Foreground="White" />
-                <a:Dot ID="time" Foreground="White" FontSize="12" />
+                <a:Dot ID="time" Foreground="White" FontSize="{StaticResource 小字}" />
             </StackPanel>
         </DataTemplate>
 
@@ -21,8 +21,8 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <a:Dot ID="servicename" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                <a:Dot ID="time" Foreground="{StaticResource 深灰边框}" FontSize="12" HorizontalAlignment="Right"/>
+                <a:Dot ID="servicename" Font="小灰" />
+                <a:Dot ID="time" Font="小灰" HorizontalAlignment="Right"/>
                 <Border Background="{StaticResource 主题蓝色}" BorderThickness="0" Padding="10,6" Grid.Row="1">
                     <a:Dot ID="title" Foreground="White" />
                 </Border>
@@ -46,7 +46,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <a:Dot ID="servicename" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                <a:Dot ID="servicename" Font="小灰" />
                 <Path Data="M0,0 L4,8 L20,8"
                       Fill="{StaticResource 绿色背景}"
                       StrokeThickness="0"
@@ -60,14 +60,14 @@
                 <Border Background="{StaticResource 绿色背景}" BorderThickness="0" Padding="10,6" Grid.Row="2">
                     <a:Dot ID="title" Foreground="White" />
                 </Border>
-                <a:Dot ID="time" Foreground="{StaticResource 深灰边框}" FontSize="12" Grid.Row="3"/>
+                <a:Dot ID="time" Font="小灰" Grid.Row="3"/>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="Exception">
             <StackPanel Background="Red" Padding="10,6" Margin="0,6">
                 <a:Dot ID="title" Foreground="White" />
-                <a:Dot ID="time" Foreground="White" FontSize="12" />
+                <a:Dot ID="time" Foreground="White" FontSize="{StaticResource 小字}" />
             </StackPanel>
         </DataTemplate>
     </a:Win.Resources>

@@ -43,7 +43,7 @@
                            Foreground="White"
                            Background="{StaticResource 绿色背景}"
                            Padding="10" />
-                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Style="{StaticResource 小灰}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -63,7 +63,7 @@
                                 RightTapped="OnFileRightTapped"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 绿色背景}" />
-                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Style="{StaticResource 小灰}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -88,7 +88,7 @@
                            Foreground="White"
                            Background="{StaticResource 主题蓝色}"
                            Padding="10" />
-                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Style="{StaticResource 小灰}" />
                 </StackPanel>
                 <!--Data不能写在Style中-->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
@@ -109,7 +109,7 @@
                                 FixedVolume="chat"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 主题蓝色}" />
-                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" Style="{StaticResource 小灰}" />
                 </StackPanel>
                 <!--Data不能写在Style中-->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />

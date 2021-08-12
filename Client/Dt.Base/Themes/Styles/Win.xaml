@@ -251,7 +251,7 @@
                                HorizontalContentAlignment="Center" />
                         <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
                             <a:Dot ID="Title" />
-                            <a:Dot ID="Desc" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" />
+                            <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

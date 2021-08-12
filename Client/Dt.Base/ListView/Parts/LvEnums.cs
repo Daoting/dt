@@ -88,4 +88,16 @@ namespace Dt.Base
         /// </summary>
         Enum,
     }
+
+    /// <summary>
+    /// Dot 常用文字样式种类
+    /// </summary>
+    public enum CellFontStyle
+    {
+        默认,
+
+        小灰,
+
+        大蓝,
+    }
 }
