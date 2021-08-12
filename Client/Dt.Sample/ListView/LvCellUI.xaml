@@ -9,22 +9,22 @@
         <a:Cols x:Key="GridView">
             <a:Col ID="scale" Title="小数位" Format="n4" />
             <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="200" />
-            <a:Col ID="Icon" Title="图标" UIType="Icon" Width="80" />
-            <a:Col ID="CheckBox" Title="选择框" UIType="CheckBox" Width="80" />
-            <a:Col ID="Image" Title="图片" UIType="Image" Width="50" />
-            <a:Col ID="File" Title="文件列表" UIType="File" Width="150" />
-            <a:Col ID="enum" Title="枚举类型" UIType="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
+            <a:Col ID="Icon" Title="图标" UI="Icon" Width="80" />
+            <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
+            <a:Col ID="Image" Title="图片" UI="Image" Width="50" />
+            <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
+            <a:Col ID="enum" Title="枚举类型" UI="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
             <StackPanel Padding="10" Width="300" Spacing="10">
                 <a:Dot ID="scale" Format="n4" />
                 <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
-                <a:Dot ID="Icon" UIType="Icon" />
-                <a:Dot ID="CheckBox" UIType="CheckBox" />
-                <a:Dot ID="Image" UIType="Image"  />
-                <a:Dot ID="File" UIType="File" />
-                <a:Dot ID="enum" UIType="Enum" Format="Dt.Base.Icons,Dt.Base" />
+                <a:Dot ID="Icon" UI="Icon" />
+                <a:Dot ID="CheckBox" UI="CheckBox" />
+                <a:Dot ID="Image" UI="Image"  />
+                <a:Dot ID="File" UI="File" />
+                <a:Dot ID="enum" UI="Enum" Format="Dt.Base.Icons,Dt.Base" />
             </StackPanel>
         </DataTemplate>
     </a:Win.Resources>
@@ -36,11 +36,11 @@
                     <a:Cols>
                         <a:Col ID="scale" Title="小数位" Format="n4" />
                         <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="200" />
-                        <a:Col ID="Icon" Title="图标" UIType="Icon" Width="80" />
-                        <a:Col ID="CheckBox" Title="选择框" UIType="CheckBox" Width="80" />
-                        <a:Col ID="Image" Title="图片" UIType="Image" Width="50" />
-                        <a:Col ID="File" Title="文件列表" UIType="File" Width="150" />
-                        <a:Col ID="enum" Title="枚举类型" UIType="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
+                        <a:Col ID="Icon" Title="图标" UI="Icon" Width="80" />
+                        <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
+                        <a:Col ID="Image" Title="图片" UI="Image" Width="50" />
+                        <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
+                        <a:Col ID="enum" Title="枚举类型" UI="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>

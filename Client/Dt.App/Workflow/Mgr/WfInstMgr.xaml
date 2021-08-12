@@ -46,7 +46,7 @@
                         </a:Menu>
                     </a:Ex.Menu>
                     <a:Cols>
-                        <a:Col ID="Status" Title="状态" UIType="Enum" Format="Dt.App.Workflow.WfiPrcStatus,Dt.App" Width="60" />
+                        <a:Col ID="Status" Title="状态" UI="Enum" Format="Dt.App.Workflow.WfiPrcStatus,Dt.App" Width="60" />
                         <a:Col ID="Name" Title="表单名称" Width="200" />
                         <a:Col ID="Ctime" Title="创建时间" Width="120" />
                         <a:Col ID="Mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
@@ -60,7 +60,7 @@
             <a:Tab Title="活动实例">
                 <a:Lv x:Name="_lvAtv" ViewMode="Table" ItemClick="OnAtvClick">
                     <a:Cols>
-                        <a:Col ID="Status" Title="状态" UIType="Enum" Format="Dt.App.Workflow.WfiAtvStatus,Dt.App" Width="60" />
+                        <a:Col ID="Status" Title="状态" UI="Enum" Format="Dt.App.Workflow.WfiAtvStatus,Dt.App" Width="60" />
                         <a:Col ID="Name" Title="活动名称" Width="200" />
                         <a:Col ID="instcount" Title="工作项数" Width="80" />
                     </a:Cols>
@@ -71,8 +71,8 @@
             <a:Tab Title="工作项">
                 <a:Lv x:Name="_lvItem" ViewMode="Table">
                     <a:Cols>
-                        <a:Col ID="Status" Title="状态" UIType="Enum" Format="Dt.App.Workflow.WfiItemStatus,Dt.App" Width="60" />
-                        <a:Col ID="AssignKind" Title="指派方式" UIType="Enum" Format="Dt.App.Workflow.WfiItemAssignKind,Dt.App" Width="100" />
+                        <a:Col ID="Status" Title="状态" UI="Enum" Format="Dt.App.Workflow.WfiItemStatus,Dt.App" Width="60" />
+                        <a:Col ID="AssignKind" Title="指派方式" UI="Enum" Format="Dt.App.Workflow.WfiItemAssignKind,Dt.App" Width="100" />
                         <a:Col ID="sendprc" Title="发送者 -> 执行者" Width="180" />
                         <a:Col ID="IsAccept" Title="已签收" Width="80" />
                         <a:Col ID="mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />

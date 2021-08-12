@@ -38,8 +38,8 @@ namespace Dt.Base
             typeof(Col),
             new PropertyMetadata(true));
 
-        public static readonly DependencyProperty UITypeProperty = DependencyProperty.Register(
-            "UIType",
+        public static readonly DependencyProperty UIProperty = DependencyProperty.Register(
+            "UI",
             typeof(CellUIType),
             typeof(Col),
             new PropertyMetadata(CellUIType.Default));
@@ -121,10 +121,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置单元格UI类型
         /// </summary>
-        public CellUIType UIType
+        public CellUIType UI
         {
-            get { return (CellUIType)GetValue(UITypeProperty); }
-            set { SetValue(UITypeProperty, value); }
+            get { return (CellUIType)GetValue(UIProperty); }
+            set { SetValue(UIProperty, value); }
         }
 
         /// <summary>

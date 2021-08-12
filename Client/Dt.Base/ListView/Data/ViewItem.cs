@@ -225,7 +225,7 @@ namespace Dt.Base
                         elem = new TextBlock { Style = Res.LvTextBlock, Text = obj.ToString(), };
                 }
             }
-            else if (p_cell.UIType == CellUIType.Default)
+            else if (p_cell.UI == CellUIType.Default)
             {
                 // 默认方式：根据数据类型生成可视元素
                 if (_data is Row dr && dr.Contains(p_cell.ID))
@@ -249,7 +249,7 @@ namespace Dt.Base
             else if ((val = this[p_cell.ID]) != null)
             {
                 // 自定义方式：按设置的内容类型生成可视元素
-                switch (p_cell.UIType)
+                switch (p_cell.UI)
                 {
                     case CellUIType.Icon:
                         elem = CreateIcon(val);
@@ -265,6 +265,9 @@ namespace Dt.Base
                         break;
                     case CellUIType.Enum:
                         elem = CreateEnumText(val, p_cell);
+                        break;
+                    case CellUIType.AutoDate:
+                        elem = CreateAutoDate(val);
                         break;
                 }
             }
@@ -614,6 +617,45 @@ namespace Dt.Base
                 catch { }
             }
             return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
+        }
+
+        TextBlock CreateAutoDate(object p_val)
+        {
+            var tb = new TextBlock();
+            DateTime dt;
+            if (p_val.GetType() == typeof(DateTime))
+            {
+                dt = (DateTime)p_val;
+            }
+            else
+            {
+                try
+                {
+                    dt = (DateTime)System.Convert.ChangeType(p_val, typeof(DateTime));
+                }
+                catch
+                {
+                    return tb;
+                }
+            }
+
+            TimeSpan ts = DateTime.Now.Date - dt.Date;
+            switch (ts.Days)
+            {
+                case 0:
+                    tb.Text = dt.ToString("HH:mm:ss");
+                    break;
+                case 1:
+                    tb.Text = "昨天";
+                    break;
+                case -1:
+                    tb.Text = "明天";
+                    break;
+                default:
+                    tb.Text = dt.ToString("yyyy-MM-dd");
+                    break;
+            }
+            return tb;
         }
 
         void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)

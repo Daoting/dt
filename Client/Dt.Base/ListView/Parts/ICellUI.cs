@@ -24,7 +24,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置单元格UI类型
         /// </summary>
-        CellUIType UIType { get; set; }
+        CellUIType UI { get; set; }
 
         /// <summary>
         /// 获取设置格式串，null或空时按默认显示，如：时间格式、小数位格式、枚举类型名称

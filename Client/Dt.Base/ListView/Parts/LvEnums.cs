@@ -87,6 +87,11 @@ namespace Dt.Base
         /// 显示为枚举类型的名称
         /// </summary>
         Enum,
+
+        /// <summary>
+        /// 自适应时间转换器，如 昨天，09:13, 2015-04-09
+        /// </summary>
+        AutoDate,
     }
 
     /// <summary>

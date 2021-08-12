@@ -22,8 +22,8 @@ namespace Dt.Base
     public partial class Dot : ContentPresenter, ICellUI
     {
         static CellUIConverter _uiConverter = new CellUIConverter();
-        public static readonly DependencyProperty UITypeProperty = DependencyProperty.Register(
-            "UIType",
+        public static readonly DependencyProperty UIProperty = DependencyProperty.Register(
+            "UI",
             typeof(CellUIType),
             typeof(Dot),
             new PropertyMetadata(CellUIType.Default));
@@ -59,10 +59,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置单元格UI类型
         /// </summary>
-        public CellUIType UIType
+        public CellUIType UI
         {
-            get { return (CellUIType)GetValue(UITypeProperty); }
-            set { SetValue(UITypeProperty, value); }
+            get { return (CellUIType)GetValue(UIProperty); }
+            set { SetValue(UIProperty, value); }
         }
 
         /// <summary>
