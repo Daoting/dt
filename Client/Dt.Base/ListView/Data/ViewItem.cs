@@ -269,6 +269,9 @@ namespace Dt.Base
                     case CellUIType.AutoDate:
                         elem = CreateAutoDate(val);
                         break;
+                    case CellUIType.Warning:
+                        elem = CreateWarning(val);
+                        break;
                 }
             }
 
@@ -656,6 +659,25 @@ namespace Dt.Base
                     break;
             }
             return tb;
+        }
+
+        Grid CreateWarning(object p_val)
+        {
+            var txt = p_val.ToString();
+            if (txt == "")
+                return null;
+
+            if (txt.Length > 2)
+                txt = "┅";
+
+            return new Grid
+            {
+                Children =
+                {
+                    new Ellipse { Fill = Res.RedBrush, Width = 20, Height = 20},
+                    new TextBlock {Text = txt, Foreground = Res.WhiteBrush, FontSize = 14, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
+                }
+            };
         }
 
         void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)

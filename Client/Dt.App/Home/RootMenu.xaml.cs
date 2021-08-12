@@ -128,46 +128,4 @@ namespace Dt.App.Home
         }
         #endregion
     }
-
-    class MenuIconConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            Icons icon = Icons.None;
-            if (value != null)
-                Enum.TryParse<Icons>(value.ToString(), true, out icon);
-            string str = Res.GetIconChar(icon);
-            if (!string.IsNullOrEmpty(str))
-                return new TextBlock { Text = str, FontFamily = Res.IconFont, FontSize = 30, TextAlignment = TextAlignment.Center };
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    class MenuWarningConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value == null || value.ToString() == string.Empty)
-                return null;
-
-            return new Grid
-            {
-                Children =
-                {
-                    new Ellipse { Fill = Res.RedBrush, Width = 20, Height = 20},
-                    new TextBlock {Text = value.ToString(), Foreground = Res.WhiteBrush, FontSize = 12, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
-                }
-            };
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

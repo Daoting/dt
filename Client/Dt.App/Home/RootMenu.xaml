@@ -5,20 +5,14 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.App.Home">
 
-    <UserControl.Resources>
-        <home:MenuIconConverter x:Key="CvMenuIcon" />
-        <home:MenuWarningConverter x:Key="CvMenuWarning" />
-    </UserControl.Resources>
-    
     <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="80">
         <DataTemplate>
             <Grid Padding="10">
                 <StackPanel VerticalAlignment="Center">
-                    <!--uno无法用ContentPresenter-->
-                    <ContentControl Content="{Binding Data.Icon,Converter={StaticResource CvMenuIcon},Mode=OneTime}" HorizontalContentAlignment="Center" />
-                    <TextBlock Text="{Binding Data.Name,Mode=OneTime}" TextAlignment="Center" />
+                    <a:Dot ID="Icon" UI="Icon" FontSize="30" />
+                    <a:Dot ID="Name" HorizontalAlignment="Center" />
                 </StackPanel>
-                <ContentControl Content="{Binding Data.Warning,Converter={StaticResource CvMenuWarning}}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                <a:Dot ID="Warning" UI="Warning" HorizontalAlignment="Right" VerticalAlignment="Top" />
             </Grid>
         </DataTemplate>
     </a:Lv>

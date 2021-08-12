@@ -92,6 +92,11 @@ namespace Dt.Base
         /// 自适应时间转换器，如 昨天，09:13, 2015-04-09
         /// </summary>
         AutoDate,
+
+        /// <summary>
+        /// 红底白字的警告样式
+        /// </summary>
+        Warning,
     }
 
     /// <summary>

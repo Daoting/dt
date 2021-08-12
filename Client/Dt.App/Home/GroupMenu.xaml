@@ -5,10 +5,6 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.App.Home">
 
-    <UserControl.Resources>
-        <home:MenuIconConverter x:Key="CvMenuIcon" />
-    </UserControl.Resources>
-    
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,9 +18,8 @@
             <DataTemplate>
                 <Grid Padding="10">
                     <StackPanel VerticalAlignment="Center">
-                        <!--uno无法用ContentPresenter-->
-                        <ContentControl Content="{Binding Data.Icon,Converter={StaticResource CvMenuIcon},Mode=OneTime}" HorizontalContentAlignment="Center" />
-                        <TextBlock Text="{Binding Data.Name,Mode=OneTime}" TextAlignment="Center" />
+                        <a:Dot ID="Icon" UI="Icon" FontSize="30" />
+                        <a:Dot ID="Name" HorizontalAlignment="Center" />
                     </StackPanel>
                 </Grid>
             </DataTemplate>
