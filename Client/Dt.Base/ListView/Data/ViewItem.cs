@@ -674,7 +674,7 @@ namespace Dt.Base
             {
                 Children =
                 {
-                    new Ellipse { Fill = Res.RedBrush, Width = 20, Height = 20},
+                    new Ellipse { Fill = Res.RedBrush, Width = 23, Height = 23 },
                     new TextBlock {Text = txt, Foreground = Res.WhiteBrush, FontSize = 14, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
                 }
             };

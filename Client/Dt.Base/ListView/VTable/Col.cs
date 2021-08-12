@@ -78,7 +78,7 @@ namespace Dt.Base
             "FontSize",
             typeof(double),
             typeof(Col),
-            new PropertyMetadata(15d));
+            new PropertyMetadata(16d));
         #endregion
 
         /// <summary>

@@ -11,8 +11,8 @@
             <a:Col ID="bh" Title="编号" Width="80" />
             <a:Col ID="chushengrq" Title="出生日期" Width="120" />
             <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
-            <a:Col ID="xb" Title="性别" Width="50" />
-            <a:Col ID="hunfou" Title="婚否" Width="50" />
+            <a:Col ID="xb" Title="性别" Width="60" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
             <a:Col ID="shengao" Title="身高" Width="100" />
             <a:Col ID="bumen" Title="所属部门" Width="160" />
             <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />

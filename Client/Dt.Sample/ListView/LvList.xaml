@@ -29,7 +29,7 @@
                             </Border>
 
                             <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
-                                <a:Dot ID="xm" />
+                                <a:Dot ID="xm" Font="大蓝" />
                                 <StackPanel Orientation="Horizontal">
                                     <a:Dot ID="xb" />
                                     <a:Dot ID="chushengrq" Margin="20,0,0,0" />

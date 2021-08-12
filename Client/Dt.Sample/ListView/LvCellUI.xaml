@@ -8,12 +8,16 @@
     <a:Win.Resources>
         <a:Cols x:Key="GridView">
             <a:Col ID="scale" Title="小数位" Format="n4" />
-            <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="200" />
-            <a:Col ID="Icon" Title="图标" UI="Icon" Width="80" />
+            <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
+            <a:Col ID="Icon" Title="图标1" UI="Icon" Width="80" />
+            <a:Col ID="IconName" Title="图标2" Width="80" />
             <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
-            <a:Col ID="Image" Title="图片" UI="Image" Width="50" />
+            <a:Col ID="Image" Title="图片" UI="Image" Width="60" />
             <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
-            <a:Col ID="enum" Title="枚举类型" UI="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
+            <a:Col ID="enum1" Title="枚举1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
+            <a:Col ID="enum2" Title="枚举2" Width="90" />
+            <a:Col ID="AutoDate" Title="自适应时间" UI="AutoDate" Width="110" />
+            <a:Col ID="Warning" Title="醒目提醒" UI="Warning" Width="100" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
@@ -21,10 +25,14 @@
                 <a:Dot ID="scale" Format="n4" />
                 <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
                 <a:Dot ID="Icon" UI="Icon" />
+                <a:Dot ID="IconName" />
                 <a:Dot ID="CheckBox" UI="CheckBox" />
                 <a:Dot ID="Image" UI="Image"  />
                 <a:Dot ID="File" UI="File" />
-                <a:Dot ID="enum" UI="Enum" Format="Dt.Base.Icons,Dt.Base" />
+                <a:Dot ID="enum1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" />
+                <a:Dot ID="enum2" />
+                <a:Dot ID="AutoDate" UI="AutoDate" />
+                <a:Dot ID="Warning" UI="Warning" />
             </StackPanel>
         </DataTemplate>
     </a:Win.Resources>
@@ -35,12 +43,16 @@
                 <a:Lv x:Name="_lv" ViewMode="Table">
                     <a:Cols>
                         <a:Col ID="scale" Title="小数位" Format="n4" />
-                        <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="200" />
-                        <a:Col ID="Icon" Title="图标" UI="Icon" Width="80" />
+                        <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
+                        <a:Col ID="Icon" Title="图标1" UI="Icon" Width="80" />
+                        <a:Col ID="IconName" Title="图标2" Width="80" />
                         <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
-                        <a:Col ID="Image" Title="图片" UI="Image" Width="50" />
+                        <a:Col ID="Image" Title="图片" UI="Image" Width="60" />
                         <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
-                        <a:Col ID="enum" Title="枚举类型" UI="Enum" Format="Dt.Base.Icons,Dt.Base" Width="150" />
+                        <a:Col ID="enum1" Title="枚举1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
+                        <a:Col ID="enum2" Title="枚举2" Width="90" />
+                        <a:Col ID="AutoDate" Title="自适应时间" UI="AutoDate" Width="110" />
+                        <a:Col ID="Warning" Title="醒目提醒" UI="Warning" Width="100" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>

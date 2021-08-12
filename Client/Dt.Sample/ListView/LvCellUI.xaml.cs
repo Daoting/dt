@@ -35,10 +35,14 @@ namespace Dt.Sample
                 { "scale", typeof(double) },
                 { "date", typeof(DateTime) },
                 { "Icon", typeof(int) },
+                { "IconName", typeof(Icons) },
                 { "CheckBox", typeof(bool) },
                 { "Image" },
                 { "File" },
-                { "Enum", typeof(byte) },
+                { "Enum1", typeof(byte) },
+                { "Enum2", typeof(HostOS) },
+                { "AutoDate", typeof(DateTime) },
+                { "Warning", typeof(int) },
             };
 
             Random rand = new Random();
@@ -50,10 +54,14 @@ namespace Dt.Sample
                     scale = rand.NextDouble(),
                     date = birth.AddMonths(rand.Next(100)),
                     Icon = i + 1,
+                    IconName = (Icons)(i + 1),
                     CheckBox = (i % 2 == 0),
                     Image = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]",
                     File = (i % 2 == 0) ? "[[\"photo/项目文档.docx\",\"项目文档\",\"docx文件\",13071,\"daoting\",\"2020-03-13 10:37\"]]" : "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"],[\"photo/profilephoto.jpg\", \"头像\", \".jpg\", 1140, \"hdt\", null],[\"photo/mov1.jpg\", \"头像\", \".jpg\", 1140, \"hdt\", null],[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]",
-                    Enum = rand.Next(1, 200),
+                    Enum1 = rand.Next(0, 6),
+                    Enum2 = (HostOS)rand.Next(0, 6),
+                    AutoDate = birth.AddHours(-rand.Next(100)),
+                    Warning = rand.Next(200),
                 });
             }
             _lv.Data = tbl;

@@ -21,6 +21,7 @@ namespace Dt.Base
     /// </summary>
     public partial class Dot : ContentPresenter, ICellUI
     {
+        const double _defaultFontSize = 16;
         static CellUIConverter _uiConverter = new CellUIConverter();
         public static readonly DependencyProperty UIProperty = DependencyProperty.Register(
             "UI",
@@ -47,6 +48,8 @@ namespace Dt.Base
 
         public Dot()
         {
+            // 系统默认大小14，uwp初次测量结果偏小
+            FontSize = _defaultFontSize;
             SetBinding(ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = this, Mode = BindingMode.OneTime });
             Loaded += OnLoaded;
         }
@@ -121,7 +124,7 @@ namespace Dt.Base
                             SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
                         if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
                             SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-                        if (ReadLocalValue(FontSizeProperty) == DependencyProperty.UnsetValue)
+                        if (FontSize == _defaultFontSize)
                             SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
                     }
                     break;
