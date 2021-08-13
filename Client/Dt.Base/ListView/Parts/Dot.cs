@@ -96,9 +96,25 @@ namespace Dt.Base
                     FontSize = Res.小字;
                     break;
 
-                case CellFontStyle.粗蓝:
-                    Foreground = Res.醒目蓝色;
-                    FontWeight = FontWeights.Bold;
+                case CellFontStyle.黑白:
+                    Foreground = Res.WhiteBrush;
+                    Background = Res.BlackBrush;
+                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
+                        Padding = new Thickness(10, 4, 10, 4);
+                    break;
+
+                case CellFontStyle.蓝白:
+                    Foreground = Res.WhiteBrush;
+                    Background = Res.主题蓝色;
+                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
+                        Padding = new Thickness(10, 4, 10, 4);
+                    break;
+
+                case CellFontStyle.红白:
+                    Foreground = Res.WhiteBrush;
+                    Background = Res.RedBrush;
+                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
+                        Padding = new Thickness(10, 4, 10, 4);
                     break;
 
                 case CellFontStyle.默认:
@@ -112,7 +128,7 @@ namespace Dt.Base
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-            
+
             switch (Font)
             {
                 case CellFontStyle.默认:
@@ -142,10 +158,12 @@ namespace Dt.Base
                     }
                     break;
 
-                case CellFontStyle.粗蓝:
+                case CellFontStyle.黑白:
+                case CellFontStyle.蓝白:
+                case CellFontStyle.红白:
                     {
-                        if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
+                        if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
+                            SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
                         if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
                             SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
                         if (FontSize == _defaultFontSize)
