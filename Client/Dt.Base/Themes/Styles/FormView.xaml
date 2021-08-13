@@ -53,11 +53,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBox x:Name="SearchBox"
-                                     PlaceholderText="{TemplateBinding Placeholder}"
-                                     BorderThickness="1"
-                                     BorderBrush="{StaticResource 浅灰边框}"
-                                     Padding="10" />
+                            <TextBox x:Name="SearchBox" PlaceholderText="{TemplateBinding Placeholder}" />
                             <Button x:Name="CloseButton" Content="取消" Grid.Column="1" />
                         </Grid>
                         <!--Fv根-->
@@ -153,8 +149,7 @@
                                  PlaceholderText="{TemplateBinding Placeholder}"
                                  TextAlignment="Right"
                                  InputScope="Number"
-                                 BorderThickness="0"
-                                 Padding="10" />
+                                 Style="{StaticResource FvTextBox}" />
                     </fv:CellPanel>
                 </ControlTemplate>
             </Setter.Value>

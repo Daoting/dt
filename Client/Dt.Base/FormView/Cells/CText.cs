@@ -94,7 +94,7 @@ namespace Dt.Base
         public CText()
         {
             DefaultStyleKey = typeof(CText);
-            _tb = new TextBox { BorderThickness = new Thickness(0), Padding = new Thickness(10) };
+            _tb = new TextBox { Style = Res.FvTextBox };
         }
         #endregion
 

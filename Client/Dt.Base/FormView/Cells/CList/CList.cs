@@ -401,7 +401,7 @@ namespace Dt.Base
 
             if (IsEditable && !ReadOnlyBinding)
             {
-                TextBox tb = new TextBox { BorderThickness = new Thickness(0), Padding = new Thickness(10) };
+                TextBox tb = new TextBox { Style = Res.FvTextBox };
                 Binding bind = new Binding
                 {
                     Path = new PropertyPath("Value"),

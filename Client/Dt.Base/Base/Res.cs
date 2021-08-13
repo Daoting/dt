@@ -348,6 +348,11 @@ namespace Dt.Base
         public static Style LvTextBlock => (Style)_dict["LvTextBlock"];
 
         /// <summary>
+        /// Fv中的文本编辑框
+        /// </summary>
+        public static Style FvTextBox => (Style)_dict["FvTextBox"];
+
+        /// <summary>
         /// 小一，32px
         /// </summary>
         public static double 特大字 => (double)_dict["特大字"];

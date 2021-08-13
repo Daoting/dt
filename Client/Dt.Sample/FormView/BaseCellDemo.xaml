@@ -10,12 +10,12 @@
             <a:Tab Title="格">
                 <a:Fv x:Name="_fv">
                     <a:CBar Title="基本格" />
-                    <a:CText ID="txt" Title="文本框" />
+                    <a:CText ID="txt" Title="文本框" Placeholder="文本框" />
                     <a:CText ID="txtinput" Title="控制输入法" InputScope="Number" />
                     <a:CText ID="txtlong" Title="长文本" AcceptsReturn="True" RowSpan="2" UpdateTimely="False" />
                     <a:CText ID="txtpy" Title="拼音码" UpdateTimely="False" Changed="OnPyChanged" />
                     <a:CText ID="tgtpy" Title="输出拼音码" IsReadOnly="True" />
-                    <a:CNum ID="num" Title="数值" Decimals="4" />
+                    <a:CNum ID="num" Title="数值" Decimals="4" Placeholder="填写数字" />
                     <a:CMask ID="mask" Title="掩码" />
                     <a:CPassword ID="pwd" Title="密码" />
                     <a:CHtml ID="html" Title="富文本" />

@@ -12,8 +12,15 @@
                   VerticalScrollMode="Auto"
                   VerticalScrollBarVisibility="Auto"
                   ZoomMode="Disabled">
-        <StackPanel Margin="20" Spacing="20">
+        <StackPanel x:Name="_sp" Margin="20" Spacing="20">
+            <TextBlock Text="默认文本"  />
+            <TextBox x:Name="_tb" Text="默认编辑框" PlaceholderText="默认编辑框" />
+            <Button Content="默认按钮" Click="OnTest" />
             <CheckBox Content="选择项" />
+            <PasswordBox PlaceholderText="密码框" />
+            <HyperlinkButton Content="链接按钮" />
+
+
         </StackPanel>
     </ScrollViewer>
 </a:Win>

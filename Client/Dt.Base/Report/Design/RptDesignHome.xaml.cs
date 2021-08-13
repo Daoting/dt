@@ -47,7 +47,7 @@ namespace Dt.Base.Report
         {
             if (_tbXaml == null)
             {
-                _tbXaml = new TextBox { AcceptsReturn = true, BorderThickness = new Thickness(0) };
+                _tbXaml = new TextBox { AcceptsReturn = true, Style = Res.FvTextBox };
                 ScrollViewer.SetHorizontalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
                 ScrollViewer.SetVerticalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
             }

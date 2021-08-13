@@ -8,6 +8,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
+Fv中红*总显示的问题
 
 
 ## Release 1.9.9 
@@ -22,6 +23,7 @@ ios  软键盘盖住 TextBox 的问题
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
 * 调整默认字体大小，15 -> 16
+* 控件适配默认字体 
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

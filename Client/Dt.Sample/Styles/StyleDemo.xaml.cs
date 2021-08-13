@@ -18,6 +18,15 @@ namespace Dt.Sample
         public StyleDemo()
         {
             InitializeComponent();
+
+            _sp.Children.Add(new TextBox { Text = "代码创建" });
+        }
+
+        void OnTest(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var a = _tb.ActualHeight;
+            var b = new TextBox();
+            var c = b.FontSize;
         }
     }
 }

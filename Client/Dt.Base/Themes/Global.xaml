@@ -147,27 +147,21 @@
     *****************************************************************
     -->
 
-    <!--**************************** TextBlock【不要设置全局样式！】****************************-->
-    <!--Lv中默认文本-->
-    <Style x:Key="LvTextBlock" TargetType="TextBlock">
-        <!--不要设置字体大小-->
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
+    <!--**************************** 系统控件全局样式 ****************************-->
+    <!-- 默认边框2，不设置MinHeight在uwp中有PlaceHolder时高度变化 -->
+    <Style TargetType="TextBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="Padding" Value="10,7,10,7"/>
+        <Setter Property="MinHeight" Value="40"/>
     </Style>
-
-    <Style x:Key="小灰" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
-        <Setter Property="FontSize" Value="{StaticResource 小字}" />
-    </Style>
-
-    <!--**************************** Button ****************************-->
-    <Style x:Key="默认按钮" TargetType="Button">
+    
+    <!-- 高度40 -->
+    <Style TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 主题蓝色}"/>
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="10" />
+        <Setter Property="Padding" Value="10,9,10,9" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
@@ -207,8 +201,60 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="Button" BasedOn="{StaticResource 默认按钮}"/>
 
+    <ios:Style x:Key="DefaultCheckBox" TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </ios:Style>
+
+    <android:Style x:Key="DefaultCheckBox" TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </android:Style>
+
+    <win:Style x:Key="DefaultCheckBox" TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="Padding" Value="8,3,0,0"/>
+    </win:Style>
+
+    <wasm:Style x:Key="DefaultCheckBox" TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </wasm:Style>
+    <!-- uwp中修改Padding -->
+    <Style TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBox}" />
+
+    <Style TargetType="PasswordBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="Padding" Value="10,7,10,7"/>
+        <Setter Property="MinHeight" Value="40"/>
+    </Style>
+
+    <Style TargetType="HyperlinkButton">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </Style>
+    
+    <!--**************************** TextBlock【不要设置全局样式！】****************************-->
+    <!--Lv中默认文本-->
+    <Style x:Key="LvTextBlock" TargetType="TextBlock">
+        <!--不要设置字体大小-->
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="小灰" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+        <Setter Property="FontSize" Value="{StaticResource 小字}" />
+    </Style>
+
+    <!--**************************** TextBox ****************************-->
+    <!-- 无边框 -->
+    <Style x:Key="FvTextBox" TargetType="TextBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,9,10,9"/>
+        <Setter Property="MinHeight" Value="40"/>
+    </Style>
+    
+    <!--**************************** Button ****************************-->
     <!--字符按钮-->
     <Style x:Key="字符按钮" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
