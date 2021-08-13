@@ -70,15 +70,6 @@ namespace Dt.Base
             new PropertyMetadata(true, OnShowTitleChanged));
 
         /// <summary>
-        /// 是否显示红星
-        /// </summary>
-        public static readonly DependencyProperty ShowStarProperty = DependencyProperty.Register(
-            "ShowStar",
-            typeof(bool),
-            typeof(FvCell),
-            new PropertyMetadata(false, OnInvalidatePanel));
-
-        /// <summary>
         /// 是否垂直显示标题
         /// </summary>
         public static readonly DependencyProperty IsVerticalTitleProperty = DependencyProperty.Register(
@@ -268,15 +259,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowTitleProperty); }
             set { SetValue(ShowTitleProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示红星
-        /// </summary>
-        public bool ShowStar
-        {
-            get { return (bool)GetValue(ShowStarProperty); }
-            set { SetValue(ShowStarProperty, value); }
         }
 
         /// <summary>

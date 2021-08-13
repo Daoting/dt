@@ -157,7 +157,6 @@ namespace Dt.Base.Report
             "ShowTitle=\"False\"\n" +
             "TitleWidth=\"20\"\n" +
             "Placeholder=\"占位符文本\"\n" +
-            "ShowStar=\"True\"\n" +
             "IsVerticalTitle=\"True\"\n" +
             "IsHorStretch=\"True\"\n" +
             "IsReadOnly=\"True\"";

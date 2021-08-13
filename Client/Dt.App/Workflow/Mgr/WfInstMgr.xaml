@@ -14,7 +14,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CList ID="prcdname" Title="选择流程模板" SrcID="id" TgtID="prcdid" ShowStar="True" />
+                    <a:CList ID="prcdname" Title="选择流程模板" SrcID="id" TgtID="prcdid" />
                     <a:CList ID="statusname" Title="状态" SrcID="id" TgtID="status">
                         <a:CList.Items>
                             <a:IDStr ID="0" Str="流转中" />

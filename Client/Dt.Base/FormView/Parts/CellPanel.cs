@@ -52,8 +52,8 @@ namespace Dt.Base.FormView
             {
                 if (pnl.Children.Count == 1)
                     pnl.Children.Insert(0, con);
-                else if (pnl.Children.Count == 4)
-                    pnl.Children.Insert(3, con);
+                else if (pnl.Children.Count == 3)
+                    pnl.Children.Insert(2, con);
                 con.KeyDown += pnl.OnKeyDown;
             }
         }
@@ -61,7 +61,6 @@ namespace Dt.Base.FormView
 
         #region 成员变量
         Rectangle _rcTitle;
-        TextBlock _tbNeeded;
         TextBlock _tbTitle;
         readonly Rectangle _rcChild;
         FvCell _owner;
@@ -110,15 +109,6 @@ namespace Dt.Base.FormView
                         Margin = new Thickness(0, 0, -1, -1)
                     };
 
-                    // 红星
-                    _tbNeeded = new TextBlock
-                    {
-                        Text = "\uE0DE",
-                        FontFamily = Res.IconFont,
-                        Foreground = Res.RedBrush,
-                        VerticalAlignment = VerticalAlignment.Center
-                    };
-
                     // 标题
                     _tbTitle = new TextBlock
                     {
@@ -131,12 +121,10 @@ namespace Dt.Base.FormView
                 }
 
                 Children.Insert(0, _rcTitle);
-                Children.Insert(1, _tbNeeded);
-                Children.Insert(2, _tbTitle);
+                Children.Insert(1, _tbTitle);
             }
-            else if (Children.Count > 3)
+            else if (Children.Count > 2)
             {
-                Children.RemoveAt(0);
                 Children.RemoveAt(0);
                 Children.RemoveAt(0);
             }
@@ -194,19 +182,9 @@ namespace Dt.Base.FormView
             // 标题
             if (_owner.ShowTitle)
             {
-                double margin = 20;
                 Size size = new Size(_owner.TitleWidth, height);
                 _rcTitle.Measure(size);
-                if (_owner.ShowStar)
-                {
-                    _tbNeeded.Measure(size);
-                    margin += _tbNeeded.DesiredSize.Width + 4;
-                }
-                else
-                {
-                    _tbNeeded.Measure(new Size());
-                }
-                _tbTitle.Measure(new Size(size.Width - margin, height));
+                _tbTitle.Measure(new Size(size.Width - 20, height));
             }
             return new Size(width, height);
         }
@@ -225,19 +203,8 @@ namespace Dt.Base.FormView
             if (_owner.ShowTitle)
             {
                 _rcTitle.Arrange(new Rect(0, 0, _owner.TitleWidth, height));
-                if (_owner.ShowStar)
-                {
-                    left = _owner.IsVerticalTitle ? (_owner.TitleWidth - _tbNeeded.DesiredSize.Width - 4 - _tbTitle.DesiredSize.Width) / 2 : 10;
-                    _tbNeeded.Arrange(new Rect(left, 0, _tbNeeded.DesiredSize.Width, height));
-                    left += _tbNeeded.DesiredSize.Width + 4;
-                    _tbTitle.Arrange(new Rect(left, 0, _tbTitle.DesiredSize.Width, height));
-                }
-                else
-                {
-                    _tbNeeded.Arrange(new Rect());
-                    left = _owner.IsVerticalTitle ? (_owner.TitleWidth - _tbTitle.DesiredSize.Width) / 2 : 10;
-                    _tbTitle.Arrange(new Rect(left, 0, _tbTitle.DesiredSize.Width, height));
-                }
+                left = _owner.IsVerticalTitle ? (_owner.TitleWidth - _tbTitle.DesiredSize.Width) / 2 : 10;
+                _tbTitle.Arrange(new Rect(left, 0, _tbTitle.DesiredSize.Width, height));
                 left = _owner.TitleWidth;
                 conWidth = width - _owner.TitleWidth;
             }

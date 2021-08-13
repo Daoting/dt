@@ -50,7 +50,6 @@
             <a:Tab Title="属性">
                 <a:Fv x:Name="_ob">
                     <a:CText Title="列标题" ID="Title" />
-                    <a:CBool Title="显示红星" ID="ShowStar" />
                     <a:CBool Title="列名垂直显示" ID="IsVerticalTitle" />
                     <a:CBool Title="显示标题列" ID="ShowTitle" />
                     <a:CNum Title="列名宽度" ID="TitleWidth" />
