@@ -175,7 +175,7 @@
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
                               Height="50">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="10" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
@@ -190,6 +190,7 @@
                             <!--标题，不再加窗口标题作为后缀-->
                             <TextBlock Text="{TemplateBinding Title}"
                                        Foreground="{StaticResource 默认背景}"
+                                       FontSize="{StaticResource 标题字}"
                                        TextTrimming="CharacterEllipsis"
                                        TextWrapping="NoWrap"
                                        Margin="10,0,10,0"
