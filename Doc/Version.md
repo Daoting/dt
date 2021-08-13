@@ -29,10 +29,10 @@ ios  软键盘盖住 TextBox 的问题
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！
 * Dlg 背景遮罩放在Dlg外部 
-* ChatMember .Sex 转Gender
+* ChatMember.Sex 转Gender
 * CText内部的TextBox的清空按钮无效，输入法
 * ios wasm 中 Fv的 CText 长文本回车跳格的问题
-* wasm版Chat的子Canvas不绘制的bug，uno已解决a
+* wasm版Chat的子Canvas不绘制的bug，uno已解决
 
 ## Release 1.9.6
 

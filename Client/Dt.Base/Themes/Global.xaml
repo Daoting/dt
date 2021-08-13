@@ -148,6 +148,10 @@
     -->
 
     <!--**************************** 系统控件全局样式 ****************************-->
+    <Style TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </Style>
+    
     <!-- 默认边框2，不设置MinHeight在uwp中有PlaceHolder时高度变化 -->
     <Style TargetType="TextBox">
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
@@ -231,7 +235,7 @@
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
     </Style>
     
-    <!--**************************** TextBlock【不要设置全局样式！】****************************-->
+    <!--**************************** TextBlock ****************************-->
     <!--Lv中默认文本-->
     <Style x:Key="LvTextBlock" TargetType="TextBlock">
         <!--不要设置字体大小-->

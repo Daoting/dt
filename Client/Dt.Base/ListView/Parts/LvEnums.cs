@@ -108,6 +108,6 @@ namespace Dt.Base
 
         小灰,
 
-        大蓝,
+        粗蓝,
     }
 }

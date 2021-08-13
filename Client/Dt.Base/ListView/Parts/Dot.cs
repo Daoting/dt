@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.ListView;
 using System;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -95,13 +96,14 @@ namespace Dt.Base
                     FontSize = Res.小字;
                     break;
 
-                case CellFontStyle.大蓝:
+                case CellFontStyle.粗蓝:
                     Foreground = Res.醒目蓝色;
-                    FontSize = Res.标题字;
+                    FontWeight = FontWeights.Bold;
                     break;
 
                 case CellFontStyle.默认:
                     SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
+                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
                     SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
                     break;
             }
@@ -130,7 +132,6 @@ namespace Dt.Base
                     break;
 
                 case CellFontStyle.小灰:
-                case CellFontStyle.大蓝:
                     {
                         if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
                             SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
@@ -138,6 +139,17 @@ namespace Dt.Base
                             SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
                         if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
                             SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
+                    }
+                    break;
+
+                case CellFontStyle.粗蓝:
+                    {
+                        if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
+                        if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
+                            SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
+                        if (FontSize == _defaultFontSize)
+                            SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
                     }
                     break;
 
