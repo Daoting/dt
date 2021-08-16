@@ -160,7 +160,7 @@
     </Style>
     
     <!-- 高度40 -->
-    <Style TargetType="Button">
+    <Style x:Key="DefaultButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 主题蓝色}"/>
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
@@ -205,7 +205,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <Style TargetType="Button" BasedOn="{StaticResource DefaultButton}" />
+    
     <ios:Style x:Key="DefaultCheckBox" TargetType="CheckBox">
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
     </ios:Style>
