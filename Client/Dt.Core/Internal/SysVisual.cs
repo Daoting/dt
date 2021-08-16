@@ -69,6 +69,9 @@ namespace Dt.Core
         /// phone状态栏高度
         /// </summary>
         public static int StatusBarHeight;
+
+        static double _winWidth;
+        static double _winHeight;
         #endregion
 
         #region 静态构造
@@ -110,6 +113,8 @@ namespace Dt.Core
             Window win = Window.Current;
             win.Content = _rootGrid;
             win.Activate();
+            _winWidth = win.Bounds.Width;
+            _winHeight = win.Bounds.Height;
 
 #if UWP
             // 支持UI自适应
@@ -344,7 +349,7 @@ namespace Dt.Core
         /// </summary>
         public static double ViewWidth
         {
-            get { return _rootGrid.ActualWidth; }
+            get { return _winWidth; }
         }
 
         /// <summary>
@@ -358,7 +363,7 @@ namespace Dt.Core
             {
                 // ApplicationView.GetForCurrentView().VisibleBounds在uno中大小不正确！！！
                 // Android上已设置不占用顶部状态栏和底部导航栏，StatusBarHeight为0
-                return _rootGrid.ActualHeight - StatusBarHeight;
+                return _winHeight - StatusBarHeight;
             }
         }
         #endregion
@@ -371,6 +376,8 @@ namespace Dt.Core
         /// <param name="e"></param>
         static void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
+            _winWidth = e.Size.Width;
+            _winHeight = e.Size.Height;
             bool isPhoneUI = e.Size.Width < _maxPhoneUIWidth;
             if (isPhoneUI == Kit.IsPhoneUI)
                 return;
