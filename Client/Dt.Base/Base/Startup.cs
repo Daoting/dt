@@ -588,7 +588,13 @@ namespace Dt.Base
 
             // 重构根元素
             if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-                ShowHome();
+            {
+                // tb为过渡UI，在Loaded事件ShowHome，确保 SysVisual.ViewWidth 准确！
+                // 直接ShowHome，SysVisual.ViewWidth 为旧模式的宽度
+                TextBlock tb = new TextBlock();
+                tb.Loaded += (s, e) => ShowHome();
+                SysVisual.RootContent = tb;
+            }
         }
         #endregion
     }
