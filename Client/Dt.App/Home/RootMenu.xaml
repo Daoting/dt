@@ -5,9 +5,9 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.App.Home">
 
-    <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="80">
+    <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick">
         <DataTemplate>
-            <Grid Padding="10">
+            <Grid Padding="15">
                 <StackPanel VerticalAlignment="Center">
                     <a:Dot ID="Icon" UI="Icon" FontSize="30" />
                     <a:Dot ID="Name" HorizontalAlignment="Center" />

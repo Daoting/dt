@@ -191,6 +191,9 @@ namespace Dt.Base
             DefaultStyleKey = typeof(Mi);
             Items = new MiList();
             IsEnabledChanged += OnIsEnabledChanged;
+
+            // Mi内部未设置上下边距
+            MinHeight = Kit.IsPhoneUI ? 50 : 40;
         }
         #endregion
 

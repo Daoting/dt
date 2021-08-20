@@ -27,7 +27,7 @@
                 <ControlTemplate TargetType="a:Mi">
                     <Grid x:Name="RootElement" Background="{TemplateBinding Background}">
                         <Rectangle x:Name="Rect" IsHitTestVisible="False"/>
-                        <Grid x:Name="ContentGrid" Margin="10">
+                        <Grid x:Name="ContentGrid" Margin="15,0,15,0" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -72,23 +72,26 @@
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="WinModeState">
-                                <VisualState x:Name="WinTopItem" />
+                                <VisualState x:Name="WinTopItem">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentGrid.Margin" Value="10,0,10,0" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <!--一级只有Icon或ID-->
                                 <VisualState x:Name="WinIconOrID">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentGrid.Margin" Value="15,10,15,10" />
                                         <Setter Target="ElementIcon.Margin" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="WinSubItem">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Width" Value="20" />
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
                                         <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="WinSubGroup">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Width" Value="20" />
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
                                         <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
                                         <Setter Target="ElementSub.Visibility" Value="Visible" />
                                     </VisualState.Setters>
@@ -98,29 +101,25 @@
                                 <VisualState x:Name="IconAndID" />
                                 <VisualState x:Name="ID">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentGrid.Margin" Value="15" />
                                         <Setter Target="ElementIcon.Visibility" Value="Collapsed" />
                                         <Setter Target="ElementIcon.Margin" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Icon">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentGrid.Margin" Value="15" />
                                         <Setter Target="ElementText.Visibility" Value="Collapsed" />
                                         <Setter Target="ElementIcon.Margin" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PhoneSubItem">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentGrid.Margin" Value="15" />
-                                        <Setter Target="ElementIcon.Width" Value="20" />
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
                                         <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PhoneSubGroup">
                                     <VisualState.Setters>
-                                        <Setter Target="ContentGrid.Margin" Value="15" />
-                                        <Setter Target="ElementIcon.Width" Value="20" />
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
                                         <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
                                         <Setter Target="ElementSub.Visibility" Value="Visible" />
                                     </VisualState.Setters>
