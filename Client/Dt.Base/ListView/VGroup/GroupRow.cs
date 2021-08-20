@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
 using System.Collections;
 using System.Reflection;
 using Windows.UI.Xaml;
@@ -45,7 +46,14 @@ namespace Dt.Base.ListView
             if (p_owner.GroupTemplate != null)
             {
                 Content = p_owner.GroupTemplate.LoadContent();
-                DataContext = p_group;
+                Type tp = p_owner.GroupContext;
+                if (tp != null && tp.IsSubclassOf(typeof(GroupContext)))
+                {
+                    // 设置分组模板的数据上下文
+                    var context = (GroupContext)Activator.CreateInstance(tp);
+                    context.Rows = p_group;
+                    DataContext = context;
+                }
             }
             else
             {

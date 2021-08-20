@@ -106,6 +106,12 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(null, OnReload));
 
+        public readonly static DependencyProperty GroupContextProperty = DependencyProperty.Register(
+            "GroupContext",
+            typeof(Type),
+            typeof(Lv),
+            new PropertyMetadata(null, OnReload));
+
         public readonly static DependencyProperty PageDataProperty = DependencyProperty.Register(
             "PageData",
             typeof(PageData),
@@ -442,15 +448,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置顶部是否显示分组导航，默认true
-        /// </summary>
-        public bool ShowGroupHeader
-        {
-            get { return (bool)GetValue(ShowGroupHeaderProperty); }
-            set { SetValue(ShowGroupHeaderProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置是否显示行/项目分割线，默认true
         /// </summary>
         public bool ShowItemBorder
@@ -478,15 +475,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置分组模板
-        /// </summary>
-        public DataTemplate GroupTemplate
-        {
-            get { return (DataTemplate)GetValue(GroupTemplateProperty); }
-            set { SetValue(GroupTemplateProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置分页数据源对象
         /// </summary>
         public PageData PageData
@@ -502,15 +490,6 @@ namespace Dt.Base
         {
             get { return (Predicate<object>)GetValue(FilterProperty); }
             set { SetValue(FilterProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置分组列名
-        /// </summary>
-        public string GroupName
-        {
-            get { return (string)GetValue(GroupNameProperty); }
-            set { SetValue(GroupNameProperty, value); }
         }
 
         /// <summary>
@@ -755,6 +734,44 @@ namespace Dt.Base
         public Table Table
         {
             get { return GetValue(DataProperty) as Table; }
+        }
+        #endregion
+
+        #region 分组
+        /// <summary>
+        /// 获取设置顶部是否显示分组导航，默认true
+        /// </summary>
+        public bool ShowGroupHeader
+        {
+            get { return (bool)GetValue(ShowGroupHeaderProperty); }
+            set { SetValue(ShowGroupHeaderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置分组列名
+        /// </summary>
+        public string GroupName
+        {
+            get { return (string)GetValue(GroupNameProperty); }
+            set { SetValue(GroupNameProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置分组模板，和GroupContext配合使用
+        /// </summary>
+        public DataTemplate GroupTemplate
+        {
+            get { return (DataTemplate)GetValue(GroupTemplateProperty); }
+            set { SetValue(GroupTemplateProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置分组模板的数据上下文类型，和GroupTemplate配合使用，需继承自GroupContext
+        /// </summary>
+        public Type GroupContext
+        {
+            get { return (Type)GetValue(GroupContextProperty); }
+            set { SetValue(GroupContextProperty, value); }
         }
         #endregion
 

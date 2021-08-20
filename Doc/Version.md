@@ -8,7 +8,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
-Lv分组模板统计功能
+
 
 
 ## Release 1.9.9 
@@ -19,6 +19,7 @@ Lv分组模板统计功能
 * MainInfo增加Cache属性，实现INotifyPropertyChanged
 * 增加首次运行向导页功能 
 * 手机横竖屏不支持UI自适应，始终为PhoneUI模式 
+* Lv分组模板统计功能 
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

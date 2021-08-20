@@ -22,6 +22,21 @@ namespace Dt.Sample
         public LvGroupTemplate()
         {
             InitializeComponent();
+
+            _lv.GroupName = "bumen";
+            _lv.GroupContext = typeof(MyGroupContext);
+            _lv.Data = SampleData.CreatePersonsTbl(100);
         }
+    }
+
+    public class MyGroupContext : GroupContext
+    {
+        public double Sum => SumDouble("shengao");
+
+        public double Average => AverageDouble("shengao");
+
+        public double Max => MaxDouble("shengao");
+
+        public double Min => MinDouble("shengao");
     }
 }
