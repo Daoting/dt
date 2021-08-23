@@ -24,6 +24,12 @@ namespace Dt.Base.ListView
     public partial class GroupRow : DtControl
     {
         #region 静态内容
+        public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
+            typeof(string),
+            typeof(GroupRow),
+            new PropertyMetadata(null));
+
         public readonly static DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
@@ -43,6 +49,8 @@ namespace Dt.Base.ListView
             DefaultStyleKey = typeof(GroupRow);
 
             Data = p_group;
+            Title = p_group.ToString();
+
             if (p_owner.GroupTemplate != null)
             {
                 Content = p_owner.GroupTemplate.LoadContent();
@@ -55,12 +63,17 @@ namespace Dt.Base.ListView
                     DataContext = context;
                 }
             }
-            else
-            {
-                Content = new TextBlock { Text = p_group.ToString(), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(20, 0, 20, 0) };
-            }
         }
         #endregion
+
+        /// <summary>
+        /// 获取设置分组标题
+        /// </summary>
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
 
         /// <summary>
         /// 获取设置分组行内容

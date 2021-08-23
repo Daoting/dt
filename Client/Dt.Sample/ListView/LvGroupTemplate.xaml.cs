@@ -33,7 +33,7 @@ namespace Dt.Sample
     {
         public double Sum => SumDouble("shengao");
 
-        public double Average => AverageDouble("shengao");
+        public string Average => AverageDouble("shengao").ToString("n2");
 
         public double Max => MaxDouble("shengao");
 

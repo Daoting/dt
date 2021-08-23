@@ -19,16 +19,23 @@
                     </DataTemplate>
                     <a:Lv.GroupTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Padding="10">
-                                <TextBlock Text="{Binding Title}" />
-                                <TextBlock Text="人数" Margin="20,0,0,0" />
-                                <TextBlock Text="{Binding Count}" />
-                                <TextBlock Text="平均身高" Margin="20,0,0,0" />
-                                <TextBlock Text="{Binding Average}" />
-                                <TextBlock Text="最高" Margin="20,0,0,0" />
-                                <TextBlock Text="{Binding Max}" />
-                                <TextBlock Text="最矮" Margin="20,0,0,0" />
-                                <TextBlock Text="{Binding Min}" />
+                            <StackPanel Padding="10,0,10,0" Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Black">
+                                    <TextBlock Text="人数" Foreground="White" />
+                                    <TextBlock Text="{Binding Count}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="{StaticResource 主题蓝色}">
+                                    <TextBlock Text="平均身高" Foreground="White" />
+                                    <TextBlock Text="{Binding Average}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Gray">
+                                    <TextBlock Text="最高" Foreground="White" />
+                                    <TextBlock Text="{Binding Max}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Green">
+                                    <TextBlock Text="最矮" Foreground="White" />
+                                    <TextBlock Text="{Binding Min}" Foreground="White" />
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </a:Lv.GroupTemplate>
