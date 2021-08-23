@@ -4,6 +4,33 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="xm" Title="姓名" Width="150" />
+            <a:Col ID="shengao" Title="身高" Width="180" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <StackPanel Padding="10">
+                <a:Dot ID="xm" />
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                    <a:Dot ID="Shengao" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TileView">
+            <StackPanel Padding="10">
+                <a:Dot ID="xm" />
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                    <a:Dot ID="Shengao" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+    
     <a:Main>
         <a:Tabs>
             <a:Tab Title="列表">
@@ -43,4 +70,25 @@
             </a:Tab>
         </a:Tabs>
     </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Title="属性">
+                <a:Fv>
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                        <Button Content="磁贴" Click="OnTileView" />
+                    </StackPanel>
+
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10行" Tag="10" Click="OnLoadData" />
+                        <Button Content="100行" Tag="100" Click="OnLoadData" />
+                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
 </a:Win>

@@ -27,6 +27,26 @@ namespace Dt.Sample
             _lv.GroupContext = typeof(MyGroupContext);
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
+
+        void OnGridView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+        }
+
+        void OnListView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
+        }
+
+        void OnTileView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
+        }
+
+        void OnLoadData(object sender, RoutedEventArgs e)
+        {
+            _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
+        }
     }
 
     public class MyGroupContext : GroupContext
