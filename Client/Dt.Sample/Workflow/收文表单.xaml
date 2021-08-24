@@ -1,0 +1,17 @@
+﻿<UserControl
+    x:Class="Dt.Sample.收文表单"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CFile ID="文件附件" MaxFileCount="1" />
+        <a:CText ID="文件标题" />
+        <a:CText ID="来文单位" />
+        <a:CDate ID="来文时间" />
+        <a:CList ID="密级" Enum="Dt.Oa.密级,Dt.Oa" />
+        <a:CText ID="市场部经理意见" />
+        <a:CText ID="综合部经理意见" />
+        <a:CTip ID="收文完成时间" />
+    </a:Fv>
+</UserControl>
