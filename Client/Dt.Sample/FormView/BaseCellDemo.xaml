@@ -57,6 +57,7 @@
                     <a:CTip ID="tip" Title="普通只读信息" />
                     <a:CTip ID="tipdate" Title="日期信息" />
                     <a:CTip ID="tipnum" Title="数字信息" Format="N2" />
+                    <a:CTip ID="tipclick" Title="点击事件" Click="OnTipClick" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

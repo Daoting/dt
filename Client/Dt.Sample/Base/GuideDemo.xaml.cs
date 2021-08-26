@@ -22,11 +22,14 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Sample
 {
-    public partial class GuideDemo : GuidePage
+    public partial class GuideDemo : Dlg
     {
         public GuideDemo()
         {
             InitializeComponent();
+
+            HideTitleBar = true;
+            WinPlacement = DlgPlacement.Maximized;
 
             for (int i = 0; i < _fv.Items.Count - 1; i++)
             {

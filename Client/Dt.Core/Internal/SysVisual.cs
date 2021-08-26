@@ -10,7 +10,6 @@
 using System;
 using System.Linq;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,6 +42,7 @@ namespace Dt.Core
         /// PhoneUI模式的最大宽度
         /// </summary>
         const double _maxPhoneUIWidth = 640;
+        static Window _win;
 
         /// <summary>
         /// Window.Current.Content内容，根Grid
@@ -104,25 +104,31 @@ namespace Dt.Core
             // 状态栏边距
             StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
+#elif ANDROID
+            // Android上已设置不占用顶部状态栏和底部导航栏，但 Window.Bounds 包含顶部状态栏高度！
+            var res = Android.App.Application.Context.Resources;
+            int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0)
+                StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
 #endif
 
-            Window win = Window.Current;
-            win.Content = _rootGrid;
-            win.Activate();
+            _win = Window.Current;
+            _win.Content = _rootGrid;
+            _win.Activate();
 
 #if UWP
             // 支持UI自适应
-            win.SizeChanged += OnWindowSizeChanged;
-            Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+            _win.SizeChanged += OnWindowSizeChanged;
+            Kit.IsPhoneUI = _win.Bounds.Width < _maxPhoneUIWidth;
 #elif WASM
             if (Kit.HostOS == HostOS.Windows
                 || Kit.HostOS == HostOS.Mac
                 || Kit.HostOS == HostOS.Linux)
             {
                 // 支持UI自适应
-                win.SizeChanged += OnWindowSizeChanged;
+                _win.SizeChanged += OnWindowSizeChanged;
                 // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
-                Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+                Kit.IsPhoneUI = _win.Bounds.Width < _maxPhoneUIWidth;
             }
             else
             {
@@ -341,10 +347,7 @@ namespace Dt.Core
         /// 手机：页面宽度
         /// PC上：除标题栏和外框的窗口内部宽度
         /// </summary>
-        public static double ViewWidth
-        {
-            get { return _rootGrid.ActualWidth; }
-        }
+        public static double ViewWidth => _win.Bounds.Width;
 
         /// <summary>
         /// 可视区域高度
@@ -355,9 +358,8 @@ namespace Dt.Core
         {
             get
             {
-                // ApplicationView.GetForCurrentView().VisibleBounds在uno中大小不正确！！！
-                // Android上已设置不占用顶部状态栏和底部导航栏，StatusBarHeight为0
-                return _rootGrid.ActualHeight - StatusBarHeight;
+                // 使用 _rootGrid.ActualHeight 初始启动时为0，无法弹出对话框！！！
+                return _win.Bounds.Height - StatusBarHeight;
             }
         }
         #endregion

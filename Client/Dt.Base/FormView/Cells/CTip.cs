@@ -12,6 +12,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -49,6 +50,16 @@ namespace Dt.Base
             ValConverter = new TipValConverter(this);
         }
 
+        #region 事件
+        /// <summary>
+        /// 点击事件
+        /// </summary>
+#if ANDROID
+        new
+#endif
+        public event EventHandler Click;
+        #endregion
+
         /// <summary>
         /// 获取设置格式串，时间格式如：yyyy-MM-dd HH:mm:ss
         /// </summary>
@@ -59,12 +70,80 @@ namespace Dt.Base
             set { SetValue(FormatProperty, value); }
         }
 
+        #region 重写方法
+        /// <summary>
+        /// 切换内容
+        /// </summary>
+        //protected override void OnLoadTemplate()
+        //{
+
+        //}
+
         protected override void SetValBinding()
         {
             var tb = (TextBlock)GetTemplateChild("Block");
             if (tb != null)
                 tb.SetBinding(TextBlock.TextProperty, ValBinding);
         }
+
+        protected override void OnPointerEntered(PointerRoutedEventArgs e)
+        {
+            if (Click == null)
+                return;
+
+            e.Handled = true;
+            VisualStateManager.GoToState(this, "PointerOver", true);
+        }
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {
+            if (Click == null)
+                return;
+
+            var props = e.GetCurrentPoint(null).Properties;
+            if (props.IsLeftButtonPressed)
+            {
+                if (CapturePointer(e.Pointer))
+                {
+                    e.Handled = true;
+                    VisualStateManager.GoToState(this, "Pressed", true);
+                }
+            }
+        }
+
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        {
+            if (Click == null)
+                return;
+
+            ReleasePointerCapture(e.Pointer);
+            e.Handled = true;
+
+            var pt = e.GetCurrentPoint(null).Position;
+            if (this.ContainPoint(pt))
+            {
+                VisualStateManager.GoToState(this, "PointerOver", true);
+                Click?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        protected override void OnPointerExited(PointerRoutedEventArgs e)
+        {
+            if (Click == null)
+                return;
+
+            e.Handled = true;
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
+
+        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
+        {
+            if (Click == null)
+                return;
+
+            e.Handled = true;
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
+        #endregion
     }
 
     /// <summary>

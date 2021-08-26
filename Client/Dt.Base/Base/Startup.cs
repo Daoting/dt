@@ -442,38 +442,12 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 向导页面
+        #region 自定义根页面
         /// <summary>
-        /// 显示向导页面
-        /// </summary>
-        /// <param name="p_guide">向导页面类型</param>
-        /// <param name="p_showAlways">是否每次启动都显示向导</param>
-        /// <returns></returns>
-        public static Task ShowGuide(Type p_guide, bool p_showAlways = false)
-        {
-            var path = Path.Combine(Kit.CachePath, "guide.flag");
-            if (File.Exists(path) && !p_showAlways)
-                return Task.CompletedTask;
-
-            var page = Activator.CreateInstance(p_guide) as GuidePage;
-            if (page == null)
-            {
-                ShowTip($"{p_guide.Name} 向导类型需要继承 GuidePage！");
-                return Task.CompletedTask;
-            }
-
-            SysVisual.RootContent = page;
-            File.Create(path);
-            return page.AsyncTask;
-        }
-        #endregion
-
-        #region 自定义页面
-        /// <summary>
-        /// 显示自定义页面
+        /// 显示自定义根页面
         /// </summary>
         /// <param name="p_page"></param>
-        public static void ShowCustom(Control p_page)
+        public static void ShowRoot(UIElement p_page)
         {
             SysVisual.RootContent = p_page;
         }
@@ -588,13 +562,7 @@ namespace Dt.Base
 
             // 重构根元素
             if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-            {
-                // tb为过渡UI，在Loaded事件ShowHome，确保 SysVisual.ViewWidth 准确！
-                // 直接ShowHome，SysVisual.ViewWidth 为旧模式的宽度
-                TextBlock tb = new TextBlock();
-                tb.Loaded += (s, e) => ShowHome();
-                SysVisual.RootContent = tb;
-            }
+                ShowHome();
         }
         #endregion
     }

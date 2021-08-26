@@ -1,8 +1,9 @@
-﻿<a:GuidePage
+﻿<a:Dlg
     x:Class="Dt.Sample.GuideDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    Background="{StaticResource 主题蓝色}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,4 +19,4 @@
         </FlipView>
         <StackPanel x:Name="_sp" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" />
     </Grid>
-</a:GuidePage>
+</a:Dlg>

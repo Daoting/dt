@@ -124,11 +124,44 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:CTip">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <TextBlock x:Name="Block"
-                                   Margin="10,0,10,0"
-                                   VerticalAlignment="Center"
-                                   IsTextSelectionEnabled="True"
-                                   TextWrapping="Wrap" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle x:Name="Rect"
+                                       Stroke="{TemplateBinding BorderBrush}"
+                                       Margin="0,0,-1,-1"
+                                       IsHitTestVisible="False"
+                                       Grid.ColumnSpan="2" />
+                            <TextBlock x:Name="Block"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       IsTextSelectionEnabled="True"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="&#xE011;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
                     </fv:CellPanel>
                 </ControlTemplate>
             </Setter.Value>

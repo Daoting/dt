@@ -20,6 +20,7 @@ ios  软键盘盖住 TextBox 的问题
 * 增加首次运行向导页功能 
 * 手机横竖屏不支持UI自适应，始终为PhoneUI模式 
 * Lv分组模板统计功能 
+* CTip增加Click事件
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
@@ -37,6 +38,8 @@ ios  软键盘盖住 TextBox 的问题
 * wasm版Chat的子Canvas不绘制的bug，uno已解决
 *  两UI模式切换事件SysVisual.ViewWidth值不对
 * Menu在手机大字体模式显示不全
+* SysVisual.ViewWidth 采用 Window.Bounds.Width
+
 
 ## Release 1.9.6
 

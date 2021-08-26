@@ -86,7 +86,11 @@ namespace Dt.Shell
         public async Task OnStartup()
         {
             // 初次运行，显示向导
-            //await Startup.ShowGuide(typeof(Sample.GuideDemo));
+            //if (AtState.GetCookie("FirstRun") == "")
+            //{
+            //    await new Sample.GuideDemo().ShowAsync();
+            //    AtState.SaveCookie("FirstRun", "0");
+            //}
 
             // 1. 按默认流程启动
             Startup.Register(null, typeof(DefaultHome));

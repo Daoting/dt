@@ -61,6 +61,7 @@ namespace Dt.Sample
                 { "tip" },
                 { "tipdate", typeof(DateTime) },
                 { "tipnum", typeof(double) },
+                { "tipclick" },
             };
         }
 
@@ -91,6 +92,7 @@ namespace Dt.Sample
                 tip = "只读信息内容",
                 tipdate = now,
                 tipnum = 367d,
+                tipclick = "共5人",
             });
         }
 
@@ -120,6 +122,7 @@ namespace Dt.Sample
                 Tip = "只读信息内容",
                 TipDate = now,
                 TipNum = 367d,
+                TipClick = "共5人",
             };
         }
 
@@ -190,6 +193,12 @@ namespace Dt.Sample
             public string Tip { get; set; }
             public DateTime TipDate { get; set; }
             public double TipNum { get; set; }
+            public string TipClick { get; set; }
+        }
+
+        void OnTipClick(object sender, EventArgs e)
+        {
+
         }
     }
 }
