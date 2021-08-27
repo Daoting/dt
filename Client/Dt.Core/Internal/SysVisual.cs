@@ -125,9 +125,9 @@ namespace Dt.Core
                 || Kit.HostOS == HostOS.Linux)
             {
                 // 支持UI自适应
-                _win.SizeChanged += OnWindowSizeChanged;
+                win.SizeChanged += OnWindowSizeChanged;
                 // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
-                Kit.IsPhoneUI = _win.Bounds.Width < _maxPhoneUIWidth;
+                Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
             }
             else
             {

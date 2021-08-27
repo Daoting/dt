@@ -369,7 +369,7 @@ namespace Dt.Base
                 return;
 
             // 两边各空出20边距，主页按钮120
-            double width = Math.Floor((ActualWidth - 160) / Items.Count);
+            double width = Math.Floor((Kit.ViewWidth - 160) / Items.Count);
             if (width < _maxItemWidth && width != ((TaskbarItem)_taskbarPanel.Children[0]).Width)
             {
                 foreach (var item in _taskbarPanel.Children.OfType<TaskbarItem>())
