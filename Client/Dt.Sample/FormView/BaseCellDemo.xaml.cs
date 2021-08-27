@@ -142,7 +142,7 @@ namespace Dt.Sample
         }
 
         int _cnt = 0;
-        void OnToggleLink(object sender, EventArgs e)
+        void OnToggleLink(object sender, TappedRoutedEventArgs e)
         {
             _link.Title = $"切换内容{++_cnt}";
         }
@@ -166,6 +166,17 @@ namespace Dt.Sample
         void OnDefaultInput(object sender, RoutedEventArgs e)
         {
             ((CText)_fv["txtinput"]).InputScope = new InputScope { Names = { new InputScopeName { NameValue = InputScopeNameValue.Default } } };
+        }
+
+
+        void BaseCellDemo_Click(object sender, TappedRoutedEventArgs e)
+        {
+            ((CTip)_fv["tipnum"]).Click -= BaseCellDemo_Click;
+        }
+
+        void OnTipClick(object sender, TappedRoutedEventArgs e)
+        {
+            ((CTip)_fv["tipnum"]).Click += BaseCellDemo_Click;
         }
 
         class CellData
@@ -194,11 +205,6 @@ namespace Dt.Sample
             public DateTime TipDate { get; set; }
             public double TipNum { get; set; }
             public string TipClick { get; set; }
-        }
-
-        void OnTipClick(object sender, EventArgs e)
-        {
-
         }
     }
 }

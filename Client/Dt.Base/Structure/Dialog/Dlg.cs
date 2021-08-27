@@ -523,8 +523,8 @@ namespace Dt.Base
                 return;
 
             Canvas.SetZIndex(_canvas, ++_currentZIndex);
-            double maxWidth = SysVisual.ViewWidth;
-            double maxHeight = SysVisual.ViewHeight;
+            double maxWidth = Kit.ViewWidth;
+            double maxHeight = Kit.ViewHeight;
 
             // 确保底层Canvas占用整个可视区域，遮罩效果
             _canvas.Width = maxWidth;

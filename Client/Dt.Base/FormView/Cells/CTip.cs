@@ -29,6 +29,12 @@ namespace Dt.Base
             typeof(CTip),
             new PropertyMetadata(null, OnFormatChanged));
 
+        public readonly static DependencyProperty ChildProperty = DependencyProperty.Register(
+            "Child",
+            typeof(FrameworkElement),
+            typeof(CTip),
+            new PropertyMetadata(null));
+
         static void OnFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CTip tip = (CTip)d;
@@ -44,11 +50,15 @@ namespace Dt.Base
         }
         #endregion
 
+        TextBlock _tb;
+
+        #region 构造方法
         public CTip()
         {
             DefaultStyleKey = typeof(CTip);
             ValConverter = new TipValConverter(this);
         }
+        #endregion
 
         #region 事件
         /// <summary>
@@ -57,7 +67,26 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event EventHandler Click;
+        public event TappedEventHandler Click
+        {
+            add
+            {
+                Grid g = Child as Grid;
+                if (g == null)
+                {
+                    g = LoadInteractiveChild();
+                }
+                g.AddHandler(TappedEvent, value, true);
+            }
+            remove
+            {
+                if (Child is Grid g)
+                {
+                    g.RemoveHandler(TappedEvent, value);
+                    LoadTextChild();
+                }
+            }
+        }
         #endregion
 
         /// <summary>
@@ -70,78 +99,111 @@ namespace Dt.Base
             set { SetValue(FormatProperty, value); }
         }
 
-        #region 重写方法
         /// <summary>
-        /// 切换内容
+        /// 获取设置单元格内容
         /// </summary>
-        //protected override void OnLoadTemplate()
-        //{
+        public FrameworkElement Child
+        {
+            get { return (FrameworkElement)GetValue(ChildProperty); }
+            set { SetValue(ChildProperty, value); }
+        }
 
-        //}
+        #region 重写方法
+        protected override void OnApplyCellTemplate()
+        {
+            if (Child == null)
+                LoadTextChild();
+        }
 
         protected override void SetValBinding()
         {
-            var tb = (TextBlock)GetTemplateChild("Block");
-            if (tb != null)
-                tb.SetBinding(TextBlock.TextProperty, ValBinding);
+            _tb?.SetBinding(TextBlock.TextProperty, ValBinding);
+        }
+        #endregion
+
+        #region 动态内容
+        void LoadTextChild()
+        {
+            Child = CreateTextBlock();
+            if (_isLoaded)
+                SetValBinding();
         }
 
-        protected override void OnPointerEntered(PointerRoutedEventArgs e)
+        TextBlock CreateTextBlock()
         {
-            if (Click == null)
-                return;
-
-            e.Handled = true;
-            VisualStateManager.GoToState(this, "PointerOver", true);
+            _tb = new TextBlock
+            {
+                Margin = new Thickness(10, 0, 10, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                IsTextSelectionEnabled = true,
+                TextWrapping = TextWrapping.Wrap,
+            };
+            return _tb;
         }
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
-        {
-            if (Click == null)
-                return;
 
+        Grid LoadInteractiveChild()
+        {
+            Grid g = new Grid
+            {
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                },
+                Background = Res.TransparentBrush,
+            };
+            g.Children.Add(CreateTextBlock());
+
+            var tb = new TextBlock
+            {
+                Text = "\uE011",
+                FontFamily = Res.IconFont,
+                FontSize = 20,
+                Margin = new Thickness(10, 0, 10, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+            };
+            Grid.SetColumn(tb, 1);
+            g.Children.Add(tb);
+
+            g.PointerEntered += OnGridPointerEntered;
+            g.PointerPressed += OnGridPointerPressed;
+            g.PointerReleased += OnGridPointerReleased;
+            g.PointerExited += OnGridPointerExited;
+            g.PointerCaptureLost += OnGridPointerExited;
+            Child = g;
+
+            if (_isLoaded)
+                SetValBinding();
+            return g;
+        }
+
+        void OnGridPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (Child is Grid g)
+                g.Background = Res.暗遮罩;
+        }
+
+        void OnGridPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
             var props = e.GetCurrentPoint(null).Properties;
             if (props.IsLeftButtonPressed)
             {
-                if (CapturePointer(e.Pointer))
-                {
-                    e.Handled = true;
-                    VisualStateManager.GoToState(this, "Pressed", true);
-                }
+                if (Child is Grid g)
+                    g.Background = Res.深暗遮罩;
             }
         }
 
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        void OnGridPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (Click == null)
-                return;
-
-            ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
-
-            var pt = e.GetCurrentPoint(null).Position;
-            if (this.ContainPoint(pt))
-            {
-                VisualStateManager.GoToState(this, "PointerOver", true);
-                Click?.Invoke(this, EventArgs.Empty);
-            }
+            if (Child is Grid g)
+                g.Background = Res.暗遮罩;
         }
 
-        protected override void OnPointerExited(PointerRoutedEventArgs e)
+        void OnGridPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (Click == null)
-                return;
-
-            e.Handled = true;
-            VisualStateManager.GoToState(this, "Normal", true);
-        }
-
-        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
-        {
-            if (Click == null)
-                return;
-
-            e.Handled = true;
-            VisualStateManager.GoToState(this, "Normal", true);
+            if (Child is Grid g)
+                g.Background = Res.TransparentBrush;
         }
         #endregion
     }

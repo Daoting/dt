@@ -1186,8 +1186,8 @@ namespace Dt.Base
                 else
                 {
                     // 无有效大小时以窗口大小为准
-                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                    double width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
                     _panel.SetMaxSize(new Size(width, height));
                 }
             }

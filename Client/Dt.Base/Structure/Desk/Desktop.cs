@@ -459,12 +459,12 @@ namespace Dt.Base
                     if (_grid.ColumnDefinitions[4].Width.Value > 0)
                     {
                         // 右侧已停靠
-                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 3);
-                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 3);
+                        _grid.ColumnDefinitions[0].Width = new GridLength(Kit.ViewWidth / 3);
+                        _grid.ColumnDefinitions[4].Width = new GridLength(Kit.ViewWidth / 3);
                     }
                     else
                     {
-                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
+                        _grid.ColumnDefinitions[0].Width = new GridLength(Kit.ViewWidth / 2);
                     }
                 }
                 _grid.ColumnDefinitions[1].Width = GridLength.Auto;
@@ -535,12 +535,12 @@ namespace Dt.Base
                     if (_grid.ColumnDefinitions[0].Width.Value > 0)
                     {
                         // 左侧已停靠
-                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 3);
-                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 3);
+                        _grid.ColumnDefinitions[0].Width = new GridLength(Kit.ViewWidth / 3);
+                        _grid.ColumnDefinitions[4].Width = new GridLength(Kit.ViewWidth / 3);
                     }
                     else
                     {
-                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
+                        _grid.ColumnDefinitions[4].Width = new GridLength(Kit.ViewWidth / 2);
                     }
                 }
             }

@@ -62,8 +62,8 @@ namespace Dt.Base.FileLists
 
             if (!Kit.IsPhoneUI)
             {
-                Height = SysVisual.ViewHeight / 2;
-                Width = SysVisual.ViewHeight / 2;
+                Height = Kit.ViewHeight / 2;
+                Width = Kit.ViewHeight / 2;
             }
 
             await ShowAsync();

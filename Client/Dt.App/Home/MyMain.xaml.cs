@@ -13,6 +13,7 @@ using Dt.Core;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.App.Home
@@ -61,7 +62,7 @@ namespace Dt.App.Home
             }
         }
 
-        async void OnEditInfo(object sender, EventArgs e)
+        async void OnEditInfo(object sender, TappedRoutedEventArgs e)
         {
             var dlg = new EditUserDlg();
             if (await dlg.Show(Kit.UserID, false))
@@ -74,7 +75,7 @@ namespace Dt.App.Home
             }
         }
 
-        void OnSetting(object sender, EventArgs e)
+        void OnSetting(object sender, TappedRoutedEventArgs e)
         {
             Type tp = Kit.GetViewType("我的设置");
             if (tp == null)
@@ -93,7 +94,7 @@ namespace Dt.App.Home
             dlg.Show();
         }
 
-        async void OnAbout(object sender, EventArgs e)
+        async void OnAbout(object sender, TappedRoutedEventArgs e)
         {
             var b = await Kit.GetParam<string>("接收新任务");
             var c = await Kit.GetParam<bool>("接收新发布通知");

@@ -43,8 +43,8 @@ namespace Dt.Base.Docking
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-            double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewWidth - 50 : availableSize.Height;
+            double width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
+            double height = double.IsInfinity(availableSize.Height) ? Kit.ViewWidth - 50 : availableSize.Height;
             double usedLeft = 0.0;
             double usedRight = 0.0;
             double usedTop = 0.0;

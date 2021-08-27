@@ -34,7 +34,11 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event EventHandler Click;
+        public event TappedEventHandler Click
+        {
+            add { this.AddHandler(TappedEvent, value, true); }
+            remove { this.RemoveHandler(TappedEvent, value); }
+        }
         #endregion
 
         #region 重写方法
@@ -73,7 +77,6 @@ namespace Dt.Base
 
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             VisualStateManager.GoToState(this, "PointerOver", true);
         }
 
@@ -82,36 +85,22 @@ namespace Dt.Base
             var props = e.GetCurrentPoint(null).Properties;
             if (props.IsLeftButtonPressed)
             {
-                if (CapturePointer(e.Pointer))
-                {
-                    e.Handled = true;
-                    VisualStateManager.GoToState(this, "Pressed", true);
-                }
+                VisualStateManager.GoToState(this, "Pressed", true);
             }
         }
 
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
-            ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
-
-            var pt = e.GetCurrentPoint(null).Position;
-            if (this.ContainPoint(pt))
-            {
-                VisualStateManager.GoToState(this, "PointerOver", true);
-                Click?.Invoke(this, EventArgs.Empty);
-            }
+            VisualStateManager.GoToState(this, "PointerOver", true);
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             VisualStateManager.GoToState(this, "Normal", true);
         }
 
         protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             VisualStateManager.GoToState(this, "Normal", true);
         }
         #endregion

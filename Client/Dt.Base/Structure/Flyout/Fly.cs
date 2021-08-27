@@ -193,8 +193,8 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnOpening(object sender, object e)
         {
-            _rootGrid.MaxWidth = SysVisual.ViewWidth;
-            _rootGrid.MaxHeight = SysVisual.ViewHeight;
+            _rootGrid.MaxWidth = Kit.ViewWidth;
+            _rootGrid.MaxHeight = Kit.ViewHeight;
 
             Rect rect = Target.GetBounds();
             switch (Placement)

@@ -67,7 +67,8 @@ namespace Dt.Base
             if (SysVisual.ExistDlg)
             {
                 Dlg dlg = SysVisual.GetTopDlg() as Dlg;
-                if (dlg != null)
+                // 隐藏标题栏的不自动关闭，控制用户操作对话框内容关闭！
+                if (dlg != null && !dlg.HideTitleBar)
                     dlg.Close();
                 return;
             }

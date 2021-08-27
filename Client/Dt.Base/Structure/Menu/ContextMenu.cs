@@ -174,8 +174,8 @@ namespace Dt.Base
                 // 计算显示位置
                 double width = _dlg.DesiredSize.Width;
                 double height = _dlg.DesiredSize.Height;
-                _dlg.Left = (p_pos.X + width > SysVisual.ViewWidth) ? Math.Floor(p_pos.X - width) : p_pos.X;
-                _dlg.Top = (p_pos.Y + height > SysVisual.ViewHeight) ? Math.Floor(p_pos.Y - height) : p_pos.Y;
+                _dlg.Left = (p_pos.X + width > Kit.ViewWidth) ? Math.Floor(p_pos.X - width) : p_pos.X;
+                _dlg.Top = (p_pos.Y + height > Kit.ViewHeight) ? Math.Floor(p_pos.Y - height) : p_pos.Y;
             }
 
             Focus(FocusState.Programmatic);

@@ -48,7 +48,7 @@ namespace Dt.Base
                 colCount = Children.Count;
             }
 
-            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            double maxWidth = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
             double colWidth = (maxWidth - (colCount - 1) * Owner.Spacing) / colCount;
 
             double totalHeight = 0;
@@ -127,7 +127,7 @@ namespace Dt.Base
         /// <returns></returns>
         Size MeasureOneCol(Size availableSize)
         {
-            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            double maxWidth = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
             Size itemSize = new Size(maxWidth, PanelMaxHeight);
             Size imgSize = new Size(maxWidth, Owner.ImageHeight > 0 ? Owner.ImageHeight : maxWidth);
             double width = 0;

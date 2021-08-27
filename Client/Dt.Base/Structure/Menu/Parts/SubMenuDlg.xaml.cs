@@ -54,7 +54,7 @@ namespace Dt.Base.MenuView
                 else
                 {
                     // 默认放右侧，不能完全显示放左侧
-                    if (_mi.GetBounds().Right + MinWidth > SysVisual.ViewWidth)
+                    if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
                         WinPlacement = DlgPlacement.TargetOuterLeftTop;
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;
@@ -71,7 +71,7 @@ namespace Dt.Base.MenuView
                     // 一级放左下方，多级默认放右侧，不能完全显示放左侧
                     if (_mi.ParentMi == null && !_mi.Owner.IsContextMenu)
                         WinPlacement = DlgPlacement.TargetBottomLeft;
-                    else if (_mi.GetBounds().Right + MinWidth > SysVisual.ViewWidth)
+                    else if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
                         WinPlacement = DlgPlacement.TargetOuterLeftTop;
                     else
                         WinPlacement = DlgPlacement.TargetTopRight;

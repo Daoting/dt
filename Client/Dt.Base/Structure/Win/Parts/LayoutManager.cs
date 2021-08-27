@@ -1162,24 +1162,24 @@ namespace Dt.Base.Docking
                 switch (p_winItem.FloatPos)
                 {
                     case FloatPosition.Center:
-                        win.HorizontalOffset = Math.Ceiling((SysVisual.ViewWidth - p_winItem.FloatSize.Width) / 2);
-                        win.VerticalOffset = Math.Ceiling((SysVisual.ViewHeight - p_winItem.FloatSize.Height) / 2);
+                        win.HorizontalOffset = Math.Ceiling((Kit.ViewWidth - p_winItem.FloatSize.Width) / 2);
+                        win.VerticalOffset = Math.Ceiling((Kit.ViewHeight - p_winItem.FloatSize.Height) / 2);
                         break;
                     case FloatPosition.TopLeft:
                         win.HorizontalOffset = 0;
                         win.VerticalOffset = 0;
                         break;
                     case FloatPosition.TopRight:
-                        win.HorizontalOffset = SysVisual.ViewWidth - p_winItem.FloatSize.Width;
+                        win.HorizontalOffset = Kit.ViewWidth - p_winItem.FloatSize.Width;
                         win.VerticalOffset = 0;
                         break;
                     case FloatPosition.BottomLeft:
                         win.HorizontalOffset = 0;
-                        win.VerticalOffset = SysVisual.ViewHeight - p_winItem.FloatSize.Height;
+                        win.VerticalOffset = Kit.ViewHeight - p_winItem.FloatSize.Height;
                         break;
                     case FloatPosition.BottomRight:
-                        win.HorizontalOffset = SysVisual.ViewWidth - p_winItem.FloatSize.Width;
-                        win.VerticalOffset = SysVisual.ViewHeight - p_winItem.FloatSize.Height;
+                        win.HorizontalOffset = Kit.ViewWidth - p_winItem.FloatSize.Width;
+                        win.VerticalOffset = Kit.ViewHeight - p_winItem.FloatSize.Height;
                         break;
                 }
             }

@@ -60,13 +60,13 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
-                dlg.Width = SysVisual.ViewWidth - 40;
+                dlg.Width = Kit.ViewWidth - 40;
             }
             else
             {
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
                 dlg.MinWidth = 300;
-                dlg.MaxWidth = SysVisual.ViewWidth / 4;
+                dlg.MaxWidth = Kit.ViewWidth / 4;
                 dlg.ShowVeil = true;
             }
             Grid grid = new Grid { Margin = new Thickness(10) };
@@ -99,13 +99,13 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
             {
                 dlg.PhonePlacement = DlgPlacement.CenterScreen;
-                dlg.Width = SysVisual.ViewWidth - 40;
+                dlg.Width = Kit.ViewWidth - 40;
             }
             else
             {
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
                 dlg.MinWidth = 300;
-                dlg.MaxWidth = SysVisual.ViewWidth / 4;
+                dlg.MaxWidth = Kit.ViewWidth / 4;
                 dlg.ShowVeil = true;
             }
             Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };

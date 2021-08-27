@@ -568,7 +568,7 @@ namespace Dt.Base.Docking
                 }
                 else
                 {
-                    Size maximum = MaxSize.IsEmpty ? new Size(SysVisual.ViewWidth, SysVisual.ViewHeight) : MaxSize;
+                    Size maximum = MaxSize.IsEmpty ? new Size(Kit.ViewWidth, Kit.ViewHeight) : MaxSize;
                     switch (Placement)
                     {
                         case ItemPlacement.Left:

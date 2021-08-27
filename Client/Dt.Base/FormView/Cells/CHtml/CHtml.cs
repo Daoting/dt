@@ -50,8 +50,8 @@ namespace Dt.Base
                 var dlg = new HtmlViewDlg();
                 if (!Kit.IsPhoneUI)
                 {
-                    dlg.Height = SysVisual.ViewHeight - 140;
-                    dlg.Width = Math.Min(800, SysVisual.ViewWidth - 200);
+                    dlg.Height = Kit.ViewHeight - 140;
+                    dlg.Width = Math.Min(800, Kit.ViewWidth - 200);
                 }
                 dlg.ShowDlg(this);
             }
@@ -60,8 +60,8 @@ namespace Dt.Base
                 var dlg = new HtmlEditDlg();
                 if (!Kit.IsPhoneUI)
                 {
-                    dlg.Height = SysVisual.ViewHeight - 140;
-                    dlg.Width = Math.Min(900, SysVisual.ViewWidth - 200);
+                    dlg.Height = Kit.ViewHeight - 140;
+                    dlg.Width = Math.Min(900, Kit.ViewWidth - 200);
                 }
                 dlg.ShowDlg(this);
             }

@@ -189,7 +189,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
-                        cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
+                        cell.Measure(new Size(p_colWidth, Kit.ViewHeight));
                         // uno中高度莫名多出小数点后的
                         rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / Res.RowOuterHeight);
                     }
@@ -263,7 +263,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数
-                        cell.Measure(new Size(p_colWidth * p_colCount, SysVisual.ViewHeight));
+                        cell.Measure(new Size(p_colWidth * p_colCount, Kit.ViewHeight));
                         rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / Res.RowOuterHeight);
                     }
 
@@ -324,7 +324,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数
-                        cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
+                        cell.Measure(new Size(p_colWidth, Kit.ViewHeight));
                         rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / Res.RowOuterHeight);
                     }
 

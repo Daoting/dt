@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
+using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Core
@@ -298,14 +299,14 @@ namespace Dt.Core
         /// 手机：页面宽度
         /// PC上：除标题栏和外框的窗口内部宽度
         /// </summary>
-        public static double ViewWidth => SysVisual.ViewWidth;
+        public static double ViewWidth => Window.Current.Bounds.Width;
 
         /// <summary>
         /// 可视区域高度
         /// 手机：不包括状态栏的高度
         /// PC上：除标题栏和外框的窗口内部高度
         /// </summary>
-        public static double ViewHeight => SysVisual.ViewHeight;
+        public static double ViewHeight => Window.Current.Bounds.Height - SysVisual.StatusBarHeight;
         #endregion
 
         #region 系统通知

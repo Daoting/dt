@@ -125,10 +125,10 @@ namespace Dt.Base.FormView
             Show();
 
             // phone模式选项内容不足半屏时在下部显示
-            if (Kit.IsPhoneUI && DesiredSize.Height * 2 < SysVisual.ViewHeight)
+            if (Kit.IsPhoneUI && DesiredSize.Height * 2 < Kit.ViewHeight)
             {
                 //HideTitleBar = true;
-                Top = SysVisual.ViewHeight - DesiredSize.Height;
+                Top = Kit.ViewHeight - DesiredSize.Height;
                 // uno中不可设置为固定高度！
                 Height = double.NaN;
             }
