@@ -21,6 +21,7 @@ ios  软键盘盖住 TextBox 的问题
 * 手机横竖屏不支持UI自适应，始终为PhoneUI模式 
 * Lv分组模板统计功能 
 * CTip增加Click事件
+*  两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

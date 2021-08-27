@@ -92,6 +92,12 @@ namespace Dt.Shell
             //    AtState.SaveCookie("FirstRun", "0");
             //}
 
+            //Startup.AutoStartOnce = new AutoStartInfo
+            //{
+            //    WinType = typeof(Dt.Sample.SamplesMain).AssemblyQualifiedName,
+            //    Title = "自启动样例",
+            //};
+
             // 1. 按默认流程启动
             Startup.Register(null, typeof(DefaultHome));
             await Startup.Run(true);

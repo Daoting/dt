@@ -39,12 +39,22 @@ namespace Dt.Base
         public static async Task Launch<T>(string p_launchArgs, ShareInfo p_shareInfo)
             where T : IStub
         {
+            if (!string.IsNullOrEmpty(p_launchArgs))
+            {
+                try
+                {
+                    // 带参数启动
+                    AutoStartOnce = JsonSerializer.Deserialize<AutoStartInfo>(p_launchArgs);
+                }
+                catch { }
+            }
+
             // 非null表示app已启动过
             if (Kit.Stub != null)
             {
                 // 带参数启动
-                if (!string.IsNullOrEmpty(p_launchArgs))
-                    Kit.RunAsync(() => LaunchFreely(p_launchArgs));
+                if (AutoStartOnce != null)
+                    Kit.RunAsync(() => ShowAutoStartOnce());
                 Window.Current.Activate();
 
                 if (p_shareInfo != null)
@@ -66,7 +76,6 @@ namespace Dt.Base
 
             InputManager.Init();
             NotifyManager.Init();
-            _launchArgs = p_launchArgs;
 
             // 设置WinUI模式与PhoneUI模式切换的回调方法
             // 此处调用会通过SysVisual的静态构造方法创建整个系统可视树
@@ -288,7 +297,10 @@ namespace Dt.Base
         #endregion
 
         #region 加载主页
-        static string _launchArgs;
+        /// <summary>
+        /// 自启动信息，加载主页前设置有效
+        /// </summary>
+        public static AutoStartInfo AutoStartOnce { get; set; }
 
         /// <summary>
         /// 主页类型
@@ -327,47 +339,22 @@ namespace Dt.Base
             }
 
             // 自启动
-            AutoStartInfo autoStart;
-            if (!string.IsNullOrEmpty(_launchArgs))
-            {
-                // 带启动参数的自启动
-                LaunchFreely(_launchArgs);
-                _launchArgs = null;
-            }
-            else if ((autoStart = AtState.GetAutoStart()) != null)
+            AutoStartInfo autoStart = AutoStartOnce != null ? AutoStartOnce : AtState.GetAutoStart();
+            if (autoStart != null)
             {
                 // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
+                Win win = CreateAutoStartWin(autoStart);
+                if (win != null)
                 {
-                    try
-                    {
-                        Win win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                        {
-                            win = (Win)Activator.CreateInstance(type);
-                        }
-                        else
-                        {
-                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (Win)Activator.CreateInstance(type, par);
-                        }
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-                            win.NaviToHome();
-                            suc = true;
-                        }
-                    }
-                    catch { }
+                    win.NaviToHome();
                 }
-                if (!suc)
+                else if (AutoStartOnce == null)
+                {
+                    // 用户设置的自启动，启动失败删除cookie
                     AtState.DelAutoStart();
+                }
+                // 只自启动一次
+                AutoStartOnce = null;
             }
         }
 
@@ -392,48 +379,22 @@ namespace Dt.Base
             }
 
             // 自启动
-            AutoStartInfo autoStart;
-            if (!string.IsNullOrEmpty(_launchArgs))
-            {
-                // 带启动参数的自启动
-                LaunchFreely(_launchArgs);
-                _launchArgs = null;
-            }
-            else if ((autoStart = AtState.GetAutoStart()) != null)
+            AutoStartInfo autoStart = AutoStartOnce != null ? AutoStartOnce : AtState.GetAutoStart();
+            if (autoStart != null)
             {
                 // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
+                Win win = CreateAutoStartWin(autoStart);
+                if (win != null)
                 {
-                    try
-                    {
-                        Win win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                        {
-                            win = (Win)Activator.CreateInstance(type);
-                        }
-                        else
-                        {
-                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (Win)Activator.CreateInstance(type, par);
-                        }
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-
-                            desktop.ShowNewWin(win);
-                            suc = true;
-                        }
-                    }
-                    catch { }
+                    desktop.ShowNewWin(win);
                 }
-                if (!suc)
+                else if (AutoStartOnce == null)
+                {
+                    // 用户设置的自启动，启动失败删除cookie
                     AtState.DelAutoStart();
+                }
+                // 只自启动一次
+                AutoStartOnce = null;
             }
 
             if (desktop.MainWin == null)
@@ -453,83 +414,14 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 带参数启动
-        /// <summary>
-        /// 以参数方式自启动，通常从Toast启动
-        /// </summary>
-        /// <param name="p_params">xml启动参数</param>
-        static void LaunchFreely(string p_params)
-        {
-            var root = XDocument.Parse(p_params).Root;
-            var attr = root.Attribute("id");
-            if (attr == null || string.IsNullOrEmpty(attr.Value))
-            {
-                Kit.Msg("自启动时标识不可为空！");
-                return;
-            }
-
-            // 以菜单项方式启动
-            if (root.Name == "menu")
-            {
-                //AtUI.OpenMenu(attr.Value);
-                return;
-            }
-
-            // 打开视图
-            string viewName = attr.Value;
-            string title = null;
-            Icons icon = Icons.None;
-            attr = root.Attribute("title");
-            if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                title = attr.Value;
-            attr = root.Attribute("icon");
-            if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                Enum.TryParse(attr.Value, out icon);
-
-            // undo
-            //Dictionary<string, string> pars = new Dictionary<string, string>();
-            //foreach (var elem in root.Elements("param"))
-            //{
-            //    var key = elem.Attribute("key");
-            //    var val = elem.Attribute("val");
-            //    if (key != null && !string.IsNullOrEmpty(key.Value) && val != null)
-            //        pars[key.Value] = val.Value;
-            //}
-            Kit.OpenView(viewName, title, icon);
-        }
-        #endregion
-
-        #region 自启动设置
+        #region 自启动
         /// <summary>
         /// 设置自启动
         /// </summary>
         /// <param name="p_win"></param>
         internal static void SetAutoStart(Win p_win)
         {
-            if (p_win == null)
-                return;
-
-            if (!Kit.IsPhoneUI)
-            {
-                Tabs tabs = (Tabs)p_win.GetValue(Win.MainTabsProperty);
-                if (tabs != null
-                    && tabs.Items.Count > 0
-                    && ((Tab)tabs.Items[0]).Content is Win win)
-                {
-                    // 设置主区窗口为自启动
-                    p_win = win;
-                }
-            }
-
-            AutoStartInfo info = new AutoStartInfo();
-            info.WinType = p_win.GetType().AssemblyQualifiedName;
-            info.Title = p_win.Title;
-            info.Icon = p_win.Icon.ToString();
-            if (p_win.Params != null)
-            {
-                info.Params = JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer);
-                info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
-            }
+            AutoStartInfo info = GetAutoStartInfo(p_win);
             AtState.SaveAutoStart(info);
             Kit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
@@ -541,6 +433,86 @@ namespace Dt.Base
         {
             AtState.DelAutoStart();
             Kit.Msg("已取消自启动设置！");
+        }
+
+        /// <summary>
+        /// 创建自启动Win
+        /// </summary>
+        /// <param name="p_autoStart"></param>
+        /// <returns></returns>
+        static Win CreateAutoStartWin(AutoStartInfo p_autoStart)
+        {
+            Win win = null;
+            Type type = Type.GetType(p_autoStart.WinType);
+            if (type != null)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(p_autoStart.Params))
+                    {
+                        win = (Win)Activator.CreateInstance(type);
+                    }
+                    else
+                    {
+                        var par = JsonSerializer.Deserialize(p_autoStart.Params, Type.GetType(p_autoStart.ParamsType));
+                        win = (Win)Activator.CreateInstance(type, par);
+                    }
+
+                    if (win != null)
+                    {
+                        win.Title = string.IsNullOrEmpty(p_autoStart.Title) ? "自启动" : p_autoStart.Title;
+                        Icons icon;
+                        if (Enum.TryParse(p_autoStart.Icon, out icon))
+                            win.Icon = icon;
+                    }
+                }
+                catch { }
+            }
+            return win;
+        }
+
+        /// <summary>
+        /// 获取Win的自启动信息
+        /// </summary>
+        /// <param name="p_win"></param>
+        /// <returns></returns>
+        static AutoStartInfo GetAutoStartInfo(Win p_win)
+        {
+            if (p_win == null)
+                return null;
+
+            Tabs tabs = (Tabs)p_win.GetValue(Win.MainTabsProperty);
+            if (tabs != null
+                && tabs.Items.Count > 0
+                && ((Tab)tabs.Items[0]).Content is Win win)
+            {
+                // 设置主区窗口为自启动
+                p_win = win;
+            }
+
+            AutoStartInfo info = new AutoStartInfo();
+            info.WinType = p_win.GetType().AssemblyQualifiedName;
+            info.Title = p_win.Title;
+            info.Icon = p_win.Icon.ToString();
+            if (p_win.Params != null)
+            {
+                info.Params = JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer);
+                info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
+            }
+            return info;
+        }
+
+        static void ShowAutoStartOnce()
+        {
+            Win win = CreateAutoStartWin(AutoStartOnce);
+            if (win != null)
+            {
+                if (Kit.IsPhoneUI)
+                    win.NaviToHome();
+                else
+                    Desktop.Inst.ShowNewWin(win);
+            }
+            AutoStartOnce = null;
         }
         #endregion
 
@@ -560,9 +532,34 @@ namespace Dt.Base
                 Desktop.Inst = null;
             }
 
-            // 重构根元素
-            if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-                ShowHome();
+            // 重构根元素，将切换前的窗口设为自启动，符合习惯
+            if (SysVisual.RootContent is Frame frame)
+            {
+                var con = ((PhonePage)frame.Content).Content;
+                Win win = null;
+                if (con is Tab tab)
+                {
+                    win = tab.OwnWin;
+                }
+                else if (con is PhoneTabs tabs)
+                {
+                    win = tabs.OwnWin;
+                }
+                if (win != null && win.GetType() != _homePageType)
+                {
+                    AutoStartOnce = GetAutoStartInfo(win);
+                }
+
+                LoadDesktop();
+            }
+            else if (SysVisual.RootContent is Desktop desktop)
+            {
+                if (desktop.MainWin != desktop.HomeWin)
+                {
+                    AutoStartOnce = GetAutoStartInfo(desktop.MainWin);
+                }
+                LoadRootFrame();
+            }
         }
         #endregion
     }

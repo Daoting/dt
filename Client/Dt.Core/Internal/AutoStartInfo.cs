@@ -14,7 +14,7 @@ namespace Dt.Core
     /// <summary>
     /// 自启动信息描述
     /// </summary>
-    internal class AutoStartInfo
+    public class AutoStartInfo
     {
         /// <summary>
         /// 获取设置自启动的窗口类型

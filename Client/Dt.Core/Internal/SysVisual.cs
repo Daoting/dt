@@ -354,6 +354,11 @@ namespace Dt.Core
 
             Kit.IsPhoneUI = isPhoneUI;
 
+            // 登录之前无UI自适应！有向导对话框时造成关闭
+            var tp = RootContent.GetType().Name;
+            if (tp != "Frame" && tp != "Desktop")
+                return;
+
             // 调整对话框层
             _dlgCanvas.Children.Clear();
 
@@ -379,6 +384,42 @@ namespace Dt.Core
                 _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
             }
         }
+        #endregion
+
+        #region 设置默认样式
+        static void SetDefaultStyle(Control p_con)
+        {
+            if (p_con != null)
+            {
+                // 统一设置默认字体大小
+                // 原系统的默认大小：Control为11，TextBlock为14，Frame为15
+                p_con.FontSize = 16;
+            }
+        }
+        #endregion
+
+        #region 废弃
+        // 统一转到 Kit
+        ///// <summary>
+        ///// 可视区域宽度
+        ///// 手机：页面宽度
+        ///// PC上：除标题栏和外框的窗口内部宽度
+        ///// </summary>
+        //public static double ViewWidth => _win.Bounds.Width;
+
+        ///// <summary>
+        ///// 可视区域高度
+        ///// 手机：不包括状态栏的高度
+        ///// PC上：除标题栏和外框的窗口内部高度
+        ///// </summary>
+        //public static double ViewHeight
+        //{
+        //    get
+        //    {
+        //        // 使用 _rootGrid.ActualHeight 初始启动时为0，无法弹出对话框！！！
+        //        return _win.Bounds.Height - StatusBarHeight;
+        //    }
+        //}
 
         //#if ANDROID
         //static void RefreshStatusBarHeight()
@@ -401,42 +442,6 @@ namespace Dt.Core
         //    }
         //}
         //#endif
-        #endregion
-
-        #region 设置默认样式
-        static void SetDefaultStyle(Control p_con)
-        {
-            if (p_con != null)
-            {
-                // 统一设置默认字体大小
-                // 原系统的默认大小：Control为11，TextBlock为14，Frame为15
-                p_con.FontSize = 16;
-            }
-        }
-        #endregion
-
-        #region 可视区域
-        // 统一转到 Kit
-        ///// <summary>
-        ///// 可视区域宽度
-        ///// 手机：页面宽度
-        ///// PC上：除标题栏和外框的窗口内部宽度
-        ///// </summary>
-        //public static double ViewWidth => _win.Bounds.Width;
-
-        ///// <summary>
-        ///// 可视区域高度
-        ///// 手机：不包括状态栏的高度
-        ///// PC上：除标题栏和外框的窗口内部高度
-        ///// </summary>
-        //public static double ViewHeight
-        //{
-        //    get
-        //    {
-        //        // 使用 _rootGrid.ActualHeight 初始启动时为0，无法弹出对话框！！！
-        //        return _win.Bounds.Height - StatusBarHeight;
-        //    }
-        //}
         #endregion
     }
 
