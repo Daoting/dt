@@ -698,6 +698,14 @@ namespace Dt.Base
                         Top = top;
                     }
                     break;
+
+                case DlgPlacement.TargetOverlap:
+                    rcTarget = PlacementTarget.GetBounds();
+                    Left = rcTarget.Left;
+                    Top = rcTarget.Top;
+                    Width = rcTarget.Width;
+                    Height = rcTarget.Height;
+                    break;
             }
 
             // 禁止获得焦点时调整显示层次，太乱！

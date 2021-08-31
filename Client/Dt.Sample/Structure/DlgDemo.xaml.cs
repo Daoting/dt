@@ -156,7 +156,11 @@ namespace Dt.Sample
                 dlg.PhonePlacement = placement;
             else
                 dlg.WinPlacement = placement;
-            dlg.PlacementTarget = _tgt;
+
+            if (placement == DlgPlacement.TargetOverlap)
+                dlg.PlacementTarget = _fv;
+            else
+                dlg.PlacementTarget = _tgt;
             dlg.IsPinned = row.Bool("Pin");
             dlg.HideTitleBar = row.Bool("HideBar");
             dlg.Resizeable = row.Bool("Resize");
