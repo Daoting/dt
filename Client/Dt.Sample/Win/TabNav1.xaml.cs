@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class TabNav1 : UserControl, INaviContent
+    public sealed partial class TabNav1 : Nav
     {
         public TabNav1()
         {
@@ -27,22 +27,7 @@ namespace Dt.Sample
 
         void OnNextPage(object sender, RoutedEventArgs e)
         {
-            _host.NaviTo(new TabNav2());
+            NaviTo(new TabNav2(1));
         }
-
-        #region INaviContent
-        INaviHost _host;
-
-        void INaviContent.AddToHost(INaviHost p_host)
-        {
-            _host = p_host;
-            _host.Title = "Tab内部导航";
-
-            var menu = new Menu();
-            menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
-            menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
-            _host.Menu = menu;
-        }
-        #endregion
     }
 }

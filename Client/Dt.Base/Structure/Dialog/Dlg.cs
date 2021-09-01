@@ -18,6 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
@@ -30,7 +31,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgPressed, INaviHost
+    public partial class Dlg : Control, IDlgPressed, INavHost
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -853,65 +854,73 @@ namespace Dt.Base
         }
         #endregion
 
-        #region INaviHost
-        Stack<INaviContent> _naviCache;
+        #region INavHost
+        Stack<Nav> _navCache;
 
         /// <summary>
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>
-        void INaviHost.NaviTo(INaviContent p_content)
+        void INavHost.NaviTo(Nav p_content)
         {
-            INaviContent current;
-            if (p_content == null || (current = Content as INaviContent) == null)
+            Nav current;
+            if (p_content == null || (current = Content as Nav) == null)
                 return;
 
-            if (_naviCache == null)
+            if (_navCache == null)
             {
-                _naviCache = new Stack<INaviContent>();
+                _navCache = new Stack<Nav>();
                 // 内容切换动画
                 var ls = new TransitionCollection();
                 ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
                 ContentTransitions = ls;
             }
-            _naviCache.Push(current);
+            _navCache.Push(current);
             Content = p_content;
         }
 
         /// <summary>
         /// 返回上一内容
         /// </summary>
-        void INaviHost.GoBack()
+        void INavHost.GoBack()
         {
-            if (_naviCache != null && _naviCache.Count > 0)
-                Content = _naviCache.Pop();
+            if (_navCache != null && _navCache.Count > 0)
+                Content = _navCache.Pop();
         }
 
         void OnContentChanged()
         {
-            var navi = Content as INaviContent;
-            if (navi == null)
+            var nav = Content as Nav;
+            if (nav == null)
                 return;
 
-            if (_naviCache != null)
+            if (_navCache != null)
             {
-                if (_naviCache.Count == 1)
+                if (_navCache.Count == 1)
                     HeaderButtonText = "\uE010";
-                else if (_naviCache.Count == 0)
+                else if (_navCache.Count == 0)
                     HeaderButtonText = "\uE009";
             }
 
-            // 外部可设置Menu和Title
-            navi.AddToHost(this);
+            // 绑定Nav中的依赖属性
+            SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = nav });
+            SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = nav });
+            SetBinding(HideTitleBarProperty, new Binding { Path = new PropertyPath("HideTitleBar"), Source = nav });
+            nav.AddToHost(this);
+
             if (string.IsNullOrEmpty(Title))
                 Title = "无标题";
         }
 
         void OnHeaderButtonClick(object sender, RoutedEventArgs e)
         {
-            if (_naviCache != null && _naviCache.Count > 0)
+            if (_navCache != null)
             {
-                Content = _naviCache.Pop();
+                // 避免连续返回时造成关闭误操作，使第一次点击停靠时无效！
+                if (_navCache.Count > 0)
+                    Content = _navCache.Pop();
+                else
+                    _navCache = null;
             }
             else
             {

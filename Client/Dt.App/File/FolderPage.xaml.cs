@@ -21,7 +21,7 @@ namespace Dt.App.File
     /// <summary>
     /// 文件夹内容
     /// </summary>
-    public sealed partial class FolderPage : UserControl, INaviContent
+    public sealed partial class FolderPage : Nav
     {
         readonly IFileMgr _fileMgr;
 
@@ -31,6 +31,9 @@ namespace Dt.App.File
             _fileMgr = p_fileMgr;
             _lv.View = new FileItemSelector((DataTemplate)Resources["FolderTemplate"], (DataTemplate)Resources["FileTemplate"]);
             this.FirstLoaded(LoadData);
+
+            Title = _fileMgr.FolderName;
+            LoadMenu();
         }
 
         async void LoadData()
@@ -47,7 +50,7 @@ namespace Dt.App.File
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
             mgr.Setting = _fileMgr.Setting;
-            _host.NaviTo(new FolderPage(mgr));
+            NaviTo(new FolderPage(mgr));
         }
 
         void OnOpenedFile(object sender, FileItem e)
@@ -70,7 +73,7 @@ namespace Dt.App.File
 
         void OnSearch(object sender, Mi e)
         {
-            _host.NaviTo(new SearchFilePage(_fileMgr));
+            NaviTo(new SearchFilePage(_fileMgr));
         }
 
         async void OnUpload(object sender, Mi e)
@@ -157,7 +160,7 @@ namespace Dt.App.File
                 mgr.FolderID = dlg.Target.FolderID;
                 mgr.FolderName = dlg.Target.FolderName;
                 mgr.Setting = _fileMgr.Setting;
-                _host.NaviTo(new FolderPage(mgr));
+                NaviTo(new FolderPage(mgr));
                 LoadData();
                 OnCancelMulti(null, null);
             }
@@ -247,6 +250,8 @@ namespace Dt.App.File
             }
         }
 
+        Menu _menu;
+        Menu _menuMulti;
         void OnMultiMode(object sender, Mi e)
         {
             if (_menuMulti == null)
@@ -268,7 +273,7 @@ namespace Dt.App.File
                 mi.Click += OnCancelMulti;
                 _menuMulti.Items.Add(mi);
             }
-            _host.Menu = _menuMulti;
+            Menu = _menuMulti;
             _lv.SelectionMode = Base.SelectionMode.Multiple;
         }
 
@@ -279,20 +284,12 @@ namespace Dt.App.File
 
         void OnCancelMulti(object sender, Mi e)
         {
-            _host.Menu = _menu;
+            Menu = _menu;
             _lv.SelectionMode = Base.SelectionMode.Single;
         }
 
-        #region INaviContent
-        INaviHost _host;
-        Menu _menu;
-        Menu _menuMulti;
-
-        void INaviContent.AddToHost(INaviHost p_host)
+        void LoadMenu()
         {
-            _host = p_host;
-            _host.Title = _fileMgr.FolderName;
-
             _menu = new Menu();
             Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
             mi.Click += OnSearch;
@@ -312,9 +309,8 @@ namespace Dt.App.File
                 mi.Click += OnMultiMode;
                 _menu.Items.Add(mi);
             }
-            _host.Menu = _menu;
+            Menu = _menu;
         }
-        #endregion
     }
 
     internal class FileItemSelector : DataTemplateSelector

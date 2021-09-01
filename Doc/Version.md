@@ -23,6 +23,7 @@ ios  软键盘盖住 TextBox 的问题
 * CTip增加Click事件
 *  两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
 * Dlg增加TargetOverlap 布局
+* 增加Nav控件，能够放在Tab Dlg中支持内部导航
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

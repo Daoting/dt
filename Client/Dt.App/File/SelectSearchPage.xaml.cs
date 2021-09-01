@@ -22,7 +22,7 @@ namespace Dt.App.File
     /// <summary>
     /// 搜索文件
     /// </summary>
-    public sealed partial class SelectSearchPage : UserControl, INaviContent
+    public sealed partial class SelectSearchPage : Nav
     {
         readonly SelectFileDlg _owner;
 
@@ -58,18 +58,5 @@ namespace Dt.App.File
             _owner.SelectedFiles = ls;
             _owner.Close(true);
         }
-
-        #region INaviContent
-        void INaviContent.AddToHost(INaviHost p_host)
-        {
-            p_host.Title = "搜索";
-
-            var menu = new Menu();
-            Mi mi = new Mi { ID = "确认", Icon = Icons.正确 };
-            mi.Click += OnSelect;
-            menu.Items.Add(mi);
-            p_host.Menu = menu;
-        }
-        #endregion
     }
 }

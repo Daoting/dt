@@ -13,9 +13,6 @@ using Dt.Core.Model;
 using Dt.Core.Rpc;
 using System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.App.Home
@@ -23,7 +20,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 根级菜单项页面(带分组)
     /// </summary>
-    public sealed partial class RootMenu : UserControl, INaviContent
+    public sealed partial class RootMenu : Nav
     {
         DateTime _dtLast;
 
@@ -35,6 +32,10 @@ namespace Dt.App.Home
                 LoadMenus();
             else
                 Kit.LoginSuc += LoadMenus;
+
+            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
+            if (MenuKit.FavMenus.Count > cntFixed)
+                _miReset.Visibility = Visibility.Visible;
         }
 
         async void LoadMenus()
@@ -50,7 +51,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    _host.NaviTo(new GroupMenu(menu));
+                    NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -58,7 +59,7 @@ namespace Dt.App.Home
 
         void OnSearch(object sender, Mi e)
         {
-            _host.NaviTo(new SearchMenu());
+            NaviTo(new SearchMenu());
         }
 
         async void OnReset(object sender, Mi e)
@@ -103,29 +104,5 @@ namespace Dt.App.Home
                 }
             });
         }
-
-        #region INaviContent
-        INaviHost _host;
-
-        void INaviContent.AddToHost(INaviHost p_host)
-        {
-            _host = p_host;
-            _host.Title = "开始";
-
-            var menu = new Menu();
-            Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
-            mi.Click += OnSearch;
-            menu.Items.Add(mi);
-
-            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
-            if (MenuKit.FavMenus.Count > cntFixed)
-            {
-                mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
-                mi.Click += OnReset;
-                menu.Items.Add(mi);
-            }
-            _host.Menu = menu;
-        }
-        #endregion
     }
 }

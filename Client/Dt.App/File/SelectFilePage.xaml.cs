@@ -22,7 +22,7 @@ namespace Dt.App.File
     /// <summary>
     /// 选择移动到的目标文件夹
     /// </summary>
-    public sealed partial class SelectFilePage : UserControl, INaviContent
+    public sealed partial class SelectFilePage : Nav
     {
         readonly IFileMgr _fileMgr;
         readonly SelectFileDlg _owner;
@@ -33,6 +33,9 @@ namespace Dt.App.File
 
             _fileMgr = p_fileMgr;
             _owner = p_owner;
+
+            Title = _fileMgr.FolderName;
+            LoadMenu();
 
             if (_owner.IsMultiSelection)
                 _lv.SelectionMode = Base.SelectionMode.Multiple;
@@ -57,7 +60,7 @@ namespace Dt.App.File
                 mgr.FolderID = e.Row.ID;
                 mgr.FolderName = e.Row.Str("name");
                 mgr.Setting = _fileMgr.Setting;
-                _host.NaviTo(new SelectFilePage(mgr, _owner));
+                NaviTo(new SelectFilePage(mgr, _owner));
             }
         }
 
@@ -79,7 +82,7 @@ namespace Dt.App.File
 
         void OnSearch(object sender, Mi e)
         {
-            _host.NaviTo(new SelectSearchPage(_owner));
+            NaviTo(new SelectSearchPage(_owner));
         }
 
         async void OnAdd(object sender, Mi e)
@@ -96,14 +99,8 @@ namespace Dt.App.File
             LoadData();
         }
 
-        #region INaviContent
-        INaviHost _host;
-
-        void INaviContent.AddToHost(INaviHost p_host)
+        void LoadMenu()
         {
-            _host = p_host;
-            _host.Title = _fileMgr.FolderName;
-
             var menu = new Menu();
             Mi mi = new Mi { ID = "确认", Icon = Icons.正确 };
             mi.Click += OnSelect;
@@ -119,8 +116,7 @@ namespace Dt.App.File
                 mi.Click += OnAdd;
                 menu.Items.Add(mi);
             }
-            _host.Menu = menu;
+            Menu = menu;
         }
-        #endregion
     }
 }

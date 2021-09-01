@@ -1,8 +1,9 @@
-﻿<UserControl
+﻿<a:Nav
     x:Class="Dt.App.Home.SearchMenu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    Title="搜索">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -40,4 +41,4 @@
             </DataTemplate>
         </a:Lv>
     </Grid>
-</UserControl>
+</a:Nav>

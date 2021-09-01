@@ -135,8 +135,8 @@ namespace Dt.Sample
             dlg.Content = new TabNav1();
             if (!Kit.IsPhoneUI)
             {
-                dlg.Width = 300;
-                dlg.Height = 300;
+                dlg.Width = 400;
+                dlg.Height = 600;
             }
             dlg.Show();
         }

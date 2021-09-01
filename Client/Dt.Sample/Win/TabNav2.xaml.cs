@@ -18,38 +18,25 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class TabNav2 : UserControl, INaviContent
+    public sealed partial class TabNav2 : Nav
     {
-        public TabNav2()
+        public TabNav2(int p_index)
         {
             InitializeComponent();
+            Index = p_index;
+            Title = $"第{Index}页";
         }
 
         public int Index { get; set; } = 1;
 
         void OnNextPage(object sender, RoutedEventArgs e)
         {
-            _host.NaviTo(new TabNav2 { Index = Index + 1 });
+            NaviTo(new TabNav2(Index + 1));
         }
 
         void OnBackPage(object sender, RoutedEventArgs e)
         {
-            _host.GoBack();
+            GoBack();
         }
-
-        #region INaviContent
-        INaviHost _host;
-
-        void INaviContent.AddToHost(INaviHost p_host)
-        {
-            _host = p_host;
-            _host.Title = $"第{Index}页";
-
-            var menu = new Menu();
-            menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
-            menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
-            _host.Menu = menu;
-        }
-        #endregion
     }
 }
