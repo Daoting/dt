@@ -75,7 +75,7 @@ namespace Dt.Base
         {
             foreach (var btn in _grid.Children.OfType<Button>())
             {
-                ((Tab)btn.DataContext).PinButtonVisibility = Visibility.Collapsed;
+                ((Tab)btn.DataContext).BackButtonVisibility = Visibility.Collapsed;
             }
         }
 

@@ -8,7 +8,8 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
-
+重新设计搜索UI 
+ToolWindow 支持Nav
 
 
 ## Release 1.9.9 
@@ -30,8 +31,8 @@ ios  软键盘盖住 TextBox 的问题
 * 调整默认字体大小，15 -> 16
 * 控件适配默认字体 
 * 删除FvCell.ShowStar属性
-*  PhoneUI模式页标题20px
-*  重新设计搜索UI
+* PhoneUI模式页标题20px
+* Tab.Pin按钮只用作返回，Pin按钮转为右键菜单
 * 删除Tab.PhoneBar 
 
 ### Bug修改 

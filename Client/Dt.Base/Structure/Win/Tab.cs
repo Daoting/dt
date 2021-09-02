@@ -61,7 +61,7 @@ namespace Dt.Base
             "CanUserPin",
             typeof(bool),
             typeof(Tab),
-            new PropertyMetadata(true, OnUpdatePinButton));
+            new PropertyMetadata(true));
 
         public static readonly DependencyProperty CanDockProperty = DependencyProperty.Register(
             "CanDock",
@@ -73,25 +73,19 @@ namespace Dt.Base
             "IsFloating",
             typeof(bool),
             typeof(Tab),
-            new PropertyMetadata(false, OnUpdatePinButton));
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty IsInCenterProperty = DependencyProperty.Register(
             "IsInCenter",
             typeof(bool),
             typeof(Tab),
-            new PropertyMetadata(false, OnUpdatePinButton));
+            new PropertyMetadata(false));
 
-        public static readonly DependencyProperty PinButtonVisibilityProperty = DependencyProperty.Register(
-            "PinButtonVisibility",
+        public static readonly DependencyProperty BackButtonVisibilityProperty = DependencyProperty.Register(
+            "BackButtonVisibility",
             typeof(Visibility),
             typeof(Tab),
             new PropertyMetadata(Visibility.Visible));
-
-        public static readonly DependencyProperty HeaderButtonTextProperty = DependencyProperty.Register(
-            "HeaderButtonText",
-            typeof(string),
-            typeof(Tab),
-            new PropertyMetadata("\uE028"));
 
         public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
             "Menu",
@@ -102,11 +96,6 @@ namespace Dt.Base
         static void OnIsPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Tab)d).OnIsPinnedChanged();
-        }
-
-        static void OnUpdatePinButton(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((Tab)d).UpdatePinButton();
         }
         #endregion
 
@@ -141,7 +130,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否隐藏标题栏
+        /// 获取设置是否隐藏标题栏，只在PhoneUI模式下有效
         /// </summary>
         public bool HideTitleBar
         {
@@ -159,7 +148,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否可以停靠在中部
+        /// 获取设置当前Tab是否允许其他浮动Tab停靠在中部
         /// </summary>
         public bool CanDockInCenter
         {
@@ -168,7 +157,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取是否允许停靠
+        /// 当前Tab是否允许停靠
         /// </summary>
         public bool CanDock
         {
@@ -177,7 +166,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否可以浮动
+        /// 获取设置当前Tab是否可以浮动
         /// </summary>
         public bool CanFloat
         {
@@ -186,7 +175,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否允许固定
+        /// 获取设置是否允许在固定和自动隐藏之间切换
         /// </summary>
         public bool CanUserPin
         {
@@ -213,21 +202,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取是否显示Pin按钮，手机上为返回按钮，windows上为自动隐藏按钮
+        /// 获取是否显示返回按钮，默认Visible，内部绑定用
         /// </summary>
-        public Visibility PinButtonVisibility
+        public Visibility BackButtonVisibility
         {
-            get { return (Visibility)GetValue(PinButtonVisibilityProperty); }
-            set { SetValue(PinButtonVisibilityProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置标题栏按钮字符
-        /// </summary>
-        public string HeaderButtonText
-        {
-            get { return (string)GetValue(HeaderButtonTextProperty); }
-            set { SetValue(HeaderButtonTextProperty, value); }
+            get { return (Visibility)GetValue(BackButtonVisibilityProperty); }
+            internal set { SetValue(BackButtonVisibilityProperty, value); }
         }
 
         /// <summary>
@@ -286,8 +266,8 @@ namespace Dt.Base
         {
             if (Kit.IsPhoneUI)
                 InputManager.GoBack();
-            else if (_navCache != null && _navCache.Count > 0)
-                Content = _navCache.Pop();
+            else
+                OnBackButtonClick();
         }
         #endregion
 
@@ -326,7 +306,7 @@ namespace Dt.Base
 
         void InitPhoneUITemplate()
         {
-            if (PinButtonVisibility == Visibility.Visible)
+            if (BackButtonVisibility == Visibility.Visible)
             {
                 WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
                 Button btn = GetTemplateChild("BackButton") as Button;
@@ -343,19 +323,14 @@ namespace Dt.Base
         protected override void OnContentChanged()
         {
             if (!Kit.IsPhoneUI)
+            {
                 base.OnContentChanged();
+                BackButtonVisibility = (_navCache != null && _navCache.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
+            }
 
             var nav = Content as Nav;
             if (nav == null)
                 return;
-
-            if (_navCache != null)
-            {
-                if (_navCache.Count == 1)
-                    HeaderButtonText = "\uE010";
-                else if (_navCache.Count == 0)
-                    HeaderButtonText = IsPinned ? "\uE028" : "\uE027";
-            }
 
             // 绑定Nav中的依赖属性
             SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = nav });
@@ -391,36 +366,20 @@ namespace Dt.Base
             }
         }
 
-        internal void OnHeaderButtonClick()
+        internal void OnBackButtonClick()
         {
-            if (_navCache != null)
-            {
-                // 避免连续返回时造成停靠的误操作，使第一次点击停靠时无效！
-                if (_navCache.Count > 0)
-                    Content = _navCache.Pop();
-                else
-                    _navCache = null;
-            }
-            else
-            {
-                IsPinned = !IsPinned;
-            }
+            if (_navCache != null && _navCache.Count > 0)
+                Content = _navCache.Pop();
         }
 
         void OnIsPinnedChanged()
         {
-            HeaderButtonText = IsPinned ? "\uE028" : "\uE027";
             if (_isLoaded)
             {
                 if (!IsPinned && (IsFloating || IsInCenter))
                     throw new InvalidOperationException("浮动或在中部区域时无法自动隐藏！");
                 OwnWin.OnPinChange(this);
             }
-        }
-
-        void UpdatePinButton()
-        {
-            PinButtonVisibility = (CanUserPin && !IsInCenter && !IsFloating) ? Visibility.Visible : Visibility.Collapsed;
         }
         #endregion
     }

@@ -10,6 +10,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base.Docking
@@ -107,18 +108,41 @@ namespace Dt.Base.Docking
         protected override object LoadDlgContent()
         {
             StackPanel sp = new StackPanel();
-            TabHeader header = new TabHeader();
-            header.Owner = this;
-            sp.Children.Add(header);
+
+            Grid g = new Grid
+            { 
+                ColumnDefinitions = { new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, new ColumnDefinition { Width = GridLength.Auto } },
+                BorderBrush = Res.浅灰边框,
+                BorderThickness = new Thickness(1),
+                Background = Res.浅灰背景
+            };
+            TabHeader header = new TabHeader { BorderThickness = new Thickness(0), Height = Res.RowInnerHeight, Owner = this };
+            g.Children.Add(header);
+            Button btn = new Button { Content = "\uE027", Style = Res.字符按钮, Foreground = Res.深灰背景 };
+            btn.Click += OnPinClick;
+            Grid.SetColumn(btn, 1);
+            g.Children.Add(btn);
+            sp.Children.Add(g);
+
             ContentPresenter content = new ContentPresenter()
             {
                 VerticalAlignment = VerticalAlignment.Stretch,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
             };
+            // 内容切换动画
+            var ls = new TransitionCollection();
+            ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
+            content.ContentTransitions = ls;
             Binding contentBinding = new Binding() { Path = new PropertyPath("SelectedContent"), Source = this };
             content.SetBinding(ContentPresenter.ContentProperty, contentBinding);
             sp.Children.Add(content);
             return sp;
+        }
+
+        void OnPinClick(object sender, RoutedEventArgs e)
+        {
+            if (SelectedItem is Tab tab)
+                tab.IsPinned = true;
         }
         #endregion
 

@@ -390,7 +390,7 @@ namespace Dt.Base
 
             // 起始页隐藏返回按钮
             if (frame.Content == null)
-                p_tab.PinButtonVisibility = Visibility.Collapsed;
+                p_tab.BackButtonVisibility = Visibility.Collapsed;
 
             // 向前导航
             PhonePage.Show(p_tab);

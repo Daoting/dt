@@ -55,15 +55,15 @@ namespace Dt.Base.Docking
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            Button btn = GetTemplateChild("HeaderButton") as Button;
+            Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
-                btn.Click += OnPinClick;
+                btn.Click += OnBackClick;
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             base.OnPointerPressed(e);
-            if (CanFloat())
+            if (CanFloat() && e.IsLeftButton())
             {
                 Focus(FocusState.Programmatic);
                 _dragging = CapturePointer(e.Pointer);
@@ -101,13 +101,45 @@ namespace Dt.Base.Docking
         }
         #endregion
 
+        #region 右键菜单
+        static Menu _menu;
+        
+        protected override async void OnRightTapped(RightTappedRoutedEventArgs e)
+        {
+            base.OnRightTapped(e);
+
+            if (!(Owner is Tabs tabs 
+                && tabs.SelectedItem is Tab tab
+                && tab.CanUserPin
+                && !tab.IsInCenter
+                && !tab.IsFloating))
+                return;
+            
+            if (_menu == null)
+            {
+                _menu = new Menu { IsContextMenu = true };
+                var item = new Mi { ID = "自动隐藏" };
+                item.Click += OnAutoHide;
+                _menu.Items.Add(item);
+            }
+            _menu.DataContext = tab;
+            await _menu.OpenContextMenu(e.GetPosition(null));
+        }
+
+        static void OnAutoHide(object sender, Mi e)
+        {
+            if (_menu.DataContext is Tab tab)
+                tab.IsPinned = false;
+        }
+        #endregion
+
         #region 内部方法
-        void OnPinClick(object sender, RoutedEventArgs e)
+        void OnBackClick(object sender, RoutedEventArgs e)
         {
             if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                tab.OnHeaderButtonClick();
+                tab.OnBackButtonClick();
             else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
-                autoTab.OnHeaderButtonClick();
+                autoTab.OnBackButtonClick();
         }
 
         bool CanFloat()

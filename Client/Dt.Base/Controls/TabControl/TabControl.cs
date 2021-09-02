@@ -339,7 +339,15 @@ namespace Dt.Base
             foreach (var item in Items)
             {
                 InitItem(item);
-                _itemsPanel.Children.Add(item);
+                try
+                {
+                    _itemsPanel.Children.Add(item);
+                }
+                catch
+                {
+                    item.ClearParent();
+                    _itemsPanel.Children.Add(item);
+                }
             }
         }
 
