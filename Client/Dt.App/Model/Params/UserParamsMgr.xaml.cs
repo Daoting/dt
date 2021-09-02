@@ -41,7 +41,7 @@ namespace Dt.App.Model
             {
                 _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{e}%" });
             }
-            SelectTab("列表");
+            NaviTo("参数列表");
         }
 
         async void LoadAll()
@@ -54,42 +54,27 @@ namespace Dt.App.Model
             _lv.Data = await AtCm.Query<Params>("参数-最近修改");
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        void OnNaviToSearch(object sender, Mi e)
         {
-            _fv.Data = await AtCm.GetByID<Params>(e.Data.To<Params>().ID);
-            SelectTab("定义");
+            NaviTo("查找");
         }
 
         void OnAdd(object sender, Mi e)
         {
-            _fv.Data = new Params(ID: "新参数");
+            _nav.NaviTo(new EditUserParams(null));
         }
 
-        async void OnSave(object sender, Mi e)
+        void OnEdit(object sender, Mi e)
         {
-            var par = _fv.Data.To<Params>();
-            bool delVer = par.IsAdded || par.Cells["ID"].IsChanged || par.Cells["Value"].IsChanged;
-            if (await AtCm.Save(par))
-            {
-                LoadLast();
-                if (delVer)
-                    DeleteDataVer();
-            }
+            _nav.NaviTo(new EditUserParams(e.Data.To<Params>().ID));
         }
 
-        void OnDel(object sender, Mi e)
+        void OnUserSetting(object sender, Mi e)
         {
-            var par = _fv.Data.To<Params>();
-            if (par != null)
-                DelParams(par);
+            new UserParamsDlg().Show(e.Data.To<Params>().ID);
         }
 
-        void OnListDel(object sender, Mi e)
-        {
-            DelParams(e.Data.To<Params>());
-        }
-
-        async void DelParams(Params p_par)
+        async void OnListDel(object sender, Mi e)
         {
             if (!await Kit.Confirm("确认要删除吗？"))
             {
@@ -97,13 +82,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            
-            if (p_par.IsAdded)
-            {
-                _fv.Data = null;
-                return;
-            }
-
+            Params p_par = e.Data.To<Params>();
             int cnt = await AtCm.GetScalar<int>("参数-用户设置数", new { ParamID = p_par.ID });
             if (cnt > 0)
             {
@@ -114,20 +93,10 @@ namespace Dt.App.Model
             if (await AtCm.Delete(p_par))
             {
                 LoadLast();
-                _fv.Data = null;
-                DeleteDataVer();
+
+                // 1表任何人，删除所有人的参数版本号
+                await AtCm.DeleteDataVer(new List<long> { 1 }, "params");
             }
-        }
-
-        async void DeleteDataVer()
-        {
-            // 1表任何人，删除所有人的参数版本号
-            await AtCm.DeleteDataVer(new List<long> { 1 }, "params");
-        }
-
-        void OnUserSetting(object sender, Mi e)
-        {
-            new UserParamsDlg().Show(e.Data.To<Params>().ID);
         }
     }
 }

@@ -71,11 +71,6 @@ namespace Dt.App.Model
             }
         }
 
-        void OnNaviToSearch(object sender, RoutedEventArgs e)
-        {
-            NaviTo("查找角色");
-        }
-
         async void OnSearch(object sender, string e)
         {
             if (e == "#全部")

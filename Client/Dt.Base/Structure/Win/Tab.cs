@@ -39,12 +39,6 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(false));
 
-        public readonly static DependencyProperty PhoneBarProperty = DependencyProperty.Register(
-            "PhoneBar",
-            typeof(object),
-            typeof(Tab),
-            new PropertyMetadata(null, OnPhoneBarChanged));
-
         public static readonly DependencyProperty IsPinnedProperty = DependencyProperty.Register(
             "IsPinned",
             typeof(bool),
@@ -114,17 +108,6 @@ namespace Dt.Base
         {
             ((Tab)d).UpdatePinButton();
         }
-
-        static void OnPhoneBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (Kit.IsPhoneUI
-                && e.NewValue is Button btn
-                && btn.Style == null)
-            {
-                // 默认搜索按钮样式
-                btn.Style = Res.PhonSearchButton;
-            }
-        }
         #endregion
 
         #region 构造方法
@@ -164,15 +147,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(HideTitleBarProperty); }
             set { SetValue(HideTitleBarProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置Phone模式下的工具栏，一般为搜索栏
-        /// </summary>
-        public object PhoneBar
-        {
-            get { return GetValue(PhoneBarProperty); }
-            set { SetValue(PhoneBarProperty, value); }
         }
 
         /// <summary>
@@ -221,7 +195,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取是否为浮动状态
+        /// 获取是否为浮动状态，浮动时父容器为ToolWindow
         /// </summary>
         public bool IsFloating
         {
@@ -236,21 +210,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(IsInCenterProperty); }
             internal set { SetValue(IsInCenterProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置父容器是否为ToolWindow
-        /// </summary>
-        public bool IsInWindow
-        {
-            get { return IsFloating; }
-            internal set
-            {
-                if (IsFloating != value)
-                {
-                    IsFloating = value;
-                }
-            }
         }
 
         /// <summary>

@@ -46,11 +46,6 @@ namespace Dt.App.Model
                 _lvUser.Data = await AtCm.Query<User>("用户-最近修改");
         }
 
-        void OnNaviToSearch(object sender, RoutedEventArgs e)
-        {
-            NaviTo("查找用户");
-        }
-
         async void OnDelUser(object sender, Mi e)
         {
             if (!await Kit.Confirm($"确认要删除[{e.Row.Str("name")}]吗？"))

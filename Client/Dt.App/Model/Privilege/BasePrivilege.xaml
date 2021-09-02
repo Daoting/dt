@@ -23,9 +23,6 @@
                         <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAddPrv" />
                     </a:Menu>
                 </a:Tab.Menu>
-                <a:Tab.PhoneBar>
-                    <Button Content="查找权限" Click="OnNaviToSearch" />
-                </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvPrv" ItemClick="OnItemClick" DataChanged="OnDataChanged">
                     <a:Ex.Menu>
                         <a:Menu>

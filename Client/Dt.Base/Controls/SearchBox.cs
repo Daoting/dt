@@ -92,6 +92,7 @@ namespace Dt.Base
             ((Button)GetTemplateChild("Button")).Click += (s, e) => OnSearch();
             _tb = (TextBox)GetTemplateChild("TextBox");
             _tb.TextChanged += OnTextChanged;
+            _tb.FirstLoaded(() => _tb.Focus(FocusState.Programmatic));
         }
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)

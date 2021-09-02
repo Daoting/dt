@@ -149,7 +149,7 @@ namespace Dt.Base
                     {
                         Tab sect = item as Tab;
                         if (sect != null)
-                            sect.IsInWindow = _isInWindow;
+                            sect.IsFloating = _isInWindow;
                     }
 
                     if (!value)
@@ -243,7 +243,7 @@ namespace Dt.Base
             if (pane != null)
             {
                 pane.IsInCenter = IsInCenter;
-                pane.IsInWindow = IsInWindow;
+                pane.IsFloating = IsInWindow;
             }
         }
 

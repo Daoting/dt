@@ -32,6 +32,7 @@ ios  软键盘盖住 TextBox 的问题
 * 删除FvCell.ShowStar属性
 *  PhoneUI模式页标题20px
 *  重新设计搜索UI
+* 删除Tab.PhoneBar 
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

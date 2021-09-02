@@ -24,9 +24,6 @@
                         <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAddRole" />
                     </a:Menu>
                 </a:Tab.Menu>
-                <a:Tab.PhoneBar>
-                    <Button Content="查找角色" Click="OnNaviToSearch" />
-                </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvRole" ItemClick="OnItemClick" DataChanged="OnDataChanged">
                     <a:Ex.Menu>
                         <a:Menu>

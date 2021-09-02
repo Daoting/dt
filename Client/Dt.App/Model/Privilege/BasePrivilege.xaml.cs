@@ -30,11 +30,6 @@ namespace Dt.App.Model
             _lvPrv.Data = await AtCm.Query<Prv>("权限-所有");
         }
 
-        void OnNaviToSearch(object sender, RoutedEventArgs e)
-        {
-            NaviTo("查找权限");
-        }
-
         async void OnSearch(object sender, string e)
         {
             if (e == "#全部")

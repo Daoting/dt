@@ -165,9 +165,7 @@
                         <Grid.RowDefinitions>
                             <!--第一行标题栏-->
                             <RowDefinition Height="Auto" />
-                            <!--第二行搜索栏-->
-                            <RowDefinition Height="Auto" />
-                            <!--第三行内容-->
+                            <!--第二行内容-->
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
@@ -202,11 +200,9 @@
                                               HorizontalAlignment="Right"
                                               Grid.Column="2" />
                         </Grid>
-                        <!--搜索栏-->
-                        <ContentPresenter Content="{TemplateBinding PhoneBar}" Grid.Row="1" />
                         <!--内容-->
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
-                        <a:SizedPresenter Content="{TemplateBinding Content}" Grid.Row="2" />
+                        <a:SizedPresenter Content="{TemplateBinding Content}" Grid.Row="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
