@@ -27,15 +27,6 @@ namespace Dt.Base.Docking
     {
         #region 静态成员
         /// <summary>
-        /// 是否显示列标题
-        /// </summary>
-        public readonly static DependencyProperty HeaderProperty = DependencyProperty.Register(
-            "Header",
-            typeof(string),
-            typeof(ToolWindow),
-            null);
-
-        /// <summary>
         /// 水平偏移量
         /// </summary>
         public readonly static DependencyProperty HorizontalOffsetProperty = DependencyProperty.Register(
@@ -88,15 +79,6 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 属性
-        /// <summary>
-        /// 获取设置标题内容
-        /// </summary>
-        public string Header
-        {
-            get { return (string)GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
-        }
-
         /// <summary>
         /// 获取设置水平偏移量
         /// </summary>
@@ -158,40 +140,6 @@ namespace Dt.Base.Docking
             if (_panel.Children.Contains(this))
                 _panel.Children.Remove(this);
         }
-
-        /// <summary>
-        /// 更新窗口标题的绑定
-        /// </summary>
-        internal void UpdateHeader()
-        {
-            Pane dockItem = Content as Pane;
-            if (dockItem == null)
-                return;
-
-            IEnumerable<Tabs> sects = from sect in dockItem.GetAllTabs()
-                                      where sect != null && sect.Visibility == Visibility.Visible
-                                      select sect;
-
-            if (sects.Count() == 1)
-            {
-                // 窗口中只一个Tabs时，隐藏Tabs标题，在窗口标题显示
-                Tabs sect = sects.First();
-                sect.ShowHeader = false;
-
-                Binding bind = new Binding();
-                bind.Path = new PropertyPath("SelectedItem.Title");
-                bind.Source = sect;
-                SetBinding(HeaderProperty, bind);
-            }
-            else
-            {
-                foreach (Tabs sect in sects)
-                {
-                    sect.ShowHeader = true;
-                }
-                ClearValue(HeaderProperty);
-            }
-        }
         #endregion
 
         #region 重写
@@ -240,8 +188,6 @@ namespace Dt.Base.Docking
 
             if (newContent == null)
                 Close();
-            else
-                UpdateHeader();
         }
 
         protected override void OnGotFocus(RoutedEventArgs e)

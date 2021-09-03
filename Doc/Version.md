@@ -9,7 +9,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ios  软键盘盖住 TextBox 的问题
 
 重新设计搜索UI 
-ToolWindow 支持Nav
+
 
 
 ## Release 1.9.9 
@@ -25,6 +25,7 @@ ToolWindow 支持Nav
 *  两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
 * Dlg增加TargetOverlap 布局
 * 增加Nav控件，能够放在Tab Dlg中支持内部导航
+* 调整Dlg、ToolWindow样式
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

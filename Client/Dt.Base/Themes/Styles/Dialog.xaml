@@ -11,20 +11,23 @@
     <Style x:Key="WinDlg" TargetType="a:Dlg">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 主题蓝色}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 灰色边框}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ShowVeil" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Dlg">
-                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                    <Grid x:Name="RootGrid"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Background="{StaticResource 浅灰背景}"
+                              Background="{StaticResource 灰色背景}"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               BorderThickness="0,0,0,1"
                               Height="{StaticResource RowOuterHeight}">
@@ -48,7 +51,7 @@
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认前景}"
-                                              Background="{StaticResource 浅灰背景}"
+                                              Background="{StaticResource 灰色背景}"
                                               Grid.Column="2"/>
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
@@ -57,7 +60,6 @@
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           Grid.Row="1" />
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.RowSpan="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -353,6 +353,7 @@ namespace Dt.Core
                 return;
 
             Kit.IsPhoneUI = isPhoneUI;
+            ApplyNotifyStyle();
 
             // 登录之前无UI自适应！有向导对话框时造成关闭
             var tp = RootContent.GetType().Name;
@@ -361,8 +362,6 @@ namespace Dt.Core
 
             // 调整对话框层
             _dlgCanvas.Children.Clear();
-
-            ApplyNotifyStyle();
             UIModeChanged?.Invoke();
         }
 

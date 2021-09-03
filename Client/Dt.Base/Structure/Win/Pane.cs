@@ -567,7 +567,6 @@ namespace Dt.Base
         /// </summary>
         void RefreshInternal()
         {
-            UpdateWindowHeader();
             int count = (from item in Items
                          where item.Visibility == Visibility.Visible
                          select item).Count();
@@ -622,21 +621,6 @@ namespace Dt.Base
                         wi.ResizerPlacement = null;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// 更新窗口标题
-        /// </summary>
-        void UpdateWindowHeader()
-        {
-            if (Parent is ToolWindow win)
-            {
-                win.UpdateHeader();
-            }
-            else if (Parent is TabItemPanel pnl)
-            {
-                pnl.Owner?.UpdateWindowHeader();
             }
         }
         #endregion

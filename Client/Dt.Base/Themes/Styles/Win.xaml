@@ -314,9 +314,8 @@
     <Style TargetType="docking:ToolWindow">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="MinHeight" Value="80" />
-        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="MinHeight" Value="200" />
+        <Setter Property="MinWidth" Value="400" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="docking:ToolWindow">
@@ -325,16 +324,18 @@
                             <RowDefinition Height="40" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Border x:Name="HeaderElement" Background="{StaticResource 浅灰背景}">
-                            <TextBlock Text="{TemplateBinding Header}" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                        <Border x:Name="HeaderElement"
+                                Background="{StaticResource 灰色背景}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{StaticResource 灰色边框}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                            </StackPanel>
                         </Border>
                         <ContentPresenter Content="{TemplateBinding Content}" Grid.Row="1"/>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Ellipse x:Name="ellipse0" Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
-                            <Ellipse x:Name="ellipse1" Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
-                            <Ellipse x:Name="ellipse2" Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
-                        </StackPanel>
-                        <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,0" IsHitTestVisible="False" Grid.RowSpan="2"/>
+                        <Rectangle Stroke="{StaticResource 灰色边框}" Margin="0,0,-1,0" IsHitTestVisible="False" Grid.RowSpan="2"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
