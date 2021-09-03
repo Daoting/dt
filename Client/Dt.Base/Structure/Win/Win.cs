@@ -49,12 +49,6 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty HomeProperty = DependencyProperty.Register(
-            "Home",
-            typeof(string),
-            typeof(Win),
-            new PropertyMetadata(null));
-
         public static readonly DependencyProperty AutoSaveLayoutProperty = DependencyProperty.Register(
             "AutoSaveLayout",
             typeof(bool),
@@ -169,15 +163,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置Phone模式的首页，为多个页面时用逗号隔开(自动以Tab形式显示)，null时自动为第一个Tab
-        /// </summary>
-        public string Home
-        {
-            get { return (string)GetValue(HomeProperty); }
-            set { SetValue(HomeProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置是否自动保存布局状态
         /// </summary>
         public bool AutoSaveLayout
@@ -278,6 +263,7 @@ namespace Dt.Base
         int _frameStartIndex;
         // 多页PhoneTabs缓存
         List<PhoneTabs> _cacheMultiTabs;
+        string _homeID;
 
         /// <summary>
         /// 导航到窗口主页
@@ -294,7 +280,34 @@ namespace Dt.Base
             }
             // 记录起始索引
             _frameStartIndex = SysVisual.RootFrame.BackStackDepth;
-            NaviTo(Home);
+
+            var ls = (from tab in _tabs.Values
+                      where tab.Order > 0
+                      orderby tab.Order
+                      select tab).ToList();
+            if (ls.Count == 0)
+            {
+                var tab = _tabs.Values.FirstOrDefault();
+                if (tab != null)
+                {
+                    // 置首页标志
+                    tab.Order = 1;
+                    NaviToSingleTab(tab);
+                }
+            }
+            else if (ls.Count == 1)
+            {
+                NaviToSingleTab(ls[0]);
+            }
+            else if(ls.Count > 1)
+            {
+                _homeID = ls[0].Title;
+                for (int i = 1; i < ls.Count; i++)
+                {
+                    _homeID = $"{_homeID},{ls[i].Title}";
+                }
+                NaviToMultiTabs(_homeID);
+            }
         }
 
         /// <summary>
@@ -450,8 +463,8 @@ namespace Dt.Base
 
             tabs = new PhoneTabs();
             tabs.NaviID = p_tabTitle;
-            if (p_tabTitle == Home)
-                tabs.OwnWin = this;
+            if (p_tabTitle == _homeID)
+                tabs.IsHome = true;
 
             Tab tab;
             string[] names = p_tabTitle.Split(',');

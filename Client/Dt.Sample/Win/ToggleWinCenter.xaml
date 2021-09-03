@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.ToggleWinCenter"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="自定义,描述列表">
+    xmlns:a="using:Dt.Base">
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Title="自定义">
+            <a:Tab Order="1" Title="自定义">
                 <StackPanel Margin="-1,-1,0,0">
                     <a:BtnItem Icon="公告" Title="内容为窗口" Click="OnChanged" a:Ex.TagCls="Dt.Sample.SingleViewWin" />
                     <a:BtnItem Icon="田字格" Title="内容为嵌套窗口" Click="OnChanged" a:Ex.TagCls="Dt.Sample.ToggleWinCenter" />
@@ -17,7 +16,7 @@
                     <a:BtnItem Title="内容为空" Click="OnCenterNull" />
                 </StackPanel>
             </a:Tab>
-            <a:Tab Title="描述列表">
+            <a:Tab Order="2" Title="描述列表">
                 <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
             </a:Tab>
         </a:Tabs>

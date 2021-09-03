@@ -2,12 +2,11 @@
     x:Class="Dt.App.Workflow.WorkflowDesign"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="流程,流程图,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Title="流程">
+            <a:Tab Order="1" Title="流程">
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
                         <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
@@ -30,7 +29,7 @@
     </a:Pane>
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="流程图">
+            <a:Tab Order="2" Title="流程图">
                 <a:Tab.Menu>
                     <a:Menu DataContext="{Binding ElementName=_sketch}">
                         <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo}"/>
@@ -47,7 +46,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab x:Name="_tab" Title="属性" />
+            <a:Tab x:Name="_tab" Order="3" Title="属性" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

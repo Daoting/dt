@@ -93,6 +93,12 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty OrderProperty = DependencyProperty.Register(
+            "Order",
+            typeof(int),
+            typeof(Tab),
+            new PropertyMetadata(0));
+
         static void OnIsPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Tab)d).OnIsPinnedChanged();
@@ -118,6 +124,18 @@ namespace Dt.Base
         {
             get { return (Menu)GetValue(MenuProperty); }
             set { SetValue(MenuProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置Phone模式时 是否在首页显示 以及 显示次序
+        /// <para>默认0表示不在首页显示</para>
+        /// <para>大于0时在首页显示</para>
+        /// <para>当有多个Tab显示在首页时，底部标签次序按值从小到大排列</para>
+        /// </summary>
+        public int Order
+        {
+            get { return (int)GetValue(OrderProperty); }
+            set { SetValue(OrderProperty, value); }
         }
 
         /// <summary>
@@ -279,7 +297,7 @@ namespace Dt.Base
         Task<bool> IPhonePage.OnClosing()
         {
             // 只在首页时处理
-            if (OwnWin != null && OwnWin.Home == Title)
+            if (Order > 0 && OwnWin != null)
                 return OwnWin.AllowClose();
             return Task.FromResult(true);
         }
@@ -290,7 +308,7 @@ namespace Dt.Base
         void IPhonePage.OnClosed()
         {
             // 只在首页时处理
-            if (OwnWin != null && OwnWin.Home == Title)
+            if (Order > 0 && OwnWin != null)
                 OwnWin.AfterClosed();
         }
         #endregion

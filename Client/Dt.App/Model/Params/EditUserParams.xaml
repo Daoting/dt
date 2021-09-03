@@ -3,8 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title = "Tab内部导航"
-    x:Name="_nav">
+    Title="参数编辑">
 
     <a:Nav.Menu>
         <a:Menu>

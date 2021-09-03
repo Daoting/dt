@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.FileCellDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="格,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="格">
+            <a:Tab Order="1" Title="格">
                 <a:Fv x:Name="_fv">
                     <a:CFile ID="file0" Title="无文件" />
                     <a:CText ID="txt" Title="文本框" />
@@ -49,7 +48,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="属性">
+            <a:Tab Order="2" Title="属性">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

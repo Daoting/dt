@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.FileListDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="文件列表,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="文件列表">
+            <a:Tab Order="1" Title="文件列表">
                 <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                     <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished" ColCount="3" >
                         <a:Ex.Menu>
@@ -25,7 +24,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="属性">
+            <a:Tab Order="2" Title="属性">
                 <a:Fv Data="{Binding ElementName=_fl}" DataContext="{Binding ElementName=_fl}">
                     <a:CBar Title="命令" />
                     <StackPanel Orientation="Horizontal">

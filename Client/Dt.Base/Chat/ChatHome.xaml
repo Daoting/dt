@@ -3,15 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:chat="using:Dt.Base.Chat"
-    Home="消息,联系人">
+    xmlns:chat="using:Dt.Base.Chat">
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Title="消息">
+            <a:Tab Order="1" Title="消息">
                 <chat:ChatList ItemClick="OnItemClick" />
             </a:Tab>
-            <a:Tab Title="联系人">
+            <a:Tab Order="2" Title="联系人">
                 <chat:ChatMemberList ItemClick="OnItemClick" />
             </a:Tab>
         </a:Tabs>

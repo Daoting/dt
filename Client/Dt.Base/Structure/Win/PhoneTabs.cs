@@ -43,14 +43,28 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 只有是首页时才有值
+        /// 所属Win
         /// </summary>
-        internal Win OwnWin { get; set; }
+        internal Win OwnWin
+        {
+            get
+            {
+                if (_grid == null || _grid.Children.Count == 0)
+                    return null;
+
+                return ((Tab)(((Button)_grid.Children[0]).DataContext)).OwnWin;
+            }
+        }
 
         /// <summary>
         /// 导航时的标识，所有Tab标题逗号隔开
         /// </summary>
         internal string NaviID { get; set; }
+
+        /// <summary>
+        /// 是否为首页
+        /// </summary>
+        internal bool IsHome { get; set; }
 
         /// <summary>
         /// 添加标签
@@ -112,8 +126,12 @@ namespace Dt.Base
         /// <returns>true 表允许关闭</returns>
         Task<bool> IPhonePage.OnClosing()
         {
-            if (OwnWin != null)
-                return OwnWin.AllowClose();
+            if (IsHome)
+            {
+                var win = OwnWin;
+                if (win != null)
+                    return win.AllowClose();
+            }
             return Task.FromResult(true);
         }
 
@@ -123,8 +141,8 @@ namespace Dt.Base
         void IPhonePage.OnClosed()
         {
             // 只在首页时处理
-            if (OwnWin != null)
-                OwnWin.AfterClosed();
+            if (IsHome)
+                OwnWin?.AfterClosed();
         }
         #endregion
 

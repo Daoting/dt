@@ -2,19 +2,18 @@
     x:Class="Dt.Sample.UseCase"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="Excel,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="Excel">
+            <a:Tab Order="1" Title="Excel">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="属性">
+            <a:Tab Order="2" Title="属性">
                 <a:Fv>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="月报xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />

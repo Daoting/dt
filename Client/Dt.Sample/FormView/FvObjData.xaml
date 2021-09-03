@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.FvObjData"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="目标对象">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="表单">
+            <a:Tab Order="2" Title="表单">
                 <a:Fv x:Name="_fv">
                     <a:CNum ID="BorderThickness.Bottom" Title="多级路径" />
                     <a:CText ID="ActualHeight" Title="实际高度(只读)" />
@@ -21,7 +20,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="目标对象">
+            <a:Tab Order="1" Title="目标对象">
                 <a:Fv>
                     <a:CBar Title="设置数据源" />
                     <StackPanel Orientation="Horizontal">

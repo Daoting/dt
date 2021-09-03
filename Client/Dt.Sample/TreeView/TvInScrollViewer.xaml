@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.TvInScrollViewer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="格,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="格">
+            <a:Tab Order="1" Title="格">
                 <ScrollViewer x:Name="_sv">
                     <StackPanel>
                         <Border x:Name="_top" Height="100" Background="Gray" />
@@ -24,7 +23,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="属性">
+            <a:Tab Order="2" Title="属性">
                 <a:Fv>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="随机选择节点" Click="OnScroll" />

@@ -34,6 +34,7 @@ ToolWindow 支持Nav
 * PhoneUI模式页标题20px
 * Tab.Pin按钮只用作返回，Pin按钮转为右键菜单
 * 删除Tab.PhoneBar 
+* 删除Win.Home，增加Tab.Order控制首页显示
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

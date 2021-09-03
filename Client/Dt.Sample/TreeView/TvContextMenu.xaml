@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.TvContextMenu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Home="树,属性">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Title="树">
+            <a:Tab Order="1" Title="树">
                 <a:Tv x:Name="_tv">
                     <a:Ex.Menu>
                         <a:Menu>
@@ -28,7 +27,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Title="属性">
+            <a:Tab Order="2" Title="属性">
                 <a:Fv Data="{Binding ElementName=_tv}">
                     <a:CBar Title="触发事件方式" />
                     <StackPanel Orientation="Horizontal">
