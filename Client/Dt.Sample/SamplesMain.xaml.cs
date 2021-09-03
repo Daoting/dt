@@ -167,6 +167,12 @@ namespace Dt.Sample
                     Note = "跨平台文件选择、上传下载文件、不同类型图像资源",
                     Tag = typeof(FileHome),
                 },
+                new DataCmd
+                {
+                    Title = "搜索面板",
+                    Note = "通用搜索功能，包括固定搜索项、历史搜索项、统一搜索事件、统一导航等功能",
+                    Tag = typeof(SearchNavDemo)
+                },
                  new DataCmd
                 {
                     Title = "Tab页",

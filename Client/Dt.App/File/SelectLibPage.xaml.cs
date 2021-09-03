@@ -31,23 +31,23 @@ namespace Dt.App.File
         async void OnPublicFile(object sender, RoutedEventArgs e)
         {
             var setting = new FileMgrSetting { AllowEdit = await Kit.HasPrv("公共文件管理") };
-            NaviTo(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
+            Forward(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
         void OnMyFile(object sender, RoutedEventArgs e)
         {
-            NaviTo(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = true } }, _owner));
+            Forward(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = true } }, _owner));
         }
 
         async void OnResFile(object sender, RoutedEventArgs e)
         {
             var setting = new FileMgrSetting { AllowEdit = await Kit.HasPrv("素材库管理") };
-            NaviTo(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
+            Forward(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         
         void OnSearch(object sender, Mi e)
         {
-            NaviTo(new SelectSearchPage(_owner));
+            Forward(new SelectSearchPage(_owner));
         }
     }
 }

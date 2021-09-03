@@ -861,7 +861,7 @@ namespace Dt.Base
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>
-        void INavHost.NaviTo(Nav p_content)
+        void INavHost.Forward(Nav p_content)
         {
             Nav current;
             if (p_content == null || (current = Content as Nav) == null)
@@ -882,7 +882,7 @@ namespace Dt.Base
         /// <summary>
         /// 返回上一内容
         /// </summary>
-        void INavHost.GoBack()
+        void INavHost.Backward()
         {
             if (_navCache != null && _navCache.Count > 0)
                 Content = _navCache.Pop();

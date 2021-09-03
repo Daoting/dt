@@ -1,0 +1,29 @@
+﻿<a:Nav
+    x:Class="Dt.Base.SearchNav"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="_tb" PlaceholderText="搜索" />
+        </Grid>
+
+        <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <StackPanel>
+                <a:CBar Title="常用" />
+                <a:Lv x:Name="_lvFix" />
+                <a:CBar Title="搜索历史" />
+                <a:Lv x:Name="_lvHis" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</a:Nav>

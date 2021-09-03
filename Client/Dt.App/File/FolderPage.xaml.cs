@@ -50,7 +50,7 @@ namespace Dt.App.File
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
             mgr.Setting = _fileMgr.Setting;
-            NaviTo(new FolderPage(mgr));
+            Forward(new FolderPage(mgr));
         }
 
         void OnOpenedFile(object sender, FileItem e)
@@ -73,7 +73,7 @@ namespace Dt.App.File
 
         void OnSearch(object sender, Mi e)
         {
-            NaviTo(new SearchFilePage(_fileMgr));
+            Forward(new SearchFilePage(_fileMgr));
         }
 
         async void OnUpload(object sender, Mi e)
@@ -160,7 +160,7 @@ namespace Dt.App.File
                 mgr.FolderID = dlg.Target.FolderID;
                 mgr.FolderName = dlg.Target.FolderName;
                 mgr.Setting = _fileMgr.Setting;
-                NaviTo(new FolderPage(mgr));
+                Forward(new FolderPage(mgr));
                 LoadData();
                 OnCancelMulti(null, null);
             }

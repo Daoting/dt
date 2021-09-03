@@ -60,7 +60,7 @@ namespace Dt.App.File
                 mgr.FolderID = e.Row.ID;
                 mgr.FolderName = e.Row.Str("name");
                 mgr.Setting = _fileMgr.Setting;
-                NaviTo(new SelectFilePage(mgr, _owner));
+                Forward(new SelectFilePage(mgr, _owner));
             }
         }
 
@@ -82,7 +82,7 @@ namespace Dt.App.File
 
         void OnSearch(object sender, Mi e)
         {
-            NaviTo(new SelectSearchPage(_owner));
+            Forward(new SelectSearchPage(_owner));
         }
 
         async void OnAdd(object sender, Mi e)

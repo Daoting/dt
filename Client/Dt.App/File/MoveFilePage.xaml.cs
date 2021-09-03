@@ -42,7 +42,7 @@ namespace Dt.App.File
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
-            NaviTo(new MoveFilePage(mgr, _owner));
+            Forward(new MoveFilePage(mgr, _owner));
         }
 
         void OnSelect(object sender, Mi e)

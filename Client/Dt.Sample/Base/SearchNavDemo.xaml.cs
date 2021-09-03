@@ -9,34 +9,29 @@
 #region 引用命名
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
 using Dt.Base;
 using Dt.Core;
+using Dt.Core.Rpc;
+using Windows.Foundation;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Sample
 {
-    public sealed partial class TabNav2 : Nav
+    public sealed partial class SearchNavDemo : Win
     {
-        public TabNav2(int p_index)
+        public SearchNavDemo()
         {
             InitializeComponent();
-            Index = p_index;
-            Title = $"第{Index}页";
         }
 
-        public int Index { get; set; } = 1;
-
-        void OnNextPage(object sender, RoutedEventArgs e)
-        {
-            Forward(new TabNav2(Index + 1));
-        }
-
-        void OnBackPage(object sender, RoutedEventArgs e)
-        {
-            Backward();
-        }
     }
 }

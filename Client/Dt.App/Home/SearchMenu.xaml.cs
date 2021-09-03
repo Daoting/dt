@@ -31,7 +31,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    NaviTo(new GroupMenu(menu));
+                    Forward(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });

@@ -20,11 +20,11 @@ namespace Dt.Base
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>
-        void NaviTo(Nav p_content);
+        void Forward(Nav p_content);
 
         /// <summary>
-        /// 返回上一内容
+        /// 向后导航到上一内容
         /// </summary>
-        void GoBack();
+        void Backward();
     }
 }

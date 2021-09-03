@@ -51,7 +51,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    NaviTo(new GroupMenu(menu));
+                    Forward(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -59,7 +59,7 @@ namespace Dt.App.Home
 
         void OnSearch(object sender, Mi e)
         {
-            NaviTo(new SearchMenu());
+            Forward(new SearchMenu());
         }
 
         async void OnReset(object sender, Mi e)

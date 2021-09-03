@@ -27,7 +27,7 @@ namespace Dt.Sample
 
         void OnNextPage(object sender, RoutedEventArgs e)
         {
-            NaviTo(new TabNav2(1));
+            Forward(new TabNav2(1));
         }
     }
 }

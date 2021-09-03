@@ -40,7 +40,7 @@ namespace Dt.App.Model
             {
                 _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{e}%" });
             }
-            //NaviTo("参数列表");
+            NaviToSelf();
         }
 
         async void LoadAll()
@@ -55,17 +55,17 @@ namespace Dt.App.Model
 
         void OnNaviToSearch(object sender, Mi e)
         {
-            //NaviTo("查找");
+            NaviTo("查找");
         }
 
         void OnAdd(object sender, Mi e)
         {
-            NaviTo(new EditUserParams(null));
+            Forward(new EditUserParams(null));
         }
 
         void OnEdit(object sender, Mi e)
         {
-            NaviTo(new EditUserParams(e.Data.To<Params>().ID));
+            Forward(new EditUserParams(e.Data.To<Params>().ID));
         }
 
         void OnUserSetting(object sender, Mi e)

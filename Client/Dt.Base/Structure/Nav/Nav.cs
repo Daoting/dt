@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -71,17 +72,35 @@ namespace Dt.Base
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>
-        public void NaviTo(Nav p_content)
+        public void Forward(Nav p_content)
         {
-            _host?.NaviTo(p_content);
+            _host?.Forward(p_content);
         }
 
         /// <summary>
-        /// 返回上一内容
+        /// 向后导航到上一内容
         /// </summary>
-        public void GoBack()
+        public void Backward()
         {
-            _host?.GoBack();
+            _host?.Backward();
+        }
+
+        /// <summary>
+        /// 导航到指定页，支持多页Tab形式
+        /// </summary>
+        /// <param name="p_tabTitle">多个页面时用逗号隔开(自动以Tab形式显示)，null时自动导航到第一个Tab</param>
+        public void NaviTo(string p_tabTitle)
+        {
+            if (Kit.IsPhoneUI && _host is Tab tab && tab.OwnWin != null)
+                tab.OwnWin.NaviTo(p_tabTitle);
+        }
+
+        /// <summary>
+        /// 导航到当前页
+        /// </summary>
+        public void NaviToSelf()
+        {
+            NaviTo(Title);
         }
 
         /// <summary>
