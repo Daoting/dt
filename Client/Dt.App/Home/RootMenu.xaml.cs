@@ -20,7 +20,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 根级菜单项页面(带分组)
     /// </summary>
-    public sealed partial class RootMenu : Nav
+    public sealed partial class RootMenu : Mv
     {
         DateTime _dtLast;
 

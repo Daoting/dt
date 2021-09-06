@@ -18,7 +18,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 搜索菜单项
     /// </summary>
-    public sealed partial class SearchMenu : Nav
+    public sealed partial class SearchMenu : Mv
     {
         public SearchMenu()
         {

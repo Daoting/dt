@@ -7,6 +7,18 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="ModuleView\MvHome.xaml" />
+    <None Remove="ModuleView\MvItem.xaml" />
+    <None Remove="ModuleView\MvNavi.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="ModuleView\MvHome.xaml" />
+    <UpToDateCheckInput Remove="ModuleView\MvItem.xaml" />
+    <UpToDateCheckInput Remove="ModuleView\MvNavi.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Report\数据源\个人成绩.json" />
     <EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
     <EmbeddedResource Include="Report\数据源\图表表格.json" />
@@ -60,5 +72,29 @@
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
     <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ModuleView\MvHome.xaml.cs">
+      <DependentUpon>MvHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ModuleView\RootMv - 复制.xaml.cs">
+      <DependentUpon>RootMv.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ModuleView\MvItem.xaml.cs">
+      <DependentUpon>MvItem.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ModuleView\MvHome.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ModuleView\MvNavi.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ModuleView\MvItem.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 </Project>

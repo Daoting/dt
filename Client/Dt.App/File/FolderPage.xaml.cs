@@ -21,7 +21,7 @@ namespace Dt.App.File
     /// <summary>
     /// 文件夹内容
     /// </summary>
-    public sealed partial class FolderPage : Nav
+    public sealed partial class FolderPage : Mv
     {
         readonly IFileMgr _fileMgr;
 

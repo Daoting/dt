@@ -22,7 +22,7 @@ namespace Dt.App.File
     /// <summary>
     /// 选择移动到的目标文件夹
     /// </summary>
-    public sealed partial class SelectFilePage : Nav
+    public sealed partial class SelectFilePage : Mv
     {
         readonly IFileMgr _fileMgr;
         readonly SelectFileDlg _owner;

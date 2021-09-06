@@ -51,14 +51,14 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Tv _owner;
+        TreeView _owner;
         TvItemExpandedState _expandedState;
         Button _btnExpanded;
         bool _isExpandedAll;
         #endregion
 
         #region 构造方法
-        public TvItem(Tv p_tv, object p_data, TvItem p_parent)
+        public TvItem(TreeView p_tv, object p_data, TvItem p_parent)
         {
             _owner = p_tv;
             Data = p_data;

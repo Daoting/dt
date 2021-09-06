@@ -7,7 +7,7 @@
     <a:Pane>
         <a:Tabs>
             <a:Tab Order="1" Title="菜单树">
-                <a:Tv x:Name="_tv" ItemClick="OnItemClick">
+                <a:TreeView x:Name="_tv" ItemClick="OnItemClick">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="上移" Icon="向上" Click="OnMoveUp" />
@@ -21,7 +21,7 @@
                             <a:Dot ID="name" />
                         </StackPanel>
                     </DataTemplate>
-                </a:Tv>
+                </a:TreeView>
             </a:Tab>
         </a:Tabs>
     </a:Pane>

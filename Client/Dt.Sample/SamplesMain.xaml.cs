@@ -119,7 +119,13 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "树Tv",
+                    Title = "模块视图Mv",
+                    Note = "模块视图是业务处理的基本部分，多个模块视图实现一个完整的功能模块",
+                    Tag = typeof(MvHome)
+                },
+                new DataCmd
+                {
+                    Title = "树",
                     Note = "支持动态加载子节点，自定义节点样式、节点内容，动态设置节点模板，上下文菜单",
                     Tag = typeof(TvHome)
                 },

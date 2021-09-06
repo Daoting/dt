@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Model
 {
-    public partial class UserParamsList : Nav
+    public partial class UserParamsList : Mv
     {
         public UserParamsList()
         {

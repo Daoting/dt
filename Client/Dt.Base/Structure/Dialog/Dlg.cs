@@ -31,7 +31,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgPressed, INavHost
+    public partial class Dlg : Control, IDlgPressed
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -110,7 +110,7 @@ namespace Dt.Base
             "Content",
             typeof(object),
             typeof(Dlg),
-            new PropertyMetadata(null, OnContentChanged));
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty ShowVeilProperty = DependencyProperty.Register(
             "ShowVeil",
@@ -152,11 +152,6 @@ namespace Dt.Base
         {
             if (Kit.IsPhoneUI)
                 ((Dlg)d).OnPlacementChanged();
-        }
-
-        static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((Dlg)d).OnContentChanged();
         }
 
         static void OnShowVeilChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -485,7 +480,7 @@ namespace Dt.Base
 
             Button btn = (Button)GetTemplateChild("CloseButton");
             if (btn != null)
-                btn.Click += OnHeaderButtonClick;
+                btn.Click += (s, e) => Close();
 
             var rootGrid = (Grid)GetTemplateChild("RootGrid");
             if (rootGrid != null && !Kit.IsPhoneUI)
@@ -851,81 +846,6 @@ namespace Dt.Base
         /// <param name="p_result">对话框关闭时的返回值</param>
         protected virtual void OnClosed(bool p_result)
         {
-        }
-        #endregion
-
-        #region INavHost
-        Stack<Nav> _navCache;
-
-        /// <summary>
-        /// 向前导航到新内容
-        /// </summary>
-        /// <param name="p_content"></param>
-        void INavHost.Forward(Nav p_content)
-        {
-            Nav current;
-            if (p_content == null || (current = Content as Nav) == null)
-                return;
-
-            if (_navCache == null)
-            {
-                _navCache = new Stack<Nav>();
-                // 内容切换动画
-                var ls = new TransitionCollection();
-                ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
-                ContentTransitions = ls;
-            }
-            _navCache.Push(current);
-            Content = p_content;
-        }
-
-        /// <summary>
-        /// 返回上一内容
-        /// </summary>
-        void INavHost.Backward()
-        {
-            if (_navCache != null && _navCache.Count > 0)
-                Content = _navCache.Pop();
-        }
-
-        void OnContentChanged()
-        {
-            var nav = Content as Nav;
-            if (nav == null)
-                return;
-
-            if (_navCache != null)
-            {
-                if (_navCache.Count == 1)
-                    HeaderButtonText = "\uE010";
-                else if (_navCache.Count == 0)
-                    HeaderButtonText = "\uE009";
-            }
-
-            // 绑定Nav中的依赖属性
-            SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = nav });
-            SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = nav });
-            SetBinding(HideTitleBarProperty, new Binding { Path = new PropertyPath("HideTitleBar"), Source = nav });
-            nav.AddToHost(this);
-
-            if (string.IsNullOrEmpty(Title))
-                Title = "无标题";
-        }
-
-        void OnHeaderButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (_navCache != null)
-            {
-                // 避免连续返回时造成关闭误操作，使第一次点击停靠时无效！
-                if (_navCache.Count > 0)
-                    Content = _navCache.Pop();
-                else
-                    _navCache = null;
-            }
-            else
-            {
-                Close();
-            }
         }
         #endregion
 

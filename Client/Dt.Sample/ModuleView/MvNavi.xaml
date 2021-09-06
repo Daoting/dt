@@ -1,0 +1,29 @@
+﻿<a:Win
+    x:Class="Dt.Sample.MvNavi"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Sample">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:MvItem Title="左区" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="2">
+                <l:MvItem Title="主区" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="3">
+                <l:MvItem Title="右区" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

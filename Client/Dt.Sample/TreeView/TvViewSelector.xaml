@@ -24,7 +24,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="树">
-                <a:Tv x:Name="_tv" />
+                <a:TreeView x:Name="_tv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>

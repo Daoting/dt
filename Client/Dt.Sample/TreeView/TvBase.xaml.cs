@@ -126,7 +126,7 @@ namespace Dt.Sample
 
         void OnDefEnteredBrush(object sender, RoutedEventArgs e)
         {
-            _tv.ClearValue(Tv.EnteredBrushProperty);
+            _tv.ClearValue(Base.TreeView.EnteredBrushProperty);
         }
 
         void OnNoPressedBrush(object sender, RoutedEventArgs e)
@@ -141,7 +141,7 @@ namespace Dt.Sample
 
         void OnDefPressedBrush(object sender, RoutedEventArgs e)
         {
-            _tv.ClearValue(Tv.PressedBrushProperty);
+            _tv.ClearValue(Base.TreeView.PressedBrushProperty);
         }
 
         void OnScroll(object sender, RoutedEventArgs e)

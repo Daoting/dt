@@ -26,13 +26,15 @@ namespace Dt.Base
     /// 历史搜索项：自动记录历史搜索，可删，事件参数内容为普通文本
     /// 搜索事件：所有固定搜索项、搜索框、历史搜索项统一触发Search事件
     /// </summary>
-    public partial class SearchNav : Nav
+    [ContentProperty(Name = nameof(FixItems))]
+    public partial class SearchNav : Mv
     {
 
         public SearchNav()
         {
             InitializeComponent();
             Title = "搜索";
+            _lvFix.Data = FixItems;
         }
 
         /// <summary>
@@ -48,5 +50,10 @@ namespace Dt.Base
             get { return _tb.PlaceholderText; }
             set { _tb.PlaceholderText = value; }
         }
+
+        /// <summary>
+        /// 外部(xaml中)定义的固定搜索项列表
+        /// </summary>
+        public Nl<string> FixItems { get; } = new Nl<string>();
     }
 }

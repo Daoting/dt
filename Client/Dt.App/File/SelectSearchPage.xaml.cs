@@ -22,7 +22,7 @@ namespace Dt.App.File
     /// <summary>
     /// 搜索文件
     /// </summary>
-    public sealed partial class SelectSearchPage : Nav
+    public sealed partial class SelectSearchPage : Mv
     {
         readonly SelectFileDlg _owner;
 

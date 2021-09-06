@@ -31,12 +31,12 @@ namespace Dt.Base.FormView
             InitializeComponent();
             Title = "选择";
             _owner = p_owner;
-            Content = _owner.Tv;
+            Content = _owner.TreeView;
         }
 
         public async void ShowDlg()
         {
-            Tv tv = _owner.Tv;
+            TreeView tv = _owner.TreeView;
 
             tv.ItemClick -= OnSingleClick;
             if (tv.SelectionMode == SelectionMode.Multiple)
@@ -153,9 +153,9 @@ namespace Dt.Base.FormView
             // 暂未实现同步填充！
             List<object> ls = new List<object>();
             StringBuilder sb = new StringBuilder();
-            if (_owner.Tv.Data is Table tbl)
+            if (_owner.TreeView.Data is Table tbl)
             {
-                foreach (var row in _owner.Tv.SelectedItems.Cast<Row>())
+                foreach (var row in _owner.TreeView.SelectedItems.Cast<Row>())
                 {
                     if (sb.Length > 0)
                         sb.Append("#");
@@ -165,7 +165,7 @@ namespace Dt.Base.FormView
             }
             else
             {
-                foreach (var obj in _owner.Tv.SelectedItems)
+                foreach (var obj in _owner.TreeView.SelectedItems)
                 {
                     if (sb.Length > 0)
                         sb.Append("#");

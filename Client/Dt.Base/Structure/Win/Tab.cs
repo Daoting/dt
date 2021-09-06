@@ -24,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 增加属性控制的TabItem
     /// </summary>
-    public partial class Tab : TabItem, IPhonePage, INavHost
+    public partial class Tab : TabItem, IPhonePage
     {
         #region 静态内容
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
@@ -242,17 +242,17 @@ namespace Dt.Base
         internal Win OwnWin { get; set; }
         #endregion
 
-        #region INavHost
-        Stack<Nav> _navCache;
+        #region Mv
+        Stack<Mv> _navCache;
 
         /// <summary>
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>
-        void INavHost.Forward(Nav p_content)
+        internal void Forward(Mv p_content)
         {
-            Nav current;
-            if (p_content == null || (current = Content as Nav) == null)
+            Mv current;
+            if (p_content == null || (current = Content as Mv) == null)
                 return;
 
             if (Kit.IsPhoneUI)
@@ -264,7 +264,7 @@ namespace Dt.Base
 
             if (_navCache == null)
             {
-                _navCache = new Stack<Nav>();
+                _navCache = new Stack<Mv>();
                 // 内容切换动画
                 if (OwnTabs != null)
                 {
@@ -280,12 +280,61 @@ namespace Dt.Base
         /// <summary>
         /// 向后导航到上一内容
         /// </summary>
-        void INavHost.Backward()
+        internal void Backward()
         {
+            var mv = Content as Mv;
+            if (mv == null)
+            {
+                // 普通内容
+                if (Kit.IsPhoneUI)
+                    InputManager.GoBack();
+                return;
+            }
+
+            mv.StopWait();
             if (Kit.IsPhoneUI)
+            {
                 InputManager.GoBack();
-            else
-                OnBackButtonClick();
+            }
+            else if (_navCache != null && _navCache.Count > 0)
+            {
+                Content = _navCache.Pop();
+            }
+            else if (mv.OwnDlg != null)
+            {
+                // 带遮罩的Mv
+                mv.OwnDlg.Close();
+            }
+        }
+
+        /// <summary>
+        /// 切换内容
+        /// </summary>
+        protected override void OnContentChanged()
+        {
+            if (!Kit.IsPhoneUI)
+            {
+                base.OnContentChanged();
+                BackButtonVisibility = Visibility.Collapsed;
+            }
+
+            var mv = Content as Mv;
+            if (mv == null)
+                return;
+
+            if (!Kit.IsPhoneUI
+                && ((_navCache != null && _navCache.Count > 0) || mv.OwnDlg != null))
+            {
+                BackButtonVisibility = Visibility.Visible;
+            }
+
+            // 绑定Nav中的依赖属性
+            SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = mv });
+            SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = mv });
+            if (Kit.IsPhoneUI)
+                SetBinding(HideTitleBarProperty, new Binding { Path = new PropertyPath("HideTitleBar"), Source = mv });
+
+            mv.AddToHost(this);
         }
         #endregion
 
@@ -329,37 +378,12 @@ namespace Dt.Base
                 WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
-                    btn.Click += InputManager.OnBackClick;
+                    btn.Click += (s, e) => Backward();
             }
         }
         #endregion
 
         #region 重写方法
-        /// <summary>
-        /// 切换内容
-        /// </summary>
-        protected override void OnContentChanged()
-        {
-            if (!Kit.IsPhoneUI)
-            {
-                base.OnContentChanged();
-                BackButtonVisibility = (_navCache != null && _navCache.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            var nav = Content as Nav;
-            if (nav == null)
-                return;
-
-            // 绑定Nav中的依赖属性
-            SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = nav });
-            SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = nav });
-            SetBinding(HideTitleBarProperty, new Binding { Path = new PropertyPath("HideTitleBar"), Source = nav });
-            nav.AddToHost(this);
-
-            if (string.IsNullOrEmpty(Title))
-                Title = "无标题";
-        }
-
         /// <summary>
         /// 开始拖动标签
         /// </summary>
@@ -382,12 +406,6 @@ namespace Dt.Base
                 ClearValue(TabItemPanel.SplitterChangeProperty);
                 Owner.Items.Remove(this);
             }
-        }
-
-        internal void OnBackButtonClick()
-        {
-            if (_navCache != null && _navCache.Count > 0)
-                Content = _navCache.Pop();
         }
 
         void OnIsPinnedChanged()

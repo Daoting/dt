@@ -55,7 +55,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly Tv _tv;
+        readonly TreeView _tv;
         Grid _grid;
         TreeDlg _dlg;
         #endregion
@@ -64,7 +64,7 @@ namespace Dt.Base
         public CTree()
         {
             DefaultStyleKey = typeof(CTree);
-            _tv = new Tv();
+            _tv = new TreeView();
         }
         #endregion
 
@@ -80,7 +80,7 @@ namespace Dt.Base
         public event EventHandler<object> AfterSelect;
         #endregion
 
-        #region Tv属性
+        #region TreeView属性
         /// <summary>
         /// 获取设置数据源对象，Table已实现ITreeData
         /// </summary>
@@ -170,9 +170,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取Tv对象
+        /// 获取TreeView对象
         /// </summary>
-        public Tv Tv
+        public TreeView TreeView
         {
             get { return _tv; }
         }

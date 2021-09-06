@@ -8,7 +8,8 @@
         <a:Tabs>
             <a:Tab>
                 <a:SearchNav x:Name="_sn">
-                    
+                    <x:String>选项一</x:String>
+                    <x:String>选项二</x:String>
                 </a:SearchNav>
             </a:Tab>
         </a:Tabs>

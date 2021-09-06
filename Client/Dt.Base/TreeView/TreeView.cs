@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.TreeView;
+using Dt.Base.TreeViews;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
@@ -32,84 +32,84 @@ namespace Dt.Base
     /// 树控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class Tv : DtControl, IViewItemHost, IMenuHost
+    public partial class TreeView : DtControl, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
             "Data",
             typeof(ITreeData),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(null, OnDataChanged));
 
         public readonly static DependencyProperty ViewProperty = DependencyProperty.Register(
             "View",
             typeof(object),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(null, OnViewChanged));
 
         public readonly static DependencyProperty CellExProperty = DependencyProperty.Register(
             "CellEx",
             typeof(Type),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(null, OnViewExChanged));
 
         public readonly static DependencyProperty IsVirtualizedProperty = DependencyProperty.Register(
             "IsVirtualized",
             typeof(bool),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(true, OnIsVirtualizedChanged));
 
         public readonly static DependencyProperty SelectionModeProperty = DependencyProperty.Register(
             "SelectionMode",
             typeof(SelectionMode),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(SelectionMode.Single, OnSelectionModeChanged));
 
         public readonly static DependencyProperty FixedRootProperty = DependencyProperty.Register(
             "FixedRoot",
             typeof(object),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(null));
 
         public static readonly DependencyProperty ShowRowLineProperty = DependencyProperty.Register(
             "ShowRowLine",
             typeof(bool),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(true, OnReloadAllRows));
 
         public static readonly DependencyProperty IndentProperty = DependencyProperty.Register(
             "Indent",
             typeof(int),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(20));
 
         public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
             "EnteredBrush",
             typeof(Brush),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0xff, 0xff, 0x00))));
 
         public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(
             "PressedBrush",
             typeof(Brush),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0x00, 0x00, 0x00))));
 
         public static readonly DependencyProperty IsDynamicLoadingProperty = DependencyProperty.Register(
             "IsDynamicLoading",
             typeof(bool),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(false));
 
         public static readonly DependencyProperty HasSelectedProperty = DependencyProperty.Register(
             "HasSelected",
             typeof(bool),
-            typeof(Tv),
+            typeof(TreeView),
             new PropertyMetadata(false));
 
         static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             if (tv._dataView != null)
                 tv._dataView.Unload();
 
@@ -127,14 +127,14 @@ namespace Dt.Base
 
         static void OnReloadAllRows(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             if (tv._isLoaded)
                 tv._panel.Reload();
         }
 
         static void OnViewExChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             Type tp = (Type)e.NewValue;
             if (tp == null)
             {
@@ -173,7 +173,7 @@ namespace Dt.Base
 
         static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             if (e.NewValue != null)
             {
                 if (tv.IsVirtualized && e.NewValue is DataTemplateSelector)
@@ -185,7 +185,7 @@ namespace Dt.Base
 
         static void OnIsVirtualizedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             if (tv._isLoaded)
             {
                 tv.Scroll.ViewChanged -= tv.OnScrollViewChanged;
@@ -197,7 +197,7 @@ namespace Dt.Base
 
         static void OnSelectionModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Tv tv = (Tv)d;
+            TreeView tv = (TreeView)d;
             if (tv._isLoaded)
             {
                 foreach (var row in tv.RootItems.GetAllItems())
@@ -234,9 +234,9 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        public Tv()
+        public TreeView()
         {
-            DefaultStyleKey = typeof(Tv);
+            DefaultStyleKey = typeof(TreeView);
             RootItems = new TvRootItems(this);
             _selectedRows = new ObservableCollection<TvItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;

@@ -7,12 +7,12 @@
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--Tv-->
-    <Style TargetType="a:Tv">
+    <!--TreeView-->
+    <Style TargetType="a:TreeView">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="a:Tv">
+                <ControlTemplate TargetType="a:TreeView">
                     <Border x:Name="Border"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"

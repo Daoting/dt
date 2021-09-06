@@ -11,7 +11,7 @@ using System;
 using Windows.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.TreeView
+namespace Dt.Base.TreeViews
 {
     /// <summary>
     /// IsSelected -> 字符图标

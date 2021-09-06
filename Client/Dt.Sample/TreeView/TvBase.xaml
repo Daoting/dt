@@ -7,11 +7,11 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="树">
-                <a:Tv x:Name="_tv">
+                <a:TreeView x:Name="_tv">
                     <DataTemplate>
                         <a:Dot ID="name" />
                     </DataTemplate>
-                </a:Tv>
+                </a:TreeView>
             </a:Tab>
         </a:Tabs>
     </a:Main>

@@ -11,18 +11,18 @@ using Dt.Core;
 using System.Collections.Specialized;
 #endregion
 
-namespace Dt.Base.TreeView
+namespace Dt.Base.TreeViews
 {
     /// <summary>
-    /// Tv数据视图
+    /// TreeView数据视图
     /// </summary>
     internal class TvDataView
     {
-        Tv _owner;
+        TreeView _owner;
         ITreeData _data;
 
         #region 构造方法
-        public TvDataView(Tv p_owner, ITreeData p_data)
+        public TvDataView(TreeView p_owner, ITreeData p_data)
         {
             _owner = p_owner;
             _data = p_data;

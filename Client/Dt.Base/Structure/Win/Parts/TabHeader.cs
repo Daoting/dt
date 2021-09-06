@@ -137,9 +137,9 @@ namespace Dt.Base.Docking
         void OnBackClick(object sender, RoutedEventArgs e)
         {
             if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                tab.OnBackButtonClick();
+                tab.Backward();
             else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
-                autoTab.OnBackButtonClick();
+                autoTab.Backward();
         }
 
         bool CanFloat()

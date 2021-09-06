@@ -15,7 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.TreeView
+namespace Dt.Base.TreeViews
 {
     /// <summary>
     /// 树节点布局面板
@@ -27,7 +27,7 @@ namespace Dt.Base.TreeView
         static Rect _rcEmpty = new Rect();
         static Size _sizeEmpty = new Size();
 
-        Tv _owner;
+        TreeView _owner;
         bool _initVirRow;
         double _rowHeight;
         double _pageHeight;
@@ -38,7 +38,7 @@ namespace Dt.Base.TreeView
         Size _maxSize = Size.Empty;
         #endregion
 
-        public TvPanel(Tv p_owner)
+        public TvPanel(TreeView p_owner)
         {
             _owner = p_owner;
             Background = Res.TransparentBrush;

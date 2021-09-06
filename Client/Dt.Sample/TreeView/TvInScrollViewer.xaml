@@ -10,11 +10,11 @@
                 <ScrollViewer x:Name="_sv">
                     <StackPanel>
                         <Border x:Name="_top" Height="100" Background="Gray" />
-                        <a:Tv x:Name="_tv">
+                        <a:TreeView x:Name="_tv">
                             <DataTemplate>
                                 <a:Dot ID="name" />
                             </DataTemplate>
-                        </a:Tv>
+                        </a:TreeView>
                         <Border x:Name="_bottom" Height="100" Background="Gray" />
                     </StackPanel>
                 </ScrollViewer>

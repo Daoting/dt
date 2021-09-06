@@ -13,17 +13,17 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 #endregion
 
-namespace Dt.Base.TreeView
+namespace Dt.Base.TreeViews
 {
     /// <summary>
     /// 根节点集合
     /// </summary>
     internal class TvRootItems : List<TvItem>
     {
-        Tv _owner;
+        TreeView _owner;
         int _cntExpanded = -1;
 
-        public TvRootItems(Tv p_owner)
+        public TvRootItems(TreeView p_owner)
         {
             _owner = p_owner;
         }

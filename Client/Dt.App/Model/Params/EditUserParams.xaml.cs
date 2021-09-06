@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.App.Model
 {
-    public sealed partial class EditUserParams : Nav
+    public sealed partial class EditUserParams : Mv
     {
         public EditUserParams(string p_id)
         {

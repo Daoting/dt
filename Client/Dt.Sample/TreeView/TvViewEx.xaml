@@ -7,7 +7,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="树">
-                <a:Tv x:Name="_tv">
+                <a:TreeView x:Name="_tv">
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <a:Dot ID="icon" Margin="10,0,10,0" VerticalAlignment="Center" />
@@ -17,7 +17,7 @@
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
-                </a:Tv>
+                </a:TreeView>
             </a:Tab>
         </a:Tabs>
     </a:Main>

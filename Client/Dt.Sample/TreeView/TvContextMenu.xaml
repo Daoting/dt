@@ -7,7 +7,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="树">
-                <a:Tv x:Name="_tv">
+                <a:TreeView x:Name="_tv">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="保存" Icon="保存" />
@@ -21,7 +21,7 @@
                     <DataTemplate>
                         <a:Dot ID="name" />
                     </DataTemplate>
-                </a:Tv>
+                </a:TreeView>
             </a:Tab>
         </a:Tabs>
     </a:Main>

@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 #endregion
 
-namespace Dt.Base.TreeView
+namespace Dt.Base.TreeViews
 {
     /// <summary>
     /// 树节点面板
@@ -29,7 +29,7 @@ namespace Dt.Base.TreeView
         #region 成员变量
         const double _btnWidth = 40;
         const double _cbWidth = 25;
-        Tv _owner;
+        TreeView _owner;
         TvItem _row;
         Rectangle _rcPointer;
         double _indent;
@@ -40,13 +40,13 @@ namespace Dt.Base.TreeView
         #endregion
 
         #region 构造方法
-        public TvPanelItem(Tv p_owner)
+        public TvPanelItem(TreeView p_owner)
         {
             _owner = p_owner;
             LoadContent();
         }
 
-        public TvPanelItem(Tv p_owner, TvItem p_row)
+        public TvPanelItem(TreeView p_owner, TvItem p_row)
         {
             _owner = p_owner;
             _row = p_row;
