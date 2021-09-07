@@ -14,28 +14,32 @@ using System.Threading.Tasks;
 
 namespace Dt.App.File
 {
-    public sealed partial class EditFolderDlg : Dlg
+    public sealed partial class EditFolder : Mv
     {
-        bool _needRefresh;
         IFileMgr _fileMgr;
 
-        public EditFolderDlg()
+        public EditFolder(IFileMgr p_fileMgr)
         {
             InitializeComponent();
+            _fileMgr = p_fileMgr;
         }
 
-        public async Task<bool> Show(IFileMgr p_fileMgr, Row p_row)
+        protected override void OnInit(object p_params)
         {
-            _fileMgr = p_fileMgr;
             Row row = CreateData();
-            if (p_row != null)
+            if (p_params is Row r)
             {
-                row.InitVal(0, p_row.ID);
-                row.InitVal(1, p_row["name"]);
+                row.InitVal(0, r.ID);
+                row.InitVal(1, r["name"]);
             }
             _fv.Data = row;
-            await ShowAsync();
-            return _needRefresh;
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            if (_fv.Row.IsChanged)
+                return Kit.Confirm("数据未保存，要放弃修改吗？");
+            return Task.FromResult(true);
         }
 
         Row CreateData()
@@ -54,7 +58,7 @@ namespace Dt.App.File
             Row row = _fv.Row;
             if (await _fileMgr.SaveFolder(row.ID, row.Str("name")))
             {
-                _needRefresh = true;
+                Result = true;
                 _fv.Data = CreateData();
             }
         }
@@ -62,13 +66,6 @@ namespace Dt.App.File
         void OnAdd(object sender, Mi e)
         {
             _fv.Data = CreateData();
-        }
-
-        protected override Task<bool> OnClosing(bool p_result)
-        {
-            if (_fv.Row.IsChanged)
-                return Kit.Confirm("数据未保存，要放弃修改吗？");
-            return Task.FromResult(true);
         }
     }
 }

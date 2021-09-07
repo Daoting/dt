@@ -1,5 +1,5 @@
 ﻿<a:Mv
-    x:Class="Dt.Base.SearchNav"
+    x:Class="Dt.Base.SearchMv"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

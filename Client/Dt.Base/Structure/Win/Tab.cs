@@ -99,6 +99,12 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(0));
 
+        public static readonly DependencyProperty ContentTransitionsProperty = DependencyProperty.Register(
+            "ContentTransitions",
+            typeof(TransitionCollection),
+            typeof(Tab),
+            new PropertyMetadata(null));
+
         static void OnIsPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Tab)d).OnIsPinnedChanged();
@@ -229,6 +235,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取或设置切换内容时的转换
+        /// </summary>
+        public TransitionCollection ContentTransitions
+        {
+            get { return (TransitionCollection)GetValue(ContentTransitionsProperty); }
+            set { SetValue(ContentTransitionsProperty, value); }
+        }
+
+        /// <summary>
         /// 获取所属的Tabs
         /// </summary>
         public Tabs OwnTabs
@@ -255,7 +270,7 @@ namespace Dt.Base
             if (p_content == null || (current = Content as Mv) == null)
                 return;
 
-            if (Kit.IsPhoneUI)
+            if (Kit.IsPhoneUI && p_content.OwnDlg == null)
             {
                 Tab tab = new Tab { OwnWin = OwnWin, Content = p_content };
                 PhonePage.Show(tab);
@@ -265,13 +280,14 @@ namespace Dt.Base
             if (_navCache == null)
             {
                 _navCache = new Stack<Mv>();
+
                 // 内容切换动画
+                var ls = new TransitionCollection();
+                ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
                 if (OwnTabs != null)
-                {
-                    var ls = new TransitionCollection();
-                    ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
                     OwnTabs.ContentTransitions = ls;
-                }
+                else if (Kit.IsPhoneUI)
+                    ContentTransitions = ls;
             }
             _navCache.Push(current);
             Content = p_content;
@@ -280,7 +296,7 @@ namespace Dt.Base
         /// <summary>
         /// 向后导航到上一内容
         /// </summary>
-        internal void Backward()
+        internal async void Backward()
         {
             var mv = Content as Mv;
             if (mv == null)
@@ -291,8 +307,11 @@ namespace Dt.Base
                 return;
             }
 
-            mv.StopWait();
-            if (Kit.IsPhoneUI)
+            // 不允许返回
+            if (!await mv.BeforeClose())
+                return;
+
+            if (Kit.IsPhoneUI && mv.OwnDlg == null)
             {
                 InputManager.GoBack();
             }
@@ -305,6 +324,7 @@ namespace Dt.Base
                 // 带遮罩的Mv
                 mv.OwnDlg.Close();
             }
+            mv.AfterClosed();
         }
 
         /// <summary>
@@ -313,19 +333,31 @@ namespace Dt.Base
         protected override void OnContentChanged()
         {
             if (!Kit.IsPhoneUI)
-            {
                 base.OnContentChanged();
-                BackButtonVisibility = Visibility.Collapsed;
-            }
 
             var mv = Content as Mv;
             if (mv == null)
-                return;
-
-            if (!Kit.IsPhoneUI
-                && ((_navCache != null && _navCache.Count > 0) || mv.OwnDlg != null))
             {
-                BackButtonVisibility = Visibility.Visible;
+                if (!Kit.IsPhoneUI)
+                    BackButtonVisibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (mv.OwnDlg != null)
+            {
+                if (mv.OwnDlg.HideTitleBar
+                    || (_navCache != null && _navCache.Count > 0))
+                {
+                    BackButtonVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    BackButtonVisibility = Visibility.Collapsed;
+                }
+            }
+            else if (!Kit.IsPhoneUI)
+            {
+                BackButtonVisibility = (_navCache != null && _navCache.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
             }
 
             // 绑定Nav中的依赖属性
@@ -373,9 +405,14 @@ namespace Dt.Base
 
         void InitPhoneUITemplate()
         {
-            if (BackButtonVisibility == Visibility.Visible)
+            if (!HideTitleBar)
             {
-                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
+                if (OwnWin != null && BackButtonVisibility == Visibility.Visible)
+                {
+                    // 首页无标题右键菜单
+                    WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
+                }
+
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
                     btn.Click += (s, e) => Backward();

@@ -7,10 +7,10 @@
     <a:Pane>
         <a:Tabs>
             <a:Tab>
-                <a:SearchNav x:Name="_sn">
+                <a:SearchMv x:Name="_sn">
                     <x:String>选项一</x:String>
                     <x:String>选项二</x:String>
-                </a:SearchNav>
+                </a:SearchMv>
             </a:Tab>
         </a:Tabs>
     </a:Pane>

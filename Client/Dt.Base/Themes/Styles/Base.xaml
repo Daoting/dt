@@ -12,8 +12,6 @@
         <Setter Property="Background" Value="{StaticResource 主题蓝色}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
-        <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}" />
-        <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:BtnItem">

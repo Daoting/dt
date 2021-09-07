@@ -121,13 +121,13 @@ namespace Dt.App.File
 
         async void OnAddFolder(object sender, Mi e)
         {
-            if (await new EditFolderDlg().Show(_fileMgr, null))
+            if (await Forward<bool>(new EditFolder(_fileMgr)))
                 LoadData();
         }
 
         async void OnEditFolder(object sender, Mi e)
         {
-            if (await new EditFolderDlg().Show(_fileMgr, e.Row))
+            if (await Forward<bool>(new EditFolder(_fileMgr), e.Row))
                 LoadData();
         }
 

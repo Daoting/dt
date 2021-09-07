@@ -23,7 +23,6 @@ namespace Dt.Sample
 {
     public partial class MvItem : Mv
     {
-
         public MvItem()
         {
             InitializeComponent();
@@ -35,7 +34,8 @@ namespace Dt.Sample
                 Kit.Msg($"输入参数：{p_params}");
 
             Result = new Random().Next(100);
-            Title = Result.ToString();
+            Title = "标题" + Result.ToString();
+            _mi.ID = "功能" + Title;
         }
 
         async void OnForward(object sender, RoutedEventArgs e)
@@ -60,6 +60,15 @@ namespace Dt.Sample
         void OnBackward(object sender, RoutedEventArgs e)
         {
             Backward();
+        }
+
+        void OnShowDlg(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Dlg { IsPinned = true };
+            if ((bool)_cbDlgTitle.IsChecked)
+                dlg.HideTitleBar = true;
+            dlg.LoadMv(new MvItem());
+            dlg.Show();
         }
     }
 }

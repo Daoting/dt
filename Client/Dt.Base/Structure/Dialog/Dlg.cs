@@ -471,6 +471,25 @@ namespace Dt.Base
             if (Canvas.GetZIndex(_canvas) != _currentZIndex)
                 Canvas.SetZIndex(_canvas, ++_currentZIndex);
         }
+
+        /// <summary>
+        /// 加载Mv，PhoneUI外套Tab，WinUI外套Tabs\Tab
+        /// </summary>
+        /// <param name="p_mv"></param>
+        public void LoadMv(Mv p_mv)
+        {
+            p_mv.OwnDlg = this;
+            if (Kit.IsPhoneUI)
+            {
+                Content = new Tab { Content = p_mv };
+            }
+            else
+            {
+                Tabs tabs = new Tabs();
+                tabs.Items.Add(new Tab { Content = p_mv });
+                Content = tabs;
+            }
+        }
         #endregion
 
         #region 重写方法

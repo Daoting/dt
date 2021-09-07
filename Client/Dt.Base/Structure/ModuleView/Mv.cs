@@ -88,7 +88,7 @@ namespace Dt.Base
         internal Dlg OwnDlg
         {
             get { return (Dlg)GetValue(OwnDlgProperty); }
-            private set { SetValue(OwnDlgProperty, value); }
+            set { SetValue(OwnDlgProperty, value); }
         }
 
         /// <summary>
@@ -121,9 +121,15 @@ namespace Dt.Base
         {
             p_content.Initialize(p_params);
             if (p_isModal)
+            {
                 ShowDlg(p_content);
+            }
             else
+            {
+                if (OwnDlg != null)
+                    p_content.OwnDlg = OwnDlg;
                 _tab.Forward(p_content);
+            }
         }
 
         /// <summary>
@@ -156,16 +162,47 @@ namespace Dt.Base
         protected virtual void OnInit(object p_params)
         {
         }
+
+        /// <summary>
+        /// 后退之前
+        /// </summary>
+        /// <returns>true 表允许关闭</returns>
+        protected virtual Task<bool> OnClosing()
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// 后退完成
+        /// </summary>
+        protected virtual void OnClosed()
+        {
+        }
         #endregion
 
         #region 内部方法
         /// <summary>
-        /// 将内容添加到宿主Tab
+        /// 将内容添加到Tab
         /// </summary>
         /// <param name="p_tab">宿主容器</param>
         internal void AddToHost(Tab p_tab)
         {
             _tab = p_tab;
+        }
+
+        internal async Task<bool> BeforeClose()
+        {
+            if (await OnClosing())
+            {
+                StopWait();
+                return true;
+            }
+            return false;
+        }
+
+        internal void AfterClosed()
+        {
+            OnClosed();
         }
 
         /// <summary>
@@ -183,7 +220,7 @@ namespace Dt.Base
         /// <summary>
         /// 结束等待当前Mv
         /// </summary>
-        internal void StopWait()
+        void StopWait()
         {
             // Forward<T>的情况
             if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
@@ -205,28 +242,29 @@ namespace Dt.Base
 
         void ShowDlg(Mv p_content)
         {
+            Dlg dlg;
             if (Kit.IsPhoneUI)
             {
-                Tab tab = new Tab { OwnWin = _tab.OwnWin, Content = p_content };
-                PhonePage.Show(tab);
-                return;
+                dlg = new Dlg()
+                {
+                    HideTitleBar = true,
+                    IsPinned = true,
+                };
             }
-
-            var dlg = new Dlg()
+            else
             {
-                PlacementTarget = _tab.OwnTabs,
-                WinPlacement = DlgPlacement.TargetOverlap,
-                Resizeable = false,
-                HideTitleBar = true,
-                ShowVeil = true,
-                IsPinned = true,
-                BorderThickness = new Thickness(0),
-            };
-            p_content.OwnDlg = dlg;
-
-            Tabs tabs = new Tabs();
-            tabs.Items.Add(new Tab { Content = p_content });
-            dlg.Content = tabs;
+                dlg = new Dlg()
+                {
+                    PlacementTarget = _tab.OwnTabs,
+                    WinPlacement = DlgPlacement.TargetOverlap,
+                    Resizeable = false,
+                    HideTitleBar = true,
+                    ShowVeil = true,
+                    IsPinned = true,
+                    BorderThickness = new Thickness(0),
+                };
+            }
+            dlg.LoadMv(p_content);
             dlg.Show();
         }
         #endregion

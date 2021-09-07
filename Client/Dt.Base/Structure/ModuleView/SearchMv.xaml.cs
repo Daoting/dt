@@ -27,10 +27,10 @@ namespace Dt.Base
     /// 搜索事件：所有固定搜索项、搜索框、历史搜索项统一触发Search事件
     /// </summary>
     [ContentProperty(Name = nameof(FixItems))]
-    public partial class SearchNav : Mv
+    public partial class SearchMv : Mv
     {
 
-        public SearchNav()
+        public SearchMv()
         {
             InitializeComponent();
             Title = "搜索";

@@ -4,15 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Pane InitWidth="200">
+    <a:Pane InitWidth="150">
         <a:Tabs>
             <a:Tab Title="功能列表">
                 <a:Lv x:Name="_lv" ItemClick="OnMainInfoClick">
                     <DataTemplate>
-                        <StackPanel Padding="10">
-                            <a:Dot ID="Title" />
-                            <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
-                        </StackPanel>
+                        <a:Dot ID="Title" Padding="10" />
                     </DataTemplate>
                 </a:Lv>
             </a:Tab>

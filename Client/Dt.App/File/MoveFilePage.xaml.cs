@@ -27,7 +27,7 @@ namespace Dt.App.File
             _fileMgr = p_fileMgr;
             _owner = p_owner;
             LoadData();
-            Title = $"移到->{_fileMgr.FolderName} ";
+            Title = _fileMgr.FolderName;
         }
 
         async void LoadData()

@@ -47,7 +47,7 @@ namespace Dt.App.File
                 Height = 600;
             }
 
-            Content = new SelectLibPage(this);
+            LoadMv(new SelectLibPage(this));
             return await ShowAsync();
         }
     }

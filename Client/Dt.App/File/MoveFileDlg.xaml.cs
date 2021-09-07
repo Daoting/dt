@@ -26,6 +26,7 @@ namespace Dt.App.File
         public MoveFileDlg()
         {
             InitializeComponent();
+            Title = "移到";
         }
 
         public IFileMgr Target { get; private set; }
@@ -41,7 +42,7 @@ namespace Dt.App.File
             }
 
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
-            Content = new MoveFilePage(mgr, this);
+            LoadMv(new MoveFilePage(mgr, this));
             return await ShowAsync();
         }
 
