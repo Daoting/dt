@@ -85,10 +85,10 @@ namespace Dt.Base
         /// <summary>
         /// 带遮罩时的Dlg容器
         /// </summary>
-        internal Dlg OwnDlg
+        public Dlg OwnDlg
         {
             get { return (Dlg)GetValue(OwnDlgProperty); }
-            set { SetValue(OwnDlgProperty, value); }
+            internal set { SetValue(OwnDlgProperty, value); }
         }
 
         /// <summary>
@@ -119,7 +119,6 @@ namespace Dt.Base
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         public void Forward(Mv p_content, object p_params = null, bool p_isModal = false)
         {
-            p_content.Initialize(p_params);
             if (p_isModal)
             {
                 ShowDlg(p_content);
@@ -130,6 +129,10 @@ namespace Dt.Base
                     p_content.OwnDlg = OwnDlg;
                 _tab.Forward(p_content);
             }
+
+            // 初始化
+            p_content.Result = null;
+            p_content.OnInit(p_params);
         }
 
         /// <summary>
@@ -231,15 +234,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 导航前的初始化
+        /// 用带遮罩的Dlg承载Mv，遮罩为了禁止对其他位置编辑
         /// </summary>
-        /// <param name="p_params"></param>
-        void Initialize(object p_params)
-        {
-            Result = null;
-            OnInit(p_params);
-        }
-
+        /// <param name="p_content"></param>
         void ShowDlg(Mv p_content)
         {
             Dlg dlg;

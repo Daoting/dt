@@ -11,15 +11,15 @@
     </a:Mv.Menu>
     
     <StackPanel Padding="10" Spacing="10">
-        <a:CBar Title="导航设置" />
+        <a:CBar Title="向前导航设置" />
         <CheckBox x:Name="_cbModal" Content="带遮罩的模式视图" />
         <CheckBox x:Name="_cbInput" Content="包含导航参数" />
         <CheckBox x:Name="_cbResult" Content="包含返回结果" />
         <CheckBox x:Name="_cbHideTitle" Content="隐藏标题栏，PhoneUI模式有效" />
         <Button Content="向前导航" Click="OnForward" />
-        <Button Content="返回" Click="OnBackward" />
-        <a:CBar Title="对话框" />
+        <a:CBar Title="其他" />
         <CheckBox x:Name="_cbDlgTitle" Content="隐藏对话框标题" />
         <Button Content="对话框加载Mv" Click="OnShowDlg" />
+        <Button Content="返回" Click="OnBackward" />
     </StackPanel>
 </a:Mv>

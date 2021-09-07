@@ -98,6 +98,7 @@
                             <TextBlock Text="{TemplateBinding Title}"
                                        VerticalAlignment="Center"
                                        Foreground="{StaticResource 默认背景}"
+                                       FontSize="{StaticResource 标题字}"
                                        TextTrimming="CharacterEllipsis"
                                        TextWrapping="NoWrap"
                                        Margin="4,0,10,0"

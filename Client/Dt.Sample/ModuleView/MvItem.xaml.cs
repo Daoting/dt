@@ -34,8 +34,8 @@ namespace Dt.Sample
                 Kit.Msg($"输入参数：{p_params}");
 
             Result = new Random().Next(100);
-            Title = "标题" + Result.ToString();
-            _mi.ID = "功能" + Title;
+            Title = (OwnDlg != null ? "对话框" : "标题") + Result.ToString();
+            _mi.ID = "菜单" + Result.ToString();
         }
 
         async void OnForward(object sender, RoutedEventArgs e)
@@ -64,10 +64,10 @@ namespace Dt.Sample
 
         void OnShowDlg(object sender, RoutedEventArgs e)
         {
-            var dlg = new Dlg { IsPinned = true };
+            var dlg = new Dlg { IsPinned = true, Title = "内嵌Mv" };
             if ((bool)_cbDlgTitle.IsChecked)
                 dlg.HideTitleBar = true;
-            dlg.LoadMv(new MvItem());
+            dlg.LoadMv(new MvItem { Title = "对话框" });
             dlg.Show();
         }
     }
