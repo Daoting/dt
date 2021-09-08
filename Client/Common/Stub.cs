@@ -200,15 +200,15 @@ namespace Dt.Shell
                 "state",
                 new SqliteTblsInfo
                 {
-                    Version = "f54911e74b7e9b6623f53fe0057441a3",
+                    Version = "b52141c5528d02be53e32e6fb8d2310c",
                     Tables = new List<Type>
                     {
                         typeof(Dt.App.MenuFav),
                         typeof(Dt.App.UserMenu),
                         typeof(Dt.App.File.ReadFileHistory),
                         typeof(Dt.Base.Docking.DockLayout),
+                        typeof(Dt.Base.ModuleView.SearchHistory),
                         typeof(Dt.Base.FormView.CellLastVal),
-                        typeof(Dt.Base.FormView.SearchFvHis),
                         typeof(Dt.Base.Chat.ChatMember),
                         typeof(Dt.Base.Chat.Letter),
                         typeof(Dt.Core.Model.ClientLog),

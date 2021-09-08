@@ -11,18 +11,18 @@ using Dt.Core;
 using Dt.Core.Sqlite;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.ModuleView
 {
     /// <summary>
     /// 查询面板历史
     /// </summary>
     [Sqlite("state")]
-    public class SearchFvHis : Entity
+    public class SearchHistory : Entity
     {
         #region 构造方法
-        SearchFvHis() { }
+        SearchHistory() { }
 
-        public SearchFvHis(
+        public SearchHistory(
             string BaseUri = default,
             string Content = default)
         {

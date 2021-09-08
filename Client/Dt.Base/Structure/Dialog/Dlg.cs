@@ -481,6 +481,7 @@ namespace Dt.Base
             p_mv.OwnDlg = this;
             if (Kit.IsPhoneUI)
             {
+                HideTitleBar = true;
                 Content = new Tab { Content = p_mv };
             }
             else

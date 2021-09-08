@@ -4,29 +4,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <Grid>
+    <Grid x:Name="_grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBox x:Name="_tb" PlaceholderText="搜索" />
-        </Grid>
 
         <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1">
-            <StackPanel>
-                <a:CBar Title="常用" />
-                <a:Lv x:Name="_lvFix">
+            <StackPanel x:Name="_sp">
+                <a:Lv x:Name="_lvFix"
+                      ItemClick="OnFixClick"
+                      ViewMode="Tile"
+                      SelectionMode="None"
+                      ItemHeight="50"
+                      BorderBrush="{StaticResource 浅灰边框}"
+                      BorderThickness="0,1,0,0">
                     <DataTemplate>
-                        <a:Dot ID="#" Margin="10" />
+                        <a:Dot ID="#" Foreground="{StaticResource 主题蓝色}" HorizontalAlignment="Center" />
                     </DataTemplate>
                 </a:Lv>
-                <a:CBar Title="搜索历史" />
-                <a:Lv x:Name="_lvHis" />
+                <a:CBar Margin="0,10,0,0">
+                    <Grid Background="{StaticResource 浅灰背景}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                            <TextBlock Text="&#xE02D;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       VerticalAlignment="Center"
+                                       Margin="0, 0, 4, 0" />
+                            <TextBlock Text="搜索历史" VerticalAlignment="Center" TextWrapping="NoWrap" />
+                        </StackPanel>
+                        <Button Content="&#xE00A;" Click="OnClearHis" Style="{StaticResource 字符按钮}" Margin="0,0,10,0" Grid.Column="1" />
+                    </Grid>
+                </a:CBar>
+                <a:Lv x:Name="_lvHis" ItemClick="OnHisClick">
+                    <DataTemplate>
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <a:Dot ID="Content" Foreground="{StaticResource 主题蓝色}" />
+                            <Button Content="&#xE009;" Click="OnDelHis" Style="{StaticResource 字符按钮}" Grid.Column="1" />
+                        </Grid>
+                    </DataTemplate>
+                </a:Lv>
             </StackPanel>
         </ScrollViewer>
     </Grid>

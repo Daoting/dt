@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base.FormView;
+using Dt.Base.ModuleView;
 using Dt.Core;
 using System;
 using Windows.Foundation;
@@ -120,9 +121,9 @@ namespace Dt.Base
         {
             _lastText = p_text;
             // 删除重复
-            AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{p_text}'");
+            AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}' and Content='{p_text}'");
 
-            SearchFvHis his = new SearchFvHis(BaseUri: _baseUri, Content: p_text);
+            SearchHistory his = new SearchHistory(BaseUri: _baseUri, Content: p_text);
             await AtState.Save(his, false);
 
             using (Items.Defer())
@@ -138,7 +139,7 @@ namespace Dt.Base
             {
                 RemoveAllHis();
             }
-            AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}'");
+            AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}'");
         }
 
         void RemoveAllHis()
@@ -151,14 +152,14 @@ namespace Dt.Base
 
         void OnClickHis(object sender, RoutedEventArgs e)
         {
-            SearchFvHis his = (SearchFvHis)((Button)sender).DataContext;
+            SearchHistory his = (SearchHistory)((Button)sender).DataContext;
             OnSearch(his.Content);
         }
 
         void OnDelHis(object sender, RoutedEventArgs e)
         {
-            SearchFvHis his = (SearchFvHis)((Button)sender).DataContext;
-            if (AtState.Exec($"delete from SearchFvHis where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
+            SearchHistory his = (SearchHistory)((Button)sender).DataContext;
+            if (AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}' and Content='{his.Content}'") == 1)
             {
                 for (int i = _hisStart; i < Items.Count; i++)
                 {
@@ -218,7 +219,7 @@ namespace Dt.Base
 
         void LoadHisItems()
         {
-            var his = AtState.Each<SearchFvHis>($"select * from SearchFvHis where BaseUri='{_baseUri}' order by id desc");
+            var his = AtState.Each<SearchHistory>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc");
             foreach (var item in his)
             {
                 Grid grid = new Grid();

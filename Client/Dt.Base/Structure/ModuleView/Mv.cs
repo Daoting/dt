@@ -47,11 +47,18 @@ namespace Dt.Base
             typeof(Dlg),
             typeof(Mv),
             new PropertyMetadata(null));
+
+        public readonly static DependencyProperty IsHomeProperty = DependencyProperty.Register(
+            "IsHome",
+            typeof(bool),
+            typeof(Mv),
+            new PropertyMetadata(true));
         #endregion
 
         #region 成员变量
-        Tab _tab;
+        protected Tab _tab;
         TaskCompletionSource<bool> _taskSrc;
+        object _params;
         #endregion
 
         #region 属性
@@ -92,6 +99,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 是否为Tab内的首页
+        /// </summary>
+        public bool IsHome
+        {
+            get { return (bool)GetValue(IsHomeProperty); }
+            private set { SetValue(IsHomeProperty, value); }
+        }
+
+        /// <summary>
         /// 返回值
         /// </summary>
         protected object Result { get; set; }
@@ -119,6 +135,8 @@ namespace Dt.Base
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         public void Forward(Mv p_content, object p_params = null, bool p_isModal = false)
         {
+            p_content.IsHome = false;
+            p_content._params = p_params;
             if (p_isModal)
             {
                 ShowDlg(p_content);
@@ -129,10 +147,6 @@ namespace Dt.Base
                     p_content.OwnDlg = OwnDlg;
                 _tab.Forward(p_content);
             }
-
-            // 初始化
-            p_content.Result = null;
-            p_content.OnInit(p_params);
         }
 
         /// <summary>
@@ -191,6 +205,10 @@ namespace Dt.Base
         internal void AddToHost(Tab p_tab)
         {
             _tab = p_tab;
+
+            // 初始化
+            Result = null;
+            OnInit(_params);
         }
 
         internal async Task<bool> BeforeClose()

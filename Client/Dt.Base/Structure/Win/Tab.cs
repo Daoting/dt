@@ -307,24 +307,32 @@ namespace Dt.Base
                 return;
             }
 
-            // 不允许返回
-            if (!await mv.BeforeClose())
-                return;
-
             if (Kit.IsPhoneUI && mv.OwnDlg == null)
             {
-                InputManager.GoBack();
+                // 允许返回
+                if (await mv.BeforeClose())
+                {
+                    InputManager.GoBack();
+                    mv.AfterClosed();
+                }
             }
             else if (_navCache != null && _navCache.Count > 0)
             {
-                Content = _navCache.Pop();
+                if (await mv.BeforeClose())
+                {
+                    Content = _navCache.Pop();
+                    mv.AfterClosed();
+                }
             }
             else if (mv.OwnDlg != null)
             {
                 // 带遮罩的Mv
-                mv.OwnDlg.Close();
+                if (await mv.BeforeClose())
+                {
+                    mv.OwnDlg.Close();
+                    mv.AfterClosed();
+                }
             }
-            mv.AfterClosed();
         }
 
         /// <summary>

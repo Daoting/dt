@@ -26,12 +26,16 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Sample
 {
-    public sealed partial class SearchNavDemo : Win
+    public sealed partial class SearchMvWin : Win
     {
-        public SearchNavDemo()
+        public SearchMvWin()
         {
             InitializeComponent();
         }
 
+        void OnSearch(object sender, string e)
+        {
+            _si.DoSearch(e);
+        }
     }
 }

@@ -1,0 +1,27 @@
+﻿<a:Win
+    x:Class="Dt.Sample.SearchMvWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Sample">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <a:SearchMv x:Name="_sm" Search="OnSearch">
+                    <x:String>选项一</x:String>
+                    <x:String>选项二</x:String>
+                    <x:String>选项三</x:String>
+                    <x:String>选项四</x:String>
+                </a:SearchMv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:SearchMvItem x:Name="_si" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

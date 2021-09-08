@@ -529,8 +529,8 @@ namespace Dt.Base
                         if (string.IsNullOrEmpty(title))
                         {
                             // Tab未设置标题时使用窗口标题
-                            tab.Title = Title;
-                            title = Kit.NewGuid;
+                            title = Kit.NewGuid.Substring(0, 8);
+                            tab.Title = string.IsNullOrEmpty(Title) ? title : Title;
                         }
                         tab.OwnWin = this;
                         _tabs[title] = tab;
