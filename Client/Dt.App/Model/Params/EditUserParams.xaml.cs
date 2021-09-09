@@ -7,14 +7,9 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Dt.Base;
 using Dt.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
+using System.Collections.Generic;
 #endregion
 
 namespace Dt.App.Model
@@ -43,6 +38,9 @@ namespace Dt.App.Model
         async void OnSave(object sender, Mi e)
         {
             var par = _fv.Data.To<Params>();
+            if (par == null || (!par.IsAdded && !par.IsChanged))
+                return;
+
             bool delVer = par.IsAdded || par.Cells["ID"].IsChanged || par.Cells["Value"].IsChanged;
             if (await AtCm.Save(par))
             {
@@ -64,6 +62,12 @@ namespace Dt.App.Model
                 return;
             }
 
+            if (par.IsAdded)
+            {
+                _fv.Data = null;
+                return;
+            }
+
             int cnt = await AtCm.GetScalar<int>("参数-用户设置数", new { ParamID = par.ID });
             if (cnt > 0)
             {
@@ -73,6 +77,7 @@ namespace Dt.App.Model
 
             if (await AtCm.Delete(par))
             {
+                _fv.Data = null;
                 _win.List.Refresh();
                 DeleteDataVer();
             }

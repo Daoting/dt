@@ -20,32 +20,45 @@ namespace Dt.App.Model
 {
     public partial class UserParamsList : Mv
     {
+        Action _refresh;
+
         public UserParamsList()
         {
             InitializeComponent();
-            LoadAll();
+            _refresh = LoadAll;
         }
 
-        public async void OnSearch(string e)
+        public void OnSearch(string e)
         {
             if (e == "#全部")
             {
-                LoadAll();
+                _refresh = LoadAll;
             }
             else if (e == "#最近修改")
             {
-                LoadLast();
+                _refresh = LoadLast;
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{e}%" });
+                _refresh = async () => _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{e}%" });
+            }
+
+            if (!string.IsNullOrEmpty(e))
+            {
+                Title = "参数列表 - " + e;
+                Refresh();
             }
             NaviTo(this);
         }
 
-        public async void Refresh()
+        public void Refresh()
         {
+            _refresh?.Invoke();
+        }
 
+        protected override void OnInit(object p_params)
+        {
+            Refresh();
         }
 
         async void LoadAll()

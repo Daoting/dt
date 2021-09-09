@@ -8,7 +8,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
-重新设计搜索UI 
+Lv顶部增加排序列按钮
 
 
 
@@ -24,8 +24,9 @@ ios  软键盘盖住 TextBox 的问题
 * CTip增加Click事件
 *  两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
 * Dlg增加TargetOverlap 布局
-* 增加Nav控件，能够放在Tab Dlg中支持内部导航
-* 调整Dlg、ToolWindow样式
+* 增加Mv控件，能够放在Tab中支持内部导航
+* 调整Dlg、ToolWindow样式 
+* 增加 SearchMv 控件
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
