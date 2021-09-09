@@ -5,12 +5,11 @@
     xmlns:a="using:Dt.Base"
     Title="搜索">
 
-    <Grid>
+    <Grid x:Name="_grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:SearchBox Placeholder="请输入拼音简码或包含的文字..." IsRealtime="True" Search="OnSearch" BorderThickness="0,0,0,1" />
         <a:Lv x:Name="_lv" ItemClick="OnItemClick" Grid.Row="1">
             <DataTemplate>
                 <Grid Padding="6">

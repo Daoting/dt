@@ -13,18 +13,6 @@ namespace Dt.Base
     /// </summary>
     public partial class SearchBox : DtControl
     {
-        /// <summary>
-        /// 提示内容
-        /// </summary>
-        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
-            "Placeholder",
-            typeof(string),
-            typeof(SearchBox),
-            new PropertyMetadata(null));
-
-        /// <summary>
-        /// 文本内容变化时是否执行查询
-        /// </summary>
         public static readonly DependencyProperty IsRealtimeProperty = DependencyProperty.Register(
             "IsRealtime",
             typeof(bool),
@@ -44,11 +32,18 @@ namespace Dt.Base
         }
 
         DispatcherTimer _timer;
-        TextBox _tb;
+        readonly TextBox _tb;
 
         public SearchBox()
         {
             DefaultStyleKey = typeof(SearchBox);
+
+            _tb = new TextBox
+            {
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(10, 7, 10, 7),
+                CornerRadius = new CornerRadius(10)
+            };
         }
 
         /// <summary>
@@ -61,8 +56,8 @@ namespace Dt.Base
         /// </summary>
         public string Placeholder
         {
-            get { return (string)GetValue(PlaceholderProperty); }
-            set { SetValue(PlaceholderProperty, value); }
+            get { return _tb.PlaceholderText; }
+            set { _tb.PlaceholderText = value; }
         }
 
         /// <summary>
@@ -89,8 +84,8 @@ namespace Dt.Base
 
         protected override void OnLoadTemplate()
         {
-            ((Button)GetTemplateChild("Button")).Click += (s, e) => OnSearch();
-            _tb = (TextBox)GetTemplateChild("TextBox");
+            var bd = (Border)GetTemplateChild("Border");
+            bd.Child = _tb;
             _tb.TextChanged += OnTextChanged;
             _tb.FirstLoaded(() => _tb.Focus(FocusState.Programmatic));
         }

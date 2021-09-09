@@ -14,19 +14,21 @@ using Dt.Base;
 using Dt.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 #endregion
 
 namespace Dt.App.Model
 {
     public sealed partial class EditUserParams : Mv
     {
-        public EditUserParams(string p_id)
+        public EditUserParams()
         {
             InitializeComponent();
-            LoadData(p_id);
+            //_mi.SetBinding(IsEnabledProperty, new Binding { Path = new PropertyPath("IsDirty"), Source = _fv });
+            var bind = _mi.GetBindingExpression(IsEnabledProperty);
         }
 
-        async void LoadData(string p_id)
+        public async void LoadData(string p_id)
         {
             if (string.IsNullOrEmpty(p_id))
                 OnAdd(null, null);
@@ -45,17 +47,51 @@ namespace Dt.App.Model
             bool delVer = par.IsAdded || par.Cells["ID"].IsChanged || par.Cells["Value"].IsChanged;
             if (await AtCm.Save(par))
             {
-                //if (delVer)
-                //    DeleteDataVer();
+                _win.List.Refresh();
+                if (delVer)
+                    DeleteDataVer();
             }
         }
 
-        void OnDel(object sender, Mi e)
+        async void OnDel(object sender, Mi e)
         {
             var par = _fv.Data.To<Params>();
-            //if (par != null)
-            //    DelParams(par);
+            if (par == null)
+                return;
+
+            if (!await Kit.Confirm("确认要删除吗？"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            int cnt = await AtCm.GetScalar<int>("参数-用户设置数", new { ParamID = par.ID });
+            if (cnt > 0)
+            {
+                if (!await Kit.Confirm("该参数已存在用户设置，确认要删除吗？"))
+                    return;
+            }
+
+            if (await AtCm.Delete(par))
+            {
+                _win.List.Refresh();
+                DeleteDataVer();
+            }
         }
 
+        async void DeleteDataVer()
+        {
+            // 1表任何人，删除所有人的参数版本号
+            await AtCm.DeleteDataVer(new List<long> { 1 }, "params");
+        }
+
+        void OnUserSetting(object sender, Mi e)
+        {
+            var par = _fv.Data.To<Params>();
+            if (par != null)
+                new UserParamsDlg().Show(par.ID);
+        }
+
+        UserParamsWin _win => (UserParamsWin)_tab.OwnWin;
     }
 }

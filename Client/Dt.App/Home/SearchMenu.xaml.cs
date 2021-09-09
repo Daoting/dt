@@ -10,6 +10,7 @@
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -23,6 +24,7 @@ namespace Dt.App.Home
         public SearchMenu()
         {
             InitializeComponent();
+            LoadTopBar();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
@@ -48,6 +50,56 @@ namespace Dt.App.Home
                 _lv.Data = null;
             else
                 _lv.Data = MenuKit.LoadMenusByName(p_filter.ToLower());
+        }
+
+        void LoadTopBar()
+        {
+            var sb = new Base.SearchBox
+            {
+                Placeholder = "请输入拼音简码或包含的文字...",
+                IsRealtime = true
+            };
+            sb.Search += OnSearch;
+
+            if (Kit.IsPhoneUI)
+            {
+                // 隐藏标题栏
+                HideTitleBar = true;
+
+                Grid grid = new Grid
+                {
+                    Background = Res.主题蓝色,
+                    Height = 50,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = GridLength.Auto },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                    },
+                };
+                var btn = new Button
+                {
+                    Content = "\uE010",
+                    Style = Res.字符按钮,
+                    Foreground = Res.WhiteBrush,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    Width = 50,
+                };
+                btn.Click += (s, e) => Backward();
+                grid.Children.Add(btn);
+
+                sb.BorderThickness = new Thickness(0);
+                sb.Margin = new Thickness(0, 5, 10, 5);
+                Grid.SetColumn(sb, 1);
+                grid.Children.Add(sb);
+
+                _grid.Children.Add(grid);
+            }
+            else
+            {
+                sb.BorderThickness = new Thickness(0, 0, 0, 1);
+                _grid.Children.Add(sb);
+            }
         }
     }
 }

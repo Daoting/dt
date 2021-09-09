@@ -321,11 +321,21 @@ namespace Dt.Base
 
             // 导航到单页或多页Tab
             if (string.IsNullOrEmpty(p_tabTitle))
-                NaviToFirstTab();
+            {
+                Tab tab = _tabs.Values.FirstOrDefault();
+                if (tab != null)
+                    NaviToSingleTab(tab);
+            }
             else if (!p_tabTitle.Contains(','))
-                NaviToSingleTab(p_tabTitle);
+            {
+                if (!_tabs.TryGetValue(p_tabTitle, out var tab))
+                    throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
+                NaviToSingleTab(tab);
+            }
             else
+            {
                 NaviToMultiTabs(p_tabTitle);
+            }
         }
 
         /// <summary>
@@ -344,32 +354,10 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 导航到第一个Tab
-        /// </summary>
-        void NaviToFirstTab()
-        {
-            Tab tab = _tabs.Values.FirstOrDefault();
-            if (tab != null)
-                NaviToSingleTab(tab);
-        }
-
-        /// <summary>
-        /// 导航到单页Tab
-        /// </summary>
-        /// <param name="p_tabTitle"></param>
-        void NaviToSingleTab(string p_tabTitle)
-        {
-            Tab tab;
-            if (!_tabs.TryGetValue(p_tabTitle, out tab))
-                throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
-            NaviToSingleTab(tab);
-        }
-
-        /// <summary>
         /// 导航到单页Tab
         /// </summary>
         /// <param name="p_tab"></param>
-        void NaviToSingleTab(Tab p_tab)
+        internal void NaviToSingleTab(Tab p_tab)
         {
             // 判断是否为向后导航
             var frame = SysVisual.RootFrame;
@@ -413,7 +401,7 @@ namespace Dt.Base
         /// 导航到多页Tab
         /// </summary>
         /// <param name="p_tabTitle"></param>
-        void NaviToMultiTabs(string p_tabTitle)
+        internal void NaviToMultiTabs(string p_tabTitle)
         {
             // 判断是否为向后导航
             var frame = SysVisual.RootFrame;

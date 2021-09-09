@@ -162,7 +162,7 @@ namespace Dt.Shell
             { "基础选项", typeof(Dt.App.Model.BaseOption) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
-            { "参数定义", typeof(Dt.App.Model.UserParamsMgr) },
+            { "参数定义", typeof(Dt.App.Model.UserParamsWin) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },
             { "系统角色", typeof(Dt.App.Model.SysRole) },

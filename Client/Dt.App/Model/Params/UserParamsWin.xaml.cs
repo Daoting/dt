@@ -19,17 +19,22 @@ using System.Threading.Tasks;
 namespace Dt.App.Model
 {
     [View("参数定义")]
-    public partial class UserParamsMgr : Win
+    public partial class UserParamsWin : Win
     {
-        public UserParamsMgr()
+        public UserParamsWin()
         {
             InitializeComponent();
         }
 
+        public UserParamsList List => _list;
+
+        public EditUserParams Edit => _edit;
+
+        public SearchMv Search => _search;
+
         void OnSearch(object sender, string e)
         {
-            _ls.OnSearch(e);
+            _list.OnSearch(e);
         }
-
     }
 }

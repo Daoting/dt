@@ -7,13 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.Docking;
 using Dt.Core;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -113,6 +111,7 @@ namespace Dt.Base
         protected object Result { get; set; }
         #endregion
 
+        #region Tab内导航
         /// <summary>
         /// 向前导航到新内容，可异步等待返回值
         /// </summary>
@@ -156,6 +155,41 @@ namespace Dt.Base
         {
             _tab.Backward();
         }
+        #endregion
+
+        #region Win内导航
+        /// <summary>
+        /// 导航到指定页
+        /// </summary>
+        /// <param name="p_mv"></param>
+        public void NaviTo(Mv p_mv)
+        {
+            if (Kit.IsPhoneUI && _tab?.OwnWin != null && p_mv?._tab != null)
+                _tab.OwnWin.NaviToSingleTab(p_mv._tab);
+        }
+
+        /// <summary>
+        /// 导航到多页Tab
+        /// </summary>
+        /// <param name="p_ls"></param>
+        public void NaviTo(List<Mv> p_ls)
+        {
+            if (!Kit.IsPhoneUI || p_ls == null || p_ls.Count == 0 || _tab?.OwnWin == null)
+                return;
+
+            if (p_ls.Count == 1)
+            {
+                NaviTo(p_ls[0]);
+                return;
+            }
+
+            var titles = p_ls[0].Title;
+            for (int i = 1; i < p_ls.Count; i++)
+            {
+                titles = $"{titles},{p_ls[i].Title}";
+            }
+            _tab.OwnWin.NaviToMultiTabs(titles);
+        }
 
         /// <summary>
         /// 导航到指定页，支持多页Tab形式
@@ -163,17 +197,10 @@ namespace Dt.Base
         /// <param name="p_tabTitle">多个页面时用逗号隔开(自动以Tab形式显示)，null时自动导航到第一个Tab</param>
         public void NaviTo(string p_tabTitle)
         {
-            if (Kit.IsPhoneUI && _tab is Tab tab && tab.OwnWin != null)
-                tab.OwnWin.NaviTo(p_tabTitle);
+            if (Kit.IsPhoneUI && _tab?.OwnWin != null)
+                _tab.OwnWin.NaviTo(p_tabTitle);
         }
-
-        /// <summary>
-        /// 导航到当前页
-        /// </summary>
-        public void NaviToSelf()
-        {
-            NaviTo(Title);
-        }
+        #endregion
 
         #region 虚方法
         protected virtual void OnInit(object p_params)

@@ -185,22 +185,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:SearchBox">
-                    <Grid x:Name="Grid"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TextBox"
-                                 PlaceholderText="{TemplateBinding Placeholder}"
-                                 BorderThickness="0"
-                                 Padding="10" />
-                        <Button x:Name="Button"
-                                Content="&#xE00B;"
-                                Style="{StaticResource 字符按钮}"
-                                Grid.Column="1" />
-                    </Grid>
+                    <Border x:Name="Border"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

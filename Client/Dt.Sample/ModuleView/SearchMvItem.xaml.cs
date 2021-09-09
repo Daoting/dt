@@ -37,7 +37,7 @@ namespace Dt.Sample
         public void DoSearch(string e)
         {
             Kit.Msg("查询内容：" + e);
-            NaviToSelf();
+            NaviTo(this);
         }
 
         void OnDlgMv(object sender, RoutedEventArgs e)

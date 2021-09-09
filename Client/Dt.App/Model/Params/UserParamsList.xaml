@@ -8,18 +8,11 @@
     <a:Mv.Menu>
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Scope="Phone" Click="OnNaviToSearch" />
-            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
+            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
         </a:Menu>
     </a:Mv.Menu>
-    
-    <a:Lv x:Name="_lv" ViewMode="Table">
-        <a:Ex.Menu>
-            <a:Menu>
-                <a:Mi ID="编辑" Icon="编辑" Click="OnEdit" />
-                <a:Mi ID="查看用户设置" Icon="设置" Click="OnUserSetting" />
-                <a:Mi ID="删除" Icon="删除" Click="OnListDel" />
-            </a:Menu>
-        </a:Ex.Menu>
+
+    <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick">
         <a:Cols>
             <a:Col ID="ID" Title="参数名" Width="150" />
             <a:Col ID="Value" Title="缺省值" Width="150" />
