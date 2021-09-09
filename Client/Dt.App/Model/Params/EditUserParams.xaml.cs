@@ -24,8 +24,7 @@ namespace Dt.App.Model
         public EditUserParams()
         {
             InitializeComponent();
-            //_mi.SetBinding(IsEnabledProperty, new Binding { Path = new PropertyPath("IsDirty"), Source = _fv });
-            var bind = _mi.GetBindingExpression(IsEnabledProperty);
+            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void LoadData(string p_id)

@@ -15,6 +15,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -109,6 +110,19 @@ namespace Dt.Base
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 设置绑定，简化写法
+        /// </summary>
+        /// <param name="target">目标元素</param>
+        /// <param name="p_dp">目标依赖属性</param>
+        /// <param name="p_source">绑定源</param>
+        /// <param name="p_path">源路径</param>
+        public static void Bind(this FrameworkElement target, DependencyProperty p_dp, object p_source, string p_path)
+        {
+            if (target != null)
+                target.SetBinding(p_dp, new Binding { Path = new PropertyPath(p_path), Source = p_source });
         }
 
         /// <summary>
