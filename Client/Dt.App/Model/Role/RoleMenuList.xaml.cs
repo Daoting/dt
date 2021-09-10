@@ -15,11 +15,11 @@ using System.Linq;
 
 namespace Dt.App.Model
 {
-    public sealed partial class UserRoleList : Mv
+    public sealed partial class RoleMenuList : Mv
     {
-        long _userID;
+        long _roleID;
 
-        public UserRoleList()
+        public RoleMenuList()
         {
             InitializeComponent();
             Menu["移除"].Bind(IsEnabledProperty, _lv, "HasSelected");
@@ -27,57 +27,66 @@ namespace Dt.App.Model
 
         public void Update(long p_userID)
         {
-            _userID = p_userID;
+            _roleID = p_userID;
             Menu["添加"].IsEnabled = true;
             Refresh();
         }
 
         public void Clear()
         {
-            _userID = -1;
+            _roleID = -1;
             Menu["添加"].IsEnabled = false;
             _lv.Data = null;
         }
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query("用户-关联角色", new { userid = _userID });
+            _lv.Data = await AtCm.Query("角色-关联的菜单", new { roleid = _roleID });
         }
 
         async void OnAdd(object sender, Mi e)
         {
-            SelectRolesDlg dlg = new SelectRolesDlg();
-            if (await dlg.Show(RoleRelations.User, _userID.ToString(), e))
+            var dlg = new SelectRoleMenuDlg();
+            if (await dlg.Show(_roleID, e))
             {
-                List<long> roles = new List<long>();
+                List<RoleMenu> ls = new List<RoleMenu>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    roles.Add(row.ID);
+                    ls.Add(new RoleMenu(_roleID, row.ID));
                 }
-                if (roles.Count > 0 && await AtCm.AddUserRole(_userID, roles))
+                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                {
                     Refresh();
+                    await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
+                }
             }
         }
 
         void OnRemove(object sender, Mi e)
         {
-            RemoveRole(_lv.SelectedRows);
+            DoRemove(_lv.SelectedRows);
         }
 
         void OnRemove2(object sender, Mi e)
         {
             if (_lv.SelectionMode == SelectionMode.Multiple)
-                RemoveRole(_lv.SelectedRows);
+                DoRemove(_lv.SelectedRows);
             else
-                RemoveRole(new List<Row> { e.Row });
+                DoRemove(new List<Row> { e.Row });
         }
 
-        async void RemoveRole(IEnumerable<Row> p_rows)
+        async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<long> roles = (from r in p_rows
-                                select r.Long("roleid")).ToList();
-            if (roles.Count > 0 && await AtCm.RemoveUserRoles(_userID, roles))
+            List<RoleMenu> ls = new List<RoleMenu>();
+            foreach (var row in p_rows)
+            {
+                ls.Add(new RoleMenu(_roleID, row.Long("menuid")));
+            }
+            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
+            {
                 Refresh();
+                await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
+            }
         }
 
         void OnSelectAll(object sender, Mi e)
@@ -99,6 +108,6 @@ namespace Dt.App.Model
             Menu.Hide("移除", "全选", "取消");
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        RoleWin _win => (RoleWin)_tab.OwnWin;
     }
 }

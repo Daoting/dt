@@ -15,68 +15,68 @@ using System.Linq;
 
 namespace Dt.App.Model
 {
-    public sealed partial class UserRoleList : Mv
+    public sealed partial class RoleUserList : Mv
     {
-        long _userID;
+        long _roleID;
 
-        public UserRoleList()
+        public RoleUserList()
         {
             InitializeComponent();
             Menu["移除"].Bind(IsEnabledProperty, _lv, "HasSelected");
         }
 
-        public void Update(long p_userID)
+        public void Update(long p_roleID)
         {
-            _userID = p_userID;
+            _roleID = p_roleID;
             Menu["添加"].IsEnabled = true;
             Refresh();
         }
 
         public void Clear()
         {
-            _userID = -1;
+            _roleID = -1;
             Menu["添加"].IsEnabled = false;
             _lv.Data = null;
         }
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query("用户-关联角色", new { userid = _userID });
+            _lv.Data = await AtCm.Query("角色-关联用户", new { roleid = _roleID });
         }
 
         async void OnAdd(object sender, Mi e)
         {
-            SelectRolesDlg dlg = new SelectRolesDlg();
-            if (await dlg.Show(RoleRelations.User, _userID.ToString(), e))
+            var dlg = new SelectUserDlg();
+            if (await dlg.Show(_roleID, e))
             {
-                List<long> roles = new List<long>();
+                List<long> users = new List<long>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    roles.Add(row.ID);
+                    users.Add(row.ID);
                 }
-                if (roles.Count > 0 && await AtCm.AddUserRole(_userID, roles))
+                if (users.Count > 0 && await AtCm.AddRoleUser(_roleID, users))
                     Refresh();
             }
         }
 
         void OnRemove(object sender, Mi e)
         {
-            RemoveRole(_lv.SelectedRows);
+            DoRemove(_lv.SelectedRows);
         }
 
         void OnRemove2(object sender, Mi e)
         {
             if (_lv.SelectionMode == SelectionMode.Multiple)
-                RemoveRole(_lv.SelectedRows);
+                DoRemove(_lv.SelectedRows);
             else
-                RemoveRole(new List<Row> { e.Row });
+                DoRemove(new List<Row> { e.Row });
         }
 
-        async void RemoveRole(IEnumerable<Row> p_rows)
+        async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<long> roles = (from r in p_rows
-                                select r.Long("roleid")).ToList();
-            if (roles.Count > 0 && await AtCm.RemoveUserRoles(_userID, roles))
+            List<long> users = (from r in p_rows
+                                select r.Long("userid")).ToList();
+            if (users.Count > 0 && await AtCm.RemoveRoleUsers(_roleID, users))
                 Refresh();
         }
 

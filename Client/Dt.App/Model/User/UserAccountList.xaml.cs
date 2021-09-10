@@ -68,18 +68,14 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            _win.Edit.Update(0);
+            _win.Edit.Update(-1);
             NaviTo(new List<Mv> { _win.Edit, _win.RoleList });
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-            {
-                long id = e.Row.ID;
-                _win.Edit.Update(id);
-                _win.RoleList.Update(id);
-            }
+                _win.Edit.Update(e.Row.ID);
             NaviTo(new List<Mv> { _win.Edit, _win.RoleList });
         }
 
@@ -117,7 +113,7 @@ namespace Dt.App.Model
 
         async void OnDelUser(object sender, Mi e)
         {
-            var id = _lv.SelectedRow.ID;
+            var isSelected = _lv.SelectedItem == e.Data;
             User user = e.Data.To<User>();
             if (!await Kit.Confirm($"确认要删除[{user.Name}]吗？"))
             {
@@ -127,11 +123,9 @@ namespace Dt.App.Model
 
             if (await AtCm.DeleteBySvc(user))
             {
-                if (user.ID == id)
-                {
+                // 删除的为选择行时，清空关联Mv
+                if (isSelected)
                     _win.Edit.Clear();
-                    _win.RoleList.Clear();
-                }
                 Update();
             }
         }

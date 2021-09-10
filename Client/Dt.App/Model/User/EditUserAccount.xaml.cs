@@ -32,10 +32,11 @@ namespace Dt.App.Model
             if (p_userID > 0)
             {
                 _fv.Data = await AtCm.First<User>("用户-编辑", new { id = p_userID });
+                _win?.RoleList.Update(p_userID);
             }
             else
             {
-                CreateUser();
+                Create();
             }
 
             Menu["增加"].Visibility = p_enableAdd ? Visibility.Visible : Visibility.Collapsed;
@@ -44,15 +45,17 @@ namespace Dt.App.Model
         public void Clear()
         {
             _fv.Data = null;
+            _win.RoleList.Clear();
         }
 
         public User User => _fv.Data.To<User>();
 
-        async void CreateUser()
+        async void Create()
         {
             _fv.Data = new User(
                 ID: await AtCm.NewID(),
                 Name: "新用户");
+            _win?.RoleList.Clear();
         }
 
         void OnSave(object sender, Mi e)
@@ -62,7 +65,7 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            CreateUser();
+            Create();
         }
 
         void OnPhotoChanged(object sender, object e)
@@ -83,11 +86,8 @@ namespace Dt.App.Model
             {
                 Result = true;
                 _win?.List.Update();
-                if (Menu["增加"].Visibility == Visibility.Visible && isNew)
-                {
-                    CreateUser();
-                    _fv.GotoFirstCell();
-                }
+                if (isNew)
+                    _win.RoleList.Update(user.ID);
             }
         }
 
