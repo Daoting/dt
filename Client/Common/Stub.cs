@@ -166,7 +166,7 @@ namespace Dt.Shell
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },
             { "系统角色", typeof(Dt.App.Model.SysRole) },
-            { "用户账号", typeof(Dt.App.Model.UserAccount) },
+            { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
             { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
             { "控件样例", typeof(Dt.Sample.SamplesMain) },

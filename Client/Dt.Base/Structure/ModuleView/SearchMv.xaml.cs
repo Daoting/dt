@@ -71,6 +71,8 @@ namespace Dt.Base
 #if UWP
             if (_tab.BaseUri != null)
                 _baseUri = _tab.BaseUri.AbsolutePath;
+            else if (_tab.OwnWin != null)
+                _baseUri = _tab.OwnWin.BaseUri.AbsolutePath;
 #else
             // 识别不同的查询面板，因uno中BaseUri为空！
             if (_tab.OwnWin != null)

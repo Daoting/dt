@@ -21,7 +21,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 我的
     /// </summary>
-    public sealed partial class MyMain : UserControl
+    public sealed partial class MyMain : Mv
     {
         public MyMain()
         {
@@ -64,13 +64,14 @@ namespace Dt.App.Home
 
         async void OnEditInfo(object sender, TappedRoutedEventArgs e)
         {
-            var dlg = new EditUserDlg();
-            if (await dlg.Show(Kit.UserID, false))
+            var edit = new EditUserAccount();
+            edit.Update(Kit.UserID, false);
+            if (await Forward<bool>(edit))
             {
-                Row row = dlg.Info;
-                Kit.UserName = row.Str("name");
-                Kit.UserPhone = row.Str("phone");
-                Kit.UserPhoto = row.Str("photo");
+                var user = edit.User;
+                Kit.UserName = user.Name;
+                Kit.UserPhone = user.Phone;
+                Kit.UserPhoto = user.Photo;
                 LoadInfo();
             }
         }

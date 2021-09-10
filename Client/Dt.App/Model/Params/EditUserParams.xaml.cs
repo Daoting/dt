@@ -10,6 +10,7 @@
 using Dt.Base;
 using Dt.Core;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
@@ -22,14 +23,17 @@ namespace Dt.App.Model
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
-        public async void LoadData(string p_id)
+        public async void Update(string p_id)
         {
+            if (!await _fv.DiscardChanges())
+                return;
+
             if (string.IsNullOrEmpty(p_id))
                 OnAdd(null, null);
             else
                 _fv.Data = await AtCm.GetByID<Params>(p_id);
         }
-
+        
         void OnAdd(object sender, Mi e)
         {
             _fv.Data = new Params(ID: "新参数");
@@ -44,7 +48,7 @@ namespace Dt.App.Model
             bool delVer = par.IsAdded || par.Cells["ID"].IsChanged || par.Cells["Value"].IsChanged;
             if (await AtCm.Save(par))
             {
-                _win.List.Refresh();
+                _win.List.Update();
                 if (delVer)
                     DeleteDataVer();
             }
@@ -78,7 +82,7 @@ namespace Dt.App.Model
             if (await AtCm.Delete(par))
             {
                 _fv.Data = null;
-                _win.List.Refresh();
+                _win.List.Update();
                 DeleteDataVer();
             }
         }
@@ -87,6 +91,11 @@ namespace Dt.App.Model
         {
             // 1表任何人，删除所有人的参数版本号
             await AtCm.DeleteDataVer(new List<long> { 1 }, "params");
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            return _fv.DiscardChanges();
         }
 
         void OnUserSetting(object sender, Mi e)

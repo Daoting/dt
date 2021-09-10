@@ -9,25 +9,26 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using System;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.App.Model
 {
-    public sealed partial class EditUserDlg : Dlg
+    public sealed partial class EditUserAccount : Mv
     {
-        bool _needRefresh;
-
-        public EditUserDlg()
+        public EditUserAccount()
         {
             InitializeComponent();
+            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
-        public async Task<bool> Show(long p_userID, bool p_enableAdd = true)
+        public async void Update(long p_userID, bool p_enableAdd = true)
         {
+            if (!await _fv.DiscardChanges())
+                return;
+
             if (p_userID > 0)
             {
                 _fv.Data = await AtCm.First<User>("用户-编辑", new { id = p_userID });
@@ -37,16 +38,15 @@ namespace Dt.App.Model
                 CreateUser();
             }
 
-            if (!p_enableAdd)
-                _miAdd.Visibility = Visibility.Collapsed;
-            await ShowAsync();
-            return _needRefresh;
+            Menu["增加"].Visibility = p_enableAdd ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public Row Info
+        public void Clear()
         {
-            get { return _fv.Row; }
+            _fv.Data = null;
         }
+
+        public User User => _fv.Data.To<User>();
 
         async void CreateUser()
         {
@@ -59,18 +59,10 @@ namespace Dt.App.Model
         {
             Save();
         }
-        
 
         void OnAdd(object sender, Mi e)
         {
             CreateUser();
-        }
-
-        protected override Task<bool> OnClosing(bool p_result)
-        {
-            if (_fv.Row.IsChanged)
-                return Kit.Confirm("数据未保存，要放弃修改吗？");
-            return Task.FromResult(true);
         }
 
         void OnPhotoChanged(object sender, object e)
@@ -78,21 +70,27 @@ namespace Dt.App.Model
             Save();
         }
 
+        protected override Task<bool> OnClosing()
+        {
+            return _fv.DiscardChanges();
+        }
+
         async void Save()
         {
-            if (await AtCm.SaveBySvc(_fv.Data.To<User>()))
+            var user = _fv.Data.To<User>();
+            bool isNew = user.IsAdded;
+            if (await AtCm.SaveBySvc(user))
             {
-                _needRefresh = true;
-                if (_miAdd.Visibility == Visibility.Visible)
+                Result = true;
+                _win?.List.Update();
+                if (Menu["增加"].Visibility == Visibility.Visible && isNew)
                 {
                     CreateUser();
                     _fv.GotoFirstCell();
                 }
-                else
-                {
-                    Close();
-                }
             }
         }
+
+        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
     }
 }

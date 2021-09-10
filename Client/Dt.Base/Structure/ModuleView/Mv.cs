@@ -203,6 +203,10 @@ namespace Dt.Base
         #endregion
 
         #region 虚方法
+        /// <summary>
+        /// 初始化，只在放入Tab.Content时调用一次
+        /// </summary>
+        /// <param name="p_params">初始化参数</param>
         protected virtual void OnInit(object p_params)
         {
         }

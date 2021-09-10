@@ -299,7 +299,7 @@ namespace Dt.Base
             {
                 NaviToSingleTab(ls[0]);
             }
-            else if(ls.Count > 1)
+            else if (ls.Count > 1)
             {
                 _homeID = ls[0].Title;
                 for (int i = 1; i < ls.Count; i++)
@@ -328,9 +328,10 @@ namespace Dt.Base
             }
             else if (!p_tabTitle.Contains(','))
             {
-                if (!_tabs.TryGetValue(p_tabTitle, out var tab))
-                    throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
-                NaviToSingleTab(tab);
+                if (_tabs.TryGetValue(p_tabTitle, out var tab))
+                    NaviToSingleTab(tab);
+                else
+                    Kit.Warn($"导航出错，缺少{p_tabTitle}Tab页！");
             }
             else
             {
@@ -458,9 +459,10 @@ namespace Dt.Base
             string[] names = p_tabTitle.Split(',');
             foreach (var name in names)
             {
-                if (!_tabs.TryGetValue(name, out tab))
-                    throw new Exception($"导航出错，缺少{name}Tab页！");
-                tabs.AddItem(tab);
+                if (_tabs.TryGetValue(name, out tab))
+                    tabs.AddItem(tab);
+                else
+                    Kit.Warn($"导航出错，缺少{name}Tab页！");
             }
 
             // 起始页隐藏返回按钮

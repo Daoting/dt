@@ -20,55 +20,44 @@ namespace Dt.App.Model
 {
     public partial class UserParamsList : Mv
     {
-        Action _refresh;
+        string _query;
 
         public UserParamsList()
         {
             InitializeComponent();
-            _refresh = LoadAll;
         }
 
-        public void OnSearch(string e)
+        public void OnSearch(string p_txt)
         {
-            if (e == "#全部")
+            if (!string.IsNullOrEmpty(p_txt))
             {
-                _refresh = LoadAll;
-            }
-            else if (e == "#最近修改")
-            {
-                _refresh = LoadLast;
-            }
-            else if (!string.IsNullOrEmpty(e))
-            {
-                _refresh = async () => _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{e}%" });
+                _query = p_txt;
+                Title = "参数列表 - " + p_txt;
+                Update();
             }
 
-            if (!string.IsNullOrEmpty(e))
-            {
-                Title = "参数列表 - " + e;
-                Refresh();
-            }
             NaviTo(this);
         }
 
-        public void Refresh()
+        public async void Update()
         {
-            _refresh?.Invoke();
+            if (string.IsNullOrEmpty(_query) || _query == "#全部")
+            {
+                _lv.Data = await AtCm.GetAll<Params>();
+            }
+            else if (_query == "#最近修改")
+            {
+                _lv.Data = await AtCm.Query<Params>("参数-最近修改");
+            }
+            else
+            {
+                _lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{_query}%" });
+            }
         }
 
         protected override void OnInit(object p_params)
         {
-            Refresh();
-        }
-
-        async void LoadAll()
-        {
-            _lv.Data = await AtCm.GetAll<Params>();
-        }
-
-        async void LoadLast()
-        {
-            _lv.Data = await AtCm.Query<Params>("参数-最近修改");
+            Update();
         }
 
         void OnNaviToSearch(object sender, Mi e)
@@ -78,14 +67,14 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            _win.Edit.LoadData(null);
+            _win.Edit.Update(null);
             NaviTo(_win.Edit);
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Edit.LoadData(e.Data.To<Params>().ID);
+                _win.Edit.Update(e.Data.To<Params>().ID);
             NaviTo(_win.Edit);
         }
 

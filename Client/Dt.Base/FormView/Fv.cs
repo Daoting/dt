@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -445,6 +446,34 @@ namespace Dt.Base
                 row.RejectChanges();
             else if (DataView != null)
                 DataView.RejectChanges();
+        }
+
+        /// <summary>
+        /// 是否丢弃所有的修改
+        /// </summary>
+        /// <returns>true 未修改或丢弃修改</returns>
+        public async Task<bool> DiscardChanges()
+        {
+            if (Data is Row row)
+            {
+                if (row.IsChanged)
+                {
+                    if (!await Kit.Confirm("数据未保存，确认要丢弃所有修改吗？"))
+                        return false;
+                    row.RejectChanges();
+                }
+            }
+            else if (DataView != null)
+            {
+                var dv = DataView;
+                if (dv.IsChanged)
+                {
+                    if (!await Kit.Confirm("数据未保存，确认要丢弃所有修改吗？"))
+                        return false;
+                    dv.RejectChanges();
+                }
+            }
+            return true;
         }
 
         /// <summary>
