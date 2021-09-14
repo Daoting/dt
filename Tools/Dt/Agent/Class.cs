@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
@@ -17,28 +16,10 @@ using System.Threading.Tasks;
 
 namespace $rootnamespace$
 {
-	public partial class $entityname$Obj
+	class $safeitemname$ : DataProvider<lob>
 	{
-		//async Task OnSaving()
-		//{
-		//}
 
-		//async Task OnDeleting()
-		//{
-		//}
 	}
 
-    #region 自动生成
-    [Tbl("cm_$entityname$")]
-    public partial class $entityname$Obj: Entity
-    {
-        $entityname$Obj() { }
-
-        public $entityname$Obj(long ID)
-        {
-            AddCell("ID", ID);
-            AttachHook();
-        }
-    }
-    #endregion
+	class lob { }
 }

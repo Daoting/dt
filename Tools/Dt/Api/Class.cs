@@ -7,38 +7,26 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Core;
+using Dt.Core.Caches;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
 
 namespace $rootnamespace$
 {
-	public partial class $entityname$Obj
-	{
-		//async Task OnSaving()
-		//{
-		//}
-
-		//async Task OnDeleting()
-		//{
-		//}
-	}
-
-    #region 自动生成
-    [Tbl("cm_$entityname$")]
-    public partial class $entityname$Obj: Entity
+    /// <summary>
+    /// 
+    /// </summary>
+    [Api]
+    public class $safeitemname$ : BaseApi
     {
-        $entityname$Obj() { }
-
-        public $entityname$Obj(long ID)
+        public Dict GetConfig()
         {
-            AddCell("ID", ID);
-            AttachHook();
+            return null;
         }
     }
-    #endregion
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Dt
 {
-    partial class SingleTblForm
+    partial class ManyToManyForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SingleTblForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManyToManyForm));
             this.label2 = new System.Windows.Forms.Label();
             this._nameSpace = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -111,7 +111,7 @@ namespace Dt
             this._info.TabIndex = 23;
             this._info.Text = " ";
             // 
-            // SingleTblForm
+            // ManyToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -128,10 +128,10 @@ namespace Dt
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SingleTblForm";
+            this.Name = "ManyToManyForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "添加单表框架文件";
+            this.Text = "添加多对多框架文件";
             this.ResumeLayout(false);
             this.PerformLayout();
 

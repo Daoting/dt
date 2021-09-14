@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 namespace Dt
 {
-    public partial class SingleTblForm : Form
+    public partial class OnToManyForm : Form
     {
-        public SingleTblForm()
+        public OnToManyForm()
         {
             InitializeComponent();
             _nameSpace.Text = Kit.GetNamespace();

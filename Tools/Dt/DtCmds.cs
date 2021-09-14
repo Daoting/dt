@@ -1,5 +1,4 @@
 ﻿using Dt.Editor;
-using Dt.SingleTbl;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -26,7 +25,7 @@ namespace Dt
         const string _tabMenu = "<a:Tab.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Tab.Menu>";
         const string _contextMenu = "<a:Ex.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Ex.Menu>";
         const string _dot = "<a:Dot ID=\"xx\" />";
-        const string _dotSmall = "<a:Dot ID=\"xx\" Foreground=\"{StaticResource 深灰边框}\" FontSize=\"12\" />";
+        const string _dotSmall = "<a:Dot ID=\"xx\" Font=\"小灰\" />";
 
         const int LvCommandId = 0x0100;
         const int FvCommandId = 0x0101;
@@ -38,6 +37,16 @@ namespace Dt
         const int DotSmallCmdId = 0x0106;
 
         const int SingleTblCmdId = 0x3000;
+        const int OnToManyCmdId = 0x3001;
+        const int ManyToManyCmdId = 0x3002;
+
+        const int InsertMvCmdId = 0x4000;
+        const int InsertWinCmdId = 0x4001;
+        const int InsertDlgCmdId = 0x4002;
+
+        const int InsertEntityCmdId = 0x5000;
+        const int InsertAgentCmdId = 0x5001;
+        const int InsertApiCmdId = 0x5002;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -66,6 +75,15 @@ namespace Dt
             commandService.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
 
             commandService.AddCommand(CmdCustom(SingleTblCmdId, typeof(SingleTblForm)));
+            commandService.AddCommand(CmdCustom(OnToManyCmdId, typeof(OnToManyForm)));
+            commandService.AddCommand(CmdCustom(ManyToManyCmdId, typeof(ManyToManyForm)));
+
+            commandService.AddCommand(CmdCustom(InsertWinCmdId, typeof(InsertWinForm)));
+            commandService.AddCommand(CmdCustom(InsertDlgCmdId, typeof(InsertDlgForm)));
+
+            commandService.AddCommand(CmdCustom(InsertEntityCmdId, typeof(InsertEntityForm)));
+            commandService.AddCommand(CmdCustom(InsertAgentCmdId, typeof(InsertAgentForm)));
+            commandService.AddCommand(CmdCustom(InsertApiCmdId, typeof(InsertApiForm)));
         }
 
         /// <summary>

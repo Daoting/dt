@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>VSTHRD010</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Agent\InsertAgentForm.resx">
+      <DependentUpon>InsertAgentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Api\InsertApiForm.resx">
+      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Agent\Class.cs" />
+    <Compile Include="Agent\InsertAgentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Agent\InsertAgentForm.Designer.cs">
+      <DependentUpon>InsertAgentForm.cs</DependentUpon>
+    </Compile>
+    <None Include="Api\Class.cs" />
+    <Compile Include="Api\InsertApiForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Api\InsertApiForm.Designer.cs">
+      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\InsertDlgForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\InsertDlgForm.Designer.cs">
+      <DependentUpon>InsertDlgForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\CPassword.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -166,6 +196,13 @@
     <Compile Include="Editor\CTree.Designer.cs">
       <DependentUpon>CTree.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Entity\Entity.cs" />
+    <Compile Include="Entity\InsertEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entity\InsertEntityForm.Designer.cs">
+      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LvXaml\ICmdForm.cs" />
     <Compile Include="LvXaml\LvXaml.cs">
       <SubType>UserControl</SubType>
@@ -174,8 +211,53 @@
       <DependentUpon>LvXaml.cs</DependentUpon>
     </Compile>
     <Compile Include="Kit.cs" />
+    <Compile Include="ManyToMany\ManyToManyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManyToMany\ManyToManyForm.Designer.cs">
+      <DependentUpon>ManyToManyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OnToMany\OnToManyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OnToMany\OnToManyForm.Designer.cs">
+      <DependentUpon>OnToManyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DtPackage.cs" />
+    <EmbeddedResource Include="Dialog\InsertDlgForm.resx">
+      <DependentUpon>InsertDlgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Entity\InsertEntityForm.resx">
+      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\ToggleMainWin.xaml.cs">
+      <DependentUpon>ToggleMainWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\ThreePanelWin.xaml.cs">
+      <DependentUpon>ThreePanelWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\TwoPanelWin.xaml.cs">
+      <DependentUpon>TwoPanelWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\BlankWin.xaml.cs">
+      <DependentUpon>BlankWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Win\InsertWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Win\InsertWinForm.Designer.cs">
+      <DependentUpon>InsertWinForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Win\SingleWin.xaml.cs">
+      <DependentUpon>SingleWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\ManyToManyForm.resx">
+      <DependentUpon>ManyToManyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\OnToManyForm.resx">
+      <DependentUpon>OnToManyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SingleTbl\EntityWin.xaml.cs">
       <DependentUpon>EntityWin.xaml</DependentUpon>
     </EmbeddedResource>
@@ -192,6 +274,9 @@
     <Compile Include="SingleTbl\SingleTblForm.Designer.cs">
       <DependentUpon>SingleTblForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Win\InsertWinForm.resx">
+      <DependentUpon>InsertWinForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -234,27 +319,6 @@
     <None Include="Resources\Logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AgentClass\AgentClass.csproj">
-      <Project>{E3764406-BEFD-442F-BC84-F95922AD4D53}</Project>
-      <Name>AgentClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ApiClass\ApiClass.csproj">
-      <Project>{80F57BCC-9D54-4AD6-8A9A-D46237CB4178}</Project>
-      <Name>ApiClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\BlankWin\BlankWin.csproj">
-      <Project>{F010B6D2-48A8-4DDA-AFEA-715F1429A168}</Project>
-      <Name>BlankWin</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
     <ProjectReference Include="..\CommonLib\CommonLib.csproj">
       <Project>{8BA7F8C8-F6A0-40C3-93FA-63FB6000738E}</Project>
       <Name>CommonLib</Name>
@@ -262,66 +326,10 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
-    <ProjectReference Include="..\Dialog\Dialog.csproj">
-      <Project>{E574AB78-67E8-42B4-9F75-BAABDB36F1D4}</Project>
-      <Name>Dialog</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\EntityClass\EntityClass.csproj">
-      <Project>{726D7C4A-54D3-4FF8-9C95-D550A9BFC2FC}</Project>
-      <Name>EntityClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\LvCellExClass\LvCellExClass.csproj">
-      <Project>{0D96B26A-485C-4A42-A938-6B79B887C5E3}</Project>
-      <Name>LvCellExClass</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\NaviUserControl\NaviUserControl.csproj">
-      <Project>{8BAA8554-EC3D-4C09-AC4D-5167831B9984}</Project>
-      <Name>NaviUserControl</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\SingleWin\SingleWin.csproj">
-      <Project>{D07EDA90-6C90-4788-954B-A372F4168AC7}</Project>
-      <Name>SingleWin</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
     <ProjectReference Include="..\Svc\Svc.csproj">
       <Project>{CC44A804-F77B-4E52-9F66-DEB46D0F2DFA}</Project>
       <Name>Svc</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ThreePanelWin\ThreePanelWin.csproj">
-      <Project>{2FAA32E5-8BB7-4191-9E34-A2D05D761A61}</Project>
-      <Name>ThreePanelWin</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\ToggleMainWin\ToggleMainWin.csproj">
-      <Project>{A68B86EF-BDB1-470D-9284-31C104743765}</Project>
-      <Name>ToggleMainWin</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\TwoPanelWin\TwoPanelWin.csproj">
-      <Project>{06BB0F2D-4DA7-479D-B690-726596592A5B}</Project>
-      <Name>TwoPanelWin</Name>
-      <VSIXSubPath>ItemTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
     </ProjectReference>
@@ -407,6 +415,36 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SingleTbl\EntityList.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\SingleWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\BlankWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\TwoPanelWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\ThreePanelWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\ToggleMainWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dialog\Dialog.xaml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
