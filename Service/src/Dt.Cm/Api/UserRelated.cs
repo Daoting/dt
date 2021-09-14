@@ -127,7 +127,7 @@ namespace Dt.Cm
         {
             Throw.IfNullOrEmpty(p_paramID, "参数名不可为空！");
 
-            Userparams up = new Userparams(
+            UserparamsObj up = new UserparamsObj(
                 UserID: p_userID,
                 ParamID: p_paramID,
                 Value: p_value,
@@ -197,8 +197,8 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<Userrole> ls = (from id in p_roleIDs
-                                 select new Userrole(p_userID, id)).ToList();
+            List<UserroleObj> ls = (from id in p_roleIDs
+                                 select new UserroleObj(p_userID, id)).ToList();
             if (await _dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().Delete(p_userID);
@@ -220,8 +220,8 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<Userrole> ls = (from id in p_userIDs
-                                 select new Userrole(id, p_roleID)).ToList();
+            List<UserroleObj> ls = (from id in p_userIDs
+                                 select new UserroleObj(id, p_roleID)).ToList();
             if (await _dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().BatchDelete(p_userIDs);
@@ -242,13 +242,13 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<Userrole> ls = new List<Userrole>();
+            List<UserroleObj> ls = new List<UserroleObj>();
             foreach (var rid in p_roleIDs)
             {
                 // 任何人不需要关联
                 if (rid != 1)
                 {
-                    ls.Add(new Userrole(p_userID, rid));
+                    ls.Add(new UserroleObj(p_userID, rid));
                 }
             }
 
@@ -272,10 +272,10 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<Userrole> ls = new List<Userrole>();
+            List<UserroleObj> ls = new List<UserroleObj>();
             foreach (var uid in p_userIDs)
             {
-                ls.Add(new Userrole(uid, p_roleID));
+                ls.Add(new UserroleObj(uid, p_roleID));
             }
 
             if (!await _dp.BatchSave(ls))
@@ -292,7 +292,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteRole(long p_roleID)
         {
-            if (await _dp.Delete(new Role(p_roleID)))
+            if (await _dp.Delete(new RoleObj(p_roleID)))
             {
                 var ls = await _dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);

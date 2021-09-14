@@ -48,7 +48,7 @@ namespace Dt.Sample
 
         async void Create()
         {
-            _fv.Data = new Role(
+            _fv.Data = new RoleObj(
                 ID: await AtCm.NewID(),
                 Name: "新角色");
         }
@@ -70,7 +70,7 @@ namespace Dt.Sample
 
         async void Save()
         {
-            var d = _fv.Data.To<Role>();
+            var d = _fv.Data.To<RoleObj>();
             if (await AtCm.Save(d))
             {
                 _win.List.Update();
@@ -79,7 +79,7 @@ namespace Dt.Sample
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<Role>();
+            var d = _fv.Data.To<RoleObj>();
             if (d == null)
                 return;
 

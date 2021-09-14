@@ -23,7 +23,7 @@ namespace Dt.App.Workflow
             InitializeComponent();
         }
 
-        public void LoadNode(SNode p_node, Table<WfdAtvrole> p_atvRoles)
+        public void LoadNode(SNode p_node, Table<WfdAtvroleObj> p_atvRoles)
         {
             if (p_node.Tag != _fv.Data)
             {

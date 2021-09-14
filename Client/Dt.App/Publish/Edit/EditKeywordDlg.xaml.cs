@@ -23,19 +23,19 @@ namespace Dt.App.Publish
             InitializeComponent();
         }
 
-        public async Task<bool> Show(Keyword p_keyword)
+        public async Task<bool> Show(KeywordObj p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await AtPublish.GetByID<Keyword>(p_keyword.ID);
+                _fv.Data = await AtPublish.GetByID<KeywordObj>(p_keyword.ID);
             else
                 _fv.Data = Create();
             await ShowAsync();
             return _needRefresh;
         }
 
-        Keyword Create()
+        KeywordObj Create()
         {
-            return new Keyword(
+            return new KeywordObj(
                 ID: "新关键字",
                 Creator: Kit.UserName,
                 Ctime: Kit.Now);
@@ -43,7 +43,7 @@ namespace Dt.App.Publish
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtPublish.Save(_fv.Data.To<Keyword>()))
+            if (await AtPublish.Save(_fv.Data.To<KeywordObj>()))
             {
                 _needRefresh = true;
                 _fv.Data = Create();

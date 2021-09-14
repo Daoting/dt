@@ -26,7 +26,7 @@ namespace Dt.App.Model
         public async Task<bool> Show(string p_id)
         {
             if (!string.IsNullOrEmpty(p_id))
-                _fv.Data = await AtCm.GetByID<Prv>(p_id);
+                _fv.Data = await AtCm.GetByID<PrvObj>(p_id);
             else
                 CreatePrv();
             await ShowAsync();
@@ -35,12 +35,12 @@ namespace Dt.App.Model
 
         void CreatePrv()
         {
-            _fv.Data = new Prv("");
+            _fv.Data = new PrvObj("");
         }
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Prv>()))
+            if (await AtCm.Save(_fv.Data.To<PrvObj>()))
             {
                 _needRefresh = true;
                 CreatePrv();

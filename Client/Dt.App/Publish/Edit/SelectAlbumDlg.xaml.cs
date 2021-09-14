@@ -52,10 +52,10 @@ namespace Dt.App.Publish
                 return;
             }
 
-            var ls = new List<Postalbum>();
+            var ls = new List<PostalbumObj>();
             foreach (var row in selected)
             {
-                ls.Add(new Postalbum(PostID: _postID, AlbumID: row.ID));
+                ls.Add(new PostalbumObj(PostID: _postID, AlbumID: row.ID));
             }
             if (await AtPublish.BatchSave(ls))
                 Close(true);

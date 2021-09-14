@@ -27,7 +27,7 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lvPrv.Data = await AtCm.Query<Prv>("权限-所有");
+            _lvPrv.Data = await AtCm.Query<PrvObj>("权限-所有");
         }
 
         async void OnSearch(object sender, string e)
@@ -38,7 +38,7 @@ namespace Dt.App.Model
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lvPrv.Data = await AtCm.Query<Prv>("权限-模糊查询", new { id = $"%{e}%" });
+                _lvPrv.Data = await AtCm.Query<PrvObj>("权限-模糊查询", new { id = $"%{e}%" });
             }
             NaviTo("权限列表");
         }
@@ -51,13 +51,13 @@ namespace Dt.App.Model
 
         async void OnEditPrv(object sender, Mi e)
         {
-            if (await new EditPrvDlg().Show(e.Data.To<Prv>().ID))
+            if (await new EditPrvDlg().Show(e.Data.To<PrvObj>().ID))
                 LoadAll();
         }
 
         async void OnDelPrv(object sender, Mi e)
         {
-            var prv = e.Data.To<Prv>();
+            var prv = e.Data.To<PrvObj>();
             if (!await Kit.Confirm($"确认要删除[{prv.ID}]吗？"))
             {
                 Kit.Msg("已取消删除！");
@@ -71,7 +71,7 @@ namespace Dt.App.Model
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                RefreshRelation(e.Data.To<Prv>().ID);
+                RefreshRelation(e.Data.To<PrvObj>().ID);
 
             NaviTo("授权角色,授权用户");
         }
@@ -109,15 +109,15 @@ namespace Dt.App.Model
 
         async void OnAddRole(object sender, Mi e)
         {
-            string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
+            string prvID = _lvPrv.SelectedItem.To<PrvObj>().ID;
             SelectRolesDlg dlg = new SelectRolesDlg();
 
             if (await dlg.Show(RoleRelations.Prv, prvID, e))
             {
-                List<RolePrv> ls = new List<RolePrv>();
+                List<RolePrvObj> ls = new List<RolePrvObj>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RolePrv(row.ID, prvID));
+                    ls.Add(new RolePrvObj(row.ID, prvID));
                 }
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
@@ -142,11 +142,11 @@ namespace Dt.App.Model
 
         async void RemoveRole(IEnumerable<Row> p_rows)
         {
-            string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
-            List<RolePrv> ls = new List<RolePrv>();
+            string prvID = _lvPrv.SelectedItem.To<PrvObj>().ID;
+            List<RolePrvObj> ls = new List<RolePrvObj>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RolePrv(row.Long("roleid"), prvID));
+                ls.Add(new RolePrvObj(row.Long("roleid"), prvID));
             }
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {

@@ -31,7 +31,7 @@ namespace Dt.App.Model
 
             if (p_userID > 0)
             {
-                _fv.Data = await AtCm.First<User>("用户-编辑", new { id = p_userID });
+                _fv.Data = await AtCm.First<UserObj>("用户-编辑", new { id = p_userID });
                 _win?.RoleList.Update(p_userID);
             }
             else
@@ -48,11 +48,11 @@ namespace Dt.App.Model
             _win.RoleList.Clear();
         }
 
-        public User User => _fv.Data.To<User>();
+        public UserObj User => _fv.Data.To<UserObj>();
 
         async void Create()
         {
-            _fv.Data = new User(
+            _fv.Data = new UserObj(
                 ID: await AtCm.NewID(),
                 Name: "新用户");
             _win?.RoleList.Clear();
@@ -80,7 +80,7 @@ namespace Dt.App.Model
 
         async void Save()
         {
-            var user = _fv.Data.To<User>();
+            var user = _fv.Data.To<UserObj>();
             bool isNew = user.IsAdded;
             if (await AtCm.SaveBySvc(user))
             {

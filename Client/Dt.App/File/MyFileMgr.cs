@@ -52,7 +52,7 @@ namespace Dt.App.File
 
         public Task<bool> SaveFile(Row p_row)
         {
-            var file = new Myfile(
+            var file = new MyfileObj(
                 ID: p_row.ID,
                 ParentID: FolderID == -1 ? (long?)null : FolderID,
                 Name: p_row.Str("name"),
@@ -66,10 +66,10 @@ namespace Dt.App.File
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
         {
-            Myfile file;
+            MyfileObj file;
             if (p_id == -1)
             {
-                file = new Myfile(
+                file = new MyfileObj(
                     ID: await AtCm.NewID(),
                     ParentID: FolderID == -1 ? (long?)null : FolderID,
                     Name: p_name,
@@ -79,7 +79,7 @@ namespace Dt.App.File
             }
             else
             {
-                file = new Myfile(ID: p_id);
+                file = new MyfileObj(ID: p_id);
                 file.IsAdded = false;
                 file["name"] = p_name;
             }
@@ -88,7 +88,7 @@ namespace Dt.App.File
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
         {
-            var ls = new List<Myfile>();
+            var ls = new List<MyfileObj>();
             foreach (var row in p_rows)
             {
                 if (row.Bool("IsFolder"))
@@ -101,17 +101,17 @@ namespace Dt.App.File
                     }
                 }
 
-                ls.Add(new Myfile(ID: row.ID));
+                ls.Add(new MyfileObj(ID: row.ID));
             }
             return await AtCm.BatchDelete(ls);
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
         {
-            var ls = new List<Myfile>();
+            var ls = new List<MyfileObj>();
             foreach (var row in p_files)
             {
-                var pf = new Myfile(ID: row.ID);
+                var pf = new MyfileObj(ID: row.ID);
                 pf.IsAdded = false;
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);

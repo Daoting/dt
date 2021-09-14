@@ -132,14 +132,14 @@ namespace Dt.App.Workflow
 
             // 更新当前实例状态为活动
             DateTime time = Kit.Now;
-            WfiAtv curAtvi = await AtCm.GetByID<WfiAtv>(row.Long("atviid"));
+            WfiAtvObj curAtvi = await AtCm.GetByID<WfiAtvObj>(row.Long("atviid"));
             curAtvi.Status = WfiAtvStatus.活动;
             curAtvi.InstCount += 1;
             curAtvi.Mtime = time;
 
             // 根据当前工作项创建新工作项并更改指派方式
-            var curItem = await AtCm.GetByID<WfiItem>(row.Long("itemid"));
-            var newItem = new WfiItem(
+            var curItem = await AtCm.GetByID<WfiItemObj>(row.Long("itemid"));
+            var newItem = new WfiItemObj(
                 ID: await AtCm.NewID(),
                 AtviID: curItem.AtviID,
                 Status: WfiItemStatus.活动,
@@ -155,11 +155,11 @@ namespace Dt.App.Workflow
                 Mtime: time);
 
             // 删除已发送的后续活动实例，关联删除工作项及迁移实例
-            Table<WfiAtv> nextAtvs = new Table<WfiAtv>();
+            Table<WfiAtvObj> nextAtvs = new Table<WfiAtvObj>();
             nextAtvs.StartRecordDelRows();
             foreach (var id in ls)
             {
-                nextAtvs.DeletedRows.Add(new WfiAtv(id));
+                nextAtvs.DeletedRows.Add(new WfiAtvObj(id));
             }
 
             // 一个事务批量保存

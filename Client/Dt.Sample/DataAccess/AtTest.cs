@@ -438,12 +438,12 @@ namespace Dt.Sample
             ).Call<Row>();
         }
 
-        public static Task<Table<CustomEntity>> GetEntityTable()
+        public static Task<Table<CustomEntityObj>> GetEntityTable()
         {
             return new UnaryRpc(
                 "cm",
                 "TestSerialize.GetEntityTable"
-            ).Call<Table<CustomEntity>>();
+            ).Call<Table<CustomEntityObj>>();
         }
 
         public static Task<bool> SetEntityTable(Table p_tbl)
@@ -455,12 +455,12 @@ namespace Dt.Sample
             ).Call<bool>();
         }
 
-        public static Task<CustomEntity> GetEntity()
+        public static Task<CustomEntityObj> GetEntity()
         {
             return new UnaryRpc(
                 "cm",
                 "TestSerialize.GetEntity"
-            ).Call<CustomEntity>();
+            ).Call<CustomEntityObj>();
         }
 
         public static Task<bool> SetEntity(Row p_entity)

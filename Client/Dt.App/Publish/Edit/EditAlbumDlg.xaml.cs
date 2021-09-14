@@ -23,19 +23,19 @@ namespace Dt.App.Publish
             InitializeComponent();
         }
 
-        public async Task<bool> Show(Album p_keyword)
+        public async Task<bool> Show(AlbumObj p_keyword)
         {
             if (p_keyword != null)
-                _fv.Data = await AtPublish.GetByID<Album>(p_keyword.ID);
+                _fv.Data = await AtPublish.GetByID<AlbumObj>(p_keyword.ID);
             else
                 _fv.Data = await Create();
             await ShowAsync();
             return _needRefresh;
         }
 
-        async Task<Album> Create()
+        async Task<AlbumObj> Create()
         {
-            return new Album(
+            return new AlbumObj(
                 ID: await AtPublish.NewID(),
                 Name: "新专辑",
                 Creator: Kit.UserName,
@@ -44,7 +44,7 @@ namespace Dt.App.Publish
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtPublish.Save(_fv.Data.To<Album>()))
+            if (await AtPublish.Save(_fv.Data.To<AlbumObj>()))
             {
                 _needRefresh = true;
                 _fv.Data = await Create();

@@ -356,22 +356,22 @@ namespace Dt.Cm
             return p_row;
         }
 
-        public Table<CustomEntity> GetEntityTable()
+        public Table<CustomEntityObj> GetEntityTable()
         {
             return CreateEntityTable();
         }
 
-        public bool SetEntityTable(Table<CustomEntity> p_tbl)
+        public bool SetEntityTable(Table<CustomEntityObj> p_tbl)
         {
             return p_tbl != null;
         }
 
-        public CustomEntity GetEntity()
+        public CustomEntityObj GetEntity()
         {
             return CreateEntityTable()[0];
         }
 
-        public bool SetEntity(CustomEntity p_entity)
+        public bool SetEntity(CustomEntityObj p_entity)
         {
             return p_entity != null;
         }
@@ -446,10 +446,10 @@ namespace Dt.Cm
             return tbl;
         }
 
-        Table<CustomEntity> CreateEntityTable()
+        Table<CustomEntityObj> CreateEntityTable()
         {
-            var tbl = Table<CustomEntity>.Create();
-            tbl.Add(new CustomEntity(
+            var tbl = Table<CustomEntityObj>.Create();
+            tbl.Add(new CustomEntityObj(
                 Col1: "原始值",
                 Col2: true,
                 Col3: 100L,
@@ -458,7 +458,7 @@ namespace Dt.Cm
                 Col6: 23,
                 Col7: new byte[] { 10, 20, 30, 40 }));
 
-            tbl.Add(new CustomEntity(
+            tbl.Add(new CustomEntityObj(
                 Col1: "列值21",
                 Col4: DateTime.Now));
 
@@ -697,12 +697,12 @@ namespace Dt.Cm
         public Student Employee { get; set; }
     }
 
-    public class CustomEntity : Entity
+    public class CustomEntityObj : Entity
     {
-        CustomEntity()
+        CustomEntityObj()
         { }
 
-        public CustomEntity(
+        public CustomEntityObj(
             string Col1 = default,
             bool Col2 = default,
             long Col3 = default,

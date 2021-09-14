@@ -327,7 +327,7 @@ namespace Dt.Core
             {
                 clsName = SetFirstToUpper(p_tblName);
             }
-            return clsName;
+            return clsName + "Obj";
         }
 
         string GetEnumName(TableCol p_col)

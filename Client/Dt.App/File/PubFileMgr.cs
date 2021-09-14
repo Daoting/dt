@@ -71,7 +71,7 @@ namespace Dt.App.File
 
         public Task<bool> SaveFile(Row p_row)
         {
-            Pubfile pf = new Pubfile(
+            PubfileObj pf = new PubfileObj(
                     ID: p_row.ID,
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
@@ -84,10 +84,10 @@ namespace Dt.App.File
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
         {
-            Pubfile pf;
+            PubfileObj pf;
             if (p_id == -1)
             {
-                pf = new Pubfile(
+                pf = new PubfileObj(
                     ID: await AtCm.NewID(),
                     ParentID: FolderID,
                     Name: p_name,
@@ -96,7 +96,7 @@ namespace Dt.App.File
             }
             else
             {
-                pf = new Pubfile(ID: p_id);
+                pf = new PubfileObj(ID: p_id);
                 pf.IsAdded = false;
                 pf["name"] = p_name;
             }
@@ -105,7 +105,7 @@ namespace Dt.App.File
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
         {
-            var ls = new List<Pubfile>();
+            var ls = new List<PubfileObj>();
             foreach (var row in p_rows)
             {
                 if (row.Bool("IsFolder"))
@@ -118,17 +118,17 @@ namespace Dt.App.File
                     }
                 }
 
-                ls.Add(new Pubfile(ID: row.ID));
+                ls.Add(new PubfileObj(ID: row.ID));
             }
             return await AtCm.BatchDelete(ls);
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
         {
-            var ls = new List<Pubfile>();
+            var ls = new List<PubfileObj>();
             foreach (var row in p_files)
             {
-                var pf = new Pubfile(ID: row.ID);
+                var pf = new PubfileObj(ID: row.ID);
                 pf.IsAdded = false;
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);

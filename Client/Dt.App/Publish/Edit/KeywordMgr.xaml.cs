@@ -24,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await AtPublish.Query<Keyword>("发布-所有关键字");
+            _lv.Data = await AtPublish.Query<KeywordObj>("发布-所有关键字");
         }
 
         async void OnSearch(object sender, string e)
@@ -35,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtPublish.Query<Keyword>("发布-模糊查询关键字", new { id = $"%{e}%" });
+                _lv.Data = await AtPublish.Query<KeywordObj>("发布-模糊查询关键字", new { id = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -48,17 +48,17 @@ namespace Dt.App.Publish
 
         async void OnEdit(object sender, Mi e)
         {
-            var key = e.Data.To<Keyword>();
+            var key = e.Data.To<KeywordObj>();
             if (!await IsUsed(key.ID))
             {
-                if (await new EditKeywordDlg().Show(e.Data.To<Keyword>()))
+                if (await new EditKeywordDlg().Show(e.Data.To<KeywordObj>()))
                     LoadAll();
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var key = e.Data.To<Keyword>();
+            var key = e.Data.To<KeywordObj>();
             if (await IsUsed(key.ID))
                 return;
 

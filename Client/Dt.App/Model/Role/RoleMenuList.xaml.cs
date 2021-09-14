@@ -49,10 +49,10 @@ namespace Dt.App.Model
             var dlg = new SelectRoleMenuDlg();
             if (await dlg.Show(_roleID, e))
             {
-                List<RoleMenu> ls = new List<RoleMenu>();
+                List<RoleMenuObj> ls = new List<RoleMenuObj>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RoleMenu(_roleID, row.ID));
+                    ls.Add(new RoleMenuObj(_roleID, row.ID));
                 }
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
@@ -77,10 +77,10 @@ namespace Dt.App.Model
 
         async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<RoleMenu> ls = new List<RoleMenu>();
+            List<RoleMenuObj> ls = new List<RoleMenuObj>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RoleMenu(_roleID, row.Long("menuid")));
+                ls.Add(new RoleMenuObj(_roleID, row.Long("menuid")));
             }
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {

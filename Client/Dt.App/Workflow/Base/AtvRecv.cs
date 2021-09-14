@@ -24,7 +24,7 @@ namespace Dt.App
         /// <summary>
         /// 获取设置活动定义
         /// </summary>
-        public WfdAtv Def { get; set; }
+        public WfdAtvObj Def { get; set; }
 
         /// <summary>
         /// 获取设置是否按角色接收
@@ -71,7 +71,7 @@ namespace Dt.App
         /// <summary>
         /// 同步活动定义
         /// </summary>
-        public WfdAtv SyncDef { get; set; }
+        public WfdAtvObj SyncDef { get; set; }
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace Dt.App
         /// <summary>
         /// 结束活动
         /// </summary>
-        public WfdAtv Def { get; set; }
+        public WfdAtvObj Def { get; set; }
 
         /// <summary>
         /// 是否选择结束活动

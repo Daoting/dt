@@ -31,7 +31,7 @@ namespace Dt.App.Model
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<Role>("角色-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<RoleObj>("角色-编辑", new { id = p_id });
                 _win.UserList.Update(p_id);
                 _win.MenuList.Update(p_id);
                 _win.PrvList.Update(p_id);
@@ -52,7 +52,7 @@ namespace Dt.App.Model
 
         async void Create()
         {
-            _fv.Data = new Role(
+            _fv.Data = new RoleObj(
                 ID: await AtCm.NewID(),
                 Name: "新角色");
 
@@ -78,7 +78,7 @@ namespace Dt.App.Model
 
         async void Save()
         {
-            var d = _fv.Data.To<Role>();
+            var d = _fv.Data.To<RoleObj>();
             bool isNew = d.IsAdded;
             if (await AtCm.Save(d))
             {
@@ -94,7 +94,7 @@ namespace Dt.App.Model
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<Role>();
+            var d = _fv.Data.To<RoleObj>();
             if (d == null)
                 return;
 

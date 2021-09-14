@@ -24,7 +24,7 @@ namespace Dt.App.Workflow
     public partial class WorkflowDesign : Win
     {
         #region 成员变量
-        WfdPrc _prc;
+        WfdPrcObj _prc;
 
         WfInsertMenu _insertMenu;
         AlignMenu _alignMenu;
@@ -50,7 +50,7 @@ namespace Dt.App.Workflow
         #region 数据处理
         async void LoadPrc(long p_prcID)
         {
-            _prc = (p_prcID < 0) ? await WfdPrc.New() : await WfdPrc.Get(p_prcID);
+            _prc = (p_prcID < 0) ? await WfdPrcObj.New() : await WfdPrcObj.Get(p_prcID);
 
             IsChanged = false;
             _sketch.His.CmdChanged -= OnSketchChanged;
@@ -105,14 +105,14 @@ namespace Dt.App.Workflow
 
             foreach (var elem in _sketch.Container.Children)
             {
-                if (elem is SNode node && node.Tag is WfdAtv atv)
+                if (elem is SNode node && node.Tag is WfdAtvObj atv)
                 {
                     // 标题以属性值为准
                     atv.Name = node.Title;
                     if (atv.IsChanged)
                         atv.Mtime = now;
                 }
-                else if (elem is SLine line && line.Tag is WfdTrs trs)
+                else if (elem is SLine line && line.Tag is WfdTrsObj trs)
                 {
                     // 以最终起点终点标识为准
                     trs.SrcAtvID = line.HeaderID;
@@ -190,7 +190,7 @@ namespace Dt.App.Workflow
                                 break;
                         }
 
-                        WfdAtv atv = new WfdAtv(
+                        WfdAtvObj atv = new WfdAtvObj(
                             ID: node.ID,
                             PrcID: _prc.ID,
                             Name: node.Title,
@@ -209,7 +209,7 @@ namespace Dt.App.Workflow
                         node.Tag = atv;
                         _prc.Atvs.Add(atv);
                     }
-                    else if (node.Tag is WfdAtv atv)
+                    else if (node.Tag is WfdAtvObj atv)
                     {
                         // 删除后撤消 或 撤消后重做
                         _prc.Atvs.Add(atv);
@@ -220,7 +220,7 @@ namespace Dt.App.Workflow
                     if (item.Tag == null)
                     {
                         line.ID = await AtCm.NewID();
-                        WfdTrs trs = new WfdTrs(
+                        WfdTrsObj trs = new WfdTrsObj(
                             ID: line.ID,
                             PrcID: _prc.ID,
                             SrcAtvID: line.HeaderID,
@@ -229,7 +229,7 @@ namespace Dt.App.Workflow
                         line.Tag = trs;
                         _prc.Trss.Add(trs);
                     }
-                    else if (item.Tag is WfdTrs trs)
+                    else if (item.Tag is WfdTrsObj trs)
                     {
                         _prc.Trss.Add(trs);
                     }
@@ -261,12 +261,12 @@ namespace Dt.App.Workflow
             {
                 if (item is SNode node)
                 {
-                    if (node.Tag is WfdAtv atv)
+                    if (node.Tag is WfdAtvObj atv)
                         _prc.Atvs.Remove(atv);
                 }
                 else if (item is SLine line)
                 {
-                    if (line.Tag is WfdTrs trs)
+                    if (line.Tag is WfdTrsObj trs)
                         _prc.Trss.Remove(trs);
                 }
             }
@@ -356,7 +356,7 @@ namespace Dt.App.Workflow
         /// <param name="p_node"></param>
         void LoadAtvForm(SNode p_node)
         {
-            var data = p_node.Tag as WfdAtv;
+            var data = p_node.Tag as WfdAtvObj;
             if (data == null)
             {
                 _tab.Content = null;
@@ -402,7 +402,7 @@ namespace Dt.App.Workflow
         /// <param name="p_line"></param>
         void LoadTrsForm(SLine p_line)
         {
-            var data = p_line.Tag as WfdTrs;
+            var data = p_line.Tag as WfdTrsObj;
             if (data == null)
             {
                 _tab.Content = null;

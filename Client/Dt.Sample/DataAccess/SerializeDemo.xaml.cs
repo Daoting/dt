@@ -701,10 +701,10 @@ namespace Dt.Sample
             return tbl;
         }
 
-        public static Table<CustomEntity> CreateEntityTable()
+        public static Table<CustomEntityObj> CreateEntityTable()
         {
-            var tbl = Table<CustomEntity>.Create();
-            tbl.Add(new CustomEntity(
+            var tbl = Table<CustomEntityObj>.Create();
+            tbl.Add(new CustomEntityObj(
                 Col1: "原始值",
                 Col2: true,
                 Col3: 100L,
@@ -713,7 +713,7 @@ namespace Dt.Sample
                 Col6: 23,
                 Col7: new byte[] { 10, 20, 30, 40 }));
 
-            tbl.Add(new CustomEntity(
+            tbl.Add(new CustomEntityObj(
                 Col1: "列值21",
                 Col4: DateTime.Now));
 
@@ -757,12 +757,12 @@ namespace Dt.Sample
         public Student Employee { get; set; }
     }
 
-    public class CustomEntity : Entity
+    public class CustomEntityObj : Entity
     {
-        CustomEntity()
+        CustomEntityObj()
         { }
 
-        public CustomEntity(
+        public CustomEntityObj(
             string Col1 = default,
             bool Col2 = default,
             long Col3 = default,

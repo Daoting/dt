@@ -17,9 +17,9 @@ namespace Dt.App.Model
 {
     public class AppRptDesignInfo : RptDesignInfo
     {
-        Rpt _rpt;
+        RptObj _rpt;
 
-        public AppRptDesignInfo(Rpt p_rpt)
+        public AppRptDesignInfo(RptObj p_rpt)
         {
             _rpt = p_rpt;
             Name = p_rpt.Name;

@@ -15,25 +15,25 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
-    public class InsertUserHandler : InsertEventHandler<User>
+    public class InsertUserHandler : InsertEventHandler<UserObj>
     {
-        public override Task Handle(InsertEvent<User> p_event)
+        public override Task Handle(InsertEvent<UserObj> p_event)
         {
             return Task.CompletedTask;
         }
     }
 
-    public class UpdateUserHandler : UpdateEventHandler<User>
+    public class UpdateUserHandler : UpdateEventHandler<UserObj>
     {
-        public override Task Handle(UpdateEvent<User> p_event)
+        public override Task Handle(UpdateEvent<UserObj> p_event)
         {
             return Task.CompletedTask;
         }
     }
 
-    public class DeleteUserHandler : DeleteEventHandler<User>
+    public class DeleteUserHandler : DeleteEventHandler<UserObj>
     {
-        public override Task Handle(DeleteEvent<User> p_event)
+        public override Task Handle(DeleteEvent<UserObj> p_event)
         {
             // 删除用户时同步删除缓存
             return new HashCache("ver").Delete(p_event.Entity.ID);

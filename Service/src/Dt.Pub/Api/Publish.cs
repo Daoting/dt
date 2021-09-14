@@ -42,7 +42,7 @@ namespace Dt.Pub
         /// </summary>
         /// <param name="p_post"></param>
         /// <returns></returns>
-        public async Task<string> SavePost(Post p_post)
+        public async Task<string> SavePost(PostObj p_post)
         {
             Throw.IfNull(p_post, "待保存的文章对象为null");
             Throw.If(!p_post.IsAdded && !p_post.IsChanged, "文章对象不需要保存");

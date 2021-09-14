@@ -24,12 +24,12 @@ namespace Dt.App.Model
 
         async void LoadAll()
         {
-            _lv.Data = await AtCm.Query<Rpt>("报表-所有");
+            _lv.Data = await AtCm.Query<RptObj>("报表-所有");
         }
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            Rpt rpt = _fv.Data.To<Rpt>();
+            RptObj rpt = _fv.Data.To<RptObj>();
             if (rpt != null && rpt.IsChanged)
             {
                 if (!await Kit.Confirm("数据已修改，确认要放弃修改吗？"))
@@ -38,7 +38,7 @@ namespace Dt.App.Model
                 rpt.RejectChanges();
             }
 
-            _fv.Data = await AtCm.First<Rpt>("报表-ID", new { id = e.Data.To<Rpt>().ID });
+            _fv.Data = await AtCm.First<RptObj>("报表-ID", new { id = e.Data.To<RptObj>().ID });
             SelectTab("编辑");
         }
 
@@ -50,44 +50,44 @@ namespace Dt.App.Model
             }
             else if (e == "#最近修改")
             {
-                _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
+                _lv.Data = await AtCm.Query<RptObj>("报表-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtCm.Query<Rpt>("报表-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await AtCm.Query<RptObj>("报表-模糊查询", new { input = $"%{e}%" });
             }
             SelectTab("列表");
         }
 
         async void OnAdd(object sender, Mi e)
         {
-            _fv.Data = new Rpt(
+            _fv.Data = new RptObj(
                 ID: await AtCm.NewID(),
                 Name: "新报表");
         }
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Rpt>()))
+            if (await AtCm.Save(_fv.Data.To<RptObj>()))
             {
-                _lv.Data = await AtCm.Query<Rpt>("报表-最近修改");
+                _lv.Data = await AtCm.Query<RptObj>("报表-最近修改");
                 AtCm.PromptForUpdateModel();
             }
         }
 
         void OnDel(object sender, Mi e)
         {
-            Rpt rpt = _fv.Data.To<Rpt>();
+            RptObj rpt = _fv.Data.To<RptObj>();
             if (rpt != null)
                 DelRpt(rpt);
         }
 
         void OnDelContext(object sender, Mi e)
         {
-            DelRpt(e.Data.To<Rpt>());
+            DelRpt(e.Data.To<RptObj>());
         }
 
-        async void DelRpt(Rpt rpt)
+        async void DelRpt(RptObj rpt)
         {
             if (rpt.IsAdded && !rpt.IsChanged)
             {
@@ -105,7 +105,7 @@ namespace Dt.App.Model
             {
                 _fv.Data = null;
             }
-            else if (await AtCm.DelByID<Rpt>(rpt.ID))
+            else if (await AtCm.DelByID<RptObj>(rpt.ID))
             {
                 _fv.Data = null;
                 LoadAll();
@@ -115,17 +115,17 @@ namespace Dt.App.Model
 
         void OnEditTemplateContext(object sender, Mi e)
         {
-            EditTemplate(e.Data.To<Rpt>());
+            EditTemplate(e.Data.To<RptObj>());
         }
 
         void OnEditTemplate(object sender, Mi e)
         {
-            Rpt rpt = _fv.Data.To<Rpt>();
+            RptObj rpt = _fv.Data.To<RptObj>();
             if (rpt != null)
                 EditTemplate(rpt);
         }
 
-        void EditTemplate(Rpt p_rpt)
+        void EditTemplate(RptObj p_rpt)
         {
             _ = AtRpt.ShowDesign(new AppRptDesignInfo(p_rpt));
         }

@@ -43,7 +43,7 @@ namespace Dt.Cm
             }
 
             // 从缓存读取
-            var user = await _dp.GetByKey<User>("phone", p_phone);
+            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
             if (user == null || user.Pwd != p_pwd)
             {
                 result.AddCell("IsSuc", false);
@@ -87,7 +87,7 @@ namespace Dt.Cm
             result.AddCell("IsSuc", true);
 
             // 已注册
-            var user = await _dp.GetByKey<User>("phone", p_phone);
+            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
             if (user != null)
             {
                 result.AddCell("UserID", user.ID);
@@ -100,7 +100,7 @@ namespace Dt.Cm
             else
             {
                 // 初次登录，创建账号，初始密码为手机号后4位
-                user = User.CreateByPhone(p_phone);
+                user = UserObj.CreateByPhone(p_phone);
                 await _dp.Save(user);
 
                 result.AddCell("UserID", user.ID);

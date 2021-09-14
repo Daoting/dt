@@ -27,7 +27,7 @@ namespace Dt.App.Publish
         #region 文章列表
         async void LoadAll()
         {
-            _lvPost.Data = await AtPublish.Query<Post>("文章-管理列表");
+            _lvPost.Data = await AtPublish.Query<PostObj>("文章-管理列表");
         }
 
         void OnPostClick(object sender, ItemClickArgs e)
@@ -41,19 +41,19 @@ namespace Dt.App.Publish
 
         async void OnSearch(object sender, string e)
         {
-            _lvPost.Data = await AtPublish.Query<Post>("文章-模糊查询", new { input = $"%{e}%" });
+            _lvPost.Data = await AtPublish.Query<PostObj>("文章-模糊查询", new { input = $"%{e}%" });
         }
         #endregion
 
         #region 文章
-        internal Post CurrentPost
+        internal PostObj CurrentPost
         {
-            get { return (Post)_fv.Data; }
+            get { return (PostObj)_fv.Data; }
         }
 
         async void LoadPost(long p_id)
         {
-            _fv.Data = await AtPublish.First<Post>("文章-编辑", new { id = p_id });
+            _fv.Data = await AtPublish.First<PostObj>("文章-编辑", new { id = p_id });
             LoadKeyword(p_id);
             LoadAlbum(p_id);
         }
@@ -70,7 +70,7 @@ namespace Dt.App.Publish
 
         async void OnAddPost(object sender, Mi e)
         {
-            var post = new Post(
+            var post = new PostObj(
                 ID: await AtPublish.NewID(),
                 Title: "新文章",
                 TempType: 0,
@@ -85,7 +85,7 @@ namespace Dt.App.Publish
 
         internal async Task<bool> SavePost()
         {
-            Post post = (Post)_fv.Data;
+            PostObj post = (PostObj)_fv.Data;
             if (post == null || !post.IsValid())
                 return false;
 
@@ -103,14 +103,14 @@ namespace Dt.App.Publish
 
         void OnEditContent(object sender, Mi e)
         {
-            Post post = (Post)_fv.Data;
+            PostObj post = (PostObj)_fv.Data;
             if (post != null)
                 new HtmlEditDlg().ShowDlg(this);
         }
 
         async void OnDelPost(object sender, Mi e)
         {
-            Post post = (Post)_fv.Data;
+            PostObj post = (PostObj)_fv.Data;
             if (!await Kit.Confirm($"确认要删除[{post.Title}]吗？"))
             {
                 Kit.Msg("已取消删除！");
@@ -128,7 +128,7 @@ namespace Dt.App.Publish
 
         void OnExplore(object sender, Mi e)
         {
-            Post post = (Post)_fv.Data;
+            PostObj post = (PostObj)_fv.Data;
             if (post != null)
             {
                 if (string.IsNullOrEmpty(post.Url))
@@ -149,7 +149,7 @@ namespace Dt.App.Publish
 
         async void OnDelPostKeyword(object sender, Mi e)
         {
-            Postkeyword pk = new Postkeyword(PostID: _fv.Row.ID, Keyword: e.Row.Str(0));
+            PostkeywordObj pk = new PostkeywordObj(PostID: _fv.Row.ID, Keyword: e.Row.Str(0));
             if (await AtPublish.Delete(pk))
                 LoadKeyword(_fv.Row.ID);
         }
@@ -165,7 +165,7 @@ namespace Dt.App.Publish
 
         async void OnDelPostAlbum(object sender, Mi e)
         {
-            var pa = new Postalbum(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
+            var pa = new PostalbumObj(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
             if (await AtPublish.Delete(pa))
                 LoadAlbum(_fv.Row.ID);
         }
@@ -189,7 +189,7 @@ namespace Dt.App.Publish
 
         Task<bool> IHtmlEditHost.SaveHtml(string p_html)
         {
-            ((Post)_fv.Data).Content = p_html;
+            ((PostObj)_fv.Data).Content = p_html;
             return SavePost();
         }
         #endregion

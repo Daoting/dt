@@ -49,10 +49,10 @@ namespace Dt.App.Model
             var dlg = new SelectRolePrvDlg();
             if (await dlg.Show(_roleID, e))
             {
-                List<RolePrv> ls = new List<RolePrv>();
+                List<RolePrvObj> ls = new List<RolePrvObj>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RolePrv(_roleID, row.Str("id")));
+                    ls.Add(new RolePrvObj(_roleID, row.Str("id")));
                 }
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
@@ -77,10 +77,10 @@ namespace Dt.App.Model
 
         async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<RolePrv> ls = new List<RolePrv>();
+            List<RolePrvObj> ls = new List<RolePrvObj>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RolePrv(_roleID, row.Str("prvid")));
+                ls.Add(new RolePrvObj(_roleID, row.Str("prvid")));
             }
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {

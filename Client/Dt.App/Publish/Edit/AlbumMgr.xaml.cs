@@ -24,7 +24,7 @@ namespace Dt.App.Publish
 
         async void LoadAll()
         {
-            _lv.Data = await AtPublish.Query<Album>("发布-所有专辑");
+            _lv.Data = await AtPublish.Query<AlbumObj>("发布-所有专辑");
         }
 
         async void OnSearch(object sender, string e)
@@ -35,7 +35,7 @@ namespace Dt.App.Publish
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtPublish.Query<Album>("发布-模糊查询专辑", new { name = $"%{e}%" });
+                _lv.Data = await AtPublish.Query<AlbumObj>("发布-模糊查询专辑", new { name = $"%{e}%" });
             }
             SelectTab("列表");
         }
@@ -48,7 +48,7 @@ namespace Dt.App.Publish
 
         async void OnEdit(object sender, Mi e)
         {
-            var album = e.Data.To<Album>();
+            var album = e.Data.To<AlbumObj>();
             if (!await IsUsed(album.ID))
             {
                 if (await new EditAlbumDlg().Show(album))
@@ -58,7 +58,7 @@ namespace Dt.App.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var album = e.Data.To<Album>();
+            var album = e.Data.To<AlbumObj>();
             if (await IsUsed(album.ID))
                 return;
 

@@ -27,7 +27,7 @@ namespace Dt.App.Model
 
         void Load()
         {
-            Menu m = new Menu(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
+            MenuObj m = new MenuObj(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
             m.AddCell("parentname", "");
             _tv.FixedRoot = m;
             _fv.DataChanged += OnFvDataChanged;
@@ -48,9 +48,9 @@ namespace Dt.App.Model
         async void LoadTreeData()
         {
             // 记录已选择的节点
-            var m = _tv.Selected<Menu>();
+            var m = _tv.Selected<MenuObj>();
             long id = m == null ? -1 : m.ID;
-            _tv.Data = await AtCm.Query<Menu>("菜单-完整树");
+            _tv.Data = await AtCm.Query<MenuObj>("菜单-完整树");
 
             object select = null;
             if (id > 0)
@@ -66,7 +66,7 @@ namespace Dt.App.Model
         {
             var id = e.Row.ID;
             if (id > 0)
-                _fv.Data = await AtCm.First<Menu>("菜单-id菜单项", new { id = id });
+                _fv.Data = await AtCm.First<MenuObj>("菜单-id菜单项", new { id = id });
             else
                 _fv.Data = _tv.FixedRoot;
             NaviTo("菜单项,菜单授权");
@@ -79,7 +79,7 @@ namespace Dt.App.Model
         /// <param name="e"></param>
         async void OnFvDataChanged(object sender, object e)
         {
-            var m = (Menu)e;
+            var m = (MenuObj)e;
             if (m.ID == 0)
             {
                 // 根节点
@@ -112,7 +112,7 @@ namespace Dt.App.Model
             else
             {
                 _mRole.IsEnabled = true;
-                _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = m.ID });
+                _lvRole.Data = await AtCm.Query<RoleMenuObj>("菜单-关联的角色", new { menuid = m.ID });
             }
         }
 
@@ -128,8 +128,8 @@ namespace Dt.App.Model
 
         async void AddMenu(bool p_isGroup)
         {
-            var sel = _tv.Selected<Menu>();
-            Menu m = new Menu(
+            var sel = _tv.Selected<MenuObj>();
+            MenuObj m = new MenuObj(
                 ID: await AtCm.NewID(),
                 Name: p_isGroup ? "新组" : "新菜单",
                 Icon: p_isGroup ? "文件夹" : "文件",
@@ -144,7 +144,7 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<Menu>()))
+            if (await AtCm.Save(_fv.Data.To<MenuObj>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
@@ -154,10 +154,10 @@ namespace Dt.App.Model
 
         void OnDel(object sender, Mi e)
         {
-            DelMenuRow(_fv.Data.To<Menu>());
+            DelMenuRow(_fv.Data.To<MenuObj>());
         }
 
-        async void DelMenuRow(Menu p_row)
+        async void DelMenuRow(MenuObj p_row)
         {
             if (!await Kit.Confirm("确认要删除吗？"))
             {
@@ -186,7 +186,7 @@ namespace Dt.App.Model
 
         void OnOpen(object sender, Mi e)
         {
-            var row = _fv.Data.To<Menu>();
+            var row = _fv.Data.To<MenuObj>();
             OmMenu menu = new OmMenu(
                 ID: row.ID,
                 Name: row.Name,
@@ -200,33 +200,33 @@ namespace Dt.App.Model
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await AtCm.Query<Menu>("菜单-分组树");
+                ((CTree)sender).Data = await AtCm.Query<MenuObj>("菜单-分组树");
             }
         }
 
         void OnMoveUp(object sender, Mi e)
         {
-            var src = e.Data.To<Menu>();
+            var src = e.Data.To<MenuObj>();
             if (src.ID == 0)
                 return;
 
-            var tgt = _tv.GetTopBrother(src) as Menu;
+            var tgt = _tv.GetTopBrother(src) as MenuObj;
             if (tgt != null)
                 Exchange(src, tgt);
         }
 
         void OnMoveDown(object sender, Mi e)
         {
-            var src = e.Data.To<Menu>();
+            var src = e.Data.To<MenuObj>();
             if (src.ID == 0)
                 return;
 
-            var tgt = _tv.GetFollowingBrother(src) as Menu;
+            var tgt = _tv.GetFollowingBrother(src) as MenuObj;
             if (tgt != null)
                 Exchange(src, tgt);
         }
 
-        async void Exchange(Menu src, Menu tgt)
+        async void Exchange(MenuObj src, MenuObj tgt)
         {
             if (await AtCm.ExchangeDispidx(src, tgt))
             {
@@ -237,7 +237,7 @@ namespace Dt.App.Model
 
         void OnListDel(object sender, Mi e)
         {
-            DelMenuRow(e.Data.To<Menu>());
+            DelMenuRow(e.Data.To<MenuObj>());
         }
 
         #region Role
@@ -263,17 +263,17 @@ namespace Dt.App.Model
         async void OnAddRole(object sender, Mi e)
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
-            long menuID = _fv.Data.To<Menu>().ID;
+            long menuID = _fv.Data.To<MenuObj>().ID;
             if (await dlg.Show(RoleRelations.Menu, menuID.ToString(), e))
             {
-                List<RoleMenu> ls = new List<RoleMenu>();
+                List<RoleMenuObj> ls = new List<RoleMenuObj>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RoleMenu(row.ID, menuID));
+                    ls.Add(new RoleMenuObj(row.ID, menuID));
                 }
                 if (ls.Count > 0 && await AtCm.BatchSave(ls))
                 {
-                    _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
+                    _lvRole.Data = await AtCm.Query<RoleMenuObj>("菜单-关联的角色", new { menuid = menuID });
                     await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
                 }
             }
@@ -294,15 +294,15 @@ namespace Dt.App.Model
 
         async void RemoveRole(IEnumerable<Row> p_rows)
         {
-            long menuID = _fv.Data.To<Menu>().ID;
-            List<RoleMenu> ls = new List<RoleMenu>();
+            long menuID = _fv.Data.To<MenuObj>().ID;
+            List<RoleMenuObj> ls = new List<RoleMenuObj>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RoleMenu(row.Long("roleid"), menuID));
+                ls.Add(new RoleMenuObj(row.Long("roleid"), menuID));
             }
             if (ls.Count > 0 && await AtCm.BatchDelete(ls))
             {
-                _lvRole.Data = await AtCm.Query<RoleMenu>("菜单-关联的角色", new { menuid = menuID });
+                _lvRole.Data = await AtCm.Query<RoleMenuObj>("菜单-关联的角色", new { menuid = menuID });
                 await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
             }
         }

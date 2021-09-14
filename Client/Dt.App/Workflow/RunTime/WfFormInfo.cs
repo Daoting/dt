@@ -23,7 +23,7 @@ namespace Dt.App
     public class WfFormInfo
     {
         #region 成员变量
-        static readonly Dictionary<long, WfdPrc> _prcDefs = new Dictionary<long, WfdPrc>();
+        static readonly Dictionary<long, WfdPrcObj> _prcDefs = new Dictionary<long, WfdPrcObj>();
         long _prcID;
         long _prciID;
         long _itemID;
@@ -112,27 +112,27 @@ namespace Dt.App
         /// <summary>
         /// 获取流程模板定义
         /// </summary>
-        public WfdPrc PrcDef { get; private set; }
+        public WfdPrcObj PrcDef { get; private set; }
 
         /// <summary>
         /// 获取当前活动定义
         /// </summary>
-        public WfdAtv AtvDef { get; private set; }
+        public WfdAtvObj AtvDef { get; private set; }
 
         /// <summary>
         /// 获取流程实例
         /// </summary>
-        public WfiPrc PrcInst { get; private set; }
+        public WfiPrcObj PrcInst { get; private set; }
 
         /// <summary>
         /// 获取当前活动实例
         /// </summary>
-        public WfiAtv AtvInst { get; private set; }
+        public WfiAtvObj AtvInst { get; private set; }
 
         /// <summary>
         /// 获取当前工作项
         /// </summary>
-        public WfiItem WorkItem { get; private set; }
+        public WfiItemObj WorkItem { get; private set; }
 
         /// <summary>
         /// 获取是否为回退活动
@@ -273,7 +273,7 @@ namespace Dt.App
         /// <param name="p_date">创建时间</param>
         /// <param name="p_rollback">是否回退</param>
         /// <returns></returns>
-        internal async Task<WfiTrs> CreateAtvTrs(long p_tatvid, long p_tatviid, DateTime p_date, bool p_rollback)
+        internal async Task<WfiTrsObj> CreateAtvTrs(long p_tatvid, long p_tatviid, DateTime p_date, bool p_rollback)
         {
             Dict dt = new Dict();
             dt["prcid"] = PrcInst.PrcdID;
@@ -283,7 +283,7 @@ namespace Dt.App
             long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
             Throw.If(trsdid == 0, "未找到流程迁移模板");
 
-            return new WfiTrs(
+            return new WfiTrsObj(
                 ID: await AtCm.NewID(),
                 TrsdID: trsdid,
                 SrcAtviID: AtvInst.ID,
@@ -308,12 +308,12 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_prcID"></param>
         /// <returns></returns>
-        internal static async Task<WfdPrc> GetPrcDef(long p_prcID)
+        internal static async Task<WfdPrcObj> GetPrcDef(long p_prcID)
         {
-            WfdPrc def;
+            WfdPrcObj def;
             if (!_prcDefs.TryGetValue(p_prcID, out def))
             {
-                def = await AtCm.GetByID<WfdPrc>(p_prcID);
+                def = await AtCm.GetByID<WfdPrcObj>(p_prcID);
                 _prcDefs[p_prcID] = def;
             }
             return def;
@@ -379,20 +379,20 @@ namespace Dt.App
 
         async Task CreateWorkItem()
         {
-            AtvDef = await AtCm.First<WfdAtv>("流程-起始活动", new { prcid = _prcID });
+            AtvDef = await AtCm.First<WfdAtvObj>("流程-起始活动", new { prcid = _prcID });
 
-            PrcInst = new WfiPrc(
+            PrcInst = new WfiPrcObj(
                 ID: await AtCm.NewID(),
                 PrcdID: _prcID,
                 Name: PrcDef.Name);
 
-            AtvInst = new WfiAtv(
+            AtvInst = new WfiAtvObj(
                 ID: await AtCm.NewID(),
                 PrciID: PrcInst.ID,
                 AtvdID: AtvDef.ID,
                 InstCount: 1);
 
-            WorkItem = new WfiItem(
+            WorkItem = new WfiItemObj(
                 ID: await AtCm.NewID(),
                 AtviID: AtvInst.ID,
                 AssignKind: WfiItemAssignKind.起始指派,
@@ -405,10 +405,10 @@ namespace Dt.App
         async Task LoadWorkItem()
         {
             Dict dt = new Dict { { "itemid", _itemID } };
-            PrcInst = await AtCm.First<WfiPrc>("流程-工作项的流程实例", dt);
-            AtvInst = await AtCm.First<WfiAtv>("流程-工作项的活动实例", dt);
-            WorkItem = await AtCm.GetByID<WfiItem>(_itemID);
-            AtvDef = await AtCm.GetByID<WfdAtv>(AtvInst.AtvdID);
+            PrcInst = await AtCm.First<WfiPrcObj>("流程-工作项的流程实例", dt);
+            AtvInst = await AtCm.First<WfiAtvObj>("流程-工作项的活动实例", dt);
+            WorkItem = await AtCm.GetByID<WfiItemObj>(_itemID);
+            AtvDef = await AtCm.GetByID<WfdAtvObj>(AtvInst.AtvdID);
         }
         #endregion
 

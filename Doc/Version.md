@@ -37,6 +37,7 @@ Lv顶部增加排序列按钮
 * Tab.Pin按钮只用作返回，Pin按钮转为右键菜单
 * 删除Tab.PhoneBar 
 * 删除Win.Home，增加Tab.Order控制首页显示
+* 实体对象名增加Obj后缀，避免重复命名 
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

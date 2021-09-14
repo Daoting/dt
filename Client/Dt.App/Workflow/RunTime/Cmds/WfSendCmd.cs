@@ -51,7 +51,7 @@ namespace Dt.App.Workflow
             }
 
             // 获得所有后续活动，包括同步
-            var nextAtvs = await AtCm.Query<WfdAtv>("流程-后续活动", new { atvid = _info.AtvDef.ID });
+            var nextAtvs = await AtCm.Query<WfdAtvObj>("流程-后续活动", new { atvid = _info.AtvDef.ID });
             if (nextAtvs.Count == 0)
             {
                 // 无后续活动，结束当前工作项和活动
@@ -83,7 +83,7 @@ namespace Dt.App.Workflow
                         if (await IsActive(atv))
                         {
                             // 同步活动只支持一个后续活动！
-                            var syncNext = await AtCm.First<WfdAtv>("流程-后续活动", new { atvid = atv.ID });
+                            var syncNext = await AtCm.First<WfdAtvObj>("流程-后续活动", new { atvid = atv.ID });
                             if (syncNext != null)
                             {
                                 recv = await LoadRecvs(syncNext);
@@ -151,9 +151,9 @@ namespace Dt.App.Workflow
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
-            var tblAtvs = Table<WfiAtv>.Create();
-            var tblItems = Table<WfiItem>.Create();
-            var tblTrs = Table<WfiTrs>.Create();
+            var tblAtvs = Table<WfiAtvObj>.Create();
+            var tblItems = Table<WfiItemObj>.Create();
+            var tblTrs = Table<WfiTrsObj>.Create();
             DateTime time = Kit.Now;
 
             if (_info.NextRecvs.FinishedAtv != null
@@ -173,7 +173,7 @@ namespace Dt.App.Workflow
                         && (ar.SelectedRecvs == null || ar.SelectedRecvs.Count == 0))
                         continue;
 
-                    var atvInst = new WfiAtv(
+                    var atvInst = new WfiAtvObj(
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: ar.Def.ID,
@@ -188,7 +188,7 @@ namespace Dt.App.Workflow
                         atvInst.InstCount = ar.SelectedRecvs.Count;
                         foreach (var recvID in ar.SelectedRecvs)
                         {
-                            var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
+                            var wi = await WfiItemObj.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
@@ -198,7 +198,7 @@ namespace Dt.App.Workflow
                         atvInst.InstCount = ar.Recvs.Count;
                         foreach (var row in ar.Recvs)
                         {
-                            var wi = await WfiItem.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                            var wi = await WfiItemObj.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
@@ -214,7 +214,7 @@ namespace Dt.App.Workflow
                     && (!p_manualSend || (syncAtv.SelectedRecvs != null && syncAtv.SelectedRecvs.Count > 0)))
                 {
                     // 同步实例
-                    var syncInst = new WfiAtv(
+                    var syncInst = new WfiAtvObj(
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: syncAtv.SyncDef.ID,
@@ -225,7 +225,7 @@ namespace Dt.App.Workflow
                     tblAtvs.Add(syncInst);
 
                     // 同步工作项
-                    WfiItem item = new WfiItem(
+                    WfiItemObj item = new WfiItemObj(
                         ID: await AtCm.NewID(),
                         AtviID: syncInst.ID,
                         AssignKind: WfiItemAssignKind.普通指派,
@@ -247,7 +247,7 @@ namespace Dt.App.Workflow
                     dt["IsRollback"] = false;
                     long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
                     
-                    var trs = new WfiTrs(
+                    var trs = new WfiTrsObj(
                         ID: await AtCm.NewID(),
                         TrsdID: trsdid,
                         SrcAtviID: _info.AtvInst.ID,
@@ -257,7 +257,7 @@ namespace Dt.App.Workflow
                     tblTrs.Add(trs);
 
                     // 同步活动的后续活动实例
-                    var nextInst = new WfiAtv(
+                    var nextInst = new WfiAtvObj(
                         ID: await AtCm.NewID(),
                         PrciID: _info.PrcInst.ID,
                         AtvdID: syncAtv.Def.ID,
@@ -272,7 +272,7 @@ namespace Dt.App.Workflow
                         nextInst.InstCount = syncAtv.SelectedRecvs.Count;
                         foreach (var recvID in syncAtv.SelectedRecvs)
                         {
-                            var wi = await WfiItem.Create(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
+                            var wi = await WfiItemObj.Create(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
                             tblItems.Add(wi);
                         }
                     }
@@ -282,7 +282,7 @@ namespace Dt.App.Workflow
                         nextInst.InstCount = syncAtv.Recvs.Count;
                         foreach (var row in syncAtv.Recvs)
                         {
-                            var wi = await WfiItem.Create(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
+                            var wi = await WfiItemObj.Create(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
                             tblItems.Add(wi);
                         }
                     }
@@ -295,7 +295,7 @@ namespace Dt.App.Workflow
                     dt["IsRollback"] = false;
                     trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
 
-                    trs = new WfiTrs(
+                    trs = new WfiTrsObj(
                         ID: await AtCm.NewID(),
                         TrsdID: trsdid,
                         SrcAtviID: syncInst.ID,
@@ -384,7 +384,7 @@ namespace Dt.App.Workflow
         /// </summary>
         /// <param name="p_atv"></param>
         /// <returns></returns>
-        async Task<RecvDef> LoadRecvs(WfdAtv p_atv)
+        async Task<RecvDef> LoadRecvs(WfdAtvObj p_atv)
         {
             RecvDef recv = new RecvDef();
             if (p_atv.ExecLimit == WfdAtvExecLimit.无限制)
@@ -448,7 +448,7 @@ namespace Dt.App.Workflow
         /// </summary>
         /// <param name="p_atvSync">同步活动</param>
         /// <returns></returns>
-        async Task<bool> IsActive(WfdAtv p_atvSync)
+        async Task<bool> IsActive(WfdAtvObj p_atvSync)
         {
             Dict dt = new Dict();
             dt["prciid"] = _info.PrcInst.ID;
@@ -462,7 +462,7 @@ namespace Dt.App.Workflow
             // 获得同步前所有活动
             dt = new Dict();
             dt["TgtAtvID"] = p_atvSync.ID;
-            var trss = await AtCm.Query<WfdTrs>("流程-活动前的迁移", dt);
+            var trss = await AtCm.Query<WfdTrsObj>("流程-活动前的迁移", dt);
 
             // 聚合方式
             // 全部
@@ -482,7 +482,7 @@ namespace Dt.App.Workflow
         /// </summary>
         /// <param name="p_trss"></param>
         /// <returns></returns>
-        async Task<bool> GetAllFinish(Table<WfdTrs> p_trss)
+        async Task<bool> GetAllFinish(Table<WfdTrsObj> p_trss)
         {
             bool finish = true;
             foreach (var trs in p_trss)
@@ -508,7 +508,7 @@ namespace Dt.App.Workflow
         /// </summary>
         /// <param name="p_trss"></param>
         /// <returns></returns>
-        async Task<bool> GetExistFinish(Table<WfdTrs> p_trss)
+        async Task<bool> GetExistFinish(Table<WfdTrsObj> p_trss)
         {
             bool finish = true;
             foreach (var trs in p_trss)

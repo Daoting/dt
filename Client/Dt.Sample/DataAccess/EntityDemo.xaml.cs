@@ -25,7 +25,7 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            _fv.Data = new MyEntity
+            _fv.Data = new MyEntityObj
             (
                 ID: 100,
                 MaxLength: "测试"
@@ -33,7 +33,7 @@ namespace Dt.Sample
         }
     }
 
-    public partial class MyEntity
+    public partial class MyEntityObj
     {
         void SetMaxLength(string p_value)
         {
@@ -53,12 +53,12 @@ namespace Dt.Sample
 
     #region 自动生成
     [Tbl("pub_my")]
-    public partial class MyEntity : Entity
+    public partial class MyEntityObj : Entity
     {
         #region 构造方法
-        MyEntity() { }
+        MyEntityObj() { }
 
-        public MyEntity(
+        public MyEntityObj(
             long ID,
             string MaxLength = default,
             string Src = default,

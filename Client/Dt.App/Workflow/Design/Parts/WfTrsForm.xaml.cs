@@ -19,19 +19,19 @@ namespace Dt.App.Workflow
     /// </summary>
     public sealed partial class WfTrsForm
     {
-        Table<WfdTrs> _trss;
-        WfdTrs _curTrs;
+        Table<WfdTrsObj> _trss;
+        WfdTrsObj _curTrs;
 
         public WfTrsForm()
         {
             InitializeComponent();
         }
 
-        public void LoadData(Table<WfdTrs> p_trss, WfdTrs p_trs)
+        public void LoadData(Table<WfdTrsObj> p_trss, WfdTrsObj p_trs)
         {
             _trss = p_trss;
             _curTrs = p_trs;
-            _cbBack.IsChecked = (from item in _trss.OfType<WfdTrs>()
+            _cbBack.IsChecked = (from item in _trss.OfType<WfdTrsObj>()
                                  where item.TrsID == _curTrs.ID
                                  select item).Any();
         }
@@ -40,7 +40,7 @@ namespace Dt.App.Workflow
         {
             if (_cbBack.IsChecked == true)
             {
-                WfdTrs trs = new WfdTrs(
+                WfdTrsObj trs = new WfdTrsObj(
                     ID: await AtCm.NewID(),
                     PrcID: _curTrs.PrcID,
                     IsRollback: true,
@@ -51,7 +51,7 @@ namespace Dt.App.Workflow
             }
             else
             {
-                var trs = (from item in _trss.OfType<WfdTrs>()
+                var trs = (from item in _trss.OfType<WfdTrsObj>()
                            where item.TrsID == _curTrs.ID
                            select item).FirstOrDefault();
                 if (trs != null)
