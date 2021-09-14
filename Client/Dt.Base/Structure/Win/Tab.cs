@@ -254,7 +254,7 @@ namespace Dt.Base
         /// <summary>
         /// 所属Win
         /// </summary>
-        internal Win OwnWin { get; set; }
+        public Win OwnWin { get; internal set; }
         #endregion
 
         #region Mv

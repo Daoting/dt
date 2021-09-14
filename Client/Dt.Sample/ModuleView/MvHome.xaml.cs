@@ -27,6 +27,7 @@ namespace Dt.Sample
             {
                 new MainInfo { Type = typeof(MvNavi), Title = "Tab内导航", Desc = "Mv之间导航时输入输出参数、带遮罩的模式视图" },
                 new MainInfo { Type = typeof(SearchMvWin), Title = "搜索面板", Desc = "通用搜索功能，包括固定搜索项、历史搜索项、统一搜索事件、统一导航等功能" },
+                new MainInfo { Type = typeof(MyEntityWin), Title = "单表模板", Desc = "单表增删改模板" },
             };
         }
     }
