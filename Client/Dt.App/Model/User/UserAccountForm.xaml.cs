@@ -16,9 +16,9 @@ using Windows.UI.Xaml;
 
 namespace Dt.App.Model
 {
-    public sealed partial class EditUserAccount : Mv
+    public sealed partial class UserAccountForm : Mv
     {
-        public EditUserAccount()
+        public UserAccountForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");

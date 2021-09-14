@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Model
 {
-    public sealed partial class EditUserParams : Mv
+    public sealed partial class UserParamsForm : Mv
     {
-        public EditUserParams()
+        public UserParamsForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");

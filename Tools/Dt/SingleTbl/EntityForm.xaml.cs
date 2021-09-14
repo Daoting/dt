@@ -88,7 +88,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (!await Kit.Confirm($"确认要删除[{d.Name}]吗？"))
+            if (!await Kit.Confirm("确认要删除吗？"))
             {
                 Kit.Msg("已取消删除！");
                 return;

@@ -15,7 +15,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab>
-                <l:EditUserAccount x:Name="_edit" />
+                <l:UserAccountForm x:Name="_form" />
             </a:Tab>
         </a:Tabs>
     </a:Main>

@@ -15,7 +15,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab>
-                <l:EditRole x:Name="_edit" />
+                <l:RoleForm x:Name="_form" />
             </a:Tab>
         </a:Tabs>
     </a:Main>

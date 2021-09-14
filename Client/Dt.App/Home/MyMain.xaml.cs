@@ -64,7 +64,7 @@ namespace Dt.App.Home
 
         async void OnEditInfo(object sender, TappedRoutedEventArgs e)
         {
-            var edit = new EditUserAccount();
+            var edit = new UserAccountForm();
             edit.Update(Kit.UserID, false);
             if (await Forward<bool>(edit))
             {

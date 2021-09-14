@@ -32,7 +32,7 @@ namespace $rootnamespace$
             if (!string.IsNullOrEmpty(p_txt))
             {
                 _query = p_txt;
-                Title = "列表 - " + p_txt;
+                Title = "$entitytitle$列表 - " + p_txt;
                 Update();
             }
 
@@ -43,15 +43,11 @@ namespace $rootnamespace$
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query("select * from cm_role");
-            }
-            else if (_query == "#最近修改")
-            {
-                //_lv.Data = await AtCm.Query<Params>("参数-最近修改");
+                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-全部");
             }
             else
             {
-                //_lv.Data = await AtCm.Query<Params>("参数-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
             }
         }
 

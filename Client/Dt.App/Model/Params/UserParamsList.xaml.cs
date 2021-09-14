@@ -67,15 +67,15 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            _win.Edit.Update(null);
-            NaviTo(_win.Edit);
+            _win.Form.Update(null);
+            NaviTo(_win.Form);
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Edit.Update(e.Data.To<ParamsObj>().ID);
-            NaviTo(_win.Edit);
+                _win.Form.Update(e.Data.To<ParamsObj>().ID);
+            NaviTo(_win.Form);
         }
 
         UserParamsWin _win => (UserParamsWin)_tab.OwnWin;

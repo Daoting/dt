@@ -16,9 +16,9 @@ using Windows.UI.Xaml;
 
 namespace Dt.App.Model
 {
-    public sealed partial class EditRole : Mv
+    public sealed partial class RoleForm : Mv
     {
-        public EditRole()
+        public RoleForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");

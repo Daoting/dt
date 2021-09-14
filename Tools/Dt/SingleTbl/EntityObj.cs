@@ -27,5 +27,17 @@ namespace $rootnamespace$
 		//}
 	}
 
+    #region 自动生成
+    [Tbl("cm_$entityname$")]
+    public partial class $entityname$Obj: Entity
+    {
+        $entityname$Obj() { }
 
+        public $entityname$Obj(long ID)
+        {
+            AddCell("ID", ID);
+            AttachHook();
+        }
+    }
+    #endregion
 }

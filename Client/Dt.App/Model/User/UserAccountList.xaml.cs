@@ -68,15 +68,15 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            _win.Edit.Update(-1);
-            NaviTo(new List<Mv> { _win.Edit, _win.RoleList });
+            _win.Form.Update(-1);
+            NaviTo(new List<Mv> { _win.Form, _win.RoleList });
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Edit.Update(e.Row.ID);
-            NaviTo(new List<Mv> { _win.Edit, _win.RoleList });
+                _win.Form.Update(e.Row.ID);
+            NaviTo(new List<Mv> { _win.Form, _win.RoleList });
         }
 
         async void OnResetPwd(object sender, Mi e)
@@ -125,7 +125,7 @@ namespace Dt.App.Model
             {
                 // 删除的为选择行时，清空关联Mv
                 if (isSelected)
-                    _win.Edit.Clear();
+                    _win.Form.Clear();
                 Update();
             }
         }

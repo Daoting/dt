@@ -28,7 +28,7 @@ namespace Dt.App.Model
 
         public RoleList List => _list;
 
-        public EditRole Edit => _edit;
+        public RoleForm Form => _form;
 
         public RoleUserList UserList => _userList;
 

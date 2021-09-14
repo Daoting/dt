@@ -66,20 +66,20 @@ namespace Dt.App.Model
 
         void OnAdd(object sender, Mi e)
         {
-            _win.Edit.Update(-1);
+            _win.Form.Update(-1);
             NaviToChildren();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Edit.Update(e.Row.ID);
+                _win.Form.Update(e.Row.ID);
             NaviToChildren();
         }
 
         void NaviToChildren()
         {
-            NaviTo(new List<Mv> { _win.Edit, _win.UserList, _win.MenuList, _win.PrvList });
+            NaviTo(new List<Mv> { _win.Form, _win.UserList, _win.MenuList, _win.PrvList });
         }
 
         RoleWin _win => (RoleWin)_tab.OwnWin;

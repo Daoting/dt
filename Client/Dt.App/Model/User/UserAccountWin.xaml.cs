@@ -28,7 +28,7 @@ namespace Dt.App.Model
 
         public UserAccountList List => _list;
 
-        public EditUserAccount Edit => _edit;
+        public UserAccountForm Form => _form;
 
         public UserRoleList RoleList => _roleList;
     }

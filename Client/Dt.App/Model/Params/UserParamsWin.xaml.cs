@@ -28,7 +28,7 @@ namespace Dt.App.Model
 
         public UserParamsList List => _list;
 
-        public EditUserParams Edit => _edit;
+        public UserParamsForm Form => _form;
 
         public SearchMv Search => _search;
 
