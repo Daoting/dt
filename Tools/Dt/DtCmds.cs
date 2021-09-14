@@ -1,4 +1,5 @@
 ﻿using Dt.Editor;
+using Dt.SingleTbl;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -36,6 +37,8 @@ namespace Dt
         const int DotCmdId = 0x0105;
         const int DotSmallCmdId = 0x0106;
 
+        const int SingleTblCmdId = 0x3000;
+
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
@@ -61,6 +64,8 @@ namespace Dt
             commandService.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
             commandService.AddCommand(CmdPaste(DotCmdId, _dot));
             commandService.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
+
+            commandService.AddCommand(CmdCustom(SingleTblCmdId, typeof(SingleTblForm)));
         }
 
         /// <summary>

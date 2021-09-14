@@ -53,6 +53,15 @@
       <Group guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" priority="0x0600">
         <Parent guid="guidDtPackageCmdSet" id="MyCodeSubMenu" />
       </Group>
+
+      <!-- 项目中文件夹的分组菜单 -->
+      <Group guid="guidDtPackageCmdSet" id="MyFolderMenuGroup" priority="0x01">
+        <!--解决方案资源管理器里的   项目里的文件夹的 ID-->
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
+      </Group>
+      <Group guid="guidDtPackageCmdSet" id="MyFolderMenuItemsGroup" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyFolderSubMenu" />
+      </Group>
     </Groups>
 
     <Menus>
@@ -64,6 +73,12 @@
       </Menu>
       <Menu guid="guidDtPackageCmdSet" id="MyCodeSubMenu" type="Menu" priority="0x0600">
         <Parent guid="guidDtPackageCmdSet" id="MyCodeMenuGroup" />
+        <Strings>
+          <ButtonText>搬运工</ButtonText>
+        </Strings>
+      </Menu>
+      <Menu guid="guidDtPackageCmdSet" id="MyFolderSubMenu" type="Menu" priority="0x0600">
+        <Parent guid="guidDtPackageCmdSet" id="MyFolderMenuGroup" />
         <Strings>
           <ButtonText>搬运工</ButtonText>
         </Strings>
@@ -138,6 +153,14 @@
           <ButtonText>Lv.CellEx 类</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidDtPackageCmdSet" id="SingleTblCmdId" priority="0x0101" type="Button">
+        <Parent guid="guidDtPackageCmdSet" id="MyFolderMenuItemsGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>单表框架</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -160,9 +183,15 @@
       <IDSymbol name="MyXamlMenuGroup" value="0x1020" />
       <IDSymbol name="MyXamlSubMenu" value="0x1021" />
       <IDSymbol name="MyXamlMenuItemsGroup" value="0x1022" />
+      
       <IDSymbol name="MyCodeMenuGroup" value="0x1030" />
       <IDSymbol name="MyCodeSubMenu" value="0x1031" />
       <IDSymbol name="MyCodeMenuItemsGroup" value="0x1032" />
+
+      <IDSymbol name="MyFolderMenuGroup" value="0x1040" />
+      <IDSymbol name="MyFolderSubMenu" value="0x1041" />
+      <IDSymbol name="MyFolderMenuItemsGroup" value="0x1042" />
+      
       <IDSymbol name="LvCmdId" value="0x0100" />
       <IDSymbol name="FvCmdId" value="0x0101" />
       <IDSymbol name="CellCmdId" value="0x0102" />
@@ -170,7 +199,10 @@
       <IDSymbol name="ContextMenuCmdId" value="0x0104" />
       <IDSymbol name="DotCmdId" value="0x0105" />
       <IDSymbol name="DotSmallCmdId" value="0x0106" />
+      
       <IDSymbol name="LvCellExClsCmdId" value="0x2000" />
+
+      <IDSymbol name="SingleTblCmdId" value="0x3000" />
     </GuidSymbol>
 
     <!-- xaml编辑器上下文菜单的guid -->
