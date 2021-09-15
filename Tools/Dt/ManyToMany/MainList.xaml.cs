@@ -21,36 +21,24 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $entityname$List : Mv
+    public partial class $maincls$List : Mv
     {
         string _query;
 
-        public $entityname$List()
+        public $maincls$List()
         {
             InitializeComponent();
-        }
-
-        public void OnSearch(string p_txt)
-        {
-            if (!string.IsNullOrEmpty(p_txt))
-            {
-                _query = p_txt;
-                Title = "$entitytitle$列表 - " + p_txt;
-                Update();
-            }
-
-            NaviTo(this);
         }
 
         public async void Update()
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-全部");
+                _lv.Data = await AtCm.Query<$maincls$Obj>("$maintitle$-全部");
             }
             else
             {
-                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<$maincls$Obj>("$maintitle$-模糊查询", new { ID = $"%{_query}%" });
             }
         }
 
@@ -59,24 +47,41 @@ namespace $rootnamespace$
             Update();
         }
 
-        void OnNaviToSearch(object sender, Mi e)
+        async void OnToSearch(object sender, Mi e)
         {
-            NaviTo(_win.Search);
+            var txt = await Forward<string>(_lzSm.Value);
+            if (!string.IsNullOrEmpty(txt))
+            {
+                _query = txt;
+                Title = "$maintitle$列表 - " + txt;
+                Update();
+            }
         }
+
+        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        {
+            Placeholder = "名称",
+            Fixed = { "全部",  },
+        });
 
         void OnAdd(object sender, Mi e)
         {
             _win.Form.Update(-1);
-            NaviTo(_win.Form);
+            NaviToChildren();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
                 _win.Form.Update(e.Row.ID);
-            NaviTo(_win.Form);
+            NaviToChildren();
         }
 
-        $entityname$Win _win => ($entityname$Win)_tab.OwnWin;
+        void NaviToChildren()
+        {
+            NaviTo(new List<Mv> { _win.Form, $navitolist$ });
+        }
+
+        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
     }
 }

@@ -211,6 +211,19 @@
       <DependentUpon>LvXaml.cs</DependentUpon>
     </Compile>
     <Compile Include="Kit.cs" />
+    <EmbeddedResource Include="ManyToMany\MainForm.xaml.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainList.xaml.cs">
+      <DependentUpon>MainList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainRelatedList.xaml.cs">
+      <DependentUpon>MainRelatedList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainWin.xaml.cs">
+      <DependentUpon>MainWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainObj.cs" />
     <Compile Include="ManyToMany\ManyToManyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -479,6 +492,24 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mv\ListMv.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\MainForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainRelatedList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

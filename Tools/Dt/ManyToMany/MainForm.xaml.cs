@@ -21,9 +21,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $entityname$Form : Mv
+    public sealed partial class $maincls$Form : Mv
     {
-        public $entityname$Form()
+        public $maincls$Form()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
@@ -36,7 +36,8 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$entityname$Obj>("$entitytitle$-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
+                UpdateRelated(p_id);
             }
             else
             {
@@ -47,12 +48,15 @@ namespace $rootnamespace$
         public void Clear()
         {
             _fv.Data = null;
+            ClearRelated();
         }
 
         async void Create()
         {
-            _fv.Data = new $entityname$Obj(
+            _fv.Data = new $maincls$Obj(
                 ID: await AtCm.NewID());
+
+            ClearRelated();
         }
 
         void OnSave(object sender, Mi e)
@@ -72,16 +76,21 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$entityname$Obj>();
+            var d = _fv.Data.To<$maincls$Obj>();
+            bool isNew = d.IsAdded;
             if (await AtCm.Save(d))
             {
                 _win.List.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$entityname$Obj>();
+            var d = _fv.Data.To<$maincls$Obj>();
             if (d == null)
                 return;
 
@@ -99,6 +108,16 @@ namespace $rootnamespace$
 
         }
 
-        $entityname$Win _win => ($entityname$Win)_tab.OwnWin;
+        void UpdateRelated(long p_id)
+        {
+$relatedupdate$
+        }
+
+        void ClearRelated()
+        {
+$relatedclear$
+        }
+
+        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
     }
 }

@@ -38,6 +38,10 @@ namespace Dt
             this._clsaTitle = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
             this._info = new System.Windows.Forms.Label();
+            this._clsb = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this._clsbTitle = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -96,26 +100,63 @@ namespace Dt
             this._btnOK.Location = new System.Drawing.Point(381, 201);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
-            this._btnOK.TabIndex = 22;
+            this._btnOK.TabIndex = 32;
             this._btnOK.Text = "确认";
             this._btnOK.UseVisualStyleBackColor = true;
             this._btnOK.Click += new System.EventHandler(this._btnOK_Click);
             // 
             // _info
             // 
-            this._info.AutoSize = true;
-            this._info.ForeColor = System.Drawing.Color.Red;
-            this._info.Location = new System.Drawing.Point(12, 201);
+            this._info.ForeColor = System.Drawing.Color.Black;
+            this._info.Location = new System.Drawing.Point(12, 132);
             this._info.Name = "_info";
-            this._info.Size = new System.Drawing.Size(11, 12);
+            this._info.Size = new System.Drawing.Size(444, 47);
             this._info.TabIndex = 23;
-            this._info.Text = " ";
+            this._info.Text = " 只生成主实体类，关联的实体类在它作为主实体时生成";
+            // 
+            // _clsb
+            // 
+            this._clsb.Location = new System.Drawing.Point(187, 67);
+            this._clsb.Name = "_clsb";
+            this._clsb.Size = new System.Drawing.Size(269, 21);
+            this._clsb.TabIndex = 22;
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(12, 67);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(176, 21);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "关联实体类名(逗号隔开多个)";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // _clsbTitle
+            // 
+            this._clsbTitle.Location = new System.Drawing.Point(187, 87);
+            this._clsbTitle.Name = "_clsbTitle";
+            this._clsbTitle.Size = new System.Drawing.Size(269, 21);
+            this._clsbTitle.TabIndex = 23;
+            // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label5.Location = new System.Drawing.Point(12, 87);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(176, 21);
+            this.label5.TabIndex = 26;
+            this.label5.Text = "关联实体标题(逗号隔开多个)";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ManyToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 240);
+            this.Controls.Add(this._clsbTitle);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this._clsb);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this._info);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._clsaTitle);
@@ -146,5 +187,9 @@ namespace Dt
         private System.Windows.Forms.TextBox _clsaTitle;
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.Label _info;
+        private System.Windows.Forms.TextBox _clsb;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox _clsbTitle;
+        private System.Windows.Forms.Label label5;
     }
 }
