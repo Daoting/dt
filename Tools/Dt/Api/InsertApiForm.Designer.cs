@@ -71,7 +71,6 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "MyApi";
             // 
             // _btnOK
             // 

@@ -64,7 +64,7 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "实体类型名称";
+            this.label1.Text = "实体类名";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _entityName

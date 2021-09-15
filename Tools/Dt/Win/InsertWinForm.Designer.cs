@@ -73,7 +73,6 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "Win1";
             // 
             // _btnOK
             // 
@@ -113,11 +112,10 @@ namespace Dt
             // 
             // _lbl
             // 
-            this._lbl.AutoSize = true;
-            this._lbl.ForeColor = System.Drawing.Color.Red;
+            this._lbl.ForeColor = System.Drawing.Color.Black;
             this._lbl.Location = new System.Drawing.Point(12, 81);
             this._lbl.Name = "_lbl";
-            this._lbl.Size = new System.Drawing.Size(41, 12);
+            this._lbl.Size = new System.Drawing.Size(444, 88);
             this._lbl.TabIndex = 26;
             this._lbl.Text = "label4";
             // 

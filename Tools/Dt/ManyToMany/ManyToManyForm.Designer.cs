@@ -31,11 +31,11 @@ namespace Dt
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManyToManyForm));
             this.label2 = new System.Windows.Forms.Label();
-            this._nameSpace = new System.Windows.Forms.TextBox();
+            this._ns = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this._entityName = new System.Windows.Forms.TextBox();
+            this._clsa = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this._entityTitle = new System.Windows.Forms.TextBox();
+            this._clsaTitle = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
             this._info = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -50,12 +50,12 @@ namespace Dt
             this.label2.Text = "命名空间";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // _nameSpace
+            // _ns
             // 
-            this._nameSpace.Location = new System.Drawing.Point(187, 7);
-            this._nameSpace.Name = "_nameSpace";
-            this._nameSpace.Size = new System.Drawing.Size(269, 21);
-            this._nameSpace.TabIndex = 17;
+            this._ns.Location = new System.Drawing.Point(187, 7);
+            this._ns.Name = "_ns";
+            this._ns.Size = new System.Drawing.Size(269, 21);
+            this._ns.TabIndex = 17;
             // 
             // label1
             // 
@@ -64,15 +64,15 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "实体类型名称";
+            this.label1.Text = "主实体类名";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // _entityName
+            // _clsa
             // 
-            this._entityName.Location = new System.Drawing.Point(187, 27);
-            this._entityName.Name = "_entityName";
-            this._entityName.Size = new System.Drawing.Size(269, 21);
-            this._entityName.TabIndex = 19;
+            this._clsa.Location = new System.Drawing.Point(187, 27);
+            this._clsa.Name = "_clsa";
+            this._clsa.Size = new System.Drawing.Size(269, 21);
+            this._clsa.TabIndex = 19;
             // 
             // label3
             // 
@@ -81,15 +81,15 @@ namespace Dt
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(176, 21);
             this.label3.TabIndex = 20;
-            this.label3.Text = "实体中文标题";
+            this.label3.Text = "主实体标题";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // _entityTitle
+            // _clsaTitle
             // 
-            this._entityTitle.Location = new System.Drawing.Point(187, 47);
-            this._entityTitle.Name = "_entityTitle";
-            this._entityTitle.Size = new System.Drawing.Size(269, 21);
-            this._entityTitle.TabIndex = 21;
+            this._clsaTitle.Location = new System.Drawing.Point(187, 47);
+            this._clsaTitle.Name = "_clsaTitle";
+            this._clsaTitle.Size = new System.Drawing.Size(269, 21);
+            this._clsaTitle.TabIndex = 21;
             // 
             // _btnOK
             // 
@@ -118,11 +118,11 @@ namespace Dt
             this.ClientSize = new System.Drawing.Size(473, 240);
             this.Controls.Add(this._info);
             this.Controls.Add(this._btnOK);
-            this.Controls.Add(this._entityTitle);
+            this.Controls.Add(this._clsaTitle);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this._entityName);
+            this.Controls.Add(this._clsa);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this._nameSpace);
+            this.Controls.Add(this._ns);
             this.Controls.Add(this.label2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -139,11 +139,11 @@ namespace Dt
 
         #endregion
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox _nameSpace;
+        private System.Windows.Forms.TextBox _ns;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox _entityName;
+        private System.Windows.Forms.TextBox _clsa;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox _entityTitle;
+        private System.Windows.Forms.TextBox _clsaTitle;
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.Label _info;
     }

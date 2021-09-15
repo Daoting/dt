@@ -105,7 +105,7 @@ namespace Dt
             // 
             this._info.AutoSize = true;
             this._info.ForeColor = System.Drawing.Color.Red;
-            this._info.Location = new System.Drawing.Point(12, 201);
+            this._info.Location = new System.Drawing.Point(12, 104);
             this._info.Name = "_info";
             this._info.Size = new System.Drawing.Size(11, 12);
             this._info.TabIndex = 23;

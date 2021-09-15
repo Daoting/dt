@@ -71,7 +71,7 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "AtMySvc";
+            this._cls.Text = "At";
             // 
             // _btnOK
             // 

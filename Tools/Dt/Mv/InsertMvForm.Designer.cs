@@ -1,7 +1,7 @@
 ﻿
 namespace Dt
 {
-    partial class InsertEntityForm
+    partial class InsertMvForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,17 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertEntityForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertMvForm));
             this.label2 = new System.Windows.Forms.Label();
             this._ns = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this._cls = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
             this._lbl = new System.Windows.Forms.Label();
+            this._cb = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this._title = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -71,7 +75,6 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "XxxObj";
             // 
             // _btnOK
             // 
@@ -86,17 +89,61 @@ namespace Dt
             // _lbl
             // 
             this._lbl.ForeColor = System.Drawing.Color.Black;
-            this._lbl.Location = new System.Drawing.Point(12, 76);
+            this._lbl.Location = new System.Drawing.Point(12, 123);
             this._lbl.Name = "_lbl";
             this._lbl.Size = new System.Drawing.Size(444, 38);
             this._lbl.TabIndex = 26;
-            this._lbl.Text = "Entity子类模板，包含OnSaving OnDeleting";
+            this._lbl.Text = "Mv是最常用的业务模块视图，放在Tab中，支持内部导航输入输出参数、带遮罩的模式视图等";
             // 
-            // InsertEntityForm
+            // _cb
+            // 
+            this._cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cb.FormattingEnabled = true;
+            this._cb.Items.AddRange(new object[] {
+            "空白",
+            "编辑表单",
+            "数据列表"});
+            this._cb.Location = new System.Drawing.Point(187, 67);
+            this._cb.Name = "_cb";
+            this._cb.Size = new System.Drawing.Size(269, 20);
+            this._cb.TabIndex = 29;
+            // 
+            // label3
+            // 
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Location = new System.Drawing.Point(12, 67);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(176, 21);
+            this.label3.TabIndex = 28;
+            this.label3.Text = "Mv内容类型";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // _title
+            // 
+            this._title.Location = new System.Drawing.Point(187, 47);
+            this._title.Name = "_title";
+            this._title.Size = new System.Drawing.Size(269, 21);
+            this._title.TabIndex = 31;
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(12, 47);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(176, 21);
+            this.label4.TabIndex = 30;
+            this.label4.Text = "标题";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // InsertMvForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 240);
+            this.Controls.Add(this._title);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this._cb);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this._lbl);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._cls);
@@ -107,10 +154,10 @@ namespace Dt
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "InsertEntityForm";
+            this.Name = "InsertMvForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "添加Entity子类";
+            this.Text = "添加Mv";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,5 +170,9 @@ namespace Dt
         private System.Windows.Forms.TextBox _cls;
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.Label _lbl;
+        private System.Windows.Forms.ComboBox _cb;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox _title;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -10,7 +10,7 @@ namespace Dt
         public ManyToManyForm()
         {
             InitializeComponent();
-            _nameSpace.Text = Kit.GetNamespace();
+            _ns.Text = Kit.GetNamespace();
         }
 
         private void _btnOK_Click(object sender, EventArgs e)
@@ -18,9 +18,9 @@ namespace Dt
             string ns, entity, title;
             try
             {
-                ns = Kit.GetText(_nameSpace);
-                entity = Kit.GetText(_entityName);
-                title = Kit.GetText(_entityTitle);
+                ns = Kit.GetText(_ns);
+                entity = Kit.GetText(_clsa);
+                title = Kit.GetText(_clsaTitle);
             }
             catch
             {

@@ -58,32 +58,33 @@ namespace Dt
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        /// <param name="commandService">Command service to add command to, not null.</param>
-        private DtCmds(AsyncPackage package, OleMenuCommandService commandService)
+        /// <param name="cs">Command service to add command to, not null.</param>
+        private DtCmds(AsyncPackage package, OleMenuCommandService cs)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
+            cs = cs ?? throw new ArgumentNullException(nameof(cs));
 
             ThreadHelper.ThrowIfNotOnUIThread();
-            commandService.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
-            commandService.AddCommand(CmdPaste(FvCommandId, _fvXaml));
-            commandService.AddCommand(CmdCustom(CellCmdId, typeof(CellXaml)));
-            commandService.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
-            commandService.AddCommand(CmdPaste(TabMenuCmdId, _tabMenu));
-            commandService.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
-            commandService.AddCommand(CmdPaste(DotCmdId, _dot));
-            commandService.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
+            cs.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
+            cs.AddCommand(CmdPaste(FvCommandId, _fvXaml));
+            cs.AddCommand(CmdCustom(CellCmdId, typeof(CellXaml)));
+            cs.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
+            cs.AddCommand(CmdPaste(TabMenuCmdId, _tabMenu));
+            cs.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
+            cs.AddCommand(CmdPaste(DotCmdId, _dot));
+            cs.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
 
-            commandService.AddCommand(CmdCustom(SingleTblCmdId, typeof(SingleTblForm)));
-            commandService.AddCommand(CmdCustom(OnToManyCmdId, typeof(OnToManyForm)));
-            commandService.AddCommand(CmdCustom(ManyToManyCmdId, typeof(ManyToManyForm)));
+            cs.AddCommand(CmdCustom(SingleTblCmdId, typeof(SingleTblForm)));
+            cs.AddCommand(CmdCustom(OnToManyCmdId, typeof(OnToManyForm)));
+            cs.AddCommand(CmdCustom(ManyToManyCmdId, typeof(ManyToManyForm)));
 
-            commandService.AddCommand(CmdCustom(InsertWinCmdId, typeof(InsertWinForm)));
-            commandService.AddCommand(CmdCustom(InsertDlgCmdId, typeof(InsertDlgForm)));
+            cs.AddCommand(CmdCustom(InsertMvCmdId, typeof(InsertMvForm)));
+            cs.AddCommand(CmdCustom(InsertWinCmdId, typeof(InsertWinForm)));
+            cs.AddCommand(CmdCustom(InsertDlgCmdId, typeof(InsertDlgForm)));
 
-            commandService.AddCommand(CmdCustom(InsertEntityCmdId, typeof(InsertEntityForm)));
-            commandService.AddCommand(CmdCustom(InsertAgentCmdId, typeof(InsertAgentForm)));
-            commandService.AddCommand(CmdCustom(InsertApiCmdId, typeof(InsertApiForm)));
+            cs.AddCommand(CmdCustom(InsertEntityCmdId, typeof(InsertEntityForm)));
+            cs.AddCommand(CmdCustom(InsertAgentCmdId, typeof(InsertAgentForm)));
+            cs.AddCommand(CmdCustom(InsertApiCmdId, typeof(InsertApiForm)));
         }
 
         /// <summary>

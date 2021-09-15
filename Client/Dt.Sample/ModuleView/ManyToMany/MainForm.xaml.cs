@@ -1,28 +1,26 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2018-08-23 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Dt.App;
+using Dt.App.Model;
 using Dt.Base;
 using Dt.Core;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.Sample.ModuleView
 {
-    public sealed partial class $entityname$Form : Mv
+    public sealed partial class MainForm : Mv
     {
-        public $entityname$Form()
+        public MainForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
@@ -35,7 +33,8 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$entityname$Obj>("$entitytitle$-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<RoleObj>("角色-编辑", new { id = p_id });
+                _win.RelatedList.Update(p_id);
             }
             else
             {
@@ -46,12 +45,16 @@ namespace $rootnamespace$
         public void Clear()
         {
             _fv.Data = null;
+            _win.RelatedList.Clear();
         }
 
         async void Create()
         {
-            _fv.Data = new $entityname$Obj(
-                ID: await AtCm.NewID());
+            _fv.Data = new RoleObj(
+                ID: await AtCm.NewID(),
+                Name: "新角色");
+
+            _win.RelatedList.Clear();
         }
 
         void OnSave(object sender, Mi e)
@@ -71,16 +74,21 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$entityname$Obj>();
+            var d = _fv.Data.To<RoleObj>();
+            bool isNew = d.IsAdded;
             if (await AtCm.Save(d))
             {
                 _win.List.Update();
+                if (isNew)
+                {
+                    _win.RelatedList.Update(d.ID);
+                }
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$entityname$Obj>();
+            var d = _fv.Data.To<RoleObj>();
             if (d == null)
                 return;
 
@@ -90,7 +98,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm($"确认要删除[{d.Name}]吗？"))
             {
                 Kit.Msg("已取消删除！");
                 return;
@@ -98,6 +106,6 @@ namespace $rootnamespace$
 
         }
 
-        $entityname$Win _win => ($entityname$Win)_tab.OwnWin;
+        MainWin _win => (MainWin)_tab.OwnWin;
     }
 }

@@ -20,9 +20,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $entityname$Form : Mv
+    public sealed partial class $safeitemname$ : Mv
     {
-        public $entityname$Form()
+        public $safeitemname$()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
@@ -35,7 +35,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$entityname$Obj>("$entitytitle$-编辑", new { id = p_id });
+                //_fv.Data = await AtCm.First<>("xxx", new { id = p_id });
             }
             else
             {
@@ -48,10 +48,10 @@ namespace $rootnamespace$
             _fv.Data = null;
         }
 
-        async void Create()
+        void Create()
         {
-            _fv.Data = new $entityname$Obj(
-                ID: await AtCm.NewID());
+            //_fv.Data = new xxx(
+            //    ID: await AtCm.NewID());
         }
 
         void OnSave(object sender, Mi e)
@@ -69,26 +69,26 @@ namespace $rootnamespace$
             return _fv.DiscardChanges();
         }
 
-        async void Save()
+        void Save()
         {
-            var d = _fv.Data.To<$entityname$Obj>();
-            if (await AtCm.Save(d))
-            {
-                _win.List.Update();
-            }
+            //var d = _fv.Data.To<>();
+            //if (await AtCm.Save(d))
+            //{
+            //    _win.List.Update();
+            //}
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$entityname$Obj>();
-            if (d == null)
-                return;
+            //var d = _fv.Data.To<>();
+            //if (d == null)
+            //    return;
 
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
+            //if (d.IsAdded)
+            //{
+            //    Clear();
+            //    return;
+            //}
 
             if (!await Kit.Confirm("确认要删除吗？"))
             {
@@ -97,7 +97,5 @@ namespace $rootnamespace$
             }
 
         }
-
-        $entityname$Win _win => ($entityname$Win)_tab.OwnWin;
     }
 }

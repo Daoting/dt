@@ -20,22 +20,12 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $entityname$Win : Win
+    public partial class $safeitemname$ : Mv
     {
-        public $entityname$Win()
+        public $safeitemname$()
         {
             InitializeComponent();
         }
 
-        public $entityname$List List => _list;
-
-        public $entityname$Form Form => _form;
-
-        public SearchMv Search => _search;
-
-        void OnSearch(object sender, string e)
-        {
-            _list.OnSearch(e);
-        }
     }
 }
