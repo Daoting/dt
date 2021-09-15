@@ -163,7 +163,7 @@ namespace Dt.Shell
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
             { "参数定义", typeof(Dt.App.Model.UserParamsWin) },
-            { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
+            { "基础权限", typeof(Dt.App.Model.PrvWin) },
             { "报表设计", typeof(Dt.App.Model.ReportMgr) },
             { "系统角色", typeof(Dt.App.Model.RoleWin) },
             { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
