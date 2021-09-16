@@ -24,6 +24,9 @@
             <a:Tab>
                 <l:PrvRoleList x:Name="_roleList" />
             </a:Tab>
+            <a:Tab>
+                <l:PrvUserList x:Name="_userList" />
+            </a:Tab>
         </a:Tabs>
     </a:Pane>
 </a:Win>

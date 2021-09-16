@@ -114,11 +114,13 @@ namespace Dt.App.Model
         void UpdateRelated(string p_id)
         {
             _win.RoleList.Update(p_id);
+            _win.UserList.Update(p_id);
         }
 
         void ClearRelated()
         {
             _win.RoleList.Clear();
+            _win.UserList.Clear();
         }
 
         PrvWin _win => (PrvWin)_tab.OwnWin;

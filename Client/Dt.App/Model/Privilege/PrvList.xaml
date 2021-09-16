@@ -13,11 +13,6 @@
     </a:Mv.Menu>
 
     <a:Lv x:Name="_lv" ItemClick="OnItemClick">
-        <a:Ex.Menu>
-            <a:Menu>
-                <a:Mi ID="已授权用户" Icon="审核" Click="OnUserList" />
-            </a:Menu>
-        </a:Ex.Menu>
         <DataTemplate>
             <StackPanel Padding="10">
                 <a:Dot ID="id" />

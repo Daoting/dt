@@ -21,9 +21,14 @@ namespace Dt.App.Model
             InitializeComponent();
         }
 
-        protected override async void OnInit(object p_params)
+        public async void Update(string p_id)
         {
-            _lv.Data = await AtCm.Query("权限-关联用户", new { prvid = p_params });
+            _lv.Data = await AtCm.Query("权限-关联用户", new { prvid = p_id });
+        }
+
+        public void Clear()
+        {
+            _lv.Data = null;
         }
 
         UserAccountWin _win => (UserAccountWin)_tab.OwnWin;

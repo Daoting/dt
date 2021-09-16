@@ -33,5 +33,6 @@ namespace Dt.App.Model
 
         public PrvRoleList RoleList => _roleList;
 
+        public PrvUserList UserList => _userList;
     }
 }

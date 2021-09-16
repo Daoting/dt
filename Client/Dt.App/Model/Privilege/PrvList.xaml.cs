@@ -84,7 +84,7 @@ namespace Dt.App.Model
 
         void NaviToChildren()
         {
-            NaviTo(new List<Mv> { _win.Form,  _win.RoleList, });
+            NaviTo(new List<Mv> { _win.Form,  _win.RoleList, _win.UserList });
         }
 
         PrvWin _win => (PrvWin)_tab.OwnWin;
