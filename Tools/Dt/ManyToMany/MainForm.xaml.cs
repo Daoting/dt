@@ -69,11 +69,6 @@ namespace $rootnamespace$
             Create();
         }
 
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
-        }
-
         async void Save()
         {
             var d = _fv.Data.To<$maincls$Obj>();
@@ -116,6 +111,11 @@ $relatedupdate$
         void ClearRelated()
         {
 $relatedclear$
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            return _fv.DiscardChanges();
         }
 
         $maincls$Win _win => ($maincls$Win)_tab.OwnWin;

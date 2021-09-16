@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
+    [View("$maincls$Win")]
     public partial class $maincls$Win : Win
     {
         public $maincls$Win()

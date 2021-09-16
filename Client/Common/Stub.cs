@@ -164,7 +164,7 @@ namespace Dt.Shell
             { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
             { "参数定义", typeof(Dt.App.Model.UserParamsWin) },
             { "基础权限", typeof(Dt.App.Model.PrvWin) },
-            { "报表设计", typeof(Dt.App.Model.ReportMgr) },
+            { "报表设计", typeof(Dt.App.Model.RptWin) },
             { "系统角色", typeof(Dt.App.Model.RoleWin) },
             { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
             { "文件", typeof(Dt.App.File.FileHome) },

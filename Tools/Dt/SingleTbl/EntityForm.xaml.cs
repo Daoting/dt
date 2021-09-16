@@ -65,11 +65,6 @@ namespace $rootnamespace$
             Create();
         }
 
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
-        }
-
         async void Save()
         {
             var d = _fv.Data.To<$entityname$Obj>();
@@ -97,6 +92,11 @@ namespace $rootnamespace$
                 return;
             }
 
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            return _fv.DiscardChanges();
         }
 
         $entityname$Win _win => ($entityname$Win)_tab.OwnWin;

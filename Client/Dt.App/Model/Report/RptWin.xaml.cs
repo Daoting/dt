@@ -1,8 +1,8 @@
-﻿#region 文件描述
+#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2021-09-16 创建
 ******************************************************************************/
 #endregion
 
@@ -18,19 +18,19 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.App.Model
 {
-    [View("$entityname$Win")]
-    public partial class $entityname$Win : Win
+    [View("报表设计")]
+    public partial class RptWin : Win
     {
-        public $entityname$Win()
+        public RptWin()
         {
             InitializeComponent();
         }
 
-        public $entityname$List List => _list;
+        public RptList List => _list;
 
-        public $entityname$Form Form => _form;
+        public RptForm Form => _form;
 
         public SearchMv Search => _search;
 
