@@ -98,12 +98,6 @@ namespace Dt.App.Model
             if (d == null)
                 return;
 
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
             if (d.ID < 1000)
             {
                 Kit.Msg("系统角色无法删除！");
@@ -113,6 +107,12 @@ namespace Dt.App.Model
             if (!await Kit.Confirm($"确认要删除[{d.Name}]吗？"))
             {
                 Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (d.IsAdded)
+            {
+                Clear();
                 return;
             }
 

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2021-09-15 创建
+* 日志: 2021-09-16 创建
 ******************************************************************************/
 #endregion
 
@@ -20,20 +20,19 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Dt.App.Model
 {
-    [View("基础权限")]
-    public partial class PrvWin : Win
+    [View("菜单管理")]
+    public partial class MenuWin : Win
     {
-        public PrvWin()
+        public MenuWin()
         {
             InitializeComponent();
         }
 
-        public PrvList List => _list;
+        public MenuList List => _list;
 
-        public PrvForm Form => _form;
+        public MenuForm Form => _form;
 
-        public PrvRoleList RoleList => _roleList;
+        public MenuRoleList RoleList => _roleList;
 
-        public PrvUserList UserList => _userList;
     }
 }

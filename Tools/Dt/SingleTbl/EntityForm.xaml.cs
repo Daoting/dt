@@ -85,15 +85,15 @@ namespace $rootnamespace$
             if (d == null)
                 return;
 
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
             if (!await Kit.Confirm("确认要删除吗？"))
             {
                 Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (d.IsAdded)
+            {
+                Clear();
                 return;
             }
 
