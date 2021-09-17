@@ -1,0 +1,32 @@
+<a:Win
+    x:Class="Dt.App.Publish.PostWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.App.Publish">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:PostxList x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:PostForm x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab>
+                <l:PostKeywordList x:Name="_keywordList" />
+            </a:Tab>
+            <a:Tab>
+                <l:PostAlbumList x:Name="_albumList" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

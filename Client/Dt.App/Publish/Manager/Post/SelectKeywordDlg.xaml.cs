@@ -63,8 +63,18 @@ namespace Dt.App.Publish
 
         async void OnAdd(object sender, Mi e)
         {
-            if (await new EditKeywordDlg().Show(null))
-                LoadData();
+            Dlg dlg = new Dlg();
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = 500;
+                dlg.Height = 300;
+            }
+            var kf = new KeywordForm();
+            kf.Update(null);
+            dlg.LoadMv(kf);
+
+            await dlg.ShowAsync();
+            LoadData();
         }
     }
 }

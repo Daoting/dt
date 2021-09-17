@@ -1,0 +1,22 @@
+<a:Win
+    x:Class="Dt.App.Publish.AlbumWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.App.Publish">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:AlbumList x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:AlbumForm x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

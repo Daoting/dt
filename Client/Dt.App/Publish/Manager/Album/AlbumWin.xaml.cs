@@ -1,8 +1,8 @@
-﻿#region 文件描述
+#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2013-12-16 创建
+* 日志: 2021-09-17 创建
 ******************************************************************************/
 #endregion
 
@@ -10,29 +10,25 @@
 using Dt.Base;
 using Dt.Core;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.App.Publish
 {
-    public partial class SearchFvDemo : Win
+    public partial class AlbumWin : Win
     {
-        public SearchFvDemo()
+        public AlbumWin()
         {
             InitializeComponent();
         }
 
-        void OnSearch(object sender, string e)
-        {
-            if (string.IsNullOrEmpty(e))
-            {
-                NaviTo("属性");
-                return;
-            }
+        public AlbumList List => _list;
 
-            Kit.Msg("搜索：" + e);
-        }
+        public AlbumForm Form => _form;
     }
 }

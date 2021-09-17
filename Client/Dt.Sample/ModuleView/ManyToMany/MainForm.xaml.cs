@@ -34,7 +34,7 @@ namespace Dt.Sample.ModuleView
             if (p_id > 0)
             {
                 _fv.Data = await AtCm.First<RoleObj>("角色-编辑", new { id = p_id });
-                _win.RelatedList.Update(p_id);
+                UpdateRelated(p_id);
             }
             else
             {
@@ -45,7 +45,7 @@ namespace Dt.Sample.ModuleView
         public void Clear()
         {
             _fv.Data = null;
-            _win.RelatedList.Clear();
+            ClearRelated();
         }
 
         async void Create()
@@ -54,7 +54,7 @@ namespace Dt.Sample.ModuleView
                 ID: await AtCm.NewID(),
                 Name: "新角色");
 
-            _win.RelatedList.Clear();
+            ClearRelated();
         }
 
         void OnSave(object sender, Mi e)
@@ -81,7 +81,7 @@ namespace Dt.Sample.ModuleView
                 _win.List.Update();
                 if (isNew)
                 {
-                    _win.RelatedList.Update(d.ID);
+                    UpdateRelated(d.ID);
                 }
             }
         }
@@ -92,18 +92,28 @@ namespace Dt.Sample.ModuleView
             if (d == null)
                 return;
 
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
             if (!await Kit.Confirm($"确认要删除[{d.Name}]吗？"))
             {
                 Kit.Msg("已取消删除！");
                 return;
             }
 
+            if (d.IsAdded)
+            {
+                Clear();
+                return;
+            }
+
+        }
+
+        void UpdateRelated(long p_id)
+        {
+            _win.RelatedList.Update(p_id);
+        }
+
+        void ClearRelated()
+        {
+            _win.RelatedList.Clear();
         }
 
         MainWin _win => (MainWin)_tab.OwnWin;

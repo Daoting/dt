@@ -63,8 +63,18 @@ namespace Dt.App.Publish
 
         async void OnAdd(object sender, Mi e)
         {
-            if (await new EditAlbumDlg().Show(null))
-                LoadData();
+            Dlg dlg = new Dlg();
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = 500;
+                dlg.Height = 300;
+            }
+            var kf = new AlbumForm();
+            kf.Update(-1);
+            dlg.LoadMv(kf);
+
+            await dlg.ShowAsync();
+            LoadData();
         }
     }
 }

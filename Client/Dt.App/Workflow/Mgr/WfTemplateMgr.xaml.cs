@@ -40,7 +40,7 @@ namespace Dt.App.Workflow
             {
                 _lv.Data = await AtCm.Query<WfdPrcObj>("流程-模糊查询", new { input = $"%{e}%" });
             }
-            SelectTab("列表");
+            NaviTo("列表");
         }
 
         void OnAdd(object sender, Mi e)
@@ -78,6 +78,11 @@ namespace Dt.App.Workflow
             {
                 LoadAll();
             }
+        }
+
+        void OnToSearch(object sender, Mi e)
+        {
+            NaviTo("搜索");
         }
     }
 }

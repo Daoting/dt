@@ -9,6 +9,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ios  软键盘盖住 TextBox 的问题
 
 Lv顶部增加排序列按钮
+删除SearchFv
 
 
 
