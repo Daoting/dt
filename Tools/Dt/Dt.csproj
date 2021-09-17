@@ -224,6 +224,9 @@
       <DependentUpon>MainWin.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManyToMany\MainObj.cs" />
+    <EmbeddedResource Include="ManyToMany\MainSearch.xaml.cs">
+      <DependentUpon>MainSearch.xaml</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="ManyToMany\ManyToManyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -239,6 +242,8 @@
     <EmbeddedResource Include="Mv\ListMv.xaml.cs">
       <DependentUpon>ListMv.xaml</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\CustomSearch.cs" />
+    <EmbeddedResource Include="ManyToMany\DefaultSearch.cs" />
     <Compile Include="Mv\InsertMvForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -274,6 +279,19 @@
     <EmbeddedResource Include="Win\BlankWin.xaml.cs">
       <DependentUpon>BlankWin.xaml</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml.cs">
+      <DependentUpon>TwoPanWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml.cs">
+      <DependentUpon>TwoPanList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml.cs">
+      <DependentUpon>EntitySearch.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\EntityCusSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\TwoDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\TwoCusSearch.cs" />
     <Compile Include="Win\InsertWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -510,6 +528,30 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ManyToMany\MainWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\MainSearch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

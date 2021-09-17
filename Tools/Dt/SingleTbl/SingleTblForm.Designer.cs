@@ -38,6 +38,10 @@ namespace Dt
             this._entityTitle = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
             this._info = new System.Windows.Forms.Label();
+            this._cbSearch = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this._cbWin = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -104,18 +108,66 @@ namespace Dt
             // _info
             // 
             this._info.AutoSize = true;
-            this._info.ForeColor = System.Drawing.Color.Red;
+            this._info.ForeColor = System.Drawing.Color.Black;
             this._info.Location = new System.Drawing.Point(12, 201);
             this._info.Name = "_info";
-            this._info.Size = new System.Drawing.Size(11, 12);
+            this._info.Size = new System.Drawing.Size(35, 12);
             this._info.TabIndex = 23;
-            this._info.Text = " ";
+            this._info.Text = " 提示";
+            // 
+            // _cbSearch
+            // 
+            this._cbSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSearch.FormattingEnabled = true;
+            this._cbSearch.Items.AddRange(new object[] {
+            "通用搜索面板",
+            "自定义搜索面板"});
+            this._cbSearch.Location = new System.Drawing.Point(187, 67);
+            this._cbSearch.Name = "_cbSearch";
+            this._cbSearch.Size = new System.Drawing.Size(269, 20);
+            this._cbSearch.TabIndex = 27;
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(12, 67);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(176, 21);
+            this.label4.TabIndex = 26;
+            this.label4.Text = "搜索面板";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // _cbWin
+            // 
+            this._cbWin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbWin.FormattingEnabled = true;
+            this._cbWin.Items.AddRange(new object[] {
+            "窗口三栏，左侧搜索栏",
+            "窗口两栏，左侧列表栏，搜索合并到列表栏"});
+            this._cbWin.Location = new System.Drawing.Point(187, 87);
+            this._cbWin.Name = "_cbWin";
+            this._cbWin.Size = new System.Drawing.Size(269, 20);
+            this._cbWin.TabIndex = 29;
+            // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label5.Location = new System.Drawing.Point(12, 87);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(176, 21);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "窗口布局";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SingleTblForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 240);
+            this.Controls.Add(this._cbWin);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this._cbSearch);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this._info);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._entityTitle);
@@ -146,5 +198,9 @@ namespace Dt
         private System.Windows.Forms.TextBox _entityTitle;
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.Label _info;
+        private System.Windows.Forms.ComboBox _cbSearch;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox _cbWin;
+        private System.Windows.Forms.Label label5;
     }
 }

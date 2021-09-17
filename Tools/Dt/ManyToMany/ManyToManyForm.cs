@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Dt
@@ -11,6 +12,7 @@ namespace Dt
         {
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
+            _cbSearch.SelectedIndex = 0;
         }
 
         private void _btnOK_Click(object sender, EventArgs e)
@@ -89,16 +91,33 @@ namespace Dt
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Win.xaml"), "Dt.ManyToMany.MainWin.xaml", dt);
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Win.xaml.cs"), "Dt.ManyToMany.MainWin.xaml.cs", dt);
 
-            // MainList
-            dt["$navitolist$"] = naviTo;
+            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml"), "Dt.ManyToMany.MainForm.xaml", dt);
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml"), "Dt.ManyToMany.MainList.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), "Dt.ManyToMany.MainList.xaml.cs", dt);
 
             // MainForm
             dt["$relatedupdate$"] = update;
             dt["$relatedclear$"] = clear;
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml"), "Dt.ManyToMany.MainForm.xaml", dt);
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml.cs"), "Dt.ManyToMany.MainForm.xaml.cs", dt);
+
+            // MainList
+            dt["$navitolist$"] = naviTo;
+            string cs;
+            if (_cbSearch.SelectedIndex == 0)
+            {
+                cs = "DefaultSearch";
+            }
+            else
+            {
+                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Search.xaml"), "Dt.ManyToMany.MainSearch.xaml", dt);
+                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Search.xaml.cs"), "Dt.ManyToMany.MainSearch.xaml.cs", dt);
+                cs = "CustomSearch";
+            }
+
+            using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.{cs}.cs")))
+            {
+                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", title);
+            }
+            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), "Dt.ManyToMany.MainList.xaml.cs", dt);
 
             Close();
         }

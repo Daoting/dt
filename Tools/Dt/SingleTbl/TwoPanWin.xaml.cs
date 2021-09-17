@@ -31,7 +31,5 @@ namespace $rootnamespace$
         public $entityname$List List => _list;
 
         public $entityname$Form Form => _form;
-
-$winsearchcs$
     }
 }

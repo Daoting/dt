@@ -42,6 +42,8 @@ namespace Dt
             this.label4 = new System.Windows.Forms.Label();
             this._clsbTitle = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this._cbSearch = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -108,9 +110,9 @@ namespace Dt
             // _info
             // 
             this._info.ForeColor = System.Drawing.Color.Black;
-            this._info.Location = new System.Drawing.Point(12, 132);
+            this._info.Location = new System.Drawing.Point(12, 148);
             this._info.Name = "_info";
-            this._info.Size = new System.Drawing.Size(444, 47);
+            this._info.Size = new System.Drawing.Size(444, 40);
             this._info.TabIndex = 23;
             this._info.Text = " 只生成主实体类，关联的实体类在它作为主实体时生成";
             // 
@@ -148,11 +150,35 @@ namespace Dt
             this.label5.Text = "关联实体标题(逗号隔开多个)";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // _cbSearch
+            // 
+            this._cbSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSearch.FormattingEnabled = true;
+            this._cbSearch.Items.AddRange(new object[] {
+            "通用搜索面板",
+            "自定义搜索面板"});
+            this._cbSearch.Location = new System.Drawing.Point(187, 107);
+            this._cbSearch.Name = "_cbSearch";
+            this._cbSearch.Size = new System.Drawing.Size(269, 20);
+            this._cbSearch.TabIndex = 34;
+            // 
+            // label6
+            // 
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.Location = new System.Drawing.Point(12, 107);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(176, 21);
+            this.label6.TabIndex = 33;
+            this.label6.Text = "主实体列表搜索面板";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // ManyToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 240);
+            this.Controls.Add(this._cbSearch);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this._clsbTitle);
             this.Controls.Add(this.label5);
             this.Controls.Add(this._clsb);
@@ -191,5 +217,7 @@ namespace Dt
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox _clsbTitle;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox _cbSearch;
+        private System.Windows.Forms.Label label6;
     }
 }

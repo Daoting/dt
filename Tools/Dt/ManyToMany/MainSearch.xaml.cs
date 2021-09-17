@@ -21,42 +21,29 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $maincls$List : Mv
+    public sealed partial class $maincls$Search : Mv
     {
-        public $maincls$List()
+        public $maincls$Search()
         {
             InitializeComponent();
         }
 
-        public void Update()
-        {
-            Query();
-        }
+        public event EventHandler<Row> Search;
 
         protected override void OnInit(object p_params)
         {
-            Query();
+
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnSearch(object sender, RoutedEventArgs e)
         {
-            _win.Form.Update(-1);
-            NaviToChildren();
-        }
+            var row = _fv.Row;
+            Result = row;
+            Search?.Invoke(this, row);
 
-        void OnItemClick(object sender, ItemClickArgs e)
-        {
-            if (e.IsChanged)
-                _win.Form.Update(e.Row.ID);
-            NaviToChildren();
+            if (!IsHome)
+                Backward();
         }
-
-        void NaviToChildren()
-        {
-            NaviTo(new List<Mv> { _win.Form, $navitolist$ });
-        }
-
-$listsearchcs$
 
         $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
     }

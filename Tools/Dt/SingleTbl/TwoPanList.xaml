@@ -7,7 +7,7 @@
 
     <a:Mv.Menu>
         <a:Menu>
-            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Scope="Phone" Click="OnToSearch" />
+            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
         </a:Menu>
     </a:Mv.Menu>
