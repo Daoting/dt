@@ -250,6 +250,29 @@
     <Compile Include="Mv\InsertMvForm.Designer.cs">
       <DependentUpon>InsertMvForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="OnToMany\TreeWin.xaml.cs">
+      <DependentUpon>TreeWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ParentObj.cs" />
+    <EmbeddedResource Include="OnToMany\ChildObj.cs" />
+    <EmbeddedResource Include="OnToMany\ThreeList.xaml.cs">
+      <DependentUpon>ThreeList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ParentForm.xaml.cs">
+      <DependentUpon>ParentForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\TwoWin.xaml.cs">
+      <DependentUpon>TwoWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\TwoList.xaml.cs">
+      <DependentUpon>TwoList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ChildList.xaml.cs">
+      <DependentUpon>ChildList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ChildForm.xaml.cs">
+      <DependentUpon>ChildForm.xaml</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="OnToMany\OnToManyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -552,6 +575,48 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ManyToMany\MainSearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TreeWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ThreeList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ParentForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TwoWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TwoList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ChildList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ChildForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

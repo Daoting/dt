@@ -42,7 +42,7 @@ namespace Dt.App.Workflow
             if (row.Str("prcdid") == "")
                 Kit.Warn("未选择流程模板！");
             else
-                _lv.Data = await AtCm.Query("流程-查找实例", row.ToDict());
+                _lv.Data = await AtCm.Query<WfiPrcObj>("流程-查找实例", row.ToDict());
         }
 
         void OnMonthClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -70,13 +70,13 @@ namespace Dt.App.Workflow
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvAtv.Data = await AtCm.Query("流程-流程实例的活动实例", new { prciID = e.Row.ID });
+                _lvAtv.Data = await AtCm.Query<WfiAtvObj>("流程-流程实例的活动实例", new { prciID = e.Row.ID });
         }
 
         async void OnAtvClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvItem.Data = await AtCm.Query("流程-活动实例的工作项", new { atviID = e.Row.ID });
+                _lvItem.Data = await AtCm.Query<WfiItemObj>("流程-活动实例的工作项", new { atviID = e.Row.ID });
         }
 
         void OnShowInst(object sender, Mi e)

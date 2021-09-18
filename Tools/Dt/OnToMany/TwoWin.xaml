@@ -1,0 +1,20 @@
+﻿<a:Win
+    x:Class="$rootnamespace$.$maincls$Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:$rootnamespace$">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:$maincls$List x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+$relatedlistxaml$
+        </a:Tabs>
+    </a:Main>
+</a:Win>

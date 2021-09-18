@@ -9,7 +9,7 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ios  软键盘盖住 TextBox 的问题
 
 Lv顶部增加排序列按钮
-删除SearchFv
+增加后台通知
 
 
 
@@ -39,6 +39,7 @@ Lv顶部增加排序列按钮
 * 删除Tab.PhoneBar 
 * 删除Win.Home，增加Tab.Order控制首页显示
 * 实体对象名增加Obj后缀，避免重复命名 
+* 删除SearchFv 
 
 ### Bug修改 
 * Dlg禁止获得焦点时调整显示层次，太乱！

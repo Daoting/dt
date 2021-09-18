@@ -17,12 +17,12 @@ namespace Dt
 
         private void _btnOK_Click(object sender, EventArgs e)
         {
-            string ns, mainCls, title, bClss, bTitles;
+            string ns, mainCls, mainTitle, bClss, bTitles;
             try
             {
                 ns = Kit.GetText(_ns);
                 mainCls = Kit.GetText(_clsa);
-                title = Kit.GetText(_clsaTitle);
+                mainTitle = Kit.GetText(_clsaTitle);
                 bClss = Kit.GetText(_clsb);
                 bTitles = Kit.GetText(_clsbTitle);
             }
@@ -44,7 +44,7 @@ namespace Dt
                 {
                     {"$rootnamespace$", ns },
                     {"$maincls$", mainCls },
-                    {"$maintitle$", title },
+                    {"$maintitle$", mainTitle },
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
                     {"$username$", Environment.UserName },
                 };
@@ -115,7 +115,7 @@ namespace Dt
 
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.{cs}.cs")))
             {
-                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", title);
+                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", mainTitle);
             }
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), "Dt.ManyToMany.MainList.xaml.cs", dt);
 
