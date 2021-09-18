@@ -1,8 +1,8 @@
-﻿#region 文件描述
+#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2021-09-18 创建
 ******************************************************************************/
 #endregion
 
@@ -19,13 +19,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.Sample.ModuleView.OneToMany2
 {
-    public sealed partial class $maincls$$childcls$List : Mv
+    public sealed partial class ShoppingGoodsList : Mv
     {
         long _id;
 
-        public $maincls$$childcls$List()
+        public ShoppingGoodsList()
         {
             InitializeComponent();
         }
@@ -46,7 +46,7 @@ namespace $rootnamespace$
 
         async void Query()
         {
-            _lv.Data = await AtCm.Query<$childcls$Obj>("$maintitle$-关联$childtitle$", new { ParentID = _id });
+            _lv.Data = await AtCm.Query<GoodsObj>("select * from oa_goods where ParentID=@ParentID", new { ParentID = _id });
         }
 
         void OnAdd(object sender, Mi e)
@@ -56,12 +56,12 @@ namespace $rootnamespace$
 
         void OnEdit(object sender, Mi e)
         {
-            ShowForm(e.Data.To<$childcls$Obj>().ID);
+            ShowForm(e.Data.To<GoodsObj>().ID);
         }
 
         async void ShowForm(long p_id)
         {
-            var form = new $maincls$$childcls$Form();
+            var form = new ShoppingGoodsForm();
             form.Update(p_id, _id);
             if (await Forward<bool>(form, null, true))
                 Query();
@@ -69,7 +69,7 @@ namespace $rootnamespace$
 
         async void OnDel(object sender, Mi e)
         {
-            var d = e.Data.To<$childcls$Obj>();
+            var d = e.Data.To<GoodsObj>();
             if (d == null)
                 return;
 
@@ -83,6 +83,6 @@ namespace $rootnamespace$
                 Query();
         }
 
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
+        ShoppingWin _win => (ShoppingWin)_tab.OwnWin;
     }
 }

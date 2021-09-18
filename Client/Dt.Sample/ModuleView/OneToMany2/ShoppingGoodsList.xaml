@@ -1,10 +1,10 @@
-﻿<a:Mv
-    x:Class="$rootnamespace$.$maincls$$childcls$List"
+<a:Mv
+    x:Class="Dt.Sample.ModuleView.OneToMany2.ShoppingGoodsList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:$rootnamespace$"
-    Title="$childtitle$列表">
+    xmlns:l="using:Dt.Sample.ModuleView.OneToMany2"
+    Title="商品列表">
 
     <a:Mv.Menu>
         <a:Menu>

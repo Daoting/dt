@@ -1,8 +1,8 @@
-﻿#region 文件描述
+#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2021-09-18 创建
 ******************************************************************************/
 #endregion
 
@@ -19,25 +19,27 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.Sample.ModuleView.OneToMany1
 {
-    public sealed partial class $maincls$Form : Mv
+    public sealed partial class ShoppingGoodsForm : Mv
     {
-        public $maincls$Form()
+        long _parentID;
+
+        public ShoppingGoodsForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
-        public async void Update(long p_id)
+        public async void Update(long p_id, long p_parentID)
         {
             if (!await _fv.DiscardChanges())
                 return;
 
+            _parentID = p_parentID;
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
-                UpdateRelated(p_id);
+                _fv.Data = await AtCm.First<GoodsObj>("select * from oa_goods where id=@id", new { id = p_id });
             }
             else
             {
@@ -45,23 +47,11 @@ namespace $rootnamespace$
             }
         }
 
-        public void Clear()
-        {
-            _fv.Data = null;
-            ClearRelated();
-        }
-
         async void Create()
         {
-            _fv.Data = new $maincls$Obj(
-                ID: await AtCm.NewID());
-
-            ClearRelated();
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
+            _fv.Data = new GoodsObj(
+                ID: await AtCm.NewID(),
+                ParentID: _parentID);
         }
 
         void OnAdd(object sender, Mi e)
@@ -69,24 +59,18 @@ namespace $rootnamespace$
             Create();
         }
 
-        async void Save()
+        async void OnSave(object sender, Mi e)
         {
-            var d = _fv.Data.To<$maincls$Obj>();
-            bool isNew = d.IsAdded;
+            var d = _fv.Data.To<GoodsObj>();
             if (await AtCm.Save(d))
             {
-                _win?.List.Update();
                 Result = true;
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$maincls$Obj>();
+            var d = _fv.Data.To<GoodsObj>();
             if (d == null)
                 return;
 
@@ -98,32 +82,20 @@ namespace $rootnamespace$
 
             if (d.IsAdded)
             {
-                Clear();
+                _fv.Data = null;
                 return;
             }
 
             if (await AtCm.Delete(d))
             {
                 Result = true;
-                Clear();
+                _fv.Data = null;
             }
-        }
-
-        void UpdateRelated(long p_id)
-        {
-$relatedupdate$
-        }
-
-        void ClearRelated()
-        {
-$relatedclear$
         }
 
         protected override Task<bool> OnClosing()
         {
             return _fv.DiscardChanges();
         }
-
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
     }
 }

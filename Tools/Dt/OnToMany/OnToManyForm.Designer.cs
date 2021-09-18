@@ -81,6 +81,7 @@ namespace Dt
             this._clsa.Name = "_clsa";
             this._clsa.Size = new System.Drawing.Size(269, 21);
             this._clsa.TabIndex = 19;
+            this._clsa.Text = "Shopping";
             // 
             // label3
             // 
@@ -98,6 +99,7 @@ namespace Dt
             this._clsaTitle.Name = "_clsaTitle";
             this._clsaTitle.Size = new System.Drawing.Size(269, 21);
             this._clsaTitle.TabIndex = 21;
+            this._clsaTitle.Text = "购物";
             // 
             // _btnOK
             // 
@@ -147,6 +149,7 @@ namespace Dt
             this._clsbTitle.Name = "_clsbTitle";
             this._clsbTitle.Size = new System.Drawing.Size(269, 21);
             this._clsbTitle.TabIndex = 36;
+            this._clsbTitle.Text = "商品";
             // 
             // label5
             // 
@@ -164,6 +167,7 @@ namespace Dt
             this._clsb.Name = "_clsb";
             this._clsb.Size = new System.Drawing.Size(269, 21);
             this._clsb.TabIndex = 35;
+            this._clsb.Text = "Goods";
             // 
             // label4
             // 

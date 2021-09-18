@@ -1,8 +1,8 @@
-﻿#region 文件描述
+#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2021-09-18 创建
 ******************************************************************************/
 #endregion
 
@@ -19,11 +19,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.Sample.ModuleView.OneToMany1
 {
-    public sealed partial class $maincls$Form : Mv
+    public sealed partial class ShoppingForm : Mv
     {
-        public $maincls$Form()
+        public ShoppingForm()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
@@ -36,7 +36,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<ShoppingObj>("select * from oa_shopping where id=@id", new { id = p_id });
                 UpdateRelated(p_id);
             }
             else
@@ -53,7 +53,7 @@ namespace $rootnamespace$
 
         async void Create()
         {
-            _fv.Data = new $maincls$Obj(
+            _fv.Data = new ShoppingObj(
                 ID: await AtCm.NewID());
 
             ClearRelated();
@@ -71,12 +71,11 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$maincls$Obj>();
+            var d = _fv.Data.To<ShoppingObj>();
             bool isNew = d.IsAdded;
             if (await AtCm.Save(d))
             {
-                _win?.List.Update();
-                Result = true;
+                _win.List.Update();
                 if (isNew)
                 {
                     UpdateRelated(d.ID);
@@ -86,7 +85,7 @@ namespace $rootnamespace$
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$maincls$Obj>();
+            var d = _fv.Data.To<ShoppingObj>();
             if (d == null)
                 return;
 
@@ -102,21 +101,16 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await AtCm.Delete(d))
-            {
-                Result = true;
-                Clear();
-            }
         }
 
         void UpdateRelated(long p_id)
         {
-$relatedupdate$
+            _win.GoodsList.Update(p_id);
         }
 
         void ClearRelated()
         {
-$relatedclear$
+            _win.GoodsList.Clear();
         }
 
         protected override Task<bool> OnClosing()
@@ -124,6 +118,6 @@ $relatedclear$
             return _fv.DiscardChanges();
         }
 
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
+        ShoppingWin _win => (ShoppingWin)_tab.OwnWin;
     }
 }

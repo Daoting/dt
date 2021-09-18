@@ -34,9 +34,10 @@ namespace $rootnamespace$
     {
         $childcls$Obj() { }
 
-        public $childcls$Obj(long ID)
+        public $childcls$Obj(long ID, long ParentID = default)
         {
             AddCell("ID", ID);
+            AddCell("ParentID", ParentID);
             AttachHook();
         }
     }

@@ -85,7 +85,7 @@ namespace Dt.Base.Docking
                     _dragging = false;
                     ReleasePointerCapture(e.Pointer);
                     if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                        tab.OwnWin.OnDragStarted(this, e);
+                        tab.OwnWin?.OnDragStarted(this, e);
                 }
             }
         }

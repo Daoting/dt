@@ -23,20 +23,23 @@ namespace $rootnamespace$
 {
     public sealed partial class $maincls$$childcls$Form : Mv
     {
+        long _parentID;
+
         public $maincls$$childcls$Form()
         {
             InitializeComponent();
             Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
-        public async void Update(long p_id)
+        public async void Update(long p_id, long p_parentID)
         {
             if (!await _fv.DiscardChanges())
                 return;
 
+            _parentID = p_parentID;
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$childcls$Obj > ("$childtitle$-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<$childcls$Obj>("$childtitle$-编辑", new { id = p_id });
             }
             else
             {
@@ -47,7 +50,8 @@ namespace $rootnamespace$
         async void Create()
         {
             _fv.Data = new $childcls$Obj(
-                ID: await AtCm.NewID());
+                ID: await AtCm.NewID(),
+                ParentID: _parentID);
         }
 
         void OnAdd(object sender, Mi e)
@@ -57,20 +61,16 @@ namespace $rootnamespace$
 
         async void OnSave(object sender, Mi e)
         {
-            var d = _fv.Data.To<$childcls$Obj > ();
-            bool isNew = d.IsAdded;
+            var d = _fv.Data.To<$childcls$Obj>();
             if (await AtCm.Save(d))
             {
-                _win.List.Update();
-                if (isNew)
-                {
-                }
+                Result = true;
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$childcls$Obj > ();
+            var d = _fv.Data.To<$childcls$Obj>();
             if (d == null)
                 return;
 
@@ -82,17 +82,20 @@ namespace $rootnamespace$
 
             if (d.IsAdded)
             {
-                Clear();
+                _fv.Data = null;
                 return;
             }
 
+            if (await AtCm.Delete(d))
+            {
+                Result = true;
+                _fv.Data = null;
+            }
         }
 
         protected override Task<bool> OnClosing()
         {
             return _fv.DiscardChanges();
         }
-
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
     }
 }

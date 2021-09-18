@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.App;
 using Dt.Base;
 using Dt.Core;
 using System;
@@ -34,7 +35,7 @@ namespace $rootnamespace$
         {
             _id = p_id;
             Menu["添加"].IsEnabled = true;
-            Refresh();
+            Query();
         }
 
         public void Clear()
@@ -44,9 +45,9 @@ namespace $rootnamespace$
             _lv.Data = null;
         }
 
-        void Refresh()
+        async void Query()
         {
-            //_lv.Data = await AtCm.Query("a-关联b", new { id = _id });
+            _lv.Data = await AtCm.Query<$relatedcls$Obj>("$maintitle$-关联$relatedtitle$", new { $maincls$id = _id });
         }
 
         void OnAdd(object sender, Mi e)

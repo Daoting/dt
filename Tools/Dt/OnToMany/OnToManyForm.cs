@@ -78,8 +78,8 @@ namespace Dt
                 winXaml += $"            <a:Tab>\r\n                <l:{mainCls}{cls}List x:Name=\"_{char.ToLower(cls[0])}{cls.Substring(1)}List\" />\r\n            </a:Tab>";
                 winCode += $"        public {mainCls}{cls}List {cls}List => _{char.ToLower(cls[0])}{cls.Substring(1)}List;\r\n";
                 naviTo += $" _win.{cls}List,";
-                update += $"            _win.{cls}List.Update(p_id);";
-                clear += $"            _win.{cls}List.Clear();";
+                update += $"            _win?.{cls}List.Update(p_id);";
+                clear += $"            _win?.{cls}List.Clear();";
             }
 
             // MainWin
@@ -92,11 +92,9 @@ namespace Dt
             // MainForm
             dt["$relatedupdate$"] = update;
             dt["$relatedclear$"] = clear;
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml"), "Dt.OnToMany.MainForm.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml.cs"), "Dt.OnToMany.MainForm.xaml.cs", dt);
+            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml"), "Dt.OnToMany.ParentForm.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml.cs"), "Dt.OnToMany.ParentForm.xaml.cs", dt);
 
-            // MainList
-            dt["$navitolist$"] = naviTo;
             string cs;
             if (_cbSearch.SelectedIndex == 0)
             {
@@ -110,11 +108,13 @@ namespace Dt
                 cs = "CustomSearch";
             }
 
+            // MainList
             // 复用ManyToMany中的文件
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.{cs}.cs")))
             {
                 dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", mainTitle);
             }
+            dt["$navitolist$"] = naviTo;
             resName = _cbWin.SelectedIndex == 0 ? "ThreeList" : "TwoList";
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml"), $"Dt.OnToMany.{resName}.xaml", dt);
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), $"Dt.OnToMany.{resName}.xaml.cs", dt);

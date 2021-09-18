@@ -30,6 +30,8 @@ namespace Dt.Sample
                 new MainInfo { Type = typeof(SearchMvWin), Title = "搜索面板", Desc = "通用搜索功能，包括固定搜索项、历史搜索项、统一搜索事件、统一导航等功能" },
                 new MainInfo { Type = typeof(MyEntityWin), Title = "单表模板", Desc = "单表增删改模板" },
                 new MainInfo { Type = typeof(MainWin), Title = "多对多模板", Desc = "多对多增删改模板" },
+                new MainInfo { Type = typeof(ModuleView.OneToMany1.ShoppingWin), Title = "一对多，三栏", Desc = "一对多增删改模板" },
+                new MainInfo { Type = typeof(ModuleView.OneToMany2.ShoppingWin), Title = "一对多，两栏", Desc = "一对多增删改模板" },
             };
         }
     }
