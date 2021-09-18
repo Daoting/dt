@@ -28,6 +28,7 @@ Lv顶部增加排序列按钮
 * 增加Mv控件，能够放在Tab中支持内部导航
 * 调整Dlg、ToolWindow样式 
 * 增加 SearchMv 控件
+* VS插件增加三种框架模板
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发
