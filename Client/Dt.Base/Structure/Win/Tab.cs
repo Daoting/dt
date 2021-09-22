@@ -368,7 +368,7 @@ namespace Dt.Base
                 BackButtonVisibility = (_navCache != null && _navCache.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            // 绑定Nav中的依赖属性
+            // 绑定Mv的依赖属性
             SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = mv });
             SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = mv });
             if (Kit.IsPhoneUI)
