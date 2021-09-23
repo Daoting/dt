@@ -11,7 +11,7 @@
                 <a:Tab.Menu>
                     <a:Menu x:Name="_m" ItemClick="OnItemClick">
                         <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
-                        <a:Mi ID="搜索" Icon="搜索" />
+                        <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" />
                         <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                         <a:Mi ID="无图标" />
                         <a:MiSplit />

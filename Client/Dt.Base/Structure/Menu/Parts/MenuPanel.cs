@@ -28,7 +28,7 @@ namespace Dt.Base.MenuView
         Menu _owner;
         Mi _miMore;
         Size _availableSize;
-        bool _updateWinItems;
+        bool _updateItems;
         #endregion
 
         /*********************************************************************************************************/
@@ -46,15 +46,10 @@ namespace Dt.Base.MenuView
                 LoadContextItems();
                 _owner.Items.ItemsChanged += OnContextItemsChanged;
             }
-            else if (Kit.IsPhoneUI)
-            {
-                LoadPhoneItems();
-                _owner.Items.ItemsChanged += (s, e) => LoadPhoneItems();
-            }
             else
             {
-                _updateWinItems = true;
-                _owner.Items.ItemsChanged += (s, e) => LoadWinItems();
+                _updateItems = true;
+                _owner.Items.ItemsChanged += (s, e) => LoadItems();
             }
         }
 
@@ -64,12 +59,7 @@ namespace Dt.Base.MenuView
         internal void UpdateArrange()
         {
             if (!_owner.IsContextMenu)
-            {
-                if (Kit.IsPhoneUI)
-                    LoadPhoneItems();
-                else
-                    LoadWinItems();
-            }
+                LoadItems();
         }
 
         #region 重写方法
@@ -77,17 +67,16 @@ namespace Dt.Base.MenuView
         {
             double maxWidth = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
             double maxHeight = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
+            bool widthChanged = _availableSize.Width != maxWidth;
+            _availableSize = new Size(maxWidth, maxHeight);
 
-            // win模式菜单在宽度变化或外部刷新布局时重新测量！
+            // 在宽度变化或外部刷新布局时重新测量，把不可见的菜单项调整到more下！
             if (!_owner.IsContextMenu
-                && !Kit.IsPhoneUI
-                && (_availableSize.Width != maxWidth || _updateWinItems))
+                && (widthChanged || _updateItems))
             {
-                _availableSize = new Size(maxWidth, maxHeight);
-                return MeasureWinItems();
+                return MeasureAndResetItems();
             }
 
-            _availableSize = new Size(maxWidth, maxHeight);
             if (Children.Count == 0)
                 return new Size();
             return _owner.IsContextMenu ? MeasureContextMenu() : MeasureMenu();
@@ -208,15 +197,15 @@ namespace Dt.Base.MenuView
         #endregion
 
         #region 内部方法
-        void LoadWinItems()
+        void LoadItems()
         {
-            _updateWinItems = true;
+            _updateItems = true;
             InvalidateMeasure();
         }
 
-        Size MeasureWinItems()
+        Size MeasureAndResetItems()
         {
-            _updateWinItems = false;
+            _updateItems = false;
             Children.Clear();
             if (_miMore != null)
                 _miMore.Items.Clear();
@@ -278,56 +267,6 @@ namespace Dt.Base.MenuView
                     return true;
             }
             return false;
-        }
-
-        void LoadPhoneItems()
-        {
-            Children.Clear();
-            if (_miMore != null)
-                _miMore.Items.Clear();
-            if (_owner.Items.Count == 0)
-                return;
-
-            bool noMore = true;
-            int cnt = 0;
-            foreach (var mi in _owner.Items)
-            {
-                if (mi.Visibility == Visibility.Visible)
-                {
-                    cnt++;
-                    if (cnt > 2)
-                    {
-                        noMore = false;
-                        break;
-                    }
-                }
-            }
-
-            if (noMore)
-            {
-                // 无more按钮
-                foreach (var mi in _owner.Items)
-                {
-                    mi.UpdateOwner(_owner, null);
-                    Children.Add(mi);
-                }
-            }
-            else
-            {
-                // 添加第一个可见项
-                int index = 0;
-                foreach (var mi in _owner.Items)
-                {
-                    index++;
-                    mi.UpdateOwner(_owner, null);
-                    Children.Add(mi);
-                    if (mi.Visibility == Visibility.Visible)
-                        break;
-                }
-
-                // 其余项添加到more下
-                ResetMoreItems(index);
-            }
         }
 
         /// <summary>

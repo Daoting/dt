@@ -207,8 +207,6 @@ namespace Dt.Base.ListView
 
                 // 分组导航头
                 _groupHeader?.Arrange(_rcEmpty);
-                // 工具栏
-                _toolbar?.Arrange(_rcEmpty);
                 return;
             }
 

@@ -720,6 +720,11 @@ namespace Dt.Base
             SetValue(IconProperty, IsChecked ? Icons.复选已选 : Icons.复选未选);
         }
 
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            OnClickMi();
+        }
+
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             Focus(FocusState.Programmatic);
@@ -740,10 +745,7 @@ namespace Dt.Base
             e.Handled = true;
             _pointerID = null;
             IsMouseOver = false;
-            if (this.ContainPoint(e.GetCurrentPoint(null).Position))
-                OnClickMi();
-            else
-                ChangeState(MenuItemState.Normal);
+            ChangeState(MenuItemState.Normal);
         }
 
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
@@ -794,13 +796,18 @@ namespace Dt.Base
             }
 
             IsMouseOver = false;
-            bool unselect = ((ParentMi == null && Items.Count > 0 && !IsSubmenuOpen)
-                || (ParentMi != null && (Items.Count == 0 || !IsSubmenuOpen)));
+            bool unselect = (ParentMi == null && Items.Count > 0 && !IsSubmenuOpen)
+                || (ParentMi != null && (Items.Count == 0 || !IsSubmenuOpen));
 
             if (unselect && IsSelected)
                 IsSelected = false;
             else
                 ChangeState(MenuItemState.Normal);
+        }
+
+        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
+        {
+            ChangeState(MenuItemState.Normal);
         }
         #endregion
     }

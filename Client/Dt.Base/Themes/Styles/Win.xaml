@@ -175,8 +175,9 @@
                               Height="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="10" />
+                                <!--标题和菜单平分-->
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <!--后退-->
                             <Button x:Name="BackButton"

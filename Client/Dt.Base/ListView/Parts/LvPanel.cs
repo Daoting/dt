@@ -457,8 +457,7 @@ namespace Dt.Base.ListView
                     ArrangeRealRows(finalSize);
             }
 
-            if (_toolbar != null)
-                _toolbar.Arrange(new Rect(0, _deltaY > 0 ? 0 : - _deltaY, finalSize.Width, _toolbarHeight));
+            _toolbar?.Arrange(new Rect(-_deltaX, _deltaY > 0 ? 0 : -_deltaY, finalSize.Width, _toolbarHeight));
             return finalSize;
         }
 
@@ -745,7 +744,7 @@ namespace Dt.Base.ListView
         #endregion
 
         #region Toolbar
-        protected Menu _toolbar;
+        Menu _toolbar;
 
         void LoadToolbar()
         {
@@ -805,6 +804,7 @@ namespace Dt.Base.ListView
                 var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 if (cols[0].Equals(sort.ID, StringComparison.OrdinalIgnoreCase))
                 {
+                    mi.ShowInPhone = VisibleInPhone.IconAndID;
                     mi.Icon = (sort.Direction == ListSortDirection.Ascending) ? Icons.向上 : Icons.向下;
                 }
                 else
