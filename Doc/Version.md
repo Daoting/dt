@@ -7,7 +7,7 @@ FileItem上传、分享、MediaPlayerElement等功能未实现
 ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
-
+ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
 增加后台通知
 
