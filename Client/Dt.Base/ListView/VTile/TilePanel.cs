@@ -242,7 +242,7 @@ namespace Dt.Base.ListView
                 for (int i = 0; i < _dataRows.Count; i++)
                 {
                     var item = _dataRows[i];
-                    double top = Math.Floor((double)i / _colCount) * _rowHeight;
+                    double top = Math.Floor((double)i / _colCount) * _rowHeight + _toolbarHeight;
 
                     // 数据行已结束 或 剩下行不可见，结束布局
                     if (i >= _owner.Rows.Count || _deltaY + top > _maxSize.Height)
@@ -252,8 +252,8 @@ namespace Dt.Base.ListView
                     }
 
                     // 行末尾项宽度加1为隐藏右边框
-                    bool isRowLast = ((i + 1) % _colCount == 0);
-                    double left = (i % _colCount) * _itemWidth;
+                    bool isRowLast = (i + 1) % _colCount == 0;
+                    double left = i % _colCount * _itemWidth;
                     item.Arrange(new Rect(left, top, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                     item.SetViewRow(_owner.Rows[i], true);
                 }
@@ -276,7 +276,7 @@ namespace Dt.Base.ListView
             // 最顶部的虚拟行索引
             int iVirRow = iRow % _dataRows.Count;
             // 页面顶部偏移
-            double deltaTop = -_deltaY + offset;
+            double deltaTop = -_deltaY + offset + _toolbarHeight;
 
             for (int i = 0; i < _dataRows.Count; i++)
             {
@@ -285,9 +285,9 @@ namespace Dt.Base.ListView
                 {
                     // 布局虚拟行
                     double top = Math.Floor((double)iVirRow / _colCount) * _rowHeight + deltaTop;
-                    double left = (iVirRow % _colCount) * _itemWidth;
+                    double left = iVirRow % _colCount * _itemWidth;
                     // 行末尾项宽度加1为隐藏右边框
-                    bool isRowLast = ((iVirRow + 1) % _colCount == 0);
+                    bool isRowLast = (iVirRow + 1) % _colCount == 0;
                     item.Arrange(new Rect(left, top, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                     item.SetViewRow(_owner.Rows[iRow + i], true);
                 }
@@ -330,9 +330,8 @@ namespace Dt.Base.ListView
                 return;
             }
 
-
-            int iAllRow = 0, iGrpRow = 0, iDataRow = 0;
-            double totalHeight = 0;
+            int iGrpRow = 0, iDataRow = 0;
+            double totalHeight = _toolbarHeight;
             // 分组内的项目索引
             int indexInGroup = 0;
             LvRow lastRow = null;
@@ -351,7 +350,7 @@ namespace Dt.Base.ListView
                         // 分组导航头高度可能为0！
                         _groupHeader.SetCurrentGroup(_owner.GroupRows[0]);
                         // -_deltaY确保始终在滚动栏顶部位置
-                        _groupHeader.Arrange(new Rect(0, -_deltaY, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                        _groupHeader.Arrange(new Rect(0, -_deltaY + _toolbarHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                     }
                     else
                     {
@@ -383,8 +382,8 @@ namespace Dt.Base.ListView
                         // 布局数据行
                         var row = _dataRows[iDataRow];
                         // 行末尾项宽度加1为隐藏右边框
-                        bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
-                        row.Arrange(new Rect((indexInGroup % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
+                        bool isRowLast = (indexInGroup + 1) % _colCount == 0;
+                        row.Arrange(new Rect(indexInGroup % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                         row.SetViewRow(_owner.Rows[i - iGrpRow], true);
 
                         if (isRowLast)
@@ -436,7 +435,7 @@ namespace Dt.Base.ListView
             //----------------------------------------------
 
             // 避免所有行完全超出滚动栏顶部的情况
-            iAllRow = _owner.MapRows.Count;
+            int iAllRow = _owner.MapRows.Count;
             GroupRow lastGroup = null;
 
             // 布局顶部超出的分组、计算总高、数据行索引
@@ -490,7 +489,7 @@ namespace Dt.Base.ListView
                 {
                     _groupHeader.SetCurrentGroup(lastGroup);
                     // -_deltaY确保始终在滚动栏顶部位置
-                    _groupHeader.Arrange(new Rect(0, -_deltaY, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                    _groupHeader.Arrange(new Rect(0, -_deltaY + _toolbarHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                 }
                 else
                 {
@@ -523,8 +522,8 @@ namespace Dt.Base.ListView
                 {
                     var row = _dataRows[iDataRow];
                     // 行末尾项宽度加1为隐藏右边框
-                    bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
-                    row.Arrange(new Rect((indexInGroup % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
+                    bool isRowLast = (indexInGroup + 1) % _colCount == 0;
+                    row.Arrange(new Rect(indexInGroup % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                     row.SetViewRow(_owner.Rows[i - iGrpRow], true);
 
                     if (isRowLast)
@@ -629,14 +628,14 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeRealRows(Size p_finalSize)
         {
-            double totalHeight = 0;
+            double totalHeight = _toolbarHeight;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
 
                 // 行末尾项宽度加1为隐藏右边框
-                bool isRowLast = ((i + 1) % _colCount == 0);
-                row.Arrange(new Rect((i % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
+                bool isRowLast = (i + 1) % _colCount == 0;
+                row.Arrange(new Rect(i % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                 if (isRowLast)
                     totalHeight += _rowHeight;
             }
@@ -645,7 +644,7 @@ namespace Dt.Base.ListView
         protected override void ArrangeGroupRealRows(Size p_finalSize)
         {
             int iGrpRow = 0, iDataRow = 0;
-            double totalHeight = 0;
+            double totalHeight = _toolbarHeight;
             GroupRow lastGroup = null;
             bool firstVisible = true;
             LvRow lastRow = null;
@@ -706,8 +705,8 @@ namespace Dt.Base.ListView
                         }
                     }
 
-                    bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
-                    row.Arrange(new Rect((indexInGroup % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
+                    bool isRowLast = (indexInGroup + 1) % _colCount == 0;
+                    row.Arrange(new Rect(indexInGroup % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
 
                     if (isRowLast)
                     {
@@ -735,7 +734,7 @@ namespace Dt.Base.ListView
                     // 分组导航头高度可能为0！
                     _groupHeader.SetCurrentGroup(lastGroup);
                     // -_deltaY确保始终在滚动栏顶部位置
-                    _groupHeader.Arrange(new Rect(0, -_deltaY, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                    _groupHeader.Arrange(new Rect(0, -_deltaY + _toolbarHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                 }
                 else
                 {

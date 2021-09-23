@@ -11,6 +11,7 @@ using Dt.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Core;
@@ -87,6 +88,11 @@ namespace Dt.Base.ListView
         /// 以滚动栏为参照物，面板与滚动栏的垂直距离，面板在下方时为正数
         /// </summary>
         protected double _deltaY;
+
+        /// <summary>
+        /// 工具栏高度
+        /// </summary>
+        protected double _toolbarHeight;
 
         /// <summary>
         /// 当前是否正在滚动中
@@ -264,6 +270,14 @@ namespace Dt.Base.ListView
         {
             return _maxSize;
         }
+
+        /// <summary>
+        /// 切换 SortDesc 属性时调整排序图标
+        /// </summary>
+        internal virtual void OnSortDescChanged()
+        {
+            SyncToolbarSortIcon();
+        }
         #endregion
 
         #region 滚动到
@@ -383,7 +397,16 @@ namespace Dt.Base.ListView
 
             //Log.Debug($"{_owner.BaseUri} LvPanel MeasureOverride");
             // 虚拟行/真实行
-            return _owner.IsVir ? MeasureVirRows() : MeasureRealRows();
+            Size size = _owner.IsVir ? MeasureVirRows() : MeasureRealRows();
+
+            // 工具栏
+            if (_toolbar != null)
+            {
+                _toolbar.Measure(_maxSize);
+                _toolbarHeight = _toolbar.DesiredSize.Height;
+                size = new Size(size.Width, size.Height + _toolbarHeight);
+            }
+            return size;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -433,6 +456,9 @@ namespace Dt.Base.ListView
                 else
                     ArrangeRealRows(finalSize);
             }
+
+            if (_toolbar != null)
+                _toolbar.Arrange(new Rect(0, _deltaY > 0 ? 0 : - _deltaY, finalSize.Width, _toolbarHeight));
             return finalSize;
         }
 
@@ -468,6 +494,7 @@ namespace Dt.Base.ListView
             _initVirRow = CreateVirRows();
             LoadGroupRows();
             LoadColHeader();
+            LoadToolbar();
 
             //if (_initVirRow)
             //    Log.Debug($"{_owner.BaseUri} 生成{_dataRows.Count}个虚拟行");
@@ -494,6 +521,7 @@ namespace Dt.Base.ListView
 
             LoadGroupRows();
             LoadColHeader();
+            LoadToolbar();
         }
 
         /// <summary>
@@ -504,6 +532,7 @@ namespace Dt.Base.ListView
             if (Children.Count > 0)
                 Children.Clear();
             _dataRows.Clear();
+            RemoveToolbar();
         }
 
         /// <summary>
@@ -715,10 +744,81 @@ namespace Dt.Base.ListView
         }
         #endregion
 
+        #region Toolbar
+        protected Menu _toolbar;
+
+        void LoadToolbar()
+        {
+            _toolbar = _owner.Toolbar;
+            if (_toolbar != null)
+            {
+                _toolbar.Background = Res.浅灰背景;
+                _toolbar.BorderBrush = Res.浅灰边框;
+                _toolbar.BorderThickness = new Thickness(0, 0, 0, 1);
+                Children.Add(_toolbar);
+                _toolbar.ItemClick += OnToolbarClick;
+            }
+        }
+
+        void RemoveToolbar()
+        {
+            if (_toolbar != null)
+            {
+                _toolbar.ItemClick -= OnToolbarClick;
+                _toolbar = null;
+            }
+            _toolbarHeight = 0;
+        }
+
+        void OnToolbarClick(object sender, Mi e)
+        {
+            var str = Ex.GetSort(e);
+            if (string.IsNullOrEmpty(str))
+                return;
+
+            var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var old = _owner.SortDesc;
+            var sort = new SortDescription { ID = cols[0] };
+            if (old != null && old.ID == cols[0])
+            {
+                sort.Direction = old.Direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            }
+            else if (cols.Length == 2)
+            {
+                sort.Direction = "desc".Equals(cols[1], StringComparison.OrdinalIgnoreCase) ? ListSortDirection.Descending : ListSortDirection.Ascending;
+            }
+            _owner.SortDesc = sort;
+        }
+
+        void SyncToolbarSortIcon()
+        {
+            if (_toolbar == null)
+                return;
+
+            var sort = _owner.SortDesc;
+            foreach (var mi in _toolbar.Items)
+            {
+                var str = Ex.GetSort(mi);
+                if (string.IsNullOrEmpty(str))
+                    continue;
+
+                var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (cols[0].Equals(sort.ID, StringComparison.OrdinalIgnoreCase))
+                {
+                    mi.Icon = (sort.Direction == ListSortDirection.Ascending) ? Icons.向上 : Icons.向下;
+                }
+                else
+                {
+                    mi.Icon = Icons.None;
+                }
+            }
+        }
+        #endregion
+
         #region 事件处理
         /// <summary>
         /// 表格：始终刷新布局，已重写方法
-        /// 列表：虚拟行刷新布局，真实行无分组时不刷新，有分组时只在开始、结束时刷新
+        /// 列表：虚拟行始终刷新布局，真实行当有分组或工具栏时只在开始、结束时刷新，其他情况不刷新
         /// 磁贴：同列表
         /// 本方法适用于列表和磁贴
         /// </summary>
@@ -732,7 +832,7 @@ namespace Dt.Base.ListView
                 _isScrolling = e.IsIntermediate;
                 InvalidateArrange();
             }
-            else if (_owner.MapRows != null)
+            else if (_owner.MapRows != null || _toolbar != null)
             {
                 // 开始滚动或结束滚动时刷新布局，为了隐藏/显示分组导航头
                 if (!e.IsIntermediate)

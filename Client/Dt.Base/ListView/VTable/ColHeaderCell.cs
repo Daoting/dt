@@ -265,22 +265,29 @@ namespace Dt.Base.ListView
 
             ListSortDirection dir = ListSortDirection.Ascending;
             SortDescription desc = _owner.Lv.SortDesc;
-            if (desc != null && !string.IsNullOrEmpty(desc.ID))
+            if (desc != null
+                && !string.IsNullOrEmpty(desc.ID)
+                && desc.ID.Equals(Col.ID, StringComparison.OrdinalIgnoreCase)
+                && desc.Direction == ListSortDirection.Ascending)
             {
-                if (desc.ID.Equals(Col.ID, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (desc.Direction == ListSortDirection.Ascending)
-                        dir = ListSortDirection.Descending;
-                }
-                else
-                {
-                    ColHeaderCell cell = _owner.GetCellByID(desc.ID);
-                    if (cell != null)
-                        cell.ClearValue(SortStateProperty);
-                }
+                dir = ListSortDirection.Descending;
             }
             _owner.Lv.SortDesc = new SortDescription(Col.ID, dir);
-            SortState = (dir == ListSortDirection.Ascending) ? "\uE017" : "\uE018";
+        }
+
+        internal void SyncSortIcon()
+        {
+            SortDescription desc = _owner.Lv.SortDesc;
+            if (desc != null
+                && !string.IsNullOrEmpty(desc.ID)
+                && desc.ID.Equals(Col.ID, StringComparison.OrdinalIgnoreCase))
+            {
+                SortState = (desc.Direction == ListSortDirection.Ascending) ? "\uE017" : "\uE018";
+            }
+            else
+            {
+                ClearValue(SortStateProperty);
+            }
         }
 
         Col GetLeftCol()

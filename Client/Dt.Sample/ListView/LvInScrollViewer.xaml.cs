@@ -119,5 +119,35 @@ namespace Dt.Sample
         {
             _lv.ScrollBottom();
         }
+
+        void OnToolbar(object sender, RoutedEventArgs e)
+        {
+            var temp = (DataTemplate)Resources["Toolbar"];
+            _lv.Toolbar = temp.LoadContent() as Menu;
+        }
+
+        void OnDelToolbar(object sender, RoutedEventArgs e)
+        {
+            _lv.Toolbar = null;
+        }
+
+        void OnToggleViewMode(object sender, Mi e)
+        {
+            if (_lv.ViewMode == ViewMode.Tile)
+            {
+                _lv.ChangeView(Resources["ListView"], ViewMode.List);
+                e.Icon = Icons.排列;
+            }
+            else
+            {
+                _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
+                e.Icon = Icons.汉堡;
+            }
+        }
+
+        void OnFilter(object sender, Mi e)
+        {
+
+        }
     }
 }

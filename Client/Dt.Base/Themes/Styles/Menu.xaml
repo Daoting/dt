@@ -13,7 +13,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Menu">
-                    <menu:MenuPanel x:Name="Panel" Background="Transparent" />
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                        <menu:MenuPanel x:Name="Panel" Background="Transparent" />
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

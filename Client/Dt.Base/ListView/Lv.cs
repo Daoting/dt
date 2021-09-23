@@ -134,7 +134,7 @@ namespace Dt.Base
             "SortDesc",
             typeof(SortDescription),
             typeof(Lv),
-            new PropertyMetadata(null, OnDataViewPropertyChanged));
+            new PropertyMetadata(null, OnSortDescChanged));
 
         public static readonly DependencyProperty AutoScrollBottomProperty = DependencyProperty.Register(
             "AutoScrollBottom",
@@ -176,6 +176,12 @@ namespace Dt.Base
             typeof(bool),
             typeof(Lv),
             new PropertyMetadata(false));
+
+        public readonly static DependencyProperty ToolbarProperty = DependencyProperty.Register(
+            "Toolbar",
+            typeof(Menu),
+            typeof(Lv),
+            new PropertyMetadata(null, OnReload));
 
         static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -283,6 +289,15 @@ namespace Dt.Base
         static void OnDataViewPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Lv lv = (Lv)d;
+            if (lv._dataView != null)
+                lv._dataView.Refresh();
+        }
+
+        static void OnSortDescChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if (lv._panel != null)
+                lv._panel.OnSortDescChanged();
             if (lv._dataView != null)
                 lv._dataView.Refresh();
         }
@@ -544,6 +559,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(HasSelectedProperty); }
             set { SetValue(HasSelectedProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置顶部的工具栏
+        /// </summary>
+        public Menu Toolbar
+        {
+            get { return (Menu)GetValue(ToolbarProperty); }
+            set { SetValue(ToolbarProperty, value); }
         }
 
         /// <summary>

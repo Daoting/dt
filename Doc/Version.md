@@ -8,7 +8,7 @@ ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交u
 ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 ios  软键盘盖住 TextBox 的问题
 
-Lv顶部增加排序列按钮
+
 增加后台通知
 
 
@@ -29,6 +29,7 @@ Lv顶部增加排序列按钮
 * 调整Dlg、ToolWindow样式 
 * 增加 SearchMv 控件
 * VS插件增加三种框架模板
+* Lv顶部增加工具栏，放置排序筛选等
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

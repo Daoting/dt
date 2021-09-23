@@ -113,6 +113,14 @@ namespace Dt.Base.ListView
             }
         }
 
+        internal void SyncSortIcon()
+        {
+            foreach (var cell in Children.OfType<ColHeaderCell>())
+            {
+                cell.SyncSortIcon();
+            }
+        }
+
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {

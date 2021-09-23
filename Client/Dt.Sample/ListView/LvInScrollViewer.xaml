@@ -72,6 +72,15 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+
+        <DataTemplate x:Key="Toolbar">
+            <a:Menu>
+                <a:Mi ID="姓名" a:Ex.Sort="xm" />
+                <a:Mi ID="出生日期" a:Ex.Sort="chushengrq desc" />
+                <a:Mi ID="视图" Icon="汉堡" Click="OnToggleViewMode" />
+                <a:Mi ID="筛选" Icon="漏斗" Click="OnFilter" />
+            </a:Menu>
+        </DataTemplate>
     </a:Win.Resources>
     
     <a:Main>
@@ -105,6 +114,10 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="按部门分组" Click="OnGroup" />
                         <Button Content="删除分组" Click="OnDelGroup" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="设置工具栏" Click="OnToolbar" />
+                        <Button Content="删除工具栏" Click="OnDelToolbar" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="自动行高" Click="OnAutoHeight" />
