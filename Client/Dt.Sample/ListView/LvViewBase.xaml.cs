@@ -299,10 +299,5 @@ namespace Dt.Sample
                 e.Icon = Icons.汉堡;
             }
         }
-
-        void OnFilter(object sender, Mi e)
-        {
-
-        }
     }
 }

@@ -122,7 +122,7 @@ namespace Dt.Base
             "Filter",
             typeof(Predicate<object>),
             typeof(Lv),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnDataViewPropertyChanged));
 
         public readonly static DependencyProperty GroupNameProperty = DependencyProperty.Register(
             "GroupName",
@@ -931,6 +931,17 @@ namespace Dt.Base
             if (!IsVir && _panel != null)
                 return _panel.GetLvRow(p_index);
             return null;
+        }
+
+        /// <summary>
+        /// 显示默认数据筛选对话框，对本地数据源过滤，列名为 ICell.ID，主要提供给内部管理员使用
+        /// </summary>
+        public void ShowFilterDlg()
+        {
+            if (Data == null || Data.Count == 0)
+                Kit.Warn("数据源为空，不需要筛选！");
+            else
+                new DefFilterDlg().ShowDlg(this);
         }
         #endregion
 

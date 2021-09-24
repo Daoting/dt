@@ -63,27 +63,6 @@ namespace Dt.Base
         }
         #endregion
 
-        #region Lv工具栏菜单项排序的列名
-        /// <summary>
-        /// Lv中排序的列名
-        /// </summary>
-        public static readonly DependencyProperty SortProperty = DependencyProperty.RegisterAttached(
-            "Sort",
-            typeof(string),
-            typeof(Ex),
-            new PropertyMetadata(null));
-
-        public static string GetSort(Mi element)
-        {
-            return (string)element.GetValue(SortProperty);
-        }
-
-        public static void SetSort(Mi element, string value)
-        {
-            element.SetValue(SortProperty, value);
-        }
-        #endregion
-
         #region Lv多选状态
         /// <summary>
         /// 双向绑定 Lv.SelectionMode 和 Mi.IsChecked，附加到Mi上

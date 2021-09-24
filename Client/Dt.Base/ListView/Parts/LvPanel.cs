@@ -771,9 +771,15 @@ namespace Dt.Base.ListView
 
         void OnToolbarClick(object sender, Mi e)
         {
-            var str = Ex.GetSort(e);
+            string str = e.CmdParam as string;
             if (string.IsNullOrEmpty(str))
                 return;
+
+            if (str.Equals("#Filter", StringComparison.OrdinalIgnoreCase))
+            {
+                _owner.ShowFilterDlg();
+                return;
+            }
 
             var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var old = _owner.SortDesc;
@@ -797,8 +803,8 @@ namespace Dt.Base.ListView
             var sort = _owner.SortDesc;
             foreach (var mi in _toolbar.Items)
             {
-                var str = Ex.GetSort(mi);
-                if (string.IsNullOrEmpty(str))
+                string str = mi.CmdParam as string;
+                if (string.IsNullOrEmpty(str) || str.Equals("#Filter", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);

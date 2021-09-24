@@ -75,10 +75,10 @@
 
         <DataTemplate x:Key="Toolbar">
             <a:Menu>
-                <a:Mi ID="姓名" a:Ex.Sort="xm" />
-                <a:Mi ID="出生日期" a:Ex.Sort="chushengrq desc" />
+                <a:Mi ID="姓名" CmdParam="xm" />
+                <a:Mi ID="出生日期" CmdParam="chushengrq desc" />
                 <a:Mi ID="视图" Icon="汉堡" ShowInPhone="Icon" Click="OnToggleViewMode" />
-                <a:Mi ID="筛选" Icon="漏斗" ShowInPhone="Icon" Click="OnFilter" />
+                <a:Mi ID="筛选" Icon="漏斗" CmdParam="#Filter" />
                 <a:Mi ID="设置" Icon="设置" />
                 <a:Mi ID="增加" Icon="加号" />
                 <a:Mi ID="删除" Icon="删除" />
