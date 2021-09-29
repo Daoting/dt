@@ -95,9 +95,6 @@
       <Link>App.xaml.cs</Link>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Stub.cs">
-      <Link>Stub.cs</Link>
-    </Compile>
     <Compile Include="NullPage.xaml.cs">
       <DependentUpon>NullPage.xaml</DependentUpon>
     </Compile>

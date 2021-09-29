@@ -49,6 +49,11 @@ namespace Dt.Shell
         {
             await Startup.Launch<Stub>(null, p_shareInfo);
         }
+
+        public void ToastStart(string p_params)
+        {
+            _ = Startup.Launch<Stub>(p_params, null);
+        }
 #endif
     }
 }

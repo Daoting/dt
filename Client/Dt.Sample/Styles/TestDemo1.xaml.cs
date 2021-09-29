@@ -35,7 +35,7 @@ namespace Dt.Sample
 
         void OnTest1(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         void OnTest2(object sender, RoutedEventArgs e)

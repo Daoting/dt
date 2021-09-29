@@ -30,6 +30,8 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * 增加 SearchMv 控件
 * VS插件增加三种框架模板
 * Lv顶部增加工具栏，放置排序筛选等
+* Lv 默认筛选对话框
+* android后台服务 
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

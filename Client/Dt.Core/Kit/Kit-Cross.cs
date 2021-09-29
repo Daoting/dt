@@ -185,5 +185,10 @@ namespace Dt.Core
             return Callback.LoadImage(p_path, p_img);
         }
         #endregion
+
+        public static void Toast(string p_title, string p_msg, string p_params = null)
+        {
+            BgJob.Toast(p_title, p_msg, p_params);
+        }
     }
 }
