@@ -17,6 +17,8 @@ namespace Dt.Shell
 {
     sealed partial class App : Application
     {
+        string _params;
+
         public App()
         {
             InitializeComponent();
@@ -24,7 +26,9 @@ namespace Dt.Shell
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch<Stub>(p_args.Arguments, null);
+            string args = string.IsNullOrEmpty(_params) ? p_args.Arguments : _params;
+            _ = Startup.Launch<Stub>(args, null);
+            _params = null;
         }
 
 #if UWP
@@ -44,7 +48,7 @@ namespace Dt.Shell
 
             return true;
         }
-#else
+#elif ANDROID
         public async void ReceiveShare(ShareInfo p_shareInfo)
         {
             await Startup.Launch<Stub>(null, p_shareInfo);
@@ -52,7 +56,16 @@ namespace Dt.Shell
 
         public void ToastStart(string p_params)
         {
-            _ = Startup.Launch<Stub>(p_params, null);
+            if (Kit.Stub != null)
+            {
+                // 非null表示app已启动过，不会再调用 OnLaunched
+                _ = Startup.Launch<Stub>(p_params, null);
+            }
+            else
+            {
+                // 未启动，记录参数提供给 OnLaunched
+                _params = p_params;
+            }
         }
 #endif
     }
