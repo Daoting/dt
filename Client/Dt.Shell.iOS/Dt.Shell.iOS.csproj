@@ -114,9 +114,6 @@
     <None Include="Info.plist">
       <SubType>Designer</SubType>
     </None>
-    <Compile Include="..\Common\Stub.cs">
-      <Link>Stub.cs</Link>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <InterfaceDefinition Include="LaunchScreen.storyboard" />

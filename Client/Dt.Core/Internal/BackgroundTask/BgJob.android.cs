@@ -11,6 +11,7 @@
 using Android.App;
 using Android.Content;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -39,11 +40,13 @@ namespace Dt.Core
         public static async Task Run(IStub p_stub)
         {
             await Task.Delay(5000);
-            Toast("abc", DateTime.Now.ToString(), "123");
         }
 
-        public static void Toast(string p_title, string p_msg, string p_params)
+        public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
+            if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
+                return;
+
             var context = Application.Context;
             if (_manager == null)
             {
@@ -57,18 +60,22 @@ namespace Dt.Core
                 }
             }
 
-            // 设置点击通知栏的动作为启动另外一个广播
+            // 点击通知自定义启动
             Intent intent = new Intent(context, _mainActivity)
                 .SetAction(ToastStart)
-                .AddCategory(Intent.CategoryLauncher)
-                .PutExtra(ToastStart, "{\"WinType\":\"Dt.Sample.SamplesMain, Dt.Sample, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",\"Params\":null,\"ParamsType\":null,\"Title\":\"控件样例\",\"Icon\":\"词典\"}");
+                .AddCategory(Intent.CategoryLauncher);
+            if (p_startInfo != null)
+            {
+                string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
+                intent.PutExtra(ToastStart, json);
+            }
             var pending = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 
             // 一定要设置 channel 和 icon，否则不通知！！！
             Notification notify = new Notification.Builder(context, _channelID)
                 .SetSmallIcon(Resource.Drawable.abc_ic_star_black_48dp)
                 .SetContentTitle(p_title)
-                .SetContentText(p_msg)
+                .SetContentText(p_content)
                 .SetContentIntent(pending)
                 .SetAutoCancel(true)
                 .Build();

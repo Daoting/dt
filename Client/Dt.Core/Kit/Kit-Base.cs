@@ -12,7 +12,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Core;
-using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 #endregion
 
@@ -307,86 +306,6 @@ namespace Dt.Core
         /// PC上：除标题栏和外框的窗口内部高度
         /// </summary>
         public static double ViewHeight => Window.Current.Bounds.Height - SysVisual.StatusBarHeight;
-        #endregion
-
-        #region 系统通知
-        /// <summary>
-        /// 显示系统通知
-        /// </summary>
-        /// <param name="p_content">内容</param>
-        /// <param name="p_viewID">点击时的启动视图</param>
-        /// <param name="p_title">视图标题</param>
-        /// <param name="p_icon">视图图标</param>
-        public static void Toast(string p_content, string p_viewID = null, string p_title = null, string p_icon = null)
-        {
-#if UWP
-            Windows.Data.Xml.Dom.XmlDocument xml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText01);
-            if (!string.IsNullOrEmpty(p_viewID))
-            {
-                string launch = string.Format("<view id=\"{0}\" title=\"{1}\" icon=\"{2}\" />",
-                    p_viewID,
-                    string.IsNullOrEmpty(p_title) ? "无标题" : p_title,
-                    string.IsNullOrEmpty(p_icon) ? "Page" : p_icon);
-                ((Windows.Data.Xml.Dom.XmlElement)xml.FirstChild).SetAttribute("launch", launch);
-            }
-            xml.GetElementsByTagName("text").Item(0).InnerText = p_content;
-            ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(xml));
-#elif IOS
-            throw new NotImplementedException();
-#elif ANDROID
-            throw new NotImplementedException();
-#elif WASM
-            throw new NotImplementedException();
-#endif
-        }
-
-        /// <summary>
-        /// 更新磁贴内容，最多支持四行信息
-        /// </summary>
-        /// <param name="p_msgs"></param>
-        public static void Tile(params string[] p_msgs)
-        {
-#if UWP
-            // 最多支持四行信息！
-            int cnt = p_msgs.Length > 4 ? 4 : p_msgs.Length;
-            if (cnt == 0)
-                return;
-
-            Windows.Data.Xml.Dom.XmlDocument xml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text03);
-            Windows.Data.Xml.Dom.XmlNodeList nodes = xml.GetElementsByTagName("text");
-            for (uint i = 0; i < cnt; i++)
-            {
-                nodes.Item(i).InnerText = p_msgs[i];
-            }
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
-#elif IOS
-            throw new NotImplementedException();
-#elif ANDROID
-            throw new NotImplementedException();
-#elif WASM
-            throw new NotImplementedException();
-#endif
-        }
-
-        /// <summary>
-        /// 更新磁贴数字
-        /// </summary>
-        /// <param name="p_num"></param>
-        public static void Tile(double p_num)
-        {
-#if UWP
-            Windows.Data.Xml.Dom.XmlDocument xml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Block);
-            Windows.Data.Xml.Dom.XmlNodeList nodes = xml.GetElementsByTagName("text");
-            nodes.Item(0).InnerText = p_num.ToString();
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
-#elif IOS
-            throw new NotImplementedException();
-#elif ANDROID
-            throw new NotImplementedException();
-#elif WASM
-            throw new NotImplementedException();
-#endif
-        }
         #endregion
 
         #region 常量

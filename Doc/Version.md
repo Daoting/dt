@@ -32,7 +32,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * Lv顶部增加工具栏，放置排序筛选等
 * Lv 默认筛选对话框
 * android后台服务 
-* android版点击通知栏，根据参数自定义启动 
+* android ios uwp点击通知栏，根据参数自定义启动 
 
 ### 变更 
 * Lv的上下文菜单在Phone模式默认为按钮触发

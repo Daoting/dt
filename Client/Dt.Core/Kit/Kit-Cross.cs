@@ -7,9 +7,11 @@
 #endregion
 
 #region 引用命名
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Xamarin.Essentials;
@@ -186,9 +188,67 @@ namespace Dt.Core
         }
         #endregion
 
-        public static void Toast(string p_title, string p_msg, string p_params = null)
+        #region 系统通知
+        /// <summary>
+        /// 显示系统通知，iOS只有app在后台或关闭时才显示！其他平台始终显示
+        /// </summary>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_content">内容</param>
+        /// <param name="p_startInfo">点击通知的启动参数</param>
+        public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo = null)
         {
-            BgJob.Toast(p_title, p_msg, p_params);
+#if !WASM
+            BgJob.Toast(p_title, p_content, p_startInfo);
+#endif
         }
+
+        /// <summary>
+        /// 更新磁贴内容，最多支持四行信息
+        /// </summary>
+        /// <param name="p_msgs"></param>
+        public static void Tile(params string[] p_msgs)
+        {
+#if UWP
+            // 最多支持四行信息！
+            int cnt = p_msgs.Length > 4 ? 4 : p_msgs.Length;
+            if (cnt == 0)
+                return;
+
+            Windows.Data.Xml.Dom.XmlDocument xml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Text03);
+            Windows.Data.Xml.Dom.XmlNodeList nodes = xml.GetElementsByTagName("text");
+            for (uint i = 0; i < cnt; i++)
+            {
+                nodes.Item(i).InnerText = p_msgs[i];
+            }
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
+#elif IOS
+            throw new NotImplementedException();
+#elif ANDROID
+            throw new NotImplementedException();
+#elif WASM
+            throw new NotImplementedException();
+#endif
+        }
+
+        /// <summary>
+        /// 更新磁贴数字
+        /// </summary>
+        /// <param name="p_num"></param>
+        public static void Tile(double p_num)
+        {
+#if UWP
+            Windows.Data.Xml.Dom.XmlDocument xml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150Block);
+            Windows.Data.Xml.Dom.XmlNodeList nodes = xml.GetElementsByTagName("text");
+            nodes.Item(0).InnerText = p_num.ToString();
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
+#elif IOS
+            throw new NotImplementedException();
+#elif ANDROID
+            throw new NotImplementedException();
+#elif WASM
+            throw new NotImplementedException();
+#endif
+        }
+#endregion
     }
 }

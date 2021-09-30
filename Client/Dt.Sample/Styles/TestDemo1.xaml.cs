@@ -35,11 +35,12 @@ namespace Dt.Sample
 
         void OnTest1(object sender, RoutedEventArgs e)
         {
-
+            Kit.Toast("标题", DateTime.Now.ToString());
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
+            Kit.Toast("标题", DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
         }
     }
 }

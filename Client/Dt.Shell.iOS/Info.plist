@@ -4,8 +4,8 @@
 <dict>
 	<key>CFBundleIdentifier</key>
 	<string>dt.Shell</string>
-  <key>CFBundleDisplayName</key>
-  <string>搬运工</string>
+	<key>CFBundleDisplayName</key>
+	<string>搬运工</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
@@ -69,12 +69,16 @@
 		<dict>
 			<key>LSItemContentTypes</key>
 			<array>
-        <string>public.data</string>
+				<string>public.data</string>
 				<string>public.content</string>
 			</array>
-      <key>LSHandlerRank</key>
-      <string>Alternate</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
 		</dict>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
 	</array>
 </dict>
 </plist>
