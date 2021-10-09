@@ -58,11 +58,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Common\App.xaml.cs" Link="App.xaml.cs" />
-    <Compile Include="..\Common\Stub.cs" Link="Stub.cs" />
-    <Page Include="..\Common\App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <Link>App.xaml</Link>
     </Page>
   </ItemGroup>
 

@@ -9,7 +9,6 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ios  软键盘盖住 TextBox 的问题
 ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
-增加后台通知
 
 
 
@@ -31,7 +30,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * VS插件增加三种框架模板
 * Lv顶部增加工具栏，放置排序筛选等
 * Lv 默认筛选对话框
-* android后台服务 
+* android ios uwp后台服务 
 * android ios uwp点击通知栏，根据参数自定义启动 
 
 ### 变更 
