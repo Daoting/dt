@@ -25,9 +25,9 @@ namespace Dt.Core
     {
         public const string ToastStart = "ToastStart";
 
-        public static async Task Run(IStub p_stub)
+        public static Task Run(IStub p_stub)
         {
-            await Task.Delay(5000);
+            return Task.CompletedTask;
 
         }
 

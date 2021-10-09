@@ -9,9 +9,11 @@
 
 #region 引用命名
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.UI.Notifications;
 #endregion
 
@@ -22,10 +24,66 @@ namespace Dt.Core
     /// </summary>
     public static partial class BgJob
     {
-        public static async Task Run(IStub p_stub)
-        {
-            await Task.Delay(5000);
+        const string _bgTaskName = "TimeTriggeredTask";
+        
+        /// <summary>
+        /// 默认为最小时间间隔15分钟
+        /// </summary>
+        const uint _interval = 15;
 
+        /// <summary>
+        /// 注册后台任务
+        /// </summary>
+        public static void Register()
+        {
+            Task.Run(async () =>
+            {
+                // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
+                string name = Kit.Stub.GetType().AssemblyQualifiedName;
+                if (name != AtState.GetCookie(_stubType))
+                    AtState.SaveCookie(_stubType, name);
+
+                var res = await BackgroundExecutionManager.RequestAccessAsync();
+                if (res == BackgroundAccessStatus.Unspecified
+                    || res == BackgroundAccessStatus.DeniedBySystemPolicy
+                    || res == BackgroundAccessStatus.DeniedByUser)
+                    return;
+
+                try
+                {
+                    var task = (from item in BackgroundTaskRegistration.AllTasks.Values
+                                where item.Name == _bgTaskName
+                                select item).FirstOrDefault();
+                    if (task != null)
+                        return;
+
+                    // 注册后台任务
+                    BackgroundTaskBuilder bd = new BackgroundTaskBuilder();
+                    // 任务名称
+                    bd.Name = _bgTaskName;
+                    // 入口点
+                    bd.TaskEntryPoint = "Dt.Tasks.TimeTriggeredTask";
+                    // 设置触发器，周期运行
+                    bd.SetTrigger(new TimeTrigger(_interval, false));
+                    bd.Register();
+                }
+                catch { }
+            });
+        }
+
+        /// <summary>
+        /// 注销后台任务
+        /// </summary>
+        public static void Unregister()
+        {
+            foreach (var cur in BackgroundTaskRegistration.AllTasks)
+            {
+                if (cur.Value.Name == _bgTaskName)
+                {
+                    cur.Value.Unregister(true);
+                    break;
+                }
+            }
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)

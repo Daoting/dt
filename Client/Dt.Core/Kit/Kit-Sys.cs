@@ -66,7 +66,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取系统存根
         /// </summary>
-        public static IStub Stub { get; private set; }
+        public static IStub Stub { get; internal set; }
 
         /// <summary>
         /// 显示监视窗口

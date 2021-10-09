@@ -64,8 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\App.xaml.cs">
-      <Link>App.xaml.cs</Link>
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainActivity.cs" />
@@ -127,8 +126,7 @@
     </ProjectReference>-->
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\Common\App.xaml">
-      <Link>App.xaml</Link>
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

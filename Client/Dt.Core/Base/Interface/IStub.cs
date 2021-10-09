@@ -41,6 +41,11 @@ namespace Dt.Core
         IList<OmMenu> FixedMenus { get; }
 
         /// <summary>
+        /// 后台任务类型，继承BgTask
+        /// </summary>
+        Type BgTaskType { get; }
+
+        /// <summary>
         /// 系统启动
         /// </summary>
         Task OnStartup();

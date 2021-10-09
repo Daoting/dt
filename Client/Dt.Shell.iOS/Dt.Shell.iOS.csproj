@@ -69,8 +69,7 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\App.xaml.cs">
-      <Link>App.xaml.cs</Link>
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <BundleResource Include="Assets\SplashScreen%402x.png" />
@@ -131,8 +130,7 @@
     <PackageReference Include="GMImagePicker.Xamarin" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\Common\App.xaml">
-      <Link>App.xaml</Link>
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -20,26 +20,16 @@ namespace Dt.Core
 {
     public static partial class BgJob
     {
-        public const string ToastStart = "ToastStart";
+        public const string ActionToast = "Toast";
         const string _channelID = "default";
         static NotificationManager _manager;
         static int _id = 1;
         static Type _mainActivity;
 
-        public static void Init(Type p_mainActivity)
+        public static Task DoWork(IStub p_stub, Type p_mainActivity)
         {
             _mainActivity = p_mainActivity;
-        }
-
-        /// <summary>
-        /// 后台作业运行入口
-        /// 此方法不可使用任何UI和外部变量，保证可独立运行！！！
-        /// </summary>
-        /// <param name="p_stub"></param>
-        /// <returns></returns>
-        public static async Task Run(IStub p_stub)
-        {
-            await Task.Delay(5000);
+            return Run(p_stub);
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
@@ -62,12 +52,12 @@ namespace Dt.Core
 
             // 点击通知自定义启动
             Intent intent = new Intent(context, _mainActivity)
-                .SetAction(ToastStart)
+                .SetAction(ActionToast)
                 .AddCategory(Intent.CategoryLauncher);
             if (p_startInfo != null)
             {
                 string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
-                intent.PutExtra(ToastStart, json);
+                intent.PutExtra(ActionToast, json);
             }
             var pending = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 

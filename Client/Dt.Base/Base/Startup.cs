@@ -86,6 +86,10 @@ namespace Dt.Base
 
             if (p_shareInfo != null)
                 stub.ReceiveShare(p_shareInfo);
+
+#if UWP
+            BgJob.Register();
+#endif
         }
         #endregion
 

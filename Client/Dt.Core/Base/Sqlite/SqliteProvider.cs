@@ -563,6 +563,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 打开Sqlite库，提供给后台任务使用，不自动创建、同步库表结构
+        /// </summary>
+        internal static void OpenDbBackground()
+        {
+            if (_db != null)
+                return;
+
+            var dbName = GetDbName();
+            try
+            {
+                var path = Path.Combine(Kit.DataPath, dbName + ".db");
+                bool exists = File.Exists(path);
+                _db = new SqliteConnectionEx("Data Source=" + path);
+                _db.Open();
+
+                SqliteDbs.All[dbName] = _db;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"打开sqlite库[{dbName}]异常，请重新启动应用！{ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// 关闭Sqlite库
         /// </summary>
         public static void CloseDb()
@@ -574,6 +598,11 @@ namespace Dt.Core
                 SqliteDbs.All.Remove(GetDbName());
             }
         }
+
+        /// <summary>
+        /// 是否已打开当前Sqlite库
+        /// </summary>
+        public static bool IsOpened => _db != null;
 
         protected static string GetDbName()
         {

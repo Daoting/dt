@@ -37,6 +37,8 @@ namespace Dt.Shell.Droid
     {
         // styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
 
+        // 启动调用顺序：Application.OnCreate -> MainActivity.MainActivity -> App.OnLaunched
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -46,9 +48,7 @@ namespace Dt.Shell.Droid
             {
                 case Intent.ActionMain:
                     // 普通启动，不传递参数
-                    // 注册后台服务，后台Worker每20分钟运行一次，系统要求最短间隔15分钟！
-                    var workRequest = PeriodicWorkRequest.Builder.From<PluginWorker>(TimeSpan.FromMinutes(20)).Build();
-                    WorkManager.GetInstance(ApplicationContext).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Replace, workRequest);
+                    // 注册后台服务放在 App.OnLaunched，初始化结束后再注册！
                     break;
 
                 case Intent.ActionSend:
@@ -57,9 +57,9 @@ namespace Dt.Shell.Droid
                         ReceiveShare();
                     break;
 
-                case BgJob.ToastStart:
+                case BgJob.ActionToast:
                     // 点击通知栏后，接收传递参数
-                    var startInfo = it.GetStringExtra(BgJob.ToastStart);
+                    var startInfo = it.GetStringExtra(BgJob.ActionToast);
                     if (!string.IsNullOrEmpty(startInfo))
                         ((Dt.Shell.App)Windows.UI.Xaml.Application.Current).ToastStart(startInfo);
                     break;
@@ -121,7 +121,6 @@ namespace Dt.Shell.Droid
 
             // 确保 Permissions.RequestAsync 调用时正常
             Xamarin.Essentials.Platform.Init(this);
-            BgJob.Init(typeof(MainActivity));
         }
     }
 
@@ -134,7 +133,11 @@ namespace Dt.Shell.Droid
 
         public override Result DoWork()
         {
-            BgJob.Run(new Stub()).Wait();
+            try
+            {
+                BgJob.DoWork(new Stub(), typeof(MainActivity)).Wait();
+            }
+            catch { }
             return Result.InvokeSuccess();
         }
     }
