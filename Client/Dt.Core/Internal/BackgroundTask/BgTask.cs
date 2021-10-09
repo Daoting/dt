@@ -36,7 +36,7 @@ namespace Dt.Core
         {
             if (Kit.IsLogon)
             {
-                Kit.Toast("后台", "已登录");
+                //Kit.Toast("后台", "已登录");
                 return true;
             }
 
@@ -55,7 +55,7 @@ namespace Dt.Core
                 // 登录成功
                 if (result.IsSuc)
                 {
-                    Kit.Toast("后台", "登录成功");
+                    //Kit.Toast("后台", "登录成功");
                     Kit.InitUser(result);
                     return true;
                 }

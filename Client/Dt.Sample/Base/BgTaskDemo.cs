@@ -21,15 +21,20 @@ namespace Dt.Sample
     /// </summary>
     public class BgTaskDemo : BgTask
     {
-        /// <summary>
-        /// 后台任务入口
-        /// </summary>
-        public override async Task Run()
+        //public override async Task Run()
+        //{
+        //    string tpName = AtState.GetCookie("LoginPhone");
+        //    var cfg = await new UnaryRpc("cm", "ModelMgr.GetConfig").Call<Dict>();
+        //    await Login();
+        //    Kit.Toast(
+        //        "样例",
+        //        tpName + "\r\n" + cfg.Date("now").ToString(),
+        //        new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+        //}
+
+        public override Task Run()
         {
-            string tpName = AtState.GetCookie("LoginPhone");
-            var cfg = await new UnaryRpc("cm", "ModelMgr.GetConfig").Call<Dict>();
-            await Login();
-            Kit.Toast("样例", tpName + "\r\n" + cfg.Date("now").ToString());
+            return Task.CompletedTask;
         }
     }
 

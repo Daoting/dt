@@ -42,7 +42,8 @@ namespace Dt.Shell
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-            UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(20 * 60);
+            // 设置 Background Fetch 最小时间间隔，10-15分钟不定
+            UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
 
             if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
@@ -52,6 +53,21 @@ namespace Dt.Shell
                 application.RegisterUserNotificationSettings(ns);
             }
             return base.FinishedLaunching(application, launchOptions);
+        }
+
+        public async override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            Console.WriteLine("启动后台任务");
+            try
+            {
+                var iOSTaskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { Console.WriteLine("后台运行超时"); });
+                await BgJob.Run(new Stub());
+                UIApplication.SharedApplication.EndBackgroundTask(iOSTaskId);
+            }
+            catch
+            { }
+
+            completionHandler(UIBackgroundFetchResult.NewData);
         }
 
         public override void ReceivedLocalNotification(UIApplication application, UILocalNotification notification)
@@ -70,22 +86,6 @@ namespace Dt.Shell
 
             // 桌面图标的提醒数字
             UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
-        }
-
-        public async override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
-        {
-            try
-            {
-                var iOSTaskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { Console.WriteLine("PerformFetch..."); });
-                Console.WriteLine("PerformFetch...");
-                await BgJob.Run(new Stub());
-                Kit.Toast("标题", DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(Sample.LvHome).AssemblyQualifiedName, Title = "列表" });
-                UIApplication.SharedApplication.EndBackgroundTask(iOSTaskId);
-            }
-            catch
-            { }
-
-            completionHandler(UIBackgroundFetchResult.NewData);
         }
     }
 }

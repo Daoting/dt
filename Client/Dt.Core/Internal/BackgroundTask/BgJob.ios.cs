@@ -25,12 +25,6 @@ namespace Dt.Core
     {
         public const string ToastStart = "ToastStart";
 
-        public static Task Run(IStub p_stub)
-        {
-            return Task.CompletedTask;
-
-        }
-
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
@@ -56,11 +50,11 @@ namespace Dt.Core
             {
                 if (error != null)
                 {
-                    Console.WriteLine($"Error: {error.LocalizedDescription ?? ""}");
+                    Console.WriteLine($"推送通知Error: {error.LocalizedDescription ?? ""}");
                 }
                 else
                 {
-                    Console.WriteLine("Scheduled...");
+                    Console.WriteLine("已推送本地通知");
                 }
             });
         }

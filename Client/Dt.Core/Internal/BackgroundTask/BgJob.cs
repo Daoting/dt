@@ -28,7 +28,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task Run(IStub p_stub)
         {
-            Toast("后台", DateTime.Now.ToString(), null);
+            //Toast("后台", DateTime.Now.ToString(), null);
             OpenStateDb();
 
             // android ios已传stub
