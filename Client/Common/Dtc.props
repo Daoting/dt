@@ -1,7 +1,9 @@
 <Project ToolsVersion="Current">
   <PropertyGroup>
+    <!-- 生成Dt.Client包时为true -->
+    <GeneratePackage>false</GeneratePackage>  
     <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Uwp.sln' ">uap10.0.18362</TargetFramework>
-     <!-- 加uap为xaml智能提示 -->
+    <!-- 加uap为xaml智能提示 -->
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid11.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;net5.0</TargetFrameworks>
@@ -34,16 +36,26 @@
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(GeneratePackage)' != 'true' ">
     <PackageReference Include="Dt.Cells" Version="2.0.0" />
-    <!--修改Excel或Chart时引用项目-->
-    <!--<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+  </ItemGroup> 
+
+  <ItemGroup Condition="'$(GeneratePackage)' == 'true' ">
+    <!--生成Dt.Client包、修改Excel或Chart时-->
+    <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" PrivateAssets="all" />-->
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(GeneratePackage)' == 'true' and '$(TargetFramework)' == 'uap10.0.18362' ">
+    <ProjectReference Include="..\Dt.Tasks\Dt.Tasks.csproj" PrivateAssets="all" />
+  </ItemGroup>
+  
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362' ">
     <PackageReference Include="Uno.UI" Version="3.10.11" />
   </ItemGroup>
