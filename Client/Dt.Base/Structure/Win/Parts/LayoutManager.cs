@@ -1037,13 +1037,17 @@ namespace Dt.Base.Docking
             {
                 if (item is Tabs tabs)
                 {
-                    foreach (var obj in tabs.Items)
+                    foreach (var tab in tabs.Items.OfType<Tab>())
                     {
-                        if (obj is Tab tab && !string.IsNullOrEmpty(tab.Title))
+                        string title = tab.Title;
+                        if (string.IsNullOrEmpty(title))
                         {
-                            tab.OwnWin = _owner;
-                            _tabs[tab.Title] = tab;
+                            // Tab无标题时内部生成id代替标题，id每次不同因此无法加载历史布局！
+                            title = Kit.NewGuid.Substring(0, 6);
+                            tab.Title = title;
                         }
+                        tab.OwnWin = _owner;
+                        _tabs[title] = tab;
                     }
                 }
                 else if (item is IPaneList child)

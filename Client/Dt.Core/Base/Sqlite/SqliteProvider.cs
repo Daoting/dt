@@ -565,7 +565,7 @@ namespace Dt.Core
         /// <summary>
         /// 打开Sqlite库，提供给后台任务使用，不自动创建、同步库表结构
         /// </summary>
-        internal static void OpenDbBackground()
+        public static void OpenDbBackground()
         {
             if (_db != null)
                 return;
