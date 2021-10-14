@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Dt
@@ -101,7 +102,7 @@ namespace Dt
                     txt = txt.Replace(item.Key, item.Value);
                 }
 
-                using (var writer = new StreamWriter(File.Open(p_filePath, FileMode.Create, FileAccess.Write)))
+                using (var writer = new StreamWriter(File.Open(p_filePath, FileMode.Create, FileAccess.Write), Encoding.UTF8))
                 {
                     writer.Write(txt);
                 }

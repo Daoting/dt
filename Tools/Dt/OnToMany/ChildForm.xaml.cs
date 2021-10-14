@@ -39,7 +39,7 @@ namespace $rootnamespace$
             _parentID = p_parentID;
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$childcls$Obj>("$childtitle$-编辑", new { id = p_id });
+                _fv.Data = await $agent$.First<$childcls$Obj>("$childtitle$-编辑", new { id = p_id });
             }
             else
             {
@@ -50,7 +50,7 @@ namespace $rootnamespace$
         async void Create()
         {
             _fv.Data = new $childcls$Obj(
-                ID: await AtCm.NewID(),
+                ID: await $agent$.NewID(),
                 ParentID: _parentID);
         }
 
@@ -62,7 +62,7 @@ namespace $rootnamespace$
         async void OnSave(object sender, Mi e)
         {
             var d = _fv.Data.To<$childcls$Obj>();
-            if (await AtCm.Save(d))
+            if (await $agent$.Save(d))
             {
                 Result = true;
             }
@@ -86,7 +86,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await $agent$.Delete(d))
             {
                 Result = true;
                 _fv.Data = null;

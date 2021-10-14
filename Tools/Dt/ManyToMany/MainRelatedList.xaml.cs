@@ -47,7 +47,7 @@ namespace $rootnamespace$
 
         async void Query()
         {
-            _lv.Data = await AtCm.Query<$relatedcls$Obj>("$maintitle$-关联$relatedtitle$", new { $maincls$id = _id });
+            _lv.Data = await $agent$.Query<$relatedcls$Obj>("$maintitle$-关联$relatedtitle$", new { $maincls$id = _id });
         }
 
         void OnAdd(object sender, Mi e)

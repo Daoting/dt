@@ -57,7 +57,7 @@ namespace Dt
             this._ns.Location = new System.Drawing.Point(187, 7);
             this._ns.Name = "_ns";
             this._ns.Size = new System.Drawing.Size(269, 21);
-            this._ns.TabIndex = 17;
+            this._ns.TabIndex = 10;
             // 
             // label1
             // 
@@ -74,7 +74,7 @@ namespace Dt
             this._cls.Location = new System.Drawing.Point(187, 27);
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
-            this._cls.TabIndex = 19;
+            this._cls.TabIndex = 11;
             // 
             // _btnOK
             // 
@@ -106,7 +106,7 @@ namespace Dt
             this._cb.Location = new System.Drawing.Point(187, 67);
             this._cb.Name = "_cb";
             this._cb.Size = new System.Drawing.Size(269, 20);
-            this._cb.TabIndex = 29;
+            this._cb.TabIndex = 13;
             // 
             // label3
             // 
@@ -123,7 +123,7 @@ namespace Dt
             this._title.Location = new System.Drawing.Point(187, 47);
             this._title.Name = "_title";
             this._title.Size = new System.Drawing.Size(269, 21);
-            this._title.TabIndex = 31;
+            this._title.TabIndex = 12;
             // 
             // label4
             // 

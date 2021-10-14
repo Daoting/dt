@@ -68,7 +68,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await $agent$.Delete(d))
                 Query();
         }
 

@@ -17,10 +17,11 @@ namespace Dt
 
         private void _btnOK_Click(object sender, EventArgs e)
         {
-            string ns, mainCls, mainTitle, bClss, bTitles;
+            string ns, agent, mainCls, mainTitle, bClss, bTitles;
             try
             {
                 ns = Kit.GetText(_ns);
+                agent = Kit.GetText(_agentName);
                 mainCls = Kit.GetText(_clsa);
                 mainTitle = Kit.GetText(_clsaTitle);
                 bClss = Kit.GetText(_clsb);
@@ -43,6 +44,7 @@ namespace Dt
             var dt = new Dictionary<string, string>
                 {
                     {"$rootnamespace$", ns },
+                    {"$agent$", agent },
                     {"$maincls$", mainCls },
                     {"$maintitle$", mainTitle },
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
@@ -115,7 +117,7 @@ namespace Dt
 
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.{cs}.cs")))
             {
-                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", mainTitle);
+                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", mainTitle).Replace("$agent$", agent);
             }
             Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), "Dt.ManyToMany.MainList.xaml.cs", dt);
 

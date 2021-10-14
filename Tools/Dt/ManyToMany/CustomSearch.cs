@@ -18,7 +18,7 @@
         {
             if (_query == null)
             {
-                _lv.Data = await AtCm.Query<$maincls$Obj>("$maintitle$-全部");
+                _lv.Data = await $agent$.Query<$maincls$Obj>("$maintitle$-全部");
             }
             else
             {

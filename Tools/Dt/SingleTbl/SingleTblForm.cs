@@ -18,10 +18,11 @@ namespace Dt
 
         private void _btnOK_Click(object sender, EventArgs e)
         {
-            string ns, entity, title;
+            string ns, agent, entity, title;
             try
             {
                 ns = Kit.GetText(_nameSpace);
+                agent = Kit.GetText(_agentName);
                 entity = Kit.GetText(_entityName);
                 title = Kit.GetText(_entityTitle);
             }
@@ -34,6 +35,7 @@ namespace Dt
             var dt = new Dictionary<string, string>
                 {
                     {"$rootnamespace$", ns },
+                    {"$agent$", agent },
                     {"$entityname$", entity },
                     {"$entitytitle$", title },
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
@@ -74,7 +76,7 @@ namespace Dt
 
                 using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.{listSearchCs}.cs")))
                 {
-                    dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", title).Replace("$entityname$", entity);
+                    dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", title).Replace("$entityname$", entity).Replace("$agent$", agent);
                 }
                 Kit.WritePrjFile(Path.Combine(path, $"{entity}List.xaml.cs"), "Dt.SingleTbl.EntityList.xaml.cs", dt);
             }

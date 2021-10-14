@@ -36,7 +36,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$entityname$Obj>("$entitytitle$-编辑", new { id = p_id });
+                _fv.Data = await $agent$.First<$entityname$Obj>("$entitytitle$-编辑", new { id = p_id });
             }
             else
             {
@@ -52,7 +52,7 @@ namespace $rootnamespace$
         async void Create()
         {
             _fv.Data = new $entityname$Obj(
-                ID: await AtCm.NewID());
+                ID: await $agent$.NewID());
         }
 
         void OnSave(object sender, Mi e)
@@ -68,7 +68,7 @@ namespace $rootnamespace$
         async void Save()
         {
             var d = _fv.Data.To<$entityname$Obj>();
-            if (await AtCm.Save(d))
+            if (await $agent$.Save(d))
             {
                 _win.List.Update();
             }

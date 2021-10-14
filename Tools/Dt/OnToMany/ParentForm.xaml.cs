@@ -36,7 +36,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
+                _fv.Data = await $agent$.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
                 UpdateRelated(p_id);
             }
             else
@@ -54,7 +54,7 @@ namespace $rootnamespace$
         async void Create()
         {
             _fv.Data = new $maincls$Obj(
-                ID: await AtCm.NewID());
+                ID: await $agent$.NewID());
 
             ClearRelated();
         }
@@ -73,7 +73,7 @@ namespace $rootnamespace$
         {
             var d = _fv.Data.To<$maincls$Obj>();
             bool isNew = d.IsAdded;
-            if (await AtCm.Save(d))
+            if (await $agent$.Save(d))
             {
                 _win?.List.Update();
                 Result = true;
@@ -102,7 +102,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await $agent$.Delete(d))
             {
                 Result = true;
                 Clear();

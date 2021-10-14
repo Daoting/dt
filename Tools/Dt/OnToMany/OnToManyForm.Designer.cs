@@ -46,6 +46,8 @@ namespace Dt
             this.label4 = new System.Windows.Forms.Label();
             this._cbWin = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
+            this._agentName = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -63,12 +65,12 @@ namespace Dt
             this._nameSpace.Location = new System.Drawing.Point(187, 7);
             this._nameSpace.Name = "_nameSpace";
             this._nameSpace.Size = new System.Drawing.Size(269, 21);
-            this._nameSpace.TabIndex = 17;
+            this._nameSpace.TabIndex = 10;
             // 
             // label1
             // 
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(12, 27);
+            this.label1.Location = new System.Drawing.Point(12, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
@@ -77,15 +79,15 @@ namespace Dt
             // 
             // _clsa
             // 
-            this._clsa.Location = new System.Drawing.Point(187, 27);
+            this._clsa.Location = new System.Drawing.Point(187, 47);
             this._clsa.Name = "_clsa";
             this._clsa.Size = new System.Drawing.Size(269, 21);
-            this._clsa.TabIndex = 19;
+            this._clsa.TabIndex = 12;
             // 
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(12, 47);
+            this.label3.Location = new System.Drawing.Point(12, 67);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(176, 21);
             this.label3.TabIndex = 20;
@@ -94,14 +96,14 @@ namespace Dt
             // 
             // _clsaTitle
             // 
-            this._clsaTitle.Location = new System.Drawing.Point(187, 47);
+            this._clsaTitle.Location = new System.Drawing.Point(187, 67);
             this._clsaTitle.Name = "_clsaTitle";
             this._clsaTitle.Size = new System.Drawing.Size(269, 21);
-            this._clsaTitle.TabIndex = 21;
+            this._clsaTitle.TabIndex = 13;
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 201);
+            this._btnOK.Location = new System.Drawing.Point(381, 249);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 22;
@@ -113,7 +115,7 @@ namespace Dt
             // 
             this._info.AutoSize = true;
             this._info.ForeColor = System.Drawing.Color.Black;
-            this._info.Location = new System.Drawing.Point(12, 165);
+            this._info.Location = new System.Drawing.Point(12, 185);
             this._info.Name = "_info";
             this._info.Size = new System.Drawing.Size(137, 12);
             this._info.TabIndex = 23;
@@ -126,15 +128,15 @@ namespace Dt
             this._cbSearch.Items.AddRange(new object[] {
             "通用搜索面板",
             "自定义搜索面板"});
-            this._cbSearch.Location = new System.Drawing.Point(187, 107);
+            this._cbSearch.Location = new System.Drawing.Point(187, 127);
             this._cbSearch.Name = "_cbSearch";
             this._cbSearch.Size = new System.Drawing.Size(269, 20);
-            this._cbSearch.TabIndex = 40;
+            this._cbSearch.TabIndex = 16;
             // 
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(12, 107);
+            this.label6.Location = new System.Drawing.Point(12, 127);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(176, 21);
             this.label6.TabIndex = 39;
@@ -143,15 +145,15 @@ namespace Dt
             // 
             // _clsbTitle
             // 
-            this._clsbTitle.Location = new System.Drawing.Point(187, 87);
+            this._clsbTitle.Location = new System.Drawing.Point(187, 107);
             this._clsbTitle.Name = "_clsbTitle";
             this._clsbTitle.Size = new System.Drawing.Size(269, 21);
-            this._clsbTitle.TabIndex = 36;
+            this._clsbTitle.TabIndex = 15;
             // 
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(12, 87);
+            this.label5.Location = new System.Drawing.Point(12, 107);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(176, 21);
             this.label5.TabIndex = 38;
@@ -160,15 +162,15 @@ namespace Dt
             // 
             // _clsb
             // 
-            this._clsb.Location = new System.Drawing.Point(187, 67);
+            this._clsb.Location = new System.Drawing.Point(187, 87);
             this._clsb.Name = "_clsb";
             this._clsb.Size = new System.Drawing.Size(269, 21);
-            this._clsb.TabIndex = 35;
+            this._clsb.TabIndex = 14;
             // 
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(12, 67);
+            this.label4.Location = new System.Drawing.Point(12, 87);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(176, 21);
             this.label4.TabIndex = 37;
@@ -182,26 +184,46 @@ namespace Dt
             this._cbWin.Items.AddRange(new object[] {
             "窗口三栏，左侧父列表，主区父表单，右侧子列表",
             "窗口两栏，左侧父列表，右侧子列表"});
-            this._cbWin.Location = new System.Drawing.Point(187, 126);
+            this._cbWin.Location = new System.Drawing.Point(187, 146);
             this._cbWin.Name = "_cbWin";
             this._cbWin.Size = new System.Drawing.Size(269, 20);
-            this._cbWin.TabIndex = 42;
+            this._cbWin.TabIndex = 17;
             // 
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Location = new System.Drawing.Point(12, 126);
+            this.label7.Location = new System.Drawing.Point(12, 146);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(176, 21);
             this.label7.TabIndex = 41;
             this.label7.Text = "窗口布局";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // _agentName
+            // 
+            this._agentName.Location = new System.Drawing.Point(187, 27);
+            this._agentName.Name = "_agentName";
+            this._agentName.Size = new System.Drawing.Size(269, 21);
+            this._agentName.TabIndex = 11;
+            this._agentName.Text = "AtLob";
+            // 
+            // label8
+            // 
+            this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label8.Location = new System.Drawing.Point(12, 27);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(176, 21);
+            this.label8.TabIndex = 43;
+            this.label8.Text = "代理服务";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // OnToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 240);
+            this.ClientSize = new System.Drawing.Size(473, 281);
+            this.Controls.Add(this._agentName);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this._cbWin);
             this.Controls.Add(this.label7);
             this.Controls.Add(this._cbSearch);
@@ -248,5 +270,7 @@ namespace Dt
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox _cbWin;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox _agentName;
+        private System.Windows.Forms.Label label8;
     }
 }

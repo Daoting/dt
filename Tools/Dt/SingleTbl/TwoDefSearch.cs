@@ -23,11 +23,11 @@
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-全部");
+                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-全部");
             }
             else
             {
-                _lv.Data = await AtCm.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
             }
         }
         #endregion

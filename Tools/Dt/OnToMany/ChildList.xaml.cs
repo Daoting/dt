@@ -46,7 +46,7 @@ namespace $rootnamespace$
 
         async void Query()
         {
-            _lv.Data = await AtCm.Query<$childcls$Obj>("$maintitle$-关联$childtitle$", new { ParentID = _id });
+            _lv.Data = await $agent$.Query<$childcls$Obj>("$maintitle$-关联$childtitle$", new { ParentID = _id });
         }
 
         void OnAdd(object sender, Mi e)
@@ -79,7 +79,7 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await $agent$.Delete(d))
                 Query();
         }
 
