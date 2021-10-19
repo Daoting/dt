@@ -156,21 +156,23 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 切换数据源时，调整所有分组行和数据行
         /// </summary>
-        /// <param name="p_existGroup">是否有分组行</param>
-        internal void OnRowsChanged(bool p_existGroup)
+        internal void OnRowsChanged()
         {
             if (_owner.IsVir)
             {
-                if (p_existGroup || !_initVirRow)
-                {
-                    // 含分组 或 第一次加载数据源时需重绘
-                    LoadVirRows();
-                }
-                else
-                {
-                    // 无分组时只需重新测量布局
-                    InvalidateMeasure();
-                }
+                // 为避免布局错误统一重绘！
+                LoadVirRows();
+
+                //if (p_existGroup || !_initVirRow)
+                //{
+                //    // 含分组 或 第一次加载数据源时需重绘
+                //    LoadVirRows();
+                //}
+                //else
+                //{
+                //    // 无分组时只需重新测量布局
+                //    InvalidateMeasure();
+                //}
             }
             else
             {
@@ -189,16 +191,19 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
             {
-                if (!_initVirRow)
-                {
-                    // 第一次加载数据源时需重绘
-                    LoadVirRows();
-                }
-                else
-                {
-                    // 只需重新测量布局
-                    InvalidateMeasure();
-                }
+                // 为避免布局错误统一重绘！
+                LoadVirRows();
+
+                //if (!_initVirRow)
+                //{
+                //    // 第一次加载数据源时需重绘
+                //    LoadVirRows();
+                //}
+                //else
+                //{
+                //    // 只需重新测量布局
+                //    InvalidateMeasure();
+                //}
             }
             else
             {
@@ -222,8 +227,8 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
             {
-                // 只需重新测量布局
-                InvalidateMeasure();
+                // 为避免布局错误统一重绘！
+                LoadVirRows();
             }
             else
             {

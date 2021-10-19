@@ -302,10 +302,9 @@ namespace Dt.Base
         /// <returns></returns>
         static UIElement CreateCellUI(Cell p_dc, ICellUI p_cellUI)
         {
-            TextBlock tb;
             if (p_dc.Type == typeof(string))
             {
-                tb = new TextBlock
+                var tb = new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<string>(),
@@ -316,88 +315,84 @@ namespace Dt.Base
 
             if (p_dc.Type == typeof(int) || p_dc.Type == typeof(long) || p_dc.Type == typeof(short))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<string>(),
                     TextAlignment = TextAlignment.Right,
                 };
-                return tb;
             }
 
             if (p_dc.Type == typeof(double) || p_dc.Type == typeof(float))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<double>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
-                return tb;
             }
 
             if (p_dc.Type == typeof(bool))
             {
                 // 字符模拟CheckBox
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<bool>() ? "\uE059" : "\uE057",
                     FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
-                return tb;
             }
 
             if (p_dc.Type == typeof(DateTime))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_dc.GetVal<DateTime>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
-                return tb;
             }
 
             if (p_dc.Type == typeof(Icons))
             {
                 // 图标
-                tb = new TextBlock
+                var txt = Res.GetIconChar(p_dc.GetVal<Icons>());
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = Res.GetIconChar(p_dc.GetVal<Icons>()),
+                    Text = txt,
                     FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
-                return tb;
             }
 
             if (p_dc.Type == typeof(Color))
             {
-                var rc = new Rectangle
+                return new Rectangle
                 {
                     Fill = new SolidColorBrush(p_dc.GetVal<Color>()),
                     IsHitTestVisible = false,
                 };
-                return rc;
             }
 
             if (p_dc.Type == typeof(SolidColorBrush))
             {
-                var rc = new Rectangle
+                return new Rectangle
                 {
                     Fill = p_dc.GetVal<SolidColorBrush>(),
                     IsHitTestVisible = false,
                 };
-                return rc;
             }
 
-            tb = new TextBlock
+            return new TextBlock
             {
                 Style = Res.LvTextBlock,
                 Text = p_dc.GetVal<string>(),
             };
-            return tb;
         }
 
         /// <summary>
@@ -409,10 +404,9 @@ namespace Dt.Base
         /// <returns></returns>
         static UIElement CreatePropertyUI(PropertyInfo p_pi, object p_val, ICellUI p_cellUI)
         {
-            TextBlock tb;
             if (p_pi.PropertyType == typeof(string))
             {
-                tb = new TextBlock
+                var tb = new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = (string)p_val,
@@ -423,88 +417,84 @@ namespace Dt.Base
 
             if (p_pi.PropertyType == typeof(int) || p_pi.PropertyType == typeof(long) || p_pi.PropertyType == typeof(short))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = p_val.ToString(),
                     TextAlignment = TextAlignment.Right,
                 };
-                return tb;
             }
 
             if (p_pi.PropertyType == typeof(double) || p_pi.PropertyType == typeof(float))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = ((double)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
                     TextAlignment = TextAlignment.Right,
                 };
-                return tb;
             }
 
             if (p_pi.PropertyType == typeof(bool))
             {
                 // 字符模拟CheckBox
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = (bool)p_val ? "\uE059" : "\uE057",
                     FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
-                return tb;
             }
 
             if (p_pi.PropertyType == typeof(DateTime))
             {
-                tb = new TextBlock
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
                     Text = ((DateTime)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
                 };
-                return tb;
             }
 
             if (p_pi.PropertyType == typeof(Icons))
             {
                 // 图标
-                tb = new TextBlock
+                var txt = Res.GetIconChar((Icons)p_val);
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
+                return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = Res.GetIconChar((Icons)p_val),
+                    Text = txt,
                     FontFamily = Res.IconFont,
                     TextAlignment = TextAlignment.Center,
                 };
-                return tb;
             }
 
             if (p_pi.PropertyType == typeof(Color))
             {
-                var rc = new Rectangle
+                return new Rectangle
                 {
                     Fill = new SolidColorBrush((Color)p_val),
                     IsHitTestVisible = false,
                 };
-                return rc;
             }
 
             if (p_pi.PropertyType == typeof(SolidColorBrush))
             {
-                var rc = new Rectangle
+                return new Rectangle
                 {
                     Fill = (SolidColorBrush)p_val,
                     IsHitTestVisible = false,
                 };
-                return rc;
             }
 
-            tb = new TextBlock
+            return new TextBlock
             {
                 Style = Res.LvTextBlock,
                 Text = p_val.ToString(),
             };
-            return tb;
         }
 
         /// <summary>
@@ -527,18 +517,23 @@ namespace Dt.Base
         #region 自定义UI
         TextBlock CreateIcon(object p_val)
         {
-            var tb = new TextBlock
+            string txt;
+            if (p_val is int || p_val is byte)
+                txt = Res.GetIconChar((Icons)p_val);
+            else
+                txt = Res.ParseIconChar(p_val.ToString());
+
+            // 无字符，返回null
+            if (string.IsNullOrEmpty(txt))
+                return null;
+
+            return new TextBlock
             {
                 Style = Res.LvTextBlock,
+                Text = txt,
                 FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
             };
-
-            if (p_val is int || p_val is byte)
-                tb.Text = Res.GetIconChar((Icons)p_val);
-            else
-                tb.Text = Res.ParseIconChar(p_val.ToString());
-            return tb;
         }
 
         TextBlock CreateCheckBox(object p_val)
