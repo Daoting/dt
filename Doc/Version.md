@@ -10,11 +10,21 @@ ios  软键盘盖住 TextBox 的问题
 ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
 
+## Release 1.9.10 
+### 功能 
+* 增加NavList，替换原有的MainInfoLv方式
+
+### 变更 
+
+### Bug修改  
+* Lv 切换数据源、删除行后的布局bug
+
+
 
 
 ## Release 1.9.9 
 ### 功能 
-*  实体类中增加enum的支持，包括sql查询、序列化反序列化 
+* 实体类中增加enum的支持，包括sql查询、序列化反序列化 
 * Dlg修改为独立遮罩，无遮罩时也可控制是否允许将点击事件传递到下层对话框 
 * Entity的OnSaving  OnDeleting 返回值Task，不再支持void，因服务端通过EntityAccess 时异常内容无法获取
 * MainInfo增加Cache属性，实现INotifyPropertyChanged
@@ -22,7 +32,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * 手机横竖屏不支持UI自适应，始终为PhoneUI模式 
 * Lv分组模板统计功能 
 * CTip增加Click事件
-*  两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
+* 两UI模式切换后老窗口能自启动， Stub中可设置Startup.AutoStartOnce 
 * Dlg增加TargetOverlap 布局
 * 增加Mv控件，能够放在Tab中支持内部导航
 * 调整Dlg、ToolWindow样式 
@@ -52,7 +62,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * CText内部的TextBox的清空按钮无效，输入法
 * ios wasm 中 Fv的 CText 长文本回车跳格的问题
 * wasm版Chat的子Canvas不绘制的bug，uno已解决
-*  两UI模式切换事件SysVisual.ViewWidth值不对
+* 两UI模式切换事件SysVisual.ViewWidth值不对
 * Menu在手机大字体模式显示不全
 * SysVisual.ViewWidth 采用 Window.Bounds.Width
 

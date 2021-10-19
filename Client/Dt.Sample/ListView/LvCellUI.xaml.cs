@@ -53,8 +53,8 @@ namespace Dt.Sample
                 {
                     scale = rand.NextDouble(),
                     date = birth.AddMonths(rand.Next(100)),
-                    Icon = i + 1,
-                    IconName = (Icons)(i + 1),
+                    Icon = i,
+                    IconName = (Icons)i,
                     CheckBox = (i % 2 == 0),
                     Image = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]",
                     File = (i % 2 == 0) ? "[[\"photo/项目文档.docx\",\"项目文档\",\"docx文件\",13071,\"daoting\",\"2020-03-13 10:37\"]]" : "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"],[\"photo/profilephoto.jpg\", \"头像\", \".jpg\", 1140, \"hdt\", null],[\"photo/mov1.jpg\", \"头像\", \".jpg\", 1140, \"hdt\", null],[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]",

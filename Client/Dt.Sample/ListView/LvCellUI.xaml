@@ -20,18 +20,24 @@
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
-            <StackPanel Padding="10" Width="300" Spacing="10">
-                <a:Dot ID="scale" Format="n4" />
-                <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
-                <a:Dot ID="Icon" UI="Icon" />
-                <a:Dot ID="IconName" />
-                <a:Dot ID="CheckBox" UI="CheckBox" />
-                <a:Dot ID="Image" UI="Image"  />
-                <a:Dot ID="File" UI="File" />
-                <a:Dot ID="enum1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" />
-                <a:Dot ID="enum2" />
-                <a:Dot ID="AutoDate" UI="AutoDate" />
-                <a:Dot ID="Warning" UI="Warning" />
+            <StackPanel Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="scale" Format="n4" />
+                    <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
+                    <a:Dot ID="Icon" UI="Icon" />
+                    <a:Dot ID="IconName" />
+                    <a:Dot ID="CheckBox" UI="CheckBox" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="Image" UI="Image" Height="50" />
+                    <a:Dot ID="File" UI="File" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="enum1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" />
+                    <a:Dot ID="enum2" />
+                    <a:Dot ID="AutoDate" UI="AutoDate" />
+                    <a:Dot ID="Warning" UI="Warning" />
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </a:Win.Resources>

@@ -28,11 +28,20 @@ namespace Dt.Base.ListView
             if (vi != null && pre != null)
             {
                 result = vi.GetCellUI(pre);
-                if (result == null && parameter is Dot dot)
+                if (parameter is Dot dot)
                 {
-                    // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
-                    // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
-                    dot.Visibility = Visibility.Collapsed;
+                    if (result == null)
+                    {
+                        // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
+                        // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
+                        if (dot.Visibility == Visibility.Visible)
+                            dot.Visibility = Visibility.Collapsed;
+                    }
+                    else if (dot.Visibility == Visibility.Collapsed)
+                    {
+                        // 数据变化时重新可见
+                        dot.Visibility = Visibility.Visible;
+                    }
                 }
             }
             return result;

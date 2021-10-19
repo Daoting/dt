@@ -23,19 +23,19 @@ namespace Dt.Sample
         public LvHome()
         {
             InitializeComponent();
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.汉堡, "基础视图", typeof(LvViewBase), "三类视图，两种数据源，三种选择模式，支持分组"),
-                new MainInfo(Icons.分组, "表格视图", typeof(LvTable), "传统二维表格"),
-                new MainInfo(Icons.全选, "列表视图", typeof(LvList), "水平填充式列表，只垂直滚动"),
-                new MainInfo(Icons.日历, "磁贴视图", typeof(LvTile), "平铺式磁贴，一行多格，只垂直滚动"),
-                new MainInfo(Icons.书籍, "内置单元格UI", typeof(LvCellUI), "适用于某列为固定UI类型的情况"),
-                new MainInfo(Icons.修改, "自定义单元格UI", typeof(LvViewEx), "定义行样式、扩展列"),
-                new MainInfo(Icons.划卡, "行模板选择", typeof(LvListSelector), "根据数据动态选择行模板"),
-                new MainInfo(Icons.划卡, "动态行内容", typeof(LvRowView), "根据数据动态生成行UI内容"),
-                new MainInfo(Icons.录音, "分组模板", typeof(LvGroupTemplate), "设置分组模板"),
-                new MainInfo(Icons.公告, "上下文菜单", typeof(LvContextMenu), "触发上下文菜单的方式：右键、悬停、点击标识按钮"),
-                new MainInfo(Icons.乐谱, "外部ScrollViewer", typeof(LvInScrollViewer), "外部嵌套ScrollViewer，和其他元素一起滚动"),
+                new Nav("基础视图", typeof(LvViewBase), Icons.汉堡) { Desc = "三类视图，两种数据源，三种选择模式，支持分组" },
+                new Nav("表格视图", typeof(LvTable), Icons.分组) { Desc = "传统二维表格" },
+                new Nav("列表视图", typeof(LvList), Icons.全选) { Desc = "水平填充式列表，只垂直滚动" },
+                new Nav("磁贴视图", typeof(LvTile), Icons.日历) { Desc = "平铺式磁贴，一行多格，只垂直滚动" },
+                new Nav("内置单元格UI", typeof(LvCellUI), Icons.书籍) { Desc = "适用于某列为固定UI类型的情况" },
+                new Nav("自定义单元格UI", typeof(LvViewEx), Icons.修改) { Desc = "定义行样式、扩展列" },
+                new Nav("行模板选择", typeof(LvListSelector), Icons.划卡) { Desc = "根据数据动态选择行模板" },
+                new Nav("动态行内容", typeof(LvRowView), Icons.划卡) { Desc = "根据数据动态生成行UI内容" },
+                new Nav("分组模板", typeof(LvGroupTemplate), Icons.录音) { Desc = "设置分组模板" },
+                new Nav("上下文菜单", typeof(LvContextMenu), Icons.公告) { Desc = "触发上下文菜单的方式：右键、悬停、点击标识按钮" },
+                new Nav("外部ScrollViewer", typeof(LvInScrollViewer), Icons.乐谱) { Desc = "外部嵌套ScrollViewer，和其他元素一起滚动" },
             };
         }
     }
