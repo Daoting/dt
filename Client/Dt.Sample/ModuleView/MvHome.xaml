@@ -6,15 +6,8 @@
 
     <a:Pane InitWidth="200">
         <a:Tabs>
-            <a:Tab Title="功能列表">
-                <a:Lv x:Name="_lv" ItemClick="OnMainInfoClick" ItemHeight="100">
-                    <DataTemplate>
-                        <StackPanel Padding="10">
-                            <a:Dot ID="Title" />
-                            <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
-                        </StackPanel>
-                    </DataTemplate>
-                </a:Lv>
+            <a:Tab>
+                <a:NavList x:Name="_nav" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

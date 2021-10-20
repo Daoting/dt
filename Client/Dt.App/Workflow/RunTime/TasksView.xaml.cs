@@ -24,46 +24,22 @@ namespace Dt.App.Workflow
         {
             InitializeComponent();
 
-            var ls = new Nl<MainInfo>
+            var ls = new Nl<Nav>
             {
-                new MainInfo(Icons.信件, "待办任务", typeof(CurrentTasks), "新发起、流转、回退、追回的任务"),
-                new MainInfo(Icons.拆信, "历史任务", typeof(HistoryTasks), "所有参与过的任务"),
-                new MainInfo(Icons.播放, "发起新任务", StartNewWf, "启动新工作流程"),
+                new Nav("待办任务", typeof(CurrentTasks), Icons.信件) { Desc = "新发起、流转、回退、追回的任务" },
+                new Nav("历史任务", typeof(HistoryTasks), Icons.拆信) { Desc = "所有参与过的任务" },
+                new Nav("发起新任务", null, Icons.播放) { Desc = "启动新工作流程", Callback = StartNewWf },
+                new Nav("表单查询", typeof(TasksFormQuery), Icons.公告) { Desc = "所有参与过的任务表单查询", To = NavTarget.NewWin },
             };
-            _lv.Data = ls;
-
-            LoadTasks();
+            _nav.Data = ls;
             //LoadMain(ls[0].GetCenter());
         }
 
-        async void LoadTasks()
-        {
-            _lvTask.Data = await AtCm.Query("流程-参与的流程", new { userid = Kit.UserID });
-        }
-
-        void StartNewWf()
+        void StartNewWf(Win p_win, Nav p_nav)
         {
             if (_dlgStart == null)
                 _dlgStart = new StartWorkflow();
             _dlgStart.Show();
-        }
-
-        void OnTaskItemClick(object sender, ItemClickArgs e)
-        {
-            var row = e.Row;
-            if (row.Tag != null)
-            {
-                LoadMain(row.Tag);
-                return;
-            }
-
-            var tpName = row.Str("ListType");
-            Throw.IfNullOrEmpty(tpName, "流程定义中未设置表单查询类型！");
-            var type = Type.GetType(tpName);
-            Throw.IfNull(type, $"表单查询类型[{tpName}]不存在！");
-            var win = Activator.CreateInstance(type);
-            row.Tag = win;
-            LoadMain(win);
         }
     }
 }

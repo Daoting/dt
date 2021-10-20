@@ -23,10 +23,10 @@ namespace Dt.Sample
         public MenuHome()
         {
             InitializeComponent();
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.保存, "工具栏菜单", typeof(MenuDemo), "工具栏样式，支持单选、多层"),
-                new MainInfo(Icons.日历, "上下文菜单", typeof(ContextMenuDemo), "附加到可视元素，支持继承数据源"),
+                new Nav("工具栏菜单", typeof(MenuDemo), Icons.保存) { Desc = "工具栏样式，支持单选、多层" },
+                new Nav("上下文菜单", typeof(ContextMenuDemo), Icons.日历) { Desc = "附加到可视元素，支持继承数据源" },
             };
         }
     }

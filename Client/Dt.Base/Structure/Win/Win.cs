@@ -1081,24 +1081,6 @@ namespace Dt.Base
                 tab.Content = p_content;
             }
         }
-
-        /// <summary>
-        /// Lv中数据源为MainInfo列表时，ItemClick默认事件处理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void OnMainInfoClick(object sender, ItemClickArgs e)
-        {
-            var info = e.Data as MainInfo;
-            if (info != null)
-            {
-                if (info.Type != null)
-                    LoadMain(info.GetCenter());
-                else
-                    info.Callback?.Invoke();
-            }
-
-        }
         #endregion
 
         #region 内部方法

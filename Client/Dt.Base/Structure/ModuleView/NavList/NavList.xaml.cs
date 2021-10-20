@@ -49,6 +49,9 @@ namespace Dt.Base
         public NavList()
         {
             InitializeComponent();
+
+            // 默认采用自动行高，因数据行数较少！
+            _lv.ItemHeight = double.NaN;
             _lv.View = Resources["ListView"];
         }
 
@@ -94,7 +97,8 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置行/项目高度，0时以第一项高度为准，NaN时自动调整高度(性能差)，默认0
+        /// 获取设置行/项目高度，0时以第一项高度为准，NaN时自动高度
+        /// <para>默认NaN：因数据行数较少，每项的内容多少不同！</para>
         /// </summary>
         public double ItemHeight
         {

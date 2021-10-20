@@ -23,12 +23,12 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.公告, "内容为窗口", typeof(SingleViewWin)),
-                new MainInfo(Icons.田字格, "内容为嵌套窗口", typeof(ToggleWinCenter)),
-                new MainInfo(Icons.饼图, "内容为UserControl", typeof(TabNav1)),
-                new MainInfo(Icons.全选, "内容为空", default(Type)),
+                new Nav("内容为窗口", typeof(SingleViewWin), Icons.公告),
+                new Nav("内容为嵌套窗口", typeof(ToggleWinCenter), Icons.田字格),
+                new Nav("内容为UserControl", typeof(TabNav1), Icons.饼图),
+                new Nav("内容为空", default(Type), Icons.全选),
             };
 
             LoadMain(new Button { Content = "abc" });

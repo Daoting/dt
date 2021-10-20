@@ -232,34 +232,6 @@
         </Setter>
     </Style>
 
-    <!--窗口主区内容描述列表-->
-    <Style x:Key="MainInfoLv" TargetType="a:Lv">
-        <Setter Property="View">
-            <Setter.Value>
-                <DataTemplate>
-                    <Grid Padding="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <a:Dot ID="Icon"
-                               FontSize="30"
-                               Foreground="White"
-                               Background="{StaticResource 主题蓝色}"
-                               Height="50"
-                               Width="50"
-                               VerticalAlignment="Center"
-                               HorizontalContentAlignment="Center" />
-                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
-                            <a:Dot ID="Title" />
-                            <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!--PhoneTabs底部按钮-->
     <Style x:Key="PhoneTabsBtn" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

@@ -6,8 +6,8 @@
 
     <a:Pane InitWidth="240">
         <a:Tabs>
-            <a:Tab Title="功能目录">
-                <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
+            <a:Tab>
+                <a:NavList x:Name="_nav" Title="功能目录" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

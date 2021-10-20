@@ -23,21 +23,21 @@ namespace Dt.Sample
         public ChartHome()
         {
             InitializeComponent();
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.汉堡, "图表预览", typeof(BaseChart), "图表类型、X轴、Y轴、调色板、图例等设置"),
-                new MainInfo(Icons.分组, "数据图表", typeof(DataChart), "Table数据图表"),
-                new MainInfo(Icons.全选, "标注", typeof(MarkersChart), "跟踪鼠标，显示标注"),
-                new MainInfo(Icons.日历, "组合图表", typeof(ComplexChart), "多图表组合方式"),
-                new MainInfo(Icons.修改, "聚合", typeof(AggregateChart), "支持多种聚合方法"),
-                new MainInfo(Icons.划卡, "标签", typeof(ChartLabel), "自定义数据标签"),
-                new MainInfo(Icons.排列, "饼图", typeof(StackedPie), "csv统计结果"),
-                new MainInfo(Icons.录音, "交互", typeof(InteractiveChart), "图表交互"),
-                new MainInfo(Icons.公告, "实时", typeof(LiveChart), "实时图表"),
-                new MainInfo(Icons.全选, "财务", typeof(FinancialChart), ""),
-                new MainInfo(Icons.日历, "甘特图", typeof(GanttChart), ""),
-                new MainInfo(Icons.修改, "多轴", typeof(PlotAreas), ""),
-                new MainInfo(Icons.划卡, "动画", typeof(LoadAnimation), ""),
+                new Nav("图表预览", typeof(BaseChart), Icons.汉堡) { Desc =  "图表类型、X轴、Y轴、调色板、图例等设置" },
+                new Nav("数据图表", typeof(DataChart), Icons.分组) { Desc =  "Table数据图表" },
+                new Nav("标注", typeof(MarkersChart), Icons.全选) { Desc =  "跟踪鼠标，显示标注" },
+                new Nav("组合图表", typeof(ComplexChart), Icons.日历) { Desc = "多图表组合方式" },
+                new Nav("聚合", typeof(AggregateChart), Icons.修改) { Desc =  "支持多种聚合方法" },
+                new Nav("标签", typeof(ChartLabel), Icons.划卡) { Desc =  "自定义数据标签" },
+                new Nav("饼图", typeof(StackedPie), Icons.排列) { Desc =  "csv统计结果" },
+                new Nav("交互", typeof(InteractiveChart), Icons.录音),
+                new Nav("实时", typeof(LiveChart), Icons.公告),
+                new Nav("财务", typeof(FinancialChart), Icons.全选),
+                new Nav("甘特图", typeof(GanttChart), Icons.日历),
+                new Nav("多轴", typeof(PlotAreas), Icons.修改),
+                new Nav("动画", typeof(LoadAnimation), Icons.划卡),
             };
         }
     }

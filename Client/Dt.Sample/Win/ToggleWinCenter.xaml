@@ -16,8 +16,8 @@
                     <a:BtnItem Title="内容为空" Click="OnCenterNull" />
                 </StackPanel>
             </a:Tab>
-            <a:Tab Order="2" Title="描述列表">
-                <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
+            <a:Tab Order="2">
+                <a:NavList x:Name="_nav" Title="描述列表" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

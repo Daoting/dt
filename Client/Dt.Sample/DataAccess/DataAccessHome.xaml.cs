@@ -23,14 +23,14 @@ namespace Dt.Sample
         public DataAccessHome()
         {
             InitializeComponent();
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.分组, "数据表操作", typeof(TableAccess), "Table, Row, Column, Cell的常用方法"),
-                new MainInfo(Icons.全选, "序列化类型", typeof(SerializeDemo), ""),
-                new MainInfo(Icons.警告, "异常处理", typeof(ExceptionDemo), ""),
-                new MainInfo(Icons.传真, "实体类业务逻辑", typeof(EntityDemo), ""),
-                new MainInfo(Icons.耳麦, "远程过程调用", typeof(RpcDemo), ""),
-                new MainInfo(Icons.小图标, "服务端Api授权控制", typeof(AuthAccess), ""),
+                new Nav("数据表操作", typeof(TableAccess), Icons.分组) { Desc = "Table, Row, Column, Cell的常用方法" },
+                new Nav("序列化类型", typeof(SerializeDemo), Icons.全选),
+                new Nav("异常处理", typeof(ExceptionDemo), Icons.警告),
+                new Nav("实体类业务逻辑", typeof(EntityDemo), Icons.传真),
+                new Nav("远程过程调用", typeof(RpcDemo), Icons.耳麦), 
+                new Nav("服务端Api授权控制", typeof(AuthAccess), Icons.小图标),
             };
         }
     }
