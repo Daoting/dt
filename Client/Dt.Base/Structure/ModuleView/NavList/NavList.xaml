@@ -13,13 +13,10 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <a:Dot ID="Icon"
-                       FontSize="20"
-                       Padding="10"
+                       FontSize="30"
                        Margin="0,0,10,0"
-                       Foreground="White"
-                       Background="{StaticResource 主题蓝色}"
-                       VerticalAlignment="Center"
-                       HorizontalContentAlignment="Center" />
+                       Foreground="{StaticResource 主题蓝色}"
+                       VerticalAlignment="Center" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <a:Dot ID="Title" />
                     <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
@@ -29,9 +26,13 @@
         </DataTemplate>
 
         <DataTemplate x:Key="TileView">
-            <Grid Padding="10" MinHeight="80">
+            <Grid Padding="12" MinHeight="80">
                 <StackPanel VerticalAlignment="Center">
-                    <a:Dot ID="Icon" FontSize="30" HorizontalAlignment="Center" />
+                    <a:Dot ID="Icon"
+                           FontSize="30"
+                           Foreground="{StaticResource 主题蓝色}"
+                           Margin="0,0,0,4"
+                           HorizontalAlignment="Center" />
                     <a:Dot ID="Title" HorizontalAlignment="Center" />
                     <a:Dot ID="Desc" Font="小灰" HorizontalAlignment="Center" />
                 </StackPanel>
