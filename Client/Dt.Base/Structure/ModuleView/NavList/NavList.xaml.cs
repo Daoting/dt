@@ -115,6 +115,15 @@ namespace Dt.Base
             set { SetValue(ItemTemplateProperty, value); }
         }
 
+        /// <summary>
+        /// 获取设置选择模式，默认Single
+        /// </summary>
+        public SelectionMode SelectionMode
+        {
+            get { return _lv.SelectionMode; }
+            set { _lv.SelectionMode = value; }
+        }
+
         void OnItemClick(object sender, ItemClickArgs e)
         {
             var nav = e.Data as Nav;

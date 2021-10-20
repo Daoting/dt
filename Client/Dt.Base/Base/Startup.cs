@@ -146,14 +146,14 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 注册登录页和主页类型，以备 登录、注销、自动登录、中途登录时用
+        /// 注册主页和登录页的类型，以备 登录、注销、自动登录、中途登录时用
         /// </summary>
-        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
         /// <param name="p_homePageType">主页类型</param>
-        public static void Register(Type p_loginPageType, Type p_homePageType)
+        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
+        public static void Register(Type p_homePageType, Type p_loginPageType = null)
         {
+            HomePageType = p_homePageType;
             _loginPageType = p_loginPageType;
-            _homePageType = p_homePageType;
         }
         #endregion
 
@@ -270,6 +270,14 @@ namespace Dt.Base
         static Type _loginPageType;
 
         /// <summary>
+        /// 当前登录页面类型，未设置时采用 DefaultLogin
+        /// </summary>
+        public static Type LoginPageType
+        {
+            get { return _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType; }
+        }
+
+        /// <summary>
         /// 显示登录页面
         /// </summary>
         /// <param name="p_isPopup">是否为弹出式</param>
@@ -278,7 +286,7 @@ namespace Dt.Base
             Kit.RunAsync(() =>
             {
                 // 外部未指定时采用默认登录页
-                Type tp = _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType;
+                Type tp = LoginPageType;
                 var page = Activator.CreateInstance(tp) as UIElement;
                 if (!p_isPopup)
                 {
@@ -309,7 +317,7 @@ namespace Dt.Base
         /// <summary>
         /// 主页类型
         /// </summary>
-        static Type _homePageType;
+        public static Type HomePageType { get; private set; }
 
         /// <summary>
         /// 加载根内容 Desktop/Frame 和主页
@@ -330,9 +338,9 @@ namespace Dt.Base
             SysVisual.RootContent = new Frame();
 
             // 主页作为根
-            if (_homePageType != null)
+            if (HomePageType != null)
             {
-                Win win = Activator.CreateInstance(_homePageType) as Win;
+                Win win = Activator.CreateInstance(HomePageType) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -370,9 +378,9 @@ namespace Dt.Base
             Desktop desktop = new Desktop();
 
             // 主页
-            if (_homePageType != null)
+            if (HomePageType != null)
             {
-                Win win = Activator.CreateInstance(_homePageType) as Win;
+                Win win = Activator.CreateInstance(HomePageType) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -549,7 +557,7 @@ namespace Dt.Base
                 {
                     win = tabs.OwnWin;
                 }
-                if (win != null && win.GetType() != _homePageType)
+                if (win != null && win.GetType() != HomePageType)
                 {
                     AutoStartOnce = GetAutoStartInfo(win);
                 }

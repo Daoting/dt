@@ -75,9 +75,9 @@ namespace Dt.Shell
 
             new OmMenu(
                 ID: 1,
-                Name: "控件样例",
+                Name: "样例",
                 Icon: "词典",
-                ViewName: "控件样例"),
+                ViewName: "样例"),
         };
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Dt.Shell
         /// <summary>
         /// 系统启动
         /// </summary>
-        public async Task OnStartup()
+        public Task OnStartup()
         {
             // 初次运行，显示向导
             //if (AtState.GetCookie("FirstRun") == "")
@@ -104,19 +104,20 @@ namespace Dt.Shell
             //};
 
             // 1. 按默认流程启动
-            Startup.Register(null, typeof(DefaultHome));
-            await Startup.Run(true);
+            //Startup.Register(typeof(DefaultHome));
+            //await Startup.Run(true);
 
             // 2. 自定义启动过程
             //if (await Startup.OpenModelDb())
             //{
-            //    Startup.Register(null, typeof(Sample.SamplesMain));
+            //    Startup.Register(typeof(Sample.SamplesMain));
             //    Startup.ShowHome();
             //}
 
             // 3. 完全不使用dt服务
-            //Startup.Register(null, typeof(Sample.SamplesMain));
-            //Startup.ShowHome();
+            Startup.Register(typeof(Sample.SamplesMain));
+            Startup.ShowHome();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -174,7 +175,7 @@ namespace Dt.Shell
             { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
             { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
-            { "控件样例", typeof(Dt.Sample.SamplesMain) },
+            { "样例", typeof(Dt.Sample.SamplesMain) },
         };
 
         /// <summary>

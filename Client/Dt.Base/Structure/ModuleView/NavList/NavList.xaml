@@ -33,7 +33,7 @@
                 <StackPanel VerticalAlignment="Center">
                     <a:Dot ID="Icon" FontSize="30" HorizontalAlignment="Center" />
                     <a:Dot ID="Title" HorizontalAlignment="Center" />
-                    <a:Dot ID="Desc" Font="小灰" VerticalContentAlignment="Top" HorizontalAlignment="Left" />
+                    <a:Dot ID="Desc" Font="小灰" HorizontalAlignment="Center" />
                 </StackPanel>
                 <a:Dot ID="Warning" UI="Warning" HorizontalAlignment="Right" VerticalAlignment="Top" />
             </Grid>

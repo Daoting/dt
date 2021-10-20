@@ -20,9 +20,9 @@
                 </a:Menu>
             </a:Ex.Menu>
             <DataTemplate>
-                <StackPanel Padding="10">
-                    <a:Dot ID="Icon" FontSize="50" HorizontalAlignment="Center" />
-                    <a:Dot ID="FullName" Margin="0,10,0,0" HorizontalAlignment="Center" />
+                <StackPanel Padding="10" Height="90">
+                    <a:Dot ID="Icon" FontSize="40" HorizontalAlignment="Center" />
+                    <a:Dot ID="FullName" Margin="0,8,0,0" HorizontalAlignment="Center" />
                 </StackPanel>
             </DataTemplate>
         </a:Lv>

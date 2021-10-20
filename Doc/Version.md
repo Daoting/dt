@@ -13,6 +13,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 ## Release 1.9.10 
 ### 功能 
 * 增加NavList，替换原有的MainInfoLv方式
+* 为上架到商店，样例设为主页
 
 ### 变更 
 

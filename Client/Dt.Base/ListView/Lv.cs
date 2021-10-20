@@ -878,6 +878,18 @@ namespace Dt.Base
         /// <param name="p_cellEx">null时不切换</param>
         public void ChangeView(object p_view, ViewMode? p_viewMode, Type p_cellEx = null)
         {
+            if (Scroll == null)
+            {
+                // 未应用模板
+                if (p_view != null)
+                    View = p_view;
+                if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
+                    ViewMode = p_viewMode.Value;
+                if (p_cellEx != null)
+                    CellEx = p_cellEx;
+                return;
+            }
+
             _updatingView = true;
             try
             {

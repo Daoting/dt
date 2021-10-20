@@ -36,7 +36,7 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         /// <param name="p_type">新窗口或主区内容的类型</param>
         /// <param name="p_icon">图标</param>
-        public Nav(string p_title, Type p_type, Icons p_icon = Icons.None)
+        public Nav(string p_title, Type p_type = null, Icons p_icon = Icons.None)
         {
             _title = p_title;
             Type = p_type;
