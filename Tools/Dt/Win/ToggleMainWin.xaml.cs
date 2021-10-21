@@ -25,10 +25,9 @@ namespace $rootnamespace$
         public $safeitemname$()
         {
             InitializeComponent();
-
-            _lv.Data = new Nl<MainInfo>
+            _nav.Data = new Nl<Nav>
             {
-                new MainInfo(Icons.公告, "窗口内容", typeof($safeitemname$)),
+                new Nav("窗口内容", typeof($safeitemname$), Icons.公告) { Desc = "描述" },
             };
         }
 

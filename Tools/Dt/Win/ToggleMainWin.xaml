@@ -7,8 +7,8 @@
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Title="列表">
-                <a:Lv x:Name="_lv" Style="{StaticResource MainInfoLv}" ItemClick="OnMainInfoClick" />
+            <a:Tab>
+                <a:NavList x:Name="_nav" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>
