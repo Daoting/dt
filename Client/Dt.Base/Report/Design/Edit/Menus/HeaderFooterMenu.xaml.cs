@@ -13,7 +13,7 @@ using Dt.Cells.Data;
 
 namespace Dt.Base.Report
 {
-    public sealed partial class HeaderFooterMenu
+    public sealed partial class HeaderFooterMenu : Menu
     {
         RptDesignWin _owner;
 

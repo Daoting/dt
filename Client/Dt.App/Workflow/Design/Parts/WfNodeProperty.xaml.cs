@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.App.Workflow
@@ -15,7 +16,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 图元属性面板
     /// </summary>
-    public sealed partial class WfNodeProperty
+    public sealed partial class WfNodeProperty : UserControl
     {
         public WfNodeProperty()
         {

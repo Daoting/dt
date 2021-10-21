@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.App.Workflow
 {
-    public sealed partial class WfInsertMenu
+    public sealed partial class WfInsertMenu : Menu
     {
         Sketch _sketch;
 

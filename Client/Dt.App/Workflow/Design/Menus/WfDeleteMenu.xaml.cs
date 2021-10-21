@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.App.Workflow
 {
-    public sealed partial class WfDeleteMenu
+    public sealed partial class WfDeleteMenu : Menu
     {
         Sketch _sketch;
 

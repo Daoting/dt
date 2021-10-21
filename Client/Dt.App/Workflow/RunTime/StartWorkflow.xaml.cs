@@ -16,7 +16,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 发起任务
     /// </summary>
-    public sealed partial class StartWorkflow
+    public sealed partial class StartWorkflow : Dlg
     {
         public StartWorkflow()
         {

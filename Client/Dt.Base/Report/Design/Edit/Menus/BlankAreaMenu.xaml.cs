@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Base.Report
 {
-    public sealed partial class BlankAreaMenu
+    public sealed partial class BlankAreaMenu : Menu
     {
         RptDesignWin _owner;
 

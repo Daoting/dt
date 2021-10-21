@@ -10,6 +10,7 @@
 using Dt.Base;
 using Dt.Core;
 using System.Linq;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.App.Workflow
@@ -17,7 +18,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 普通活动模板表单
     /// </summary>
-    public sealed partial class WfAtvForm
+    public sealed partial class WfAtvForm : UserControl
     {
         public WfAtvForm()
         {

@@ -21,7 +21,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 发起任务
     /// </summary>
-    public sealed partial class WfSendDlg
+    public sealed partial class WfSendDlg : Dlg
     {
         WfFormInfo _info;
 

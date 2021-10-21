@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.App.Workflow
 {
-    public sealed partial class AlignMenu
+    public sealed partial class AlignMenu : Menu
     {
         Sketch _sketch;
         FrameworkElement _target;

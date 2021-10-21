@@ -22,7 +22,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 查看日志
     /// </summary>
-    public sealed partial class WfLogDlg
+    public sealed partial class WfLogDlg : Dlg
     {
         long _prciID;
         TextBlock _tb;

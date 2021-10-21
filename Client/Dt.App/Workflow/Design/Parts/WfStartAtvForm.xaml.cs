@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.App.Workflow
@@ -16,7 +17,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 起始活动模板表单
     /// </summary>
-    public sealed partial class WfStartAtvForm
+    public sealed partial class WfStartAtvForm : UserControl
     {
         public WfStartAtvForm()
         {

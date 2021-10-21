@@ -10,6 +10,7 @@
 using Dt.Core;
 using System.Linq;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.App.Workflow
@@ -17,7 +18,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 迁移属性表单
     /// </summary>
-    public sealed partial class WfTrsForm
+    public sealed partial class WfTrsForm : UserControl
     {
         Table<WfdTrsObj> _trss;
         WfdTrsObj _curTrs;

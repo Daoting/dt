@@ -21,7 +21,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 活动授权
     /// </summary>
-    public sealed partial class AtvRole
+    public sealed partial class AtvRole : UserControl
     {
         long _atvID;
 

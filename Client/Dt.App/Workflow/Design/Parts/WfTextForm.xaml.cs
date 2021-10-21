@@ -16,7 +16,7 @@ namespace Dt.App.Workflow
     /// <summary>
     /// 图元属性面板
     /// </summary>
-    public sealed partial class WfTextForm
+    public sealed partial class WfTextForm : UserControl
     {
         public WfTextForm()
         {
