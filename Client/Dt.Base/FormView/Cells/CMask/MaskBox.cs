@@ -617,7 +617,16 @@ namespace Dt.Base
         static InputScope CreateNumberScope()
         {
             InputScope scope = new InputScope();
-            scope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.NumberFullWidth });
+            // iOS android若设置 Number 键盘无小数点，全角才有，windows上全角无法输入！
+            InputScopeName isn = new InputScopeName()
+            {
+#if UWP
+                NameValue = InputScopeNameValue.Number,
+#else
+                NameValue = InputScopeNameValue.NumberFullWidth,
+#endif
+            };
+            scope.Names.Add(isn);
             return scope;
         }
         #endregion

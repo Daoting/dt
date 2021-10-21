@@ -111,7 +111,6 @@
                                  IsReadOnly="{TemplateBinding ReadOnlyBinding}"
                                  PlaceholderText="{TemplateBinding Placeholder}"
                                  TextAlignment="Right"
-                                 InputScope="NumberFullWidth"
                                  Style="{StaticResource FvTextBox}" />
                     </fv:CellPanel>
                 </ControlTemplate>

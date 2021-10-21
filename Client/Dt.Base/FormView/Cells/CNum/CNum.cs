@@ -491,6 +491,20 @@ namespace Dt.Base
         protected override void OnApplyCellTemplate()
         {
             _textBox = (TextBox)GetTemplateChild("TextBox");
+
+            // iOS android若设置 Number 键盘无小数点，全角才有，windows上全角无法输入！
+            _textBox.InputScope = new InputScope
+            {
+                Names = { new InputScopeName
+                { 
+#if UWP
+                    NameValue = InputScopeNameValue.Number,
+#else
+                    NameValue = InputScopeNameValue.NumberFullWidth,
+#endif
+                } }
+            };
+
             _textBox.TextChanged += OnTextBoxTextChanged;
             UpdateText();
         }

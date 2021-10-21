@@ -20,7 +20,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
 ### Bug修改  
 * Lv 切换数据源、删除行后的布局bug
-
+* CNum采用 NumberFullWidth 键盘，Number键盘无小数点
 
 
 
