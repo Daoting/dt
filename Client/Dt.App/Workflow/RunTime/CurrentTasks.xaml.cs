@@ -74,7 +74,7 @@ namespace Dt.App.Workflow
                         }
             };
 
-            var rc = new Rectangle { Fill = Res.深灰边框 };
+            var rc = new Rectangle { Fill = Res.深灰2 };
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
@@ -86,7 +86,7 @@ namespace Dt.App.Workflow
             switch (kind)
             {
                 case WfiItemAssignKind.起始指派:
-                    rc = new Rectangle { Fill = Res.绿色背景 };
+                    rc = new Rectangle { Fill = Res.中绿 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
@@ -96,7 +96,7 @@ namespace Dt.App.Workflow
                     break;
 
                 case WfiItemAssignKind.回退:
-                    rc = new Rectangle { Fill = Res.醒目红色 };
+                    rc = new Rectangle { Fill = Res.亮红 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 
@@ -106,7 +106,7 @@ namespace Dt.App.Workflow
                     break;
 
                 case WfiItemAssignKind.追回:
-                    rc = new Rectangle { Fill = Res.醒目蓝色 };
+                    rc = new Rectangle { Fill = Res.亮蓝 };
                     Grid.SetColumn(rc, 2);
                     grid.Children.Add(rc);
 

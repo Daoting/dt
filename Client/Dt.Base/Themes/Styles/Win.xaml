@@ -12,7 +12,7 @@
     <Style TargetType="a:Win">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Win">
@@ -51,7 +51,7 @@
 
     <!--Tabs-->
     <Style TargetType="a:Tabs">
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Padding" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -116,7 +116,7 @@
                     <Grid x:Name="ElementGrid" Background="{TemplateBinding Background}">
                         <a:RotateContent x:Name="ElementHeader" Rotate="Horizontal" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
-                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰1}" StrokeThickness="1" IsHitTestVisible="False"/>
                                 <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                                 <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="2" VerticalAlignment="Bottom"/>
                                 <TextBlock x:Name="HeaderText"
@@ -133,13 +133,13 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
-                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
@@ -170,7 +170,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
-                              Background="{StaticResource 主题蓝色}"
+                              Background="{StaticResource 主蓝}"
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
                               Height="50">
                             <Grid.ColumnDefinitions>
@@ -273,8 +273,8 @@
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 醒目蓝色}" />
-                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 亮蓝}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -300,9 +300,9 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Border x:Name="HeaderElement"
-                                Background="{StaticResource 灰色背景}"
+                                Background="{StaticResource 中灰1}"
                                 BorderThickness="0,0,0,1"
-                                BorderBrush="{StaticResource 灰色边框}">
+                                BorderBrush="{StaticResource 中灰2}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
                                 <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
@@ -310,7 +310,7 @@
                             </StackPanel>
                         </Border>
                         <ContentPresenter Content="{TemplateBinding Content}" Grid.Row="1"/>
-                        <Rectangle Stroke="{StaticResource 灰色边框}" Margin="0,0,-1,0" IsHitTestVisible="False" Grid.RowSpan="2"/>
+                        <Rectangle Stroke="{StaticResource 中灰2}" Margin="0,0,-1,0" IsHitTestVisible="False" Grid.RowSpan="2"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -339,35 +339,35 @@
                                 <VisualState x:Name="HighlightLeftIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightTopIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightRightIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightBottomIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightCenterIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CenterIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -431,20 +431,20 @@
 
                         <Grid x:Name="Visual">
                             <Path x:Name="PART_LeftIndicator" Width="32" Height="32" HorizontalAlignment="Left"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" 
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
                                   Data="M164.833,52.333 L54.167,120.648 L164.833,187.667 z"/>
                             <Path x:Name="PART_TopIndicator" Width="32" Height="32" VerticalAlignment="Top"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" 
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
                                   Data="M39.2239,0.5 L84.5,84.5 L0.5,84.5 z"/>
                             <Path x:Name="PART_RightIndicator" Width="32" Height="32" HorizontalAlignment="Right"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" 
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
                                   Data="M69.834,52.833 L69.834,187.166 L182.166,119.618 z"/>
                             <Path x:Name="PART_BottomIndicator" Width="32" Height="32"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" VerticalAlignment="Bottom"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" VerticalAlignment="Bottom"
                                   Data="M272.667,456.333 L327.333,456.667 L300,505.664 z">
                             </Path>
                             <Rectangle x:Name="PART_CenterIndicator" Width="35" Height="35"
-                                       Stroke="{StaticResource 主题蓝色}" 
+                                       Stroke="{StaticResource 主蓝}" 
                                        Fill="White"/>
                         </Grid>
                     </Border>
@@ -470,28 +470,28 @@
                                 <VisualState x:Name="HighlightLeftIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightTopIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightRightIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="HighlightBottomIndicator">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -545,16 +545,16 @@
 
                         <Grid x:Name="Visual">
                             <Path x:Name="PART_LeftIndicator" Width="32" Height="32" HorizontalAlignment="Left"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" 
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
                                   Data="M164.833,52.333 L54.167,120.648 L164.833,187.667 z"/>
                             <Path x:Name="PART_TopIndicator" Width="32" Height="32" VerticalAlignment="Top"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}" 
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
                                   Data="M39.2239,0.5 L84.5,84.5 L0.5,84.5 z"/>
                             <Path x:Name="PART_RightIndicator" Width="32" Height="32" HorizontalAlignment="Right"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}"  
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}"  
                                   Data="M69.834,52.833 L69.834,187.166 L182.166,119.618 z"/>
                             <Path x:Name="PART_BottomIndicator" Width="32" Height="32"
-                                  Stretch="Fill" Fill="{StaticResource 主题蓝色}"  VerticalAlignment="Bottom"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}"  VerticalAlignment="Bottom"
                                   Data="M272.667,456.333 L327.333,456.667 L300,505.664 z"/>
                         </Grid>
                     </Border>
@@ -565,10 +565,10 @@
 
     <!--TabHeader-->
     <Style TargetType="docking:TabHeader">
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="BorderThickness" Value="1,1,1,0" />
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
         <Setter Property="Height" Value="{StaticResource RowOuterHeight}" />
         <Setter Property="Template">
             <Setter.Value>
@@ -588,7 +588,7 @@
                                 Visibility="{Binding Owner.SelectedItem.BackButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
                                 Content="&#xE010;"
                                 Style="{StaticResource 字符按钮}"
-                                Foreground="{StaticResource 深灰背景}" />
+                                Foreground="{StaticResource 深灰1}" />
 
                         <!--标题-->
                         <TextBlock Text="{Binding Owner.SelectedItem.Title, RelativeSource={RelativeSource TemplatedParent}}"
@@ -601,7 +601,7 @@
                         <!--菜单-->
                         <ContentPresenter Content="{Binding Owner.SelectedItem.Menu, RelativeSource={RelativeSource TemplatedParent}}"
                                           Foreground="{StaticResource 默认前景}"
-                                          Background="{StaticResource 浅灰背景}"
+                                          Background="{StaticResource 浅灰1}"
                                           HorizontalAlignment="Right"
                                           Margin="100,0,0,0"
                                           Grid.Column="1" />
@@ -640,7 +640,7 @@
     <!--AutoHideTab-->
     <Style TargetType="docking:AutoHideTab">
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Template">
             <Setter.Value>

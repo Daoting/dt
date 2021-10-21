@@ -6,7 +6,7 @@
 
     <UserControl.Resources>
         <Style x:Key="ExBtn" TargetType="Button" BasedOn="{StaticResource 字符按钮}">
-            <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+            <Setter Property="Foreground" Value="{StaticResource 深灰2}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
@@ -25,7 +25,7 @@
                                 Margin="0,4,0,4"
                                 BorderBrush="Transparent" />
 
-                    <Grid BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}">
+                    <Grid BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰2}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -36,7 +36,7 @@
                         <Button Content="&#xE052;" Tag="收藏" Style="{StaticResource ExBtn}" Grid.Column="2" />
                     </Grid>
                 </StackPanel>
-                <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+                <Rectangle Fill="{StaticResource 浅灰2}" Height="10" IsHitTestVisible="False" />
             </StackPanel>
         </DataTemplate>
 
@@ -52,7 +52,7 @@
                             ImageHeight="200"
                             BorderBrush="Transparent" />
                 <a:Dot ID="Title" FontWeight="Bold" FontSize="32" Foreground="White" Margin="20,0,0,20" VerticalAlignment="Bottom" />
-                <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" Grid.Row="1" />
+                <Rectangle Fill="{StaticResource 浅灰2}" Height="10" IsHitTestVisible="False" Grid.Row="1" />
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

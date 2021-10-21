@@ -9,9 +9,9 @@
 
     <!--BtnItem-->
     <Style TargetType="a:BtnItem">
-        <Setter Property="Background" Value="{StaticResource 主题蓝色}" />
+        <Setter Property="Background" Value="{StaticResource 主蓝}" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:BtnItem">
@@ -87,7 +87,7 @@
 
     <!--TabControl-->
     <Style TargetType="a:TabControl">
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Padding" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -137,7 +137,7 @@
                     <Grid x:Name="ElementGrid" Background="{TemplateBinding Background}">
                         <a:RotateContent x:Name="ElementHeader" Rotate="Horizontal" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
-                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰1}" StrokeThickness="1" IsHitTestVisible="False"/>
                                 <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                                 <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="2" VerticalAlignment="Bottom"/>
                                 <TextBlock x:Name="HeaderText"
@@ -154,13 +154,13 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
-                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
@@ -180,7 +180,7 @@
     <Style TargetType="a:SearchBox">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>

@@ -51,7 +51,7 @@
                                     <TextBlock Text="人数" Foreground="White" />
                                     <TextBlock Text="{Binding Count}" Foreground="White" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="{StaticResource 主题蓝色}">
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="{StaticResource 主蓝}">
                                     <TextBlock Text="平均身高" Foreground="White" />
                                     <TextBlock Text="{Binding Average}" Foreground="White" />
                                 </StackPanel>

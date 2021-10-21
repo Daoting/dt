@@ -16,6 +16,7 @@ ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 * 为上架到商店，样例设为主页
 
 ### 变更 
+*  精简常用画刷的名称
 
 ### Bug修改  
 * Lv 切换数据源、删除行后的布局bug

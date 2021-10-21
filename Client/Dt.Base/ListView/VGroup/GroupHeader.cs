@@ -37,7 +37,7 @@ namespace Dt.Base.ListView
             {
                 Children.Add(new GroupHeaderCell(grp, this));
             }
-            _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
+            _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰2, IsHitTestVisible = false };
             Children.Add(_border);
 
             if (!Kit.IsPhoneUI)

@@ -27,7 +27,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource 主题蓝色}"
+                <Border Background="{StaticResource 主蓝}"
                         Height="50"
                         Width="50"
                         VerticalAlignment="Center">

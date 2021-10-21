@@ -17,7 +17,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border Background="{StaticResource 主题蓝色}" Height="50" Width="50" VerticalAlignment="Center">
+                    <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Data.Icon, Converter={StaticResource CvIconNameToChar}}"
                                    FontFamily="{StaticResource IconFont}"
                                    Foreground="White"

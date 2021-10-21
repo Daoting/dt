@@ -11,8 +11,8 @@
                     <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰背景}"
-                                  BorderBrush="{StaticResource 浅灰边框}"
+                                  Background="{StaticResource 浅灰1}"
+                                  BorderBrush="{StaticResource 浅灰2}"
                                   BorderThickness="0,0,0,1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -39,8 +39,8 @@
                     <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰背景}"
-                                  BorderBrush="{StaticResource 浅灰边框}"
+                                  Background="{StaticResource 浅灰1}"
+                                  BorderBrush="{StaticResource 浅灰2}"
                                   BorderThickness="0,0,0,1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -67,7 +67,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Border Background="{StaticResource 主题蓝色}"
+                                        <Border Background="{StaticResource 主蓝}"
                                                 Height="50"
                                                 Width="50"
                                                 VerticalAlignment="Center">
@@ -98,8 +98,8 @@
                     <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰背景}"
-                                  BorderBrush="{StaticResource 浅灰边框}"
+                                  Background="{StaticResource 浅灰1}"
+                                  BorderBrush="{StaticResource 浅灰2}"
                                   BorderThickness="0,0,0,1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />

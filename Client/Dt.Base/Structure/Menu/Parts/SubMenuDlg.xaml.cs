@@ -22,7 +22,7 @@ namespace Dt.Base.MenuView
         {
             InitializeComponent();
 
-            Background = Res.浅灰背景;
+            Background = Res.浅灰1;
             MinWidth = 160;
             HideTitleBar = true;
             Resizeable = false;

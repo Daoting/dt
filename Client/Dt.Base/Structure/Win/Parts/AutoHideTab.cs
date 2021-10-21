@@ -112,13 +112,13 @@ namespace Dt.Base.Docking
             Grid g = new Grid
             { 
                 ColumnDefinitions = { new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, new ColumnDefinition { Width = GridLength.Auto } },
-                BorderBrush = Res.浅灰边框,
+                BorderBrush = Res.浅灰2,
                 BorderThickness = new Thickness(1),
-                Background = Res.浅灰背景
+                Background = Res.浅灰1
             };
             TabHeader header = new TabHeader { BorderThickness = new Thickness(0), Height = Res.RowInnerHeight, Owner = this };
             g.Children.Add(header);
-            Button btn = new Button { Content = "\uE027", Style = Res.字符按钮, Foreground = Res.深灰背景 };
+            Button btn = new Button { Content = "\uE027", Style = Res.字符按钮, Foreground = Res.深灰1 };
             btn.Click += OnPinClick;
             Grid.SetColumn(btn, 1);
             g.Children.Add(btn);

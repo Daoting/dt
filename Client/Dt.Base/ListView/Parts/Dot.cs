@@ -92,7 +92,7 @@ namespace Dt.Base
             switch (Font)
             {
                 case CellFontStyle.小灰:
-                    Foreground = Res.深灰边框;
+                    Foreground = Res.深灰2;
                     FontSize = Res.小字;
                     break;
 
@@ -105,7 +105,7 @@ namespace Dt.Base
 
                 case CellFontStyle.蓝白:
                     Foreground = Res.WhiteBrush;
-                    Background = Res.主题蓝色;
+                    Background = Res.主蓝;
                     if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
                         Padding = new Thickness(10, 4, 10, 4);
                     break;

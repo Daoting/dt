@@ -372,7 +372,7 @@ namespace Dt.Base.Report
             p_cell.FontStyle = Italic ? FontStyle.Italic : FontStyle.Normal;
             p_cell.Underline = UnderLine;
             p_cell.Strikethrough = StrikeOut;
-            p_cell.Foreground = HandleClick ? Dt.Base.Res.主题蓝色 : new SolidColorBrush(Foreground);
+            p_cell.Foreground = HandleClick ? Dt.Base.Res.主蓝 : new SolidColorBrush(Foreground);
             p_cell.Background = Background.A == 0 ? null : new SolidColorBrush(Background);
             p_cell.HorizontalAlignment = Horalign;
             p_cell.VerticalAlignment = Veralign;

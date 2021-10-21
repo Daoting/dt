@@ -13,7 +13,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid BorderThickness="0,1,0,1" BorderBrush="{StaticResource 浅灰边框}" Background="{StaticResource 浅灰背景}">
+    <Grid BorderThickness="0,1,0,1" BorderBrush="{StaticResource 浅灰2}" Background="{StaticResource 浅灰1}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />

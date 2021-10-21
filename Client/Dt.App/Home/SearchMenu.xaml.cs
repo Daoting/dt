@@ -68,7 +68,7 @@ namespace Dt.App.Home
 
                 Grid grid = new Grid
                 {
-                    Background = Res.主题蓝色,
+                    Background = Res.主蓝,
                     Height = 50,
                     Margin = new Thickness(0, 0, 0, 10),
                     ColumnDefinitions =

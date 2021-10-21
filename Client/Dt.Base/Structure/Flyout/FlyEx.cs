@@ -27,7 +27,7 @@ namespace Dt.Base
     //    /// <param name="p_content"></param>
     //    public static void Msg(this FrameworkElement p_target, string p_content)
     //    {
-    //        ShowFly(p_target, p_content, Res.主题蓝色);
+    //        ShowFly(p_target, p_content, Res.主蓝);
     //    }
 
     //    /// <summary>

@@ -73,7 +73,7 @@ namespace Dt.Core
         #region 静态构造
         static SysVisual()
         {
-            // 根Grid，背景主题蓝色
+            // 根Grid，背景主蓝
             _rootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！启动时为临时提示信息

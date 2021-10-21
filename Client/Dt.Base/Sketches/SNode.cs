@@ -283,11 +283,11 @@ namespace Dt.Base
             {
                 p_writer.WriteAttributeString("content", Content.ToString());
             }
-            if ((Background as SolidColorBrush).Color != Res.主题蓝色.Color)
+            if ((Background as SolidColorBrush).Color != Res.主蓝.Color)
             {
                 p_writer.WriteAttributeString("background", (Background as SolidColorBrush).Color.ToString());
             }
-            if ((BorderBrush as SolidColorBrush).Color != Res.主题蓝色.Color)
+            if ((BorderBrush as SolidColorBrush).Color != Res.主蓝.Color)
             {
                 p_writer.WriteAttributeString("borderbrush", (BorderBrush as SolidColorBrush).Color.ToString());
             }

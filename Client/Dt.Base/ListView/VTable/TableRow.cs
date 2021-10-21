@@ -125,14 +125,14 @@ namespace Dt.Base.ListView
             Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
             foreach (var col in cols)
             {
-                ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = Res.浅灰边框, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 SetContentBinding(col, pre);
                 Children.Add(pre);
                 _cells[col.ID] = pre;
             }
 
             // 行头
-            Grid header = new Grid { Background = Res.浅灰背景 };
+            Grid header = new Grid { Background = Res.浅灰1 };
             if (_owner.SelectionMode != SelectionMode.None)
             {
                 header.SetBinding(BackgroundProperty, new Binding
@@ -141,7 +141,7 @@ namespace Dt.Base.ListView
                     Converter = new HeaderBackgroundConverter(),
                 });
             }
-            var bd = new Border { BorderBrush = Res.浅灰边框, BorderThickness = borderLine, IsHitTestVisible = false };
+            var bd = new Border { BorderBrush = Res.浅灰2, BorderThickness = borderLine, IsHitTestVisible = false };
             header.Children.Add(bd);
             TextBlock tb = new TextBlock { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("Index") });

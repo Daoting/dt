@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel>
-        <Grid Padding="10,0,0,0" Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1">
+        <Grid Padding="10,0,0,0" Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="0,0,0,1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

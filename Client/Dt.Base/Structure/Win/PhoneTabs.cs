@@ -37,7 +37,7 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(PhoneTabs);
 
-            _grid = new Grid { BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = Res.浅灰边框, Background = Res.浅灰背景 };
+            _grid = new Grid { BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = Res.浅灰2, Background = Res.浅灰1 };
             Grid.SetRow(_grid, 1);
             ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
         }

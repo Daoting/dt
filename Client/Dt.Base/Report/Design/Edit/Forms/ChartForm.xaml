@@ -9,7 +9,7 @@
             <RowDefinition Height="200" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:Chart x:Name="_chart" Palette="Office" BorderThickness="0,0,0,1" BorderBrush="{StaticResource 浅灰边框}">
+        <a:Chart x:Name="_chart" Palette="Office" BorderThickness="0,0,0,1" BorderBrush="{StaticResource 浅灰2}">
             <a:ChartLegend x:Name="_legend" />
         </a:Chart>
         <a:Fv x:Name="_fv" Grid.Row="1">

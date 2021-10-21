@@ -28,7 +28,7 @@
                     <a:CBar RowSpan="2">
                         <StackPanel Margin="10">
                             <TextBlock Text="图标：有无子节点区分；" />
-                            <TextBlock Text="大于4个子节点的浅黄背景；" />
+                            <TextBlock Text="大于4个子节点的浅黄；" />
                             <TextBlock Text="简码字符数小于4红色，大于4绿色；" />
                         </StackPanel>
                     </a:CBar>

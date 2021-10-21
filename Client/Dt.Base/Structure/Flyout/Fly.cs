@@ -164,7 +164,7 @@ namespace Dt.Base
                 MinHeight = 40d,
                 Background = Res.默认背景,
                 BorderThickness = new Thickness(1d),
-                BorderBrush = Res.浅灰边框
+                BorderBrush = Res.浅灰2
             };
 
             _sv = new ScrollViewer
@@ -317,7 +317,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnResizeStarted(object sender, DragStartedEventArgs e)
         {
-            _rootGrid.BorderBrush = Res.醒目红色;
+            _rootGrid.BorderBrush = Res.亮红;
         }
 
         void OnTopDragDelta(object sender, DragDeltaEventArgs e)
@@ -394,7 +394,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnResizeCompleted(object sender, DragCompletedEventArgs e)
         {
-            _rootGrid.BorderBrush = Res.浅灰边框;
+            _rootGrid.BorderBrush = Res.浅灰2;
             AfterResized?.Invoke(this, EventArgs.Empty);
         }
         #endregion

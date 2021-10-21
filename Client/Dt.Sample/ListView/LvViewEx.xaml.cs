@@ -61,7 +61,7 @@ namespace Dt.Sample
             {
                 var row = p_item.Row;
                 if (row.Date("chushengrq").Month == 9)
-                    p_item.Background = Res.浅黄背景;
+                    p_item.Background = Res.浅黄;
 
                 if (row.Double("Shengao") > 1.75)
                     p_item.Foreground = Res.RedBrush;

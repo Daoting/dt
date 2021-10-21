@@ -17,7 +17,7 @@
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="默认按钮" />
                 <Button Content="不可用状态" IsEnabled="False" />
-                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主题蓝色}" BorderThickness="4" />
+                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" BorderThickness="4" />
             </StackPanel>
             <TextBlock Text="字符按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">

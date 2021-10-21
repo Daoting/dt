@@ -14,7 +14,7 @@
         </Style>
     </Page.Resources>
     
-    <Grid Background="{StaticResource 主题蓝色}">
+    <Grid Background="{StaticResource 主蓝}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="Auto" />
@@ -37,7 +37,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ProgressRing x:Name="Progress" Foreground="White" Background="{StaticResource 主题蓝色}" IsActive="True" Width="40" Height="40"/>
+            <ProgressRing x:Name="Progress" Foreground="White" Background="{StaticResource 主蓝}" IsActive="True" Width="40" Height="40"/>
             <TextBlock x:Name="InfoBlock" Text="正在登录..." TextWrapping="Wrap" Margin="10" Grid.Row="1" />
         </Grid>
 

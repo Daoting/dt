@@ -216,7 +216,7 @@ namespace Dt.Base.TreeViews
             // 分割线及选择背景
             Border bd;
             if (_owner.ShowRowLine)
-                bd = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
+                bd = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰2, IsHitTestVisible = false };
             else
                 bd = new Border { IsHitTestVisible = false };
             if (_owner.SelectionMode != SelectionMode.None)
@@ -371,7 +371,7 @@ namespace Dt.Base.TreeViews
         void CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            _btnMenu = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框 };
+            _btnMenu = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰2 };
             _btnMenu.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

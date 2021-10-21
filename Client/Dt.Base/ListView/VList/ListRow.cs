@@ -150,7 +150,7 @@ namespace Dt.Base.ListView
             Border bd;
             if (_owner.ShowItemBorder)
             {
-                bd = new Border { BorderBrush = Res.浅灰边框, IsHitTestVisible = false };
+                bd = new Border { BorderBrush = Res.浅灰2, IsHitTestVisible = false };
                 // 设置宽度或最大宽度时显示右边框
                 if (!Kit.IsPhoneUI && (!double.IsPositiveInfinity(_owner.MaxWidth) || !double.IsNaN(_owner.Width)))
                     bd.BorderThickness = new Thickness(0, 0, 1, 1);

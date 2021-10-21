@@ -71,7 +71,7 @@ namespace Dt.Base.FormView
             // 内容边框
             _rcChild = new Rectangle
             {
-                Stroke = Res.浅灰边框,
+                Stroke = Res.浅灰2,
                 IsHitTestVisible = false,
                 Margin = new Thickness(0, 0, -1, -1)
             };
@@ -103,8 +103,8 @@ namespace Dt.Base.FormView
                     // 标题背景及边框
                     _rcTitle = new Rectangle
                     {
-                        Fill = Res.浅灰背景,
-                        Stroke = Res.浅灰边框,
+                        Fill = Res.浅灰1,
+                        Stroke = Res.浅灰2,
                         IsHitTestVisible = false,
                         Margin = new Thickness(0, 0, -1, -1)
                     };

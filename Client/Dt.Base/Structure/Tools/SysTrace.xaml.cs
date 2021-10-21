@@ -91,7 +91,7 @@ namespace Dt.Base.Tools
                     Content = trace,
                     IsPinned = true,
                     WinPlacement = DlgPlacement.FromLeft,
-                    BorderBrush = Res.浅灰边框,
+                    BorderBrush = Res.浅灰2,
                     Width = 400
                 };
             }
@@ -120,7 +120,7 @@ namespace Dt.Base.Tools
                     Content = new LocalDbView(),
                     IsPinned = true,
                     WinPlacement = DlgPlacement.Maximized,
-                    BorderBrush = Res.浅灰边框,
+                    BorderBrush = Res.浅灰2,
                 };
             }
             _dlgDb.Show();

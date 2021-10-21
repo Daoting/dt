@@ -27,7 +27,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource 主题蓝色}"
+                <Border Background="{StaticResource 主蓝}"
                         Height="50"
                         Width="50"
                         VerticalAlignment="Center">
@@ -89,7 +89,7 @@
                     <a:CBar Title="说明" />
                     <a:CBar RowSpan="3">
                         <StackPanel Margin="10">
-                            <TextBlock Text="9月份出生的为浅黄背景；" />
+                            <TextBlock Text="9月份出生的为浅黄；" />
                             <TextBlock Text="身高1.75以上行字体红色；" />
                             <TextBlock Text="循环门诊的粗体，内分泌门诊斜体；" />
                             <TextBlock Text="性别头像，身高曲线；" />

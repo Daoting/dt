@@ -1336,7 +1336,7 @@ namespace Dt.Base
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
+            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰2, HorizontalAlignment = HorizontalAlignment.Right };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

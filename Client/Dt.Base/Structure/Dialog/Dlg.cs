@@ -946,7 +946,7 @@ namespace Dt.Base
                     // 调整大小的外框
                     _bdResize = new Border
                     {
-                        BorderBrush = Res.醒目红色,
+                        BorderBrush = Res.亮红,
                         Width = ActualWidth,
                         Height = ActualHeight,
                         BorderThickness = new Thickness(2),

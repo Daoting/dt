@@ -729,7 +729,7 @@ namespace Dt.Base
                 && ReadLocalValue(BorderThicknessProperty) == DependencyProperty.UnsetValue)
             {
                 BorderThickness = new Thickness(0, 0, 0, 1);
-                BorderBrush = Res.浅灰边框;
+                BorderBrush = Res.浅灰2;
             }
 #endif
 

@@ -34,9 +34,9 @@
                         <StackPanel Padding="10">
                             <a:Dot ID="name" />
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                <a:Dot ID="IsLocked" UI="CheckBox" Foreground="{StaticResource 深灰边框}" />
+                                <a:Dot ID="IsLocked" UI="CheckBox" Foreground="{StaticResource 深灰2}" />
                                 <TextBlock Text="锁定" VerticalAlignment="Center" Style="{StaticResource 小灰}" Margin="4,0,0,0" />
-                                <a:Dot ID="Singleton" UI="CheckBox" Foreground="{StaticResource 深灰边框}" Margin="30,0,0,0" />
+                                <a:Dot ID="Singleton" UI="CheckBox" Foreground="{StaticResource 深灰2}" Margin="30,0,0,0" />
                                 <TextBlock Text="单例" VerticalAlignment="Center" Style="{StaticResource 小灰}" Margin="4,0,0,0" />
 
                                 <TextBlock Text="创建：" Style="{StaticResource 小灰}" Margin="30,0,0,0" />

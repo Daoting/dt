@@ -62,7 +62,7 @@ namespace Dt.App.Workflow
                         {
                             //活动
                             case "0":
-                                node.BorderBrush = Res.醒目红色;
+                                node.BorderBrush = Res.亮红;
                                 break;
                             //结束
                             case "1":

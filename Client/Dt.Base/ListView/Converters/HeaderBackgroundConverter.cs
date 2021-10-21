@@ -20,7 +20,7 @@ namespace Dt.Base.ListView
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (bool)value ? Res.黄色背景 : Res.浅灰背景;
+            return (bool)value ? Res.中黄 : Res.浅灰1;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

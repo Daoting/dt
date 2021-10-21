@@ -72,7 +72,7 @@
                                 <VisualState x:Name="DragValid">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="StrokeThickness" >
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
@@ -85,7 +85,7 @@
                                 <VisualState x:Name="DragDel">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 绿色背景}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 中绿}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="StrokeThickness" >
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
@@ -108,8 +108,8 @@
     <!--Sketch-->
     <Style TargetType="a:Sketch">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 灰色背景}"/>
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 中灰1}"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -168,34 +168,34 @@
                                     <Line x:Name="Part_TopLine"
                                           X1="0"
                                           X2="{TemplateBinding PageWidth}"
-                                          Stroke="{StaticResource 醒目红色}"
+                                          Stroke="{StaticResource 亮红}"
                                           StrokeThickness="1"
                                           IsHitTestVisible="False"
                                           Visibility="Collapsed" />
                                     <Line x:Name="Part_BottomLine"
                                           X1="0"
                                           X2="{TemplateBinding PageWidth}"
-                                          Stroke="{StaticResource 醒目红色}"
+                                          Stroke="{StaticResource 亮红}"
                                           StrokeThickness="1"
                                           IsHitTestVisible="False"
                                           Visibility="Collapsed" />
                                     <Line x:Name="Part_LeftLine"
                                           Y1="0"
                                           Y2="{TemplateBinding PageHeight}"
-                                          Stroke="{StaticResource 醒目红色}"
+                                          Stroke="{StaticResource 亮红}"
                                           StrokeThickness="1"
                                           IsHitTestVisible="False"
                                           Visibility="Collapsed" />
                                     <Line x:Name="Part_RightLine"
                                           Y1="0"
                                           Y2="{TemplateBinding PageHeight}"
-                                          Stroke="{StaticResource 醒目红色}"
+                                          Stroke="{StaticResource 亮红}"
                                           StrokeThickness="1"
                                           IsHitTestVisible="False"
                                           Visibility="Collapsed" />
 
                                     <Rectangle x:Name="Part_SelRect"
-                                               Stroke="{StaticResource 主题蓝色}"
+                                               Stroke="{StaticResource 主蓝}"
                                                StrokeThickness="1"
                                                IsHitTestVisible="False"
                                                Visibility="Collapsed"
@@ -232,9 +232,9 @@
 
     <!--SNode-->
     <Style  TargetType="a:SNode">
-        <Setter Property="Background" Value="{StaticResource 主题蓝色}"/>
+        <Setter Property="Background" Value="{StaticResource 主蓝}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource 主题蓝色}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 主蓝}"/>
         <Setter Property="Padding" Value="10"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -309,7 +309,7 @@
 
     <!--SLine-->
     <Style TargetType="a:SLine">
-        <Setter Property="Foreground" Value="{StaticResource 深灰边框}"/>
+        <Setter Property="Foreground" Value="{StaticResource 深灰2}"/>
         <Setter Property="ManipulationMode" Value="None"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -377,7 +377,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Grid Background="Transparent">
-                        <Ellipse x:Name="Ellipse" Stroke="{StaticResource 浅湖蓝背景}" StrokeThickness="2" />
+                        <Ellipse x:Name="Ellipse" Stroke="{StaticResource 湖蓝}" StrokeThickness="2" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -385,17 +385,17 @@
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Stroke" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Stroke" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -415,7 +415,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="sketch:NodeSelector">
                     <Grid>
-                        <Rectangle StrokeThickness="1" Stroke="{StaticResource 灰色边框}" Stretch="Fill" IsHitTestVisible="False" /> <!--StrokeDashArray="2, 2"-->
+                        <Rectangle StrokeThickness="1" Stroke="{StaticResource 中灰2}" Stretch="Fill" IsHitTestVisible="False" /> <!--StrokeDashArray="2, 2"-->
                         <Thumb x:Name="PART_TopLeft" Margin="-10,-10,0,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Left" VerticalAlignment="Top" />
                         <Thumb x:Name="PART_Top" Margin="0,-10,0,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Center" VerticalAlignment="Top" />
                         <Thumb x:Name="PART_TopRight" Margin="0,-10,-10,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Right" VerticalAlignment="Top" />
@@ -432,7 +432,7 @@
 
     <!--Ruler-->
     <Style TargetType="sketch:Ruler">
-        <Setter Property="Foreground" Value="{StaticResource 深灰背景}"/>
+        <Setter Property="Foreground" Value="{StaticResource 深灰1}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -462,7 +462,7 @@
     <Style x:Key="PromptEllipse" TargetType="Ellipse">
         <Setter Property="Width" Value="20" />
         <Setter Property="Height" Value="20" />
-        <Setter Property="Stroke" Value="{StaticResource  醒目红色}" />
+        <Setter Property="Stroke" Value="{StaticResource  亮红}" />
         <Setter Property="StrokeThickness" Value="2" />
     </Style>
 
@@ -487,56 +487,56 @@
                                 <VisualState x:Name="LeftTop">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopLeft" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="TopCenter">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Top" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="RightTop">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopRight" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="LeftCenter">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Left" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="RightCenter">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Right" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="LeftBottom">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomLeft" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="BottomCenter">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Bottom" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="RightBottom">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomRight" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 醒目红色}"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>

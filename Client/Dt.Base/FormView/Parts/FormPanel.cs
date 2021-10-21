@@ -38,13 +38,13 @@ namespace Dt.Base.FormView
 
         readonly Fv _owner;
         // 为uno节省可视树级数
-        readonly Rectangle _border = new Rectangle { Stroke = Res.浅灰边框, IsHitTestVisible = false };
+        readonly Rectangle _border = new Rectangle { Stroke = Res.浅灰2, IsHitTestVisible = false };
         #endregion
 
         public FormPanel(Fv p_owner)
         {
             _owner = p_owner;
-            Background = Res.浅灰背景;
+            Background = Res.浅灰1;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
 

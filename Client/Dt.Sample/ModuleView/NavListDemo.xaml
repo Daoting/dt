@@ -16,7 +16,7 @@
                        Padding="10"
                        Margin="0,0,10,0"
                        Foreground="White"
-                       Background="{StaticResource 主题蓝色}"
+                       Background="{StaticResource 主蓝}"
                        VerticalAlignment="Center" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <a:Dot ID="Title" />

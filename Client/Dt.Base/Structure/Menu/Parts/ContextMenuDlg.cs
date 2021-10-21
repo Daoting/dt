@@ -20,7 +20,7 @@ namespace Dt.Base.MenuView
             HideTitleBar = true;
             Resizeable = false;
             Content = p_menu;
-            Background = Res.浅灰背景;
+            Background = Res.浅灰1;
             MinWidth = 160;
 
             // 不向下层对话框传递Press事件

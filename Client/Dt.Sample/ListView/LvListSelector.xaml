@@ -14,11 +14,11 @@
                 </Grid.RowDefinitions>
                 <a:Dot ID="xm" Font="小灰" />
                 <a:Dot ID="chushengrq" Font="小灰" HorizontalAlignment="Right"/>
-                <Border Background="{StaticResource 主题蓝色}" BorderThickness="0" Padding="10,6" Grid.Row="1">
+                <Border Background="{StaticResource 主蓝}" BorderThickness="0" Padding="10,6" Grid.Row="1">
                     <a:Dot ID="note" Foreground="White" />
                 </Border>
                 <Path Data="M0,0 L16,0 L20,8"
-                      Fill="{StaticResource 主题蓝色}"
+                      Fill="{StaticResource 主蓝}"
                       StrokeThickness="0"
                       Stretch="Fill"
                       Width="20"
@@ -39,7 +39,7 @@
                 </Grid.RowDefinitions>
                 <a:Dot ID="xm" Font="小灰" />
                 <Path Data="M0,0 L4,8 L20,8"
-                      Fill="{StaticResource 绿色背景}"
+                      Fill="{StaticResource 中绿}"
                       StrokeThickness="0"
                       Stretch="Fill"
                       Width="20"
@@ -48,7 +48,7 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
                       Grid.Row="1"/>
-                <Border Background="{StaticResource 绿色背景}" BorderThickness="0" Padding="10,6" Grid.Row="2">
+                <Border Background="{StaticResource 中绿}" BorderThickness="0" Padding="10,6" Grid.Row="2">
                     <a:Dot ID="note" Foreground="White" />
                 </Border>
                 <a:Dot ID="chushengrq" Font="小灰" Grid.Row="3"/>

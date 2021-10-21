@@ -43,7 +43,7 @@ namespace Dt.Sample
                 return;
             }
 
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
 
             // 字体 / 外框 = 0.8
             var folder = await OpenFolder($"{icon}_ios");
@@ -91,7 +91,7 @@ namespace Dt.Sample
             //folder = await root.CreateFolderAsync("drawable-xxhdpi", CreationCollisionOption.OpenIfExists);
             //await SaveIcon(144, 144, 115, icon, "icon.png", folder);
 
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
             var folder = await root.CreateFolderAsync("drawable", CreationCollisionOption.OpenIfExists);
             await SaveIcon(640, 1136, 326, icon, "back.png", folder);
             await SaveIcon(50, 50, 40, icon, "logo.png", folder);
@@ -103,28 +103,28 @@ namespace Dt.Sample
             await SaveIcon(162, 162, 80, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-mdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
             await SaveIcon(48, 48, 38, icon, "ic_launcher.png", folder);
             await SaveIcon(48, 48, 38, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(108, 108, 54, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
             await SaveIcon(96, 96, 76, icon, "ic_launcher.png", folder);
             await SaveIcon(96, 96, 76, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(216, 216, 108, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xxhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
             await SaveIcon(144, 144, 96, icon, "ic_launcher.png", folder);
             await SaveIcon(144, 144, 96, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;
             await SaveIcon(324, 324, 162, icon, "ic_launcher_foreground.png", folder);
 
             folder = await root.CreateFolderAsync("mipmap-xxxhdpi", CreationCollisionOption.OpenIfExists);
-            _bd.Background = Res.主题蓝色;
+            _bd.Background = Res.主蓝;
             await SaveIcon(192, 192, 130, icon, "ic_launcher.png", folder);
             await SaveIcon(192, 192, 130, icon, "ic_launcher_round.png", folder);
             _bd.Background = null;

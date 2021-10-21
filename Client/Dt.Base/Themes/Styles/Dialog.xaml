@@ -11,7 +11,7 @@
     <Style x:Key="WinDlg" TargetType="a:Dlg">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 灰色边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 中灰2}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="ShowVeil" Value="False" />
         <Setter Property="Template">
@@ -27,7 +27,7 @@
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Background="{StaticResource 灰色背景}"
+                              Background="{StaticResource 中灰1}"
                               BorderBrush="{TemplateBinding BorderBrush}"
                               BorderThickness="0,0,0,1"
                               Height="{StaticResource RowOuterHeight}">
@@ -51,7 +51,7 @@
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认前景}"
-                                              Background="{StaticResource 灰色背景}"
+                                              Background="{StaticResource 中灰1}"
                                               Grid.Column="2"/>
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
@@ -80,7 +80,7 @@
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Background="{StaticResource 主题蓝色}"
+                              Background="{StaticResource 主蓝}"
                               Height="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

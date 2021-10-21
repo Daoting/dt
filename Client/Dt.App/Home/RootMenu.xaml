@@ -16,7 +16,7 @@
         <DataTemplate>
             <Grid Padding="12">
                 <StackPanel VerticalAlignment="Center">
-                    <a:Dot ID="Icon" UI="Icon" FontSize="30" Foreground="{StaticResource 主题蓝色}" Margin="0,0,0,4" HorizontalAlignment="Center" />
+                    <a:Dot ID="Icon" UI="Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,0,4" HorizontalAlignment="Center" />
                     <a:Dot ID="Name" HorizontalAlignment="Center" />
                 </StackPanel>
                 <a:Dot ID="Warning" UI="Warning" HorizontalAlignment="Right" VerticalAlignment="Top" />

@@ -9,7 +9,7 @@
 
     <!--FileList-->
     <Style TargetType="a:FileList">
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:FileList">
@@ -28,7 +28,7 @@
     <!--FileItem注释-->
     <Style x:Key="VirFileNoteStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource 小字}"/>
-        <Setter Property="Foreground" Value="{StaticResource 深灰边框}"/>
+        <Setter Property="Foreground" Value="{StaticResource 深灰2}"/>
     </Style>
 
     <!--FileItem默认模板-->
@@ -43,7 +43,7 @@
                 <TextBlock x:Name="IconBlock"
                            Text="{TemplateBinding Icon}"
                            FontFamily="{StaticResource IconFont}"
-                           Foreground="{StaticResource 深灰边框}"
+                           Foreground="{StaticResource 深灰2}"
                            FontSize="30"
                            Margin="0,0,10,0"
                            VerticalAlignment="Center" />
@@ -97,7 +97,7 @@
                     <VisualState x:Name="NoCache" />
                     <VisualState x:Name="Cached">
                         <VisualState.Setters>
-                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主题蓝色}" />
+                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主蓝}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -108,7 +108,7 @@
     <!--FileItem图片模板-->
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid">
-            <TextBlock Text="&#xE08A;" Foreground="{StaticResource 深灰边框}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Text="&#xE08A;" Foreground="{StaticResource 深灰2}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <Grid x:Name="ContentGrid" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="{TemplateBinding ImageStretch}" />
             </Grid>
@@ -192,7 +192,7 @@
                     <VisualState x:Name="NoCache" />
                     <VisualState x:Name="Cached">
                         <VisualState.Setters>
-                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主题蓝色}" />
+                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主蓝}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

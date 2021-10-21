@@ -7,7 +7,7 @@
 
     <UserControl.Resources>
         <Style x:Key="OtherPath" TargetType="Path">
-            <Setter Property="Fill" Value="{StaticResource 绿色背景}" />
+            <Setter Property="Fill" Value="{StaticResource 中绿}" />
             <Setter Property="Stretch" Value="Fill" />
             <Setter Property="Width" Value="10" />
             <Setter Property="Height" Value="10" />
@@ -17,7 +17,7 @@
         </Style>
 
         <Style x:Key="MyPath" TargetType="Path">
-            <Setter Property="Fill" Value="{StaticResource 主题蓝色}" />
+            <Setter Property="Fill" Value="{StaticResource 主蓝}" />
             <Setter Property="Stretch" Value="Fill" />
             <Setter Property="Width" Value="10" />
             <Setter Property="Height" Value="10" />
@@ -41,7 +41,7 @@
                            Tapped="OnMsgTapped"
                            RightTapped="OnMsgRightTapped"
                            Foreground="White"
-                           Background="{StaticResource 绿色背景}"
+                           Background="{StaticResource 中绿}"
                            Padding="10" />
                     <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
                 </StackPanel>
@@ -62,7 +62,7 @@
                     <a:FileList Data="{Binding [Content]}"
                                 RightTapped="OnFileRightTapped"
                                 HorizontalAlignment="Left"
-                                BorderBrush="{StaticResource 绿色背景}" />
+                                BorderBrush="{StaticResource 中绿}" />
                     <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
                 </StackPanel>
             </Grid>
@@ -86,7 +86,7 @@
                            Tapped="OnMsgTapped"
                            RightTapped="OnMsgRightTapped"
                            Foreground="White"
-                           Background="{StaticResource 主题蓝色}"
+                           Background="{StaticResource 主蓝}"
                            Padding="10" />
                     <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
                 </StackPanel>
@@ -108,7 +108,7 @@
                                 RightTapped="OnFileRightTapped"
                                 FixedVolume="chat"
                                 HorizontalAlignment="Left"
-                                BorderBrush="{StaticResource 主题蓝色}" />
+                                BorderBrush="{StaticResource 主蓝}" />
                     <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
                 </StackPanel>
                 <!--Data不能写在Style中-->

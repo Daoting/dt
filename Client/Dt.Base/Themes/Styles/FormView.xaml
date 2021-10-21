@@ -40,8 +40,8 @@
     <!--CBar-->
     <Style TargetType="a:CBar">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:CBar">
@@ -111,7 +111,7 @@
                                  IsReadOnly="{TemplateBinding ReadOnlyBinding}"
                                  PlaceholderText="{TemplateBinding Placeholder}"
                                  TextAlignment="Right"
-                                 InputScope="Number"
+                                 InputScope="NumberFullWidth"
                                  Style="{StaticResource FvTextBox}" />
                     </fv:CellPanel>
                 </ControlTemplate>
@@ -208,8 +208,8 @@
     <!--CFile-->
     <Style TargetType="a:CFile">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:CFile">
@@ -327,7 +327,7 @@
     <Style TargetType="a:CLink">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:CLink">

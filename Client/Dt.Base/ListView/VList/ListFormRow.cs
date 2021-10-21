@@ -75,8 +75,8 @@ namespace Dt.Base.ListView
                 Grid grid = new Grid { Height = Res.RowOuterHeight };
                 var bd = new Border
                 {
-                    Background = Res.浅灰背景,
-                    BorderBrush = Res.浅灰边框,
+                    Background = Res.浅灰1,
+                    BorderBrush = Res.浅灰2,
                     BorderThickness = bdThickness,
                     IsHitTestVisible = false,
                 };
@@ -134,8 +134,8 @@ namespace Dt.Base.ListView
                 // 标题背景及边框
                 var bd = new Border
                 {
-                    Background = Res.浅灰背景,
-                    BorderBrush = Res.浅灰边框,
+                    Background = Res.浅灰1,
+                    BorderBrush = Res.浅灰2,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     IsHitTestVisible = false,
                 };
@@ -153,7 +153,7 @@ namespace Dt.Base.ListView
                 grid.Children.Add(tb);
 
                 // 内容
-                ContentPresenter pre = new ContentPresenter { Padding = TableRow.TextMargin, BorderBrush = Res.浅灰边框, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                ContentPresenter pre = new ContentPresenter { Padding = TableRow.TextMargin, BorderBrush = Res.浅灰2, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 SetContentBinding(col, pre);
                 Grid.SetColumn(pre, 1);
                 grid.Children.Add(pre);

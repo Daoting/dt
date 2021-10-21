@@ -56,7 +56,7 @@ namespace Dt.Sample
                 p_item.Foreground = Res.GreenBrush;
 
             if (p_item.Children.Count > 4)
-                p_item.Background = Res.浅黄背景;
+                p_item.Background = Res.浅黄;
             return tb;
         }
     }

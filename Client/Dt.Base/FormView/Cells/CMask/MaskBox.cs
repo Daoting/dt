@@ -617,7 +617,7 @@ namespace Dt.Base
         static InputScope CreateNumberScope()
         {
             InputScope scope = new InputScope();
-            scope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.Number });
+            scope.Names.Add(new InputScopeName() { NameValue = InputScopeNameValue.NumberFullWidth });
             return scope;
         }
         #endregion

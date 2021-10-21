@@ -16,8 +16,8 @@
             <TextBlock Text="&#xE082;" Foreground="White" FontSize="30" FontFamily="{StaticResource IconFont}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.Row="2">
-            <Button Content="完　成" Click="OnSend" Background="{StaticResource 主题蓝色}" Foreground="White" Width="100" />
-            <Button Content="放　弃" Click="OnCancel" Background="{StaticResource 深灰边框}" Foreground="White" Width="100" Margin="20,0,0,0" />
+            <Button Content="完　成" Click="OnSend" Background="{StaticResource 主蓝}" Foreground="White" Width="100" />
+            <Button Content="放　弃" Click="OnCancel" Background="{StaticResource 深灰2}" Foreground="White" Width="100" Margin="20,0,0,0" />
         </StackPanel>
     </Grid>
 </a:Dlg>

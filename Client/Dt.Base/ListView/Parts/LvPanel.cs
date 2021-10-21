@@ -756,8 +756,8 @@ namespace Dt.Base.ListView
             _toolbar = _owner.Toolbar;
             if (_toolbar != null)
             {
-                _toolbar.Background = Res.浅灰背景;
-                _toolbar.BorderBrush = Res.浅灰边框;
+                _toolbar.Background = Res.浅灰1;
+                _toolbar.BorderBrush = Res.浅灰2;
                 _toolbar.BorderThickness = new Thickness(0, 0, 0, 1);
                 Children.Add(_toolbar);
                 _toolbar.ItemClick += OnToolbarClick;

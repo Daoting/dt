@@ -17,14 +17,14 @@
                       ViewMode="Tile"
                       SelectionMode="None"
                       ItemHeight="50"
-                      BorderBrush="{StaticResource 浅灰边框}"
+                      BorderBrush="{StaticResource 浅灰2}"
                       BorderThickness="0,1,0,0">
                     <DataTemplate>
-                        <a:Dot ID="#" Foreground="{StaticResource 主题蓝色}" HorizontalAlignment="Center" />
+                        <a:Dot ID="#" Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
                     </DataTemplate>
                 </a:Lv>
                 <a:CBar Margin="0,10,0,0">
-                    <Grid Background="{StaticResource 浅灰背景}">
+                    <Grid Background="{StaticResource 浅灰1}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -46,7 +46,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <a:Dot ID="Content" Foreground="{StaticResource 主题蓝色}" />
+                            <a:Dot ID="Content" Foreground="{StaticResource 主蓝}" />
                             <Button Content="&#xE009;" Click="OnDelHis" Style="{StaticResource 字符按钮}" Grid.Column="1" />
                         </Grid>
                     </DataTemplate>

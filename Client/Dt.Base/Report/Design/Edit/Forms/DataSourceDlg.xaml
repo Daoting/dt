@@ -17,7 +17,7 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="1">
+        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
@@ -27,11 +27,11 @@
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
                       Background="White"
-                      BorderBrush="{StaticResource 浅灰边框}"
+                      BorderBrush="{StaticResource 浅灰2}"
                       BorderThickness="1,0,0,0"
                       Grid.Column="1" />
         </Grid>
-        <Grid Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="1,0,1,1" Grid.Row="1">
+        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1,0,1,1" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
@@ -42,7 +42,7 @@
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
                       Background="White"
-                      BorderBrush="{StaticResource 浅灰边框}"
+                      BorderBrush="{StaticResource 浅灰2}"
                       BorderThickness="1,0,0,0"
                       Grid.Column="1">
                 <ComboBoxItem Content="数据" />

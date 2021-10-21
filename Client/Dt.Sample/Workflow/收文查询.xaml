@@ -37,8 +37,8 @@
                             <a:Dot ID="文件标题" />
                             <a:Dot ID="文件附件" UI="File" Margin="10" />
                             <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
-                                <a:Dot ID="来文单位" FontSize="12" Foreground="{StaticResource 深灰边框}" />
-                                <TextBlock Text="{Binding [来文时间],Converter={StaticResource CvDateTime}}" Margin="10,0,0,0" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                                <a:Dot ID="来文单位" FontSize="12" Foreground="{StaticResource 深灰2}" />
+                                <TextBlock Text="{Binding [来文时间],Converter={StaticResource CvDateTime}}" Margin="10,0,0,0" FontSize="12" Foreground="{StaticResource 深灰2}" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

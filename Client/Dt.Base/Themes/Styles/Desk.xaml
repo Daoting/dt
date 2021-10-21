@@ -31,7 +31,7 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Rectangle Fill="{StaticResource 浅灰背景}" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.ColumnSpan="2"/>
+                            <Rectangle Fill="{StaticResource 浅灰1}" Stroke="{StaticResource 浅灰2}" IsHitTestVisible="False" Grid.ColumnSpan="2"/>
                             <a:HomebarItem x:Name="HomeItem" />
                             <StackPanel x:Name="TaskbarPanel" Orientation="Horizontal" Grid.Column="1">
                                 <StackPanel.ChildrenTransitions>
@@ -71,7 +71,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:HomebarItem">
                     <Grid Background="Transparent">
-                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰2}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -91,13 +91,13 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
-                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
@@ -126,14 +126,14 @@
                                    Text="&#xE009;"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="16"
-                                   Foreground="{StaticResource 灰色边框}" />
+                                   Foreground="{StaticResource 中灰2}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -159,7 +159,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:TaskbarItem">
                     <Grid Background="Transparent">
-                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰2}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
                         <Grid x:Name="RootGrid" Margin="10,0,10,0">
@@ -184,13 +184,13 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
-                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
@@ -220,7 +220,7 @@
                                    FontSize="16"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Foreground="{StaticResource 深灰边框}" />
+                                   Foreground="{StaticResource 深灰2}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -252,17 +252,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Splitter">
-                    <Grid Background="{StaticResource 浅灰背景}" BorderBrush="{StaticResource 浅灰边框}" BorderThickness="1">
+                    <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1">
                         <StackPanel x:Name="GripDotsPanel" VerticalAlignment="Center" >
                             <Button x:Name="CloseLeftButton" Content="&#xE015;" Style="{StaticResource SplitterCloseButton}" />
                             <StackPanel x:Name="DragPanel" Padding="0,20,0,20" Margin="8,0,8,0" Background="Transparent">
-                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" />
-                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" Margin="0,10,0,10" />
-                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰边框}" HorizontalAlignment="Center" />
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰2}" HorizontalAlignment="Center" />
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰2}" HorizontalAlignment="Center" Margin="0,10,0,10" />
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource 深灰2}" HorizontalAlignment="Center" />
                             </StackPanel>
                             <Button x:Name="CloseRightButton" Content="&#xE016;" Style="{StaticResource SplitterCloseButton}" />
                         </StackPanel>
-                        <Rectangle x:Name="BorderLine" Width="4" Fill="{StaticResource 醒目红色}" Visibility="Collapsed" IsHitTestVisible="False" />
+                        <Rectangle x:Name="BorderLine" Width="4" Fill="{StaticResource 亮红}" Visibility="Collapsed" IsHitTestVisible="False" />
                         
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

@@ -716,8 +716,8 @@ namespace Dt.Base.ListView
             {
                 Grid grid = new Grid
                 {
-                    Background = Res.浅灰背景,
-                    BorderBrush = Res.浅灰边框,
+                    Background = Res.浅灰1,
+                    BorderBrush = Res.浅灰2,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     ColumnDefinitions =
                     {
@@ -750,8 +750,8 @@ namespace Dt.Base.ListView
             {
                 _topLeft = new Border
                 {
-                    Background = Res.浅灰背景,
-                    BorderBrush = Res.浅灰边框,
+                    Background = Res.浅灰1,
+                    BorderBrush = Res.浅灰2,
                     BorderThickness = new Thickness(0, 0, 1, 1),
                     IsHitTestVisible = false,
                 };

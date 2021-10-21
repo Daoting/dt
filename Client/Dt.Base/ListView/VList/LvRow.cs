@@ -241,7 +241,7 @@ namespace Dt.Base.ListView
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰边框 };
+            var btn = new Button { Content = "\uE03F", Style = Res.字符按钮, Foreground = Res.深灰2 };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (!Kit.IsPhoneUI)
                 p_menu.Placement = MenuPosition.OuterLeftTop;

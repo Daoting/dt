@@ -205,9 +205,9 @@ namespace Dt.App.Workflow
             var rc = new Rectangle();
             int status = p_item.Row.Int("status");
             if (status == 0)
-                rc.Fill = Res.绿色背景;
+                rc.Fill = Res.中绿;
             else if (status == 1)
-                rc.Fill = Res.深灰边框;
+                rc.Fill = Res.深灰2;
             else
                 rc.Fill = Res.BlackBrush;
             Grid.SetColumn(rc, 1);

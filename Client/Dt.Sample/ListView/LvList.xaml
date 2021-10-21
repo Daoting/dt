@@ -18,7 +18,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Background="{StaticResource 主题蓝色}" Height="50" Width="50" VerticalAlignment="Center">
+                            <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
                                 <TextBlock Text="&#xE060;"
                                            FontFamily="{StaticResource IconFont}"
                                            FontSize="30"

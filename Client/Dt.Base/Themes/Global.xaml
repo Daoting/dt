@@ -51,7 +51,7 @@
     公共画刷
     *****************************************************************
     -->
-    <SolidColorBrush x:Key="主题蓝色" Color="#FF1BA1E2" />
+    <SolidColorBrush x:Key="主蓝" Color="#FF1BA1E2" />
     <SolidColorBrush x:Key="默认背景" Color="White" />
     <SolidColorBrush x:Key="默认前景" Color="Black" />
 
@@ -62,25 +62,25 @@
     <SolidColorBrush x:Key="黄遮罩" Color="#19FFFF00"/>
     <SolidColorBrush x:Key="深黄遮罩" Color="#33FFFF00"/>
 
-    <SolidColorBrush x:Key="灰色背景" Color="#FFD6D6D6"/>
-    <SolidColorBrush x:Key="灰色边框" Color="#FFC3C3C3"/>
+    <SolidColorBrush x:Key="浅灰1" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="浅灰2" Color="#FFE0E0E0"/>
 
-    <SolidColorBrush x:Key="浅灰背景" Color="#FFF1F1F1"/>
-    <SolidColorBrush x:Key="浅灰边框" Color="#FFE0E0E0"/>
+    <SolidColorBrush x:Key="中灰1" Color="#FFD6D6D6"/>
+    <SolidColorBrush x:Key="中灰2" Color="#FFC3C3C3"/>
 
-    <SolidColorBrush x:Key="深灰背景" Color="#FF9D9D9D"/>
-    <SolidColorBrush x:Key="深灰边框" Color="#FF969696"/>
+    <SolidColorBrush x:Key="深灰1" Color="#FF9D9D9D"/>
+    <SolidColorBrush x:Key="深灰2" Color="#FF969696"/>
 
-    <SolidColorBrush x:Key="黄色背景" Color="#FFFFDA37"/>
-    <SolidColorBrush x:Key="浅黄背景" Color="#FFFFFDC5"/>
-    <SolidColorBrush x:Key="绿色背景" Color="#FF43B756"/>
-    <SolidColorBrush x:Key="浅绿背景" Color="#FFDAFBD7"/>
-    <SolidColorBrush x:Key="浅湖蓝背景" Color="#FF2DB6C9"/>
-    <SolidColorBrush x:Key="淡蓝背景" Color="#FFD5E9FD"/>
-    <SolidColorBrush x:Key="深蓝背景" Color="#FF005297"/>
+    <SolidColorBrush x:Key="亮蓝" Color="#FF0056FF"/>
+    <SolidColorBrush x:Key="亮红" Color="#FFFF4500"/>
 
-    <SolidColorBrush x:Key="醒目蓝色" Color="#FF0056FF"/>
-    <SolidColorBrush x:Key="醒目红色" Color="#FFFF4500"/>
+    <SolidColorBrush x:Key="中黄" Color="#FFFFDA37"/>
+    <SolidColorBrush x:Key="浅黄" Color="#FFFFFDC5"/>
+    <SolidColorBrush x:Key="中绿" Color="#FF43B756"/>
+    <SolidColorBrush x:Key="浅绿" Color="#FFDAFBD7"/>
+    <SolidColorBrush x:Key="湖蓝" Color="#FF2DB6C9"/>
+    <SolidColorBrush x:Key="浅蓝" Color="#FFD5E9FD"/>
+    <SolidColorBrush x:Key="深蓝" Color="#FF005297"/>
 
     <!--
     *****************************************************************
@@ -162,7 +162,7 @@
     <!-- 高度40 -->
     <Style x:Key="DefaultButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="Foreground" Value="{StaticResource 主题蓝色}"/>
+        <Setter Property="Foreground" Value="{StaticResource 主蓝}"/>
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,9,10,9" />
@@ -246,7 +246,7 @@
     </Style>
 
     <Style x:Key="小灰" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+        <Setter Property="Foreground" Value="{StaticResource 深灰2}" />
         <Setter Property="FontSize" Value="{StaticResource 小字}" />
     </Style>
 
@@ -376,7 +376,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Rectangle x:Name="Rect" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="Rect" Stroke="{StaticResource 浅灰2}" IsHitTestVisible="False" />
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock Text="&#xE00B;"
                                        FontFamily="{StaticResource IconFont}"

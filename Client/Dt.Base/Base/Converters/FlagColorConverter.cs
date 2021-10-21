@@ -19,8 +19,8 @@ namespace Dt.Base
     /// </summary>
     public class FlagColorConverter : IValueConverter
     {
-        SolidColorBrush _trueBrush = Res.醒目蓝色;
-        SolidColorBrush _falseBrush = Res.深灰边框;
+        SolidColorBrush _trueBrush = Res.亮蓝;
+        SolidColorBrush _falseBrush = Res.深灰2;
 
         /// <summary>
         /// 获取设置值为1或true时返回的画刷

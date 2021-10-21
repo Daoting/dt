@@ -588,7 +588,7 @@ namespace Dt.Base
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Foreground = Res.主题蓝色,
+                Foreground = Res.主蓝,
                 Text = $"共{cnt}个文件",
                 Tag = p_val,
             };
