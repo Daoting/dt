@@ -84,32 +84,34 @@ namespace Dt.Cm
                 return result;
             }
 
-            result.AddCell("IsSuc", true);
+            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
+            if (user == null)
+            {
+                //// 初次登录，创建账号，初始密码为手机号后4位
+                //user = UserObj.CreateByPhone(p_phone);
+                //await _dp.Save(user);
+
+                //result.AddCell("UserID", user.ID);
+                //result.AddCell("Phone", p_phone);
+                //result.AddCell("Name", user.Name);
+                //result.AddCell("Photo", user.Photo);
+                //// 无版本信息
+                //result.AddCell("Pwd", user.Pwd);
+
+                // 未注册返回，不再自动创建账号！
+                result.AddCell("IsSuc", false);
+                result.AddCell("Error", "账号不存在！");
+                return result;
+            }
 
             // 已注册
-            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
-            if (user != null)
-            {
-                result.AddCell("UserID", user.ID);
-                result.AddCell("Phone", p_phone);
-                result.AddCell("Name", user.Name);
-                result.AddCell("Photo", user.Photo);
-                result.AddCell("Version", await GetAllVers(user.ID));
-                result.AddCell("Pwd", user.Pwd);
-            }
-            else
-            {
-                // 初次登录，创建账号，初始密码为手机号后4位
-                user = UserObj.CreateByPhone(p_phone);
-                await _dp.Save(user);
-
-                result.AddCell("UserID", user.ID);
-                result.AddCell("Phone", p_phone);
-                result.AddCell("Name", user.Name);
-                result.AddCell("Photo", user.Photo);
-                // 无版本信息
-                result.AddCell("Pwd", user.Pwd);
-            }
+            result.AddCell("IsSuc", true);
+            result.AddCell("UserID", user.ID);
+            result.AddCell("Phone", p_phone);
+            result.AddCell("Name", user.Name);
+            result.AddCell("Photo", user.Photo);
+            result.AddCell("Version", await GetAllVers(user.ID));
+            result.AddCell("Pwd", user.Pwd);
             return result;
         }
 
