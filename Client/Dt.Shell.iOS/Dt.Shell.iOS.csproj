@@ -7,9 +7,9 @@
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{440aa056-593a-4519-8708-27081dee632f}</TemplateGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Blank</RootNamespace>
+    <RootNamespace>Dt.Shell</RootNamespace>
     <IPhoneResourcePrefix>Assets</IPhoneResourcePrefix>
-    <AssemblyName>Blank</AssemblyName>
+    <AssemblyName>Dt.Sample.Shell</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ProvisioningType>manual</ProvisioningType>
@@ -63,7 +63,10 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchArch>ARM64</MtouchArch>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <OptimizePNGs>true</OptimizePNGs>
+    <CodesignProvision>dt.samples</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />

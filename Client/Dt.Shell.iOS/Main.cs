@@ -3,7 +3,7 @@ using Dt.Core;
 using System;
 using UIKit;
 
-namespace App.iOS
+namespace Dt.Shell.iOS
 {
     public class Application
     {

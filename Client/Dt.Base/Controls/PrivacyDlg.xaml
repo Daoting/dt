@@ -1,0 +1,29 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.PrivacyDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Background="Transparent">
+
+    <Border Background="White" CornerRadius="10">
+        <StackPanel Margin="20" Spacing="20">
+            <TextBlock x:Name="_tbTitle" HorizontalAlignment="Center" FontSize="24" />
+            <StackPanel>
+                <TextBlock Text="在使用应用前，请您仔细阅读" TextWrapping="NoWrap" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="《用户协议》" Click="OnAgreement" Padding="4,8,4,8" />
+                    <TextBlock Text="和" VerticalAlignment="Center" />
+                    <Button Content="《隐私政策》" Click="OnPrivacy" Padding="4,8,4,8" />
+                    <TextBlock Text="。" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="点击“同意”即表示您已阅读并同意" Margin="0,10,0,0" />
+                <TextBlock Text="全部条款。" />
+            </StackPanel>
+
+            <StackPanel>
+                <Button Content="同意" Click="OnAgree" Background="Green" Foreground="White" HorizontalAlignment="Stretch" />
+                <Button Content="不同意并退出" Click="OnNo" Foreground="Gray" HorizontalAlignment="Stretch" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</a:Dlg>

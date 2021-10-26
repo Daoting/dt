@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>dt.Shell</string>
+	<string>com.dt.samples</string>
 	<key>CFBundleDisplayName</key>
 	<string>搬运工</string>
 	<key>CFBundleShortVersionString</key>
@@ -13,14 +13,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
-	<string>8.0</string>
+	<string>10.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
 		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
@@ -67,6 +66,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+      <key>CFBundleTypeName</key>
+      <string>public.data</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.data</string>

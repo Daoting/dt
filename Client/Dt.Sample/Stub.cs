@@ -30,7 +30,8 @@ namespace Dt.Shell
 #if WASM
             Kit.GetServerUrl("https://localhost/fz");
 #else
-            "https://10.10.1.16/fz";
+            //"https://10.10.1.16/fz";
+            "http://mapp.wicp.net/fz";
 #endif
 
         /// <summary>
@@ -88,14 +89,15 @@ namespace Dt.Shell
         /// <summary>
         /// 系统启动
         /// </summary>
-        public Task OnStartup()
+        public async Task OnStartup()
         {
-            // 初次运行，显示向导
-            //if (AtState.GetCookie("FirstRun") == "")
-            //{
-            //    await new Sample.GuideDemo().ShowAsync();
-            //    AtState.SaveCookie("FirstRun", "0");
-            //}
+            // 初次运行，显示用户协议、隐私政策、向导
+            if (AtState.GetCookie("FirstRun") == "")
+            {
+                await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
+                //await new Sample.GuideDemo().ShowAsync();
+                AtState.SaveCookie("FirstRun", "0");
+            }
 
             //Startup.AutoStartOnce = new AutoStartInfo
             //{
@@ -117,7 +119,6 @@ namespace Dt.Shell
             // 3. 完全不使用dt服务
             Startup.Register(typeof(Sample.SamplesMain));
             Startup.ShowHome();
-            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -32,8 +32,4 @@ mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/
 2. 使用UIActivityViewController发起的分享，接收时需要在独立的dll项目中实现Share Extension，iOS8.0 以后增加的方式，如 照片 邮箱；
 本系统只处理第一种情况！未实现“照片”中的接收分享功能
 
-
-发布到 App Store
-与 Mac 生成主机配对 -> 解决方案设置为“Release”，将“平台”设置为“iPhone” -> ios项目右键属性
-                                                                      -> 选择“使用 LLVM 优化编译器” -> 选中“优化 PNG 图像”以降低大小
-
+开发、调试、发布上架的详细过程参见《搬运工客户端手册.docx》
