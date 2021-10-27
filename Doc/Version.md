@@ -9,18 +9,23 @@ ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等�
 ios  软键盘盖住 TextBox 的问题
 ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
+ios版内测时主页刚启动快速操作无响应，崩溃
+
 
 ## Release 1.9.10 
 ### 功能 
 * 增加NavList，替换原有的MainInfoLv方式
 * 为上架到商店，样例设为主页
+* 通用的隐私政策及用户协议对话框
 
 ### 变更 
-*  精简常用画刷的名称
+* 精简常用画刷的名称
+* 因放商店服务端不自动注册账号
 
 ### Bug修改  
 * Lv 切换数据源、删除行后的布局bug
 * CNum采用 NumberFullWidth 键盘，Number键盘无小数点
+* Lv滑动时行交互背景不消失
 
 
 

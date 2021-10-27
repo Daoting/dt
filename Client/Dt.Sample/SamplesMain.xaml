@@ -8,14 +8,14 @@
     <a:Pane>
         <a:Tabs>
             <a:Tab Order="1" Icon="词典">
-                <a:NavList x:Name="_navControl" Title="控件" To="NewWin" ViewMode="Tile" SelectionMode="None" />
+                <a:NavList x:Name="_navControl" Title="控件" To="NewWin" ViewMode="Tile" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>
     <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Order="2" Icon="搬运工">
-                <a:NavList x:Name="_navModule" Title="模块" To="NewWin" SelectionMode="None" />
+                <a:NavList x:Name="_navModule" Title="模块" To="NewWin" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>
