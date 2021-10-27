@@ -11,7 +11,6 @@ using Dt.Core;
 using System;
 using Windows.Foundation;
 using Windows.UI.Core;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -32,8 +31,6 @@ namespace Dt.Base.ListView
         protected Lv _owner;
         protected LvItem _row;
         protected Rectangle _rcPointer;
-        uint? _pointerID;
-        Point _ptLast;
         bool _menuOpened;
 
         public LvRow(Lv p_owner)
@@ -110,16 +107,18 @@ namespace Dt.Base.ListView
         protected void AttachEvent()
         {
             PointerPressed += OnPointerPressed;
-            PointerMoved += OnPointerMoved;
             PointerReleased += OnPointerReleased;
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
+            PointerCaptureLost += OnPointerCaptureLost;
+            Tapped += (s, e) => _row.OnClick();
             DoubleTapped += (s, e) => _row.OnDoubleClick();
 
+            // 新版uno在PointerCaptureLost中处理
             // android上快速滑动时未触发PointerMoved！
-#if ANDROID
-            _owner.Scroll.ViewChanged += (s, e) => _rcPointer.Fill = null;
-#endif
+            //#if ANDROID
+            //            _owner.Scroll.ViewChanged += (s, e) => _rcPointer.Fill = null;
+            //#endif
         }
 
         /// <summary>
@@ -188,40 +187,14 @@ namespace Dt.Base.ListView
 
             _rcPointer.Fill = _owner.PressedBrush;
             if (CapturePointer(e.Pointer))
-            {
                 e.Handled = true;
-                _pointerID = e.Pointer.PointerId;
-                _ptLast = e.GetCurrentPoint(null).Position;
-            }
-        }
-
-        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (_pointerID != e.Pointer.PointerId)
-                return;
-
-            // 允许有短距离移动
-            e.Handled = true;
-            Point cur = e.GetCurrentPoint(null).Position;
-            if (Math.Abs(cur.X - _ptLast.X) > 4 || Math.Abs(cur.Y - _ptLast.Y) > 4)
-            {
-                ReleasePointerCapture(e.Pointer);
-                _pointerID = null;
-                if (e.IsTouch())
-                    _rcPointer.Fill = null;
-            }
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (_pointerID != e.Pointer.PointerId)
-                return;
-
             e.Handled = true;
             _rcPointer.Fill = null;
             ReleasePointerCapture(e.Pointer);
-            _pointerID = null;
-            _row.OnClick();
         }
 
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -236,6 +209,12 @@ namespace Dt.Base.ListView
         {
             if (!_menuOpened)
                 _rcPointer.Fill = null;
+        }
+
+        void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            //Log.Debug("OnPointerCaptureLost");
+            _rcPointer.Fill = null;
         }
 
         Button CreateMenuButton(Menu p_menu)

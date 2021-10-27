@@ -41,5 +41,5 @@
         </DataTemplate>
     </a:Mv.Resources>
     
-    <a:Lv x:Name="_lv" ItemClick="OnItemClick" />
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick" SelectionMode="None" />
 </a:Mv>

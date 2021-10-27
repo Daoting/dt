@@ -116,7 +116,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置选择模式，默认Single
+        /// 获取设置选择模式，默认None
         /// </summary>
         public SelectionMode SelectionMode
         {
