@@ -142,7 +142,14 @@ namespace Dt.Base
                 var to = nav.To == null ? To : nav.To.Value;
                 if (to == NavTarget.WinMain)
                 {
-                    _tab.OwnWin?.LoadMain(nav.GetCenter());
+                    var center = nav.GetCenter(nav.Params);
+                    if (center is Win win)
+                    {
+                        win.Title = nav.Title;
+                        if (nav.Icon != Icons.None)
+                            win.Icon = nav.Icon;
+                    }
+                    _tab.OwnWin?.LoadMain(center);
                 }
                 else
                 {

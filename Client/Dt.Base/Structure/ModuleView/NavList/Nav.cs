@@ -134,16 +134,20 @@ namespace Dt.Base
         public bool Cache { get; set; } = true;
 
         object _obj;
-        internal object GetCenter()
+        internal object GetCenter(object p_params = null)
         {
             if (!Cache)
-                return Activator.CreateInstance(Type);
+            {
+                if (p_params == null)
+                    return Activator.CreateInstance(Type);
+                return Activator.CreateInstance(Type, p_params);
+            }
 
             if (_obj != null)
                 return _obj;
 
             if (Type != null)
-                _obj = Activator.CreateInstance(Type);
+                _obj = (p_params == null) ? Activator.CreateInstance(Type) : Activator.CreateInstance(Type, p_params);
             return _obj;
         }
 

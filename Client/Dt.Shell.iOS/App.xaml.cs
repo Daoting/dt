@@ -43,9 +43,9 @@ namespace Dt.Shell
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
             // 设置 Background Fetch 最小时间间隔，10-15分钟不定
-            UIApplication.SharedApplication.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
+            application.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
 
-            if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+            if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
             {
                 // 注册本地通知
                 var ns = UIUserNotificationSettings.GetSettingsForTypes(
