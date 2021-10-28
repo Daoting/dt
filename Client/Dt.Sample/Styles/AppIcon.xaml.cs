@@ -130,6 +130,11 @@ namespace Dt.Sample
             _bd.Background = null;
             await SaveIcon(432, 432, 216, icon, "ic_launcher_foreground.png", folder);
 
+            // 应用商店上架图标
+            _bd.Background = Res.主蓝;
+            await SaveIcon(216, 216, 152, icon, "华为.png", root);
+            await SaveIcon(512, 512, 358, icon, "小米.png", root);
+
             Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
