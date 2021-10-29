@@ -84,6 +84,7 @@ namespace Dt.Sample
             #endregion
 
             #region 临时
+#if DEBUG
             group = new GroupData<Nav>
             {
                 new Nav("测试1", typeof(TestDemo1)),
@@ -91,6 +92,7 @@ namespace Dt.Sample
             };
             group.Title = "临时";
             ds.Add(group);
+#endif
             #endregion
 
             _navControl.Data = ds;

@@ -1141,7 +1141,7 @@ namespace Dt.Base
             {
                 // 启用动画会界面抖动！
                 // 16为分组行上部的间隔高度
-                Scroll.ChangeView(null, p_group.IsFirst ? 0 : p_group.Top + 16, null, true);
+                Scroll.ChangeView(null, p_group.IsFirst ? 0 : p_group.Top + LvPanel.GroupSeparatorHeight, null, true);
             }
             else
             {
@@ -1149,7 +1149,7 @@ namespace Dt.Base
                 var pt = _panel.TransformToVisual(Scroll).TransformPoint(new Point());
                 double y = Scroll.VerticalOffset + pt.Y + p_group.Top;
                 if (!p_group.IsFirst)
-                    y += 16;
+                    y += LvPanel.GroupSeparatorHeight;
                 Scroll.ChangeView(null, y, null, true);
             }
         }

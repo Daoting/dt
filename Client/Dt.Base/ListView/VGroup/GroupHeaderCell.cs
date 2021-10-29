@@ -45,7 +45,6 @@ namespace Dt.Base.ListView
         #region 成员变量
         GroupHeader _owner;
         uint? _pointerID;
-        bool _isMoved;
         Point _ptLast;
         #endregion
 
@@ -56,7 +55,6 @@ namespace Dt.Base.ListView
             Group = p_group;
             _owner = p_owner;
             Title = p_group.Data.ToString();
-            Loaded += OnLoaded;
         }
         #endregion
 
@@ -88,25 +86,12 @@ namespace Dt.Base.ListView
 #endif
         internal double Left { get; set; }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-
-            // uno中重写事件方法无效！iOS暂不支持Tapped事件！
-            PointerPressed += OnPointerPressed;
-            PointerMoved += OnPointerMoved;
-            PointerReleased += OnPointerReleased;
-            PointerEntered += OnPointerEntered;
-            PointerExited += OnPointerExited;
-        }
-
-        void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             if (CapturePointer(e.Pointer))
             {
                 e.Handled = true;
                 _pointerID = e.Pointer.PointerId;
-                _isMoved = false;
                 _ptLast = e.GetCurrentPoint(null).Position;
 
                 if (e.IsMouse() && !IsSelected)
@@ -114,7 +99,7 @@ namespace Dt.Base.ListView
             }
         }
 
-        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        protected override void OnPointerMoved(PointerRoutedEventArgs e)
         {
             // 触摸模式滚动
             if (e.IsTouch() && _pointerID == e.Pointer.PointerId)
@@ -122,11 +107,10 @@ namespace Dt.Base.ListView
                 Point cur = e.GetCurrentPoint(null).Position;
                 _owner.DoHorScroll(cur.X - _ptLast.X);
                 _ptLast = cur;
-                _isMoved = true;
             }
         }
 
-        void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
             if (_pointerID != e.Pointer.PointerId)
                 return;
@@ -134,21 +118,14 @@ namespace Dt.Base.ListView
             ReleasePointerCapture(e.Pointer);
             e.Handled = true;
             _pointerID = null;
-
-            if (e.IsMouse())
-            {
-                Point pt = e.GetCurrentPoint(null).Position;
-                if (this.ContainPoint(pt))
-                    _owner.Lv.ScrollIntoGroup(Group);
-            }
-            else if (!_isMoved)
-            {
-                _owner.Lv.ScrollIntoGroup(Group);
-            }
-            _isMoved = false;
         }
 
-        void OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            _owner.Lv.ScrollIntoGroup(Group);
+        }
+
+        protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             if (e.IsMouse() && !IsSelected)
             {
@@ -157,7 +134,7 @@ namespace Dt.Base.ListView
             }
         }
 
-        void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
             if (e.IsMouse() && !IsSelected)
             {

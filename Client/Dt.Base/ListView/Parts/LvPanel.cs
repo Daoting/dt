@@ -47,7 +47,11 @@ namespace Dt.Base.ListView
         /************************************************************************************************************************************/
 
         #region 成员变量
-        protected const double PanelMaxHeight = 5000;
+        public const double PanelMaxHeight = 5000;
+        /// <summary>
+        /// 分组行上部的间隔高度
+        /// </summary>
+        public const double GroupSeparatorHeight = 16;
         protected static Rect _rcEmpty = new Rect();
 
         protected Lv _owner;

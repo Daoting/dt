@@ -29,8 +29,6 @@ namespace Dt.Base
         Grid _root;
         readonly Grid _grid;
         Button _selected;
-        SlideState _state;
-        ScrollViewer _innerScroll;
         #endregion
 
         public PhoneTabs()
@@ -39,7 +37,7 @@ namespace Dt.Base
 
             _grid = new Grid { BorderThickness = new Thickness(0, 1, 0, 0), BorderBrush = Res.浅灰2, Background = Res.浅灰1 };
             Grid.SetRow(_grid, 1);
-            ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            //ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
         }
 
         /// <summary>
@@ -181,6 +179,10 @@ namespace Dt.Base
         }
 
         #region 左右滑动
+        /*  交互效果不好，暂时停用
+        SlideState _state;
+        ScrollViewer _innerScroll;
+
         protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
         {
             if (e.PointerDeviceType == PointerDeviceType.Touch && !e.Handled && _selected != null)
@@ -320,6 +322,7 @@ namespace Dt.Base
             /// </summary>
             LockY
         }
+        */
         #endregion
     }
 }

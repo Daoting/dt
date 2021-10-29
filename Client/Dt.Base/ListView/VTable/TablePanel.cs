@@ -157,6 +157,8 @@ namespace Dt.Base.ListView
                 // 增加高度使最底部分组能够滚动到顶部，确保和导航位置同步！
                 var group = _owner.GroupRows[_owner.GroupRows.Count - 1];
                 double delta = _maxSize.Height - _colHeader.DesiredSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - group.Data.Count * _rowHeight;
+                if (_owner.GroupRows.Count > 1)
+                    delta += GroupSeparatorHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
@@ -520,6 +522,8 @@ namespace Dt.Base.ListView
                     bottomHeight += _dataRows[_dataRows.Count - i].DesiredSize.Height;
                 }
                 double delta = _maxSize.Height - colHeaderHeight - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - bottomHeight;
+                if (_owner.GroupRows.Count > 1)
+                    delta += GroupSeparatorHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
