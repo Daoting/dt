@@ -59,6 +59,13 @@ namespace Dt.Base
         object _params;
         #endregion
 
+        #region 构造方法
+        public Mv()
+        {
+            Loaded += OnLoaded;
+        }
+        #endregion
+
         #region 属性
         /// <summary>
         /// 获取设置宿主标题文字
@@ -204,7 +211,7 @@ namespace Dt.Base
 
         #region 虚方法
         /// <summary>
-        /// 初始化，只在放入Tab.Content时调用一次
+        /// 初始化，Loaded事件时调用一次
         /// </summary>
         /// <param name="p_params">初始化参数</param>
         protected virtual void OnInit(object p_params)
@@ -236,9 +243,13 @@ namespace Dt.Base
         internal void AddToHost(Tab p_tab)
         {
             _tab = p_tab;
-
-            // 初始化
             Result = null;
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            // 初始化
             OnInit(_params);
         }
 
