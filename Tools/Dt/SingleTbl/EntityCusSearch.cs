@@ -1,11 +1,14 @@
 ﻿        #region 搜索
-        Row _query;
+        /// <summary>
+        /// 获取设置查询对象
+        /// </summary>
+        public Row QueryRow { get; set; }
 
         public void OnSearch(Row p_query)
         {
             if (p_query != null)
             {
-                _query = p_query;
+                QueryRow = p_query;
                 Query();
             }
 
@@ -19,7 +22,7 @@
 
         async void Query()
         {
-            if (_query == null)
+            if (QueryRow == null)
             {
                 _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-全部");
             }

@@ -1,6 +1,10 @@
 ﻿        #region 搜索
-        Row _query;
         $maincls$Search _search;
+
+        /// <summary>
+        /// 获取设置查询对象
+        /// </summary>
+        public Row QueryRow { get; set; }
 
         async void OnToSearch(object sender, Mi e)
         {
@@ -9,14 +13,14 @@
             var row = await Forward<Row>(_search);
             if (row != null)
             {
-                _query = row;
+                QueryRow = row;
                 Query();
             }
         }
 
         async void Query()
         {
-            if (_query == null)
+            if (QueryRow == null)
             {
                 _lv.Data = await $agent$.Query<$maincls$Obj>("$maintitle$-全部");
             }

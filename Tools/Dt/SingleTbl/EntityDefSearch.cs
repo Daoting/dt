@@ -1,11 +1,14 @@
 ﻿        #region 搜索
-        string _query;
+        /// <summary>
+        /// 获取设置查询串
+        /// </summary>
+        public string QueryStr { get; set; }
 
         public void OnSearch(string p_txt)
         {
             if (!string.IsNullOrEmpty(p_txt))
             {
-                _query = p_txt;
+                QueryStr = p_txt;
                 Title = "$entitytitle$列表 - " + p_txt;
                 Query();
             }
@@ -20,13 +23,13 @@
 
         async void Query()
         {
-            if (string.IsNullOrEmpty(_query) || _query == "#全部")
+            if (string.IsNullOrEmpty(QueryStr) || QueryStr == "#全部")
             {
                 _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-全部");
             }
             else
             {
-                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{QueryStr}%" });
             }
         }
         #endregion

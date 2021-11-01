@@ -1,12 +1,15 @@
 ﻿        #region 搜索
-        string _query;
+        /// <summary>
+        /// 获取设置查询串
+        /// </summary>
+        public string QueryStr { get; set; }
 
         async void OnToSearch(object sender, Mi e)
         {
             var txt = await Forward<string>(_lzSm.Value);
             if (!string.IsNullOrEmpty(txt))
             {
-                _query = txt;
+                QueryStr = txt;
                 Title = "$maintitle$列表 - " + txt;
                 Query();
             }
@@ -20,13 +23,13 @@
 
         async void Query()
         {
-            if (string.IsNullOrEmpty(_query) || _query == "#全部")
+            if (string.IsNullOrEmpty(QueryStr) || QueryStr == "#全部")
             {
                 _lv.Data = await $agent$.Query<$maincls$Obj>("$maintitle$-全部");
             }
             else
             {
-                _lv.Data = await $agent$.Query<$maincls$Obj>("$maintitle$-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await $agent$.Query<$maincls$Obj>("$maintitle$-模糊查询", new { ID = $"%{QueryStr}%" });
             }
         }
         #endregion
