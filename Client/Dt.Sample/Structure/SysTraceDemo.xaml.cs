@@ -12,7 +12,8 @@ namespace Dt.Sample
         public SysTraceDemo()
         {
             InitializeComponent();
-            _fv.FirstLoaded(() => SysTrace.ShowBox());
+            if (!Kit.IsPhoneUI)
+                _fv.FirstLoaded(() => SysTrace.ShowBox());
         }
 
         void OnNormal(object sender, RoutedEventArgs e)

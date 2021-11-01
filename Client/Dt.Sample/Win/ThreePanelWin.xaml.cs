@@ -29,5 +29,9 @@ namespace Dt.Sample
 
         }
 
+        void OnGoto(object sender, RoutedEventArgs e)
+        {
+            NaviTo("主区,右区");
+        }
     }
 }

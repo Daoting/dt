@@ -5,6 +5,9 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
+        <a:CBar>
+            <TextBlock Text="点击以下按钮将输出到Trace日志" Margin="10,0,0,0" />
+        </a:CBar>
         <a:CBar Title="Trace输出" />
         <Button Content="普通信息" Click="OnNormal" />
         <Button Content="Http请求" Click="OnRequest" />

@@ -33,8 +33,6 @@ namespace Dt.Base.TreeViews
         TvItem _row;
         Rectangle _rcPointer;
         double _indent;
-        uint? _pointerID;
-        Point _ptLast;
         Button _btnMenu;
         bool _menuOpened;
         #endregion
@@ -233,18 +231,13 @@ namespace Dt.Base.TreeViews
             _rcPointer = new Rectangle { IsHitTestVisible = false };
             Children.Add(_rcPointer);
 
-            // 附加交互事件，iOS暂不支持Tapped事件！
             PointerPressed += OnPointerPressed;
-            PointerMoved += OnPointerMoved;
             PointerReleased += OnPointerReleased;
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
+            PointerCaptureLost += OnPointerCaptureLost;
+            Tapped += (s, e) => _row.OnClick();
             DoubleTapped += (s, e) => _row.OnDoubleTapped();
-
-            // android上快速滑动时未触发PointerMoved！
-#if ANDROID
-            _owner.Scroll.ViewChanged += (s, e) => _rcPointer.Fill = null;
-#endif
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -255,40 +248,14 @@ namespace Dt.Base.TreeViews
 
             _rcPointer.Fill = _owner.PressedBrush;
             if (CapturePointer(e.Pointer))
-            {
                 e.Handled = true;
-                _pointerID = e.Pointer.PointerId;
-                _ptLast = e.GetCurrentPoint(null).Position;
-            }
-        }
-
-        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (_pointerID != e.Pointer.PointerId)
-                return;
-
-            // 允许有短距离移动
-            e.Handled = true;
-            Point cur = e.GetCurrentPoint(null).Position;
-            if (Math.Abs(cur.X - _ptLast.X) > 4 || Math.Abs(cur.Y - _ptLast.Y) > 4)
-            {
-                ReleasePointerCapture(e.Pointer);
-                _pointerID = null;
-                if (e.IsTouch())
-                    _rcPointer.Fill = null;
-            }
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (_pointerID != e.Pointer.PointerId)
-                return;
-
             e.Handled = true;
             _rcPointer.Fill = null;
             ReleasePointerCapture(e.Pointer);
-            _pointerID = null;
-            _row.OnClick();
         }
 
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -304,6 +271,11 @@ namespace Dt.Base.TreeViews
         {
             if (!_menuOpened)
                 _rcPointer.Fill = null;
+        }
+
+        void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            _rcPointer.Fill = null;
         }
 
         /// <summary>

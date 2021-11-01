@@ -106,7 +106,9 @@ namespace Dt.Sample
             var group = new GroupData<Nav>
             {
                 new Nav("查找图标", typeof(IconDemo)) { Desc = "内置的矢量文字，可用作图标、提示" },
+#if UWP
                 new Nav("生成App图片", typeof(AppIcon)) { To = NavTarget.WinMain, Desc = "生成 android 和 iOS 中用到的app图片" },
+#endif
                 new Nav("系统监视输出", typeof(SysTraceDemo)) { Desc = "内部使用的调试输出与断言处理，调试输出内容同时保存在日志，断言处理在调试与非调试状态有不同行为" },
             };
             group.Title = "工具";
@@ -136,7 +138,9 @@ namespace Dt.Sample
                 new Nav("报表", typeof(RptDemo)) { Desc = "可视化报表模板设计，报表预览时支持导出、打印、简单编辑，支持报表绘制过程脚本" },
                 new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，外网无法访问" },
                 new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，外网无法访问" },
+#if !ANDROID || DEBUG
                 new Nav("切换到默认主页") { Callback = OpenHomeWin, Desc = "平台提供的默认主页，需要登录后才可加载，需要联网" },
+#endif
             };
             group.Title = "综合";
             ds.Add(group);
