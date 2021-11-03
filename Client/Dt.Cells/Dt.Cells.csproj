@@ -112,7 +112,7 @@
     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='uap10.0.18362' ">
+  <ItemGroup Condition="'$(TargetFramework)'=='uap10.0.18362' and '$(Configuration)'=='Debug'">
     <ProjectReference Include="..\Dt.Tasks\Dt.Tasks.csproj" PrivateAssets="all" />
   </ItemGroup> 
   

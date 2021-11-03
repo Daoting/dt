@@ -5,13 +5,13 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
   <Identity
-    Name="4e169f82-ed49-494f-8c23-7dab11228000"
-    Publisher="CN=hdt"
-    Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="4e169f82-ed49-494f-8c23-7dab11228222" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+    Name="19855Modern.175536226778E"
+    Publisher="CN=61C2C806-8989-430B-8C58-9882D00412CA"
+    Version="1.9.10.0" />
+  <mp:PhoneIdentity PhoneProductId="db1e204b-9b5a-422e-bb71-d48d5061d2df" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>搬运工</DisplayName>
-    <PublisherDisplayName>hdt</PublisherDisplayName>
+    <PublisherDisplayName>Modern</PublisherDisplayName>
     <Logo>Assets\logo.png</Logo>
   </Properties>
   <Dependencies>

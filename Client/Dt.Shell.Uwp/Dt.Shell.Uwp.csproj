@@ -8,7 +8,7 @@
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dt.Shell</RootNamespace>
-    <AssemblyName>Dt.Shell.Uwp</AssemblyName>
+    <AssemblyName>Dt.Sample.Shell</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -17,6 +17,13 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -111,6 +118,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\logo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +148,12 @@
     <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj">
       <Project>{25744ee1-b117-4141-b9a8-5ca1cbebcd98}</Project>
       <Name>Dt.Sample</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' and '$(Configuration)'=='Release'">
+    <ProjectReference Include="..\Dt.Tasks\Dt.Tasks.csproj">
+      <Project>{2803AD47-0438-446F-8EEC-5BE5371849E4}</Project>
+      <Name>Dt.Tasks</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
