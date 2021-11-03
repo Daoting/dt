@@ -31,7 +31,7 @@ namespace Dt.Cells.UI
             _excel = p_excel;
             _border = new Border
             {
-                BorderBrush = BrushRes.浅灰边框,
+                BorderBrush = BrushRes.浅灰2,
                 BorderThickness = new Thickness(0, 0, 1, 1),
                 Background = BrushRes.WhiteBrush,
             };
@@ -43,7 +43,7 @@ namespace Dt.Cells.UI
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(0, 4, 4, 4),
                 Stretch = Stretch.Uniform,
-                Fill = BrushRes.浅灰边框,
+                Fill = BrushRes.浅灰2,
                 IsHitTestVisible = false,
             };
             PathGeometry geometry = new PathGeometry();
@@ -71,15 +71,15 @@ namespace Dt.Cells.UI
 
             if (selectAll)
             {
-                _path.Fill = BrushRes.醒目蓝色;
+                _path.Fill = BrushRes.亮蓝;
             }
             else if (_excel.HoverManager.IsMouseOverCornerHeaders)
             {
-                _path.Fill = BrushRes.主题蓝色;
+                _path.Fill = BrushRes.主蓝;
             }
             else
             {
-                _path.Fill = BrushRes.浅灰边框;
+                _path.Fill = BrushRes.浅灰2;
             }
         }
 

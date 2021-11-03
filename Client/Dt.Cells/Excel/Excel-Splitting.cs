@@ -392,7 +392,7 @@ namespace Dt.Base
 
         Rectangle CreateSplitBar()
         {
-            return new Rectangle { Fill = BrushRes.灰色背景, Stroke = BrushRes.灰色边框 };
+            return new Rectangle { Fill = BrushRes.中灰1, Stroke = BrushRes.中灰2 };
         }
 
 
@@ -415,7 +415,7 @@ namespace Dt.Base
                 {
                     var bd = new Border
                     {
-                        Background = BrushRes.浅灰背景,
+                        Background = BrushRes.浅灰1,
                         Child = new TextBlock
                         {
                             Text = "\uE016",
@@ -425,7 +425,7 @@ namespace Dt.Base
                             //VerticalAlignment = VerticalAlignment.Center,
                             FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
                             FontSize = 12,
-                            Foreground = BrushRes.深灰边框,
+                            Foreground = BrushRes.深灰2,
                         }
                     };
                     _horizontalSplitBox[j] = bd;
@@ -452,7 +452,7 @@ namespace Dt.Base
                 {
                     var bd = new Border
                     {
-                        Background = BrushRes.浅灰背景,
+                        Background = BrushRes.浅灰1,
                         Child = new TextBlock
                         {
                             Text = "\uE018",
@@ -460,7 +460,7 @@ namespace Dt.Base
                             VerticalAlignment = VerticalAlignment.Center,
                             FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
                             FontSize = 12,
-                            Foreground = BrushRes.深灰边框,
+                            Foreground = BrushRes.深灰2,
                         }
                     };
                     _verticalSplitBox[i] = bd;

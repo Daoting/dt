@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Shapes;
 namespace Dt.Cells.Data
 {
     /// <summary>
-    /// 定义来自于Dt.Base，和AtRes相同
+    /// 定义来自于Dt.Base，和Res相同
     /// </summary>
     public static class BrushRes
     {
@@ -289,7 +289,7 @@ namespace Dt.Cells.Data
         #endregion
 
         #region 系统画刷
-        public static SolidColorBrush 主题蓝色 => (SolidColorBrush)_dict["主题蓝色"];
+        public static SolidColorBrush 主蓝 => (SolidColorBrush)_dict["主蓝"];
         public static SolidColorBrush 默认背景 => (SolidColorBrush)_dict["默认背景"];
         public static SolidColorBrush 默认前景 => (SolidColorBrush)_dict["默认前景"];
         public static SolidColorBrush 暗遮罩 => (SolidColorBrush)_dict["暗遮罩"];
@@ -298,21 +298,21 @@ namespace Dt.Cells.Data
         public static SolidColorBrush 深亮遮罩 => (SolidColorBrush)_dict["深亮遮罩"];
         public static SolidColorBrush 黄遮罩 => (SolidColorBrush)_dict["黄遮罩"];
         public static SolidColorBrush 深黄遮罩 => (SolidColorBrush)_dict["深黄遮罩"];
-        public static SolidColorBrush 灰色背景 => (SolidColorBrush)_dict["灰色背景"];
-        public static SolidColorBrush 灰色边框 => (SolidColorBrush)_dict["灰色边框"];
-        public static SolidColorBrush 浅灰背景 => (SolidColorBrush)_dict["浅灰背景"];
-        public static SolidColorBrush 浅灰边框 => (SolidColorBrush)_dict["浅灰边框"];
-        public static SolidColorBrush 深灰背景 => (SolidColorBrush)_dict["深灰背景"];
-        public static SolidColorBrush 深灰边框 => (SolidColorBrush)_dict["深灰边框"];
-        public static SolidColorBrush 黄色背景 => (SolidColorBrush)_dict["黄色背景"];
-        public static SolidColorBrush 浅黄背景 => (SolidColorBrush)_dict["浅黄背景"];
-        public static SolidColorBrush 绿色背景 => (SolidColorBrush)_dict["绿色背景"];
-        public static SolidColorBrush 浅绿背景 => (SolidColorBrush)_dict["浅绿背景"];
-        public static SolidColorBrush 浅湖蓝背景 => (SolidColorBrush)_dict["浅湖蓝背景"];
-        public static SolidColorBrush 淡蓝背景 => (SolidColorBrush)_dict["淡蓝背景"];
-        public static SolidColorBrush 深蓝背景 => (SolidColorBrush)_dict["深蓝背景"];
-        public static SolidColorBrush 醒目蓝色 => (SolidColorBrush)_dict["醒目蓝色"];
-        public static SolidColorBrush 醒目红色 => (SolidColorBrush)_dict["醒目红色"];
+        public static SolidColorBrush 中灰1 => (SolidColorBrush)_dict["中灰1"];
+        public static SolidColorBrush 中灰2 => (SolidColorBrush)_dict["中灰2"];
+        public static SolidColorBrush 浅灰1 => (SolidColorBrush)_dict["浅灰1"];
+        public static SolidColorBrush 浅灰2 => (SolidColorBrush)_dict["浅灰2"];
+        public static SolidColorBrush 深灰1 => (SolidColorBrush)_dict["深灰1"];
+        public static SolidColorBrush 深灰2 => (SolidColorBrush)_dict["深灰2"];
+        public static SolidColorBrush 中黄 => (SolidColorBrush)_dict["中黄"];
+        public static SolidColorBrush 浅黄 => (SolidColorBrush)_dict["浅黄"];
+        public static SolidColorBrush 中绿 => (SolidColorBrush)_dict["中绿"];
+        public static SolidColorBrush 浅绿 => (SolidColorBrush)_dict["浅绿"];
+        public static SolidColorBrush 湖蓝 => (SolidColorBrush)_dict["湖蓝"];
+        public static SolidColorBrush 浅蓝 => (SolidColorBrush)_dict["浅蓝"];
+        public static SolidColorBrush 深蓝 => (SolidColorBrush)_dict["深蓝"];
+        public static SolidColorBrush 亮蓝 => (SolidColorBrush)_dict["亮蓝"];
+        public static SolidColorBrush 亮红 => (SolidColorBrush)_dict["亮红"];
         #endregion
     }
 }

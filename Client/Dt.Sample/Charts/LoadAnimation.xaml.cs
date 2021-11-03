@@ -51,10 +51,11 @@ namespace Dt.Sample
         {
             _chart.BeginUpdate();
 
-            AnimationTransform at = (AnimationTransform)_cbTrans.SelectedIndex;
-            AnimationOrigin ao = (AnimationOrigin)_cbOrigin.SelectedIndex;
-            Easing ea = (Easing)_cbEasing.SelectedIndex;
-            _chart.Data.LoadAnimation = CreateAnimation(at, ao, _cbDelay.IsChecked == true, ea);
+            // uwp release版出错，ios android wasm无动画
+            //AnimationTransform at = (AnimationTransform)_cbTrans.SelectedIndex;
+            //AnimationOrigin ao = (AnimationOrigin)_cbOrigin.SelectedIndex;
+            //Easing ea = (Easing)_cbEasing.SelectedIndex;
+            //_chart.Data.LoadAnimation = CreateAnimation(at, ao, _cbDelay.IsChecked == true, ea);
 
             int nser = _rnd.Next(2, 6);
             int npts = _rnd.Next(5, 10);

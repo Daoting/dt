@@ -63,7 +63,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        ContextMenuDlg _dlg;
+        Dlg _dlg;
         #endregion
 
         #region 属性
@@ -145,7 +145,17 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                _dlg = new ContextMenuDlg(this);
+                _dlg = new Dlg
+                {
+                    HideTitleBar = true,
+                    Resizeable = false,
+                    Content = this,
+                    Background = Res.浅灰1,
+                    MinWidth = 160,
+
+                    // 不向下层对话框传递Press事件
+                    AllowRelayPress = false,
+                };
                 _dlg.Closed += (s, e) => Closed?.Invoke(this, EventArgs.Empty);
             }
 

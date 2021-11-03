@@ -1671,7 +1671,7 @@ namespace Dt.Base
                 Width = 16.0,
             };
 
-            Background = BrushRes.浅灰背景;
+            Background = BrushRes.浅灰1;
             LoadResizeGripper();
         }
 
@@ -2422,14 +2422,14 @@ namespace Dt.Base
         void ShowProgressRing()
         {
             HideProgressRing();
-            _progressRing = new Grid { Background = BrushRes.浅灰背景 };
+            _progressRing = new Grid { Background = BrushRes.浅灰1 };
             // 屏蔽交互事件
             _progressRing.PointerPressed += (s, e) => e.Handled = true;
             _progressRing.PointerMoved += (s, e) => e.Handled = true;
             _progressRing.PointerReleased += (s, e) => e.Handled = true;
             var ring = new ProgressRing
             {
-                Foreground = BrushRes.主题蓝色,
+                Foreground = BrushRes.主蓝,
                 IsActive = true,
                 Width = 100.0,
                 Height = 100.0,

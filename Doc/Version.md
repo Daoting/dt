@@ -10,6 +10,7 @@ ios  软键盘盖住 TextBox 的问题
 ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
 ios版内测时主页刚启动快速操作无响应，崩溃
+uwp的release版Chart动画报错 
 
 
 ## Release 1.9.10 
@@ -27,7 +28,7 @@ ios版内测时主页刚启动快速操作无响应，崩溃
 * Lv 切换数据源、删除行后的布局bug
 * CNum采用 NumberFullWidth 键盘，Number键盘无小数点
 * Lv滑动时行交互背景不消失
-
+* uwp的release版 Excel的画刷改名
 
 
 ## Release 1.9.9 

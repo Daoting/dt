@@ -37,7 +37,7 @@ namespace Dt.Sample
                 new Nav("财务", typeof(FinancialChart), Icons.全选),
                 new Nav("甘特图", typeof(GanttChart), Icons.日历),
                 new Nav("多轴", typeof(PlotAreas), Icons.修改),
-                new Nav("动画", typeof(LoadAnimation), Icons.划卡),
+                new Nav("动画", typeof(LoadAnimation), Icons.划卡) { Desc =  "有bug，暂时无动画" },
             };
         }
     }

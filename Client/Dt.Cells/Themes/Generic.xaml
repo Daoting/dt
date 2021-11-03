@@ -16,11 +16,11 @@
     <SolidColorBrush x:Key="ControlForegroundBrush" Color="#000000"/>
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF6F6F6"/>
 
-    <SolidColorBrush x:Key="灰色背景" Color="#FFD6D6D6"/>
-    <SolidColorBrush x:Key="灰色边框" Color="#FFC3C3C3"/>
+    <SolidColorBrush x:Key="中灰1" Color="#FFD6D6D6"/>
+    <SolidColorBrush x:Key="中灰2" Color="#FFC3C3C3"/>
 
-    <SolidColorBrush x:Key="浅灰背景" Color="#FFF1F1F1"/>
-    <SolidColorBrush x:Key="浅灰边框" Color="#FFE0E0E0"/>
+    <SolidColorBrush x:Key="浅灰1" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="浅灰2" Color="#FFE0E0E0"/>
 
     <SolidColorBrush x:Key="GroupButtonForeground" Color="#FF474747"/>
     <SolidColorBrush x:Key="GroupButtonMouseOver" Color="#FF94DCFF"/>
@@ -238,7 +238,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:TabStrip">
                     <Grid x:Name="Root">
-                        <Border BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}" Background="White" />
+                        <Border BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰2}" Background="White" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -262,7 +262,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰2}" Fill="{StaticResource 浅灰1}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,0,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <ContentPresenter x:Name="ContentPresenter" Margin="15,0,15,0" VerticalContentAlignment="Center" />
                     </Grid>
@@ -274,7 +274,7 @@
 
     <!-- ##################### controls.xaml #####################-->
     <Style TargetType="local:GroupHeaderButton">
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}"/>
+        <Setter Property="Background" Value="{StaticResource 浅灰1}"/>
         <Setter Property="Foreground" Value="{StaticResource GroupButtonForeground}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -308,7 +308,7 @@
     </Style>
 
     <Style TargetType="local:GroupButton">
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}"/>
+        <Setter Property="Background" Value="{StaticResource 浅灰1}"/>
         <Setter Property="Foreground" Value="{StaticResource GroupButtonForeground}"/>
         <Setter Property="Template">
             <Setter.Value>

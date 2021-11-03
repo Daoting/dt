@@ -25,9 +25,9 @@ namespace Dt.Cells.UI
             OwnRow = p_rowItem;
             _border = new Border
             {
-                BorderBrush = BrushRes.浅灰边框,
+                BorderBrush = BrushRes.浅灰2,
                 BorderThickness = new Thickness(0, 0, 1, 1),
-                Background = BrushRes.浅灰背景,
+                Background = BrushRes.浅灰1,
             };
             Children.Add(_border);
 
@@ -50,7 +50,7 @@ namespace Dt.Cells.UI
         {
             if (IsMouseOver)
             {
-                _border.Background = BrushRes.浅黄背景;
+                _border.Background = BrushRes.浅黄;
             }
             else
             {
@@ -59,11 +59,11 @@ namespace Dt.Cells.UI
                 if ((IsSelected && allowSelect)
                     || IsHightlighted)
                 {
-                    _border.Background = BrushRes.黄色背景;
+                    _border.Background = BrushRes.中黄;
                 }
                 else
                 {
-                    _border.Background = BrushRes.浅灰背景;
+                    _border.Background = BrushRes.浅灰1;
                 }
             }
         }
