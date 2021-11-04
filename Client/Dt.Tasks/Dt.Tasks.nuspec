@@ -27,6 +27,6 @@
 
       <file src="bin\x86\Release\Dt.Tasks.winmd" target="runtimes\win10-x86"/>
       <file src="bin\x86\Release\Dt.Tasks.pri" target="runtimes\win10-x86"/>
-      <file src="logo.png" target="images\" />
+      <file src="..\..\logo.png" target="images\" />
     </files>
 </package>

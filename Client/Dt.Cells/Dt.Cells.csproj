@@ -1,13 +1,19 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.22">
 
   <PropertyGroup>
-    <Description>搬运工客户端Excel控件</Description>
+    <Description>搬运工客户端Excel和Chart控件</Description>
     <!--将引用的项目合并打包-->
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
     <DocumentationFile>D:\Dt\Client\Dt.Cells\Dt.Cells.xml</DocumentationFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageProjectUrl>https://github.com/daoting/dt</PackageProjectUrl>
+    <PackageTags>搬运工 Excel Chart Uno Platform</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>2.0.1-dev.1</Version>
   </PropertyGroup>
 
   <Import Project="..\Common\Dtc-Stable.props" />
@@ -110,6 +116,13 @@
     <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">

@@ -4,16 +4,26 @@
     <PackageId>Dt.Client</PackageId>
     <Description>搬运工客户端基础包</Description>    <!--将引用的项目合并打包-->
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    <Version>1.9.9</Version>
+    <Version>1.9.10-dev.1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
     <DocumentationFile>D:\Dt\Client\Dt.App\Dt.App.xml</DocumentationFile>
+    <Authors>Daoting</Authors>
+    <Product>搬运工基础平台</Product>
+    <PackageProjectUrl>https://github.com/daoting/dt</PackageProjectUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageIconUrl />
+    <PackageTags>搬运工 WinUI UWP Uno Platform</PackageTags>
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\Common\实体类模板.txt" Link="实体类模板.txt" />
   </ItemGroup>
 
