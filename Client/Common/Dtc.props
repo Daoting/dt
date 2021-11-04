@@ -50,10 +50,6 @@
     <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' and '$(TargetFramework)' == 'uap10.0.18362' and '$(Configuration)'=='Debug'">
-    <ProjectReference Include="..\Dt.Tasks\Dt.Tasks.csproj" PrivateAssets="all" />
-  </ItemGroup>
-  
   <ItemGroup Condition="'$(TargetFramework)' != 'uap10.0.18362' ">
     <PackageReference Include="Uno.UI" Version="3.10.11" />
   </ItemGroup>

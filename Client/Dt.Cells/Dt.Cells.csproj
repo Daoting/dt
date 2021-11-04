@@ -112,10 +112,6 @@
     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='uap10.0.18362' and '$(Configuration)'=='Debug'">
-    <ProjectReference Include="..\Dt.Tasks\Dt.Tasks.csproj" PrivateAssets="all" />
-  </ItemGroup> 
-  
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
     <ItemGroup>
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />

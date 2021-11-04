@@ -1,5 +1,5 @@
 <h1 align=center>
- <img align=center src="https://github.com/daoting/dt/Client/Dt.Shell.iOS/Assets/logo.png" />
+ <img align=center src="https://raw.githubusercontent.com/Daoting/dt/master/logo.png" />
 </h1>
 
 # Dt

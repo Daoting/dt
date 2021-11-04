@@ -1,0 +1,5 @@
+打包过程参见：
+https://docs.microsoft.com/zh-cn/nuget/guides/create-uwp-packages-cs
+
+打包命令：
+E:\Software\Last\nuget pack Dt.Tasks.nuspec
