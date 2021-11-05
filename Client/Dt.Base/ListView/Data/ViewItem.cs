@@ -304,10 +304,14 @@ namespace Dt.Base
         {
             if (p_dc.Type == typeof(string))
             {
+                string txt = p_dc.GetVal<string>();
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
                 var tb = new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = p_dc.GetVal<string>(),
+                    Text = txt,
                 };
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
                 return tb;
@@ -315,10 +319,14 @@ namespace Dt.Base
 
             if (p_dc.Type == typeof(int) || p_dc.Type == typeof(long) || p_dc.Type == typeof(short))
             {
+                string txt = p_dc.GetVal<string>();
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = p_dc.GetVal<string>(),
+                    Text = txt,
                     TextAlignment = TextAlignment.Right,
                 };
             }
@@ -388,10 +396,14 @@ namespace Dt.Base
                 };
             }
 
+            string val = p_dc.GetVal<string>();
+            if (string.IsNullOrEmpty(val))
+                return null;
+
             return new TextBlock
             {
                 Style = Res.LvTextBlock,
-                Text = p_dc.GetVal<string>(),
+                Text = val,
             };
         }
 
@@ -406,10 +418,14 @@ namespace Dt.Base
         {
             if (p_pi.PropertyType == typeof(string))
             {
+                string txt = (string)p_val;
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
                 var tb = new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = (string)p_val,
+                    Text = txt,
                 };
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
                 return tb;
@@ -417,10 +433,14 @@ namespace Dt.Base
 
             if (p_pi.PropertyType == typeof(int) || p_pi.PropertyType == typeof(long) || p_pi.PropertyType == typeof(short))
             {
+                string txt = p_val.ToString();
+                if (string.IsNullOrEmpty(txt))
+                    return null;
+
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = p_val.ToString(),
+                    Text = txt,
                     TextAlignment = TextAlignment.Right,
                 };
             }
@@ -490,10 +510,14 @@ namespace Dt.Base
                 };
             }
 
+            string val = p_val.ToString();
+            if (string.IsNullOrEmpty(val))
+                return null;
+
             return new TextBlock
             {
                 Style = Res.LvTextBlock,
-                Text = p_val.ToString(),
+                Text = val,
             };
         }
 
@@ -504,10 +528,14 @@ namespace Dt.Base
         /// <returns></returns>
         static UIElement CreateObjectUI(object p_data)
         {
+            string val = p_data.ToString();
+            if (string.IsNullOrEmpty(val))
+                return null;
+
             var tb = new TextBlock
             {
                 Style = Res.LvTextBlock,
-                Text = p_data.ToString(),
+                Text = val,
             };
             tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
             return tb;

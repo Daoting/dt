@@ -4,7 +4,7 @@
     <PackageId>Dt.Client</PackageId>
     <Description>搬运工客户端基础包</Description>    <!--将引用的项目合并打包-->
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    <Version>1.9.10-dev.1</Version>
+    <Version>1.9.10-dev</Version>
   </PropertyGroup>
 
   <PropertyGroup>

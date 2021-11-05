@@ -29,7 +29,8 @@ uwp的release版Chart动画报错
 * CNum采用 NumberFullWidth 键盘，Number键盘无小数点
 * Lv滑动时行交互背景不消失
 * uwp的release版 Excel的画刷改名
-
+* Dot中string空时不显示
+* win模式Win切换主区时若保存布局后再加载布局错误
 
 ## Release 1.9.9 
 ### 功能 

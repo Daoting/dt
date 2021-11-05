@@ -545,12 +545,9 @@ namespace Dt.Base
                 {
                     string id = string.Format("{0}+{1}+{2}", BaseUri.AbsolutePath, Owner.Name, ID);
                     object val = cell.Val;
-                    if (val == null || string.IsNullOrEmpty(val.ToString()))
-                    {
-                        // 为空时删除记录，避免造成不一致情况
-                        AtState.Exec($"delete from CellLastVal where id=\"{id}\"");
-                    }
-                    else
+                    // 删除旧记录
+                    AtState.Exec($"delete from CellLastVal where id=\"{id}\"");
+                    if (val != null && !string.IsNullOrEmpty(val.ToString()))
                     {
                         CellLastVal cookie = new CellLastVal(id, val.ToString());
                         _ = AtState.Save(cookie, false);

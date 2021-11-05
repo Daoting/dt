@@ -73,10 +73,15 @@ namespace Dt.Base.Docking
             if (!AllowSaveLayout())
                 return;
 
-            Kit.RunAsync(() =>
+            Kit.RunAsync(async () =>
             {
-                DockLayout cookie = new DockLayout(_owner.BaseUri.AbsolutePath, WriteXml());
-                AtState.Save(cookie, false);
+                var xml = WriteXml();
+                DockLayout cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri='{_owner.BaseUri.AbsolutePath}'");
+                if (cookie == null)
+                    cookie = new DockLayout(_owner.BaseUri.AbsolutePath, xml);
+                else
+                    cookie.Layout = xml;
+                await AtState.Save(cookie, false);
                 _owner.AllowResetLayout = true;
             });
         }
@@ -307,10 +312,8 @@ namespace Dt.Base.Docking
                 // 中部项
                 if (centers.Count > 0)
                 {
-                    writer.WriteStartElement("Center");
                     foreach (Main center in centers)
                     {
-                        WriteCenter(writer, center.Items);
                         // 挪到CenterItem，特殊处理！
                         while (center.Items.Count > 0)
                         {
@@ -319,7 +322,7 @@ namespace Dt.Base.Docking
                             _owner.CenterItem.Items.Add(centerItem);
                         }
                     }
-                    writer.WriteEndElement();
+                    WriteCenter(writer);
                 }
 
                 // 左侧隐藏项
@@ -814,6 +817,7 @@ namespace Dt.Base.Docking
         /// <returns></returns>
         string WriteXml()
         {
+            _owner.UpdateLayout();
             StringBuilder xml = new StringBuilder();
             using (XmlWriter writer = XmlWriter.Create(xml, _writerSettings))
             {
@@ -828,12 +832,7 @@ namespace Dt.Base.Docking
                 writer.WriteEndElement();
 
                 // 中部项
-                if (_owner.CenterItem.Items.Count > 0)
-                {
-                    writer.WriteStartElement("Center");
-                    WriteCenter(writer, _owner.CenterItem.Items);
-                    writer.WriteEndElement();
-                }
+                WriteCenter(writer);
 
                 // 左侧隐藏项
                 if (_owner.LeftAutoHide?.Items.Count > 0)
@@ -880,12 +879,16 @@ namespace Dt.Base.Docking
                 }
 
                 // 浮动项
-                writer.WriteStartElement("Float");
-                foreach (Pane wi in _owner.FloatItems)
+                var fl = _owner.FloatItems.ToList();
+                if (fl.Count > 0)
                 {
-                    WriteWinItem(wi, writer);
+                    writer.WriteStartElement("Float");
+                    foreach (Pane wi in fl)
+                    {
+                        WriteWinItem(wi, writer);
+                    }
+                    writer.WriteEndElement();
                 }
-                writer.WriteEndElement();
 
                 writer.WriteEndElement();
                 writer.Flush();
@@ -893,11 +896,22 @@ namespace Dt.Base.Docking
             return xml.ToString();
         }
 
-        void WriteCenter(XmlWriter p_writer, PaneList p_items)
+        void WriteCenter(XmlWriter p_writer)
         {
-            foreach (var obj in p_items)
+            var ls = _owner.CenterItem.Items;
+            if (ls.Count == 0)
+                return;
+
+            var mainTabs = _owner.GetValue(Win.MainTabsProperty);
+
+            // 只动态主区不记录
+            if (ls.Count == 1 && ls[0] == mainTabs)
+                return;
+
+            p_writer.WriteStartElement("Center");
+            foreach (var obj in ls)
             {
-                if (obj is Tabs tabs)
+                if (obj is Tabs tabs && tabs != mainTabs)
                 {
                     WriteTabs(tabs, p_writer);
                 }
@@ -906,6 +920,7 @@ namespace Dt.Base.Docking
                     WriteWinItem(wi, p_writer);
                 }
             }
+            p_writer.WriteEndElement();
         }
 
         void WriteWinItem(Pane p_item, XmlWriter p_writer)
