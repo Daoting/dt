@@ -10,7 +10,11 @@ ios  软键盘盖住 TextBox 的问题
 ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
 ios版内测时主页刚启动快速操作无响应，崩溃
+ios版DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
 uwp的release版Chart动画报错 
+
+升级VS2022的前提：WinUI3.0 WinAppSdk1.0 MAUI1.0 Uno稳定
+移植到.net6 winui3
 
 
 ## Release 1.9.10 
