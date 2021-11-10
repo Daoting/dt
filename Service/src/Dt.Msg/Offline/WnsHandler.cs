@@ -17,6 +17,7 @@ using System.Web;
 
 namespace Dt.Msg
 {
+    /*
     /// <summary>
     /// WNS推送类
     /// </summary>
@@ -38,25 +39,26 @@ namespace Dt.Msg
         /// <param name="p_uri">设备通道Uri</param>
         /// <param name="p_data">推送内容</param>
         /// <returns>通道 URI 是否有效，无效时后续删除</returns>
-        public bool PostToWns(string p_uri, byte[] p_data)
+        public async Task<bool> PostToWns(string p_uri, string p_data)
         {
             bool valid = true;
             try
             {
-                HttpWebRequest request = HttpWebRequest.Create(p_uri) as HttpWebRequest;
-                request.Method = "POST";
-                request.Headers.Add("X-WNS-Type", "wns/toast");
-                request.ContentType = "text/xml";
-                request.Headers.Add("Authorization", string.Format("Bearer {0}", _wnsToken));
-
-                using (Stream rs = request.GetRequestStream())
+                using (var client = new HttpClient())
                 {
-                    rs.Write(p_data, 0, p_data.Length);
-                }
+                    client.DefaultRequestHeaders.Add("X-WNS-Type", "wns/toast");
+                    client.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", _wnsToken));
+                    client.DefaultRequestHeaders.Add("Content-Type", "text/xml");
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Post,
+                        RequestUri = new Uri(p_uri),
+                        Content = new StringContent(p_data),
+                    };
 
-                // 侦听来自 WNS 确认收到通知的响应
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                { }
+                    // 侦听来自 WNS 确认收到通知的响应
+                    var response = await client.SendAsync(request).ConfigureAwait(false);
+                }
             }
             catch (WebException webException)
             {
@@ -70,7 +72,7 @@ namespace Dt.Msg
                         _gettingToken = true;
                         GetWnsToken();
                         _gettingToken = false;
-                        PostToWns(p_uri, p_data);
+                        _ = PostToWns(p_uri, p_data);
                     }
                     else
                     {
@@ -127,14 +129,25 @@ namespace Dt.Msg
             // WNS获取令牌时的凭据，在【仪表盘->搬运工->推送通知->Live 服务网站(链接)】中获取
             var urlEncodedSecret = HttpUtility.UrlEncode(Kit.GetCfg<string>("UwpClientSecret"));
             var urlEncodedSid = HttpUtility.UrlEncode(Kit.GetCfg<string>("UwpPkgSID"));
-            string response = null;
+            string result = null;
             var body = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com", urlEncodedSid, urlEncodedSecret);
             try
             {
-                using (var client = new WebClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                    response = client.UploadString("https://login.live.com/accesstoken.srf", body);
+                    client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Post,
+                        RequestUri = new Uri("https://login.live.com/accesstoken.srf"),
+                        Content = new StringContent(body),
+                    };
+                    var response = await client.SendAsync(request).ConfigureAwait(false);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        result = await response.Content.ReadAsStringAsync();
+                    }
                 }
             }
             catch (Exception ex)
@@ -146,8 +159,8 @@ namespace Dt.Msg
             // 形如：{"token_type":"bearer","access_token":"xxx=","expires_in":86400}
             string[] strs;
             string[] token;
-            if (!string.IsNullOrEmpty(response)
-                && (strs = response.Split(',')).Length == 3
+            if (!string.IsNullOrEmpty(result)
+                && (strs = result.Split(',')).Length == 3
                 && (token = strs[1].Split(':')).Length == 2)
             {
                 _wnsToken = token[1].Trim('\"');
@@ -158,4 +171,5 @@ namespace Dt.Msg
             }
         }
     }
+    */
 }

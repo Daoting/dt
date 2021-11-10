@@ -58,7 +58,7 @@ namespace Dt.Core
 
         static byte[] CalcLuaSha1(string p_lua)
         {
-            SHA1 sha1 = new SHA1CryptoServiceProvider();
+            SHA1 sha1 = SHA1.Create();
             var bytesSha1In = Encoding.UTF8.GetBytes(p_lua);
             return sha1.ComputeHash(bytesSha1In);
         }
