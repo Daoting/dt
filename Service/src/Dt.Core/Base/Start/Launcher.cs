@@ -77,7 +77,7 @@ namespace Dt.Core
                     .CreateLogger();
 
                 var version = Kit.Stub.GetType().Assembly.GetName().Version;
-                Log.Information($"启动{Kit.SvcName}({version})...");
+                Log.Information($"启动{Kit.SvcName}(V{version.Major}.{version.Minor}.{version.Build})...");
             }
             catch (Exception e)
             {
