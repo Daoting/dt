@@ -36,7 +36,7 @@ namespace Dt.Core
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(p_str);
-                MD5 md = new MD5CryptoServiceProvider();
+                MD5 md = MD5.Create();
                 byte[] data = md.ComputeHash(bytes);
 
                 string[] hexDigits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
@@ -106,7 +106,7 @@ namespace Dt.Core
         public static byte[] GetMD5Bytes(string p_str)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(p_str);
-            MD5 md = new MD5CryptoServiceProvider();
+            MD5 md = MD5.Create();
             return md.ComputeHash(bytes);
         }
 

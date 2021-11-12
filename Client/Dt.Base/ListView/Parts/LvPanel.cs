@@ -790,7 +790,7 @@ namespace Dt.Base.ListView
                 return;
             }
 
-            var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var cols = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var old = _owner.SortDesc;
             var sort = new SortDescription { ID = cols[0] };
             if (old != null && old.ID == cols[0])
@@ -816,7 +816,7 @@ namespace Dt.Base.ListView
                 if (string.IsNullOrEmpty(str) || str.Equals("#Filter", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                var cols = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var cols = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (cols[0].Equals(sort.ID, StringComparison.OrdinalIgnoreCase))
                 {
                     mi.ShowInPhone = VisibleInPhone.IconAndID;

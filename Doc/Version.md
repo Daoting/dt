@@ -17,6 +17,17 @@ uwp的release版Chart动画报错
 移植到.net6 winui3
 
 
+## Release 2.0.0 
+### 功能
+* 客户端和服务端升级到.net6 
+* Release版的Service Api生成代理类时方法无注释
+
+### 变更 
+
+
+### Bug修改  
+
+
 ## Release 1.9.10 
 ### 功能 
 * 增加NavList，替换原有的MainInfoLv方式

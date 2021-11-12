@@ -126,9 +126,9 @@ namespace Dt.Base.FormView
             if (string.IsNullOrEmpty(p_txt))
                 return true;
 
-            return _pinyin.Contains(p_txt, StringComparison.OrdinalIgnoreCase)
-                || Name.Contains(p_txt, StringComparison.OrdinalIgnoreCase)
-                || Hex.Contains(p_txt, StringComparison.OrdinalIgnoreCase);
+            return _pinyin.IndexOf(p_txt, StringComparison.OrdinalIgnoreCase) >= 0
+                || Name.IndexOf(p_txt, StringComparison.OrdinalIgnoreCase) >= 0
+                || Hex.IndexOf(p_txt, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }
