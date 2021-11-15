@@ -21,6 +21,7 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
+		<None Include="..\..\..\Common\实体类模板.txt" Link="实体类模板.txt" />
 		<Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

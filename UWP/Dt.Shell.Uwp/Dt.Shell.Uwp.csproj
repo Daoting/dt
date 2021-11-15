@@ -154,7 +154,7 @@
 		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="..\Common\Fonts\icon.ttf">
+		<Content Include="..\..\Common\Fonts\icon.ttf">
 			<Link>Assets\Fonts\icon.ttf</Link>
 		</Content>
 	</ItemGroup>
