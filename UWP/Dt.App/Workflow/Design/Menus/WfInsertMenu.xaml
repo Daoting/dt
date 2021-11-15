@@ -1,0 +1,14 @@
+﻿<a:Menu
+    x:Class="Dt.App.Workflow.WfInsertMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    IsContextMenu="True">
+
+    <a:Mi ID="插入起始活动" Icon="播放" Click="OnStartNode" />
+    <a:Mi ID="插入普通活动" Icon="发出" Click="OnAtvNode" />
+    <a:Mi ID="插入同步活动" Icon="全选" Click="OnSyncNode" />
+    <a:Mi ID="插入结束活动" Icon="最后" Click="OnEndNode" />
+    <a:Mi ID="插入普通文本" Icon="文件" Click="OnTextNode" />
+</a:Menu>
+

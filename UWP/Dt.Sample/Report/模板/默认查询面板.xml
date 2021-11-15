@@ -1,0 +1,41 @@
+﻿<Rpt cols="160,260,60">
+  <Params>
+    <Param name="param1" val="string">
+      <![CDATA[<a:CList Title="参数1">
+	<a:CList.Items>
+		<x:String>string</x:String>
+		<x:String>bool</x:String>
+		<x:String>double</x:String>
+		<x:String>int</x:String>
+		<x:String>datetime</x:String>
+		<x:String>date</x:String>
+	</a:CList.Items>
+</a:CList>]]>
+    </Param>
+    <Param name="param2"><![CDATA[<a:CText Title="参数2" />]]></Param>
+    <Param name="param3">
+      <![CDATA[<a:CList Title="IDString参数3" SrcID="id" TgtID="param4">
+    <a:CList.Items>
+        <a:IDStr ID="1" Str="男" />
+        <a:IDStr ID="0" Str="女" />
+    </a:CList.Items>
+</a:CList>]]>
+    </Param>
+    <Param name="param4" type="int" />
+    <Param name="UserID" val=":UserID" />
+    <Param name="Now" val=":Now" />
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25">
+    <Text col="1" colspan="2" val=":参数1：+ Param(param1)" />
+    <Text row="1" col="1" colspan="2" val=":参数2：+ Param(param2)" />
+    <Text row="2" col="1" colspan="2" val=":参数3：+ Param(param3)" />
+    <Text row="3" col="1" colspan="2" val=":参数id：+ Param(param4)" />
+    <Text row="4" col="1" colspan="2" val=":userid：+ Param(UserID)" />
+    <Text row="5" col="1" colspan="2" val=":当前时间：+ Param(Now)" />
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

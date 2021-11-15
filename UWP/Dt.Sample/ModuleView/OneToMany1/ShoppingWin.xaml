@@ -1,0 +1,29 @@
+<a:Win
+    x:Class="Dt.Sample.ModuleView.OneToMany1.ShoppingWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Sample.ModuleView.OneToMany1">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:ShoppingList x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:ShoppingForm x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab>
+                <l:ShoppingGoodsList x:Name="_goodsList" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

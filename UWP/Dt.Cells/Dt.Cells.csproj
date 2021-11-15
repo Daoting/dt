@@ -1,0 +1,135 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>搬运工客户端Excel和Chart控件</Description>
+		<!--将引用的项目合并打包-->
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageIconUrl />
+		<PackageProjectUrl>https://github.com/daoting/dt</PackageProjectUrl>
+		<PackageTags>搬运工 Excel Chart Uno Platform</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>2.1.1</Version>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+
+	<ItemGroup>
+		<EmbeddedResource Include="Icons\Ascend.png" />
+		<EmbeddedResource Include="Icons\AutoFillIndicator.png" />
+		<EmbeddedResource Include="Icons\BottomCenterGrip.png" />
+		<EmbeddedResource Include="Icons\BottomLeftGrip.png" />
+		<EmbeddedResource Include="Icons\BottomRightGrip.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45GrayDown.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45GrayUp.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45YellowDown.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45YellowUp.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowBlueUp.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayDown.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayRight.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayUp.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowRedDown.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowYellowRight.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\BlackCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\BlackFillCircles.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Box0.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Box1.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Box2.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Box3.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Box4.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GrayFillCicle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCheck.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCheckSymbol.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GreenFlag.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\GreenTraficLight.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\PinkFillCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter0.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter1.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter2.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter3.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter4.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Rating0.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Rating1.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Rating2.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Rating3.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Rating4.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedCross.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedCrossSymbol.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedDiamond.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedFillCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedFlag.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\RedTraficLight.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Star0.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Star1.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\Star2.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleGreenUp.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleRedDown.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleYellow.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowCircle.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowExclamation.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowExclamationSymbol.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowFlag.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowTraficLight.png" />
+		<EmbeddedResource Include="Icons\ConditionalFormats\YellowTrangle.png" />
+		<EmbeddedResource Include="Icons\Descend.png" />
+		<EmbeddedResource Include="Icons\DragCell_CtrlDragCursor.png" />
+		<EmbeddedResource Include="Icons\DragCell_DragCursor.png" />
+		<EmbeddedResource Include="Icons\DragFill_CtrlDragCursor.png" />
+		<EmbeddedResource Include="Icons\DragFill_DragCursor.png" />
+		<EmbeddedResource Include="Icons\Filter.png" />
+		<EmbeddedResource Include="Icons\FilterAscend.png" />
+		<EmbeddedResource Include="Icons\FilterDescend.png" />
+		<EmbeddedResource Include="Icons\MiddleLeftGrip.png" />
+		<EmbeddedResource Include="Icons\MiddleRightGrip.png" />
+		<EmbeddedResource Include="Icons\NoSortFilter.png" />
+		<EmbeddedResource Include="Icons\ResizeGripperHor.png" />
+		<EmbeddedResource Include="Icons\ResizeGripperHor_dark.png" />
+		<EmbeddedResource Include="Icons\ResizeGripperVer.png" />
+		<EmbeddedResource Include="Icons\ResizeGripperVer_dark.png" />
+		<EmbeddedResource Include="Icons\Resize_HorizontalCursor.png" />
+		<EmbeddedResource Include="Icons\Resize_HorizontalCursor_dark.png" />
+		<EmbeddedResource Include="Icons\Resize_HorizontalSplitCursor.png" />
+		<EmbeddedResource Include="Icons\Resize_HorizontalSplitCursor_dark.png" />
+		<EmbeddedResource Include="Icons\Resize_VerticalCursor.png" />
+		<EmbeddedResource Include="Icons\Resize_VerticalCursor_dark.png" />
+		<EmbeddedResource Include="Icons\Resize_VerticalSplitCursor.png" />
+		<EmbeddedResource Include="Icons\Resize_VerticalSplitCursor_dark.png" />
+		<EmbeddedResource Include="Icons\SortAscending.png" />
+		<EmbeddedResource Include="Icons\SortDescending.png" />
+		<EmbeddedResource Include="Icons\TopCenterGrip.png" />
+		<EmbeddedResource Include="Icons\TopLeftGrip.png" />
+		<EmbeddedResource Include="Icons\TopRightGrip.png" />
+		<EmbeddedResource Include="Res\FunctionInformation.xml" />
+		<EmbeddedResource Include="Res\FunctionInformation.zh_CN.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--PrivateAssets避免引用项目的 nuget 包-->
+		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\logo.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+			<!--uwp包含引用项目的xbf文件-->
+			<TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="'$(TargetFramework)' == 'uap10.0.19041'" />
+		</ItemGroup>
+	</Target>
+</Project>

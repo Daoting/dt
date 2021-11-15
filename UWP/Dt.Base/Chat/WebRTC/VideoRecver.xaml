@@ -1,0 +1,56 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.Chat.VideoRecver"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="视频通话">
+
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="_gridRecv" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="_gridLocal" Grid.Column="1" />
+        </Grid>
+        <TextBlock x:Name="_tbInfo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid x:Name="_gridBtn" Height="50" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="拒    绝"
+                    Click="OnRefuse"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Background="Red" />
+            <Button Content="接    听"
+                    Click="OnAccept"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Background="Green"
+                    Grid.Column="2" />
+        </Grid>
+        <Button x:Name="_btnEnd"
+                Content="挂    断"
+                Click="OnEnd"
+                Foreground="White"
+                HorizontalAlignment="Stretch"
+                Height="50"
+                FontWeight="Bold"
+                Background="Red"
+                Grid.Row="2"
+                Visibility="Collapsed" />
+    </Grid>
+</a:Dlg>

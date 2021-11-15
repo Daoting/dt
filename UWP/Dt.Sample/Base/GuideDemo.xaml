@@ -1,0 +1,22 @@
+﻿<a:Dlg
+    x:Class="Dt.Sample.GuideDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Background="{StaticResource 主蓝}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
+        <FlipView x:Name="_fv" Margin="20" Background="Transparent">
+            <TextBlock Text="第一页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+            <TextBlock Text="第二页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+            <TextBlock Text="第三页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+            <TextBlock Text="请稍等..." FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+        </FlipView>
+        <StackPanel x:Name="_sp" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" />
+    </Grid>
+</a:Dlg>

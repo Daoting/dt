@@ -1,0 +1,37 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FileLvDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="fs" Title="文件" UI="File" Width="200" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <a:Dot ID="fs" UI="File" Margin="10" />
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_lv}">
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

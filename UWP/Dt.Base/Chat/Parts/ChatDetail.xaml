@@ -1,0 +1,140 @@
+﻿<UserControl
+    x:Class="Dt.Base.Chat.ChatDetail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:chat="using:Dt.Base.Chat">
+
+    <UserControl.Resources>
+        <Style x:Key="OtherPath" TargetType="Path">
+            <Setter Property="Fill" Value="{StaticResource 中绿}" />
+            <Setter Property="Stretch" Value="Fill" />
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Grid.Column" Value="1" />
+        </Style>
+
+        <Style x:Key="MyPath" TargetType="Path">
+            <Setter Property="Fill" Value="{StaticResource 主蓝}" />
+            <Setter Property="Stretch" Value="Fill" />
+            <Setter Property="Width" Value="10" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Grid.Column" Value="1" />
+        </Style>
+
+        <DataTemplate x:Key="OtherMsgTemplate">
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" />
+                <!--Data不能写在Style中-->
+                <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
+                    <a:Dot ID="Content"
+                           Tapped="OnMsgTapped"
+                           RightTapped="OnMsgRightTapped"
+                           Foreground="White"
+                           Background="{StaticResource 中绿}"
+                           Padding="10" />
+                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="OtherFileTemplate">
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" />
+                <!--Data不能写在Style中-->
+                <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+                <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
+                    <a:FileList Data="{Binding [Content]}"
+                                RightTapped="OnFileRightTapped"
+                                HorizontalAlignment="Left"
+                                BorderBrush="{StaticResource 中绿}" />
+                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="OtherLinkTemplate">
+            <Grid>
+
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MyMsgTemplate">
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
+                    <a:Dot ID="Content"
+                           Tapped="OnMsgTapped"
+                           RightTapped="OnMsgRightTapped"
+                           Foreground="White"
+                           Background="{StaticResource 主蓝}"
+                           Padding="10" />
+                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                </StackPanel>
+                <!--Data不能写在Style中-->
+                <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
+                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MyFileTemplate">
+            <Grid Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
+                    <a:FileList Data="{Binding [Content]}"
+                                RightTapped="OnFileRightTapped"
+                                FixedVolume="chat"
+                                HorizontalAlignment="Left"
+                                BorderBrush="{StaticResource 主蓝}" />
+                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                </StackPanel>
+                <!--Data不能写在Style中-->
+                <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
+                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MyLinkTemplate">
+            <Grid>
+
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <a:Lv x:Name="_lv"
+              SelectionMode="None"
+              ShowItemBorder="False"
+              AutoScrollBottom="True"
+              EnteredBrush="{x:Null}"
+              PressedBrush="{x:Null}" />
+        <chat:ChatInputBar x:Name="_inputBar" Grid.Row="1" />
+    </Grid>
+</UserControl>

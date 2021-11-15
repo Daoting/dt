@@ -1,0 +1,27 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TvDynamicLoading"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="树">
+                <a:TreeView x:Name="_tv" IsDynamicLoading="True">
+                    <DataTemplate>
+                        <a:Dot ID="name" />
+                    </DataTemplate>
+                </a:TreeView>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <Button Content="折叠所有节点" Click="OnCollapseAll" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

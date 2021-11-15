@@ -1,0 +1,9 @@
+﻿<a:Dlg
+    x:Class="Dt.App.File.SelectFileDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    IsPinned="True"
+    Title="选择文件">
+
+</a:Dlg>

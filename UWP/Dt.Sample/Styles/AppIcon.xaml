@@ -1,0 +1,19 @@
+﻿<a:Win
+    x:Class="Dt.Sample.AppIcon"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    x:Name="_win">
+
+    <StackPanel>
+        <a:Fv x:Name="_fv">
+            <a:CIcon ID="icon" Title="选择图标"/>
+            <Button Content="生成iOS图片" Click="OnIOS" />
+            <Button Content="生成android图片" Click="OnDroid" />
+            <Button Content="生成uwp图片" Click="OnUwp" />
+        </a:Fv>
+        <Border x:Name="_bd">
+            <TextBlock x:Name="_tb" FontFamily="{StaticResource IconFont}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Border>
+    </StackPanel>
+</a:Win>

@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TestInvokeDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Margin="10">
+        <TextBlock Text="xaml方式，查看输出" />
+        <a:TestInvoke Title="父">
+            <a:TestInvoke Title="子" />
+        </a:TestInvoke>
+    </StackPanel>
+</a:Win>

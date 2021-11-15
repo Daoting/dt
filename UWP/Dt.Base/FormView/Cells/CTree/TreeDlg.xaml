@@ -1,0 +1,13 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.FormView.TreeDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Dlg.Menu>
+        <a:Menu x:Name="_menu">
+            <a:Mi ID="清空" Icon="垃圾箱" Click="OnClear" />
+            <a:Mi ID="确定" Icon="保存" Click="OnMultipleOK" />
+        </a:Menu>
+    </a:Dlg.Menu>
+</a:Dlg>

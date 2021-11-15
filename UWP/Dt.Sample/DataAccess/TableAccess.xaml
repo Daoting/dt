@@ -1,0 +1,42 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TableAccess"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="创建表" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="手动创建" Click="OnCreateTable" />
+            <Button Content="由表名创建" Click="OnCreateTableByName" />
+            <Button Content="由本地库表名创建" Click="OnCreateTableByLocalName" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="复制表结构" Click="OnCreateTableByTable" />
+            <Button Content="复制行结构" Click="OnCreateTableByRow" />
+        </StackPanel>
+
+        <a:CBar Title="行操作" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="创建新空行" Click="OnAddEmptyRow" />
+            <Button Content="创建初始值新行" Click="OnAddRow" />
+            <Button Content="创建独立行" Click="OnAddSingleRow" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="克隆行" Click="OnCloneRow" />
+            <Button Content="删除行" Click="OnRemoveRow" />
+        </StackPanel>
+        <a:CBar Title="列操作" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加列" Click="OnAddCol" />
+            <Button Content="移除列" Click="OnRemoveCol" />
+        </StackPanel>
+        <a:CFree RowSpan="5" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

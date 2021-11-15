@@ -1,0 +1,24 @@
+﻿<a:Mv
+    x:Class="Dt.App.Model.UserParamsList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="参数列表">
+
+    <a:Mv.Menu>
+        <a:Menu>
+            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Scope="Phone" Click="OnNaviToSearch" />
+            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
+        </a:Menu>
+    </a:Mv.Menu>
+
+    <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick">
+        <a:Cols>
+            <a:Col ID="ID" Title="参数名" Width="150" />
+            <a:Col ID="Value" Title="缺省值" Width="150" />
+            <a:Col ID="Note" Title="参数描述" Width="220" />
+            <a:Col ID="Ctime" Title="创建时间" Width="150" />
+            <a:Col ID="Mtime" Title="修改时间" Width="150" />
+        </a:Cols>
+    </a:Lv>
+</a:Mv>

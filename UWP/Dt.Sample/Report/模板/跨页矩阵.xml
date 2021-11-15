@@ -1,0 +1,33 @@
+﻿<Rpt cols="111,109">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩" isscritp="True" cols="xm,year,subject,score" />
+  </Data>
+  <Page height="400" width="550" />
+  <Header />
+  <Body rows="25,25,25">
+    <Matrix rowspan="3" colspan="2" tbl="个人成绩" repeatrowheader="True" repeatcolheader="True" rowsort="name" colsort="year,subject">
+      <Corner>
+        <Text rowspan="2" val="姓名\成绩" background="#FFD8D8D8" />
+      </Corner>
+      <RowHeader>
+        <Level field="xm">
+          <Text row="2" val=":Val(个人成绩,xm) " background="#FFD8D8D8" />
+        </Level>
+      </RowHeader>
+      <ColHeader>
+        <Level field="year">
+          <Text col="1" val=":Val(个人成绩,year) " hideleftdup="True" background="#FFD8D8D8" />
+        </Level>
+        <Level field="subject">
+          <Text row="1" col="1" val=":Val(个人成绩,subject) " background="#FFD8D8D8" />
+        </Level>
+      </ColHeader>
+      <MRow>
+        <Text row="2" col="1" val=":Val(个人成绩,score) " />
+      </MRow>
+    </Matrix>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

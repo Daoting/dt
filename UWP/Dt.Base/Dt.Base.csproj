@@ -1,0 +1,29 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT控件库</Description>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<Import Project="..\Common\dtc.props" />
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
+		<PackageReference Include="GMImagePicker.Xamarin" Version="2.5.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0' ">
+		<Page Remove="Chat\WebRTC\VideoCaller.xaml" />
+		<Compile Remove="Chat\WebRTC\VideoCaller.xaml.cs" />
+		<None Include="Chat\WebRTC\VideoCaller.xaml.cs" />
+		<Page Remove="Chat\WebRTC\VideoRecver.xaml" />
+		<Compile Remove="Chat\WebRTC\VideoRecver.xaml.cs" />
+		<None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
+		<Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
+		<None Include="Chat\WebRTC\WebRtcApi.cs" />
+	</ItemGroup>
+
+</Project>

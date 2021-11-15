@@ -1,0 +1,24 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LvRowView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" SelectionMode="None" ShowItemBorder="False" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_lv}">
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

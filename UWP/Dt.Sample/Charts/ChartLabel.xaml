@@ -1,0 +1,41 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ChartLabel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <DataTemplate x:Key="lbl">
+            <TextBlock FontSize="24" Margin="2" Text="{Binding}" />
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart x:Name="_chart" ChartType="Column">
+                    <a:Chart.Data>
+                        <a:ChartData>
+                            <a:DataSeries Label="s1" Values="3 5 7 4" PointLabelTemplate="{StaticResource lbl}" PointTooltipTemplate="{StaticResource lbl}" />
+                            <a:DataSeries Label="s2" Values="1 2 3 8" PointLabelTemplate="{StaticResource lbl}" />
+                        </a:ChartData>
+                    </a:Chart.Data>
+                    <a:ChartLegend />
+                </a:Chart>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <a:Fv>
+                        <a:CFree Title="图表类型">
+                            <ComboBox x:Name="_cbType" SelectionChanged="OnChartTypeSelectionChanged" />
+                        </a:CFree>
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

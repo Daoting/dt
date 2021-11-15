@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Dt.Tasks</id>
+    <version>1.0.0</version>
+    <authors>Daoting</authors>
+    <owners>Daoting</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/daoting/dt</projectUrl>
+    <icon>images\logo.png</icon>
+    <description>搬运工UWP客户端的后台定时任务winmd</description>
+    <releaseNotes>First Release</releaseNotes>
+    <copyright>Copyright (C) 2021</copyright>
+    <tags>UWP BackgroundTask</tags>
+  </metadata>
+    <files>
+    <!-- WinMd and IntelliSense -->
+      <file src="bin\Release\Dt.Tasks.winmd" target="lib\uap10.0"/>
+
+    <!-- WINMDs and resources -->
+      <file src="bin\ARM\Release\Dt.Tasks.winmd" target="runtimes\win10-arm"/>
+      <file src="bin\ARM\Release\Dt.Tasks.pri" target="runtimes\win10-arm"/>
+
+      <file src="bin\x64\Release\Dt.Tasks.winmd" target="runtimes\win10-x64"/>
+      <file src="bin\x64\Release\Dt.Tasks.pri" target="runtimes\win10-x64"/>
+
+      <file src="bin\x86\Release\Dt.Tasks.winmd" target="runtimes\win10-x86"/>
+      <file src="bin\x86\Release\Dt.Tasks.pri" target="runtimes\win10-x86"/>
+      <file src="..\..\logo.png" target="images\" />
+    </files>
+</package>

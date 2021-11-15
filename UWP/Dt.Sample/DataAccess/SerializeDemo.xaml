@@ -1,0 +1,121 @@
+﻿<a:Win
+    x:Class="Dt.Sample.SerializeDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="基本类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回字符串" Click="GetString" />
+            <Button Content="发送字符串" Click="SetString" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回bool值" Click="GetBool" />
+            <Button Content="发送bool值" Click="SetBool" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回int值" Click="GetInt" />
+            <Button Content="发送int值" Click="SetInt" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回long值" Click="GetLong" />
+            <Button Content="发送long值" Click="SetLong" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回double值" Click="GetDouble" />
+            <Button Content="发送double值" Click="SetDouble" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回DateTime" Click="GetDateTime" />
+            <Button Content="发送DateTime" Click="SetDateTime" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回byte[]值" Click="GetByteArray" />
+            <Button Content="发送byte[]值" Click="SetByteArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回MsgInfo" Click="GetMsgInfo" />
+            <Button Content="发送MsgInfo" Click="SetMsgInfo" />
+        </StackPanel>
+
+        <a:CBar Title="集合类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收字符串列表" Click="GetStringList" />
+            <Button Content="发字符串列表" Click="SetStringList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收bool列表" Click="GetBoolList" />
+            <Button Content="发bool列表" Click="SetBoolList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收int列表" Click="GetIntList" />
+            <Button Content="发int列表" Click="SetIntList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收long列表" Click="GetLongList" />
+            <Button Content="发long列表" Click="SetLongList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收double列表" Click="GetDoubleList" />
+            <Button Content="发double列表" Click="SetDoubleList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收DateTime列表" Click="GetDateTimeList" />
+            <Button Content="发DateTime列表" Click="SetDateTimeList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收object列表" Click="GetObjectList" />
+            <Button Content="发object列表" Click="SetObjectList" />
+        </StackPanel>
+        
+        <a:CBar Title="Table类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Table" Click="GetTable" />
+            <Button Content="发送Table" Click="SetTable" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Row" Click="GetRow" />
+            <Button Content="发送Row" Click="SetRow" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Entity的Table" Click="GetEntityRowTable" />
+            <Button Content="发送Entity的Table" Click="SetEntityTable" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Entity" Click="GetEntityRow" />
+            <Button Content="发送Entity" Click="SetEntityRow" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返多表Dict" Click="GetTableDict" />
+            <Button Content="发多表Dict" Click="SetTableDict" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返多表列表" Click="GetTableList" />
+            <Button Content="发多表列表" Click="SetTableList" />
+        </StackPanel>
+
+        <a:CBar Title="Dict类型" />
+        <Button Content="返回基本类型Dict" Click="GetBaseDict" />
+        <Button Content="返回复杂类型Dict" Click="GetCombineDict" />
+        <Button Content="发送Dict" Click="SendDict" />
+        <Button Content="返回Dict列表" Click="GetDictList" />
+        <Button Content="发送Dict列表" Click="SendDictList" />
+
+        <a:CBar Title="自定义类型" />
+        <Button Content="返回自定义基本类型" Click="GetCustomBase"/>
+        <Button Content="发送自定义基本类型" Click="SetCustomBase"/>
+        <Button Content="返回自定义复杂类型" Click="GetCustomCombine" />
+        <Button Content="发送自定义复杂类型" Click="SetCustomCombine" />
+        <Button Content="返回自定义中包含自定义" Click="GetContainCustom" />
+        <Button Content="发送自定义中包含自定义" Click="SetContainCustom" />
+
+        <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

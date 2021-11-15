@@ -1,0 +1,27 @@
+﻿<Rpt cols="80,80,80,80,80,80,80,80">
+  <Params />
+  <Data>
+    <Tbl name="图表表格" isscritp="True" cols="xm,score" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25">
+    <Chart row="2" col="1" rowspan="13" colspan="7" tbl="图表表格" fieldx="xm" fieldy="score" title="数学成绩一览表" titley="成绩" showlegend="False" />
+    <Table row="18" col="3" rowspan="2" colspan="2" tbl="图表表格">
+      <THeader>
+        <TRow>
+          <Text row="18" col="3" val="姓名" />
+          <Text row="18" col="4" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="19" col="3" val=":Val(图表表格,xm)" />
+          <Text row="19" col="4" val=":Val(图表表格,score)" />
+        </TRow>
+      </TBody>
+    </Table>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

@@ -1,0 +1,41 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TvViewSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <DataTemplate x:Key="Folder">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
+                <a:Dot ID="name" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Children.Count,Mode=OneTime}" Margin="10,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="File">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE002;" FontFamily="{StaticResource IconFont}" Margin="10,0,10,0" VerticalAlignment="Center" />
+                <a:Dot ID="name" />
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="树">
+                <a:TreeView x:Name="_tv" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_tv}">
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CBool Title="显示行分割线" ID="ShowRowLine" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

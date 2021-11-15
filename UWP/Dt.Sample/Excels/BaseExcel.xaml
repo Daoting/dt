@@ -1,0 +1,145 @@
+﻿<a:Win
+    x:Class="Dt.Sample.BaseExcel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_excel}">
+                    <a:CBool ID="Protect" Title="只读" />
+                    <a:CText ID="ActiveSheet.RowCount" Title="总行数" />
+                    <a:CText ID="ActiveSheet.ColumnCount" Title="总列数" />
+                    <a:CList ID="ActiveSheet.SelectionPolicy" Title="选择模式" />
+                    <a:CList ID="ActiveSheet.SelectionUnit" Title="选择单位" />
+                    <a:CBool ID="ActiveSheet.ShowGridLine" Title="显示网格线" />
+                    <a:CFree Title="网格线颜色">
+                        <ComboBox x:Name="_cbGridlineColor" SelectionChanged="borderColor_SelectionChanged" />
+                    </a:CFree>
+                    <a:CList ID="ScrollBarTrackPolicy" Title="滚动栏跟踪方式" />
+                    <a:CBool ID="IsBusy" Title="忙状态" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加行" Click="OnAddRow" />
+                        <Button Content="移除行" Click="OnRemoveRow" />
+                        <Button Content="添加列" Click="OnAddCol" />
+                        <Button Content="移除列" Click="OnRemoveCol" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加列头" Click="btnAddColumnHeader_Click" />
+                        <Button Content="删除列头" Click="btnRemoveColumnHeader_Click" />
+                        <Button Content="添加行头" Click="btnAddRowHeader_Click" />
+                        <Button Content="删除行头" Click="btnRemoveRowHeader_Click" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="冻结" />
+                    <a:CText ID="ActiveSheet.FrozenRowCount" Title="冻结行数" />
+                    <a:CText ID="ActiveSheet.FrozenTrailingRowCount" Title="冻结尾行数" />
+                    <a:CText ID="ActiveSheet.FrozenColumnCount" Title="冻结列数" />
+                    <a:CText ID="ActiveSheet.FrozenTrailingColumnCount" Title="冻结尾列数" />
+                    
+                    <a:CBar Title="当前格" />
+                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <CheckBox x:Name="_cbColCanResize" Content="列宽可调" Click="OnColumnCanResize" />
+                        <CheckBox x:Name="_cbRowCanResize" Content="行高可调" Click="OnRowCanResize" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <CheckBox Content="下划线样式" Click="showUnderLine_Checked" />
+                        <CheckBox Content="删除线样式" Click="showStrickLine_Checked" />
+                    </StackPanel>
+                    <a:CFree Title="边框样式">
+                        <ComboBox x:Name="_cbLineStyle" />
+                    </a:CFree>
+                    <a:CFree Title="边框颜色">
+                        <ComboBox x:Name="_cbBorderColor" />
+                    </a:CFree>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="设置边框" Click="setBorderButton_Click" />
+                        <Button Content="清除边框" Click="clearBorderButton_Click" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="当前区域" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="btnMerge" Content="合并" Click="OnMergeClick" />
+                        <Button x:Name="btnUnMerge" Content="拆分" Click="OnUnMergeClick" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="内嵌表格" />
+                    <a:CFree Title="表格样式">
+                        <ComboBox x:Name="_cbTableStyle" SelectionChanged="cboTableStyle_SelectionChanged" />
+                    </a:CFree>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加表格" Click="btnAddTable_Click" />
+                        <Button Content="移除表格" Click="btnRemoveTable_Click" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="插入元素" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="矩形" Click="AddRectangleButton_Click" />
+                        <Button Content="椭圆" Click="AddEllipseButton_Click" />
+                        <Button Content="图片" Click="AddPictureButton_Click" />
+                        <Button Content="边框" Click="AddBorderButton_Click" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="工作表" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加" Click="btnAdd_Click" />
+                        <Button Content="移除" Click="btnRemove_Click" />
+                        <Button Content="清空" Click="btnClear_Click" />
+                        <Button Content="隐藏" Click="btnHide_Click" />
+                        <Button Content="显示所有" Click="btnUnhide_Click" />
+                    </StackPanel>
+                    <a:CBool ID="TabStripInsertTab" Title="显示新Tab" />
+                    <a:CBool ID="TabStripEditable" Title="Tab名可编辑" />
+                    <a:CList ID="TabStripVisibility" Title="显示Tab面板" />
+                    <a:CList ID="HorizontalScrollBarVisibility" Title="水平滚动栏" />
+                    <a:CText ID="TabStripRatio" Title="水平栏占比例" />
+
+                    <a:CBar Title="打开文件" />
+                    <a:CFree Title="打开选项">
+                        <ComboBox x:Name="_openFlags" SelectedIndex="0">
+                            <ComboBoxItem Content="NoFlagsSet" />
+                            <ComboBoxItem Content="DataOnly" />
+                            <ComboBoxItem Content="DataAndFormulasOnly" />
+                            <ComboBoxItem Content="RowHeaders" />
+                            <ComboBoxItem Content="ColumnHeaders" />
+                            <ComboBoxItem Content="RowAndColumnHeaders" />
+                            <ComboBoxItem Content="DoNotRecalculateAfterLoad" />
+                        </ComboBox>
+                    </a:CFree>
+                    <Button Content="打开" Click="OpenFile" />
+
+                    <a:CBar Title="保存为Excel" />
+                    <a:CFree Title="保存选项">
+                        <ComboBox x:Name="_saveFlags" SelectedIndex="0">
+                            <ComboBoxItem>NoFlagsSet</ComboBoxItem>
+                            <ComboBoxItem>NoFormulas</ComboBoxItem>
+                            <ComboBoxItem>SaveCustomRowHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveCustomColumnHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveAsFiltered</ComboBoxItem>
+                            <ComboBoxItem>SaveBothCustomRowAndColumnHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveAsViewed</ComboBoxItem>
+                            <ComboBoxItem>DataOnly</ComboBoxItem>
+                            <ComboBoxItem>AutoRowHeight</ComboBoxItem>
+                        </ComboBox>
+                    </a:CFree>
+                    <Button Content="保存" Click="SaveExcelFile" />
+
+                    <a:CBar Title="其它格式保存" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="保存为Xml" Click="SaveXmlFile" />
+                        <Button Content="保存为PDF" Click="SavePDFFile" />
+                        <Button Content="保存为CSV" Click="SaveCsvFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

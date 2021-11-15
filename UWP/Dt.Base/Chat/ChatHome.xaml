@@ -1,0 +1,25 @@
+﻿<a:Win
+    x:Class="Dt.Base.Chat.ChatHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:chat="using:Dt.Base.Chat">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1" Title="消息">
+                <chat:ChatList ItemClick="OnItemClick" />
+            </a:Tab>
+            <a:Tab Order="2" Title="联系人">
+                <chat:ChatMemberList ItemClick="OnItemClick" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Title="聊天内容">
+                <chat:ChatDetail x:Name="_detail" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

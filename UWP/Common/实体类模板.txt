@@ -1,0 +1,30 @@
+﻿    public partial class XXX
+    {
+        async Task OnSaving()
+        {
+        }
+
+        async Task OnDeleting()
+        {
+        }
+
+        public static async Task<XXX> New()
+        {
+        }
+
+        public static async Task<XXX> Get(long p_id)
+        {
+        }
+
+        void SetX(long p_value)
+        {
+        }
+
+        void SetX(string p_value)
+        {
+        }
+
+        void SetX(bool p_value)
+        {
+        }
+    }

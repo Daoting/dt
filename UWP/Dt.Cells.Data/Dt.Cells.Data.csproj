@@ -1,0 +1,20 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台Excel模型库</Description>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+		<ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+		<ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+		<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PRIResource Include="Res\Resources.resw" />
+	</ItemGroup>
+
+</Project>

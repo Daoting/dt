@@ -1,0 +1,39 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FinancialChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart x:Name="_chart" ChartType="Candle">
+                    <a:Chart.Data>
+                        <a:ChartData>
+                            <a:HighLowOpenCloseSeries SymbolSize="9,9"
+                                                      SymbolStrokeThickness="2"
+                                                    XValueBinding="{Binding Time}"
+                                                    HighValueBinding="{Binding High}"
+                                                    LowValueBinding="{Binding Low}"
+                                                    OpenValueBinding="{Binding Open}"
+                                                    CloseValueBinding="{Binding Close}" />
+                            <a:XYDataSeries  AxisY="Volume" XValueBinding="{Binding Time}" ValueBinding="{Binding Volume}" />
+                        </a:ChartData>
+                    </a:Chart.Data>
+                    <a:ChartLegend x:Name="_legend" />
+                </a:Chart>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <a:Fv>
+                        <Button x:Name="btnNew" Content="NewData" Click="btnNew_Click" />
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,40 @@
+﻿<a:Win
+    x:Class="Dt.Sample.DataExcel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CBar Title="查询" />
+                    <TextBox x:Name="_tbSearch" PlaceholderText="查询内容" KeyDown="txtSearch_KeyDown" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="查询" Click="btnSearch_Click" />
+                        <Button Content="清除" Click="btnClearSearch_Click" />
+                    </StackPanel>
+                    <a:CBar Title="增删改" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="_btnUpdate" Content="保存" Click="btnUpdate_Click" IsEnabled="False" />
+                        <Button Content="删除" Click="btnDelete_Click" />
+                        <Button Content="添加" Click="btnAdd_Click" />
+                    </StackPanel>
+                    <a:CBar Title="导出" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="导出Xls" Click="SaveExcelFile" />
+                        <Button Content="导出Xml" Click="SaveXmlFile" />
+                        <Button Content="另存为PDF" Click="SavePDFFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,57 @@
+﻿<a:Mv
+    x:Class="Dt.Base.SearchMv"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid x:Name="_grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+            <StackPanel x:Name="_sp">
+                <a:Lv x:Name="_lvFix"
+                      ItemClick="OnFixClick"
+                      ViewMode="Tile"
+                      SelectionMode="None"
+                      ItemHeight="50"
+                      BorderBrush="{StaticResource 浅灰2}"
+                      BorderThickness="0,1,0,0">
+                    <DataTemplate>
+                        <a:Dot ID="#" Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
+                    </DataTemplate>
+                </a:Lv>
+                <a:CBar Margin="0,10,0,0">
+                    <Grid Background="{StaticResource 浅灰1}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                            <TextBlock Text="&#xE02D;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       VerticalAlignment="Center"
+                                       Margin="0, 0, 4, 0" />
+                            <TextBlock Text="搜索历史" VerticalAlignment="Center" TextWrapping="NoWrap" />
+                        </StackPanel>
+                        <Button Content="&#xE00A;" Click="OnClearHis" Style="{StaticResource 字符按钮}" Margin="0,0,10,0" Grid.Column="1" />
+                    </Grid>
+                </a:CBar>
+                <a:Lv x:Name="_lvHis" ItemClick="OnHisClick">
+                    <DataTemplate>
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <a:Dot ID="Content" Foreground="{StaticResource 主蓝}" />
+                            <Button Content="&#xE009;" Click="OnDelHis" Style="{StaticResource 字符按钮}" Grid.Column="1" />
+                        </Grid>
+                    </DataTemplate>
+                </a:Lv>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</a:Mv>

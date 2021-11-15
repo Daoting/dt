@@ -1,0 +1,10 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台图表控件库</Description>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+
+</Project>

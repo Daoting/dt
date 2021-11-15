@@ -1,0 +1,78 @@
+﻿<a:Win
+    x:Class="Dt.Sample.RptDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1" Title="功能列表">
+                <ScrollViewer>
+                    <StackPanel>
+                        <a:Fv x:Name="_fv">
+                            <a:CList ID="type" Title="操作类型">
+                                <a:CList.Items>
+                                    <x:String>使用RptView预览</x:String>
+                                    <x:String>打开报表预览窗口</x:String>
+                                    <x:String>打开模板编辑窗口</x:String>
+                                </a:CList.Items>
+                            </a:CList>
+                            <a:CBar Title="基础" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="简单文本" />
+                                <Button Content="页眉页脚" />
+                            </StackPanel>
+                            <a:CBar Title="表格" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="完整表格" />
+                                <Button Content="最少行表格" />
+                                <Button Content="分组表格" />
+                                <Button Content="含头尾表格" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="跨页表格" />
+                                <Button Content="自动行数列表" />
+                                <Button Content="固定行数列表" />
+                            </StackPanel>
+                            <a:CBar Title="矩阵" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="完整矩阵" />
+                                <Button Content="两层矩阵" />
+                                <Button Content="含小计矩阵" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="含标题矩阵" />
+                                <Button Content="跨页矩阵" />
+                            </StackPanel>
+                            <a:CBar Title="图表" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="图表矩阵" />
+                                <Button Content="图表表格" />
+                            </StackPanel>
+                            <a:CBar Title="报表参数" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="默认查询面板" />
+                                <Button Content="自定义查询面板" />
+                            </StackPanel>
+                        </a:Fv>
+                        <a:Fv x:Name="_fvOther">
+                            <a:CBar Title="其他" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="脚本" Click="OnScript" />
+                                <Button Content="报表组" Click="OnRptGroup" />
+                            </StackPanel>
+                        </a:Fv>
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="2" Title="RptView">
+                <a:RptView x:Name="_rptView" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

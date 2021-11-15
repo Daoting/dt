@@ -1,0 +1,29 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TabControlDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="450" />
+        </Grid.ColumnDefinitions>
+        <a:TabControl x:Name="_tab" Margin="0,0,10,0">
+            <a:TabItem Title="首页" />
+            <a:TabItem Title="第二页" />
+            <a:TabItem Title="第三页" />
+        </a:TabControl>
+        <a:Fv Data="{Binding ElementName=_tab}" Grid.Column="1">
+            <a:CList Title="标签头位置" ID="TabStripPlacement" />
+            <a:CText Title="当前标签索引" ID="SelectedIndex" />
+            <a:CBool Title="可拖拽调整位置" ID="AllowSwapItem" />
+            <a:CNum Title="弹出面板宽度" ID="PopWidth" />
+            <a:CNum Title="弹出面板高度" ID="PopHeight" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="添加标签" Click="OnAddTabItem" />
+                <Button Content="移除标签" Click="OnRemoveTabItem" />
+            </StackPanel>
+        </a:Fv>
+    </Grid>
+</a:Win>

@@ -1,0 +1,87 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dt="using:Dt.Base"
+    xmlns:charts="using:Dt.Charts">
+
+    <!-- 有文本内容时显示，无文本内容时隐藏(不占空间) -->
+    <dt:TextToVisibleConverter x:Key="CvTextToVisible" Visible="True" />
+
+    <Style TargetType="dt:Chart">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="MinWidth" Value="24"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="dt:Chart">
+                    <Grid x:Name="RootGrid"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Padding="{TemplateBinding Padding}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Content="{TemplateBinding Header}"
+                                          FontSize="15"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Stretch"
+                                          Visibility="{Binding Header, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Padding="6,0,6,6"
+                                          Grid.ColumnSpan="3" />
+                        <ContentPresenter x:Name="ViewPresenter" Grid.Row="2" Grid.Column="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="dt:ChartLegend" >
+        <Setter Property="BorderBrush" Value="#FF969696"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="dt:ChartLegend">
+                    <StackPanel Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Center" Content="{TemplateBinding Title}"/>
+                        <StackPanel x:Name="ItemPanel" Orientation="{TemplateBinding Orientation}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="charts:AxisScrollBar">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="charts:AxisScrollBar">
+                    <ScrollBar x:Name="ScrollBar" IndicatorMode="TouchIndicator" Orientation="Horizontal" Minimum="0" Maximum="1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
+

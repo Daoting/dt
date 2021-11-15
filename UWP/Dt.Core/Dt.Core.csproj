@@ -1,0 +1,73 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT内核库</Description>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<Import Project="..\Common\dtc.props" />
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.12" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid11.0' ">
+		<PackageReference Include="Square.OkHttp3" Version="4.9.2" />
+		<PackageReference Include="Square.OkIO" version="2.10.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\CellList.cs" Link="Base\Collection\Table\CellList.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Column.cs" Link="Base\Collection\Table\Column.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\ColumnList.cs" Link="Base\Collection\Table\ColumnList.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\DataProvider\TableSchema.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\TblAttribute.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\AsyncLocker.cs" Link="Base\Locker\AsyncLocker.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Enums.cs" Link="Base\Enum\Enums.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\ServerException.cs" Link="Base\ServerException.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Throw.cs" Link="Base\Throw.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\RpcJson.cs" Link="Internal\Serialize\RpcJson.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\SerializeTypeAlias.cs" Link="Internal\Serialize\SerializeTypeAlias.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Encrypt.cs" Link="Kit\Kit-Encrypt.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Json.cs" Link="Kit\Kit-Json.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\DuplexStream.cs" Link="Rpc\DuplexStream.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\PushStreamContent.cs" Link="Rpc\PushStreamContent.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RequestWriter.cs" Link="Rpc\RequestWriter.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\ResponseReader.cs" Link="Rpc\ResponseReader.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RpcClientKit.cs" Link="Rpc\RpcClientKit.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RpcResult.cs" Link="Rpc\RpcResult.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RpcResultType.cs" Link="Rpc\RpcResultType.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\BaseRpc.cs" Link="Rpc\Client\BaseRpc.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\ClientStreamRpc.cs" Link="Rpc\Client\ClientStreamRpc.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\DuplexStreamRpc.cs" Link="Rpc\Client\DuplexStreamRpc.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\ServerStreamRpc.cs" Link="Rpc\Client\ServerStreamRpc.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\UnaryRpc.cs" Link="Rpc\Client\UnaryRpc.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Rpc\RpcKit.cs" Link="Rpc\RpcKit.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpc结构.txt" Link="Internal\Serialize\JsonRpc结构.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Rpc\Client\" />
+	</ItemGroup>
+</Project>

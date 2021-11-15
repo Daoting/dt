@@ -1,0 +1,44 @@
+﻿<Rpt cols="53,82,71,76,80">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩" isscritp="True" cols="xm,year,subject,score" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,33,25,25">
+    <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩" rowsort="xm,year">
+      <Corner>
+        <Text row="1" col="1" colspan="2" val="姓名\成绩" background="#FFD8D8D8" />
+      </Corner>
+      <RowHeader>
+        <Level field="xm">
+          <Text row="2" col="1" rowspan="2" val=":Val(个人成绩,xm)" hidetopdup="True" background="#FFD8D8D8" />
+        </Level>
+        <Level field="year">
+          <Text row="3" col="2" val=":Val(个人成绩,year)" background="#FFD8D8D8" />
+          <Subtotal>
+            <Text row="2" col="2" val="小计" background="#FF9ACCFF" />
+          </Subtotal>
+        </Level>
+      </RowHeader>
+      <ColHeader>
+        <Level field="subject">
+          <Text row="1" col="3" val=":Val(个人成绩,subject)" background="#FFD8D8D8" />
+          <Subtotal beforelevel="0">
+            <Text row="1" col="4" val="总计" background="#FF9ACCFF" />
+          </Subtotal>
+        </Level>
+      </ColHeader>
+      <MRow>
+        <Text row="2" col="3" val=":Sum(个人成绩,score)" />
+        <Text row="2" col="4" val=":Sum(个人成绩,score)" />
+      </MRow>
+      <MRow>
+        <Text row="3" col="3" val=":Val(个人成绩,score)" />
+        <Text row="3" col="4" val=":Sum(个人成绩,score)" />
+      </MRow>
+    </Matrix>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

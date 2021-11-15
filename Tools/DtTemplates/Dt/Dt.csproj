@@ -1,0 +1,633 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{E6819EFF-5851-43F2-8199-A67E58F41324}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dt</RootNamespace>
+    <AssemblyName>Dt</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <UseCodebase>true</UseCodebase>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <StartAction>Program</StartAction>
+    <StartProgram Condition="'$(DevEnvDir)' != ''">$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>VSTHRD010</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Agent\InsertAgentForm.resx">
+      <DependentUpon>InsertAgentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Api\InsertApiForm.resx">
+      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Agent\Class.cs" />
+    <Compile Include="Agent\InsertAgentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Agent\InsertAgentForm.Designer.cs">
+      <DependentUpon>InsertAgentForm.cs</DependentUpon>
+    </Compile>
+    <None Include="Api\Class.cs" />
+    <Compile Include="Api\InsertApiForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Api\InsertApiForm.Designer.cs">
+      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\InsertDlgForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\InsertDlgForm.Designer.cs">
+      <DependentUpon>InsertDlgForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CPassword.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CPassword.Designer.cs">
+      <DependentUpon>CPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CTip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CTip.Designer.cs">
+      <DependentUpon>CTip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CLink.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CLink.Designer.cs">
+      <DependentUpon>CLink.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CDate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CDate.Designer.cs">
+      <DependentUpon>CDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CellFooter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CellFooter.Designer.cs">
+      <DependentUpon>CellFooter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CmdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CmdForm.Designer.cs">
+      <DependentUpon>CmdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DtCmds.cs" />
+    <Compile Include="Editor\CBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CBar.Designer.cs">
+      <DependentUpon>CBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CBool.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CBool.Designer.cs">
+      <DependentUpon>CBool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CellHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CellHeader.Designer.cs">
+      <DependentUpon>CellHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CellXaml.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor\CellXaml.Designer.cs">
+      <DependentUpon>CellXaml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CFile.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CFile.Designer.cs">
+      <DependentUpon>CFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CColor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CColor.Designer.cs">
+      <DependentUpon>CColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CHtml.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CHtml.Designer.cs">
+      <DependentUpon>CHtml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CIcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CIcon.Designer.cs">
+      <DependentUpon>CIcon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CImage.Designer.cs">
+      <DependentUpon>CImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CList.Designer.cs">
+      <DependentUpon>CList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CMask.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CMask.Designer.cs">
+      <DependentUpon>CMask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CNum.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CNum.Designer.cs">
+      <DependentUpon>CNum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CText.Designer.cs">
+      <DependentUpon>CText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor\CTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\CTree.Designer.cs">
+      <DependentUpon>CTree.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Entity\Entity.cs" />
+    <Compile Include="Entity\InsertEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Entity\InsertEntityForm.Designer.cs">
+      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LvXaml\ICmdForm.cs" />
+    <Compile Include="LvXaml\LvXaml.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LvXaml\LvXaml.Designer.cs">
+      <DependentUpon>LvXaml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Kit.cs" />
+    <EmbeddedResource Include="ManyToMany\MainForm.xaml.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainList.xaml.cs">
+      <DependentUpon>MainList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainRelatedList.xaml.cs">
+      <DependentUpon>MainRelatedList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainWin.xaml.cs">
+      <DependentUpon>MainWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainObj.cs" />
+    <EmbeddedResource Include="ManyToMany\MainSearch.xaml.cs">
+      <DependentUpon>MainSearch.xaml</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="ManyToMany\ManyToManyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManyToMany\ManyToManyForm.Designer.cs">
+      <DependentUpon>ManyToManyForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Mv\BlankMv.xaml.cs">
+      <DependentUpon>BlankMv.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mv\FormMv.xaml.cs">
+      <DependentUpon>FormMv.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mv\ListMv.xaml.cs">
+      <DependentUpon>ListMv.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\CustomSearch.cs" />
+    <EmbeddedResource Include="ManyToMany\DefaultSearch.cs" />
+    <Compile Include="Mv\InsertMvForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Mv\InsertMvForm.Designer.cs">
+      <DependentUpon>InsertMvForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="OnToMany\TreeWin.xaml.cs">
+      <DependentUpon>TreeWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ParentObj.cs" />
+    <EmbeddedResource Include="OnToMany\ChildObj.cs" />
+    <EmbeddedResource Include="OnToMany\ThreeList.xaml.cs">
+      <DependentUpon>ThreeList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ParentForm.xaml.cs">
+      <DependentUpon>ParentForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\TwoWin.xaml.cs">
+      <DependentUpon>TwoWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\TwoList.xaml.cs">
+      <DependentUpon>TwoList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ChildList.xaml.cs">
+      <DependentUpon>ChildList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\ChildForm.xaml.cs">
+      <DependentUpon>ChildForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="OnToMany\OnToManyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OnToMany\OnToManyForm.Designer.cs">
+      <DependentUpon>OnToManyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DtPackage.cs" />
+    <EmbeddedResource Include="Dialog\InsertDlgForm.resx">
+      <DependentUpon>InsertDlgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Entity\InsertEntityForm.resx">
+      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mv\InsertMvForm.resx">
+      <DependentUpon>InsertMvForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\ToggleMainWin.xaml.cs">
+      <DependentUpon>ToggleMainWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\ThreePanelWin.xaml.cs">
+      <DependentUpon>ThreePanelWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\TwoPanelWin.xaml.cs">
+      <DependentUpon>TwoPanelWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Win\BlankWin.xaml.cs">
+      <DependentUpon>BlankWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml.cs">
+      <DependentUpon>TwoPanWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml.cs">
+      <DependentUpon>TwoPanList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml.cs">
+      <DependentUpon>EntitySearch.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\EntityCusSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\TwoDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\TwoCusSearch.cs" />
+    <Compile Include="Win\InsertWinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Win\InsertWinForm.Designer.cs">
+      <DependentUpon>InsertWinForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Win\SingleWin.xaml.cs">
+      <DependentUpon>SingleWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\ManyToManyForm.resx">
+      <DependentUpon>ManyToManyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OnToMany\OnToManyForm.resx">
+      <DependentUpon>OnToManyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityWin.xaml.cs">
+      <DependentUpon>EntityWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityForm.xaml.cs">
+      <DependentUpon>EntityForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityList.xaml.cs">
+      <DependentUpon>EntityList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityObj.cs" />
+    <Compile Include="SingleTbl\SingleTblForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SingleTbl\SingleTblForm.Designer.cs">
+      <DependentUpon>SingleTblForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Win\InsertWinForm.resx">
+      <DependentUpon>InsertWinForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.10.1055">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Readme.txt" />
+    <Content Include="Resources\Icons.png" />
+    <VSCTCompile Include="DtPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+    <None Include="Resources\Logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLib\CommonLib.csproj">
+      <Project>{8BA7F8C8-F6A0-40C3-93FA-63FB6000738E}</Project>
+      <Name>CommonLib</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\Svc\Svc.csproj">
+      <Project>{CC44A804-F77B-4E52-9F66-DEB46D0F2DFA}</Project>
+      <Name>Svc</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editor\CPassword.resx">
+      <DependentUpon>CPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CTip.resx">
+      <DependentUpon>CTip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CLink.resx">
+      <DependentUpon>CLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CDate.resx">
+      <DependentUpon>CDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CellFooter.resx">
+      <DependentUpon>CellFooter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CmdForm.resx">
+      <DependentUpon>CmdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CBar.resx">
+      <DependentUpon>CBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CBool.resx">
+      <DependentUpon>CBool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CellHeader.resx">
+      <DependentUpon>CellHeader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CellXaml.resx">
+      <DependentUpon>CellXaml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CFile.resx">
+      <DependentUpon>CFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CColor.resx">
+      <DependentUpon>CColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CHtml.resx">
+      <DependentUpon>CHtml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CIcon.resx">
+      <DependentUpon>CIcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CImage.resx">
+      <DependentUpon>CImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CList.resx">
+      <DependentUpon>CList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CMask.resx">
+      <DependentUpon>CMask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CNum.resx">
+      <DependentUpon>CNum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CText.resx">
+      <DependentUpon>CText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor\CTree.resx">
+      <DependentUpon>CTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LvXaml\LvXaml.resx">
+      <DependentUpon>LvXaml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\SingleTblForm.resx">
+      <DependentUpon>SingleTblForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\EntityWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\EntityForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SingleTbl\EntityList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\SingleWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\BlankWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\TwoPanelWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\ThreePanelWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Win\ToggleMainWin.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dialog\Dialog.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mv\BlankMv.xaml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mv\FormMv.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mv\ListMv.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\MainForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainRelatedList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\MainWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\MainSearch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TreeWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ThreeList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ParentForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TwoWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\TwoList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ChildList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OnToMany\ChildForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

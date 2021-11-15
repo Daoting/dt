@@ -1,0 +1,49 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TvInScrollViewer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="格">
+                <ScrollViewer x:Name="_sv">
+                    <StackPanel>
+                        <Border x:Name="_top" Height="100" Background="Gray" />
+                        <a:TreeView x:Name="_tv">
+                            <DataTemplate>
+                                <a:Dot ID="name" />
+                            </DataTemplate>
+                        </a:TreeView>
+                        <Border x:Name="_bottom" Height="100" Background="Gray" />
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="随机选择节点" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
+                    </StackPanel>
+                    <a:CBar Title="顶部区域高度" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="超过可视区域" Click="OnTopMax" />
+                        <Button Content="小于可视区域" Click="OnTop" />
+                        <Button Content="为0" Click="OnTopZero" />
+                    </StackPanel>
+                    <a:CBar Title="底部区域高度" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="超过可视区域" Click="OnBottomMax" />
+                        <Button Content="小于可视区域" Click="OnBottom" />
+                        <Button Content="为0" Click="OnBottomZero" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

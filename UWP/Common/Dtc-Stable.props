@@ -1,0 +1,58 @@
+<Project ToolsVersion="Current">
+	<PropertyGroup>
+		<TargetFrameworks>uap10.0.19041;monoandroid11.0;xamarinios10;netstandard2.0</TargetFrameworks>
+		<Authors>Daoting</Authors>
+		<Product>搬运工基础平台</Product>
+		<Copyright>Copyright © 2021</Copyright>
+		<NoWarn>$(NoWarn);1591;NU1701;Uno0001</NoWarn>
+		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+		<GenerateLibraryLayout>true</GenerateLibraryLayout>
+		<!-- 打包.nupkg时包含pdb文件，用于调试 -->
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0.19041' ">
+		<DefineConstants>$(DefineConstants);UWP</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'xamarinios10'">
+		<DefineConstants>$(DefineConstants);IOS</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid11.0'">
+		<DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<DefineConstants>$(DefineConstants);WASM;__WASM__</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'uap10.0.19041' ">
+		<PackageReference Include="Uno.UI" Version="3.10.11" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid11.0' ">
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Xml" />
+		<Reference Include="System.Xml.Linq" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
+		<Reference Include="Xamarin.iOS" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'monoandroid11.0' ">
+		<Reference Include="Mono.Android" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		<Compile Update="**\*.xaml.cs">
+			<DependentUpon>%(Filename)</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+	</ItemGroup>
+</Project>

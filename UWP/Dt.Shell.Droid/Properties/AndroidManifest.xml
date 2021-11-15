@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="2"
+          android:versionName="1.2"
+          package="com.dt.samples"
+          android:installLocation="auto">
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="30" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
+	<uses-feature android:name="android.hardware.camera.front" android:required="false" />
+  <uses-feature android:name="android.hardware.microphone" android:required="false" />
+	<application android:label="搬运工"
+               android:icon="@mipmap/ic_launcher"
+               android:roundIcon="@mipmap/ic_launcher_round"
+               android:theme="@style/AppTheme"
+               android:usesCleartextTraffic="true"
+               android:requestLegacyExternalStorage="true">
+		<provider android:name="androidx.core.content.FileProvider"
+              android:authorities="${applicationId}.fileprovider"
+              android:exported="false"
+              android:grantUriPermissions="true">
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
+		</provider>
+	</application>
+</manifest>

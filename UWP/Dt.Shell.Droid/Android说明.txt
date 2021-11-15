@@ -1,0 +1,32 @@
+》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：
+The Bindable attribute is missing and the type [T] is not known by the MetadataProvider. Reflection was used instead of the binding engine and generated static metadata. Add the Bindable attribute to prevent this message and performance issues.
+
+》各项目之间为避免冗余的文件，将相同文件放置在 Common 目录下，各项目采取文件链接方式
+
+
+》项目目录说明：
+\Assets\Fonts\icon.ttf  自定义矢量字体库
+              winjs-symbols.ttf：android缺少的win矢量字体库
+              OpenSans-xxx.ttf：OpenSans字体库，未用到！
+
+\Resources\drawable\back.png  快速启动背景
+                    logo.png  程序中用到的50X50图标
+
+\Resources\mipmap-xxx\ic_launcher.png   sdk26之前版本的图标
+                      ic_launcher_round.png   sdk26之前版本的图标
+                      ic_launcher_foreground.png  sdk26及以上版本的图标，背景透明
+
+\Resources\values\styles.xml  定义样式参数
+                  ic_launcher_background.xml  sdk26及以上版本图标使用的背景色
+
+\Resources\xml\file_paths.xml 共享路径配置
+
+\App.xaml  全局公共
+
+\MainActivity.cs 入口
+
+
+》App标题定义有两处：AndroidManifest.xml Stub.Title
+
+
+》生成手机apk：选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择或创建签名 -> 密码around -> 分发成功

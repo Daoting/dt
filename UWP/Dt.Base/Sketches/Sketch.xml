@@ -1,0 +1,37 @@
+﻿<Sketch pagewidth="" pageheight="">
+  <Node id=""
+        title=""
+        icon=""
+        shape=""
+        flag=""
+        content=""
+        background=""
+        borderbrush=""
+        top=""
+        left=""
+        width=""
+        height=""/>
+  
+  <Line id=""
+        headerid=""
+        headerport=""
+        headershape=""
+        tailid=""
+        tailport=""
+        tailshape=""
+        headtailsize=""
+        linethickness=""
+        isstraightline=""
+        title=""/>
+  
+  <Txt text=""
+       fontsize=""
+       fontweight=""
+       foreground=""
+       fontstyle=""
+       fontfamily=""
+       top=""
+       left=""
+       width=""
+       height=""/>
+</Sketch>

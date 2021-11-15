@@ -1,0 +1,13 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台Xls文件格式</Description>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+
+	<ItemGroup>
+		<EmbeddedResource Include="BuiltInStyles.xml" />
+	</ItemGroup>
+
+</Project>

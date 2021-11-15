@@ -1,0 +1,31 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台Pdf文件格式</Description>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+
+	<ItemGroup>
+		<EmbeddedResource Include="Fonts\arial.sfont" />
+		<EmbeddedResource Include="Fonts\arialn.sfont" />
+		<EmbeddedResource Include="Fonts\ariblk.sfont" />
+		<EmbeddedResource Include="Fonts\batang.sfont" />
+		<EmbeddedResource Include="Fonts\CNS1.cmap" />
+		<EmbeddedResource Include="Fonts\comic.sfont" />
+		<EmbeddedResource Include="Fonts\cour.sfont" />
+		<EmbeddedResource Include="Fonts\GB1.cmap" />
+		<EmbeddedResource Include="Fonts\georgia.sfont" />
+		<EmbeddedResource Include="Fonts\Japan1.cmap" />
+		<EmbeddedResource Include="Fonts\Korea1.cmap" />
+		<EmbeddedResource Include="Fonts\l_10646.sfont" />
+		<EmbeddedResource Include="Fonts\micross.sfont" />
+		<EmbeddedResource Include="Fonts\msmincho.sfont" />
+		<EmbeddedResource Include="Fonts\simsun.sfont" />
+		<EmbeddedResource Include="Fonts\times.sfont" />
+		<EmbeddedResource Include="Fonts\trebuc.sfont" />
+		<EmbeddedResource Include="Fonts\verdana.sfont" />
+		<EmbeddedResource Include="Fonts\webdings.sfont" />
+	</ItemGroup>
+
+</Project>

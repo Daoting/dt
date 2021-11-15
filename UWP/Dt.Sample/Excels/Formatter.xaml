@@ -1,0 +1,32 @@
+﻿<a:Win
+    x:Class="Dt.Sample.Formatter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CFree Title="格式化串">
+                        <TextBox x:Name="_tbFormat" Text="##,##0" Grid.Column="1" Margin="0,0,0,-2" />
+                    </a:CFree>
+                    <Button Content="应用格式" Click="setFormatButton_Click" />
+                    <Button Content="清除格式" Click="clearFormatButton_Click" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="导出Xls" Click="SaveExcelFile" />
+                        <Button Content="导出Xml" Click="SaveXmlFile" />
+                        <Button Content="另存为PDF" Click="SavePDFFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

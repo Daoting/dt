@@ -1,0 +1,11 @@
+﻿<UserControl
+    x:Class="Dt.App.Workflow.WfTextForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CText ID="Text" Title="文本内容" />
+        <a:CNum ID="FontSize" Title="字体大小" IsInteger="True" Minimum="9" />
+    </a:Fv>
+</UserControl>

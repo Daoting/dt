@@ -1,0 +1,28 @@
+﻿@font-face {
+    font-family: "DtIcon";
+    src: url(Fonts/icon.woff2) format("woff2");
+}
+
+@font-face {
+    font-family: "Symbols";
+    src: url(Fonts/uno-fluentui-assets.woff2) format("woff2");
+}
+
+/* 确保同步加载字体，否则字体测量有问题 */
+body::before {
+    font-family: 'DtIcon';
+    background: transparent;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+body::after {
+    font-family: 'Symbols';
+    background: transparent;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}

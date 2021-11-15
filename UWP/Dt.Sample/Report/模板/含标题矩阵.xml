@@ -1,0 +1,41 @@
+﻿<Rpt cols="80,80,80,80,80">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩_矩阵标题" isscritp="True" cols="xm,year,数学,语文,英语" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25">
+    <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩_矩阵标题">
+      <Corner>
+        <Text row="1" col="1" rowspan="2" val="矩阵角" />
+      </Corner>
+      <RowHeader>
+        <Level field="xm">
+          <Text row="3" col="1" val=":Val(个人成绩_矩阵标题,xm)" />
+        </Level>
+      </RowHeader>
+      <ColHeader>
+        <Level field="year">
+          <Text row="1" col="2" colspan="3" val=":Val(个人成绩_矩阵标题,year)" hideleftdup="True" />
+          <Subtitle>
+            <Text row="2" col="2" val="数学" />
+          </Subtitle>
+          <Subtitle>
+            <Text row="2" col="3" val="语文" />
+          </Subtitle>
+          <Subtitle>
+            <Text row="2" col="4" val="英语" />
+          </Subtitle>
+        </Level>
+      </ColHeader>
+      <MRow>
+        <Text row="3" col="2" val=":Val(个人成绩_矩阵标题,数学)" />
+        <Text row="3" col="3" val=":Val(个人成绩_矩阵标题,语文)" />
+        <Text row="3" col="4" val=":Val(个人成绩_矩阵标题,英语)" />
+      </MRow>
+    </Matrix>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

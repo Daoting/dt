@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <item name="android:windowBackground">@drawable/back</item>
+
+    <!-- This removes the ActionBar -->
+    <item name="android:windowFullscreen">false</item>
+    <item name="windowActionBar">false</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowNoTitle">true</item>
+
+    <!-- 适用Android5以上，应用不占用顶部状态栏和底部导航栏， 并设置状态栏透明 -->
+    <!-- 状态栏显示的是android:windowBackground图片的颜色 -->
+    <item name="android:windowTranslucentStatus">false</item>
+    <item name="android:windowTranslucentNavigation">false</item>
+    <item name="android:statusBarColor">#00FFFFFF</item>
+  </style>
+</resources>

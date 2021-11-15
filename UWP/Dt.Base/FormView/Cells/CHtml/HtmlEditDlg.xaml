@@ -1,0 +1,18 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.FormView.HtmlEditDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="编辑内容"
+    IsPinned="True">
+
+    <a:Dlg.Menu>
+        <a:Menu x:Name="_menu">
+            <a:Mi ID="图片" Icon="图片" Click="OnInsertImg" />
+            <a:Mi ID="视频" Icon="视频" Click="OnInsertVideo" />
+            <a:Mi ID="保存" Icon="保存" Click="OnSave" />
+        </a:Menu>
+    </a:Dlg.Menu>
+
+    <WebView x:Name="_wv" />
+</a:Dlg>

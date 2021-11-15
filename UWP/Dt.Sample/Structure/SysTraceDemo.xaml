@@ -1,0 +1,24 @@
+﻿<a:Win
+    x:Class="Dt.Sample.SysTraceDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar>
+            <TextBlock Text="点击以下按钮将输出到Trace日志" Margin="10,0,0,0" />
+        </a:CBar>
+        <a:CBar Title="Trace输出" />
+        <Button Content="普通信息" Click="OnNormal" />
+        <Button Content="Http请求" Click="OnRequest" />
+        <Button Content="Http响应" Click="OnResponse" />
+        <Button Content="Ws请求" Click="OnWsRequest" />
+        <Button Content="Ws响应" Click="OnWsResponse" />
+        <Button Content="服务器推送" Click="OnServerPush" />
+        <Button Content="远程异常信息" Click="OnRpcException" />
+        <Button Content="未处理异常" Click="OnUnhandled" />
+        <a:CBar Title="异常与断言警告" />
+        <Button Content="业务警告" Click="OnExcept" />
+        <Button Content="未处理异常" Click="OnDebugExcept" />
+    </a:Fv>
+</a:Win>

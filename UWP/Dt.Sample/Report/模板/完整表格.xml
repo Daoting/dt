@@ -1,0 +1,74 @@
+﻿<Rpt cols="90,130,120,100,100">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩" isscritp="True" cols="xm,year,subject,score" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25,25">
+    <Table row="1" col="1" rowspan="7" colspan="4" tbl="个人成绩" repeatheader="True" repeatfooter="True">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" val="学期" />
+          <Text row="1" col="2" val="课程" />
+          <Text row="1" col="3" val="姓名" />
+          <Text row="1" col="4" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="4" col="1" val=":Val(个人成绩,year)" hidetopdup="True" />
+          <Text row="4" col="2" val=":Val(个人成绩,subject)" hidetopdup="True" />
+          <Text row="4" col="3" val=":Val(个人成绩,xm)" />
+          <Text row="4" col="4" val=":Val(个人成绩,score)" />
+        </TRow>
+      </TBody>
+      <TFooter>
+        <TRow>
+          <Text row="7" col="1" rbc="#FFFFFFFF" />
+          <Text row="7" col="2" val="表尾" horalign="Right" lbc="#FFFFFFFF" rbc="#FFFFFFFF" />
+          <Text row="7" col="3" lbc="#FFFFFFFF" rbc="#FFFFFFFF" />
+          <Text row="7" col="4" lbc="#FFFFFFFF" />
+        </TRow>
+      </TFooter>
+      <TGroup field="year">
+        <TGroupHeader>
+          <TRow>
+            <Text row="2" col="1" val="年度总分：" />
+            <Text row="2" col="2" val=":Sum(个人成绩,score)" />
+            <Text row="2" col="3" />
+            <Text row="2" col="4" />
+          </TRow>
+        </TGroupHeader>
+        <TGroupFooter>
+          <TRow>
+            <Text row="6" col="1" val="年度平均：" />
+            <Text row="6" col="2" val=":Avg(个人成绩,score)+分" />
+            <Text row="6" col="3" />
+            <Text row="6" col="4" />
+          </TRow>
+        </TGroupFooter>
+      </TGroup>
+      <TGroup field="subject">
+        <TGroupHeader>
+          <TRow>
+            <Text row="3" col="1" val="学科总分：" />
+            <Text row="3" col="2" val=":Sum(个人成绩,score)+分" />
+            <Text row="3" col="3" />
+            <Text row="3" col="4" />
+          </TRow>
+        </TGroupHeader>
+        <TGroupFooter>
+          <TRow>
+            <Text row="5" col="1" val="学科平均：" />
+            <Text row="5" col="2" val=":Avg(个人成绩,score)+分" />
+            <Text row="5" col="3" />
+            <Text row="5" col="4" />
+          </TRow>
+        </TGroupFooter>
+      </TGroup>
+    </Table>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

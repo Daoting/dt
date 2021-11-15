@@ -1,0 +1,670 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:docking="using:Dt.Base.Docking">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Win-->
+    <Style TargetType="a:Win">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Win">
+                    <Grid x:Name="RootGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <!--内容区域面板-->
+                        <docking:PanePanel x:Name="RootPanel" Grid.Row="1" Grid.Column="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Pane-->
+    <Style TargetType="a:Pane">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Pane">
+                    <Grid>
+                        <docking:TabItemPanel x:Name="TabItemPanel" Orientation="{TemplateBinding Orientation}" />
+                        <docking:GridResizer x:Name="Resizer" Placement="{TemplateBinding ResizerPlacement}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Tabs-->
+    <Style TargetType="a:Tabs">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Tabs">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--Header-->
+                        <docking:TabHeader x:Name="HeaderElement" Visibility="{Binding ShowHeader, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                        <!--TabControl-->
+                        <Grid x:Name="MainGrid" Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
+                            <a:SizedPresenter x:Name="TabContent"
+                                              Content="{TemplateBinding SelectedContent}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              BorderThickness="1"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              Margin="0,0,-1,0"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Grid.ColumnSpan="2" />
+                            <!--标签-->
+                            <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                                <StackPanel.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </StackPanel.ChildrenTransitions>
+                            </StackPanel>
+                        </Grid>
+
+                        <docking:GridResizer x:Name="Resizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Tab windows-->
+    <Style x:Key="WinTab" TargetType="a:Tab">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BackButtonVisibility" Value="Collapsed" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Tab">
+                    <Grid x:Name="ElementGrid" Background="{TemplateBinding Background}">
+                        <a:RotateContent x:Name="ElementHeader" Rotate="Horizontal" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
+                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰1}" StrokeThickness="1" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="2" VerticalAlignment="Bottom"/>
+                                <TextBlock x:Name="HeaderText"
+                                           Text="{TemplateBinding Title}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="15,0,15,0" />
+                            </Grid>
+                        </a:RotateContent>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="UnSelected"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectedBorder.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Tab PhoneUI模式为缺省样式-->
+    <Style TargetType="a:Tab">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Tab">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <!--第一行标题栏-->
+                            <RowDefinition Height="Auto" />
+                            <!--第二行内容-->
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="HeaderGrid"
+                              Background="{StaticResource 主蓝}"
+                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
+                              Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="10" />
+                                <!--标题和菜单平分-->
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <!--后退-->
+                            <Button x:Name="BackButton"
+                                    Visibility="{TemplateBinding BackButtonVisibility}"
+                                    Style="{StaticResource 字符按钮}"
+                                    Foreground="{StaticResource 默认背景}"
+                                    Content="&#xE010;"
+                                    VerticalAlignment="Stretch"
+                                    Width="50" />
+                            <!--标题，不再加窗口标题作为后缀-->
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       Foreground="{StaticResource 默认背景}"
+                                       FontSize="{StaticResource 标题字}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                            <!--菜单-->
+                            <ContentPresenter Content="{TemplateBinding Menu}"
+                                              Foreground="{StaticResource 默认背景}"
+                                              HorizontalAlignment="Right"
+                                              Grid.Column="2" />
+                        </Grid>
+                        <!--内容-->
+                        <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
+                        <a:SizedPresenter Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          Grid.Row="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--PhoneTabs-->
+    <Style TargetType="a:PhoneTabs">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:PhoneTabs">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <!--为uno节省一级ContentPresenter！-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--PhoneTabs底部按钮-->
+    <Style x:Key="PhoneTabsBtn" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid" Background="Transparent" BorderThickness="1">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="ElementIcon"
+                                       Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="20"
+                                       TextAlignment="Center" />
+                            <TextBlock x:Name="ElementTitle"
+                                       Text="{Binding Title}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       TextWrapping="NoWrap"
+                                       FontSize="12"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="RootGrid.BorderBrush" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 亮蓝}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--ToolWindow-->
+    <Style TargetType="docking:ToolWindow">
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="MinHeight" Value="200" />
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:ToolWindow">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="HeaderElement"
+                                Background="{StaticResource 中灰1}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{StaticResource 中灰2}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                                <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 默认前景}" />
+                            </StackPanel>
+                        </Border>
+                        <ContentPresenter Content="{TemplateBinding Content}" Grid.Row="1"/>
+                        <Rectangle Stroke="{StaticResource 中灰2}" Margin="0,0,-1,0" IsHitTestVisible="False" Grid.RowSpan="2"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Compass-->
+    <Style TargetType="docking:Compass" >
+        <Setter Property="Width" Value="110"/>
+        <Setter Property="Height" Value="110"/>
+        <Setter Property="Background" Value="#7FFFFFFF"/>
+        <Setter Property="BorderBrush" Value="#33000000"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:Compass">
+                    <Border
+						x:Name="VisualRoot"
+						Background="{TemplateBinding Background}"
+						BorderThickness="0"
+						BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="5">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="HighlightLeftIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightTopIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightRightIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightBottomIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightCenterIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CenterIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="LeftIndicatorVisibilityStates">
+                                <VisualState x:Name="LeftIndicatorVisibile" />
+                                <VisualState x:Name="LeftIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="TopIndicatorVisibilityStates">
+                                <VisualState x:Name="TopIndicatorVisibile" />
+                                <VisualState x:Name="TopIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="RightIndicatorVisibilityStates">
+                                <VisualState x:Name="RightIndicatorVisibile" />
+                                <VisualState x:Name="RightIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="BottomIndicatorVisibilityStates">
+                                <VisualState x:Name="BottomIndicatorVisibile" />
+                                <VisualState x:Name="BottomIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="CenterIndicatorVisibilityStates">
+                                <VisualState x:Name="CenterIndicatorVisibile" />
+                                <VisualState x:Name="CenterIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_CenterIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid x:Name="Visual">
+                            <Path x:Name="PART_LeftIndicator" Width="32" Height="32" HorizontalAlignment="Left"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
+                                  Data="M164.833,52.333 L54.167,120.648 L164.833,187.667 z"/>
+                            <Path x:Name="PART_TopIndicator" Width="32" Height="32" VerticalAlignment="Top"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
+                                  Data="M39.2239,0.5 L84.5,84.5 L0.5,84.5 z"/>
+                            <Path x:Name="PART_RightIndicator" Width="32" Height="32" HorizontalAlignment="Right"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
+                                  Data="M69.834,52.833 L69.834,187.166 L182.166,119.618 z"/>
+                            <Path x:Name="PART_BottomIndicator" Width="32" Height="32"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" VerticalAlignment="Bottom"
+                                  Data="M272.667,456.333 L327.333,456.667 L300,505.664 z">
+                            </Path>
+                            <Rectangle x:Name="PART_CenterIndicator" Width="35" Height="35"
+                                       Stroke="{StaticResource 主蓝}" 
+                                       Fill="White"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--RootCompass-->
+    <Style TargetType="docking:RootCompass"  >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:Compass">
+                    <Border
+						x:Name="VisualRoot"
+						Background="{TemplateBinding Background}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						BorderBrush="{TemplateBinding BorderBrush}">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="HighlightLeftIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightTopIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightRightIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="HighlightBottomIndicator">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="LeftIndicatorVisibilityStates">
+                                <VisualState x:Name="LeftIndicatorVisibile" />
+                                <VisualState x:Name="LeftIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_LeftIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="TopIndicatorVisibilityStates">
+                                <VisualState x:Name="TopIndicatorVisibile" />
+                                <VisualState x:Name="TopIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="RightIndicatorVisibilityStates">
+                                <VisualState x:Name="RightIndicatorVisibile" />
+                                <VisualState x:Name="RightIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_RightIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="BottomIndicatorVisibilityStates">
+                                <VisualState x:Name="BottomIndicatorVisibile" />
+                                <VisualState x:Name="BottomIndicatorHidden">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomIndicator" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Grid x:Name="Visual">
+                            <Path x:Name="PART_LeftIndicator" Width="32" Height="32" HorizontalAlignment="Left"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
+                                  Data="M164.833,52.333 L54.167,120.648 L164.833,187.667 z"/>
+                            <Path x:Name="PART_TopIndicator" Width="32" Height="32" VerticalAlignment="Top"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}" 
+                                  Data="M39.2239,0.5 L84.5,84.5 L0.5,84.5 z"/>
+                            <Path x:Name="PART_RightIndicator" Width="32" Height="32" HorizontalAlignment="Right"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}"  
+                                  Data="M69.834,52.833 L69.834,187.166 L182.166,119.618 z"/>
+                            <Path x:Name="PART_BottomIndicator" Width="32" Height="32"
+                                  Stretch="Fill" Fill="{StaticResource 主蓝}"  VerticalAlignment="Bottom"
+                                  Data="M272.667,456.333 L327.333,456.667 L300,505.664 z"/>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TabHeader-->
+    <Style TargetType="docking:TabHeader">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="BorderThickness" Value="1,1,1,0" />
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="Height" Value="{StaticResource RowOuterHeight}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:TabHeader">
+                    <Grid x:Name="Content"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Margin="0,0,-1,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Pin -->
+                        <Button x:Name="BackButton"
+                                Visibility="{Binding Owner.SelectedItem.BackButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
+                                Content="&#xE010;"
+                                Style="{StaticResource 字符按钮}"
+                                Foreground="{StaticResource 深灰1}" />
+
+                        <!--标题-->
+                        <TextBlock Text="{Binding Owner.SelectedItem.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   Margin="10,0,10,0"
+                                   Grid.Column="1" />
+
+                        <!--菜单-->
+                        <ContentPresenter Content="{Binding Owner.SelectedItem.Menu, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{StaticResource 默认前景}"
+                                          Background="{StaticResource 浅灰1}"
+                                          HorizontalAlignment="Right"
+                                          Margin="100,0,0,0"
+                                          Grid.Column="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- PreviewControl -->
+    <Style TargetType="docking:PreviewControl">
+        <Setter Property="Background" Value="Red" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:PreviewControl">
+                    <Grid Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--GridResizer-->
+    <Style TargetType="docking:GridResizer">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:GridResizer">
+                    <Grid Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--AutoHideTab-->
+    <Style TargetType="docking:AutoHideTab">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="docking:AutoHideTab">
+                    <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <!--标签-->
+                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </StackPanel.ChildrenTransitions>
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

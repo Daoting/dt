@@ -1,0 +1,209 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--BtnItem-->
+    <Style TargetType="a:BtnItem">
+        <Setter Property="Background" Value="{StaticResource 主蓝}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:BtnItem">
+                    <Grid x:Name="RootGrid" Background="Transparent">
+                        <Grid x:Name="ContentGrid" Margin="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{TemplateBinding Background}"
+                                    Height="50"
+                                    Width="50"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}, RelativeSource={RelativeSource TemplatedParent}}"
+                                           FontFamily="{StaticResource IconFont}"
+                                           FontSize="30"
+                                           Foreground="White"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center" />
+                            </Border>
+
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{TemplateBinding Title}"
+                                               FontFamily="{TemplateBinding FontFamily}"
+                                               TextWrapping="NoWrap"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Left"/>
+                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="10,0,0,0" Grid.Column="1" />
+                                </Grid>
+
+                                <TextBlock Text="{TemplateBinding Desc}"
+                                           Visibility="{Binding Text, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource Self}}"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="Wrap"
+                                           Style="{StaticResource 小灰}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Grid>
+                        <!--分隔线-->
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Opacity" Value="0.5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TabControl-->
+    <Style TargetType="a:TabControl">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:TabControl">
+                    <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <a:SizedPresenter x:Name="TabContent"
+                                          Content="{TemplateBinding SelectedContent}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          BorderThickness="1"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          Margin="0,0,-1,0"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Grid.ColumnSpan="2" />
+                        <!--标签-->
+                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </StackPanel.ChildrenTransitions>
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TabItem-->
+    <Style TargetType="a:TabItem">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:TabItem">
+                    <Grid x:Name="ElementGrid" Background="{TemplateBinding Background}">
+                        <a:RotateContent x:Name="ElementHeader" Rotate="Horizontal" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
+                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰1}" StrokeThickness="1" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="2" VerticalAlignment="Bottom"/>
+                                <TextBlock x:Name="HeaderText"
+                                           Text="{TemplateBinding Title}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="15,0,15,0" />
+                            </Grid>
+                        </a:RotateContent>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="UnSelected"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectedBorder.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- SearchBox -->
+    <Style TargetType="a:SearchBox">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:SearchBox">
+                    <Border x:Name="Border"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="a:TestInvoke">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:TestInvoke">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{TemplateBinding Title}" />
+                        <TextBlock Text=" -- " />
+                        <ContentPresenter Content="{TemplateBinding Child}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

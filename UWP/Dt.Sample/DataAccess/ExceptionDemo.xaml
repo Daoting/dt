@@ -1,0 +1,21 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ExceptionDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="客户端异常" />
+        <Button Content="业务条件异常" Click="ThrowIf" />
+        <Button Content="业务null异常" Click="ThrowIfNull" />
+        <Button Content="业务字符串空异常" Click="ThrowIfNullOrEmpty" />
+        <Button Content="直接业务异常消息" Click="ThrowMsg" />
+        <Button Content="未处理异常" Click="ThrowUnhandle" />
+        
+        <a:CBar Title="服务端" />
+        <Button Content="服务端普通异常" Click="TestException" />
+        <Button Content="服务端业务异常消息" Click="TestRpcException" />
+        <Button Content="服务端业务位置异常" Click="TestPosException" />
+        <Button Content="服务端序列化异常" Click="TestSerializeException" />
+    </a:Fv>
+</a:Win>

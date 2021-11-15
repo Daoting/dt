@@ -1,0 +1,18 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ReceiveShareWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Title="分享内容">
+                <StackPanel Padding="10">
+                    <TextBlock x:Name="_tb" />
+                    <Button Content="复制文件" Click="OnCopy" />
+                    <Button Content="分享结束" Click="OnEnd" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

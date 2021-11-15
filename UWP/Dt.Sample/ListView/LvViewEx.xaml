@@ -1,0 +1,102 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LvViewEx"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <a:Cols x:Key="GridView">
+            <a:Col ID="xm" Title="姓名" Width="120" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="50" />
+            <a:Col ID="hunfou" Title="婚否" Width="50" />
+            <a:Col ID="line" Title="身高曲线" Width="150" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="shengao" Title="身高" Width="150" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Background="{StaticResource 主蓝}"
+                        Height="50"
+                        Width="50"
+                        VerticalAlignment="Center">
+                    <a:Dot ID="xb" FontSize="30" Foreground="White" VerticalAlignment="Center" />
+                </Border>
+
+                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                    <a:Dot ID="xm" />
+                    <StackPanel Orientation="Horizontal">
+                        <a:Dot ID="chushengrq" />
+                        <a:Dot ID="line" Margin="20,0,0,0" />
+                        <a:Dot ID="shengao" Margin="20,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                    <a:Dot ID="shenfenzh" />
+                    <a:Dot ID="bumen" />
+                    <a:Dot ID="note" Font="小灰" />
+                </StackPanel>
+
+            </Grid>
+        </DataTemplate>
+    </a:Win.Resources>
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" ViewMode="Table">
+                    <a:Cols>
+                        <a:Col ID="xm" Title="姓名" Width="120" />
+                        <a:Col ID="bh" Title="编号" Width="80" />
+                        <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+                        <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+                        <a:Col ID="xb" Title="性别" Width="50" />
+                        <a:Col ID="hunfou" Title="婚否" Width="50" />
+                        <a:Col ID="line" Title="身高曲线" Width="150" />
+                        <a:Col ID="bumen" Title="所属部门" Width="160" />
+                        <a:Col ID="shengao" Title="身高" Width="150" />
+                    </a:Cols>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="普通列表" Click="OnListView" />
+                        <Button Content="磁贴列表" Click="OnFormView" />
+                    </StackPanel>
+                    <a:CBar Title="分组统计" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="按部门分组" Click="OnGroup" />
+                        <Button Content="删除分组" Click="OnDelGroup" />
+                    </StackPanel>
+                    <a:CBar Title="说明" />
+                    <a:CBar RowSpan="3">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="9月份出生的为浅黄；" />
+                            <TextBlock Text="身高1.75以上行字体红色；" />
+                            <TextBlock Text="循环门诊的粗体，内分泌门诊斜体；" />
+                            <TextBlock Text="性别头像，身高曲线；" />
+                        </StackPanel>
+                    </a:CBar>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

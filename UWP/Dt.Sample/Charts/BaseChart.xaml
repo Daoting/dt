@@ -1,0 +1,47 @@
+﻿<a:Win
+    x:Class="Dt.Sample.BaseChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart x:Name="_chart">
+                    <a:ChartLegend x:Name="_legend" />
+                </a:Chart>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <a:Fv Data="{Binding ElementName=_chart}">
+                        <a:CBar Title="图表属性" />
+                        <a:CList ID="ChartType" Title="图表类型" Changed="OnChartTypeChanged" />
+                        <a:CList ID="Palette" Title="调色板" />
+                        <a:CText ID="Header" Title="大标题" />
+                        <a:CBool ID="View.Inverted" Title="转换XY轴" />
+
+                        <a:CBar Title="X轴设置" />
+                        <a:CText ID="View.AxisX.Title" Title="标题" />
+
+                        <a:CBar Title="Y轴设置" />
+                        <a:CText ID="View.AxisY.Title" Title="标题" />
+                        <Button Content="显示/隐藏Y轴刻度区间" Click="OnMajorGrid" />
+                        <!--<a:CText ID="View.AxisY.MajorUnit" Title="坐标轴单位" />-->
+                    </a:Fv>
+                    <a:Fv Data="{Binding ElementName=_legend}">
+                        <a:CBar Title="图例设置" />
+                        <a:CText ID="Title" Title="标题" />
+                        <a:CList ID="Position" Title="图例位置" />
+                        <a:CList ID="Orientation" Title="布局方向" />
+                        <a:CBool ID="OverlapChart" Title="重叠方式" />
+                        <Button Content="保存截图" Click="OnSnapshot" />
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

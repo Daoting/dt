@@ -1,0 +1,19 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TouchExcel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10,0,0,10" Spacing="5">
+            <Button Content="填充状态" Click="OnAutoFill" />
+            <TextBlock Text="点击列头或行头时出现调整列宽或行高的标志" />
+            <TextBlock Text="填充状态拖动右下框可复制单元格内容" />
+        </StackPanel>
+        <a:Excel x:Name="_excel" Grid.Row="1" />
+    </Grid>
+</a:Win>

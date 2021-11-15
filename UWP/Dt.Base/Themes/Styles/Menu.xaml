@@ -1,0 +1,169 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:menu="using:Dt.Base.MenuView">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Menu-->
+    <Style TargetType="a:Menu">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Menu">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                        <menu:MenuPanel x:Name="Panel" Background="Transparent" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Mi -->
+    <Style TargetType="a:Mi">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Mi">
+                    <Grid x:Name="RootElement" Background="{TemplateBinding Background}">
+                        <Rectangle x:Name="Rect" IsHitTestVisible="False"/>
+                        <Grid x:Name="ContentGrid" Margin="15,0,15,0" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="ElementIcon"
+                                       Text="{Binding Icon, Converter={StaticResource CvIconToChar}, RelativeSource={RelativeSource TemplatedParent}}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       Margin="0,0,4,0"
+                                       VerticalAlignment="Center" />
+                            <TextBlock x:Name="ElementText"
+                                       Text="{TemplateBinding ID}"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                            <TextBlock x:Name="ElementSub"
+                                       Text="&#xE011;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       Visibility="Collapsed"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="2" />
+                        </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="Rect.Stroke" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootElement.Opacity" Value="0.5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="WinModeState">
+                                <VisualState x:Name="WinTopItem">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentGrid.Margin" Value="10,0,10,0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <!--一级只有Icon或ID-->
+                                <VisualState x:Name="WinIconOrID">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Margin" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="WinSubItem">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
+                                        <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="WinSubGroup">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
+                                        <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
+                                        <Setter Target="ElementSub.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="PhoneModeState">
+                                <VisualState x:Name="IconAndID" />
+                                <VisualState x:Name="ID">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Visibility" Value="Collapsed" />
+                                        <Setter Target="ElementIcon.Margin" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Icon">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementText.Visibility" Value="Collapsed" />
+                                        <Setter Target="ElementIcon.Margin" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PhoneSubItem">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
+                                        <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PhoneSubGroup">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.MinWidth" Value="20" />
+                                        <Setter Target="ElementIcon.Margin" Value="0,0,10,0" />
+                                        <Setter Target="ElementSub.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--MiSplit-->
+    <Style TargetType="a:MiSplit">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:MiSplit">
+                    <Rectangle x:Name="Rect"
+                               Width="1"
+                               Height="20"
+                               Margin="4,0,4,0"
+                               Fill="{StaticResource 中灰2}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Stretch">
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="TopSplit" />
+                                <VisualState x:Name="SubSplit">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Width" Value="NaN" />
+                                        <Setter Target="Rect.Height" Value="1" />
+                                        <Setter Target="Rect.Margin" Value="10,4,10,4" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Rectangle>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

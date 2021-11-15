@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Dt.Base.Report.RptDesignHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Pane InitWidth="240">
+        <a:Tabs>
+            <a:Tab Title="功能列表">
+                <StackPanel>
+                    <a:BtnItem Icon="修改" Title="模板编辑" Desc="编辑报表模板" Click="OnEditTemplate" />
+                    <a:BtnItem Icon="信件" Title="参数定义" Desc="报表输入参数可以为内部宏参数或外部输入参数" Click="OnParams" />
+                    <a:BtnItem Icon="数据库" Title="Db数据源" Desc="定义查询数据的SQL语句" Click="OnDbData" />
+                    <a:BtnItem Icon="U盘" Title="脚本数据源" Desc="程序中动态提供的数据" Click="OnScriptData" />
+                    <a:BtnItem Icon="文件" Title="页面设置" Desc="设置报表页面大小" Click="OnPageSetting" />
+                    <a:BtnItem Icon="大图标" Title="报表预览设置" Desc="定制报表预览窗口的内容" Click="OnViewSetting" />
+                    <a:BtnItem x:Name="_btnSave" Icon="保存" Title="保存模板" Desc="保存报表模板Xml内容" />
+
+                    <a:BtnItem Icon="导出" Title="查看模板Xml" Desc="浏览当前报表模板的Xml内容" Click="OnExport" Margin="0,40,0,0" />
+                    <a:BtnItem Icon="导入" Title="导入" Desc="从外部导入报表模板" Click="OnImport" />
+                    <a:BtnItem Icon="门卫" Title="报表预览" Desc="浏览运行时报表" Click="OnPreview"/>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

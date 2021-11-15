@@ -1,0 +1,46 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FvObjData"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="2" Title="表单">
+                <a:Fv x:Name="_fv">
+                    <a:CNum ID="BorderThickness.Bottom" Title="多级路径" />
+                    <a:CText ID="ActualHeight" Title="实际高度(只读)" />
+                    <a:CNum ID="fontsize" Title="字体大小(绑定)" />
+                    <a:CText ID="name" Title="名称(普通)" />
+                    <a:CList ID="HorizontalAlignment" Title="水平对齐方式" />
+                    <a:CBool ID="IsEnabled" Title="可用" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="1" Title="目标对象">
+                <a:Fv>
+                    <a:CBar Title="设置数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="文本框" Click="OnTgt1" />
+                        <Button Content="普通对象" Click="OnTgt2" />
+                    </StackPanel>
+                    <a:CBar Title="修改对象值" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="调整高度" Click="OnHeight" />
+                        <Button Content="调整字体" Click="OnFontSize" />
+                        <Button Content="调整名称" Click="OnName" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="输出" />
+                    <a:CBar RowSpan="5">
+                        <TextBox x:Name="_tbOut" TextWrapping="Wrap" AcceptsReturn="True" />
+                    </a:CBar>
+                    <TextBox x:Name="_tb" Text="目标文本框" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

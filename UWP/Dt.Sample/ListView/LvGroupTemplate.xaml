@@ -1,0 +1,94 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LvGroupTemplate"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="xm" Title="姓名" Width="150" />
+            <a:Col ID="shengao" Title="身高" Width="180" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <StackPanel Padding="10">
+                <a:Dot ID="xm" />
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                    <a:Dot ID="Shengao" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TileView">
+            <StackPanel Padding="10">
+                <a:Dot ID="xm" />
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                    <a:Dot ID="Shengao" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Title="列表">
+                <a:Lv x:Name="_lv">
+                    <DataTemplate>
+                        <StackPanel Padding="10">
+                            <a:Dot ID="xm" />
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                                <a:Dot ID="Shengao" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                    <a:Lv.GroupTemplate>
+                        <DataTemplate>
+                            <StackPanel Padding="10,0,10,0" Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Black">
+                                    <TextBlock Text="人数" Foreground="White" />
+                                    <TextBlock Text="{Binding Count}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="{StaticResource 主蓝}">
+                                    <TextBlock Text="平均身高" Foreground="White" />
+                                    <TextBlock Text="{Binding Average}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Gray">
+                                    <TextBlock Text="最高" Foreground="White" />
+                                    <TextBlock Text="{Binding Max}" Foreground="White" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Green">
+                                    <TextBlock Text="最矮" Foreground="White" />
+                                    <TextBlock Text="{Binding Min}" Foreground="White" />
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </a:Lv.GroupTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Title="属性">
+                <a:Fv>
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                        <Button Content="磁贴" Click="OnTileView" />
+                    </StackPanel>
+
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10行" Tag="10" Click="OnLoadData" />
+                        <Button Content="100行" Tag="100" Click="OnLoadData" />
+                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

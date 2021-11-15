@@ -1,0 +1,15 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.FormView.ColorDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Lv x:Name="_lv">
+        <DataTemplate>
+            <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+                <a:Dot ID="Brush" Width="60" Height="20" />
+                <a:Dot ID="Name" Margin="20,0,0,0" />
+            </StackPanel>
+        </DataTemplate>
+    </a:Lv>
+</a:Dlg>

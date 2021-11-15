@@ -1,0 +1,74 @@
+﻿<Rpt cols="80,80,80,80,80">
+  <Params />
+  <Data>
+    <Tbl name="网损情况" isscritp="True" cols="year,month,unit,val" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25,25">
+    <Table row="1" col="1" rowspan="7" colspan="4" tbl="网损情况" repeatheader="True" repeatfooter="True">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" val="年度" />
+          <Text row="1" col="2" val="月份" />
+          <Text row="1" col="3" val="单位" />
+          <Text row="1" col="4" val="值" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="4" col="1" val=":Val(网损情况,year)" hidetopdup="True" />
+          <Text row="4" col="2" val=":Val(网损情况,month)" hidetopdup="True" />
+          <Text row="4" col="3" val=":Val(网损情况,unit)" />
+          <Text row="4" col="4" val=":Val(网损情况,val)" />
+        </TRow>
+      </TBody>
+      <TFooter>
+        <TRow>
+          <Text row="7" col="1" />
+          <Text row="7" col="2" />
+          <Text row="7" col="3" />
+          <Text row="7" col="4" />
+        </TRow>
+      </TFooter>
+      <TGroup field="year">
+        <TGroupHeader>
+          <TRow>
+            <Text row="2" col="1" />
+            <Text row="2" col="2" val="年度合计:" />
+            <Text row="2" col="3" val=":Sum(网损情况,val)" />
+            <Text row="2" col="4" />
+          </TRow>
+        </TGroupHeader>
+        <TGroupFooter>
+          <TRow>
+            <Text row="6" col="1" />
+            <Text row="6" col="2" val="年度平均:" />
+            <Text row="6" col="3" val=":Avg(网损情况,val)" />
+            <Text row="6" col="4" />
+          </TRow>
+        </TGroupFooter>
+      </TGroup>
+      <TGroup field="month">
+        <TGroupHeader>
+          <TRow>
+            <Text row="3" col="1" />
+            <Text row="3" col="2" />
+            <Text row="3" col="3" val="月份合计:" />
+            <Text row="3" col="4" val=":Sum(网损情况,val)" />
+          </TRow>
+        </TGroupHeader>
+        <TGroupFooter>
+          <TRow>
+            <Text row="5" col="1" />
+            <Text row="5" col="2" />
+            <Text row="5" col="3" val="月份平均:" />
+            <Text row="5" col="4" val=":Avg(网损情况,val)" />
+          </TRow>
+        </TGroupFooter>
+      </TGroup>
+    </Table>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

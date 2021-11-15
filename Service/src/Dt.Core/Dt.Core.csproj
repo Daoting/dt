@@ -22,12 +22,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\..\..\Client\Dt.Core\Base\Locker\AsyncLocker.cs" Link="Internal\Misc\AsyncLocker.cs" />
-		<Compile Include="..\..\..\Client\Dt.Core\Kit\Kit-Encrypt.cs" Link="Kit\Kit-Encrypt.cs" />
-		<Compile Include="..\..\..\Client\Dt.Core\Kit\Kit-Json.cs" Link="Kit\Kit-Json.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<EmbeddedResource Include="Res\404.html" />
 		<EmbeddedResource Include="Res\Admin.html" />
 		<EmbeddedResource Include="Res\Error.html" />

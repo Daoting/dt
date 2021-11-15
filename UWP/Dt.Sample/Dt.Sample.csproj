@@ -1,0 +1,65 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台样例库</Description>
+	</PropertyGroup>
+
+	<Import Project="..\Common\dtc.props" />
+
+	<ItemGroup>
+		<EmbeddedResource Include="Report\数据源\个人成绩.json" />
+		<EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
+		<EmbeddedResource Include="Report\数据源\图表表格.json" />
+		<EmbeddedResource Include="Report\数据源\图表矩阵.json" />
+		<EmbeddedResource Include="Report\数据源\成绩汇总.json" />
+		<EmbeddedResource Include="Report\数据源\甘特图.json" />
+		<EmbeddedResource Include="Report\数据源\网损情况.json" />
+		<EmbeddedResource Include="Report\数据源\菜单.json" />
+		<EmbeddedResource Include="Report\数据源\通讯录.json" />
+		<EmbeddedResource Include="Report\模板\两层矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\分组表格.xml" />
+		<EmbeddedResource Include="Report\模板\图表表格.xml" />
+		<EmbeddedResource Include="Report\模板\自定义查询面板.xml" />
+		<EmbeddedResource Include="Report\模板\默认查询面板.xml" />
+		<EmbeddedResource Include="Report\模板\自动行数列表.xml" />
+		<EmbeddedResource Include="Report\模板\含头尾表格.xml" />
+		<EmbeddedResource Include="Report\模板\含小计矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\含标题矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\固定行数列表.xml" />
+		<EmbeddedResource Include="Report\模板\图表矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\最少行表格.xml" />
+		<EmbeddedResource Include="Report\模板\脚本.xml" />
+		<EmbeddedResource Include="Report\模板\完整矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\简单文本.xml" />
+		<EmbeddedResource Include="Report\模板\完整表格.xml" />
+		<EmbeddedResource Include="Report\模板\跨页矩阵.xml" />
+		<EmbeddedResource Include="Report\模板\跨页表格.xml" />
+		<EmbeddedResource Include="Report\模板\页眉页脚.xml" />
+		<EmbeddedResource Include="Resource\Excel\1040.ssxml" />
+		<EmbeddedResource Include="Resource\Excel\CarRepair.ssxml" />
+		<EmbeddedResource Include="Resource\Excel\CarRepair.xlsx" />
+		<EmbeddedResource Include="Resource\Excel\Expense.ssxml" />
+		<EmbeddedResource Include="Resource\Excel\1040.xlsx" />
+		<EmbeddedResource Include="Resource\Excel\Expense.xlsx" />
+		<EmbeddedResource Include="Resource\Excel\MonthProfit.ssxml" />
+		<EmbeddedResource Include="Resource\Excel\StudentCalendar.ssxml" />
+		<EmbeddedResource Include="Resource\Excel\StudentCalendar.xlsx" />
+		<EmbeddedResource Include="Resource\Excel\Wedding.ssxml" />
+		<EmbeddedResource Include="Resource\browsers.csv" />
+		<EmbeddedResource Include="Resource\Excel\MonthProfit.xlsx" />
+		<EmbeddedResource Include="Resource\Excel\Wedding.xlsx" />
+		<EmbeddedResource Include="Resource\Logo.png" />
+		<EmbeddedResource Include="Resource\健康档案50.json" />
+		<EmbeddedResource Include="Resource\健康档案200.json" />
+		<EmbeddedResource Include="Resource\健康档案1000.json" />
+		<EmbeddedResource Include="Resource\成绩%28交叉表%29.json" />
+		<EmbeddedResource Include="Resource\成绩.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,30 @@
+﻿<Rpt cols="80,80,80,80,80,80,80,80">
+  <Params />
+  <Data>
+    <Tbl name="图表矩阵" isscritp="True" cols="xm,subject,score" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25">
+    <Chart row="2" col="1" rowspan="13" colspan="7" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" title="成绩一览表" titlex="姓名" titley="成绩" />
+    <Table row="18" col="3" rowspan="2" colspan="3" tbl="图表矩阵">
+      <THeader>
+        <TRow>
+          <Text row="18" col="3" val="姓名" />
+          <Text row="18" col="4" val="课程" />
+          <Text row="18" col="5" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="19" col="3" val=":Val(图表矩阵,xm)" />
+          <Text row="19" col="4" val=":Val(图表矩阵,subject)" />
+          <Text row="19" col="5" val=":Val(图表矩阵,score)" />
+        </TRow>
+      </TBody>
+    </Table>
+    <Chart row="22" col="1" rowspan="12" colspan="7" type="Line" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" title="成绩折线" titlex="姓名" titley="成绩" />
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

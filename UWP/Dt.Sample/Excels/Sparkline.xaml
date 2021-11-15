@@ -1,0 +1,40 @@
+﻿<a:Win
+    x:Class="Dt.Sample.Sparkline"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CFree Title="图表位置">
+                        <TextBox Text="0,0" x:Name="_tbPosition" />
+                    </a:CFree>
+                    <a:CFree Title="类型">
+                        <ComboBox x:Name="_cbSparklineType" />
+                    </a:CFree>
+                    <a:CFree Title="方向">
+                        <ComboBox x:Name="_cbOrientation" />
+                    </a:CFree>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加图表" Click="btnAddSparkline_Click" />
+                        <Button Content="清除图表" Click="btnClearSparkline_Click" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="导出Xls" Click="SaveExcelFile" />
+                        <Button Content="导出Xml" Click="SaveXmlFile" />
+                        <Button Content="另存为PDF" Click="SavePDFFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

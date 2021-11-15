@@ -1,0 +1,8 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/3.0.38">
+
+	<PropertyGroup>
+		<Description>DT平台Excel计算引擎</Description>
+	</PropertyGroup>
+
+	<Import Project="..\Common\Dtc-Stable.props" />
+</Project>

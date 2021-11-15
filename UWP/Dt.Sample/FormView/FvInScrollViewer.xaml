@@ -1,0 +1,53 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FvInScrollViewer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="格">
+                <ScrollViewer x:Name="_sv">
+                    <StackPanel>
+                        <Border x:Name="_top" Height="100" Background="Gray" />
+                        <a:Fv x:Name="_fv">
+                            <a:CBar Title="基本格" />
+                            <a:CText ID="txt1" Title="文本框" />
+                            <a:CText ID="txt2" Title="文本框" />
+                            <a:CText ID="txt3" Title="文本框" />
+                            <a:CText ID="txt4" Title="文本框" />
+                            <a:CText ID="txt5" Title="文本框" />
+                            <a:CText ID="txt6" Title="文本框" />
+                        </a:Fv>
+                        <Border x:Name="_bottom" Height="100" Background="Gray" />
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="随机滚动" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
+                    </StackPanel>
+                    <a:CBar Title="顶部区域高度" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="超过可视区域" Click="OnTopMax" />
+                        <Button Content="小于可视区域" Click="OnTop" />
+                        <Button Content="为0" Click="OnTopZero" />
+                    </StackPanel>
+                    <a:CBar Title="底部区域高度" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="超过可视区域" Click="OnBottomMax" />
+                        <Button Content="小于可视区域" Click="OnBottom" />
+                        <Button Content="为0" Click="OnBottomZero" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

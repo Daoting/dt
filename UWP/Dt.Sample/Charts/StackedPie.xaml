@@ -1,0 +1,23 @@
+﻿<a:Win
+    x:Class="Dt.Sample.StackedPie"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <DataTemplate x:Key="lbl">
+            <Border Background="White" CornerRadius="2" BorderBrush="Black" BorderThickness="0.5">
+                <TextBlock Foreground="Black" Margin="2">
+                  <Run Text="{Binding Name}" />
+                  <Run Text="{Binding}" />
+                  <Run Text="%" />
+                </TextBlock>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="lbl1">
+            <TextBlock FontSize="{StaticResource 小字}" Text="{Binding DataObject.Version}" />
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Chart x:Name="_chart" />
+</a:Win>

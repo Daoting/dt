@@ -1,0 +1,25 @@
+﻿<a:Mv
+    x:Class="Dt.Sample.MvItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Mv.Menu>
+        <a:Menu>
+            <a:Mi x:Name="_mi" ID="功能" Icon="保存" />
+        </a:Menu>
+    </a:Mv.Menu>
+    
+    <StackPanel Padding="10" Spacing="10">
+        <a:CBar Title="向前导航设置" />
+        <CheckBox x:Name="_cbModal" Content="带遮罩的模式视图" />
+        <CheckBox x:Name="_cbInput" Content="包含导航参数" />
+        <CheckBox x:Name="_cbResult" Content="包含返回结果" />
+        <CheckBox x:Name="_cbHideTitle" Content="隐藏标题栏，PhoneUI模式有效" />
+        <Button Content="向前导航" Click="OnForward" />
+        <a:CBar Title="其他" />
+        <CheckBox x:Name="_cbDlgTitle" Content="隐藏对话框标题" />
+        <Button Content="对话框加载Mv" Click="OnShowDlg" />
+        <Button Content="返回" Click="OnBackward" />
+    </StackPanel>
+</a:Mv>
