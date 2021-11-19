@@ -1,0 +1,15 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TestDemo2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid x:Name="_grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Content="Test" Click="OnTest" />
+        
+    </Grid>
+</a:Win>

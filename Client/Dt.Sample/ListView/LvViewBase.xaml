@@ -1,0 +1,178 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LvViewBase"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="xm" Title="姓名" Width="120" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="60" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
+            <a:Col ID="shengao" Title="身高" Width="100" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Background="{StaticResource 主蓝}"
+                        Height="50"
+                        Width="50"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Index}"
+                               FontSize="30"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center" />
+                </Border>
+
+                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                    <a:Dot ID="xm" />
+                    <StackPanel Orientation="Horizontal">
+                        <a:Dot ID="xb" />
+                        <a:Dot ID="chushengrq" Margin="20,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                    <a:Dot ID="shenfenzh" />
+                    <a:Dot ID="bumen" />
+                    <a:Dot ID="note" Font="小灰" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TileView">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="&#xE060;"
+                            FontFamily="{StaticResource IconFont}"
+                            FontSize="30"
+                            VerticalAlignment="Center"
+                            TextAlignment="Center" />
+                <StackPanel Margin="10,0,0,0" Grid.Column="1">
+                    <a:Dot ID="xm" />
+                    <a:Dot ID="xb" />
+                    <a:Dot ID="bumen" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Toolbar">
+            <a:Menu>
+                <a:Mi ID="姓名" CmdParam="xm" />
+                <a:Mi ID="出生日期" CmdParam="chushengrq desc" />
+                <a:Mi ID="视图" Icon="汉堡" Click="OnToggleViewMode" />
+                <a:Mi ID="筛选" Icon="漏斗" CmdParam="#Filter" />
+            </a:Menu>
+        </DataTemplate>
+    </a:Win.Resources>
+    
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_lv}">
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                        <Button Content="表单列表" Click="OnFormList" />
+                        <Button Content="磁贴" Click="OnTileView" />
+                        <Button Content="表单磁贴" Click="OnFormTile" />
+                    </StackPanel>
+
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10行" Tag="10" Click="OnLoadData" />
+                        <Button Content="100行" Tag="100" Click="OnLoadData" />
+                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                        <Button Content="10000行" Tag="10000" Click="OnLoadData" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10对象" Tag="10" Click="OnLoadObjs" />
+                        <Button Content="1000对象" Tag="1000" Click="OnLoadObjs" />
+                        <Button Content="空数据源" Click="OnLoadNull" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="页数据源" Click="OnPageData" />
+                        <Button Content="头部添加" Click="OnTopPageData" />
+                        <Button Content="对象页数据源" Click="OnPageObjs" />
+                    </StackPanel>
+                    <a:CBar Title="分组" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="按部门分组" Click="OnGroup" />
+                        <Button Content="删除分组" Click="OnDelGroup" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="属性" />
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
+                    <a:CBool Title="自动滚动到底端" ID="AutoScrollBottom" />
+                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
+                    <a:CNum Title="行/项目高" ID="ItemHeight" />
+                    <a:CFree Title="鼠标进入背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoEnteredBrush" />
+                            <Button Content="深黄色" Click="OnEnteredBrush" />
+                            <Button Content="默认色" Click="OnDefEnteredBrush" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="点击时背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoPressedBrush" />
+                            <Button Content="深色" Click="OnPressedBrush" />
+                            <Button Content="默认色" Click="OnDefPressedBrush" />
+                        </StackPanel>
+                    </a:CFree>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="自动行高" Click="OnAutoHeight" />
+                        <Button Content="设置工具栏" Click="OnToolbar" />
+                        <Button Content="删除工具栏" Click="OnDelToolbar" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="附加事件" />
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="行单击" Click="OnRowClick" Margin="10,0,0,0" />
+                        <CheckBox Content="选择变化" Click="OnSelectionChangedClick" />
+                        <CheckBox Content="行双击" Click="OnRowDoubleClick" />
+                    </StackPanel>
+                    
+                    <a:CBar Title="行操作" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="添加行" Click="OnAddRow" />
+                        <Button Content="插入多行" Click="OnInsertRows" />
+                        <Button Content="删除当前行" Click="OnDeleteRow" IsEnabled="{Binding HasSelected,ElementName=_lv}" />
+                        <Button Content="无选择行" Click="OnSelectNull" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="随机滚动" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
+                        <Button Content="修改列值" Click="OnChangedVal" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

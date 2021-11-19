@@ -1,0 +1,30 @@
+﻿<Rpt cols="80,80,100,80,80">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩" isscritp="True" cols="xm,year,subject,score" />
+  </Data>
+  <Page width="392" />
+  <Header />
+  <Body rows="25,25,25">
+    <Table row="1" col="1" rowspan="2" colspan="4" tbl="个人成绩" repeatheader="True" repeatfooter="True">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" val="姓名" />
+          <Text row="1" col="2" val="学期" />
+          <Text row="1" col="3" val="课程" />
+          <Text row="1" col="4" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="2" col="1" val=":Val(个人成绩,xm)" />
+          <Text row="2" col="2" val=":Val(个人成绩,year)" />
+          <Text row="2" col="3" val=":Val(个人成绩,subject)" />
+          <Text row="2" col="4" val=":Val(个人成绩,score)" />
+        </TRow>
+      </TBody>
+    </Table>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

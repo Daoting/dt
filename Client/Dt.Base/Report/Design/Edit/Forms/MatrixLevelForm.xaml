@@ -1,0 +1,21 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.MatrixLevelForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:rpt="using:Dt.Base.Report">
+
+    <ScrollViewer>
+        <StackPanel>
+            <rpt:MatrixForm x:Name="_fvMtx" />
+            <a:Fv x:Name="_fv">
+                <a:CBar Title="矩阵层次" />
+                <a:CList ID="field" Title="关联字段" RefreshData="True" LoadData="OnLoadField" />
+                <Button Content="新建子层次" Click="OnAddLevel" />
+                <Button Content="新建小计" Click="OnAddTotal" />
+                <Button Content="新建静态标题" Click="OnAddTitle" />
+                <Button Content="删除层次" Click="OnDelLevel" />
+            </a:Fv>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

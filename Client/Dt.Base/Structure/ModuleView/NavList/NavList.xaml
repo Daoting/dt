@@ -1,0 +1,45 @@
+﻿<a:Mv
+    x:Class="Dt.Base.NavList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="功能列表">
+
+    <a:Mv.Resources>
+        <DataTemplate x:Key="ListView">
+            <Grid Padding="10" MinHeight="60">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <a:Dot ID="Icon"
+                       FontSize="30"
+                       Margin="0,0,10,0"
+                       Foreground="{StaticResource 主蓝}"
+                       VerticalAlignment="Center" />
+                <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                    <a:Dot ID="Title" />
+                    <a:Dot ID="Desc" Font="小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                </StackPanel>
+                <a:Dot ID="Warning" UI="Warning" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TileView">
+            <Grid Padding="12" MinHeight="80">
+                <StackPanel VerticalAlignment="Center">
+                    <a:Dot ID="Icon"
+                           FontSize="30"
+                           Foreground="{StaticResource 主蓝}"
+                           Margin="0,0,0,4"
+                           HorizontalAlignment="Center" />
+                    <a:Dot ID="Title" HorizontalAlignment="Center" />
+                    <a:Dot ID="Desc" Font="小灰" HorizontalAlignment="Center" />
+                </StackPanel>
+                <a:Dot ID="Warning" UI="Warning" HorizontalAlignment="Right" VerticalAlignment="Top" />
+            </Grid>
+        </DataTemplate>
+    </a:Mv.Resources>
+    
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick" SelectionMode="None" />
+</a:Mv>

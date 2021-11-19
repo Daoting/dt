@@ -17,7 +17,7 @@ namespace Dt.Core
     /// 内部维护数据项列表类
     /// </summary>
 #if !SERVER
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
 #endif
     public class CellList : KeyedCollection<string, Cell>
     {

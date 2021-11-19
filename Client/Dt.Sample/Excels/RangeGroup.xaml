@@ -1,0 +1,39 @@
+﻿<a:Win
+    x:Class="Dt.Sample.RangeGroup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CBar Title="分组" />
+                    <Button Content="添加分组" Click="groupButton_Click" />
+                    <Button Content="取消分组" Click="ungroupButton_Click" />
+                    <Button Content="展开分组" Click="showDetailButton_Click" />
+                    <Button Content="折叠分组" Click="hideDetailButton_Click" />
+                    <CheckBox x:Name="_cbRow" Content="汇总行在分组底部" Click="summaryRow_Checked" Margin="10,0" />
+                    <CheckBox x:Name="_cbColumn" Content="汇总列在分组右部" Click="summaryColumn_Checked" Margin="10,0" />
+
+                    <a:CBar Title="排序" />
+                    <CheckBox x:Name="_cbSort" Content="列间排序" />
+                    <Button Content="升序 A->Z" Click="asc_Click" />
+                    <Button Content="降序 Z->A" Click="desc_Click" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="导出Xls" Click="SaveExcelFile" />
+                        <Button Content="导出Xml" Click="SaveXmlFile" />
+                        <Button Content="另存为PDF" Click="SavePDFFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

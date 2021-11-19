@@ -1,0 +1,74 @@
+﻿<a:Win
+    x:Class="Dt.Sample.BrushDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <Style x:Key="DefaultBlock" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="IsTextSelectionEnabled" Value="True" />
+            <Setter Property="Margin" Value="0,20,0,20" />
+        </Style>
+    </a:Win.Resources>
+
+    <ScrollViewer HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Disabled">
+        <StackPanel Margin="20" Spacing="20">
+            <Border Background="{StaticResource 主蓝}">
+                <TextBlock Text="主蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+            <Border Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="4">
+                <TextBlock Text="浅灰1 浅灰2" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 中灰1}" BorderBrush="{StaticResource 中灰2}" BorderThickness="4">
+                <TextBlock Text="中灰1 中灰2" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深灰1}" BorderBrush="{StaticResource 深灰2}" BorderThickness="4">
+                <TextBlock Text="深灰1 深灰2" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 亮蓝}">
+                <TextBlock Text="亮蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+            <Border Background="{StaticResource 亮红}">
+                <TextBlock Text="亮红" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+
+            <Border Background="{StaticResource 中黄}">
+                <TextBlock Text="中黄" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 浅黄}">
+                <TextBlock Text="浅黄" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 中绿}">
+                <TextBlock Text="中绿" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+            <Border Background="{StaticResource 浅绿}">
+                <TextBlock Text="浅绿" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 湖蓝}">
+                <TextBlock Text="湖蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+            <Border Background="{StaticResource 浅蓝}">
+                <TextBlock Text="浅蓝" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深蓝}">
+                <TextBlock Text="深蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
+            </Border>
+            
+            <Border Background="{StaticResource 暗遮罩}" BorderBrush="{StaticResource 深暗遮罩}" BorderThickness="4">
+                <TextBlock Text="暗遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 亮遮罩}" BorderBrush="{StaticResource 深亮遮罩}" BorderThickness="4">
+                <TextBlock Text="亮遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 黄遮罩}" BorderBrush="{StaticResource 深黄遮罩}" BorderThickness="4">
+                <TextBlock Text="黄遮罩 深黄遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</a:Win>

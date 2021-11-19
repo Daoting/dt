@@ -1,0 +1,38 @@
+﻿<a:Win
+    x:Class="Dt.Sample.InteractiveChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart x:Name="_chart" ChartType="Line">
+                    <a:ChartLegend x:Name="_legend" />
+                </a:Chart>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <a:Fv>
+                        <a:CFree Title="图表类型">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbX" Content="X" />
+                                <RadioButton x:Name="rbY" Content="Y" />
+                                <RadioButton x:Name="rbXY" Content="XY" IsChecked="true" />
+                            </StackPanel>
+                        </a:CFree>
+                        <Button Content="缩小" Click="Button_Click" />
+                        <a:CBar Title="说明" />
+                        <TextBlock Text="双击 - 放大" />
+                        <TextBlock Text="挤压 - 缩放" />
+                        <TextBlock Text="滑动 - 平移 (Scroll)" />
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,32 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FilePickerDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="选择单个照片" Click="OnPickPhoto" />
+            <Button Content="选择多个照片" Click="OnPickPhotos" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="选择单个视频" Click="OnPickVideo" />
+            <Button Content="选择多个视频" Click="OnPickVideos" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="选择单个媒体文件" Click="OnPickMedia" />
+            <Button Content="选择多个媒体文件" Click="OnPickMedias" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="选择单个文件" Click="OnPickFile" />
+            <Button Content="选择多个文件" Click="OnPickFiles" />
+        </StackPanel>
+        <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

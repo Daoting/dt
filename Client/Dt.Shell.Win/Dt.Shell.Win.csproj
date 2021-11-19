@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>Dt.Shell</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+	</PropertyGroup>
+
+	<Import Project="..\Common.props" />
+	
+	<ItemGroup>
+		<AppxManifest Include="Package.appxmanifest">
+			<SubType>Designer</SubType>
+		</AppxManifest>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\SplashScreen.scale-200.png" />
+		<Content Include="Assets\LockScreenLogo.scale-200.png" />
+		<Content Include="Assets\Square150x150Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.scale-200.png" />
+		<Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+		<Content Include="Assets\StoreLogo.png" />
+		<Content Include="Assets\Wide310x150Logo.scale-200.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+	  <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+	  <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+	  <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+	</ItemGroup>
+</Project>

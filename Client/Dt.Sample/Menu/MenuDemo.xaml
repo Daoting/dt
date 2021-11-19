@@ -1,0 +1,65 @@
+﻿<a:Win
+    x:Class="Dt.Sample.MenuDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="工具栏菜单">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_m" ItemClick="OnItemClick">
+                        <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
+                        <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" />
+                        <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
+                        <a:Mi ID="无图标" />
+                        <a:MiSplit />
+                        <a:Mi ID="含子项" Icon="文件夹">
+                            <a:Mi ID="修改" Icon="修改" />
+                            <a:Mi ID="复制" Icon="复制" />
+                            <a:Mi ID="无图标" />
+                            <a:Mi ID="打开" Icon="打开">
+                                <a:Mi ID="设置" Icon="设置" />
+                                <a:Mi ID="复印" Icon="复印" />
+                                <a:Mi ID="打开" Icon="打开">
+                                    <a:Mi ID="设置" Icon="设置" />
+                                    <a:Mi ID="复印" Icon="复印" />
+                                </a:Mi>
+                            </a:Mi>
+                            <a:Mi ID="选择项" IsCheckable="True" />
+                        </a:Mi>
+                        <a:Mi ID="分组单选" Icon="文件夹">
+                            <a:Mi ID="选项1" IsCheckable="True" GroupName="Test" />
+                            <a:Mi ID="选项2" IsCheckable="True" GroupName="Test" />
+                            <a:Mi ID="选项3" IsCheckable="True" GroupName="Test" />
+                            <a:Mi ID="选项4" IsCheckable="True" GroupName="Test" />
+                        </a:Mi>
+                    </a:Menu>
+                </a:Tab.Menu>
+                
+                <a:Fv x:Name="_fv">
+                    <a:CBar Title="选择菜单项" />
+                    <a:CFree RowSpan ="4" ShowTitle="false">
+                        <a:Lv x:Name="_lv" ViewMode="Tile">
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="10">
+                                    <a:Dot ID="Icon" Margin="0,0,10,0" Width="20" />
+                                    <a:Dot ID="ID" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </a:Lv>
+                    </a:CFree>
+                    <a:CBar Title="菜单项属性" />
+                    <a:CList Title="显示模式" ID="Visibility" />
+                    <a:CBool Title="可用" ID="IsEnabled" />
+                    <a:CText Title="标题" ID="ID" />
+                    <a:CList Title="图标" ID="Icon" />
+                    <a:CBool Title="是否为可选择" ID="IsCheckable" />
+                    <a:CList Title="手机显示内容" ID="ShowInPhone" />
+                    <a:CBool Title="点击后不关闭" ID="StaysOpenOnClick" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

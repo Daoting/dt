@@ -1,0 +1,36 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LoadAnimation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart x:Name="_chart" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <a:Fv Data="{Binding ElementName=_chart}">
+                        <a:CList ID="ChartType" Title="图表类型" />
+                        <a:CFree Title="转换方式">
+                            <ComboBox x:Name="_cbTrans" />
+                        </a:CFree>
+                        <a:CFree Title="动画起始位置">
+                            <ComboBox x:Name="_cbOrigin" />
+                        </a:CFree>
+                        <a:CFree Title="擦拭方法">
+                            <ComboBox x:Name="_cbEasing" />
+                        </a:CFree>
+                        <CheckBox x:Name="_cbDelay" Content="延时启动动画" />
+                        <Button Content="饼图动画" Click="OnPieAnimation" />
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

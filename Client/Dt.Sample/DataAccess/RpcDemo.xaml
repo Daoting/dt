@@ -1,0 +1,24 @@
+﻿<a:Win
+    x:Class="Dt.Sample.RpcDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="请求/响应模式" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="GetString" Click="OnGetString" />
+            <Button Content="SetString" Click="OnSetString" />
+        </StackPanel>
+
+        <a:CBar Title="流模式" />
+        <Button Content="启动ServerStream" Click="OnServerStream" />
+        <a:CFree RowSpan="8" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

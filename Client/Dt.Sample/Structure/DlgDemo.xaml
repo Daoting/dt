@@ -1,0 +1,34 @@
+﻿<a:Win
+    x:Class="Dt.Sample.DlgDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="自定义对话框" />
+        <a:CList ID="Placement" Title="显示位置" />
+        <a:CText x:Name="_tgt" ID="Target" Title="相对目标" />
+        <a:CBool ID="Pin" Title="固定不自动关闭" />
+        <a:CBool ID="HideBar" Title="隐藏标题栏" />
+        <a:CBool ID="Resize" Title="可以调整大小" />
+        <a:CBool ID="ShowVeil" Title="显示遮罩" />
+        <a:CBool ID="AllowRelayPress" Title="向下层对话框传递点击事件" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="显示对话框" Click="OnShow" />
+            <Button Content="异步等待对话框" Click="OnShowAsync" />
+            <Button Content="随机位置显示" Click="OnShowPos" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="椭圆形对话框" Click="OnClicked4" />
+            <Button Content="对话框内部导航" Click="OnNaviClick" />
+        </StackPanel>
+        <a:CBar Title="内置对话框" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="确认对话框" Click="OnClicked1" />
+            <Button Content="错误对话框" Click="OnClicked2" />
+        </StackPanel>
+        <a:CBar Title="提示信息对话框" />
+        <TextBox x:Name="_tb" PlaceholderText="文本框内容含4出警告框" TextChanged="OnTextChanged" />
+        <Button x:Name="_btn" Content="显示消息框" Click="OnMsgClick" />
+    </a:Fv>
+</a:Win>

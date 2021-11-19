@@ -1,0 +1,73 @@
+﻿<a:Win
+    x:Class="Dt.Sample.WinNavi"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:sample="using:Dt.Sample">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="主区">
+                <StackPanel Margin="10">
+                    <Button Content="左上" Click="OnNavi" />
+                    <Button Content="左下,右停靠" Click="OnNavi" />
+                    <Button Content="Tab内部导航" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane InitWidth="500">
+        <a:Tabs InitHeight="600">
+            <a:Tab Title="Tab内部导航">
+                <sample:TabNav1 x:Name="_nav1" />
+            </a:Tab>
+            <a:Tab Title="左上">
+                <StackPanel Margin="10">
+                    <Button Content="左停靠" Click="OnNavi" />
+                    <Button Content="右侧" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+            <a:Tab Title="左停靠" IsPinned="False" PopWidth="300">
+                <StackPanel Margin="10">
+                    <Button Content="主区" Click="OnNavi" />
+                    <Button Content="左下,右停靠" Click="OnNavi" />
+                    <Button Content="关闭窗口" Click="OnClosWin" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+        <a:Tabs InitHeight="300">
+            <a:Tab Title="左下">
+                <StackPanel Margin="10">
+                    <Button Content="底部" Click="OnNavi" />
+                    <Button Content="左下,右停靠" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Pane InitWidth="300" Pos="Right">
+        <a:Tabs>
+            <a:Tab Title="右侧">
+                <StackPanel Margin="10">
+                    <Button Content="左上" Click="OnNavi" />
+                    <Button Content="右侧" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+            <a:Tab Title="右停靠" IsPinned="False">
+                <StackPanel Margin="10">
+                    <Button Content="底部" Click="OnNavi" />
+                    <Button Content="左下" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Pane InitHeight="200" Pos="Bottom">
+        <a:Tabs>
+            <a:Tab Title="底部">
+                <StackPanel Margin="10">
+                    <Button Content="主区" Click="OnNavi" />
+                    <Button Content="右侧" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

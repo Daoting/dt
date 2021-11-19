@@ -1,0 +1,13 @@
+﻿<UserControl
+    x:Class="Dt.Sample.CustomSearchForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="基本格" />
+        <a:CText ID="param1" Title="参数1" />
+        <a:CText ID="param2" Title="参数2" />
+        <a:CText ID="param3" Title="参数3" />
+    </a:Fv>
+</UserControl>

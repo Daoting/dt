@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="Dt.App.DefaultLogin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Foreground="White">
+
+    <Page.Resources>
+        <Style x:Key="LoginButton" TargetType="Button">
+            <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="Background" Value="{StaticResource 深暗遮罩}" />
+            <Setter Property="Padding" Value="10,7,10,7" />
+        </Style>
+    </Page.Resources>
+    
+    <Grid Background="{StaticResource 主蓝}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <!-- 标题 -->
+        <Grid HorizontalAlignment="Center" Background="Transparent" DoubleTapped="OnShowTrace" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="ms-appx:///Assets/logo.png" Height="50" Width="50" Stretch="None" />
+            <TextBlock x:Name="_tbTitle" FontSize="{StaticResource 特大字}" Margin="5,8,5,8" Grid.Column="1"/>
+        </Grid>
+
+        <Grid x:Name="InfoPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ProgressRing x:Name="Progress" Foreground="White" Background="{StaticResource 主蓝}" IsActive="True" Width="40" Height="40"/>
+            <TextBlock x:Name="InfoBlock" Text="正在登录..." TextWrapping="Wrap" Margin="10" Grid.Row="1" />
+        </Grid>
+
+        <StackPanel x:Name="LoginPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2">
+            <TextBox x:Name="_tbPhone" PlaceholderText="手机号" KeyDown="OnPhoneKeyDown" InputScope="Number" />
+            <PasswordBox x:Name="_tbPwd" PlaceholderText="密码" KeyDown="OnPwdKeyDown" Margin="0,10,0,0" Visibility="Collapsed" />
+            <Grid x:Name="_pnlCode" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="_tbCode" PlaceholderText="验证码" InputScope="Number" />
+                <Button x:Name="_btnCode" Content="获取验证码" Click="OnGetCode" Margin="10,0,0,0" Style="{StaticResource LoginButton}" Grid.Column="1" />
+            </Grid>
+            <Button Content="登　　录" Click="OnLoginClick" HorizontalAlignment="Stretch" Margin="0,20,0,20" Style="{StaticResource LoginButton}" />
+            <HyperlinkButton Content="密码登录" Click="OnTogglePwd" Foreground="White" />
+        </StackPanel>
+
+        <!-- 系统描述 -->
+        <TextBlock x:Name="_tbDesc" FontSize="{StaticResource 小字}" TextAlignment="Center" TextWrapping="Wrap" Grid.Row="3" />
+    </Grid>
+</Page>

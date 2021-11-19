@@ -1,0 +1,12 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.FileLists.UpdateFileDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="更新方式">
+
+    <StackPanel>
+        <a:BtnItem Icon="文件夹" Title="选择更新文件" Click="OnSelect" />
+        <a:BtnItem Icon="曲别针" Title="上传更新文件" Click="OnUpload" />
+    </StackPanel>
+</a:Dlg>

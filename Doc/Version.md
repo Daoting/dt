@@ -18,14 +18,20 @@ uwp的release版Chart动画报错
 
 
 ## Release 2.0.0 
-### 功能
-* 客户端和服务端升级到.net6 
-* Release版的Service Api生成代理类时方法无注释
+### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
+* 服务端升级到.net6
+* 不再支持的API列表：
+https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-supported-api
+* 删除PhoneUI模式下窗口左上角的后退按钮
+Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
+Window.Current Window.Dispatcher  DependencyObject.Dispatcher 始终null，改用DispatcherQueue
+* Application的Suspending Resuming 事件已移除，Kit-Sys.cs
 
-### 变更 
-
+* MediaPlayerElement 未实现，FileItem.cs
+* Xamarin.Essentials 未升级到maui
 
 ### Bug修改  
+* Release版的Service Api生成代理类时方法无注释
 
 
 ## Release 1.9.10 

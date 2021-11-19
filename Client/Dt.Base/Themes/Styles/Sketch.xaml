@@ -1,0 +1,550 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:sketch="using:Dt.Base.Sketches">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--静态资源-->
+    <a:ContentPresenterSelector x:Key="ContentPresenterSelector" />
+    
+    <DataTemplate x:Key="Presenter文字">
+        <TextBlock Text="{Binding}" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+    </DataTemplate>
+
+    <sketch:RulerLabelConverter x:Key="LabelConverter"/>
+    
+    <!--连线拖拽点-->
+    <Style x:Key="LinkThumb" TargetType="Thumb">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="MinWidth" Value="30"/>
+        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Grid x:Name="InnerGrid" Width="30" Height="30" Background="Transparent">
+                        <Ellipse x:Name="Ellipse" Stroke="Black" StrokeThickness="2" />
+                        <Path x:Name="ThumbPath"
+                              Fill="Black"
+                              Stretch="Fill"
+                              Width="20"
+                              Height="20"
+                              Data="M25,0 C27.7614,0 30,2.23857 30,5 C30,7.76143 27.7614,10 25,10 C24.1371,10 23.3252,9.78139 22.6167,9.39653 L22.4353,9.29222 L10.2057,15.2593 L22.0902,21.0242 L22.2045,20.9429 C23.0025,20.4038 23.9645,20.089 25,20.089 C27.7614,20.089 30,22.3276 30,25.089 C30,27.8504 27.7614,30.089 25,30.089 C22.3249,30.089 20.1404,27.9881 20.0065,25.3463 L20.0044,25.2628 L8.11184,19.1336 L8.03779,19.1894 C7.21756,19.7783 6.21177,20.125 5.125,20.125 C2.36357,20.125 0,17.7614 0,15 C0,12.2386 2.23857,10 5,10 C6.29442,10 7.47395,10.4919 8.36189,11.2989 L8.51127,11.4413 L20.0581,5.76415 L20.0576,5.76145 C20.0197,5.51317 20,5.25888 20,5 C20,2.23857 22.2386,0 25,0 z" 
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="DragNoValid">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="DragValid">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="StrokeThickness" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="DragDel">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 中绿}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="StrokeThickness" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ThumbPath" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates"/>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Sketch-->
+    <Style TargetType="a:Sketch">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 中灰1}"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Sketch">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Fill="White" IsHitTestVisible="False" />
+                        <sketch:Ruler Visibility="{Binding ShowHorRuler, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                                     Orientation="Horizontal"
+                                     Offset="{Binding HorizontalOffset,ElementName=Part_ScrollViewer}"
+                                     Grid.Row="0"
+                                     Grid.Column="1" />
+                        <sketch:Ruler Visibility="{Binding ShowVerRuler, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                                     Orientation="Vertical"
+                                     Offset="{Binding VerticalOffset,ElementName=Part_ScrollViewer}"
+                                     Grid.Row="1"
+                                     Grid.Column="0" />
+                        <ScrollViewer x:Name="Part_ScrollViewer" 
+                                      HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                                      HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                      VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                      IsHorizontalRailEnabled="False"
+                                      IsVerticalRailEnabled="False"
+                                      ZoomMode="Disabled"
+                                      IsDeferredScrollingEnabled="False"
+                                      Grid.Row="1"
+                                      Grid.Column="1">
+                            <Grid x:Name="Part_Grid"
+                                  Width="{TemplateBinding PageWidth}"
+                                  Height="{TemplateBinding PageHeight}"
+                                  Background="White"
+                                  Margin="{TemplateBinding Padding}"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Top">
+                                <!--页边框-->
+                                <Rectangle Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1" IsHitTestVisible="False" />
+                                <sketch:GridLinePanel Visibility="{Binding ShowGridLine, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Canvas x:Name="Part_Adorner">
+                                    <sketch:NodeSelector x:Name="Part_NodeSelector" Visibility="Collapsed" 
+                                                         ManipulationMode="TranslateRailsX"/>
+                                    <Thumb x:Name="PART_LinkThumb" Style="{StaticResource LinkThumb}" Visibility="Collapsed"
+                                           ManipulationMode="TranslateRailsX"/>
+                                    <sketch:LinkPrompt x:Name="Part_LinkPrompt" Visibility="Collapsed" />
+
+                                    <Line x:Name="Part_TopLine"
+                                          X1="0"
+                                          X2="{TemplateBinding PageWidth}"
+                                          Stroke="{StaticResource 亮红}"
+                                          StrokeThickness="1"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed" />
+                                    <Line x:Name="Part_BottomLine"
+                                          X1="0"
+                                          X2="{TemplateBinding PageWidth}"
+                                          Stroke="{StaticResource 亮红}"
+                                          StrokeThickness="1"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed" />
+                                    <Line x:Name="Part_LeftLine"
+                                          Y1="0"
+                                          Y2="{TemplateBinding PageHeight}"
+                                          Stroke="{StaticResource 亮红}"
+                                          StrokeThickness="1"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed" />
+                                    <Line x:Name="Part_RightLine"
+                                          Y1="0"
+                                          Y2="{TemplateBinding PageHeight}"
+                                          Stroke="{StaticResource 亮红}"
+                                          StrokeThickness="1"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed" />
+
+                                    <Rectangle x:Name="Part_SelRect"
+                                               Stroke="{StaticResource 主蓝}"
+                                               StrokeThickness="1"
+                                               IsHitTestVisible="False"
+                                               Visibility="Collapsed"
+                                               Canvas.ZIndex="1" />
+                                    <Rectangle x:Name="Part_MouseRect"
+                                               Stroke="{StaticResource 深暗遮罩}"
+                                               StrokeThickness="1"
+                                               Fill="{StaticResource 暗遮罩}"
+                                               IsHitTestVisible="False"
+                                               Visibility="Collapsed"
+                                               Canvas.ZIndex="1" />
+                                    <Line x:Name="Part_LinkLine"
+                                          X1="0"
+                                          X2="{TemplateBinding PageWidth}"
+                                          Stroke="{StaticResource 默认前景}"
+                                          StrokeThickness="1"
+                                          IsHitTestVisible="False"
+                                          Visibility="Collapsed"
+                                          Canvas.ZIndex="1"/>
+                                </Canvas>
+                            </Grid>
+                        </ScrollViewer>
+                        <!--边框-->
+                        <Rectangle Stroke="{TemplateBinding BorderBrush}"
+                                   StrokeThickness="1"
+                                   IsHitTestVisible="False"
+                                   Grid.Row="1"
+                                   Grid.Column="1"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--SNode-->
+    <Style  TargetType="a:SNode">
+        <Setter Property="Background" Value="{StaticResource 主蓝}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 主蓝}"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="ManipulationMode" Value="TranslateRailsX" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:SNode">
+                    <Grid x:Name="ElementGrid"
+                          Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          Background="Transparent">
+                        <!-- 背景图形 -->
+                        <ContentPresenter x:Name="ElementShape" Content="{TemplateBinding NodeShape}" />
+
+                        <Grid Margin="{TemplateBinding Padding}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="TitleRow" Height="*" />
+                                <RowDefinition x:Name="ContentRow" Height="0" />
+                            </Grid.RowDefinitions>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Content="{TemplateBinding IconShape}" VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           VerticalAlignment="Center"
+                                           Grid.Column="1" />
+                            </Grid>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplateSelector="{StaticResource ContentPresenterSelector}"
+                                              FontSize="{StaticResource 小字}"
+                                              Margin="0,5,0,0"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              Grid.Row="1" />
+                            <ContentPresenter Content="{TemplateBinding FlagShape}" VerticalAlignment="Top" HorizontalAlignment="Right" />
+                        </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ElementShape" Storyboard.TargetProperty="Opacity">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="0.9" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ContentChangedStates">
+                                <VisualState x:Name="NoContent" />
+                                <VisualState x:Name="ExistContent">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TitleRow" Storyboard.TargetProperty="Height">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Auto" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRow" Storyboard.TargetProperty="Height">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="*" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--SLine-->
+    <Style TargetType="a:SLine">
+        <Setter Property="Foreground" Value="{StaticResource 深灰2}"/>
+        <Setter Property="ManipulationMode" Value="None"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:SLine">
+                    <Canvas x:Name="LineCanvas">
+                        <Path x:Name="LinePath"
+                              Data="{TemplateBinding LinkPathGeometry}"
+                              Stretch="None"
+                              Stroke="{TemplateBinding Foreground}"
+                              StrokeThickness="{TemplateBinding LineThickness}" />
+
+                        <Path x:Name="HeaderPath"
+                              Data="{TemplateBinding HeaderGeometry}"
+                              Width="{TemplateBinding HeadTailSize}"
+                              Height="{TemplateBinding HeadTailSize}"
+                              Canvas.Left="{TemplateBinding HeaderLeft}"
+                              Canvas.Top="{TemplateBinding HeaderTop}"
+                              RenderTransformOrigin="0.5, 0.5"
+                              Fill="{TemplateBinding Foreground}"
+                              Stretch="Fill"
+                              StrokeThickness="0" />
+
+                        <Path x:Name="TailPath"
+                              Data="{TemplateBinding TailGeometry}"
+                              Width="{TemplateBinding HeadTailSize}"
+                              Height="{TemplateBinding HeadTailSize}"
+                              Canvas.Left="{TemplateBinding TailLeft}"
+                              Canvas.Top="{TemplateBinding TailTop}"
+                              RenderTransformOrigin="0.5, 0.5"
+                              Fill="{TemplateBinding Foreground}"
+                              Stretch="Fill"
+                              StrokeThickness="0" />
+
+                        <TextBlock x:Name="TitleLabel"
+                                   Text="{TemplateBinding Title}"
+                                   Canvas.Left="{TemplateBinding LabelLeft}"
+                                   Canvas.Top="{TemplateBinding LabelTop}"
+                                   FontSize="20"
+                                   FontWeight="Normal"
+                                   Foreground="Black">
+                            <TextBlock.RenderTransform>
+                                <RotateTransform Angle="{Binding LabelAngle,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+
+                        <Thumb x:Name="HeaderThumb"
+                               Style="{StaticResource LinkThumb}"
+                               Visibility="{TemplateBinding ThumbVisibility}" />
+
+                        <Thumb x:Name="TailThumb"
+                               Style="{StaticResource LinkThumb}"
+                               Visibility="{TemplateBinding ThumbVisibility}" />
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--调节器-->
+    <Style x:Key="SelectorThumb" TargetType="Thumb">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Grid Background="Transparent">
+                        <Ellipse x:Name="Ellipse" Stroke="{StaticResource 湖蓝}" StrokeThickness="2" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Stroke" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="Stroke" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates"/>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--NodeSelector-->
+    <Style TargetType="sketch:NodeSelector">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="sketch:NodeSelector">
+                    <Grid>
+                        <Rectangle StrokeThickness="1" Stroke="{StaticResource 中灰2}" Stretch="Fill" IsHitTestVisible="False" /> <!--StrokeDashArray="2, 2"-->
+                        <Thumb x:Name="PART_TopLeft" Margin="-10,-10,0,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <Thumb x:Name="PART_Top" Margin="0,-10,0,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                        <Thumb x:Name="PART_TopRight" Margin="0,-10,-10,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                        <Thumb x:Name="PART_Left" Margin="-10,0,0,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <Thumb x:Name="PART_Right" Margin="0,0,-10,0" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Thumb x:Name="PART_BottomLeft" Margin="-10,0,0,-10" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                        <Thumb x:Name="PART_Bottom" Margin="0,0,0,-10" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                        <Thumb x:Name="PART_BottomRight" Margin="0,0,-10,-10" Style="{StaticResource SelectorThumb}" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Ruler-->
+    <Style TargetType="sketch:Ruler">
+        <Setter Property="Foreground" Value="{StaticResource 深灰1}"/>
+        <Setter Property="Background" Value="{StaticResource 默认背景}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="sketch:Ruler">
+                    <Canvas x:Name="Part_RulerPanel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="sketch:RulerSegment">
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="sketch:RulerSegment">
+                    <Canvas x:Name="Part_RulerSegmentPanel">
+                        <TextBlock x:Name="PART_Label"
+                                   FontSize="9"
+                                   Text="{Binding Path=StartValue, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource LabelConverter}}"
+                                   Padding="0"/>
+                    </Canvas>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PromptEllipse" TargetType="Ellipse">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Stroke" Value="{StaticResource  亮红}" />
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
+
+    <!--LinkPrompt-->
+    <Style TargetType="sketch:LinkPrompt">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="sketch:LinkPrompt">
+                    <Grid>
+                        <Ellipse x:Name="PART_TopLeft" Margin="-10,-10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_Top" Margin="0,-10,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_TopRight" Margin="0,-10,-10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_Left" Margin="-10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_Right" Margin="0,0,-10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_BottomLeft" Margin="-10,0,0,-10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_Bottom" Margin="0,0,0,-10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource PromptEllipse}" />
+                        <Ellipse x:Name="PART_BottomRight" Margin="0,0,-10,-10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource PromptEllipse}" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CornerStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="LeftTop">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopLeft" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="TopCenter">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Top" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="RightTop">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_TopRight" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="LeftCenter">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Left" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="RightCenter">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Right" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="LeftBottom">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomLeft" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="BottomCenter">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Bottom" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="RightBottom">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_BottomRight" Storyboard.TargetProperty="Fill" >
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource 亮红}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

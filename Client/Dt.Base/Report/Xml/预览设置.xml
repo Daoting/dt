@@ -1,0 +1,8 @@
+﻿<View script="Dt.Base.MyScript,Dt.Base"
+      showsearchform="False"
+      autoquery="False"
+      showcolheader="False"
+      showrowheader="False"
+      showgridline="False"
+      showmenu="False"
+      showcontextmenu="False" />

@@ -1,0 +1,35 @@
+﻿<a:Win
+    x:Class="Dt.App.Model.RoleWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.App.Model">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:RoleList x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:RoleForm x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab>
+                <l:RoleUserList x:Name="_userList" />
+            </a:Tab>
+            <a:Tab>
+                <l:RoleMenuList x:Name="_menuList" />
+            </a:Tab>
+            <a:Tab>
+                <l:RolePrvList x:Name="_prvList" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,32 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FvAutoCell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="2" Title="表单">
+                <a:Fv x:Name="_fv" AutoCreateCell="true" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="1" Title="数据源">
+                <a:Fv>
+                    <a:CBar Title="设置数据源" />
+                    <Button Content="Row" Click="OnDataRow" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="目标1" Click="OnTgt1" />
+                        <Button Content="目标2" Click="OnTgt2" />
+                    </StackPanel>
+                    <Button Content="空数据源" Click="OnNull" />
+                    <a:CBar Title="目标对象" />
+                    <TextBox x:Name="_tb" Text="目标" />
+                    <a:BtnItem x:Name="_btn" Title="目标2" Icon="百分号" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

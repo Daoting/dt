@@ -1,0 +1,31 @@
+﻿<Rpt cols="160,260,60">
+  <Params>
+    <Param name="parentid" title="父项标识" val="" />
+    <Param name="parentname" title="父项名称" val="" />
+  </Params>
+  <Data>
+    <Tbl name="菜单" isscritp="True" cols="id,parentid,name,isgroup" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="40,25,25,25,25">
+    <Text col="1" colspan="2" val="#script#" handleclick="True" fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Table row="1" col="1" rowspan="2" colspan="2" tbl="菜单">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" val="菜单名称" />
+          <Text row="1" col="2" val="分组" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="2" col="1" val=":Val(菜单,name)" handleclick="True" horalign="Left" />
+          <Text row="2" col="2" val="#script#" handleclick="True" />
+        </TRow>
+      </TBody>
+    </Table>
+    <Text row="4" col="1" val=":&quot;合计 &quot;&#xD;&#xA;+ Count(菜单)&#xD;&#xA;+ &quot; 个&quot;" horalign="Left" lbs="None" tbs="None" rbs="None" bbs="None" />
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.MyRptScript,Dt.Sample" autoquery="True" showsearchform="False" />
+</Rpt>

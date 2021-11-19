@@ -1,0 +1,18 @@
+﻿<a:Menu
+    x:Class="Dt.App.Workflow.AlignMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    IsContextMenu="True">
+
+    <a:Mi ID="左对齐" Icon="左对齐" Click="OnAlignLeft" />
+    <a:Mi ID="右对齐" Icon="右对齐" Click="OnAlignRight" />
+    <a:Mi ID="上对齐" Icon="展开" Click="OnAlignTop" />
+    <a:Mi ID="下对齐" Icon="下" Click="OnAlignBottom" />
+    <a:Mi ID="水平居中对齐" Icon="居中对齐" Click="OnAlignHorCenter" />
+    <a:Mi ID="垂直居中对齐" Icon="收起" Click="OnAlignVerCenter" />
+    <a:Mi ID="水平间距相同" Icon="暂停" Click="OnHorSpace" />
+    <a:Mi ID="垂直间距相同" Icon="等于" Click="OnVerSpace" />
+    <a:Mi ID="删除" Icon="删除" Click="OnDel" />
+</a:Menu>
+

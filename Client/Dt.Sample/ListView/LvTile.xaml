@@ -1,0 +1,68 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LvTile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" ViewMode="Tile">
+                    <DataTemplate>
+                        <Grid Padding="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE060;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="30"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center" />
+                            <StackPanel Margin="10,0,0,0" Grid.Column="1">
+                                <a:Dot ID="xm" />
+                                <a:Dot ID="xb" />
+                                <a:Dot ID="bumen" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_lv}">
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10行" Tag="10" Click="OnLoadData" />
+                        <Button Content="100行" Tag="100" Click="OnLoadData" />
+                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="空数据源" Click="OnLoadNull" />
+                        <Button Content="10000行" Tag="10000" Click="OnLoadData" />
+                    </StackPanel>
+                    <a:CBar Title="分组" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="按部门分组" Click="OnGroup" />
+                        <Button Content="删除分组" Click="OnDelGroup" />
+                    </StackPanel>
+                    <a:CBar Title="属性" />
+                    <a:CList Title="视图类型" ID="ViewMode" />
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
+                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
+                    <a:CNum Title="行/项目高" ID="ItemHeight" />
+                    <a:CBar Title="其他" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="自动行高" Click="OnAutoHeight" />
+                        <Button Content="无选择行" Click="OnSelectNull" />
+                        <Button Content="随机滚动" Click="OnScroll" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

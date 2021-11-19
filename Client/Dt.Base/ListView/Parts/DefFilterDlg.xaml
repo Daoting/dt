@@ -1,0 +1,20 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.ListView.DefFilterDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="筛选">
+
+    <a:Dlg.Menu>
+        <a:Menu x:Name="_menu">
+            <a:Mi ID="重置" Icon="顺时针" Click="OnReset" />
+            <a:Mi ID="筛选" Icon="漏斗" Click="OnFilter" />
+        </a:Menu>
+    </a:Dlg.Menu>
+
+    <a:Fv x:Name="_fv">
+        <a:CBar>
+            <CheckBox x:Name="_cbAnd" Content="筛选条件之间【与】操作" IsChecked="True" />
+        </a:CBar>
+    </a:Fv>
+</a:Dlg>

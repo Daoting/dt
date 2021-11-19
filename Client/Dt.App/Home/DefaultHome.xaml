@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Dt.App.DefaultHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:home="using:Dt.App.Home"
+    AutoSaveLayout="False">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1" Icon="主页">
+                <home:RootMenu x:Name="_menu" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="2" Title="动态" Icon="心电">
+                
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="3">
+                <home:MyMain x:Name="_my" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

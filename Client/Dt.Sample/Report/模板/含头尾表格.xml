@@ -1,0 +1,50 @@
+﻿<Rpt cols="80,80,80,80,80,80,80,80,80">
+  <Params />
+  <Data>
+    <Tbl name="网损情况" isscritp="True" cols="year,month,unit,val" />
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25">
+    <Text colspan="4" val="无表头表尾" />
+    <Text col="5" colspan="4" val="包含表头表尾" />
+    <Table row="2" colspan="4" tbl="网损情况">
+      <TBody>
+        <TRow>
+          <Text row="2" val=":Val(网损情况,year)" />
+          <Text row="2" col="1" val=":Val(网损情况,month)" />
+          <Text row="2" col="2" val=":Val(网损情况,unit)" />
+          <Text row="2" col="3" val=":Val(网损情况,val)" />
+        </TRow>
+      </TBody>
+    </Table>
+    <Table row="2" col="5" rowspan="3" colspan="4" tbl="网损情况">
+      <THeader>
+        <TRow>
+          <Text row="2" col="5" val="年度" />
+          <Text row="2" col="6" val="月份" />
+          <Text row="2" col="7" val="单位" />
+          <Text row="2" col="8" val="值" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="3" col="5" val=":Val(网损情况,year)" />
+          <Text row="3" col="6" val=":Val(网损情况,month)" />
+          <Text row="3" col="7" val=":Val(网损情况,unit)" />
+          <Text row="3" col="8" val=":Val(网损情况,val)" />
+        </TRow>
+      </TBody>
+      <TFooter>
+        <TRow>
+          <Text row="4" col="5" val="年度" />
+          <Text row="4" col="6" val="网损" />
+          <Text row="4" col="7" val="情况" />
+          <Text row="4" col="8" val="报表" />
+        </TRow>
+      </TFooter>
+    </Table>
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+</Rpt>

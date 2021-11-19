@@ -1,0 +1,44 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.TextForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="单元格值" />
+        <a:CText ID="val" ShowTitle="False" AcceptsReturn="True" RowSpan="3" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="+数据源列值" Click="OnAddDataVal" />
+            <Button Content="+参数值" Click="OnAddParamVal" />
+            <Button Content="+全局变量值" Click="OnAddGlobalVal" />
+            <Button Content="脚本赋值" Click="OnScriptVal" />
+        </StackPanel>
+        <a:CBool ID="handleclick" Title="点击时执行脚本" />
+        <a:CBar Title="自动合并重复值的格" />
+        <a:CBool ID="hidetopdup" Title="纵向合并" />
+        <a:CBool ID="hideleftdup" Title="横向合并" />
+        
+        <a:CBar Title="样式" />
+        <a:CBool ID="wordwrap" Title="自动换行" />
+        <a:CBool ID="autoheight" Title="自动行高(低效)" />
+        <a:CText ID="fontfamily" Title="字体" />
+        <a:CNum ID="fontsize" Title="字号" Minimum="0" IsInteger="True" />
+        <a:CBool ID="bold" Title="粗体" />
+        <a:CBool ID="italic" Title="斜体" />
+        <a:CBool ID="underline" Title="下划线" />
+        <a:CBool ID="strikeout" Title="删除线" />
+        <a:CList ID="horalign" Title="水平对齐方式" Enum="Dt.Cells.Data.CellHorizontalAlignment,Dt.Cells.Data" />
+        <a:CList ID="veralign" Title="垂直对齐方式" Enum="Dt.Cells.Data.CellVerticalAlignment,Dt.Cells.Data" />
+        <a:CColor ID="foreground" Title="前景色"/>
+        <a:CColor ID="background" Title="背景色"/>
+        <a:CNum ID="margin" Title="缩进" Minimum="0" IsInteger="True" />
+        <a:CList ID="lbs" Title="左边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CColor ID="lbc" Title="左边框颜色" />
+        <a:CList ID="tbs" Title="上边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CColor ID="tbc" Title="上边框颜色" />
+        <a:CList ID="rbs" Title="右边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CColor ID="rbc" Title="右边框颜色" />
+        <a:CList ID="bbs" Title="下边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CColor ID="bbc" Title="下边框颜色" />
+    </a:Fv>
+</UserControl>

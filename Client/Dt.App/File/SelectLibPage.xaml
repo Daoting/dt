@@ -1,0 +1,19 @@
+﻿<a:Mv
+    x:Class="Dt.App.File.SelectLibPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="选择文件位置">
+
+    <a:Mv.Menu>
+        <a:Menu>
+            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnSearch" />
+        </a:Menu>
+    </a:Mv.Menu>
+
+    <StackPanel>
+        <a:BtnItem Icon="文件" Title="公共文件" Click="OnPublicFile" />
+        <a:BtnItem Icon="对比" Title="我的文件" Click="OnMyFile" />
+        <a:BtnItem Icon="词典" Title="素材库" Click="OnResFile" />
+    </StackPanel>
+</a:Mv>

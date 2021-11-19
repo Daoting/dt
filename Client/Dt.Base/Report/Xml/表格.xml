@@ -1,0 +1,38 @@
+﻿<Table row="2"
+       col="1"
+       rowspan="5"
+       colspan="4"
+       tbl="数据源名称"
+       repeatheader="False"
+       repeatfooter="False"
+       minrowcount="100"
+       rowbreakcount="1"
+       colbreakcount="1">
+  <THeader>
+    <TRow>
+      <Text />
+    </TRow>
+  </THeader>
+  <TBody minrowcount="最少行数，不够时增加空行">
+    <TRow>
+      <Text />
+    </TRow>
+  </TBody>
+  <TFooter>
+    <TRow>
+      <Text />
+    </TRow>
+  </TFooter>
+  <TGroup field="分组字段">
+    <TGroupHeader>
+      <TRow>
+        <Text />
+      </TRow>
+    </TGroupHeader>
+    <TGroupFooter>
+      <TRow>
+        <Text />
+      </TRow>
+    </TGroupFooter>
+  </TGroup>
+</Table>

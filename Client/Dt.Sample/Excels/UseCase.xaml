@@ -1,0 +1,55 @@
+﻿<a:Win
+    x:Class="Dt.Sample.UseCase"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="月报xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
+                        <Button Content="月报xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="课程表xls" Tag="StudentCalendar.xlsx" Click="OnLoadFile" />
+                        <Button Content="课程表xml" Tag="StudentCalendar.ssxml" Click="OnLoadFile" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表单xls" Tag="1040.xlsx" Click="OnLoadFile" />
+                        <Button Content="表单xml" Tag="1040.ssxml" Click="OnLoadFile" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="结婚预算xls" Tag="Wedding.xlsx" Click="OnLoadFile" />
+                        <Button Content="结婚预算xml" Tag="Wedding.ssxml" Click="OnLoadFile" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="消费趋势xls" Tag="Expense.xlsx" Click="OnLoadFile" />
+                        <Button Content="消费趋势xml" Tag="Expense.ssxml" Click="OnLoadFile" />
+                        <Button Content="消费趋势格式化" Click="OnConditionalFormat" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="汽车维修跟踪xls" Tag="CarRepair.xlsx" Click="OnLoadFile" />
+                        <Button Content="汽车维修跟踪xml" Tag="CarRepair.ssxml" Click="OnLoadFile" />
+                    </StackPanel>
+                    <a:CBar Title="导出" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Xls" Click="SaveExcelFile" />
+                        <Button Content="Xml" Click="SaveXmlFile" />
+                        <Button Content="PDF" Click="SavePDFFile" />
+                        <Button Content="CSV" Click="SaveCsvFile" />
+                    </StackPanel>
+                    <Button Content="打开" Click="OpenFile" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

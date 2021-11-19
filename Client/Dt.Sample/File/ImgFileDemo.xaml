@@ -1,0 +1,16 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ImgFileDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Margin="10">
+        <TextBlock Text="图片源主要有三类：ms-appx、ms-appdata、文件服务Fsm、外部http，uno只支持ms-appx直接在xaml指定Image.Source，其余需代码实现" TextWrapping="Wrap" />
+        <TextBlock Text="图片为内容文件，直接在xaml指定Image.Source" Margin="0,20,0,0" />
+        <Image Source="ms-appx:///Assets/logo.png" Width="50" HorizontalAlignment="Left" />
+        <TextBlock Text="图片在Fsm，下载缓存本地方式" Margin="0,20,0,0" />
+        <Image x:Name="_imgFsm" Width="50" HorizontalAlignment="Left" />
+        <TextBlock Text="图片在Fsm，下载无缓存方式" Margin="0,20,0,0" />
+        <Image x:Name="_imgFsmNoCache" Width="50" HorizontalAlignment="Left" />
+    </StackPanel>
+</a:Win>

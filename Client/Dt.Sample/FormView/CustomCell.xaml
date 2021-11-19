@@ -1,0 +1,66 @@
+﻿<a:Win
+    x:Class="Dt.Sample.CustomCell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="自定义内容">
+                <a:Fv x:Name="_fv">
+                    <a:CFree Title="文本框">
+                        <TextBox />
+                    </a:CFree>
+                    <TextBox Text="文本框" />
+                    <a:CFree Title="自动行高" RowSpan="-1">
+                        <TextBox AcceptsReturn="True" MinHeight="130" />
+                    </a:CFree>
+                    <Button Content="&#xE06E;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                    <CheckBox Content="选择框" />
+                    <a:CFree Title="选择框">
+                        <CheckBox />
+                    </a:CFree>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Content="单选框1" GroupName="Default" IsChecked="True" />
+                        <RadioButton Content="单选框2" GroupName="Default" Margin="10,0,0,0" />
+                        <RadioButton Content="不可用" IsEnabled="False" Margin="10,0,0,0" />
+                    </StackPanel>
+                    <a:CBar x:Name="_bar" Title="切换内容" />
+                    <a:CFree Title="下拉选项">
+                        <ComboBox SelectedIndex="2">
+                            <ComboBoxItem Content="选项1" />
+                            <ComboBoxItem Content="选项2" />
+                            <ComboBoxItem Content="选项3" />
+                            <ComboBoxItem Content="选项4" />
+                            <ComboBoxItem Content="选项5" />
+                            <ComboBoxItem Content="选项6" />
+                        </ComboBox>
+                    </a:CFree>
+                    <a:CBar Title="水平填充自动行高" />
+                    <a:CBar RowSpan="-1">
+                        <TextBlock Text="南方周末 windows 8 版是广东南方周末新媒体有限公司专为windows 8平板及桌面电脑用户度身定做的资讯应用。本应用精选南方周末报系旗下《南方周末》、《南方人物周刊》、《名牌》的精华文章以及infzm.com原创资讯。" />
+                    </a:CBar>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv x:Name="_ob">
+                    <a:CText Title="列标题" ID="Title" />
+                    <a:CBool Title="列名垂直显示" ID="IsVerticalTitle" />
+                    <a:CBool Title="显示标题列" ID="ShowTitle" />
+                    <a:CNum Title="列名宽度" ID="TitleWidth" />
+                    <a:CBool Title="水平填充" ID="IsHorStretch" />
+                    <a:CNum Title="行数(-1自动)" ID="RowSpan" />
+                    <a:CList Title="可见" ID="Visibility" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="切换第一格内容" Click="OnToggleContent"/>
+                        <Button Content="切换CBar内容" Click="OnToggleBar"/>
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

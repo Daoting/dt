@@ -23,7 +23,7 @@ namespace Dt.Core
     /// 数据行管理类
     /// </summary>
 #if !SERVER
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
 #endif
     public class Row : INotifyPropertyChanged, IRpcJson
     {

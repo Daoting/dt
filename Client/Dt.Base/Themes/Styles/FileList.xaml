@@ -1,0 +1,202 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--FileList-->
+    <Style TargetType="a:FileList">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:FileList">
+                    <!--边框在项中绑定-->
+                    <a:FileListPanel x:Name="Panel" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--FileItem-->
+    <Style TargetType="a:FileItem">
+        <Setter Property="Template" Value="{StaticResource VirFileTemplate}" />
+    </Style>
+
+    <!--FileItem注释-->
+    <Style x:Key="VirFileNoteStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource 小字}"/>
+        <Setter Property="Foreground" Value="{StaticResource 深灰2}"/>
+    </Style>
+
+    <!--FileItem默认模板-->
+    <ControlTemplate x:Key="VirFileTemplate" TargetType="a:FileItem">
+        <!--Fv中两行高度-->
+        <Grid x:Name="RootGrid" MinHeight="82" Background="Transparent">
+            <Grid Padding="10" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="IconBlock"
+                           Text="{TemplateBinding Icon}"
+                           FontFamily="{StaticResource IconFont}"
+                           Foreground="{StaticResource 深灰2}"
+                           FontSize="30"
+                           Margin="0,0,10,0"
+                           VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="{TemplateBinding Title}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{TemplateBinding ExtInfo}" Style="{StaticResource VirFileNoteStyle}"/>
+                </StackPanel>
+            </Grid>
+            <!--上传下载状态-->
+            <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+            <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+            
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="VirFileStates">
+                    <VisualState x:Name="None" />
+                    <VisualState x:Name="UploadWaiting">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                            <Setter Target="MsgBlock.Text" Value="等待上传..." />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Uploading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Downloading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CachedStates">
+                    <VisualState x:Name="NoCache" />
+                    <VisualState x:Name="Cached">
+                        <VisualState.Setters>
+                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主蓝}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ControlTemplate>
+
+    <!--FileItem图片模板-->
+    <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
+        <Grid x:Name="RootGrid">
+            <TextBlock Text="&#xE08A;" Foreground="{StaticResource 深灰2}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Grid x:Name="ContentGrid" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="{TemplateBinding ImageStretch}" />
+            </Grid>
+            <!--上传下载状态-->
+            <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+            <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="VirFileStates">
+                    <VisualState x:Name="None" />
+                    <VisualState x:Name="UploadWaiting">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                            <Setter Target="MsgBlock.Text" Value="等待上传..." />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Uploading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Downloading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CachedStates">
+                    <VisualState x:Name="NoCache" />
+                    <VisualState x:Name="Cached" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ControlTemplate>
+
+    <!--FileItem视频模板-->
+    <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
+        <Grid x:Name="RootGrid">
+            <!--视频主流比例-->
+            <Grid x:Name="ContentGrid" Width="327" Height="184" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Source="{TemplateBinding Bitmap}" />
+                <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />
+                    <TextBlock x:Name="IconBlock" Text="&#xE02D;" Foreground="White" FontFamily="{StaticResource IconFont}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <TextBlock Text="{TemplateBinding ExtInfo}" Foreground="White" Margin="0,0,0,20" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+            <!--上传下载状态-->
+            <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+            <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="VirFileStates">
+                    <VisualState x:Name="None" />
+                    <VisualState x:Name="UploadWaiting">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                            <Setter Target="MsgBlock.Text" Value="等待上传..." />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Uploading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Downloading">
+                        <VisualState.Setters>
+                            <Setter Target="ProgressGrid.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CachedStates">
+                    <VisualState x:Name="NoCache" />
+                    <VisualState x:Name="Cached">
+                        <VisualState.Setters>
+                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主蓝}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ControlTemplate>
+</ResourceDictionary>

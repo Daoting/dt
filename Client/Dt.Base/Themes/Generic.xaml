@@ -1,0 +1,17 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Base.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Desk.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Win.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Dialog.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Menu.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/FormView.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/ListView.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/TreeView.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/FileList.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Sketch.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

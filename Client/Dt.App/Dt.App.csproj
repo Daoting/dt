@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Version>2.0.0</Version>
+		<Description>搬运工客户端基础包</Description>
+		<!--将引用的项目合并打包-->
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<Import Project="..\Common.props" />
+	<Import Project="..\Client.props" />
+
+	<!-- 包图标 -->
+	<ItemGroup>
+		<None Include="..\..\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" PrivateAssets="all" />
+	</ItemGroup>
+
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+			<!--uwp包含引用项目的xbf文件-->
+			<TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="'$(TargetFramework)' == 'net6.0-windows10.0.19041.0'" />
+		</ItemGroup>
+	</Target>
+</Project>

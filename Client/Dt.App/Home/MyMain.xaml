@@ -1,0 +1,36 @@
+﻿<a:Mv
+    x:Class="Dt.App.Home.MyMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="我的">
+
+    <a:Fv x:Name="_fv">
+        <a:CLink Click="OnEditInfo" RowSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image x:Name="_img" Width="50" Height="50" Margin="0,0,20,0" />
+                <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                    <TextBlock x:Name="_tbName" FontSize="{StaticResource 标题字}" />
+                    <TextBlock x:Name="_tbPhone" Foreground="{StaticResource 深灰2}" />
+                </StackPanel>
+                <TextBlock Text="编辑" Foreground="{StaticResource 深灰2}" VerticalAlignment="Center" Grid.Column="2" />
+            </Grid>
+        </a:CLink>
+        <a:CBar />
+        <a:CLink Title="我的二维码" />
+        <a:CLink Title="修改密码" />
+        <a:CLink Title="设置" Click="OnSetting" />
+        <a:CLink Title="关于" Click="OnAbout" />
+        <a:CBar>
+            <Button Content="清除缓存" Click="OnClearLocalFile" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </a:CBar>
+        <a:CBar>
+            <Button Content="退出登录" Click="OnExit" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </a:CBar>
+    </a:Fv>
+</a:Mv>

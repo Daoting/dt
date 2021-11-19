@@ -1,0 +1,43 @@
+﻿<a:Win
+    x:Class="Dt.Sample.PrintExcel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv x:Name="_fv">
+                    <a:CList ID="PaperSize.MediaSize" Title="纸张类型" />
+                    <a:CList ID="Orientation" Title="方向" />
+                    <a:CList ID="Centering" Title="居中方式" />
+                    <a:CList ID="ShowRowHeader" Title="行头" />
+                    <a:CList ID="ShowColumnHeader" Title="列头" />
+                    <a:CBool ID="ShowBorder" Title="外边框" />
+                    <a:CBool ID="ShowGridLine" Title="打印网格" />
+                    
+                    <a:CText ID="Margin.Left" Title="左边距" />
+                    <a:CText ID="Margin.Top" Title="上边距" />
+                    <a:CText ID="Margin.Right" Title="右边距" />
+                    <a:CText ID="Margin.Bottom" Title="下边距" />
+
+                    <a:CText ID="HeaderLeft" Title="页眉左" />
+                    <a:CText ID="HeaderCenter" Title="页眉中" />
+                    <a:CText ID="HeaderRight" Title="页眉右" />
+
+                    <a:CText ID="FooterLeft" Title="页脚左" />
+                    <a:CText ID="FooterCenter" Title="页脚中" />
+                    <a:CText ID="FooterRight" Title="页脚右" />
+                    <Button Content="打印" Click="OnPrintExcel" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

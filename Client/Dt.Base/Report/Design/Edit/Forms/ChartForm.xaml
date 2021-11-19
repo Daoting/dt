@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.ChartForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:Chart x:Name="_chart" Palette="Office" BorderThickness="0,0,0,1" BorderBrush="{StaticResource 浅灰2}">
+            <a:ChartLegend x:Name="_legend" />
+        </a:Chart>
+        <a:Fv x:Name="_fv" Grid.Row="1">
+            <a:CList ID="type" Title="图表类型" Enum="Dt.Charts.ChartType,Dt.Charts" />
+            <a:CList ID="tbl" Title="数据源" />
+            <a:CList ID="fieldseries" Title="系列字段" />
+            <a:CList ID="fieldx" Title="分类字段" />
+            <a:CList ID="fieldy" Title="值字段" />
+            <a:CList ID="fieldz" Title="扩展字段" />
+            <a:CText ID="title" Title="标题" />
+            <a:CBar Title="图例" />
+            <a:CBool ID="showlegend" Title="显示图例" />
+            <a:CText ID="legtitle" Title="图例标题" />
+            <a:CList ID="legpos" Title="图例位置" Enum="Dt.Charts.LegendPosition,Dt.Charts" />
+            <a:CList ID="legorientation" Title="布局方向">
+                <a:CList.Items>
+                    <x:String>Vertical</x:String>
+                    <x:String>Horizontal</x:String>
+                </a:CList.Items>
+            </a:CList>
+            <a:CBar Title="坐标轴" />
+            <a:CText ID="titlex" Title="X轴标题" />
+            <a:CText ID="titley" Title="Y轴标题" />
+        </a:Fv>
+    </Grid>
+</UserControl>

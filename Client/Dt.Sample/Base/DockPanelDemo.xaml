@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Dt.Sample.DockPanelDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <a:DockPanel x:Name="RootDockPanel">
+            <Border Background="Red" Width="160" a:DockPanel.Dock="Left">
+                <TextBlock Text="停靠左侧" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Background="Green" Width="160" a:DockPanel.Dock="Right">
+                <TextBlock Text="停靠右侧" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Background="Blue" Height="80" a:DockPanel.Dock="Top">
+                <TextBlock Text="停靠上部" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Background="Yellow" Height="80" a:DockPanel.Dock="Bottom">
+                <TextBlock Text="停靠下部" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+            <Border Background="Gray">
+                <TextBlock Text="内容填充" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            </Border>
+        </a:DockPanel>
+    </Grid>
+</a:Win>

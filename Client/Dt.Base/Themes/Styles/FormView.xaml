@@ -1,0 +1,432 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:fv="using:Dt.Base.FormView">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Fv-->
+    <Style TargetType="a:Fv">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Fv">
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--FvCell-->
+    <Style TargetType="a:FvCell">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:FvCell">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CBar-->
+    <Style TargetType="a:CBar">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CBar">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Rectangle Stroke="{TemplateBinding BorderBrush}"
+                                   Margin="0,0,-1,-1"
+                                   IsHitTestVisible="False" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CFree-->
+    <Style TargetType="a:CFree">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CFree">
+                    <fv:CellPanel x:Name="Panel"
+                                  Background="{TemplateBinding Background}"
+                                  Child="{TemplateBinding Content}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CText-->
+    <Style TargetType="a:CText">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CText">
+                    <!-- TextBox原本放在控件模板中，因wasm中长文本对应textarea放入代码构造，跨平台就是一个妥协过程！-->
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CTip-->
+    <Style TargetType="a:CTip">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CTip">
+                    <!-- 增加Click事件后采用动态内容 -->
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" Child="{TemplateBinding Child}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--CNum-->
+    <Style TargetType="a:CNum">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CNum">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <!--设置TextWrapping为Wrap时不显示最后的删除按钮，但wasm会使用textarea，只能保留删除按钮-->
+                        <TextBox x:Name="TextBox"
+                                 IsReadOnly="{TemplateBinding ReadOnlyBinding}"
+                                 PlaceholderText="{TemplateBinding Placeholder}"
+                                 TextAlignment="Right"
+                                 Style="{StaticResource FvTextBox}" />
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CBool-->
+    <Style TargetType="a:CBool">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CBool">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CList-->
+    <Style TargetType="a:CList">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CList">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--内容动态增加-->
+                            <TextBlock Text="&#xE013;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CList的Row选项模板-->
+    <DataTemplate x:Key="CListRowView">
+        <a:Dot ID="name" Margin="10,0,10,0" />
+    </DataTemplate>
+
+    <!--CList的object选项模板-->
+    <DataTemplate x:Key="CListObjView">
+        <a:Dot ID="#" Margin="10,0,10,0" />
+    </DataTemplate>
+
+    <!--CHtml-->
+    <Style TargetType="a:CHtml">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CHtml">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Button x:Name="BtnEdit" Content="&#xE006;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--CImage-->
+    <Style TargetType="a:CImage">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CImage">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Button x:Name="BtnAdd"
+                                    Content="&#xE08A;"
+                                    Style="{StaticResource 字符按钮}"
+                                    HorizontalAlignment="Center"
+                                    Visibility="{Binding ReadOnlyBinding,Converter={StaticResource CvBoolToCollapsed},RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CFile-->
+    <Style TargetType="a:CFile">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CFile">
+                    <Grid x:Name="RootGrid" Background="White">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Background="{TemplateBinding Background}" Height="{StaticResource RowOuterHeight}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" Grid.ColumnSpan="2" />
+                            <TextBlock Text="{TemplateBinding Title}" Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            <ContentPresenter Content="{TemplateBinding Toolbar}" Grid.Column="1" />
+                        </Grid>
+                        <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" Grid.RowSpan="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--CIcon-->
+    <Style TargetType="a:CIcon">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CIcon">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{TemplateBinding IconChar}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Desc}"
+                                       IsTextSelectionEnabled="True"
+                                       Margin="10,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CColor-->
+    <Style TargetType="a:CColor">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CColor">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Fill="{TemplateBinding ColorBrush}"
+                                       Width="40"
+                                       Height="20"
+                                       Margin="10,0,20,0"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Desc}"
+                                       IsTextSelectionEnabled="True"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CTree-->
+    <Style TargetType="a:CTree">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CTree">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{TemplateBinding Text}"
+                                       Margin="10,0,0,0"
+                                       IsTextSelectionEnabled="True"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="&#xE102;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CLink-->
+    <Style TargetType="a:CLink">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CLink">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="Rect"
+                                   Stroke="{TemplateBinding BorderBrush}"
+                                   Margin="0,0,-1,-1"
+                                   IsHitTestVisible="False"
+                                   Grid.ColumnSpan="2" />
+                        <TextBlock Text="&#xE011;"
+                                   FontFamily="{StaticResource IconFont}"
+                                   FontSize="20"
+                                   Margin="10,0,10,0"
+                                   VerticalAlignment="Center"
+                                   Grid.Column="1" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--CPassword-->
+    <Style TargetType="a:CPassword">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CPassword">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <PasswordBox x:Name="PasswordBox"
+                                     IsEnabled="{Binding ReadOnlyBinding,Converter={StaticResource CvBoolReverse},RelativeSource={RelativeSource TemplatedParent}}"
+                                     MaxLength="{TemplateBinding MaxLength}"
+                                     PasswordChar="{TemplateBinding Holder}"
+                                     BorderThickness="0"
+                                     Padding="10" />
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--MaskBox-->
+    <Style TargetType="a:MaskBox">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:MaskBox">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--CMask-->
+    <Style TargetType="a:CMask">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CMask">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--CDate-->
+    <Style TargetType="a:CDate">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CDate">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

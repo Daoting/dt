@@ -1,0 +1,50 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FloatingObject"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <Button Content="添加矩形" Click="AddRectangleButton_Click" />
+                    <Button Content="添加椭圆" Click="AddEllipseButton_Click" />
+                    <Button Content="矩形边框" Click="testButton_Click" />
+                    <Button Content="选择边框" Click="selectButton_Click" />
+                    <Button Content="划线" Click="lineButton_Click" />
+
+                    <a:CBar Title="保存为Excel" />
+                    <a:CFree Title="保存选项">
+                        <ComboBox x:Name="_saveFlags" SelectedIndex="0">
+                            <ComboBoxItem>NoFlagsSet</ComboBoxItem>
+                            <ComboBoxItem>NoFormulas</ComboBoxItem>
+                            <ComboBoxItem>SaveCustomRowHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveCustomColumnHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveAsFiltered</ComboBoxItem>
+                            <ComboBoxItem>SaveBothCustomRowAndColumnHeaders</ComboBoxItem>
+                            <ComboBoxItem>SaveAsViewed</ComboBoxItem>
+                            <ComboBoxItem>DataOnly</ComboBoxItem>
+                            <ComboBoxItem>AutoRowHeight</ComboBoxItem>
+                        </ComboBox>
+                    </a:CFree>
+                    <Button Content="保存" Click="SaveExcelFile" />
+
+                    <a:CBar Title="其它格式保存" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="保存为Xml" Click="SaveXmlFile" />
+                        <Button Content="保存为PDF" Click="SavePDFFile" />
+                        <Button Content="保存为CSV" Click="SaveCsvFile" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

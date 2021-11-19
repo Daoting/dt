@@ -1,0 +1,43 @@
+﻿<a:Mv
+    x:Class="Dt.App.Home.SearchMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="搜索">
+
+    <Grid x:Name="_grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:Lv x:Name="_lv" ItemClick="OnItemClick" Grid.Row="1">
+            <DataTemplate>
+                <Grid Padding="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Data.Icon, Converter={StaticResource CvIconNameToChar}}"
+                                   FontFamily="{StaticResource IconFont}"
+                                   Foreground="White"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                    </Border>
+                    <Grid Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <a:Dot ID="Name" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <a:Dot ID="Note"
+                               Font="小灰"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Grid.Row="1"/>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </a:Lv>
+    </Grid>
+</a:Mv>

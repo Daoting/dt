@@ -37,7 +37,7 @@ namespace Dt.Core.Rpc
 
         static BaseRpc()
         {
-#if SERVER || UWP
+#if SERVER || WIN
             _client = new HttpClient(new HttpClientHandler
             {
                 // 验证时服务端证书始终有效！

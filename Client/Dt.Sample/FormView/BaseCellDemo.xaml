@@ -1,0 +1,97 @@
+﻿<a:Win
+    x:Class="Dt.Sample.BaseCellDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="格">
+                <a:Fv x:Name="_fv">
+                    <a:CBar Title="基本格" />
+                    <a:CText ID="txt" Title="文本框" Placeholder="文本框" />
+                    <a:CText ID="txtinput" Title="控制输入法" InputScope="Number" />
+                    <a:CText ID="txtlong" Title="长文本" AcceptsReturn="True" RowSpan="2" UpdateTimely="False" />
+                    <a:CText ID="txtpy" Title="拼音码" UpdateTimely="False" Changed="OnPyChanged" />
+                    <a:CText ID="tgtpy" Title="输出拼音码" IsReadOnly="True" />
+                    <a:CNum ID="num" Title="数值" Decimals="4" Placeholder="填写数字" />
+                    <a:CMask ID="mask" Title="掩码" />
+                    <a:CPassword ID="pwd" Title="密码" />
+                    <a:CHtml ID="html" Title="富文本" />
+
+                    <a:CBar Title="日期格" />
+                    <a:CDate ID="date" Title="日期"/>
+                    <a:CDate ID="time" Title="时间" Format="HH:mm:ss"/>
+                    <a:CDate ID="datetime" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" />
+                    <a:CDate ID="datestr" Title="日期串" />
+                    <a:CDate ID="datetouch" Title="触摸模式日期" Format="yyyy-MM-dd HH:mm:ss" AlwaysTouchPicker="True" />
+                    
+                    <a:CBar Title="布尔格" />
+                    <a:CBool ID="check" Title="bool选择框" />
+                    <a:CBool ID="checkint" Title="整数选择框">
+                        <a:CBool.TrueVal>
+                            <x:Int32>1</x:Int32>
+                        </a:CBool.TrueVal>
+                        <a:CBool.FalseVal>
+                            <x:Int32>0</x:Int32>
+                        </a:CBool.FalseVal>
+                    </a:CBool>
+                    <a:CBool ID="checkstr" Title="字符串选择框" TrueVal="男" FalseVal="女" />
+                    <a:CBool ID="checkswitch" Title="开关" IsSwitch="True" />
+
+                    <a:CBar Title="链接格" />
+                    <a:CLink Title="默认链接格" />
+                    <a:CLink RowSpan="2" IsHorStretch="False">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="ms-appx:///Assets/logo.png" Width="50" Height="50" Margin="0,0,20,0" Stretch="Uniform" />
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="李世杰" Foreground="Black" />
+                                <TextBlock Text="1870****504" Style="{StaticResource 小灰}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </a:CLink>
+                    <a:CLink x:Name="_link" Title="切换内容" IsHorStretch="False" Click="OnToggleLink" />
+
+                    <a:CBar Title="提示信息格" />
+                    <a:CTip ID="tip" Title="普通只读信息" />
+                    <a:CTip ID="tipdate" Title="日期信息" />
+                    <a:CTip ID="tipnum" Title="数字信息" Format="N2" />
+                    <a:CTip ID="tipclick" Title="点击事件" Click="OnTipClick" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <a:Fv x:Name="_pbFv">
+                        <a:CBar Title="表单" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Row" Click="OnRow" />
+                            <Button Content="普通对象" Click="OnObj" />
+                            <Button Content="空数据源" Click="OnNull" />
+                        </StackPanel>
+                        <a:CBool Title="表单只读" ID="IsReadOnly" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="警告信息" Click="OnWarn" />
+                            <Button Content="提示信息" Click="OnMsg" />
+                        </StackPanel>
+                        <a:CBar Title="控制输入法" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="输入数字" Click="OnNum" />
+                            <Button Content="输入手机号码" Click="OnPhoneNum" />
+                            <Button Content="默认输入法" Click="OnDefaultInput" />
+                        </StackPanel>
+                        <a:CBar Title="单元格" />
+                    </a:Fv>
+                    <a:Fv x:Name="_pbCell" Grid.Row="1" />
+                </Grid>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

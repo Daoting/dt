@@ -1,0 +1,39 @@
+﻿<a:Win
+    x:Class="Dt.Sample.TvViewEx"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="树">
+                <a:TreeView x:Name="_tv">
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <a:Dot ID="icon" Margin="10,0,10,0" VerticalAlignment="Center" />
+                            <StackPanel Margin="0,10,0,10">
+                                <a:Dot ID="name" />
+                                <a:Dot ID="rowcolor" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </a:TreeView>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CBar RowSpan="2">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="图标：有无子节点区分；" />
+                            <TextBlock Text="大于4个子节点的浅黄；" />
+                            <TextBlock Text="简码字符数小于4红色，大于4绿色；" />
+                        </StackPanel>
+                    </a:CBar>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

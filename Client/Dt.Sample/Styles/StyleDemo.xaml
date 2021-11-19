@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Dt.Sample.StyleDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:a="using:Dt.Base">
+
+    <ScrollViewer HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Disabled">
+        <StackPanel x:Name="_sp" Margin="20" Spacing="20">
+            <TextBlock Text="默认文本"  />
+            <TextBox x:Name="_tb" Text="默认编辑框" PlaceholderText="默认编辑框" />
+            <Button Content="默认按钮" Click="OnTest" />
+            <CheckBox Content="选择项" />
+            <PasswordBox PlaceholderText="密码框" />
+            <HyperlinkButton Content="链接按钮" />
+
+
+        </StackPanel>
+    </ScrollViewer>
+</a:Win>

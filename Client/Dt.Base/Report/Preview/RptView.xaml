@@ -1,0 +1,8 @@
+﻿<UserControl
+    x:Class="Dt.Base.RptView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Excel x:Name="_excel" TabStripVisibility="Collapsed" ShowDecoration="True" />
+</UserControl>

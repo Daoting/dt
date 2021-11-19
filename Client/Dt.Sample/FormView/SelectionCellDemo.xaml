@@ -1,0 +1,97 @@
+﻿<a:Win
+    x:Class="Dt.Sample.SelectionCellDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="格">
+                <a:Fv x:Name="_fv">
+                    <a:CBar Title="列表格" />
+                    <a:CList ID="liststr" Title="字符串列表">
+                        <a:CList.Items>
+                            <x:String>选项一</x:String>
+                            <x:String>选项二</x:String>
+                            <x:String>选项三</x:String>
+                            <x:String>选项四</x:String>
+                            <x:String>选项五</x:String>
+                            <x:String>选项六</x:String>
+                        </a:CList.Items>
+                    </a:CList>
+                    <a:CList ID="listint" Title="整数列表">
+                        <a:CList.Items>
+                            <x:Int32>1</x:Int32>
+                            <x:Int32>2</x:Int32>
+                            <x:Int32>3</x:Int32>
+                        </a:CList.Items>
+                    </a:CList>
+                    <a:CList ID="listenum1" Title="自动枚举列表" />
+                    <a:CList ID="listenum2" Title="手动设置枚举" Enum="Dt.Base.DlgPlacement,Dt.Base" />
+                    <a:CList ID="listobj" Title="对象列表" LoadData="OnLoadPersons">
+                        <DataTemplate>
+                            <Grid Padding="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE060;"
+                                               FontFamily="{StaticResource IconFont}"
+                                               FontSize="30"
+                                               Foreground="White"
+                                               VerticalAlignment="Center"
+                                               TextAlignment="Center" />
+                                </Border>
+                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                    <a:Dot ID="xm" />
+                                    <a:Dot ID="note" Font="小灰" MaxHeight="60" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </a:CList>
+                    <a:CList ID="code" Title="基础选项" Option="民族" />
+                    <a:CList ID="sex" Title="性别" />
+                    <a:CList ID="idstrdsp" Title="IDStr" SrcID="id" TgtID="idstr">
+                        <a:CList.Items>
+                            <a:IDStr ID="0" Str="选项一" />
+                            <a:IDStr ID="1" Str="选项二" />
+                            <a:IDStr ID="2" Str="选项三" />
+                        </a:CList.Items>
+                    </a:CList>
+                    <a:CList ID="listrow" Title="模拟IDString" SrcID="id" TgtID="listrowid" LoadData="OnLoadDataTable" AfterSelect="OnSelectedRow" />
+                    
+                    <a:CBar Title="树形格" />
+                    <a:CTree ID="tree" Title="普通树" LoadData="OnLoadTreeData" />
+                    <a:CTree ID="treedata" Title="动态树" RefreshData="true" LoadData="OnLoadTreeData" />
+                    <a:CTree ID="treefill" Title="填充其它列值" SrcID="id" TgtID="treefillid" LoadData="OnLoadTreeData" />
+                    
+                    <a:CBar Title="图标颜色格" />
+                    <a:CIcon ID="icon" Title="枚举图标"/>
+                    <a:CIcon ID="iconint" Title="整数图标"/>
+                    <a:CIcon ID="iconstr" Title="名称图标"/>
+                    <a:CColor ID="color" Title="颜色"/>
+                    <a:CColor ID="colorstr" Title="颜色字符串"/>
+                    <a:CColor ID="colorbrush" Title="颜色画刷"/>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <a:Fv x:Name="_pbFv">
+                        <a:CBool Title="表单只读" ID="IsReadOnly" />
+                        <a:CBar Title="单元格" />
+                    </a:Fv>
+                    <a:Fv x:Name="_pbCell" Grid.Row="1" />
+                </Grid>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,14 @@
+﻿<a:Dlg
+    x:Class="Dt.App.Model.UserParamsDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Lv x:Name="_lv" ViewMode="Table">
+        <a:Cols>
+            <a:Col ID="Name" Title="用户名" Width="150" />
+            <a:Col ID="Value" Title="参数值" Width="200" />
+            <a:Col ID="Mtime" Title="修改时间" />
+        </a:Cols>
+    </a:Lv>
+</a:Dlg>

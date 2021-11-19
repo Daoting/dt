@@ -1,0 +1,17 @@
+﻿<Rpt cols="160,260,60">
+  <Params>
+    <Param name="param1" val="a" />
+    <Param name="param2" val="b" />
+    <Param name="param3" val="c" />
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="25,25,25,25,25">
+    <Text col="1" colspan="2" val=":参数1：+ Param(param1)" />
+    <Text row="1" col="1" colspan="2" val=":参数2：+ Param(param2)" />
+    <Text row="2" col="1" colspan="2" val=":参数3：+ Param(param3)" />
+  </Body>
+  <Footer />
+  <View script="Dt.Sample.RptSearchFormScript,Dt.Sample" />
+</Rpt>

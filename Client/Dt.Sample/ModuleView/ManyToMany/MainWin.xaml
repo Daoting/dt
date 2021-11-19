@@ -1,0 +1,29 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ModuleView.MainWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Sample.ModuleView">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:MainList x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab>
+                <l:MainForm x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab>
+                <l:MainRelatedList x:Name="_relatedList" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,27 @@
+﻿<a:Dlg
+    x:Class="Dt.App.Workflow.WfSendDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="发送"
+    IsPinned="True">
+
+    <a:Dlg.Resources>
+        <DataTemplate x:Key="ViewTemp">
+            <a:Dot ID="name" Padding="10" />
+        </DataTemplate>
+    </a:Dlg.Resources>
+    
+    <a:Dlg.Menu>
+        <a:Menu x:Name="_m">
+            <a:Mi ID="发送" Icon="发出" Click="OnSend" />
+            <a:Mi ID="完成" Icon="录像" Click="OnFinish" Visibility="Collapsed" />
+        </a:Menu>
+    </a:Dlg.Menu>
+
+    <ScrollViewer>
+        <StackPanel x:Name="_pnl" />
+    </ScrollViewer>
+</a:Dlg>
+
+    

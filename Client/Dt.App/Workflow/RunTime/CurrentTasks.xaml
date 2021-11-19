@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Dt.App.Workflow.CurrentTasks"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Title="待办任务">
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_menu">
+                        <a:Mi ID="刷新" Icon="刷新" Click="OnRefresh" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lv" ItemClick="OnItemClick">
+                    <DataTemplate>
+                        <StackPanel Padding="10">
+                            <a:Dot ID="title" />
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
+                                <a:Dot ID="sender" Font="小灰" />
+                                <TextBlock Text="{Binding [stime],Converter={StaticResource CvDateTime}}" Margin="10,0,0,0" Style="{StaticResource 小灰}" />
+                            </StackPanel>
+                            <a:Dot ID="prcname" Font="小灰" />
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

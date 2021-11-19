@@ -19,7 +19,7 @@ namespace Dt.Core
     /// 注意：string类型时值空为string.Empty，使用时无需考虑null的情况
     /// </summary>
 #if !SERVER
-    [Windows.UI.Xaml.Data.Bindable]
+    [Microsoft.UI.Xaml.Data.Bindable]
 #endif
     public partial class Cell : INotifyPropertyChanged
     {
@@ -297,7 +297,7 @@ namespace Dt.Core
                 {
                     try
                     {
-                        // 绑定时钩子抛出的异常被UWP内部catch，无法统一提示警告信息，故先catch
+                        // 绑定时钩子抛出的异常被WIN内部catch，无法统一提示警告信息，故先catch
                         Hook.Invoke(Row, new object[] { p_val });
                     }
                     catch (Exception ex)
@@ -310,7 +310,7 @@ namespace Dt.Core
                         // 通知UI重置原值
                         if (PropertyChanged != null)
                         {
-#if !UWP
+#if !WIN
                             // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
                             var old = OriginalVal;
                             OriginalVal = _val;
