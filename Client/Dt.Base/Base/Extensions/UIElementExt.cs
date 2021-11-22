@@ -386,14 +386,14 @@ namespace Dt.Base
 
             using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                var di = DisplayInformation.GetForCurrentView();
+                // WinUI
+                // 换算成物理像素
+                double raw = p_element.XamlRoot.RasterizationScale;
                 var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
 
                 // 含裁剪区域
                 if (p_bounds.Width > 0 && p_bounds.Height > 0)
                 {
-                    // 换算成物理像素
-                    double raw = di.RawPixelsPerViewPixel;
                     BitmapBounds bb = new BitmapBounds();
                     bb.X = (uint)Math.Ceiling(p_bounds.Left * raw);
                     bb.Y = (uint)Math.Ceiling(p_bounds.Top * raw);
@@ -402,14 +402,13 @@ namespace Dt.Base
                     encoder.BitmapTransform.Bounds = bb;
                 }
 
-                float dpi = di.LogicalDpi;
                 encoder.SetPixelData(
                     BitmapPixelFormat.Bgra8,
                     BitmapAlphaMode.Ignore,
                     (uint)bmp.PixelWidth,
                     (uint)bmp.PixelHeight,
-                    dpi,
-                    dpi,
+                    raw,
+                    raw,
                     pixelBuffer.ToArray());
                 await encoder.FlushAsync();
             }

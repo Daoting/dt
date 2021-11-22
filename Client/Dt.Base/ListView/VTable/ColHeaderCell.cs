@@ -15,6 +15,7 @@ using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Input;
 #endregion
 
 namespace Dt.Base.ListView
@@ -115,7 +116,7 @@ namespace Dt.Base.ListView
                 if (_resizingCol == null)
                 {
                     _isDragging = true;
-                    SetCursor(CoreCursorType.Arrow);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "Pressed", true);
                 }
                 else
@@ -159,12 +160,12 @@ namespace Dt.Base.ListView
                 Point pt = e.GetCurrentPoint(this).Position;
                 if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
                 {
-                    SetCursor(CoreCursorType.Arrow);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);
                 }
                 else
                 {
-                    SetCursor(CoreCursorType.SizeWestEast);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     VisualStateManager.GoToState(this, "Normal", true);
                 }
                 return;
@@ -231,12 +232,12 @@ namespace Dt.Base.ListView
                 Point pt = e.GetCurrentPoint(this).Position;
                 if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
                 {
-                    SetCursor(CoreCursorType.Arrow);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);
                 }
                 else
                 {
-                    SetCursor(CoreCursorType.SizeWestEast);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     VisualStateManager.GoToState(this, "Normal", true);
                 }
             }
@@ -246,7 +247,7 @@ namespace Dt.Base.ListView
         {
             if (e.IsMouse() && !_isDragging && _resizingCol == null)
             {
-                SetCursor(CoreCursorType.Arrow);
+                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                 VisualStateManager.GoToState(this, "Normal", true);
             }
         }
@@ -317,13 +318,8 @@ namespace Dt.Base.ListView
                 _dragTgtCol = null;
                 _resizingCol = null;
             }
-            SetCursor(CoreCursorType.Arrow);
+            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
             VisualStateManager.GoToState(this, "Normal", true);
-        }
-
-        void SetCursor(CoreCursorType p_cursor)
-        {
-            CoreWindow.GetForCurrentThread().PointerCursor = new CoreCursor(p_cursor, 0);
         }
     }
 }

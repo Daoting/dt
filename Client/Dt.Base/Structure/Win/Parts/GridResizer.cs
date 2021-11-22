@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Input;
 #endregion
 
 namespace Dt.Base.Docking
@@ -373,7 +374,8 @@ namespace Dt.Base.Docking
                     VerticalAlignment = VerticalAlignment.Stretch;
                     Width = ResizerSize;
                     Height = double.NaN;
-                    this.SetCursor(CoreCursorType.SizeWestEast);
+                    // WinUI
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                 }
                 else if (Placement == ItemPlacement.Right)
                 {
@@ -381,7 +383,7 @@ namespace Dt.Base.Docking
                     VerticalAlignment = VerticalAlignment.Stretch;
                     Width = ResizerSize;
                     Height = double.NaN;
-                    this.SetCursor(CoreCursorType.SizeWestEast);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                 }
                 else if (Placement == ItemPlacement.Top)
                 {
@@ -389,7 +391,7 @@ namespace Dt.Base.Docking
                     VerticalAlignment = VerticalAlignment.Top;
                     Width = double.NaN;
                     Height = ResizerSize;
-                    this.SetCursor(CoreCursorType.SizeNorthSouth);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
                 }
                 else if (Placement == ItemPlacement.Bottom)
                 {
@@ -397,7 +399,7 @@ namespace Dt.Base.Docking
                     VerticalAlignment = VerticalAlignment.Bottom;
                     Width = double.NaN;
                     Height = ResizerSize;
-                    this.SetCursor(CoreCursorType.SizeNorthSouth);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
                 }
             }
             else

@@ -16,6 +16,7 @@ using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Input;
 #endregion
 
 namespace Dt.Base
@@ -72,7 +73,7 @@ namespace Dt.Base
         #region 拖拽过程
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            Kit.MainWin.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeWestEast, 0);
+            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -132,7 +133,7 @@ namespace Dt.Base
                 e.Handled = true;
                 VisualStateManager.GoToState(this, "Normal", true);
             }
-            Kit.MainWin.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
         }
         #endregion
     }

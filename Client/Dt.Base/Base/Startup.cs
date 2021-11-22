@@ -80,7 +80,8 @@ namespace Dt.Base
                 stub.ReceiveShare(p_shareInfo);
 
 #if WIN
-            BgJob.Register();
+            // WinUI
+            //BgJob.Register();
 #endif
         }
         #endregion

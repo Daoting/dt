@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Input;
 #endregion
 
 namespace Dt.Base.Docking
@@ -443,26 +444,27 @@ namespace Dt.Base.Docking
             {
                 case ResizeDirection.Left:
                 case ResizeDirection.Right:
-                    this.SetCursor(Windows.UI.Core.CoreCursorType.SizeWestEast);
+                    // WinUI
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     break;
 
                 case ResizeDirection.TopLeft:
                 case ResizeDirection.BottomRight:
-                    this.SetCursor(Windows.UI.Core.CoreCursorType.SizeNorthwestSoutheast);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthwestSoutheast);
                     break;
 
                 case ResizeDirection.Top:
                 case ResizeDirection.Bottom:
-                    this.SetCursor(Windows.UI.Core.CoreCursorType.SizeNorthSouth);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
                     break;
 
                 case ResizeDirection.TopRight:
                 case ResizeDirection.BottomLeft:
-                    this.SetCursor(Windows.UI.Core.CoreCursorType.SizeNortheastSouthwest);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
                     break;
 
                 default:
-                    this.SetCursor(Windows.UI.Core.CoreCursorType.Arrow);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     break;
             }
         }

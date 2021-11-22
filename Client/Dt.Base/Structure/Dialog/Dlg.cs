@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Input;
 #endregion
 
 namespace Dt.Base
@@ -1115,26 +1116,27 @@ namespace Dt.Base
             {
                 case ResizeDirection.Left:
                 case ResizeDirection.Right:
-                    Kit.MainWin.CoreWindow.PointerCursor = Cursors.GetCursor(CoreCursorType.SizeWestEast);
+                    // WinUI
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     break;
 
                 case ResizeDirection.TopLeft:
                 case ResizeDirection.BottomRight:
-                    Kit.MainWin.CoreWindow.PointerCursor = Cursors.GetCursor(CoreCursorType.SizeNorthwestSoutheast);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthwestSoutheast);
                     break;
 
                 case ResizeDirection.Top:
                 case ResizeDirection.Bottom:
-                    Kit.MainWin.CoreWindow.PointerCursor = Cursors.GetCursor(CoreCursorType.SizeNorthSouth);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
                     break;
 
                 case ResizeDirection.TopRight:
                 case ResizeDirection.BottomLeft:
-                    Kit.MainWin.CoreWindow.PointerCursor = Cursors.GetCursor(CoreCursorType.SizeNortheastSouthwest);
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
                     break;
 
                 default:
-                    Kit.MainWin.CoreWindow.PointerCursor = Cursors.DefaultCursor;
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     break;
             }
         }
