@@ -104,6 +104,12 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 重写方法
+        protected override void OnPointerEntered(PointerRoutedEventArgs e)
+        {
+            base.OnPointerEntered(e);
+            ResetCursor();
+        }
+
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             base.OnPointerPressed(e);
@@ -368,43 +374,61 @@ namespace Dt.Base.Docking
             if (Placement.HasValue)
             {
                 Visibility = Visibility.Visible;
-                if (Placement == ItemPlacement.Left)
+                switch (Placement.Value)
                 {
-                    HorizontalAlignment = HorizontalAlignment.Left;
-                    VerticalAlignment = VerticalAlignment.Stretch;
-                    Width = ResizerSize;
-                    Height = double.NaN;
-                    // WinUI
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
-                }
-                else if (Placement == ItemPlacement.Right)
-                {
-                    HorizontalAlignment = HorizontalAlignment.Right;
-                    VerticalAlignment = VerticalAlignment.Stretch;
-                    Width = ResizerSize;
-                    Height = double.NaN;
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
-                }
-                else if (Placement == ItemPlacement.Top)
-                {
-                    HorizontalAlignment = HorizontalAlignment.Stretch;
-                    VerticalAlignment = VerticalAlignment.Top;
-                    Width = double.NaN;
-                    Height = ResizerSize;
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
-                }
-                else if (Placement == ItemPlacement.Bottom)
-                {
-                    HorizontalAlignment = HorizontalAlignment.Stretch;
-                    VerticalAlignment = VerticalAlignment.Bottom;
-                    Width = double.NaN;
-                    Height = ResizerSize;
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
+                    case ItemPlacement.Left:
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Left;
+                            VerticalAlignment = VerticalAlignment.Stretch;
+                            Width = ResizerSize;
+                            Height = double.NaN;
+                            break;
+                        }
+                    case ItemPlacement.Right:
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Right;
+                            VerticalAlignment = VerticalAlignment.Stretch;
+                            Width = ResizerSize;
+                            Height = double.NaN;
+                            break;
+                        }
+                    case ItemPlacement.Top:
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Stretch;
+                            VerticalAlignment = VerticalAlignment.Top;
+                            Width = double.NaN;
+                            Height = ResizerSize;
+                            break;
+                        }
+                    case ItemPlacement.Bottom:
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Stretch;
+                            VerticalAlignment = VerticalAlignment.Bottom;
+                            Width = double.NaN;
+                            Height = ResizerSize;
+                            break;
+                        }
                 }
             }
             else
             {
                 Visibility = Visibility.Collapsed;
+            }
+        }
+
+        void ResetCursor()
+        {
+            if (!Placement.HasValue)
+                return;
+
+            if (Placement == ItemPlacement.Left || Placement == ItemPlacement.Right)
+            {
+                // WinUI
+                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+            }
+            else
+            {
+                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
             }
         }
 
