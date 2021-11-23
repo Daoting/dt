@@ -187,7 +187,7 @@ namespace Dt.Sample
             RenderTargetBitmap bmp = new RenderTargetBitmap();
             await bmp.RenderAsync(_bd);
             var pixelBuffer = await bmp.GetPixelsAsync();
-            StorageFile saveFile = null;
+            StorageFile saveFile;
             try
             {
                 saveFile = await p_folder.CreateFileAsync(p_fileName, CreationCollisionOption.ReplaceExisting);
@@ -200,9 +200,8 @@ namespace Dt.Sample
 
             using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                var di = DisplayInformation.GetForCurrentView();
                 var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                float dpi = di.LogicalDpi;
+                float dpi = (float)_bd.XamlRoot.RasterizationScale * 96;
                 encoder.SetPixelData(
                     BitmapPixelFormat.Bgra8,
                     BitmapAlphaMode.Straight,

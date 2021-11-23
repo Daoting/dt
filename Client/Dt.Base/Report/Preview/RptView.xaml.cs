@@ -562,6 +562,8 @@ namespace Dt.Base
             filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
             filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
             filePicker.SuggestedFileName = "新文件";
+            // WinUI
+            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {

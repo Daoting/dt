@@ -348,11 +348,12 @@ namespace Dt.Base
             if (p_element == null)
                 return null;
 
-            string fileName = "";
             RenderTargetBitmap bmp = new RenderTargetBitmap();
             await bmp.RenderAsync(p_element);
             var pixelBuffer = await bmp.GetPixelsAsync();
-            StorageFile saveFile = null;
+
+            string fileName;
+            StorageFile saveFile;
             if (p_autoSave)
             {
                 fileName = string.IsNullOrEmpty(p_fileName) ? DateTime.Now.ToString("yyMMdd_hhmmss") + "snapshot.png" : p_fileName.ToLower();
@@ -378,6 +379,8 @@ namespace Dt.Base
                 savePicker.FileTypeChoices.Add(".png", new List<string> { ".png" });
                 savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                 savePicker.SuggestedFileName = fileName;
+                // WinUI
+                savePicker.Init();
                 saveFile = await savePicker.PickSaveFileAsync();
 
                 if (saveFile == null)

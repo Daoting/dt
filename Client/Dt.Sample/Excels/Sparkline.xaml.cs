@@ -297,6 +297,8 @@ namespace Dt.Sample
             filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
             filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
             filePicker.SuggestedFileName = "新文件";
+            // WinUI
+            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {
@@ -318,6 +320,8 @@ namespace Dt.Sample
             var filePicker = new Windows.Storage.Pickers.FileSavePicker();
             filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
             filePicker.SuggestedFileName = "新文件";
+            // WinUI
+            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {
@@ -333,6 +337,8 @@ namespace Dt.Sample
             var filePicker = new Windows.Storage.Pickers.FileSavePicker();
             filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
             filePicker.SuggestedFileName = "新文件";
+            // WinUI
+            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {

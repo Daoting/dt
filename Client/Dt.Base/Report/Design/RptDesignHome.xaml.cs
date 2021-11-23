@@ -63,6 +63,8 @@ namespace Dt.Base.Report
 
             FileOpenPicker picker = new FileOpenPicker();
             picker.FileTypeFilter.Add(".xml");
+            // WinUI
+            picker.Init();
             StorageFile sf = await picker.PickSingleFileAsync();
             if (sf != null)
             {

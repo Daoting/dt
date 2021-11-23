@@ -52,6 +52,8 @@ namespace Dt.Base.Tools
             picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
             var fileName = row.Str("name") + ".db";
             picker.SuggestedFileName = fileName;
+            // WinUI
+            picker.Init();
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
