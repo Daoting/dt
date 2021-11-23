@@ -402,13 +402,14 @@ namespace Dt.Base
                     encoder.BitmapTransform.Bounds = bb;
                 }
 
+                float dpi = (float)raw * 96;
                 encoder.SetPixelData(
                     BitmapPixelFormat.Bgra8,
                     BitmapAlphaMode.Ignore,
                     (uint)bmp.PixelWidth,
                     (uint)bmp.PixelHeight,
-                    raw,
-                    raw,
+                    dpi,
+                    dpi,
                     pixelBuffer.ToArray());
                 await encoder.FlushAsync();
             }

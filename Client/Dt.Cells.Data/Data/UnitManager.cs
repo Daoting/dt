@@ -44,7 +44,9 @@ namespace Dt.Cells.Data
 
         static UnitManager()
         {
-            _dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
+            // WinUI
+            _dpi = 96;
+            //_dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
         }
 
         /// <summary>

@@ -146,7 +146,9 @@ namespace Dt.Cells.Data
             taskEncoder.Wait();
 
             BitmapEncoder encoder = taskEncoder.Result;
-            float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
+            // WinUI
+            float dpi = 96;
+            //float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
             encoder.SetPixelData(
                     BitmapPixelFormat.Bgra8,
                     BitmapAlphaMode.Ignore,
