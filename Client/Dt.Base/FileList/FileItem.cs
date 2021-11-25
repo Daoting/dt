@@ -444,12 +444,10 @@ namespace Dt.Base
             }
 
 #if WIN
-            FileSavePicker picker = new FileSavePicker();
+            var picker = Kit.GetFileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add(GetSaveDesc(), new List<string>() { GetExtName() });
             picker.SuggestedFileName = _itemInfo.FileName;
-            // WinUI
-            picker.Init();
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {

@@ -47,13 +47,11 @@ namespace Dt.Base.Tools
         async void OnBackup(object sender, RoutedEventArgs e)
         {
             var row = ((LvItem)((Button)sender).DataContext).Row;
-            FileSavePicker picker = new FileSavePicker();
+            var picker = Kit.GetFileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
             var fileName = row.Str("name") + ".db";
             picker.SuggestedFileName = fileName;
-            // WinUI
-            picker.Init();
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
@@ -97,7 +95,7 @@ namespace Dt.Base.Tools
         async void OnBackup(object sender, RoutedEventArgs e)
         {
             var row = ((LvItem)((Button)sender).DataContext).Row;
-            FileSavePicker picker = new FileSavePicker();
+            var picker = Kit.GetFileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
             var fileName = row.Str("name") + ".db";

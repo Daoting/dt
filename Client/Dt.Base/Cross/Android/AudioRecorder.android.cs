@@ -8,6 +8,7 @@
 #endregion
 
 #region ÒýÓÃÃüÃû
+using Android.App;
 using Android.Content.PM;
 using Android.Media;
 using Dt.Core;
@@ -38,7 +39,8 @@ namespace Dt.Base
 
         public Task PlatformRecordAsync()
         {
-            _recorder = new MediaRecorder();
+            // .net6.0
+            _recorder = new MediaRecorder(Application.Context);
             _recorder.SetAudioSource(AudioSource.Mic);
             _recorder.SetOutputFormat(OutputFormat.Mpeg4);
             _recorder.SetAudioEncoder(AudioEncoder.Aac);

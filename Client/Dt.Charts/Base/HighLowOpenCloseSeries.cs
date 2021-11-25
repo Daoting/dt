@@ -27,7 +27,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty CloseValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty CloseValuesProperty = DependencyProperty.Register(
            "CloseValues",
            typeof(DoubleCollection),
            typeof(HighLowOpenCloseSeries),
@@ -45,7 +45,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty OpenValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty OpenValuesProperty = DependencyProperty.Register(
             "OpenValues",
             typeof(DoubleCollection),
             typeof(HighLowOpenCloseSeries),

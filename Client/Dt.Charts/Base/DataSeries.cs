@@ -233,7 +233,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty ValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty ValuesProperty = DependencyProperty.Register(
             "Values", 
             typeof(DoubleCollection),
             typeof(DataSeries), 

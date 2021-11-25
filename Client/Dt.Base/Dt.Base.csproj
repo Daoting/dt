@@ -4,21 +4,28 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-	<Import Project="..\Common.props" />
-	<Import Project="..\Client.props" />
+    <Import Project="..\Targets.props" />
+    <Import Project="..\Common.props" />
+    <Import Project="..\Stable.props" />
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0' ">
+	<ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
+        <None Include="Chat\WebRTC\VideoCaller.xaml" />
 		<Page Remove="Chat\WebRTC\VideoCaller.xaml" />
+        
+        <None Include="Chat\WebRTC\VideoCaller.xaml.cs" />
 		<Compile Remove="Chat\WebRTC\VideoCaller.xaml.cs" />
-		<None Include="Chat\WebRTC\VideoCaller.xaml.cs" />
+        
+        <None Include="Chat\WebRTC\VideoRecver.xaml" />
 		<Page Remove="Chat\WebRTC\VideoRecver.xaml" />
+        
+        <None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
 		<Compile Remove="Chat\WebRTC\VideoRecver.xaml.cs" />
-		<None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
-		<Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
+        
 		<None Include="Chat\WebRTC\WebRtcApi.cs" />
+        <Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
 	</ItemGroup>
 </Project>

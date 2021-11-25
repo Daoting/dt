@@ -132,7 +132,7 @@ namespace Dt.Base
             return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_fileTypes));
         }
 
-        #region 内部方法
+#region 内部方法
         static async Task<FileData> PickFile(FileOpenPicker p_picker)
         {
             var file = await p_picker.PickSingleFileAsync();
@@ -197,11 +197,9 @@ namespace Dt.Base
 
         static FileOpenPicker CreatePicker(PickerLocationId p_locationstring, string[] p_allowedTypes)
         {
-            var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = p_locationstring,
-            };
+            var picker = Kit.GetFileOpenPicker();
+            picker.ViewMode = PickerViewMode.List;
+            picker.SuggestedStartLocation = p_locationstring;
 
             var hasAtleastOneType = false;
             if (p_allowedTypes != null)
@@ -219,7 +217,7 @@ namespace Dt.Base
                 picker.FileTypeFilter.Add("*");
             return picker;
         }
-        #endregion
+#endregion
     }
 }
 #endif

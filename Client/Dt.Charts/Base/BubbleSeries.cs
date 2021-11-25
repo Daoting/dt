@@ -27,7 +27,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty SizeValuesProperty = Utils.RegisterProperty(
+        public static DependencyProperty SizeValuesProperty = Utils.RegisterProperty(
            "SizeValues",
            typeof(DoubleCollection),
            typeof(BubbleSeries),

@@ -903,7 +903,7 @@ namespace Dt.Cells.Data
                     this.dataValidator = info.DataValidator;
                     this.dataValidatorSet = true;
                 }
-                ///hdt 唐忠宝增加
+                //hdt 唐忠宝增加
                 if (((merge && !this.isUnderlineSet) && info.isUnderlineSet) || (!merge && info.isUnderlineSet))
                 {
                     this.underline = info.Underline;

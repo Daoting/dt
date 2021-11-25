@@ -7,12 +7,16 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using WinRT;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -28,12 +32,8 @@ namespace Dt.Shell.Win
             this.InitializeComponent();
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
+        void myButton_Click(object sender, RoutedEventArgs e)
         {
-            if (myButton.Dispatcher.HasThreadAccess)
-            {
-                int a = 10 + 20;
-            }
         }
     }
 }

@@ -44,8 +44,8 @@ namespace Dt.Shell
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs p_args)
         {
-            //_ = Startup.Launch<Stub>(p_args.Arguments, null);
-            new MainWindow().Activate();
+            _ = Startup.Launch<Stub>(p_args.Arguments, null);
+            //new MainWindow().Activate();
         }
 
         private Window m_window;

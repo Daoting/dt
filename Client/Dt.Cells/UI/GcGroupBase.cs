@@ -141,9 +141,6 @@ namespace Dt.Cells.UI
             return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
-#if !WIN
-        new
-#endif
         internal Brush BorderBrush
         {
             get

@@ -1,0 +1,35 @@
+》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：
+The Bindable attribute is missing and the type [T] is not known by the MetadataProvider. Reflection was used instead of the binding engine and generated static metadata. Add the Bindable attribute to prevent this message and performance issues.
+
+》各项目之间为避免冗余的文件，将相同文件放置在 Common 目录下，各项目采取文件链接方式
+
+
+》项目目录说明：
+\Assets.xcassets 图标资源，可通过控件样例的工具生成
+
+\Assets
+    \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
+
+    \Fonts
+        \icon.ttf  自定义矢量字体库
+        \winjs-symbols.ttf ios缺少的win矢量字体库
+
+\App.xaml  全局公共
+
+\Entitlements.plist  需要权限列表
+
+\Info.plist  项目间只有顶部的 CFBundleIdentifier CFBundleDisplayName 不同
+
+\LaunchScreen.storyboard 启动动画定义
+
+\MainActivity.cs 入口
+
+mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/
+
+
+接收“分享”有两种情况实现，主要取决于发起“分享”的app的实现方式：
+1. 使用UIDocumentInterationController发起的分享，接收时只需要在Info.plist中配置CFBundleDocumentTypes，并在App.xaml.cs中重写OpenUrl，如app 文件；
+2. 使用UIActivityViewController发起的分享，接收时需要在独立的dll项目中实现Share Extension，iOS8.0 以后增加的方式，如 照片 邮箱；
+本系统只处理第一种情况！未实现“照片”中的接收分享功能
+
+开发、调试、发布上架的详细过程参见《搬运工客户端手册.docx》

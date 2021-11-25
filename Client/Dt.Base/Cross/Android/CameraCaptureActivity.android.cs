@@ -32,7 +32,7 @@ using Xamarin.Essentials;
 namespace Dt.Base
 {
     [Activity(ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
-    public class CameraCaptureActivity : Activity
+    public class CameraCaptureActivity : Android.App.Activity
     {
         /// <summary>
         /// 是否为拍照

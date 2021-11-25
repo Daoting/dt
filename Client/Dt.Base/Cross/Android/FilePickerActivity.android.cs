@@ -33,7 +33,7 @@ namespace Dt.Base
     /// intent.
     /// </summary>
     [Activity(ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenSize)]
-    [Preserve(AllMembers = true)]
+    //[Preserve(AllMembers = true)]
     public class FilePickerActivity : Activity
     {
         /// <summary>

@@ -50,7 +50,17 @@ namespace Dt.Base
                 return;
             }
 
-#if WASM
+#if WIN
+            // WinUI
+            Dict dt = new Dict
+            {
+                { "sessionid", _sessionID },
+                { "model", "Windows" },
+                { "name", "WinUI" },
+                { "platform", "Windows" },
+                { "version", "10.0" },
+            };
+#elif WASM
             Dict dt = new Dict
             {
                 { "sessionid", _sessionID },
@@ -130,7 +140,7 @@ namespace Dt.Base
                 AtMsg.Unregister(Kit.UserID, _sessionID);
             }
         }
-        #endregion
+#endregion
 
         public void Call(string p_msg)
         {

@@ -1,0 +1,17 @@
+<Project ToolsVersion="Current">
+    <!-- 除Stable项目外都需Import -->
+    <ItemGroup Condition="'$(SolutionFileName)' != 'Client-All.sln' and '$(SolutionFileName)' != 'Client-Package.sln'">
+        <PackageReference Include="Dt.Stable" Version="2.2.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(SolutionFileName)' == 'Client-All.sln' or '$(SolutionFileName)' == 'Client-Package.sln'">
+        <!--生成Dt.Client包、修改Excel或Chart时-->
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" PrivateAssets="all" />
+    </ItemGroup>
+
+</Project>

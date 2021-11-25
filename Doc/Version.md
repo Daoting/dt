@@ -13,9 +13,8 @@ ios版内测时主页刚启动快速操作无响应，崩溃
 ios版DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
 uwp的release版Chart动画报错 
 
-升级VS2022的前提：WinUI3.0 WinAppSdk1.0 MAUI1.0 Uno稳定
-移植到.net6 winui3
 
+Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 
 ## Release 2.0.0 
 ### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
@@ -25,10 +24,13 @@ https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-s
 * 删除PhoneUI模式下窗口左上角的后退按钮
 Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
 Window.Current Window.Dispatcher  DependencyObject.Dispatcher 始终null，改用DispatcherQueue
+ProtectedCursor 加载到可视树前设置崩溃，无提示！
+FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
+
 * Application的Suspending Resuming 事件已移除，Kit-Sys.cs
 
 * MediaPlayerElement 未实现，FileItem.cs
-* Xamarin.Essentials 未升级到maui
+* 
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

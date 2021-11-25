@@ -374,13 +374,11 @@ namespace Dt.Base
             else
             {
                 fileName = string.IsNullOrEmpty(p_fileName) ? "snapshot.png" : p_fileName;
-                var savePicker = new FileSavePicker();
+                var savePicker = Kit.GetFileSavePicker();
                 savePicker.DefaultFileExtension = ".png";
                 savePicker.FileTypeChoices.Add(".png", new List<string> { ".png" });
                 savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
                 savePicker.SuggestedFileName = fileName;
-                // WinUI
-                savePicker.Init();
                 saveFile = await savePicker.PickSaveFileAsync();
 
                 if (saveFile == null)

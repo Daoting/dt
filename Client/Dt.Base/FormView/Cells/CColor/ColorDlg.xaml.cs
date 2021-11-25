@@ -54,7 +54,7 @@ namespace Dt.Base.FormView
 #else
                 foreach (FieldInfo info in type.GetFields())
                 {
-                    _colors.Add(new ColorItem(Colors.Parse(info.Name), info.Name));
+                    _colors.Add(new ColorItem(Microsoft.UI.Colors.Parse(info.Name), info.Name));
                 }
 #endif
             }

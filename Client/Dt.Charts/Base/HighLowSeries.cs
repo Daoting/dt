@@ -26,7 +26,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty HighValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty HighValuesProperty = DependencyProperty.Register(
            "HighValues",
            typeof(DoubleCollection),
            typeof(HighLowSeries),
@@ -44,7 +44,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty LowValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty LowValuesProperty = DependencyProperty.Register(
             "LowValues",
             typeof(DoubleCollection),
             typeof(HighLowSeries),

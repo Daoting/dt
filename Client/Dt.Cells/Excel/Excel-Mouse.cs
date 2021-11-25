@@ -49,7 +49,8 @@ namespace Dt.Base
                 | GestureSettings.ManipulationTranslateX
                 | GestureSettings.ManipulationTranslateY
                 | GestureSettings.Tap;
-            _gestrueRecognizer.ShowGestureFeedback = false;
+            // WinUI uno中无此属性
+            //_gestrueRecognizer.ShowGestureFeedback = false;
             _gestrueRecognizer.Tapped += OnGestureRecognizerTapped;
             _gestrueRecognizer.ManipulationStarted += OnGestrueRecognizerManipulationStarted;
             _gestrueRecognizer.ManipulationUpdated += OnGestrueRecognizerManipulationUpdated;

@@ -1,0 +1,28 @@
+<Project ToolsVersion="Current">
+    <!-- 打包项目需Import -->
+    <PropertyGroup>
+        <!--将引用的项目合并打包-->
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+        <!-- 打包.nupkg时包含pdb文件，用于调试 -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    
+	<!-- 包公共属性 -->
+	<PropertyGroup>
+		<Authors>Daoting</Authors>
+		<Product>搬运工基础平台</Product>
+		<Copyright>Copyright © 2021</Copyright>
+		<PackageProjectUrl>https://github.com/daoting/dt</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageIconUrl />
+		<PackageTags>搬运工 WinUI UWP Uno DataGrid Form Chart Excel</PackageTags>
+	</PropertyGroup>
+
+    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+            <!--uwp包含引用项目的xbf文件-->
+            <TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="$(TargetFramework.Contains('-windows'))" />
+        </ItemGroup>
+    </Target>
+</Project>

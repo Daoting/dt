@@ -25,7 +25,7 @@ namespace Dt.Base
     /// <summary>
     /// Android版文件选择
     /// </summary>
-    [Preserve(AllMembers = true)]
+    //[Preserve(AllMembers = true)]
     class FilePicker
     {
         TaskCompletionSource<List<FileData>> _tcs;

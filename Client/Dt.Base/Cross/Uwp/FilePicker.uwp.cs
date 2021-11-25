@@ -135,8 +135,6 @@ namespace Dt.Base
         #region 内部方法
         static async Task<FileData> PickFile(FileOpenPicker p_picker)
         {
-            // WinUI
-            p_picker.Init();
             var file = await p_picker.PickSingleFileAsync();
             if (file != null)
                 return await GetFileData(file);
@@ -145,8 +143,6 @@ namespace Dt.Base
 
         static async Task<List<FileData>> PickFiles(FileOpenPicker p_picker)
         {
-            // WinUI
-            p_picker.Init();
             var files = await p_picker.PickMultipleFilesAsync();
             if (files == null || files.Count == 0)
                 return null;
@@ -201,11 +197,9 @@ namespace Dt.Base
 
         static FileOpenPicker CreatePicker(PickerLocationId p_locationstring, string[] p_allowedTypes)
         {
-            var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = p_locationstring,
-            };
+            var picker = Kit.GetFileOpenPicker();
+            picker.ViewMode = PickerViewMode.List;
+            picker.SuggestedStartLocation = p_locationstring;
 
             var hasAtleastOneType = false;
             if (p_allowedTypes != null)

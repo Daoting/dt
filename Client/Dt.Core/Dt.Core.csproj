@@ -4,12 +4,10 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
+    <Import Project="..\Targets.props" />
 	<Import Project="..\Common.props" />
-	<Import Project="..\Client.props" />
-	<ItemGroup>
-	  <None Remove="Internal\Notify\NotifyItem.xaml" />
-	</ItemGroup>
-	
+	<Import Project="..\Stable.props" />
+
 	<ItemGroup>
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />
@@ -61,9 +59,4 @@
 		<Folder Include="Rpc\Client\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Page Update="Internal\Notify\NotifyItem.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	  </Page>
-	</ItemGroup>
 </Project>

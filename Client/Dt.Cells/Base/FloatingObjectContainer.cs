@@ -47,9 +47,6 @@ namespace Dt.Cells.UI
         static readonly SolidColorBrush BlackGripBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xae, 0xaf, 0xaf));
 
         [ThreadStatic]
-#if !WIN
-        new
-#endif
         static readonly SolidColorBrush BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xd8, 0xd8, 0xd8));
         [ThreadStatic]
         static readonly SolidColorBrush BorderGapBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(200, 0xeb, 0xeb, 0xeb));

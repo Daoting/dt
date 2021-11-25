@@ -356,6 +356,7 @@ Service/src/Dt.Fsm/etc/log/
 !Service/iis/tls.pfx
 UWP/Common/wasm/
 !UWP/Dt.App/Publish/
+!Client/Dt.App/Publish/
 Package/
 Publish/
 Doc/商店截图/

@@ -300,12 +300,10 @@ namespace Dt.Sample
 
         async void SaveExcelFile(object sender, RoutedEventArgs e)
         {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var filePicker = Kit.GetFileSavePicker();
             filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
             filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
             filePicker.SuggestedFileName = "新文件";
-            // WinUI
-            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {
@@ -324,11 +322,9 @@ namespace Dt.Sample
 
         async void SavePDFFile(object sender, RoutedEventArgs e)
         {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var filePicker = Kit.GetFileSavePicker();
             filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
             filePicker.SuggestedFileName = "新文件";
-            // WinUI
-            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {
@@ -341,11 +337,9 @@ namespace Dt.Sample
 
         async void SaveCsvFile(object sender, RoutedEventArgs e)
         {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var filePicker = Kit.GetFileSavePicker();
             filePicker.FileTypeChoices.Add("CSV文件", new List<string>(new string[] { ".csv" }));
             filePicker.SuggestedFileName = "新文件";
-            // WinUI
-            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {
@@ -358,11 +352,9 @@ namespace Dt.Sample
 
         async void SaveXmlFile(object sender, RoutedEventArgs e)
         {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            var filePicker = Kit.GetFileSavePicker();
             filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
             filePicker.SuggestedFileName = "新文件";
-            // WinUI
-            filePicker.Init();
             StorageFile storageFile = await filePicker.PickSaveFileAsync();
             if (storageFile != null)
             {

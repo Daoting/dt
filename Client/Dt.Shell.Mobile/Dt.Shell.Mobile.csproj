@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net6.0-android;net6.0-ios</TargetFrameworks>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <RuntimeIdentifier Condition="'$(TargetFramework)' == 'net6.0-ios'">iossimulator-x64</RuntimeIdentifier>
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <IsUnoHead>true</IsUnoHead>
+    </PropertyGroup>
+
+    <Import Project="..\Common.props" />
+    <Import Project="..\Stable.props" />
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+        <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+        <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Android\Assets\Fonts\" />
+      <Folder Include="iOS\Resources\Fonts\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
+      <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        <None Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

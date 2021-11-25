@@ -28,7 +28,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        static DependencyProperty XValuesProperty = DependencyProperty.Register(
+        public static DependencyProperty XValuesProperty = DependencyProperty.Register(
             "XValues",
             typeof(DoubleCollection),
             typeof(XYDataSeries),

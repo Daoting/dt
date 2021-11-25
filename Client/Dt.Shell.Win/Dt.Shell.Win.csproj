@@ -1,19 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows10.0.19041</TargetFramework>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>Dt.Shell</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
+        <Platforms>x86;x64</Platforms>
+        <RuntimeIdentifiers>win10-x86;win10-x64</RuntimeIdentifiers>
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+        <UseWinUI>true</UseWinUI>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 	</PropertyGroup>
 
-	<Import Project="..\Common.props" />
-	
-	<ItemGroup>
+    <Import Project="..\Common.props" />
+    <Import Project="..\Stable.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+        <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+        <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
 			<SubType>Designer</SubType>
 		</AppxManifest>
 	</ItemGroup>
+    
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
 		<Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -23,15 +37,15 @@
 		<Content Include="Assets\StoreLogo.png" />
 		<Content Include="Assets\Wide310x150Logo.scale-200.png" />
 	</ItemGroup>
-
+    
+	<ItemGroup>
+		<Content Include="..\..\Common\Fonts\icon.ttf">
+			<Link>Assets\Fonts\icon.ttf</Link>
+		</Content>
+	</ItemGroup>
+	
 	<ItemGroup>
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
-	  <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-	  <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-	  <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
-	</ItemGroup>
 </Project>
