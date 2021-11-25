@@ -1,10 +1,11 @@
 <Project ToolsVersion="Current">
     <!-- 库项目需Import -->
 	<PropertyGroup>
-		<TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-All.sln' or '$(SolutionFileName)' == 'Client-Package.sln'">net6.0;net6.0-android;net6.0-ios;net6.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-All.sln' or '$(SolutionFileName)' == 'Client-Package.sln'">net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
         <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Win.sln'">net6.0-windows10.0.19041</TargetFrameworks>
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Mobile.sln'">net6.0-android;net6.0-ios;net6.0-windows10.0.19041</TargetFrameworks>
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Wasm.sln'">net6.0;net6.0-windows10.0.19041</TargetFrameworks>
+        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Droid.sln'">net6.0-windows10.0.19041;net6.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-IOS.sln'">net6.0-windows10.0.19041;net6.0-ios</TargetFrameworks>
+        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Wasm.sln'">net6.0-windows10.0.19041;net6.0</TargetFrameworks>
 	</PropertyGroup>
 
 </Project>

@@ -12,8 +12,7 @@ using Dt.Core;
 using Foundation;
 using System;
 using UIKit;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 #endregion
 
 namespace Dt.Shell
