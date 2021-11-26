@@ -329,11 +329,6 @@ namespace Dt.Base
         public static Style 浅色按钮 => (Style)_dict["浅色按钮"];
 
         /// <summary>
-        /// Phone模式的搜索栏按钮
-        /// </summary>
-        public static Style PhonSearchButton => (Style)_dict["PhonSearchButton"];
-
-        /// <summary>
         /// 默认字体大小
         /// </summary>
         public static double DefaultFontSize => (double)_dict["ControlContentThemeFontSize"];

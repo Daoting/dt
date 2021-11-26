@@ -164,7 +164,6 @@
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 主蓝}"/>
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10,9,10,9" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -172,7 +171,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
+                        <Border x:Name="Rect" IsHitTestVisible="False" />
                         <ContentPresenter x:Name="ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           Margin="{TemplateBinding Padding}"
@@ -185,7 +184,6 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="Rect.Background" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="Rect.BorderBrush" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -265,7 +263,6 @@
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontSize" Value="20" />
-        <Setter Property="BorderThickness" Value="1" />
         <!--宽高 40 X 40-->
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -276,10 +273,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Border x:Name="Rect"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                IsHitTestVisible="False" />
+                        <Border x:Name="Rect" IsHitTestVisible="False" />
                         <TextBlock Text="{TemplateBinding Content}"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="{TemplateBinding FontSize}"
@@ -293,7 +287,6 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="Rect.Background" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="Rect.BorderBrush" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
@@ -350,54 +343,6 @@
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="Rect.Background" Value="{StaticResource 深亮遮罩}" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <VisualState.Setters>
-                                        <Setter Target="RootGrid.Opacity" Value="0.5" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--Phone模式的搜索栏按钮-->
-    <Style x:Key="PhonSearchButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="Foreground" Value="{StaticResource 默认前景}"/>
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Rectangle x:Name="Rect" Stroke="{StaticResource 浅灰2}" IsHitTestVisible="False" />
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE00B;"
-                                       FontFamily="{StaticResource IconFont}"
-                                       Foreground="{StaticResource 默认前景}"
-                                       VerticalAlignment="Center" />
-                            <ContentPresenter x:Name="ContentPresenter"
-                                              Content="{TemplateBinding Content}"
-                                              Margin="10" />
-                        </StackPanel>
-
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="PointerOver">
-                                    <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">

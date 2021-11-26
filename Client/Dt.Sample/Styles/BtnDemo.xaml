@@ -17,7 +17,7 @@
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="默认按钮" />
                 <Button Content="不可用状态" IsEnabled="False" />
-                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" BorderThickness="4" />
+                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" />
             </StackPanel>
             <TextBlock Text="字符按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">
@@ -29,11 +29,6 @@
             <StackPanel Orientation="Horizontal" Spacing="10" Background="Black">
                 <Button Content="按 钮" Style="{StaticResource 浅色按钮}" />
                 <Button Content="不可用状态" Style="{StaticResource 浅色按钮}" IsEnabled="False" />
-            </StackPanel>
-            <TextBlock Text="Phone模式的搜索栏按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="按 钮" Style="{StaticResource PhonSearchButton}" />
-                <Button Content="不可用状态" Style="{StaticResource PhonSearchButton}" IsEnabled="False" />
             </StackPanel>
             <TextBlock Text="列表项按钮" />
             <StackPanel>
@@ -59,25 +54,6 @@
                 </a:BtnItem>
                 <a:BtnItem Icon="禁止登记" Title="注销" Desc="设置自动登录时，可以通过注销切换账号。"/>
             </StackPanel>
-            <CommandBar DefaultLabelPosition="Right">
-                <AppBarToggleButton Icon="Shuffle" Label="Shuffle" />
-                <AppBarToggleButton Icon="RepeatAll" Label="Repeat" />
-                <AppBarSeparator/>
-                <AppBarButton Icon="Back" Label="Back" />
-                <AppBarButton Label="Stop" />
-                <AppBarButton Icon="Play" />
-                <AppBarButton Icon="Forward" Label="Forward" />
-
-                <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Like" Label="Like" />
-                    <AppBarButton Icon="Dislike" Label="Dislike" />
-                    <AppBarToggleButton Icon="RepeatAll" Label="Repeat" />
-                </CommandBar.SecondaryCommands>
-
-                <CommandBar.Content>
-                    <TextBlock Text="Now playing..." Margin="12,14"/>
-                </CommandBar.Content>
-            </CommandBar>
         </StackPanel>
     </ScrollViewer>
 </a:Win>
