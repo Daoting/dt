@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Core
@@ -150,14 +151,26 @@ namespace Dt.Core
         #endregion
 
         #region UI线程调用
+        /**********************************************************************************************************************************************************/
+        // 升级WinUI后的问题：
+        //
+        // 1. WinUI 中 Window.Dispatcher 和 DependencyObject.Dispatcher 始终null，只能使用 DispatcherQueue！
+        //
+        // 2. uno 中 Window.DispatcherQueue 未实现，RootGrid.DispatcherQueue 在 Task 中访问为 null，只能使用 UWP 时的方式！
+        //
+        /***********************************************************************************************************************************************************/
+
         /// <summary>
         /// 确保在UI线程异步调用给定方法
         /// </summary>
         /// <param name="p_action"></param>
         public static void RunAsync(Action p_action)
         {
-            // WinUI 中 Window.Dispatcher 和 DependencyObject.Dispatcher 始终null
-            MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
+#if WIN
+            SysVisual.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
+#else
+            _ = SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
+#endif
         }
 
         /// <summary>
@@ -166,20 +179,27 @@ namespace Dt.Core
         /// <param name="p_action"></param>
         public static void RunSync(Action p_action)
         {
+#if WIN
             // WinUI
-            if (MainWin.DispatcherQueue.HasThreadAccess)
+            if (SysVisual.MainWin.DispatcherQueue.HasThreadAccess)
             {
                 p_action();
                 return;
             }
 
             var taskSrc = new TaskCompletionSource<bool>();
-            MainWin.DispatcherQueue.TryEnqueue(() =>
+            SysVisual.MainWin.DispatcherQueue.TryEnqueue(() =>
             {
                 p_action();
                 taskSrc.TrySetResult(true);
             });
             taskSrc.Task.Wait();
+#else
+            if (SysVisual.RootGrid.Dispatcher.HasThreadAccess)
+                p_action();
+            else
+                WindowsRuntimeSystemExtensions.AsTask(SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action))).Wait();
+#endif
         }
 
         /// <summary>
@@ -189,14 +209,44 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task RunTask(Action p_action)
         {
+#if WIN
             var taskSrc = new TaskCompletionSource<bool>();
-            MainWin.DispatcherQueue.TryEnqueue(() =>
+            SysVisual.MainWin.DispatcherQueue.TryEnqueue(() =>
             {
                 p_action();
                 taskSrc.TrySetResult(true);
             });
             return taskSrc.Task;
+#else
+            return SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action)).AsTask();
+#endif
         }
+        #endregion
+
+        #region 可视区域
+        /// <summary>
+        /// 主窗口
+        /// </summary>
+        public static Window MainWin => SysVisual.MainWin;
+
+        /// <summary>
+        /// Window.Content内容，根Grid
+        /// </summary>
+        public static Grid RootGrid => SysVisual.RootGrid;
+
+        /// <summary>
+        /// 可视区域宽度
+        /// 手机：页面宽度
+        /// PC上：除标题栏和外框的窗口内部宽度
+        /// </summary>
+        public static double ViewWidth => SysVisual.MainWin.Bounds.Width;
+
+        /// <summary>
+        /// 可视区域高度
+        /// 手机：不包括状态栏的高度
+        /// PC上：除标题栏和外框的窗口内部高度
+        /// </summary>
+        public static double ViewHeight => SysVisual.MainWin.Bounds.Height - SysVisual.StatusBarHeight;
         #endregion
 
         #region 工具方法
@@ -307,23 +357,6 @@ namespace Dt.Core
             }
             return count;
         }
-
-        #endregion
-
-        #region 可视区域
-        /// <summary>
-        /// 可视区域宽度
-        /// 手机：页面宽度
-        /// PC上：除标题栏和外框的窗口内部宽度
-        /// </summary>
-        public static double ViewWidth => MainWin.Bounds.Width;
-
-        /// <summary>
-        /// 可视区域高度
-        /// 手机：不包括状态栏的高度
-        /// PC上：除标题栏和外框的窗口内部高度
-        /// </summary>
-        public static double ViewHeight => MainWin.Bounds.Height - SysVisual.StatusBarHeight;
         #endregion
 
         #region 常量

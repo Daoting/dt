@@ -44,11 +44,6 @@ namespace Dt.Core
         const double _maxPhoneUIWidth = 640;
 
         /// <summary>
-        /// Window.Content内容，根Grid
-        /// </summary>
-        static readonly Grid _rootGrid;
-
-        /// <summary>
         /// 对话框面板
         /// </summary>
         static readonly Canvas _dlgCanvas;
@@ -64,18 +59,13 @@ namespace Dt.Core
         /// 内容元素，桌面、Frame、登录页面等，在最底层
         /// </summary>
         static UIElement _rootContent;
-
-        /// <summary>
-        /// phone状态栏高度
-        /// </summary>
-        public static int StatusBarHeight = 0;
         #endregion
 
         #region 静态构造
         static SysVisual()
         {
             // 根Grid，背景主蓝
-            _rootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
+            RootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！启动时为临时提示信息
             TextBlock tb = new TextBlock
@@ -87,24 +77,24 @@ namespace Dt.Core
                 VerticalAlignment = VerticalAlignment.Center
             };
             _rootContent = tb;
-            _rootGrid.Children.Add(tb);
+            RootGrid.Children.Add(tb);
 
             // 对话框层
             _dlgCanvas = new Canvas();
-            _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
-            _rootGrid.Children.Add(_dlgCanvas);
+            RootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
+            RootGrid.Children.Add(_dlgCanvas);
 
             // 提示信息层
             _notifyList = new ItemList<NotifyInfo>();
             _notifyList.ItemsChanged += OnNotifyItemsChanged;
             _notifyPanel = new StackPanel();
             _notifyPanel.Spacing = 10;
-            _rootGrid.Children.Add(_notifyPanel);
+            RootGrid.Children.Add(_notifyPanel);
 
 #if IOS
             // 状态栏边距
             StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
-            _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
+            RootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #elif ANDROID
             // Android上已设置不占用顶部状态栏和底部导航栏，但 Window.Bounds 包含顶部状态栏高度！
             var res = Android.App.Application.Context.Resources;
@@ -113,23 +103,29 @@ namespace Dt.Core
                 StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
 #endif
 
-            var win = Kit.MainWin;
-            win.Content = _rootGrid;
-            win.Activate();
+#if WIN
+            // WinUI中Window.Current为null
+            MainWin = new Window();
+#else
+            // uno中若新创建，Window.Bounds始终为(0, 0)！
+            MainWin = Window.Current;
+#endif
+            MainWin.Content = RootGrid;
+            MainWin.Activate();
 
 #if WIN
             // 支持UI自适应
-            win.SizeChanged += OnWindowSizeChanged;
-            Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+            MainWin.SizeChanged += OnWindowSizeChanged;
+            Kit.IsPhoneUI = MainWin.Bounds.Width < _maxPhoneUIWidth;
 #elif WASM
             if (Kit.HostOS == HostOS.Windows
                 || Kit.HostOS == HostOS.Mac
                 || Kit.HostOS == HostOS.Linux)
             {
                 // 支持UI自适应
-                win.SizeChanged += OnWindowSizeChanged;
+                MainWin.SizeChanged += OnWindowSizeChanged;
                 // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
-                Kit.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+                Kit.IsPhoneUI = MainWin.Bounds.Width < _maxPhoneUIWidth;
             }
             else
             {
@@ -153,6 +149,16 @@ namespace Dt.Core
 
         #region 基础
         /// <summary>
+        /// 主窗口
+        /// </summary>
+        public static readonly Window MainWin;
+
+        /// <summary>
+        /// Window.Content内容，根Grid
+        /// </summary>
+        public static readonly Grid RootGrid;
+
+        /// <summary>
         /// 获取设置桌面层/页面层的内容元素，桌面、Frame、登录页面，在最底层
         /// </summary>
         public static UIElement RootContent
@@ -162,10 +168,10 @@ namespace Dt.Core
             {
                 if (value != null && value != _rootContent)
                 {
-                    _rootGrid.Children.Remove(_rootContent);
+                    RootGrid.Children.Remove(_rootContent);
                     _rootContent = value;
                     SetDefaultStyle(_rootContent as Control);
-                    _rootGrid.Children.Insert(0, value);
+                    RootGrid.Children.Insert(0, value);
                 }
             }
         }
@@ -179,9 +185,9 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// Window.Content内容，根Grid
+        /// phone状态栏高度
         /// </summary>
-        public static Grid RootGrid => _rootGrid;
+        public static int StatusBarHeight = 0;
         #endregion
 
         #region 对话框
@@ -412,52 +418,6 @@ namespace Dt.Core
                 p_con.FontSize = 16;
             }
         }
-        #endregion
-
-        #region 废弃
-        // 统一转到 Kit
-        ///// <summary>
-        ///// 可视区域宽度
-        ///// 手机：页面宽度
-        ///// PC上：除标题栏和外框的窗口内部宽度
-        ///// </summary>
-        //public static double ViewWidth => _win.Bounds.Width;
-
-        ///// <summary>
-        ///// 可视区域高度
-        ///// 手机：不包括状态栏的高度
-        ///// PC上：除标题栏和外框的窗口内部高度
-        ///// </summary>
-        //public static double ViewHeight
-        //{
-        //    get
-        //    {
-        //        // 使用 _rootGrid.ActualHeight 初始启动时为0，无法弹出对话框！！！
-        //        return _win.Bounds.Height - StatusBarHeight;
-        //    }
-        //}
-
-        //#if ANDROID
-        //static void RefreshStatusBarHeight()
-        //{
-        //    // android项目的styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
-        //    // 竖屏StatusBarHeight为0，但横屏为实际高度
-        //    // 但横屏时ViewHeight需要去掉状态栏高度，诡异
-        //    if (Kit.IsPhoneUI)
-        //    {
-        //        // 竖屏为0
-        //        StatusBarHeight = 0;
-        //    }
-        //    else
-        //    {
-        //        // 横屏为实际高度
-        //        var res = Android.App.Application.Context.Resources;
-        //        int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
-        //        if (resourceId > 0)
-        //            StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
-        //    }
-        //}
-        //#endif
         #endregion
     }
 

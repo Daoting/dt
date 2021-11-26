@@ -25,11 +25,6 @@ namespace Dt.Core
     {
         #region 系统基础
         /// <summary>
-        /// 主窗口
-        /// </summary>
-        public static readonly Window MainWin = new Window();
-
-        /// <summary>
         /// 获取系统是否采用手机的UI模式
         /// </summary>
         public static bool IsPhoneUI { get; internal set; }
