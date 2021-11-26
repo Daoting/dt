@@ -28,12 +28,15 @@ namespace Dt.Base
         public static async Task<string> InvokeScriptAsync(this WebView2 webView2, string p_functionName, params object[] p_parameters)
         {
             string script = p_functionName + "(";
-            for (int i = 0; i < p_parameters.Length; i++)
+            if (p_parameters != null && p_parameters.Length > 0)
             {
-                script += JsonSerializer.Serialize(p_parameters[i], JsonOptions.UnsafeSerializer);
-                if (i < p_parameters.Length - 1)
+                for (int i = 0; i < p_parameters.Length; i++)
                 {
-                    script += ", ";
+                    script += JsonSerializer.Serialize(p_parameters[i], JsonOptions.UnsafeSerializer);
+                    if (i < p_parameters.Length - 1)
+                    {
+                        script += ", ";
+                    }
                 }
             }
             script += ");";

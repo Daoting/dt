@@ -2,12 +2,11 @@
     x:Class="Dt.Sample.MenuDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Title="工具栏菜单">
+    xmlns:a="using:Dt.Base">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab>
+            <a:Tab Title="工具栏菜单">
                 <a:Tab.Menu>
                     <a:Menu x:Name="_m" ItemClick="OnItemClick">
                         <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />

@@ -132,8 +132,8 @@ namespace Dt.Sample
 
         void OnNaviClick(object sender, RoutedEventArgs e)
         {
-            Dlg dlg = new Dlg();
-            dlg.Content = new TabNav1();
+            Dlg dlg = new Dlg { Title = "内部导航" };
+            dlg.LoadMv(new TabNav1());
             if (!Kit.IsPhoneUI)
             {
                 dlg.Width = 400;

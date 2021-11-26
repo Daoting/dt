@@ -161,7 +161,7 @@ namespace Dt.Base
             }
             else
             {
-                item.ChangeState(MenuItemState.Pressed);
+                item.ChangeState(MenuItemState.PointerOver);
             }
 
             if ((bool)e.OldValue)
