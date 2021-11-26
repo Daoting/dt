@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Dt.App.Publish.PublishView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    AutoSaveLayout="False">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab x:Name="_tab" Title="目录" HideTitleBar="True" />
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

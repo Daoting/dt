@@ -1,0 +1,19 @@
+<a:Mv
+    x:Class="Dt.App.Publish.KeywordForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="关键字">
+
+    <a:Mv.Menu>
+        <a:Menu>
+            <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" Click="OnSave" />
+            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
+            <a:Mi ID="删除" Icon="删除" Click="OnDel" />
+        </a:Menu>
+    </a:Mv.Menu>
+
+    <a:Fv x:Name="_fv">
+        <a:CText ID="id" Title="关键字" />
+    </a:Fv>
+</a:Mv>

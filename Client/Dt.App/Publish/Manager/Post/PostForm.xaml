@@ -1,0 +1,38 @@
+<a:Mv
+    x:Class="Dt.App.Publish.PostForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="文章">
+
+    <a:Mv.Menu>
+        <a:Menu>
+            <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" Click="OnSave" />
+            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
+            <a:Mi ID="删除" Icon="删除" Click="OnDel" />
+            <a:Mi ID="编辑内容" Icon="编辑" Click="OnEditContent" />
+            <a:Mi ID="预览" Icon="公告" Click="OnExplore" />
+        </a:Menu>
+    </a:Mv.Menu>
+
+    <a:Fv x:Name="_fv" MaxColCount="2">
+        <a:CText ID="Title" Title="标题" />
+        <a:CList ID="TempType" Title="列表模板类型" Enum="Dt.App.Publish.PostTempType,Dt.App" />
+        <a:CFile ID="Cover" Title="封面" ColCount="3" />
+        <a:CText ID="Summary" Title="摘要" RowSpan="2" AcceptsReturn="True" />
+        <a:CBool ID="AllowComment" Title="允许评论" />
+        <a:CBool ID="AllowCoverClick" Title="封面可点击" />
+        <a:CBool ID="AddAlbumLink" Title="添加同专辑链接" />
+        <a:CBool ID="AddKeywordLink" Title="添加同关键字链接" />
+        <a:CBool ID="IsPublish" Title="发布" />
+
+        <a:CBar Title="其他" />
+        <a:CTip ID="Url" Title="文章地址" />
+        <a:CTip ID="creator" Title="创建人" />
+        <a:CTip ID="ctime" Title="创建时间" />
+        <a:CTip ID="lasteditor" Title="修改人" />
+        <a:CTip ID="mtime" Title="修改时间" />
+        <a:CTip ID="ReadCount" Title="阅读次数" />
+        <a:CTip ID="CommentCount" Title="评论次数" />
+    </a:Fv>
+</a:Mv>
