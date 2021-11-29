@@ -423,7 +423,7 @@ namespace Dt.Base
                             Margin = new Thickness(9, 7, 0, 0),
                             //HorizontalAlignment = HorizontalAlignment.Center,
                             //VerticalAlignment = VerticalAlignment.Center,
-                            FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
+                            FontFamily = BrushRes.IconFont,
                             FontSize = 12,
                             Foreground = BrushRes.深灰2,
                         }
@@ -458,7 +458,7 @@ namespace Dt.Base
                             Text = "\uE018",
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
-                            FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
+                            FontFamily = BrushRes.IconFont,
                             FontSize = 12,
                             Foreground = BrushRes.深灰2,
                         }

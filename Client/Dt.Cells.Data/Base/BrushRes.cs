@@ -28,7 +28,7 @@ namespace Dt.Cells.Data
     public static class BrushRes
     {
         // 全局资源字典
-        readonly static ResourceDictionary _dict = Application.Current.Resources;
+        readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Cells/Themes/Global.xaml") };
 
         #region 标准颜色画刷
         static SolidColorBrush _transparentBrush;
@@ -314,5 +314,10 @@ namespace Dt.Cells.Data
         public static SolidColorBrush 亮蓝 => (SolidColorBrush)_dict["亮蓝"];
         public static SolidColorBrush 亮红 => (SolidColorBrush)_dict["亮红"];
         #endregion
+
+        /// <summary>
+        /// 图标字体
+        /// </summary>
+        public static FontFamily IconFont => (FontFamily)_dict["IconFont"];
     }
 }

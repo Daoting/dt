@@ -1,20 +1,33 @@
-﻿# 版本说明
-
-wasm未实现
+﻿#  未解决问题
+wasm ：
 日期选择CalendarView、DatePickerFlyout、TimePickerFlyout未实现
 FileItem上传、分享、MediaPlayerElement等功能未实现
 
-ios版Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
-ios版System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
-ios  软键盘盖住 TextBox 的问题
-ios版Lv.Toolbar在Table模式时 MeasureOverride 死循环
 
-ios版内测时主页刚启动快速操作无响应，崩溃
-ios版DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
+ios ：
+Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
+System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
+软键盘盖住 TextBox 的问题
+Lv.Toolbar在Table模式时 MeasureOverride 死循环
+内测时主页刚启动快速操作无响应，崩溃
+DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
+
+
+android:
+
+
+
+window:
 uwp的release版Chart动画报错 
-
-
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
+Excel样例中 ChartExcel.xaml 报错，因WinUI3无法定位调试，暂搁
+
+
+
+
+
+# 版本说明
+
 
 ## Release 2.0.0 
 ### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息

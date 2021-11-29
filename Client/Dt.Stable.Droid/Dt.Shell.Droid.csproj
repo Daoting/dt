@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0-android</TargetFramework>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <IsUnoHead>true</IsUnoHead>
+    </PropertyGroup>
+
+    <Import Project="..\Common.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+        <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Android\Assets\Fonts\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
+      <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    </ItemGroup>
+
+</Project>
