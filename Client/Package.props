@@ -1,9 +1,9 @@
 <Project ToolsVersion="Current">
     <!-- 打包项目需Import -->
     <PropertyGroup>
-        <!--将引用的项目合并打包-->
+        <!-- 将引用项目合并打包 -->
         <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-        <!-- 打包.nupkg时包含pdb文件，用于调试 -->
+        <!-- 打包时包含pdb文件，用于调试 -->
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
     
@@ -20,6 +20,7 @@
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
         <ItemGroup>
+            <!-- copy引用项目的文件 -->
             <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
             <!--uwp包含引用项目的xbf文件-->
             <TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="$(TargetFramework.Contains('-windows'))" />

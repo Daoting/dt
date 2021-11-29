@@ -3,8 +3,6 @@
 		<Version>2.2.0</Version>
 		<PackageId>Dt.Stable</PackageId>
 		<Description>搬运工客户端Excel和Chart控件</Description>
-		<!--将引用的项目合并打包-->
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 

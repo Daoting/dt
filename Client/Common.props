@@ -3,8 +3,6 @@
 	<PropertyGroup>
 		<SingleProject>true</SingleProject>
 		<NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
-		<!-- Ensures the .xr.xml files are generated in a proper layout folder -->
-		<GenerateLibraryLayout>true</GenerateLibraryLayout>
 	</PropertyGroup>
 
 	<!-- 定义平台常量 -->

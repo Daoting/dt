@@ -100,21 +100,6 @@ namespace Dt.Sample
             _btnUpdate.IsEnabled = true;
         }
 
-        Employee[] GetDataSource()
-        {
-            return new Employee[] {
-                new Employee(){ LastName="Freehafer",   FirstName="Nancy",  Title="Sales Representative", Phone="(123)555-0100", Email="nancy@northwindtraders.com"},
-                new Employee(){ LastName="Cencini", FirstName="Andrew", Title="Vice President, Sales", Phone="(123)555-0100", Email="andrew@northwindtraders.com"},
-                new Employee(){ LastName="Kotas",   FirstName="Jan",    Title="Sales Representative", Phone="(123)555-0100", Email="jan@northwindtraders.com"},
-                new Employee(){ LastName="Sergienko",   FirstName="Mariya", Title="Sales Representative", Phone="(123)555-0100", Email="mariya@northwindtraders.com"},
-                new Employee(){ LastName="Thorpe",  FirstName="Steven", Title="Sales Manager", Phone="(123)555-0100", Email="steven@northwindtraders.com"},
-                new Employee(){ LastName="Neipper", FirstName="Michael",    Title="Sales Representative", Phone="(123)555-0100", Email="michael@northwindtraders.com"},
-                new Employee(){ LastName="Zare",    FirstName="Robert", Title="Sales Representative", Phone="(123)555-0100", Email="robert@northwindtraders.com"},
-                new Employee(){ LastName="Giussani",    FirstName="Laura",  Title="Sales Coordinator", Phone="(123)555-0100", Email="laura@northwindtraders.com"},
-                new Employee(){ LastName="Hellung-Larsen",  FirstName="Anne",   Title="Sales Representative", Phone="(123)555-0100", Email="anne@northwindtraders.com"},
-            };
-        }
-
         void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_tbSearch.Text))
@@ -233,14 +218,5 @@ namespace Dt.Sample
                 Kit.Msg("导出成功！");
             }
         }
-    }
-
-    public class Employee
-    {
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string Title { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
     }
 }
