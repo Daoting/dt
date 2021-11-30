@@ -43,7 +43,6 @@ namespace Dt.Base.ListView
         // 调整列宽行高的有效边距
         const double _resizePadding = 6.0;
         ColHeader _owner;
-        uint? _pointerID;
         bool _isDragging;
         Col _resizingCol;
         Col _dragTgtCol;
@@ -92,22 +91,18 @@ namespace Dt.Base.ListView
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
             PointerCaptureLost += OnPointerCaptureLost;
+            // uno已支持
+            Tapped += OnPointerTapped;
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (!CapturePointer(e.Pointer))
+            // 触摸模式只支持列排序
+            if (e.IsTouch() || !CapturePointer(e.Pointer))
                 return;
-
-            e.Handled = true;
-            if (e.IsTouch())
-            {
-                // 触摸模式只支持列排序
-                _pointerID = e.Pointer.PointerId;
-                return;
-            }
 
             // 鼠标模式
+            e.Handled = true;
             Point pt = e.GetCurrentPoint(this).Position;
             if (pt.X < _resizePadding)
             {
@@ -142,18 +137,11 @@ namespace Dt.Base.ListView
 
         void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
+            // 触摸模式只支持列排序
             if (e.IsTouch())
-            {
-                // 触摸模式只支持列排序
-                if (_pointerID == e.Pointer.PointerId)
-                {
-                    ReleasePointerCapture(e.Pointer);
-                    _pointerID = null;
-                }
                 return;
-            }
 
+            e.Handled = true;
             // 鼠标未按下时的滑过
             if (!_isDragging && _resizingCol == null)
             {
@@ -193,36 +181,27 @@ namespace Dt.Base.ListView
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (e.IsTouch())
-            {
-                // 触摸模式只支持列排序
-                if (_pointerID == e.Pointer.PointerId)
-                {
-                    ReleasePointerCapture(e.Pointer);
-                    _pointerID = null;
-                    ChangedSortState();
-                }
                 return;
-            }
 
-            if (_isDragging)
+            if (_isDragging && _dragTgtCol != null)
             {
-                if (_dragTgtCol != null)
-                {
-                    // 拖拽结束
-                    _owner.FinishedDrag();
-                    Cols cols = _owner.Lv.Cols;
-                    int index = cols.IndexOf(_dragTgtCol);
-                    cols.Remove(Col);
-                    cols.Insert(index, Col);
-                    cols.Invalidate();
-                }
-                else
-                {
-                    // 列排序
-                    ChangedSortState();
-                }
+                // 拖拽结束
+                _owner.FinishedDrag();
+                Cols cols = _owner.Lv.Cols;
+                int index = cols.IndexOf(_dragTgtCol);
+                cols.Remove(Col);
+                cols.Insert(index, Col);
+                cols.Invalidate();
             }
             ResetMouseState();
+        }
+
+        void OnPointerTapped(object sender, TappedRoutedEventArgs e)
+        {
+            // _resizingCol 在 ResetMouseState() 中已为 null
+            Point pt = e.GetPosition(this);
+            if (pt.X > _resizePadding && pt.X < Col.Width - _resizePadding)
+                ChangedSortState();
         }
 
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
