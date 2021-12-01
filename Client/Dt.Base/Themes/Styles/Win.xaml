@@ -132,13 +132,13 @@
                                 <VisualState x:Name="UnSelected"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 浅黄}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 中黄}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -182,8 +182,7 @@
                             <!--后退-->
                             <Button x:Name="BackButton"
                                     Visibility="{TemplateBinding BackButtonVisibility}"
-                                    Style="{StaticResource 字符按钮}"
-                                    Foreground="{StaticResource 默认背景}"
+                                    Style="{StaticResource 浅字符按钮}"
                                     Content="&#xE010;"
                                     VerticalAlignment="Stretch"
                                     Width="50" />
@@ -241,7 +240,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid" Background="Transparent" BorderThickness="1">
+                    <Grid x:Name="RootGrid" Background="Transparent">
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock x:Name="ElementIcon"
                                        Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
@@ -262,13 +261,12 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="RootGrid.BorderBrush" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 浅黄}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 中黄}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">

@@ -55,10 +55,12 @@
                     <a:CBool Title="水平填充" ID="IsHorStretch" />
                     <a:CNum Title="行数(-1自动)" ID="RowSpan" />
                     <a:CList Title="可见" ID="Visibility" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="切换第一格内容" Click="OnToggleContent"/>
-                        <Button Content="切换CBar内容" Click="OnToggleBar"/>
-                    </StackPanel>
+                    <a:CBar>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="切换第一格内容" Click="OnToggleContent"/>
+                            <Button Content="切换CBar内容" Click="OnToggleBar"/>
+                        </StackPanel>
+                    </a:CBar>
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

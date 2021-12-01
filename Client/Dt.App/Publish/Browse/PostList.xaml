@@ -7,7 +7,7 @@
     <UserControl.Resources>
         <Style x:Key="ExBtn" TargetType="Button" BasedOn="{StaticResource 字符按钮}">
             <Setter Property="Foreground" Value="{StaticResource 深灰2}" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
 

@@ -35,12 +35,41 @@ namespace Dt.Sample
 
         void OnTest1(object sender, RoutedEventArgs e)
         {
-            Kit.Toast("标题", DateTime.Now.ToString());
+            ConvertRgbToArgb(0xff, 0xE4, 0x66, 0x33);
+            //ConvertRgbToArgb(0xff, 0xff, 204, 0x33);
+
+            //ConvertArgbToRgb(0x19, 0xff, 0xff, 0);
+            //ConvertArgbToRgb(0x33, 0xff, 0xff, 0);
+            ConvertArgbToRgb(0x33, 0xfa, 0xd0, 0);
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
             Kit.Toast("标题", DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+        }
+
+        void ConvertRgbToArgb(byte p_r, byte p_g, byte p_b, byte p_tgtAlpha)
+        {
+            // 背景为白色
+            var alpha = p_tgtAlpha / 255.0;
+            byte r = (byte)(Math.Abs((p_r - 255) / alpha + 255));
+            byte g = (byte)(Math.Abs((p_g - 255) / alpha + 255));
+            byte b = (byte)(Math.Abs((int)((p_b - 255) / alpha) % 255 + 255));
+            Console.WriteLine(r);
+            Console.WriteLine(g);
+            Console.WriteLine(b);
+        }
+
+        void ConvertArgbToRgb(byte p_ahpha, byte p_r, byte p_g, byte p_b)
+        {
+            var alpha = p_ahpha / 255.0;
+            var diff = 1.0 - alpha;
+            byte r = (byte)(p_r * alpha + 255 * diff);
+            byte g = (byte)(p_g * alpha + 255 * diff);
+            byte b = (byte)(p_b * alpha + 255 * diff);
+            Console.WriteLine(r);
+            Console.WriteLine(g);
+            Console.WriteLine(b);
         }
     }
 }

@@ -7,6 +7,10 @@
     mc:Ignorable="d"
     xmlns:a="using:Dt.Base">
 
+    <a:Win.Resources>
+        <Style x:Key="SysButton" TargetType="Button" />
+    </a:Win.Resources>
+    
     <ScrollViewer HorizontalScrollMode="Disabled"
                   HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollMode="Auto"
@@ -19,11 +23,23 @@
                 <Button Content="不可用状态" IsEnabled="False" />
                 <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" />
             </StackPanel>
+            <TextBlock Text="系统按钮" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="系统按钮" Style="{StaticResource SysButton}" />
+                <Button Content="不可用状态" IsEnabled="False" Style="{StaticResource SysButton}" />
+                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" Style="{StaticResource SysButton}" />
+            </StackPanel>
             <TextBlock Text="字符按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="&#xE004;" Style="{StaticResource 字符按钮}" />
                 <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
                 <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="60" />
+            </StackPanel>
+            <TextBlock Text="浅字符按钮" />
+            <StackPanel Orientation="Horizontal" Spacing="10" Background="{StaticResource 主蓝}">
+                <Button Content="&#xE004;" Style="{StaticResource 浅字符按钮}" />
+                <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" IsEnabled="False" />
+                <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" FontSize="60" />
             </StackPanel>
             <TextBlock Text="浅色按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10" Background="Black">

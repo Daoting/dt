@@ -89,8 +89,7 @@
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
-                                    Style="{StaticResource 字符按钮}"
-                                    Foreground="{StaticResource 默认背景}"
+                                    Style="{StaticResource 浅字符按钮}"
                                     Content="{TemplateBinding HeaderButtonText}"
                                     VerticalAlignment="Stretch"
                                     Width="50" />

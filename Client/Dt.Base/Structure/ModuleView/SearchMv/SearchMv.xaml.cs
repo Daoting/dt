@@ -160,8 +160,7 @@ namespace Dt.Base
                 var btn = new Button
                 {
                     Content = "\uE010",
-                    Style = Res.字符按钮,
-                    Foreground = Res.WhiteBrush,
+                    Style = Res.浅字符按钮,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     Width = 50,
                 };

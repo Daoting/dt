@@ -64,12 +64,12 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 浅黄}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 中黄}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -153,13 +153,13 @@
                                 <VisualState x:Name="UnSelected"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 浅黄}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 中黄}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 亮蓝}" />
                                     </VisualState.Setters>
                                 </VisualState>

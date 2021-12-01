@@ -324,6 +324,11 @@ namespace Dt.Base
         public static Style 字符按钮 => (Style)_dict["字符按钮"];
 
         /// <summary>
+        /// 浅字符按钮样式
+        /// </summary>
+        public static Style 浅字符按钮 => (Style)_dict["浅字符按钮"];
+
+        /// <summary>
         /// 浅色按钮样式
         /// </summary>
         public static Style 浅色按钮 => (Style)_dict["浅色按钮"];

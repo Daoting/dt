@@ -9,7 +9,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="IsTextSelectionEnabled" Value="True" />
-            <Setter Property="Margin" Value="0,20,0,20" />
+            <Setter Property="Margin" Value="0,10,0,10" />
         </Style>
     </a:Win.Resources>
 
@@ -38,12 +38,16 @@
                 <TextBlock Text="亮红" Style="{StaticResource DefaultBlock}" Foreground="White" />
             </Border>
 
-            <Border Background="{StaticResource 中黄}">
-                <TextBlock Text="中黄" Style="{StaticResource DefaultBlock}" />
-            </Border>
             <Border Background="{StaticResource 浅黄}">
                 <TextBlock Text="浅黄" Style="{StaticResource DefaultBlock}" />
             </Border>
+            <Border Background="{StaticResource 中黄}">
+                <TextBlock Text="中黄" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深黄}">
+                <TextBlock Text="深黄" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            
             <Border Background="{StaticResource 中绿}">
                 <TextBlock Text="中绿" Style="{StaticResource DefaultBlock}" Foreground="White" />
             </Border>
@@ -59,16 +63,28 @@
             <Border Background="{StaticResource 深蓝}">
                 <TextBlock Text="深蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
             </Border>
+
+            <Border Background="{StaticResource 暗遮罩}">
+                <TextBlock Text="暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深暗遮罩}">
+                <TextBlock Text="深暗遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+
+            <Border Background="{StaticResource 黄遮罩}">
+                <TextBlock Text="黄遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深黄遮罩}">
+                <TextBlock Text="深黄遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+
+            <Border Background="{StaticResource 亮遮罩}">
+                <TextBlock Text="亮遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
+            <Border Background="{StaticResource 深亮遮罩}">
+                <TextBlock Text="深亮遮罩" Style="{StaticResource DefaultBlock}" />
+            </Border>
             
-            <Border Background="{StaticResource 暗遮罩}" BorderBrush="{StaticResource 深暗遮罩}" BorderThickness="4">
-                <TextBlock Text="暗遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 亮遮罩}" BorderBrush="{StaticResource 深亮遮罩}" BorderThickness="4">
-                <TextBlock Text="亮遮罩 深暗遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 黄遮罩}" BorderBrush="{StaticResource 深黄遮罩}" BorderThickness="4">
-                <TextBlock Text="黄遮罩 深黄遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
         </StackPanel>
     </ScrollViewer>
 </a:Win>
