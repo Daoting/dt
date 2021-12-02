@@ -34,6 +34,7 @@ namespace Dt.Sample
 
         public override Task Run()
         {
+            //Kit.Toast("标题", DateTime.Now.ToString());
             return Task.CompletedTask;
         }
     }

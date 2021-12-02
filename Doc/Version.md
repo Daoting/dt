@@ -21,8 +21,8 @@ window:
 uwp的release版Chart动画报错 
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 Excel样例中 ChartExcel.xaml 报错，因WinUI3无法定位调试，暂搁
-
-
+点击Toast自启动传参数问题
+BackgroundTask 的TimeTriggeredTask 能注册但不触发，无法调试
 
 
 

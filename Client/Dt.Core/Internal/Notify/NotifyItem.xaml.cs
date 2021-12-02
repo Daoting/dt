@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.System.Threading;
 #endregion
 
@@ -31,6 +32,7 @@ namespace Dt.Core
 
         NotifyInfo _info;
         ThreadPoolTimer _timerAutoClose;
+        Point? _ptStart;
 
         public NotifyItem(NotifyInfo p_info)
         {
@@ -42,7 +44,6 @@ namespace Dt.Core
             _grid.PointerEntered += OnPointerEntered;
             _grid.PointerPressed += OnPointerPressed;
             _grid.PointerReleased += OnPointerReleased;
-            _grid.Tapped += OnPointerTapped;
             _grid.PointerExited += OnPointerExited;
 
             _tb.Text = _info.Message;
@@ -124,20 +125,19 @@ namespace Dt.Core
                 KillCloseTimer();
                 e.Handled = true;
                 _rc.Fill = (SolidColorBrush)Application.Current.Resources["深亮遮罩"];
+                _ptStart = e.GetCurrentPoint(null).Position;
             }
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            // WinUI
             _grid.ReleasePointerCapture(e.Pointer);
             e.Handled = true;
-            _rc.Fill = null;
-        }
-
-        void OnPointerTapped(object sender, TappedRoutedEventArgs e)
-        {
-            CloseInternal();
+            var pt = e.GetCurrentPoint(null).Position;
+            if (Math.Abs(_ptStart.Value.X - pt.X) < 6 && Math.Abs(_ptStart.Value.Y - pt.Y) < 6)
+                CloseInternal();
+            else
+                _rc.Fill = null;
         }
 
         /// <summary>

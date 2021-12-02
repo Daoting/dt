@@ -69,7 +69,6 @@ namespace Dt.Base
                 if (elem != null)
                 {
                     elem.Loaded -= handler;
-                    // WinUI
                     Kit.RunAsync(p_action);
                 }
             };

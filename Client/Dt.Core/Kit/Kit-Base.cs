@@ -180,7 +180,6 @@ namespace Dt.Core
         public static void RunSync(Action p_action)
         {
 #if WIN
-            // WinUI
             if (SysVisual.MainWin.DispatcherQueue.HasThreadAccess)
             {
                 p_action();

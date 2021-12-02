@@ -332,7 +332,7 @@ namespace Dt.Base
         //}
 
         /// <summary>
-        /// 保存当前界面元素的png截图
+        /// 保存当前界面元素的png截图，只支持 Windows
         /// </summary>
         /// <param name="p_element">要截图的界面元素</param>
         /// <param name="p_fileName">要保存的文件名</param>
@@ -387,7 +387,6 @@ namespace Dt.Base
 
             using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                // WinUI
                 // 换算成物理像素
                 double raw = p_element.XamlRoot.RasterizationScale;
                 var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
