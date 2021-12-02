@@ -790,7 +790,6 @@ namespace Dt.Base
         /// <param name="p_totalBytesToSend">总字节数</param>
         void OnUploadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
         {
-            // WinUI
             Kit.RunAsync(() =>
             {
                 // 开始发送
@@ -908,7 +907,6 @@ namespace Dt.Base
         /// <param name="p_totalBytesToSend"></param>
         void OnDownloadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
         {
-            // WinUI
             Kit.RunAsync(() =>
             {
                 double percent = p_bytesSent * 100 / p_totalBytesToSend;

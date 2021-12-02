@@ -423,7 +423,6 @@ namespace Dt.Base.Docking
 
             if (Placement == ItemPlacement.Left || Placement == ItemPlacement.Right)
             {
-                // WinUI
                 ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
             }
             else

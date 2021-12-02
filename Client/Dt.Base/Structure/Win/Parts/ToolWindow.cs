@@ -444,7 +444,6 @@ namespace Dt.Base.Docking
             {
                 case ResizeDirection.Left:
                 case ResizeDirection.Right:
-                    // WinUI
                     ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     break;
 

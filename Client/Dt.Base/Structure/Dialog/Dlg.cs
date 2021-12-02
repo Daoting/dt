@@ -1116,7 +1116,6 @@ namespace Dt.Base
             {
                 case ResizeDirection.Left:
                 case ResizeDirection.Right:
-                    // WinUI
                     ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
                     break;
 

@@ -247,7 +247,6 @@ namespace Dt.Base.ListView
         /// </summary>
         void SetDataContextAsync()
         {
-            // WinUI
             DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => DataContext = _row);
         }
     }

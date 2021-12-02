@@ -303,7 +303,6 @@ namespace Dt.Base.TreeViews
         /// </summary>
         void SetDataContextAsync()
         {
-            // WinUI
             DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => DataContext = _row);
         }
 

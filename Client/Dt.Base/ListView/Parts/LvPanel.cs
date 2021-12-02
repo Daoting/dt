@@ -315,7 +315,7 @@ namespace Dt.Base.ListView
                 offset = _owner.Scroll.VerticalOffset + pt.Y + rowHeight;
             }
 
-            // WinUI 不异步初次加载数据后滚出无效！
+            // 不异步初次加载数据后滚出无效！
             Kit.RunAsync(() => _owner.Scroll.ChangeView(null, offset, null));
         }
 
@@ -868,7 +868,6 @@ namespace Dt.Base.ListView
         /// <param name="e"></param>
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // WinUI
             var pd = _owner.PageData;
             if (pd == null || pd.State != PageDataState.Loading)
             {
