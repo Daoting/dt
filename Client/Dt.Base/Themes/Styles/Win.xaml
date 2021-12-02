@@ -195,6 +195,8 @@
                                        Margin="10,0,10,0"
                                        VerticalAlignment="Center"
                                        Grid.Column="1" />
+                            <!--触发右键菜单-->
+                            <Border x:Name="ContextMenuBorder" Background="Transparent" Grid.Column="1" />
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认背景}"

@@ -417,8 +417,8 @@ namespace Dt.Base
             {
                 if (OwnWin != null && BackButtonVisibility == Visibility.Visible)
                 {
-                    // 首页无标题右键菜单
-                    WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
+                    // 首页无右键菜单
+                    WinKit.OnPhoneTitleTapped((Border)GetTemplateChild("ContextMenuBorder"), OwnWin);
                 }
 
                 Button btn = GetTemplateChild("BackButton") as Button;

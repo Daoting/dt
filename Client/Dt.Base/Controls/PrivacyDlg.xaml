@@ -22,7 +22,7 @@
             </StackPanel>
 
             <StackPanel>
-                <Button Content="同意" Click="OnAgree" Background="Green" Foreground="White" HorizontalAlignment="Stretch" />
+                <Button Content="同意" Click="OnAgree" Background="Green" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
                 <Button Content="不同意并退出" Click="OnNo" Foreground="Gray" HorizontalAlignment="Stretch" />
             </StackPanel>
         </StackPanel>
