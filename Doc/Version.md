@@ -43,11 +43,13 @@ FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
 * Application的Suspending Resuming 事件已移除，Kit-Sys.cs
 
 * MediaPlayerElement 未实现，FileItem.cs
-*  Button Menu交互样式调整
+* Button Menu交互样式调整
+* 全局快捷键适配WinUI
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
 * Lv的Table模式列头排序只在Tapped事件触发
+* Phone模式标题栏触发右键菜单位置调整
 
 ## Release 1.9.10 
 ### 功能 

@@ -14,6 +14,8 @@ using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Input;
+using System;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -33,7 +35,19 @@ namespace Dt.Base
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
 #else
             // 全局快捷键
-            SysVisual.RootGrid.KeyDown += OnGlobalKeyDown;
+            var accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Right
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + → 系统监控
+                e.Handled = true;
+                SysTrace.ShowBox();
+            };
+            // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
+            SysVisual.RootGrid.Children[SysVisual.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
 #endif
         }
 
@@ -86,23 +100,6 @@ namespace Dt.Base
                 {
                     frame.GoBack();
                 }
-            }
-        }
-
-        /// <summary>
-        /// 处理全局快捷键
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void OnGlobalKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            // WinUI
-            if (e.KeyStatus.IsMenuKeyDown
-                && InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Right) == CoreVirtualKeyStates.Down)
-            {
-                // Alt + → 系统监控
-                e.Handled = true;
-                SysTrace.ShowBox();
             }
         }
 
