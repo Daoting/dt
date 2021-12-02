@@ -43,11 +43,11 @@ FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
 * Application的Suspending Resuming 事件已移除，Kit-Sys.cs
 
 * MediaPlayerElement 未实现，FileItem.cs
-* 
+*  Button Menu交互样式调整
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
-
+* Lv的Table模式列头排序只在Tapped事件触发
 
 ## Release 1.9.10 
 ### 功能 
@@ -67,6 +67,8 @@ FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
 * uwp的release版 Excel的画刷改名
 * Dot中string空时不显示
 * win模式Win切换主区时若保存布局后再加载布局错误
+
+
 
 ## Release 1.9.9 
 ### 功能 

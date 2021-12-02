@@ -688,11 +688,26 @@ namespace Dt.Base
         void ChangeState(MenuItemState p_state)
         {
             if (!IsEnabled)
+            {
                 VisualStateManager.GoToState(this, "Disabled", true);
+            }
+            else if (Kit.IsPhoneUI)
+            {
+                if (ParentMi != null || Owner.IsContextMenu)
+                    VisualStateManager.GoToState(this, p_state.ToString(), true);
+                else if (p_state == MenuItemState.Pressed)
+                    VisualStateManager.GoToState(this, "LightPressed", true);
+                else
+                    VisualStateManager.GoToState(this, "Normal", true);
+            }
             else if (IsSubmenuOpen)
+            {
                 VisualStateManager.GoToState(this, "Pressed", true);
+            }
             else
+            {
                 VisualStateManager.GoToState(this, p_state.ToString(), true);
+            }
         }
 
         protected virtual void UpdateRoleState()
