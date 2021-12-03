@@ -1,8 +1,10 @@
 ﻿#  未解决问题
-wasm ：
-日期选择CalendarView、DatePickerFlyout、TimePickerFlyout未实现
-FileItem上传、分享、MediaPlayerElement等功能未实现
 
+MediaPlayerElement 未实现，FileItem.cs 
+
+wasm ：
+FileItem上传、分享、MediaPlayerElement等功能未实现
+切换到默认主页无响应
 
 ios ：
 Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
@@ -32,19 +34,16 @@ BackgroundTask 的TimeTriggeredTask 能注册但不触发，无法调试
 ## Release 2.0.0 
 ### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
 * 服务端升级到.net6
-* 不再支持的API列表：
-https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-supported-api
+* 不再支持的API列表：https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-supported-api
 * 删除PhoneUI模式下窗口左上角的后退按钮
-Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
-Window.Current Window.Dispatcher  DependencyObject.Dispatcher 始终null，改用DispatcherQueue
-ProtectedCursor 加载到可视树前设置崩溃，无提示！
-FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
-
-* Application的Suspending Resuming 事件已移除，Kit-Sys.cs
-
-* MediaPlayerElement 未实现，FileItem.cs
+* Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
+* Window.Current Window.Dispatcher  DependencyObject.Dispatcher 始终null，改用DispatcherQueue
+* ProtectedCursor 加载到可视树前设置崩溃，无提示！
+* FileOpenPicker, FileSavePicker, FolderPicker 增加Window句柄
+* Win版Application的Suspending Resuming 事件已移除，Kit-Sys.cs
 * Button Menu交互样式调整
 * 全局快捷键适配WinUI
+* wasm版日期选择CalendarView、DatePickerFlyout、TimePickerFlyout已实现 
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
