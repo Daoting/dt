@@ -12,9 +12,9 @@
       Version="1.0.0.0" />
 
     <Properties>
-        <DisplayName>Dt.Shell.Win</DisplayName>
+        <DisplayName>新搬运工</DisplayName>
         <PublisherDisplayName>Daoting</PublisherDisplayName>
-        <Logo>Assets\StoreLogo.png</Logo>
+        <Logo>Assets\logo.png</Logo>
     </Properties>
 
     <Dependencies>
@@ -31,13 +31,13 @@
           Executable="$targetnametoken$.exe"
           EntryPoint="$targetentrypoint$">
             <uap:VisualElements
-              DisplayName="Dt.Shell.Win"
-              Description="Dt.Shell.Win"
+              DisplayName="搬运工-WinUI"
+              Description="WinUI版搬运工"
               BackgroundColor="transparent"
               Square150x150Logo="Assets\Square150x150Logo.png"
               Square44x44Logo="Assets\Square44x44Logo.png">
                 <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
-                <uap:SplashScreen Image="Assets\SplashScreen.png" />
+                <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#1BA1E2" />
             </uap:VisualElements>
             <Extensions>
                 <Extension Category="windows.backgroundTasks" EntryPoint="Dt.Core.TimeTriggeredTask">

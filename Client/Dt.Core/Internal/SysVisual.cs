@@ -105,7 +105,7 @@ namespace Dt.Core
 
 #if WIN
             // WinUI中Window.Current为null
-            MainWin = new Window();
+            MainWin = new Window { Title = Kit.Stub.Title };
 #else
             // uno中若新创建，Window.Bounds始终为(0, 0)！
             MainWin = Window.Current;

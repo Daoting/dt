@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.0.0-dev.5531" />
+        <PackageReference Include="Uno.WinUI" Version="4.0.9" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
@@ -52,7 +52,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.0.0-dev.5531" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.0.9" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
     </ItemGroup>
 
