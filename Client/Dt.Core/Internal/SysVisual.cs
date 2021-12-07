@@ -64,20 +64,10 @@ namespace Dt.Core
         #region 静态构造
         static SysVisual()
         {
-            // 根Grid，背景主蓝
-            RootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
+            // 根Grid
+            RootGrid = new Grid();
 
-            // 桌面层/页面层，此层调整为动态添加！为uno节省级数！启动时为临时提示信息
-            TextBlock tb = new TextBlock
-            {
-                Text = "正在启动...",
-                FontSize = 20,
-                Foreground = new SolidColorBrush(Colors.White),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            _rootContent = tb;
-            RootGrid.Children.Add(tb);
+            // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
 
             // 对话框层
             _dlgCanvas = new Canvas();
@@ -168,7 +158,8 @@ namespace Dt.Core
             {
                 if (value != null && value != _rootContent)
                 {
-                    RootGrid.Children.Remove(_rootContent);
+                    if (_rootContent != null)
+                        RootGrid.Children.Remove(_rootContent);
                     _rootContent = value;
                     SetDefaultStyle(_rootContent as Control);
                     RootGrid.Children.Insert(0, value);

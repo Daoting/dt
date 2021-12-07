@@ -165,7 +165,7 @@ namespace Dt.Base
             }
             catch
             {
-                ShowTip("服务器连接失败！");
+                ShowError("服务器连接失败！");
                 return false;
             }
 
@@ -204,7 +204,7 @@ namespace Dt.Base
                         File.Delete(modelFile);
                     }
                     catch { }
-                    ShowTip("下载模型文件失败！" + ex.Message);
+                    ShowError("下载模型文件失败！" + ex.Message);
                     return false;
                 }
             }
@@ -216,20 +216,30 @@ namespace Dt.Base
             }
             catch (Exception ex)
             {
-                ShowTip("打开模型库失败！" + ex.Message);
+                ShowError("打开模型库失败！" + ex.Message);
                 return false;
             }
             return true;
         }
 
         /// <summary>
-        /// 显示提示信息，只在未加载任何UI时有效
+        /// 启动过程中显示错误信息，此时未加载任何UI
         /// </summary>
-        /// <param name="p_msg"></param>
-        public static void ShowTip(string p_msg)
+        /// <param name="p_error"></param>
+        public static void ShowError(string p_error)
         {
-            if (SysVisual.RootContent is TextBlock tb && p_msg != null)
-                tb.Text = p_msg;
+            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Res.主蓝 };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.WinPlacement = DlgPlacement.CenterScreen;
+                dlg.MinWidth = 300;
+                dlg.MaxWidth = Kit.ViewWidth / 4;
+            }
+            var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+            pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
+            pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
+            dlg.Content = pnl;
+            dlg.Show();
         }
         #endregion
 
