@@ -2,7 +2,7 @@
  <img align=center src="https://raw.githubusercontent.com/Daoting/dt/master/logo.png" width="64" />
 </h1>
 
-## 一套让您能够快速构建业务系统的框架
+## 利用 C# + XAML 进行快速业务开发的跨平台框架
 [![GitHub Stars](https://img.shields.io/github/stars/daoting/dt?label=github%20stars)](https://github.com/daoting/dt/stargazers/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/dt.client.svg)](https://www.nuget.org/packages/dt.client)
 
@@ -22,7 +22,7 @@
 # 正在进行
 * 客户端迁移到 .NET6.0 + WinAppSdk1.0(WinUI3.0) + Uno.WinUI 4.x
 * 服务端升级到 .NET6.0
-* VS扩展工具
+* 打造VS扩展工具，提高搬运工使用体验
 
 # 客户端
 客户端样例已上传到各平台商店，请搜索【搬运工】或使用以下链接进行安装：
@@ -61,5 +61,6 @@ https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-
 
 # 开始使用
 
-VS扩展工具
+* 为了提高搬运工的使用体验，先安装[VS扩展工具]()
+* 添加新项目
 
