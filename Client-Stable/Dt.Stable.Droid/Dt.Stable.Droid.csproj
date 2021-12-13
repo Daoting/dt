@@ -7,7 +7,11 @@
         <IsUnoHead>true</IsUnoHead>
     </PropertyGroup>
 
-    <Import Project="..\Common.props" />
+    <ItemGroup>
+        <PackageReference Include="Uno.WinUI" Version="4.0.9" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.1.1" />
+        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.2.1.3" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
@@ -18,13 +22,13 @@
         <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Android\Assets\Fonts\" />
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
     </ItemGroup>
-
-    <ItemGroup>
-      <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
-      <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     </ItemGroup>
-
 </Project>

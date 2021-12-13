@@ -13,7 +13,6 @@
 	</PropertyGroup>
 
     <Import Project="..\Common.props" />
-    <Import Project="..\Stable.props" />
 
     <ItemGroup>
         <ProjectReference Include="..\Dt.App\Dt.App.csproj" />

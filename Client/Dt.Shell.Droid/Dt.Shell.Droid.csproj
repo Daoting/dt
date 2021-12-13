@@ -8,22 +8,12 @@
     </PropertyGroup>
 
     <Import Project="..\Common.props" />
-    <Import Project="..\Stable.props" />
     
     <ItemGroup>
         <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Android\Assets\Fonts\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
-      <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
     </ItemGroup>
 
 </Project>

@@ -20,9 +20,9 @@
 
     <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
         <ItemGroup>
-            <!-- copy引用项目的文件 -->
+            <!-- 打包引用项目的文件 -->
             <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-            <!--uwp包含引用项目的xbf文件-->
+            <!-- 打包本项目的展开文件，如嵌入资源文件 -->
             <TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="$(TargetFramework.Contains('-windows'))" />
         </ItemGroup>
     </Target>

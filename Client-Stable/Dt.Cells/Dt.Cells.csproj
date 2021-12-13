@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>2.2.0</Version>
-		<PackageId>Dt.Stable</PackageId>
 		<Description>搬运工客户端Excel和Chart控件</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-    <Import Project="..\Targets.props" />
-	<Import Project="..\Common.props" />
+    <Import Project="..\Stable.props" />
     <Import Project="..\Package.props" />
 
 	<!-- 包图标 -->

@@ -1,23 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:ios="http://uno.ui/ios"
-    xmlns:android="http://uno.ui/android"
-    xmlns:wasm="http://uno.ui/wasm"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="ios android wasm">
-
-    <!--自定义图标字体库-->
-    <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
-    <ios:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
-    <android:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
-    <!--前缀wasm not_wasm netstdref都无效，wasm在App.cs使用代码添加字体库-->
-    <!--<wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>-->
-
-    <!--uno中标准控件用到的字体库-->
-    <ios:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</ios:FontFamily>
-    <android:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</android:FontFamily>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     
     <!--
     *****************************************************************

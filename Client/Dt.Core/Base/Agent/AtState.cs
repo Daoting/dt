@@ -56,7 +56,8 @@ namespace Dt.Core
             try
             {
                 string json = _db.GetScalar<string>("select val from ClientCookie where key='AutoStart'");
-                return JsonSerializer.Deserialize<AutoStartInfo>(json);
+                if (!string.IsNullOrEmpty(json))
+                    return JsonSerializer.Deserialize<AutoStartInfo>(json);
             }
             catch { }
             return null;

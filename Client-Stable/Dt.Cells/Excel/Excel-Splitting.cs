@@ -418,13 +418,12 @@ namespace Dt.Base
                         Background = BrushRes.浅灰1,
                         Child = new TextBlock
                         {
-                            Text = "\uE016",
+                            Text = ">",
                             // 居中在android上位置不对
-                            Margin = new Thickness(9, 7, 0, 0),
+                            Margin = new Thickness(9, 4, 0, 0),
                             //HorizontalAlignment = HorizontalAlignment.Center,
                             //VerticalAlignment = VerticalAlignment.Center,
-                            FontFamily = BrushRes.IconFont,
-                            FontSize = 12,
+                            FontSize = 14,
                             Foreground = BrushRes.深灰2,
                         }
                     };
@@ -455,11 +454,10 @@ namespace Dt.Base
                         Background = BrushRes.浅灰1,
                         Child = new TextBlock
                         {
-                            Text = "\uE018",
+                            Text = "v",
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
-                            FontFamily = BrushRes.IconFont,
-                            FontSize = 12,
+                            FontSize = 14,
                             Foreground = BrushRes.深灰2,
                         }
                     };

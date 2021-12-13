@@ -6,7 +6,6 @@
 
     <Import Project="..\Targets.props" />
 	<Import Project="..\Common.props" />
-	<Import Project="..\Stable.props" />
 
 	<ItemGroup>
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />

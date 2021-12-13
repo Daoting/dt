@@ -314,10 +314,5 @@ namespace Dt.Cells.Data
         public static SolidColorBrush 亮蓝 => (SolidColorBrush)_dict["亮蓝"];
         public static SolidColorBrush 亮红 => (SolidColorBrush)_dict["亮红"];
         #endregion
-
-        /// <summary>
-        /// 图标字体
-        /// </summary>
-        public static FontFamily IconFont => (FontFamily)_dict["IconFont"];
     }
 }

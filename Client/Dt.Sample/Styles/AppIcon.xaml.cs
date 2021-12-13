@@ -158,6 +158,30 @@ namespace Dt.Sample
             Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
+        async void OnLogo(object sender, RoutedEventArgs e)
+        {
+            Icons icon = (Icons)_fv.Row["icon"];
+            if (icon == Icons.None)
+            {
+                Kit.Msg("请选择图标");
+                return;
+            }
+
+            var folder = await OpenFolder($"{icon}_logo");
+
+            _bd.Background = null;
+            _tb.Foreground = Res.主蓝;
+            await SaveIcon(512, 512, 408, icon, "logo-trans-512.png", folder);
+            await SaveIcon(256, 256, 204, icon, "logo-trans-256.png", folder);
+
+            _bd.Background = Res.主蓝;
+            _tb.Foreground = Res.WhiteBrush;
+            await SaveIcon(512, 512, 408, icon, "logo-512.png", folder);
+            await SaveIcon(256, 256, 204, icon, "logo-256.png", folder);
+
+            Kit.Msg("生成成功，路径: " + folder.Path);
+        }
+
         async Task<StorageFolder> OpenFolder(string p_name)
         {
             try

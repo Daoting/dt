@@ -6,8 +6,7 @@
 
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
-    <Import Project="..\Stable.props" />
-	
+    
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 	</ItemGroup>
@@ -28,4 +27,22 @@
 		<None Include="Chat\WebRTC\WebRtcApi.cs" />
         <Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
 	</ItemGroup>
+
+    <ItemGroup>
+        <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
+        <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <BundleResource Include="iOS\Fonts\icon.ttf" />
+        <BundleResource Include="iOS\Fonts\uno-fluentui-assets.ttf" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Android\Fonts\" />
+    </ItemGroup>
 </Project>

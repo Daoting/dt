@@ -8,7 +8,6 @@
 
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
-    <Import Project="..\Stable.props" />
     <Import Project="..\Package.props" />
 
 	<!-- 包图标 -->
@@ -18,7 +17,7 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" PrivateAssets="all" />

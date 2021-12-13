@@ -24,6 +24,7 @@
 
     <!-- 引用包 -->
     <ItemGroup>
+        <PackageReference Include="Dt.Cells" Version="2.2.0" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.12" />
         <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     </ItemGroup>

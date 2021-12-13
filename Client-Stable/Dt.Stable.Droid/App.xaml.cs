@@ -23,7 +23,6 @@ namespace Dt.Shell
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             Window.Current.Content = new MainWindow();
-            
         }
     }
 }

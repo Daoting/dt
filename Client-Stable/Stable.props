@@ -1,0 +1,44 @@
+<Project ToolsVersion="Current">
+    <PropertyGroup>
+        <TargetFrameworks>net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
+        <SingleProject>true</SingleProject>
+        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
+    </PropertyGroup>
+
+    <!-- 定义平台常量 -->
+    <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
+        <DefineConstants>$(DefineConstants);WIN</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+        <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+        <DefineConstants>$(DefineConstants);WASM</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <PackageReference Include="Uno.WinUI" Version="4.0.9" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+    </ItemGroup>
+
+    <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    </ItemGroup>
+</Project>
