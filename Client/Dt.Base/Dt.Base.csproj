@@ -33,16 +33,16 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-        <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
-        <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+        <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
+        <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Themes\uno-fluentui-assets.ttf" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-        <BundleResource Include="iOS\Fonts\icon.ttf" />
-        <BundleResource Include="iOS\Fonts\uno-fluentui-assets.ttf" />
+        <BundleResource Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
+        <BundleResource Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Themes\uno-fluentui-assets.ttf" />
     </ItemGroup>
     
-    <ItemGroup>
-      <Folder Include="Android\Fonts\" />
+    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+        <Content Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
     </ItemGroup>
 </Project>
