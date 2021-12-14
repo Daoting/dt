@@ -37,8 +37,8 @@
 
     <!--自定义图标字体库-->
     <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
-    <ios:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
-    <android:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
+    <ios:FontFamily x:Key="IconFont">iOS/Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
+    <android:FontFamily x:Key="IconFont">Android/Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
     <!--前缀wasm not_wasm netstdref都无效，wasm在App.cs使用代码添加字体库-->
     <!--<wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>-->
 

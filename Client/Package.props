@@ -22,8 +22,8 @@
         <ItemGroup>
             <!-- 打包引用项目的文件 -->
             <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-            <!-- 打包本项目的展开文件，如嵌入资源文件 -->
-            <TfmSpecificPackageFile Include="@(_LayoutFile)" PackagePath="lib\$(TargetFramework)\%(_LayoutFile.TargetPath)" Condition="$(TargetFramework.Contains('-windows'))" />
+            <!-- 将本项目输出目录的所有子目录内容打包，写法保证只复制子目录不重复复制文件，自创，佩服在下 -->
+            <TfmSpecificPackageFile Include="$(OutputPath)**" Exclude="$(OutputPath)*.*" PackagePath="lib\$(TargetFramework)" Condition="$(TargetFramework.Contains('-windows'))" />
         </ItemGroup>
     </Target>
 </Project>

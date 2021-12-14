@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
     <Import Project="..\Stable.props" />
-    <Import Project="..\Package.props" />
+    <Import Project="..\..\Client\Package.props" />
 
 	<!-- 包图标 -->
 	<ItemGroup>
