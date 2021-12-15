@@ -5,13 +5,19 @@
 
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
-
+    
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
 		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
 	</ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="App\App.xaml.cs" />
+        <Page Remove="App\App.xaml" />
+        <None Include="App\App.xaml.cs" />
+    </ItemGroup>
+    
 	<ItemGroup>
 		<EmbeddedResource Include="Report\数据源\个人成绩.json" />
 		<EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />

@@ -1,5 +1,5 @@
 ﻿
-namespace Dt.Shell
+namespace Dt.Sample
 {
 	public class Program
 	{

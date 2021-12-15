@@ -16,4 +16,10 @@
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Page Include="..\Dt.Sample\App\App.xaml" Link="App.xaml" />
+        <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
+            <DependentUpon>App.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
 </Project>

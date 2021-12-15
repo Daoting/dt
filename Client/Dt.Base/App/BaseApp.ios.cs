@@ -1,13 +1,13 @@
-﻿#region 文件描述
+﻿#if IOS
+#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2015-08-04
+* 日志: 2021-12-14 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Core;
 using Foundation;
 using System;
@@ -15,18 +15,21 @@ using UIKit;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.Base
 {
-    sealed partial class App : Application
+    /// <summary>
+    /// 默认的Application行为
+    /// </summary>
+    public abstract class BaseApp : Application
     {
-        public App()
-        {
-            InitializeComponent();
-        }
+        /// <summary>
+        /// 存根类型
+        /// </summary>
+        public abstract Type Stub { get; }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch<Stub>(p_args.Arguments, null);
+            _ = Startup.Launch(Stub, p_args.Arguments);
         }
 
         public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
@@ -34,7 +37,7 @@ namespace Dt.Sample
             var doc = new UIDocument(p_url);
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
-                _ = Startup.Launch<Stub>(null, new ShareInfo(path));
+                _ = Startup.Launch(Stub, null, new ShareInfo(path));
 
             return true;
         }
@@ -60,7 +63,7 @@ namespace Dt.Sample
             try
             {
                 var iOSTaskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { Console.WriteLine("后台运行超时"); });
-                await BgJob.Run(new Stub());
+                await BgJob.Run();
                 UIApplication.SharedApplication.EndBackgroundTask(iOSTaskId);
             }
             catch
@@ -79,7 +82,7 @@ namespace Dt.Sample
                 {
                     // app完全退出后点击通知启动时不调用此方法！！！
                     // 因此 OnLaunched 和 ReceivedLocalNotification 方法只调用一个！
-                    _ = Startup.Launch<Stub>(val, null);
+                    _ = Startup.Launch(Stub, val);
                 }
             }
 
@@ -88,3 +91,4 @@ namespace Dt.Sample
         }
     }
 }
+#endif

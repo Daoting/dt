@@ -40,6 +40,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Page Include="..\Dt.Sample\App\App.xaml" Link="App.xaml" />
+        <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
+            <DependentUpon>App.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
         <!-- 生成包时不参加裁剪的dll列表，能够反射出类型的dll都不可裁剪 -->
         <LinkerDescriptor Include="LinkerConfig.xml" />
     </ItemGroup>
@@ -52,12 +59,6 @@
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.1.2" PrivateAssets="all" />
         <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.js、dotnet.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
         <!--<PackageReference Include="Uno.sqlite-wasm" Version="3.34.1.3" />-->
-    </ItemGroup>
-
-    <ItemGroup>
-        <Page Include="App.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </Page>
     </ItemGroup>
 
     <ItemGroup>

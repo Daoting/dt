@@ -67,7 +67,7 @@ namespace Dt.Core
                 // 注册后台服务，后台Worker每15分钟运行一次，系统要求最短间隔15分钟！
                 var workRequest = PeriodicWorkRequest.Builder.From<PluginWorker>(TimeSpan.FromMinutes(15)).Build();
                 // 设为Replace时每次启动都运行后台服务，方便调试！
-                WorkManager.GetInstance(Android.App.Application.Context).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Keep, workRequest);
+                WorkManager.GetInstance(Android.App.Application.Context).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Replace, workRequest);
             });
         }
 

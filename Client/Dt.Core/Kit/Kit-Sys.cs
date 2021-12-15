@@ -345,6 +345,44 @@ namespace Dt.Core
             OnUnhandledException(e.Exception);
         }
 
+#if IOS
+        public static void OnIOSUnhandledException(Exception ex)
+        {
+            OnUnhandledException(ex);
+            RunLoop();
+        }
+
+        /// <summary>
+        /// 原创方法，防止异常时闪退，碰巧好使
+        /// 网上未找到处理方法，已测试的方法有：
+        /// ObjCRuntime.Runtime.MarshalManagedException += OnIOSUnhandledException;
+        /// AppDomain.CurrentDomain.UnhandledException
+        /// NSSetUncaughtExceptionHandler signal
+        /// Mono.Runtime.RemoveSignalHandlers
+        /// </summary>
+        static void RunLoop()
+        {
+            var loop = CoreFoundation.CFRunLoop.Current;
+            bool hasException;
+            while (true)
+            {
+                try
+                {
+                    loop.RunInMode(CoreFoundation.CFRunLoop.ModeDefault, 0.001, false);
+                }
+                catch (Exception ex)
+                {
+                    hasException = true;
+                    OnUnhandledException(ex);
+                    break;
+                }
+            }
+
+            if (hasException)
+                RunLoop();
+        }
+#endif
+
 #if ANDROID
         static void OnAndroidUnhandledException(object sender, Android.Runtime.RaiseThrowableEventArgs e)
         {
