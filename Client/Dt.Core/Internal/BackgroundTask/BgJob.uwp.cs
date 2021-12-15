@@ -117,7 +117,7 @@ namespace Dt.Core
             var deferral = taskInstance.GetDeferral();
             try
             {
-                await BgJob.Run(null);
+                await BgJob.Run();
             }
             catch { }
             deferral.Complete();

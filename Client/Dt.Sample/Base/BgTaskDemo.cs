@@ -34,7 +34,7 @@ namespace Dt.Sample
 
         public override Task Run()
         {
-            //Kit.Toast("标题", DateTime.Now.ToString());
+            Kit.Toast("标题", DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
             return Task.CompletedTask;
         }
     }

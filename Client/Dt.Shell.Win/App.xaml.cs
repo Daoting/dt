@@ -8,21 +8,18 @@
 
 #region 引用命名
 using Dt.Base;
-using Microsoft.UI.Xaml;
+using System;
 #endregion
 
-namespace Dt.Shell
+namespace Dt.Sample
 {
-    public partial class App : Application
+    public partial class App : BaseApp
     {
         public App()
         {
             InitializeComponent();
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
-        {
-            _ = Startup.Launch<Stub>(p_args.Arguments, null);
-        }
+        public override Type Stub => typeof(Stub);
     }
 }

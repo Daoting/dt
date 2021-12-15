@@ -25,6 +25,13 @@ namespace Dt.Core
     {
         public const string ToastStart = "ToastStart";
 
+        /// <summary>
+        /// 注册后台任务
+        /// </summary>
+        public static void Register()
+        {
+        }
+
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))

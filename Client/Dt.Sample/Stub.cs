@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Shell
+namespace Dt.Sample
 {
     /// <summary>
     /// 系统存根

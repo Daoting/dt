@@ -36,7 +36,8 @@ namespace Dt.Sample
             if (!string.IsNullOrEmpty(_info.FileName))
             {
                 sb.AppendLine("文件名：" + _info.FileName);
-                sb.AppendLine("文件大小：" + _info.FileLength.ToString());
+                // 异常
+                //sb.AppendLine("文件大小：" + _info.FileLength.ToString());
             }
 
             _tb.Text = sb.ToString();

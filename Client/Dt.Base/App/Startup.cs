@@ -32,12 +32,11 @@ namespace Dt.Base
         /// <summary>
         /// 应用程序启动
         /// </summary>
-        /// <typeparam name="T">存根类型</typeparam>
+        /// <param name="p_stub">存根类型</param>
         /// <param name="p_launchArgs">启动参数</param>
         /// <param name="p_shareInfo">接收分享的内容描述</param>
         /// <returns></returns>
-        public static async Task Launch<T>(string p_launchArgs, ShareInfo p_shareInfo)
-            where T : IStub
+        public static async Task Launch(Type p_stub, string p_launchArgs = null, ShareInfo p_shareInfo = null)
         {
             if (!string.IsNullOrEmpty(p_launchArgs))
             {
@@ -72,7 +71,9 @@ namespace Dt.Base
 #endif
 
             // 创建存根、启动，内含创建窗口及整个系统可视树、调用存根的OnStartup
-            IStub stub = Activator.CreateInstance<T>();
+            if (p_stub == null)
+                throw new Exception("启动时Stub类型不可为空！");
+            IStub stub = (IStub)Activator.CreateInstance(p_stub);
             await Kit.Startup(stub, new DefaultCallback());
             InputManager.Init();
 

@@ -15,7 +15,7 @@ using UIKit;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Shell
+namespace Dt.Sample
 {
     sealed partial class App : Application
     {

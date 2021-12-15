@@ -10,10 +10,13 @@
 #region 引用命名
 using Android.Content;
 using Android.Database;
+using Android.Graphics;
 using Android.OS;
 using Android.Provider;
 using Android.Webkit;
+using Java.IO;
 using System;
+using System.IO;
 #endregion
 
 namespace Dt.Base
@@ -34,10 +37,8 @@ namespace Dt.Base
         /// <returns>full file system path, or null</returns>
         public static string GetPath(Context context, Android.Net.Uri uri)
         {
-            bool isKitKat = Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat;
-
             // DocumentProvider
-            if (isKitKat && DocumentsContract.IsDocumentUri(context, uri))
+            if (DocumentsContract.IsDocumentUri(context, uri))
             {
                 // ExternalStorageProvider
                 if (IsExternalStorageDocument(uri))
@@ -128,9 +129,19 @@ namespace Dt.Base
             // MediaStore (and general)
             if (IsMediaStore(uri.Scheme))
             {
+                    // 判断是否是google相册图片
+                if (IsGooglePhotosUri(uri))
+                    return uri.LastPathSegment;
+
+                    // 判断是否是Google相册图片
+                if (IsGooglePlayPhotosUri(uri))
+                    return GetImageUrlWithAuthority(context, uri);
+
+                // 其他类似于media这样的图片，和android4.4以下获取图片path方法类似
                 return GetDataColumn(context, uri, null, null);
             }
-            else if ("file".Equals(uri.Scheme, StringComparison.OrdinalIgnoreCase))
+            
+            if ("file".Equals(uri.Scheme, StringComparison.OrdinalIgnoreCase))
             {
                 return uri.Path;
             }
@@ -195,6 +206,43 @@ namespace Dt.Base
                 }
             }
 
+            return null;
+        }
+
+        public static bool IsGooglePhotosUri(Android.Net.Uri uri)
+        {
+            return "com.google.android.apps.photos.content".Equals(uri.Authority);
+        }
+
+        public static bool IsGooglePlayPhotosUri(Android.Net.Uri uri)
+        {
+            return "com.google.android.apps.photos.contentprovider".Equals(uri.Authority);
+        }
+
+        public static string GetImageUrlWithAuthority(Context context, Android.Net.Uri uri)
+        {
+            if (uri.Authority != null)
+            {
+                Stream stream = null;
+                try
+                {
+                    stream = context.ContentResolver.OpenInputStream(uri);
+                    Bitmap bmp = BitmapFactory.DecodeStream(stream);
+
+                    MemoryStream ms = new MemoryStream();
+                    bmp.Compress(Bitmap.CompressFormat.Jpeg, 100, ms);
+#pragma warning disable CS0618 // 类型或成员已过时
+                    string path = MediaStore.Images.Media.InsertImage(context.ContentResolver, bmp, null, null);
+#pragma warning restore CS0618 // 类型或成员已过时
+                    return GetDataColumn(context, Android.Net.Uri.Parse(path), null, null);
+                }
+                catch { }
+                finally
+                {
+                    if (stream != null)
+                        stream.Close();
+                }
+            }
             return null;
         }
 

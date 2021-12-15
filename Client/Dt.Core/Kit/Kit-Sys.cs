@@ -246,9 +246,9 @@ namespace Dt.Core
             // 创建窗口及整个系统可视树
             SysVisual.Init();
 
-#if WIN
+            // 注册后台任务
             BgJob.Register();
-#endif
+
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
             return Stub.OnStartup();
         }
