@@ -209,6 +209,26 @@ namespace Dt.Base.Tools
                 _tb.Text = SysVisual.RootContent.GetType().FullName;
         }
 
+        void OnLocalFiles(object sender, Mi e)
+        {
+            StringBuilder sb = new StringBuilder();
+            OutAllFiles(new DirectoryInfo(Kit.DataPath), sb);
+            OutAllFiles(new DirectoryInfo(Kit.CachePath), sb);
+            _tb.Text = sb.ToString();
+        }
+
+        void OutAllFiles(DirectoryInfo di, StringBuilder p_sb)
+        {
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                p_sb.AppendLine(fi.FullName);
+            }
+            foreach (var cd in di.GetDirectories())
+            {
+                OutAllFiles(cd, p_sb);
+            }
+        }
+
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Kit.TraceRpc = true;

@@ -99,6 +99,7 @@
                             <a:Mi ID="库路径" Icon="数据库" Click="OnLocalPath" />
                             <a:Mi ID="换行" Icon="左对齐" IsCheckable="True" Click="OnWrap" />
                             <a:Mi ID="存根代码" Icon="链接" Click="OnStub" />
+                            <a:Mi ID="本地文件" Icon="文件夹" Click="OnLocalFiles" />
                             <a:Mi ID="页面类型" Icon="文件" Click="OnPageType" />
                             <a:Mi ID="安装路径" Icon="文件夹" Click="OnInstallPath" />
                             <a:Mi ID="操作系统" Icon="服务器" Click="OnHostOS" />
