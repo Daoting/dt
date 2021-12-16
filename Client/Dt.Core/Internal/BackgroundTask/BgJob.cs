@@ -27,7 +27,8 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task Run()
         {
-            OpenStateDb();
+            // 打开状态库
+            AtState.OpenDbBackground();
 
             // 因后台任务独立运行，存根类型需要从State库获取！
             IStub stub = null;
@@ -53,24 +54,6 @@ namespace Dt.Core
                     await bgTask.Run();
                 }
             }
-        }
-
-        static void OpenStateDb()
-        {
-            if (AtState.IsOpened)
-                return;
-
-#if WASM
-            // .net5.0 只能引用 SQLite3Provider_sqlite3，DllImport("sqlite3")
-            // 默认为 SQLite3Provider_e_sqlite3 引用时出错！
-            SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
-#else
-            // 初始化不同平台的包绑定！V2支持类型和属性的绑定
-            // 内部调用 SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            SQLitePCL.Batteries_V2.Init();
-#endif
-            // 打开状态库
-            AtState.OpenDbBackground();
         }
     }
 }

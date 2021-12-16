@@ -235,9 +235,10 @@ namespace Dt.Core
             // 默认为 SQLite3Provider_e_sqlite3 引用时出错！
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
 #else
+            // 升级.net6.0后使用 Microsoft.Data.Sqlite 的默认初始化
             // 初始化不同平台的包绑定！V2支持类型和属性的绑定
             // 内部调用 SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            SQLitePCL.Batteries_V2.Init();
+            //SQLitePCL.Batteries_V2.Init();
 #endif
 
             // 打开状态库
