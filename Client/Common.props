@@ -41,10 +41,10 @@
     <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
         <PackageReference Include="Square.OkHttp3" Version="4.9.2" />
         <PackageReference Include="Square.OkIO" version="2.10.0" />
-        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.1.1" />
+        <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.1.3" />
         <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.2.1.3" />
         <!-- 因WorkManager后台任务添加的引用 -->
-        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.6.0" />
+        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.6.0.2" />
         <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.4" />
     </ItemGroup>
 

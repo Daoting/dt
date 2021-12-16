@@ -84,7 +84,7 @@ namespace Dt.Sample
         /// <summary>
         /// 后台任务类型
         /// </summary>
-        public Type BgTaskType => typeof(Sample.BgTaskDemo);
+        public Type BgTaskType => typeof(BgTaskDemo);
 
         /// <summary>
         /// 系统启动
@@ -127,7 +127,7 @@ namespace Dt.Sample
         /// <param name="p_info">分享内容描述</param>
         public void ReceiveShare(ShareInfo p_info)
         {
-            Kit.OpenWin(typeof(Dt.Sample.ReceiveShareWin), "接收分享", Icons.分享, p_info);
+            Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
 
         /// <summary>

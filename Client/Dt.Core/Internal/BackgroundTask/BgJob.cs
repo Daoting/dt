@@ -27,7 +27,6 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task Run()
         {
-            Toast("后台", DateTime.Now.ToString(), null);
             OpenStateDb();
 
             // 因后台任务独立运行，存根类型需要从State库获取！
