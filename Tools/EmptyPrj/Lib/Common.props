@@ -1,0 +1,79 @@
+<Project ToolsVersion="Current">
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<SingleProject>true</SingleProject>
+		<NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
+	</PropertyGroup>
+
+	<!-- 定义平台常量 -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<DefineConstants>$(DefineConstants);WIN</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<DefineConstants>$(DefineConstants);IOS</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+		<DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<DefineConstants>$(DefineConstants);WASM</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="Dt.Core" />
+		<Using Include="Dt.Base" />
+		<Using Include="Dt.App" />
+		<Using Include="Dt.Core.Model" />
+		<Using Include="System" />
+	</ItemGroup>
+	
+    <!-- 引用包 -->
+    <ItemGroup>
+		<PackageReference Include="Dt.Client" Version="2.0.0" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.12" />
+        <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <PackageReference Include="Uno.WinUI" Version="4.0.9" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<PackageReference Include="Square.OkHttp3" Version="4.9.2" />
+		<PackageReference Include="Square.OkIO" version="2.10.0" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.1.3" />
+		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.2.1.3" />
+		<!-- 因WorkManager后台任务添加的引用 -->
+		<PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.6.0.2" />
+		<!-- 升级.net6后需要引用 -->
+		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.4" />
+	</ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <PackageReference Include="GMImagePicker.Xamarin" Version="2.5.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.0.9" />
+        <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
+    </ItemGroup>
+
+    <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    </ItemGroup>
+</Project>

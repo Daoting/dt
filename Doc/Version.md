@@ -1,6 +1,7 @@
 ﻿#  未解决问题
 
 MediaPlayerElement 未实现，FileItem.cs 
+gRPC的客户端负载均衡
 
 wasm ：
 FileItem上传、分享、MediaPlayerElement等功能未实现
@@ -16,7 +17,7 @@ DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Inf
 
 
 android:
-
+关闭app后，后台任务不运行
 
 
 window:
@@ -26,7 +27,7 @@ Excel样例中 ChartExcel.xaml 报错，因WinUI3无法定位调试，暂搁
 点击Toast自启动传参数问题
 BackgroundTask 的TimeTriggeredTask 能注册但不触发，无法调试 
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
-
+DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 
 
 # 版本说明

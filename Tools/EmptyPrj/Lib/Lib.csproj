@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
+		<AssemblyName>Dt.Lib</AssemblyName>
+		<RootNamespace>Dt.Lib</RootNamespace>
+	</PropertyGroup>
+
+	<Import Project="Common.props" />
+
+	<ItemGroup>
+		<None Remove="Common.props" />
+		<Compile Remove="App\App.xaml.cs" />
+		<Page Remove="App\App.xaml" />
+		<None Include="App\App.xaml.cs" />
+	</ItemGroup>
+</Project>

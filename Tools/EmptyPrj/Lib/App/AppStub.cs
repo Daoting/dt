@@ -7,61 +7,22 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.Lib
 {
     /// <summary>
-    /// 存根
+    /// 系统存根
     /// </summary>
     public class AppStub : Stub
     {
         public AppStub()
         {
-            //ServerUrl = "https://10.10.1.16/fz";
-            ServerUrl = "http://mapp.wicp.net/fz";
+            ServerUrl = "https://10.10.1.16/fz";
             Title = "搬运工";
             Desc = "搬运工平台基础样例";
-            BgTaskType = typeof(BgTaskDemo);
-            FixedMenus = new List<OmMenu>
-            {
-                new OmMenu(
-                    ID: 1110,
-                    Name: "通讯录",
-                    Icon: "留言",
-                    ViewName: "通讯录"),
-
-                new OmMenu(
-                    ID: 3000,
-                    Name: "任务",
-                    Icon: "双绞线",
-                    ViewName: "任务",
-                    SvcName: "cm"),
-
-                new OmMenu(
-                    ID: 4000,
-                    Name: "文件",
-                    Icon: "文件夹",
-                    ViewName: "文件"),
-
-                new OmMenu(
-                    ID: 5000,
-                    Name: "发布",
-                    Icon: "公告",
-                    ViewName: "发布"),
-
-                new OmMenu(
-                    ID: 1,
-                    Name: "样例",
-                    Icon: "词典",
-                    ViewName: "样例"),
-            };
+            BgTaskType = typeof(CustomBgTask);
         }
 
         /// <summary>
@@ -70,21 +31,15 @@ namespace Dt.Sample
         public override async Task OnStartup()
         {
             // 初次运行，显示用户协议、隐私政策、向导
-            if (AtState.GetCookie("FirstRun") == "")
-            {
-                await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
-                AtState.SaveCookie("FirstRun", "0");
-            }
-
-            //Startup.AutoStartOnce = new AutoStartInfo
+            //if (AtState.GetCookie("FirstRun") == "")
             //{
-            //    WinType = typeof(Dt.Sample.SamplesMain).AssemblyQualifiedName,
-            //    Title = "自启动样例",
-            //};
+            //    await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
+            //    AtState.SaveCookie("FirstRun", "0");
+            //}
 
             // 1. 按默认流程启动
-            //Startup.Register(typeof(DefaultHome));
-            //await Startup.Run(true);
+            Startup.Register(typeof(DefaultHome));
+            await Startup.Run(true);
 
             // 2. 自定义启动过程
             //if (await Startup.OpenModelDb())
@@ -94,8 +49,8 @@ namespace Dt.Sample
             //}
 
             // 3. 完全不使用dt服务
-            Startup.Register(typeof(Sample.SamplesMain));
-            Startup.ShowHome();
+            //Startup.Register(typeof(Sample.SamplesMain));
+            //Startup.ShowHome();
         }
 
         /// <summary>
@@ -104,7 +59,7 @@ namespace Dt.Sample
         /// <param name="p_info">分享内容描述</param>
         public override void ReceiveShare(ShareInfo p_info)
         {
-            Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
+            //Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
 
         #region 自动生成
@@ -128,8 +83,6 @@ namespace Dt.Sample
                 { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
                 { "文件", typeof(Dt.App.File.FileHome) },
                 { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
-                { "样例", typeof(Dt.Sample.SamplesMain) },
-                { "ShoppingWin", typeof(Dt.Sample.ModuleView.OneToMany1.ShoppingWin) },
             };
 
             // 处理服务器推送的类型字典
@@ -141,11 +94,7 @@ namespace Dt.Sample
 
             // 获取自定义可序列化类型字典
             SerializeTypes = new Dictionary<string, Type>
-            {
-                { "产品", typeof(Dt.Sample.Product) },
-                { "学生", typeof(Dt.Sample.Student) },
-                { "部门", typeof(Dt.Sample.Department) },
-            };
+            { };
 
             // 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
             SqliteDb = new Dictionary<string, SqliteTblsInfo>

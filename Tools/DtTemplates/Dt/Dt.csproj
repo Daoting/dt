@@ -393,16 +393,9 @@
     <None Include="Resources\Logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonLib\CommonLib.csproj">
-      <Project>{8BA7F8C8-F6A0-40C3-93FA-63FB6000738E}</Project>
-      <Name>CommonLib</Name>
-      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
-    <ProjectReference Include="..\Svc\Svc.csproj">
-      <Project>{CC44A804-F77B-4E52-9F66-DEB46D0F2DFA}</Project>
-      <Name>Svc</Name>
+    <ProjectReference Include="..\PrjTemplate\PrjTemplate.csproj">
+      <Project>{C3B63B07-864B-4369-AE58-1448E72BAEC2}</Project>
+      <Name>PrjTemplate</Name>
       <VSIXSubPath>ProjectTemplates</VSIXSubPath>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
