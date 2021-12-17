@@ -31,13 +31,13 @@ namespace Dt.Core
             AtState.OpenDbBackground();
 
             // 因后台任务独立运行，存根类型需要从State库获取！
-            IStub stub = null;
+            Stub stub = null;
             string tpName = AtState.GetCookie(_stubType);
             if (!string.IsNullOrEmpty(tpName))
             {
                 Type tp = Type.GetType(tpName);
                 if (tp != null)
-                    stub = Activator.CreateInstance(tp) as IStub;
+                    stub = Activator.CreateInstance(tp) as Stub;
             }
 
             if (stub != null && stub.BgTaskType != null)

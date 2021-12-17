@@ -66,7 +66,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取系统存根
         /// </summary>
-        public static IStub Stub { get; internal set; }
+        public static Stub Stub { get; internal set; }
 
         /// <summary>
         /// 显示监视窗口
@@ -198,7 +198,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_stub">系统存根</param>
         /// <param name="p_callback"></param>
-        internal static Task Startup(IStub p_stub, ICallback p_callback)
+        internal static Task Startup(Stub p_stub, ICallback p_callback)
         {
             Stub = p_stub;
             Callback = p_callback;

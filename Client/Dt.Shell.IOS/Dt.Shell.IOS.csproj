@@ -6,6 +6,7 @@
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
         <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
         <IsUnoHead>true</IsUnoHead>
+        <Platforms>AnyCPU;ARM64</Platforms>
     </PropertyGroup>
 
     <Import Project="..\Common.props" />

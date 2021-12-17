@@ -26,7 +26,7 @@ namespace Dt.Core
         /// <summary>
         /// 存根
         /// </summary>
-        public IStub Stub => Kit.Stub;
+        public Stub Stub => Kit.Stub;
 
         /// <summary>
         /// 因后台独立运行，涉及验证身份的API，先确保已登录

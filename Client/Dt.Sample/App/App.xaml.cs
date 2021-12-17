@@ -20,6 +20,6 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        public override Type Stub => typeof(Stub);
+        public override Type Stub => typeof(AppStub);
     }
 }

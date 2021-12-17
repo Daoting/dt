@@ -258,51 +258,34 @@ namespace Dt.Base.Tools
             _serializeTypes = new Dictionary<string, Type>();
             _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
 
-            StorageFile exeFile = null;
             IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
             foreach (StorageFile file in files)
             {
-                // Bs临时
-                if (file.DisplayName.StartsWith("Dt.") || file.DisplayName.StartsWith("Bs."))
-                {
-                    if (file.FileType == ".dll")
-                        ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
-                    else if (file.FileType == ".exe")
-                        exeFile = file;
-                }
+                if (file.DisplayName.StartsWith("Dt.") && file.FileType == ".dll")
+                    ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
             }
-
-            // 最后加载exe，确保exe中提取的类型优先级最高
-            if (exeFile != null)
-                ExtractAssembly(Assembly.Load(new AssemblyName(exeFile.DisplayName)));
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("\t\t#region 自动生成");
+            sb.AppendLine("\t\tprotected override void Init()\r\n\t\t{");
 
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 视图名称与窗口类型的映射字典，主要菜单项用");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> ViewTypes { get; } = new Dictionary<string, Type>");
+            sb.AppendLine("\t\t\t// 视图名称与窗口类型的映射字典，主要菜单项用");
+            sb.AppendLine("\t\t\tViewTypes = new Dictionary<string, Type>");
             BuildStubDict(sb, _viewTypes);
 
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 处理服务器推送的类型字典");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> PushHandlers { get; } = new Dictionary<string, Type>");
+            sb.AppendLine("\t\t\t// 处理服务器推送的类型字典");
+            sb.AppendLine("\t\t\tPushHandlers = new Dictionary<string, Type>");
             BuildStubDict(sb, _pushHandlers);
 
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 获取自定义可序列化类型字典");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, Type> SerializeTypes { get; } = new Dictionary<string, Type>");
+            sb.AppendLine("\t\t\t// 获取自定义可序列化类型字典");
+            sb.AppendLine("\t\t\tSerializeTypes = new Dictionary<string, Type>");
             BuildStubDict(sb, _serializeTypes);
 
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\tpublic Dictionary<string, SqliteTblsInfo> SqliteDb { get; } = new Dictionary<string, SqliteTblsInfo>");
+            sb.AppendLine("\t\t\t// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
+            sb.AppendLine("\t\t\tSqliteDb = new Dictionary<string, SqliteTblsInfo>");
             BuildSqliteDict(sb);
 
+            sb.AppendLine("\t\t}");
             sb.Append("\t\t#endregion");
 
             DataPackage data = new DataPackage();
@@ -352,7 +335,7 @@ namespace Dt.Base.Tools
                                 tbls = new SqliteDbTbls();
                                 _sqliteTbls[sqlite.DbName] = tbls;
                             }
-                                
+
                             tbls.Tbls.Add(tp);
                             foreach (var pro in tp.GetRuntimeProperties())
                             {
@@ -391,17 +374,17 @@ namespace Dt.Base.Tools
         {
             if (p_dt.Count == 0)
             {
-                p_sb.AppendLine("\t\t{};");
+                p_sb.AppendLine("\t\t\t{};");
                 p_sb.AppendLine();
                 return;
             }
 
-            p_sb.AppendLine("\t\t{");
+            p_sb.AppendLine("\t\t\t{");
             foreach (var item in p_dt)
             {
-                p_sb.AppendFormat("\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
+                p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
             }
-            p_sb.AppendLine("\t\t};");
+            p_sb.AppendLine("\t\t\t};");
             p_sb.AppendLine();
         }
 
@@ -409,34 +392,32 @@ namespace Dt.Base.Tools
         {
             if (_sqliteTbls.Count == 0)
             {
-                p_sb.AppendLine("\t\t{};");
-                p_sb.AppendLine();
+                p_sb.AppendLine("\t\t\t{};");
                 return;
             }
 
-            p_sb.AppendLine("\t\t{");
+            p_sb.AppendLine("\t\t\t{");
             foreach (var item in _sqliteTbls)
             {
-                p_sb.AppendLine("\t\t\t{");
-                p_sb.AppendLine($"\t\t\t\t\"{item.Key}\",");
-
-                p_sb.AppendLine("\t\t\t\tnew SqliteTblsInfo");
                 p_sb.AppendLine("\t\t\t\t{");
-                p_sb.AppendLine($"\t\t\t\t\tVersion = \"{item.Value.GetVer()}\",");
-                p_sb.AppendLine("\t\t\t\t\tTables = new List<Type>");
+                p_sb.AppendLine($"\t\t\t\t\t\"{item.Key}\",");
+
+                p_sb.AppendLine("\t\t\t\t\tnew SqliteTblsInfo");
                 p_sb.AppendLine("\t\t\t\t\t{");
+                p_sb.AppendLine($"\t\t\t\t\t\tVersion = \"{item.Value.GetVer()}\",");
+                p_sb.AppendLine("\t\t\t\t\t\tTables = new List<Type>");
+                p_sb.AppendLine("\t\t\t\t\t\t{");
 
                 foreach (var tp in item.Value.Tbls)
                 {
-                    p_sb.AppendLine($"\t\t\t\t\t\ttypeof({tp.FullName}),");
+                    p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
                 }
 
+                p_sb.AppendLine("\t\t\t\t\t\t}");
                 p_sb.AppendLine("\t\t\t\t\t}");
-                p_sb.AppendLine("\t\t\t\t}");
-                p_sb.AppendLine("\t\t\t},");
+                p_sb.AppendLine("\t\t\t\t},");
             }
-            p_sb.AppendLine("\t\t};");
-            p_sb.AppendLine();
+            p_sb.AppendLine("\t\t\t};");
         }
 
         class SqliteDbTbls

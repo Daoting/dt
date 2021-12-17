@@ -73,7 +73,7 @@ namespace Dt.Base
             // 创建存根、启动，内含创建窗口及整个系统可视树、调用存根的OnStartup
             if (p_stub == null)
                 throw new Exception("启动时Stub类型不可为空！");
-            IStub stub = (IStub)Activator.CreateInstance(p_stub);
+            Stub stub = (Stub)Activator.CreateInstance(p_stub);
             await Kit.Startup(stub, new DefaultCallback());
             InputManager.Init();
 
