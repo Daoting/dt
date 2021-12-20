@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Dt.Lib
 {
     /// <summary>
-    /// 系统存根
+    /// 系统存根，完整用法请参见：https://github.com/Daoting/dt/blob/master/Client/Dt.Sample/App/AppStub.cs
     /// </summary>
     public class AppStub : Stub
     {
@@ -21,45 +21,17 @@ namespace Dt.Lib
         {
             ServerUrl = "https://10.10.1.16/fz";
             Title = "搬运工";
-            Desc = "搬运工平台基础样例";
-            BgTaskType = typeof(CustomBgTask);
         }
 
         /// <summary>
-        /// 系统启动
+        /// 多种启动方式请参见：
+        /// https://github.com/Daoting/dt/blob/428a4f039c13fa5cc5dba427eb0b00b12822e60b/Client/Dt.Sample/App/AppStub.cs#L75
         /// </summary>
         public override async Task OnStartup()
         {
-            // 初次运行，显示用户协议、隐私政策、向导
-            //if (AtState.GetCookie("FirstRun") == "")
-            //{
-            //    await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
-            //    AtState.SaveCookie("FirstRun", "0");
-            //}
-
-            // 1. 按默认流程启动
-            Startup.Register(typeof(DefaultHome));
-            await Startup.Run(true);
-
-            // 2. 自定义启动过程
-            //if (await Startup.OpenModelDb())
-            //{
-            //    Startup.Register(typeof(Sample.SamplesMain));
-            //    Startup.ShowHome();
-            //}
-
-            // 3. 完全不使用dt服务
-            //Startup.Register(typeof(Sample.SamplesMain));
-            //Startup.ShowHome();
-        }
-
-        /// <summary>
-        /// 接收分享内容
-        /// </summary>
-        /// <param name="p_info">分享内容描述</param>
-        public override void ReceiveShare(ShareInfo p_info)
-        {
-            //Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
+            Startup.Register(typeof(Home));
+            Startup.ShowHome();
+            await Task.CompletedTask;
         }
 
         #region 自动生成

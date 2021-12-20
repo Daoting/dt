@@ -26,10 +26,6 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Folder Include="iOS\Resources\Fonts\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>

@@ -31,16 +31,6 @@
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
     </ItemGroup>
-
-    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-        <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
-        <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Themes\uno-fluentui-assets.ttf" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-        <BundleResource Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
-        <BundleResource Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Themes\uno-fluentui-assets.ttf" />
-    </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
         <Content Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />

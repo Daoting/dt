@@ -12,8 +12,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Lib\Lib.csproj" />
 	</ItemGroup>
-	
-    <ItemGroup>
+
+	<ItemGroup>
         <Page Include="..\Lib\App\App.xaml" Link="App.xaml" />
         <Compile Include="..\Lib\App\App.xaml.cs" Link="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
