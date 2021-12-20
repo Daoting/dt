@@ -33,7 +33,7 @@ namespace Dt.App.Home
             else
                 Kit.LoginSuc += LoadMenus;
 
-            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
+            int cntFixed = MenuKit.FixedMenus == null ? 0 : MenuKit.FixedMenus.Count;
             if (MenuKit.FavMenus.Count > cntFixed)
                 _miReset.Visibility = Visibility.Visible;
         }
@@ -64,7 +64,7 @@ namespace Dt.App.Home
 
         async void OnReset(object sender, Mi e)
         {
-            int cntFixed = Kit.Stub.FixedMenus == null ? 0 : Kit.Stub.FixedMenus.Count;
+            int cntFixed = MenuKit.FixedMenus == null ? 0 : MenuKit.FixedMenus.Count;
             if (MenuKit.FavMenus.Count > cntFixed)
             {
                 var cnt = AtState.Exec($"delete from menufav where userid={Kit.UserID}");

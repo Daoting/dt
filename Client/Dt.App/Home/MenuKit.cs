@@ -26,7 +26,7 @@ namespace Dt.App
     /// 2. 菜单，收藏菜单
     /// 3. 权限
     /// </summary>
-    static class MenuKit
+    public static class MenuKit
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
@@ -36,6 +36,11 @@ namespace Dt.App
         #endregion
 
         #region 属性
+        /// <summary>
+        /// 获取设置默认主页(DefaultHome)的固定菜单项
+        /// </summary>
+        public static IList<OmMenu> FixedMenus { get; set; }
+
         /// <summary>
         /// 获取当前登录用户的根页面菜单（包含一二级）
         /// </summary>
@@ -130,11 +135,10 @@ namespace Dt.App
 
             // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
             _favMenus.Clear();
-            var fixedMenus = Kit.Stub.FixedMenus;
-            if (fixedMenus != null)
+            if (FixedMenus != null)
             {
                 // 固定项
-                foreach (var om in fixedMenus)
+                foreach (var om in FixedMenus)
                 {
                     _favMenus.Add(om);
                 }

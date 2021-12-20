@@ -19,7 +19,6 @@
             <RowDefinition Height="50" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <!-- 标题 -->
@@ -56,8 +55,5 @@
             <Button Content="登　　录" Click="OnLoginClick" HorizontalAlignment="Stretch" Margin="0,20,0,20" Style="{StaticResource LoginButton}" />
             <HyperlinkButton Content="密码登录" Click="OnTogglePwd" Foreground="White" />
         </StackPanel>
-
-        <!-- 系统描述 -->
-        <TextBlock x:Name="_tbDesc" FontSize="{StaticResource 小字}" TextAlignment="Center" TextWrapping="Wrap" Grid.Row="3" />
     </Grid>
 </Page>

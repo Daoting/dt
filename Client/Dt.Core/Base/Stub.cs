@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Model;
+using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -50,30 +51,20 @@ namespace Dt.Core
         public string Title { get; protected set; }
 
         /// <summary>
-        /// 系统描述信息
-        /// </summary>
-        public string Desc { get; protected set; }
-
-        /// <summary>
-        /// 后台任务类型，继承BgTask
-        /// </summary>
-        public Type BgTaskType { get; protected set; }
-
-        /// <summary>
-        /// 默认主页(DefaultHome)的固定菜单项
-        /// </summary>
-        public IList<OmMenu> FixedMenus { get; protected set; }
-
-        /// <summary>
         /// 系统启动
         /// </summary>
         public abstract Task OnStartup();
 
         /// <summary>
+        /// 后台任务处理，除 AtState、Stub、UnaryRpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
+        /// </summary>
+        public virtual Task OnBgTaskRun() => Task.CompletedTask;
+
+        /// <summary>
         /// 接收分享内容
         /// </summary>
         /// <param name="p_info">分享内容描述</param>
-        public virtual void ReceiveShare(ShareInfo p_info) { }
+        public virtual void OnReceiveShare(ShareInfo p_info) { }
 
         /// <summary>
         /// 系统注销时的处理
@@ -92,6 +83,40 @@ namespace Dt.Core
         /// </summary>
         public virtual void OnResuming() { }
 
+        /// <summary>
+        /// 后台登录，因后台独立运行，涉及验证身份的API，先确保已登录
+        /// </summary>
+        /// <returns></returns>
+        protected async Task<bool> BackgroundLogin()
+        {
+            if (Kit.IsLogon)
+            {
+                //Kit.Toast("后台", "已登录");
+                return true;
+            }
+
+            string phone = AtState.GetCookie("LoginPhone");
+            string pwd = AtState.GetCookie("LoginPwd");
+            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
+            {
+                // 自动登录
+                var result = await new UnaryRpc(
+                    "cm",
+                    "Entry.LoginByPwd",
+                    phone,
+                    pwd
+                ).Call<LoginResult>();
+
+                // 登录成功
+                if (result.IsSuc)
+                {
+                    //Kit.Toast("后台", "登录成功");
+                    Kit.InitUser(result);
+                    return true;
+                }
+            }
+            return false;
+        }
 
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();

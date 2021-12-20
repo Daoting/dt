@@ -40,19 +40,15 @@ namespace Dt.Core
                     stub = Activator.CreateInstance(tp) as Stub;
             }
 
-            if (stub != null && stub.BgTaskType != null)
+            if (stub != null)
             {
-                var bgTask = Activator.CreateInstance(stub.BgTaskType) as BgTask;
-                if (bgTask != null)
+                if (Kit.Stub == null)
                 {
-                    if (Kit.Stub == null)
-                    {
-                        // 避免涉及UI
-                        Kit.StopTrace = true;
-                        Kit.Stub = stub;
-                    }
-                    await bgTask.Run();
+                    // 避免涉及UI
+                    Kit.StopTrace = true;
+                    Kit.Stub = stub;
                 }
+                await stub.OnBgTaskRun();
             }
         }
     }

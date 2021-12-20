@@ -57,7 +57,7 @@ namespace Dt.Base
                 Kit.MainWin.Activate();
 
                 if (p_shareInfo != null)
-                    Kit.RunAsync(() => Kit.Stub.ReceiveShare(p_shareInfo));
+                    Kit.RunAsync(() => Kit.Stub.OnReceiveShare(p_shareInfo));
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace Dt.Base
             InputManager.Init();
 
             if (p_shareInfo != null)
-                stub.ReceiveShare(p_shareInfo);
+                stub.OnReceiveShare(p_shareInfo);
         }
         #endregion
 

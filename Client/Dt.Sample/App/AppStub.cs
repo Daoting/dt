@@ -7,9 +7,11 @@
 #endregion
 
 #region 引用命名
+using Dt.App;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
+using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,9 +29,8 @@ namespace Dt.Sample
             //ServerUrl = "https://10.10.1.16/fz";
             ServerUrl = "http://mapp.wicp.net/fz";
             Title = "搬运工";
-            Desc = "搬运工平台基础样例";
-            BgTaskType = typeof(BgTaskDemo);
-            FixedMenus = new List<OmMenu>
+
+            MenuKit.FixedMenus = new List<OmMenu>
             {
                 new OmMenu(
                     ID: 1110,
@@ -99,10 +100,26 @@ namespace Dt.Sample
         }
 
         /// <summary>
+        /// 后台任务处理，除 AtState、Stub、UnaryRpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
+        /// </summary>
+        public override async Task OnBgTaskRun()
+        {
+            //string tpName = AtState.GetCookie("LoginPhone");
+            //var cfg = await new UnaryRpc("cm", "ModelMgr.GetConfig").Call<Dict>();
+            //await BackgroundLogin();
+            //Kit.Toast(
+            //    "样例",
+            //    tpName + "\r\n" + cfg.Date("now").ToString(),
+            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
         /// 接收分享内容
         /// </summary>
         /// <param name="p_info">分享内容描述</param>
-        public override void ReceiveShare(ShareInfo p_info)
+        public override void OnReceiveShare(ShareInfo p_info)
         {
             Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
