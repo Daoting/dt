@@ -29,6 +29,7 @@ namespace Dt.Sample
             //ServerUrl = "https://10.10.1.16/fz";
             ServerUrl = "http://mapp.wicp.net/fz";
             Title = "搬运工";
+            EnableBgTask = true;
 
             MenuKit.FixedMenus = new List<OmMenu>
             {

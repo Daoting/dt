@@ -248,10 +248,11 @@ namespace Dt.Core
             SysVisual.Init();
 
             // 注册后台任务
-            BgJob.Register();
+            if (p_stub.EnableBgTask)
+                BgJob.Register();
 
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-            return Stub.OnStartup();
+            return p_stub.OnStartup();
         }
         #endregion
 

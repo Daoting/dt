@@ -51,6 +51,11 @@ namespace Dt.Core
         public string Title { get; protected set; }
 
         /// <summary>
+        /// 是否启用后台任务
+        /// </summary>
+        public bool EnableBgTask { get; protected set; }
+
+        /// <summary>
         /// 系统启动
         /// </summary>
         public abstract Task OnStartup();
