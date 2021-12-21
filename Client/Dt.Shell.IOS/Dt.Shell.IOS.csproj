@@ -6,7 +6,6 @@
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
         <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
         <IsUnoHead>true</IsUnoHead>
-        <Platforms>AnyCPU;ARM64</Platforms>
     </PropertyGroup>
 
     <Import Project="..\Common.props" />
@@ -23,14 +22,19 @@
         <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <None Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
-        <None Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </None>
+        <BundleResource Include="iOS\Resources\SplashScreen%402x.png" />
+        <BundleResource Include="iOS\Resources\SplashScreen%403x.png" />
+        <BundleResource Include="iOS\Resources\logo.png" />
+        <BundleResource Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
+        <BundleResource Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
     </ItemGroup>
 </Project>

@@ -37,13 +37,13 @@
 
     <!--自定义图标字体库-->
     <win:FontFamily x:Key="IconFont">ms-appx:///Dt.Base/Themes/icon.ttf#DtIcon</win:FontFamily>
-    <ios:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</ios:FontFamily>
+    <ios:FontFamily x:Key="IconFont">ms-appx:///Resources/Fonts/icon.ttf#DtIcon</ios:FontFamily>
     <android:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
     <!--前缀wasm not_wasm netstdref都无效，wasm在App.cs使用代码添加字体库-->
     <!--<wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>-->
 
     <!--uno中标准控件用到的字体库-->
-    <ios:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</ios:FontFamily>
+    <ios:FontFamily x:Key="Symbols">ms-appx:///Resources/Fonts/uno-fluentui-assets.ttf#Symbols</ios:FontFamily>
     <android:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</android:FontFamily>
     
     <!--
