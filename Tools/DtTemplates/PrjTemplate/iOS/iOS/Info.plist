@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.dt.Lib</string>
+	<string>com.dt.$ext_safeprojectname$</string>
 	<key>CFBundleDisplayName</key>
-	<string>Lib</string>
+	<string>$ext_safeprojectname$</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.1</string>
 	<key>CFBundleVersion</key>

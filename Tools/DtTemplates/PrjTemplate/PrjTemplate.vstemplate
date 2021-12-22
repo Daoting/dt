@@ -12,6 +12,7 @@
 		<PlatformTag>Android</PlatformTag>
 		<PlatformTag>Web</PlatformTag>
 		<CreateNewFolder>true</CreateNewFolder>
+		<TemplateID>5f15d8a8-9a72-4994-b5af-be6fee566cb8</TemplateID>
 		<DefaultName>PrjName</DefaultName>
 		<ProvideDefaultName>true</ProvideDefaultName>
 		<!-- 不加CreateInPlace，项目无文件 -->
@@ -28,6 +29,9 @@
 				</ProjectTemplateLink>
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Win" CopyParameters="true">
 					Win\Win.vstemplate
+				</ProjectTemplateLink>
+				<ProjectTemplateLink ProjectName="$safeprojectname$.iOS" CopyParameters="true">
+					iOS\iOS.vstemplate
 				</ProjectTemplateLink>
 			</SolutionFolder>
 		</ProjectCollection>

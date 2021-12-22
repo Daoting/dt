@@ -27,11 +27,16 @@ namespace Dt.Lib
         /// 多种启动方式请参见：
         /// https://github.com/Daoting/dt/blob/428a4f039c13fa5cc5dba427eb0b00b12822e60b/Client/Dt.Sample/App/AppStub.cs#L75
         /// </summary>
-        public override Task OnStartup()
+        public override async Task OnStartup()
         {
+            // 按默认流程启动
+            //Startup.Register(typeof(DefaultHome));
+            //await Startup.Run(true);
+
+            // 完全不使用服务
             Startup.Register(typeof(Home));
             Startup.ShowHome();
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         #region 自动生成

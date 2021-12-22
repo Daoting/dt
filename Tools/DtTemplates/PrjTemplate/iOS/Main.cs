@@ -1,4 +1,4 @@
-﻿namespace Dt.Lib
+﻿namespace $ext_safeprojectname$
 {
     public class Application
     {

@@ -56,6 +56,11 @@
   <ItemGroup>
     <None Include="Droid\Android\Assets\Fonts\icon.ttf" />
     <None Include="Droid\Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    <None Include="iOS\iOS.csproj" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <None Include="iOS\iOS\Entitlements.plist" />
+    <None Include="iOS\iOS\Info.plist" />
+    <None Include="iOS\iOS\LaunchScreen.storyboard" />
     <None Include="Lib\Common.props" />
     <None Include="Lib\Lib.csproj" />
     <None Include="Win\app.manifest" />
@@ -75,6 +80,7 @@
       <DependentUpon>Home.xaml</DependentUpon>
     </None>
     <None Include="Droid\MainActivity.cs" />
+    <None Include="iOS\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +102,19 @@
     <VSTemplate Include="Lib\Lib.vstemplate" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%402x.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
+    <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
+    <None Include="iOS\iOS\iOS说明.txt" />
+    <None Include="iOS\iOS\Resources\logo.png" />
+    <None Include="iOS\iOS\Resources\SplashScreen%402x.png" />
+    <None Include="iOS\iOS\Resources\SplashScreen%403x.png" />
+    <VSTemplate Include="iOS\iOS.vstemplate" />
     <None Include="Win\Assets\logo.png" />
     <None Include="Win\Assets\SplashScreen.scale-200.png" />
     <None Include="Win\Assets\Square150x150Logo.scale-200.png" />
