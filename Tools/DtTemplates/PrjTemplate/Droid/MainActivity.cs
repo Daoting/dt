@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: Daoting
+* 创建: $username$
 * 摘要: 
-* 日志: 2017-12-06 创建
+* 日志: $time$ 创建
 ******************************************************************************/
 #endregion
 
@@ -14,13 +14,13 @@ using Android.Runtime;
 using Android.Views;
 #endregion
 
-namespace Dt.Lib
+namespace $ext_safeprojectname$
 {
     // 接收分享的内容
-    [IntentFilter(
-        new[] { Intent.ActionSend },
-        Categories = new[] { Intent.CategoryDefault },
-        DataMimeTypes = new[] { "image/*", "text/plain", "video/*", "audio/*", "*/*" })]
+    //[IntentFilter(
+    //    new[] { Intent.ActionSend },
+    //    Categories = new[] { Intent.CategoryDefault },
+    //    DataMimeTypes = new[] { "image/*", "text/plain", "video/*", "audio/*", "*/*" })]
 
     [Activity(
         MainLauncher = true,

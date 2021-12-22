@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0-android</TargetFramework>
+		<SingleProject>true</SingleProject>
+		<OutputType>Exe</OutputType>
+		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+		<IsUnoHead>true</IsUnoHead>
+	</PropertyGroup>
+
+	<Import Project="..\$ext_safeprojectname$\Common.props" />
+
+	<ItemGroup>
+		<ProjectReference Include="..\$ext_safeprojectname$\$ext_safeprojectname$.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="..\$ext_safeprojectname$\App\App.xaml" Link="App.xaml" />
+		<Compile Include="..\$ext_safeprojectname$\App\App.xaml.cs" Link="App.xaml.cs">
+			<DependentUpon>App.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+</Project>

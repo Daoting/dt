@@ -54,14 +54,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Droid\Common.props" />
-    <None Include="Win\ProjectTemplate.csproj" />
-    <None Include="Droid\Class1.cs" />
-    <None Include="Win\Class1.cs" />
+    <None Include="Droid\Android\Assets\Fonts\icon.ttf" />
+    <None Include="Droid\Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+    <None Include="Lib\Common.props" />
+    <None Include="Lib\Lib.csproj" />
+    <None Include="Win\app.manifest" />
+    <None Include="Win\Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Win\Properties\launchSettings.json" />
+    <None Include="Win\Properties\PublishProfiles\win10-arm64.pubxml" />
+    <None Include="Win\Properties\PublishProfiles\win10-x64.pubxml" />
+    <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
+    <None Include="Win\Win.csproj" />
+    <None Include="Lib\AppStub.cs" />
+    <None Include="Lib\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </None>
+    <None Include="Lib\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
+    </None>
+    <None Include="Droid\MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Droid\ProjectTemplate.csproj" />
+    <None Include="Droid\Droid.csproj" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="PrjTemplate.vstemplate" />
@@ -70,10 +87,57 @@
     <None Include="Logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Droid\MyTemplate.vstemplate" />
+    <VSTemplate Include="Droid\Droid.vstemplate" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Win\MyTemplate.vstemplate" />
+    <VSTemplate Include="Win\Win.vstemplate" />
+  </ItemGroup>
+  <ItemGroup>
+    <VSTemplate Include="Lib\Lib.vstemplate" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Win\Assets\logo.png" />
+    <None Include="Win\Assets\SplashScreen.scale-200.png" />
+    <None Include="Win\Assets\Square150x150Logo.scale-200.png" />
+    <None Include="Win\Assets\Square44x44Logo.scale-200.png" />
+    <None Include="Win\Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <None Include="Win\Assets\Wide310x150Logo.scale-200.png" />
+    <None Include="Droid\Android\AndroidManifest.xml" />
+    <None Include="Droid\Android\Resources\drawable\back.png" />
+    <None Include="Droid\Android\Resources\drawable\logo.png" />
+    <None Include="Droid\Android\Resources\mipmap-anydpi-v26\ic_launcher.xml" />
+    <None Include="Droid\Android\Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
+    <None Include="Droid\Android\Resources\mipmap-hdpi\ic_launcher.png" />
+    <None Include="Droid\Android\Resources\mipmap-hdpi\ic_launcher_foreground.png" />
+    <None Include="Droid\Android\Resources\mipmap-hdpi\ic_launcher_round.png" />
+    <None Include="Droid\Android\Resources\mipmap-mdpi\ic_launcher.png" />
+    <None Include="Droid\Android\Resources\mipmap-mdpi\ic_launcher_foreground.png" />
+    <None Include="Droid\Android\Resources\mipmap-mdpi\ic_launcher_round.png" />
+    <None Include="Droid\Android\Resources\mipmap-xhdpi\ic_launcher.png" />
+    <None Include="Droid\Android\Resources\mipmap-xhdpi\ic_launcher_foreground.png" />
+    <None Include="Droid\Android\Resources\mipmap-xhdpi\ic_launcher_round.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxhdpi\ic_launcher.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxhdpi\ic_launcher_foreground.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxhdpi\ic_launcher_round.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
+    <None Include="Droid\Android\Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
+    <None Include="Droid\Android\Resources\values\ic_launcher_background.xml" />
+    <None Include="Droid\Android\Resources\values\styles.xml" />
+    <None Include="Droid\Android\Resources\xml\file_paths.xml" />
+    <Content Include="Lib\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Lib\App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Lib\Home.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

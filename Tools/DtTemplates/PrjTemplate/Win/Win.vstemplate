@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>搬运工</Name>
+		<ProjectType>CSharp</ProjectType>
+		<CreateInPlace>true</CreateInPlace>
+		<!-- 内部模板标记为隐藏 -->
+		<Hidden>true</Hidden>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="Win.csproj" ReplaceParameters="true">
+			<ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package.appxmanifest</ProjectItem>
+			<ProjectItem ReplaceParameters="true" TargetFileName="app.manifest">app.manifest</ProjectItem>
+			<ProjectItem ReplaceParameters="true" TargetFileName="launchSettings.json">Properties\launchSettings.json</ProjectItem>
+			<ProjectItem TargetFileName="win10-arm64.pubxml">Properties\PublishProfiles\win10-arm64.pubxml</ProjectItem>
+			<ProjectItem TargetFileName="win10-x64.pubxml">Properties\PublishProfiles\win10-x64.pubxml</ProjectItem>
+			<ProjectItem TargetFileName="win10-x86.pubxml">Properties\PublishProfiles\win10-x86.pubxml</ProjectItem>
+			<ProjectItem TargetFileName="logo.png">Assets\logo.png</ProjectItem>
+			<ProjectItem TargetFileName="SplashScreen.scale-200.png">Assets\SplashScreen.scale-200.png</ProjectItem>
+			<ProjectItem TargetFileName="Square150x150Logo.scale-200.png">Assets\Square150x150Logo.scale-200.png</ProjectItem>
+			<ProjectItem TargetFileName="Square44x44Logo.scale-200.png">Assets\Square44x44Logo.scale-200.png</ProjectItem>
+			<ProjectItem TargetFileName="Square44x44Logo.targetsize-24_altform-unplated.png">Assets\Square44x44Logo.targetsize-24_altform-unplated.png</ProjectItem>
+			<ProjectItem TargetFileName="Wide310x150Logo.scale-200.png">Assets\Wide310x150Logo.scale-200.png</ProjectItem>
+		</Project>
+	</TemplateContent>
+</VSTemplate>

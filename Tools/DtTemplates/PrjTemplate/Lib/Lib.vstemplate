@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>搬运工</Name>
+		<ProjectType>CSharp</ProjectType>
+		<CreateInPlace>true</CreateInPlace>
+		<!-- 内部模板标记为隐藏 -->
+		<Hidden>true</Hidden>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="Lib.csproj" ReplaceParameters="true">
+			<ProjectItem TargetFileName="Common.props">Common.props</ProjectItem>
+			<ProjectItem TargetFileName="Android\AndroidManifest.xml">AndroidManifest.xml</ProjectItem>
+			<ProjectItem TargetFileName="App\AppStub.cs" ReplaceParameters="true">AppStub.cs</ProjectItem>
+			<ProjectItem TargetFileName="App\App.xaml" ReplaceParameters="true">App.xaml</ProjectItem>
+			<ProjectItem TargetFileName="App\App.xaml.cs" ReplaceParameters="true">App.xaml.cs</ProjectItem>
+			<ProjectItem TargetFileName="Home.xaml" ReplaceParameters="true">Home.xaml</ProjectItem>
+			<ProjectItem TargetFileName="Home.xaml.cs" ReplaceParameters="true">Home.xaml.cs</ProjectItem>
+		</Project>
+	</TemplateContent>
+</VSTemplate>

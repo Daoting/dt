@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: Daoting
+* 创建: $username$
 * 摘要: 
-* 日志: 2016-02-18
+* 日志: $time$ 创建
 ******************************************************************************/
 #endregion
 
@@ -10,7 +10,7 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Lib
+namespace $safeprojectname$
 {
     /// <summary>
     /// 系统存根，完整用法请参见：https://github.com/Daoting/dt/blob/master/Client/Dt.Sample/App/AppStub.cs
