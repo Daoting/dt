@@ -251,19 +251,25 @@ namespace Dt.Base.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        async void OnStub(object sender, Mi e)
+        void OnStub(object sender, Mi e)
         {
             _viewTypes = new Dictionary<string, Type>();
             _pushHandlers = new Dictionary<string, Type>();
             _serializeTypes = new Dictionary<string, Type>();
             _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
 
-            IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
-            foreach (StorageFile file in files)
-            {
-                if (file.DisplayName.StartsWith("Dt.") && file.FileType == ".dll")
-                    ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
-            }
+            //IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
+            //foreach (StorageFile file in files)
+            //{
+            //    if (file.DisplayName.StartsWith("Dt.") && file.FileType == ".dll")
+            //        ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
+            //}
+            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Core")));
+            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Base")));
+            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.App")));
+
+            // 最后提取业务程序集，确保业务程序集的类型优先级最高，比如替换系统自带的视图
+            ExtractAssembly(Kit.Stub.GetType().Assembly);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("\t\t#region 自动生成");

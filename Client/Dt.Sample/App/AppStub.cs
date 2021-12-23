@@ -131,6 +131,7 @@ namespace Dt.Sample
             // 视图名称与窗口类型的映射字典，主要菜单项用
             ViewTypes = new Dictionary<string, Type>
             {
+                { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
                 { "报表", typeof(Dt.App.ReportView) },
                 { "流程设计", typeof(Dt.App.Workflow.WorkflowMgr) },
                 { "任务", typeof(Dt.App.Workflow.TasksView) },
@@ -145,7 +146,6 @@ namespace Dt.Sample
                 { "系统角色", typeof(Dt.App.Model.RoleWin) },
                 { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
                 { "文件", typeof(Dt.App.File.FileHome) },
-                { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
                 { "样例", typeof(Dt.Sample.SamplesMain) },
                 { "ShoppingWin", typeof(Dt.Sample.ModuleView.OneToMany1.ShoppingWin) },
             };
@@ -172,22 +172,22 @@ namespace Dt.Sample
                     "state",
                     new SqliteTblsInfo
                     {
-                        Version = "b52141c5528d02be53e32e6fb8d2310c",
+                        Version = "2fe5c45e35be65ce0b3f263598f88599",
                         Tables = new List<Type>
                         {
-                            typeof(Dt.App.MenuFav),
-                            typeof(Dt.App.UserMenu),
-                            typeof(Dt.App.File.ReadFileHistory),
-                            typeof(Dt.Base.Docking.DockLayout),
-                            typeof(Dt.Base.ModuleView.SearchHistory),
-                            typeof(Dt.Base.FormView.CellLastVal),
-                            typeof(Dt.Base.Chat.ChatMember),
-                            typeof(Dt.Base.Chat.Letter),
                             typeof(Dt.Core.Model.ClientLog),
                             typeof(Dt.Core.Model.ClientCookie),
                             typeof(Dt.Core.Model.DataVersion),
                             typeof(Dt.Core.Model.UserParams),
                             typeof(Dt.Core.Model.UserPrivilege),
+                            typeof(Dt.Base.Docking.DockLayout),
+                            typeof(Dt.Base.ModuleView.SearchHistory),
+                            typeof(Dt.Base.FormView.CellLastVal),
+                            typeof(Dt.Base.Chat.ChatMember),
+                            typeof(Dt.Base.Chat.Letter),
+                            typeof(Dt.App.MenuFav),
+                            typeof(Dt.App.UserMenu),
+                            typeof(Dt.App.File.ReadFileHistory),
                         }
                     }
                 },
