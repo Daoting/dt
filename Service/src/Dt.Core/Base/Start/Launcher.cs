@@ -33,11 +33,13 @@ namespace Dt.Core
         /// + 启动http服务器
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
-        /// <param name="p_stub">服务存根</param>
         /// <param name="p_args">启动参数</param>
-        public static void Run(ISvcStub p_stub, string[] p_args)
+        /// <param name="p_stubs">服务存根列表</param>
+        public static void Run(string[] p_args, params Stub[] p_stubs)
         {
-            Kit.Stub = p_stub ?? throw new ArgumentNullException(nameof(p_stub));
+            if (p_stubs.Length == 0)
+                throw new ArgumentException(nameof(p_stubs));
+            Kit.Stubs = p_stubs;
             CreateLogger();
             LoadConfig();
             DbSchema.Init();
@@ -60,10 +62,10 @@ namespace Dt.Core
                     .Build();
 
                 // 日志文件命名：
-                // k8s：服务名 -服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
+                // k8s：服务名-服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
                 // windows：服务名-日期.txt
-                string fileName = Kit.IsInDocker ? $"{Kit.SvcName}-{Kit.SvcID}-.txt" : $"{Kit.SvcName}-.txt";
-                string path = Path.Combine(AppContext.BaseDirectory, "etc/log", fileName);
+                string svc = string.Join('+', Kit.SvcNames);
+                string path = Path.Combine(AppContext.BaseDirectory, "etc/log", $"{svc}-{Kit.SvcID}-.txt");
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
                     //.WriteTo.Console()
@@ -76,8 +78,7 @@ namespace Dt.Core
                         rollOnFileSizeLimit: true) // 超过1G时新文件名末尾加序号
                     .CreateLogger();
 
-                var version = Kit.Stub.GetType().Assembly.GetName().Version;
-                Log.Information($"启动{Kit.SvcName}(V{version.Major}.{version.Minor}.{version.Build})...");
+                Log.Information($"启动{svc}...");
             }
             catch (Exception e)
             {
@@ -128,7 +129,7 @@ namespace Dt.Core
             }
             catch (Exception e)
             {
-                Log.Fatal(e, "启动 {0} 失败", Kit.SvcName);
+                Log.Fatal(e, "Web服务器启动失败");
                 throw;
             }
         }

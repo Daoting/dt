@@ -51,10 +51,13 @@ namespace Dt.Core
         /// <returns>副本个数</returns>
         public async Task<int> GetReplicaCount(string p_svcName)
         {
+            if (Kit.Stubs.Length > 1)
+                return 1;
+
             await UpdateSvcList();
 
             if (string.IsNullOrEmpty(p_svcName))
-                p_svcName = Kit.SvcName;
+                p_svcName = Kit.Stubs[0].SvcName;
             string queueName = $"{Kit.AppName}.{p_svcName}";
             return (from name in _allSvcInsts
                     where name.StartsWith(queueName)

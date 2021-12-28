@@ -114,7 +114,6 @@ namespace Dt.Core
             // 订阅事件
             RemoteEventBus.Subscribe(p_app.ApplicationServices);
 
-            var version = Kit.Stub.GetType().Assembly.GetName().Version;
             Log.Information("---启动完毕---");
         }
     }

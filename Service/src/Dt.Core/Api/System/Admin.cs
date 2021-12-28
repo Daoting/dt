@@ -34,9 +34,12 @@ namespace Dt.Core
         public List<string> GetInitInfo()
         {
             var ls = new List<string>();
-            ls.Add($"{Kit.SvcName.Substring(0, 1).ToUpper()}{Kit.SvcName.Substring(1)} API目录");
+            if (Kit.Stubs.Length == 1)
+                ls.Add($"{Kit.Stubs[0].SvcName} API目录");
+            else
+                ls.Add("API目录");
             ls.Add(GetTopbarHtml());
-            ls.Add(GetGroupApi("API"));
+            ls.Add(GetGroupApi(Kit.Stubs[0].SvcName));
             return ls;
         }
 
@@ -206,12 +209,13 @@ namespace Dt.Core
         string GetTopbarHtml()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"<span style=\"font-size:20px;\">{Kit.SvcName.Substring(0, 1).ToUpper()}{Kit.SvcName.Substring(1)}服务({Silo.Methods.Count})</span>");
-            foreach (var item in Silo.GroupMethods.OrderBy((p) => p.Key, StringComparer.OrdinalIgnoreCase))
+            sb.Append($"<span style=\"font-size:20px;\">API({Silo.Methods.Count})</span>");
+            foreach (var stub in Kit.Stubs)
             {
-                if (item.Value.Count > 0)
-                    sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", item.Key);
+                sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
             }
+            sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "公共");
+            sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "测试");
             return sb.ToString();
         }
         #endregion
@@ -227,6 +231,7 @@ namespace Dt.Core
             List<string> keys = new List<string>();
             IEnumerable<XElement> comments = null;
             AgentMode mode = AgentMode.Default;
+            Type type = null;
             foreach (var item in Silo.Methods)
             {
                 if (!item.Key.StartsWith(p_clsName + "."))
@@ -235,7 +240,7 @@ namespace Dt.Core
                 keys.Add(item.Key);
                 if (comments == null)
                 {
-                    Type type = item.Value.Method.DeclaringType;
+                    type = item.Value.Method.DeclaringType;
                     var attr = type.GetCustomAttribute<ApiAttribute>();
                     if (attr != null)
                         mode = attr.AgentMode;
@@ -243,17 +248,38 @@ namespace Dt.Core
                 }
             }
 
-            if (keys.Count == 0)
+            if (keys.Count == 0 || type == null)
                 return "未找到该类型！";
 
             // 不同模式的服务名
-            string serviceName;
+            string serviceName = "";
             if (mode == AgentMode.Default)
-                serviceName = $"\"{Kit.SvcName}\"";
+            {
+                if (Kit.Stubs.Length == 1)
+                {
+                    serviceName = $"\"{Kit.Stubs[0].SvcName}\"";
+                }
+                else
+                {
+                    // 多服务
+                    foreach (var stub in Kit.Stubs)
+                    {
+                        if (stub.GetType().Assembly == type.Assembly)
+                        {
+                            serviceName = $"\"{stub.SvcName}\"";
+                            break;
+                        }
+                    }
+                }
+            }
             else if (mode == AgentMode.Generic)
+            {
                 serviceName = "typeof(TSvc).Name";
+            }
             else
+            {
                 serviceName = "p_serviceName";
+            }
 
             string retTypeName;
             int paramsLength;

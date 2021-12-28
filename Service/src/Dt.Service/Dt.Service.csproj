@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\Common.props" />
+
+	<!-- 包属性 -->
+	<PropertyGroup>
+		<Version>1.2.0</Version>
+		<!-- 将引用项目合并打包 -->
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+		<Authors>Daoting</Authors>
+		<Product>搬运工基础平台</Product>
+		<Description>搬运工服务端基础包</Description>
+		<Copyright>Copyright © 2021</Copyright>
+		<PackageProjectUrl>https://github.com/daoting/dt</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageIconUrl />
+		<PackageTags>搬运工 Service</PackageTags>
+	</PropertyGroup>
+
+	<!-- 包图标 -->
+	<ItemGroup>
+		<None Include="..\..\..\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--PrivateAssets避免引用项目的 nuget 包-->
+		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Dns\Dt.Dns.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Pub\Dt.Pub.csproj" PrivateAssets="all" />
+	</ItemGroup>
+
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<!-- 将本项目输出目录的所有内容打包 -->
+            <TfmSpecificPackageFile Include="$(OutputPath)**" Exclude="$(OutputPath)Dt.Service.*" PackagePath="lib\$(TargetFramework)" />
+		</ItemGroup>
+	</Target>
+</Project>

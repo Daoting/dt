@@ -1,0 +1,21 @@
+<Project ToolsVersion="Current">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+		<DefineConstants>$(DefineConstants);TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+		<DefineConstants>$(DefineConstants);TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+		
+	<ItemGroup>
+		<Using Include="Dt.Core" />
+	</ItemGroup>
+</Project>

@@ -20,7 +20,7 @@ namespace Dt.Cm
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试")]
+    [Api(IsTest = true)]
     public class TestSerialize : BaseApi
     {
         #region 基本类型

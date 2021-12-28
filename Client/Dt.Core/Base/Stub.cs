@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// 系统存根接口
+    /// 系统存根
     /// </summary>
     public abstract class Stub
     {

@@ -165,13 +165,20 @@ namespace Dt.Core
 
         #region Sql字典
         /// <summary>
-        /// 缓存当前服务的所有Sql语句，表名xxx_sql
+        /// 缓存当前所有服务的所有Sql语句，表名xxx_sql
         /// </summary>
         public static void LoadCacheSql()
         {
             try
             {
-                var ls = new MySqlAccess().Each($"select id,`sql` from {Kit.SvcName}_sql").Result;
+                StringBuilder sb = new StringBuilder();
+                foreach (var name in Kit.SvcNames)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(" union ");
+                    sb.Append($"select id,`sql` from {name}_sql");
+                }
+                var ls = new MySqlAccess().Each(sb.ToString()).Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");
@@ -198,6 +205,23 @@ namespace Dt.Core
             else
             {
                 Kit.Sql = GetDebugSql;
+
+                // 生成查询sql
+                if (Kit.Stubs.Length > 1)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var name in Kit.SvcNames)
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(" union ");
+                        sb.Append($"select `sql` from {name}_sql where id=@id");
+                    }
+                    _debugSql = $"select 'sql' from ({sb}) a LIMIT 1";
+                }
+                else
+                {
+                    _debugSql = $"select `sql` from {Kit.Stubs[0].SvcName}_sql where id=@id";
+                }
                 Log.Information("未缓存Sql, 调试状态");
             }
         }
@@ -244,6 +268,7 @@ namespace Dt.Core
             return sql;
         }
 
+        static string _debugSql;
         /// <summary>
         /// 直接从库中查询Sql语句，只在调试时单机用！
         /// </summary>
@@ -258,10 +283,7 @@ namespace Dt.Core
             if (p_keyOrSql.IndexOf(' ') != -1)
                 return p_keyOrSql;
 
-            // 键名不包含空格！！！
-            if (!string.IsNullOrEmpty(p_keyOrSql))
-                return new MySqlAccess().GetScalar<string>($"select `sql` from {Kit.SvcName}_sql where id='{p_keyOrSql}'").Result;
-            return null;
+            return new MySqlAccess().GetScalar<string>(_debugSql, new { id = p_keyOrSql }).Result;
         }
 
         #endregion
@@ -291,29 +313,40 @@ namespace Dt.Core
             var builder = new ContainerBuilder();
             builder.Populate(p_services);
 
-            //// 提取有用类型，程序集包括Dt.Core、微服务、插件(以.Addin.dll结尾)
-            //List<Assembly> asms = new List<Assembly> { Kit.Stub.GetType().Assembly, typeof(Silo).Assembly };
-            //asms.AddRange(Directory
-            //    .EnumerateFiles(Path.GetDirectoryName(typeof(Silo).Assembly.Location), "*.Addin.dll", SearchOption.TopDirectoryOnly)
-            //    .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath));
-
             // 提取微服务和Dt.Core程序集
-            var types = Kit.Stub.GetType().Assembly.GetTypes()
-                .Concat(typeof(Silo).Assembly.GetTypes())
-                .Where(type => type != null && type.IsClass && type.IsPublic && !type.IsAbstract);
+            LoadAssembly(typeof(Silo).Assembly, builder, "公共");
+            foreach (var stub in Kit.Stubs)
+            {
+                LoadAssembly(stub.GetType().Assembly, builder, stub.SvcName);
+            }
 
-            foreach (Type type in types)
+            // 内部服务管理Api
+            ExtractApi(typeof(Admin), null, builder, null);
+            Log.Information("注入服务成功");
+
+            return new AutofacServiceProvider(builder.Build());
+        }
+
+        static void LoadAssembly(Assembly p_asm, ContainerBuilder p_builder, string p_svcName)
+        {
+            // 过滤有用类型，排序为了admin页面显示顺序
+            var ls = from tp in p_asm.GetTypes()
+                     where tp != null && tp.IsClass && tp.IsPublic && !tp.IsAbstract
+                     orderby tp.Name
+                     select tp;
+
+            foreach (Type type in ls)
             {
                 // 提取Api
                 ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
                 if (rpcAttr != null)
                 {
-                    ExtractApi(type, rpcAttr, builder);
+                    ExtractApi(type, rpcAttr, p_builder, rpcAttr.IsTest ? "测试" : p_svcName);
                     continue;
                 }
 
                 // 注册事件处理
-                if (IsEventHandler(type, builder))
+                if (IsEventHandler(type, p_builder))
                     continue;
 
                 // 注册服务，支持继承的SvcAttribute
@@ -324,7 +357,7 @@ namespace Dt.Core
                     if (itps.Length > 0)
                     {
                         // 注册接口类型
-                        builder
+                        p_builder
                             .RegisterType(type)
                             .As(type)
                             .As(itps)
@@ -332,7 +365,7 @@ namespace Dt.Core
                     }
                     else
                     {
-                        builder
+                        p_builder
                             .RegisterType(type)
                             .ConfigureLifecycle(svcAttr.Lifetime, null);
                     }
@@ -352,12 +385,6 @@ namespace Dt.Core
                 if (serAttr != null)
                     SerializeTypeAlias.Add(serAttr.Alias, type);
             }
-
-            // 内部服务管理Api
-            ExtractApi(typeof(Admin), null, builder);
-            Log.Information("注入服务成功");
-
-            return new AutofacServiceProvider(builder.Build());
         }
 
         /// <summary>
@@ -366,21 +393,21 @@ namespace Dt.Core
         /// <param name="p_type"></param>
         /// <param name="p_apiAttr"></param>
         /// <param name="p_builder"></param>
-        static void ExtractApi(Type p_type, ApiAttribute p_apiAttr, ContainerBuilder p_builder)
+        /// <param name="p_groupName">分组名称</param>
+        static void ExtractApi(Type p_type, ApiAttribute p_apiAttr, ContainerBuilder p_builder, string p_groupName)
         {
             // 分组列表
             List<string> grpMethods = null;
-            if (p_apiAttr != null)
+            if (!string.IsNullOrEmpty(p_groupName))
             {
-                string grpName = string.IsNullOrEmpty(p_apiAttr.GroupName) ? "API" : p_apiAttr.GroupName;
-                if (GroupMethods.TryGetValue(grpName, out List<string> ls))
+                if (GroupMethods.TryGetValue(p_groupName, out List<string> ls))
                 {
                     grpMethods = ls;
                 }
                 else
                 {
                     grpMethods = new List<string>();
-                    GroupMethods[grpName] = grpMethods;
+                    GroupMethods[p_groupName] = grpMethods;
                 }
             }
 
@@ -418,7 +445,7 @@ namespace Dt.Core
 
                 var methodAuth = mi.GetCustomAttribute<AuthAttribute>(false);
                 string name = $"{p_type.Name}.{mi.Name}";
-                Methods[name] = new ApiMethod(mi, callMode, methodAuth?? clsAuth, isTran);
+                Methods[name] = new ApiMethod(mi, callMode, methodAuth ?? clsAuth, isTran);
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }

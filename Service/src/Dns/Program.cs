@@ -1,0 +1,1 @@
+﻿Launcher.Run(args, new Dt.Dns.SvcStub());

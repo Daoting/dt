@@ -16,7 +16,7 @@ namespace Dt.Core
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
+    [Api(AgentMode = AgentMode.Generic, IsTest = true)]
     public class TestStreamRpc : BaseApi
     {
         public async Task OnServerStream(string p_title, ResponseWriter p_writer)

@@ -18,7 +18,7 @@ namespace Dt.Cm
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试")]
+    [Api(IsTest = true)]
     public class TestCache : BaseApi
     {
         public async Task<string> CacheStr(string p_key, string p_val)

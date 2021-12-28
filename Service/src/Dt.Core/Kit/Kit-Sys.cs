@@ -31,7 +31,6 @@ namespace Dt.Core
     public partial class Kit
     {
         #region 成员变量
-        static ISvcStub _stub;
         static TimeSpan _timeSpan;
         static IConfiguration _config;
         static IDisposable _cfgCallback;
@@ -41,9 +40,9 @@ namespace Dt.Core
 
         #region 属性
         /// <summary>
-        /// 获取服务名称，取自服务程序集命名空间的末尾段，小写
+        /// 获取所有服务存根
         /// </summary>
-        public static string SvcName { get; private set; }
+        public static Stub[] Stubs { get; set; }
 
         /// <summary>
         /// 获取服务实例ID，k8s部署在同一Node上多个Pod副本时区分用，每次启动生成新ID，终生不变
@@ -51,19 +50,10 @@ namespace Dt.Core
         public static string SvcID { get; } = Guid.NewGuid().ToString().Substring(0, 8);
 
         /// <summary>
-        /// 获取服务存根
+        /// 获取所有服务名称，小写
         /// </summary>
-        public static ISvcStub Stub
-        {
-            get { return _stub; }
-            internal set
-            {
-                _stub = value;
-                // 服务名称
-                var ns = _stub.GetType().Namespace;
-                SvcName = ns.Substring(ns.LastIndexOf(".") + 1).ToLower();
-            }
-        }
+        public static IEnumerable<string> SvcNames => from stub in Stubs
+                                                      select stub.SvcName;
 
         /// <summary>
         /// 获取系统配置
@@ -211,7 +201,10 @@ namespace Dt.Core
         internal static void ConfigureServices(IServiceCollection p_services)
         {
             // 外部
-            _stub.ConfigureServices(p_services);
+            foreach (var stub in Stubs)
+            {
+                stub.ConfigureServices(p_services);
+            }
 
             // 以便访问当前的HttpContext
             p_services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -222,7 +215,10 @@ namespace Dt.Core
             // 全局服务容器
             _svcProvider = p_app.ApplicationServices;
             _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
-            _stub.Configure(p_app, DtMiddleware.RequestHandlers);
+            foreach (var stub in Stubs)
+            {
+                stub.Configure(p_app, DtMiddleware.RequestHandlers);
+            }
         }
         #endregion
     }

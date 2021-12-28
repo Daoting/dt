@@ -23,7 +23,7 @@ namespace Dt.Msg.Api
     /// <summary>
     /// 
     /// </summary>
-    [Api(GroupName = "功能测试")]
+    [Api(IsTest = true)]
     public class TestMsg : BaseApi
     {
         public async Task<int> CloseAllOnline()

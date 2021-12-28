@@ -119,7 +119,7 @@ namespace Dt.Core.EventBus
             if (p_event != null)
             {
                 if (string.IsNullOrEmpty(p_svcName))
-                    p_svcName = Kit.SvcName;
+                    p_svcName = Kit.Stubs[0].SvcName;
                 Publish(p_event, $"{Kit.AppName}.{p_svcName.ToLower()}.All", true);
             }
         }
@@ -225,20 +225,24 @@ namespace Dt.Core.EventBus
                 durable: true,      // 持久化
                 autoDelete: false); // 是否自动删除
 
-            // 声明两个消费者队列
-            // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-            CreateWorkConsumer();
-            // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-            CreateTopicConsumer();
+            // 每个声明两个消费者队列
+            foreach (var stub in Kit.Stubs)
+            {
+                // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+                CreateWorkConsumer(stub.SvcName);
+                // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
+                CreateTopicConsumer(stub.SvcName);
+            }
         }
 
         /// <summary>
         /// 声明消费者队列 AppName.SvcName，work模式，未绑定交换机，只支持和队列名称完全匹配时投递
         /// 用于接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
         /// </summary>
-        void CreateWorkConsumer()
+        /// <param name="p_svcName"></param>
+        void CreateWorkConsumer(string p_svcName)
         {
-            string queueName = $"{Kit.AppName}.{Kit.SvcName}";
+            string queueName = $"{Kit.AppName}.{p_svcName}";
             IModel channel = _conn.CreateModel();
 
             // 声明队列
@@ -276,7 +280,7 @@ namespace Dt.Core.EventBus
                     if (!_conn.IsConnected)
                         _conn.TryConnect();
                     if (_conn.IsConnected)
-                        CreateWorkConsumer();
+                        CreateWorkConsumer(p_svcName);
                 }
                 catch (Exception ex)
                 {
@@ -290,9 +294,10 @@ namespace Dt.Core.EventBus
         /// AppName.SvcName.*  接收对服务所有副本的投递
         /// #.SvcID  接收对当前副本的投递
         /// </summary>
-        void CreateTopicConsumer()
+        /// <param name="p_svcName"></param>
+        void CreateTopicConsumer(string p_svcName)
         {
-            string queueName = $"{Kit.AppName}.{Kit.SvcName}.{Kit.SvcID}";
+            string queueName = $"{Kit.AppName}.{p_svcName}.{Kit.SvcID}";
             IModel channel = _conn.CreateModel();
 
             // 声明队列
@@ -304,9 +309,9 @@ namespace Dt.Core.EventBus
 
             // 绑定队列
             channel.QueueBind(
-                queue: queueName,        // 队列名称
+                queue: queueName,          // 队列名称
                 exchange: _exchangeName,   // 绑定的交换机
-                routingKey: $"{Kit.AppName}.{Kit.SvcName}.*"); // 路由名称
+                routingKey: $"{Kit.AppName}.{p_svcName}.*"); // 路由名称
             channel.QueueBind(
                 queue: queueName,           // 队列名称
                 exchange: _exchangeName,    // 绑定的交换机
@@ -340,7 +345,7 @@ namespace Dt.Core.EventBus
                     if (!_conn.IsConnected)
                         _conn.TryConnect();
                     if (_conn.IsConnected)
-                        CreateTopicConsumer();
+                        CreateTopicConsumer(p_svcName);
                 }
                 catch (Exception ex)
                 {

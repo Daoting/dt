@@ -23,7 +23,7 @@ namespace Dt.Core.Sqlite
     /// </summary>
     public class SqliteModelHandler
     {
-        internal const string Warning = "当前服务不支持模型文件！";
+        public const string Warning = "当前服务不支持模型文件！";
         bool _isInited;
         string _version;
         byte[] _data;
@@ -80,8 +80,9 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 刷新模型版本
         /// </summary>
+        /// <param name="p_svcName"></param>
         /// <returns></returns>
-        public bool Refresh()
+        public bool Refresh(string p_svcName)
         {
             Throw.If(!_isInited, Warning);
             if (Refreshing)
@@ -89,7 +90,7 @@ namespace Dt.Core.Sqlite
 
             // 远程事件通知刷新，服务可能存在多个副本！
             var ed = new ModelRefreshEvent { Version = Guid.NewGuid().ToString().Substring(0, 8) };
-            Kit.RemoteMulticast(ed, Kit.SvcName);
+            Kit.RemoteMulticast(ed, p_svcName);
             return true;
         }
 

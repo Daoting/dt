@@ -1,0 +1,29 @@
+﻿{
+  "DbConn": "bs0",
+  "CacheSql": false,
+  "TraceSql": true,
+  "TraceRpc": true,
+
+  "SqliteModel": {
+    "OmOption": {
+      "Create": [
+        "create table if not exists OmOption (Name text not null,Category text not null,primary key (Name,Category))",
+        "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
+      ],
+      "Data": "select Name,Category from cm_option order by Category,Dispidx"
+    },
+    "OmReport": {
+      "Create": [
+        "create table if not exists OmReport (ID integer not null,Name text,Define text,primary key (ID))"
+      ],
+      "Data": "select id,name,define from cm_rpt"
+    },
+    "OmMenu": {
+      "Create": [
+        "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,SvcName text,Note text,DispIdx integer,primary key (ID))",
+        "create index if not exists \"OmMenu_ParentID\" on \"OmMenu\"(\"ParentID\")"
+      ],
+      "Data": "select * from cm_menu where islocked=0 order by dispidx"
+    }
+  }
+}

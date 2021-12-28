@@ -22,11 +22,6 @@ namespace Dt.Core
     public class ApiAttribute : Attribute
     {
         /// <summary>
-        /// 所属分组名称
-        /// </summary>
-        public string GroupName { get; set; }
-
-        /// <summary>
         /// 生成代理代码的模式
         /// </summary>
         public AgentMode AgentMode { get; set; }
@@ -35,6 +30,11 @@ namespace Dt.Core
         /// 拦截器类型数组
         /// </summary>
         public Type[] Interceptors { get; set; }
+
+        /// <summary>
+        /// 是否为测试用的Api
+        /// </summary>
+        public bool IsTest { get; set; }
     }
 
     /// <summary>
