@@ -212,11 +212,15 @@ namespace Dt.Core
                     StringBuilder sb = new StringBuilder();
                     foreach (var name in Kit.SvcNames)
                     {
-                        if (sb.Length > 0)
-                            sb.Append(" union ");
-                        sb.Append($"select `sql` from {name}_sql where id=@id");
+                        string tbl = name + "_sql";
+                        if (DbSchema.Schema.ContainsKey(tbl))
+                        {
+                            if (sb.Length > 0)
+                                sb.Append(" union ");
+                            sb.Append($"select `sql` from {tbl} where id=@id");
+                        }
                     }
-                    _debugSql = $"select 'sql' from ({sb}) a LIMIT 1";
+                    _debugSql = $"select * from ({sb}) a LIMIT 1";
                 }
                 else
                 {

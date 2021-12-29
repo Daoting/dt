@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>1.2.0</Version>
+		<Version>2.0.0</Version>
 		<!-- 将引用项目合并打包 -->
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<Authors>Daoting</Authors>
@@ -23,21 +23,31 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
-
+	
 	<ItemGroup>
 		<!--PrivateAssets避免引用项目的 nuget 包-->
 		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Dns\Dt.Dns.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Pub\Dt.Pub.csproj" PrivateAssets="all" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Content Include="..\Dt.Fsm\drive\**">
+			<Pack>True</Pack>
+			<Visible>false</Visible>
+			<PackagePath>\tools</PackagePath>
+		</Content>
+		<Content Include="Dt.Service.targets">
+			<Pack>True</Pack>
+			<PackagePath>\build</PackagePath>
+		</Content>
 	</ItemGroup>
 
 	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
 		<ItemGroup>
 			<!-- 将本项目输出目录的所有内容打包 -->
-            <TfmSpecificPackageFile Include="$(OutputPath)**" Exclude="$(OutputPath)Dt.Service.*" PackagePath="lib\$(TargetFramework)" />
+            <TfmSpecificPackageFile Include="$(OutputPath)*.*" Exclude="$(OutputPath)Dt.Service.*" PackagePath="lib\$(TargetFramework)" />
 		</ItemGroup>
 	</Target>
 </Project>

@@ -11,7 +11,7 @@ using Dt.Core;
 using System;
 #endregion
 
-namespace Dt.Pub
+namespace Dt.Cm
 {
     public partial class PostObj
     {

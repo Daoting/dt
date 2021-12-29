@@ -14,7 +14,7 @@ using System.IO;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Pub
+namespace Dt.Cm
 {
     /// <summary>
     /// 发布服务Api

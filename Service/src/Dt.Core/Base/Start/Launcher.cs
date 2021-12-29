@@ -39,6 +39,7 @@ namespace Dt.Core
         {
             if (p_stubs.Length == 0)
                 throw new ArgumentException(nameof(p_stubs));
+
             Kit.Stubs = p_stubs;
             CreateLogger();
             LoadConfig();
@@ -64,7 +65,7 @@ namespace Dt.Core
                 // 日志文件命名：
                 // k8s：服务名-服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
                 // windows：服务名-日期.txt
-                string svc = string.Join('+', Kit.SvcNames);
+                string svc = Kit.Stubs.Length == 1 ? Kit.Stubs[0].SvcName : "app";
                 string path = Path.Combine(AppContext.BaseDirectory, "etc/log", $"{svc}-{Kit.SvcID}-.txt");
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
@@ -78,7 +79,7 @@ namespace Dt.Core
                         rollOnFileSizeLimit: true) // 超过1G时新文件名末尾加序号
                     .CreateLogger();
 
-                Log.Information($"启动{svc}...");
+                Log.Information($"启动 {string.Join('+', Kit.SvcNames)} ...");
             }
             catch (Exception e)
             {

@@ -1,0 +1,9 @@
+<Project DefaultTargets="Build">
+	<ItemGroup>
+		<Content Include="$(MSBuildThisFileDirectory)..\tools\**">
+			<Visible>false</Visible>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+</Project>

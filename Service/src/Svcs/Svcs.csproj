@@ -10,10 +10,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" />
 	  <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-	  <ProjectReference Include="..\Dt.Dns\Dt.Dns.csproj" />
 	  <ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" />
 	  <ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" />
-	  <ProjectReference Include="..\Dt.Pub\Dt.Pub.csproj" />
 	</ItemGroup>
 
 </Project>
