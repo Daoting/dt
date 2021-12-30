@@ -10,12 +10,12 @@
   "profiles": {
     "Svcs": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7041;http://localhost:5041",
+      "launchUrl": ".admin",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:20200/"
     },
     "IIS Express": {
       "commandName": "IISExpress",
