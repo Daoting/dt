@@ -1,5 +1,6 @@
 <Project DefaultTargets="Build">
 	<ItemGroup>
+		<!-- build时将tools下的文件copy到输出目录 -->
 		<Content Include="$(MSBuildThisFileDirectory)..\tools\**">
 			<Visible>false</Visible>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

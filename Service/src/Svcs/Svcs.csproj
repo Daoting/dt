@@ -8,10 +8,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" />
-	  <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-	  <ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" />
-	  <ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" />
+	  <PackageReference Include="Dt.Service" Version="2.0.0" />
 	</ItemGroup>
 
 </Project>

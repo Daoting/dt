@@ -59,13 +59,18 @@ namespace Dt.Fsm
             p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
 
             // 设置可浏览目录的根目录，测试用
-            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions { FileProvider = new PhysicalFileProvider(Cfg.Root) });
+            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(Cfg.Root),
+                RequestPath = "/drv"
+            });
 
-            // 增加浏览次数，无缩略图时自动取原图
-            p_app.UseMiddleware<AddBrowseCount>();
-
-            // 指定根目录，代替wwwroot
-            p_app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Cfg.Root) });
+            // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
+            p_app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Cfg.Root),
+                RequestPath = "/drv"
+            });
         }
     }
 }
