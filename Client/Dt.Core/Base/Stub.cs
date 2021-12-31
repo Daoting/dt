@@ -21,28 +21,9 @@ namespace Dt.Core
     /// </summary>
     public abstract class Stub
     {
-        string _serverUrl;
-
         public Stub()
         {
             Init();
-        }
-
-        /// <summary>
-        /// 服务器地址，如：https://10.10.1.16/fz
-        /// </summary>
-        public string ServerUrl
-        {
-            get { return _serverUrl; }
-            protected set
-            {
-#if WASM
-                _serverUrl = Kit.GetServerUrl(value);
-#else
-                if (!string.IsNullOrEmpty(value))
-                    _serverUrl = value.TrimEnd('\\');
-#endif
-            }
         }
 
         /// <summary>
@@ -74,7 +55,7 @@ namespace Dt.Core
         /// <summary>
         /// 系统注销时的处理
         /// </summary>
-        public virtual Task OnLogout()  => Task.CompletedTask;
+        public virtual Task OnLogout() => Task.CompletedTask;
 
         /// <summary>
         /// 挂起时的处理，必须耗时小！
@@ -123,9 +104,18 @@ namespace Dt.Core
             return false;
         }
 
+        /// <summary>
+        /// 设置cm服务地址，如：https://10.10.1.16/fz-cm
+        /// </summary>
+        /// <param name="p_url"></param>
+        protected void InitCmUrl(string p_url)
+        {
+            Kit.InitCmSvcUrl(p_url);
+        }
+
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();
-        
+
         /// <summary>
         /// 视图字典
         /// </summary>

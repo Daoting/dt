@@ -19,6 +19,7 @@ using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using System.Collections.Generic;
 #endregion
 
 namespace Dt.Base
@@ -93,8 +94,26 @@ namespace Dt.Base
         /// <returns></returns>
         public static async Task Run(bool p_loginFirst)
         {
+            // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
+            List<object> cfg;
+            try
+            {
+                cfg = await AtKernel.GetConfig();
+                if (cfg == null || cfg.Count != 3)
+                    throw new Exception();
+            }
+            catch
+            {
+                ShowError("服务器连接失败！");
+                return;
+            }
+
+            // 服务器时间、初始化服务地址
+            Kit.SyncTime((DateTime)cfg[0]);
+            Kit.InitSvcUrls(cfg[1]);
+
             // 更新打开模型库
-            if (!await OpenModelDb())
+            if (!await OpenModelDb(cfg[2] as string))
                 return;
 
             string phone = AtState.GetCookie("LoginPhone");
@@ -102,12 +121,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
                 // 自动登录
-                var result = await new UnaryRpc(
-                    _svcName,
-                    "Entry.LoginByPwd",
-                    phone,
-                    pwd
-                ).Call<LoginResult>();
+                var result = await AtKernel.LoginByPwd(phone, pwd);
 
                 // 登录成功
                 if (result.IsSuc)
@@ -147,31 +161,17 @@ namespace Dt.Base
         #endregion
 
         #region 模型库
-        const string _svcName = "cm";
-
         /// <summary>
         /// 更新打开模型文件
         /// 1. 与本地不同时下载新模型文件；
         /// 2. 打开模型库；
         /// </summary>
+        /// <param name="p_ver"></param>
         /// <returns></returns>
-        public static async Task<bool> OpenModelDb()
+        public static async Task<bool> OpenModelDb(string p_ver)
         {
-            // 获取全局参数
-            Dict cfg;
-            try
-            {
-                cfg = await new UnaryRpc(_svcName, "ModelMgr.GetConfig").Call<Dict>();
-                Kit.SyncTime(cfg.Date("now"));
-            }
-            catch
-            {
-                ShowError("服务器连接失败！");
-                return false;
-            }
-
             // 更新模型文件
-            string modelVer = Path.Combine(Kit.DataPath, $"model-{cfg.Str("ver")}.ver");
+            string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
             if (!File.Exists(modelVer))
             {
                 string modelFile = Path.Combine(Kit.DataPath, "model.db");
@@ -185,8 +185,8 @@ namespace Dt.Base
 
                 try
                 {
-                    // 下载模型文件，下载地址如 https://localhost/app/cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.Stub.ServerUrl}/{_svcName}/.model"))
+                    // 下载模型文件，下载地址如 https://localhost/app-cm/.model
+                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                     using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))

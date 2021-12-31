@@ -16,7 +16,7 @@ using System.IO;
 using System.Linq;
 #endregion
 
-namespace Dt.Core.Sqlite
+namespace Dt.Cm
 {
     /// <summary>
     /// Sqlite模型文件处理

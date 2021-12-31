@@ -36,7 +36,6 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 
 ## Release 2.0.0 
 ### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
-* 服务端升级到.net6
 * 不再支持的API列表：https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-supported-api
 * 删除PhoneUI模式下窗口左上角的后退按钮
 * Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
@@ -52,6 +51,19 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 * Release版的Service Api生成代理类时方法无注释
 * Lv的Table模式列头排序只在Tapped事件触发
 * Phone模式标题栏触发右键菜单位置调整
+
+### 服务  
+* 所有服务升级到.net6
+* 调整项目结构，支持合并所有微服务为单体服务
+* pub合并到cm, editor放入fsm
+* 调整fsm静态文件的虚拟路径为drv，避免和其他服务冲突
+* cm增加dns功能，对客户端和所有微服务提供服务url列表
+* 客户端rpc采用动态服务路径
+* 微服务之间rpc采用新路径
+* 原pub的管理功能，表名规范按cm
+* 服务监听rabbitmq的事件，更新服务列表
+
+
 
 ## Release 1.9.10 
 ### 功能 

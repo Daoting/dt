@@ -35,7 +35,7 @@ namespace Dt.App
             {
                 if (await Kit.Confirm("确认要更新模型吗？"))
                 {
-                    if (await new UnaryRpc("cm", "ModelMgr.更新模型").Call<bool>())
+                    if (await AtKernel.UpdateModelDbFile())
                         Kit.Msg("更新模型成功，请重启应用！");
                     else
                         Kit.Warn("更新模型失败！");
@@ -43,70 +43,6 @@ namespace Dt.App
             };
             Kit.RunAsync(() => SysVisual.NotifyList.Add(notify));
         }
-
-        #region Entry
-        /// <summary>
-        /// 密码登录
-        /// </summary>
-        /// <param name="p_phone">手机号</param>
-        /// <param name="p_pwd">密码</param>
-        /// <returns></returns>
-        public static Task<LoginResult> LoginByPwd(string p_phone, string p_pwd)
-        {
-            return new UnaryRpc(
-                "cm",
-                "Entry.LoginByPwd",
-                p_phone,
-                p_pwd
-            ).Call<LoginResult>();
-        }
-
-        /// <summary>
-        /// 验证码登录
-        /// </summary>
-        /// <param name="p_phone">手机号</param>
-        /// <param name="p_code">验证码</param>
-        /// <returns></returns>
-        public static Task<LoginResult> LoginByCode(string p_phone, string p_code)
-        {
-            return new UnaryRpc(
-                "cm",
-                "Entry.LoginByCode",
-                p_phone,
-                p_code
-            ).Call<LoginResult>();
-        }
-
-        /// <summary>
-        /// 创建验证码
-        /// </summary>
-        /// <param name="p_phone"></param>
-        /// <returns></returns>
-        public static Task<string> CreateVerificationCode(string p_phone)
-        {
-            return new UnaryRpc(
-                "cm",
-                "Entry.CreateVerificationCode",
-                p_phone
-            ).Call<string>();
-        }
-
-        /// <summary>
-        /// 获取菜单项的数字提示信息
-        /// </summary>
-        /// <param name="p_menuID"></param>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public static Task<int> GetMenuTip(long p_menuID, long p_userID)
-        {
-            return new UnaryRpc(
-                "cm",
-                "Entry.GetMenuTip",
-                p_menuID,
-                p_userID
-            ).Call<int>();
-        }
-        #endregion
 
         #region UserRelated
         /// <summary>
@@ -261,6 +197,22 @@ namespace Dt.App
                 "UserRelated.DeleteRole",
                 p_roleID
             ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 获取菜单项的数字提示信息
+        /// </summary>
+        /// <param name="p_menuID"></param>
+        /// <param name="p_userID"></param>
+        /// <returns></returns>
+        public static Task<int> GetMenuTip(long p_menuID, long p_userID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRelated.GetMenuTip",
+                p_menuID,
+                p_userID
+            ).Call<int>();
         }
         #endregion
     }

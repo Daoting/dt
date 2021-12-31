@@ -7,33 +7,42 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Sqlite;
+using Dt.Core;
 #endregion
 
 namespace Dt.Cm
 {
     /// <summary>
-    /// 模型管理Api
+    /// 系统内核Api
     /// </summary>
     [Api]
-    public class ModelMgr
+    public class SysKernel
     {
         /// <summary>
-        /// 获取参数配置，包括模型文件版本号、服务器时间
+        /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
         /// </summary>
         /// <returns></returns>
-        public Dict GetConfig()
+        public List<object> GetConfig()
         {
-            var handler = Kit.GetObj<SqliteModelHandler>();
-            Throw.IfNull(handler, SqliteModelHandler.Warning);
-            return new Dict { { "ver", handler.GetVersion() }, { "now", Kit.Now } };
+            var ls = new List<object> { Kit.Now };
+            if (Kit.IsSingletonSvc)
+            {
+                ls.Add(true);
+            }
+            else
+            {
+                Dict dt = new Dict { { "msg", "*/dt-msg" }, { "fsm", "*/dt-fsm" } };
+                ls.Add(dt);
+            }
+            ls.Add(Kit.GetObj<SqliteModelHandler>().GetVersion());
+            return ls;
         }
 
         /// <summary>
-        /// 刷新模型版本
+        /// 更新模型库文件
         /// </summary>
         /// <returns></returns>
-        public bool 更新模型()
+        public bool UpdateModelDbFile()
         {
             var handler = Kit.GetObj<SqliteModelHandler>();
             Throw.IfNull(handler, SqliteModelHandler.Warning);

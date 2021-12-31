@@ -99,8 +99,13 @@ namespace Dt.App.Home
                     if (string.IsNullOrEmpty(mi.SvcName))
                         continue;
 
-                    int num = await new UnaryRpc(mi.SvcName, "Entry.GetMenuTip", mi.ID, Kit.UserID).Call<int>();
-                    mi.SetWarningNum(num);
+                    var strs = mi.SvcName.Split(':');
+                    if (strs.Length == 2)
+                    {
+                        int num = await new UnaryRpc(strs[0], strs[1], mi.ID, Kit.UserID).Call<int>();
+                        mi.SetWarningNum(num);
+                    }
+                    
                 }
             });
         }

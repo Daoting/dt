@@ -120,7 +120,7 @@ namespace Dt.Core.Model
         }
 
         /// <summary>
-        /// 提供提示信息的服务名称，空表示无提示信息
+        /// 提供提示信息的服务Api名称，格式如：cm:UserRelated.GetMenuTip，空表示无提示信息
         /// </summary>
         public string SvcName
         {

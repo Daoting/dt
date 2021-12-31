@@ -218,7 +218,7 @@ namespace Dt.Base
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-                RequestUri = new Uri($"{Kit.Stub.ServerUrl}/fsm/.d/{p_act}"),
+                RequestUri = new Uri($"{Kit.GetSvcUrl("fsm")}/.d/{p_act}"),
                 // 无内容时 okhttp 异常
                 Content = new StringContent("a")
             };

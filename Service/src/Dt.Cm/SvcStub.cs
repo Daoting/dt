@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

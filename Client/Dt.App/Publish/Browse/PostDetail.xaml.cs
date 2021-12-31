@@ -30,7 +30,7 @@ namespace Dt.App.Publish
         {
             _tab.Title = p_row.Str("title");
             // Android ios上WebView的 https 需要有效证书，临时用http！
-            _wv.Source = new Uri($"{Kit.Stub.ServerUrl.Replace("https:", "http:")}/pub/g/{p_row.Str("url")}");
+            _wv.Source = new Uri($"{Kit.GetSvcUrl("fsm").Replace("https:", "http:")}/drv/g/{p_row.Str("url")}");
         }
 
         async void OnShare(object sender, Mi e)

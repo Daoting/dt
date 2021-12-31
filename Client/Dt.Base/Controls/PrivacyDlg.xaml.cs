@@ -67,7 +67,7 @@ namespace Dt.Base
                 Title = p_title,
                 IsPinned = true,
                 WinPlacement = DlgPlacement.Maximized,
-                Content = new WebView2 { Source = new Uri($"{Kit.Stub.ServerUrl}/{p_url}") },
+                Content = new WebView2 { Source = new Uri($"{Kit.GetSvcUrl("cm")}/{p_url}") },
             }.Show();
         }
     }

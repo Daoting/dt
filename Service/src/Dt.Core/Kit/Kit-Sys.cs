@@ -56,6 +56,11 @@ namespace Dt.Core
                                                       select stub.SvcName;
 
         /// <summary>
+        /// 是否为单体服务(所有微服务合并成一个服务)
+        /// </summary>
+        public static bool IsSingletonSvc => Stubs.Length > 1;
+
+        /// <summary>
         /// 获取系统配置
         /// </summary>
         public static IConfiguration Config

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace Dt.Cm
 {
     /// <summary>
-    /// 入口Api
+    /// 登录入口Api
     /// </summary>
     [Api]
     public class Entry : BaseApi
@@ -127,21 +127,6 @@ namespace Dt.Cm
             // 发送短信
 
             return code;
-        }
-
-        /// <summary>
-        /// 获取菜单项的数字提示信息
-        /// </summary>
-        /// <param name="p_menuID"></param>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public Task<int> GetMenuTip(long p_menuID, long p_userID)
-        {
-            if (p_menuID == 3000)
-            {
-                return _dp.GetScalar<int>("流程-待办任务总数", new { userid = p_userID });
-            }
-            return Task.FromResult(0);
         }
 
         static async Task<string> GetAllVers(long p_userID)

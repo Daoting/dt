@@ -23,7 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Sqlite
+namespace Dt.Cm
 {
     /// <summary>
     /// Sqlite模型文件生成类
