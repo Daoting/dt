@@ -18,6 +18,9 @@ namespace Dt.Cm
     [Api]
     public class SysKernel
     {
+        static readonly SqliteModelHandler _modelHandler = Kit.GetObj<SqliteModelHandler>();
+        static Dict _svcUrls;
+
         /// <summary>
         /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
         /// </summary>
@@ -27,14 +30,16 @@ namespace Dt.Cm
             var ls = new List<object> { Kit.Now };
             if (Kit.IsSingletonSvc)
             {
+                // 单体服务只传标志
                 ls.Add(true);
             }
             else
             {
-                Dict dt = new Dict { { "msg", "*/dt-msg" }, { "fsm", "*/dt-fsm" } };
-                ls.Add(dt);
+                if (_svcUrls == null)
+                    LoadSvcUrls();
+                ls.Add(_svcUrls);
             }
-            ls.Add(Kit.GetObj<SqliteModelHandler>().GetVersion());
+            ls.Add(_modelHandler.Version);
             return ls;
         }
 
@@ -44,9 +49,21 @@ namespace Dt.Cm
         /// <returns></returns>
         public bool UpdateModelDbFile()
         {
-            var handler = Kit.GetObj<SqliteModelHandler>();
-            Throw.IfNull(handler, SqliteModelHandler.Warning);
-            return handler.Refresh("cm");
+            return _modelHandler.Refresh("cm");
+        }
+
+        static void LoadSvcUrls()
+        {
+            // service.json 调整后支持实时更新服务地址
+            Kit.ConfigChanged -= LoadSvcUrls;
+            Kit.ConfigChanged += LoadSvcUrls;
+
+            Dict dt = new Dict();
+            foreach (var item in Kit.Config.GetSection("SvcUrls").GetChildren())
+            {
+                dt[item.Key] = item.Value;
+            }
+            _svcUrls = dt;
         }
     }
 }

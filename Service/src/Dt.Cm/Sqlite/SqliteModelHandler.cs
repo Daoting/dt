@@ -23,9 +23,6 @@ namespace Dt.Cm
     /// </summary>
     public class SqliteModelHandler
     {
-        public const string Warning = "当前服务不支持模型文件！";
-        bool _isInited;
-        string _version;
         byte[] _data;
 
         /// <summary>
@@ -37,6 +34,11 @@ namespace Dt.Cm
         /// 模型文件路径
         /// </summary>
         public static string ModelPath => System.IO.Path.Combine(AppContext.BaseDirectory, "etc/model");
+
+        /// <summary>
+        /// 获取设置模型文件版本号
+        /// </summary>
+        public string Version { get; internal set; }
 
         /// <summary>
         /// 初始化SQLite模型文件
@@ -57,7 +59,7 @@ namespace Dt.Cm
             FileInfo fi = dir.EnumerateFiles("*.gz", SearchOption.TopDirectoryOnly).FirstOrDefault();
             if (fi != null)
             {
-                _version = fi.Name.Substring(0, fi.Name.Length - 3);
+                Version = fi.Name.Substring(0, fi.Name.Length - 3);
                 LoadModelFile();
                 Log.Information("缓存模型文件成功");
             }
@@ -65,16 +67,6 @@ namespace Dt.Cm
             {
                 Log.Error("模型文件不存在，请[更新模型]创建模型文件");
             }
-            _isInited = true;
-        }
-
-        /// <summary>
-        /// 获取模型文件版本号
-        /// </summary>
-        public string GetVersion()
-        {
-            Throw.If(!_isInited, Warning);
-            return _version;
         }
 
         /// <summary>
@@ -84,7 +76,6 @@ namespace Dt.Cm
         /// <returns></returns>
         public bool Refresh(string p_svcName)
         {
-            Throw.If(!_isInited, Warning);
             if (Refreshing)
                 return false;
 
@@ -99,7 +90,7 @@ namespace Dt.Cm
         /// </summary>
         internal void LoadModelFile()
         {
-            string gzFile = Path.Combine(ModelPath, _version + ".gz");
+            string gzFile = Path.Combine(ModelPath, Version + ".gz");
             using (FileStream fs = new FileStream(gzFile, FileMode.Open, FileAccess.Read))
             {
                 using (BinaryReader reader = new BinaryReader(fs))
@@ -108,15 +99,6 @@ namespace Dt.Cm
                     reader.Read(_data, 0, (int)fs.Length);
                 }
             }
-        }
-
-        /// <summary>
-        /// 刷新后重置版本
-        /// </summary>
-        /// <param name="p_ver"></param>
-        internal void SetVersion(string p_ver)
-        {
-            _version = p_ver;
         }
     }
 

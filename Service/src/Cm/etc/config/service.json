@@ -4,6 +4,11 @@
   "TraceSql": true,
   "TraceRpc": true,
 
+  "SvcUrls": {
+    "msg": "*/dt-msg",
+    "fsm": "*/dt-fsm2"
+  },
+
   "SqliteModel": {
     "OmOption": {
       "Create": [

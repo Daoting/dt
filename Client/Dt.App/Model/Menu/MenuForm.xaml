@@ -30,7 +30,8 @@
             </DataTemplate>
         </a:CList>
         <a:CText ID="params" Title="视图参数" AcceptsReturn="True" RowSpan="3" />
-        <a:CText ID="svcname" Title="提示服务" />
+        <a:CBar Title="提示服务Api，如：cm:MyCls.GetMenuTip" />
+        <a:CText ID="svcname" ShowTitle="False" />
         <a:CText ID="note" Title="功能说明" AcceptsReturn="True" RowSpan="3" />
         <a:CBool ID="islocked" Title="锁定不可用" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />

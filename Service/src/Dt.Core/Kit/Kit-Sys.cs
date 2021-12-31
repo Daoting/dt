@@ -116,6 +116,11 @@ namespace Dt.Core
 
         #region 系统配置
         /// <summary>
+        /// 系统配置变化事件
+        /// </summary>
+        public static event Action ConfigChanged;
+
+        /// <summary>
         /// 获取系统配置中指定键的值
         /// </summary>
         /// <typeparam name="T">值的类型</typeparam>
@@ -146,6 +151,7 @@ namespace Dt.Core
         {
             Silo.OnConfigChanged();
             ApplyConfig();
+            ConfigChanged?.Invoke();
 
             // 每次修改后需要重新注册，立即注册又会连续触发两次！
             _cfgCallback?.Dispose();

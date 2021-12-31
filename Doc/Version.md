@@ -57,7 +57,7 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 * 调整项目结构，支持合并所有微服务为单体服务
 * pub合并到cm, editor放入fsm
 * 调整fsm静态文件的虚拟路径为drv，避免和其他服务冲突
-* cm增加dns功能，对客户端和所有微服务提供服务url列表
+* cm的GetConfig增加提供服务url列表，service.json 调整后支持实时更新服务地址
 * 客户端rpc采用动态服务路径
 * 微服务之间rpc采用新路径
 * 原pub的管理功能，表名规范按cm

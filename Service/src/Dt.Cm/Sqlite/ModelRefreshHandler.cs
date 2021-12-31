@@ -142,7 +142,7 @@ namespace Dt.Cm
                 sb.AppendLine("成功！");
 
                 // 更新缓存、通知版本变化
-                handler.SetVersion(p_event.Version);
+                handler.Version = p_event.Version;
                 handler.LoadModelFile();
                 sb.AppendLine("缓存模型文件成功！");
 
