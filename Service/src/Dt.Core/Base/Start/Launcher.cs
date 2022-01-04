@@ -34,19 +34,58 @@ namespace Dt.Core
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
         /// <param name="p_args">启动参数</param>
-        /// <param name="p_stubs">服务存根列表</param>
-        public static void Run(string[] p_args, params Stub[] p_stubs)
+        /// <param name="p_stub">服务存根</param>
+        /// <param name="p_isSingletonSvc">是否为单体服务</param>
+        public static void Run(string[] p_args, Stub p_stub, bool p_isSingletonSvc)
         {
-            if (p_stubs.Length == 0)
-                throw new ArgumentException(nameof(p_stubs));
-
-            Kit.Stubs = p_stubs;
+            BuildStubs(p_stub, p_isSingletonSvc);
             CreateLogger();
             LoadConfig();
             DbSchema.Init();
             Silo.CacheSql();
             RunWebHost(p_args);
             Log.CloseAndFlush();
+        }
+
+        /// <summary>
+        /// 整理服务存根
+        /// </summary>
+        /// <param name="p_stub">服务存根</param>
+        /// <param name="p_isSingletonSvc">是否为单体服务</param>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Exception"></exception>
+        static void BuildStubs(Stub p_stub, bool p_isSingletonSvc)
+        {
+            if (!p_isSingletonSvc && p_stub == null)
+                throw new ArgumentException(nameof(p_stub));
+
+            if (p_isSingletonSvc)
+            {
+                List<Stub> stubs = new List<Stub>();
+                if (p_stub != null)
+                    stubs.Add(p_stub);
+
+                Type tp = Type.GetType("Dt.Cm.SvcStub,Dt.Cm");
+                if (tp == null)
+                    throw new Exception("缺少Dt.Cm.dll文件");
+                stubs.Add((Stub)Activator.CreateInstance(tp));
+
+                tp = Type.GetType("Dt.Msg.SvcStub,Dt.Msg");
+                if (tp == null)
+                    throw new Exception("缺少Dt.Msg.dll文件");
+                stubs.Add((Stub)Activator.CreateInstance(tp));
+
+                tp = Type.GetType("Dt.Fsm.SvcStub,Dt.Fsm");
+                if (tp == null)
+                    throw new Exception("缺少Dt.Fsm.dll文件");
+                stubs.Add((Stub)Activator.CreateInstance(tp));
+
+                Kit.Stubs = stubs.ToArray();
+            }
+            else
+            {
+                Kit.Stubs = new Stub[] { p_stub };
+            }
         }
 
         /// <summary>

@@ -1,1 +1,1 @@
-﻿Launcher.Run(args, new Dt.Fsm.SvcStub());
+﻿Launcher.Run(args, new Dt.Fsm.SvcStub(), false);
