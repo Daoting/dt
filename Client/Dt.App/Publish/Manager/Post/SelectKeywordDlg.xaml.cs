@@ -40,7 +40,7 @@ namespace Dt.App.Publish
 
         async void LoadData()
         {
-            _lv.Data = await AtPublish.Query("文章-未选关键字", new { postid = _postID });
+            _lv.Data = await AtCm.Query("文章-未选关键字", new { postid = _postID });
         }
 
         async void OnSelect(object sender, Mi e)
@@ -52,12 +52,12 @@ namespace Dt.App.Publish
                 return;
             }
 
-            List<PostkeywordObj> ls = new List<PostkeywordObj>();
+            List<PubPostkeywordObj> ls = new List<PubPostkeywordObj>();
             foreach (var row in selected)
             {
-                ls.Add(new PostkeywordObj(PostID: _postID, Keyword: row.Str("id")));
+                ls.Add(new PubPostkeywordObj(PostID: _postID, Keyword: row.Str("id")));
             }
-            if (await AtPublish.BatchSave(ls))
+            if (await AtCm.BatchSave(ls))
                 Close(true);
         }
 

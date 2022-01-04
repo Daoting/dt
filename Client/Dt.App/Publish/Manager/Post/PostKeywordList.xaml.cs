@@ -45,7 +45,7 @@ namespace Dt.App.Publish
 
         async void Refresh()
         {
-            _lv.Data = await AtPublish.Query("文章-已选关键字", new { postid = _id });
+            _lv.Data = await AtCm.Query("文章-已选关键字", new { postid = _id });
         }
 
         async void OnAdd(object sender, Mi e)
@@ -56,9 +56,9 @@ namespace Dt.App.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            PostkeywordObj pk = new PostkeywordObj(PostID: _id, Keyword: e.Row.Str(0));
+            PubPostkeywordObj pk = new PubPostkeywordObj(PostID: _id, Keyword: e.Row.Str(0));
             pk.IsAdded = false;
-            if (await AtPublish.Delete(pk))
+            if (await AtCm.Delete(pk))
                 Refresh();
         }
 

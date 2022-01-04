@@ -40,7 +40,7 @@ namespace Dt.App.Publish
 
         async void LoadData()
         {
-            _lv.Data = await AtPublish.Query("文章-未选专辑", new { postid = _postID });
+            _lv.Data = await AtCm.Query("文章-未选专辑", new { postid = _postID });
         }
 
         async void OnSelect(object sender, Mi e)
@@ -52,12 +52,12 @@ namespace Dt.App.Publish
                 return;
             }
 
-            var ls = new List<PostalbumObj>();
+            var ls = new List<PubPostalbumObj>();
             foreach (var row in selected)
             {
-                ls.Add(new PostalbumObj(PostID: _postID, AlbumID: row.ID));
+                ls.Add(new PubPostalbumObj(PostID: _postID, AlbumID: row.ID));
             }
-            if (await AtPublish.BatchSave(ls))
+            if (await AtCm.BatchSave(ls))
                 Close(true);
         }
 

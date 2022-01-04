@@ -47,7 +47,7 @@ namespace Dt.App.Publish
 
         async void OnLoadTest(object sender, RoutedEventArgs e)
         {
-            _lv.Data = await AtPublish.Query("select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from pub_post where id=@id", new { id = _testID });
+            _lv.Data = await AtCm.Query("select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from pub_post where id=@id", new { id = _testID });
         }
 
         void OnPostClick(object sender, ItemClickArgs e)
@@ -60,7 +60,7 @@ namespace Dt.App.Publish
 
         async void OnNextPage(PageData e)
         {
-            var ls = await AtPublish.Query("select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from pub_post where IsPublish=1 order by Dispidx desc");
+            var ls = await AtCm.Query("select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from pub_post where IsPublish=1 order by Dispidx desc");
             e.LoadPageData(ls);
         }
 

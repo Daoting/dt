@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Publish
 {
-    public partial class KeywordObj
+    public partial class PubKeywordObj
     {
         Task OnSaving()
         {
@@ -26,20 +26,20 @@ namespace Dt.App.Publish
     }
 
     #region 自动生成
-    [Tbl("pub_keyword")]
-    public partial class KeywordObj : Entity
+    [Tbl("cm_pub_keyword")]
+    public partial class PubKeywordObj : Entity
     {
         #region 构造方法
-        KeywordObj() { }
+        PubKeywordObj() { }
 
-        public KeywordObj(
+        public PubKeywordObj(
             string ID,
             string Creator = default,
             DateTime Ctime = default)
         {
-            AddCell<string>("ID", ID);
-            AddCell<string>("Creator", Creator);
-            AddCell<DateTime>("Ctime", Ctime);
+            AddCell("ID", ID);
+            AddCell("Creator", Creator);
+            AddCell("Ctime", Ctime);
             IsAdded = true;
             AttachHook();
         }

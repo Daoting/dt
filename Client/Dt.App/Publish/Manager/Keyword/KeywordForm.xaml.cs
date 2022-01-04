@@ -36,7 +36,7 @@ namespace Dt.App.Publish
 
             if (p_id != null)
             {
-                _fv.Data = await AtPublish.GetByID<KeywordObj>(p_id);
+                _fv.Data = await AtCm.GetByID<PubKeywordObj>(p_id);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Dt.App.Publish
 
         void Create()
         {
-            _fv.Data = new KeywordObj(
+            _fv.Data = new PubKeywordObj(
                 ID: "新关键字",
                 Creator: Kit.UserName,
                 Ctime: Kit.Now);
@@ -69,7 +69,7 @@ namespace Dt.App.Publish
 
         async void Save()
         {
-            var d = _fv.Data.To<KeywordObj>();
+            var d = _fv.Data.To<PubKeywordObj>();
             if (d == null)
                 return;
 
@@ -81,7 +81,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await AtPublish.Save(d))
+            if (await AtCm.Save(d))
             {
                 _win?.List.Update();
             }
@@ -89,7 +89,7 @@ namespace Dt.App.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<KeywordObj>();
+            var d = _fv.Data.To<PubKeywordObj>();
             if (d == null)
                 return;
 
@@ -109,7 +109,7 @@ namespace Dt.App.Publish
             if (await IsUsed(d.ID))
                 return;
 
-            if (await AtPublish.Delete(d))
+            if (await AtCm.Delete(d))
             {
                 _win?.List.Update();
                 Clear();
@@ -118,7 +118,7 @@ namespace Dt.App.Publish
 
         async Task<bool> IsUsed(string p_keyword)
         {
-            int cnt = await AtPublish.GetScalar<int>("发布-关键字引用数", new { keyword = p_keyword });
+            int cnt = await AtCm.GetScalar<int>("发布-关键字引用数", new { keyword = p_keyword });
             if (cnt > 0)
             {
                 Kit.Warn("关键字已被引用，无法修改或删除！");

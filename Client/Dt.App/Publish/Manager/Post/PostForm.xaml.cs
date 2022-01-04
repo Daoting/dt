@@ -37,7 +37,7 @@ namespace Dt.App.Publish
 
             if (p_id > 0)
             {
-                _fv.Data = await AtPublish.First<PostObj>("文章-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<PubPostObj>("文章-编辑", new { id = p_id });
                 UpdateRelated(p_id);
             }
             else
@@ -54,11 +54,11 @@ namespace Dt.App.Publish
 
         async void Create()
         {
-            _fv.Data = new PostObj(
-                ID: await AtPublish.NewID(),
+            _fv.Data = new PubPostObj(
+                ID: await AtCm.NewID(),
                 Title: "新文章",
                 TempType: 0,
-                Dispidx: await AtPublish.NewSeq("sq_post"),
+                Dispidx: await AtCm.NewSeq("sq_post"),
                 CreatorID: Kit.UserID,
                 Creator: Kit.UserName,
                 Ctime: Kit.Now);
@@ -78,12 +78,12 @@ namespace Dt.App.Publish
 
         async Task<bool> Save()
         {
-            var d = _fv.Data.To<PostObj>();
+            var d = _fv.Data.To<PubPostObj>();
             if (d == null || !d.IsValid())
                 return false;
 
             bool isNew = d.IsAdded;
-            d.Url = await AtPublish.SavePost(d);
+            d.Url = await AtCm.SavePost(d);
             _fv.Row.AcceptChanges();
             _win.List.Update();
             if (isNew)
@@ -96,7 +96,7 @@ namespace Dt.App.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<PostObj>();
+            var d = _fv.Data.To<PubPostObj>();
             if (d == null)
                 return;
 
@@ -112,7 +112,7 @@ namespace Dt.App.Publish
                 return;
             }
 
-            if (await AtPublish.Delete(d))
+            if (await AtCm.Delete(d))
             {
                 _win.List.Update();
                 Clear();
@@ -121,14 +121,14 @@ namespace Dt.App.Publish
 
         void OnEditContent(object sender, Mi e)
         {
-            var d = _fv.Data.To<PostObj>();
+            var d = _fv.Data.To<PubPostObj>();
             if (d != null)
                 new HtmlEditDlg().ShowDlg(this);
         }
 
         void OnExplore(object sender, Mi e)
         {
-            var d = _fv.Data.To<PostObj>();
+            var d = _fv.Data.To<PubPostObj>();
             if (d != null)
             {
                 if (string.IsNullOrEmpty(d.Url))
@@ -139,11 +139,11 @@ namespace Dt.App.Publish
         }
 
         #region IHtmlEditHost
-        string IHtmlEditHost.CurrentHtml => _fv.Data.To<PostObj>().Content;
+        string IHtmlEditHost.CurrentHtml => _fv.Data.To<PubPostObj>().Content;
 
         Task<bool> IHtmlEditHost.SaveHtml(string p_html)
         {
-            ((PostObj)_fv.Data).Content = p_html;
+            ((PubPostObj)_fv.Data).Content = p_html;
             return Save();
         }
         #endregion

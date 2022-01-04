@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Dt.App.Publish
 {
-    public partial class AlbumObj
+    public partial class PubAlbumObj
     {
         Task OnSaving()
         {
@@ -26,22 +26,22 @@ namespace Dt.App.Publish
     }
 
     #region 自动生成
-    [Tbl("pub_album")]
-    public partial class AlbumObj : Entity
+    [Tbl("cm_pub_album")]
+    public partial class PubAlbumObj : Entity
     {
         #region 构造方法
-        AlbumObj() { }
+        PubAlbumObj() { }
 
-        public AlbumObj(
+        public PubAlbumObj(
             long ID,
             string Name = default,
             string Creator = default,
             DateTime Ctime = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<string>("Name", Name);
-            AddCell<string>("Creator", Creator);
-            AddCell<DateTime>("Ctime", Ctime);
+            AddCell("ID", ID);
+            AddCell("Name", Name);
+            AddCell("Creator", Creator);
+            AddCell("Ctime", Ctime);
             IsAdded = true;
             AttachHook();
         }

@@ -13,19 +13,19 @@ using System;
 
 namespace Dt.Cm
 {
-    public partial class PostObj
+    public partial class PubPostObj
     {
         
     }
 
     #region 自动生成
-    [Tbl("pub_post")]
-    public partial class PostObj : Entity
+    [Tbl("cm_pub_post")]
+    public partial class PubPostObj : Entity
     {
         #region 构造方法
-        PostObj() { }
+        PubPostObj() { }
 
-        public PostObj(
+        public PubPostObj(
             long ID,
             string Title = default,
             string Cover = default,

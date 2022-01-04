@@ -17,18 +17,18 @@ using System.Threading.Tasks;
 namespace Dt.App.Publish
 {
     #region 自动生成
-    [Tbl("pub_postalbum")]
-    public partial class PostalbumObj : Entity
+    [Tbl("cm_pub_postalbum")]
+    public partial class PubPostalbumObj : Entity
     {
         #region 构造方法
-        PostalbumObj() { }
+        PubPostalbumObj() { }
 
-        public PostalbumObj(
+        public PubPostalbumObj(
             long PostID,
             long AlbumID)
         {
-            AddCell<long>("PostID", PostID);
-            AddCell<long>("AlbumID", AlbumID);
+            AddCell("PostID", PostID);
+            AddCell("AlbumID", AlbumID);
             IsAdded = true;
             AttachHook();
         }

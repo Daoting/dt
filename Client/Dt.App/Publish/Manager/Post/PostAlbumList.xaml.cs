@@ -45,7 +45,7 @@ namespace Dt.App.Publish
 
         async void Refresh()
         {
-            _lv.Data = await AtPublish.Query("文章-已选专辑", new { postid = _id });
+            _lv.Data = await AtCm.Query("文章-已选专辑", new { postid = _id });
         }
 
         async void OnAdd(object sender, Mi e)
@@ -55,9 +55,9 @@ namespace Dt.App.Publish
         }
         async void OnDel(object sender, Mi e)
         {
-            var pa = new PostalbumObj(PostID: _id, AlbumID: e.Row.ID);
+            var pa = new PubPostalbumObj(PostID: _id, AlbumID: e.Row.ID);
             pa.IsAdded = false;
-            if (await AtPublish.Delete(pa))
+            if (await AtCm.Delete(pa))
                 Refresh();
         }
 

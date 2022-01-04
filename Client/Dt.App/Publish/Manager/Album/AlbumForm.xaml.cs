@@ -36,7 +36,7 @@ namespace Dt.App.Publish
 
             if (p_id > 0)
             {
-                _fv.Data = await AtPublish.GetByID<AlbumObj>(p_id);
+                _fv.Data = await AtCm.GetByID<PubAlbumObj>(p_id);
             }
             else
             {
@@ -51,8 +51,8 @@ namespace Dt.App.Publish
 
         async void Create()
         {
-            _fv.Data = new AlbumObj(
-                ID: await AtPublish.NewID(),
+            _fv.Data = new PubAlbumObj(
+                ID: await AtCm.NewID(),
                 Name: "新专辑",
                 Creator: Kit.UserName,
                 Ctime: Kit.Now);
@@ -70,7 +70,7 @@ namespace Dt.App.Publish
 
         async void Save()
         {
-            var d = _fv.Data.To<AlbumObj>();
+            var d = _fv.Data.To<PubAlbumObj>();
             if (d == null)
                 return;
 
@@ -90,7 +90,7 @@ namespace Dt.App.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<AlbumObj>();
+            var d = _fv.Data.To<PubAlbumObj>();
             if (d == null)
                 return;
 
@@ -110,7 +110,7 @@ namespace Dt.App.Publish
             if (await IsUsed(d.ID))
                 return;
 
-            if (await AtPublish.Delete(d))
+            if (await AtCm.Delete(d))
             {
                 _win?.List.Update();
                 Clear();
@@ -119,7 +119,7 @@ namespace Dt.App.Publish
 
         async Task<bool> IsUsed(long p_id)
         {
-            int cnt = await AtPublish.GetScalar<int>("发布-专辑引用数", new { AlbumID = p_id });
+            int cnt = await AtCm.GetScalar<int>("发布-专辑引用数", new { AlbumID = p_id });
             if (cnt > 0)
             {
                 Kit.Warn("专辑已被引用，无法修改或删除！");

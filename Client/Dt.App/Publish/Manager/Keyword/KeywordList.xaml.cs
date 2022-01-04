@@ -47,7 +47,7 @@ namespace Dt.App.Publish
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Form.Update(e.Data.To<KeywordObj>().ID);
+                _win.Form.Update(e.Data.To<PubKeywordObj>().ID);
             NaviTo(_win.Form);
         }
 
@@ -76,11 +76,11 @@ namespace Dt.App.Publish
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtPublish.Query<KeywordObj>("发布-所有关键字");
+                _lv.Data = await AtCm.Query<PubKeywordObj>("发布-所有关键字");
             }
             else
             {
-                _lv.Data = await AtPublish.Query<KeywordObj>("发布-模糊查询关键字", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<PubKeywordObj>("发布-模糊查询关键字", new { ID = $"%{_query}%" });
             }
         }
         #endregion

@@ -17,18 +17,18 @@ using System.Threading.Tasks;
 namespace Dt.App.Publish
 {
     #region 自动生成
-    [Tbl("pub_postkeyword")]
-    public partial class PostkeywordObj : Entity
+    [Tbl("cm_pub_postkeyword")]
+    public partial class PubPostkeywordObj : Entity
     {
         #region 构造方法
-        PostkeywordObj() { }
+        PubPostkeywordObj() { }
 
-        public PostkeywordObj(
+        public PubPostkeywordObj(
             long PostID,
             string Keyword)
         {
-            AddCell<long>("PostID", PostID);
-            AddCell<string>("Keyword", Keyword);
+            AddCell("PostID", PostID);
+            AddCell("Keyword", Keyword);
             IsAdded = true;
             AttachHook();
         }
