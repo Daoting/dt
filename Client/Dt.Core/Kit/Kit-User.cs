@@ -128,11 +128,11 @@ namespace Dt.Core
             if (cnt == 0)
             {
                 // 查询服务端
-                Dict dt = await new UnaryRpc(
+                Dict dt = await Rpc<Dict>(
                     "cm",
                     "UserRelated.GetPrivileges",
                     UserID
-                ).Call<Dict>();
+                );
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "privilege", Ver: dt.Str("ver"));
@@ -198,11 +198,11 @@ namespace Dt.Core
                 return;
 
             // 查询服务端
-            Dict dt = await new UnaryRpc(
+            Dict dt = await Rpc<Dict>(
                     "cm",
                     "UserRelated.GetParams",
                     UserID
-                ).Call<Dict>();
+                );
 
             // 记录版本号
             var ver = new DataVersion(ID: "params", Ver: dt.Str("ver"));

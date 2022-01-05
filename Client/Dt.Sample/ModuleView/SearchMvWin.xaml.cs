@@ -7,21 +7,7 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Rpc;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Sample

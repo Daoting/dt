@@ -52,11 +52,11 @@ namespace Dt.App
         /// <returns>返回版本号和菜单id串</returns>
         public static Task<Dict> GetMenus(long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "UserRelated.GetMenus",
                 p_userID
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -66,11 +66,11 @@ namespace Dt.App
         /// <returns>返回版本号和权限id串</returns>
         public static Task<Dict> GetPrivileges(long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "UserRelated.GetPrivileges",
                 p_userID
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -80,11 +80,11 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<Dict> GetParams(long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "UserRelated.GetParams",
                 p_userID
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -96,13 +96,13 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> SaveParams(long p_userID, string p_paramID, string p_value)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.SaveParams",
                 p_userID,
                 p_paramID,
                 p_value
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -113,12 +113,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> DeleteDataVer(List<long> p_roleIDs, string p_key)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.DeleteDataVer",
                 p_roleIDs,
                 p_key
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -129,12 +129,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.RemoveUserRoles",
                 p_userID,
                 p_roleIDs
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -145,12 +145,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.RemoveRoleUsers",
                 p_roleID,
                 p_userIDs
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -161,12 +161,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> AddUserRole(long p_userID, List<long> p_roleIDs)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.AddUserRole",
                 p_userID,
                 p_roleIDs
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -177,12 +177,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> AddRoleUser(long p_roleID, List<long> p_userIDs)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.AddRoleUser",
                 p_roleID,
                 p_userIDs
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -192,11 +192,11 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<bool> DeleteRole(long p_roleID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "UserRelated.DeleteRole",
                 p_roleID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -207,12 +207,12 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<int> GetMenuTip(long p_menuID, long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<int>(
                 "cm",
                 "UserRelated.GetMenuTip",
                 p_menuID,
                 p_userID
-            ).Call<int>();
+            );
         }
         #endregion
 
@@ -224,11 +224,11 @@ namespace Dt.App
         /// <returns></returns>
         public static Task<string> SavePost(Row p_post)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "Publish.SavePost",
                 p_post
-            ).Call<string>();
+            );
         }
 
         /// <summary>
@@ -239,12 +239,12 @@ namespace Dt.App
         /// <returns>返回静态页面的路径，生成失败返回null</returns>
         public static Task<string> CreatePage(string p_title, string p_content)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "Publish.CreatePage",
                 p_title,
                 p_content
-            ).Call<string>();
+            );
         }
 
         /// <summary>
@@ -255,12 +255,12 @@ namespace Dt.App
         /// <returns>返回页面路径，生成失败返回null</returns>
         public static Task<string> CreateTestPage(string p_title, string p_content)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "Publish.CreateTestPage",
                 p_title,
                 p_content
-            ).Call<string>();
+            );
         }
         #endregion
     }

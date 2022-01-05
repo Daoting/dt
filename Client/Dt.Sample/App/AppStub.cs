@@ -11,7 +11,6 @@ using Dt.App;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
-using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -100,7 +99,7 @@ namespace Dt.Sample
         }
 
         /// <summary>
-        /// 后台任务处理，除 AtState、Stub、UnaryRpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
+        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
         /// </summary>
         public override async Task OnBgTaskRun()
         {

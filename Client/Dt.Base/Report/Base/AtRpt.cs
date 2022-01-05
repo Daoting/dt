@@ -9,7 +9,6 @@
 #region 命名空间
 using Dt.Base.Report;
 using Dt.Core;
-using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -182,12 +181,12 @@ namespace Dt.Base
                 }
             }
 
-            return new UnaryRpc(
+            return Kit.Rpc<Table>(
                 p_srv,
                 "Da.Query",
                 sql,
                 sqlDt
-            ).Call<Table>();
+            );
         }
 
         /// <summary>

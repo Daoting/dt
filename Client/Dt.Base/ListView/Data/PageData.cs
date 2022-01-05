@@ -8,12 +8,9 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
-using System;
-using System.Collections;
-using System.Threading.Tasks;
-using Windows.UI.Core;
 using Microsoft.UI.Xaml;
+using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -236,7 +233,7 @@ namespace Dt.Base
                 if (info.Length != 2 || string.IsNullOrEmpty(info[0]) || string.IsNullOrEmpty(info[1]))
                     throw new Exception("Sql格式不正确！" + Sql);
 
-                LoadPageData(await new UnaryRpc(info[0], "Da.QueryPage", start, PageSize, info[1], SqlParams, null).Call<Table>());
+                LoadPageData(await Kit.Rpc<Table>(info[0], "Da.QueryPage", start, PageSize, info[1], SqlParams, null));
             }
             else if (!string.IsNullOrEmpty(SqlStr))
             {
@@ -244,7 +241,7 @@ namespace Dt.Base
                 if (sqlInfo.Length != 2 || string.IsNullOrEmpty(sqlInfo[0]) || string.IsNullOrEmpty(sqlInfo[1]))
                     throw new Exception("Sql格式不正确！" + SqlStr);
 
-                LoadPageData(await new UnaryRpc(sqlInfo[0], "Da.QueryPage", start, PageSize, sqlInfo[1], SqlParams).Call<Table>());
+                LoadPageData(await Kit.Rpc<Table>(sqlInfo[0], "Da.QueryPage", start, PageSize, sqlInfo[1], SqlParams));
             }
             else
                 throw new Exception("未指定获取页面数据源的方法！");

@@ -405,16 +405,31 @@ namespace Dt.Core
 
                 // 方法体
                 sb.AppendLine("{");
+
+                // 返回值
                 AppendTabSpace(sb, 1);
                 if (sm.CallMode == ApiCallMode.Unary)
-                    sb.AppendLine("return new UnaryRpc(");
+                {
+                    sb.Append("return Kit.Rpc<");
+                    if (!string.IsNullOrEmpty(retTypeName))
+                        sb.Append(retTypeName);
+                    else
+                        sb.Append("object");
+                    sb.AppendLine(">(");
+                }
                 else if (sm.CallMode == ApiCallMode.ServerStream)
-                    sb.AppendLine("return new ServerStreamRpc(");
+                {
+                    sb.AppendLine("return Kit.ServerStreamRpc(");
+                }
                 else if (sm.CallMode == ApiCallMode.ClientStream)
-                    sb.AppendLine("return new ClientStreamRpc(");
+                {
+                    sb.AppendLine("return Kit.ClientStreamRpc(");
+                }
                 else
-                    sb.AppendLine("return new DuplexStreamRpc(");
-
+                {
+                    sb.AppendLine("return Kit.DuplexStreamRpc(");
+                }
+                
                 // 服务名
                 AppendTabSpace(sb, 2);
                 sb.Append(serviceName);
@@ -423,6 +438,8 @@ namespace Dt.Core
                 // 完整方法名
                 AppendTabSpace(sb, 2);
                 sb.AppendFormat("\"{0}.{1}\"", p_clsName, mi.Name);
+
+                // 所有参数
                 if (paramsLength > 0)
                 {
                     for (int i = 0; i < paramsLength; i++)
@@ -438,26 +455,9 @@ namespace Dt.Core
                     }
                 }
                 sb.AppendLine();
-
-                // Rpc方法
                 AppendTabSpace(sb, 1);
-                if (sm.CallMode == ApiCallMode.Unary)
-                {
-                    if (!string.IsNullOrEmpty(retTypeName))
-                    {
-                        sb.Append(").Call<");
-                        sb.Append(retTypeName);
-                        sb.AppendLine(">();");
-                    }
-                    else
-                    {
-                        sb.AppendLine(").Call<object>();");
-                    }
-                }
-                else
-                {
-                    sb.AppendLine(").Call();");
-                }
+                sb.AppendLine(");");
+
                 sb.AppendLine("}");
             }
             sb.Append("#endregion");

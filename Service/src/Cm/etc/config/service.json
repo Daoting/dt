@@ -6,7 +6,7 @@
 
   "SvcUrls": {
     "msg": "*/dt-msg",
-    "fsm": "*/dt-fsm2"
+    "fsm": "*/dt-fsm"
   },
 
   "SqliteModel": {

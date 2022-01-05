@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
-using Dt.Core.Sqlite;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -33,11 +31,11 @@ namespace Dt.Base.Chat
                 return;
 
             // 暂时取所有，后续增加好友功能
-            var tbl = await new UnaryRpc(
+            var tbl = await Kit.Rpc<Table<ChatMember>>(
                 "cm",
                 "Da.Query",
                 "select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user"
-            ).Call<Table<ChatMember>>();
+            );
 
             // 将新列表缓存到本地库
             AtState.Exec("delete from ChatMember");

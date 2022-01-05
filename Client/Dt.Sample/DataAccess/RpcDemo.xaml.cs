@@ -10,11 +10,9 @@
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Rpc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Sample
@@ -55,46 +53,46 @@ namespace Dt.Sample
         #region TestRpc
         public static Task<string> GetString()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestRpc.GetString"
-            ).Call<string>();
+            );
         }
 
         public static Task<bool> SetString(string p_str)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestRpc.SetString",
                 p_str
-            ).Call<bool>();
+            );
         }
 
         public static Task<ResponseReader> OnServerStream(string p_title)
         {
-            return new ServerStreamRpc(
+            return Kit.ServerStreamRpc(
                 "cm",
                 "TestRpc.OnServerStream",
                 p_title
-            ).Call();
+            );
         }
 
         public static Task<RequestWriter> OnClientStream(string p_title)
         {
-            return new ClientStreamRpc(
+            return Kit.ClientStreamRpc(
                 "cm",
                 "TestRpc.OnClientStream",
                 p_title
-            ).Call();
+            );
         }
 
         public static Task<DuplexStream> OnDuplexStream(string p_title)
         {
-            return new DuplexStreamRpc(
+            return Kit.DuplexStreamRpc(
                 "cm",
                 "TestRpc.OnDuplexStream",
                 p_title
-            ).Call();
+            );
         }
         #endregion
     }

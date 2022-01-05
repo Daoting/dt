@@ -8,7 +8,8 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base.FormView
@@ -289,7 +288,7 @@ namespace Dt.Base.FormView
             if (info[0].ToLower() == "local")
                 data = AtState.Query(sql);
             else
-                data = await new UnaryRpc(info[0], "Da.Query", sql, null).Call<Table>();
+                data = await Kit.Rpc<Table>(info[0], "Da.Query", sql, null);
             return data;
         }
 
@@ -307,7 +306,7 @@ namespace Dt.Base.FormView
             string[] info = p_key.Trim().Split(':');
             if (info.Length != 2 || string.IsNullOrEmpty(info[0]) || string.IsNullOrEmpty(info[1]))
                 throw new Exception("Key格式不正确！" + p_key);
-            return new UnaryRpc(info[0], "Da.GetDataByKey", info[1], p_filter).Call<Table>();
+            return Kit.Rpc<Table>(info[0], "Da.GetDataByKey", info[1], p_filter);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 远程调用基类
     /// </summary>
-    public abstract class BaseRpc
+    abstract class BaseRpc
     {
         #region 成员变量
         protected readonly static HttpClient _client;
@@ -71,7 +71,7 @@ namespace Dt.Core.Rpc
         }
 
         /// <summary>
-        /// 获取单例HttpClient
+        /// 获取单例HttpClient，当服务端DNS更新时可能产生无法解析的异常，HttpClientFactory能解决，不急暂缓
         /// </summary>
         public static HttpClient Client => _client;
 
@@ -101,12 +101,7 @@ namespace Dt.Core.Rpc
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-#if SERVER
-                // 部署在k8s时内部DNS通过服务名即可
-                RequestUri = new Uri(Kit.IsInDocker ? $"https://{Kit.AppName}-{_svcName}/.c" : $"https://localhost/{Kit.AppName}/{_svcName}/.c"),
-#else
                 RequestUri = new Uri($"{Kit.GetSvcUrl(_svcName)}/.c"),
-#endif
             };
         }
 

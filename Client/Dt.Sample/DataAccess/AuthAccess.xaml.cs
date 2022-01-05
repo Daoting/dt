@@ -9,12 +9,8 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Rpc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Sample
@@ -44,26 +40,26 @@ namespace Dt.Sample
         #region TestAuth
         public static Task<string> NoAuth()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestAuth.NoAuth"
-            ).Call<string>();
+            );
         }
 
         public static Task<string> Auth()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestAuth.Auth"
-            ).Call<string>();
+            );
         }
 
         public static Task<string> CustomAuth()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestAuth.CustomAuth"
-            ).Call<string>();
+            );
         }
         #endregion
     }

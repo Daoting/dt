@@ -53,7 +53,7 @@ namespace Dt.Core
                 }
                 catch
                 {
-                    throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", val, typeof(T)));
+                    throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", p_val, typeof(T)));
                 }
                 return (T)val;
             }

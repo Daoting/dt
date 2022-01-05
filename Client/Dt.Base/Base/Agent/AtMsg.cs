@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
@@ -29,11 +28,11 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<ResponseReader> Register(Dict p_deviceInfo)
         {
-            return new ServerStreamRpc(
+            return Kit.ServerStreamRpc(
                 "msg",
                 "Pusher.Register",
                 p_deviceInfo
-            ).Call();
+            );
         }
 
         /// <summary>
@@ -47,12 +46,12 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<bool> Unregister(long p_userID, string p_sessionID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "Pusher.Unregister",
                 p_userID,
                 p_sessionID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -62,11 +61,11 @@ namespace Dt.Base
         /// <returns>false 不在线</returns>
         public static Task<bool> IsOnline(long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "Pusher.IsOnline",
                 p_userID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -76,11 +75,11 @@ namespace Dt.Base
         /// <returns>会话信息列表</returns>
         public static Task<List<Dict>> GetAllSessions(long p_userID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<Dict>>(
                 "msg",
                 "Pusher.GetAllSessions",
                 p_userID
-            ).Call<List<Dict>>();
+            );
         }
 
         /// <summary>
@@ -89,10 +88,10 @@ namespace Dt.Base
         /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
         public static Task<Dict> GetOnlineCount()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "msg",
                 "Pusher.GetOnlineCount"
-            ).Call<Dict>();
+            );
         }
         #endregion
 
@@ -105,12 +104,12 @@ namespace Dt.Base
         /// <returns>true 在线推送</returns>
         public static Task<bool> SendMsg(long p_userID, string p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "InstantMsg.SendMsg",
                 p_userID,
                 p_msg
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -121,12 +120,12 @@ namespace Dt.Base
         /// <returns>在线推送列表</returns>
         public static Task<List<long>> BatchSendMsg(List<long> p_userIDs, string p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<long>>(
                 "msg",
                 "InstantMsg.BatchSendMsg",
                 p_userIDs,
                 p_msg
-            ).Call<List<long>>();
+            );
         }
 
         /// <summary>
@@ -135,11 +134,11 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public static Task SendMsgToOnline(string p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<object>(
                 "msg",
                 "InstantMsg.SendMsgToOnline",
                 p_msg
-            ).Call<object>();
+            );
         }
 
         /// <summary>
@@ -150,12 +149,12 @@ namespace Dt.Base
         /// <returns>true 在线推送</returns>
         public static Task<bool> SendLetter(long p_userID, LetterInfo p_letter)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "InstantMsg.SendLetter",
                 p_userID,
                 p_letter
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -166,12 +165,12 @@ namespace Dt.Base
         /// <returns>在线推送列表</returns>
         public static Task<List<long>> BatchSendLetter(List<long> p_userIDs, LetterInfo p_letter)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<long>>(
                 "msg",
                 "InstantMsg.BatchSendLetter",
                 p_userIDs,
                 p_letter
-            ).Call<List<long>>();
+            );
         }
         #endregion
 
@@ -184,12 +183,12 @@ namespace Dt.Base
         /// <returns>true 在线推送</returns>
         public static Task<bool> SendCmd(long p_userID, MsgInfo p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "CmdMsg.SendCmd",
                 p_userID,
                 p_msg
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -200,12 +199,12 @@ namespace Dt.Base
         /// <returns>在线推送列表</returns>
         public static Task<List<long>> BatchSendCmd(List<long> p_userIDs, MsgInfo p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<long>>(
                 "msg",
                 "CmdMsg.BatchSendCmd",
                 p_userIDs,
                 p_msg
-            ).Call<List<long>>();
+            );
         }
         #endregion
 
@@ -218,12 +217,12 @@ namespace Dt.Base
         /// <returns>true 对方在线，false对方不在线</returns>
         public static Task<bool> RequestRtcConnection(long p_fromUserID, long p_toUserID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.RequestRtcConnection",
                 p_fromUserID,
                 p_toUserID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -234,12 +233,12 @@ namespace Dt.Base
         /// <returns>true 在线发送成功，false对方不在线</returns>
         public static Task<bool> AcceptRtcConnection(long p_fromUserID, long p_toUserID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.AcceptRtcConnection",
                 p_fromUserID,
                 p_toUserID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -250,12 +249,12 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<bool> RefuseRtcConnection(long p_fromUserID, long p_toUserID)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.RefuseRtcConnection",
                 p_fromUserID,
                 p_toUserID
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -267,13 +266,13 @@ namespace Dt.Base
         /// <returns>true 在线发送成功，false对方不在线</returns>
         public static Task<bool> SendRtcOffer(long p_fromUserID, long p_toUserID, string p_offer)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.SendRtcOffer",
                 p_fromUserID,
                 p_toUserID,
                 p_offer
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -285,13 +284,13 @@ namespace Dt.Base
         /// <returns>true 在线发送成功，false对方不在线</returns>
         public static Task<bool> SendRtcAnswer(long p_fromUserID, long p_toUserID, string p_answer)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.SendRtcAnswer",
                 p_fromUserID,
                 p_toUserID,
                 p_answer
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -304,14 +303,14 @@ namespace Dt.Base
         /// <returns>true 在线发送成功，false对方不在线</returns>
         public static Task<bool> SendIceCandidate(long p_fromUserID, long p_toUserID, string p_iceCandidate, bool p_toCaller)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.SendIceCandidate",
                 p_fromUserID,
                 p_toUserID,
                 p_iceCandidate,
                 p_toCaller
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -323,13 +322,13 @@ namespace Dt.Base
         /// <returns>true 在线发送成功，false对方不在线</returns>
         public static Task<bool> HangUp(long p_fromUserID, long p_toUserID, bool p_toCaller)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "msg",
                 "WebRtcMsg.HangUp",
                 p_fromUserID,
                 p_toUserID,
                 p_toCaller
-            ).Call<bool>();
+            );
         }
         #endregion
 
@@ -343,13 +342,13 @@ namespace Dt.Base
         /// <returns>在线收到的人数</returns>
         public static Task<int> Publish(long p_subscribeID, string p_msg, string p_offlineTip)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<int>(
                 "msg",
                 "SubscribeMsg.Publish",
                 p_subscribeID,
                 p_msg,
                 p_offlineTip
-            ).Call<int>();
+            );
         }
         #endregion
     }

@@ -102,7 +102,7 @@ namespace Dt.App.Home
                     var strs = mi.SvcName.Split(':');
                     if (strs.Length == 2)
                     {
-                        int num = await new UnaryRpc(strs[0], strs[1], mi.ID, Kit.UserID).Call<int>();
+                        int num = await Kit.Rpc<int>(strs[0], strs[1], mi.ID, Kit.UserID);
                         mi.SetWarningNum(num);
                     }
                     

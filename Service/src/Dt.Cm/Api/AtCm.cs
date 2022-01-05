@@ -2,49 +2,26 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2021-12-31 创建
+* 日志: 2019-08-29 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Dt.Cm;
 using Dt.Core;
-using System.Collections.Generic;
+using Dt.Core.Rpc;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Agent
 {
     /// <summary>
-    /// 系统内核Api代理类（自动生成）
+    /// 发布服务Api
     /// </summary>
-    public static class AtKernel
+    public static class AtCm
     {
-        #region SysKernel
-        /// <summary>
-        /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
-        /// </summary>
-        /// <returns></returns>
-        public static Task<List<object>> GetConfig()
-        {
-            return Kit.Rpc<List<object>>(
-                "cm",
-                "SysKernel.GetConfig"
-            );
-        }
-
-        /// <summary>
-        /// 更新模型库文件
-        /// </summary>
-        /// <returns></returns>
-        public static Task<bool> UpdateModelDbFile()
-        {
-            return Kit.Rpc<bool>(
-                "cm",
-                "SysKernel.UpdateModelDbFile"
-            );
-        }
-        #endregion
-
         #region Entry
         /// <summary>
         /// 密码登录
@@ -52,9 +29,9 @@ namespace Dt.Base
         /// <param name="p_phone">手机号</param>
         /// <param name="p_pwd">密码</param>
         /// <returns></returns>
-        public static Task<LoginResult> LoginByPwd(string p_phone, string p_pwd)
+        public static Task<Row> LoginByPwd(string p_phone, string p_pwd)
         {
-            return Kit.Rpc<LoginResult>(
+            return Kit.Rpc<Row>(
                 "cm",
                 "Entry.LoginByPwd",
                 p_phone,
@@ -68,9 +45,9 @@ namespace Dt.Base
         /// <param name="p_phone">手机号</param>
         /// <param name="p_code">验证码</param>
         /// <returns></returns>
-        public static Task<LoginResult> LoginByCode(string p_phone, string p_code)
+        public static Task<Row> LoginByCode(string p_phone, string p_code)
         {
-            return Kit.Rpc<LoginResult>(
+            return Kit.Rpc<Row>(
                 "cm",
                 "Entry.LoginByCode",
                 p_phone,
@@ -89,6 +66,35 @@ namespace Dt.Base
                 "cm",
                 "Entry.CreateVerificationCode",
                 p_phone
+            );
+        }
+        #endregion
+
+        #region TestStreamRpc
+        public static Task<ResponseReader> OnServerStream(string p_title)
+        {
+            return Kit.ServerStreamRpc(
+                "cm",
+                "TestStreamRpc.OnServerStream",
+                p_title
+            );
+        }
+
+        public static Task<RequestWriter> OnClientStream(string p_title)
+        {
+            return Kit.ClientStreamRpc(
+                "cm",
+                "TestStreamRpc.OnClientStream",
+                p_title
+            );
+        }
+
+        public static Task<DuplexStream> OnDuplexStream(string p_title)
+        {
+            return Kit.DuplexStreamRpc(
+                "cm",
+                "TestStreamRpc.OnDuplexStream",
+                p_title
             );
         }
         #endregion

@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
-using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -42,7 +40,7 @@ namespace Dt.Core
         public abstract Task OnStartup();
 
         /// <summary>
-        /// 后台任务处理，除 AtState、Stub、UnaryRpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
+        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
         /// </summary>
         public virtual Task OnBgTaskRun() => Task.CompletedTask;
 
@@ -86,12 +84,12 @@ namespace Dt.Core
             if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
                 // 自动登录
-                var result = await new UnaryRpc(
+                var result = await Kit.Rpc<LoginResult>(
                     "cm",
                     "Entry.LoginByPwd",
                     phone,
                     pwd
-                ).Call<LoginResult>();
+                );
 
                 // 登录成功
                 if (result.IsSuc)

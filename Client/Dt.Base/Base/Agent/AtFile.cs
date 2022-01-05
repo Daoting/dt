@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
+using Dt.Core;
 using System.Threading.Tasks;
 #endregion
 
@@ -26,11 +26,11 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<bool> Exists(string p_filePath)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "fsm",
                 "FileMgr.Exists",
                 p_filePath
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -40,11 +40,11 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<bool> Delete(string p_filePath)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "fsm",
                 "FileMgr.Delete",
                 p_filePath
-            ).Call<bool>();
+            );
         }
         #endregion
     }

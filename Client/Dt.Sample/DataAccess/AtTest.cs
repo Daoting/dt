@@ -1,9 +1,7 @@
 ﻿using Dt.Core;
-using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Dt.Sample
@@ -17,10 +15,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<string> GetString()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestSerialize.GetString"
-            ).Call<string>();
+            );
         }
 
         /// <summary>
@@ -29,11 +27,11 @@ namespace Dt.Sample
         /// <param name="p_str"></param>
         public static Task<bool> SetString(string p_str)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetString",
                 p_str
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -42,10 +40,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> GetBool()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.GetBool"
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -54,11 +52,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<bool> SetBool(bool p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetBool",
                 p_val
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -67,10 +65,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<int> GetInt()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<int>(
                 "cm",
                 "TestSerialize.GetInt"
-            ).Call<int>();
+            );
         }
 
         /// <summary>
@@ -79,11 +77,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<int> SetInt(int p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<int>(
                 "cm",
                 "TestSerialize.SetInt",
                 p_val
-            ).Call<int>();
+            );
         }
 
         /// <summary>
@@ -92,10 +90,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<long> GetLong()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<long>(
                 "cm",
                 "TestSerialize.GetLong"
-            ).Call<long>();
+            );
         }
 
         /// <summary>
@@ -104,11 +102,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<long> SetLong(long p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<long>(
                 "cm",
                 "TestSerialize.SetLong",
                 p_val
-            ).Call<long>();
+            );
         }
 
         /// <summary>
@@ -117,10 +115,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Double> GetDouble()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Double>(
                 "cm",
                 "TestSerialize.GetDouble"
-            ).Call<Double>();
+            );
         }
 
         /// <summary>
@@ -129,11 +127,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<Double> SetDouble(Double p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Double>(
                 "cm",
                 "TestSerialize.SetDouble",
                 p_val
-            ).Call<Double>();
+            );
         }
 
         /// <summary>
@@ -142,10 +140,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<DateTime> GetDateTime()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<DateTime>(
                 "cm",
                 "TestSerialize.GetDateTime"
-            ).Call<DateTime>();
+            );
         }
 
         /// <summary>
@@ -154,11 +152,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<DateTime> SetDateTime(DateTime p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<DateTime>(
                 "cm",
                 "TestSerialize.SetDateTime",
                 p_val
-            ).Call<DateTime>();
+            );
         }
 
         /// <summary>
@@ -167,10 +165,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Byte[]> GetByteArray()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Byte[]>(
                 "cm",
                 "TestSerialize.GetByteArray"
-            ).Call<Byte[]>();
+            );
         }
 
         /// <summary>
@@ -179,11 +177,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<Byte[]> SetByteArray(Byte[] p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Byte[]>(
                 "cm",
                 "TestSerialize.SetByteArray",
                 p_val
-            ).Call<Byte[]>();
+            );
         }
 
         /// <summary>
@@ -192,10 +190,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<MsgInfo> GetMsgInfo()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<MsgInfo>(
                 "cm",
                 "TestSerialize.GetMsgInfo"
-            ).Call<MsgInfo>();
+            );
         }
 
         /// <summary>
@@ -204,11 +202,11 @@ namespace Dt.Sample
         /// <param name="p_msg"></param>
         public static Task<MsgInfo> SetMsgInfo(MsgInfo p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<MsgInfo>(
                 "cm",
                 "TestSerialize.SetMsgInfo",
                 p_msg
-            ).Call<MsgInfo>();
+            );
         }
 
         /// <summary>
@@ -217,10 +215,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<string>> GetStringList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<string>>(
                 "cm",
                 "TestSerialize.GetStringList"
-            ).Call<List<string>>();
+            );
         }
 
         /// <summary>
@@ -229,11 +227,11 @@ namespace Dt.Sample
         /// <param name="p_ls"></param>
         public static Task<bool> SetStringList(List<string> p_ls)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetStringList",
                 p_ls
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -242,10 +240,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<bool>> GetBoolList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<bool>>(
                 "cm",
                 "TestSerialize.GetBoolList"
-            ).Call<List<bool>>();
+            );
         }
 
         /// <summary>
@@ -254,11 +252,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<List<bool>> SetBoolList(List<bool> p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<bool>>(
                 "cm",
                 "TestSerialize.SetBoolList",
                 p_val
-            ).Call<List<bool>>();
+            );
         }
 
         /// <summary>
@@ -267,10 +265,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<int>> GetIntList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<int>>(
                 "cm",
                 "TestSerialize.GetIntList"
-            ).Call<List<int>>();
+            );
         }
 
         /// <summary>
@@ -279,11 +277,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<List<int>> SetIntList(List<int> p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<int>>(
                 "cm",
                 "TestSerialize.SetIntList",
                 p_val
-            ).Call<List<int>>();
+            );
         }
 
         /// <summary>
@@ -292,10 +290,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<long>> GetLongList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<long>>(
                 "cm",
                 "TestSerialize.GetLongList"
-            ).Call<List<long>>();
+            );
         }
 
         /// <summary>
@@ -304,11 +302,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<List<long>> SetLongList(List<long> p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<long>>(
                 "cm",
                 "TestSerialize.SetLongList",
                 p_val
-            ).Call<List<long>>();
+            );
         }
 
         /// <summary>
@@ -317,10 +315,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<double>> GetDoubleList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<double>>(
                 "cm",
                 "TestSerialize.GetDoubleList"
-            ).Call<List<double>>();
+            );
         }
 
         /// <summary>
@@ -329,11 +327,11 @@ namespace Dt.Sample
         /// <param name="p_val"></param>
         public static Task<List<double>> SetDoubleList(List<double> p_val)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<double>>(
                 "cm",
                 "TestSerialize.SetDoubleList",
                 p_val
-            ).Call<List<double>>();
+            );
         }
 
         /// <summary>
@@ -342,10 +340,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<DateTime>> GetDateTimeList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<DateTime>>(
                 "cm",
                 "TestSerialize.GetDateTimeList"
-            ).Call<List<DateTime>>();
+            );
         }
 
         /// <summary>
@@ -355,11 +353,11 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> SetDateTimeList(List<DateTime> p_times)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetDateTimeList",
                 p_times
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -368,10 +366,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<object>> GetObjectList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<object>>(
                 "cm",
                 "TestSerialize.GetObjectList"
-            ).Call<List<object>>();
+            );
         }
 
         /// <summary>
@@ -381,11 +379,11 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> SetObjectList(params object[] p_ls)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetObjectList",
                 (p_ls == null || p_ls.Length == 0) ? null : p_ls.ToList()
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -394,10 +392,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Table> GetTable()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Table>(
                 "cm",
                 "TestSerialize.GetTable"
-            ).Call<Table>();
+            );
         }
 
         /// <summary>
@@ -406,11 +404,11 @@ namespace Dt.Sample
         /// <param name="p_tbl"></param>
         public static Task<Table> SetTable(Table p_tbl)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Table>(
                 "cm",
                 "TestSerialize.SetTable",
                 p_tbl
-            ).Call<Table>();
+            );
         }
 
         /// <summary>
@@ -419,10 +417,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Row> GetRow()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Row>(
                 "cm",
                 "TestSerialize.GetRow"
-            ).Call<Row>();
+            );
         }
 
         /// <summary>
@@ -431,45 +429,45 @@ namespace Dt.Sample
         /// <param name="p_row"></param>
         public static Task<Row> SetRow(Row p_row)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Row>(
                 "cm",
                 "TestSerialize.SetRow",
                 p_row
-            ).Call<Row>();
+            );
         }
 
         public static Task<Table<CustomEntityObj>> GetEntityTable()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Table<CustomEntityObj>>(
                 "cm",
                 "TestSerialize.GetEntityTable"
-            ).Call<Table<CustomEntityObj>>();
+            );
         }
 
         public static Task<bool> SetEntityTable(Table p_tbl)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetEntityTable",
                 p_tbl
-            ).Call<bool>();
+            );
         }
 
         public static Task<CustomEntityObj> GetEntity()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<CustomEntityObj>(
                 "cm",
                 "TestSerialize.GetEntity"
-            ).Call<CustomEntityObj>();
+            );
         }
 
         public static Task<bool> SetEntity(Row p_entity)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetEntity",
                 p_entity
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -478,10 +476,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Dict> GetTableDict()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestSerialize.GetTableDict"
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -490,11 +488,11 @@ namespace Dt.Sample
         /// <param name="p_dict"></param>
         public static Task<Dict> SetTableDict(Dict p_dict)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestSerialize.SetTableDict",
                 p_dict
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -503,10 +501,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<Table>> GetTableList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<Table>>(
                 "cm",
                 "TestSerialize.GetTableList"
-            ).Call<List<Table>>();
+            );
         }
 
         /// <summary>
@@ -515,11 +513,11 @@ namespace Dt.Sample
         /// <param name="p_ls"></param>
         public static Task<List<Table>> SetTableList(List<Table> p_ls)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<Table>>(
                 "cm",
                 "TestSerialize.SetTableList",
                 p_ls
-            ).Call<List<Table>>();
+            );
         }
 
         /// <summary>
@@ -528,10 +526,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Dict> GetBaseDict()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestSerialize.GetBaseDict"
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -540,10 +538,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Dict> GetCombineDict()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestSerialize.GetCombineDict"
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -552,11 +550,11 @@ namespace Dt.Sample
         /// <param name="p_dict"></param>
         public static Task<Dict> SendDict(Dict p_dict)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestSerialize.SendDict",
                 p_dict
-            ).Call<Dict>();
+            );
         }
 
         /// <summary>
@@ -565,10 +563,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<List<Dict>> GetDictList()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<List<Dict>>(
                 "cm",
                 "TestSerialize.GetDictList"
-            ).Call<List<Dict>>();
+            );
         }
 
         /// <summary>
@@ -577,11 +575,11 @@ namespace Dt.Sample
         /// <param name="p_dicts"></param>
         public static Task<bool> SendDictList(List<Dict> p_dicts)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SendDictList",
                 p_dicts
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -590,10 +588,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Product> GetCustomBase()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Product>(
                 "cm",
                 "TestSerialize.GetCustomBase"
-            ).Call<Product>();
+            );
         }
 
         /// <summary>
@@ -603,11 +601,11 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> SetCustomBase(Product p_product)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetCustomBase",
                 p_product
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -616,10 +614,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Student> GetCustomCombine()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Student>(
                 "cm",
                 "TestSerialize.GetCustomCombine"
-            ).Call<Student>();
+            );
         }
 
         /// <summary>
@@ -629,11 +627,11 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> SetCustomCombine(Student p_person)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetCustomCombine",
                 p_person
-            ).Call<bool>();
+            );
         }
 
         /// <summary>
@@ -642,10 +640,10 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<Department> GetContainCustom()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Department>(
                 "cm",
                 "TestSerialize.GetContainCustom"
-            ).Call<Department>();
+            );
         }
 
         /// <summary>
@@ -655,70 +653,70 @@ namespace Dt.Sample
         /// <returns></returns>
         public static Task<bool> SetContainCustom(Department p_dept)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<bool>(
                 "cm",
                 "TestSerialize.SetContainCustom",
                 p_dept
-            ).Call<bool>();
+            );
         }
 
         public static Task AsyncVoid(string p_msg)
         {
-            return new UnaryRpc(
+            return Kit.Rpc<object>(
                 "cm",
                 "TestSerialize.AsyncVoid",
                 p_msg
-            ).Call<object>();
+            );
         }
 
         public static Task<Table> AsyncDb()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Table>(
                 "cm",
                 "TestSerialize.AsyncDb"
-            ).Call<Table>();
+            );
         }
 
         public static Task<int> AsyncWait()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<int>(
                 "cm",
                 "TestSerialize.AsyncWait"
-            ).Call<int>();
+            );
         }
         #endregion
 
         #region TestException
         public static Task<string> ThrowException()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestException.ThrowException"
-            ).Call<string>();
+            );
         }
 
         public static Task<string> ThrowBusinessException()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestException.ThrowBusinessException"
-            ).Call<string>();
+            );
         }
 
         public static Task<string> ThrowPostionException()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<string>(
                 "cm",
                 "TestException.ThrowPostionException"
-            ).Call<string>();
+            );
         }
 
         public static Task<Dict> ThrowSerializeException()
         {
-            return new UnaryRpc(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "TestException.ThrowSerializeException"
-            ).Call<Dict>();
+            );
         }
         #endregion
     }

@@ -19,7 +19,7 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 基于Http2的请求/响应模式的远程调用
     /// </summary>
-    public class UnaryRpc : BaseRpc
+    class UnaryRpc : BaseRpc
     {
         /// <summary>
         /// 构造方法

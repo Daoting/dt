@@ -18,7 +18,7 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 客户端发送一个请求，服务端返回数据流响应的远程调用
     /// </summary>
-    public class ServerStreamRpc : BaseRpc
+    class ServerStreamRpc : BaseRpc
     {
         /// <summary>
         /// 构造方法

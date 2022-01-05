@@ -18,7 +18,7 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 客户端发送请求数据流的远程调用
     /// </summary>
-    public class ClientStreamRpc : BaseRpc
+    class ClientStreamRpc : BaseRpc
     {
         TaskCompletionSource<Stream> _writeStreamTcs;
         TaskCompletionSource<bool> _writeCompleteTcs;
