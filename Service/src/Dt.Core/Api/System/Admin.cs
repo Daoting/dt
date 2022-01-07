@@ -273,7 +273,7 @@ namespace Dt.Core
                 serviceName = "p_serviceName";
             }
 
-            string retTypeName;
+            string retTypeName = "";
             int paramsLength;
             StringBuilder sb = new StringBuilder();
 
@@ -317,21 +317,45 @@ namespace Dt.Core
                     if (mi.ReturnType.IsGenericType && mi.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
                         tpReturn = mi.ReturnType.GetGenericArguments()[0];
 
+                    bool isAppend = false;
                     if (tpReturn == typeof(Row) || tpReturn.IsSubclassOf(typeof(Row)))
                     {
                         // 方便在客户端使用Entity子类型
                         retTypeName = "T";
                         generic = "where T : Row";
                         sb.AppendFormat("public static Task<T> {0}<T>(", mi.Name);
+                        isAppend = true;
                     }
-                    else if (tpReturn.IsGenericType && tpReturn.GetGenericTypeDefinition() == typeof(Table<>))
+                    else if (tpReturn.IsGenericType)
                     {
-                        // 客户端和服务端Entity类型无耦合
-                        retTypeName = "Table<T>";
-                        generic = "where T : Entity";
-                        sb.AppendFormat("public static Task<Table<T>> {0}<T>(", mi.Name);
+                        var geType = tpReturn.GetGenericTypeDefinition();
+                        if (geType == typeof(Table<>))
+                        {
+                            // 客户端和服务端Entity类型无耦合
+                            retTypeName = "Table<T>";
+                            generic = "where T : Entity";
+                            sb.AppendFormat("public static Task<Table<T>> {0}<T>(", mi.Name);
+                            isAppend = true;
+                        }
+                        else if (geType == typeof(List<>)
+                            && !SerializeTypeAlias.IsInternal(tpReturn))
+                        {
+                            retTypeName = "List<T>";
+                            generic = "where T : class";
+                            sb.AppendFormat("public static Task<List<T>> {0}<T>(", mi.Name);
+                            isAppend = true;
+                        }
                     }
-                    else
+                    else if (!SerializeTypeAlias.IsInternal(tpReturn))
+                    {
+                        // 非内置类型
+                        retTypeName = "T";
+                        generic = "where T : class";
+                        sb.AppendFormat("public static Task<T> {0}<T>(", mi.Name);
+                        isAppend = true;
+                    }
+
+                    if (!isAppend)
                     {
                         retTypeName = GetRpcTypeName(tpReturn);
                         if (!string.IsNullOrEmpty(retTypeName))
@@ -403,6 +427,14 @@ namespace Dt.Core
                         if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))
                         {
                             sb.Append("params object[] ");
+                            sb.Append(item.Name);
+                            continue;
+                        }
+
+                        // 非内置类型
+                        if (!SerializeTypeAlias.IsInternal(item.ParameterType))
+                        {
+                            sb.Append("object ");
                             sb.Append(item.Name);
                             continue;
                         }
@@ -512,6 +544,8 @@ namespace Dt.Core
                 tpName = "int";
             else if (p_type == typeof(Int64))
                 tpName = "long";
+            else if (p_type == typeof(double))
+                tpName = "double";
             else if (p_type == typeof(object))
                 tpName = "object";
             else if (p_type == typeof(List<string>))
@@ -532,6 +566,8 @@ namespace Dt.Core
                 tpName = "List<Table>";
             else if (p_type == typeof(List<Dict>))
                 tpName = "List<Dict>";
+            else if (p_type == typeof(byte[]))
+                tpName = "byte[]";
             else if (p_type.IsGenericType)
             {
                 var name = p_type.GetGenericTypeDefinition().FullName;

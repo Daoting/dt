@@ -383,11 +383,6 @@ namespace Dt.Core
                     if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
                         _entityDict[tbl.Name.ToLower()] = type;
                 }
-
-                // 自定义json序列化对象
-                JsonObjAttribute serAttr = type.GetCustomAttribute<JsonObjAttribute>(false);
-                if (serAttr != null)
-                    SerializeTypeAlias.Add(serAttr.Alias, type);
             }
         }
 

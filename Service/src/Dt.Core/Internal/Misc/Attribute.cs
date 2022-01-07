@@ -142,18 +142,6 @@ namespace Dt.Core
     }
 
     /// <summary>
-    /// 类型可序列化属性
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class JsonObjAttribute : AliasAttribute
-    {
-        public JsonObjAttribute(string p_alias)
-            : base(p_alias)
-        {
-        }
-    }
-
-    /// <summary>
     /// 基类属性
     /// </summary>
     public abstract class AliasAttribute : Attribute

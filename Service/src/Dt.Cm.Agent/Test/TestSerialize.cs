@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Dt.Agent
+﻿namespace Dt.Agent
 {
     /// <summary>
     /// 功能测试Api
@@ -111,9 +109,9 @@ namespace Dt.Agent
         /// 返回double值
         /// </summary>
         /// <returns></returns>
-        public static Task<Double> GetDouble()
+        public static Task<double> GetDouble()
         {
-            return Kit.Rpc<Double>(
+            return Kit.Rpc<double>(
                 "cm",
                 "TestSerialize.GetDouble"
             );
@@ -123,9 +121,9 @@ namespace Dt.Agent
         /// double参数
         /// </summary>
         /// <param name="p_val"></param>
-        public static Task<Double> SetDouble(Double p_val)
+        public static Task<double> SetDouble(double p_val)
         {
-            return Kit.Rpc<Double>(
+            return Kit.Rpc<double>(
                 "cm",
                 "TestSerialize.SetDouble",
                 p_val
@@ -161,9 +159,9 @@ namespace Dt.Agent
         /// 返回byte[]值
         /// </summary>
         /// <returns></returns>
-        public static Task<Byte[]> GetByteArray()
+        public static Task<byte[]> GetByteArray()
         {
-            return Kit.Rpc<Byte[]>(
+            return Kit.Rpc<byte[]>(
                 "cm",
                 "TestSerialize.GetByteArray"
             );
@@ -173,9 +171,9 @@ namespace Dt.Agent
         /// byte[]参数
         /// </summary>
         /// <param name="p_val"></param>
-        public static Task<Byte[]> SetByteArray(Byte[] p_val)
+        public static Task<byte[]> SetByteArray(byte[] p_val)
         {
-            return Kit.Rpc<Byte[]>(
+            return Kit.Rpc<byte[]>(
                 "cm",
                 "TestSerialize.SetByteArray",
                 p_val
@@ -588,9 +586,10 @@ namespace Dt.Agent
         /// 返回基础自定义类型
         /// </summary>
         /// <returns></returns>
-        public static Task<Product> GetCustomBase()
+        public static Task<List<T>> GetCustomBase<T>()
+            where T : class
         {
-            return Kit.Rpc<Product>(
+            return Kit.Rpc<List<T>>(
                 "cm",
                 "TestSerialize.GetCustomBase"
             );
@@ -601,7 +600,7 @@ namespace Dt.Agent
         /// </summary>
         /// <param name="p_product"></param>
         /// <returns></returns>
-        public static Task<bool> SetCustomBase(Product p_product)
+        public static Task<bool> SetCustomBase(object p_product)
         {
             return Kit.Rpc<bool>(
                 "cm",
@@ -614,9 +613,10 @@ namespace Dt.Agent
         /// 返回复杂自定义类型
         /// </summary>
         /// <returns></returns>
-        public static Task<Student> GetCustomCombine()
+        public static Task<T> GetCustomCombine<T>()
+            where T : class
         {
-            return Kit.Rpc<Student>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.GetCustomCombine"
             );
@@ -627,7 +627,7 @@ namespace Dt.Agent
         /// </summary>
         /// <param name="p_person"></param>
         /// <returns></returns>
-        public static Task<bool> SetCustomCombine(Student p_person)
+        public static Task<bool> SetCustomCombine(object p_person)
         {
             return Kit.Rpc<bool>(
                 "cm",
@@ -640,9 +640,10 @@ namespace Dt.Agent
         /// 返回嵌套自定义类型
         /// </summary>
         /// <returns></returns>
-        public static Task<Department> GetContainCustom()
+        public static Task<T> GetContainCustom<T>()
+            where T : class
         {
-            return Kit.Rpc<Department>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.GetContainCustom"
             );
@@ -653,7 +654,7 @@ namespace Dt.Agent
         /// </summary>
         /// <param name="p_dept"></param>
         /// <returns></returns>
-        public static Task<bool> SetContainCustom(Department p_dept)
+        public static Task<bool> SetContainCustom(object p_dept)
         {
             return Kit.Rpc<bool>(
                 "cm",
@@ -662,9 +663,10 @@ namespace Dt.Agent
             );
         }
 
-        public static Task AsyncVoid(string p_msg)
+        public static Task<T> AsyncVoid<T>(string p_msg)
+            where T : class
         {
-            return Kit.Rpc<object>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.AsyncVoid",
                 p_msg
@@ -687,41 +689,4 @@ namespace Dt.Agent
             );
         }
     }
-
-
-    [JsonObj("产品")]
-    public class Product
-    {
-        public string Name { get; set; }
-
-        public DateTime ExpiryDate { get; set; }
-
-        [JsonIgnore]
-        public decimal Price { get; set; }
-
-        public string[] Sizes { get; set; }
-    }
-
-    [JsonObj("学生")]
-    public class Student
-    {
-        public string Name { get; set; }
-
-        public DateTime LastModified { get; set; }
-
-        [RpcJson]
-        public Dict Salary { get; set; }
-
-        [RpcJson]
-        public Table Info { get; set; }
-    }
-
-    [JsonObj("部门")]
-    public class Department
-    {
-        public string Name { get; set; }
-
-        public Student Employee { get; set; }
-    }
-
 }

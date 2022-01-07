@@ -224,7 +224,7 @@ namespace Dt.Core
 
                         // 前缀'&'表示集合
                         if (tp.StartsWith("&"))
-                            return DeserializeArray(ref p_reader, tp.Substring(1));
+                            return DeserializeArray(ref p_reader, tp.Substring(1), p_tgtType);
                         throw new Exception($"无法自动反序列化Json类型{tp}！");
                     }
 
@@ -346,10 +346,15 @@ namespace Dt.Core
             return obj;
         }
 
-        static object DeserializeArray(ref Utf8JsonReader p_reader, string p_alias)
+        static object DeserializeArray(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)
         {
             // 只支持List<T>的情况
             Type type = SerializeTypeAlias.GetType(p_alias);
+
+            // 非内置对象列表
+            if (!type.IsGenericType)
+                return DeserializeFreeObjectArray(ref p_reader, p_tgtType);
+
             Type itemType = type.GetGenericArguments()[0];
             if (itemType == typeof(object))
                 return DeserializeObjsArray(ref p_reader);
@@ -398,6 +403,29 @@ namespace Dt.Core
                 p_reader.Read();
             }
             return ls;
+        }
+
+        static object DeserializeFreeObjectArray(ref Utf8JsonReader p_reader, Type p_tgtType)
+        {
+            if (!p_tgtType.IsGenericType || p_tgtType.GetGenericTypeDefinition() != typeof(List<>))
+                throw new Exception("");
+
+            Type itemType = p_tgtType.GetGenericArguments()[0];
+            IList target = Activator.CreateInstance(p_tgtType) as IList;
+            // 对象起始 [
+            while (p_reader.Read())
+            {
+                // 外层末尾 ]
+                if (p_reader.TokenType == JsonTokenType.EndArray)
+                    break;
+
+                // 对象
+                target.Add(Deserialize(ref p_reader, itemType));
+                // 对象 }
+                p_reader.Read();
+                // 对象末尾 ]
+            }
+            return target;
         }
         #endregion
 

@@ -18,6 +18,9 @@ namespace Dt.Core
     /// </summary>
     internal static class SerializeTypeAlias
     {
+        /// <summary>
+        /// 内置类型缓存
+        /// </summary>
         static readonly Dictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
         static SerializeTypeAlias()
@@ -49,10 +52,11 @@ namespace Dt.Core
         /// <returns></returns>
         public static Type GetType(string p_alias)
         {
-            Type tp;
-            if (_typeCache.TryGetValue(p_alias, out tp))
+            if (_typeCache.TryGetValue(p_alias, out var tp))
                 return tp;
-            throw new Exception($"未找到 {p_alias} 映射的类型！");
+
+            // 非内置类型
+            return typeof(object);
         }
 
         /// <summary>
@@ -67,30 +71,17 @@ namespace Dt.Core
                 if (item.Value == p_type)
                     return item.Key;
             }
-            throw new Exception($"类“{p_type.FullName}”不存在可序列化别名！");
+
+            // 非内置类型
+            return "object";
         }
 
-        /// <summary>
-        /// 合并可序列化类型字典
-        /// </summary>
-        /// <param name="p_dict"></param>
-        public static void Merge(Dictionary<string, Type> p_dict)
+        public static bool IsInternal(Type p_type)
         {
-            foreach (var item in p_dict)
-            {
-                _typeCache[item.Key] = item.Value;
-            }
-        }
-
-        /// <summary>
-        /// 增加自定义序列化类型
-        /// </summary>
-        /// <param name="p_alias">类型别名</param>
-        /// <param name="p_type">类型</param>
-        public static void Add(string p_alias, Type p_type)
-        {
-            if (!string.IsNullOrEmpty(p_alias))
-                _typeCache[p_alias] = p_type;
+            return p_type.IsValueType
+                || p_type == typeof(string)
+                || p_type == typeof(byte[])
+                || _typeCache.Values.Contains(p_type);
         }
     }
 }

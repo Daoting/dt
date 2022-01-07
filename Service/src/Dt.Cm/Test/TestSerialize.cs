@@ -568,14 +568,20 @@ namespace Dt.Cm
         /// 返回基础自定义类型
         /// </summary>
         /// <returns></returns>
-        public Product GetCustomBase()
+        public List<Product> GetCustomBase()
         {
-            Product product = new Product();
-            product.Name = "Apple";
-            product.ExpiryDate = new DateTime(2016, 12, 28);
-            product.Price = 3.99M;
-            product.Sizes = new string[] { "Small", "Medium", "Large" };
-            return product;
+            var ls = new List<Product>();
+            for (int i = 0; i < 5; i++)
+            {
+                Product product = new Product();
+                product.Name = "Apple" + i.ToString();
+                product.ExpiryDate = new DateTime(2016, 12, 28);
+                product.Price = 3.99M;
+                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                ls.Add(product);
+            }
+            
+            return ls;
         }
 
         /// <summary>
@@ -662,7 +668,6 @@ namespace Dt.Cm
         #endregion
     }
 
-    [JsonObj("产品")]
     public class Product
     {
         public string Name { get; set; }
@@ -675,7 +680,6 @@ namespace Dt.Cm
         public string[] Sizes { get; set; }
     }
 
-    [JsonObj("学生")]
     public class Student
     {
         public string Name { get; set; }
@@ -689,7 +693,6 @@ namespace Dt.Cm
         public Table Info { get; set; }
     }
 
-    [JsonObj("部门")]
     public class Department
     {
         public string Name { get; set; }

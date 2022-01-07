@@ -21,9 +21,19 @@ namespace Dt.Cm
     [Api(IsTest = true)]
     public class TestAuth : BaseApi
     {
-        public string NoAuth()
+        public async Task<string> NoAuth()
         {
+            var prue = await GetCustomBase<Product>();
+
             return "无授权验证";
+        }
+
+        public static Task<List<T>> GetCustomBase<T>()
+        {
+            return Kit.Rpc<List<T>>(
+                "cm",
+                "TestSerialize.GetCustomBase"
+            );
         }
 
         [Auth]

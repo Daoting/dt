@@ -48,6 +48,9 @@
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Cm.Agent\Dt.Cm.Agent.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Fsm.Agent\Dt.Fsm.Agent.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Msg.Agent\Dt.Msg.Agent.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -503,7 +503,7 @@ namespace Dt.Sample
         #region 自定义类型
         async void GetCustomBase(object sender, RoutedEventArgs e)
         {
-            Product product = await AtTestCm.GetCustomBase();
+            Product product = await AtTestCm.GetCustomBase<Product>();
             if (product == null)
                 _tbInfo.Text = "调用不成功！";
             else
