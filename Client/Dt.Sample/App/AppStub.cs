@@ -9,11 +9,7 @@
 #region 引用命名
 using Dt.App;
 using Dt.Base;
-using Dt.Core;
 using Dt.Core.Model;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Sample

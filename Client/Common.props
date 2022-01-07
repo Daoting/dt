@@ -63,6 +63,19 @@
         <Using Include="Dt.Core" />
         <Using Include="Dt.Agent" />
     </ItemGroup>
+
+    <!-- 确保各平台的GlobalUsing相同，不然造成歧义 -->
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <Using Remove="Android.App" />
+        <Using Remove="Android.Widget" />
+        <Using Remove="Android.OS.Bundle" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <Using Remove="CoreGraphics" />
+        <Using Remove="Foundation" />
+        <Using Remove="UIKit" />
+    </ItemGroup>
     
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">

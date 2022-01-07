@@ -111,7 +111,7 @@ namespace Dt.Base
 
             _tempFile = await SaveToFile(p_uploadFiles, p_fixedvolume);
 
-            var request = new NSMutableUrlRequest(NSUrl.FromString($"{Kit.Stub.ServerUrl.TrimEnd('/')}/fsm/.u"));
+            var request = new NSMutableUrlRequest(NSUrl.FromString($"{Kit.GetSvcUrl("fsm")}/.u"));
             request.HttpMethod = "POST";
             request["Content-Type"] = "multipart/form-data; boundary=" + _boundary;
             if (Kit.IsLogon)

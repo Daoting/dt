@@ -48,7 +48,7 @@ namespace Dt.Base
             }
 
             // 图片无缓存
-            p_img.Source = new BitmapImage(new Uri($"{Kit.Stub.ServerUrl}/fsm/{p_path}"));
+            p_img.Source = new BitmapImage(new Uri($"{Kit.GetSvcUrl("fsm")}/drv/{p_path}"));
             return Task.CompletedTask;
         }
 #else

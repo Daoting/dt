@@ -200,7 +200,7 @@ namespace Dt.Base
                 filePath = IOUtil.IsMediaStore(p_uri.Scheme) ? p_uri.ToString() : p_uri.Path;
             var fileName = GetFileName(_context, p_uri);
 
-            var fd = new FileData(filePath, fileName, (ulong)new File(filePath).Length());
+            var fd = new FileData(filePath, fileName, (ulong)new Java.IO.File(filePath).Length());
             string ext = fd.Ext;
 
             // 生成文件描述和缩略图

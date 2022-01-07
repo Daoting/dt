@@ -112,7 +112,7 @@ namespace Dt.Base
 
             var request = new Request.Builder()
                 .Post(body)
-                .Url($"{Kit.Stub.ServerUrl.TrimEnd('/')}/fsm/.u");
+                .Url($"{Kit.GetSvcUrl("fsm")}/.u");
             if (Kit.IsLogon)
                 request.Header("uid", Kit.UserID.ToString());
 

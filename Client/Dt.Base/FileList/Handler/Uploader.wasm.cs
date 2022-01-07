@@ -136,7 +136,7 @@ namespace Dt.Base
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-                RequestUri = new Uri($"{Kit.Stub.ServerUrl.TrimEnd('/')}/fsm/.u")
+                RequestUri = new Uri($"{Kit.GetSvcUrl("fsm")}/.u")
             };
 
             if (Kit.IsLogon)

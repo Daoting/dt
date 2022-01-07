@@ -111,17 +111,17 @@ namespace Dt.Base
         /// <returns></returns>
         public void DownloadFile()
         {
-            Kit.Download($"{Kit.Stub.ServerUrl}/fsm/{ID}", Title);
+            Kit.Download($"{Kit.GetSvcUrl("fsm")}/drv/{ID}", Title);
         }
 
         internal Task<string> EnsureFileExists()
         {
-            return Task.FromResult($"{Kit.Stub.ServerUrl}/fsm/{ID}");
+            return Task.FromResult($"{Kit.GetSvcUrl("fsm")}/drv/{ID}");
         }
 
         Task LoadImage()
         {
-            var path = new Uri($"{Kit.Stub.ServerUrl}/fsm/{ID}{ThumbPostfix}");
+            var path = new Uri($"{Kit.GetSvcUrl("fsm")}/drv/{ID}{ThumbPostfix}");
             Bitmap = new BitmapImage(path);
             return Task.CompletedTask;
         }
