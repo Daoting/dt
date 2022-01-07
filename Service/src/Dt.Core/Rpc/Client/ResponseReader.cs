@@ -7,12 +7,13 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core
 {
     /// <summary>
     /// 读取服务器的返回流

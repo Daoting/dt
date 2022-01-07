@@ -1,14 +1,12 @@
-﻿using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
-namespace Dt.Sample
+namespace Dt.Agent
 {
-    public static class AtTest
+    /// <summary>
+    /// 功能测试Api
+    /// </summary>
+    public partial class AtTestCm
     {
-        #region TestSerialize
         /// <summary>
         /// 返回字符串
         /// </summary>
@@ -415,9 +413,10 @@ namespace Dt.Sample
         /// 返回Row到客户端
         /// </summary>
         /// <returns></returns>
-        public static Task<Row> GetRow()
+        public static Task<T> GetRow<T>()
+            where T : Row
         {
-            return Kit.Rpc<Row>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.GetRow"
             );
@@ -427,18 +426,20 @@ namespace Dt.Sample
         /// 由外部传递Row
         /// </summary>
         /// <param name="p_row"></param>
-        public static Task<Row> SetRow(Row p_row)
+        public static Task<T> SetRow<T>(Row p_row)
+            where T : Row
         {
-            return Kit.Rpc<Row>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.SetRow",
                 p_row
             );
         }
 
-        public static Task<Table<CustomEntityObj>> GetEntityTable()
+        public static Task<Table<T>> GetEntityTable<T>()
+            where T : Entity
         {
-            return Kit.Rpc<Table<CustomEntityObj>>(
+            return Kit.Rpc<Table<T>>(
                 "cm",
                 "TestSerialize.GetEntityTable"
             );
@@ -453,9 +454,10 @@ namespace Dt.Sample
             );
         }
 
-        public static Task<CustomEntityObj> GetEntity()
+        public static Task<T> GetEntity<T>()
+            where T : Row
         {
-            return Kit.Rpc<CustomEntityObj>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.GetEntity"
             );
@@ -684,40 +686,42 @@ namespace Dt.Sample
                 "TestSerialize.AsyncWait"
             );
         }
-        #endregion
-
-        #region TestException
-        public static Task<string> ThrowException()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestException.ThrowException"
-            );
-        }
-
-        public static Task<string> ThrowBusinessException()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestException.ThrowBusinessException"
-            );
-        }
-
-        public static Task<string> ThrowPostionException()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestException.ThrowPostionException"
-            );
-        }
-
-        public static Task<Dict> ThrowSerializeException()
-        {
-            return Kit.Rpc<Dict>(
-                "cm",
-                "TestException.ThrowSerializeException"
-            );
-        }
-        #endregion
     }
+
+
+    [JsonObj("产品")]
+    public class Product
+    {
+        public string Name { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+
+        [JsonIgnore]
+        public decimal Price { get; set; }
+
+        public string[] Sizes { get; set; }
+    }
+
+    [JsonObj("学生")]
+    public class Student
+    {
+        public string Name { get; set; }
+
+        public DateTime LastModified { get; set; }
+
+        [RpcJson]
+        public Dict Salary { get; set; }
+
+        [RpcJson]
+        public Table Info { get; set; }
+    }
+
+    [JsonObj("部门")]
+    public class Department
+    {
+        public string Name { get; set; }
+
+        public Student Employee { get; set; }
+    }
+
 }

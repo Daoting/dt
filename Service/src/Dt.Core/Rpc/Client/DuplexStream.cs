@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core
 {
     /// <summary>
     /// 双工流

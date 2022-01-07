@@ -1,50 +1,10 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2013-12-16 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Dt.Base;
-using Dt.Core;
-using Dt.Core.Rpc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-#endregion
-
-namespace Dt.App
+﻿namespace Dt.Agent
 {
     /// <summary>
-    /// 内核模型服务Api代理类（自动生成）
+    /// 用户相关的Api
     /// </summary>
-    public class AtCm : DataProvider<cm>
+    public partial class AtCm
     {
-        /// <summary>
-        /// 提示需要更新模型
-        /// </summary>
-        /// <param name="p_msg">提示消息</param>
-        public static void PromptForUpdateModel(string p_msg = null)
-        {
-            var notify = new NotifyInfo();
-            notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
-            notify.DelaySeconds = 5;
-            notify.Link = "更新模型";
-            notify.LinkCallback = async (e) =>
-            {
-                if (await Kit.Confirm("确认要更新模型吗？"))
-                {
-                    if (await AtKernel.UpdateModelDbFile())
-                        Kit.Msg("更新模型成功，请重启应用！");
-                    else
-                        Kit.Warn("更新模型失败！");
-                }
-            };
-            Kit.RunAsync(() => SysVisual.NotifyList.Add(notify));
-        }
-
-        #region UserRelated
         /// <summary>
         /// 获取用户可访问的菜单，更新数据版本号
         /// </summary>
@@ -214,59 +174,5 @@ namespace Dt.App
                 p_userID
             );
         }
-        #endregion
-
-        #region Publish
-        /// <summary>
-        /// 保存文章，返回文章地址
-        /// </summary>
-        /// <param name="p_post"></param>
-        /// <returns></returns>
-        public static Task<string> SavePost(Row p_post)
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "Publish.SavePost",
-                p_post
-            );
-        }
-
-        /// <summary>
-        /// 创建静态页面
-        /// </summary>
-        /// <param name="p_title">页面标题</param>
-        /// <param name="p_content">页面内容</param>
-        /// <returns>返回静态页面的路径，生成失败返回null</returns>
-        public static Task<string> CreatePage(string p_title, string p_content)
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "Publish.CreatePage",
-                p_title,
-                p_content
-            );
-        }
-
-        /// <summary>
-        /// 创建测试页面
-        /// </summary>
-        /// <param name="p_title">页面标题</param>
-        /// <param name="p_content">页面内容</param>
-        /// <returns>返回页面路径，生成失败返回null</returns>
-        public static Task<string> CreateTestPage(string p_title, string p_content)
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "Publish.CreateTestPage",
-                p_title,
-                p_content
-            );
-        }
-        #endregion
     }
-
-    /// <summary>
-    /// 内核模型服务，只为规范服务名称
-    /// </summary>
-    public class cm { }
 }

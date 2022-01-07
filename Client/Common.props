@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<SingleProject>true</SingleProject>
 		<NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
+        <ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<!-- 定义平台常量 -->
@@ -58,6 +59,11 @@
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Using Include="Dt.Core" />
+        <Using Include="Dt.Agent" />
+    </ItemGroup>
+    
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

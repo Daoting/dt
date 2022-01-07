@@ -89,7 +89,7 @@ namespace Dt.App.Model
             {
                 _win.List.Update();
                 UpdateRelated(d);
-                AtCm.PromptForUpdateModel();
+                ModelKit.PromptForUpdateModel();
             }
         }
 
@@ -115,7 +115,7 @@ namespace Dt.App.Model
             {
                 Clear();
                 _win.List.Update();
-                AtCm.PromptForUpdateModel();
+                ModelKit.PromptForUpdateModel();
             }
         }
 

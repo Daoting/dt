@@ -21,12 +21,12 @@ namespace Dt.Core
     [Api(AgentMode = AgentMode.Generic, IsTest = true)]
     public class TestRpc
     {
-        public string GetString()
+        public string GetRpcString()
         {
             return "字符串结果";
         }
 
-        public bool SetString(string p_str)
+        public bool SetRpcString(string p_str)
         {
             return !string.IsNullOrEmpty(p_str);
         }

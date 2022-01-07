@@ -98,7 +98,7 @@ namespace Dt.Base
             List<object> cfg;
             try
             {
-                cfg = await AtKernel.GetConfig();
+                cfg = await AtCm.GetConfig();
                 if (cfg == null || cfg.Count != 3)
                     throw new Exception();
             }
@@ -121,7 +121,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
                 // 自动登录
-                var result = await AtKernel.LoginByPwd(phone, pwd);
+                var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
 
                 // 登录成功
                 if (result.IsSuc)

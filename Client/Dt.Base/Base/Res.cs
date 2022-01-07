@@ -625,9 +625,9 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_data"></param>
         /// <returns></returns>
-        public static Path ParsePath(string p_data)
+        public static Microsoft.UI.Xaml.Shapes.Path ParsePath(string p_data)
         {
-            Path path = new Path();
+            var path = new Microsoft.UI.Xaml.Shapes.Path();
             path.Data = ParseGeometry(p_data);
             return path;
         }

@@ -8,14 +8,8 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 #endregion
 
@@ -230,7 +224,7 @@ namespace Dt.Core
         {
             List<string> keys = new List<string>();
             IEnumerable<XElement> comments = null;
-            AgentMode mode = AgentMode.Default;
+            ApiAttribute attr = null;
             Type type = null;
             foreach (var item in Silo.Methods)
             {
@@ -241,9 +235,7 @@ namespace Dt.Core
                 if (comments == null)
                 {
                     type = item.Value.Method.DeclaringType;
-                    var attr = type.GetCustomAttribute<ApiAttribute>();
-                    if (attr != null)
-                        mode = attr.AgentMode;
+                    attr = type.GetCustomAttribute<ApiAttribute>();
                     comments = LoadComments(type);
                 }
             }
@@ -253,7 +245,7 @@ namespace Dt.Core
 
             // 不同模式的服务名
             string serviceName = "";
-            if (mode == AgentMode.Default)
+            if (attr.AgentMode == AgentMode.Default)
             {
                 if (Kit.Stubs.Length == 1)
                 {
@@ -272,7 +264,7 @@ namespace Dt.Core
                     }
                 }
             }
-            else if (mode == AgentMode.Generic)
+            else if (attr.AgentMode == AgentMode.Generic)
             {
                 serviceName = "typeof(TSvc).Name";
             }
@@ -284,8 +276,20 @@ namespace Dt.Core
             string retTypeName;
             int paramsLength;
             StringBuilder sb = new StringBuilder();
-            sb.Append("#region ");
-            sb.Append(p_clsName);
+
+            if (attr.AgentMode == AgentMode.Default)
+            {
+                // 类名
+                AppendClsComment(type, sb, comments);
+                sb.Append("public partial class At");
+                char[] a = serviceName.Substring(1, serviceName.Length - 2).ToCharArray();
+                a[0] = char.ToUpper(a[0]);
+                if (attr.IsTest)
+                    sb.Append("Test");
+                sb.AppendLine(new string(a));
+                sb.Append("{");
+            }
+
             foreach (string key in keys)
             {
                 ApiMethod sm = Silo.GetMethod(key);
@@ -297,22 +301,44 @@ namespace Dt.Core
                     AppendComment(sm, sb, comments);
 
                 // 自定义Agent方法代码
-                var attr = mi.GetCustomAttribute<CustomAgentAttribute>(false);
-                if (attr != null)
+                var custAttr = mi.GetCustomAttribute<CustomAgentAttribute>(false);
+                if (custAttr != null)
                 {
-                    if (!string.IsNullOrEmpty(attr.Code))
-                        sb.Append(attr.Code.Replace("###", serviceName));
+                    if (!string.IsNullOrEmpty(custAttr.Code))
+                        sb.Append(custAttr.Code.Replace("###", serviceName));
                     continue;
                 }
 
                 // 方法定义
+                string generic = null;
                 if (sm.CallMode == ApiCallMode.Unary)
                 {
-                    retTypeName = GetRpcTypeName(mi.ReturnType);
-                    if (!string.IsNullOrEmpty(retTypeName))
-                        sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
+                    Type tpReturn = mi.ReturnType;
+                    if (mi.ReturnType.IsGenericType && mi.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                        tpReturn = mi.ReturnType.GetGenericArguments()[0];
+
+                    if (tpReturn == typeof(Row) || tpReturn.IsSubclassOf(typeof(Row)))
+                    {
+                        // 方便在客户端使用Entity子类型
+                        retTypeName = "T";
+                        generic = "where T : Row";
+                        sb.AppendFormat("public static Task<T> {0}<T>(", mi.Name);
+                    }
+                    else if (tpReturn.IsGenericType && tpReturn.GetGenericTypeDefinition() == typeof(Table<>))
+                    {
+                        // 客户端和服务端Entity类型无耦合
+                        retTypeName = "Table<T>";
+                        generic = "where T : Entity";
+                        sb.AppendFormat("public static Task<Table<T>> {0}<T>(", mi.Name);
+                    }
                     else
-                        sb.AppendFormat("public static Task {0}(", mi.Name);
+                    {
+                        retTypeName = GetRpcTypeName(tpReturn);
+                        if (!string.IsNullOrEmpty(retTypeName))
+                            sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
+                        else
+                            sb.AppendFormat("public static Task {0}(", mi.Name);
+                    }
                 }
                 else
                 {
@@ -344,7 +370,7 @@ namespace Dt.Core
                 }
 
                 // 自定义服务名模式
-                if (mode == AgentMode.Custom)
+                if (attr.AgentMode == AgentMode.Custom)
                 {
                     sb.Append("string p_serviceName");
                     if (paramsLength > 0)
@@ -403,6 +429,13 @@ namespace Dt.Core
                 }
                 sb.AppendLine(")");
 
+                // 泛型约束
+                if (!string.IsNullOrEmpty(generic))
+                {
+                    AppendTabSpace(sb, 1);
+                    sb.AppendLine(generic);
+                }
+
                 // 方法体
                 sb.AppendLine("{");
 
@@ -429,7 +462,7 @@ namespace Dt.Core
                 {
                     sb.AppendLine("return Kit.DuplexStreamRpc(");
                 }
-                
+
                 // 服务名
                 AppendTabSpace(sb, 2);
                 sb.Append(serviceName);
@@ -460,7 +493,11 @@ namespace Dt.Core
 
                 sb.AppendLine("}");
             }
-            sb.Append("#endregion");
+
+            // 外嵌套类名
+            if (attr.AgentMode == AgentMode.Default)
+                sb.Append("}");
+
             return sb.ToString();
         }
 
@@ -615,6 +652,29 @@ namespace Dt.Core
                     }
                     p_sb.Append("/// </returns>\r\n");
                 }
+            }
+        }
+
+
+        void AppendClsComment(Type p_type, StringBuilder p_sb, IEnumerable<XElement> p_results)
+        {
+            var name = $"T:{p_type.FullName}";
+            var member = (from result in p_results
+                          where result.Attribute("name").Value == name
+                          select result).FirstOrDefault();
+            if (member == null)
+                return;
+
+            XElement summary = member.Element("summary");
+            if (summary != null)
+            {
+                p_sb.AppendLine("/// <summary>");
+                string[] ss = summary.Value.Trim().Split('\n');
+                foreach (string str in ss)
+                {
+                    p_sb.AppendFormat("/// {0}\r\n", str.Trim());
+                }
+                p_sb.AppendLine("/// </summary>");
             }
         }
         #endregion

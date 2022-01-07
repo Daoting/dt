@@ -608,7 +608,7 @@ namespace Dt.Base
                 return false;
             }
 
-            bool suc = await AtFile.Delete(ID);
+            bool suc = await AtFsm.Delete(ID);
             if (suc)
                 _owner.AfterDeleteItem(this);
             else
@@ -720,7 +720,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(ID))
             {
                 // 删除服务器端旧文件
-                await AtFile.Delete(ID);
+                await AtFsm.Delete(ID);
                 // 删除本地旧文件
                 Kit.DeleteCacheFile(GetFileName());
             }
@@ -830,7 +830,7 @@ namespace Dt.Base
             if (p_priorThumbnail)
             {
                 // 优先下载缩略图时，先判断是否存在
-                downloadThumb = await AtFile.Exists(ID + ThumbPostfix);
+                downloadThumb = await AtFsm.Exists(ID + ThumbPostfix);
                 // 缩略图不存在时，若为视频文件不下载
                 if (!downloadThumb && FileType != FileItemType.Image)
                     return false;

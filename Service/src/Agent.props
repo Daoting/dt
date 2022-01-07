@@ -1,0 +1,23 @@
+<Project ToolsVersion="Current">
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="Dt.Core" />
+	</ItemGroup>
+
+	<!-- 客户端和服务端的框架、引用项目、导入不同，靠sln名称区分 -->
+
+	<!-- 客户端 -->
+	<Import Project="..\..\Client\Targets.props" Condition="$(SolutionFileName.Contains('Client-'))" />
+	<ItemGroup Condition="$(SolutionFileName.Contains('Client-'))">
+		<ProjectReference Include="..\..\..\Client\Dt.Core\Dt.Core.csproj" />
+	</ItemGroup>
+
+	<!-- 服务端 -->
+	<Import Project="Common.props" Condition="!$(SolutionFileName.Contains('Client-'))" />
+	<ItemGroup Condition="!$(SolutionFileName.Contains('Client-'))">
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+	</ItemGroup>
+</Project>

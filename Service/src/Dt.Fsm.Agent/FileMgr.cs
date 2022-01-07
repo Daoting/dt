@@ -1,24 +1,10 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2019-09-06 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Dt.Core;
-using System.Threading.Tasks;
-#endregion
-
-namespace Dt.Base
+﻿namespace Dt.Agent
 {
     /// <summary>
-    /// 文件服务Api代理类（自动生成）
+    /// 文件服务Api
     /// </summary>
-    public static class AtFile
+    public partial class AtFsm
     {
-        #region FileMgr
         /// <summary>
         /// 判断文件是否存在
         /// </summary>
@@ -46,6 +32,5 @@ namespace Dt.Base
                 p_filePath
             );
         }
-        #endregion
     }
 }

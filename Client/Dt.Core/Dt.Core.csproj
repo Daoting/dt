@@ -8,6 +8,7 @@
 	<Import Project="..\Common.props" />
 
 	<ItemGroup>
+		<Compile Include="..\..\Service\src\Dt.Core\Api\Test\SvcTestAgent.cs" Link="Internal\SvcTestAgent.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\CellList.cs" Link="Base\Collection\Table\CellList.cs" />

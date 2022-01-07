@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using System.Linq;
+using Path = Microsoft.UI.Xaml.Shapes.Path;
 #endregion
 
 namespace Dt.Base
@@ -650,7 +651,7 @@ namespace Dt.Base
         {
             base.OnApplyTemplate();
 
-            Path path = GetTemplateChild("HeaderPath") as Path;
+            var path = GetTemplateChild("HeaderPath") as Path;
             path.RenderTransform = _headPathTransform;
             path = GetTemplateChild("TailPath") as Path;
             path.RenderTransform = _tailPathTransform;

@@ -8,14 +8,10 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Agent
 {
     /// <summary>
     /// 客户端数据提供者，和服务端DataProvider方法基本相同
@@ -163,7 +159,7 @@ namespace Dt.Core
                 "Da.First",
                 p_keyOrSql,
                 p_params
-                ).Call<TEntity>();
+            ).Call<TEntity>();
         }
 
         /// <summary>
@@ -181,7 +177,7 @@ namespace Dt.Core
                 typeof(T).FullName,
                 p_keyOrSql,
                 p_params
-                ).Call<List<T>>();
+            ).Call<List<T>>();
         }
 
         /// <summary>

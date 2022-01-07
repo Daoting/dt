@@ -50,7 +50,7 @@ namespace Dt.Cm
         /// 调用过程异常
         /// </summary>
         /// <returns></returns>
-        public virtual async Task ThrowException()
+        public virtual async Task CallInlineException()
         {
             string sql = await GetSql();
             throw new Exception("普通异常");

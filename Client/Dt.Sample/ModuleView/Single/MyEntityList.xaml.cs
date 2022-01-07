@@ -43,7 +43,7 @@ namespace Dt.Sample
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await App.AtCm.Query("select * from cm_role");
+                _lv.Data = await AtCm.Query("select * from cm_role");
             }
             else if (_query == "#最近修改")
             {

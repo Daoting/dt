@@ -70,7 +70,7 @@ namespace Dt.App
                     if (isCode)
                     {
                         // 验证码登录
-                        result = await AtKernel.LoginByCode(phone, txt);
+                        result = await AtCm.LoginByCode<LoginResult>(phone, txt);
                         if (result.IsSuc)
                             pwd = result.Pwd;
                     }
@@ -78,7 +78,7 @@ namespace Dt.App
                     {
                         // 密码登录
                         pwd = Kit.GetMD5(txt);
-                        result = await AtKernel.LoginByPwd(phone, pwd);
+                        result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
                     }
 
                     if (!result.IsSuc)
@@ -139,7 +139,7 @@ namespace Dt.App
                 return;
 
             _btnCode.IsEnabled = false;
-            string code = await AtKernel.CreateVerificationCode(phone);
+            string code = await AtCm.CreateVerificationCode(phone);
             _tbCode.Focus(FocusState.Programmatic);
 
             int sec = 60;

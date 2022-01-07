@@ -68,22 +68,22 @@ namespace Dt.Sample
         #region 服务端异常
         async void TestException(object sender, RoutedEventArgs e)
         {
-            await AtTest.ThrowException();
+            await AtTestCm.ThrowException();
         }
 
         async void TestSerializeException(object sender, RoutedEventArgs e)
         {
-            await AtTest.ThrowSerializeException();
+            await AtTestCm.ThrowSerializeException();
         }
 
         async void TestRpcException(object sender, RoutedEventArgs e)
         {
-            await AtTest.ThrowBusinessException();
+            await AtTestCm.ThrowBusinessException();
         }
 
         async void TestPosException(object sender, RoutedEventArgs e)
         {
-            await AtTest.ThrowPostionException();
+            await AtTestCm.ThrowPostionException();
         }
         #endregion
     }

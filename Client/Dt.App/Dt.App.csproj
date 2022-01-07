@@ -9,7 +9,8 @@
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
     <Import Project="..\Package.props" />
-
+    <Import Project="..\Agent.props" />
+    
 	<!-- 包图标 -->
 	<ItemGroup>
 		<None Include="..\..\logo.png">
@@ -19,7 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" PrivateAssets="all" />
 	</ItemGroup>
 </Project>

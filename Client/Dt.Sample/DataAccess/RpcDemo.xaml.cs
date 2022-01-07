@@ -26,19 +26,19 @@ namespace Dt.Sample
 
         async void OnGetString(object sender, RoutedEventArgs e)
         {
-            _tbInfo.Text = "返回：" + await AtTestRpc.GetString();
+            _tbInfo.Text = "返回：" + await AtTestCm.GetRpcString();
         }
 
         async void OnSetString(object sender, RoutedEventArgs e)
         {
-            if (await AtTestRpc.SetString("abc"))
+            if (await AtTestCm.SetRpcString("abc"))
                 _tbInfo.Text = "OnSetString成功";
         }
 
         async void OnServerStream(object sender, RoutedEventArgs e)
         {
             _tbInfo.Text = "ServerStream模式：";
-            var _reader = await AtTestRpc.OnServerStream("hello");
+            var _reader = await AtTestCm.OnServerStream("hello");
             while (await _reader.MoveNext())
             {
                 _tbInfo.Text += $"{Environment.NewLine}收到：{_reader.Val<string>()}";
@@ -46,54 +46,5 @@ namespace Dt.Sample
             _tbInfo.Text += Environment.NewLine + "结束";
         }
 
-    }
-
-    internal static class AtTestRpc
-    {
-        #region TestRpc
-        public static Task<string> GetString()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestRpc.GetString"
-            );
-        }
-
-        public static Task<bool> SetString(string p_str)
-        {
-            return Kit.Rpc<bool>(
-                "cm",
-                "TestRpc.SetString",
-                p_str
-            );
-        }
-
-        public static Task<ResponseReader> OnServerStream(string p_title)
-        {
-            return Kit.ServerStreamRpc(
-                "cm",
-                "TestRpc.OnServerStream",
-                p_title
-            );
-        }
-
-        public static Task<RequestWriter> OnClientStream(string p_title)
-        {
-            return Kit.ClientStreamRpc(
-                "cm",
-                "TestRpc.OnClientStream",
-                p_title
-            );
-        }
-
-        public static Task<DuplexStream> OnDuplexStream(string p_title)
-        {
-            return Kit.DuplexStreamRpc(
-                "cm",
-                "TestRpc.OnDuplexStream",
-                p_title
-            );
-        }
-        #endregion
     }
 }

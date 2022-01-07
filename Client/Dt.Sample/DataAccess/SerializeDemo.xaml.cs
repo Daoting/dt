@@ -32,90 +32,90 @@ namespace Dt.Sample
         #region 基本类型
         async void GetString(object sender, RoutedEventArgs e)
         {
-            _tbInfo.Text = "返回值：" + await AtTest.GetString();
+            _tbInfo.Text = "返回值：" + await AtTestCm.GetString();
         }
 
         async void SetString(object sender, RoutedEventArgs e)
         {
-            bool success = await AtTest.SetString("发送字符串");
+            bool success = await AtTestCm.SetString("发送字符串");
             _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
         }
 
         async void GetBool(object sender, RoutedEventArgs e)
         {
-            bool result = await AtTest.GetBool();
+            bool result = await AtTestCm.GetBool();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetBool(object sender, RoutedEventArgs e)
         {
-            bool result = await AtTest.SetBool(true);
+            bool result = await AtTestCm.SetBool(true);
             _tbInfo.Text = result ? "调用成功！" : "调用不成功！";
         }
 
         async void GetInt(object sender, RoutedEventArgs e)
         {
-            int result = await AtTest.GetInt();
+            int result = await AtTestCm.GetInt();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetInt(object sender, RoutedEventArgs e)
         {
             int val = 100;
-            int result = await AtTest.SetInt(val);
+            int result = await AtTestCm.SetInt(val);
             _tbInfo.Text = (result == val) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetLong(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetLong();
+            var result = await AtTestCm.GetLong();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetLong(object sender, RoutedEventArgs e)
         {
             long val = 1234L;
-            long result = await AtTest.SetLong(val);
+            long result = await AtTestCm.SetLong(val);
             _tbInfo.Text = (result == val) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetDouble(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetDouble();
+            var result = await AtTestCm.GetDouble();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetDouble(object sender, RoutedEventArgs e)
         {
             double val = 1234.123d;
-            double result = await AtTest.SetDouble(val);
+            double result = await AtTestCm.SetDouble(val);
             _tbInfo.Text = (result == val) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetDateTime(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetDateTime();
+            var result = await AtTestCm.GetDateTime();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetDateTime(object sender, RoutedEventArgs e)
         {
             DateTime val = DateTime.Now;
-            DateTime result = await AtTest.SetDateTime(val);
+            DateTime result = await AtTestCm.SetDateTime(val);
             TimeSpan span = val - result;
             _tbInfo.Text = (span.TotalSeconds < 1) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetByteArray(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetByteArray();
+            var result = await AtTestCm.GetByteArray();
             _tbInfo.Text = "返回值：" + result.ToString();
         }
 
         async void SetByteArray(object sender, RoutedEventArgs e)
         {
             byte[] val = new byte[] { 10, 12, 14, 16 };
-            byte[] result = await AtTest.SetByteArray(val);
+            byte[] result = await AtTestCm.SetByteArray(val);
             bool succ = true;
             if (val.Length != result.Length)
                 succ = false;
@@ -132,13 +132,13 @@ namespace Dt.Sample
 
         async void GetMsgInfo(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetMsgInfo();
+            var result = await AtTestCm.GetMsgInfo();
             _tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
         }
 
         async void SetMsgInfo(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.SetMsgInfo(new MsgInfo { Title = "abc", Content = "message" });
+            var result = await AtTestCm.SetMsgInfo(new MsgInfo { Title = "abc", Content = "message" });
             _tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
         }
         #endregion
@@ -146,7 +146,7 @@ namespace Dt.Sample
         #region 集合类型
         async void GetStringList(object sender, RoutedEventArgs e)
         {
-            List<string> ls = await AtTest.GetStringList();
+            List<string> ls = await AtTestCm.GetStringList();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("调用成功，共有{0}个字符串：\r\n", ls.Count);
             foreach (string item in ls)
@@ -158,7 +158,7 @@ namespace Dt.Sample
 
         async void SetStringList(object sender, RoutedEventArgs e)
         {
-            bool success = await AtTest.SetStringList(new List<string>() { "first", "second" });
+            bool success = await AtTestCm.SetStringList(new List<string>() { "first", "second" });
             _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
         }
 
@@ -166,7 +166,7 @@ namespace Dt.Sample
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("调用成功：");
-            foreach (var item in await AtTest.GetBoolList())
+            foreach (var item in await AtTestCm.GetBoolList())
             {
                 sb.AppendLine(item.ToString());
             }
@@ -175,7 +175,7 @@ namespace Dt.Sample
 
         async void SetBoolList(object sender, RoutedEventArgs e)
         {
-            var ls = await AtTest.SetBoolList(new List<bool>() { true, false, true });
+            var ls = await AtTestCm.SetBoolList(new List<bool>() { true, false, true });
             _tbInfo.Text = ls.Count == 3 ? "调用成功！" : "调用不成功！";
         }
 
@@ -183,7 +183,7 @@ namespace Dt.Sample
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("调用成功：");
-            foreach (var item in await AtTest.GetIntList())
+            foreach (var item in await AtTestCm.GetIntList())
             {
                 sb.AppendLine(item.ToString());
             }
@@ -192,7 +192,7 @@ namespace Dt.Sample
 
         async void SetIntList(object sender, RoutedEventArgs e)
         {
-            var ls = await AtTest.SetIntList(new List<int>() { 1, 2, 3, 4 });
+            var ls = await AtTestCm.SetIntList(new List<int>() { 1, 2, 3, 4 });
             _tbInfo.Text = ls.Count == 4 ? "调用成功！" : "调用不成功！";
         }
 
@@ -200,7 +200,7 @@ namespace Dt.Sample
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("调用成功：");
-            foreach (var item in await AtTest.GetLongList())
+            foreach (var item in await AtTestCm.GetLongList())
             {
                 sb.AppendLine(item.ToString());
             }
@@ -209,7 +209,7 @@ namespace Dt.Sample
 
         async void SetLongList(object sender, RoutedEventArgs e)
         {
-            var ls = await AtTest.SetLongList(new List<long>() { 1, 2, 3, 4 });
+            var ls = await AtTestCm.SetLongList(new List<long>() { 1, 2, 3, 4 });
             _tbInfo.Text = ls.Count == 4 ? "调用成功！" : "调用不成功！";
         }
 
@@ -217,7 +217,7 @@ namespace Dt.Sample
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("调用成功：");
-            foreach (var item in await AtTest.GetDoubleList())
+            foreach (var item in await AtTestCm.GetDoubleList())
             {
                 sb.AppendLine(item.ToString());
             }
@@ -226,13 +226,13 @@ namespace Dt.Sample
 
         async void SetDoubleList(object sender, RoutedEventArgs e)
         {
-            var ls = await AtTest.SetDoubleList(new List<double>() { 200.0d, 100d, 50.123d, 123.45d });
+            var ls = await AtTestCm.SetDoubleList(new List<double>() { 200.0d, 100d, 50.123d, 123.45d });
             _tbInfo.Text = ls.Count == 4 ? "调用成功！" : "调用不成功！";
         }
 
         async void GetDateTimeList(object sender, RoutedEventArgs e)
         {
-            List<DateTime> dts = await AtTest.GetDateTimeList();
+            List<DateTime> dts = await AtTestCm.GetDateTimeList();
             _tbInfo.Text = (dts != null) ? string.Format("调用成功: {0}, {1}", dts[0], dts[1]) : "调用不成功！";
         }
 
@@ -241,12 +241,12 @@ namespace Dt.Sample
             List<DateTime> tms = new List<DateTime>();
             tms.Add(DateTime.Now);
             tms.Add(DateTime.Now.AddDays(-1));
-            _tbInfo.Text = (await AtTest.SetDateTimeList(tms)) ? "调用成功！" : "调用不成功！";
+            _tbInfo.Text = (await AtTestCm.SetDateTimeList(tms)) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetObjectList(object sender, RoutedEventArgs e)
         {
-            List<object> ls = await AtTest.GetObjectList();
+            List<object> ls = await AtTestCm.GetObjectList();
             _tbInfo.Text = (ls != null && ls.Count > 0) ? "调用成功！" : "调用不成功！";
         }
 
@@ -257,14 +257,14 @@ namespace Dt.Sample
             ls.Add(123);
             ls.Add(DateTime.Now);
             ls.Add(100.23d);
-            _tbInfo.Text = (await AtTest.SetObjectList(ls)) ? "调用成功！" : "调用不成功！";
+            _tbInfo.Text = (await AtTestCm.SetObjectList(ls)) ? "调用成功！" : "调用不成功！";
         }
         #endregion
 
         #region Table
         async void GetTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await AtTest.GetTable();
+            var tbl = await AtTestCm.GetTable();
             StringBuilder sb = new StringBuilder("调用成功：\r\n");
             foreach (var row in tbl)
             {
@@ -279,13 +279,13 @@ namespace Dt.Sample
 
         async void SetTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await AtTest.SetTable(_tbl);
+            var tbl = await AtTestCm.SetTable(_tbl);
             _tbInfo.Text = tbl != null ? "调用成功！" : "调用不成功！";
         }
 
         async void GetRow(object sender, RoutedEventArgs e)
         {
-            var row = await AtTest.GetRow();
+            var row = await AtTestCm.GetRow<Row>();
             StringBuilder sb = new StringBuilder("调用成功：\r\n");
             foreach (var cell in row.Cells)
             {
@@ -296,13 +296,13 @@ namespace Dt.Sample
 
         async void SetRow(object sender, RoutedEventArgs e)
         {
-            var row = await AtTest.SetRow(_tbl[0]);
+            var row = await AtTestCm.SetRow<Row>(_tbl[0]);
             _tbInfo.Text = row != null ? "调用成功！" : "调用不成功！";
         }
 
         async void GetEntityRowTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await AtTest.GetEntityTable();
+            var tbl = await AtTestCm.GetEntityTable<CustomEntityObj>();
             StringBuilder sb = new StringBuilder("调用成功：\r\n");
             foreach (var r in tbl)
             {
@@ -320,19 +320,19 @@ namespace Dt.Sample
 
         async void SetEntityTable(object sender, RoutedEventArgs e)
         {
-            var suc = await AtTest.SetEntityTable(CreateEntityTable());
+            var suc = await AtTestCm.SetEntityTable(CreateEntityTable());
             _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
         }
 
         async void GetEntityRow(object sender, RoutedEventArgs e)
         {
-            var row = await AtTest.GetEntity();
+            var row = await AtTestCm.GetEntity<CustomEntityObj>();
             _tbInfo.Text = row.Col1 + " " + row.Col2;
         }
 
         async void SetEntityRow(object sender, RoutedEventArgs e)
         {
-            var suc = await AtTest.SetEntity(CreateEntityTable()[0]);
+            var suc = await AtTestCm.SetEntity(CreateEntityTable()[0]);
             _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
         }
 
@@ -343,7 +343,7 @@ namespace Dt.Sample
         /// <param name="e"></param>
         async void GetTableDict(object sender, RoutedEventArgs e)
         {
-            Dict tbls = await AtTest.GetTableDict();
+            Dict tbls = await AtTestCm.GetTableDict();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("调用成功，共有{0}个Table：\r\n", tbls.Count);
             foreach (var item in tbls)
@@ -374,7 +374,7 @@ namespace Dt.Sample
             var tbl = _tbl.Clone();
             tbl.AcceptChanges();
             dtl["table2"] = tbl;
-            Dict result = await AtTest.SetTableDict(dtl);
+            Dict result = await AtTestCm.SetTableDict(dtl);
             _tbInfo.Text = result.Count == 1 ? "调用成功！" : "调用不成功！";
         }
 
@@ -385,7 +385,7 @@ namespace Dt.Sample
         /// <param name="e"></param>
         async void GetTableList(object sender, RoutedEventArgs e)
         {
-            List<Table> tbls = await AtTest.GetTableList();
+            List<Table> tbls = await AtTestCm.GetTableList();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("调用成功，共有{0}个DataTable：\r\n", tbls.Count);
             foreach (var tbl in tbls)
@@ -414,7 +414,7 @@ namespace Dt.Sample
             List<Table> tbls = new List<Table>();
             tbls.Add(_tbl);
             tbls.Add(_tbl.Clone());
-            tbls = await AtTest.SetTableList(tbls);
+            tbls = await AtTestCm.SetTableList(tbls);
             _tbInfo.Text = tbls.Count == 2 ? "调用成功！" : "调用不成功！";
         }
         #endregion
@@ -427,7 +427,7 @@ namespace Dt.Sample
         /// <param name="e"></param>
         async void GetBaseDict(object sender, RoutedEventArgs e)
         {
-            OutDict(await AtTest.GetBaseDict());
+            OutDict(await AtTestCm.GetBaseDict());
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace Dt.Sample
         /// <param name="e"></param>
         async void GetCombineDict(object sender, RoutedEventArgs e)
         {
-            OutDict(await AtTest.GetCombineDict());
+            OutDict(await AtTestCm.GetCombineDict());
         }
 
         /// <summary>
@@ -468,12 +468,12 @@ namespace Dt.Sample
             dt["bool列表"] = new List<bool>() { true, false, false, true };
             dt["int列表"] = new List<int>() { 100, 123, 432, 78 };
 
-            OutDict(await AtTest.SendDict(dt));
+            OutDict(await AtTestCm.SendDict(dt));
         }
 
         async void GetDictList(object sender, RoutedEventArgs e)
         {
-            List<Dict> dts = await AtTest.GetDictList();
+            List<Dict> dts = await AtTestCm.GetDictList();
             _tbInfo.Text = string.Format("调用成功：\r\n列表中有 {0} 个Dict", dts.Count);
         }
 
@@ -495,7 +495,7 @@ namespace Dt.Sample
             dict["string"] = "string value";
             dict["bool"] = true;
             dts.Add(dict);
-            bool succ = await AtTest.SendDictList(dts);
+            bool succ = await AtTestCm.SendDictList(dts);
             _tbInfo.Text = succ ? "调用成功！" : "调用不成功！";
         }
         #endregion
@@ -503,7 +503,7 @@ namespace Dt.Sample
         #region 自定义类型
         async void GetCustomBase(object sender, RoutedEventArgs e)
         {
-            Product product = await AtTest.GetCustomBase();
+            Product product = await AtTestCm.GetCustomBase();
             if (product == null)
                 _tbInfo.Text = "调用不成功！";
             else
@@ -528,12 +528,12 @@ namespace Dt.Sample
             product.ExpiryDate = new DateTime(2016, 12, 28);
             product.Price = 3.99M;
             product.Sizes = new string[] { "Small", "Medium", "Large" };
-            _tbInfo.Text = (await AtTest.SetCustomBase(product)) ? "调用成功！" : "调用不成功！";
+            _tbInfo.Text = (await AtTestCm.SetCustomBase(product)) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetCustomCombine(object sender, RoutedEventArgs e)
         {
-            var person = await AtTest.GetCustomCombine();
+            var person = await AtTestCm.GetCustomCombine();
             if (person == null)
                 _tbInfo.Text = "调用不成功！";
             else
@@ -567,12 +567,12 @@ namespace Dt.Sample
             person.Salary.Add("一月", 2000);
             person.Salary.Add("二月", 3000);
             person.Info = _tbl;
-            _tbInfo.Text = (await AtTest.SetCustomCombine(person)) ? "调用成功！" : "调用不成功！";
+            _tbInfo.Text = (await AtTestCm.SetCustomCombine(person)) ? "调用成功！" : "调用不成功！";
         }
 
         async void GetContainCustom(object sender, RoutedEventArgs e)
         {
-            Department dept = await AtTest.GetContainCustom();
+            Department dept = await AtTestCm.GetContainCustom();
             if (dept == null)
                 _tbInfo.Text = "调用不成功！";
             else
@@ -609,7 +609,7 @@ namespace Dt.Sample
             employee.Salary.Add("二月", 3000);
             employee.Info = _tbl;
             dept.Employee = employee;
-            _tbInfo.Text = (await AtTest.SetContainCustom(dept)) ? "调用成功！" : "调用不成功！";
+            _tbInfo.Text = (await AtTestCm.SetContainCustom(dept)) ? "调用成功！" : "调用不成功！";
         }
         #endregion
 
@@ -716,41 +716,6 @@ namespace Dt.Sample
             tbl[0].Col1 = "当前值";
             return tbl;
         }
-    }
-
-    [JsonObj("产品")]
-    public class Product
-    {
-        public string Name { get; set; }
-
-        public DateTime ExpiryDate { get; set; }
-
-        [JsonIgnore]
-        public decimal Price { get; set; }
-
-        public string[] Sizes { get; set; }
-    }
-
-    [JsonObj("学生")]
-    public class Student
-    {
-        public string Name { get; set; }
-
-        public DateTime LastModified { get; set; }
-
-        [RpcJson]
-        public Dict Salary { get; set; }
-
-        [RpcJson]
-        public Table Info { get; set; }
-    }
-
-    [JsonObj("部门")]
-    public class Department
-    {
-        public string Name { get; set; }
-
-        public Student Employee { get; set; }
     }
 
     public class CustomEntityObj : Entity

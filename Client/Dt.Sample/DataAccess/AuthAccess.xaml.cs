@@ -24,43 +24,17 @@ namespace Dt.Sample
 
         async void OnNoAuth(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await NoAuth());
+            Kit.Msg(await AtTestCm.NoAuth());
         }
 
         async void OnAuth(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await Auth());
+            Kit.Msg(await AtTestCm.Auth());
         }
 
         async void OnCustomAuth(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await CustomAuth());
+            Kit.Msg(await AtTestCm.CustomAuth());
         }
-
-        #region TestAuth
-        public static Task<string> NoAuth()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestAuth.NoAuth"
-            );
-        }
-
-        public static Task<string> Auth()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestAuth.Auth"
-            );
-        }
-
-        public static Task<string> CustomAuth()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestAuth.CustomAuth"
-            );
-        }
-        #endregion
     }
 }
