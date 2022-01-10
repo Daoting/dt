@@ -355,10 +355,12 @@ namespace Dt.Core
             if (!type.IsGenericType)
                 return DeserializeFreeObjectArray(ref p_reader, p_tgtType);
 
+            // List<object>
             Type itemType = type.GetGenericArguments()[0];
             if (itemType == typeof(object))
                 return DeserializeObjsArray(ref p_reader);
 
+            // 内置对象列表List<T>
             IList target = Activator.CreateInstance(type) as IList;
             while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
             {
@@ -408,7 +410,7 @@ namespace Dt.Core
         static object DeserializeFreeObjectArray(ref Utf8JsonReader p_reader, Type p_tgtType)
         {
             if (!p_tgtType.IsGenericType || p_tgtType.GetGenericTypeDefinition() != typeof(List<>))
-                throw new Exception("");
+                throw new Exception("非内置对象列表只支持List<T>！");
 
             Type itemType = p_tgtType.GetGenericArguments()[0];
             IList target = Activator.CreateInstance(p_tgtType) as IList;

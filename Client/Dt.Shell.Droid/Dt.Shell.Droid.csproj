@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <Import Project="..\Common.props" />
+    <Import Project="..\Agent.props" />
     
     <ItemGroup>
         <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
     </ItemGroup>
 

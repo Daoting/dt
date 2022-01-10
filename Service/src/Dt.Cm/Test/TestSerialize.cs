@@ -568,20 +568,14 @@ namespace Dt.Cm
         /// 返回基础自定义类型
         /// </summary>
         /// <returns></returns>
-        public List<Product> GetCustomBase()
+        public Product GetCustomBase()
         {
-            var ls = new List<Product>();
-            for (int i = 0; i < 5; i++)
-            {
-                Product product = new Product();
-                product.Name = "Apple" + i.ToString();
-                product.ExpiryDate = new DateTime(2016, 12, 28);
-                product.Price = 3.99M;
-                product.Sizes = new string[] { "Small", "Medium", "Large" };
-                ls.Add(product);
-            }
-            
-            return ls;
+            Product product = new Product();
+            product.Name = "Apple";
+            product.ExpiryDate = new DateTime(2016, 12, 28);
+            product.Price = 3.99M;
+            product.Sizes = new string[] { "Small", "Medium", "Large" };
+            return product;
         }
 
         /// <summary>
@@ -591,7 +585,37 @@ namespace Dt.Cm
         /// <returns></returns>
         public bool SetCustomBase(Product p_product)
         {
-            return (p_product != null && p_product.Sizes.Length > 0);
+            return p_product != null && p_product.Sizes?.Length > 0;
+        }
+
+        /// <summary>
+        /// 返回自定义对象列表
+        /// </summary>
+        /// <returns></returns>
+        public List<Product> GetCustomList()
+        {
+            var ls = new List<Product>();
+            for (int i = 0; i < 5; i++)
+            {
+                Product product = new Product();
+                product.Name = "Apple" + i.ToString();
+                product.ExpiryDate = new DateTime(2016, 12, 28);
+                product.Price = 3.99M + i;
+                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                ls.Add(product);
+            }
+
+            return ls;
+        }
+
+        /// <summary>
+        /// 由外部传递自定义对象列表
+        /// </summary>
+        /// <param name="p_products"></param>
+        /// <returns></returns>
+        public bool SetCustomList(List<Product> p_products)
+        {
+            return p_products != null && p_products.Count > 0;
         }
 
         /// <summary>

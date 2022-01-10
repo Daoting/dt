@@ -243,7 +243,6 @@ namespace Dt.Base.Tools
 #if DEBUG
         Dictionary<string, Type> _viewTypes;
         Dictionary<string, Type> _pushHandlers;
-        Dictionary<string, Type> _serializeTypes;
         Dictionary<string, SqliteDbTbls> _sqliteTbls;
 
         /// <summary>
@@ -255,7 +254,6 @@ namespace Dt.Base.Tools
         {
             _viewTypes = new Dictionary<string, Type>();
             _pushHandlers = new Dictionary<string, Type>();
-            _serializeTypes = new Dictionary<string, Type>();
             _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
 
             //IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
@@ -283,10 +281,6 @@ namespace Dt.Base.Tools
             sb.AppendLine("\t\t\tPushHandlers = new Dictionary<string, Type>");
             BuildStubDict(sb, _pushHandlers);
 
-            sb.AppendLine("\t\t\t// 获取自定义可序列化类型字典");
-            sb.AppendLine("\t\t\tSerializeTypes = new Dictionary<string, Type>");
-            BuildStubDict(sb, _serializeTypes);
-
             sb.AppendLine("\t\t\t// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
             sb.AppendLine("\t\t\tSqliteDb = new Dictionary<string, SqliteTblsInfo>");
             BuildSqliteDict(sb);
@@ -301,7 +295,6 @@ namespace Dt.Base.Tools
 
             _viewTypes.Clear();
             _pushHandlers.Clear();
-            _serializeTypes.Clear();
             _sqliteTbls.Clear();
         }
 
@@ -326,11 +319,6 @@ namespace Dt.Base.Tools
                         {
                             // 视图
                             _viewTypes[va.Alias] = tp;
-                        }
-                        else if (attr is JsonObjAttribute ja)
-                        {
-                            // 可序列化类型
-                            _serializeTypes[ja.Alias] = tp;
                         }
                         else if (attr is SqliteAttribute sqlite)
                         {

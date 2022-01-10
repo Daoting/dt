@@ -102,13 +102,15 @@
         <Button Content="返回Dict列表" Click="GetDictList" />
         <Button Content="发送Dict列表" Click="SendDictList" />
 
-        <a:CBar Title="自定义类型" />
-        <Button Content="返回自定义基本类型" Click="GetCustomBase"/>
-        <Button Content="发送自定义基本类型" Click="SetCustomBase"/>
-        <Button Content="返回自定义复杂类型" Click="GetCustomCombine" />
-        <Button Content="发送自定义复杂类型" Click="SetCustomCombine" />
-        <Button Content="返回自定义中包含自定义" Click="GetContainCustom" />
-        <Button Content="发送自定义中包含自定义" Click="SetContainCustom" />
+        <a:CBar Title="任意类型" />
+        <Button Content="返回非内置对象" Click="GetCustomBase"/>
+        <Button Content="发送非内置对象" Click="SetCustomBase"/>
+        <Button Content="返回非内置对象列表" Click="GetCustomList"/>
+        <Button Content="发送非内置对象列表" Click="SetCustomList"/>
+        <Button Content="返回嵌套对象" Click="GetCustomCombine" />
+        <Button Content="发送嵌套对象" Click="SetCustomCombine" />
+        <Button Content="返回复杂嵌套对象" Click="GetContainCustom" />
+        <Button Content="发送复杂嵌套对象" Click="SetContainCustom" />
 
         <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
             <TextBox x:Name="_tbInfo"

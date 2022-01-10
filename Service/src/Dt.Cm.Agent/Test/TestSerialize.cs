@@ -586,10 +586,10 @@
         /// 返回基础自定义类型
         /// </summary>
         /// <returns></returns>
-        public static Task<List<T>> GetCustomBase<T>()
+        public static Task<T> GetCustomBase<T>()
             where T : class
         {
-            return Kit.Rpc<List<T>>(
+            return Kit.Rpc<T>(
                 "cm",
                 "TestSerialize.GetCustomBase"
             );
@@ -606,6 +606,33 @@
                 "cm",
                 "TestSerialize.SetCustomBase",
                 p_product
+            );
+        }
+
+        /// <summary>
+        /// 返回自定义对象列表
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<T>> GetCustomList<T>()
+            where T : class
+        {
+            return Kit.Rpc<List<T>>(
+                "cm",
+                "TestSerialize.GetCustomList"
+            );
+        }
+
+        /// <summary>
+        /// 由外部传递自定义对象列表
+        /// </summary>
+        /// <param name="p_products"></param>
+        /// <returns></returns>
+        public static Task<bool> SetCustomList(object p_products)
+        {
+            return Kit.Rpc<bool>(
+                "cm",
+                "TestSerialize.SetCustomList",
+                p_products
             );
         }
 

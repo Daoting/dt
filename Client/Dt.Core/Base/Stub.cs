@@ -125,11 +125,6 @@ namespace Dt.Core
         public Dictionary<string, Type> PushHandlers { get; protected set; }
 
         /// <summary>
-        /// 自定义可序列化类型字典
-        /// </summary>
-        public Dictionary<string, Type> SerializeTypes { get; protected set; }
-
-        /// <summary>
         /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
         /// </summary>
         public Dictionary<string, SqliteTblsInfo> SqliteDb { get; protected set; }

@@ -531,9 +531,33 @@ namespace Dt.Sample
             _tbInfo.Text = (await AtTestCm.SetCustomBase(product)) ? "调用成功！" : "调用不成功！";
         }
 
+        async void GetCustomList(object sender, RoutedEventArgs e)
+        {
+            var products = await AtTestCm.GetCustomList<Product>();
+            if (products == null)
+                _tbInfo.Text = "调用不成功！";
+            else
+                _tbInfo.Text = string.Format("调用成功：\r\n列表长度 {0}", products.Count);
+        }
+
+        async void SetCustomList(object sender, RoutedEventArgs e)
+        {
+            var ls = new List<Product>();
+            for (int i = 0; i < 5; i++)
+            {
+                Product product = new Product();
+                product.Name = "Apple" + i.ToString();
+                product.ExpiryDate = new DateTime(2016, 12, 28);
+                product.Price = 3.99M + i;
+                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                ls.Add(product);
+            }
+            _tbInfo.Text = (await AtTestCm.SetCustomList(ls)) ? "调用成功！" : "调用不成功！";
+        }
+
         async void GetCustomCombine(object sender, RoutedEventArgs e)
         {
-            var person = await AtTestCm.GetCustomCombine();
+            var person = await AtTestCm.GetCustomCombine<Student>();
             if (person == null)
                 _tbInfo.Text = "调用不成功！";
             else
@@ -572,7 +596,7 @@ namespace Dt.Sample
 
         async void GetContainCustom(object sender, RoutedEventArgs e)
         {
-            Department dept = await AtTestCm.GetContainCustom();
+            Department dept = await AtTestCm.GetContainCustom<Department>();
             if (dept == null)
                 _tbInfo.Text = "调用不成功！";
             else
@@ -716,6 +740,38 @@ namespace Dt.Sample
             tbl[0].Col1 = "当前值";
             return tbl;
         }
+    }
+
+    public class Product
+    {
+        public string Name { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+
+        [JsonIgnore]
+        public decimal Price { get; set; }
+
+        public string[] Sizes { get; set; }
+    }
+
+    public class Student
+    {
+        public string Name { get; set; }
+
+        public DateTime LastModified { get; set; }
+
+        [RpcJson]
+        public Dict Salary { get; set; }
+
+        [RpcJson]
+        public Table Info { get; set; }
+    }
+
+    public class Department
+    {
+        public string Name { get; set; }
+
+        public Student Employee { get; set; }
     }
 
     public class CustomEntityObj : Entity

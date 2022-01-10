@@ -76,6 +76,11 @@ namespace Dt.Core
             return "object";
         }
 
+        /// <summary>
+        /// 是否为内置类型
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
         public static bool IsInternal(Type p_type)
         {
             return p_type.IsValueType

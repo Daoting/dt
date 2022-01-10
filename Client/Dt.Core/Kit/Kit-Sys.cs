@@ -202,8 +202,6 @@ namespace Dt.Core
         {
             Stub = p_stub;
             Callback = p_callback;
-            if (Stub.SerializeTypes != null)
-                SerializeTypeAlias.Merge(Stub.SerializeTypes);
 
 #if !WIN
             // WinUI已移除事件，其他平台咋？
