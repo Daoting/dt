@@ -104,6 +104,7 @@ namespace Dt.Core
 
         /// <summary>
         /// 设置cm服务地址，如：https://10.10.1.16/fz-cm
+        /// <para>不使用dt服务的无需设置</para>
         /// </summary>
         /// <param name="p_url"></param>
         protected void InitCmUrl(string p_url)

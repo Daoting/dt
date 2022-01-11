@@ -46,11 +46,13 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 * Button Menu交互样式调整
 * 全局快捷键适配WinUI
 * wasm版日期选择CalendarView、DatePickerFlyout、TimePickerFlyout已实现 
+* 启动时增加Kit.IsUsingDtSvc判断，GetConfig提前调用 
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
 * Lv的Table模式列头排序只在Tapped事件触发
 * Phone模式标题栏触发右键菜单位置调整
+
 
 ### 服务  
 * 所有服务升级到.net6

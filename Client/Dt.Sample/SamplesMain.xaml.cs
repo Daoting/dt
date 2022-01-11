@@ -63,8 +63,8 @@ namespace Dt.Sample
                 new Nav("树", typeof(TvHome)) { Desc = "传统树，自定义节点样式、节点内容" },
                 new Nav("数据图表", typeof(ChartHome)) { Desc = "柱线饼等9大类40种不同图表" },
                 new Nav("Excel", typeof(ExcelHome)) { Desc = "模拟Excel的常用功能" },
+                new Nav("报表", typeof(RptDemo)) { Desc = "报表模板设计、预览、导出、打印" },
                 new Nav("菜单", typeof(MenuHome)) { Desc = "菜单、工具栏、上下文菜单" },
-                new Nav("Tab页", typeof(TabControlDemo)) { Desc = "传统TabControl控件" },
                 new Nav("杂项", typeof(MiscHome)) { Desc = "分隔栏、可停靠面板等" },
             };
             group.Title = "基础控件";
@@ -121,29 +121,34 @@ namespace Dt.Sample
                 new Nav("Mv之间导航", typeof(MvNavi)) { Desc = "导航时的参数传递、带遮罩的模式视图等" },
                 new Nav("功能列表视图", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
                 new Nav("通用搜索视图", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
-#if DEBUG
-                new Nav("单表模板", typeof(MyEntityWin)) { Desc = "单表增删改模板，需要联网" },
-                new Nav("多对多模板", typeof(ModuleView.MainWin)) { Desc = "多对多增删改模板，需要联网" },
-                new Nav("一对多，三栏", typeof(ModuleView.OneToMany1.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
-                new Nav("一对多，两栏", typeof(ModuleView.OneToMany2.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
-#endif
             };
+
+            if (Kit.IsUsingDtSvc)
+            {
+                group.AddRange(new List<Nav>
+                {
+                    new Nav("单表模板", typeof(MyEntityWin)) { Desc = "单表增删改模板，需要联网" },
+                    new Nav("多对多模板", typeof(ModuleView.MainWin)) { Desc = "多对多增删改模板，需要联网" },
+                    new Nav("一对多，三栏", typeof(ModuleView.OneToMany1.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
+                    new Nav("一对多，两栏", typeof(ModuleView.OneToMany2.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
+                });
+            }
             group.Title = "模块视图";
             ds.Add(group);
             #endregion
 
             #region 综合
-            group = new GroupData<Nav>
+            if (Kit.IsUsingDtSvc)
             {
-                new Nav("报表", typeof(RptDemo)) { Desc = "可视化报表模板设计，报表预览时支持导出、打印、简单编辑，支持报表绘制过程脚本" },
-                new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，外网无法访问" },
-                new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，外网无法访问" },
-#if !ANDROID || DEBUG
-                new Nav("切换到默认主页") { Callback = OpenHomeWin, Desc = "平台提供的默认主页，需要登录后才可加载，需要联网" },
-#endif
-            };
-            group.Title = "综合";
-            ds.Add(group);
+                group = new GroupData<Nav>
+                {
+                    new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，外网无法访问" },
+                    new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，外网无法访问" },
+                    new Nav("切换到默认主页") { Callback = OpenHomeWin, Desc = "平台提供的默认主页，需要登录后才可加载，需要联网" },
+                };
+                group.Title = "综合";
+                ds.Add(group);
+            }
             #endregion
 
             _navModule.Data = ds;
@@ -154,8 +159,7 @@ namespace Dt.Sample
             var tp = typeof(DefaultHome);
             if (Startup.HomePageType != tp)
             {
-                Startup.Register(tp);
-                await Startup.Run(true);
+                await Startup.Run();
             }
             else
             {

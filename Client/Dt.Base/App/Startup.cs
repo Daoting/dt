@@ -71,29 +71,34 @@ namespace Dt.Base
             res["Symbols"] = new FontFamily("Symbols");
 #endif
 
-            // 创建存根、启动，内含创建窗口及整个系统可视树、调用存根的OnStartup
+            // 创建存根、启动，内含创建窗口及整个系统可视树
             if (p_stub == null)
                 throw new Exception("启动时Stub类型不可为空！");
             Stub stub = (Stub)Activator.CreateInstance(p_stub);
-            await Kit.Startup(stub, new DefaultCallback());
-            InputManager.Init();
+            Kit.Startup(stub, new DefaultCallback());
 
+            // 连接cm服务，获取全局参数，更新/打开模型库
+            if (!await InitConfig())
+                return;
+
+            // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
+            await stub.OnStartup();
+
+            InputManager.Init();
             if (p_shareInfo != null)
                 stub.OnReceiveShare(p_shareInfo);
         }
-        #endregion
 
-        #region 按默认流程启动
         /// <summary>
-        /// 按默认流程启动：
-        /// 1. 更新打开模型库
-        /// 2. 已登录过，先自动登录
-        /// 3. 未登录或登录失败时，根据 p_loginFirst 显示登录页或主页
+        /// 连接cm服务，获取全局参数，更新打开模型库
         /// </summary>
-        /// <param name="p_loginFirst">是否强制先登录</param>
         /// <returns></returns>
-        public static async Task Run(bool p_loginFirst)
+        static async Task<bool> InitConfig()
         {
+            // 不使用dt服务
+            if (!Kit.IsUsingDtSvc)
+                return true;
+
             // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
             List<object> cfg;
             try
@@ -105,7 +110,7 @@ namespace Dt.Base
             catch
             {
                 ShowError("服务器连接失败！");
-                return;
+                return false;
             }
 
             // 服务器时间、初始化服务地址
@@ -113,8 +118,33 @@ namespace Dt.Base
             Kit.InitSvcUrls(cfg[1]);
 
             // 更新打开模型库
-            if (!await OpenModelDb(cfg[2] as string))
+            return await OpenModelDb(cfg[2] as string);
+        }
+        #endregion
+
+        #region 按默认流程启动
+        /// <summary>
+        /// 按默认流程启动，
+        /// <para>1. 记录主页和登录页的类型，以备登录、注销、自动登录、中途登录时用</para>
+        /// <para>2. 不使用dt服务时，直接显示主页</para>
+        /// <para>3. 已登录过，先自动登录</para>
+        /// <para>4. 未登录或登录失败时，根据 p_loginFirst 显示登录页或主页</para>
+        /// </summary>
+        /// <param name="p_homePageType">主页类型，null时采用默认主页 DefaultHome</param>
+        /// <param name="p_loginFirst">是否强制先登录，默认true</param>
+        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
+        /// <returns></returns>
+        public static async Task Run(Type p_homePageType = null, bool p_loginFirst = true, Type p_loginPageType = null)
+        {
+            _homePageType = p_homePageType;
+            _loginPageType = p_loginPageType;
+
+            // 不使用dt服务，直接显示主页
+            if (!Kit.IsUsingDtSvc)
+            {
+                ShowHome();
                 return;
+            }
 
             string phone = AtState.GetCookie("LoginPhone");
             string pwd = AtState.GetCookie("LoginPwd");
@@ -147,17 +177,6 @@ namespace Dt.Base
                 ShowHome();
             }
         }
-
-        /// <summary>
-        /// 注册主页和登录页的类型，以备 登录、注销、自动登录、中途登录时用
-        /// </summary>
-        /// <param name="p_homePageType">主页类型</param>
-        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
-        public static void Register(Type p_homePageType, Type p_loginPageType = null)
-        {
-            HomePageType = p_homePageType;
-            _loginPageType = p_loginPageType;
-        }
         #endregion
 
         #region 模型库
@@ -168,7 +187,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_ver"></param>
         /// <returns></returns>
-        public static async Task<bool> OpenModelDb(string p_ver)
+        static async Task<bool> OpenModelDb(string p_ver)
         {
             // 更新模型文件
             string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
@@ -235,6 +254,7 @@ namespace Dt.Base
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
                 dlg.MinWidth = 300;
                 dlg.MaxWidth = Kit.ViewWidth / 4;
+                dlg.BorderThickness = new Thickness(0);
             }
             var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
             pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
@@ -308,15 +328,20 @@ namespace Dt.Base
         #endregion
 
         #region 加载主页
-        /// <summary>
-        /// 自启动信息，加载主页前设置有效
-        /// </summary>
-        public static AutoStartInfo AutoStartOnce { get; set; }
+        static Type _homePageType;
 
         /// <summary>
         /// 主页类型
         /// </summary>
-        public static Type HomePageType { get; private set; }
+        public static Type HomePageType
+        {
+            get { return _homePageType == null ? Type.GetType("Dt.App.DefaultHome,Dt.App") : _homePageType; }
+        }
+
+        /// <summary>
+        /// 自启动信息，加载主页前设置有效
+        /// </summary>
+        public static AutoStartInfo AutoStartOnce { get; set; }
 
         /// <summary>
         /// 加载根内容 Desktop/Frame 和主页

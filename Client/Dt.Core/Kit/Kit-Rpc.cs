@@ -93,6 +93,11 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 是否使用dt服务
+        /// </summary>
+        public static bool IsUsingDtSvc => !string.IsNullOrEmpty(_cmSvcUrl);
+
+        /// <summary>
         /// 获取服务地址
         /// </summary>
         /// <param name="p_svcName">服务名称，如cm</param>

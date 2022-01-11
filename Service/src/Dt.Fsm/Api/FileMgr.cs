@@ -25,7 +25,7 @@ namespace Dt.Fsm
         /// </summary>
         /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
         /// <returns></returns>
-        public bool Exists(string p_filePath)
+        public bool IsFileExists(string p_filePath)
         {
             return File.Exists(Path.Combine(Cfg.Root, p_filePath));
         }
@@ -35,7 +35,7 @@ namespace Dt.Fsm
         /// </summary>
         /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
         /// <returns></returns>
-        public async Task<bool> Delete(string p_filePath)
+        public async Task<bool> DeleteFile(string p_filePath)
         {
             if (string.IsNullOrEmpty(p_filePath))
                 return false;
@@ -73,6 +73,38 @@ namespace Dt.Fsm
             }
             await _dp.Exec($"delete from fsm_file where path='{p_filePath}'");
             return true;
+        }
+
+        /// <summary>
+        /// 保存文本内容的文件
+        /// </summary>
+        /// <param name="p_filePath">文件路径</param>
+        /// <param name="p_content">文件内容</param>
+        /// <returns>null 保存成功</returns>
+        public async Task<string> SaveFile(string p_filePath, string p_content)
+        {
+            FileInfo fi = new FileInfo(Path.Combine(Cfg.Root, p_filePath));
+            if (fi.Exists)
+                return "文件已存在！";
+
+            try
+            {
+                if (!fi.Directory.Exists)
+                    fi.Directory.Create();
+
+                // 未记录在上传文件表中，fsm_file表
+                using (var stream = fi.Create())
+                using (var sw = new StreamWriter(stream))
+                {
+                    await sw.WriteAsync(p_content);
+                    await sw.FlushAsync();
+                }
+            }
+            catch
+            {
+                return "文件保存出错！";
+            }
+            return null;
         }
     }
 }

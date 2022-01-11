@@ -78,20 +78,11 @@ namespace Dt.Sample
             //    Title = "自启动样例",
             //};
 
-            // 1. 按默认流程启动
-            //Startup.Register(typeof(DefaultHome));
-            //await Startup.Run(true);
+            // 1. 默认启动
+            //await Startup.Run();
 
-            // 2. 自定义启动过程
-            //if (await Startup.OpenModelDb())
-            //{
-            //    Startup.Register(typeof(Sample.SamplesMain));
-            //    Startup.ShowHome();
-            //}
-
-            // 3. 完全不使用dt服务
-            Startup.Register(typeof(Sample.SamplesMain));
-            Startup.ShowHome();
+            // 2. 自定义启动
+            await Startup.Run(typeof(Sample.SamplesMain), false);
         }
 
         /// <summary>

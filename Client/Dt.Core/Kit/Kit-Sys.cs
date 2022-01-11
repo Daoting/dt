@@ -198,7 +198,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_stub">系统存根</param>
         /// <param name="p_callback"></param>
-        internal static Task Startup(Stub p_stub, ICallback p_callback)
+        internal static void Startup(Stub p_stub, ICallback p_callback)
         {
             Stub = p_stub;
             Callback = p_callback;
@@ -248,9 +248,6 @@ namespace Dt.Core
             // 注册后台任务
             if (p_stub.EnableBgTask)
                 BgJob.Register();
-
-            // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-            return p_stub.OnStartup();
         }
         #endregion
 

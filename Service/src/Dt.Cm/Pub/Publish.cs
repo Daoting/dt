@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Agent;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
@@ -53,21 +54,11 @@ namespace Dt.Cm
                 Throw.Msg("发布的文章标题和内容不能为空");
             }
 
+            string oldUrl = null;
             if (p_post.Cells["title"].IsChanged || p_post.Cells["content"].IsChanged)
             {
-                if (!string.IsNullOrEmpty(p_post.Url))
-                {
-                    // 删除旧文件
-                    try
-                    {
-                        string path = Path.Combine(GetRootPath(), p_post.Url);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        p_post.Url = null;
-                    }
-                    catch { }
-                }
-
+                oldUrl = p_post.Url;
+                
                 if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
                 {
                     string url = null;
@@ -80,6 +71,12 @@ namespace Dt.Cm
             }
 
             bool suc = await _dp.Save(p_post);
+            if (suc && oldUrl != null)
+            {
+                // 删除旧文件
+                await AtFsm.DeleteFile(oldUrl);
+            }
+
             Throw.If(!suc, "文章保存失败");
             return p_post.Url;
         }
@@ -115,30 +112,10 @@ namespace Dt.Cm
 
             string pageContent = string.Format(_template, p_title, p_content);
             string pageName = $"{Kit.NewID}.html";
-            try
-            {
-                string path = Path.Combine(GetRootPath(), p_folder);
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-
-                using (var stream = File.Create(Path.Combine(path, pageName)))
-                using (var sw = new StreamWriter(stream))
-                {
-                    await sw.WriteAsync(pageContent);
-                    await sw.FlushAsync();
-                }
-            }
-            catch
-            {
-                return null;
-            }
-            return $"{p_folder}/{pageName}";
-        }
-
-        string GetRootPath()
-        {
-            // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
-            return Path.Combine(AppContext.BaseDirectory, "wwwroot\\g");
+            var result = await AtFsm.SaveFile($"g/{p_folder}/{pageName}", pageContent);
+            if (string.IsNullOrEmpty(result))
+                return $"{p_folder}/{pageName}";
+            return null;
         }
     }
 }
