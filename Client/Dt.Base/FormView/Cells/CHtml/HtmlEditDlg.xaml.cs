@@ -8,6 +8,8 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -25,14 +27,13 @@ namespace Dt.Base.FormView
         {
             InitializeComponent();
 
-            _wv.Source = new Uri($"{Kit.GetSvcUrl("fsm")}/drv/editor/html/default.html");
             if (Type.GetType(FileItem.SelectFileDlgType) == null)
             {
                 _menu.Hide("图片", "视频");
             }
         }
 
-        public async void ShowDlg(IHtmlEditHost p_host)
+        public void ShowDlg(IHtmlEditHost p_host)
         {
             _host = p_host;
             if (!Kit.IsPhoneUI)
@@ -43,10 +44,16 @@ namespace Dt.Base.FormView
             }
             Show();
 
+            _wv.Source = new Uri($"{Kit.GetSvcUrl("fsm")}/drv/editor/html/default.html");
+            _wv.NavigationCompleted += OnNavigationCompleted;
+        }
+
+        async void OnNavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        {
+            _wv.NavigationCompleted -= OnNavigationCompleted;
             if (!string.IsNullOrEmpty(_host.CurrentHtml))
             {
-                // WebView事件无法捕捉到初始化html的时机，延时
-                await Task.Delay(500);
+                // 初始化html
                 await _wv.InvokeScriptAsync("setHtml", new string[] { _host.CurrentHtml });
             }
         }

@@ -7,11 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -40,7 +37,12 @@ namespace Dt.Base
                 }
             }
             script += ");";
-            return await webView2.ExecuteScriptAsync(script);
+
+            // 返回json编码的串，undefined时返回"null"
+            string str = await webView2.ExecuteScriptAsync(script);
+            // json解码
+            var val = JsonSerializer.Deserialize<dynamic>(str);
+            return val is null ? "" : val.ToString();
         }
     }
 }

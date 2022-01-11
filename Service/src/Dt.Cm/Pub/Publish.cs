@@ -74,7 +74,7 @@ namespace Dt.Cm
             if (suc && oldUrl != null)
             {
                 // 删除旧文件
-                await AtFsm.DeleteFile(oldUrl);
+                await AtFsm.DeleteFile($"g/{oldUrl}");
             }
 
             Throw.If(!suc, "文章保存失败");
