@@ -71,54 +71,141 @@ namespace Dt.Base
             res["Symbols"] = new FontFamily("Symbols");
 #endif
 
-            // 创建存根、启动，内含创建窗口及整个系统可视树
-            if (p_stub == null)
-                throw new Exception("启动时Stub类型不可为空！");
-            Stub stub = (Stub)Activator.CreateInstance(p_stub);
-            Kit.Startup(stub, new DefaultCallback());
+            try
+            {
+                // 创建存根、系统初始化，内含创建窗口及整个系统可视树
+                Stub stub = (Stub)Activator.CreateInstance(p_stub);
+                Kit.Startup(stub, new DefaultCallback());
 
-            // 连接cm服务，获取全局参数，更新/打开模型库
-            if (!await InitConfig())
-                return;
+                // 连接cm服务，获取全局参数，更新/打开模型库
+                if (Kit.IsUsingDtSvc)
+                    await InitConfig();
 
-            // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-            await stub.OnStartup();
+                // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
+                await stub.OnStartup();
 
-            InputManager.Init();
-            if (p_shareInfo != null)
-                stub.OnReceiveShare(p_shareInfo);
+                // 接收分享
+                if (p_shareInfo != null)
+                    stub.OnReceiveShare(p_shareInfo);
+
+                // 注册后台任务
+                if (stub.EnableBgTask)
+                    BgJob.Register();
+
+                InputManager.Init();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
         }
 
         /// <summary>
         /// 连接cm服务，获取全局参数，更新打开模型库
         /// </summary>
         /// <returns></returns>
-        static async Task<bool> InitConfig()
+        static async Task InitConfig()
         {
-            // 不使用dt服务
-            if (!Kit.IsUsingDtSvc)
-                return true;
-
             // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
             List<object> cfg;
             try
             {
                 cfg = await AtCm.GetConfig();
-                if (cfg == null || cfg.Count != 3)
-                    throw new Exception();
             }
             catch
             {
-                ShowError("服务器连接失败！");
-                return false;
+                throw new Exception("服务器连接失败！");
             }
+
+            if (cfg == null || cfg.Count != 3)
+                throw new Exception("获取参数失败！");
 
             // 服务器时间、初始化服务地址
             Kit.SyncTime((DateTime)cfg[0]);
             Kit.InitSvcUrls(cfg[1]);
 
             // 更新打开模型库
-            return await OpenModelDb(cfg[2] as string);
+            await OpenModelDb(cfg[2] as string);
+        }
+
+        /// <summary>
+        /// 更新打开模型文件
+        /// 1. 与本地不同时下载新模型文件；
+        /// 2. 打开模型库；
+        /// </summary>
+        /// <param name="p_ver"></param>
+        /// <returns></returns>
+        static async Task OpenModelDb(string p_ver)
+        {
+            // 更新模型文件
+            string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
+            if (!File.Exists(modelVer))
+            {
+                string modelFile = Path.Combine(Kit.DataPath, "model.db");
+
+                // 删除旧版的模型文件和版本号文件
+                try { File.Delete(modelFile); } catch { }
+                foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"model-*.ver"))
+                {
+                    try { file.Delete(); } catch { }
+                }
+
+                try
+                {
+                    // 下载模型文件，下载地址如 https://localhost/app-cm/.model
+                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
+                    using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))
+                    {
+                        gzipStream.CopyTo(fs);
+                        fs.Flush();
+                    }
+
+                    // 版本号文件
+                    File.Create(modelVer);
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        File.Delete(modelFile);
+                    }
+                    catch { }
+                    throw new Exception("下载模型文件失败！" + ex.Message);
+                }
+            }
+
+            // 打开模型库
+            try
+            {
+                AtModel.OpenDb();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("打开模型库失败！" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 启动过程中显示错误信息，此时未加载任何UI
+        /// </summary>
+        /// <param name="p_error"></param>
+        static void ShowError(string p_error)
+        {
+            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Res.主蓝 };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.WinPlacement = DlgPlacement.CenterScreen;
+                dlg.MinWidth = 300;
+                dlg.MaxWidth = Kit.ViewWidth / 4;
+                dlg.BorderThickness = new Thickness(0);
+            }
+            var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+            pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
+            pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
+            dlg.Content = pnl;
+            dlg.Show();
         }
         #endregion
 
@@ -176,91 +263,6 @@ namespace Dt.Base
                 // 未登录先显示主页
                 ShowHome();
             }
-        }
-        #endregion
-
-        #region 模型库
-        /// <summary>
-        /// 更新打开模型文件
-        /// 1. 与本地不同时下载新模型文件；
-        /// 2. 打开模型库；
-        /// </summary>
-        /// <param name="p_ver"></param>
-        /// <returns></returns>
-        static async Task<bool> OpenModelDb(string p_ver)
-        {
-            // 更新模型文件
-            string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
-            if (!File.Exists(modelVer))
-            {
-                string modelFile = Path.Combine(Kit.DataPath, "model.db");
-
-                // 删除旧版的模型文件和版本号文件
-                try { File.Delete(modelFile); } catch { }
-                foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"model-*.ver"))
-                {
-                    try { file.Delete(); } catch { }
-                }
-
-                try
-                {
-                    // 下载模型文件，下载地址如 https://localhost/app-cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
-                    using (var stream = await response.Content.ReadAsStreamAsync())
-                    using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
-                    using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))
-                    {
-                        gzipStream.CopyTo(fs);
-                        fs.Flush();
-                    }
-
-                    // 版本号文件
-                    File.Create(modelVer);
-                }
-                catch (Exception ex)
-                {
-                    try
-                    {
-                        File.Delete(modelFile);
-                    }
-                    catch { }
-                    ShowError("下载模型文件失败！" + ex.Message);
-                    return false;
-                }
-            }
-
-            // 打开模型库
-            try
-            {
-                AtModel.OpenDb();
-            }
-            catch (Exception ex)
-            {
-                ShowError("打开模型库失败！" + ex.Message);
-                return false;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// 启动过程中显示错误信息，此时未加载任何UI
-        /// </summary>
-        /// <param name="p_error"></param>
-        public static void ShowError(string p_error)
-        {
-            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Res.主蓝 };
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.WinPlacement = DlgPlacement.CenterScreen;
-                dlg.MinWidth = 300;
-                dlg.MaxWidth = Kit.ViewWidth / 4;
-                dlg.BorderThickness = new Thickness(0);
-            }
-            var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-            pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
-            pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
-            dlg.Content = pnl;
-            dlg.Show();
         }
         #endregion
 

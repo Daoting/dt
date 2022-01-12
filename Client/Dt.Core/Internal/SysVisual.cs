@@ -65,7 +65,12 @@ namespace Dt.Core
         static SysVisual()
         {
             // 根Grid，背景主蓝
-            RootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
+            RootGrid = new Grid();
+#if !ANDROID
+            // Android已设置顶部状态栏和底部导航栏透明、有窗口背景图片，
+            // 不需设置背景色，状态栏显示的是窗口背景图片的颜色，启动体验好！
+            RootGrid.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
+#endif
 
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
 

@@ -203,6 +203,9 @@ namespace Dt.Core
             Stub = p_stub;
             Callback = p_callback;
 
+            // 创建窗口及整个系统可视树
+            SysVisual.Init();
+
 #if !WIN
             // WinUI已移除事件，其他平台咋？
             var app = Application.Current;
@@ -241,13 +244,6 @@ namespace Dt.Core
 
             // 打开状态库
             AtState.OpenDb();
-
-            // 创建窗口及整个系统可视树
-            SysVisual.Init();
-
-            // 注册后台任务
-            if (p_stub.EnableBgTask)
-                BgJob.Register();
         }
         #endregion
 
