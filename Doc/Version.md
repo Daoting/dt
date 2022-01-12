@@ -14,7 +14,7 @@ System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 Lv.Toolbar在Table模式时 MeasureOverride 死循环
 内测时主页刚启动快速操作无响应，崩溃
 DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
-升级WinUI后无法调试
+升级WinUI后无法调试、HttpClient无法联网
 
 
 android:
