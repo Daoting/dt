@@ -41,7 +41,7 @@ namespace Dt.Msg
             var onlines = new List<long>();
             var offlines = new List<long>();
             string onlineMsg = p_msg.GetOnlineMsg();
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 // Msg服务多副本推送
@@ -88,7 +88,7 @@ namespace Dt.Msg
             }
 
             // 查询所有其他副本
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 string key = $"msg:PushIfOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
@@ -130,7 +130,7 @@ namespace Dt.Msg
             Throw.IfNull(p_msg);
 
             var msg = p_msg.GetOnlineMsg();
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 // 多副本推送

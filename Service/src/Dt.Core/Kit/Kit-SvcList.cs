@@ -18,16 +18,16 @@ namespace Dt.Core
     /// </summary>
     public partial class Kit
     {
-        static AppSvcList _svcList;
+        static readonly AppSvcList _svcList = new AppSvcList();
 
         /// <summary>
         /// 通过RabbitMQ队列，获取应用内正在运行的所有微服务列表
         /// </summary>
         /// <param name="p_isSvcInst">true表示所有微服务副本实例，false表示所有微服务</param>
         /// <returns>微服务列表</returns>
-        public static Task<List<string>> GetAllSvcs(bool p_isSvcInst)
+        public static List<string> GetAllSvcs(bool p_isSvcInst)
         {
-            return GetAppSvcList().GetAllSvcs(p_isSvcInst);
+            return _svcList.GetAllSvcs(p_isSvcInst);
         }
 
         /// <summary>
@@ -35,16 +35,14 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_svcName">服务名称，null表示当前服务</param>
         /// <returns>副本个数</returns>
-        public static Task<int> GetSvcReplicaCount(string p_svcName = null)
+        public static int GetSvcReplicaCount(string p_svcName = null)
         {
-            return GetAppSvcList().GetReplicaCount(p_svcName);
+            return _svcList.GetReplicaCount(p_svcName);
         }
 
-        static AppSvcList GetAppSvcList()
+        internal static void UpdateSvcList()
         {
-            if (_svcList == null)
-                _svcList = new AppSvcList();
-            return _svcList;
+            _svcList.Update();
         }
     }
 }

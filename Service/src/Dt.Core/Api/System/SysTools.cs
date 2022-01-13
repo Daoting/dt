@@ -265,12 +265,12 @@ namespace Dt.Core
             Silo.LoadCacheSql();
         }
 
-        public Task<List<string>> 所有微服务()
+        public List<string> 所有微服务()
         {
             return Kit.GetAllSvcs(false);
         }
 
-        public Task<List<string>> 所有微服务副本()
+        public List<string> 所有微服务副本()
         {
             return Kit.GetAllSvcs(true);
         }

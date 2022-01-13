@@ -56,12 +56,12 @@ namespace Dt.Core.EventBus
         /// </summary>
         /// <param name="p_event">事件内容</param>
         /// <param name="p_isAllSvcInst">true表示所有服务的所有副本，false表示当服务有多个副本时只投递给其中一个</param>
-        public async void Broadcast(IEvent p_event, bool p_isAllSvcInst = true)
+        public void Broadcast(IEvent p_event, bool p_isAllSvcInst = true)
         {
             if (p_event == null)
                 return;
 
-            List<string> svcs = await Kit.GetAllSvcs(false);
+            List<string> svcs = Kit.GetAllSvcs(false);
             foreach (var svc in svcs)
             {
                 if (p_isAllSvcInst)
@@ -156,6 +156,10 @@ namespace Dt.Core.EventBus
         /// <param name="p_bindExchange"></param>
         async void Publish(IEvent p_event, string p_routingKey, bool p_bindExchange)
         {
+            // 单体服务不收发消息
+            if (Kit.IsSingletonSvc)
+                return;
+
             // IModel实例不支持多个线程同时使用
             using (await _mutex.LockAsync())
             {
@@ -203,6 +207,10 @@ namespace Dt.Core.EventBus
 
         void Init()
         {
+            // 单体服务不收发消息
+            if (Kit.IsSingletonSvc)
+                return;
+
             if (!_conn.IsConnected)
                 _conn.TryConnect();
 
@@ -225,14 +233,14 @@ namespace Dt.Core.EventBus
                 durable: true,      // 持久化
                 autoDelete: false); // 是否自动删除
 
-            // 每个声明两个消费者队列
-            foreach (var stub in Kit.Stubs)
-            {
-                // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-                CreateWorkConsumer(stub.SvcName);
-                // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-                CreateTopicConsumer(stub.SvcName);
-            }
+            // 每个微服务声明三个消费者队列
+            // 1. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数，先订阅为了保证首次更新列表
+            // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
+            CreateQueueChangeConsumer();
+            // 2. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+            CreateWorkConsumer(Kit.Stubs[0].SvcName);
+            // 3. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
+            CreateTopicConsumer(Kit.Stubs[0].SvcName);
         }
 
         /// <summary>
@@ -352,6 +360,28 @@ namespace Dt.Core.EventBus
                     _log.LogError(ex, $"重建RabbitMQ队列{queueName}时异常！");
                 }
             };
+        }
+
+        /// <summary>
+        /// 订阅系统队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
+        /// </summary>
+        void CreateQueueChangeConsumer()
+        {
+            IModel channel = _conn.CreateModel();
+            // 获取系统队列名称
+            var queueName = channel.QueueDeclare().QueueName;
+
+            // 绑定queue.*队列
+            channel.QueueBind(
+               queue: queueName,
+               exchange: "amq.rabbitmq.event",
+               routingKey: "queue.*");
+
+            // 队列变化时更新微服务列表
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (s, e) => Kit.UpdateSvcList();
+
+            channel.BasicConsume(queue: queueName, true, consumer: consumer);
         }
 
         async Task ProcessEvent(BasicDeliverEventArgs p_args)

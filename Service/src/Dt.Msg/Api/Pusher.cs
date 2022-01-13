@@ -68,7 +68,7 @@ namespace Dt.Msg
             }
 
             // 查询所有其他副本
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 string key = $"msg:Unregister:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
@@ -107,7 +107,7 @@ namespace Dt.Msg
                 return true;
 
             // 查询所有其他副本
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 string key = $"msg:IsOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
@@ -142,7 +142,7 @@ namespace Dt.Msg
         public async Task<List<Dict>> GetAllSessions(long p_userID)
         {
             List<Dict> result = new List<Dict>();
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 // 查询所有副本
@@ -209,7 +209,7 @@ namespace Dt.Msg
         public async Task<Dict> GetOnlineCount()
         {
             Dict result = null;
-            int cnt = await Kit.GetSvcReplicaCount();
+            int cnt = Kit.GetSvcReplicaCount();
             if (cnt > 1)
             {
                 // 所有副本
