@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.EventBus;
+using Dt.Core.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 #endregion
 
@@ -112,7 +110,7 @@ namespace Dt.Core
             p_app.UseMiddleware<EndMiddleware>();
 
             // 订阅事件
-            RemoteEventBus.Subscribe(p_app.ApplicationServices);
+            RabbitMQCenter.Subscribe(p_app.ApplicationServices);
 
             Log.Information("---启动完毕---");
         }
