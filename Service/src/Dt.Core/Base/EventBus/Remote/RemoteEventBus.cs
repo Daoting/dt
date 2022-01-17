@@ -9,8 +9,6 @@
 #region ÒıÓÃÃüÃû
 using Dt.Core.RabbitMQ;
 using Microsoft.Extensions.DependencyInjection;
-using Nito.AsyncEx;
-using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
 #endregion

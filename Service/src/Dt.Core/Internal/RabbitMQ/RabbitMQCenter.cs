@@ -2,28 +2,23 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-10 创建
+* 日志: 2021-01-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Text.Json;
 using Nito.AsyncEx;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Serilog;
 #endregion
 
 namespace Dt.Core.RabbitMQ
 {
     /// <summary>
-    /// RabbitMQ 信道队列管理
+    /// RabbitMQ 信道、队列、发布消息管理
     /// </summary>
     [Svc(ServiceLifetime.Singleton)]
     public sealed class RabbitMQCenter
@@ -45,13 +40,21 @@ namespace Dt.Core.RabbitMQ
         }
         #endregion
 
+        #region 发布
         /// <summary>
-        /// 发布远程事件
+        /// 发布 RabbitMQ 消息
         /// </summary>
-        /// <param name="p_event"></param>
+        /// <param name="p_data"></param>
         /// <param name="p_routingKey"></param>
         /// <param name="p_bindExchange"></param>
-        public async void Publish(byte[] p_data, string p_routingKey, bool p_bindExchange, string p_correlationId = null)
+        /// <param name="p_correlationId"></param>
+        /// <param name="p_replyTo"></param>
+        public async void Publish(
+            byte[] p_data,
+            string p_routingKey,
+            bool p_bindExchange,
+            string p_correlationId = null,
+            string p_replyTo = null)
         {
             // IModel实例不支持多个线程同时使用
             using (await _mutex.LockAsync())
@@ -73,10 +76,9 @@ namespace Dt.Core.RabbitMQ
 
                     var props = _chPublish.CreateBasicProperties();
                     if (!string.IsNullOrEmpty(p_correlationId))
-                    {
                         props.CorrelationId = p_correlationId;
-                        props.ReplyTo = "." + Kit.SvcID;
-                    }
+                    if (!string.IsNullOrEmpty(p_replyTo))
+                        props.ReplyTo = p_replyTo;
 
                     _chPublish.BasicPublish(
                         p_bindExchange ? _exchangeName : "",
@@ -86,14 +88,19 @@ namespace Dt.Core.RabbitMQ
                 });
             }
         }
+        #endregion
 
+        #region 订阅
+        /// <summary>
+        /// 初始化 RabbitMQ 信道、队列
+        /// </summary>
+        /// <param name="p_provider"></param>
         internal static void Subscribe(IServiceProvider p_provider)
         {
             // 单例对象，实例化时进行订阅
             p_provider.GetRequiredService<RabbitMQCenter>();
         }
 
-        #region 订阅
         void Init()
         {
             // 单体服务不收发消息
@@ -274,12 +281,30 @@ namespace Dt.Core.RabbitMQ
             channel.BasicConsume(queue: queueName, true, consumer: consumer);
         }
 
+        /// <summary>
+        /// 处理接收到的消息
+        /// </summary>
+        /// <param name="p_args"></param>
         void OnConsumeMessage(BasicDeliverEventArgs p_args)
         {
             if (!string.IsNullOrEmpty(p_args.BasicProperties.CorrelationId))
-                new RabbitMQRpcHandler().Process(p_args);
+            {
+                // Rpc
+                if (!string.IsNullOrEmpty(p_args.BasicProperties.ReplyTo))
+                {
+                    // 接收Rpc调用
+                    new RabbitMQRpcHandler().Process(p_args);
+                }
+                else
+                {
+                    // 接收Rpc返回的结果
+                    new RabbitMQRpcResponse().Process(p_args);
+                }
+            }
             else
+            {
                 _ = new RemoteEventHandler().Process(p_args);
+            }
         }
         #endregion
     }
