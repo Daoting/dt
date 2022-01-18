@@ -36,7 +36,7 @@ namespace Dt.Core.Rpc
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数列表</param>
         /// <returns>返回远程调用结果</returns>
-        public async Task<T> Call<T>(string p_svcName, string p_svcID, string p_methodName, params object[] p_params)
+        public async Task<T> Call<T>(string p_svcName, string p_svcID, string p_methodName, object[] p_params)
         {
             if (string.IsNullOrEmpty(p_methodName))
                 throw new InvalidOperationException("Rpc调用时需要指定API名称！");
@@ -111,16 +111,19 @@ namespace Dt.Core.Rpc
         }
 
         /// <summary>
-        /// 解析结果，Utf8JsonReader不能用在异步方法内！
+        /// 解析结果
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p_args"></param>
         /// <returns></returns>
         T ParseResult<T>(BasicDeliverEventArgs p_args)
         {
+            // 读取RabbitMQ消息内容，已自动解压
+            byte[] data = RpcServerKit.ReadRabbitMQMessage(p_args);
+
             T val = default(T);
             RpcResult result = new RpcResult();
-            Utf8JsonReader reader = new Utf8JsonReader(p_args.Body.Span);
+            Utf8JsonReader reader = new Utf8JsonReader(data);
 
             try
             {

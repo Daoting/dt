@@ -48,7 +48,7 @@ namespace Dt.Core
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
-                return new ApiInvoker(p_context).Handle();
+                return new HttpApiInvoker(p_context).Handle();
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
             if (path == "/.log")

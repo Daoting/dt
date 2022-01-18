@@ -293,7 +293,7 @@ namespace Dt.Core.RabbitMQ
                 if (!string.IsNullOrEmpty(p_args.BasicProperties.ReplyTo))
                 {
                     // 接收Rpc调用
-                    new RabbitMQRpcHandler().Process(p_args);
+                    _ = new RabbitMQApiInvoker().Process(p_args);
                 }
                 else
                 {

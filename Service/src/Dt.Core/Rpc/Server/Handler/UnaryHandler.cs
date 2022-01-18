@@ -44,13 +44,13 @@ namespace Dt.Core.Rpc
                 {
                     // 异步无返回值时
                     var task = (Task)mi.Invoke(_tgt, _invoker.Args);
-                    task.Wait(_invoker.Context.RequestAborted);
+                    task.Wait(_invoker.RequestAborted);
                 }
                 else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
                 {
                     // 异步有返回值
                     var task = (Task)mi.Invoke(_tgt, _invoker.Args);
-                    task.Wait(_invoker.Context.RequestAborted);
+                    task.Wait(_invoker.RequestAborted);
                     result = task.GetType().GetProperty("Result").GetValue(task);
                 }
                 else

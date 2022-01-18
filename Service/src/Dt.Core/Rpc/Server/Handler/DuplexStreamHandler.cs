@@ -39,7 +39,7 @@ namespace Dt.Core.Rpc
                 }
 
                 var task = (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
-                task.Wait(_invoker.Context.RequestAborted);
+                task.Wait(_invoker.RequestAborted);
             }
             catch (OperationCanceledException)
             {

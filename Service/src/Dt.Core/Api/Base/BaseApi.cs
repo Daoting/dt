@@ -20,11 +20,11 @@ namespace Dt.Core
         /// <summary>
         /// 数据提供者
         /// </summary>
-        protected DataProvider _dp = Kit.ContextDp;
+        protected DataProvider _dp = new DataProvider(false); // Kit.ContextDp;
 
         /// <summary>
         /// 日志对象，日志中比静态Log类多出Api名称和当前UserID
         /// </summary>
-        protected ILogger _log => Kit.ContextLog;
+        protected ILogger _log => null; // Serilog.Log.ForContext();
     }
 }

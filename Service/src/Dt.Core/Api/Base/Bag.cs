@@ -29,7 +29,7 @@ namespace Dt.Core
         {
             Invoker = p_invoker;
             // 在服务中通过静态Current取出
-            Invoker.Context.Items[Kit.ContextItemName] = this;
+            //Invoker.Context.Items[Kit.ContextItemName] = this;
         }
         #endregion
 

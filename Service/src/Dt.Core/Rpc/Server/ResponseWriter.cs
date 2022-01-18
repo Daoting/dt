@@ -17,11 +17,11 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class ResponseWriter
     {
-        readonly ApiInvoker _invoker;
+        readonly HttpApiInvoker _invoker;
 
         internal ResponseWriter(ApiInvoker p_invoker)
         {
-            _invoker = p_invoker;
+            _invoker = p_invoker as HttpApiInvoker;
         }
 
         /// <summary>

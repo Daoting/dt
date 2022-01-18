@@ -36,7 +36,7 @@ namespace Dt.Core.Rpc
                     _invoker.Args[_invoker.Args.Length - 1] = new ResponseWriter(_invoker);
 
                 var task = (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
-                task.Wait(_invoker.Context.RequestAborted);
+                task.Wait(_invoker.RequestAborted);
             }
             catch (OperationCanceledException)
             {

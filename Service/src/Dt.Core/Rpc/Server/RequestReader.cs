@@ -19,12 +19,12 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class RequestReader
     {
-        readonly ApiInvoker _invoker;
+        readonly HttpApiInvoker _invoker;
         object _val;
 
         internal RequestReader(ApiInvoker p_invoker)
         {
-            _invoker = p_invoker;
+            _invoker = p_invoker as HttpApiInvoker;
         }
 
         /// <summary>

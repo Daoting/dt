@@ -22,7 +22,7 @@ namespace Dt.Core
         static readonly Dictionary<string, string> _svcUrls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 调用服务API，单体服务时本地直接调用
+        /// 调用服务API(RabbitMQ Rpc)，单体服务时本地直接调用
         /// </summary>
         /// <typeparam name="T">结果对象的类型</typeparam>
         /// <param name="p_serviceName">服务名称</param>
@@ -35,78 +35,16 @@ namespace Dt.Core
             if (!IsSingletonSvc && !Stubs[0].SvcName.Equals(p_serviceName, StringComparison.OrdinalIgnoreCase))
             {
                 // 非单体且非本服务时，远程调用
-                return new UnaryRpc(
+                return new RabbitMQRpc().Call<T>(
                     p_serviceName,
+                    null,
                     p_methodName,
                     p_params
-                ).Call<T>();
+                );
             }
 
             // 单体服务，本地直接调用
-            ApiMethod sm = Silo.GetMethod(p_methodName);
-            if (sm == null)
-                throw new Exception($"未找到Api[{p_methodName}]");
-
-            var mi = sm.Method;
-            var tgt = GetObj(mi.DeclaringType);
-            if (tgt == null)
-                throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
-
-            object result = null;
-            try
-            {
-                if (mi.ReturnType == typeof(Task))
-                {
-                    // 异步无返回值时
-                    var task = (Task)mi.Invoke(tgt, p_params);
-                    task.Wait();
-                }
-                else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
-                {
-                    // 异步有返回值
-                    var task = (Task)mi.Invoke(tgt, p_params);
-                    task.Wait();
-                    result = task.GetType().GetProperty("Result").GetValue(task);
-                }
-                else
-                {
-                    // 调用同步方法
-                    result = mi.Invoke(tgt, p_params);
-                }
-            }
-            catch
-            {
-                throw;
-            }
-
-            if (result == null)
-                return Task.FromResult(default(T));
-
-            Type tp = result.GetType();
-            if (typeof(T) == tp)
-            {
-                // 结果对象与给定对象类型相同时
-                return Task.FromResult((T)result);
-            }
-
-            // 特殊处理，将 Row 转 Entity
-            if (tp == typeof(Row) && typeof(T).IsSubclassOf(typeof(Entity)))
-            {
-                // T 是返回值的子类，如 T 为Entity, result为Row
-                object entity = ((Row)result).CloneTo(typeof(T));
-                return Task.FromResult((T)entity);
-            }
-
-            object val;
-            try
-            {
-                val = Convert.ChangeType(result, typeof(T));
-            }
-            catch
-            {
-                throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", result, typeof(T)));
-            }
-            return Task.FromResult((T)val);
+            return new NativeApiInvoker().Call<T>(p_methodName, p_params);
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using RabbitMQ.Client.Events;
 using Serilog;
 using System;
 using System.Buffers;
@@ -127,6 +128,27 @@ namespace Dt.Core.Rpc
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 读取RabbitMQ消息内容，返回的数据不包括5字节的头，已自动解压
+        /// </summary>
+        /// <param name="p_args"></param>
+        /// <returns></returns>
+        public static byte[] ReadRabbitMQMessage(BasicDeliverEventArgs p_args)
+        {
+            byte[] data = p_args.Body.Span.Slice(5).ToArray();
+            if (p_args.Body.Span[0] == 1)
+            {
+                // 先解压
+                var ms = new MemoryStream();
+                using (GZipStream zs = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+                {
+                    zs.CopyTo(ms);
+                }
+                data = ms.ToArray();
+            }
+            return data;
         }
 
         /// <summary>
