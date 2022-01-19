@@ -21,6 +21,20 @@ namespace Dt.Core
     public abstract class Entity : Row
     {
         List<DomainEvent> _events;
+        DataProvider _dp;
+
+        /// <summary>
+        /// 获取数据提供者，提供给 Entity 内部查询使用，禁止保存或删除操作！
+        /// </summary>
+        public DataProvider Dp
+        {
+            get
+            {
+                if (_dp == null)
+                    _dp = new DataProvider(false);
+                return _dp;
+            }
+        }
 
         /// <summary>
         /// 增加领域事件

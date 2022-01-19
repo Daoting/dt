@@ -58,7 +58,7 @@ namespace Dt.Cm
 
         public virtual Task<string> GetSql()
         {
-            return _dp.GetScalar<string>("select `sql` from cm_sql");
+            return Dp.GetScalar<string>("select `sql` from cm_sql");
         }
     }
 
@@ -80,7 +80,7 @@ namespace Dt.Cm
             }
 
             isIntercepted = true;
-            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + Kit.ContextUserID);
+            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + (p_invocation.InvocationTarget as BaseApi).UserID);
             var type = p_invocation.Method.ReturnType;
             try
             {

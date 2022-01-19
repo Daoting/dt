@@ -21,7 +21,7 @@ namespace Dt.Core
     /// 所有服务内部使用的工具Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class SysTools
+    public class SysTools : BaseApi
     {
         /// <summary>
         /// 生成实体类

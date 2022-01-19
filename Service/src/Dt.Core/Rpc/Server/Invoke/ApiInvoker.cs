@@ -26,11 +26,6 @@ namespace Dt.Core.Rpc
 
         #region 属性
         /// <summary>
-        /// 获取当前用户标识
-        /// </summary>
-        public long UserID { get; protected set; } = -1;
-
-        /// <summary>
         /// 日志对象
         /// </summary>
         public ILogger Log
@@ -58,6 +53,14 @@ namespace Dt.Core.Rpc
         /// </summary>
         public object[] Args { get; protected set; }
 
+        /// <summary>
+        /// 获取当前用户标识
+        /// </summary>
+        public virtual long UserID { get; }
+
+        /// <summary>
+        /// 获取取消令牌
+        /// </summary>
         public virtual CancellationToken RequestAborted { get; }
         #endregion
 

@@ -34,7 +34,7 @@ namespace Dt.Cm
         {
             List<long> ls = new List<long>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.Each("用户-可访问的菜单", new { userid = p_userID });
+            var rows = await Dp.Each("用户-可访问的菜单", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -62,7 +62,7 @@ namespace Dt.Cm
         {
             List<string> ls = new List<string>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.Each("用户-具有的权限", new { userid = p_userID });
+            var rows = await Dp.Each("用户-具有的权限", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -85,8 +85,8 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<Dict> GetParams(long p_userID)
         {
-            var tblAll = await _dp.Query("SELECT id,value FROM cm_params");
-            var tblMy = await _dp.Query("SELECT paramid,value FROM cm_userparams where userid=@userid", new { userid = p_userID });
+            var tblAll = await Dp.Query("SELECT id,value FROM cm_params");
+            var tblMy = await Dp.Query("SELECT paramid,value FROM cm_userparams where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in tblAll)
             {
@@ -132,13 +132,13 @@ namespace Dt.Cm
                 ParamID: p_paramID,
                 Value: p_value,
                 Mtime: Kit.Now);
-            await _dp.Delete(up);
+            await Dp.Delete(up);
 
-            var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
+            var defVal = await Dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
             if (defVal != p_value)
             {
                 // 和默认值不同
-                if (!await _dp.Save(up))
+                if (!await Dp.Save(up))
                     return false;
             }
             await GetVerCache().DeleteField(p_userID, "params");
@@ -162,11 +162,11 @@ namespace Dt.Cm
             if (p_roleIDs.Contains(1))
             {
                 // 包含任何人
-                ls = await _dp.EachFirstCol<long>("select id from cm_user");
+                ls = await Dp.EachFirstCol<long>("select id from cm_user");
             }
             else
             {
-                ls = await _dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await Dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
             }
 
             var db = GetVerCache();
@@ -199,7 +199,7 @@ namespace Dt.Cm
 
             List<UserroleObj> ls = (from id in p_roleIDs
                                  select new UserroleObj(p_userID, id)).ToList();
-            if (await _dp.BatchDelete(ls) > 0)
+            if (await Dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().Delete(p_userID);
                 return true;
@@ -222,7 +222,7 @@ namespace Dt.Cm
 
             List<UserroleObj> ls = (from id in p_userIDs
                                  select new UserroleObj(id, p_roleID)).ToList();
-            if (await _dp.BatchDelete(ls) > 0)
+            if (await Dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().BatchDelete(p_userIDs);
                 return true;
@@ -252,7 +252,7 @@ namespace Dt.Cm
                 }
             }
 
-            if (!await _dp.BatchSave(ls))
+            if (!await Dp.BatchSave(ls))
                 return false;
 
             await GetVerCache().Delete(p_userID);
@@ -278,7 +278,7 @@ namespace Dt.Cm
                 ls.Add(new UserroleObj(uid, p_roleID));
             }
 
-            if (!await _dp.BatchSave(ls))
+            if (!await Dp.BatchSave(ls))
                 return false;
 
             await GetVerCache().BatchDelete(p_userIDs);
@@ -292,9 +292,9 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteRole(long p_roleID)
         {
-            if (await _dp.Delete(new RoleObj(p_roleID)))
+            if (await Dp.Delete(new RoleObj(p_roleID)))
             {
-                var ls = await _dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
+                var ls = await Dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);
                 return true;
             }
@@ -313,7 +313,7 @@ namespace Dt.Cm
         {
             if (p_menuID == 3000)
             {
-                return _dp.GetScalar<int>("流程-待办任务总数", new { userid = p_userID });
+                return Dp.GetScalar<int>("流程-待办任务总数", new { userid = p_userID });
             }
             return Task.FromResult(0);
         }

@@ -28,13 +28,17 @@ namespace Dt.Core.Rpc
         BasicDeliverEventArgs _args;
 
         /// <summary>
+        /// 获取当前用户标识，内部服务之间调用时或admin页面使用 110 作为标识
+        /// </summary>
+        public override long UserID => 110;
+
+        /// <summary>
         /// 取消请求的令牌
         /// </summary>
         public override CancellationToken RequestAborted => CancellationToken.None;
 
         public async Task Process(BasicDeliverEventArgs p_args)
         {
-            UserID = 110;
             _args = p_args;
 
             // 读取RabbitMQ消息内容，已自动解压
@@ -52,7 +56,7 @@ namespace Dt.Core.Rpc
                 return;
             }
 
-            bool isSuc = await new UnaryHandler(this).Call();
+            await new UnaryHandler(this).Call();
         }
 
         protected override Task WriteResponse(byte[] p_data, bool p_compress)

@@ -169,6 +169,11 @@ namespace Dt.Core
 
         #region 全局服务对象
         /// <summary>
+        /// 全局根ServiceProvider
+        /// </summary>
+        public static IServiceProvider ServiceProvider => _svcProvider;
+
+        /// <summary>
         /// 在全局服务容器中获取指定类型的服务对象，服务类型不存在时异常
         /// </summary>
         /// <typeparam name="T">服务类型</typeparam>

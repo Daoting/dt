@@ -40,5 +40,13 @@ namespace Dt.Msg.Api
             }
             return cnt;
         }
+
+        public Task<string> GetRpc()
+        {
+            return Kit.Rpc<string>(
+                "cm",
+                "TestSerialize.GetString"
+            );
+        }
     }
 }

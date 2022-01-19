@@ -14,8 +14,9 @@
 		<NoWarn>1701;1702;1705;1591</NoWarn>
 		<DefineConstants>$(DefineConstants);TRACE;SERVER</DefineConstants>
 	</PropertyGroup>
-		
+
 	<ItemGroup>
 		<Using Include="Dt.Core" />
+		<Using Include="Serilog" />
 	</ItemGroup>
 </Project>

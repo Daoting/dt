@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -23,7 +24,7 @@ namespace Dt.Core.Rpc
         internal static bool TraceRpc;
 
         protected readonly ApiInvoker _invoker;
-        protected object _tgt;
+        protected BaseApi _tgt;
         #endregion
 
         public RpcHandler(ApiInvoker p_invoker)
@@ -32,21 +33,28 @@ namespace Dt.Core.Rpc
         }
 
         /// <summary>
-        /// 执行Http Rpc调用
+        /// 执行Rpc调用
         /// </summary>
         /// <returns></returns>
-        public Task<bool> Call()
+        public async Task Call()
         {
             // 创建服务实例
-            _tgt = Kit.GetObj(_invoker.Api.Method.DeclaringType);
-            if (_tgt == null)
+            _tgt = Kit.GetObj(_invoker.Api.Method.DeclaringType) as BaseApi;
+            if (_tgt != null)
+            {
+                _tgt.UserID = _invoker.UserID;
+                _tgt.IsTransactional = _invoker.Api.IsTransactional;
+
+                bool suc = await CallMethod();
+                // Api调用结束后释放资源
+                await _tgt.Close(suc);
+            }
+            else
             {
                 var msg = $"无法创建服务实例，类型{_invoker.Api.Method.DeclaringType.Name}！";
                 _invoker.Log.Warning(msg);
-                _ = _invoker.Response(ApiResponseType.Error, 0, msg);
-                return Task.FromResult(false);
+                await _invoker.Response(ApiResponseType.Error, 0, msg);
             }
-            return CallMethod();
         }
 
         /// <summary>

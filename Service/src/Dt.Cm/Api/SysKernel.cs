@@ -16,7 +16,7 @@ namespace Dt.Cm
     /// 系统内核Api
     /// </summary>
     [Api]
-    public class SysKernel
+    public class SysKernel : BaseApi
     {
         static readonly SqliteModelHandler _modelHandler = Kit.GetObj<SqliteModelHandler>();
         static Dict _svcUrls;

@@ -32,9 +32,19 @@ namespace Dt.Core.Rpc
             _context = p_context;
             // 内容标志
             _context.Response.ContentType = "application/dt";
+        }
 
-            if (long.TryParse(_context.Request.Headers["uid"], out var id))
-                UserID = id;
+        /// <summary>
+        /// 获取当前用户标识
+        /// </summary>
+        public override long UserID
+        {
+            get
+            {
+                if (long.TryParse(_context.Request.Headers["uid"], out var id))
+                    return id;
+                return -1;
+            }
         }
 
         /// <summary>
@@ -69,26 +79,21 @@ namespace Dt.Core.Rpc
             if (Api.CallMode != ApiCallMode.Unary)
                 await RpcServerKit.WriteHeartbeat(_context.Response.BodyWriter);
 
-            // 创建整个http请求期间有效的数据包，提供不同位置共享对象
-            Bag bag = new Bag(this);
-            bool isSuc = true;
             switch (Api.CallMode)
             {
                 case ApiCallMode.Unary:
-                    isSuc = await new UnaryHandler(this).Call();
+                    await new UnaryHandler(this).Call();
                     break;
                 case ApiCallMode.ServerStream:
-                    isSuc = await new ServerStreamHandler(this).Call();
+                    await new ServerStreamHandler(this).Call();
                     break;
                 case ApiCallMode.ClientStream:
-                    isSuc = await new ClientStreamHandler(this).Call();
+                    await new ClientStreamHandler(this).Call();
                     break;
                 case ApiCallMode.DuplexStream:
-                    isSuc = await new DuplexStreamHandler(this).Call();
+                    await new DuplexStreamHandler(this).Call();
                     break;
             }
-            // Api调用结束后释放资源
-            await bag.Close(isSuc);
         }
 
 
@@ -108,7 +113,8 @@ namespace Dt.Core.Rpc
                 return Task.FromResult(true);
 
             // 固定特权标识，内部服务之间调用时或admin页面使用该标识
-            if (UserID == 110)
+            long userID = UserID;
+            if (userID == 110)
                 return Task.FromResult(true);
 
             // 外部自定义校验授权方法
@@ -119,7 +125,7 @@ namespace Dt.Core.Rpc
             }
 
             // 所有登录用户
-            return Task.FromResult(UserID != -1);
+            return Task.FromResult(userID != -1);
         }
     }
 }

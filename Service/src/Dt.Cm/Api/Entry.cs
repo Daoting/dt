@@ -36,9 +36,9 @@ namespace Dt.Cm
                 result.AddCell("Error", "手机号或密码不可为空！");
                 return result;
             }
-
+            
             // 从缓存读取
-            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
+            var user = await Dp.GetByKey<UserObj>("phone", p_phone);
             if (user == null || user.Pwd != p_pwd)
             {
                 result.AddCell("IsSuc", false);
@@ -79,7 +79,7 @@ namespace Dt.Cm
                 return result;
             }
 
-            var user = await _dp.GetByKey<UserObj>("phone", p_phone);
+            var user = await Dp.GetByKey<UserObj>("phone", p_phone);
             if (user == null)
             {
                 //// 初次登录，创建账号，初始密码为手机号后4位

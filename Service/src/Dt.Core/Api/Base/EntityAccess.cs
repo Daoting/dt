@@ -35,7 +35,7 @@ namespace Dt.Core
 
             // 调用DataProvider.Save<T>方法
             Type type = Silo.GetEntityType(p_tblName);
-            Task task = _save.MakeGenericMethod(type).Invoke(_dp, new object[] { p_row.CloneTo(type) }) as Task;
+            Task task = _save.MakeGenericMethod(type).Invoke(Dp, new object[] { p_row.CloneTo(type) }) as Task;
             await task;
             return (bool)task.GetType().GetProperty("Result").GetValue(task);
         }
@@ -52,7 +52,7 @@ namespace Dt.Core
 
             // 调用DataProvider.Delete<T>方法
             Type type = Silo.GetEntityType(p_tblName);
-            Task task = _delete.MakeGenericMethod(type).Invoke(_dp, new object[] { p_row.CloneTo(type) }) as Task;
+            Task task = _delete.MakeGenericMethod(type).Invoke(Dp, new object[] { p_row.CloneTo(type) }) as Task;
             await task;
             return (bool)task.GetType().GetProperty("Result").GetValue(task);
         }

@@ -18,7 +18,7 @@ namespace Dt.Msg
     /// WebRTC信令服务器Api
     /// </summary>
     [Api]
-    public class WebRtcMsg
+    public class WebRtcMsg : BaseApi
     {
         /// <summary>
         /// 向某在线用户的发送 WebRTC 连接请求

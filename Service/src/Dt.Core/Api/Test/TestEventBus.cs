@@ -20,7 +20,7 @@ namespace Dt.Core
     /// 功能测试Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic, IsTest = true)]
-    public class TestEventBus
+    public class TestEventBus : BaseApi
     {
         public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {

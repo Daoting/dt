@@ -18,7 +18,7 @@ namespace Dt.Core
     /// MySql默认库的数据访问Api，全称DataAccess
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class Da
+    public class Da : BaseApi
     {
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集

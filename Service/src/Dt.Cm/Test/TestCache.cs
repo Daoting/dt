@@ -41,7 +41,7 @@ namespace Dt.Cm
             await cache.Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
             var obj = await cache.Get<TestCacheObject>(p_key);
             if (obj != null && !string.IsNullOrEmpty(obj.Name))
-                _log.Information(obj.Name);
+                Log.Information(obj.Name);
         }
 
         public Task CacheExpiry(string p_key, string p_val, int p_expiry)

@@ -28,12 +28,12 @@ namespace Dt.Msg
         readonly ResponseWriter _writer;
         readonly Dict _deviceInfo;
 
-        public ClientInfo(Dict p_deviceInfo, ResponseWriter p_writer)
+        public ClientInfo(Dict p_deviceInfo, ResponseWriter p_writer, long p_userID)
         {
             _deviceInfo = p_deviceInfo;
             _writer = p_writer;
             Context = Kit.HttpContext;
-            UserID = Kit.ContextUserID;
+            UserID = p_userID;
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;

@@ -13,15 +13,8 @@ using Autofac.Extras.DynamicProxy;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -342,13 +335,16 @@ namespace Dt.Core
             foreach (Type type in ls)
             {
                 // 提取Api
-                ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
-                if (rpcAttr != null)
+                if (type.IsSubclassOf(typeof(BaseApi)))
                 {
-                    ExtractApi(type, rpcAttr, p_builder, rpcAttr.IsTest ? "测试" : p_svcName);
-                    continue;
+                    ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
+                    if (rpcAttr != null)
+                    {
+                        ExtractApi(type, rpcAttr, p_builder, rpcAttr.IsTest ? "测试" : p_svcName);
+                        continue;
+                    }
                 }
-
+                
                 // 注册事件处理
                 if (IsEventHandler(type, p_builder))
                     continue;
