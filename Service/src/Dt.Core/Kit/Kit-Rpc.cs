@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
-using Serilog;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -19,8 +17,6 @@ namespace Dt.Core
     /// </summary>
     public partial class Kit
     {
-        static readonly Dictionary<string, string> _svcUrls = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
         /// <summary>
         /// 调用服务API(RabbitMQ Rpc)，单体服务时本地直接调用
         /// </summary>
@@ -56,11 +52,7 @@ namespace Dt.Core
         /// <returns>返回数据流响应</returns>
         public static Task<ResponseReader> ServerStreamRpc(string p_serviceName, string p_methodName, params object[] p_params)
         {
-            return new ServerStreamRpc(
-                p_serviceName,
-                p_methodName,
-                p_params
-            ).Call();
+            throw new Exception(_rpcError);
         }
 
         /// <summary>
@@ -72,11 +64,7 @@ namespace Dt.Core
         /// <returns>返回响应</returns>
         public static Task<RequestWriter> ClientStreamRpc(string p_serviceName, string p_methodName, params object[] p_params)
         {
-            return new ClientStreamRpc(
-                p_serviceName,
-                p_methodName,
-                p_params
-            ).Call();
+            throw new Exception(_rpcError);
         }
 
         /// <summary>
@@ -88,11 +76,7 @@ namespace Dt.Core
         /// <returns>返回数据流响应</returns>
         public static Task<DuplexStream> DuplexStreamRpc(string p_serviceName, string p_methodName, params object[] p_params)
         {
-            return new DuplexStreamRpc(
-                p_serviceName,
-                p_methodName,
-                p_params
-            ).Call();
+            throw new Exception(_rpcError);
         }
 
         /// <summary>
@@ -103,21 +87,9 @@ namespace Dt.Core
         /// <exception cref="Exception"></exception>
         public static string GetSvcUrl(string p_svcName)
         {
-            if (_svcUrls.TryGetValue(p_svcName, out var url))
-                return url;
-
-            throw new Exception($"[{p_svcName}]服务地址不存在！");
+            throw new Exception(_rpcError);
         }
 
-        /// <summary>
-        /// 加载global.json中的所有微服务地址，修改后动态更新
-        /// </summary>
-        static void LoadSvcUrls()
-        {
-            foreach (var item in _config.GetSection("AllSvcUrls").GetChildren())
-            {
-                _svcUrls[item.Key] = item.Value;
-            }
-        }
+        const string _rpcError = "服务之间采用RabbitMQ RPC方式！";
     }
 }

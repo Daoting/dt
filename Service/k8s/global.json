@@ -10,10 +10,5 @@
     "Port": 5672,
     "HttpPort": 15672
   },
-  "Redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true",
-  "AllSvcUrls": {
-    "cm": "https://localhost/dt-cm",
-    "msg": "https://localhost/dt-msg",
-    "fsm": "https://localhost/dt-fsm"
-  }
+  "Redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
 }

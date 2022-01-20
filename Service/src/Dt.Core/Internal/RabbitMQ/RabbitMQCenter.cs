@@ -129,14 +129,15 @@ namespace Dt.Core.RabbitMQ
                 durable: true,      // 持久化
                 autoDelete: false); // 是否自动删除
 
+            var name = Kit.Stubs[0].SvcName;
             // 每个微服务声明三个消费者队列
             // 1. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数，先订阅为了保证首次更新列表
             // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
-            CreateQueueChangeConsumer();
+            CreateQueueChangeConsumer(name);
             // 2. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-            CreateWorkConsumer(Kit.Stubs[0].SvcName);
+            CreateWorkConsumer(name);
             // 3. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-            CreateTopicConsumer(Kit.Stubs[0].SvcName);
+            CreateTopicConsumer(name);
         }
 
         /// <summary>
@@ -261,12 +262,18 @@ namespace Dt.Core.RabbitMQ
         /// <summary>
         /// 订阅系统队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
         /// </summary>
-        void CreateQueueChangeConsumer()
+        void CreateQueueChangeConsumer(string p_svcName)
         {
+            // 用'-'隔开为了和其他两队列区分，避免获取的服务列表错误！
+            string queueName = $"{Kit.AppName}-{p_svcName}-{Kit.SvcID}-queue";
             IModel channel = _conn.CreateModel();
 
-            // 创建一个由RabbitMQ 命名的、排他的、自动删除的、非持久化的队列
-            var queueName = channel.QueueDeclare().QueueName;
+            // 创建一个排他的、自动删除的、非持久化的队列
+            channel.QueueDeclare(
+                queueName,         // 队列名称
+                durable: false,    // 是否持久化
+                exclusive: true,   // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
 
             // 绑定queue.*队列
             channel.QueueBind(

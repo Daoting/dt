@@ -163,7 +163,6 @@ namespace Dt.Core
             MySqlAccess.DefaultConnStr = _config["MySql:" + _config["DbConn"]];
             MySqlAccess.TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
-            LoadSvcUrls();
         }
         #endregion
 

@@ -28,9 +28,9 @@ namespace Dt.Core.Rpc
         BasicDeliverEventArgs _args;
 
         /// <summary>
-        /// 获取当前用户标识，内部服务之间调用时或admin页面使用 110 作为标识
+        /// 固定用户标识
         /// </summary>
-        public override long UserID => 110;
+        public override long UserID => 111;
 
         /// <summary>
         /// 取消请求的令牌

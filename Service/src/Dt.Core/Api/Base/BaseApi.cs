@@ -33,7 +33,8 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取当前用户标识
+        /// 获取当前用户标识，UI客户端rpc为实际登录用户ID
+        /// <para>特殊标识：110为admin页面，111为RabbitMQ rpc，112为本地调用</para>
         /// </summary>
         public long UserID { get; internal set; }
 

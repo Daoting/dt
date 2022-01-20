@@ -30,7 +30,8 @@ namespace Dt.Core.Rpc
             if (tgt == null)
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
-            tgt.UserID = 110;
+            // 本地调用标识
+            tgt.UserID = 112;
             tgt.IsTransactional = sm.IsTransactional;
             bool suc = await CallMethod(mi, tgt, p_params);
             // Api调用结束后释放资源
