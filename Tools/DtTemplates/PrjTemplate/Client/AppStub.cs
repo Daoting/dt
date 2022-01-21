@@ -10,7 +10,7 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace $safeprojectname$
+namespace $ext_safeprojectname$
 {
     /// <summary>
     /// 系统存根，完整用法请参见：https://github.com/Daoting/dt/blob/master/Client/Dt.Sample/App/AppStub.cs
@@ -19,8 +19,10 @@ namespace $safeprojectname$
     {
         public AppStub()
         {
-            ServerUrl = "https://10.10.1.16/fz";
             Title = "搬运工";
+
+            // 注释后为单机模式
+            InitCmUrl("https://10.10.1.16/dt-cm");
         }
 
         /// <summary>
@@ -29,14 +31,11 @@ namespace $safeprojectname$
         /// </summary>
         public override async Task OnStartup()
         {
-            // 按默认流程启动
-            //Startup.Register(typeof(DefaultHome));
-            //await Startup.Run(true);
+            // 默认启动
+            //await Startup.Run();
 
-            // 完全不使用服务启动
-            Startup.Register(typeof(Home));
-            Startup.ShowHome();
-            await Task.CompletedTask;
+            // 自定义启动
+            await Startup.Run(typeof(Home), false);
         }
 
         #region 自动生成
@@ -68,10 +67,6 @@ namespace $safeprojectname$
                 { "syspushapi", typeof(Dt.Base.SysPushApi) },
                 { "webrtcapi", typeof(Dt.Base.Chat.WebRtcApi) },
             };
-
-            // 获取自定义可序列化类型字典
-            SerializeTypes = new Dictionary<string, Type>
-            { };
 
             // 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
             SqliteDb = new Dictionary<string, SqliteTblsInfo>

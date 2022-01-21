@@ -38,7 +38,7 @@ namespace Dt.Core
                     listenOptions.Protocols = HttpProtocols.Http2;
 
                     // 为Kestrel加载X509证书，证书名称tls.pfx，位置在根目录，默认证书为localhost，生成环境可替换
-                    var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "tls.pfx"));
+                    var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "etc/config/tls.pfx"));
                     if (tls.Exists)
                     {
                         using (var stream = tls.OpenRead())

@@ -20,8 +20,11 @@
 	</TemplateData>
 	<TemplateContent>
 		<ProjectCollection>
-			<ProjectTemplateLink ProjectName="$safeprojectname$" CopyParameters="true">
-				Lib\Lib.vstemplate
+			<ProjectTemplateLink ProjectName="$safeprojectname$.Client" CopyParameters="true">
+				Client\Client.vstemplate
+			</ProjectTemplateLink>
+			<ProjectTemplateLink ProjectName="$safeprojectname$.Svc" CopyParameters="true">
+				Svc\Svc.vstemplate
 			</ProjectTemplateLink>
 			<SolutionFolder Name="App">
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Droid" CopyParameters="true">

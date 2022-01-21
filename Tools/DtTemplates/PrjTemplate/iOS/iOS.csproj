@@ -8,15 +8,15 @@
 		<IsUnoHead>true</IsUnoHead>
 	</PropertyGroup>
 
-	<Import Project="..\$ext_safeprojectname$\Common.props" />
+	<Import Project="..\$ext_safeprojectname$.Client\Common.props" />
 
 	<ItemGroup>
-		<ProjectReference Include="..\$ext_safeprojectname$\$ext_safeprojectname$.csproj" />
+		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Include="..\$ext_safeprojectname$\App\App.xaml" Link="App.xaml" />
-		<Compile Include="..\$ext_safeprojectname$\App\App.xaml.cs" Link="App.xaml.cs">
+		<Page Include="..\$ext_safeprojectname$.Client\App\App.xaml" Link="App.xaml" />
+		<Compile Include="..\$ext_safeprojectname$.Client\App\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
 		<BundleResource Include="iOS\Resources\SplashScreen%402x.png" />

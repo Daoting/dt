@@ -7,18 +7,21 @@
 #endregion
 
 #region 引用命名
-using System;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $safeprojectname$
+namespace $ext_safeprojectname$
 {
-    public partial class App : BaseApp
+    /// <summary>
+    /// 主页
+    /// </summary>
+    public partial class Home : Win
     {
-        public App()
+        public Home()
         {
             InitializeComponent();
         }
-
-        public override Type Stub => typeof(AppStub);
     }
 }

@@ -8,7 +8,7 @@
 		<Hidden>true</Hidden>
 	</TemplateData>
 	<TemplateContent>
-		<Project File="Lib.csproj" ReplaceParameters="true">
+		<Project File="Client.csproj" ReplaceParameters="true">
 			<ProjectItem TargetFileName="Common.props">Common.props</ProjectItem>
 			<ProjectItem TargetFileName="Android\AndroidManifest.xml">AndroidManifest.xml</ProjectItem>
 			<ProjectItem TargetFileName="App\AppStub.cs" ReplaceParameters="true">AppStub.cs</ProjectItem>

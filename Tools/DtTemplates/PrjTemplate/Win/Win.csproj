@@ -12,10 +12,10 @@
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 	</PropertyGroup>
 
-	<Import Project="..\$ext_safeprojectname$\Common.props" />
+	<Import Project="..\$ext_safeprojectname$.Client\Common.props" />
 
 	<ItemGroup>
-		<ProjectReference Include="..\$ext_safeprojectname$\$ext_safeprojectname$.csproj" />
+		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,10 +37,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="..\$ext_safeprojectname$\App\App.xaml.cs" Link="App.xaml.cs">
+		<Compile Include="..\$ext_safeprojectname$.Client\App\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
-		<ApplicationDefinition Include="..\$ext_safeprojectname$\App\App.xaml" Link="App.xaml">
+		<ApplicationDefinition Include="..\$ext_safeprojectname$.Client\App\App.xaml" Link="App.xaml">
 			<Generator>MSBuild:Compile</Generator>
 			<SubType>Designer</SubType>
 		</ApplicationDefinition>

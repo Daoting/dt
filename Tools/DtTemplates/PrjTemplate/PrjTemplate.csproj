@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Svc\TestApi.cs" />
     <None Include="Droid\Android\Assets\Fonts\icon.ttf" />
     <None Include="Droid\Android\Assets\Fonts\uno-fluentui-assets.ttf" />
     <None Include="iOS\iOS.csproj" />
@@ -61,8 +62,14 @@
     <None Include="iOS\iOS\Entitlements.plist" />
     <None Include="iOS\iOS\Info.plist" />
     <None Include="iOS\iOS\LaunchScreen.storyboard" />
-    <None Include="Lib\Common.props" />
-    <None Include="Lib\Lib.csproj" />
+    <None Include="Client\Common.props" />
+    <None Include="Client\Client.csproj" />
+    <None Include="Svc\etc\config\global.json" />
+    <None Include="Svc\etc\config\logger.json" />
+    <None Include="Svc\etc\config\service.json" />
+    <None Include="Svc\Svc.csproj" />
+    <None Include="Svc\Properties\launchSettings.json" />
+    <None Include="Svc\etc\config\tls.pfx" />
     <None Include="Win\app.manifest" />
     <None Include="Win\Package.appxmanifest">
       <SubType>Designer</SubType>
@@ -72,15 +79,17 @@
     <None Include="Win\Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
     <None Include="Win\Win.csproj" />
-    <None Include="Lib\AppStub.cs" />
-    <None Include="Lib\App.xaml.cs">
+    <None Include="Client\AppStub.cs" />
+    <None Include="Client\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
-    <None Include="Lib\Home.xaml.cs">
+    <None Include="Client\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </None>
     <None Include="Droid\MainActivity.cs" />
     <None Include="iOS\Main.cs" />
+    <None Include="Svc\Program.cs" />
+    <None Include="Svc\SvcStub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +108,10 @@
     <VSTemplate Include="Win\Win.vstemplate" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Lib\Lib.vstemplate" />
+    <VSTemplate Include="Client\Client.vstemplate" />
   </ItemGroup>
   <ItemGroup>
+    <VSTemplate Include="Svc\Svc.vstemplate" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
@@ -144,16 +154,16 @@
     <None Include="Droid\Android\Resources\values\ic_launcher_background.xml" />
     <None Include="Droid\Android\Resources\values\styles.xml" />
     <None Include="Droid\Android\Resources\xml\file_paths.xml" />
-    <Content Include="Lib\AndroidManifest.xml" />
+    <Content Include="Client\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Lib\App.xaml">
+    <None Include="Client\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Lib\Home.xaml">
+    <None Include="Client\Home.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

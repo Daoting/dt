@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>搬运工</Name>
+		<ProjectType>CSharp</ProjectType>
+		<CreateInPlace>true</CreateInPlace>
+		<!-- 内部模板标记为隐藏 -->
+		<Hidden>true</Hidden>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="Svc.csproj" ReplaceParameters="true">
+			<ProjectItem TargetFileName="Program.cs" ReplaceParameters="true">Program.cs</ProjectItem>
+			<ProjectItem TargetFileName="SvcStub.cs" ReplaceParameters="true">SvcStub.cs</ProjectItem>
+			<ProjectItem TargetFileName="Api\TestApi.cs" ReplaceParameters="true">TestApi.cs</ProjectItem>
+			<ProjectItem TargetFileName="launchSettings.json" ReplaceParameters="true">Properties\launchSettings.json</ProjectItem>
+			<ProjectItem TargetFileName="global.json" ReplaceParameters="true">etc\config\global.json</ProjectItem>
+			<ProjectItem TargetFileName="service.json">etc\config\service.json</ProjectItem>
+			<ProjectItem TargetFileName="logger.json">etc\config\logger.json</ProjectItem>
+			<ProjectItem TargetFileName="tls.pfx">etc\config\tls.pfx</ProjectItem>
+		</Project>
+	</TemplateContent>
+</VSTemplate>

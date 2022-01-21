@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: Daoting
+* 创建: $username$
 * 摘要: 
-* 日志: 2019-04-15 创建
+* 日志: $time$ 创建
 ******************************************************************************/
 #endregion
 
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
-namespace Dt.Cm
+namespace $ext_safeprojectname$
 {
     /// <summary>
     /// 服务存根
@@ -22,7 +22,7 @@ namespace Dt.Cm
         /// <summary>
         /// 获取服务名称，小写
         /// </summary>
-        public override string SvcName => "cm";
+        public override string SvcName => "lob";
 
         /// <summary>
         /// 定义全局服务
@@ -30,7 +30,7 @@ namespace Dt.Cm
         /// <param name="p_services"></param>
         public override void ConfigureServices(IServiceCollection p_services)
         {
-            p_services.AddSingleton<SqliteModelHandler>();
+
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Dt.Cm
         /// <param name="p_handlers">注册自定义请求处理</param>
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            Kit.GetObj<SqliteModelHandler>().Init(p_handlers);
+
         }
     }
 }

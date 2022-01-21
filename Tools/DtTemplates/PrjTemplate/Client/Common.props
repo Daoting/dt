@@ -26,6 +26,7 @@
 		<Using Include="Dt.Core" />
 		<Using Include="Dt.Base" />
 		<Using Include="Dt.App" />
+		<Using Include="Dt.Agent" />
 		<Using Include="Dt.Core.Model" />
 		<Using Include="System" />
 	</ItemGroup>
