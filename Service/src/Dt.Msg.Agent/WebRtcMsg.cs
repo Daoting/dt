@@ -126,5 +126,23 @@
                 p_toCaller
             );
         }
+
+        /// <summary>
+        /// 若用户在线则推送消息，不在线返回false
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_msg"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
+        /// <returns>true 已在线推送，false不在线</returns>
+        public static Task<bool> PushIfOnline(long p_userID, MsgInfo p_msg, bool p_checkReplica = true)
+        {
+            return Kit.Rpc<bool>(
+                "msg",
+                "WebRtcMsg.PushIfOnline",
+                p_userID,
+                p_msg,
+                p_checkReplica
+            );
+        }
     }
 }

@@ -27,14 +27,16 @@
         /// </summary>
         /// <param name="p_userID"></param>
         /// <param name="p_sessionID">会话标识，区分同一账号多个登录的情况</param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns></returns>
-        public static Task<bool> Unregister(long p_userID, string p_sessionID)
+        public static Task<bool> Unregister(long p_userID, string p_sessionID, bool p_checkReplica = true)
         {
             return Kit.Rpc<bool>(
                 "msg",
                 "Pusher.Unregister",
                 p_userID,
-                p_sessionID
+                p_sessionID,
+                p_checkReplica
             );
         }
 
@@ -42,13 +44,15 @@
         /// 判断用户是否在线，查询所有副本
         /// </summary>
         /// <param name="p_userID"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>false 不在线</returns>
-        public static Task<bool> IsOnline(long p_userID)
+        public static Task<bool> IsOnline(long p_userID, bool p_checkReplica = true)
         {
             return Kit.Rpc<bool>(
                 "msg",
                 "Pusher.IsOnline",
-                p_userID
+                p_userID,
+                p_checkReplica
             );
         }
 
@@ -56,25 +60,29 @@
         /// 查询所有副本，获取某账号的所有会话信息
         /// </summary>
         /// <param name="p_userID"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>会话信息列表</returns>
-        public static Task<List<Dict>> GetAllSessions(long p_userID)
+        public static Task<List<Dict>> GetAllSessions(long p_userID, bool p_checkReplica = true)
         {
             return Kit.Rpc<List<Dict>>(
                 "msg",
                 "Pusher.GetAllSessions",
-                p_userID
+                p_userID,
+                p_checkReplica
             );
         }
 
         /// <summary>
         /// 实时获取所有副本的在线用户总数
         /// </summary>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
-        public static Task<Dict> GetOnlineCount()
+        public static Task<Dict> GetOnlineCount(bool p_checkReplica = true)
         {
             return Kit.Rpc<Dict>(
                 "msg",
-                "Pusher.GetOnlineCount"
+                "Pusher.GetOnlineCount",
+                p_checkReplica
             );
         }
     }

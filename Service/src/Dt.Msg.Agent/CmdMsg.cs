@@ -26,14 +26,16 @@
         /// </summary>
         /// <param name="p_userIDs">用户列表</param>
         /// <param name="p_msg">待推送信息</param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>在线推送列表</returns>
-        public static Task<List<long>> BatchSendCmd(List<long> p_userIDs, MsgInfo p_msg)
+        public static Task<List<long>> BatchSendCmd(List<long> p_userIDs, MsgInfo p_msg, bool p_checkReplica = true)
         {
             return Kit.Rpc<List<long>>(
                 "msg",
                 "CmdMsg.BatchSendCmd",
                 p_userIDs,
-                p_msg
+                p_msg,
+                p_checkReplica
             );
         }
     }

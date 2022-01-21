@@ -41,12 +41,15 @@
         /// 向所有副本的所有在线用户广播信息
         /// </summary>
         /// <param name="p_msg"></param>
-        public static Task SendMsgToOnline(string p_msg)
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
+        public static Task<T> SendMsgToOnline<T>(string p_msg, bool p_checkReplica = true)
+            where T : class
         {
-            return Kit.Rpc<object>(
+            return Kit.Rpc<T>(
                 "msg",
                 "InstantMsg.SendMsgToOnline",
-                p_msg
+                p_msg,
+                p_checkReplica
             );
         }
 
