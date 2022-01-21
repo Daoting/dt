@@ -22,7 +22,7 @@ namespace $ext_safeprojectname$
             Title = "搬运工";
 
             // 注释后为单机模式
-            InitCmUrl("https://10.10.1.16/dt-cm");
+            InitCmUrl("https://localhost:2022");
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public bool UpdateModelDbFile()
         {
-            return _modelHandler.Refresh("cm");
+            return _modelHandler.Refresh();
         }
 
         static void LoadSvcUrls()

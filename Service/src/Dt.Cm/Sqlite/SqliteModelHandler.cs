@@ -65,23 +65,30 @@ namespace Dt.Cm
             }
             else
             {
-                Log.Error("模型文件不存在，请[更新模型]创建模型文件");
+                Log.Error("模型文件不存在，请[SysKernel.UpdateModelDbFile]创建模型文件");
             }
         }
 
         /// <summary>
         /// 刷新模型版本
         /// </summary>
-        /// <param name="p_svcName"></param>
         /// <returns></returns>
-        public bool Refresh(string p_svcName)
+        public bool Refresh()
         {
             if (Refreshing)
                 return false;
 
-            // 远程事件通知刷新，服务可能存在多个副本！
             var ed = new ModelRefreshEvent { Version = Guid.NewGuid().ToString().Substring(0, 8) };
-            Kit.RemoteMulticast(ed, p_svcName);
+            if (Kit.GetSvcReplicaCount() > 1)
+            {
+                // 远程事件通知刷新，服务存在多个副本！
+                Kit.RemoteMulticast(ed, "cm");
+            }
+            else
+            {
+                // 单个副本直接刷新
+                _ = new ModelRefreshHandler().Handle(ed);
+            }
             return true;
         }
 
