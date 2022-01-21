@@ -49,6 +49,34 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取当前服务的其他副本实例的id列表
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetOtherReplicaIDs()
+        {
+            string queueName = $"{Kit.AppName}.{Kit.Stubs[0].SvcName}";
+            return from name in _allSvcInsts
+                   where name.StartsWith(queueName) && !name.EndsWith(Kit.SvcID)
+                   select name.Substring(queueName.Length + 1);
+        }
+
+        /// <summary>
+        /// 获取某微服务的所有副本实例的id列表
+        /// </summary>
+        /// <param name="p_svcName"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetReplicaIDs(string p_svcName)
+        {
+            if (string.IsNullOrEmpty(p_svcName))
+                p_svcName = Kit.Stubs[0].SvcName;
+
+            string queueName = $"{Kit.AppName}.{p_svcName}";
+            return from name in _allSvcInsts
+                   where name.StartsWith(queueName)
+                   select name.Substring(queueName.Length + 1);
+        }
+
+        /// <summary>
         /// 通过RabbitMQ队列，获取应用内正在运行的某微服务的副本个数
         /// </summary>
         /// <param name="p_svcName">服务名称，null表示当前服务</param>

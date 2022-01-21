@@ -25,9 +25,6 @@ namespace Dt.Msg
     [Api]
     public class Pusher : BaseApi
     {
-        const int _maxRetry = 12;
-        const int _delayMilli = 100;
-
         /// <summary>
         /// 客户端注册在线推送
         /// </summary>
@@ -57,8 +54,9 @@ namespace Dt.Msg
         /// </summary>
         /// <param name="p_userID"></param>
         /// <param name="p_sessionID">会话标识，区分同一账号多个登录的情况</param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns></returns>
-        public async Task<bool> Unregister(long p_userID, string p_sessionID)
+        public async Task<bool> Unregister(long p_userID, string p_sessionID, bool p_checkReplica = true)
         {
             var ci = Online.GetSession(p_userID, p_sessionID);
             if (ci != null)
@@ -68,30 +66,20 @@ namespace Dt.Msg
             }
 
             // 查询所有其他副本
-            int cnt = Kit.GetSvcReplicaCount();
-            if (cnt > 1)
+            if (p_checkReplica)
             {
-                string key = $"msg:Unregister:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Kit.RemoteMulticast(new UnregisterEvent { CacheKey = key, UserID = p_userID, SessionID = p_sessionID });
-
-                // 等待收集
-                int total, retry = 0;
-                var sc = new StringCache(key);
-                do
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
                 {
-                    await Task.Delay(_delayMilli);
-                    total = await sc.Get<int>("cnt");
-                    retry++;
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        var suc = await Kit.RpcInst<bool>(svcID, "Pusher.Unregister", p_userID, p_sessionID, false);
+                        if (suc)
+                            return true;
+                    }
                 }
-                while (total < cnt && retry < _maxRetry);
-
-                // 删除统计总数
-                await sc.Delete("cnt");
-
-                // 存在键值表示在线
-                if (await sc.Delete(null))
-                    return true;
             }
+            
             return false;
         }
 
@@ -99,38 +87,29 @@ namespace Dt.Msg
         /// 判断用户是否在线，查询所有副本
         /// </summary>
         /// <param name="p_userID"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>false 不在线</returns>
-        public async Task<bool> IsOnline(long p_userID)
+        public async Task<bool> IsOnline(long p_userID, bool p_checkReplica = true)
         {
             var ls = Online.GetSessions(p_userID);
             if (ls != null && ls.Count > 0)
                 return true;
 
             // 查询所有其他副本
-            int cnt = Kit.GetSvcReplicaCount();
-            if (cnt > 1)
+            if (p_checkReplica)
             {
-                string key = $"msg:IsOnline:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Kit.RemoteMulticast(new IsOnlineEvent { CacheKey = key, UserID = p_userID });
-
-                // 等待收集
-                int total, retry = 0;
-                var sc = new StringCache(key);
-                do
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
                 {
-                    await Task.Delay(_delayMilli);
-                    total = await sc.Get<int>("cnt");
-                    retry++;
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        var suc = await Kit.RpcInst<bool>(svcID, "Pusher.IsOnline", p_userID, false);
+                        if (suc)
+                            return true;
+                    }
                 }
-                while (total < cnt && retry < _maxRetry);
-
-                // 删除统计总数
-                await sc.Delete("cnt");
-
-                // 存在键值表示在线
-                if (await sc.Delete(null))
-                    return true;
             }
+
             return false;
         }
 
@@ -138,111 +117,74 @@ namespace Dt.Msg
         /// 查询所有副本，获取某账号的所有会话信息
         /// </summary>
         /// <param name="p_userID"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>会话信息列表</returns>
-        public async Task<List<Dict>> GetAllSessions(long p_userID)
+        public async Task<List<Dict>> GetAllSessions(long p_userID, bool p_checkReplica = true)
         {
             List<Dict> result = new List<Dict>();
-            int cnt = Kit.GetSvcReplicaCount();
-            if (cnt > 1)
+            
+            // 当前单副本
+            var ls = Online.GetSessions(p_userID);
+            if (ls != null && ls.Count > 0)
             {
-                // 查询所有副本
-                string key = $"msg:Sessions:{p_userID}:{Guid.NewGuid().ToString().Substring(0, 6)}";
-                Kit.RemoteMulticast(new UserSessionsEvent { CacheKey = key, UserID = p_userID });
-
-                // 等待收集
-                int total, retry = 0;
-                var sc = new StringCache(key);
-                do
+                foreach (var ci in ls)
                 {
-                    await Task.Delay(_delayMilli);
-                    total = await sc.Get<int>("cnt");
-                    retry++;
-                }
-                while (total < cnt && retry < _maxRetry);
-
-                // 删除统计总数
-                await sc.Delete("cnt");
-
-                var hc = new HashCache(key);
-                var hash = await hc.GetAll(null);
-                if (hash != null && hash.Length > 0)
-                {
-                    await hc.Delete(null);
-
-                    var dt = hash.ToDict();
-                    foreach (var item in dt)
+                    result.Add(new Dict
                     {
-                        var ss = Kit.Deserialize<List<Dict>>((string)item.Value);
-                        if (ss != null && ss.Count > 0)
-                            result.AddRange(ss);
+                        { "userid", ci.UserID },
+                        { "svcid", Kit.SvcID },
+                        { "starttime", ci.StartTime.ToString() },
+                        { "platform", ci.Platform },
+                        { "version", ci.Version },
+                        { "devicename", ci.DeviceName },
+                        { "devicemodel", ci.DeviceModel },
+                    });
+                }
+            }
+
+            // 查询所有其他副本
+            if (p_checkReplica)
+            {
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
+                {
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        var dts = await Kit.RpcInst<List<Dict>>(svcID, "Pusher.GetAllSessions", p_userID, false);
+                        if (dts != null && dts.Count > 0)
+                            result.AddRange(dts);
                     }
                 }
             }
-            else
-            {
-                // 当前单副本
-                var ls = Online.GetSessions(p_userID);
-                if (ls != null && ls.Count > 0)
-                {
-                    foreach (var ci in ls)
-                    {
-                        result.Add(new Dict
-                        {
-                            { "userid", ci.UserID },
-                            { "svcid", Kit.SvcID },
-                            { "starttime", ci.StartTime.ToString() },
-                            { "platform", ci.Platform },
-                            { "version", ci.Version },
-                            { "devicename", ci.DeviceName },
-                            { "devicemodel", ci.DeviceModel },
-                        });
-                    }
-                }
-            }
+
             return result;
         }
 
         /// <summary>
         /// 实时获取所有副本的在线用户总数
         /// </summary>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
         /// <returns>Dict结构：key为副本id，value为副本会话总数</returns>
-        public async Task<Dict> GetOnlineCount()
+        public async Task<Dict> GetOnlineCount(bool p_checkReplica = true)
         {
-            Dict result = null;
-            int cnt = Kit.GetSvcReplicaCount();
-            if (cnt > 1)
+            // 当前单副本
+            Dict result = new Dict { { Kit.SvcID, Online.TotalCount } };
+
+            // 查询所有其他副本
+            if (p_checkReplica)
             {
-                // 所有副本
-                string key = "msg:OnlineCount:" + Guid.NewGuid().ToString().Substring(0, 6);
-                Kit.RemoteMulticast(new OnlineCountEvent { CacheKey = key });
-
-                // 等待收集
-                int total, retry = 0;
-                var sc = new StringCache(key);
-                do
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
                 {
-                    await Task.Delay(_delayMilli);
-                    total = await sc.Get<int>("cnt");
-                    retry++;
-                }
-                while (total < cnt && retry < _maxRetry);
-
-                // 删除统计总数
-                await sc.Delete("cnt");
-
-                var hc = new HashCache(key);
-                var hash = await hc.GetAll(null);
-                if (hash != null && hash.Length > 0)
-                {
-                    await hc.Delete(null);
-                    result = hash.ToDict();
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        var dt = await Kit.RpcInst<Dict>(svcID, "Pusher.GetOnlineCount", false);
+                        if (dt != null && dt.TryGetValue(svcID, out var count))
+                            result[svcID] = count;
+                    }
                 }
             }
-            else
-            {
-                // 当前单副本
-                result = new Dict { { Kit.SvcID, Online.TotalCount } };
-            }
+
             return result;
         }
     }

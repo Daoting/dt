@@ -44,6 +44,25 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 调用某服务实例的API(RabbitMQ Rpc)
+        /// </summary>
+        /// <typeparam name="T">结果对象的类型</typeparam>
+        /// <param name="p_svcID">服务实例id</param>
+        /// <param name="p_methodName">方法名</param>
+        /// <param name="p_params">参数列表</param>
+        /// <returns>返回远程调用结果</returns>
+        public static Task<T> RpcInst<T>(string p_svcID, string p_methodName, params object[] p_params)
+        {
+            // 非单体且非本服务时，远程调用
+            return new RabbitMQRpc().Call<T>(
+                null,
+                p_svcID,
+                p_methodName,
+                p_params
+            );
+        }
+
+        /// <summary>
         /// 客户端发送一个请求，服务端返回数据流响应
         /// </summary>
         /// <param name="p_serviceName">服务名称</param>

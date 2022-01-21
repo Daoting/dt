@@ -41,12 +41,33 @@ namespace Dt.Msg.Api
             return cnt;
         }
 
-        public Task<string> GetRpc()
+        public Task<string> CallCmGetString()
         {
             return Kit.Rpc<string>(
                 "cm",
                 "TestSerialize.GetString"
             );
+        }
+
+        public async Task<int> CallAllReplica(string p_msg, bool p_checkReplica = true)
+        {
+            Log.Information($"{Kit.SvcID}收到：{p_msg}");
+            int total = 1;
+
+            // 查询所有其他副本
+            if (p_checkReplica)
+            {
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
+                {
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        await Kit.RpcInst<int>(svcID, "TestMsg.CallAllReplica", p_msg, false);
+                        total++;
+                    }
+                }
+            }
+            return total;
         }
     }
 }

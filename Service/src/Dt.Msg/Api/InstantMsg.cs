@@ -30,7 +30,7 @@ namespace Dt.Msg
         /// <returns>true 在线推送</returns>
         public async Task<bool> SendMsg(long p_userID, string p_msg)
         {
-            var result = await MsgKit.Push(new List<long> { p_userID }, WrapperMsg(p_msg));
+            var result = await new CmdMsg().BatchSendCmd(new List<long> { p_userID }, WrapperMsg(p_msg));
             return result.Count > 0;
         }
 
@@ -42,16 +42,40 @@ namespace Dt.Msg
         /// <returns>在线推送列表</returns>
         public Task<List<long>> BatchSendMsg(List<long> p_userIDs, string p_msg)
         {
-            return MsgKit.Push(p_userIDs, WrapperMsg(p_msg));
+            return new CmdMsg().BatchSendCmd(p_userIDs, WrapperMsg(p_msg));
         }
 
         /// <summary>
         /// 向所有副本的所有在线用户广播信息
         /// </summary>
         /// <param name="p_msg"></param>
-        public void SendMsgToOnline(string p_msg)
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
+        public async Task SendMsgToOnline(string p_msg, bool p_checkReplica = true)
         {
-            _ = MsgKit.BroadcastAllOnline(WrapperMsg(p_msg));
+            var mi = WrapperMsg(p_msg);
+            var msg = mi.GetOnlineMsg();
+
+            // 本地单副本推送
+            foreach (var ls in Online.All.Values)
+            {
+                foreach (var ci in ls)
+                {
+                    ci.AddMsg(msg);
+                }
+            }
+
+            // 查询所有其他副本
+            if (p_checkReplica)
+            {
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
+                {
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        await Kit.RpcInst<bool>(svcID, "InstantMsg.SendMsgToOnline", p_msg, false);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -64,7 +88,7 @@ namespace Dt.Msg
         /// <returns>true 在线推送</returns>
         public async Task<bool> SendLetter(long p_userID, LetterInfo p_letter)
         {
-            var result = await MsgKit.Push(new List<long> { p_userID }, WrapperLetter(p_letter));
+            var result = await new CmdMsg().BatchSendCmd(new List<long> { p_userID }, WrapperLetter(p_letter));
             return result.Count > 0;
         }
 
@@ -76,7 +100,7 @@ namespace Dt.Msg
         /// <returns>在线推送列表</returns>
         public Task<List<long>> BatchSendLetter(List<long> p_userIDs, LetterInfo p_letter)
         {
-            return MsgKit.Push(p_userIDs, WrapperLetter(p_letter));
+            return new CmdMsg().BatchSendCmd(p_userIDs, WrapperLetter(p_letter));
         }
         #endregion
 

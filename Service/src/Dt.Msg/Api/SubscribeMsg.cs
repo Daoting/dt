@@ -42,7 +42,7 @@ namespace Dt.Msg
                 Title = "订阅信息",
                 Content = p_offlineTip
             };
-            var result = await MsgKit.Push(users, mi);
+            var result = await new CmdMsg().BatchSendCmd(users, mi);
             return result.Count;
         }
     }

@@ -33,7 +33,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.RequestRtcConnection",
                 Params = new List<object> { p_fromUserID },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.AcceptRtcConnection",
                 Params = new List<object> { p_fromUserID },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.RefuseRtcConnection",
                 Params = new List<object> { p_fromUserID },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.RecvRtcOffer",
                 Params = new List<object> { p_fromUserID, p_offer },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.RecvRtcAnswer",
                 Params = new List<object> { p_fromUserID, p_answer },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.RecvIceCandidate",
                 Params = new List<object> { p_fromUserID, p_iceCandidate, p_toCaller },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
         }
 
         /// <summary>
@@ -134,7 +134,44 @@ namespace Dt.Msg
                 MethodName = "WebRtcApi.HangUp",
                 Params = new List<object> { p_fromUserID, p_toCaller },
             };
-            return MsgKit.PushIfOnline(p_toUserID, mi);
+            return PushIfOnline(p_toUserID, mi);
+        }
+
+
+        /// <summary>
+        /// 若用户在线则推送消息，不在线返回false
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_msg"></param>
+        /// <param name="p_checkReplica">多副本实例时是否检查其他副本</param>
+        /// <returns>true 已在线推送，false不在线</returns>
+        public async Task<bool> PushIfOnline(long p_userID, MsgInfo p_msg, bool p_checkReplica = true)
+        {
+            if (Online.All.TryGetValue(p_userID, out var ls)
+                && ls != null
+                && ls.Count > 0)
+            {
+                // 本地在线推送
+                ls[0].AddMsg(p_msg.GetOnlineMsg());
+                return true;
+            }
+
+            // 查询所有其他副本
+            if (p_checkReplica)
+            {
+                int cnt = Kit.GetSvcReplicaCount();
+                if (cnt > 1)
+                {
+                    foreach (var svcID in Kit.GetOtherReplicaIDs())
+                    {
+                        var suc = await Kit.RpcInst<bool>(svcID, "WebRtcMsg.PushIfOnline", p_userID, p_msg, false);
+                        if (suc)
+                            return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

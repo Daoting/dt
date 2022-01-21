@@ -28,6 +28,11 @@ namespace Dt.Msg
         readonly ResponseWriter _writer;
         readonly Dict _deviceInfo;
 
+        /// <summary>
+        /// 用户未推送消息列表 msg:Queue:userid = list(msginfo)
+        /// </summary>
+        public const string MsgQueueKey = "msg:Queue";
+
         public ClientInfo(Dict p_deviceInfo, ResponseWriter p_writer, long p_userID)
         {
             _deviceInfo = p_deviceInfo;
@@ -92,7 +97,7 @@ namespace Dt.Msg
         public async Task SendOfflineMsg()
         {
             // 所有离线信息
-            var lc = new ListCache<string>(MsgKit.MsgQueueKey);
+            var lc = new ListCache<string>(MsgQueueKey);
             var ls = await lc.GetRange(UserID);
             if (ls != null && ls.Count > 0)
             {
