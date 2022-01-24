@@ -52,6 +52,8 @@ namespace Dt.Core.Rpc
 #elif WASM
             _client = new HttpClient();
 #endif
+            // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1
+            _client.DefaultRequestVersion = new Version(2, 0);
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         protected HttpRequestMessage CreateRequestMessage()
         {
-            // 使用http2协议Post方法
+            // 使用http2协议Post方法，Version默认1.1，虽DefaultRequestVersion已设2！
             return new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
