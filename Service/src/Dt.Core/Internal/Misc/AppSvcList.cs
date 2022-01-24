@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Microsoft.Extensions.Configuration;
-using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -113,7 +112,7 @@ namespace Dt.Core
             if (_updating)
                 return;
 
-            Log.Information("OnUpdateSvcList");
+            Log.Information("已更新服务列表");
             _updating = true;
             if (_mqClient == null)
             {

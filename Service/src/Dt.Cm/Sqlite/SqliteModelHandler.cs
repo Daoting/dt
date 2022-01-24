@@ -65,7 +65,10 @@ namespace Dt.Cm
             }
             else
             {
-                Log.Error("模型文件不存在，请[SysKernel.UpdateModelDbFile]创建模型文件");
+                // cm多副本时，需要调用 SysKernel.UpdateModelDbFile 统一模型文件名
+                Log.Warning("模型文件不存在，先创建模型文件");
+                var ed = new ModelRefreshEvent { Version = Guid.NewGuid().ToString().Substring(0, 8) };
+                new ModelRefreshHandler().Handle(ed).Wait();
             }
         }
 

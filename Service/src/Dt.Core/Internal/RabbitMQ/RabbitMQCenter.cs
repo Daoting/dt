@@ -131,13 +131,13 @@ namespace Dt.Core.RabbitMQ
 
             var name = Kit.Stubs[0].SvcName;
             // 每个微服务声明三个消费者队列
-            // 1. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数，先订阅为了保证首次更新列表
+            // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+            CreateWorkConsumer(name);
+            // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
+            CreateTopicConsumer(name);
+            // 3. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
             // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
             CreateQueueChangeConsumer(name);
-            // 2. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-            CreateWorkConsumer(name);
-            // 3. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-            CreateTopicConsumer(name);
         }
 
         /// <summary>
@@ -286,6 +286,9 @@ namespace Dt.Core.RabbitMQ
             consumer.Received += (s, e) => Kit.UpdateSvcList();
 
             channel.BasicConsume(queue: queueName, true, consumer: consumer);
+
+            // 保证首次更新列表
+            Kit.UpdateSvcList();
         }
 
         /// <summary>
