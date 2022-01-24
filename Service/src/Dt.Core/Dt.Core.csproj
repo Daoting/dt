@@ -5,6 +5,7 @@
 		<EmbeddedResource Include="Res\404.html" />
 		<EmbeddedResource Include="Res\Admin.html" />
 		<EmbeddedResource Include="Res\Error.html" />
+		<EmbeddedResource Include="..\..\iis\tls.pfx" Link="Res\tls.pfx" />
 	</ItemGroup>
 
 	<ItemGroup>

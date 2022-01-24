@@ -37,20 +37,37 @@ namespace Dt.Core
                     // 默认http2
                     listenOptions.Protocols = HttpProtocols.Http2;
 
-                    // 为Kestrel加载X509证书，证书名称tls.pfx，位置在根目录，默认证书为localhost，生成环境可替换
-                    var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "etc/config/tls.pfx"));
-                    if (tls.Exists)
+                    try
                     {
-                        using (var stream = tls.OpenRead())
+                        // 为Kestrel加载X509证书，证书名称tls.pfx
+                        byte[] pfx;
+                        var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "etc/config/tls.pfx"));
+                        if (tls.Exists)
                         {
-                            byte[] pfx = new byte[tls.Length];
-                            stream.Read(pfx, 0, (int)stream.Length);
-                            listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
+                            // 生成环境的证书
+                            using (var stream = tls.OpenRead())
+                            {
+                                pfx = new byte[tls.Length];
+                                stream.Read(pfx, 0, (int)stream.Length);
+                            }
+                            Log.Information("Kestrel已加载生成环境证书");
                         }
+                        else
+                        {
+                            // 加载内置的localhost测试证书，默认证书为，生成环境可替换
+                            using (var stream = typeof(Startup).Assembly.GetManifestResourceStream("Dt.Core.Res.tls.pfx"))
+                            using (var reader = new BinaryReader(stream))
+                            {
+                                pfx = new byte[stream.Length];
+                                reader.Read(pfx, 0, (int)stream.Length);
+                            }
+                            Log.Information("Kestrel已加载内置测试证书");
+                        }
+                        listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Log.Error("Kestrel缺少X509证书文件tls.pfx");
+                        Log.Error(ex, "Kestrel加载X509证书文件tls.pfx时异常");
                     }
                 });
 
@@ -64,7 +81,7 @@ namespace Dt.Core
                     // 设置post的body的最大长度，默认28.6M
                     options.Limits.MaxRequestBodySize = maxSize;
                 }
-                
+
                 Log.Information("启动 KestrelServer 成功");
             });
 

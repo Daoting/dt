@@ -14,7 +14,7 @@ using System.Text.Json;
 using Timer = System.Timers.Timer;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.RabbitMQ
 {
     /// <summary>
     /// 通过 RabbitMQ 获取微服务列表
@@ -112,7 +112,7 @@ namespace Dt.Core
             if (_updating)
                 return;
 
-            Log.Information("已更新服务列表");
+            Log.Information("已更新服务列表 — RabbitMQ");
             _updating = true;
             if (_mqClient == null)
             {

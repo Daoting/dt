@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.RabbitMQ;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
