@@ -124,7 +124,7 @@ namespace Dt.Core
         {
             if (string.IsNullOrEmpty(p_url))
                 throw new Exception("cm服务地址不可为空！");
-            _cmSvcUrl = p_url.TrimEnd('\\');
+            _cmSvcUrl = p_url.TrimEnd('/');
         }
 
         /// <summary>

@@ -16,7 +16,6 @@
 			<ProjectItem TargetFileName="global.json" ReplaceParameters="true">etc\config\global.json</ProjectItem>
 			<ProjectItem TargetFileName="service.json">etc\config\service.json</ProjectItem>
 			<ProjectItem TargetFileName="logger.json">etc\config\logger.json</ProjectItem>
-			<ProjectItem TargetFileName="tls.pfx">etc\config\tls.pfx</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

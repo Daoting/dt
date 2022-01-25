@@ -69,7 +69,6 @@
     <None Include="Svc\etc\config\service.json" />
     <None Include="Svc\Svc.csproj" />
     <None Include="Svc\Properties\launchSettings.json" />
-    <None Include="Svc\etc\config\tls.pfx" />
     <None Include="Win\app.manifest" />
     <None Include="Win\Package.appxmanifest">
       <SubType>Designer</SubType>

@@ -11,8 +11,9 @@ using Dt.Core.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 #endregion
 
@@ -30,46 +31,8 @@ namespace Dt.Core
             // 配置 KestrelServer
             p_services.Configure<KestrelServerOptions>(options =>
             {
-                // 未使用Listen方法，因无法应用外部设置的端口！
-                options.ConfigureEndpointDefaults(listenOptions =>
-                {
-                    // 浏览器要求http2.0协议必须采用https通信，http2.0协议和https之间本来没有依赖关系！
-                    // 默认http2
-                    listenOptions.Protocols = HttpProtocols.Http2;
-
-                    try
-                    {
-                        // 为Kestrel加载X509证书，证书名称tls.pfx
-                        byte[] pfx;
-                        var tls = new FileInfo(Path.Combine(AppContext.BaseDirectory, "etc/config/tls.pfx"));
-                        if (tls.Exists)
-                        {
-                            // 生成环境的证书
-                            using (var stream = tls.OpenRead())
-                            {
-                                pfx = new byte[tls.Length];
-                                stream.Read(pfx, 0, (int)stream.Length);
-                            }
-                            Log.Information("Kestrel已加载生成环境证书");
-                        }
-                        else
-                        {
-                            // 加载内置的localhost测试证书，默认证书为，生成环境可替换
-                            using (var stream = typeof(Startup).Assembly.GetManifestResourceStream("Dt.Core.Res.tls.pfx"))
-                            using (var reader = new BinaryReader(stream))
-                            {
-                                pfx = new byte[stream.Length];
-                                reader.Read(pfx, 0, (int)stream.Length);
-                            }
-                            Log.Information("Kestrel已加载内置测试证书");
-                        }
-                        listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "Kestrel加载X509证书文件tls.pfx时异常");
-                    }
-                });
+                // KestrelServer 监听设置，配置在 service.json 的 KestrelListen 节
+                ConfigureKestrelListen(options);
 
                 // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
                 options.Limits.MinRequestBodyDataRate = null;
@@ -101,6 +64,74 @@ namespace Dt.Core
 
             Kit.ConfigureServices(p_services);
             return Silo.ConfigureServices(p_services);
+        }
+
+        /// <summary>
+        /// KestrelServer 监听设置
+        /// </summary>
+        /// <param name="p_options"></param>
+        void ConfigureKestrelListen(KestrelServerOptions p_options)
+        {
+            var sect = Kit.Config.GetSection("KestrelListen").GetChildren();
+
+            // service.json 中无配置
+            if (!sect.Any())
+            {
+                // 使用 launchSettings.json 中配置，
+                // 都无配置使用缺省：http://localhost:5000; https://localhost:5001
+                Log.Information("service.json无监听配置，使用默认");
+                return;
+            }
+
+            // 根据 service.json 的 KestrelListen 节配置设置监听
+            // 可以监听多个Url，每个监听的Url配置一次
+            foreach (var item in sect)
+            {
+                // 使用协议：http https
+                string scheme = item.GetValue<string>("Scheme");
+                string address = item.GetValue<string>("Address");
+                int port = item.GetValue<int>("Port");
+
+                if ("https".Equals(scheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    // https协议
+                    p_options.Listen(IPAddress.Parse(address), port, listenOptions =>
+                    {
+                        // 浏览器要求http2.0协议必须采用https通信，http2.0协议和https之间本来没有依赖关系！
+                        // 系统默认 Http1AndHttp2
+                        //listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+
+                        string cerFileName = item.GetValue<string>("Certificate:FileName");
+                        string cerPwd = item.GetValue<string>("Certificate:Password");
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(cerFileName))
+                            {
+                                // 加载X509证书
+                                listenOptions.UseHttps(new X509Certificate2(Path.Combine(AppContext.BaseDirectory, "etc/config/", cerFileName), cerPwd));
+                            }
+                            else
+                            {
+                                // 无证书使用默认
+                                listenOptions.UseHttps();
+                            }
+                            Log.Information($"监听：{listenOptions}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, $"Kestrel加载X509证书文件[{cerFileName}]时异常");
+                        }
+                    });
+                }
+                else
+                {
+                    // http协议，无X509证书
+                    p_options.Listen(IPAddress.Parse(address), port, listenOptions =>
+                    {
+                        Log.Information($"监听：{listenOptions}");
+                    });
+                }
+            }
         }
 
         /// <summary>

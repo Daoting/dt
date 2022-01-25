@@ -4,6 +4,19 @@
   "TraceSql": true,
   "TraceRpc": true,
 
+  "KestrelListen": [
+    {
+      "Scheme": "http",
+      "Address": "0.0.0.0",
+      "Port": "30001"
+    },
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "20201"
+    }
+  ],
+
   "SvcUrls": {
     "msg": "*/dt-msg",
     "fsm": "*/dt-fsm"
