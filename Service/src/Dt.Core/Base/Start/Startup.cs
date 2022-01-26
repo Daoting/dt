@@ -43,6 +43,7 @@ namespace Dt.Core
                 {
                     // 设置post的body的最大长度，默认28.6M
                     options.Limits.MaxRequestBodySize = maxSize;
+                    Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
                 }
 
                 Log.Information("启动 KestrelServer 成功");
@@ -60,6 +61,7 @@ namespace Dt.Core
                 }
 
                 Log.Information("启动 IISHttpServer 成功");
+                Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
             });
 
             Kit.ConfigureServices(p_services);
@@ -112,7 +114,7 @@ namespace Dt.Core
                             }
                             else
                             {
-                                // 无证书使用默认
+                                // 无证书使用默认localhost证书
                                 listenOptions.UseHttps();
                             }
                             Log.Information($"监听：{listenOptions}");

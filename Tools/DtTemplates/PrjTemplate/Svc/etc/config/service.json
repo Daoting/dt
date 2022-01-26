@@ -4,6 +4,19 @@
   "TraceSql": true,
   "TraceRpc": true,
 
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "1234"
+    },
+    {
+      "Scheme": "http",
+      "Address": "0.0.0.0",
+      "Port": "4321"
+    }
+  ],
+
   "SvcUrls": {
     "msg": "*/dt-msg",
     "fsm": "*/dt-fsm"
@@ -30,5 +43,8 @@
       ],
       "Data": "select * from cm_menu where islocked=0 order by dispidx"
     }
-  }
+  },
+
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
 }

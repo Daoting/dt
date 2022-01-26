@@ -66,9 +66,10 @@ namespace Dt.Fsm
 
             // 固定卷
             var fv = Kit.GetCfg<string>("FixedVolume");
-            StringBuilder sb = new StringBuilder("初始化固定卷");
+            StringBuilder sb;
             if (!string.IsNullOrEmpty(fv))
             {
+                sb = new StringBuilder("初始化固定卷");
                 var vols = fv.Split(';');
                 foreach (var vol in vols)
                 {
@@ -83,10 +84,11 @@ namespace Dt.Fsm
                         sb.Append(v);
                     }
                 }
+                Log.Information(sb.ToString());
             }
-            sb.Append("，普通卷");
 
             // 普通卷
+            sb = new StringBuilder("初始化普通卷");
             SortedSetCache cache = new SortedSetCache(VolumeKey);
             var subs = dir.GetDirectories();
             if (subs != null && subs.Length > 0)

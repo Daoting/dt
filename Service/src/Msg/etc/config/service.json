@@ -3,6 +3,15 @@
   "CacheSql": false,
   "TraceSql": true,
   "TraceRpc": false,
+
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "20202"
+    }
+  ],
+
   "UwpClientSecret": "",
   "UwpPkgSID": ""
 }

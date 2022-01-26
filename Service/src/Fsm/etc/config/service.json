@@ -3,6 +3,15 @@
   "CacheSql": false,
   "TraceSql": false,
   "TraceRpc": false,
-  "FixedVolume": "photo;chat",
-  "MaxRequestBodySize": 1024000000
+
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "20203"
+    }
+  ],
+
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
 }

@@ -59,5 +59,38 @@ namespace Dt.Core
             }
             return default(T);
         }
+
+        /// <summary>
+        /// 将字节长度转成描述信息
+        /// </summary>
+        /// <param name="p_size"></param>
+        /// <returns></returns>
+        public static string GetFileSizeDesc(ulong p_size)
+        {
+            if (p_size < KB)
+                return string.Format("{0}B", p_size);
+            if (p_size < MB)
+                return string.Format("{0}KB", Math.Round(p_size / (float)KB, 2));
+            if (p_size < GB)
+                return string.Format("{0}MB", Math.Round(p_size / (float)MB, 2));
+            return string.Format("{0}GB", Math.Round(p_size / (float)GB, 2));
+        }
+
+        #region 常量
+        /// <summary>
+        /// 1GB
+        /// </summary>
+        public const int GB = 1024 * 1024 * 1024;
+
+        /// <summary>
+        /// 1MB
+        /// </summary>
+        public const int MB = 1024 * 1024;
+
+        /// <summary>
+        /// 1KB
+        /// </summary>
+        public const int KB = 1024;
+        #endregion
     }
 }

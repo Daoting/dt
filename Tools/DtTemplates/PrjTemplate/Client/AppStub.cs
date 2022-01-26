@@ -22,7 +22,9 @@ namespace $ext_safeprojectname$
             Title = "搬运工";
 
             // 注释后为单机模式
-            InitCmUrl("https://localhost:2022");
+            // 联网时先启动服务$ext_safeprojectname$.Svc
+            // ip是本机ip不能为localhost，确保android ios虚拟机能够访问
+            InitCmUrl("https://ip:1234");
         }
 
         /// <summary>
@@ -32,10 +34,10 @@ namespace $ext_safeprojectname$
         public override async Task OnStartup()
         {
             // 默认启动
-            //await Startup.Run();
+            await Startup.Run();
 
             // 自定义启动
-            await Startup.Run(typeof(Home), false);
+            //await Startup.Run(typeof(Home), false);
         }
 
         #region 自动生成
