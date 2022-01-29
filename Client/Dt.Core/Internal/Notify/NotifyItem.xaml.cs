@@ -11,10 +11,12 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.System.Threading;
@@ -38,23 +40,19 @@ namespace Dt.Core
         {
             InitializeComponent();
 
-            FontSize = 16;
             _info = p_info;
-            _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush;
+            _info.PropertyChanged += OnInfoChanged;
+            _info.Close = CloseInternal;
+
+            FontSize = 16;
             _grid.PointerEntered += OnPointerEntered;
             _grid.PointerPressed += OnPointerPressed;
             _grid.PointerReleased += OnPointerReleased;
             _grid.PointerExited += OnPointerExited;
 
+            _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush;
             _tb.Text = _info.Message;
-            _info.Close = CloseInternal;
-            if (!string.IsNullOrEmpty(_info.Link))
-            {
-                Button btn = new Button { Content = _info.Link, Style = (Style)Application.Current.Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
-                if (_info.LinkCallback != null)
-                    btn.Click += (s, e) => _info.LinkCallback(_info);
-                _sp.Children.Add(btn);
-            }
+            CreateLink();
 
             if (_info.DelaySeconds > 0)
                 StartAutoClose();
@@ -63,6 +61,36 @@ namespace Dt.Core
             TransitionCollection tc = new TransitionCollection();
             tc.Add(new EdgeUIThemeTransition { Edge = Kit.IsPhoneUI ? EdgeTransitionLocation.Top : EdgeTransitionLocation.Right });
             _grid.Transitions = tc;
+        }
+
+        void OnInfoChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Message")
+            {
+                _tb.Text = _info.Message;
+            }
+            else if (e.PropertyName == "NotifyType")
+            {
+                _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush;
+            }
+            else if (e.PropertyName == "Link")
+            {
+                if (_sp.Children.Count > 1)
+                    _sp.Children.RemoveAt(1);
+                CreateLink();
+            }
+        }
+
+        void CreateLink()
+        {
+            if (!string.IsNullOrEmpty(_info.Link))
+            {
+                Button btn = new Button { Content = _info.Link, Style = (Style)Application.Current.Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
+
+                if (_info.LinkCallback != null)
+                    btn.Click += (s, e) => _info.LinkCallback(_info);
+                _sp.Children.Add(btn);
+            }
         }
 
         /// <summary>
@@ -134,10 +162,16 @@ namespace Dt.Core
             _grid.ReleasePointerCapture(e.Pointer);
             e.Handled = true;
             var pt = e.GetCurrentPoint(null).Position;
-            if (Math.Abs(_ptStart.Value.X - pt.X) < 6 && Math.Abs(_ptStart.Value.Y - pt.Y) < 6)
+            if (_info.DelaySeconds >= 0
+                && Math.Abs(_ptStart.Value.X - pt.X) < 6
+                && Math.Abs(_ptStart.Value.Y - pt.Y) < 6)
+            {
                 CloseInternal();
+            }
             else
+            {
                 _rc.Fill = null;
+            }
         }
 
         /// <summary>

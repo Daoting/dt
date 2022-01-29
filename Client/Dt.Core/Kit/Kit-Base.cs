@@ -29,34 +29,46 @@ namespace Dt.Core
         /// 发布消息提示
         /// </summary>
         /// <param name="p_content">显示内容</param>
-        /// <param name="p_delaySeconds">几秒后自动关闭，默认3秒，0表示不自动关闭</param>
-        public static void Msg(string p_content, int p_delaySeconds = 3)
+        /// <param name="p_delaySeconds">
+        /// 几秒后自动关闭，默认3秒
+        /// <para>大于0：启动定时器自动关闭，点击也关闭</para>
+        /// <para>0：不自动关闭，但点击关闭</para>
+        /// <para>小于0：始终不关闭，只有程序控制关闭</para>
+        /// </param>
+        public static NotifyInfo Msg(string p_content, int p_delaySeconds = 3)
         {
             if (string.IsNullOrEmpty(p_content))
-                return;
+                return null;
 
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Information;
             notify.DelaySeconds = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
+            return notify;
         }
 
         /// <summary>
         /// 警告提示
         /// </summary>
         /// <param name="p_content">显示内容</param>
-        /// <param name="p_delaySeconds">几秒后自动关闭，默认5秒，0表示不自动关闭</param>
-        public static void Warn(string p_content, int p_delaySeconds = 5)
+        /// <param name="p_delaySeconds">
+        /// 几秒后自动关闭，默认5秒
+        /// <para>大于0：启动定时器自动关闭，点击也关闭</para>
+        /// <para>0：不自动关闭，但点击关闭</para>
+        /// <para>小于0：始终不关闭，只有程序控制关闭</para>
+        /// </param>
+        public static NotifyInfo Warn(string p_content, int p_delaySeconds = 5)
         {
             if (string.IsNullOrEmpty(p_content))
-                return;
+                return null;
 
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Warning;
             notify.DelaySeconds = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
+            return notify;
         }
 
         /// <summary>

@@ -15,25 +15,46 @@ namespace Dt.Core
     /// <summary>
     /// 消息提示内容结构
     /// </summary>
-    public class NotifyInfo
+    public class NotifyInfo : ViewModel
     {
+        #region 成员变量
+        string _message;
+        NotifyType _notifyType;
+        string _link;
+        #endregion
+
         /// <summary>
         /// 提示内容
         /// </summary>
-        public string Message { get; set; }
+        public string Message
+        {
+            get { return _message; }
+            set { SetProperty(ref _message, value); }
+        }
 
         /// <summary>
         /// 提示框类型
         /// </summary>
-        public NotifyType NotifyType { get; set; }
+        public NotifyType NotifyType
+        {
+            get { return _notifyType; }
+            set { SetProperty(ref _notifyType, value); }
+        }
 
         /// <summary>
         /// 链接描述
         /// </summary>
-        public string Link { get; set; }
+        public string Link
+        {
+            get { return _link; }
+            set { SetProperty(ref _link, value); }
+        }
 
         /// <summary>
-        /// 几秒后自动关闭，0表示不自动关闭
+        /// 几秒后自动关闭
+        /// <para>大于0：启动定时器自动关闭，点击也关闭</para>
+        /// <para>0：不自动关闭，但点击关闭</para>
+        /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </summary>
         public int DelaySeconds { get; set; }
 

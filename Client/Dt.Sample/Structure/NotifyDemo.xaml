@@ -11,5 +11,6 @@
 
         <Button Content="显示提示信息" Click="OnShowNotify" />
         <Button Content="显示带按钮的提示内容" Click="OnCustomNotify" />
+        <Button Content="动态信息 动态样式 动态按钮" Click="OnEditNotify" />
     </StackPanel>
 </a:Win>

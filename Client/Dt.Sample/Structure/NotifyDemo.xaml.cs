@@ -35,6 +35,25 @@ namespace Dt.Sample
             Kit.Notify(GetInfo());
         }
 
+        async void OnEditNotify(object sender, RoutedEventArgs e)
+        {
+            NotifyInfo info = Kit.Msg(_tbMessage.Text, -1);
+
+            await Task.Delay(2000);
+            info.Message = "3";
+            info.NotifyType = NotifyType.Warning;
+            await Task.Delay(2000);
+            info.Message = "2";
+            info.NotifyType = NotifyType.Information;
+            info.Link = "查看";
+            await Task.Delay(2000);
+            info.Message = "1";
+            info.NotifyType = NotifyType.Warning;
+            info.Link = null;
+            await Task.Delay(2000);
+            Kit.CloseNotify(info);
+        }
+
         NotifyInfo GetInfo()
         {
             NotifyInfo info = new NotifyInfo();
