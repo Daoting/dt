@@ -14,11 +14,15 @@
 
     <Import Project="..\Common.props" />
     <Import Project="..\Agent.props" />
-    
+
     <ItemGroup>
         <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dt.Tasks" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,6 +43,10 @@
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
+        <ProjectCapability Include="Msix" />
+    </ItemGroup>
+
     <ItemGroup>
         <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
@@ -47,5 +55,11 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="WinRT.Host.runtimeconfig.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

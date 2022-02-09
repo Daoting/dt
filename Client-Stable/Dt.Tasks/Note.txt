@@ -1,0 +1,4 @@
+
+1. 打包后修改 Dt.Tasks.targets 文件，共2个，内容相同，去除Dt.Tasks中的'.'，否则引用该包的项目生成错误
+
+2. 不需要包含 WinRT.Host.runtimeconfig.json 文件，但 exe 项目中需要将该文件"复制到输出目录"，否则无法启动后台任务

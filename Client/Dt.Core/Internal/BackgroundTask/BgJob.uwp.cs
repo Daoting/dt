@@ -62,7 +62,7 @@ namespace Dt.Core
                     // 任务名称
                     bd.Name = _bgTaskName;
                     // 入口点
-                    bd.TaskEntryPoint = "Dt.Core.TimeTriggeredTask";
+                    bd.TaskEntryPoint = "Dt.Tasks.TimeTriggeredTask";
                     // 设置触发器，周期运行
                     bd.SetTrigger(new TimeTrigger(_interval, false));
                     bd.Register();
@@ -100,27 +100,6 @@ namespace Dt.Core
             xml.GetElementsByTagName("text").Item(0).InnerText = p_title;
             xml.GetElementsByTagName("text").Item(1).InnerText = p_content;
             ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(xml));
-        }
-    }
-
-    /// <summary>
-    /// 定时启动后台任务，最小时间间隔15分钟
-    /// </summary>
-    public sealed class TimeTriggeredTask : IBackgroundTask
-    {
-        /// <summary>
-        /// 后台处理入口
-        /// </summary>
-        /// <param name="taskInstance"></param>
-        public async void Run(IBackgroundTaskInstance taskInstance)
-        {
-            var deferral = taskInstance.GetDeferral();
-            try
-            {
-                await BgJob.Run();
-            }
-            catch { }
-            deferral.Complete();
         }
     }
 }

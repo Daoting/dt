@@ -40,7 +40,7 @@
                 <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#1BA1E2" />
             </uap:VisualElements>
             <Extensions>
-                <Extension Category="windows.backgroundTasks" EntryPoint="Dt.Core.TimeTriggeredTask">
+                <Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
                     <BackgroundTasks>
                         <Task Type="timer"/>
                     </BackgroundTasks>
@@ -56,8 +56,8 @@
     <Extensions>
         <Extension Category="windows.activatableClass.inProcessServer">
             <InProcessServer>
-                <Path>Dt.Core.dll</Path>
-                <ActivatableClass ActivatableClassId="Dt.Core.TimeTriggeredTask" ThreadingModel="both" />
+                <Path>WinRT.Host.dll</Path>
+                <ActivatableClass ActivatableClassId="Dt.Tasks.TimeTriggeredTask" ThreadingModel="both" />
             </InProcessServer>
         </Extension>
     </Extensions>
