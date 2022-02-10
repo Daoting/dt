@@ -25,7 +25,7 @@ window:
 uwp的release版Chart动画报错 
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
-DefaultLogin.xaml 的 ProgressRing WinUI中未实现
+
 
 
 # 版本说明
@@ -53,6 +53,8 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 * BackgroundTask 的TimeTriggeredTask 能注册、触发，和uwp调试方式相同
 * 点击Toast自启动传参数问题
 * win版Excel样例中 ChartExcel.xaml 报错，Dt.Cells.Data.Utility.GetFontWeightString()问题
+* 合并WinUI库的默认样式，DefaultLogin.xaml 的 ProgressRing  正常显示
+
 
 ### 服务  
 * 所有服务升级到.net6

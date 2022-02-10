@@ -11,6 +11,10 @@
         <UseWinUI>true</UseWinUI>
         <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     </PropertyGroup>
+    <ItemGroup>
+      <None Remove="MonthProfit.ssxml" />
+      <None Remove="MonthProfit.xlsx" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
@@ -40,6 +44,11 @@
         <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
         <Content Include="Assets\StoreLogo.png" />
         <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Res\MonthProfit.ssxml" />
+      <EmbeddedResource Include="Res\MonthProfit.xlsx" />
     </ItemGroup>
 
     <ItemGroup>

@@ -10,7 +10,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Padding="10">
-            <Button Content="Test1" Click="OnTest1" />
+            <Button Content="图表" Click="OnTest1" />
+            <Button Content="月报xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
+            <Button Content="月报xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
         </StackPanel>
         <a:Excel x:Name="_excel" Grid.Row="1" />
     </Grid>

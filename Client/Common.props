@@ -32,6 +32,8 @@
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <PackageReference Include="Uno.WinUI" Version="4.0.13" />
+        <!-- 对应Microsoft.Toolkit.Uwp.UI.Lottie库，渲染 Adobe AfterEffects 格式动画，提供60fps矢量图形动画 -->
+        <PackageReference Include="Uno.WinUI.Lottie" Version="4.0.13" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">

@@ -41,6 +41,20 @@ namespace Dt.Shell
                 InitChartTitle();
             }
         }
+
+        async void OnLoadFile(object sender, RoutedEventArgs e)
+        {
+            var file = ((Button)sender).Tag.ToString();
+            var assembly = typeof(MainWindow).Assembly;
+            using (var stream = assembly.GetManifestResourceStream($"Dt.Shell.Res.{file}"))
+            {
+                if (file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    await _excel.OpenExcel(stream);
+                else
+                    await _excel.OpenXml(stream);
+            }
+        }
+
         void InitChart()
         {
             _excel.SheetCount = 9;
