@@ -1,4 +1,12 @@
 ﻿
 1. 需要包含 WinRT.Host.runtimeconfig.json 文件，将该文件"复制到输出目录"，否则无法启动后台任务
 
+
 2. 注意 Properties\PublishProfiles 下的配置文件，最初调试时因配置问题造成各种变量异常！
+
+
+3. 点击Toast自启动传参数：
+   引用包 Microsoft.Toolkit.Uwp.Notifications 
+   Package.appxmanifest 增加 desktop:Extension com:Extension 两节，ToastActivatorCLSID Id 为 Identity.Name
+   处理 ToastNotificationManagerCompat.OnActivated 事件
+   详见：https://docs.microsoft.com/zh-cn/windows/apps/design/shell/tiles-and-notifications/send-local-toast?tabs=desktop-msix

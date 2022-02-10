@@ -69,5 +69,15 @@ namespace Dt.Sample
         {
             Kit.Msg(string.Format("点击链接 [{0}]", p_info.Link));
         }
+
+        void OnCommonToast(object sender, RoutedEventArgs e)
+        {
+            Kit.Toast("普通通知", "无启动参数\r\n" + DateTime.Now.ToString());
+        }
+
+        void OnParamsToast(object sender, RoutedEventArgs e)
+        {
+            Kit.Toast("带自启动参数的通知", "点击打开LvHome\r\n" + DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+        }
     }
 }

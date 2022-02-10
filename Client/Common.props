@@ -37,6 +37,7 @@
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+        <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
 	</ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-android'))">

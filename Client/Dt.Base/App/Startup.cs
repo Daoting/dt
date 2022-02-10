@@ -54,11 +54,11 @@ namespace Dt.Base
             {
                 // 带参数启动
                 if (AutoStartOnce != null)
-                    Kit.RunAsync(() => ShowAutoStartOnce());
+                    ShowAutoStartOnce();
                 Kit.MainWin.Activate();
 
                 if (p_shareInfo != null)
-                    Kit.RunAsync(() => Kit.Stub.OnReceiveShare(p_shareInfo));
+                    Kit.Stub.OnReceiveShare(p_shareInfo);
                 return;
             }
 
