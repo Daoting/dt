@@ -24,7 +24,6 @@ android:
 window:
 uwp的release版Chart动画报错 
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
-Excel样例中 ChartExcel.xaml 报错，因WinUI3无法定位调试，暂搁
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
 DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 
@@ -53,7 +52,7 @@ DefaultLogin.xaml 的 ProgressRing WinUI中未实现
 * Phone模式标题栏触发右键菜单位置调整
 * BackgroundTask 的TimeTriggeredTask 能注册、触发，和uwp调试方式相同
 * 点击Toast自启动传参数问题
-
+* win版Excel样例中 ChartExcel.xaml 报错，Dt.Cells.Data.Utility.GetFontWeightString()问题
 
 ### 服务  
 * 所有服务升级到.net6

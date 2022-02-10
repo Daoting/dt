@@ -58,78 +58,78 @@ namespace Dt.Shell
             _excel.Sheets[0].AddChart("Chart3", SpreadChartType.ColumnStacked100pc, "Column!$A$1:$E$5", 30, 440, 400, 290);
 
 
-            //_excel.Sheets[1].Name = "Line";
-            //_excel.Sheets[1].SetArray(0, 0, values);
-            //_excel.Sheets[1].AddChart("chart1", SpreadChartType.Line, "Line!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[1].AddChart("chart2", SpreadChartType.LineSmoothed, "Line!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[1].AddChart("chart3", SpreadChartType.LineStacked, "Line!$A$1:$E$5", 30, 440, 400, 290);
-            //_excel.Sheets[1].AddChart("chart4", SpreadChartType.LineStacked100pc, "Line!$A$1:$E$5", 480, 440, 400, 290);
-            //_excel.Sheets[1].AddChart("chart5", SpreadChartType.LineStacked100pcWithMarkers, "Line!$A$1:$E$5", 30, 760, 400, 290);
-            //_excel.Sheets[1].AddChart("chart6", SpreadChartType.LineStackedWithMarkers, "Line!$A$1:$E$5", 480, 760, 400, 290);
-            //_excel.Sheets[1].AddChart("chart7", SpreadChartType.LineWithMarkers, "Line!$A$1:$F$5", 30, 1080, 400, 290);
-            //_excel.Sheets[1].AddChart("chart8", SpreadChartType.LineWithMarkersSmoothed, "Line!$A$1:$E$5", 480, 1080, 400, 290);
+            _excel.Sheets[1].Name = "Line";
+            _excel.Sheets[1].SetArray(0, 0, values);
+            _excel.Sheets[1].AddChart("chart1", SpreadChartType.Line, "Line!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[1].AddChart("chart2", SpreadChartType.LineSmoothed, "Line!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[1].AddChart("chart3", SpreadChartType.LineStacked, "Line!$A$1:$E$5", 30, 440, 400, 290);
+            _excel.Sheets[1].AddChart("chart4", SpreadChartType.LineStacked100pc, "Line!$A$1:$E$5", 480, 440, 400, 290);
+            _excel.Sheets[1].AddChart("chart5", SpreadChartType.LineStacked100pcWithMarkers, "Line!$A$1:$E$5", 30, 760, 400, 290);
+            _excel.Sheets[1].AddChart("chart6", SpreadChartType.LineStackedWithMarkers, "Line!$A$1:$E$5", 480, 760, 400, 290);
+            _excel.Sheets[1].AddChart("chart7", SpreadChartType.LineWithMarkers, "Line!$A$1:$F$5", 30, 1080, 400, 290);
+            _excel.Sheets[1].AddChart("chart8", SpreadChartType.LineWithMarkersSmoothed, "Line!$A$1:$E$5", 480, 1080, 400, 290);
 
 
-            //_excel.Sheets[2].Name = "Pie";
-            //_excel.Sheets[2].SetArray(0, 0, values);
-            //_excel.Sheets[2].AddChart("chart1", SpreadChartType.Pie, "Pie!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[2].AddChart("chart2", SpreadChartType.PieDoughnut, "Pie!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[2].AddChart("chart3", SpreadChartType.PieExploded, "Pie!$A$1:$E$5", 30, 440, 400, 290);
-            //_excel.Sheets[2].AddChart("chart4", SpreadChartType.PieExplodedDoughnut, "Line!$A$1:$E$5", 480, 760, 400, 290);
+            _excel.Sheets[2].Name = "Pie";
+            _excel.Sheets[2].SetArray(0, 0, values);
+            _excel.Sheets[2].AddChart("chart1", SpreadChartType.Pie, "Pie!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[2].AddChart("chart2", SpreadChartType.PieDoughnut, "Pie!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[2].AddChart("chart3", SpreadChartType.PieExploded, "Pie!$A$1:$E$5", 30, 440, 400, 290);
+            _excel.Sheets[2].AddChart("chart4", SpreadChartType.PieExplodedDoughnut, "Line!$A$1:$E$5", 480, 760, 400, 290);
 
 
-            //_excel.Sheets[3].Name = "Bar";
-            //_excel.Sheets[3].SetArray(0, 0, values);
-            //_excel.Sheets[3].AddChart("chart1", SpreadChartType.BarClustered, "Bar!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[3].AddChart("chart2", SpreadChartType.BarStacked, "Bar!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[3].AddChart("chart3", SpreadChartType.BarStacked100pc, "Bar!$A$1:$E$5", 30, 440, 400, 290);
+            _excel.Sheets[3].Name = "Bar";
+            _excel.Sheets[3].SetArray(0, 0, values);
+            _excel.Sheets[3].AddChart("chart1", SpreadChartType.BarClustered, "Bar!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[3].AddChart("chart2", SpreadChartType.BarStacked, "Bar!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[3].AddChart("chart3", SpreadChartType.BarStacked100pc, "Bar!$A$1:$E$5", 30, 440, 400, 290);
 
 
-            //_excel.Sheets[4].Name = "Area";
-            //_excel.Sheets[4].SetArray(0, 0, values);
-            //_excel.Sheets[4].AddChart("chart1", SpreadChartType.Area, "Area!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[4].AddChart("chart2", SpreadChartType.AreaStacked, "Area!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[4].AddChart("chart3", SpreadChartType.AreaStacked100pc, "Area!$A$1:$E$5", 30, 440, 400, 290);
+            _excel.Sheets[4].Name = "Area";
+            _excel.Sheets[4].SetArray(0, 0, values);
+            _excel.Sheets[4].AddChart("chart1", SpreadChartType.Area, "Area!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[4].AddChart("chart2", SpreadChartType.AreaStacked, "Area!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[4].AddChart("chart3", SpreadChartType.AreaStacked100pc, "Area!$A$1:$E$5", 30, 440, 400, 290);
 
 
-            //object[,] values1 = { { "", "North", "South", "East", "West", "Northeast" },
-            //                    { "s1", 384, 246, 549, 260, 260 },
-            //                    { "s2", 926, 146, 1501, 240, 650 },
-            //                    { "s3", 650, 260, 700, 600, 428 },
-            //                    { "s4", 240, 80, 260, 1100, 268 } };
+            object[,] values1 = { { "", "North", "South", "East", "West", "Northeast" },
+                                { "s1", 384, 246, 549, 260, 260 },
+                                { "s2", 926, 146, 1501, 240, 650 },
+                                { "s3", 650, 260, 700, 600, 428 },
+                                { "s4", 240, 80, 260, 1100, 268 } };
 
-            //_excel.Sheets[5].Name = "Scatter";
-            //_excel.Sheets[5].SetArray(0, 0, values1);
-            //_excel.Sheets[5].AddChart("chart1", SpreadChartType.Scatter, "Scatter!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[5].AddChart("chart2", SpreadChartType.ScatterLines, "Scatter!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[5].AddChart("chart3", SpreadChartType.ScatterLinesSmoothed, "Scatter!$A$1:$E$5", 30, 440, 400, 290);
-            //_excel.Sheets[5].AddChart("chart4", SpreadChartType.ScatterLinesSmoothedWithMarkers, "Scatter!$A$1:$E$5", 480, 440, 400, 290);
-            //_excel.Sheets[5].AddChart("chart5", SpreadChartType.ScatterLinesWithMarkers, "Scatter!$A$1:$E$5", 30, 760, 400, 290);
-
-
-            //_excel.Sheets[6].Name = "Bubble";
-            //_excel.Sheets[6].SetArray(0, 0, values1);
-            //_excel.Sheets[6].AddChart("chart1", SpreadChartType.Bubble, "Bubble!$A$1:$E$5", 30, 120, 380, 260);
+            _excel.Sheets[5].Name = "Scatter";
+            _excel.Sheets[5].SetArray(0, 0, values1);
+            _excel.Sheets[5].AddChart("chart1", SpreadChartType.Scatter, "Scatter!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[5].AddChart("chart2", SpreadChartType.ScatterLines, "Scatter!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[5].AddChart("chart3", SpreadChartType.ScatterLinesSmoothed, "Scatter!$A$1:$E$5", 30, 440, 400, 290);
+            _excel.Sheets[5].AddChart("chart4", SpreadChartType.ScatterLinesSmoothedWithMarkers, "Scatter!$A$1:$E$5", 480, 440, 400, 290);
+            _excel.Sheets[5].AddChart("chart5", SpreadChartType.ScatterLinesWithMarkers, "Scatter!$A$1:$E$5", 30, 760, 400, 290);
 
 
-            //object[,] values2 = { { "", new DateTime(2013, 8, 1), new DateTime(2013, 8, 2), new DateTime(2013, 8, 3),
-            //                          new DateTime(2013, 8, 4), new DateTime(2013, 8, 5) },
-            //                    { "Open", 864, 279, 825, 360, 384 },
-            //                    { "High", 926, 612, 865, 562, 650 },
-            //                    { "Low", 380, 146, 501, 310, 260 },
-            //                    { "Close", 650, 560, 786, 486, 428 } };
-
-            //_excel.Sheets[7].Name = "Stock";
-            //_excel.Sheets[7].SetArray(0, 0, values2);
-            //_excel.Sheets[7].Rows[0].Formatter = new GeneralFormatter("MM/DD");
-            //_excel.Sheets[7].AddChart("chart1", SpreadChartType.StockHighLowOpenClose, "Stock!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[6].Name = "Bubble";
+            _excel.Sheets[6].SetArray(0, 0, values1);
+            _excel.Sheets[6].AddChart("chart1", SpreadChartType.Bubble, "Bubble!$A$1:$E$5", 30, 120, 380, 260);
 
 
-            //_excel.Sheets[8].Name = "Radar";
-            //_excel.Sheets[8].SetArray(0, 0, values);
-            //_excel.Sheets[8].AddChart("chart1", SpreadChartType.Radar, "Radar!$A$1:$E$5", 30, 120, 400, 290);
-            //_excel.Sheets[8].AddChart("chart2", SpreadChartType.RadarFilled, "Radar!$A$1:$E$5", 480, 120, 400, 290);
-            //_excel.Sheets[8].AddChart("chart3", SpreadChartType.RadarWithMarkers, "Radar!$A$1:$E$5", 30, 440, 400, 290);
+            object[,] values2 = { { "", new DateTime(2013, 8, 1), new DateTime(2013, 8, 2), new DateTime(2013, 8, 3),
+                                      new DateTime(2013, 8, 4), new DateTime(2013, 8, 5) },
+                                { "Open", 864, 279, 825, 360, 384 },
+                                { "High", 926, 612, 865, 562, 650 },
+                                { "Low", 380, 146, 501, 310, 260 },
+                                { "Close", 650, 560, 786, 486, 428 } };
+
+            _excel.Sheets[7].Name = "Stock";
+            _excel.Sheets[7].SetArray(0, 0, values2);
+            _excel.Sheets[7].Rows[0].Formatter = new GeneralFormatter("MM/DD");
+            _excel.Sheets[7].AddChart("chart1", SpreadChartType.StockHighLowOpenClose, "Stock!$A$1:$E$5", 30, 120, 400, 290);
+
+
+            _excel.Sheets[8].Name = "Radar";
+            _excel.Sheets[8].SetArray(0, 0, values);
+            _excel.Sheets[8].AddChart("chart1", SpreadChartType.Radar, "Radar!$A$1:$E$5", 30, 120, 400, 290);
+            _excel.Sheets[8].AddChart("chart2", SpreadChartType.RadarFilled, "Radar!$A$1:$E$5", 480, 120, 400, 290);
+            _excel.Sheets[8].AddChart("chart3", SpreadChartType.RadarWithMarkers, "Radar!$A$1:$E$5", 30, 440, 400, 290);
 
         }
 

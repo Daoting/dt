@@ -23,6 +23,7 @@ using Windows.UI.Text;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Text;
+using System.Collections.Generic;
 #endregion
 
 namespace Dt.Cells.Data
@@ -30,7 +31,7 @@ namespace Dt.Cells.Data
     public static class Utility
     {
         public static FontFamily DefaultFontFamily = new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
-        static PropertyInfo[] infos = null;
+        static Dictionary<FontWeight, string> _fonts = null;
 
         public static MemoryStream CreateMemStream(Stream source)
         {
@@ -50,19 +51,23 @@ namespace Dt.Cells.Data
 
         public static string GetFontWeightString(FontWeight fontWeight)
         {
-            if (infos == null)
+            if (_fonts == null)
             {
-                // hdt
-                infos = typeof(FontWeights).GetRuntimeProperties().ToArray<PropertyInfo>();
-            }
-            for (int i = 0; i < infos.Length; i++)
-            {
-                object obj2 = infos[i].GetValue(null);
-                if ((obj2 != null) && (((FontWeight)obj2).Weight == fontWeight.Weight))
+                // hdt 升级WinUI后通过 GetRuntimeProperties 获取的属性不是FontWeight类型
+                _fonts = new Dictionary<FontWeight, string>();
+                var infos = typeof(FontWeights).GetProperties((System.Reflection.BindingFlags)(BindingFlags.Public | BindingFlags.Static));
+                foreach (var fw in infos)
                 {
-                    return infos[i].Name;
+                    if (fw.PropertyType == typeof(FontWeight))
+                    {
+                        var weight = (FontWeight)fw.GetValue(null);
+                        _fonts[weight] = fw.Name;
+                    }
                 }
             }
+
+            if (_fonts.TryGetValue(fontWeight, out var name))
+                return name;
             return "Normal";
         }
 

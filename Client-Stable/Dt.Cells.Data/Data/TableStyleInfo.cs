@@ -772,7 +772,7 @@ namespace Dt.Cells.Data
             }
             if (this.fontWeightSet)
             {
-                Serializer.SerializeObj(StyleInfo.GetFontWeightString(this.fontWeight), "FontWeight", writer);
+                Serializer.SerializeObj(Utility.GetFontWeightString(this.fontWeight), "FontWeight", writer);
             }
             if (this.leftBorderSet && (this.leftBorder != null))
             {

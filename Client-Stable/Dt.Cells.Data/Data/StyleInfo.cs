@@ -61,7 +61,6 @@ namespace Dt.Cells.Data
         bool formatterSet;
         CellHorizontalAlignment horizontalAlignment;
         bool horizontalAlignmentSet;
-        static PropertyInfo[] infos;
         BorderLine leftBorder;
         bool leftBorderSet;
         bool locked;
@@ -94,7 +93,6 @@ namespace Dt.Cells.Data
         {
             FONTTHEME_BODY = "Body";
             FONTTHEME_HEADING = "Headings";
-            infos = null;
         }
 
         public StyleInfo()
@@ -1079,24 +1077,6 @@ namespace Dt.Cells.Data
             return ((((((!this.nameSet || object.Equals(this.name, info.name)) && (!this.parentSet || object.Equals(this.parent, info.parent))) && ((!this.canFocusSet || object.Equals((bool)this.canFocus, (bool)info.canFocus)) && (!this.lockedSet || object.Equals((bool)this.locked, (bool)info.locked)))) && (((!this.tabStopSet || object.Equals((bool)this.tabStop, (bool)info.tabStop)) && (!this.fontThemeSet || object.Equals(this.fontTheme, info.fontTheme))) && ((!this.fontFamilySet || object.Equals(this.fontFamily, info.fontFamily)) && (!this.fontSizeSet || object.Equals((double)this.fontSize, (double)info.fontSize))))) && ((((!this.fontStretchSet || object.Equals(this.fontStretch, info.fontStretch)) && (!this.fontStyleSet || object.Equals(this.fontStyle, info.fontStyle))) && ((!this.fontWeightSet || object.Equals(this.fontWeight, info.fontWeight)) && (!this.horizontalAlignmentSet || object.Equals(this.horizontalAlignment, info.horizontalAlignment)))) && (((!this.verticalAlignmentSet || object.Equals(this.verticalAlignment, info.verticalAlignment)) && (!this.textIndentSet || object.Equals((int)this.textIndent, (int)info.textIndent))) && ((!this.wordWrapSet || object.Equals((bool)this.wordWrap, (bool)info.wordWrap)) && (!this.shrinkToFitSet || object.Equals((bool)this.shrinkToFit, (bool)info.shrinkToFit)))))) && ((((!this.leftBorderSet || object.Equals(this.leftBorder, info.leftBorder)) && (!this.topBorderSet || object.Equals(this.topBorder, info.topBorder))) && ((!this.rightBorderSet || object.Equals(this.rightBorder, info.rightBorder)) && (!this.bottomBorderSet || object.Equals(this.bottomBorder, info.bottomBorder)))) && ((((!this.backgroundSet || object.Equals(this.background, info.background)) && (!this.foregroundSet || object.Equals(this.foreground, info.foreground))) && ((!this.backgroundThemeColorSet || object.Equals(this.backgroundThemeColor, info.backgroundThemeColor)) && (!this.foregroundThemeColorSet || object.Equals(this.foregroundThemeColor, info.foregroundThemeColor)))) && ((!this.formatterSet || object.Equals(this.formatter, info.formatter)) && (!this.dataValidatorSet || object.Equals(this.dataValidator, info.dataValidator))))));
         }
 
-
-        internal static string GetFontWeightString(FontWeight fontWeight)
-        {
-            if (infos == null)
-            {
-                infos = typeof(FontWeights).GetRuntimeProperties().ToArray();
-            }
-            for (int i = 0; i < infos.Length; i++)
-            {
-                object obj2 = infos[i].GetValue(null);
-                if ((obj2 != null) && (((FontWeight)obj2).Weight == fontWeight.Weight))
-                {
-                    return infos[i].Name;
-                }
-            }
-            return "Normal";
-        }
-
         /// <summary>
         /// hdt 唐忠宝增加 Underline 和 Strikethrough
         /// </summary>
@@ -1881,7 +1861,7 @@ namespace Dt.Cells.Data
             }
             if (this.fontWeightSet)
             {
-                Serializer.SerializeObj(GetFontWeightString(this.fontWeight), "FontWeight", writer);
+                Serializer.SerializeObj(Utility.GetFontWeightString(this.fontWeight), "FontWeight", writer);
             }
             if (this.horizontalAlignmentSet)
             {

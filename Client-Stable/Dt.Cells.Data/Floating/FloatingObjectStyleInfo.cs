@@ -70,7 +70,6 @@ namespace Dt.Cells.Data
         IThemeSupport _themeContext;
         internal static string FONTTHEME_BODY = "Body";
         internal static string FONTTHEME_HEADING = "Headings";
-        static PropertyInfo[] infos = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -204,24 +203,6 @@ namespace Dt.Cells.Data
                 this._lineEndArrowSettings = info._lineEndArrowSettings;
                 this._lineEndArrowSettingsSet = info._lineEndArrowSettingsSet;
             }
-        }
-
-        internal static string GetFontWeightString(Windows.UI.Text.FontWeight fontWeight)
-        {
-            if (infos == null)
-            {
-                // hdt
-                infos = typeof(FontWeights).GetRuntimeProperties().ToArray<PropertyInfo>();
-            }
-            for (int i = 0; i < infos.Length; i++)
-            {
-                object obj2 = infos[i].GetValue(null);
-                if ((obj2 != null) && (((Windows.UI.Text.FontWeight)obj2).Weight == fontWeight.Weight))
-                {
-                    return infos[i].Name;
-                }
-            }
-            return "Normal";
         }
 
         void Init()
@@ -664,7 +645,7 @@ namespace Dt.Cells.Data
             }
             if (this._fontWeightSet)
             {
-                Serializer.SerializeObj(StyleInfo.GetFontWeightString(this._fontWeight), "FontWeight", writer);
+                Serializer.SerializeObj(Utility.GetFontWeightString(this._fontWeight), "FontWeight", writer);
             }
             if (this._fillSet)
             {
