@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-ios</TargetFrameworks>
+    <SingleProject>true</SingleProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\GMEmptyFolder%402x.png" />
+    <BundleResource Include="Resources\GMSelected.png" />
+    <BundleResource Include="Resources\GMSelected%402x.png" />
+    <BundleResource Include="Resources\GMVideoIcon.png" />
+    <BundleResource Include="Resources\GMVideoIcon%402x.png" />
+    <BundleResource Include="Base.lproj\GMImagePicker.strings" />
+    <BundleResource Include="ca.lproj\GMImagePicker.strings" />
+    <BundleResource Include="de.lproj\GMImagePicker.strings" />
+    <BundleResource Include="en.lproj\GMImagePicker.strings" />
+    <BundleResource Include="es.lproj\GMImagePicker.strings" />
+    <BundleResource Include="fr.lproj\GMImagePicker.strings" />
+    <BundleResource Include="it.lproj\GMImagePicker.strings" />
+    <BundleResource Include="pt.lproj\GMImagePicker.strings" />
+    <BundleResource Include="nl.lproj\GMImagePicker.strings" />
+    <BundleResource Include="ru.lproj\GMImagePicker.strings" />
+    <BundleResource Include="pl.lproj\GMImagePicker.strings" />
+    <BundleResource Include="nb.lproj\GMImagePicker.strings" />
+    <BundleResource Include="sv.lproj\GMImagePicker.strings" />
+  </ItemGroup>
+</Project>
