@@ -22,15 +22,6 @@
 		<DefineConstants>$(DefineConstants);WASM</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Using Include="Dt.Core" />
-		<Using Include="Dt.Base" />
-		<Using Include="Dt.App" />
-		<Using Include="Dt.Agent" />
-		<Using Include="Dt.Core.Model" />
-		<Using Include="System" />
-	</ItemGroup>
-	
     <!-- 引用包 -->
     <ItemGroup>
 		<PackageReference Include="Dt.Client" Version="2.0.0" />
@@ -39,21 +30,23 @@
     </ItemGroup>
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.0.11" />
+        <PackageReference Include="Uno.WinUI" Version="4.0.13" />
+		<PackageReference Include="Uno.WinUI.Lottie" Version="4.0.13" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.196" />
+		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
 		<PackageReference Include="Square.OkHttp3" Version="4.9.2" />
 		<PackageReference Include="Square.OkIO" version="2.10.0" />
-		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.3.1.3" />
+		<PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.4.0.1" />
 		<PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.2.1.3" />
 		<!-- 因WorkManager后台任务添加的引用 -->
-		<PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.6.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.7.1.1" />
 		<!-- 升级.net6后需要引用 -->
 		<PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.0.4" />
 	</ItemGroup>
@@ -63,11 +56,33 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.0.11" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.0.13" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.0.4" />
     </ItemGroup>
 
-    <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
+	<ItemGroup>
+		<Using Include="Dt.Core" />
+		<Using Include="Dt.Base" />
+		<Using Include="Dt.App" />
+		<Using Include="Dt.Agent" />
+		<Using Include="Dt.Core.Model" />
+		<Using Include="System" />
+	</ItemGroup>
+
+	<!-- 确保各平台的GlobalUsing相同，不然造成歧义 -->
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<Using Remove="Android.App" />
+		<Using Remove="Android.Widget" />
+		<Using Remove="Android.OS.Bundle" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<Using Remove="CoreGraphics" />
+		<Using Remove="Foundation" />
+		<Using Remove="UIKit" />
+	</ItemGroup>
+	
+	<!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
         <Compile Update="**\*.xaml.cs">

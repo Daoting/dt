@@ -21,6 +21,9 @@ namespace $ext_safeprojectname$
         {
             Title = "搬运工";
 
+            // 启用后台任务，重写OnBgTaskRun
+            EnableBgTask = true;
+
             // 注释后为单机模式
             // 联网时先启动服务$ext_safeprojectname$.Svc
             // ip是本机ip不能为localhost，确保android ios虚拟机能够访问
@@ -38,6 +41,22 @@ namespace $ext_safeprojectname$
 
             // 自定义启动
             //await Startup.Run(typeof(Home), false);
+        }
+
+        /// <summary>
+        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
+        /// </summary>
+        public override async Task OnBgTaskRun()
+        {
+            //string tpName = AtState.GetCookie("LoginPhone");
+            //var cfg = await AtCm.GetConfig();
+            //await BackgroundLogin();
+            //Kit.Toast(
+            //    "样例",
+            //    tpName + "\r\n" + cfg.Date("now").ToString(),
+            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+
+            await Task.CompletedTask;
         }
 
         #region 自动生成

@@ -91,7 +91,7 @@ namespace Dt.Sample
         public override async Task OnBgTaskRun()
         {
             //string tpName = AtState.GetCookie("LoginPhone");
-            //var cfg = await AtKernel.GetConfig();
+            //var cfg = await AtCm.GetConfig();
             //await BackgroundLogin();
             //Kit.Toast(
             //    "样例",
