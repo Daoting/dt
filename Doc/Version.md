@@ -47,6 +47,7 @@ Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件
 * wasm版日期选择CalendarView、DatePickerFlyout、TimePickerFlyout已实现 
 * 启动时增加Kit.IsUsingDtSvc判断，GetConfig提前调用 
 * Kit.Msg Kit.Warn增加动态调整信息的功能
+* GMImagePicker.Xamarin不再升级，升.net6.0不兼容，合并到Dt.Cell
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

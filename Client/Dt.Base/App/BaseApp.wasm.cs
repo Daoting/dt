@@ -24,9 +24,11 @@ namespace Dt.Base
         /// </summary>
         public abstract Type Stub { get; }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
+        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch(Stub, p_args.Arguments);
+            // 确保sqlite的state.db正常打开，否则每次都重建！
+            await Task.Delay(100);
+            await Startup.Launch(Stub, p_args.Arguments);
         }
     }
 }
