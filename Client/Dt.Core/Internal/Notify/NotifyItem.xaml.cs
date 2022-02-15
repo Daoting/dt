@@ -51,7 +51,7 @@ namespace Dt.Core
             _tb.Text = _info.Message;
             CreateLink();
 
-            if (_info.DelaySeconds > 0)
+            if (_info.Delay > 0)
                 StartAutoClose();
 
             // 动画，uno暂时未实现
@@ -64,17 +64,29 @@ namespace Dt.Core
         {
             if (e.PropertyName == "Message")
             {
-                _tb.Text = _info.Message;
+                Kit.RunSync(() => _tb.Text = _info.Message);
             }
             else if (e.PropertyName == "NotifyType")
             {
-                _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush;
+                Kit.RunSync(() => _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush);
             }
             else if (e.PropertyName == "Link")
             {
-                if (_sp.Children.Count > 1)
-                    _sp.Children.RemoveAt(1);
-                CreateLink();
+                Kit.RunSync(() =>
+                {
+                    if (_sp.Children.Count > 1)
+                        _sp.Children.RemoveAt(1);
+                    CreateLink();
+                });
+            }
+            else if (e.PropertyName == "Delay")
+            {
+                Kit.RunSync(() =>
+                {
+                    KillCloseTimer();
+                    if (_info.Delay > 0)
+                        StartAutoClose();
+                });
             }
         }
 
@@ -83,9 +95,7 @@ namespace Dt.Core
             if (!string.IsNullOrEmpty(_info.Link))
             {
                 Button btn = new Button { Content = _info.Link, Style = (Style)Application.Current.Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
-
-                if (_info.LinkCallback != null)
-                    btn.Click += (s, e) => _info.LinkCallback(_info);
+                btn.Click += (s, e) => _info.LinkCallback?.Invoke(_info);
                 _sp.Children.Add(btn);
             }
         }
@@ -96,7 +106,7 @@ namespace Dt.Core
         void StartAutoClose()
         {
             KillCloseTimer();
-            _timerAutoClose = ThreadPoolTimer.CreateTimer(OnTimerHandler, TimeSpan.FromSeconds(_info.DelaySeconds));
+            _timerAutoClose = ThreadPoolTimer.CreateTimer(OnTimerHandler, TimeSpan.FromSeconds(_info.Delay));
         }
 
         void KillCloseTimer()
@@ -159,7 +169,7 @@ namespace Dt.Core
             _grid.ReleasePointerCapture(e.Pointer);
             e.Handled = true;
             var pt = e.GetCurrentPoint(null).Position;
-            if (_info.DelaySeconds >= 0
+            if (_info.Delay >= 0
                 && Math.Abs(_ptStart.Value.X - pt.X) < 6
                 && Math.Abs(_ptStart.Value.Y - pt.Y) < 6)
             {
@@ -178,7 +188,7 @@ namespace Dt.Core
         /// <param name="e"></param>
         void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (_info.DelaySeconds > 0)
+            if (_info.Delay > 0)
                 StartAutoClose();
             _rc.Fill = null;
         }

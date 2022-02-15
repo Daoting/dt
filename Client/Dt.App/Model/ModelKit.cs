@@ -25,7 +25,7 @@ namespace Dt.App
         {
             var notify = new NotifyInfo();
             notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
-            notify.DelaySeconds = 5;
+            notify.Delay = 5;
             notify.Link = "更新模型";
             notify.LinkCallback = async (e) =>
             {

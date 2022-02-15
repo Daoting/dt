@@ -54,6 +54,23 @@ namespace Dt.Sample
             Kit.CloseNotify(info);
         }
 
+        async void OnFreeNotify(object sender, RoutedEventArgs e)
+        {
+            NotifyInfo info = Kit.Msg(_tbMessage.Text, -1);
+
+            await Task.Delay(3000);
+            info.Message = "点击启动自动关闭";
+            info.NotifyType = NotifyType.Warning;
+            info.LinkCallback = (e) =>
+            {
+                info.Message = "三秒后自动关闭";
+                info.NotifyType = NotifyType.Information;
+                info.Link = null;
+                info.Delay = 3;
+            };
+            info.Link = "自动关闭";
+        }
+
         NotifyInfo GetInfo()
         {
             NotifyInfo info = new NotifyInfo();
@@ -61,7 +78,7 @@ namespace Dt.Sample
             info.Message = _tbMessage.Text;
             info.Link = "查看详情";
             info.LinkCallback = OnLink;
-            info.DelaySeconds = (bool)_cbAutoClose.IsChecked ? 3 : 0;
+            info.Delay = (bool)_cbAutoClose.IsChecked ? 3 : 0;
             return info;
         }
 

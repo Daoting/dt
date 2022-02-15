@@ -43,7 +43,7 @@ namespace Dt.Core
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Information;
-            notify.DelaySeconds = p_delaySeconds;
+            notify.Delay = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
             return notify;
         }
@@ -66,7 +66,7 @@ namespace Dt.Core
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Warning;
-            notify.DelaySeconds = p_delaySeconds;
+            notify.Delay = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
             return notify;
         }

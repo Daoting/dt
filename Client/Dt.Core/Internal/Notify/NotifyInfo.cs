@@ -21,6 +21,7 @@ namespace Dt.Core
         string _message;
         NotifyType _notifyType;
         string _link;
+        int _delay;
         #endregion
 
         /// <summary>
@@ -56,7 +57,11 @@ namespace Dt.Core
         /// <para>0：不自动关闭，但点击关闭</para>
         /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </summary>
-        public int DelaySeconds { get; set; }
+        public int Delay
+        {
+            get { return _delay; }
+            set { SetProperty(ref _delay, value); }
+        }
 
         /// <summary>
         /// 附加信息

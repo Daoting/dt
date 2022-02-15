@@ -115,7 +115,7 @@ namespace Dt.Base.Chat
 
             var notify = new NotifyInfo();
             // 不自动关闭
-            notify.DelaySeconds = 0;
+            notify.Delay = 0;
             notify.Link = "查看内容";
             notify.LinkCallback = (e) =>
             {

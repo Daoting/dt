@@ -316,7 +316,7 @@ namespace Dt.Core
                     {
                         NotifyType = NotifyType.Warning,
                         Message = title,
-                        DelaySeconds = 5,
+                        Delay = 5,
                         Link = "查看详细",
                     };
                     notify.LinkCallback = (e) =>
