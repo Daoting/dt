@@ -24,11 +24,9 @@ namespace Dt.Base
         /// </summary>
         public abstract Type Stub { get; }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
+        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            // 确保state.db正常打开，否则每次都重建！
-            await Task.Delay(100);
-            await Startup.Launch(Stub, p_args.Arguments);
+            _ = Startup.Launch(Stub, p_args.Arguments);
         }
     }
 }

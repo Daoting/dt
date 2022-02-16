@@ -75,7 +75,7 @@ namespace Dt.Base
             {
                 // 创建存根、系统初始化，内含创建窗口及整个系统可视树
                 Stub stub = (Stub)Activator.CreateInstance(p_stub);
-                Kit.Startup(stub, new DefaultCallback());
+                await Kit.Startup(stub, new DefaultCallback());
 
                 // 连接cm服务，获取全局参数，更新/打开模型库
                 if (Kit.IsUsingDtSvc)

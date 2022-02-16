@@ -198,7 +198,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_stub">系统存根</param>
         /// <param name="p_callback"></param>
-        internal static void Startup(Stub p_stub, ICallback p_callback)
+        internal static async Task Startup(Stub p_stub, ICallback p_callback)
         {
             Stub = p_stub;
             Callback = p_callback;
@@ -226,10 +226,15 @@ namespace Dt.Core
 #endif
 
             // 创建本地文件存放目录
-            if (!Directory.Exists(CachePath))
-                Directory.CreateDirectory(CachePath);
-            if (!Directory.Exists(DataPath))
-                Directory.CreateDirectory(DataPath);
+            // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
+            // 否则用 Directory 每次都创建新目录！
+            var localFolder = ApplicationData.Current.LocalFolder;
+            await localFolder.CreateFolderAsync(".doc", CreationCollisionOption.OpenIfExists);
+            await localFolder.CreateFolderAsync(".data", CreationCollisionOption.OpenIfExists);
+            //if (!Directory.Exists(CachePath))
+            //    Directory.CreateDirectory(CachePath);
+            //if (!Directory.Exists(DataPath))
+            //    Directory.CreateDirectory(DataPath);
 
 #if WASM
             // .net5.0 只能引用 SQLite3Provider_sqlite3，DllImport("sqlite3")
