@@ -15,12 +15,40 @@
         <StackPanel x:Name="_sp" Margin="20" Spacing="20">
             <TextBlock Text="默认文本"  />
             <TextBox x:Name="_tb" Text="默认编辑框" PlaceholderText="默认编辑框" />
-            <Button Content="默认按钮" Click="OnTest" />
+            <Button Content="默认按钮" />
+            <NumberBox Header="NumberBox" Value="1" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="100" />
+            <NumberBox Header="NumberBox自动计算" Value="NaN" PlaceholderText="1 + 2^2" AcceptsExpression="True" />
             <CheckBox Content="选择项" />
             <PasswordBox PlaceholderText="密码框" />
             <HyperlinkButton Content="链接按钮" />
-
-
+            <ToggleButton Content="ToggleButton" />
+            <ComboBox PlaceholderText="Pick a color" Width="200">
+                <x:String>Blue</x:String>
+                <x:String>Green</x:String>
+                <x:String>Red</x:String>
+                <x:String>Yellow</x:String>
+            </ComboBox>
+            <RatingControl IsClearEnabled="False" IsReadOnly="False" Caption="312 ratings" HorizontalAlignment="Left" />
+            <Slider Width="300" Minimum="500" Maximum="1000" StepFrequency="10" SmallChange="10" LargeChange="100" Value="800" HorizontalAlignment="Left" />
+            <ToggleSwitch />
+            <CalendarDatePicker PlaceholderText="Pick a date" Header="日历" />
+            <DatePicker Header="选择日期" />
+            <TimePicker Header="选择时间" MinuteIncrement="15" />
+            <FlipView Width="300" Height="200" HorizontalAlignment="Left">
+                <TextBlock Text="&#xE001;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE002;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE003;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE004;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </FlipView>
+            <!--<ColorPicker
+                  ColorSpectrumShape="Box"
+                  IsMoreButtonVisible="False"
+                  IsColorSliderVisible="True"
+                  IsColorChannelTextInputVisible="True"
+                  IsHexInputVisible="True"
+                  IsAlphaEnabled="False"
+                  IsAlphaSliderVisible="True"
+                  IsAlphaTextInputVisible="True" />-->
         </StackPanel>
     </ScrollViewer>
 </a:Win>

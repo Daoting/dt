@@ -107,10 +107,10 @@
                 <ControlTemplate TargetType="a:CNum">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
                         <!--设置TextWrapping为Wrap时不显示最后的删除按钮，但wasm会使用textarea，只能保留删除按钮-->
+                        <!--未右对齐因为和删除按钮容易误操作-->
                         <TextBox x:Name="TextBox"
                                  IsReadOnly="{TemplateBinding ReadOnlyBinding}"
                                  PlaceholderText="{TemplateBinding Placeholder}"
-                                 TextAlignment="Right"
                                  Style="{StaticResource FvTextBox}" />
                     </fv:CellPanel>
                 </ControlTemplate>

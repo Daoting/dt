@@ -64,15 +64,15 @@ namespace Dt.Core
         {
             if (e.PropertyName == "Message")
             {
-                Kit.RunSync(() => _tb.Text = _info.Message);
+                Kit.RunAsync(() => _tb.Text = _info.Message);
             }
             else if (e.PropertyName == "NotifyType")
             {
-                Kit.RunSync(() => _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush);
+                Kit.RunAsync(() => _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush);
             }
             else if (e.PropertyName == "Link")
             {
-                Kit.RunSync(() =>
+                Kit.RunAsync(() =>
                 {
                     if (_sp.Children.Count > 1)
                         _sp.Children.RemoveAt(1);
@@ -81,7 +81,7 @@ namespace Dt.Core
             }
             else if (e.PropertyName == "Delay")
             {
-                Kit.RunSync(() =>
+                Kit.RunAsync(() =>
                 {
                     KillCloseTimer();
                     if (_info.Delay > 0)
