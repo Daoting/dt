@@ -7,16 +7,16 @@ wasm ：
 FileItem上传、分享、MediaPlayerElement等功能未实现
 切换到默认主页无响应
 
+
 ios ：
-Manipulation 事件，内部有ScrollViewer时始终不触发，已提交uno，#5385
 System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 软键盘盖住 TextBox 的问题
 Lv.Toolbar在Table模式时 MeasureOverride 死循环
 内测时主页刚启动快速操作无响应，崩溃
 DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
 升级WinUI后：
-SqliteConnection初始化异常 ，无法启动
-Uno.WinUI.Lottie 不兼容 .net6-ios15.2
+SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
+Uno.WinUI.Lottie 不兼容 .net6-ios15.2 (Com.Airbnb.iOS.Lottie)
 
 
 android:
@@ -27,7 +27,7 @@ window:
 uwp的release版Chart动画报错 
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
-
+web部署方式禁用：ms-appinstaller:?source=
 
 
 # 版本说明

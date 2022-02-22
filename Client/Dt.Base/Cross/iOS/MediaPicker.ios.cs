@@ -119,7 +119,7 @@ namespace Dt.Base
                                     Version = PHVideoRequestOptionsVersion.Original,
                                     DeliveryMode = PHVideoRequestOptionsDeliveryMode.FastFormat,
                                 };
-                                PHImageManager.DefaultManager.RequestAvAsset(
+                                PHImageManager.DefaultManager.RequestAVAsset(
                                     asset,
                                     vOptions,
                                     (avAsset, audioMix, vInfo) =>
