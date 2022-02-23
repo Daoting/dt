@@ -34,6 +34,7 @@
             <CalendarDatePicker PlaceholderText="Pick a date" Header="日历" />
             <DatePicker Header="选择日期" />
             <TimePicker Header="选择时间" MinuteIncrement="15" />
+            <ProgressRing IsActive="True" HorizontalAlignment="Left" />
             <FlipView Width="300" Height="200" HorizontalAlignment="Left">
                 <TextBlock Text="&#xE001;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <TextBlock Text="&#xE002;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />

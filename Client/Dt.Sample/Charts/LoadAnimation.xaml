@@ -27,7 +27,6 @@
                             <ComboBox x:Name="_cbEasing" />
                         </a:CFree>
                         <CheckBox x:Name="_cbDelay" Content="延时启动动画" />
-                        <Button Content="饼图动画" Click="OnPieAnimation" />
                     </a:Fv>
                 </StackPanel>
             </a:Tab>

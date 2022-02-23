@@ -24,7 +24,6 @@ android:
 
 
 window:
-uwp的release版Chart动画报错 
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
 web部署方式禁用：ms-appinstaller:?source=

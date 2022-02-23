@@ -52,10 +52,10 @@ namespace Dt.Sample
             _chart.BeginUpdate();
 
             // uwp release版出错，ios android wasm无动画
-            //AnimationTransform at = (AnimationTransform)_cbTrans.SelectedIndex;
-            //AnimationOrigin ao = (AnimationOrigin)_cbOrigin.SelectedIndex;
-            //Easing ea = (Easing)_cbEasing.SelectedIndex;
-            //_chart.Data.LoadAnimation = CreateAnimation(at, ao, _cbDelay.IsChecked == true, ea);
+            AnimationTransform at = (AnimationTransform)_cbTrans.SelectedIndex;
+            AnimationOrigin ao = (AnimationOrigin)_cbOrigin.SelectedIndex;
+            Easing ea = (Easing)_cbEasing.SelectedIndex;
+            _chart.Data.LoadAnimation = CreateAnimation(at, ao, _cbDelay.IsChecked == true, ea);
 
             int nser = _rnd.Next(2, 6);
             int npts = _rnd.Next(5, 10);
@@ -189,11 +189,6 @@ namespace Dt.Sample
             }
 
             return new PlotElementAnimation() { Storyboard = sb, SymbolStyle = style };
-        }
-
-        void OnPieAnimation(object sender, RoutedEventArgs e)
-        {
-            //GoTo(new PieAnimation(), "饼图动画");
         }
     }
 
