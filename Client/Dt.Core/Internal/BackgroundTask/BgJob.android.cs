@@ -102,7 +102,7 @@ namespace Dt.Core
 
             // 一定要设置 channel 和 icon，否则不通知！！！
             Notification notify = new Notification.Builder(context, _channelID)
-                .SetSmallIcon(Resource.Drawable.abc_ic_star_black_48dp)
+                .SetSmallIcon(Resource.Drawable.abc_star_black_48dp)
                 .SetContentTitle(p_title)
                 .SetContentText(p_content)
                 .SetContentIntent(pending)
