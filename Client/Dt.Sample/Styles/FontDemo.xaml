@@ -13,16 +13,37 @@
                   VerticalScrollBarVisibility="Auto"
                   ZoomMode="Disabled">
         <StackPanel Margin="20" Spacing="20">
-            <TextBlock Text="常用字大小" />
-            <TextBlock Text="标题字：20px，小三，窗口页面标题用" FontSize="{StaticResource 标题字}" />
-            <TextBlock Text="默认字：16px，小四，xaml中不需要指定FontSize" />
-            <TextBlock Text="小字：14px，五号，说明性文字用" FontSize="{StaticResource 小字}" />
-            <TextBlock Text="小灰：深灰214px，常用文字样式" Style="{StaticResource 小灰}" />
-            
-            <TextBlock Text="不常用" Margin="0,20,0,0" />
-            <TextBlock Text="特小字：12px，小五，辅助说明文字用" FontSize="{StaticResource 特小字}" />
-            <TextBlock Text="大字：24px，小二，需要大字体醒目文字用" FontSize="{StaticResource 大字}" />
-            <TextBlock Text="特大字：32px，小一，使用场景少" FontSize="{StaticResource 特大字}" />
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="默认字：16px，小四，xaml中不需要指定FontSize" />
+                <TextBlock Text="&lt;TextBlock Text=&quot;内容&quot; /&gt;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="标题字：20px，小三" FontSize="{StaticResource 标题字}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 标题字}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="小字：14px，五号，说明性文字用" FontSize="{StaticResource 小字}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 小字}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="小灰：深灰2，14px" Style="{StaticResource 小灰}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 小灰}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="特小字：12px，小五，辅助说明文字用" FontSize="{StaticResource 特小字}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 特小字}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="大字：24px，小二，大字体醒目用" FontSize="{StaticResource 大字}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 大字}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
+
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="特大字：32px，小一" FontSize="{StaticResource 特大字}" />
+                <TextBlock Text="FontSize=&quot;{StaticResource 特大字}&quot;" IsTextSelectionEnabled="True" />
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </a:Win>

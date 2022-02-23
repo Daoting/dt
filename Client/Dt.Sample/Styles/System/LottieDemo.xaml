@@ -1,0 +1,20 @@
+﻿<a:Win
+    x:Class="Dt.Sample.LottieDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ScrollViewer HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Disabled">
+        <StackPanel Margin="20" Spacing="20">
+            <ProgressRing IsActive="True" HorizontalAlignment="Left" />
+            <TextBlock Text="Lottie 升级 WinUI3 后不可用" Foreground="Red" />
+            <AnimatedVisualPlayer x:Name="player">
+                
+            </AnimatedVisualPlayer>
+        </StackPanel>
+    </ScrollViewer>
+</a:Win>

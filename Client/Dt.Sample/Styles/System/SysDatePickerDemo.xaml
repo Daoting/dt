@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Dt.Sample.SysDatePickerDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Margin="20" Spacing="20">
+        <CalendarDatePicker PlaceholderText="Pick a date" Header="日历" />
+        <DatePicker Header="选择日期" />
+        <TimePicker Header="选择时间" MinuteIncrement="15" />
+    </StackPanel>
+</a:Win>

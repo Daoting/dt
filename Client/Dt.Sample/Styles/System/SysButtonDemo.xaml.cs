@@ -13,9 +13,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class StyleDemo : Win
+    public sealed partial class SysButtonDemo : Win
     {
-        public StyleDemo()
+        public SysButtonDemo()
         {
             InitializeComponent();
         }

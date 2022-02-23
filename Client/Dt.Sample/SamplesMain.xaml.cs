@@ -74,10 +74,10 @@ namespace Dt.Sample
             #region 样式资源
             group = new GroupData<Nav>
             {
-                new Nav("按钮", typeof(BtnDemo)) { To = NavTarget.WinMain, Desc = "常用按钮样式" },
                 new Nav("字体", typeof(FontDemo)) { To = NavTarget.WinMain, Desc = "常用字体大小" },
-                new Nav("标准控件", typeof(StyleDemo)) { To = NavTarget.WinMain, Desc = "常用系统控件的样式" },
                 new Nav("常用画刷", typeof(BrushDemo)) { To = NavTarget.WinMain, Desc = "内部标准画刷" },
+                new Nav("按钮", typeof(BtnDemo)) { To = NavTarget.WinMain, Desc = "常用按钮样式" },
+                new Nav("标准控件", typeof(StyleHome)) { Desc = "常用系统控件的样式" },
             };
             group.Title = "样式资源";
             ds.Add(group);

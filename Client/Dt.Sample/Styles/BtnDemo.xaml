@@ -7,52 +7,50 @@
     mc:Ignorable="d"
     xmlns:a="using:Dt.Base">
 
-    <a:Win.Resources>
-        <Style x:Key="SysButton" TargetType="Button" />
-    </a:Win.Resources>
-    
     <ScrollViewer HorizontalScrollMode="Disabled"
                   HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollMode="Auto"
                   VerticalScrollBarVisibility="Auto"
                   ZoomMode="Disabled">
-        <StackPanel Spacing="10" Margin="20">
-            <TextBlock Text="默认按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="默认按钮" />
-                <Button Content="不可用状态" IsEnabled="False" />
-                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" />
+        <StackPanel Spacing="20" Margin="20">
+            <StackPanel BorderBrush="{StaticResource 浅灰2}" BorderThickness="1" Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="默认按钮" />
+                    <Button Content="不可用状态" IsEnabled="False" />
+                    <Button Content="蓝底白字按钮" Foreground="White" Background="{StaticResource 主蓝}" />
+                </StackPanel>
+                <TextBlock Text="&lt;Button Content=&quot;内容&quot; /&gt;" IsTextSelectionEnabled="True" />
             </StackPanel>
-            <TextBlock Text="系统按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="系统按钮" Style="{StaticResource SysButton}" />
-                <Button Content="不可用状态" IsEnabled="False" Style="{StaticResource SysButton}" />
-                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" Style="{StaticResource SysButton}" />
+
+            <StackPanel BorderBrush="{StaticResource 浅灰2}" BorderThickness="1" Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="&#xE004;" Style="{StaticResource 字符按钮}" />
+                    <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
+                    <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="40" />
+                </StackPanel>
+                <TextBlock Text="Style=&quot;{StaticResource 字符按钮}&quot;" IsTextSelectionEnabled="True" />
             </StackPanel>
-            <TextBlock Text="字符按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="&#xE004;" Style="{StaticResource 字符按钮}" />
-                <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
-                <Button Content="&#xE003;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="60" />
+
+            <StackPanel Background="{StaticResource 主蓝}" Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="&#xE004;" Style="{StaticResource 浅字符按钮}" />
+                    <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" IsEnabled="False" />
+                    <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" FontSize="40" />
+                </StackPanel>
+                <TextBlock Text="Style=&quot;{StaticResource 浅字符按钮}&quot;" Foreground="White" IsTextSelectionEnabled="True" />
             </StackPanel>
-            <TextBlock Text="浅字符按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10" Background="{StaticResource 主蓝}">
-                <Button Content="&#xE004;" Style="{StaticResource 浅字符按钮}" />
-                <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" IsEnabled="False" />
-                <Button Content="&#xE003;" Style="{StaticResource 浅字符按钮}" FontSize="60" />
+
+            <StackPanel Background="Black" Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="按 钮" Style="{StaticResource 浅色按钮}" />
+                    <Button Content="不可用状态" Style="{StaticResource 浅色按钮}" IsEnabled="False" />
+                </StackPanel>
+                <TextBlock Text="Style=&quot;{StaticResource 浅色按钮}&quot;" Foreground="White" IsTextSelectionEnabled="True" />
             </StackPanel>
-            <TextBlock Text="浅色按钮" />
-            <StackPanel Orientation="Horizontal" Spacing="10" Background="Black">
-                <Button Content="按 钮" Style="{StaticResource 浅色按钮}" />
-                <Button Content="不可用状态" Style="{StaticResource 浅色按钮}" IsEnabled="False" />
-            </StackPanel>
-            <TextBlock Text="列表项按钮" />
+
             <StackPanel>
-                <a:BtnItem Icon="个人信息" Title="个人选项" Desc="包括自定义参数设置，查看修改个人信息及密码等功能。" />
-                <a:BtnItem Icon="备注" Title="删除聊天记录" Desc="删除所有历史聊天记录，包括文字、文件、图片、音视频等。" />
-                <a:BtnItem Icon="排列" Title="清除自定义布局" Desc="将所有视图布局恢复到默认状态。" />
-                <a:BtnItem Icon="文件" Title="删除临时文件" Desc="删除所有临时文件，删除后再次用到时需要重新下载，建议存储空间充足时不必清除。" />
-                <a:BtnItem Icon="公告" Title="关于" Desc="包括系统版权信息、软硬件要求、程序集版本及视图等内容。">
+                <a:BtnItem Icon="个人信息" Title="标题" Desc="描述" />
+                <a:BtnItem Icon="公告" Title="自定义内容" Desc="包括提醒、表情">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -68,7 +66,7 @@
                         </StackPanel>
                     </Grid>
                 </a:BtnItem>
-                <a:BtnItem Icon="禁止登记" Title="注销" Desc="设置自动登录时，可以通过注销切换账号。"/>
+                <TextBlock Text="&lt;a:BtnItem Icon=&quot;公告&quot; Title=&quot;标题&quot; Desc=&quot;描述&quot; /&gt;" IsTextSelectionEnabled="True" Margin="0,10,0,0" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

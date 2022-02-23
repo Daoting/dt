@@ -8,8 +8,11 @@
         <Style x:Key="DefaultBlock" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="IsTextSelectionEnabled" Value="True" />
             <Setter Property="Margin" Value="0,10,0,10" />
+        </Style>
+        <Style x:Key="DefBtn" TargetType="Button" BasedOn="{StaticResource 字符按钮}">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Content" Value="&#xE007;" />
         </Style>
     </a:Win.Resources>
 
@@ -19,71 +22,103 @@
                   VerticalScrollBarVisibility="Auto"
                   ZoomMode="Disabled">
         <StackPanel Margin="20" Spacing="20">
-            <Border Background="{StaticResource 主蓝}">
+            <Grid Background="{StaticResource 主蓝}">
                 <TextBlock Text="主蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
-            <Border Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="4">
-                <TextBlock Text="浅灰1 浅灰2" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 中灰1}" BorderBrush="{StaticResource 中灰2}" BorderThickness="4">
-                <TextBlock Text="中灰1 中灰2" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深灰1}" BorderBrush="{StaticResource 深灰2}" BorderThickness="4">
-                <TextBlock Text="深灰1 深灰2" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 亮蓝}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 浅灰1}">
+                <TextBlock Text="浅灰1" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 浅灰2}">
+                <TextBlock Text="浅灰2" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 中灰1}">
+                <TextBlock Text="中灰1" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 中灰2}">
+                <TextBlock Text="中灰2" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深灰1}">
+                <TextBlock Text="深灰1" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深灰2}">
+                <TextBlock Text="深灰2" Style="{StaticResource DefaultBlock}" />
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 亮蓝}">
                 <TextBlock Text="亮蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
-            <Border Background="{StaticResource 亮红}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 亮红}">
                 <TextBlock Text="亮红" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
 
-            <Border Background="{StaticResource 浅黄}">
+            <Grid Background="{StaticResource 浅黄}">
                 <TextBlock Text="浅黄" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 中黄}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 中黄}">
                 <TextBlock Text="中黄" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深黄}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深黄}">
                 <TextBlock Text="深黄" Style="{StaticResource DefaultBlock}" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
             
-            <Border Background="{StaticResource 中绿}">
+            <Grid Background="{StaticResource 中绿}">
                 <TextBlock Text="中绿" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
-            <Border Background="{StaticResource 浅绿}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 浅绿}">
                 <TextBlock Text="浅绿" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 湖蓝}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 湖蓝}">
                 <TextBlock Text="湖蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
-            <Border Background="{StaticResource 浅蓝}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 浅蓝}">
                 <TextBlock Text="浅蓝" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深蓝}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深蓝}">
                 <TextBlock Text="深蓝" Style="{StaticResource DefaultBlock}" Foreground="White" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
 
-            <Border Background="{StaticResource 暗遮罩}">
+            <Grid Background="{StaticResource 暗遮罩}">
                 <TextBlock Text="暗遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深暗遮罩}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深暗遮罩}">
                 <TextBlock Text="深暗遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
 
-            <Border Background="{StaticResource 黄遮罩}">
+            <Grid Background="{StaticResource 黄遮罩}">
                 <TextBlock Text="黄遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深黄遮罩}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深黄遮罩}">
                 <TextBlock Text="深黄遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
 
-            <Border Background="{StaticResource 亮遮罩}">
+            <Grid Background="{StaticResource 亮遮罩}">
                 <TextBlock Text="亮遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
-            <Border Background="{StaticResource 深亮遮罩}">
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
+            <Grid Background="{StaticResource 深亮遮罩}">
                 <TextBlock Text="深亮遮罩" Style="{StaticResource DefaultBlock}" />
-            </Border>
+                <Button Style="{StaticResource DefBtn}" Click="OnCopy" />
+            </Grid>
             
         </StackPanel>
     </ScrollViewer>

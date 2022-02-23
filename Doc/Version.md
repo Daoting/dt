@@ -1,7 +1,7 @@
 ﻿#  未解决问题
 
 MediaPlayerElement 未实现，FileItem.cs 
-
+Lottie 加载 json 动画未实现
 
 wasm ：
 FileItem上传、分享、MediaPlayerElement等功能未实现
