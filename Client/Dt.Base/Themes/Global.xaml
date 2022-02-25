@@ -409,53 +409,5 @@
         </Setter>
     </Style>
 
-    <!--****************************** Frame ******************************-->
-    <ios:Style x:Key="NativeDefaultFrame" TargetType="Frame">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Frame">
-                    <NativeFramePresenter Background="{TemplateBinding Background}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </ios:Style>
-
-    <android:Style x:Key="NativeDefaultFrame" TargetType="Frame">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Frame">
-                    <NativeFramePresenter Background="{TemplateBinding Background}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </android:Style>
-
-    <win:Style x:Key="NativeDefaultFrame" TargetType="Frame">
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Frame">
-                    <ContentPresenter Content="{TemplateBinding Content}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  ContentTransitions="{TemplateBinding ContentTransitions}"
-									  Background="{TemplateBinding Background}"
-									  BorderBrush="{TemplateBinding BorderBrush}"
-									  BorderThickness="{TemplateBinding BorderThickness}"
-									  Padding="{TemplateBinding Padding}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </win:Style>
-
-    <wasm:Style x:Key="NativeDefaultFrame" TargetType="Frame">
-    </wasm:Style>
-
-    <!--默认Frame，不同平台不同style，含页面动画-->
-    <Style TargetType="Frame" BasedOn="{StaticResource NativeDefaultFrame}" />
-
     <!--****************************** 数据模板 ******************************-->
 </ResourceDictionary>

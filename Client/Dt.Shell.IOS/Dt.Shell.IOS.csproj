@@ -27,7 +27,6 @@
         <BundleResource Include="iOS\Resources\logo.png" />
         <BundleResource Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
         <BundleResource Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
-        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
         <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
         <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
         <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />

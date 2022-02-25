@@ -64,7 +64,16 @@ namespace Dt.Base
 
             // 合并资源，因Dt.Client打包后uno无法在App.xaml中合并资源，故通过代码合并
             var res = Application.Current.Resources;
+            // 后合并的样式优先
             res.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Generic.xaml") });
+
+#if ANDROID || WASM //|| IOS
+            // Frame CommandBar AppBarButton采用本地样式及动画
+            // 原来在Global.xaml中定义，Frame内部使用NativeFramePresenter承载
+            // 目前 uno4.2 dev 版本iOS不能运行
+            Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
+#endif
+
 #if WASM
             // 自定义图标字体库，因Global.xaml中前缀无效无法定义
             res["IconFont"] = new FontFamily("DtIcon");

@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.2.0-dev.100" />
+        <PackageReference Include="Uno.WinUI" Version="4.2.0-dev.117" />
         <!-- 对应Microsoft.Toolkit.Uwp.UI.Lottie库，渲染 Adobe AfterEffects 格式动画，提供60fps矢量图形动画 -->
         <!-- Com.Airbnb.iOS.Lottie暂不支持ios15.2 -->
         <!--<PackageReference Include="Uno.WinUI.Lottie" Version="4.0.13" />-->
@@ -48,7 +48,7 @@
         <PackageReference Include="Square.OkHttp3" Version="4.9.2.1" />
         <!-- WorkManager后台任务引用 -->
         <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.7.1.2" />
-        <PackageReference Include="Uno.WinUI.Lottie" Version="4.2.0-dev.100" />
+        <PackageReference Include="Uno.WinUI.Lottie" Version="4.2.0-dev.117" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
