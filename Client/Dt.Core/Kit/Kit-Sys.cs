@@ -203,6 +203,9 @@ namespace Dt.Core
             Stub = p_stub;
             Callback = p_callback;
 
+            // 初始化日志
+            Serilogger.Init(p_stub.LogSetting);
+
             // 创建窗口及整个系统可视树
             SysVisual.Init();
 
@@ -330,7 +333,7 @@ namespace Dt.Core
                         notify.Close();
                     };
                     SysVisual.NotifyList.Add(notify);
-                    Kit.Trace(TraceOutType.UnhandledException, title, msg);
+                    Trace(TraceOutType.UnhandledException, title, msg);
                     Log.Error(msg);
                 }
             }

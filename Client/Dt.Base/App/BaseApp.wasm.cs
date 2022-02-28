@@ -20,13 +20,13 @@ namespace Dt.Base
     public abstract class BaseApp : Application
     {
         /// <summary>
-        /// 存根类型
+        /// 存根
         /// </summary>
-        public abstract Type Stub { get; }
+        protected Stub _stub;
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch(Stub, p_args.Arguments);
+            _ = Startup.Launch(_stub, p_args.Arguments);
         }
     }
 }

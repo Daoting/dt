@@ -23,13 +23,13 @@ namespace Dt.Base
     public abstract class BaseApp : Application
     {
         /// <summary>
-        /// 存根类型
+        /// 存根
         /// </summary>
-        public abstract Type Stub { get; }
+        protected Stub _stub;
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch(Stub, p_args.Arguments);
+            _ = Startup.Launch(_stub, p_args.Arguments);
         }
 
         public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
@@ -37,7 +37,7 @@ namespace Dt.Base
             var doc = new UIDocument(p_url);
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
-                _ = Startup.Launch(Stub, null, new ShareInfo(path));
+                _ = Startup.Launch(_stub, null, new ShareInfo(path));
 
             return true;
         }
@@ -82,7 +82,7 @@ namespace Dt.Base
                 {
                     // app完全退出后点击通知启动时不调用此方法！！！
                     // 因此 OnLaunched 和 ReceivedLocalNotification 方法只调用一个！
-                    _ = Startup.Launch(Stub, val);
+                    _ = Startup.Launch(_stub, val);
                 }
             }
 

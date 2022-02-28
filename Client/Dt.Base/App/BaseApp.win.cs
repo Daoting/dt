@@ -21,15 +21,15 @@ namespace Dt.Base
     {
         TaskCompletionSource<bool> _tcs;
 
+        /// <summary>
+        /// 存根
+        /// </summary>
+        protected Stub _stub;
+
         public BaseApp()
         {
             ToastNotificationManagerCompat.OnActivated += OnToastActivated;
         }
-
-        /// <summary>
-        /// 存根类型
-        /// </summary>
-        public abstract Type Stub { get; }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
@@ -41,7 +41,7 @@ namespace Dt.Base
                 _tcs = new TaskCompletionSource<bool>();
 
             // 参数始终null，只有Toast启动带参数
-            await Startup.Launch(Stub, null);
+            await Startup.Launch(_stub, null);
 
             // 通知正常启动完成
             _tcs?.SetResult(true);
@@ -57,7 +57,7 @@ namespace Dt.Base
             }
 
             // 从后台线程切换到UI线程，传递启动参数
-            Kit.RunAsync(() => _ = Startup.Launch(Stub, e.Argument));
+            Kit.RunAsync(() => _ = Startup.Launch(_stub, e.Argument));
         }
     }
 }

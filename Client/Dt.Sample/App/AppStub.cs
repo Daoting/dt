@@ -149,10 +149,9 @@ namespace Dt.Sample
                     "state",
                     new SqliteTblsInfo
                     {
-                        Version = "2fe5c45e35be65ce0b3f263598f88599",
+                        Version = "047ebd4f0ef4957193958ba8aff3966b",
                         Tables = new List<Type>
                         {
-                            typeof(Dt.Core.Model.ClientLog),
                             typeof(Dt.Core.Model.ClientCookie),
                             typeof(Dt.Core.Model.DataVersion),
                             typeof(Dt.Core.Model.UserParams),

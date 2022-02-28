@@ -17,10 +17,8 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv1">
-                    <a:CText ID="UserName" Title="用户名" />
-                    <a:CText ID="Title" Title="日志标题" />
-                    <a:CText ID="Content" Title="日志内容" AcceptsReturn="True" RowSpan="4" />
-                    <a:CDate ID="CTime" Title="日志时间" />
+                    <a:CText ID="Key" Title="键" />
+                    <a:CText ID="Val" Title="值" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

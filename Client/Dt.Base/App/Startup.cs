@@ -33,11 +33,11 @@ namespace Dt.Base
         /// <summary>
         /// 应用程序启动
         /// </summary>
-        /// <param name="p_stub">存根类型</param>
+        /// <param name="p_stub">存根</param>
         /// <param name="p_launchArgs">启动参数</param>
         /// <param name="p_shareInfo">接收分享的内容描述</param>
         /// <returns></returns>
-        public static async Task Launch(Type p_stub, string p_launchArgs = null, ShareInfo p_shareInfo = null)
+        public static async Task Launch(Stub p_stub, string p_launchArgs = null, ShareInfo p_shareInfo = null)
         {
             if (!string.IsNullOrEmpty(p_launchArgs))
             {
@@ -82,23 +82,22 @@ namespace Dt.Base
 
             try
             {
-                // 创建存根、系统初始化，内含创建窗口及整个系统可视树
-                Stub stub = (Stub)Activator.CreateInstance(p_stub);
-                await Kit.Startup(stub, new DefaultCallback());
+                // 系统初始化，内含创建窗口及整个系统可视树
+                await Kit.Startup(p_stub, new DefaultCallback());
 
                 // 连接cm服务，获取全局参数，更新/打开模型库
                 if (Kit.IsUsingDtSvc)
                     await InitConfig();
 
                 // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
-                await stub.OnStartup();
+                await p_stub.OnStartup();
 
                 // 接收分享
                 if (p_shareInfo != null)
-                    stub.OnReceiveShare(p_shareInfo);
+                    p_stub.OnReceiveShare(p_shareInfo);
 
                 // 注册后台任务
-                if (stub.EnableBgTask)
+                if (p_stub.EnableBgTask)
                     BgJob.Register();
 
                 InputManager.Init();

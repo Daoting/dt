@@ -35,6 +35,11 @@ namespace Dt.Core
         public bool EnableBgTask { get; protected set; }
 
         /// <summary>
+        /// 日志设置，null时默认输出到：Console 监控
+        /// </summary>
+        public LogSetting LogSetting { get; protected set; }
+
+        /// <summary>
         /// 系统启动
         /// </summary>
         public abstract Task OnStartup();

@@ -55,7 +55,7 @@ namespace Dt.Sample
 
         void OnCreateTableByLocalName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(new ClientLog());
+            Table tbl = Table.Create(new ClientCookie("test"));
             WriteColumns(tbl);
         }
 

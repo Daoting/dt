@@ -17,6 +17,7 @@ DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Inf
 升级WinUI后：
 SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
 Uno.WinUI.Lottie 不兼容 .net6-ios15.2 (Com.Airbnb.iOS.Lottie)
+Frame 未采用本地样式及动画，因FeatureConfiguration.Style.ConfigureNativeFrameNavigation() 后 Frame 无内容
 
 
 android:

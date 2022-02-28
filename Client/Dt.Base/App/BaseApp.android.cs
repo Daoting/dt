@@ -25,22 +25,22 @@ namespace Dt.Base
         string _params;
 
         /// <summary>
-        /// 存根类型
+        /// 存根
         /// </summary>
-        public abstract Type Stub { get; }
+        protected Stub _stub;
 
         protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (string.IsNullOrEmpty(_params))
                 _params = p_args.Arguments;
 
-            await Startup.Launch(Stub, _params);
+            await Startup.Launch(_stub, _params);
             _params = null;
         }
 
         public async void ReceiveShare(ShareInfo p_shareInfo)
         {
-            await Startup.Launch(Stub, null, p_shareInfo);
+            await Startup.Launch(_stub, null, p_shareInfo);
         }
 
         public void ToastStart(string p_params)
@@ -49,7 +49,7 @@ namespace Dt.Base
             if (Kit.Stub != null)
             {
                 // 非null表示app已启动过，不会再调用 OnLaunched
-                _ = Startup.Launch(Stub, p_params);
+                _ = Startup.Launch(_stub, p_params);
             }
             else
             {

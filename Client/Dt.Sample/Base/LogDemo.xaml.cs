@@ -7,9 +7,9 @@ using Microsoft.UI.Xaml;
 
 namespace Dt.Sample
 {
-    public sealed partial class SysTraceDemo : Win
+    public sealed partial class LogDemo : Win
     {
-        public SysTraceDemo()
+        public LogDemo()
         {
             InitializeComponent();
             if (!Kit.IsPhoneUI)
@@ -18,7 +18,8 @@ namespace Dt.Sample
 
         void OnNormal(object sender, RoutedEventArgs e)
         {
-            Kit.Trace("普通信息标题", "信息内容！");
+            Log.Information("abc134");
+            //Kit.Trace("普通信息标题", "信息内容！");
         }
 
         void OnRequest(object sender, RoutedEventArgs e)

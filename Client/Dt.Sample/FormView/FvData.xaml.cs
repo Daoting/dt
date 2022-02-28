@@ -29,12 +29,12 @@ namespace Dt.Sample
 
         void OnNewLocal(object sender, Mi e)
         {
-            _fv1.Data = new ClientLog(Content: "hdt", Ctime: DateTime.Now);
+            _fv1.Data = new ClientCookie("键名");
         }
 
         async void OnLocalSave(object sender, Mi e)
         {
-            if (await AtState.Save((ClientLog)_fv1.Data, false))
+            if (await AtState.Save((ClientCookie)_fv1.Data, false))
             {
                 _fv1.AcceptChanges();
                 Kit.Msg("本地库保存成功！");
@@ -47,7 +47,7 @@ namespace Dt.Sample
 
         void OnQueryLocal(object sender, Mi e)
         {
-            Table tbl = AtState.Query("select * from ClientLog limit 1");
+            var tbl = AtState.Query<ClientCookie>("select * from ClientCookie limit 1");
             if (tbl.Count > 0)
                 _fv1.Data = tbl[0];
             else
@@ -58,7 +58,7 @@ namespace Dt.Sample
         {
             if (await Kit.Confirm("确认要删除码？"))
             {
-                if (await AtState.Delete((ClientLog)_fv1.Data))
+                if (await AtState.Delete((ClientCookie)_fv1.Data))
                     _fv1.Data = null;
             }
         }

@@ -17,9 +17,8 @@ namespace Dt.Sample
     {
         public App()
         {
+            _stub = new AppStub();
             InitializeComponent();
         }
-
-        public override Type Stub => typeof(AppStub);
     }
 }
