@@ -44,9 +44,11 @@ namespace Dt.Core
             {
                 if (Kit.Stub == null)
                 {
-                    // 避免涉及UI
-                    Kit.StopTrace = true;
                     Kit.Stub = stub;
+
+                    // 避免涉及UI
+                    stub.LogSetting.TraceEnabled = false;
+                    Serilogger.Init();
                 }
                 await stub.OnBgTaskRun();
             }

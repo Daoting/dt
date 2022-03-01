@@ -204,7 +204,7 @@ namespace Dt.Core
             Callback = p_callback;
 
             // 初始化日志
-            Serilogger.Init(p_stub.LogSetting);
+            Serilogger.Init();
 
             // 创建窗口及整个系统可视树
             SysVisual.Init();

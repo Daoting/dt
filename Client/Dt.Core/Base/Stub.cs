@@ -35,9 +35,9 @@ namespace Dt.Core
         public bool EnableBgTask { get; protected set; }
 
         /// <summary>
-        /// 日志设置，null时默认输出到：Console 监控
+        /// 日志设置，在AppStub构造方法设置有效，默认输出到：Console 监控trace
         /// </summary>
-        public LogSetting LogSetting { get; protected set; }
+        public LogSetting LogSetting { get; } = new LogSetting();
 
         /// <summary>
         /// 系统启动
