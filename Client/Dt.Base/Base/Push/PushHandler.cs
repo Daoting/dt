@@ -155,7 +155,8 @@ namespace Dt.Base
             object[] args = null;
             try
             {
-                var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_msg));
+                byte[] data = Encoding.UTF8.GetBytes(p_msg);
+                var reader = new Utf8JsonReader(data);
                 // [
                 reader.Read();
                 method = reader.ReadAsString();
@@ -180,13 +181,17 @@ namespace Dt.Base
                         index++;
                     }
                 }
+
+                // 输出日志信息
+                string id = TraceLogs.AddRpcJson(data);
+                Log.ForContext("Rpc", "Recv")
+                    .ForContext("Json", id)
+                    .Debug($"msg推送—> {method}");
             }
             catch (Exception ex)
             {
                 Log.Warning(ex, "解析服务器推送时异常");
             }
-
-            Kit.Trace(TraceOutType.ServerPush, $"{method}—推送", Kit.TraceRpc ? p_msg : null);
 
             try
             {

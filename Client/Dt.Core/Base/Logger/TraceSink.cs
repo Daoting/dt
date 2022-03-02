@@ -17,7 +17,7 @@ namespace Dt.Core
     {
         public void Emit(LogEvent logEvent)
         {
-            TraceLogs.Add(logEvent);
+            TraceLogs.AddItem(logEvent);
         }
     }
 }

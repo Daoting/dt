@@ -109,7 +109,7 @@ namespace Dt.Sample
 #if WIN
                 new Nav("生成App图片", typeof(AppIcon)) { To = NavTarget.WinMain, Desc = "生成 android 和 iOS 中用到的app图片" },
 #endif
-                new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到系统监视、Console或保存到文件" },
+                new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
             };
             group.Title = "工具";
             ds.Add(group);

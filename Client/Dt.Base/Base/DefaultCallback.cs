@@ -198,7 +198,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 显示监视窗口
+        /// 显示系统日志窗口
         /// </summary>
         public void ShowTraceBox()
         {

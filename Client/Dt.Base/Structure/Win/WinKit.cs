@@ -46,7 +46,7 @@ namespace Dt.Base
                     item.Click += SetAutoStart;
                     _menu.Items.Add(item);
 
-                    item = new Mi { ID = "系统监视" };
+                    item = new Mi { ID = "系统日志" };
                     item.Click += (o, a) => SysTrace.ShowBox();
                     _menu.Items.Add(item);
                 }

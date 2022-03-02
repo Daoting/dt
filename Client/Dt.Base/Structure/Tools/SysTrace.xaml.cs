@@ -7,30 +7,26 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Dt.Core.Sqlite;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Serilog.Events;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base.Tools
 {
     /// <summary>
-    /// 监视输出面板
+    /// 系统日志输出面板
     /// </summary>
     public sealed partial class SysTrace : Win
     {
+        const string _copyMsg = "已复制到剪切板！";
         static SysTrace _win;
         static Dlg _dlg;
         static Dlg _dlgDb;
@@ -38,23 +34,10 @@ namespace Dt.Base.Tools
         public SysTrace()
         {
             InitializeComponent();
-            _lv.View = new TraceItemSelector
-            {
-                Normal = (DataTemplate)Resources["Normal"],
-                Call = (DataTemplate)Resources["Call"],
-                Recv = (DataTemplate)Resources["Recv"],
-                Exception = (DataTemplate)Resources["Exception"],
-            };
-            _lv.CellEx = typeof(TraceViewEx);
-            _lv.Data = Kit.TraceList;
-            _lv.ItemClick += OnOutputClick;
 
-            // mono不支持 Stream.Position = 0，JsonRpc第136行！无法输出返回内容
-            if (!Kit.IsPhoneUI)
-            {
-                _lv.Loaded += OnLoaded;
-                _lv.Unloaded += OnUnloaded;
-            }
+            _lv.CellEx = typeof(TraceViewEx);
+            _lv.Data = TraceLogs.Data;
+            _lv.ItemDoubleClick += OnDoubleClick;
         }
 
         public static void ShowBox()
@@ -87,7 +70,7 @@ namespace Dt.Base.Tools
                 var trace = new SysTrace();
                 _dlg = new Dlg
                 {
-                    Title = "系统监视",
+                    Title = "系统日志",
                     Content = trace,
                     IsPinned = true,
                     WinPlacement = DlgPlacement.FromLeft,
@@ -98,9 +81,26 @@ namespace Dt.Base.Tools
             _dlg.Show();
         }
 
+        void OnDoubleClick(object sender, object e)
+        {
+            var item = (TraceLogItem)e;
+            if (item.Log.Properties.TryGetValue("Json", out var val))
+            {
+                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
+                if (!string.IsNullOrEmpty(txt))
+                    CopyToClipboard(txt, false);
+                else
+                    Kit.Msg("json内容为空");
+            }
+            else
+            {
+                CopyToClipboard(item.ExceptionMsg, false);
+            }
+        }
+
         void OnClear(object sender, Mi e)
         {
-            Kit.TraceList.Clear();
+            TraceLogs.Data.Clear();
         }
 
         void OnLocalDb(object sender, Mi e)
@@ -126,45 +126,14 @@ namespace Dt.Base.Tools
             _dlgDb.Show();
         }
 
-        /// <summary>
-        /// 选择输出行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnOutputClick(object sender, ItemClickArgs e)
-        {
-            Row row = e.Row;
-            string txt = row.Str("content");
-            if (txt.Length > 2 && txt[0] == '[' && txt[1] != '\r')
-            {
-                // 初次时对Json格式化，带缩进
-                txt = FormatJson(txt);
-                row.InitVal("content", txt);
-            }
-            _tb.Text = txt;
-        }
-
-        void OnCopy(object sender, Mi e)
-        {
-            if (_tb.Text != "")
-                CopyToClipboard(_tb.Text);
-        }
-
-        void OnWrap(object sender, Mi e)
-        {
-            _tb.TextWrapping = e.IsChecked ? TextWrapping.Wrap : TextWrapping.NoWrap;
-        }
-
         void OnLocalPath(object sender, Mi e)
         {
-            _tb.Text = ApplicationData.Current.LocalFolder.Path;
-            CopyToClipboard(_tb.Text);
+            CopyToClipboard(ApplicationData.Current.LocalFolder.Path, true);
         }
 
         void OnInstallPath(object sender, Mi e)
         {
-            _tb.Text = Package.Current.InstalledLocation.Path;
-            CopyToClipboard(_tb.Text);
+            CopyToClipboard(Package.Current.InstalledLocation.Path, true);
         }
 
         void OnHostOS(object sender, Mi e)
@@ -176,37 +145,28 @@ namespace Dt.Base.Tools
         /// 将文本复制到剪贴板
         /// </summary>
         /// <param name="p_text"></param>
-        void CopyToClipboard(string p_text)
+        /// <param name="p_showText"></param>
+        void CopyToClipboard(string p_text, bool p_showText)
         {
             DataPackage data = new DataPackage();
             data.SetText(p_text);
             Clipboard.SetContent(data);
-            Kit.Msg("已复制到剪切板！");
-        }
-
-        /// <summary>
-        /// 格式化Json串，带缩进
-        /// </summary>
-        /// <param name="p_json"></param>
-        /// <returns></returns>
-        string FormatJson(string p_json)
-        {
-            try
-            {
-                return JsonSerializer.Serialize<object>(JsonSerializer.Deserialize<object>(p_json), JsonOptions.IndentedSerializer);
-            }
-            catch { }
-            return p_json;
+            if (p_showText)
+                Kit.Msg($"{_copyMsg}\r\n{p_text}");
+            else
+                Kit.Msg(_copyMsg);
         }
 
         void OnPageType(object sender, Mi e)
         {
+            string name;
             if (SysVisual.RootContent is Desktop)
-                _tb.Text = Desktop.Inst.MainWin.GetType().FullName;
+                name = Desktop.Inst.MainWin.GetType().FullName;
             else if (SysVisual.RootContent is Frame frame)
-                _tb.Text = frame.Content.GetType().FullName;
+                name = frame.Content.GetType().FullName;
             else
-                _tb.Text = SysVisual.RootContent.GetType().FullName;
+                name = SysVisual.RootContent.GetType().FullName;
+            Kit.Msg(name);
         }
 
         void OnLocalFiles(object sender, Mi e)
@@ -214,7 +174,7 @@ namespace Dt.Base.Tools
             StringBuilder sb = new StringBuilder();
             OutAllFiles(new DirectoryInfo(Kit.DataPath), sb);
             OutAllFiles(new DirectoryInfo(Kit.CachePath), sb);
-            _tb.Text = sb.ToString();
+            Kit.Msg(sb.ToString());
         }
 
         void OutAllFiles(DirectoryInfo di, StringBuilder p_sb)
@@ -227,16 +187,6 @@ namespace Dt.Base.Tools
             {
                 OutAllFiles(cd, p_sb);
             }
-        }
-
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Kit.TraceRpc = true;
-        }
-
-        void OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            Kit.TraceRpc = false;
         }
 
         #region 生成存根代码
@@ -433,51 +383,93 @@ namespace Dt.Base.Tools
         #endregion
     }
 
-    public class TraceItemSelector : DataTemplateSelector
-    {
-        public DataTemplate Normal { get; set; }
-        public DataTemplate Call { get; set; }
-        public DataTemplate Recv { get; set; }
-        public DataTemplate Exception { get; set; }
-
-        protected override DataTemplate SelectTemplateCore(object item)
-        {
-            switch ((TraceOutType)((LvItem)item).Row.Int("type"))
-            {
-                case TraceOutType.RpcCall:
-                case TraceOutType.WsCall:
-                    return Call;
-                case TraceOutType.RpcRecv:
-                case TraceOutType.WsRecv:
-                case TraceOutType.ServerPush:
-                    return Recv;
-                case TraceOutType.RpcException:
-                case TraceOutType.UnhandledException:
-                    return Exception;
-                default:
-                    return Normal;
-            }
-        }
-    }
-
     public class TraceViewEx
     {
-        public static string ServiceName(LvItem p_vr)
+        public static Grid Title(LvItem p_vr)
         {
-            var row = (Row)p_vr.Data;
-            switch ((TraceOutType)row["type"])
+            var item = (TraceLogItem)p_vr.Data;
+            Grid grid = new Grid
             {
-                case TraceOutType.RpcCall:
-                case TraceOutType.RpcRecv:
-                    return row.Str("service");
-                case TraceOutType.WsCall:
-                case TraceOutType.WsRecv:
-                    return "ws";
-                case TraceOutType.ServerPush:
-                    return "push";
-                default:
-                    return null;
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition() { Width = GridLength.Auto },
+                    new ColumnDefinition() { Width = GridLength.Auto },
+                    new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) },
+                },
+                Height = 40,
+            };
+
+            TextBlock tb = new TextBlock { Text = item.Log.Timestamp.ToString("HH:mm:ss"), Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center };
+            grid.Children.Add(tb);
+
+            tb = new TextBlock { Foreground = Res.WhiteBrush, Text = item.Log.Level.ToString(), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+            if (item.Log.Level == LogEventLevel.Error || item.Log.Level == LogEventLevel.Fatal)
+            {
+                tb.Foreground = Res.RedBrush;
             }
+            else if (item.Log.Level == LogEventLevel.Warning)
+            {
+                tb.Foreground = Res.YellowBrush;
+            }
+            else if (item.Log.Properties.TryGetValue("Rpc", out var val))
+            {
+                tb.Foreground = Res.湖蓝;
+                var tp = val.ToString("l", null);
+                tb.Text = (tp == "Call") ? "Call" : "Recv";
+            }
+            else if (item.Log.Level == LogEventLevel.Information)
+            {
+                tb.Text = "Inf";
+            }
+            Grid.SetColumn(tb, 1);
+            grid.Children.Add(tb);
+
+            if (item.Log.Exception != null || item.Log.Properties.ContainsKey("Json"))
+            {
+                Button btn = new Button { Content = "\uE006", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
+                btn.Click += OnShowDetail;
+                Grid.SetColumn(btn, 2);
+                grid.Children.Add(btn);
+            }
+            return grid;
+        }
+
+        static void OnShowDetail(object sender, RoutedEventArgs e)
+        {
+            var item = (TraceLogItem)((LvItem)((Button)sender).DataContext).Data;
+            TextBox tb = new TextBox
+            {
+                AcceptsReturn = true,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                BorderThickness = new Thickness(),
+            };
+            ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
+            ScrollViewer.SetVerticalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
+            if (item.Log.Properties.TryGetValue("Json", out var val))
+            {
+                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
+                if (!string.IsNullOrEmpty(txt))
+                    tb.Text = txt;
+            }
+            else
+            {
+                tb.Text = item.ExceptionMsg;
+            }
+
+            Dlg dlg = new Dlg
+            {
+                Title = item.Log.Timestamp.ToString("HH:mm:ss"),
+                Content = tb,
+                IsPinned = true,
+            };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.MinWidth = 400;
+                dlg.MaxWidth = Kit.ViewWidth - 80;
+                dlg.MinHeight = 300;
+                dlg.MaxHeight = Kit.ViewHeight - 80;
+            }
+            dlg.Show();
         }
     }
 }

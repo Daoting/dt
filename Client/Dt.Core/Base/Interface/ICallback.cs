@@ -69,7 +69,7 @@ namespace Dt.Core
         object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params);
 
         /// <summary>
-        /// 显示监视窗口
+        /// 显示系统日志窗口
         /// </summary>
         void ShowTraceBox();
 

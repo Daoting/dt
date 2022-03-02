@@ -98,7 +98,7 @@ namespace Dt.Base
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                var item = new Mi { ID = "系统监控" };
+                var item = new Mi { ID = "系统日志" };
                 item.Click += (s, a) => SysTrace.ShowBox();
                 _menu.Items.Add(item);
             }

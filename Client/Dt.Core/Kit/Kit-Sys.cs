@@ -69,7 +69,7 @@ namespace Dt.Core
         public static Stub Stub { get; internal set; }
 
         /// <summary>
-        /// 显示监视窗口
+        /// 显示系统日志窗口
         /// </summary>
         public static Action ShowTraceBox => Callback.ShowTraceBox;
 
@@ -77,11 +77,6 @@ namespace Dt.Core
         /// 系统回调
         /// </summary>
         internal static ICallback Callback { get; private set; }
-
-        /// <summary>
-        /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
-        /// </summary>
-        internal static bool TraceRpc { get; set; }
         #endregion
 
         #region 当前时间
@@ -307,19 +302,16 @@ namespace Dt.Core
                 else
                 {
                     string title;
-                    string msg;
                     if (p_ex is ServerException se)
                     {
                         title = se.Title;
-                        msg = se.Message;
                     }
                     else
                     {
-                        title = "未处理异常";
-                        msg = $"异常消息：{p_ex.Message}\r\n堆栈信息：{p_ex.StackTrace}";
+                        title = $"未处理异常：{p_ex.GetType().FullName}";
                     }
 
-                    // 警告、输出监视、保存日志
+                    // 警告、保存日志
                     var notify = new NotifyInfo
                     {
                         NotifyType = NotifyType.Warning,
@@ -333,8 +325,7 @@ namespace Dt.Core
                         notify.Close();
                     };
                     SysVisual.NotifyList.Add(notify);
-                    Trace(TraceOutType.UnhandledException, title, msg);
-                    Log.Error(msg);
+                    Log.Error(p_ex, title);
                 }
             }
             catch { }

@@ -118,8 +118,11 @@ namespace Dt.Core.Rpc
             byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
 
 #if !SERVER
-            // 输出监视信息
-            Kit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
+            // 输出日志信息
+            string id = TraceLogs.AddRpcJson(data);
+            Log.ForContext("Rpc", "Call")
+                .ForContext("Json", id)
+                .Debug($"{_svcName}.{p_methodName}");
 #endif
 
             // 超过长度限制时执行压缩

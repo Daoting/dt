@@ -23,8 +23,9 @@ namespace Dt.Sample
         {
             Title = "搬运工";
             EnableBgTask = true;
-            //InitCmUrl("https://10.10.1.16/dt-cm");
-
+            InitCmUrl("https://10.10.1.16/dt-cm");
+            LogSetting.FileEnabled = true ;
+            
             MenuKit.FixedMenus = new List<OmMenu>
             {
                 new OmMenu(

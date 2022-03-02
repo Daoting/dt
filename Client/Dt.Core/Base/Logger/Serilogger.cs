@@ -21,11 +21,15 @@ namespace Dt.Core
             try
             {
                 var cfg = new LoggerConfiguration();
+
+                // 设置最小输出级别，默认Information
+                cfg.MinimumLevel.Is(setting.LogLevel);
+                
                 if (setting.TraceEnabled)
-                    cfg.WriteTo.Sink(new TraceSink(), setting.LogLevel, null);
+                    cfg.WriteTo.Sink(new TraceSink());
 
                 if (setting.ConsoleEnabled)
-                    cfg.WriteTo.Sink(new ConsoleSink(), setting.LogLevel, null);
+                    cfg.WriteTo.Sink(new ConsoleSink());
 
                 if (setting.FileEnabled)
                     AddFileLogging(cfg);
@@ -57,8 +61,7 @@ namespace Dt.Core
                     new CompactJsonFormatter(),
                     Path.Combine(ApplicationData.Current.LocalFolder.Path, ".data", fileName),
                     rollingInterval: RollingInterval.Day, // 文件名末尾加日期
-                    fileSizeLimitBytes: 10485760,         // 10mb
-                    restrictedToMinimumLevel: Kit.Stub.LogSetting.LogLevel);
+                    fileSizeLimitBytes: 10485760);        // 10mb
         }
     }
 }

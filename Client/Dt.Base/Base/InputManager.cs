@@ -42,7 +42,7 @@ namespace Dt.Base
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + → 系统监控
+                // Alt + → 系统日志
                 e.Handled = true;
                 SysTrace.ShowBox();
             };

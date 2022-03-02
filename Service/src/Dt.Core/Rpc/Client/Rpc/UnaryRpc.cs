@@ -122,15 +122,12 @@ namespace Dt.Core.Rpc
             }
 
 #if !SERVER
-            // 输出监视信息
-            string content = null;
-            if (Kit.TraceRpc || result.ResultType == RpcResultType.Error)
-            {
-                // 输出详细内容
-                content = Encoding.UTF8.GetString(p_data);
-            }
-            Kit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
-
+            // 输出日志信息
+            string id = TraceLogs.AddRpcJson(p_data);
+            Log.ForContext("Rpc", "Recv")
+                .ForContext("Json", id)
+                .Debug($"{_svcName}.{_methodName} — {result.Elapsed}ms");
+            
             // ⚡ 为服务器标志
             if (result.ResultType == RpcResultType.Message)
                 throw new KnownException("⚡" + result.Info);
