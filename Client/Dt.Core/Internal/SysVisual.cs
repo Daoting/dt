@@ -91,11 +91,12 @@ namespace Dt.Core
             StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
             RootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #elif ANDROID
+            // .net6.0 后 Window.Bounds 不包含顶部状态栏高度！！！
             // Android上已设置不占用顶部状态栏和底部导航栏，但 Window.Bounds 包含顶部状态栏高度！
-            var res = Android.App.Application.Context.Resources;
-            int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0)
-                StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
+            //var res = Android.App.Application.Context.Resources;
+            //int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
+            //if (resourceId > 0)
+            //    StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
 #endif
 
 #if WIN

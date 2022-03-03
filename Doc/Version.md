@@ -28,6 +28,7 @@ window:
 Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
 web部署方式禁用：ms-appinstaller:?source=
+KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 
 
 # 版本说明
@@ -49,6 +50,8 @@ web部署方式禁用：ms-appinstaller:?source=
 * Kit.Msg Kit.Warn增加动态调整信息的功能
 * GMImagePicker.Xamarin不再升级，升.net6.0不兼容，合并到Dt.Cell
 * NotifyItem动态自动关闭，动态回调
+* 使用Serilog，完成日志的file console trace输出
+* Dlg 标题和菜单平分标题栏宽度
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

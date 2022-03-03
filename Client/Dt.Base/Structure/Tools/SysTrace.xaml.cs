@@ -13,7 +13,6 @@ using Microsoft.UI.Xaml.Controls;
 using Serilog.Events;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -24,60 +23,37 @@ namespace Dt.Base.Tools
     /// <summary>
     /// 系统日志输出面板
     /// </summary>
-    public sealed partial class SysTrace : Win
+    public sealed partial class SysTrace : Dlg
     {
         const string _copyMsg = "已复制到剪切板！";
-        static SysTrace _win;
-        static Dlg _dlg;
+        static SysTrace _dlg;
         static Dlg _dlgDb;
 
         public SysTrace()
         {
             InitializeComponent();
 
+            Title = "系统日志";
+            IsPinned = true;
+            WinPlacement = DlgPlacement.FromRight;
+
             _lv.CellEx = typeof(TraceViewEx);
-            _lv.Data = TraceLogs.Data;
             _lv.ItemDoubleClick += OnDoubleClick;
         }
 
         public static void ShowBox()
         {
-            // 桌面
-            if (SysVisual.RootContent is Desktop)
-            {
-                // 桌面时停靠在左侧
-                if (_win == null)
-                {
-                    _win = new SysTrace();
-                    _win.SetSplitWidth(400);
-                }
-
-                // 注销后再打开时可能异常！
-                Desktop.Inst.LeftWin = _win;
-                return;
-            }
-
-            // phone模式
-            if (SysVisual.RootContent is Frame)
-            {
-                Kit.OpenWin(typeof(SysTrace));
-                return;
-            }
-
-            // win模式未登录
             if (_dlg == null)
             {
-                var trace = new SysTrace();
-                _dlg = new Dlg
-                {
-                    Title = "系统日志",
-                    Content = trace,
-                    IsPinned = true,
-                    WinPlacement = DlgPlacement.FromLeft,
-                    BorderBrush = Res.浅灰2,
-                    Width = 400
-                };
+                _dlg = new SysTrace();
+                if (!Kit.IsPhoneUI)
+                    _dlg.Width = 400;
+
+                // 数据源和Lv都是静态的，即使关闭窗口仍做绑定处理
+                _dlg.Closed += (s, e) => _dlg._lv.Data = null;
             }
+
+            _dlg._lv.Data = TraceLogs.Data;
             _dlg.Show();
         }
 
@@ -100,7 +76,7 @@ namespace Dt.Base.Tools
 
         void OnClear(object sender, Mi e)
         {
-            TraceLogs.Data.Clear();
+            TraceLogs.Clear();
         }
 
         void OnLocalDb(object sender, Mi e)
@@ -128,17 +104,17 @@ namespace Dt.Base.Tools
 
         void OnLocalPath(object sender, Mi e)
         {
-            CopyToClipboard(ApplicationData.Current.LocalFolder.Path, true);
+            Log.Debug(ApplicationData.Current.LocalFolder.Path);
         }
 
         void OnInstallPath(object sender, Mi e)
         {
-            CopyToClipboard(Package.Current.InstalledLocation.Path, true);
+            Log.Debug(Package.Current.InstalledLocation.Path);
         }
 
         void OnHostOS(object sender, Mi e)
         {
-            Kit.Msg(Kit.HostOS.ToString());
+            Log.Debug(Kit.HostOS.ToString());
         }
 
         /// <summary>
@@ -161,12 +137,30 @@ namespace Dt.Base.Tools
         {
             string name;
             if (SysVisual.RootContent is Desktop)
+            {
                 name = Desktop.Inst.MainWin.GetType().FullName;
+            }
             else if (SysVisual.RootContent is Frame frame)
-                name = frame.Content.GetType().FullName;
+            {
+                if (frame.Content is Page page)
+                {
+                    if (page.Content is Tab tab)
+                        name = tab.OwnWin?.GetType().FullName;
+                    else if (page.Content is PhoneTabs tabs)
+                        name = tabs.OwnWin?.GetType().FullName;
+                    else
+                        name = page.Content.GetType().FullName;
+                }
+                else
+                {
+                    name = frame.Content.GetType().FullName;
+                }
+            }
             else
+            {
                 name = SysVisual.RootContent.GetType().FullName;
-            Kit.Msg(name);
+            }
+            Log.Debug(name);
         }
 
         void OnLocalFiles(object sender, Mi e)

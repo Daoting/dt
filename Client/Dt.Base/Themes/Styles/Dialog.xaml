@@ -33,8 +33,9 @@
                               Height="{StaticResource RowOuterHeight}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
+                                <!--标题和菜单平分-->
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
@@ -52,6 +53,7 @@
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认前景}"
                                               Background="{StaticResource 中灰1}"
+                                              HorizontalAlignment="Right"
                                               Grid.Column="2"/>
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
@@ -84,8 +86,9 @@
                               Height="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
+                                <!--标题和菜单平分-->
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
@@ -95,16 +98,17 @@
                                     Width="50" />
                             <!--标题-->
                             <TextBlock Text="{TemplateBinding Title}"
-                                       VerticalAlignment="Center"
                                        Foreground="{StaticResource 默认背景}"
                                        FontSize="{StaticResource 标题字}"
                                        TextTrimming="CharacterEllipsis"
                                        TextWrapping="NoWrap"
-                                       Margin="4,0,10,0"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
                                        Grid.Column="1" />
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认背景}"
+                                              HorizontalAlignment="Right"
                                               Grid.Column="2"/>
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->

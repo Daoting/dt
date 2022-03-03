@@ -38,11 +38,11 @@ namespace Dt.Base
             var accelerator = new KeyboardAccelerator()
             {
                 Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Right
+                Key = VirtualKey.Left
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + → 系统日志
+                // Alt + ← 系统日志
                 e.Handled = true;
                 SysTrace.ShowBox();
             };

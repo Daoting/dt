@@ -580,9 +580,10 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.FromLeft:
-                    Top = 0;
+                    // Desktop时不覆盖任务栏
+                    Top = SysVisual.RootContent is Desktop ? 44 : 0;
                     Left = 0;
-                    Height = maxHeight;
+                    Height = maxHeight - Top;
                     if (maxWidth < actWidth)
                         Width = maxWidth;
                     break;
@@ -596,8 +597,9 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.FromRight:
-                    Top = 0;
-                    Height = maxHeight;
+                    // Desktop时不覆盖任务栏
+                    Top = SysVisual.RootContent is Desktop ? 44 : 0;
+                    Height = maxHeight - Top;
                     if (maxWidth < actWidth)
                     {
                         Left = 0;

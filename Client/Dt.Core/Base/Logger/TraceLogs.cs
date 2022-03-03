@@ -49,6 +49,16 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 清空输出
+        /// </summary>
+        public static void Clear()
+        {
+            Data.Clear();
+            _rpcJsons.Clear();
+            _startIndex = 0;
+        }
+
+        /// <summary>
         /// 缓存rpc调用或结果的json数据，返回索引，优点：
         /// 1. 避免无用的byte[] -> string 转换
         /// 2. 避免将 json 内容写进日志文件

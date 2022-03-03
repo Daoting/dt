@@ -21,6 +21,8 @@ namespace Dt.Core
     {
         static ITextFormatter _ftMessage = new MessageTemplateTextFormatter("{Message:lj}");
         static ITextFormatter _ftAll = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
+        string _msg;
+        string _allMsg;
 
         /// <summary>
         /// 日志项
@@ -34,11 +36,15 @@ namespace Dt.Core
         {
             get
             {
-                using (var buffer = new StringWriter())
+                if (_msg == null)
                 {
-                    _ftMessage.Format(Log, buffer);
-                    return buffer.ToString().Trim();
+                    using (var buffer = new StringWriter())
+                    {
+                        _ftMessage.Format(Log, buffer);
+                        _msg = buffer.ToString().Trim();
+                    }
                 }
+                return _msg;
             }
         }
 
@@ -49,11 +55,15 @@ namespace Dt.Core
         {
             get
             {
-                using (var buffer = new StringWriter())
+                if (_allMsg == null)
                 {
-                    _ftAll.Format(Log, buffer);
-                    return buffer.ToString().Trim();
+                    using (var buffer = new StringWriter())
+                    {
+                        _ftAll.Format(Log, buffer);
+                        _allMsg = buffer.ToString().Trim();
+                    }
                 }
+                return _allMsg;
             }
         }
     }
