@@ -27,7 +27,6 @@ namespace Dt.Base.Tools
     {
         const string _copyMsg = "已复制到剪切板！";
         static SysTrace _dlg;
-        static Dlg _dlgDb;
 
         public SysTrace()
         {
@@ -45,16 +44,28 @@ namespace Dt.Base.Tools
         {
             if (_dlg == null)
             {
-                _dlg = new SysTrace();
+                _dlg = new SysTrace { ShowVeil = false };
                 if (!Kit.IsPhoneUI)
                     _dlg.Width = 400;
 
-                // 数据源和Lv都是静态的，即使关闭窗口仍做绑定处理
+                // 数据源和Lv都是静态的，即使关闭仍做绑定处理
                 _dlg.Closed += (s, e) => _dlg._lv.Data = null;
             }
 
             _dlg._lv.Data = TraceLogs.Data;
             _dlg.Show();
+        }
+
+        /// <summary>
+        /// 模式切换时关闭dlg并置null，再次打开时重新创建
+        /// </summary>
+        internal static void OnUIModeChanged()
+        {
+            if (_dlg != null)
+            {
+                _dlg.Close();
+                _dlg = null;
+            }
         }
 
         void OnDoubleClick(object sender, object e)
@@ -81,25 +92,31 @@ namespace Dt.Base.Tools
 
         void OnLocalDb(object sender, Mi e)
         {
-            if (Kit.IsPhoneUI || SysVisual.RootContent is Desktop)
+            if (SysVisual.RootContent is Desktop)
             {
                 Kit.OpenWin(typeof(LocalDbView));
-                return;
             }
-
-            // win模式未登录
-            if (_dlgDb == null)
+            else if (SysVisual.RootContent is Frame)
             {
-                _dlgDb = new Dlg
+                Close();
+
+                if (Kit.IsPhoneUI)
                 {
-                    Title = "本地库",
-                    Content = new LocalDbView(),
-                    IsPinned = true,
-                    WinPlacement = DlgPlacement.Maximized,
-                    BorderBrush = Res.浅灰2,
-                };
+                    // phone模式
+                    Kit.OpenWin(typeof(LocalDbView));
+                }
+                else
+                {
+                    // win模式未登录
+                    new Dlg
+                    {
+                        Title = "本地库",
+                        Content = new LocalDbView(),
+                        IsPinned = true,
+                        WinPlacement = DlgPlacement.Maximized,
+                    }.Show();
+                }
             }
-            _dlgDb.Show();
         }
 
         void OnLocalPath(object sender, Mi e)
@@ -142,7 +159,7 @@ namespace Dt.Base.Tools
             }
             else if (SysVisual.RootContent is Frame frame)
             {
-                if (frame.Content is Page page)
+                if (frame.Content is PhonePage page)
                 {
                     if (page.Content is Tab tab)
                         name = tab.OwnWin?.GetType().FullName;

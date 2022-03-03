@@ -32,7 +32,7 @@ namespace Dt.App
 
             _tbTitle.Text = string.IsNullOrEmpty(Kit.Stub.Title) ? "无标题" : Kit.Stub.Title;
             // 设置中间面板宽度
-            LoginPanel.Width = Kit.IsPhoneUI ? ApplicationView.GetForCurrentView().VisibleBounds.Width - 80 : 400;
+            LoginPanel.Width = Kit.IsPhoneUI ? Kit.ViewWidth - 80 : 400;
             Loaded += (s, e) => _tbPhone.Focus(FocusState.Programmatic);
         }
 

@@ -315,24 +315,25 @@ namespace Dt.Base
             Kit.RunAsync(() =>
             {
                 // 外部未指定时采用默认登录页
-                Type tp = LoginPageType;
-                var page = Activator.CreateInstance(tp) as UIElement;
                 if (!p_isPopup)
                 {
-                    SysVisual.RootContent = page;
-                    return;
+                    Frame fm = new Frame();
+                    SysVisual.RootContent = fm;
+                    fm.Navigate(LoginPageType);
                 }
-
-                // 弹出式登录页面在未登录遇到需要登录的功能时
-                var dlg = new Dlg
+                else
                 {
-                    Resizeable = false,
-                    HideTitleBar = true,
-                    PhonePlacement = DlgPlacement.Maximized,
-                    WinPlacement = DlgPlacement.Maximized,
-                    Content = page,
-                };
-                dlg.Show();
+                    // 弹出式登录页面在未登录遇到需要登录的功能时
+                    var dlg = new Dlg
+                    {
+                        Resizeable = false,
+                        HideTitleBar = true,
+                        PhonePlacement = DlgPlacement.Maximized,
+                        WinPlacement = DlgPlacement.Maximized,
+                        Content = Activator.CreateInstance(LoginPageType),
+                    };
+                    dlg.Show();
+                }
             });
         }
         #endregion

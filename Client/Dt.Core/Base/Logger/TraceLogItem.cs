@@ -22,7 +22,6 @@ namespace Dt.Core
         static ITextFormatter _ftMessage = new MessageTemplateTextFormatter("{Message:lj}");
         static ITextFormatter _ftAll = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
         string _msg;
-        string _allMsg;
 
         /// <summary>
         /// 日志项
@@ -30,7 +29,7 @@ namespace Dt.Core
         public LogEvent Log { get; set; }
 
         /// <summary>
-        /// 日志的消息内容
+        /// 日志的消息内容，Lv中显示
         /// </summary>
         public string Message
         {
@@ -55,15 +54,11 @@ namespace Dt.Core
         {
             get
             {
-                if (_allMsg == null)
+                using (var buffer = new StringWriter())
                 {
-                    using (var buffer = new StringWriter())
-                    {
-                        _ftAll.Format(Log, buffer);
-                        _allMsg = buffer.ToString().Trim();
-                    }
+                    _ftAll.Format(Log, buffer);
+                    return buffer.ToString().Trim();
                 }
-                return _allMsg;
             }
         }
     }

@@ -252,6 +252,8 @@ namespace Dt.Base
             //            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Kit.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             //#endif
 
+            SysTrace.OnUIModeChanged();
+
             if (Kit.IsPhoneUI)
             {
                 // WinUI模式 -> PhoneUI模式
@@ -259,15 +261,15 @@ namespace Dt.Base
             }
 
             // 重构根元素，将切换前的窗口设为自启动，符合习惯
-            if (SysVisual.RootContent is Frame frame)
+            if (SysVisual.RootContent is Frame frame
+                && frame.Content is PhonePage page)
             {
-                var con = ((PhonePage)frame.Content).Content;
                 Win win = null;
-                if (con is Tab tab)
+                if (page.Content is Tab tab)
                 {
                     win = tab.OwnWin;
                 }
-                else if (con is PhoneTabs tabs)
+                else if (page.Content is PhoneTabs tabs)
                 {
                     win = tabs.OwnWin;
                 }
