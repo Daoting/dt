@@ -52,6 +52,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * NotifyItem动态自动关闭，动态回调
 * 使用Serilog，完成日志的file console trace输出
 * Dlg 标题和菜单平分标题栏宽度
+* wasm通过StorageFile 可以保存文件
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

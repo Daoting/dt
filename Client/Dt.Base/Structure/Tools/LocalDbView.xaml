@@ -9,20 +9,17 @@
         <a:Tabs InitHeight="300">
             <a:Tab Order="1" Title="库">
                 <a:Lv x:Name="_lvDb" ItemClick="OnDbClick">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="备份" Icon="保存" Click="OnBackup" />
+                            <a:Mi ID="分享" Icon="分享" Click="OnShare" />
+                        </a:Menu>
+                    </a:Ex.Menu>
                     <DataTemplate>
-                        <Grid Margin="10,0,10,0" Height="60">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center">
-                                <a:Dot ID="name" />
-                                <a:Dot ID="info" Font="小灰" />
-                            </StackPanel>
-                            <Button Content="备份" Click="OnBackup" VerticalAlignment="Center" Grid.Column="1" />
-                            <Button Content="分享" Click="OnShare" VerticalAlignment="Center" Grid.Column="2" />
-                        </Grid>
+                        <StackPanel Margin="10">
+                            <a:Dot ID="name" />
+                            <a:Dot ID="info" Font="小灰" Margin="0,6,0,0" />
+                        </StackPanel>
                     </DataTemplate>
                 </a:Lv>
             </a:Tab>

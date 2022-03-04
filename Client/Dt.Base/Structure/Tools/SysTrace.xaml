@@ -7,7 +7,6 @@
     <a:Dlg.Menu>
         <a:Menu>
             <a:Mi ID="清空" Icon="垃圾箱" Click="OnClear" />
-            <a:Mi ID="存根代码" Icon="链接" Click="OnStub" />
             <a:Mi ID="本地库" Icon="数据库" Click="OnLocalDb" />
             <a:Mi ID="本地文件" Icon="文件" Click="OnLocalFiles" />
             <a:Mi ID="页面类型" Icon="地址" Click="OnPageType" />

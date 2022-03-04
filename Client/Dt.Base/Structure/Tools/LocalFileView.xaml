@@ -1,0 +1,52 @@
+﻿<a:Win
+    x:Class="Dt.Base.Tools.LocalFileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="本地文件">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Order="1" Title="本地目录">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <a:BtnItem Icon="文件" Title=".doc" Click="OnOpenPath" Desc="本地缓存文件的存放路径" />
+                        <a:BtnItem Icon="数据库" Title=".data" Click="OnOpenPath" Desc="状态库、模型库、日志文件的存放路径" />
+                    </StackPanel>
+                    <Border Background="{StaticResource 浅灰2}" Padding="10" Grid.Row="1">
+                        <TextBlock Text="1 除state.db和model.db文件外其他所有文件都可删除&#x000A;&#x000A;2 .doc目录下的文件删除后再次用到时会重新下载&#x000A;&#x000A;3 删除对应的.ver文件并重启应用即可更新state.db或model.db" TextWrapping="Wrap" />
+                    </Border>
+                </Grid>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Title="文件列表">
+                <a:Lv x:Name="_lv">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="打开" Icon="打开" Click="OnOpen" />
+                            <a:Mi ID="保存" Icon="保存" Click="OnSaveAs" />
+                            <a:Mi ID="分享" Icon="分享" Click="OnShare" />
+                            <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" />
+                        </a:Menu>
+                    </a:Ex.Menu>
+                    <DataTemplate>
+                        <StackPanel Margin="10">
+                            <a:Dot ID="Name" />
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <a:Dot ID="Date" Font="小灰" />
+                                <a:Dot ID="Size" Font="小灰" Margin="60,0,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+</a:Win>

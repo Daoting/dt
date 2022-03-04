@@ -38,6 +38,12 @@ namespace Dt.Base.Tools
 
             _lv.CellEx = typeof(TraceViewEx);
             _lv.ItemDoubleClick += OnDoubleClick;
+
+#if DEBUG && WIN
+            Mi mi = new Mi { ID = "存根代码", Icon = Icons.链接 };
+            mi.Click += OnStub;
+            Menu.Items.Insert(1, mi);
+#endif
         }
 
         public static void ShowBox()
@@ -92,30 +98,37 @@ namespace Dt.Base.Tools
 
         void OnLocalDb(object sender, Mi e)
         {
+            OpenWin(typeof(LocalDbView), "本地库");
+        }
+
+        void OnLocalFiles(object sender, Mi e)
+        {
+            OpenWin(typeof(LocalFileView), "本地文件");
+        }
+
+        void OpenWin(Type p_type, string p_title)
+        {
             if (SysVisual.RootContent is Desktop)
             {
-                Kit.OpenWin(typeof(LocalDbView));
+                // win模式已登录
+                Kit.OpenWin(p_type);
             }
-            else if (SysVisual.RootContent is Frame)
+            else if (Kit.IsPhoneUI)
             {
+                // phone模式，先关闭当前对话框
                 Close();
-
-                if (Kit.IsPhoneUI)
+                Kit.OpenWin(p_type);
+            }
+            else
+            {
+                // win模式未登录
+                new Dlg
                 {
-                    // phone模式
-                    Kit.OpenWin(typeof(LocalDbView));
-                }
-                else
-                {
-                    // win模式未登录
-                    new Dlg
-                    {
-                        Title = "本地库",
-                        Content = new LocalDbView(),
-                        IsPinned = true,
-                        WinPlacement = DlgPlacement.Maximized,
-                    }.Show();
-                }
+                    Title = p_title,
+                    Content = Activator.CreateInstance(p_type),
+                    IsPinned = true,
+                    WinPlacement = DlgPlacement.Maximized,
+                }.Show();
             }
         }
 
@@ -180,28 +193,8 @@ namespace Dt.Base.Tools
             Log.Debug(name);
         }
 
-        void OnLocalFiles(object sender, Mi e)
-        {
-            StringBuilder sb = new StringBuilder();
-            OutAllFiles(new DirectoryInfo(Kit.DataPath), sb);
-            OutAllFiles(new DirectoryInfo(Kit.CachePath), sb);
-            Kit.Msg(sb.ToString());
-        }
-
-        void OutAllFiles(DirectoryInfo di, StringBuilder p_sb)
-        {
-            foreach (FileInfo fi in di.GetFiles())
-            {
-                p_sb.AppendLine(fi.FullName);
-            }
-            foreach (var cd in di.GetDirectories())
-            {
-                OutAllFiles(cd, p_sb);
-            }
-        }
-
         #region 生成存根代码
-#if DEBUG
+#if DEBUG && WIN
         Dictionary<string, Type> _viewTypes;
         Dictionary<string, Type> _pushHandlers;
         Dictionary<string, SqliteDbTbls> _sqliteTbls;
@@ -385,10 +378,6 @@ namespace Dt.Base.Tools
             {
                 return Kit.GetMD5(Cols.ToString());
             }
-        }
-#else
-        void OnStub(object sender, Mi e)
-        {
         }
 #endif
         #endregion

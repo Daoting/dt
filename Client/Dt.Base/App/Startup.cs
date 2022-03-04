@@ -317,6 +317,7 @@ namespace Dt.Base
                 // 外部未指定时采用默认登录页
                 if (!p_isPopup)
                 {
+                    // 使用Frame确保PhoneUI模式下正常导航！如 系统日志->本地库
                     Frame fm = new Frame();
                     SysVisual.RootContent = fm;
                     fm.Navigate(LoginPageType);

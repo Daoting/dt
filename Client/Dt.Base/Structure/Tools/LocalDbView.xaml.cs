@@ -23,7 +23,7 @@ using Xamarin.Essentials;
 namespace Dt.Base.Tools
 {
     /// <summary>
-    /// 系统工具列表
+    /// 本地库
     /// </summary>
     public sealed partial class LocalDbView : Win
     {
@@ -44,9 +44,9 @@ namespace Dt.Base.Tools
         }
 
 #if WIN
-        async void OnBackup(object sender, RoutedEventArgs e)
+        async void OnBackup(object sender, Mi e)
         {
-            var row = ((LvItem)((Button)sender).DataContext).Row;
+            var row = e.Row;
             var picker = Kit.GetFileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
@@ -65,9 +65,9 @@ namespace Dt.Base.Tools
             }
         }
 #elif ANDROID
-        void OnBackup(object sender, RoutedEventArgs e)
+        void OnBackup(object sender, Mi e)
         {
-            var row = ((LvItem)((Button)sender).DataContext).Row;
+            var row = e.Row;
             try
             {
                 var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
@@ -81,20 +81,14 @@ namespace Dt.Base.Tools
             }
         }
 #elif IOS
-        async void OnBackup(object sender, RoutedEventArgs e)
+        void OnBackup(object sender, Mi e)
         {
-            var row = ((LvItem)((Button)sender).DataContext).Row;
-            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = row.Str("name") + ".db",
-                File = new ShareFile(dbFile)
-            });
+            ShareFile(e);
         }
 #elif WASM
-        async void OnBackup(object sender, RoutedEventArgs e)
+        async void OnBackup(object sender, Mi e)
         {
-            var row = ((LvItem)((Button)sender).DataContext).Row;
+            var row = e.Row;
             var picker = Kit.GetFileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
@@ -105,27 +99,49 @@ namespace Dt.Base.Tools
             {
                 var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
                 var data = File.ReadAllBytes(dbFile);
-                Log.Debug($"长度：{data.Length}");
-                Log.Debug($"路径：{file.Path}");
-                // 内容能读出，无法正常保存
+                //Log.Debug($"长度：{data.Length}");
+                //Log.Debug($"路径：{file.Path}");
+
+                // 此方法无法正常保存
                 //File.WriteAllBytes(file.Path, data);
 
-                //var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
-                //var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
-                //File.Copy(temp.Path, file.Path);
+                try
+                {
+                    using (var stream = await file.OpenStreamForWriteAsync())
+                    {
+                        stream.Write(data, 0, data.Length);
+                    }
+                    Kit.Msg("文件保存成功！");
+                }
+                catch
+                {
+                    Kit.Warn("文件保存失败！");
+                }
             }
         }
 #endif
 
-        async void OnShare(object sender, RoutedEventArgs e)
+        void OnShare(object sender, Mi e)
         {
-            var row = ((LvItem)((Button)sender).DataContext).Row;
-            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
-            await Share.RequestAsync(new ShareFileRequest
+            ShareFile(e);
+        }
+
+        async void ShareFile(Mi e)
+        {
+            try
             {
-                Title = "分享文件",
-                File = new ShareFile(dbFile)
-            });
+                var row = e.Row;
+                var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
+                await Share.RequestAsync(new ShareFileRequest
+                {
+                    Title = "分享文件",
+                    File = new ShareFile(dbFile)
+                });
+            }
+            catch
+            {
+                Kit.Warn("暂未实现");
+            }
         }
 
         void OnTblClick(object sender, ItemClickArgs e)
