@@ -33,6 +33,7 @@ namespace Dt.Base.ListView
         protected LvItem _row;
         protected Rectangle _rcPointer;
         bool _menuOpened;
+        Point _ptStart;
 
         public LvRow(Lv p_owner)
         {
@@ -112,7 +113,9 @@ namespace Dt.Base.ListView
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
             PointerCaptureLost += OnPointerCaptureLost;
-            Tapped += (s, e) => _row.OnClick();
+            // 参见 Dt.Core\Note.txt 中的事件顺序
+            // _btnMenu附加Click事件时，点击Button仍能接收到Tapped事件！
+            //Tapped += (s, e) => _row.OnClick();
             DoubleTapped += (s, e) => _row.OnDoubleClick();
 
             // 新版uno在PointerCaptureLost中处理
@@ -188,13 +191,25 @@ namespace Dt.Base.ListView
 
             _rcPointer.Fill = _owner.PressedBrush;
             if (CapturePointer(e.Pointer))
+            {
                 e.Handled = true;
+                _ptStart = e.GetCurrentPoint(this).Position;
+            }
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
             _rcPointer.Fill = null;
+
+            // 放在 Tapped 事件处理受 _btnMenu 点击影响！
+            var pt = e.GetCurrentPoint(this).Position;
+            if (Math.Abs(pt.X - _ptStart.X) < 6
+                && Math.Abs(pt.Y - _ptStart.Y) < 6)
+            {
+                _row.OnClick();
+            }
+            
             ReleasePointerCapture(e.Pointer);
         }
 

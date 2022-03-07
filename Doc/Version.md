@@ -62,7 +62,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * 点击Toast自启动传参数问题
 * win版Excel样例中 ChartExcel.xaml 报错，Dt.Cells.Data.Utility.GetFontWeightString()问题
 * 合并WinUI库的默认样式，DefaultLogin.xaml 的 ProgressRing  正常显示
-
+* Lv中行的上下文菜单按钮和行的ItemClick事件同时触发
 
 ### 服务  
 * 所有服务升级到.net6

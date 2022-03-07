@@ -383,7 +383,9 @@ namespace Dt.Base
         public event EventHandler<ItemClickArgs> ItemClick;
 
         /// <summary>
-        /// 双击行/项目事件
+        /// 双击行/项目事件，慎用：
+        /// <para>iOS始终不触发</para>
+        /// <para>该事件之前始终触发ItemClick，若两个事件都有操作容易无法区分</para>
         /// </summary>
         public event EventHandler<object> ItemDoubleClick;
 

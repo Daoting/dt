@@ -37,7 +37,6 @@ namespace Dt.Base.Tools
             WinPlacement = DlgPlacement.FromRight;
 
             _lv.CellEx = typeof(TraceViewEx);
-            _lv.ItemDoubleClick += OnDoubleClick;
 
 #if DEBUG && WIN
             Mi mi = new Mi { ID = "存根代码", Icon = Icons.链接 };
@@ -71,23 +70,6 @@ namespace Dt.Base.Tools
             {
                 _dlg.Close();
                 _dlg = null;
-            }
-        }
-
-        void OnDoubleClick(object sender, object e)
-        {
-            var item = (TraceLogItem)e;
-            if (item.Log.Properties.TryGetValue("Json", out var val))
-            {
-                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
-                if (!string.IsNullOrEmpty(txt))
-                    CopyToClipboard(txt, false);
-                else
-                    Kit.Msg("json内容为空");
-            }
-            else
-            {
-                CopyToClipboard(item.ExceptionMsg, false);
             }
         }
 
@@ -191,6 +173,37 @@ namespace Dt.Base.Tools
                 name = SysVisual.RootContent.GetType().FullName;
             }
             Log.Debug(name);
+        }
+
+        void OnOpenMenu(object sender, AsyncCancelEventArgs e)
+        {
+            Menu m = (Menu)sender;
+            var item = m.TargetData as TraceLogItem;
+            m["复制json"].Visibility = item.Log.Properties.ContainsKey("Json") ? Visibility.Visible : Visibility.Collapsed;
+            m["复制异常"].Visibility = item.Log.Exception != null ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        void OnCopyTitle(object sender, Mi e)
+        {
+            CopyToClipboard(((TraceLogItem)e.Data).Message, false);
+        }
+
+        void OnCopyJson(object sender, Mi e)
+        {
+            var item = (TraceLogItem)e.Data;
+            if (item.Log.Properties.TryGetValue("Json", out var val))
+            {
+                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
+                if (!string.IsNullOrEmpty(txt))
+                    CopyToClipboard(txt, false);
+                else
+                    Kit.Msg("json内容为空");
+            }
+        }
+
+        void OnCopyExcept(object sender, Mi e)
+        {
+            CopyToClipboard(((TraceLogItem)e.Data).ExceptionMsg, false);
         }
 
         #region 生成存根代码

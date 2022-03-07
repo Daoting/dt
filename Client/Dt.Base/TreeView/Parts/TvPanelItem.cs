@@ -36,6 +36,7 @@ namespace Dt.Base.TreeViews
         double _indent;
         Button _btnMenu;
         bool _menuOpened;
+        Point _ptStart;
         #endregion
 
         #region 构造方法
@@ -237,7 +238,6 @@ namespace Dt.Base.TreeViews
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
             PointerCaptureLost += OnPointerCaptureLost;
-            Tapped += (s, e) => _row.OnClick();
             DoubleTapped += (s, e) => _row.OnDoubleTapped();
         }
 
@@ -249,13 +249,25 @@ namespace Dt.Base.TreeViews
 
             _rcPointer.Fill = _owner.PressedBrush;
             if (CapturePointer(e.Pointer))
+            {
                 e.Handled = true;
+                _ptStart = e.GetCurrentPoint(this).Position;
+            }
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
             _rcPointer.Fill = null;
+
+            // 放在 Tapped 事件处理受 _btnMenu 点击影响！
+            var pt = e.GetCurrentPoint(this).Position;
+            if (Math.Abs(pt.X - _ptStart.X) < 6
+                && Math.Abs(pt.Y - _ptStart.Y) < 6)
+            {
+                _row.OnClick();
+            }
+
             ReleasePointerCapture(e.Pointer);
         }
 
