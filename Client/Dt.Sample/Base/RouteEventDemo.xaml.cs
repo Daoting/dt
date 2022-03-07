@@ -44,6 +44,7 @@ namespace Dt.Sample
             _bdParent.PointerPressed += OnRoutedPointerPressed;
             _bdParent.PointerReleased += OnRoutedPointerReleased;
             _bdParent.Tapped += OnRoutedTapped;
+            _bdParent.RightTapped += OnRoutedRightTapped;
             _bdParent.DoubleTapped += OnRoutedDoubleTapped;
 
             _bdChild.PointerEntered += OnRoutedPointerEntered;
@@ -52,15 +53,17 @@ namespace Dt.Sample
             _bdChild.PointerPressed += OnRoutedPointerPressed;
             _bdChild.PointerReleased += OnRoutedPointerReleased;
             _bdChild.Tapped += OnRoutedTapped;
+            _bdChild.RightTapped += OnRoutedRightTapped;
             _bdChild.DoubleTapped += OnRoutedDoubleTapped;
 
-            _bdAdd.AddHandler(PointerEnteredEvent, new PointerEventHandler(PointerEnteredHandler), true);
-            _bdAdd.AddHandler(PointerExitedEvent, new PointerEventHandler(PointerExitedHandler), true);
-            _bdAdd.AddHandler(PointerMovedEvent, new PointerEventHandler(PointerMovedHandler), true);
-            _bdAdd.AddHandler(PointerPressedEvent, new PointerEventHandler(PointerPressedHandler), true);
-            _bdAdd.AddHandler(PointerReleasedEvent, new PointerEventHandler(PointerReleasedHandler), true);
-            _bdAdd.AddHandler(TappedEvent, new TappedEventHandler(TappedHandler), true);
-            _bdAdd.AddHandler(DoubleTappedEvent, new DoubleTappedEventHandler(DoubleTappedHandler), true);
+            _bdAddParent.AddHandler(PointerEnteredEvent, new PointerEventHandler(PointerEnteredHandler), true);
+            _bdAddParent.AddHandler(PointerExitedEvent, new PointerEventHandler(PointerExitedHandler), true);
+            _bdAddParent.AddHandler(PointerMovedEvent, new PointerEventHandler(PointerMovedHandler), true);
+            _bdAddParent.AddHandler(PointerPressedEvent, new PointerEventHandler(PointerPressedHandler), true);
+            _bdAddParent.AddHandler(PointerReleasedEvent, new PointerEventHandler(PointerReleasedHandler), true);
+            _bdAddParent.AddHandler(TappedEvent, new TappedEventHandler(TappedHandler), true);
+            _bdAddParent.AddHandler(RightTappedEvent, new RightTappedEventHandler(RightTappedHandler), true);
+            _bdAddParent.AddHandler(DoubleTappedEvent, new DoubleTappedEventHandler(DoubleTappedHandler), true);
 
             _bdAddChild.PointerEntered += PointerEnteredHandler;
             _bdAddChild.PointerExited += PointerExitedHandler;
@@ -68,6 +71,7 @@ namespace Dt.Sample
             _bdAddChild.PointerPressed += PointerPressedHandler;
             _bdAddChild.PointerReleased += PointerReleasedHandler;
             _bdAddChild.Tapped += TappedHandler;
+            _bdAddChild.RightTapped += RightTappedHandler;
             _bdAddChild.DoubleTapped += DoubleTappedHandler;
 
             _bdHold.Holding += _bdHold_Holding;
@@ -77,17 +81,17 @@ namespace Dt.Sample
         void OnRoutedPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text += $"\r\nEntered, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nEntered{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
         }
 
         void OnRoutedPointerExited(object sender, PointerRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text += $"\r\nExited, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nExited{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
         }
 
         void OnRoutedPointerMoved(object sender, PointerRoutedEventArgs e)
@@ -95,42 +99,50 @@ namespace Dt.Sample
             if (_lastEventIsMoved)
                 return;
 
-            _tbRoute.Text += $"\r\nMoved, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nMoved{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
             _lastEventIsMoved = true;
         }
 
         void OnRoutedPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text = $"Pressed, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nPressed{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
         }
 
         void OnRoutedPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text += $"\r\nReleased, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nReleased{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
         }
 
         void OnRoutedTapped(object sender, TappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text += $"\r\nTapped, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nTapped{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
+        }
+
+        void OnRoutedRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            _lastEventIsMoved = false;
+            _tbRoute.Text += $"\r\nRightTapped{GetName(sender)}";
+            if (sender == _bdChild)
+                e.Handled = _cbHandled.IsChecked;
         }
 
         void OnRoutedDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbRoute.Text += $"\r\nDoubleTapped, sender={GetName(sender)}";
+            _tbRoute.Text += $"\r\nDoubleTapped{GetName(sender)}";
             if (sender == _bdChild)
-                e.Handled = _cbHandled.IsOn;
+                e.Handled = _cbHandled.IsChecked;
         }
         #endregion
 
@@ -138,12 +150,9 @@ namespace Dt.Sample
         void OnHandler(object sender, PointerRoutedEventArgs e, string p_event)
         {
             _lastEventIsMoved = false;
-            if (p_event != "Pressed")
-                _tbAdd.Text += $"\r\n{p_event}, sender={GetName(sender)}";
-            else
-                _tbAdd.Text = $"{p_event}, sender={GetName(sender)}";
+            _tbAdd.Text += $"\r\n{p_event}{GetName(sender)}";
             if (sender == _bdAddChild)
-                e.Handled = _cbAdd.IsOn;
+                e.Handled = _cbAdd.IsChecked;
         }
 
         void PointerEnteredHandler(object sender, PointerRoutedEventArgs e)
@@ -161,7 +170,7 @@ namespace Dt.Sample
             if (_lastEventIsMoved)
                 return;
 
-            _tbAdd.Text += $"\r\nMoved, sender={GetName(sender)}";
+            _tbAdd.Text += $"\r\nMoved{GetName(sender)}";
             _lastEventIsMoved = true;
         }
 
@@ -178,17 +187,25 @@ namespace Dt.Sample
         void TappedHandler(object sender, TappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbAdd.Text += $"\r\nTapped, sender={GetName(sender)}";
+            _tbAdd.Text += $"\r\nTapped{GetName(sender)}";
             if (sender == _cbAdd)
-                e.Handled = _cbAdd.IsOn;
+                e.Handled = _cbAdd.IsChecked;
+        }
+
+        void RightTappedHandler(object sender, RightTappedRoutedEventArgs e)
+        {
+            _lastEventIsMoved = false;
+            _tbAdd.Text += $"\r\nRightTapped{GetName(sender)}";
+            if (sender == _cbAdd)
+                e.Handled = _cbAdd.IsChecked;
         }
 
         void DoubleTappedHandler(object sender, DoubleTappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbAdd.Text += $"\r\nDoubleTapped, sender={GetName(sender)}";
+            _tbAdd.Text += $"\r\nDoubleTapped{GetName(sender)}";
             if (sender == _cbAdd)
-                e.Handled = _cbAdd.IsOn;
+                e.Handled = _cbAdd.IsChecked;
         }
         #endregion
 
@@ -196,13 +213,13 @@ namespace Dt.Sample
         void OnSinglePointerEntered(object sender, PointerRoutedEventArgs args)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " Entered";
+            _tbSingle.Text += "\r\nEntered";
         }
 
         void OnSinglePointerExited(object sender, PointerRoutedEventArgs args)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " Exited";
+            _tbSingle.Text += "\r\nExited";
         }
 
         void OnSinglePointerMoved(object sender, PointerRoutedEventArgs args)
@@ -210,59 +227,70 @@ namespace Dt.Sample
             if (_lastEventIsMoved)
                 return;
 
-            _tbSingle.Text += " Moved";
+            _tbSingle.Text += "\r\nMoved";
             _lastEventIsMoved = true;
         }
 
         void OnSinglePointerPressed(object sender, PointerRoutedEventArgs args)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text = "Pressed";
+            _tbSingle.Text += "\r\nPressed";
         }
 
         void OnSinglePointerReleased(object sender, PointerRoutedEventArgs args)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " Released";
+            _tbSingle.Text += "\r\nReleased";
         }
 
         void OnSingleTapped(object sender, TappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " Tapped";
+            _tbSingle.Text += "\r\nTapped";
         }
 
         void OnSingleRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " RightTapped";
+            _tbSingle.Text += "\r\nRightTapped";
         }
 
         void OnSingleDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             _lastEventIsMoved = false;
-            _tbSingle.Text += " DoubleTapped";
+            _tbSingle.Text += "\r\nDoubleTapped";
         }
         #endregion
 
         void _bdHold_Holding(object sender, HoldingRoutedEventArgs e)
         {
             if (e.HoldingState == HoldingState.Started)
-                _tbHold.Text = "Holding:" + DateTime.Now.ToString("ss");
+                _tbHold.Text += "\r\nHolding:" + DateTime.Now.ToString("mi:ss");
         }
 
         static string GetName(object element)
         {
-            if (element == null)
-                return "<null>";
-            if (element is FrameworkElement fe)
-                return string.IsNullOrWhiteSpace(fe.Name) ? fe.ToString() : fe.Name;
-            return element.ToString();
+            if (element is FrameworkElement fe
+                && !string.IsNullOrWhiteSpace(fe.Name))
+            {
+                return fe.Name.EndsWith("Child") ? "(Child)" : "(Parent)";
+            }
+            return "(null)";
         }
 
-        void OnTbKeyDown(object sender, KeyRoutedEventArgs e)
+        void OnClear(object sender, Mi e)
         {
-            Kit.Msg(e.Key.ToString());
+            if (_tbSingle.Text != "")
+                Log.Debug(_tbSingle.Text);
+            if (_tbRoute.Text != "")
+                Log.Debug(_tbRoute.Text);
+            if (_tbAdd.Text != "")
+                Log.Debug(_tbAdd.Text);
+
+            _tbSingle.Text = "";
+            _tbRoute.Text = "";
+            _tbAdd.Text = "";
+            _tbHold.Text = "";
         }
     }
 }
