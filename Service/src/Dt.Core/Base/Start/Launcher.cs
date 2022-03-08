@@ -102,13 +102,11 @@ namespace Dt.Core
                     .Build();
 
                 // 日志文件命名：
-                // k8s：服务名-服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
-                // windows：服务名-日期.txt
+                // 服务名-服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
                 string svc = Kit.Stubs.Length == 1 ? Kit.Stubs[0].SvcName : "app";
                 string path = Path.Combine(AppContext.BaseDirectory, "etc/log", $"{svc}-{Kit.SvcID}-.txt");
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
-                    //.WriteTo.Console()
                     .WriteTo.Html()
                     // 输出json文件，默认最大1G、最多保存31个文件、实时写、文件独占方式
                     .WriteTo.File(

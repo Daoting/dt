@@ -57,5 +57,41 @@ namespace Dt.Sample
         {
             Throw.Msg("业务警告");
         }
+
+        void OnFormat(object sender, RoutedEventArgs e)
+        {
+            // 推荐
+            Log.Debug("PhoneUI模式：{Mode}，操作系统：{OS}", Kit.IsPhoneUI, Kit.HostOS);
+
+            // 不推荐
+            //Log.Debug($"PhoneUI模式：{Kit.IsPhoneUI}，操作系统：{Kit.HostOS}");
+        }
+
+        void OnAddContext(object sender, RoutedEventArgs e)
+        {
+            // 简单写法
+            Log.ForContext("OS", Kit.HostOS)
+                .Debug("临时附加属性");
+
+            // log输出的日志都包含OS属性
+            var log = Log.ForContext("OS", Kit.HostOS);
+            log.Debug("信息1");
+            log.Information("信息2");
+        }
+
+        void OnMultiContext(object sender, RoutedEventArgs e)
+        {
+            // 添加两个附加属性
+            Log.ForContext("IsPhoneUI", Kit.IsPhoneUI)
+                .ForContext("OS", Kit.HostOS)
+                .Debug("多个附加属性");
+        }
+
+        void OnSourceContext(object sender, RoutedEventArgs e)
+        {
+            // SourceContext：Dt.Sample.LogDemo
+            Log.ForContext<LogDemo>()
+                .Debug("附加SourceContext属性");
+        }
     }
 }

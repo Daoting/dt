@@ -21,5 +21,13 @@
             <Button Content="业务警告" Click="OnExcept" />
             <Button Content="未处理异常" Click="OnUnhandled" />
         </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="消息模板" Click="OnFormat" />
+            <Button Content="附加属性" Click="OnAddContext" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="多个附加属性" Click="OnMultiContext" />
+            <Button Content="SourceContext附加属性" Click="OnSourceContext" />
+        </StackPanel>
     </a:Fv>
 </a:Win>
