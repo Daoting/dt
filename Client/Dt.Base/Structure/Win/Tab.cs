@@ -415,9 +415,9 @@ namespace Dt.Base
         {
             if (!HideTitleBar)
             {
-                if (OwnWin != null && BackButtonVisibility == Visibility.Visible)
+                if (OwnWin != null)
                 {
-                    // 首页无右键菜单
+                    // 右键菜单
                     WinKit.OnPhoneTitleTapped((Border)GetTemplateChild("ContextMenuBorder"), OwnWin);
                 }
 
