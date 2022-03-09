@@ -459,7 +459,8 @@ namespace Dt.Base.ListView
                     ArrangeRealRows(finalSize);
             }
 
-            _toolbar?.Arrange(new Rect(-_deltaX, _deltaY > 0 ? 0 : -_deltaY, finalSize.Width, _toolbarHeight));
+            // 宽度采用_maxSize.Width，若finalSize.Width造成iOS上死循环！
+            _toolbar?.Arrange(new Rect(-_deltaX, _deltaY > 0 ? 0 : -_deltaY, _maxSize.Width, _toolbarHeight));
             return finalSize;
         }
 

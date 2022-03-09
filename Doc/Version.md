@@ -11,13 +11,13 @@ UseMauiEssentials 后生成错误
 
 ios ：
 软键盘盖住 TextBox 的问题
-Lv.Toolbar在Table模式时 MeasureOverride 死循环
 内测时主页刚启动快速操作无响应，崩溃
 DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
 升级WinUI后：
 SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
 Uno.WinUI.Lottie 不兼容 .net6-ios15.2 (Com.Airbnb.iOS.Lottie)
 Frame 未采用本地样式及动画，因FeatureConfiguration.Style.ConfigureNativeFrameNavigation() 后 Frame 无内容
+Excel死循环 
 
 
 android:
@@ -25,7 +25,7 @@ android:
 
 
 window:
-升级 Microsoft.Maui.Essentials 后，除无法分享外，其余正常
+升级 Microsoft.Maui.Essentials 后，除无法"分享"外，其余正常
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
 web部署方式禁用：ms-appinstaller:?source=
 KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
@@ -64,6 +64,8 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * win版Excel样例中 ChartExcel.xaml 报错，Dt.Cells.Data.Utility.GetFontWeightString()问题
 * 合并WinUI库的默认样式，DefaultLogin.xaml 的 ProgressRing  正常显示
 * Lv中行的上下文菜单按钮和行的ItemClick事件同时触发
+* uno4.1.8 后Lv面板与外部ScrollViewer的相对距离和WinUI调整为一致 
+* [iOS]Lv.Toolbar在Table模式时 MeasureOverride 死循环 
 
 ### 服务  
 * 所有服务升级到.net6
