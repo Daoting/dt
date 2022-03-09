@@ -424,8 +424,9 @@ namespace Dt.Base.ListView
             //Log.Debug($"{_owner.BaseUri} LvPanel ArrangeOverride");
             if (!_owner.IsInnerScroll)
             {
+                // 外部有ScrollViewer时
                 // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
-#if WIN
+                // uno4.1.8 后和WinUI一致！！！之前uno中面板与Scroll的相对距离始终为滚动栏未移动时之间的距离！
                 if (_owner.Scroll.ActualHeight > 0)
                 {
                     // 当切换win时，再次显示Scroll时ActualHeight为0，计算相对位置错误！采用切换前的相对位置
@@ -433,12 +434,6 @@ namespace Dt.Base.ListView
                     _deltaX = pt.X;
                     _deltaY = pt.Y;
                 }
-#else
-                // uno中面板与Scroll的相对距离始终为滚动栏未移动时之间的距离！
-                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
-                _deltaX = pt.X - _owner.Scroll.HorizontalOffset;
-                _deltaY = pt.Y - _owner.Scroll.VerticalOffset;
-#endif
             }
             else
             {
