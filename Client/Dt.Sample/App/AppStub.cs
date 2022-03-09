@@ -99,6 +99,10 @@ namespace Dt.Sample
             //    tpName + "\r\n" + cfg.Date("now").ToString(),
             //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
 
+            //Kit.Toast(
+            //    "样例",
+            //    DateTime.Now.ToString(),
+            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
             await Task.CompletedTask;
         }
 

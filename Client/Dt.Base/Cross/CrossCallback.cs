@@ -11,7 +11,7 @@ using Dt.Core;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base

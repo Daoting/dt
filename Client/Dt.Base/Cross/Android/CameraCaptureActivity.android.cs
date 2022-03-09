@@ -26,7 +26,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.AccessCache;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base

@@ -18,7 +18,7 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base

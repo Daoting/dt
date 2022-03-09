@@ -68,9 +68,9 @@ namespace Dt.Base
             base.OnCreate(bundle);
 
             BgJob.MainActivity = GetType();
-            
+
             // 确保 Permissions.RequestAsync 调用时正常
-            Xamarin.Essentials.Platform.Init(this, bundle);
+            Microsoft.Maui.Essentials.Platform.Init(this, bundle);
 
             var it = Intent;
             switch (it.Action)

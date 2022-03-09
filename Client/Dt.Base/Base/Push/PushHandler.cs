@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -50,17 +50,7 @@ namespace Dt.Base
                 return;
             }
 
-#if WIN
-            // WinUI
-            Dict dt = new Dict
-            {
-                { "sessionid", _sessionID },
-                { "model", "Windows" },
-                { "name", "WinUI" },
-                { "platform", "Windows" },
-                { "version", "10.0" },
-            };
-#elif WASM
+#if WASM
             Dict dt = new Dict
             {
                 { "sessionid", _sessionID },

@@ -6,10 +6,10 @@ Lottie 加载 json 动画未实现
 wasm ：
 FileItem上传、分享、MediaPlayerElement等功能未实现
 切换到默认主页无响应
+UseMauiEssentials 后生成错误
 
 
 ios ：
-System.Text.Json 有bug，传输json串时异常，涉及上传文件等功能
 软键盘盖住 TextBox 的问题
 Lv.Toolbar在Table模式时 MeasureOverride 死循环
 内测时主页刚启动快速操作无响应，崩溃
@@ -25,7 +25,7 @@ android:
 
 
 window:
-Xamarin.Essentials 未升级到maui，Win中已不可用，分享、打开文件、DeviceInfo 等能编译但不可用
+升级 Microsoft.Maui.Essentials 后，除无法分享外，其余正常
 窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
 web部署方式禁用：ms-appinstaller:?source=
 KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
@@ -53,6 +53,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * 使用Serilog，完成日志的file console trace输出
 * Dlg 标题和菜单平分标题栏宽度
 * wasm通过StorageFile 可以保存文件
+* Xamarin.Essentials 升级到 Microsoft.Maui.Essentials
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

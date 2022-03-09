@@ -15,7 +15,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using UIKit;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base

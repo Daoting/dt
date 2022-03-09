@@ -30,7 +30,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Xamarin.Essentials;
+using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -377,10 +377,17 @@ namespace Dt.Base
 
                 default:
                     // 默认关联程序打开
-                    await Launcher.OpenAsync(new OpenFileRequest
+                    try
                     {
-                        File = new ReadOnlyFile(fileName)
-                    });
+                        await Launcher.OpenAsync(new OpenFileRequest
+                        {
+                            File = new ReadOnlyFile(fileName)
+                        });
+                    }
+                    catch
+                    {
+                        Kit.Warn("暂未实现");
+                    }
                     break;
             }
 
@@ -418,11 +425,18 @@ namespace Dt.Base
                     break;
             }
 
-            await Share.RequestAsync(new ShareFileRequest
+            try
             {
-                Title = title,
-                File = new ShareFile(fileName)
-            });
+                await Share.RequestAsync(new ShareFileRequest
+                {
+                    Title = title,
+                    File = new ShareFile(fileName)
+                });
+            }
+            catch
+            {
+                Kit.Warn("暂未实现");
+            }
         }
 
         /// <summary>
