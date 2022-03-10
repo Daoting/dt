@@ -12,7 +12,6 @@ using Dt.Core;
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.App.Publish
@@ -67,12 +66,7 @@ namespace Dt.App.Publish
         async void OnShare(object sender, RoutedEventArgs e)
         {
             Row row = ((LvItem)((Button)sender).DataContext).Row;
-            await Share.RequestAsync(new ShareTextRequest
-            {
-                Subject = "福祉堂",
-                Text = row.Str("Title"),
-                Uri = row.Str("Url"),
-            });
+            await Kit.ShareText(row.Str("Title"), "福祉堂", row.Str("Url"));
         }
     }
 

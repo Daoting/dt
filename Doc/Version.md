@@ -6,7 +6,6 @@ Lottie 加载 json 动画未实现
 wasm ：
 FileItem上传、分享、MediaPlayerElement等功能未实现
 切换到默认主页无响应
-UseMauiEssentials 后生成错误
 
 
 ios ：
@@ -54,6 +53,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * Dlg 标题和菜单平分标题栏宽度
 * wasm通过StorageFile 可以保存文件
 * Xamarin.Essentials 升级到 Microsoft.Maui.Essentials
+* wasm不引用Microsoft.Maui.Essentials 
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

@@ -4,7 +4,8 @@
         <SingleProject>true</SingleProject>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UseMauiEssentials>true</UseMauiEssentials>
+        <!-- wasm不支持Essentials -->
+        <UseMauiEssentials Condition="'$(TargetFramework)' != 'net6.0'">true</UseMauiEssentials>
     </PropertyGroup>
 
     <!-- 定义平台常量 -->

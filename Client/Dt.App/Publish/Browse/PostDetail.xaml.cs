@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.App.Publish
@@ -35,12 +34,7 @@ namespace Dt.App.Publish
 
         async void OnShare(object sender, Mi e)
         {
-            await Share.RequestAsync(new ShareTextRequest
-            {
-                Subject = "福祉堂",
-                Text = Title,
-                Uri = _wv.Source.ToString()
-            });
+            await Kit.ShareText(Title, "福祉堂", _wv.Source.ToString());
         }
     }
 }

@@ -15,7 +15,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+#if !WASM
 using Microsoft.Maui.Essentials;
+#endif
 #endregion
 
 namespace Dt.Base

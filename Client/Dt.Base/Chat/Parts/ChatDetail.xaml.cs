@@ -7,19 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Input;
-using Windows.Foundation;
-using Windows.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.Maui.Essentials;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Base.Chat
@@ -397,14 +390,9 @@ namespace Dt.Base.Chat
             _lv.Data.Remove(l);
         }
 
-        async void OnShareMsg(object sender, Mi e)
+        void OnShareMsg(object sender, Mi e)
         {
-            var l = (Letter)e.DataContext;
-            await Share.RequestAsync(new ShareTextRequest
-            {
-                Text = l.Content,
-                Subject = "分享内容"
-            });
+            _ = Kit.ShareText(((Letter)e.DataContext).Content);
         }
 
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)

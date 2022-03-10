@@ -11,7 +11,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base.Tools
@@ -46,7 +45,7 @@ namespace Dt.Base.Tools
             _lv.Data = list;
         }
 
-        async void OnOpen(object sender, Mi e)
+        void OnOpen(object sender, Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
 
@@ -78,36 +77,15 @@ namespace Dt.Base.Tools
             }
             else
             {
-                try
-                {
-                    await Launcher.OpenAsync(new OpenFileRequest
-                    {
-                        File = new ReadOnlyFile(fi.Info.FullName)
-                    });
-                }
-                catch
-                {
-                    Kit.Warn("暂未实现");
-                }
+                _ = Kit.OpenFile(fi.Info.FullName);
             }
         }
 
 
         async void OnShare(object sender, Mi e)
         {
-            try
-            {
-                var file = e.Data.To<LocalFileItem>();
-                await Share.RequestAsync(new ShareFileRequest
-                {
-                    Title = "分享文件",
-                    File = new ShareFile(file.Info.FullName)
-                });
-            }
-            catch
-            {
-                Kit.Warn("暂未实现");
-            }
+            var file = e.Data.To<LocalFileItem>();
+            await Kit.ShareFile(file.Info.FullName);
         }
 
 #if WIN

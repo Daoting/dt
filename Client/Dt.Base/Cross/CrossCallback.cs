@@ -11,7 +11,9 @@ using Dt.Core;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+#if !WASM
 using Microsoft.Maui.Essentials;
+#endif
 #endregion
 
 namespace Dt.Base
@@ -155,6 +157,7 @@ namespace Dt.Base
         /// <returns>录音文件信息，失败或放弃时返回null</returns>
         public async Task<FileData> TakeAudio(FrameworkElement p_target)
         {
+
             if (_audioRecorder == null)
                 _audioRecorder = new AudioRecorder();
 
@@ -170,6 +173,7 @@ namespace Dt.Base
                 return null;
             }
 
+#if !WASM
             try
             {
                 await Permissions.RequestAsync<Permissions.Microphone>();
@@ -179,6 +183,7 @@ namespace Dt.Base
                 Kit.Warn("设备禁止录音！");
                 return null;
             }
+#endif
 
             _audioRecorder.IsRecording = true;
             await _audioRecorder.PlatformRecordAsync();

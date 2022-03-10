@@ -17,7 +17,6 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base.Tools
@@ -126,22 +125,11 @@ namespace Dt.Base.Tools
             ShareFile(e);
         }
 
-        async void ShareFile(Mi e)
+        void ShareFile(Mi e)
         {
-            try
-            {
-                var row = e.Row;
-                var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
-                await Share.RequestAsync(new ShareFileRequest
-                {
-                    Title = "分享文件",
-                    File = new ShareFile(dbFile)
-                });
-            }
-            catch
-            {
-                Kit.Warn("暂未实现");
-            }
+            var row = e.Row;
+            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
+            _ = Kit.ShareFile(dbFile);
         }
 
         void OnTblClick(object sender, ItemClickArgs e)

@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Windows.UI.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+#if !WASM
 using Microsoft.Maui.Essentials;
+#endif
 #endregion
 
 namespace Dt.Core
@@ -163,16 +161,61 @@ namespace Dt.Core
         /// 默认关联程序打开文件
         /// </summary>
         /// <param name="p_filePath">文件完整路径</param>
-        public static async void OpenFile(string p_filePath)
+        public static Task OpenFile(string p_filePath)
         {
-            if (File.Exists(p_filePath))
+#if WASM
+            return Task.CompletedTask;
+#else
+            // 默认关联程序打开
+            return Launcher.OpenAsync(new OpenFileRequest
             {
-                // 默认关联程序打开
-                await Launcher.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(p_filePath)
-                });
-            }
+                File = new ReadOnlyFile(p_filePath)
+            });
+#endif
+        }
+        #endregion
+
+        #region 分享
+        /// <summary>
+        /// 分享文字内容
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <param name="p_title"></param>
+        /// <param name="p_uri"></param>
+        /// <returns></returns>
+        public static Task ShareText(string p_content, string p_title = null, string p_uri = null)
+        {
+#if WASM
+            return Task.CompletedTask;
+#else
+            var request = new ShareTextRequest
+            {
+                Text = p_content,
+                Subject = string.IsNullOrEmpty(p_title) ? "分享内容" : p_title
+            };
+            if (!string.IsNullOrEmpty(p_uri))
+                request.Uri = p_uri;
+            return Share.RequestAsync(request);
+#endif
+        }
+
+        /// <summary>
+        /// 分享文件
+        /// </summary>
+        /// <param name="p_filePath"></param>
+        /// <param name="p_title"></param>
+        /// <returns></returns>
+        public static Task ShareFile(string p_filePath, string p_title = null)
+        {
+#if WASM
+            return Task.CompletedTask;
+#else
+            return Share.RequestAsync(new ShareFileRequest
+            {
+                File = new ShareFile(p_filePath),
+                Title = string.IsNullOrEmpty(p_title) ? "分享文件" : p_title
+            });
+#endif
         }
         #endregion
 

@@ -30,7 +30,6 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -377,17 +376,7 @@ namespace Dt.Base
 
                 default:
                     // 默认关联程序打开
-                    try
-                    {
-                        await Launcher.OpenAsync(new OpenFileRequest
-                        {
-                            File = new ReadOnlyFile(fileName)
-                        });
-                    }
-                    catch
-                    {
-                        Kit.Warn("暂未实现");
-                    }
+                    await Kit.OpenFile(fileName);
                     break;
             }
 
@@ -425,18 +414,7 @@ namespace Dt.Base
                     break;
             }
 
-            try
-            {
-                await Share.RequestAsync(new ShareFileRequest
-                {
-                    Title = title,
-                    File = new ShareFile(fileName)
-                });
-            }
-            catch
-            {
-                Kit.Warn("暂未实现");
-            }
+            await Kit.ShareFile(fileName, title);
         }
 
         /// <summary>
