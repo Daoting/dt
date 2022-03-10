@@ -10,6 +10,8 @@
 using Windows.UI.Notifications;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 #if !WASM
 using Microsoft.Maui.Essentials;
 #endif
@@ -158,7 +160,7 @@ namespace Dt.Core
 
         #region 打开文件
         /// <summary>
-        /// 默认关联程序打开文件
+        /// 默认关联程序打开文件，wasm未实现
         /// </summary>
         /// <param name="p_filePath">文件完整路径</param>
         public static Task OpenFile(string p_filePath)
@@ -186,6 +188,24 @@ namespace Dt.Core
         public static Task ShareText(string p_content, string p_title = null, string p_uri = null)
         {
 #if WASM
+            // https://platform.uno/docs/articles/features/windows-applicationmodel-datatransfer.html?q=ShareUI
+            
+            var dtm = DataTransferManager.GetForCurrentView();
+            TypedEventHandler<DataTransferManager, DataRequestedEventArgs> handler = null;
+            handler = delegate (DataTransferManager sender, DataRequestedEventArgs args)
+            {
+                args.Request.Data.Properties.Title = string.IsNullOrEmpty(p_title) ? "分享内容" : p_title;
+                //args.Request.Data.Properties.Description = "分享内容";
+
+                args.Request.Data.SetText(p_content);
+                if (!string.IsNullOrEmpty(p_uri))
+                    args.Request.Data.SetWebLink(new Uri(p_uri));
+
+                dtm.DataRequested -= handler;
+            };
+            dtm.DataRequested += handler;
+
+            DataTransferManager.ShowShareUI();
             return Task.CompletedTask;
 #else
             var request = new ShareTextRequest
@@ -200,7 +220,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 分享文件
+        /// 分享文件，wasm未实现
         /// </summary>
         /// <param name="p_filePath"></param>
         /// <param name="p_title"></param>
