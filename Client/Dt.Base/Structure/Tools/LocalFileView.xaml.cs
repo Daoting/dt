@@ -135,11 +135,7 @@ namespace Dt.Base.Tools
         async void OnSaveAs(object sender, Mi e)
         {
             var file = e.Data.To<LocalFileItem>();
-            await Share.RequestAsync(new ShareFileRequest
-            {
-                Title = "分享文件",
-                File = new ShareFile(file.Info.FullName)
-            });
+            await Kit.ShareFile(file.Info.FullName);
         }
 #elif WASM
         async void OnSaveAs(object sender, Mi e)
