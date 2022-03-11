@@ -1,4 +1,9 @@
-﻿#  未解决问题
+﻿#   正在
+ios 
+CDate格
+
+
+#  未解决问题
 
 MediaPlayerElement 未实现，FileItem.cs 
 Lottie 加载 json 动画未实现
@@ -11,12 +16,13 @@ FileItem上传、分享、MediaPlayerElement等功能未实现
 ios ：
 软键盘盖住 TextBox 的问题
 内测时主页刚启动快速操作无响应，崩溃
-DatePicker、CalendarView、DatePickerFlyout因区域问题不显示，移除Info.plist中的CFBundleDevelopmentRegion 可以暂时使用
 升级WinUI后：
 SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
 Uno.WinUI.Lottie 不兼容 .net6-ios15.2 (Com.Airbnb.iOS.Lottie)
 Frame 未采用本地样式及动画，因FeatureConfiguration.Style.ConfigureNativeFrameNavigation() 后 Frame 无内容
 Excel死循环 
+后台任务不运行 
+TimePickerFlyout.TimePicked事件未触发
 
 
 android:
@@ -66,6 +72,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * Lv中行的上下文菜单按钮和行的ItemClick事件同时触发
 * uno4.1.8 后Lv面板与外部ScrollViewer的相对距离和WinUI调整为一致 
 * [iOS]Lv.Toolbar在Table模式时 MeasureOverride 死循环 
+* iOS版CDate除TimePickerFlyout.TimePicked事件外，都正常
 
 ### 服务  
 * 所有服务升级到.net6

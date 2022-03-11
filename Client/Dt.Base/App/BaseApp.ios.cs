@@ -57,17 +57,14 @@ namespace Dt.Base
             return base.FinishedLaunching(application, launchOptions);
         }
 
-        public async override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
+        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
         {
-            Console.WriteLine("启动后台任务");
             try
             {
-                var iOSTaskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { Console.WriteLine("后台运行超时"); });
-                await BgJob.Run();
-                UIApplication.SharedApplication.EndBackgroundTask(iOSTaskId);
+                // 该方法耗时必须在30秒内！
+                BgJob.Run().Wait();
             }
-            catch
-            { }
+            catch { }
 
             completionHandler(UIBackgroundFetchResult.NewData);
         }

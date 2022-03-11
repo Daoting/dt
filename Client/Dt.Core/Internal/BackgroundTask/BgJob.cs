@@ -40,17 +40,28 @@ namespace Dt.Core
                     stub = Activator.CreateInstance(tp) as Stub;
             }
 
-            if (stub != null)
-            {
-                if (Kit.Stub == null)
-                {
-                    Kit.Stub = stub;
+            if (stub == null)
+                return;
 
-                    // 避免涉及UI
-                    stub.LogSetting.TraceEnabled = false;
-                    Serilogger.Init();
-                }
+            if (Kit.Stub == null)
+            {
+                // 前端没运行，完全后台启动
+                Kit.Stub = stub;
+
+                // 避免涉及UI
+                stub.LogSetting.TraceEnabled = false;
+                Serilogger.Init();
+            }
+
+            Log.Debug("开始后台任务");
+            try
+            {
                 await stub.OnBgTaskRun();
+                Log.Debug("后台任务结束");
+            }
+            catch (Exception ex)
+            {
+                Log.Warning(ex, "后台任务运行异常");
             }
         }
     }

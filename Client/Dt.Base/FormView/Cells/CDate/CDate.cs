@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace Dt.Base
@@ -232,7 +233,13 @@ namespace Dt.Base
                 return;
 
             // 日期选择器
+#if IOS || ANDROID
+            // 平台自带的效果好
+            NativeDatePickerFlyout fly = new NativeDatePickerFlyout();
+#else
             DatePickerFlyout fly = new DatePickerFlyout();
+#endif
+
             fly.Date = Value;
             fly.DatePicked += (s, args) => Value = args.NewDate.DateTime;
             fly.ShowAt(_grid);
@@ -255,20 +262,21 @@ namespace Dt.Base
             if (ReadOnlyBinding)
                 return;
 
-            // uno无法给出相对位置
+            // 相对位置
+            var pt = e.GetPosition(_grid);
             TextBlock tb = _grid.Children[0] as TextBlock;
-            var pt = e.GetPosition(null);
 
-            // 无文本内容时按Grid计算
-            MatrixTransform trans = string.IsNullOrEmpty(tb.Text) ? _grid.TransformToVisual(null) as MatrixTransform : tb.TransformToVisual(null) as MatrixTransform;
-            if (trans == null)
-                return;
+            // 点击位置在日期 还是 时间
+            bool showDateFly = (pt.X <= tb.Margin.Left + tb.ActualWidth / 2 + 10) && !_dateInTail;
 
-            bool showDateFly = (pt.X <= trans.Matrix.OffsetX + tb.ActualWidth / 2 + 10) && !_dateInTail;
             if (showDateFly)
             {
                 // 日期选择器
+#if IOS || ANDROID
+                NativeDatePickerFlyout fly = new NativeDatePickerFlyout();
+#else
                 DatePickerFlyout fly = new DatePickerFlyout();
+#endif
                 fly.Date = Value;
                 fly.DatePicked += (s, args) => Value = args.NewDate.DateTime.Date + (Value - Value.Date);
                 fly.ShowAt(_grid);
