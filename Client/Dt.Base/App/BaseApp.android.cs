@@ -70,7 +70,7 @@ namespace Dt.Base
             BgJob.MainActivity = GetType();
 
             // 确保 Permissions.RequestAsync 调用时正常
-            Microsoft.Maui.Essentials.Platform.Init(this, bundle);
+            Microsoft.Maui.ApplicationModel.Platform.Init(this, bundle);
 
             var it = Intent;
             switch (it.Action)

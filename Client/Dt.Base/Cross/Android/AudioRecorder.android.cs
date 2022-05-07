@@ -16,7 +16,7 @@ using Java.IO;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.ApplicationModel;
 using Encoding = Android.Media.Encoding;
 #endregion
 

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 #if !WASM
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.ApplicationModel;
 #endif
 #endregion
 

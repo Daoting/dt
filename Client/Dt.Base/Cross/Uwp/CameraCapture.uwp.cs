@@ -18,7 +18,6 @@ using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
-using Microsoft.Maui.Essentials;
 #endregion
 
 namespace Dt.Base
