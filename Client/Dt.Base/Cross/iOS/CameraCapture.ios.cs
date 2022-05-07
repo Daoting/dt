@@ -13,7 +13,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UIKit;
-using Microsoft.Maui.Essentials;
+using Microsoft.Maui.ApplicationModel;
 using System.Threading;
 using Foundation;
 #endregion

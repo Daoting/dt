@@ -72,8 +72,8 @@ namespace GMImagePicker
 
 		private static UICollectionViewFlowLayout CollectionViewFlowLayoutForOrientation (UIInterfaceOrientation orientation, GMImagePickerController picker)
 		{
-            ObjCRuntime.nfloat screenWidth;
-            ObjCRuntime.nfloat screenHeight;
+            nfloat screenWidth;
+            nfloat screenHeight;
 
 			//Ipad popover is not affected by rotation!
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) {
@@ -111,7 +111,7 @@ namespace GMImagePicker
 					_portraitLayout = new UICollectionViewFlowLayout {
 						MinimumInteritemSpacing = picker.MinimumInteritemSpacing,
 						ItemSize = itemSize,
-						MinimumLineSpacing = (ObjCRuntime.nfloat) spaceWidth
+						MinimumLineSpacing = (nfloat) spaceWidth
 					};
 
 					if (_portraitLayout.RespondsToSelector(new ObjCRuntime.Selector("sectionInsetReference"))) {
@@ -129,7 +129,7 @@ namespace GMImagePicker
 					_landscapeLayout = new UICollectionViewFlowLayout {
 						MinimumInteritemSpacing = picker.MinimumInteritemSpacing,
 						ItemSize = itemSize,
-						MinimumLineSpacing = (ObjCRuntime.nfloat) spaceWidth
+						MinimumLineSpacing = (nfloat) spaceWidth
 					};
 
 					if (_landscapeLayout.RespondsToSelector(new ObjCRuntime.Selector("sectionInsetReference"))) {

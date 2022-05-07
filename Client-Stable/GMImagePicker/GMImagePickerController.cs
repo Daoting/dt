@@ -81,7 +81,7 @@ namespace GMImagePicker
 		/// <summary>
 		/// Horizontal and vertical minimum space between grid cells (2.0 by default)
 		/// </summary>
-		public ObjCRuntime.nfloat MinimumInteritemSpacing { get; set; }
+		public nfloat MinimumInteritemSpacing { get; set; }
 
 		#endregion
 
@@ -663,18 +663,18 @@ namespace GMImagePicker
 
 			// UI Customization
 			PickerBackgroundColor = UIColor.White;
-			PickerTextColor = UIColor.DarkTextColor;
+			PickerTextColor = UIColor.DarkText;
 			PickerFontName = UIFont.SystemFontOfSize (14.0f).Name;
 			PickerBoldFontName = UIFont.BoldSystemFontOfSize(17.0f).Name;
 			PickerFontNormalSize = 14.0f;
 			PickerFontHeaderSize = 17.0f;
-			CameraButtonTintColor = UIColor.DarkTextColor;
+			CameraButtonTintColor = UIColor.DarkText;
 
-			NavigationBarTextColor = UIColor.DarkTextColor;
-			NavigationBarTintColor = UIColor.DarkTextColor;
+			NavigationBarTextColor = UIColor.DarkText;
+			NavigationBarTintColor = UIColor.DarkText;
 
-			ToolbarTextColor = UIColor.DarkTextColor;
-			ToolbarTintColor = UIColor.DarkTextColor;
+			ToolbarTextColor = UIColor.DarkText;
+			ToolbarTintColor = UIColor.DarkText;
 
 			PickerStatusBarStyle = UIStatusBarStyle.Default;
 

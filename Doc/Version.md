@@ -2,6 +2,10 @@
 ios 
 CDate格
 
+android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
+C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.21\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
+C:\Users\Daoting\.nuget\packages\xamarin.jetbrains.annotations\23.0.0.3\buildTransitive\net6.0-android31.0\Xamarin.Jetbrains.Annotations.targets 
+
 
 #  未解决问题
 
@@ -60,6 +64,7 @@ KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
 * wasm通过StorageFile 可以保存文件
 * Xamarin.Essentials 升级到 Microsoft.Maui.Essentials
 * wasm不引用Microsoft.Maui.Essentials 
+* 升级maui rc2后 Dt.Cells包的GMImagePicker 引用Xamarin.iOS 转为 Micorsoft.iOS
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

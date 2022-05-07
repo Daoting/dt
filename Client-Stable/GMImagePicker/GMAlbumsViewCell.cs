@@ -54,7 +54,7 @@ namespace GMImagePicker
 			Accessory = UITableViewCellAccessory.DisclosureIndicator;
 
             // Border width of 1 pixel:
-            ObjCRuntime.nfloat borderWidth = 1.0f / UIScreen.MainScreen.Scale;
+            nfloat borderWidth = 1.0f / UIScreen.MainScreen.Scale;
 
 			// ImageView
 			ImageView3 = new UIImageView {

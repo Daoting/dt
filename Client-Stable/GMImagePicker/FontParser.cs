@@ -6,7 +6,7 @@ namespace GMImagePicker
 {
 	internal static class FontParser
 	{
-		public static UIFont GetFont(string family, ObjCRuntime.nfloat size)
+		public static UIFont GetFont(string family, nfloat size)
 		{
 			UIFont result;
 
