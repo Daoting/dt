@@ -63,7 +63,7 @@ namespace Dt.Base
             MeasureTabStrip(layout);
             // 触摸时调整选择范围的圈圈、调整列宽行高的标志、自动填充标志
             MeasureSelectionGripper();
-
+            Console.WriteLine("MeasureOverride");
             // 跟踪层：调整行列宽高时的虚线，拖拽时的标志，冻结线，动态调整时的分隔栏，各种png图片的光标
             UpdateFreezeLines();
             if (!Children.Contains(_trackersPanel))
@@ -706,6 +706,7 @@ namespace Dt.Base
             _progressRing?.Arrange(rcFull);
 
             Clip = new RectangleGeometry { Rect = rcFull };
+            Console.WriteLine("ArrangeOverride");
             return finalSize;
         }
 

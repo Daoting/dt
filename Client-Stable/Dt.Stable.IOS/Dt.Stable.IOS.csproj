@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0-ios</TargetFramework>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <IsUnoHead>true</IsUnoHead>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Uno.WinUI" Version="4.2.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+        <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <BundleResource Include="iOS\Resources\SplashScreen%402x.png" />
+        <BundleResource Include="iOS\Resources\SplashScreen%403x.png" />
+        <BundleResource Include="iOS\Resources\logo.png" />
+        <BundleResource Include="..\..\Common\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
+        <BundleResource Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
+        <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="App.xaml" />
+      <None Remove="App.xaml.cs" />
+      <None Remove="MainWindow.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="App.xaml" />
+      <UpToDateCheckInput Remove="MainWindow.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="App.xaml.cs">
+        <DependentUpon>%(Filename)</DependentUpon>
+      </Compile>
+      <Compile Update="MainWindow.xaml.cs">
+        <DependentUpon>%(Filename)</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="App.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="MainWindow.xaml.cs" />
+    </ItemGroup>
+</Project>

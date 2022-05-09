@@ -1,0 +1,15 @@
+﻿<UserControl
+    x:Class="Dt.Shell.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid x:Name="_grid" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Content="Test1" Click="OnTest1" Margin="10"/>
+        <a:Excel x:Name="_excel" Grid.Row="1" />
+    </Grid>
+</UserControl>

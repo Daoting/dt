@@ -2,6 +2,7 @@
 ios 
 CDate格
 
+
 android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
 C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.21\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
 C:\Users\Daoting\.nuget\packages\xamarin.jetbrains.annotations\23.0.0.3\buildTransitive\net6.0-android31.0\Xamarin.Jetbrains.Annotations.targets 
@@ -20,10 +21,12 @@ FileItem上传、分享、MediaPlayerElement等功能未实现
 ios ：
 软键盘盖住 TextBox 的问题
 内测时主页刚启动快速操作无响应，崩溃
-升级WinUI后：
+>>升级maui rc2后：
+只能在mac的ios虚拟机上调试，无法在windows上打开虚拟机
+部分功能莫名崩
 SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
 Uno4.2.6 涉及Uno.WinUI.Lottie 的控件 ProgressRing 未实现
-Excel死循环 
+Excel在stable项目中可以运行，在dt中崩
 后台任务不运行 
 TimePickerFlyout.TimePicked事件未触发
 
