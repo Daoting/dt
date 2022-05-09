@@ -22,8 +22,7 @@ ios ：
 内测时主页刚启动快速操作无响应，崩溃
 升级WinUI后：
 SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw  2.1.0 preview以后版本无异常
-Uno.WinUI.Lottie 不兼容 .net6-ios15.2 (Com.Airbnb.iOS.Lottie)
-Frame 未采用本地样式及动画，因FeatureConfiguration.Style.ConfigureNativeFrameNavigation() 后 Frame 无内容
+Uno4.2.6 涉及Uno.WinUI.Lottie 的控件 ProgressRing 未实现
 Excel死循环 
 后台任务不运行 
 TimePickerFlyout.TimePicked事件未触发

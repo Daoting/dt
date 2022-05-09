@@ -67,10 +67,9 @@ namespace Dt.Base
             // 后合并的样式优先
             res.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Generic.xaml") });
 
-#if ANDROID || WASM //|| IOS
+#if !WIN
             // Frame CommandBar AppBarButton采用本地样式及动画
             // 原来在Global.xaml中定义，Frame内部使用NativeFramePresenter承载
-            // 目前 uno4.2 dev 版本iOS不能运行
             Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
 #endif
 
