@@ -6,6 +6,7 @@
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
         <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
         <IsUnoHead>true</IsUnoHead>
+        <DefineConstants>$(DefineConstants);IOS</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -47,36 +48,5 @@
         <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="App.xaml" />
-      <None Remove="App.xaml.cs" />
-      <None Remove="MainWindow.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <UpToDateCheckInput Remove="App.xaml" />
-      <UpToDateCheckInput Remove="MainWindow.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="App.xaml.cs">
-        <DependentUpon>%(Filename)</DependentUpon>
-      </Compile>
-      <Compile Update="MainWindow.xaml.cs">
-        <DependentUpon>%(Filename)</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="App.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-      <Page Update="MainWindow.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="MainWindow.xaml.cs" />
-    </ItemGroup>
+    <Import Project="..\Dt.Stable.Shared\Dt.Stable.Shared.projitems" Label="Shared" />
 </Project>

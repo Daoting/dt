@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMImagePicker", "GMImagePic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Stable.IOS", "Dt.Stable.IOS\Dt.Stable.IOS.csproj", "{DE665386-B069-4F97-92DF-3B97DD482EB6}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Dt.Stable.Shared", "Dt.Stable.Shared\Dt.Stable.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,8 +181,15 @@ Global
 		{1A7184F8-CEDC-4588-BF75-D04B0EE5DF5D} = {C1FF7E0E-EA86-45A8-907D-40D321C8A100}
 		{37A62DE9-17E6-4DF4-86A3-003DA058DC3C} = {8C0247A8-F080-461D-A928-06F2EB323E93}
 		{DE665386-B069-4F97-92DF-3B97DD482EB6} = {C1FF7E0E-EA86-45A8-907D-40D321C8A100}
+		{6279C845-92F8-4333-AB99-3D213163593C} = {C1FF7E0E-EA86-45A8-907D-40D321C8A100}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59319F29-7C52-40C4-94A8-954FB69F6041}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Dt.Stable.Shared\Dt.Stable.Shared.projitems*{1a7184f8-cedc-4588-bf75-d04b0ee5df5d}*SharedItemsImports = 5
+		Dt.Stable.Shared\Dt.Stable.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+		Dt.Stable.Shared\Dt.Stable.Shared.projitems*{c29251b7-801c-4f2a-baaa-67ca72be68f4}*SharedItemsImports = 5
+		Dt.Stable.Shared\Dt.Stable.Shared.projitems*{de665386-b069-4f97-92df-3b97dd482eb6}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

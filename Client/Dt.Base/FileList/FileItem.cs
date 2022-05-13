@@ -30,7 +30,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+#if !WASM
 using Microsoft.Maui.ApplicationModel;
+#endif
 #endregion
 
 namespace Dt.Base

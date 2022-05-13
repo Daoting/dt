@@ -9,16 +9,11 @@ C:\Users\Daoting\.nuget\packages\xamarin.jetbrains.annotations\23.0.0.3\buildTra
 
 
 #  未解决问题
-
-MediaPlayerElement 未实现，FileItem.cs 
+MediaPlayerElement 在 winappsdk1.1 中仍未实现，FileItem.cs 
 Lottie 加载 json 动画未实现
 
-wasm ：
-FileItem上传、分享、MediaPlayerElement等功能未实现
-切换到默认主页无响应
 
-
-ios ：
+---------------------------- ios ----------------------------
 软键盘盖住 TextBox 的问题
 内测时主页刚启动快速操作无响应，崩溃
 >>升级maui rc2后：
@@ -31,19 +26,32 @@ Excel在stable项目中可以运行，在dt中崩
 TimePickerFlyout.TimePicked事件未触发
 
 
-android:
+---------------------------- android ----------------------------
 关闭app后，后台任务不运行
+maui rc2 中统一未处理异常未触发 AndroidEnvironment.UnhandledExceptionRaiser
 
 
-window:
+---------------------------- window ----------------------------
 升级 Microsoft.Maui.Essentials 后，除无法"分享"外，其余正常
-窗口标题、图标、Splash Screens升级WinUI后都需要自行设置，等下个版本看看
-web部署方式禁用：ms-appinstaller:?source=
-KnownException 业务异常无法在 Kit.OnUnhandledException 中识别
+KnownException 业务异常无法在 Kit.OnUnhandledException 中识别，已提交：https://github.com/microsoft/WindowsAppSDK/issues/2494
+
+>> 不再处理
+Splash Screens升级WinUI后无效，github有多处提，等待实现
+任务栏图标有背景色，uwp背景透明，试过无法调整，并且第一次运行后替换 Square44x44Logo.scale-200.png 无效，图标不刷新
+窗口标题栏图标：需要设置*.ico文件，可以通过 ExtendsContentIntoTitleBar = true 完全自定义标题栏，不调整 
+web部署方式因漏洞已被禁用：ms-appinstaller:?source=，等待微软修复：https://techcommunity.microsoft.com/t5/windows-it-pro-blog/disabling-the-msix-ms-appinstaller-protocol-handler/ba-p/3119479 
+
+
+---------------------------- wasm ----------------------------
+FileItem上传、分享、MediaPlayerElement等功能未实现
+切换到默认主页无响应
+
+
+#总体
+wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响应慢，用户体验差，不推荐使用。
 
 
 # 版本说明
-
 
 ## Release 2.0.0 
 ### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息

@@ -10,6 +10,7 @@
         <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
         <UseWinUI>true</UseWinUI>
         <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+        <DefineConstants>$(DefineConstants);WIN</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
       <None Remove="MonthProfit.ssxml" />
@@ -47,12 +48,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Res\MonthProfit.ssxml" />
-      <EmbeddedResource Include="Res\MonthProfit.xlsx" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Manifest Include="$(ApplicationManifest)" />
     </ItemGroup>
+
+    <Import Project="..\Dt.Stable.Shared\Dt.Stable.Shared.projitems" Label="Shared" />
 
 </Project>
