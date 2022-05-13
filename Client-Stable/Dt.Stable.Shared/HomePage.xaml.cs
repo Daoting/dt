@@ -12,6 +12,11 @@ namespace Dt.Shell
             this.InitializeComponent();
         }
 
+        void OnBlank(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(BlankPage));
+        }
+
         void OnChart(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(ChartPage));

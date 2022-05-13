@@ -625,7 +625,6 @@ namespace Dt.Base
         bool _IsTouchStartRowSelecting;
         bool IsTouchZooming;
 
-        Size _cachedLastAvailableSize;
         HashSet<int> _invisibleColumns;
         HashSet<int> _invisibleRows;
         bool _pendinging;

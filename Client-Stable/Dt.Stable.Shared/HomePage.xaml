@@ -5,6 +5,7 @@
 
     <Grid Background="White">
         <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Click="OnBlank" Content="空内容" />
             <Button Click="OnChart" Content="图表" />
             <Button Content="xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
             <Button Content="xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />

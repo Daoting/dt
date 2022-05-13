@@ -972,6 +972,11 @@ namespace Dt.Base
             _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
             _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
             Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
+
+#if ANDROID
+            // 升级uno4.2.6后不自动重新测量布局
+            InvalidateMeasure();
+#endif
         }
 
         /// <summary>
@@ -1170,9 +1175,9 @@ namespace Dt.Base
                 RefreshViewportFloatingObjects(picture);
             }
         }
-        #endregion
+#endregion
 
-        #region 外部方法
+#region 外部方法
         /// <summary>
         /// Adds a new column viewport to the control. 
         /// </summary>
@@ -2640,6 +2645,6 @@ namespace Dt.Base
             string jobName = string.IsNullOrEmpty(p_title) ? Sheets[index].Name : p_title;
             printer.Print(jobName);
         }
-        #endregion
+#endregion
     }
 }
