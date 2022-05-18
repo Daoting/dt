@@ -201,9 +201,6 @@ namespace Dt.Core
             // 初始化日志
             Serilogger.Init();
 
-            // 创建窗口及整个系统可视树
-            SysVisual.Init();
-
 #if !WIN
             // WinUI已移除事件，其他平台咋？
             var app = Application.Current;
@@ -247,6 +244,10 @@ namespace Dt.Core
 
             // 打开状态库
             AtState.OpenDb();
+
+            // 创建窗口及整个系统可视树
+            SysVisual.Init();
+            Log.Debug("初始化日志、目录、状态库、可视树");
         }
         #endregion
 
