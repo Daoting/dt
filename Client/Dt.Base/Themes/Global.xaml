@@ -119,8 +119,6 @@
     <a:DateConverter x:Key="CvTimeFull" Format="HH:mm:ss" />
     <!-- bool取反的转换 -->
     <a:BoolToggleConverter x:Key="CvBoolReverse" />
-    <!-- 将值转换成两种类型画刷 可自定义TrueBrush FalseBrush -->
-    <a:FlagColorConverter x:Key="CvFlagBrush" />
     <!-- Visibility取反 -->
     <a:VisibilityToggleConverter x:Key="CvVisibleReverse" />
     <!-- 逗号隔开的整数 -->
