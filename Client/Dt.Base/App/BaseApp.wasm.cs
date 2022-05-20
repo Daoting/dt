@@ -24,6 +24,14 @@ namespace Dt.Base
         /// </summary>
         protected Stub _stub;
 
+        public BaseApp()
+        {
+#if DEBUG
+            // 初始化uno平台全局日志
+            UnoKit.InitializeLogging();
+#endif
+        }
+
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             _ = Startup.Launch(_stub, p_args.Arguments);

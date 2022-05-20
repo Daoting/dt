@@ -30,7 +30,7 @@ namespace Dt.Base
     public static class Res
     {
         // 全局资源字典
-        readonly static ResourceDictionary _dict = Application.Current.Resources;
+        readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Generic.xaml") };
 
         #region 标准颜色画刷
         static SolidColorBrush _transparentBrush;
