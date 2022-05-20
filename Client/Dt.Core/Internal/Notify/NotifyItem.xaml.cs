@@ -94,7 +94,7 @@ namespace Dt.Core
         {
             if (!string.IsNullOrEmpty(_info.Link))
             {
-                Button btn = new Button { Content = _info.Link, Style = (Style)Application.Current.Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
+                Button btn = new Button { Content = _info.Link, Style = (Style)Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
                 btn.Click += (s, e) => _info.LinkCallback?.Invoke(_info);
                 _sp.Children.Add(btn);
             }
@@ -144,7 +144,7 @@ namespace Dt.Core
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             KillCloseTimer();
-            _rc.Fill = (SolidColorBrush)Application.Current.Resources["亮遮罩"];
+            _rc.Fill = (SolidColorBrush)Resources["亮遮罩"];
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Dt.Core
                 // 因phone不触发PointerEntered，再次关闭定时器
                 KillCloseTimer();
                 e.Handled = true;
-                _rc.Fill = (SolidColorBrush)Application.Current.Resources["深亮遮罩"];
+                _rc.Fill = (SolidColorBrush)Resources["深亮遮罩"];
                 _ptStart = e.GetCurrentPoint(null).Position;
             }
         }
