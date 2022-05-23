@@ -7,19 +7,16 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System;
-using System.Globalization;
-using System.Text;
-using Windows.Foundation;
-using Windows.UI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI;
+using System.Globalization;
+using System.Text;
+using Windows.Foundation;
+using Windows.UI;
 #endregion
 
 namespace Dt.Base
@@ -30,7 +27,7 @@ namespace Dt.Base
     public static class Res
     {
         // 全局资源字典
-        readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Generic.xaml") };
+        readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Global.xaml") };
 
         #region 标准颜色画刷
         static SolidColorBrush _transparentBrush;
@@ -332,11 +329,6 @@ namespace Dt.Base
         /// 浅色按钮样式
         /// </summary>
         public static Style 浅色按钮 => (Style)_dict["浅色按钮"];
-
-        /// <summary>
-        /// 默认字体大小
-        /// </summary>
-        public static double DefaultFontSize => (double)_dict["ControlContentThemeFontSize"];
 
         /// <summary>
         /// 图标字体
@@ -759,23 +751,6 @@ namespace Dt.Base
 
             return -1;
         }
-        #endregion
-
-        #region FileItem资源
-        /// <summary>
-        /// FileItem默认模板
-        /// </summary>
-        internal static ControlTemplate VirFileTemplate => (ControlTemplate)_dict["VirFileTemplate"];
-
-        /// <summary>
-        /// FileItem图片模板
-        /// </summary>
-        internal static ControlTemplate VirImageTemplate => (ControlTemplate)_dict["VirImageTemplate"];
-
-        /// <summary>
-        /// FileItem视频模板
-        /// </summary>
-        internal static ControlTemplate VirVideoTemplate => (ControlTemplate)_dict["VirVideoTemplate"];
         #endregion
 
         #region 颜色

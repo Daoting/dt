@@ -108,16 +108,18 @@ namespace Dt.Base
             typeof(FileItem),
             new PropertyMetadata(Stretch.Uniform));
 
+        readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Styles/FileList.xaml") };
+
         static void OnFileTypePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileItem vf = (FileItem)d;
             FileItemType tp = (FileItemType)e.NewValue;
             if (tp == FileItemType.Image)
-                vf.Template = Res.VirImageTemplate;
+                vf.Template = (ControlTemplate)_dict["VirImageTemplate"];
             else if (tp == FileItemType.Video)
-                vf.Template = Res.VirVideoTemplate;
+                vf.Template = (ControlTemplate)_dict["VirVideoTemplate"];
             else
-                vf.Template = Res.VirFileTemplate;
+                vf.Template = (ControlTemplate)_dict["VirFileTemplate"];
         }
 
         static void OnStatePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

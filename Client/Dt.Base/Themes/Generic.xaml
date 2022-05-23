@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml" />
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Base.xaml" />
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Desk.xaml" />
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Win.xaml" />
