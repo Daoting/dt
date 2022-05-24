@@ -65,7 +65,7 @@ namespace Dt.Core.Rpc
                             throw new KnownException($"⚡对【{_methodName}】无访问权限！");
 
                         // 跳转到登录页面
-                        Kit.Login(true);
+                        Kit.ShowLogin(true);
                         throw new KnownException("请先登录您的账号！");
                     }
 #endif
