@@ -33,7 +33,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<FileData> PickImage()
         {
-            return Callback.PickImage();
+            return Stub.PickImage();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<List<FileData>> PickImages()
         {
-            return Callback.PickImages();
+            return Stub.PickImages();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<FileData> PickVideo()
         {
-            return Callback.PickVideo();
+            return Stub.PickVideo();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<List<FileData>> PickVideos()
         {
-            return Callback.PickVideos();
+            return Stub.PickVideos();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<FileData> PickAudio()
         {
-            return Callback.PickAudio();
+            return Stub.PickAudio();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<List<FileData>> PickAudios()
         {
-            return Callback.PickAudios();
+            return Stub.PickAudios();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<FileData> PickMedia()
         {
-            return Callback.PickMedia();
+            return Stub.PickMedia();
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<List<FileData>> PickMedias()
         {
-            return Callback.PickMedias();
+            return Stub.PickMedias();
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<FileData> PickFile(string[] p_fileTypes = null)
         {
-            return Callback.PickFile(p_fileTypes);
+            return Stub.PickFile(p_fileTypes);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<List<FileData>> PickFiles(string[] p_fileTypes = null)
         {
-            return Callback.PickFiles(p_fileTypes);
+            return Stub.PickFiles(p_fileTypes);
         }
         #endregion
 
@@ -136,7 +136,7 @@ namespace Dt.Core
         /// <returns>照片文件信息，失败或放弃时返回null</returns>
         public static Task<FileData> TakePhoto(CapturePhotoOptions p_options = null)
         {
-            return Callback.TakePhoto(p_options);
+            return Stub.TakePhoto(p_options);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Dt.Core
         /// <returns>视频文件信息，失败或放弃时返回null</returns>
         public static Task<FileData> TakeVideo(CaptureVideoOptions p_options = null)
         {
-            return Callback.TakeVideo(p_options);
+            return Stub.TakeVideo(p_options);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Dt.Core
         /// <returns>录音文件信息，失败或放弃时返回null</returns>
         public static Task<FileData> TakeAudio(FrameworkElement p_target)
         {
-            return Callback.TakeAudio(p_target);
+            return Stub.TakeAudio(p_target);
         }
         #endregion
 
@@ -249,7 +249,7 @@ namespace Dt.Core
         /// <param name="p_img"></param>
         public static Task LoadImage(string p_path, Image p_img = null)
         {
-            return Callback.LoadImage(p_path, p_img);
+            return Stub.LoadImage(p_path, p_img);
         }
         #endregion
 

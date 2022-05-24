@@ -20,41 +20,15 @@ namespace Dt.Base
     /// <summary>
     /// 默认系统回调
     /// </summary>
-    internal partial class DefaultCallback : ICallback
+    public abstract partial class DefaultStub : Stub
     {
-        /// <summary>
-        /// 显示登录页面
-        /// </summary>
-        /// <param name="p_isPopup">是否为弹出式</param>
-        public void Login(bool p_isPopup)
-        {
-            Startup.ShowLogin(p_isPopup);
-        }
-
-        /// <summary>
-        /// 注销后重新登录
-        /// </summary>
-        public async void Logout()
-        {
-            // 先停止接收，再清空用户信息
-            PushHandler.StopRecvPush();
-            // 注销时清空用户信息
-            Kit.ResetUser();
-
-            AtState.DeleteCookie("LoginPhone");
-            AtState.DeleteCookie("LoginPwd");
-
-            await Kit.Stub.OnLogout();
-            Startup.ShowLogin(false);
-        }
-
         /// <summary>
         /// 显示确认对话框
         /// </summary>
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
         /// <returns>true表确认</returns>
-        public Task<bool> Confirm(string p_content, string p_title)
+        internal override Task<bool> Confirm(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
             if (Kit.IsPhoneUI)
@@ -93,7 +67,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
-        public void Error(string p_content, string p_title)
+        internal override void Error(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
             if (Kit.IsPhoneUI)
@@ -127,7 +101,7 @@ namespace Dt.Base
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">启动参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
+        internal override object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
         {
             Type tp = Kit.GetViewType(p_viewName);
             if (tp == null)
@@ -146,7 +120,7 @@ namespace Dt.Base
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params)
+        internal override object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params)
         {
             Throw.IfNull(p_type, "待显示的窗口类型不可为空！");
 
@@ -200,7 +174,7 @@ namespace Dt.Base
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        public void ShowTraceBox()
+        internal override void ShowTraceBox()
         {
             SysTrace.ShowBox();
         }
@@ -210,7 +184,7 @@ namespace Dt.Base
         /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
         /// </summary>
         /// <returns></returns>
-        public Task OnSuspending()
+        internal protected override Task OnSuspending()
         {
             // ios在转入后台有180s的处理时间，过后停止所有操作，http连接瞬间自动断开
             // android各版本不同
@@ -231,20 +205,20 @@ namespace Dt.Base
         /// <summary>
         /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
         /// </summary>
-        public void OnResuming()
+        internal protected override void OnResuming()
         {
             if (Kit.IsLogon)
             {
                 // 在线推送可能被停止，重新启动
                 PushHandler.RetryTimes = 0;
-                Startup.RegisterSysPush();
+                PushHandler.Register();
             }
         }
 
         /// <summary>
         /// WinUI模式 和 PhoneUI模式切换
         /// </summary>
-        public void OnUIModeChanged()
+        internal override void OnUIModeChanged()
         {
             // WinUI中已移除 SystemNavigationManager
             //#if WIN
@@ -273,20 +247,20 @@ namespace Dt.Base
                 {
                     win = tabs.OwnWin;
                 }
-                if (win != null && win.GetType() != Startup.HomePageType)
+                if (win != null && win.GetType() != HomePageType)
                 {
-                    Startup.AutoStartOnce = Startup.GetAutoStartInfo(win);
+                    _autoStartOnce = AutoStartKit.GetAutoStartInfo(win);
                 }
 
-                Startup.LoadDesktop();
+                LoadDesktop();
             }
             else if (SysVisual.RootContent is Desktop desktop)
             {
                 if (desktop.MainWin != desktop.HomeWin)
                 {
-                    Startup.AutoStartOnce = Startup.GetAutoStartInfo(desktop.MainWin);
+                    _autoStartOnce = AutoStartKit.GetAutoStartInfo(desktop.MainWin);
                 }
-                Startup.LoadRootFrame();
+                LoadRootFrame();
             }
         }
     }

@@ -115,7 +115,7 @@ namespace Dt.Base
             {
                 _menu = new Menu { IsContextMenu = true };
                 var item = new Mi { ID = "取消自启动" };
-                item.Click += (s, a) => Startup.DelAutoStart();
+                item.Click += (s, a) => AutoStartKit.DelAutoStart();
                 _menu.Items.Add(item);
                 item = new Mi { ID = "设置自启动" };
                 item.Click += SetAutoStart;
@@ -187,7 +187,7 @@ namespace Dt.Base
 
         static void SetAutoStart(object sender, Mi e)
         {
-            Startup.SetAutoStart(_currentItem._win);
+            AutoStartKit.SetAutoStart(_currentItem._win);
         }
 
         static void ResetWinLayout(object sender, Mi e)

@@ -10,67 +10,18 @@
 #region 引用命名
 using Android.Content;
 using Android.OS;
-using Dt.Core;
 using Microsoft.UI.Xaml;
-using System;
+using System.Reflection;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 默认的Application行为
+    /// 启动调用顺序：
+    /// NativeApplication.OnCreate -> ApplicationActivity.OnCreate -> App.OnLaunched -> DefaultStub.OnLaunched
     /// </summary>
-    public abstract class BaseApp : Application
-    {
-        string _params;
-
-        /// <summary>
-        /// 存根
-        /// </summary>
-        protected Stub _stub;
-
-        public BaseApp()
-        {
-#if DEBUG
-            // 初始化uno平台全局日志
-            UnoKit.InitializeLogging();
-#endif
-        }
-
-        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
-        {
-            if (string.IsNullOrEmpty(_params))
-                _params = p_args.Arguments;
-
-            await Startup.Launch(_stub, _params);
-            _params = null;
-        }
-
-        public async void ReceiveShare(ShareInfo p_shareInfo)
-        {
-            await Startup.Launch(_stub, null, p_shareInfo);
-        }
-
-        public void ToastStart(string p_params)
-        {
-            // 点击通知栏启动
-            if (Kit.Stub != null)
-            {
-                // 非null表示app已启动过，不会再调用 OnLaunched
-                _ = Startup.Launch(_stub, p_params);
-            }
-            else
-            {
-                // 未启动，记录参数提供给 OnLaunched
-                _params = p_params;
-            }
-        }
-    }
-
     public class BaseAppActivity : ApplicationActivity
     {
-        // 启动调用顺序：Application.OnCreate -> MainActivity.OnCreate -> App.OnLaunched
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -98,7 +49,7 @@ namespace Dt.Base
                     // 点击通知栏后，接收传递参数
                     var startInfo = it.GetStringExtra(BgJob.ActionToast);
                     if (!string.IsNullOrEmpty(startInfo))
-                        ((BaseApp)Microsoft.UI.Xaml.Application.Current).ToastStart(startInfo);
+                        GetStub()?.ToastStart(startInfo);
                     break;
             }
         }
@@ -140,7 +91,16 @@ namespace Dt.Base
                     path = uri.ToString();
                 info.FilePath = path;
             }
-            ((BaseApp)Microsoft.UI.Xaml.Application.Current).ReceiveShare(info);
+            GetStub()?.ReceiveShare(info);
+        }
+
+        DefaultStub GetStub()
+        {
+            var app = Microsoft.UI.Xaml.Application.Current;
+            var pi = app.GetType().GetProperty("Stub", BindingFlags.Public & BindingFlags.Instance);
+            if (pi != null)
+                return pi.GetValue(app) as DefaultStub;
+            return null;
         }
     }
 }

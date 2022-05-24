@@ -18,21 +18,13 @@ using Microsoft.UI.Xaml;
 namespace Dt.Base
 {
     /// <summary>
-    /// 默认的Application行为
+    /// 默认存根
     /// </summary>
-    public abstract class BaseApp : Application
+    public abstract partial class DefaultStub : Stub
     {
-        /// <summary>
-        /// 存根
-        /// </summary>
-        protected Stub _stub;
-
-        public BaseApp()
+        public DefaultStub()
         {
-#if DEBUG
-            // 初始化uno平台全局日志
-            UnoKit.InitializeLogging();
-#endif
+            UnoKit.Init();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)

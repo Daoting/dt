@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Dt.Core
     /// <summary>
     /// 系统存根
     /// </summary>
-    public abstract class Stub
+    public abstract partial class Stub
     {
         public Stub()
         {
@@ -59,18 +60,6 @@ namespace Dt.Core
         /// 系统注销时的处理
         /// </summary>
         public virtual Task OnLogout() => Task.CompletedTask;
-
-        /// <summary>
-        /// 挂起时的处理，必须耗时小！
-        /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
-        /// </summary>
-        /// <returns></returns>
-        public virtual Task OnSuspending() => Task.CompletedTask;
-
-        /// <summary>
-        /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
-        /// </summary>
-        public virtual void OnResuming() { }
 
         /// <summary>
         /// 后台登录，因后台独立运行，涉及验证身份的API，先确保已登录

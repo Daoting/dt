@@ -3,7 +3,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2021-12-14 创建
+* 日志: 2016-02-18
 ******************************************************************************/
 #endregion
 
@@ -15,23 +15,18 @@ using Microsoft.UI.Xaml;
 namespace Dt.Base
 {
     /// <summary>
-    /// 默认的Application行为
+    /// 默认存根
     /// </summary>
-    public abstract class BaseApp : Application
+    public abstract partial class DefaultStub : Stub
     {
         TaskCompletionSource<bool> _tcs;
 
-        /// <summary>
-        /// 存根
-        /// </summary>
-        protected Stub _stub;
-
-        public BaseApp()
+        public DefaultStub()
         {
             ToastNotificationManagerCompat.OnActivated += OnToastActivated;
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             // 当用户单击Toast通知（或通知上的按钮）时：
             // 1. 如果应用当前正在运行，将在后台线程上调用 OnActivated 事件
@@ -41,7 +36,7 @@ namespace Dt.Base
                 _tcs = new TaskCompletionSource<bool>();
 
             // 参数始终null，只有Toast启动带参数
-            await Startup.Launch(_stub, null);
+            Launch().Wait();
 
             // 通知正常启动完成
             _tcs?.SetResult(true);
@@ -57,7 +52,7 @@ namespace Dt.Base
             }
 
             // 从后台线程切换到UI线程，传递启动参数
-            Kit.RunAsync(() => _ = Startup.Launch(_stub, e.Argument));
+            Kit.RunAsync(() => _ = Launch(e.Argument));
         }
     }
 }

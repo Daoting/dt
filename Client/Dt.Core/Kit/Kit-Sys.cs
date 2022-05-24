@@ -71,12 +71,7 @@ namespace Dt.Core
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        public static Action ShowTraceBox => Callback.ShowTraceBox;
-
-        /// <summary>
-        /// 系统回调
-        /// </summary>
-        internal static ICallback Callback { get; private set; }
+        public static Action ShowTraceBox => Stub.ShowTraceBox;
         #endregion
 
         #region 当前时间
@@ -175,16 +170,21 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 登录注销
+        #region 登录注销主页
         /// <summary>
         /// 显示登录页面，参数：是否为弹出式
         /// </summary>
-        public static Action<bool> Login => Callback.Login;
+        public static Action<bool> ShowLogin => Stub.ShowLogin;
 
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        public static Action Logout => Callback.Logout;
+        public static Action Logout => Stub.Logout;
+
+        /// <summary>
+        /// 加载根内容 Desktop/Frame 和主页
+        /// </summary>
+        public static Action ShowHome => Stub.ShowHome;
         #endregion
 
         #region 平台启动
@@ -192,11 +192,9 @@ namespace Dt.Core
         /// 系统初始化
         /// </summary>
         /// <param name="p_stub">系统存根</param>
-        /// <param name="p_callback"></param>
-        internal static async Task Startup(Stub p_stub, ICallback p_callback)
+        internal static async Task Init(Stub p_stub)
         {
             Stub = p_stub;
-            Callback = p_callback;
 
             // 初始化日志
             Serilogger.Init();
@@ -264,7 +262,6 @@ namespace Dt.Core
             var deferral = e.SuspendingOperation.GetDeferral();
             try
             {
-                await Callback.OnSuspending();
                 await Stub.OnSuspending();
             }
             catch { }
@@ -282,7 +279,6 @@ namespace Dt.Core
         {
             try
             {
-                Callback.OnResuming();
                 Stub.OnResuming();
             }
             catch { }

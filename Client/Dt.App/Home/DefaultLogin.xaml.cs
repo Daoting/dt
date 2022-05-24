@@ -101,10 +101,10 @@ namespace Dt.App
                     else
                     {
                         // 正常登录后切换到主页
-                        Startup.ShowHome();
+                        Kit.ShowHome();
                     }
                     // 接收服务器推送
-                    Startup.RegisterSysPush();
+                    Kit.RegisterSysPush();
                 }
                 catch
                 {

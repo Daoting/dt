@@ -101,7 +101,7 @@ namespace Dt.Core
         /// <returns>true表确认</returns>
         public static Task<bool> Confirm(string p_content, string p_title = null)
         {
-            return Callback.Confirm(p_content, string.IsNullOrEmpty(p_title) ? "请确认" : p_title);
+            return Stub.Confirm(p_content, string.IsNullOrEmpty(p_title) ? "请确认" : p_title);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Dt.Core
         /// <param name="p_title">标题</param>
         public static void Error(string p_content, string p_title = null)
         {
-            Callback.Error(p_content, string.IsNullOrEmpty(p_title) ? "出错提示" : p_title);
+            Stub.Error(p_content, string.IsNullOrEmpty(p_title) ? "出错提示" : p_title);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Dt.Core
             Icons p_icon = Icons.None,
             object p_params = null)
         {
-            return Callback.OpenWin(p_type, p_title, p_icon, p_params);
+            return Stub.OpenWin(p_type, p_title, p_icon, p_params);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Dt.Core
             Icons p_icon = Icons.None,
             object p_params = null)
         {
-            return Callback.OpenView(p_viewName, p_title, p_icon, p_params);
+            return Stub.OpenView(p_viewName, p_title, p_icon, p_params);
         }
 
         /// <summary>
@@ -160,6 +160,18 @@ namespace Dt.Core
                 return tp;
             return null;
         }
+        #endregion
+
+        #region 注册接收推送
+        /// <summary>
+        /// 注册接收服务器推送
+        /// </summary>
+        public static Action RegisterSysPush => Stub.RegisterSysPush;
+
+        /// <summary>
+        /// 主动停止接收推送
+        /// </summary>
+        public static Action StopSysPush => Stub.StopSysPush;
         #endregion
 
         #region UI线程调用

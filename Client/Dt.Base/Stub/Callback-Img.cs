@@ -7,24 +7,17 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 加载图片工具类
+    /// 加载图片
     /// </summary>
-    internal partial class DefaultCallback : ICallback
+    public abstract partial class DefaultStub : Stub
     {
 #if WASM
         /// <summary>
@@ -32,7 +25,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public Task LoadImage(string p_path, Image p_img)
+        internal override Task LoadImage(string p_path, Image p_img)
         {
             if (string.IsNullOrEmpty(p_path))
                 return Task.CompletedTask;
@@ -59,7 +52,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public async Task LoadImage(string p_path, Image p_img = null)
+        internal override async Task LoadImage(string p_path, Image p_img = null)
         {
             // 加载过程：
             // 1. 本地.doc目录是否存在
@@ -113,7 +106,7 @@ namespace Dt.Base
             string path = Path.Combine(Kit.CachePath, p_fileName);
             if (!File.Exists(path))
                 return null;
-            
+
             BitmapImage bmp = new BitmapImage();
 #if WIN
             StorageFile sf = await StorageFile.GetFileFromPathAsync(path);

@@ -401,7 +401,7 @@ namespace Dt.Core
 
             // 调整对话框层
             _dlgCanvas.Children.Clear();
-            Kit.Callback.OnUIModeChanged();
+            Kit.Stub.OnUIModeChanged();
         }
         #endregion
 

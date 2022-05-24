@@ -7,18 +7,52 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using System;
+using Microsoft.UI.Xaml;
 #endregion
 
 namespace Dt.Sample
 {
-    public partial class App : BaseApp
+    /// <summary>
+    /// 禁止采用继承Application的中间类型！！！
+    /// 因uno的InitializeComponent()中使用 base.GetType().Assembly
+    /// </summary>
+    public partial class App : Application
     {
         public App()
         {
-            _stub = new AppStub();
             InitializeComponent();
+            Stub = new AppStub();
         }
+
+        public Stub Stub { get; }
+
+        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
+        {
+            Stub.OnLaunched(p_args);
+        }
+
+#if IOS
+        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
+        {
+            Stub.OpenUrl(p_app, p_url, p_options);
+            return true;
+        }
+
+        public override bool FinishedLaunching(UIApplication p_app, NSDictionary p_options)
+        {
+            Stub.FinishedLaunching(p_app, p_options);
+            return base.FinishedLaunching(p_app, p_options);
+        }
+
+        public override void PerformFetch(UIApplication p_app, Action<UIBackgroundFetchResult> p_completionHandler)
+        {
+            Stub.PerformFetch(p_app, p_completionHandler);
+        }
+
+        public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
+        {
+            Stub.ReceivedLocalNotification(p_app, p_notification);
+        }
+#endif
     }
 }

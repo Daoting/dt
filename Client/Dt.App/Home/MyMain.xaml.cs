@@ -34,7 +34,7 @@ namespace Dt.App.Home
             else
             {
                 var btn = new Button { Content = "点击登录", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                btn.Click += (s, e) => Kit.Login(false);
+                btn.Click += (s, e) => Kit.ShowLogin(false);
                 Content = btn;
                 Kit.LoginSuc += () => { Content = _fv; LoadInfo(); };
             }

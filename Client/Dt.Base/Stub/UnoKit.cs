@@ -15,10 +15,19 @@ namespace Dt.Base
 {
     static class UnoKit
     {
+        public static void Init()
+        {
+            // Frame CommandBar AppBarButton采用本地样式及动画
+            // 原来在Global.xaml中定义，Frame内部使用NativeFramePresenter承载
+            Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
+
+            InitializeLogging();
+        }
+
         /// <summary>
         /// Configures global Uno Platform logging
         /// </summary>
-        public static void InitializeLogging()
+        static void InitializeLogging()
         {
 #if DEBUG
             // Logging is disabled by default for release builds, as it incurs a significant
