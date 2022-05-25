@@ -362,7 +362,7 @@ namespace Dt.Base
 
                 try
                 {
-                    var folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(Kit.Stub.Title, CreationCollisionOption.OpenIfExists);
+                    var folder = await KnownFolders.PicturesLibrary.CreateFolderAsync(Kit.Title, CreationCollisionOption.OpenIfExists);
                     saveFile = await folder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
                 }
                 catch

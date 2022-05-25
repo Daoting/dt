@@ -101,7 +101,7 @@ namespace Dt.Core
 
 #if WIN
             // WinUI中Window.Current为null
-            MainWin = new Window { Title = Kit.Stub.Title };
+            MainWin = new Window { Title = Stub.Inst.Title };
 #else
             // uno中若新创建，Window.Bounds始终为(0, 0)！
             MainWin = Window.Current;
@@ -401,7 +401,7 @@ namespace Dt.Core
 
             // 调整对话框层
             _dlgCanvas.Children.Clear();
-            Kit.Stub.OnUIModeChanged();
+            Stub.Inst.OnUIModeChanged();
         }
         #endregion
 

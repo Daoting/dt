@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using System;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.UI.Core;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Core
@@ -90,88 +88,6 @@ namespace Dt.Core
             if (p_notify != null)
                 RunAsync(() => SysVisual.NotifyList.Remove(p_notify));
         }
-        #endregion
-
-        #region 窗口对话框
-        /// <summary>
-        /// 显示确认对话框
-        /// </summary>
-        /// <param name="p_content">消息内容</param>
-        /// <param name="p_title">标题</param>
-        /// <returns>true表确认</returns>
-        public static Task<bool> Confirm(string p_content, string p_title = null)
-        {
-            return Stub.Confirm(p_content, string.IsNullOrEmpty(p_title) ? "请确认" : p_title);
-        }
-
-        /// <summary>
-        /// 显示错误对话框
-        /// </summary>
-        /// <param name="p_content">消息内容</param>
-        /// <param name="p_title">标题</param>
-        public static void Error(string p_content, string p_title = null)
-        {
-            Stub.Error(p_content, string.IsNullOrEmpty(p_title) ? "出错提示" : p_title);
-        }
-
-        /// <summary>
-        /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
-        /// </summary>
-        /// <param name="p_type">窗口/视图类型</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">初始参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public static object OpenWin(
-            Type p_type,
-            string p_title = null,
-            Icons p_icon = Icons.None,
-            object p_params = null)
-        {
-            return Stub.OpenWin(p_type, p_title, p_icon, p_params);
-        }
-
-        /// <summary>
-        /// 根据视图名称激活旧窗口或打开新窗口
-        /// </summary>
-        /// <param name="p_viewName">窗口视图名称</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">启动参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public static object OpenView(
-            string p_viewName,
-            string p_title = null,
-            Icons p_icon = Icons.None,
-            object p_params = null)
-        {
-            return Stub.OpenView(p_viewName, p_title, p_icon, p_params);
-        }
-
-        /// <summary>
-        /// 获取视图类型
-        /// </summary>
-        /// <param name="p_typeName">类型名称</param>
-        /// <returns>返回类型</returns>
-        public static Type GetViewType(string p_typeName)
-        {
-            Type tp;
-            if (!string.IsNullOrEmpty(p_typeName) && Stub.ViewTypes.TryGetValue(p_typeName, out tp))
-                return tp;
-            return null;
-        }
-        #endregion
-
-        #region 注册接收推送
-        /// <summary>
-        /// 注册接收服务器推送
-        /// </summary>
-        public static Action RegisterSysPush => Stub.RegisterSysPush;
-
-        /// <summary>
-        /// 主动停止接收推送
-        /// </summary>
-        public static Action StopSysPush => Stub.StopSysPush;
         #endregion
 
         #region UI线程调用

@@ -17,7 +17,7 @@ namespace Dt.Core
     {
         public static void Init()
         {
-            var setting = Kit.Stub.LogSetting;
+            var setting = Stub.Inst.LogSetting;
             try
             {
                 var cfg = new LoggerConfiguration();

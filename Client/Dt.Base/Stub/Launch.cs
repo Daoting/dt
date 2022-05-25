@@ -40,8 +40,8 @@ namespace Dt.Base
                 catch { }
             }
 
-            // 非null表示app已启动过
-            if (Kit.Stub != null)
+            // 状态库打开表示app已启动过
+            if (AtState.IsOpened)
             {
                 // 带参数启动
                 if (_autoStartOnce != null)
@@ -56,7 +56,7 @@ namespace Dt.Base
             try
             {
                 // 系统初始化，内含创建窗口及整个系统可视树
-                await Kit.Init(this);
+                await Kit.Init();
 
                 // 连接cm服务，获取全局参数，更新/打开模型库
                 if (Kit.IsUsingDtSvc)

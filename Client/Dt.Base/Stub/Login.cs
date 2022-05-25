@@ -25,7 +25,7 @@ namespace Dt.Base
         /// <summary>
         /// 当前登录页面类型，未设置时采用 DefaultLogin
         /// </summary>
-        public Type LoginPageType
+        public override Type LoginPageType
         {
             get { return _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType; }
         }
@@ -34,7 +34,7 @@ namespace Dt.Base
         /// 显示登录页面
         /// </summary>
         /// <param name="p_isPopup">是否为弹出式</param>
-        internal override void ShowLogin(bool p_isPopup)
+        public override void ShowLogin(bool p_isPopup)
         {
             Kit.RunAsync(() =>
             {
@@ -65,7 +65,7 @@ namespace Dt.Base
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        internal override async void Logout()
+        public override async void Logout()
         {
             // 先停止接收，再清空用户信息
             PushHandler.StopRecvPush();
@@ -75,14 +75,14 @@ namespace Dt.Base
             AtState.DeleteCookie("LoginPhone");
             AtState.DeleteCookie("LoginPwd");
 
-            await Kit.Stub.OnLogout();
+            await OnLogout();
             ShowLogin(false);
         }
 
         /// <summary>
         /// 注册接收服务器推送
         /// </summary>
-        internal override void RegisterSysPush()
+        public override void RegisterSysPush()
         {
             PushHandler.Register();
         }
@@ -90,7 +90,7 @@ namespace Dt.Base
         /// <summary>
         /// 主动停止接收推送
         /// </summary>
-        internal override void StopSysPush()
+        public override void StopSysPush()
         {
             PushHandler.StopRecvPush();
         }

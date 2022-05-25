@@ -22,8 +22,14 @@ namespace Dt.Core
     {
         public Stub()
         {
+            Inst = this;
             Init();
         }
+        
+        /// <summary>
+        /// 内部访问存根实例
+        /// </summary>
+        internal static Stub Inst { get; private set; }
 
         /// <summary>
         /// 系统标题
@@ -31,35 +37,35 @@ namespace Dt.Core
         public string Title { get; protected set; }
 
         /// <summary>
-        /// 是否启用后台任务
-        /// </summary>
-        public bool EnableBgTask { get; protected set; }
-
-        /// <summary>
         /// 日志设置，在AppStub构造方法设置有效，默认输出到：Console和trace
         /// </summary>
         public LogSetting LogSetting { get; } = new LogSetting();
 
         /// <summary>
+        /// 是否启用后台任务，在AppStub构造方法设置有效
+        /// </summary>
+        protected bool EnableBgTask { get; set; }
+
+        /// <summary>
         /// 系统启动
         /// </summary>
-        public abstract Task OnStartup();
+        protected abstract Task OnStartup();
 
         /// <summary>
         /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
         /// </summary>
-        public virtual Task OnBgTaskRun() => Task.CompletedTask;
+        protected virtual Task OnBgTaskRun() => Task.CompletedTask;
 
         /// <summary>
         /// 接收分享内容
         /// </summary>
         /// <param name="p_info">分享内容描述</param>
-        public virtual void OnReceiveShare(ShareInfo p_info) { }
+        protected virtual void OnReceiveShare(ShareInfo p_info) { }
 
         /// <summary>
         /// 系统注销时的处理
         /// </summary>
-        public virtual Task OnLogout() => Task.CompletedTask;
+        protected virtual Task OnLogout() => Task.CompletedTask;
 
         /// <summary>
         /// 后台登录，因后台独立运行，涉及验证身份的API，先确保已登录
@@ -105,6 +111,11 @@ namespace Dt.Core
         {
             Kit.InitCmSvcUrl(p_url);
         }
+
+        /// <summary>
+        /// 处理后台任务
+        /// </summary>
+        public Task BgTaskRun() => OnBgTaskRun();
 
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();

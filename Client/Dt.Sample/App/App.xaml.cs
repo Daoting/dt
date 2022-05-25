@@ -18,40 +18,40 @@ namespace Dt.Sample
     /// </summary>
     public partial class App : Application
     {
+        readonly Stub _stub;
+
         public App()
         {
             InitializeComponent();
-            Stub = new AppStub();
+            _stub = new AppStub();
         }
-
-        public Stub Stub { get; }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            Stub.OnLaunched(p_args);
+            _stub.OnLaunched(p_args);
         }
 
 #if IOS
         public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
         {
-            Stub.OpenUrl(p_app, p_url, p_options);
+            _stub.OpenUrl(p_app, p_url, p_options);
             return true;
         }
 
         public override bool FinishedLaunching(UIApplication p_app, NSDictionary p_options)
         {
-            Stub.FinishedLaunching(p_app, p_options);
+            _stub.FinishedLaunching(p_app, p_options);
             return base.FinishedLaunching(p_app, p_options);
         }
 
         public override void PerformFetch(UIApplication p_app, Action<UIBackgroundFetchResult> p_completionHandler)
         {
-            Stub.PerformFetch(p_app, p_completionHandler);
+            _stub.PerformFetch(p_app, p_completionHandler);
         }
 
         public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
         {
-            Stub.ReceivedLocalNotification(p_app, p_notification);
+            _stub.ReceivedLocalNotification(p_app, p_notification);
         }
 #endif
     }

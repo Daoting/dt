@@ -157,9 +157,9 @@ namespace Dt.Sample
         async void OpenHomeWin(Win p_win, Nav p_nav)
         {
             var tp = typeof(DefaultHome);
-            if (Startup.HomePageType != tp)
+            if (Kit.HomePageType != tp)
             {
-                await Startup.Run();
+                await Kit.StartRun();
             }
             else
             {

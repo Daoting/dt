@@ -36,7 +36,7 @@ namespace Dt.Base
             ShowVeil = false;
             IsPinned = true;
             PhonePlacement = DlgPlacement.CenterScreen;
-            _tbTitle.Text = $"欢迎使用{Kit.Stub.Title}";
+            _tbTitle.Text = $"欢迎使用{Kit.Title}";
         }
 
         void OnAgree(object sender, RoutedEventArgs e)

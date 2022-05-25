@@ -39,7 +39,7 @@ namespace Dt.Core
             Task.Run(async () =>
             {
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
-                string name = Kit.Stub.GetType().AssemblyQualifiedName;
+                string name = Stub.Inst.GetType().AssemblyQualifiedName;
                 if (name != AtState.GetCookie(_stubType))
                     AtState.SaveCookie(_stubType, name);
 

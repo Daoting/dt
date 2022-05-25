@@ -34,17 +34,17 @@ namespace Dt.Base
             _params = null;
         }
 
-        public async void ReceiveShare(ShareInfo p_shareInfo)
+        public void ReceiveShare(ShareInfo p_shareInfo)
         {
-            await Launch(null, p_shareInfo);
+            _ = Launch(null, p_shareInfo);
         }
 
         public void ToastStart(string p_params)
         {
             // 点击通知栏启动
-            if (Kit.Stub != null)
+            if (AtState.IsOpened)
             {
-                // 非null表示app已启动过，不会再调用 OnLaunched
+                // 状态库打开表示app已启动过，不会再调用 OnLaunched
                 _ = Launch(p_params);
             }
             else

@@ -29,7 +29,7 @@ namespace Dt.Base
         /// <summary>
         /// 主页类型
         /// </summary>
-        public Type HomePageType
+        public override Type HomePageType
         {
             get { return _homePageType == null ? Type.GetType("Dt.App.DefaultHome,Dt.App") : _homePageType; }
         }
@@ -37,7 +37,7 @@ namespace Dt.Base
         /// <summary>
         /// 加载根内容 Desktop/Frame 和主页
         /// </summary>
-        internal override void ShowHome()
+        public override void ShowHome()
         {
             if (Kit.IsPhoneUI)
                 LoadRootFrame();
@@ -48,7 +48,7 @@ namespace Dt.Base
         /// <summary>
         /// 加载PhoneUI模式的根Frame
         /// </summary>
-        internal void LoadRootFrame()
+        void LoadRootFrame()
         {
             SysVisual.RootContent = new Frame();
 
@@ -88,7 +88,7 @@ namespace Dt.Base
         /// <summary>
         /// 加载Windows模式桌面
         /// </summary>
-        internal void LoadDesktop()
+        void LoadDesktop()
         {
             Desktop desktop = new Desktop();
 

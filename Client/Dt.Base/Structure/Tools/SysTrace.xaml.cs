@@ -234,7 +234,7 @@ namespace Dt.Base.Tools
             ExtractAssembly(Assembly.Load(new AssemblyName("Dt.App")));
 
             // 最后提取业务程序集，确保业务程序集的类型优先级最高，比如替换系统自带的视图
-            ExtractAssembly(Kit.Stub.GetType().Assembly);
+            ExtractAssembly(Stub.Inst.GetType().Assembly);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("\t\t#region 自动生成");

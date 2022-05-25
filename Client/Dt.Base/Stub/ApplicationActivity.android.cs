@@ -49,7 +49,7 @@ namespace Dt.Base
                     // 点击通知栏后，接收传递参数
                     var startInfo = it.GetStringExtra(BgJob.ActionToast);
                     if (!string.IsNullOrEmpty(startInfo))
-                        GetStub()?.ToastStart(startInfo);
+                        ((DefaultStub)Stub.Inst).ToastStart(startInfo);
                     break;
             }
         }
@@ -91,16 +91,7 @@ namespace Dt.Base
                     path = uri.ToString();
                 info.FilePath = path;
             }
-            GetStub()?.ReceiveShare(info);
-        }
-
-        DefaultStub GetStub()
-        {
-            var app = Microsoft.UI.Xaml.Application.Current;
-            var pi = app.GetType().GetProperty("Stub", BindingFlags.Public & BindingFlags.Instance);
-            if (pi != null)
-                return pi.GetValue(app) as DefaultStub;
-            return null;
+            ((DefaultStub)Stub.Inst).ReceiveShare(info);
         }
     }
 }

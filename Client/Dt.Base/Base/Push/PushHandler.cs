@@ -204,7 +204,7 @@ namespace Dt.Base
 
             Type tp;
             string[] arr = _method.Split('.');
-            if (arr.Length == 2 && Kit.Stub.PushHandlers.TryGetValue(arr[0], out tp))
+            if (arr.Length == 2 && Stub.Inst.PushHandlers.TryGetValue(arr[0], out tp))
             {
                 mi = tp.GetMethod(arr[1], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (mi != null)

@@ -536,7 +536,7 @@ namespace Dt.Core
                 _db.Open();
 
                 // 初次运行、库表结构版本变化或文件被删除时创建库表结构
-                if (Kit.Stub.SqliteDb.TryGetValue(dbName, out var dbInfo))
+                if (Stub.Inst.SqliteDb.TryGetValue(dbName, out var dbInfo))
                 {
                     path = Path.Combine(Kit.DataPath, $"{dbName}-{dbInfo.Version}.ver");
                     if (!exists || !File.Exists(path))
@@ -565,10 +565,12 @@ namespace Dt.Core
         /// <summary>
         /// 打开Sqlite库，提供给后台任务使用，不自动创建、同步库表结构
         /// </summary>
-        public static void OpenDbBackground()
+        /// <returns>false表示已打开，无需重复打开</returns>
+        /// <exception cref="Exception"></exception>
+        public static bool OpenDbBackground()
         {
             if (_db != null)
-                return;
+                return false;
 
             var dbName = GetDbName();
             try
@@ -584,6 +586,7 @@ namespace Dt.Core
             {
                 throw new Exception($"打开sqlite库[{dbName}]异常，请重新启动应用！{ex.Message}");
             }
+            return true;
         }
 
         /// <summary>

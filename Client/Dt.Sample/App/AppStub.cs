@@ -17,7 +17,7 @@ namespace Dt.Sample
     /// <summary>
     /// 存根
     /// </summary>
-    public class AppStub : Stub
+    public class AppStub : DefaultStub
     {
         public AppStub()
         {
@@ -64,7 +64,7 @@ namespace Dt.Sample
         /// <summary>
         /// 系统启动
         /// </summary>
-        public override async Task OnStartup()
+        protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议、隐私政策、向导
             if (AtState.GetCookie("FirstRun") == "")
@@ -73,23 +73,17 @@ namespace Dt.Sample
                 AtState.SaveCookie("FirstRun", "0");
             }
 
-            //Startup.AutoStartOnce = new AutoStartInfo
-            //{
-            //    WinType = typeof(Dt.Sample.SamplesMain).AssemblyQualifiedName,
-            //    Title = "自启动样例",
-            //};
-
             // 1. 默认启动
-            //await Startup.Run();
+            //await StartRun();
 
             // 2. 自定义启动
-            await Startup.Run(typeof(Sample.SamplesMain), false);
+            await StartRun(typeof(Sample.SamplesMain), false);
         }
 
         /// <summary>
         /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
         /// </summary>
-        public override async Task OnBgTaskRun()
+        protected override async Task OnBgTaskRun()
         {
             //string tpName = AtState.GetCookie("LoginPhone");
             //var cfg = await AtCm.GetConfig();
@@ -110,7 +104,7 @@ namespace Dt.Sample
         /// 接收分享内容
         /// </summary>
         /// <param name="p_info">分享内容描述</param>
-        public override void OnReceiveShare(ShareInfo p_info)
+        protected override void OnReceiveShare(ShareInfo p_info)
         {
             Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
