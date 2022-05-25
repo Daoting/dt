@@ -108,7 +108,7 @@ namespace Dt.Base.FormView
             if (lv.View == null)
             {
                 lv.ShowItemBorder = false;
-                lv.View = (lv.Data is Table) ? Application.Current.Resources["CListRowView"] : Application.Current.Resources["CListObjView"];
+                lv.View = (lv.Data is Table) ? Res.FormRes["CListRowView"] : Res.FormRes["CListObjView"];
             }
 
             // 不向下层对话框传递Press事件

@@ -1165,7 +1165,7 @@ namespace Dt.Base
         {
             if (item != null && item.GetType() == typeof(string))
             {
-                return (DataTemplate)Application.Current.Resources["Presenter文字"];
+                return (DataTemplate)Res.SketchRes["Presenter文字"];
             }
 
             return base.SelectTemplateCore(item, container);

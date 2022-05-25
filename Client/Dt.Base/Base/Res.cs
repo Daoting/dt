@@ -26,8 +26,18 @@ namespace Dt.Base
     /// </summary>
     public static class Res
     {
+        #region 资源字典
         // 全局资源字典
         readonly static ResourceDictionary _dict = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Global.xaml") };
+
+        internal static ResourceDictionary WinRes { get; } = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Styles/Win.xaml") };
+
+        internal static ResourceDictionary DialogRes { get; } = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Styles/Dialog.xaml") };
+
+        internal static ResourceDictionary FormRes { get; } = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Styles/FormView.xaml") };
+
+        internal static ResourceDictionary SketchRes { get; } = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Base/Themes/Styles/Sketch.xaml") };
+        #endregion
 
         #region 标准颜色画刷
         static SolidColorBrush _transparentBrush;

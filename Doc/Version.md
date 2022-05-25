@@ -1,10 +1,9 @@
 ﻿#   正在
-ios 
-CDate格
+Agent项目能否打包
 
 
 android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
-C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.21\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
+C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.20.1\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
 C:\Users\Daoting\.nuget\packages\xamarin.jetbrains.annotations\23.0.0.3\buildTransitive\net6.0-android31.0\Xamarin.Jetbrains.Annotations.targets 
 
 
@@ -45,7 +44,7 @@ web部署方式因漏洞已被禁用：ms-appinstaller:?source=，等待微软�
 ---------------------------- wasm ----------------------------
 FileItem上传、分享、MediaPlayerElement等功能未实现
 切换到默认主页无响应
-
+DefaultStub中自定义图标字体库
 
 #总体
 wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响应慢，用户体验差，不推荐使用。
@@ -75,6 +74,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Xamarin.Essentials 升级到 Microsoft.Maui.Essentials
 * wasm不引用Microsoft.Maui.Essentials 
 * 升级maui rc2后 Dt.Cells包的GMImagePicker 引用Xamarin.iOS 转为 Micorsoft.iOS
+* Dt.Core不依赖Dt.Base中的样式 ，修改NotifyItem
+* 增加uno在debug状态下的日志输出
+* 移除继承Application的 BaseApp，功能合并到Stub，因uno的InitializeComponent()中使用 base.GetType().Assembly 造成莫名崩溃，5天才查出原因
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释

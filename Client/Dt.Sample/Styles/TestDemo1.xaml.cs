@@ -19,7 +19,9 @@ namespace Dt.Sample
     {
         public TestDemo1()
         {
+            Log.Debug("Before new TestDemo1()");
             InitializeComponent();
+            Log.Debug("new TestDemo1()");
         }
 
         void OnTest1(object sender, RoutedEventArgs e)

@@ -196,7 +196,7 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Dlg);
             else
-                Style = (Style)Application.Current.Resources["WinDlg"];
+                Style = (Style)Res.DialogRes["WinDlg"];
         }
         #endregion
 

@@ -72,7 +72,7 @@ namespace Dt.Base
         {
             _grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             Button btn = new Button();
-            btn.Style = (Style)Application.Current.Resources["PhoneTabsBtn"];
+            btn.Style = (Style)Res.WinRes["PhoneTabsBtn"];
             btn.DataContext = p_tab;
             btn.Click += OnBtnClick;
             btn.HorizontalAlignment = HorizontalAlignment.Stretch;

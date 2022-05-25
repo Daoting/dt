@@ -118,7 +118,7 @@ namespace Dt.Base
             if (Kit.IsPhoneUI)
                 DefaultStyleKey = typeof(Tab);
             else
-                Style = (Style)Application.Current.Resources["WinTab"];
+                Style = (Style)Res.WinRes["WinTab"];
         }
         #endregion
 
