@@ -36,9 +36,9 @@ namespace Dt.Sample
     }
 
     [Application(LargeHeap = true, HardwareAccelerated = true)]
-    public class Application : Microsoft.UI.Xaml.NativeApplication
+    public class MainApplication : Microsoft.UI.Xaml.NativeApplication
     {
-        public Application(IntPtr javaReference, JniHandleOwnership transfer)
+        public MainApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(() => new App(), javaReference, transfer)
         {
         }
