@@ -22,7 +22,12 @@ namespace Dt.Core
         /// <summary>
         /// 获取系统是否采用手机的UI模式
         /// </summary>
-        public static bool IsPhoneUI { get; internal set; }
+        public static bool IsPhoneUI
+#if IOS || ANDROID
+            => true;
+#else
+        { get; internal set; }
+#endif
 
         /// <summary>
         /// 获取宿主操作系统类型

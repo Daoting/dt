@@ -30,7 +30,7 @@ namespace Dt.Base
 
         public override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            Launch().Wait();
+            _ = Launch();
         }
     }
 }

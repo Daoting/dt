@@ -29,7 +29,7 @@ namespace Dt.Base
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Startup.Launch(_stub, p_args.Arguments);
+            _ = Launch(_stub, p_args.Arguments);
         }
 
         public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)

@@ -109,6 +109,7 @@ namespace Dt.Core
             MainWin.Content = RootGrid;
             MainWin.Activate();
 
+            // ios android 不支持UI自适应
 #if WIN
             // 支持UI自适应
             MainWin.SizeChanged += OnWindowSizeChanged;
@@ -128,9 +129,6 @@ namespace Dt.Core
                 // ios android 不支持UI自适应
                 Kit.IsPhoneUI = true;
             }
-#else
-            // ios android 不支持UI自适应
-            Kit.IsPhoneUI = true;
 #endif
 
             ApplyNotifyStyle();
@@ -380,6 +378,7 @@ namespace Dt.Core
         #endregion
 
         #region UI自适应
+#if WIN || WASM
         /// <summary>
         /// 系统区域大小变化时UI自适应
         /// </summary>
@@ -403,6 +402,7 @@ namespace Dt.Core
             _dlgCanvas.Children.Clear();
             Stub.Inst.OnUIModeChanged();
         }
+#endif
         #endregion
 
         #region 设置默认样式

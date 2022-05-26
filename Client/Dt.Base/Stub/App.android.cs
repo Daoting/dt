@@ -25,12 +25,12 @@ namespace Dt.Base
             UnoKit.Init();
         }
 
-        public override void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (string.IsNullOrEmpty(_params))
                 _params = p_args.Arguments;
 
-            Launch(_params).Wait();
+            await Launch(_params);
             _params = null;
         }
 

@@ -26,7 +26,7 @@ namespace Dt.Base
             ToastNotificationManagerCompat.OnActivated += OnToastActivated;
         }
 
-        public override void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             // 当用户单击Toast通知（或通知上的按钮）时：
             // 1. 如果应用当前正在运行，将在后台线程上调用 OnActivated 事件
@@ -36,7 +36,7 @@ namespace Dt.Base
                 _tcs = new TaskCompletionSource<bool>();
 
             // 参数始终null，只有Toast启动带参数
-            Launch().Wait();
+            await Launch();
 
             // 通知正常启动完成
             _tcs?.SetResult(true);
