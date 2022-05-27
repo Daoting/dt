@@ -1,7 +1,6 @@
 <Project ToolsVersion="Current">
     <PropertyGroup>
         <TargetFrameworks>net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
-        <SingleProject>true</SingleProject>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
     </PropertyGroup>
 

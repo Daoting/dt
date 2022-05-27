@@ -1,7 +1,6 @@
 <Project ToolsVersion="Current">
     <!-- 所有项目都需Import -->
     <PropertyGroup>
-        <SingleProject>true</SingleProject>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
         <ImplicitUsings>enable</ImplicitUsings>
         <!-- wasm不支持Essentials, android编译产生缺androidx.window.extensions.jar androidx.window.sidecar.jar警告 -->
