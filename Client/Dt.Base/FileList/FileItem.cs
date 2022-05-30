@@ -135,7 +135,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        internal const string SelectFileDlgType = "Dt.App.File.SelectFileDlg,Dt.App";
+        internal const string SelectFileDlgType = "Dt.Mgr.File.SelectFileDlg,Dt.Mgr";
         public const string ImageExt = "png,jpg,jpeg,bmp,gif,ico,tif";
         public const string VideoExt = "mp4,wmv,mov";
 

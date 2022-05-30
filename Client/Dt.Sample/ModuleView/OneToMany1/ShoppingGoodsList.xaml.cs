@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
+using Dt.Mgr;
 using Dt.Base;
 using Dt.Core;
 using System;

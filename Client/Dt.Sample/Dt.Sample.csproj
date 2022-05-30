@@ -9,7 +9,7 @@
     
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+		<ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿<linker>
   <assembly fullname="Dt.Core" />
   <assembly fullname="Dt.Base" />
-  <assembly fullname="Dt.App" />
+  <assembly fullname="Dt.Mgr" />
   <assembly fullname="Dt.Sample" />
   <assembly fullname="Dt.Shell.Wasm" />
 

@@ -231,7 +231,7 @@ namespace Dt.Base.Tools
             //}
             ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Core")));
             ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Base")));
-            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.App")));
+            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Mgr")));
 
             // 最后提取业务程序集，确保业务程序集的类型优先级最高，比如替换系统自带的视图
             ExtractAssembly(Stub.Inst.GetType().Assembly);

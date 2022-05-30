@@ -52,8 +52,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.2.6" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.3.6" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.2.0" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.2.0" PrivateAssets="all" />
         <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.js、dotnet.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
@@ -61,9 +60,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
-        <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+        <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+        <ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
     </ItemGroup>
 

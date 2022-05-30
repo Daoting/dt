@@ -7,8 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
-using Dt.App.Model;
+using Dt.Mgr;
+using Dt.Mgr.Model;
 using Dt.Base;
 using Dt.Core;
 using System.Collections.Generic;

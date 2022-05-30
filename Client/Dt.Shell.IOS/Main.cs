@@ -4,7 +4,7 @@ using UIKit;
 
 namespace Dt.Sample
 {
-    public class Application
+    public class EntryPoint
     {
         static void Main(string[] args)
         {

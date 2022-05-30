@@ -7,6 +7,8 @@
 #endregion
 
 #region 引用命名
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.UI.Notifications;
 #if !WASM
 using Microsoft.Maui.ApplicationModel;

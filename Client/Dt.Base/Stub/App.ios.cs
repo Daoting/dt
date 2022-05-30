@@ -10,9 +10,9 @@
 #region 引用命名
 using Dt.Core;
 using Foundation;
+using Microsoft.UI.Xaml;
 using System;
 using UIKit;
-using Microsoft.UI.Xaml;
 #endregion
 
 namespace Dt.Base
@@ -27,22 +27,20 @@ namespace Dt.Base
             UnoKit.Init();
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Launch(_stub, p_args.Arguments);
+            _ = Launch(p_args.Arguments);
         }
 
-        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
+        public override void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
         {
             var doc = new UIDocument(p_url);
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
-                _ = Startup.Launch(_stub, null, new ShareInfo(path));
-
-            return true;
+                _ = Launch(null, new ShareInfo(path));
         }
 
-        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+        public override void FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
             // 设置 Background Fetch 最小时间间隔，10-15分钟不定
             application.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
@@ -54,7 +52,6 @@ namespace Dt.Base
                     UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
                 application.RegisterUserNotificationSettings(ns);
             }
-            return base.FinishedLaunching(application, launchOptions);
         }
 
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
@@ -79,7 +76,7 @@ namespace Dt.Base
                 {
                     // app完全退出后点击通知启动时不调用此方法！！！
                     // 因此 OnLaunched 和 ReceivedLocalNotification 方法只调用一个！
-                    _ = Startup.Launch(_stub, val);
+                    _ = Launch(val);
                 }
             }
 

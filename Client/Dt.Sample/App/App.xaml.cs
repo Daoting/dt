@@ -7,7 +7,12 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Microsoft.UI.Xaml;
+#if IOS
+using UIKit;
+using Foundation;
+#endif
 #endregion
 
 namespace Dt.Sample

@@ -1,6 +1,6 @@
 ﻿#   正在
 Agent项目能否打包
-
+Notify的UI移动到Dt.Base
 
 android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
 C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.20.1\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
@@ -77,6 +77,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Dt.Core不依赖Dt.Base中的样式 ，修改NotifyItem
 * 增加uno在debug状态下的日志输出
 * 移除继承Application的 BaseApp，功能合并到Stub，因uno的InitializeComponent()中使用 base.GetType().Assembly 造成莫名崩溃，5天才查出原因
+* Dt.App因App名称易混改为Dt.Mgr
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
@@ -90,6 +91,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * uno4.1.8 后Lv面板与外部ScrollViewer的相对距离和WinUI调整为一致 
 * [iOS]Lv.Toolbar在Table模式时 MeasureOverride 死循环 
 * iOS版CDate除TimePickerFlyout.TimePicked事件外，都正常
+* 删除Common.props中的SingleProject ，即可移除项目中的Android 目录 
 
 ### 服务  
 * 所有服务升级到.net6

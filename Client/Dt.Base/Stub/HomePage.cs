@@ -31,7 +31,7 @@ namespace Dt.Base
         /// </summary>
         public override Type HomePageType
         {
-            get { return _homePageType == null ? Type.GetType("Dt.App.DefaultHome,Dt.App") : _homePageType; }
+            get { return _homePageType == null ? Type.GetType("Dt.Mgr.DefaultHome,Dt.Mgr") : _homePageType; }
         }
 
         /// <summary>

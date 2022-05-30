@@ -27,7 +27,7 @@ namespace Dt.Base
         /// </summary>
         public override Type LoginPageType
         {
-            get { return _loginPageType == null ? Type.GetType("Dt.App.DefaultLogin,Dt.App") : _loginPageType; }
+            get { return _loginPageType == null ? Type.GetType("Dt.Mgr.DefaultLogin,Dt.Mgr") : _loginPageType; }
         }
 
         /// <summary>

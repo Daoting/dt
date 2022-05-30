@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
+using Dt.Mgr;
 using Dt.Base;
 using Dt.Core.Model;
 #endregion
@@ -116,20 +116,20 @@ namespace Dt.Sample
             ViewTypes = new Dictionary<string, Type>
             {
                 { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
-                { "报表", typeof(Dt.App.ReportView) },
-                { "流程设计", typeof(Dt.App.Workflow.WorkflowMgr) },
-                { "任务", typeof(Dt.App.Workflow.TasksView) },
-                { "发布", typeof(Dt.App.Publish.PublishView) },
-                { "发布管理", typeof(Dt.App.Publish.PublishMgr) },
-                { "基础选项", typeof(Dt.App.Model.BaseOption) },
-                { "菜单管理", typeof(Dt.App.Model.MenuWin) },
-                { "我的设置", typeof(Dt.App.Model.MyParamsSetting) },
-                { "参数定义", typeof(Dt.App.Model.UserParamsWin) },
-                { "基础权限", typeof(Dt.App.Model.PrvWin) },
-                { "报表设计", typeof(Dt.App.Model.RptWin) },
-                { "系统角色", typeof(Dt.App.Model.RoleWin) },
-                { "用户账号", typeof(Dt.App.Model.UserAccountWin) },
-                { "文件", typeof(Dt.App.File.FileHome) },
+                { "报表", typeof(Dt.Mgr.ReportView) },
+                { "流程设计", typeof(Dt.Mgr.Workflow.WorkflowMgr) },
+                { "任务", typeof(Dt.Mgr.Workflow.TasksView) },
+                { "发布", typeof(Dt.Mgr.Publish.PublishView) },
+                { "发布管理", typeof(Dt.Mgr.Publish.PublishMgr) },
+                { "基础选项", typeof(Dt.Mgr.Model.BaseOption) },
+                { "菜单管理", typeof(Dt.Mgr.Model.MenuWin) },
+                { "我的设置", typeof(Dt.Mgr.Model.MyParamsSetting) },
+                { "参数定义", typeof(Dt.Mgr.Model.UserParamsWin) },
+                { "基础权限", typeof(Dt.Mgr.Model.PrvWin) },
+                { "报表设计", typeof(Dt.Mgr.Model.RptWin) },
+                { "系统角色", typeof(Dt.Mgr.Model.RoleWin) },
+                { "用户账号", typeof(Dt.Mgr.Model.UserAccountWin) },
+                { "文件", typeof(Dt.Mgr.File.FileHome) },
                 { "样例", typeof(Dt.Sample.SamplesMain) },
                 { "ShoppingWin", typeof(Dt.Sample.ModuleView.OneToMany1.ShoppingWin) },
             };
@@ -160,9 +160,9 @@ namespace Dt.Sample
                             typeof(Dt.Base.FormView.CellLastVal),
                             typeof(Dt.Base.Chat.ChatMember),
                             typeof(Dt.Base.Chat.Letter),
-                            typeof(Dt.App.MenuFav),
-                            typeof(Dt.App.UserMenu),
-                            typeof(Dt.App.File.ReadFileHistory),
+                            typeof(Dt.Mgr.MenuFav),
+                            typeof(Dt.Mgr.UserMenu),
+                            typeof(Dt.Mgr.File.ReadFileHistory),
                         }
                     }
                 },
