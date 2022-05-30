@@ -1,5 +1,5 @@
 ﻿#   正在
-Client-Stable 改名Infra，Task能否合并Infra
+
 
 android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
 C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.20.1\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
@@ -22,6 +22,7 @@ Uno4.2.6 涉及Uno.WinUI.Lottie 的控件 ProgressRing 未实现
 Excel在stable项目中可以运行，在dt中崩
 后台任务不运行 
 TimePickerFlyout.TimePicked事件未触发
+初次运行对话框无法显示，因SysVisual.MainWin.Bounds 为0x0
 
 
 ---------------------------- android ----------------------------
@@ -80,6 +81,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Agent项目合并到Dt.Base
 * Notify的UI移动到Dt.Base 
 * 字体ttf文件放在win项目中，其他项目引用
+* Client-Stable 改名Infra 
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
