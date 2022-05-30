@@ -17,8 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AndroidAsset Include="..\..\Common\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
-        <AndroidAsset Include="..\..\Common\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+        <AndroidAsset Include="..\Dt.Shell.Win\Assets\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
+        <AndroidAsset Include="..\Dt.Shell.Win\Assets\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
     </ItemGroup>
     
     <ItemGroup>

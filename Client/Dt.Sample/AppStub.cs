@@ -67,17 +67,17 @@ namespace Dt.Sample
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议、隐私政策、向导
-            if (AtState.GetCookie("FirstRun") == "")
-            {
-                await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
-                AtState.SaveCookie("FirstRun", "0");
-            }
+            //if (AtState.GetCookie("FirstRun") == "")
+            //{
+            //    await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
+            //    AtState.SaveCookie("FirstRun", "0");
+            //}
 
             // 1. 默认启动
             //await StartRun();
 
             // 2. 自定义启动
-            await StartRun(typeof(Sample.SamplesMain), false);
+            await StartRun(typeof(Sample.TestDemo1), false);
         }
 
         /// <summary>

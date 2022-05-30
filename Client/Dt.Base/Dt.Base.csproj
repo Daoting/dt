@@ -31,8 +31,4 @@
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
     </ItemGroup>
-    
-    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <Content Include="..\..\Common\Fonts\icon.ttf" Link="Themes\icon.ttf" />
-    </ItemGroup>
 </Project>

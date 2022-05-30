@@ -1,6 +1,5 @@
 ﻿#   正在
-
-Notify的UI移动到Dt.Base
+Client-Stable 改名Infra，Task能否合并Infra
 
 android升级rc2后 Square.OkHttp3 中引用的包 xamarin.kotlin.stdlib  和 xamarin.jetbrains.annotations 重复复制jar包的现象，删除以下文件的include
 C:\Users\Daoting\.nuget\packages\xamarin.kotlin.stdlib\1.6.20.1\buildTransitive\net6.0-android31.0\Xamarin.Kotlin.StdLib.targets
@@ -79,6 +78,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 移除继承Application的 BaseApp，功能合并到Stub，因uno的InitializeComponent()中使用 base.GetType().Assembly 造成莫名崩溃，5天才查出原因
 * Dt.App因App名称易混改为Dt.Mgr
 * Agent项目合并到Dt.Base
+* Notify的UI移动到Dt.Base 
+* 字体ttf文件放在win项目中，其他项目引用
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
