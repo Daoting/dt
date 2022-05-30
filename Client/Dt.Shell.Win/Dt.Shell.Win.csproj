@@ -49,16 +49,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
-            <DependentUpon>App.xaml</DependentUpon>
-        </Compile>
-        <ApplicationDefinition Include="..\Dt.Sample\App\App.xaml" Link="App.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </ApplicationDefinition>
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="WinRT.Host.runtimeconfig.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

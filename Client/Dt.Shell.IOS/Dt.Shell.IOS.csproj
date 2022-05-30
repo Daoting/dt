@@ -18,8 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Page Include="..\Dt.Sample\App\App.xaml" Link="App.xaml" />
-        <Compile Include="..\Dt.Sample\App\App.xaml.cs" Link="App.xaml.cs">
+        <Page Include="..\Dt.Shell.Win\App.xaml" Link="App.xaml" />
+        <Compile Include="..\Dt.Shell.Win\App.xaml.cs" Link="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
         <BundleResource Include="iOS\Resources\SplashScreen%402x.png" />
