@@ -1,8 +1,0 @@
-<Project ToolsVersion="Current">
-    <ItemGroup>
-        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
-        <ProjectReference Include="..\..\Service\src\Dt.Cm.Agent\Dt.Cm.Agent.csproj" PrivateAssets="all" />
-        <ProjectReference Include="..\..\Service\src\Dt.Fsm.Agent\Dt.Fsm.Agent.csproj" PrivateAssets="all" />
-        <ProjectReference Include="..\..\Service\src\Dt.Msg.Agent\Dt.Msg.Agent.csproj" PrivateAssets="all" />
-    </ItemGroup>
-</Project>

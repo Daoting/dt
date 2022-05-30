@@ -6,7 +6,10 @@
 
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
-    <Import Project="..\Agent.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
         <None Include="Chat\WebRTC\VideoCaller.xaml" />
