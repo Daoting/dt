@@ -45,6 +45,56 @@ namespace Dt.Core
         public static Type HomePageType => Stub.Inst.HomePageType;
         #endregion
 
+        #region 提示信息
+        /// <summary>
+        /// 发布消息提示
+        /// </summary>
+        /// <param name="p_content">显示内容</param>
+        /// <param name="p_delaySeconds">
+        /// 几秒后自动关闭，默认3秒
+        /// <para>大于0：启动定时器自动关闭，点击也关闭</para>
+        /// <para>0：不自动关闭，但点击关闭</para>
+        /// <para>小于0：始终不关闭，只有程序控制关闭</para>
+        /// </param>
+        public static NotifyInfo Msg(string p_content, int p_delaySeconds = 3)
+        {
+            return Stub.Inst.Msg(p_content, p_delaySeconds);
+        }
+
+        /// <summary>
+        /// 警告提示
+        /// </summary>
+        /// <param name="p_content">显示内容</param>
+        /// <param name="p_delaySeconds">
+        /// 几秒后自动关闭，默认5秒
+        /// <para>大于0：启动定时器自动关闭，点击也关闭</para>
+        /// <para>0：不自动关闭，但点击关闭</para>
+        /// <para>小于0：始终不关闭，只有程序控制关闭</para>
+        /// </param>
+        public static NotifyInfo Warn(string p_content, int p_delaySeconds = 5)
+        {
+            return Stub.Inst.Warn(p_content, p_delaySeconds);
+        }
+
+        /// <summary>
+        /// 发布消息提示
+        /// </summary>
+        /// <param name="p_notify">消息提示实例</param>
+        public static void Notify(NotifyInfo p_notify)
+        {
+            Stub.Inst.Notify(p_notify);
+        }
+
+        /// <summary>
+        /// 关闭消息提示，通常在连接按钮中执行关闭
+        /// </summary>
+        /// <param name="p_notify"></param>
+        public static void CloseNotify(NotifyInfo p_notify)
+        {
+            Stub.Inst.CloseNotify(p_notify);
+        }
+        #endregion
+
         #region 窗口对话框
         /// <summary>
         /// 显示确认对话框

@@ -19,16 +19,13 @@ using Windows.Foundation;
 using Windows.System.Threading;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Base
 {
     /// <summary>
     /// 提示信息项
     /// </summary>
     public sealed partial class NotifyItem : UserControl
     {
-        static SolidColorBrush _blackBrush = new SolidColorBrush(Colors.Black);
-        static SolidColorBrush _redBrush = new SolidColorBrush(Colors.Red);
-
         NotifyInfo _info;
         ThreadPoolTimer _timerAutoClose;
         Point? _ptStart;
@@ -47,7 +44,7 @@ namespace Dt.Core
             _grid.PointerReleased += OnPointerReleased;
             _grid.PointerExited += OnPointerExited;
 
-            _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush;
+            _grid.Background = _info.NotifyType == NotifyType.Information ? Res.BlackBrush : Res.RedBrush;
             _tb.Text = _info.Message;
             CreateLink();
 
@@ -68,7 +65,7 @@ namespace Dt.Core
             }
             else if (e.PropertyName == "NotifyType")
             {
-                Kit.RunAsync(() => _grid.Background = _info.NotifyType == NotifyType.Information ? _blackBrush : _redBrush);
+                Kit.RunAsync(() => _grid.Background = _info.NotifyType == NotifyType.Information ? Res.BlackBrush : Res.RedBrush);
             }
             else if (e.PropertyName == "Link")
             {
@@ -94,7 +91,7 @@ namespace Dt.Core
         {
             if (!string.IsNullOrEmpty(_info.Link))
             {
-                Button btn = new Button { Content = _info.Link, Style = (Style)Resources["浅色按钮"], HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
+                Button btn = new Button { Content = _info.Link, Style = Res.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 10, 0, 0) };
                 btn.Click += (s, e) => _info.LinkCallback?.Invoke(_info);
                 _sp.Children.Add(btn);
             }
@@ -133,7 +130,7 @@ namespace Dt.Core
             Content = null;
             // 保证动画播放完毕
             await Task.Delay(200);
-            SysVisual.NotifyList.Remove(_info);
+            Stub.Inst.NotifyList.Remove(_info);
         }
 
         /// <summary>
@@ -144,7 +141,7 @@ namespace Dt.Core
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             KillCloseTimer();
-            _rc.Fill = (SolidColorBrush)Resources["亮遮罩"];
+            _rc.Fill = Res.亮遮罩;
         }
 
         /// <summary>
@@ -159,7 +156,7 @@ namespace Dt.Core
                 // 因phone不触发PointerEntered，再次关闭定时器
                 KillCloseTimer();
                 e.Handled = true;
-                _rc.Fill = (SolidColorBrush)Resources["深亮遮罩"];
+                _rc.Fill = Res.深亮遮罩;
                 _ptStart = e.GetCurrentPoint(null).Position;
             }
         }

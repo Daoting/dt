@@ -58,6 +58,9 @@ namespace Dt.Base
                 // 系统初始化，内含创建窗口及整个系统可视树
                 await Kit.Init();
 
+                // 初始化提示信息
+                InitNotify();
+
                 // 连接cm服务，获取全局参数，更新/打开模型库
                 if (Kit.IsUsingDtSvc)
                     await InitConfig();

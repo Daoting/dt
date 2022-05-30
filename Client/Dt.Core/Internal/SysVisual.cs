@@ -7,14 +7,11 @@
 #endregion
 
 #region 引用命名
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using System.Linq;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 #endregion
 
 namespace Dt.Core
@@ -48,11 +45,6 @@ namespace Dt.Core
         /// </summary>
         static readonly Canvas _dlgCanvas;
 
-        /// <summary>
-        /// 提示信息面板
-        /// </summary>
-        static readonly StackPanel _notifyPanel;
-        static readonly ItemList<NotifyInfo> _notifyList;
         static PointerEventHandler _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
 
         /// <summary>
@@ -80,11 +72,8 @@ namespace Dt.Core
             RootGrid.Children.Add(_dlgCanvas);
 
             // 提示信息层
-            _notifyList = new ItemList<NotifyInfo>();
-            _notifyList.ItemsChanged += OnNotifyItemsChanged;
-            _notifyPanel = new StackPanel();
-            _notifyPanel.Spacing = 10;
-            RootGrid.Children.Add(_notifyPanel);
+            NotifyPanel = new StackPanel { Spacing = 10 };
+            RootGrid.Children.Add(NotifyPanel);
 
 #if IOS
             // 状态栏边距
@@ -308,37 +297,9 @@ namespace Dt.Core
 
         #region Notify
         /// <summary>
-        /// 获取提示信息列表
+        /// 提示信息面板
         /// </summary>
-        public static ItemList<NotifyInfo> NotifyList => _notifyList;
-
-        /// <summary>
-        /// UI添加一条提示信息
-        /// </summary>
-        /// <param name="p_index"></param>
-        /// <param name="p_item"></param>
-        public static void InsertNotifyItem(int p_index, Control p_item)
-        {
-            SetDefaultStyle(p_item);
-            _notifyPanel.Children.Insert(p_index, p_item);
-        }
-
-        /// <summary>
-        /// UI删除一条提示信息
-        /// </summary>
-        /// <param name="p_index"></param>
-        public static void RemoveNotifyItem(int p_index)
-        {
-            _notifyPanel.Children.RemoveAt(p_index);
-        }
-
-        /// <summary>
-        /// UI清空所有提示信息
-        /// </summary>
-        public static void ClearAllNotify()
-        {
-            _notifyPanel.Children.Clear();
-        }
+        public static readonly StackPanel NotifyPanel;
 
         /// <summary>
         /// 调整提示信息层样式
@@ -347,32 +308,15 @@ namespace Dt.Core
         {
             if (Kit.IsPhoneUI)
             {
-                _notifyPanel.Width = double.NaN;
-                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                _notifyPanel.VerticalAlignment = VerticalAlignment.Top;
+                NotifyPanel.Width = double.NaN;
+                NotifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                NotifyPanel.VerticalAlignment = VerticalAlignment.Top;
             }
             else
             {
-                _notifyPanel.Width = 240;
-                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
-                _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
-            }
-        }
-
-        static void OnNotifyItemsChanged(object sender, ItemListChangedArgs e)
-        {
-            if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
-            {
-                var info = ((ItemList<NotifyInfo>)sender)[e.Index];
-                _notifyPanel.Children.Insert(e.Index, new NotifyItem(info));
-            }
-            else if (e.CollectionChange == CollectionChange.ItemRemoved)
-            {
-                _notifyPanel.Children.RemoveAt(e.Index);
-            }
-            else
-            {
-                _notifyPanel.Children.Clear();
+                NotifyPanel.Width = 240;
+                NotifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
+                NotifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
             }
         }
         #endregion

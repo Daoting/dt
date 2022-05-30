@@ -110,7 +110,7 @@ namespace Dt.Base.Chat
         static void ShowUnreadNotify(Letter p_letter)
         {
             // 避免过多
-            if (SysVisual.NotifyList.Count > 5)
+            if (Stub.Inst.NotifyList.Count > 5)
                 return;
 
             var notify = new NotifyInfo();
@@ -121,7 +121,7 @@ namespace Dt.Base.Chat
             {
                 Letter l = (Letter)e.Tag;
                 // 关闭所有对方为同一人的提示
-                foreach (var ni in SysVisual.NotifyList)
+                foreach (var ni in Stub.Inst.NotifyList)
                 {
                     if (ni.Tag is Letter letter && letter.OtherID == l.OtherID)
                         Kit.CloseNotify(ni);
@@ -158,7 +158,7 @@ namespace Dt.Base.Chat
                     break;
             }
             notify.Tag = p_letter;
-            SysVisual.NotifyList.Add(notify);
+            Kit.Notify(notify);
         }
 
         /// <summary>

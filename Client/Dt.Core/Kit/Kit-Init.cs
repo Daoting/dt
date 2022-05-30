@@ -148,7 +148,7 @@ namespace Dt.Core
                         ShowTraceBox();
                         notify.Close();
                     };
-                    SysVisual.NotifyList.Add(notify);
+                    Notify(notify);
                     Log.Error(p_ex, title);
                 }
             }

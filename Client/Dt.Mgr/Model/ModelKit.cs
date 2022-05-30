@@ -37,7 +37,7 @@ namespace Dt.Mgr
                         Kit.Warn("更新模型失败！");
                 }
             };
-            Kit.RunAsync(() => SysVisual.NotifyList.Add(notify));
+            Kit.Notify(notify);
         }
     }
 }
