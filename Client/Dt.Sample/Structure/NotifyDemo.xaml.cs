@@ -96,5 +96,51 @@ namespace Dt.Sample
         {
             Kit.Toast("带自启动参数的通知", "点击打开LvHome\r\n" + DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
         }
+
+        async void OnKnownException(object sender, RoutedEventArgs e)
+        {
+            //try
+            {
+                Throw.Msg("业务警告");
+                await AtTestCm.GetBool();
+                //await Except("abc");
+            }
+            //catch { }
+            //await Task.CompletedTask;
+            //Task.Run(async () =>
+            //{
+            //    await AtTestCm.GetBool();
+            //    Throw.Msg("业务警告");
+            //    Console.Write("abd");
+            //});
+            //throw new KnownException("业务警告"));
+        }
+
+        Task Except(string p_msg)
+        {
+            return Task.Run(() => throw new KnownException("业务警告"));
+        }
+
+        async void OnServerKnownException(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await AtTestCm.ThrowBusinessException();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        void OnServerException(object sender, RoutedEventArgs e)
+        {
+            AtTestCm.ThrowException();
+        }
+
+        void OnUnhandled(object sender, RoutedEventArgs e)
+        {
+            throw new Exception("未处理异常信息");
+        }
     }
 }

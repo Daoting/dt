@@ -17,10 +17,7 @@
             <Button Content="Http请求" Click="OnRequest" />
             <Button Content="Http响应" Click="OnResponse" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="业务警告" Click="OnExcept" />
-            <Button Content="未处理异常" Click="OnUnhandled" />
-        </StackPanel>
+        
         <StackPanel Orientation="Horizontal">
             <Button Content="消息模板" Click="OnFormat" />
             <Button Content="附加属性" Click="OnAddContext" />

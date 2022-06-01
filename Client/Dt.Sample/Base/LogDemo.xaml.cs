@@ -48,16 +48,6 @@ namespace Dt.Sample
                 .Debug("Http响应信息");
         }
 
-        void OnUnhandled(object sender, RoutedEventArgs e)
-        {
-            throw new Exception("未处理异常信息");
-        }
-
-        void OnExcept(object sender, RoutedEventArgs e)
-        {
-            Throw.Msg("业务警告");
-        }
-
         void OnFormat(object sender, RoutedEventArgs e)
         {
             // 推荐

@@ -14,7 +14,12 @@
         <Button Content="动态信息 动态样式 动态按钮" Click="OnEditNotify" />
         <Button Content="动态按钮回调 动态关闭控制" Click="OnFreeNotify" />
 
-        <Button Content="普通Toast通知" Click="OnCommonToast" Margin="0,40,0,0" />
+        <Button Content="普通Toast通知" Click="OnCommonToast" Margin="0,20,0,0" />
         <Button Content="带自启动的Toast通知" Click="OnParamsToast" />
+
+        <Button Content="业务警告异常" Click="OnKnownException" Margin="0,20,0,0" />
+        <Button Content="服务端返回的业务警告异常" Click="OnServerKnownException" />
+        <Button Content="服务端异常" Click="OnServerException" />
+        <Button Content="未处理异常" Click="OnUnhandled" />
     </StackPanel>
 </a:Win>
