@@ -34,17 +34,17 @@ namespace Dt.Core
             app.Resuming += OnResuming;
 #endif
 
-            // 异常处理
-#if WIN
-            Application.Current.UnhandledException += OnUwpUnhandledException;
-#elif ANDROID
-            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
-#elif IOS
-            // 在iOS项目的Main函数处理
-#elif WASM
-            //TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
-#endif
+            // 异常处理，暂停，参加https://github.com/Daoting/dt/issues/1
+            //#if WIN
+            //            Application.Current.UnhandledException += OnUwpUnhandledException;
+            //#elif ANDROID
+            //            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
+            //#elif IOS
+            //            // 在iOS项目的Main函数处理
+            //#elif WASM
+            //            //TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
+            //            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+            //#endif
 
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
@@ -57,15 +57,15 @@ namespace Dt.Core
             //if (!Directory.Exists(DataPath))
             //    Directory.CreateDirectory(DataPath);
 
+            // SQLite3
+            // 默认引用顺序：Microsoft.Data.Sqlite -> SQLitePCLRaw.bundle_e_sqlite3 -> SQLitePCLRaw.provider.e_sqlite3
+            // 内部默认初始化调用 SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
+            // 所以最终引用的库名为 e_sqlite3
+            // iOS上即可绑定到系统 sqlite(早期)，也可绑定到 e_sqlite3(现在)
+            // 但wasm中引用包Uno.sqlite-wasm中的库名为 sqlite3，需要另外引用包 SQLitePCLRaw.provider.sqlite3，并且设置provider
+            // 否则默认privider为 SQLite3Provider_e_sqlite3，因找不到e_sqlite3出错！
 #if WASM
-            // .net5.0 只能引用 SQLite3Provider_sqlite3，DllImport("sqlite3")
-            // 默认为 SQLite3Provider_e_sqlite3 引用时出错！
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
-#else
-            // 升级.net6.0后使用 Microsoft.Data.Sqlite 的默认初始化
-            // 初始化不同平台的包绑定！V2支持类型和属性的绑定
-            // 内部调用 SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
-            //SQLitePCL.Batteries_V2.Init();
 #endif
 
             // 打开状态库
@@ -73,7 +73,7 @@ namespace Dt.Core
 
             // 创建窗口及整个系统可视树
             SysVisual.Init();
-            Log.Debug("初始化日志、目录、状态库、可视树");
+            Log.Debug("初始化完毕");
         }
 
         #region App事件方法
