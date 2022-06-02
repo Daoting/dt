@@ -21,11 +21,6 @@ namespace Dt.Base
         public DefaultStub()
         {
             UnoKit.Init();
-
-            // 自定义图标字体库，因Global.xaml中前缀无效无法定义
-            //var res = Application.Current.Resources;
-            //res["IconFont"] = new FontFamily("DtIcon");
-            //res["Symbols"] = new FontFamily("Symbols");
         }
 
         public override void OnLaunched(LaunchActivatedEventArgs p_args)
