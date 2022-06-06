@@ -56,6 +56,22 @@ namespace Dt.Core
         #region 静态构造
         static SysVisual()
         {
+#if WIN
+            // WinUI中Window.Current为null
+            MainWin = new Window { Title = Stub.Inst.Title };
+            MainWin.Activate();
+#else
+            // uno中若新创建，Window.Bounds始终为(0, 0)！
+            MainWin = Window.Current;
+#endif
+
+#if ANDROID
+            // 解决项目文件多时启动就奔溃的怪异现象，且必须最早创建Frame！！！
+            // 未发现其他解决方法，已提讨论，https://github.com/unoplatform/uno/discussions/8933
+            // 浪费十多天生命，怎能以一个操字了得！
+            new Frame().Navigate(typeof(Page));
+#endif
+
             // 根Grid，背景主蓝
             RootGrid = new Grid();
 #if !ANDROID
@@ -87,17 +103,7 @@ namespace Dt.Core
             //if (resourceId > 0)
             //    StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
 #endif
-
-#if WIN
-            // WinUI中Window.Current为null
-            MainWin = new Window { Title = Stub.Inst.Title };
-#else
-            // uno中若新创建，Window.Bounds始终为(0, 0)！
-            MainWin = Window.Current;
-#endif
-            MainWin.Content = RootGrid;
-            MainWin.Activate();
-
+           
             // ios android 不支持UI自适应
 #if WIN
             // 支持UI自适应
@@ -121,6 +127,8 @@ namespace Dt.Core
 #endif
 
             ApplyNotifyStyle();
+            MainWin.Content = RootGrid;
+            MainWin.Activate();
         }
 
         /// <summary>
