@@ -4,7 +4,8 @@
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <!-- Disabled because of https://github.com/dotnet/runtime/issues/68808 -->
+        <!--<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>-->
         <IsUnoHead>true</IsUnoHead>
     </PropertyGroup>
 
