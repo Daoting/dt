@@ -110,14 +110,47 @@ namespace Dt.Core
         /// 手机：页面宽度
         /// PC上：除标题栏和外框的窗口内部宽度
         /// </summary>
-        public static double ViewWidth => SysVisual.MainWin.Bounds.Width;
+        public static double ViewWidth
+        {
+            get
+            {
+#if IOS
+                // ios首页未显示前uno中的Bounds为0x0
+                var w = SysVisual.MainWin.Bounds.Width;
+                if (w > 0)
+                    return w;
+
+                var info = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
+                return info.Width / info.Density;
+#else
+                return SysVisual.MainWin.Bounds.Width;
+#endif
+            }
+        }
 
         /// <summary>
         /// 可视区域高度
         /// 手机：不包括状态栏的高度
         /// PC上：除标题栏和外框的窗口内部高度
         /// </summary>
-        public static double ViewHeight => SysVisual.MainWin.Bounds.Height - SysVisual.StatusBarHeight;
+        public static double ViewHeight
+        {
+            get
+            {
+#if IOS
+                // ios首页未显示前uno中的Bounds为0x0
+                var h = SysVisual.MainWin.Bounds.Height;
+                if (h <= 0)
+                {
+                    var info = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
+                    h = info.Height / info.Density;
+                }
+                return h - SysVisual.StatusBarHeight;
+#else
+                return SysVisual.MainWin.Bounds.Height - SysVisual.StatusBarHeight;
+#endif
+            }
+        }
         #endregion
 
         #region 工具方法
