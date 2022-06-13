@@ -7,8 +7,5 @@
 
 	<ItemGroup>
 		<None Remove="Common.props" />
-		<Compile Remove="App\App.xaml.cs" />
-		<Page Remove="App\App.xaml" />
-		<None Include="App\App.xaml.cs" />
 	</ItemGroup>
 </Project>

@@ -21,6 +21,12 @@
 			<ProjectItem TargetFileName="Square44x44Logo.scale-200.png">Assets\Square44x44Logo.scale-200.png</ProjectItem>
 			<ProjectItem TargetFileName="Square44x44Logo.targetsize-24_altform-unplated.png">Assets\Square44x44Logo.targetsize-24_altform-unplated.png</ProjectItem>
 			<ProjectItem TargetFileName="Wide310x150Logo.scale-200.png">Assets\Wide310x150Logo.scale-200.png</ProjectItem>
+
+			<ProjectItem TargetFileName="icon.ttf">Assets\Fonts\icon.ttf</ProjectItem>
+			<ProjectItem TargetFileName="uno-fluentui-assets.ttf">Assets\Fonts\uno-fluentui-assets.ttf</ProjectItem>
+
+			<ProjectItem TargetFileName="App.xaml" ReplaceParameters="true">App.xaml</ProjectItem>
+			<ProjectItem TargetFileName="App.xaml.cs" ReplaceParameters="true">App.xaml.cs</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

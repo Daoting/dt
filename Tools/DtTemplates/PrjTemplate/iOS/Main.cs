@@ -1,12 +1,12 @@
 ﻿namespace $ext_safeprojectname$
 {
-    public class Application
+    public class EntryPoint
     {
         static void Main(string[] args)
         {
             try
             {
-                UIApplication.Main(args, null, typeof(App));
+                UIKit.UIApplication.Main(args, null, typeof(App));
             }
             catch (Exception ex)
             {

@@ -12,9 +12,6 @@
 			<ProjectItem ReplaceParameters="true" TargetFileName="MainActivity.cs">MainActivity.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true" TargetFileName="AndroidManifest.xml">Android\AndroidManifest.xml</ProjectItem>
 			
-			<ProjectItem TargetFileName="icon.ttf">Android\Assets\Fonts\icon.ttf</ProjectItem>
-			<ProjectItem TargetFileName="uno-fluentui-assets.ttf">Android\Assets\Fonts\uno-fluentui-assets.ttf</ProjectItem>
-			
 			<ProjectItem TargetFileName="back.png">Android\Resources\drawable\back.png</ProjectItem>
 			<ProjectItem TargetFileName="logo.png">Android\Resources\drawable\logo.png</ProjectItem>
 			

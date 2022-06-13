@@ -2,7 +2,6 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net6.0-windows10.0.19041</TargetFramework>
-		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>Dt.Shell</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64</Platforms>
@@ -10,6 +9,7 @@
 		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>true</UseWinUI>
 		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<DefaultLanguage>zh-CN</DefaultLanguage>
 	</PropertyGroup>
 
 	<Import Project="..\$ext_safeprojectname$.Client\Common.props" />
@@ -18,6 +18,10 @@
 		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Dt.Tasks" Version="2.0.0" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<AppxManifest Include="Package.appxmanifest">
 			<SubType>Designer</SubType>
@@ -36,13 +40,13 @@
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+
 	<ItemGroup>
-		<Compile Include="..\$ext_safeprojectname$.Client\App\App.xaml.cs" Link="App.xaml.cs">
-			<DependentUpon>App.xaml</DependentUpon>
-		</Compile>
-		<ApplicationDefinition Include="..\$ext_safeprojectname$.Client\App\App.xaml" Link="App.xaml">
-			<Generator>MSBuild:Compile</Generator>
-			<SubType>Designer</SubType>
-		</ApplicationDefinition>
+		<None Update="WinRT.Host.runtimeconfig.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>

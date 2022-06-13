@@ -55,8 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Svc\TestApi.cs" />
-    <None Include="Droid\Android\Assets\Fonts\icon.ttf" />
-    <None Include="Droid\Android\Assets\Fonts\uno-fluentui-assets.ttf" />
     <None Include="iOS\iOS.csproj" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
     <None Include="iOS\iOS\Entitlements.plist" />
@@ -70,6 +68,8 @@
     <None Include="Svc\Svc.csproj" />
     <None Include="Svc\Properties\launchSettings.json" />
     <None Include="Win\app.manifest" />
+    <None Include="Win\Assets\Fonts\icon.ttf" />
+    <None Include="Win\Assets\Fonts\uno-fluentui-assets.ttf" />
     <None Include="Win\Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -79,7 +79,7 @@
     <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
     <None Include="Win\Win.csproj" />
     <None Include="Client\AppStub.cs" />
-    <None Include="Client\App.xaml.cs">
+    <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
     <None Include="Client\Home.xaml.cs">
@@ -153,10 +153,9 @@
     <None Include="Droid\Android\Resources\values\ic_launcher_background.xml" />
     <None Include="Droid\Android\Resources\values\styles.xml" />
     <None Include="Droid\Android\Resources\xml\file_paths.xml" />
-    <Content Include="Client\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\App.xaml">
+    <None Include="Win\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

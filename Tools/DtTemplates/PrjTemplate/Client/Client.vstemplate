@@ -10,10 +10,7 @@
 	<TemplateContent>
 		<Project File="Client.csproj" ReplaceParameters="true">
 			<ProjectItem TargetFileName="Common.props">Common.props</ProjectItem>
-			<ProjectItem TargetFileName="Android\AndroidManifest.xml">AndroidManifest.xml</ProjectItem>
-			<ProjectItem TargetFileName="App\AppStub.cs" ReplaceParameters="true">AppStub.cs</ProjectItem>
-			<ProjectItem TargetFileName="App\App.xaml" ReplaceParameters="true">App.xaml</ProjectItem>
-			<ProjectItem TargetFileName="App\App.xaml.cs" ReplaceParameters="true">App.xaml.cs</ProjectItem>
+			<ProjectItem TargetFileName="AppStub.cs" ReplaceParameters="true">AppStub.cs</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml" ReplaceParameters="true">Home.xaml</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml.cs" ReplaceParameters="true">Home.xaml.cs</ProjectItem>
 		</Project>

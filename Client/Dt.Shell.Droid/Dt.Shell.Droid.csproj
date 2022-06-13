@@ -3,7 +3,6 @@
         <TargetFramework>net6.0-android</TargetFramework>
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
-        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
         <IsUnoHead>true</IsUnoHead>
     </PropertyGroup>
 

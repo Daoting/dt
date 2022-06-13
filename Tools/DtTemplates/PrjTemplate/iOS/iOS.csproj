@@ -3,8 +3,6 @@
 		<TargetFramework>net6.0-ios</TargetFramework>
 		<SingleProject>true</SingleProject>
 		<OutputType>Exe</OutputType>
-		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
-		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 		<IsUnoHead>true</IsUnoHead>
 	</PropertyGroup>
 
@@ -15,15 +13,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Include="..\$ext_safeprojectname$.Client\App\App.xaml" Link="App.xaml" />
-		<Compile Include="..\$ext_safeprojectname$.Client\App\App.xaml.cs" Link="App.xaml.cs">
+		<Page Include="..\$ext_safeprojectname$.Win\App.xaml" Link="App.xaml" />
+		<Compile Include="..\$ext_safeprojectname$.Win\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
 		<BundleResource Include="iOS\Resources\SplashScreen%402x.png" />
 		<BundleResource Include="iOS\Resources\SplashScreen%403x.png" />
 		<BundleResource Include="iOS\Resources\logo.png" />
-		<BundleResource Include="..\$ext_safeprojectname$.Droid\Android\Assets\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
-		<BundleResource Include="..\$ext_safeprojectname$.Droid\Android\Assets\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
+		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
+		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />

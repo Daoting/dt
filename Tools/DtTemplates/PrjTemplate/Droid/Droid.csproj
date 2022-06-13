@@ -3,7 +3,6 @@
 		<TargetFramework>net6.0-android</TargetFramework>
 		<SingleProject>true</SingleProject>
 		<OutputType>Exe</OutputType>
-		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 		<IsUnoHead>true</IsUnoHead>
 	</PropertyGroup>
 
@@ -14,8 +13,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Include="..\$ext_safeprojectname$.Client\App\App.xaml" Link="App.xaml" />
-		<Compile Include="..\$ext_safeprojectname$.Client\App\App.xaml.cs" Link="App.xaml.cs">
+		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
+		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Page Include="..\$ext_safeprojectname$.Win\App.xaml" Link="App.xaml" />
+		<Compile Include="..\$ext_safeprojectname$.Win\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
