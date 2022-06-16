@@ -41,8 +41,8 @@
         </Grid>
 
         <StackPanel x:Name="LoginPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2">
-            <TextBox x:Name="_tbPhone" PlaceholderText="手机号" KeyDown="OnPhoneKeyDown" InputScope="Number" />
-            <PasswordBox x:Name="_tbPwd" PlaceholderText="密码" KeyDown="OnPwdKeyDown" Margin="0,10,0,0" Visibility="Collapsed" />
+            <TextBox x:Name="_tbPhone" PlaceholderText="手机号" KeyUp="OnPhoneKeyUp" InputScope="Number" />
+            <PasswordBox x:Name="_tbPwd" PlaceholderText="密码" KeyUp="OnPwdKeyUp" Margin="0,10,0,0" Visibility="Collapsed" />
             <Grid x:Name="_pnlCode" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

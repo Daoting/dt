@@ -178,7 +178,7 @@ namespace Dt.Mgr
             return false;
         }
 
-        void OnPhoneKeyDown(object sender, KeyRoutedEventArgs e)
+        void OnPhoneKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter
                 && _tbPhone.Text.Trim() != string.Empty
@@ -192,7 +192,7 @@ namespace Dt.Mgr
             }
         }
 
-        void OnPwdKeyDown(object sender, KeyRoutedEventArgs e)
+        void OnPwdKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
             {

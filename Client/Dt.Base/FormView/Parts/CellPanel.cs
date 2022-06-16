@@ -44,7 +44,7 @@ namespace Dt.Base.FormView
             if (con != null)
             {
                 pnl.Children.Remove(con);
-                con.KeyDown -= pnl.OnKeyDown;
+                con.KeyUp -= pnl.OnKeyUp;
             }
 
             con = (FrameworkElement)e.NewValue;
@@ -54,7 +54,7 @@ namespace Dt.Base.FormView
                     pnl.Children.Insert(0, con);
                 else if (pnl.Children.Count == 3)
                     pnl.Children.Insert(2, con);
-                con.KeyDown += pnl.OnKeyDown;
+                con.KeyUp += pnl.OnKeyUp;
             }
         }
         #endregion
@@ -235,7 +235,7 @@ namespace Dt.Base.FormView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        void OnKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (_owner == null || _owner.Owner == null)
                 return;

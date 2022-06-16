@@ -157,8 +157,6 @@ namespace Dt.Sample
 
         void OnConditionalFormat(object sender, RoutedEventArgs e)
         {
-            DetachEvent();
-
             using (_excel.Defer())
             {
                 Worksheet sheet = _excel.ActiveSheet;

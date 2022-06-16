@@ -16,7 +16,7 @@
             <a:Tab Order="2" Title="属性">
                 <a:Fv>
                     <a:CBar Title="查询" />
-                    <TextBox x:Name="_tbSearch" PlaceholderText="查询内容" KeyDown="txtSearch_KeyDown" />
+                    <TextBox x:Name="_tbSearch" PlaceholderText="查询内容" KeyUp="txtSearch_KeyUp" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="查询" Click="btnSearch_Click" />
                         <Button Content="清除" Click="btnClearSearch_Click" />

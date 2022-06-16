@@ -112,7 +112,7 @@ namespace Dt.Sample
             }
         }
 
-        void txtSearch_KeyDown(object sender, KeyRoutedEventArgs e)
+        void txtSearch_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
                 btnSearch_Click(null, null);
