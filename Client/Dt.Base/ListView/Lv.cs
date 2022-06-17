@@ -1242,6 +1242,12 @@ namespace Dt.Base
             }
             return base.MeasureOverride(availableSize);
         }
+
+        protected override void OnControlLoaded()
+        {
+            // 确保初次加载后键盘操作有效
+            Focus(FocusState.Programmatic);
+        }
         #endregion
 
         #region 加载过程

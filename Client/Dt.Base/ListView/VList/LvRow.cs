@@ -194,6 +194,8 @@ namespace Dt.Base.ListView
             {
                 e.Handled = true;
                 _ptStart = e.GetCurrentPoint(this).Position;
+                // 确保键盘操作有效：上、下、头、尾、复制、全选等，LvPanel.OnKeyUp
+                _owner.Focus(FocusState.Programmatic);
             }
         }
 

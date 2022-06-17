@@ -784,7 +784,7 @@ namespace Dt.Base
         protected override void OnControlLoaded()
         {
             Focus(FocusState.Programmatic);
-            KeyDown += OnKeyDown;
+            KeyUp += OnKeyUp;
         }
 
         /// <summary>
@@ -1105,7 +1105,7 @@ namespace Dt.Base
         #endregion
 
         #region 键盘操作
-        void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        void OnKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (SelectionMode == SelectionMode.Multiple || RootItems.Count == 0)
                 return;
@@ -1173,6 +1173,20 @@ namespace Dt.Base
                             }
                         }
                     }
+                    e.Handled = true;
+                    return;
+
+                case VirtualKey.Right:
+                    row = SelectedRows.LastOrDefault();
+                    if (row != null)
+                        row.IsExpanded = true;
+                    e.Handled = true;
+                    return;
+
+                case VirtualKey.Left:
+                    row = SelectedRows.LastOrDefault();
+                    if (row != null)
+                        row.IsExpanded = false;
                     e.Handled = true;
                     return;
 
