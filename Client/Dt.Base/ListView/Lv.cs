@@ -23,6 +23,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
+using Windows.ApplicationModel.DataTransfer;
+using System.Text;
 #endregion
 
 namespace Dt.Base
@@ -956,6 +958,66 @@ namespace Dt.Base
                 Kit.Warn("数据源为空，不需要筛选！");
             else
                 new DefFilterDlg().ShowDlg(this);
+        }
+
+        /// <summary>
+        /// 复制选择行数据
+        /// </summary>
+        public void CopySelection()
+        {
+            if (SelectionMode == SelectionMode.None || _selectedLvItems.Count == 0)
+                return;
+
+            StringBuilder sb = new StringBuilder();
+            if (ViewMode == ViewMode.Table && View is Cols cols)
+            {
+                foreach (var item in _selectedLvItems)
+                {
+                    foreach (var col in cols)
+                    {
+                        var val = item[col.ID];
+                        if (val != null)
+                            sb.Append(val);
+                        // Tab复制到Excel自动分列
+                        sb.Append(" ");
+                    }
+                    sb.AppendLine();
+                }
+            }
+            else if (_selectedLvItems[0].Data is Row)
+            {
+                foreach (var item in _selectedLvItems)
+                {
+                    Row row = item.Data as Row;
+                    foreach (var cell in row.Cells)
+                    {
+                        if (cell.Val != null)
+                            sb.Append(cell.Val);
+                        sb.Append(" ");
+                    }
+                    sb.AppendLine();
+                }
+            }
+            else
+            {
+                var props = _selectedLvItems[0].Data.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.DeclaredOnly);
+                foreach (var item in _selectedLvItems)
+                {
+                    foreach (var p in props)
+                    {
+                        var val = p.GetValue(item.Data);
+                        if (val != null)
+                            sb.Append(val);
+                        sb.Append(" ");
+                    }
+                    sb.AppendLine();
+                }
+            }
+
+            DataPackage data = new DataPackage();
+            data.SetText(sb.ToString());
+            Clipboard.SetContent(data);
+            Kit.Msg("已成功复制到剪贴板！");
         }
         #endregion
 

@@ -784,7 +784,7 @@ namespace Dt.Base
         protected override void OnControlLoaded()
         {
             Focus(FocusState.Programmatic);
-            KeyUp += OnKeyUp;
+            KeyDown += OnKeyDown;
         }
 
         /// <summary>
@@ -1105,7 +1105,7 @@ namespace Dt.Base
         #endregion
 
         #region 键盘操作
-        void OnKeyUp(object sender, KeyRoutedEventArgs e)
+        void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (SelectionMode == SelectionMode.Multiple || RootItems.Count == 0)
                 return;

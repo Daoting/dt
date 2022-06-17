@@ -123,7 +123,7 @@ namespace Dt.Base.ListView
 #if WIN
             // 屏蔽鼠标滚轮引起的抖动
             PointerWheelChanged += OnPointerWheelChanged;
-            _owner.KeyUp += OnKeyUp;
+            _owner.KeyDown += OnKeyDown;
 #endif
         }
         #endregion
@@ -259,7 +259,7 @@ namespace Dt.Base.ListView
 
 #if WIN
             PointerWheelChanged -= OnPointerWheelChanged;
-            _owner.KeyUp -= OnKeyUp;
+            _owner.KeyDown -= OnKeyDown;
 #endif
         }
 
@@ -902,7 +902,7 @@ namespace Dt.Base.ListView
             _owner.Scroll.ChangeView(null, _owner.Scroll.VerticalOffset - delta, null, true);
         }
 
-        void OnKeyUp(object sender, KeyRoutedEventArgs e)
+        void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             int index;
             switch (e.Key)
@@ -949,8 +949,12 @@ namespace Dt.Base.ListView
                     return;
 
                 case VirtualKey.C:
-                    // 复制
-                    
+                    // 复制选择行数据
+                    if (InputManager.IsCtrlPressed)
+                    {
+                        _owner.CopySelection();
+                        e.Handled = true;
+                    }
                     return;
 
                 case VirtualKey.A:
