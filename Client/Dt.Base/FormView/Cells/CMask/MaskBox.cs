@@ -397,15 +397,6 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            // 注释原因：DateTime类型在点击TextBox右侧x按钮删除内容时无效！
-            //if (!_isSavedStateValid)
-            //{
-            //    // 未保存状态
-            //    RaiseTextChanged(e);
-            //    return;
-            //}
-
-            _isSavedStateValid = false;
             if (string.IsNullOrEmpty(Text))
             {
                 // 清空重新执行掩码
@@ -413,6 +404,15 @@ namespace Dt.Base
                 RaiseTextChanged(e);
                 return;
             }
+
+            if (!_isSavedStateValid)
+            {
+                // 未保存状态
+                RaiseTextChanged(e);
+                return;
+            }
+
+            _isSavedStateValid = false;
 
             // 上一状态选择区域前、选择区域后字符串
             string strBefore = _savedState.Text.Substring(0, _savedState.SelectionStart);
