@@ -80,6 +80,9 @@ namespace Dt.Core
             RootGrid.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
 #endif
 
+            // 放在最后 MainWin.Activate() 之前时在wasm中异常！
+            MainWin.Content = RootGrid;
+
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
 
             // 对话框层
@@ -127,7 +130,6 @@ namespace Dt.Core
 #endif
 
             ApplyNotifyStyle();
-            MainWin.Content = RootGrid;
             MainWin.Activate();
         }
 

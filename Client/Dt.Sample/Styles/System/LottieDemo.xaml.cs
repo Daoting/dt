@@ -33,11 +33,29 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            Load("LottieLogo1.json", ref _animation1, _watch1, _timer1, _cvs1);
-            Load("LightBulb.json", ref _animation2, _watch2, _timer2, _cvs2);
+            Load("LottieLogo1.json", ref _animation1, _watch1, ref _timer1, _cvs1);
+            Load("LightBulb.json", ref _animation2, _watch2, ref _timer2, _cvs2);
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
         }
 
-        private void Load(string p_file, ref Animation p_animation, Stopwatch p_watch, DispatcherQueueTimer p_timer, SKXamlCanvas p_cvs)
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _timer1?.Start();
+            _timer2?.Start();
+            _watch1?.Start();
+            _watch2?.Start();
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            _timer1?.Stop();
+            _timer2?.Stop();
+            _watch1?.Stop();
+            _watch2?.Stop();
+        }
+
+        void Load(string p_file, ref Animation p_animation, Stopwatch p_watch, ref DispatcherQueueTimer p_timer, SKXamlCanvas p_cvs)
         {
             using var stream = ResKit.GetResource(p_file);
             using var fileStream = new SKManagedStream(stream);
@@ -56,9 +74,6 @@ namespace Dt.Sample
             p_timer = DispatcherQueue.CreateTimer();
             p_timer.Interval = TimeSpan.FromSeconds(Math.Max(1 / 60.0, 1 / p_animation.Fps));
             p_timer.Tick += (s, e) => p_cvs.Invalidate();
-            p_timer.Start();
-
-            p_watch.Start();
         }
 
         private void OnPaint1(object sender, SKPaintSurfaceEventArgs e)
