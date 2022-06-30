@@ -29,7 +29,8 @@ namespace Dt.Sample
                 new Nav("输入控件", typeof(SysInputDemo), Icons.分组),
                 new Nav("日历时间", typeof(SysDatePickerDemo), Icons.图片) ,
                 new Nav("颜色选择", typeof(SysColorDemo), Icons.全选),
-                new Nav("动画", typeof(LottieDemo), Icons.小图标),
+                new Nav("进度条", typeof(ProgressDemo), Icons.Bug),
+                new Nav("Lottie动画", typeof(LottieDemo), Icons.小图标),
             };
         }
     }

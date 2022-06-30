@@ -6,7 +6,7 @@
         <NoWarn>NU1701</NoWarn>
 
         <!-- 必须sdk完整路径 -->
-        <NetCoreWasmSDKUri>d:\dt\Common\wasm\dotnet-runtime-wasm-windows-bd114dd-53ca85fb900-1877706367-Sqlite.zip</NetCoreWasmSDKUri>
+        <NetCoreWasmSDKUri>d:\dt\Package\wasm\dotnet-runtime-wasm-windows-bd114dd-53ca85fb900-1877706367-Sqlite.zip</NetCoreWasmSDKUri>
 
         <!-- 默认Interpreter -->
         <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
