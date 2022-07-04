@@ -5,13 +5,13 @@
     xmlns:a="using:Dt.Base"
     xmlns:skia="using:SkiaSharp.Views.Windows">
 
-    <Grid RowDefinitions="*,*">
-        <skia:SKXamlCanvas x:Name="_cvs1"
-                       PaintSurface="OnPaint1"
-                       Background="Transparent" />
-        <skia:SKXamlCanvas x:Name="_cvs2"
-                       PaintSurface="OnPaint2"
-                       Background="Transparent" Grid.Row="1" />
-    </Grid>
-    
+    <StackPanel Spacing="20">
+        <TextBlock Text="Android中json文件必须放在Assets目录下，路径中不包括Assets，如 ms-appx:///Lottie/xx.json" TextWrapping="Wrap" Margin="10,0,10,0" />
+        <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Content="上一幅" Click="OnPreview" />
+            <Button Content="下一幅" Click="OnNext" />
+            <TextBlock x:Name="_tb" VerticalAlignment="Center" />
+        </StackPanel>
+        <AnimatedVisualPlayer x:Name="_player" />
+    </StackPanel>
 </a:Win>

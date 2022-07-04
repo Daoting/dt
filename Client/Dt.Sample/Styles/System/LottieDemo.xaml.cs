@@ -8,16 +8,107 @@
 
 #region 引用命名
 using Dt.Base;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
-using SkiaSharp;
-using SkiaSharp.Skottie;
-using SkiaSharp.Views.Windows;
-using System.Diagnostics;
+#if !WIN
+using Microsoft.Toolkit.Uwp.UI.Lottie;
+#endif
 #endregion
 
 namespace Dt.Sample
 {
+    public sealed partial class LottieDemo : Win
+    {
+        string[] _names = new string[]
+        {
+            "AlBoardman",
+            "BeatingHeart",
+            "BeloFoggy",
+            "Camera",
+            "Countdown",
+            "Dash",
+            "EmptyState",
+            "FavoriteStar",
+            "Gears",
+            "HamburgerArrow",
+            "Loading1",
+            "Loading2",
+            "Loading3",
+            "Loading4",
+            "LottieLogo1",
+            "LottieLogo2",
+            "MailSent",
+            "MotionCorpse-Jrcanest",
+            "Name",
+            "Octopus",
+            "PinJump",
+            "PlayLike",
+            "Postcard",
+            "Preloader",
+            "ProgressSuccess",
+            "Retweet",
+            "Shock",
+            "Tongue",
+            "TouchID",
+            "TwitterHeart",
+            "VideoCamera",
+            "WeAccept",
+            "Wink",
+        };
+
+        int _cur = 0;
+
+        public LottieDemo()
+        {
+            InitializeComponent();
+
+            LoadLottie();
+        }
+
+        void OnPreview(object sender, RoutedEventArgs e)
+        {
+            if (_cur > 0)
+                _cur--;
+            else
+                _cur = _names.Length - 1;
+
+            LoadLottie();
+        }
+
+        void OnNext(object sender, RoutedEventArgs e)
+        {
+            if (_cur < _names.Length - 1)
+                _cur++;
+            else
+                _cur = 0;
+
+            LoadLottie();
+        }
+
+#if WIN
+        void LoadLottie()
+        {
+        }
+#else
+        void LoadLottie()
+        {
+            // uno 支持嵌入资源文件，但winui不支持
+            //Uri uri = new Uri("embedded://Dt.Sample/Dt.Sample.Resource.LottieLogo1.json");
+            Uri uri = new Uri($"ms-appx:///Assets/Lottie/{_names[_cur]}.json");
+
+            // 切换动画时改变_player.Source无效，只能重置UriSource！
+            if (_player.Source == null)
+                _player.Source = new LottieVisualSource { UriSource = uri };
+            else
+                ((LottieVisualSource)_player.Source).UriSource = uri;
+
+            _tb.Text = _names[_cur] + ".json";
+        }
+#endif
+    }
+
+
+    // Skottie https://github.com/unoplatform/Uno.Samples/blob/master/UI/SkottieSample/SkottieSample/SkottieSample.Shared/MainPage.xaml.cs
+    /*
     public sealed partial class LottieDemo : Win
     {
         Stopwatch _watch1 = new Stopwatch();
@@ -35,8 +126,8 @@ namespace Dt.Sample
 
             Load("LottieLogo1.json", ref _animation1, _watch1, ref _timer1, _cvs1);
             Load("LightBulb.json", ref _animation2, _watch2, ref _timer2, _cvs2);
-            Loaded += OnLoaded;
-            Unloaded += OnUnloaded;
+            _grid.Loaded += OnLoaded;
+            _grid.Unloaded += OnUnloaded;
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)
@@ -101,4 +192,5 @@ namespace Dt.Sample
             }
         }
     }
+    */
 }

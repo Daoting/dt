@@ -37,11 +37,11 @@
 
     <!-- 非windows引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.4.5" />
-        <!-- 对应Microsoft.Toolkit.Uwp.UI.Lottie库，渲染 Adobe AfterEffects 格式动画，提供60fps矢量图形动画 -->
-        <PackageReference Include="Uno.WinUI.Lottie" Version="4.4.5" />
+        <PackageReference Include="Uno.WinUI" Version="4.4.13" />
+        <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
+        <PackageReference Include="Uno.WinUI.Lottie" Version="4.4.13" />
         <!-- uno日志 -->
-        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.5" />
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.13" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     </ItemGroup>
@@ -52,10 +52,6 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
         <!-- Toast参数启动引用 -->
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
-        <!-- Lottie动画 -->
-        <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.1-preview.71" />
-        <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.1-preview.71" />
-        <PackageReference Include="SkiaSharp.Skottie" Version="2.88.1-preview.71" />
     </ItemGroup>
 
     <!-- android引用包 -->
@@ -72,12 +68,9 @@
 
     <!-- wasm引用包 -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.4.5" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.4.13" />
         <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.0" />
-        <!-- Lottie动画 -->
-        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.1-preview.71" />
-        <PackageReference Include="SkiaSharp.Skottie" Version="2.88.1-preview.71" />
     </ItemGroup>
 
     <ItemGroup>
@@ -105,8 +98,6 @@
         <Compile Update="**\*.xaml.cs">
             <DependentUpon>%(Filename)</DependentUpon>
         </Compile>
-    </ItemGroup>
-    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     </ItemGroup>
 </Project>

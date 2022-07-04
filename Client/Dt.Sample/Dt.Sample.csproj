@@ -54,9 +54,7 @@
 		<EmbeddedResource Include="Resource\browsers.csv" />
 		<EmbeddedResource Include="Resource\Excel\MonthProfit.xlsx" />
 		<EmbeddedResource Include="Resource\Excel\Wedding.xlsx" />
-		<EmbeddedResource Include="Resource\LightBulb.json" />
 		<EmbeddedResource Include="Resource\Logo.png" />
-		<EmbeddedResource Include="Resource\LottieLogo1.json" />
 		<EmbeddedResource Include="Resource\健康档案50.json" />
 		<EmbeddedResource Include="Resource\健康档案200.json" />
 		<EmbeddedResource Include="Resource\健康档案1000.json" />

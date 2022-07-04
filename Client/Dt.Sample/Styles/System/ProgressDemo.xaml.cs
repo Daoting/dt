@@ -10,9 +10,6 @@
 using Dt.Base;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
-using SkiaSharp;
-using SkiaSharp.Skottie;
-using SkiaSharp.Views.Windows;
 using System.Diagnostics;
 #endregion
 
