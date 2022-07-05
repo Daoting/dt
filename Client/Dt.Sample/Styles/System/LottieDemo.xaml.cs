@@ -84,6 +84,20 @@ namespace Dt.Sample
             LoadLottie();
         }
 
+        void OnPause(object sender, RoutedEventArgs e)
+        {
+            if (_player.IsPlaying)
+            {
+                _player.Pause();
+                _btnPlay.Content = "\uE02D";
+            }
+            else
+            {
+                _player.Resume();
+                _btnPlay.Content = "\uE02E";
+            }
+        }
+
 #if WIN
         void LoadLottie()
         {
