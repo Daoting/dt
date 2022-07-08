@@ -45,6 +45,26 @@ namespace Dt.Core
 
         public Task Invoke(HttpContext p_context)
         {
+            // 是否跨域请求：跨域预检 或 wasm标志
+            if (p_context.Request.Method == "OPTIONS"
+                || p_context.Request.Headers.ContainsKey("dt-wasm"))
+            {
+                var headers = p_context.Response.Headers;
+                // 允许跨域请求的域
+                headers.Add("Access-Control-Allow-Origin", "*");
+                // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
+                headers.Add("Access-Control-Allow-Methods", "*");
+                // 允许跨域请求时自定义 header 字段
+                headers.Add("Access-Control-Allow-Headers", "*");
+                // 若要支持iframe内的跨域请求，需要以下两个header
+                //headers.Add("Cross-Origin-Embedder-Policy", "require-corp");
+                //headers.Add("Cross-Origin-Opener-Policy", "same-origin");
+
+                // wasm客户端跨域请求的预检
+                if (p_context.Request.Method == "OPTIONS")
+                    return Task.CompletedTask;
+            }
+
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")

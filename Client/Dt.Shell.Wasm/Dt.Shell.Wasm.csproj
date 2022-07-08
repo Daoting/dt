@@ -32,7 +32,7 @@
         <Content Include="Assets\Fonts\uno-fluentui-assets.woff2" />
         <Content Include="..\Dt.Shell.Win\Assets\Lottie\*.json" Link="Assets\Lottie\%(Filename).json" />
         <!-- 嵌入资源文件输出到 package_xxx 根目录下 -->
-        <EmbeddedResource Include="WasmCSS\Fonts.css" />
+        <EmbeddedResource Include="WasmCSS\*.css" />
         <EmbeddedResource Include="WasmScripts\*.js" />
     </ItemGroup>
 

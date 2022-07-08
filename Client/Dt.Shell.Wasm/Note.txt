@@ -1,0 +1,18 @@
+﻿
+1. AppManifest.js：自定义启动页logo、背景色、浏览器标题等
+
+
+2. 项目文件(*.csproj)中：
+   EmbeddedResource 节点可以将js文件或css文件输出到网站 package_xxx 目录下，js文件在WasmScripts下，css文件在WasmCSS下
+   Content 节点的内容文件输出到 package_xxx 的对应子目录下，也可以自定义目录如：<Content Include="Path\To\My\File.txt" UnoDeploy="Root" />
+   https://platform.uno/docs/articles/external/uno.wasm.bootstrap/doc/features-additional-files.html
+
+
+3. 系统使用 RequireJS 加载模块、管理依赖关系，在WasmScripts下js文件中：
+   define([],function(){})：第一个参数是模块依赖，如果需要依赖别的js或者css，就在第一个参数中指定，第二个是函数，当第一个参数中的所有依赖都加载成功后，然后才会该函数会被调用来定义该模块，因此该模块应该返回一个定义了本模块的object
+   require([],function(){})：参数和define相同，只是不返回当前object
+
+
+4.
+
+

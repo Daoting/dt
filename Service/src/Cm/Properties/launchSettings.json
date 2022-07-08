@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/dt-cm",
+      "applicationUrl": "http://localhost/dt-cm",
       "sslPort": 0
     }
   },
@@ -18,7 +18,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:20201/"
+      "applicationUrl": "http://localhost:20201/"
     }
   }
 }

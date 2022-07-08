@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "https://localhost/dt-fsm",
+      "applicationUrl": "http://localhost/dt-fsm",
       "sslPort": 0
     }
   },
@@ -18,7 +18,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:20203/"
+      "applicationUrl": "http://localhost:20203/"
     }
   }
 }

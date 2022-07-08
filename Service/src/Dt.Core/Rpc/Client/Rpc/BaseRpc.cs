@@ -51,6 +51,8 @@ namespace Dt.Core.Rpc
             _client = new HttpClient(new NativeMessageHandler());
 #elif WASM
             _client = new HttpClient();
+            // 识别wasm客户端，允许跨域请求
+            _client.DefaultRequestHeaders.Add("dt-wasm", "");
 #endif
             // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1
             _client.DefaultRequestVersion = new Version(2, 0);
@@ -99,6 +101,7 @@ namespace Dt.Core.Rpc
         protected HttpRequestMessage CreateRequestMessage()
         {
             // 使用http2协议Post方法，Version默认1.1，虽DefaultRequestVersion已设2！
+            // 只在启用https时采用http2，否则虽然已设置http2但仍采用http1.1协议！！！
             return new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
