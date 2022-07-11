@@ -39,10 +39,46 @@ namespace Dt.Core
         public static void Run(string[] p_args, Stub p_stub, bool p_isSingletonSvc)
         {
             BuildStubs(p_stub, p_isSingletonSvc);
+            Kit.EnableRabbitMQ = !p_isSingletonSvc;
             CreateLogger();
             LoadConfig();
             DbSchema.Init();
             Silo.CacheSql();
+            RunWebHost(p_args);
+            Log.CloseAndFlush();
+        }
+
+        /// <summary>
+        /// 启动boot服务
+        /// </summary>
+        /// <param name="p_args"></param>
+        /// <param name="p_stub"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void StartBoot(string[] p_args, Stub p_stub)
+        {
+            if (p_stub == null)
+                throw new ArgumentException(nameof(p_stub));
+            Kit.Stubs = new Stub[] { p_stub };
+            Kit.EnableRabbitMQ = false;
+
+            CreateLogger();
+
+            try
+            {
+                Kit.Config = new ConfigurationBuilder()
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .AddJsonFile("service.json", false, true)
+                    .Build();
+                Log.Information("读取配置成功");
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "读取配置失败！");
+                throw;
+            }
+
+            // 无db连接，无sql
+
             RunWebHost(p_args);
             Log.CloseAndFlush();
         }

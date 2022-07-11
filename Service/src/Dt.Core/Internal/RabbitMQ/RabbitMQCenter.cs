@@ -34,6 +34,10 @@ namespace Dt.Core.RabbitMQ
         #region 构造方法
         public RabbitMQCenter()
         {
+            // 未启用RabbitMQ，如：单体服务、Boot服务
+            if (!Kit.EnableRabbitMQ)
+                return;
+
             _conn = new RabbitMQConnection();
             _mutex = new AsyncLock();
             Init();
@@ -103,10 +107,6 @@ namespace Dt.Core.RabbitMQ
 
         void Init()
         {
-            // 单体服务不收发消息
-            if (Kit.IsSingletonSvc)
-                return;
-
             if (!_conn.IsConnected)
                 _conn.TryConnect();
 

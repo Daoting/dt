@@ -82,8 +82,8 @@ namespace Dt.Core.RabbitMQ
         /// <returns>副本个数</returns>
         public int GetReplicaCount(string p_svcName)
         {
-            // 单体只支持一个副本
-            if (Kit.IsSingletonSvc)
+            // 未启用RabbitMQ，如：单体服务、Boot服务
+            if (!Kit.EnableRabbitMQ)
                 return 1;
 
             if (string.IsNullOrEmpty(p_svcName))

@@ -142,8 +142,8 @@ namespace Dt.Core.EventBus
         /// <param name="p_bindExchange"></param>
         void Publish(IEvent p_event, string p_routingKey, bool p_bindExchange)
         {
-            // 单体服务不收发消息
-            if (Kit.IsSingletonSvc)
+            // 未启用RabbitMQ不收发消息，如：单体服务、Boot服务
+            if (!Kit.EnableRabbitMQ)
                 return;
 
             // 序列化

@@ -160,7 +160,8 @@ namespace Dt.Core
             p_app.UseMiddleware<EndMiddleware>();
 
             // 订阅事件
-            RabbitMQCenter.Subscribe(p_app.ApplicationServices);
+            if (Kit.EnableRabbitMQ)
+                RabbitMQCenter.Subscribe(p_app.ApplicationServices);
 
             Log.Information("---启动完毕---");
         }

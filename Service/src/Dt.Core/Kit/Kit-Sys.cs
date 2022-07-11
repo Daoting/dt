@@ -106,6 +106,11 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 是否启用RabbitMQ
+        /// </summary>
+        public static bool EnableRabbitMQ { get; internal set; }
+
+        /// <summary>
         /// 服务是否运行在Docker容器
         /// </summary>
         public static bool IsInDocker
