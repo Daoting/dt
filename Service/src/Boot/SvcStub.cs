@@ -7,13 +7,9 @@
 #endregion
 
 #region 引用命名
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System.Net.Mime;
 #endregion
@@ -25,6 +21,17 @@ namespace Dt.Boot
     /// </summary>
     public class SvcStub : Stub
     {
+        readonly FileExtensionContentTypeProvider _mimeTypeProvider;
+
+        public SvcStub()
+        {
+            _mimeTypeProvider = new FileExtensionContentTypeProvider();
+            _mimeTypeProvider.Mappings.Add(".clr", MediaTypeNames.Application.Octet);
+            // mime类型在 OnPrepareResponse 时重置到非压缩文件的类型
+            _mimeTypeProvider.Mappings.Add(".br", MediaTypeNames.Application.Octet);
+            _mimeTypeProvider.Mappings.Add(".dat", MediaTypeNames.Application.Octet);
+        }
+
         /// <summary>
         /// 获取服务名称，小写
         /// </summary>
@@ -36,14 +43,7 @@ namespace Dt.Boot
         /// <param name="p_services"></param>
         public override void ConfigureServices(IServiceCollection p_services)
         {
-            p_services.AddResponseCompression(options =>
-            {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                {
-                    MediaTypeNames.Application.Octet,
-                    "application/wasm"
-                });
-            });
+
         }
 
         /// <summary>
@@ -55,34 +55,33 @@ namespace Dt.Boot
         {
             string pathBase = Kit.GetCfg<string>("WasmPath");
             if (!Path.IsPathRooted(pathBase))
+            {
+                // 相对路径
                 pathBase = Path.Combine(AppContext.BaseDirectory, pathBase);
+            }
+            var fileProvider = new PhysicalFileProvider(pathBase);
+
+            p_app.UseMiddleware<RewriteBrFileMiddleware>(fileProvider);
+
+            // 该中间件处理访问根路径时的默认页，内部只重置 context.Request.Path 的值
+            // 所以必须在UseStaticFiles之前调用，最终由 StaticFiles 中间件响应默认页
+            p_app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                FileProvider = fileProvider,
+                RequestPath = ""
+            });
 
             p_app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(pathBase),
-                ContentTypeProvider = CreateContentTypeProvider(true),
+                FileProvider = fileProvider,
+                ContentTypeProvider = _mimeTypeProvider,
                 OnPrepareResponse = SetCacheHeaders
             });
         }
 
-
-        static IContentTypeProvider CreateContentTypeProvider(bool enableDebugging)
+        void SetCacheHeaders(StaticFileResponseContext ctx)
         {
-            var result = new FileExtensionContentTypeProvider();
-            result.Mappings.Add(".clr", MediaTypeNames.Application.Octet);
-            result.Mappings.Add(".dat", MediaTypeNames.Application.Octet);
-            // result.Mappings.Add(".wasm", "application/wasm");
-
-            if (enableDebugging)
-            {
-                result.Mappings.Add(".pdb", MediaTypeNames.Application.Octet);
-            }
-
-            return result;
-        }
-
-        static void SetCacheHeaders(StaticFileResponseContext ctx)
-        {
+            // 参见uno: https://github.com/unoplatform/Uno.Wasm.Bootstrap/blob/main/src/Uno.Wasm.Bootstrap.Cli/Server/Startup.cs
             // By setting "Cache-Control: no-cache", we're allowing the browser to store
             // a cached copy of the response, but telling it that it must check with the
             // server for modifications (based on Etag) before using that cached copy.
@@ -92,10 +91,17 @@ namespace Dt.Boot
             var headers = ctx.Context.Response.GetTypedHeaders();
             if (headers.CacheControl == null)
             {
-                headers.CacheControl = new CacheControlHeaderValue
-                {
-                    NoCache = true
-                };
+                headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
+            }
+
+            if (!ctx.File.Name.EndsWith(".br"))
+                return;
+
+            // 重置到非压缩文件的mime类型
+            var fileName = ctx.File.Name.Substring(0, ctx.File.Name.Length - 3);
+            if (_mimeTypeProvider.TryGetContentType(fileName, out var mimeType))
+            {
+                headers.ContentType = new MediaTypeHeaderValue(new StringSegment(mimeType));
             }
         }
     }
