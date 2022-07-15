@@ -26,10 +26,16 @@ namespace Dt.Boot
         public SvcStub()
         {
             _mimeTypeProvider = new FileExtensionContentTypeProvider();
-            _mimeTypeProvider.Mappings.Add(".clr", MediaTypeNames.Application.Octet);
+            var mp = _mimeTypeProvider.Mappings;
+            mp.TryAdd(".clr", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".blat", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".config", MediaTypeNames.Text.Xml);
+            mp.TryAdd(".rsp", MediaTypeNames.Text.Plain);
+
             // mime类型在 OnPrepareResponse 时重置到非压缩文件的类型
-            _mimeTypeProvider.Mappings.Add(".br", MediaTypeNames.Application.Octet);
-            _mimeTypeProvider.Mappings.Add(".dat", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".br", MediaTypeNames.Application.Octet);
         }
 
         /// <summary>
