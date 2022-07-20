@@ -4,16 +4,12 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <NoWarn>NU1701</NoWarn>
-
+        
         <!-- 必须sdk完整路径 -->
         <NetCoreWasmSDKUri>d:\dt\Package\wasm\dotnet-runtime-wasm-windows-bd114dd-53ca85fb900-1877706367-Sqlite.zip</NetCoreWasmSDKUri>
 
         <!-- 默认Interpreter -->
-        <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
         <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
-
-        <!-- InterpreterAndAOT模式第一步，生成AOT配置文件 -->
-        <!--<WasmShellGenerateAOTProfile>true</WasmShellGenerateAOTProfile>-->
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -26,11 +22,11 @@
 
     <ItemGroup>
         <!-- 内容文件输出到 package_xxx 的对应子目录下 -->
-        <Content Include="Assets\logo.png" />
-        <Content Include="Assets\SplashScreen.png" />
-        <Content Include="Assets\Fonts\icon.woff2" />
-        <Content Include="Assets\Fonts\uno-fluentui-assets.woff2" />
-        <Content Include="..\Dt.Shell.Win\Assets\Lottie\*.json" Link="Assets\Lottie\%(Filename).json" />
+        <Content Include="assets\logo.png" />
+        <Content Include="assets\SplashScreen.png" />
+        <Content Include="assets\fonts\icon.woff2" />
+        <Content Include="assets\fonts\uno-fluentui-assets.woff2" />
+        <Content Include="..\Dt.Shell.Win\Assets\Lottie\*.json" Link="assets\lottie\%(Filename).json" />
         <!-- 嵌入资源文件输出到 package_xxx 根目录下 -->
         <EmbeddedResource Include="WasmCSS\*.css" />
         <EmbeddedResource Include="WasmScripts\*.js" />
@@ -47,7 +43,7 @@
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
     </ItemGroup>
-    
+
     <ItemGroup>
         <!-- 生成包时不参加裁剪的dll列表，能够反射出类型的dll都不可裁剪 -->
         <LinkerDescriptor Include="LinkerConfig.xml" />
@@ -56,7 +52,8 @@
     <ItemGroup>
         <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.4.13" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.1" />
-        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.1" PrivateAssets="all" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.1" />
+        <PackageReference Include="Dt.WasmTools" Version="1.0.0" />
         <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.js、dotnet.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
         <!--<PackageReference Include="Uno.sqlite-wasm" Version="3.34.1.3" />-->
     </ItemGroup>
@@ -68,21 +65,11 @@
         <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
     </ItemGroup>
 
-    <!-- 调试Uno.Wasm.Bootstrap -->
-    <!--
-      <Import Project="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap\build\Uno.Wasm.Bootstrap.targets" />
-      <Import Project="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap.DevServer\build\Uno.Wasm.Bootstrap.DevServer.targets" />
-      <ItemGroup>
-        <ProjectReference Include="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap.Cli\Uno.Wasm.Bootstrap.Cli.csproj">
-          <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-          <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-          <UndefineProperties>TargetFramework</UndefineProperties>
-        </ProjectReference>
-        <ProjectReference Include="..\..\..\GitHub\Uno.Wasm.Bootstrap-main\src\Uno.Wasm.Bootstrap\Uno.Wasm.Bootstrap.csproj">
-          <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-          <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-          <UndefineProperties>TargetFramework</UndefineProperties>
-        </ProjectReference>
-      </ItemGroup>
-      -->
+    <!-- PWA相关，只在Release时有效 -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <WasmPWAManifestFile>manifest.json</WasmPWAManifestFile>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+        <Content Include="pwa\**" />
+    </ItemGroup>
 </Project>

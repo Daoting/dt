@@ -1,0 +1,8 @@
+<Project>
+
+	<UsingTask TaskName="BuildPWATask" AssemblyFile="../tools/Dt.WasmTools.dll" Condition="'$(Configuration)'=='Release'" />
+	<Target Name="BuildPWA" AfterTargets="BuildDist" Condition="'$(Configuration)'=='Release'">
+		<BuildPWATask OutDir="$(OutDir)dist" />
+	</Target>
+	
+</Project>
