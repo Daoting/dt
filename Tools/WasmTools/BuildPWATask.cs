@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace WasmTools
 {
@@ -21,8 +22,11 @@ namespace WasmTools
                 if (!IsValidate())
                     return false;
 
+                // 删除无用的文件，如 *.pdb
                 DelUnusedFiles();
+                // 生成 service-worker.js 文件并压缩，动态创建要缓存的文件
                 WriteServiceWorker();
+                // 替换 uno-config.js 中的 config.offline_files
                 ReplaceUnoConfig();
 
                 return true;
@@ -38,13 +42,13 @@ namespace WasmTools
         {
             if (string.IsNullOrEmpty(OutDir))
             {
-                Log.LogMessage("OutDir不可为空！");
+                Log.LogError("OutDir不可为空！");
                 return false;
             }
 
             if (!Directory.Exists(OutDir))
             {
-                Log.LogMessage($"OutDir路径不存在：{OutDir}");
+                Log.LogError($"OutDir路径不存在：{OutDir}");
                 return false;
             }
 
@@ -52,7 +56,7 @@ namespace WasmTools
             var pkg = Directory.GetDirectories(OutDir, "package_*", SearchOption.TopDirectoryOnly);
             if (pkg == null || pkg.Length == 0)
             {
-                Log.LogMessage($"未找到package_xxx路径！");
+                Log.LogError($"未找到package_xxx路径！");
                 return false;
             }
 
@@ -66,38 +70,16 @@ namespace WasmTools
             {
                 if (!file.EndsWith("\\index.html"))
                 {
-                    try
-                    {
-                        if (File.Exists(file))
-                        {
-                            File.Delete(file);
-                        }
-                    }
-                    catch { }
+                    DelFile(file);
                 }
             }
 
             foreach (var file in Directory.EnumerateFiles(Path.Combine(_pkgDir, "managed"), "*.pdb"))
             {
-                try
-                {
-                    if (File.Exists(file))
-                    {
-                        File.Delete(file);
-                    }
-                }
-                catch { }
+                DelFile(file);
             }
 
-            var path = Path.Combine(_pkgDir, "uno-assets.txt");
-            try
-            {
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
-            }
-            catch { }
+            DelFile(Path.Combine(_pkgDir, "uno-assets.txt"));
         }
 
         void WriteServiceWorker()
@@ -105,17 +87,14 @@ namespace WasmTools
             StringBuilder sb = new StringBuilder();
             sb.Append("[\"./\", \"./service-worker.js\"");
 
-            AddCacheFiles(_pkgDir, sb);
-            foreach (var path in Directory.EnumerateDirectories(_pkgDir))
+            var ls = from file in Directory.EnumerateFiles(_pkgDir, "*.*", SearchOption.AllDirectories)
+                     where !file.EndsWith(".br", StringComparison.OrdinalIgnoreCase)
+                     select file.Replace(OutDir, ".").Replace("\\", "/");
+            foreach (var file in ls)
             {
-                if (!path.EndsWith("\\pwa"))
-                {
-                    AddCacheFiles(path, sb);
-                    foreach (var sub in Directory.EnumerateDirectories(path, "*", SearchOption.AllDirectories))
-                    {
-                        AddCacheFiles(sub, sb);
-                    }
-                }
+                sb.Append(", \"");
+                sb.Append(file);
+                sb.Append("\"");
             }
             sb.Append("]");
 
@@ -156,20 +135,6 @@ namespace WasmTools
             BrotliCompress(path, br);
         }
 
-        void AddCacheFiles(string p_path, StringBuilder p_sb)
-        {
-            foreach (var file in Directory.EnumerateFiles(p_path, "*.*"))
-            {
-                if (file.EndsWith(".br"))
-                    continue;
-
-                string name = file.Replace(OutDir, ".").Replace("\\", "/");
-                p_sb.Append(", \"");
-                p_sb.Append(name);
-                p_sb.Append("\"");
-            }
-        }
-
         void BrotliCompress(string source, string destination)
         {
             using var input = File.Open(source, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -188,6 +153,18 @@ namespace WasmTools
 			   for the final block to be flushed out 
 			*/
             bs.Dispose();
+        }
+
+        void DelFile(string p_filePath)
+        {
+            try
+            {
+                if (File.Exists(p_filePath))
+                {
+                    File.Delete(p_filePath);
+                }
+            }
+            catch { }
         }
     }
 }

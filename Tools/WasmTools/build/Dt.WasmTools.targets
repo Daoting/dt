@@ -1,6 +1,8 @@
 <Project>
 
 	<UsingTask TaskName="BuildPWATask" AssemblyFile="../tools/Dt.WasmTools.dll" Condition="'$(Configuration)'=='Release'" />
+	
+	<!-- BuildDist 在 Uno.Wasm.Bootstrap.targets 中定义 -->
 	<Target Name="BuildPWA" AfterTargets="BuildDist" Condition="'$(Configuration)'=='Release'">
 		<BuildPWATask OutDir="$(OutDir)dist" />
 	</Target>
