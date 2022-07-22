@@ -3,7 +3,7 @@
 		<Description>Pdf文件格式(搬运工客户端)</Description>
 	</PropertyGroup>
 
-    <Import Project="..\Stable.props" />
+    <Import Project="..\Common.props" />
 
 	<ItemGroup>
 		<EmbeddedResource Include="Fonts\arial.sfont" />

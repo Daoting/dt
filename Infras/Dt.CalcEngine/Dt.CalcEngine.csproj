@@ -3,5 +3,5 @@
 		<Description>Excel计算引擎(搬运工客户端)</Description>
 	</PropertyGroup>
 
-    <Import Project="..\Stable.props" />
+    <Import Project="..\Common.props" />
 </Project>

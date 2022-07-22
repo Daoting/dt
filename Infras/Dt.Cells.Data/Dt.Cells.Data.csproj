@@ -3,7 +3,7 @@
 		<Description>Excel模型库(搬运工客户端)</Description>
 	</PropertyGroup>
 
-    <Import Project="..\Stable.props" />
+    <Import Project="..\Common.props" />
 
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />

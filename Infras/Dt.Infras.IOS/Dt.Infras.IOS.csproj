@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Uno.WinUI" Version="4.3.6" />
+        <PackageReference Include="Uno.WinUI" Version="4.4.13" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,5 +48,5 @@
         <ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png" />
     </ItemGroup>
 
-    <Import Project="..\Dt.Stable.Shared\Dt.Stable.Shared.projitems" Label="Shared" />
+    <Import Project="..\Dt.Infras.Shared\Dt.Infras.Shared.projitems" Label="Shared" />
 </Project>

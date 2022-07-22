@@ -4,6 +4,6 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-    <Import Project="..\Stable.props" />
+    <Import Project="..\Common.props" />
 
 </Project>

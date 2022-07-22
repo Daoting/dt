@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Uno.WinUI" Version="4.3.6" />
+        <PackageReference Include="Uno.WinUI" Version="4.4.13" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,5 +30,5 @@
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     </ItemGroup>
-    <Import Project="..\Dt.Stable.Shared\Dt.Stable.Shared.projitems" Label="Shared" />
+    <Import Project="..\Dt.Infras.Shared\Dt.Infras.Shared.projitems" Label="Shared" />
 </Project>
