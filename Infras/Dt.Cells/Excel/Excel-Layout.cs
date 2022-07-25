@@ -71,9 +71,9 @@ namespace Dt.Base
             }
 
 #if WIN
-            //System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
+            System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
 #else
-            //Console.WriteLine("Excel.MeasureOverride");
+            Console.WriteLine("Excel.MeasureOverride");
 #endif
             return _availableSize;
         }
@@ -111,9 +111,9 @@ namespace Dt.Base
             Clip = new RectangleGeometry { Rect = rcFull };
 
 #if WIN
-            //System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
+            System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
 #else
-            //Console.WriteLine("Excel.ArrangeOverride");
+            Console.WriteLine("Excel.ArrangeOverride");
 #endif
             return finalSize;
         }

@@ -37,7 +37,12 @@ namespace Dt.Cells.UI
             _editorLayer.Measure(availableSize);
             _floatingLayer.Measure(availableSize);
             _floatingEditLayer.Measure(availableSize);
-            
+
+#if WIN
+            System.Diagnostics.Debug.WriteLine("CellsPanel.MeasureOverride");
+#else
+            System.Console.WriteLine("CellsPanel.MeasureOverride");
+#endif
             return GetViewportSize(availableSize);
         }
 
@@ -74,6 +79,12 @@ namespace Dt.Cells.UI
 
             if (Clip != null)
                 _borderLayer.Clip = new RectangleGeometry { Rect = Clip.Rect };
+
+#if WIN
+            System.Diagnostics.Debug.WriteLine("CellsPanel.ArrangeOverride");
+#else
+            System.Console.WriteLine("CellsPanel.ArrangeOverride");
+#endif
             return finalSize;
         }
 

@@ -1175,9 +1175,9 @@ namespace Dt.Base
                 RefreshViewportFloatingObjects(picture);
             }
         }
-#endregion
+        #endregion
 
-#region 外部方法
+        #region 外部方法
         /// <summary>
         /// Adds a new column viewport to the control. 
         /// </summary>
@@ -2645,6 +2645,6 @@ namespace Dt.Base
             string jobName = string.IsNullOrEmpty(p_title) ? Sheets[index].Name : p_title;
             printer.Print(jobName);
         }
-#endregion
+        #endregion
     }
 }
