@@ -119,6 +119,7 @@ Global
 		{37A62DE9-17E6-4DF4-86A3-003DA058DC3C}.Release|x86.Build.0 = Release|Any CPU
 		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|x64.Build.0 = Debug|Any CPU
 		{00E741E0-F1B6-4338-B3E2-3D283ED733B6}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -181,6 +182,7 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Dt.Infras.Shared\Dt.Infras.Shared.projitems*{00e741e0-f1b6-4338-b3e2-3d283ed733b6}*SharedItemsImports = 5
 		Dt.Infras.Shared\Dt.Infras.Shared.projitems*{52503bab-9829-4db0-adba-2dcefb6284de}*SharedItemsImports = 5
+		Dt.Infras.Shared\Dt.Infras.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		Dt.Infras.Shared\Dt.Infras.Shared.projitems*{834a542c-fda0-44c4-97f9-81706609d659}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
