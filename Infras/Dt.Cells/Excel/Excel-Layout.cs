@@ -50,8 +50,10 @@ namespace Dt.Base
             MeasureCornerPanel(layout);
             // 滚动栏
             MeasureScrollBar(layout);
-            // 水平/垂直分隔栏
+#if WIN
+            // 水平/垂直分隔栏，只Win支持多视口！
             MeasureSplitBars(layout);
+#endif
             // 区域分组
             MeasureRangeGroup(layout);
             // sheet标签
@@ -68,10 +70,10 @@ namespace Dt.Base
                 _progressRing.Measure(availableSize);
             }
 
-#if WASM
-            //Console.WriteLine("Excel.MeasureOverride");
-#else
+#if WIN
             //System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
+#else
+            //Console.WriteLine("Excel.MeasureOverride");
 #endif
             return _availableSize;
         }
@@ -91,8 +93,10 @@ namespace Dt.Base
             ArrangeCornerPanel(layout);
             // 滚动栏
             ArrangeScrollBar(layout);
-            // 分隔栏
+#if WIN
+            // 水平/垂直分隔栏，只Win支持多视口！
             ArrangeSplitBar(layout);
+#endif
             // 区域分组
             ArrangeRangeGroup(layout);
             // sheet标签
@@ -106,10 +110,10 @@ namespace Dt.Base
 
             Clip = new RectangleGeometry { Rect = rcFull };
 
-#if WASM
-            //Console.WriteLine("Excel.ArrangeOverride");
-#else
+#if WIN
             //System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
+#else
+            //Console.WriteLine("Excel.ArrangeOverride");
 #endif
             return finalSize;
         }
@@ -600,7 +604,10 @@ namespace Dt.Base
         #region 滚动栏
         void MeasureScrollBar(SheetLayout p_layout)
         {
+#if WIN
             UpdateHorizontalSplitBoxes();
+#endif
+
             if (p_layout.OrnamentHeight > 0.0)
             {
                 for (int i = 0; i < p_layout.ColumnPaneCount; i++)
@@ -620,6 +627,7 @@ namespace Dt.Base
                         Children.Remove(bar);
                     }
 
+#if WIN
                     var box = _horizontalSplitBox[i];
                     double splitBoxWidth = p_layout.GetHorizontalSplitBoxWidth(i);
                     if (splitBoxWidth > 0.0)
@@ -634,6 +642,7 @@ namespace Dt.Base
                     {
                         Children.Remove(box);
                     }
+#endif
                 }
             }
             else
@@ -654,7 +663,10 @@ namespace Dt.Base
                 }
             }
 
+#if WIN
             UpdateVerticalSplitBoxes();
+#endif
+
             if (p_layout.OrnamentWidth > 0.0)
             {
                 for (int i = 0; i < p_layout.RowPaneCount; i++)
@@ -674,6 +686,7 @@ namespace Dt.Base
                         Children.Remove(bar);
                     }
 
+#if WIN
                     var vbox = _verticalSplitBox[i];
                     double vboxHeight = p_layout.GetVerticalSplitBoxHeight(i);
                     if (vboxHeight > 0.0)
@@ -688,6 +701,7 @@ namespace Dt.Base
                     {
                         Children.Remove(vbox);
                     }
+#endif
                 }
             }
             else
@@ -728,6 +742,7 @@ namespace Dt.Base
                 }
             }
 
+#if WIN
             if (_horizontalSplitBox != null)
             {
                 for (int i = 0; i < p_layout.ColumnPaneCount; i++)
@@ -743,6 +758,7 @@ namespace Dt.Base
                     _verticalSplitBox[i].Arrange(new Rect(p_layout.OrnamentX, p_layout.GetVerticalSplitBoxY(i), p_layout.OrnamentWidth, p_layout.GetVerticalSplitBoxHeight(i)));
                 }
             }
+#endif
         }
 
         #endregion
