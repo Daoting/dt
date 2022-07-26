@@ -25,6 +25,7 @@ namespace Dt.Charts
         public double Height;
         public double InnerRadius;
         public double Offset;
+
         public PieInfo(Point center, double radiusX, double radiusY, double inner, double angle, double sweep, double height, double offset = 0.0)
         {
             Center = center;

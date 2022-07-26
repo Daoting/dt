@@ -70,11 +70,11 @@ namespace Dt.Base
                 _progressRing.Measure(availableSize);
             }
 
-#if WIN
-            System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
-#else
-            Console.WriteLine("Excel.MeasureOverride");
-#endif
+//#if WIN
+//            System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
+//#else
+//            Console.WriteLine("Excel.MeasureOverride");
+//#endif
             return _availableSize;
         }
 
@@ -110,11 +110,11 @@ namespace Dt.Base
 
             Clip = new RectangleGeometry { Rect = rcFull };
 
-#if WIN
-            System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
-#else
-            Console.WriteLine("Excel.ArrangeOverride");
-#endif
+//#if WIN
+//            System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
+//#else
+//            Console.WriteLine("Excel.ArrangeOverride");
+//#endif
             return finalSize;
         }
         #endregion

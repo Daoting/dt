@@ -27,5 +27,10 @@ namespace Dt.Shell
             var file = ((Button)sender).Tag.ToString();
             Frame.Navigate(typeof(FilePage), file);
         }
+
+        void OnPieStacked(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(PieStackedChart));
+        }
     }
 }

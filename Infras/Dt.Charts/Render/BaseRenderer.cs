@@ -692,14 +692,18 @@ namespace Dt.Charts
 
         protected UIElement RenderElement(List<UIElement> objects, IPlotElement pe, DataSeries ds, RenderContext rc, ShapeStyle shapeStyle, DataPoint dp)
         {
-            DataTemplate pointLabelTemplate = ds.PointLabelTemplate;
+            if (pe == null)
+                return null;
+
             PlotElement element = pe as PlotElement;
             if (((ItemNames != null) && (dp.PointIndex < ItemNames.Length)) && (ItemNames[dp.PointIndex] != null))
             {
                 dp.Name = ItemNames[dp.PointIndex].ToString();
             }
+
             FrameworkElement lbl = null;
             Line line = null;
+            DataTemplate pointLabelTemplate = ds.PointLabelTemplate;
             if (pointLabelTemplate != null)
             {
                 lbl = pointLabelTemplate.LoadContent() as FrameworkElement;
@@ -718,10 +722,7 @@ namespace Dt.Charts
                 }
                 line = PlotElement.GetLabelLine(lbl);
             }
-            if (pe == null)
-            {
-                return null;
-            }
+            
             Size size = ds.GetSymbolSize(dp.PointIndex, _dataInfo, rc.Chart);
             if (!size.IsEmpty && (element != null))
             {
@@ -731,6 +732,7 @@ namespace Dt.Charts
             {
                 return null;
             }
+
             if (lbl != null)
             {
                 objects.Add(lbl);
@@ -746,6 +748,7 @@ namespace Dt.Charts
                     };
                 }
             }
+
             if ((element.Center.X == 0.0) && (element.Center.Y == 0.0))
             {
                 element.Center = rc.Current;

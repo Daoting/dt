@@ -10,4 +10,7 @@
   <PropertyGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <Import Project="Dt.Infras.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <_Globbed_Compile Remove="ChartSampleData.cs" />
+  </ItemGroup>
 </Project>
