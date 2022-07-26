@@ -67,18 +67,17 @@ namespace Dt.Cells.UI
             _floatingEditLayer.Arrange(rc);
 
             Size viewportSize = GetViewportSize(finalSize);
+            var clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
             if (Excel.IsTouching)
             {
                 if (Clip == null)
-                    Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
+                    Clip = clip;
             }
             else
             {
-                Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
+                Clip = clip;
             }
-
-            if (Clip != null)
-                _borderLayer.Clip = new RectangleGeometry { Rect = Clip.Rect };
+            _borderLayer.Clip = clip;
 
 //#if WIN
 //            System.Diagnostics.Debug.WriteLine("CellsPanel.ArrangeOverride");
