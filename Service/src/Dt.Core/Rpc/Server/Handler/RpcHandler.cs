@@ -39,7 +39,7 @@ namespace Dt.Core.Rpc
         public async Task Call()
         {
             // 创建服务实例
-            _tgt = Kit.GetObj(_invoker.Api.Method.DeclaringType) as BaseApi;
+            _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as BaseApi;
             if (_tgt != null)
             {
                 _tgt.UserID = _invoker.UserID;

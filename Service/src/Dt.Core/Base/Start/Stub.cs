@@ -26,7 +26,7 @@ namespace Dt.Core
         public abstract string SvcName { get; }
 
         /// <summary>
-        /// 定义全局服务
+        /// 注入全局服务
         /// </summary>
         /// <param name="p_services"></param>
         public virtual void ConfigureServices(IServiceCollection p_services) { }

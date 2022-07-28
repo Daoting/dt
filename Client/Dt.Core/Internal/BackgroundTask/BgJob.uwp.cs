@@ -8,6 +8,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Text.Json;
@@ -38,6 +39,10 @@ namespace Dt.Core
         {
             Task.Run(async () =>
             {
+                // 无后台任务
+                if (Kit.GetService<IBackgroundJob>() == null)
+                    return;
+
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
                 string name = Stub.Inst.GetType().AssemblyQualifiedName;
                 if (name != AtState.GetCookie(_stubType))

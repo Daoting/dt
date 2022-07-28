@@ -68,7 +68,7 @@ namespace Dt.Core.Rpc
             p_data.CopyTo(result, 5);
 
             // 发送给固定副本
-            var mq = Kit.GetObj<RabbitMQCenter>();
+            var mq = Kit.GetService<RabbitMQCenter>();
             mq.Publish(
                 result,
                 _args.BasicProperties.ReplyTo,

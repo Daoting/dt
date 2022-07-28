@@ -37,11 +37,6 @@ namespace Dt.Mgr
 
         #region 属性
         /// <summary>
-        /// 获取设置默认主页(DefaultHome)的固定菜单项
-        /// </summary>
-        public static IList<OmMenu> FixedMenus { get; set; }
-
-        /// <summary>
         /// 获取当前登录用户的根页面菜单（包含一二级）
         /// </summary>
         public static Nl<GroupData<OmMenu>> RootPageMenus
@@ -56,6 +51,11 @@ namespace Dt.Mgr
         {
             get { return _favMenus; }
         }
+
+        /// <summary>
+        /// 获取默认主页(DefaultHome)的固定菜单项数
+        /// </summary>
+        public static int FixedMenusCount { get; private set; }
         #endregion
 
         #region 菜单相关
@@ -135,12 +135,19 @@ namespace Dt.Mgr
 
             // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
             _favMenus.Clear();
-            if (FixedMenus != null)
+            
+            // 外部注入的固定项
+            var svc = Kit.GetService<IFixedMenus>();
+            if (svc != null)
             {
-                // 固定项
-                foreach (var om in FixedMenus)
+                var fixedMenus = svc.GetFixedMenus();
+                if (fixedMenus != null && fixedMenus.Count > 0)
                 {
-                    _favMenus.Add(om);
+                    FixedMenusCount = fixedMenus.Count;
+                    foreach (var om in fixedMenus)
+                    {
+                        _favMenus.Add(om);
+                    }
                 }
             }
 

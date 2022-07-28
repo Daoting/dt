@@ -26,7 +26,7 @@ namespace Dt.Core.Rpc
                 throw new Exception($"未找到Api[{p_methodName}]");
 
             var mi = sm.Method;
-            var tgt = Kit.GetObj(mi.DeclaringType) as BaseApi;
+            var tgt = Kit.GetService(mi.DeclaringType) as BaseApi;
             if (tgt == null)
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 

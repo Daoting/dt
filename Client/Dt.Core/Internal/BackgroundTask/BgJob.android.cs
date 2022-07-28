@@ -52,6 +52,10 @@ namespace Dt.Core
         {
             Task.Run(() =>
             {
+                // 无后台任务
+                if (Kit.GetService<IBackgroundJob>() == null)
+                    return;
+
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
                 string name = Stub.Inst.GetType().AssemblyQualifiedName;
                 if (name != AtState.GetCookie(_stubType))
@@ -69,6 +73,14 @@ namespace Dt.Core
                 // 设为Replace时每次启动都运行后台服务，方便调试！
                 WorkManager.GetInstance(Android.App.Application.Context).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Replace, workRequest);
             });
+        }
+
+        /// <summary>
+        /// 注销后台任务
+        /// </summary>
+        public static void Unregister()
+        {
+            WorkManager.GetInstance(Android.App.Application.Context).CancelAllWork();
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)

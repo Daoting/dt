@@ -72,11 +72,10 @@ namespace Dt.Base
                 if (p_shareInfo != null)
                     OnReceiveShare(p_shareInfo);
 
-                // 注册后台任务
-                if (EnableBgTask)
-                    BgJob.Register();
-
                 InputManager.Init();
+
+                // 注册后台任务
+                BgJob.Register();
             }
             catch (Exception ex)
             {

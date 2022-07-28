@@ -32,6 +32,13 @@ namespace Dt.Core
         {
         }
 
+        /// <summary>
+        /// 注销后台任务
+        /// </summary>
+        public static void Unregister()
+        {
+        }
+
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))

@@ -67,7 +67,7 @@ namespace Dt.Cm
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             string dbFile = System.IO.Path.Combine(path, p_event.Version + ".db");
-            var handler = Kit.GetObj<SqliteModelHandler>();
+            var handler = Kit.GetService<SqliteModelHandler>();
 
             bool trace = MySqlAccess.TraceSql;
             MySqlAccess.TraceSql = false;

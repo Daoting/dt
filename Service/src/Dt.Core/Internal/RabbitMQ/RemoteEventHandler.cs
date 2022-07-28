@@ -56,7 +56,7 @@ namespace Dt.Core.RabbitMQ
                 return;
 
             // 实例化所有Handler
-            var handlers = Kit.GetObjs(hType);
+            var handlers = Kit.GetServices(hType);
             var mi = hType.GetMethod("Handle");
             foreach (var h in handlers)
             {

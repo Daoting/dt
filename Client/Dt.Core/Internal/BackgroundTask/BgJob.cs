@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -51,15 +52,24 @@ namespace Dt.Core
                 Serilogger.Init();
             }
 
-            Log.Debug("开始后台任务");
-            try
+            var bgJob = stub.ServiceProvider.GetService<IBackgroundJob>();
+            if (bgJob != null)
             {
-                await stub.BgTaskRun();
-                Log.Debug("后台任务结束");
+                Log.Debug("开始后台任务");
+                try
+                {
+                    await bgJob.Run();
+                    Log.Debug("后台任务结束");
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex, "后台任务运行异常");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Log.Warning(ex, "后台任务运行异常");
+                Unregister();
+                Log.Warning("后台任务无处理内容，已注销！");
             }
         }
     }

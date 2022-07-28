@@ -52,7 +52,7 @@ namespace Dt.Core.Rpc
             var tcs = new TaskCompletionSource<BasicDeliverEventArgs>();
             RunningCalls[id] = tcs;
 
-            var mq = Kit.GetObj<RabbitMQCenter>();
+            var mq = Kit.GetService<RabbitMQCenter>();
             if (!string.IsNullOrEmpty(p_svcName))
             {
                 // 发送给某个服务，服务有多个副本时采用均衡算法将消息投递给其中一个

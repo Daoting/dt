@@ -40,7 +40,7 @@ namespace Dt.Cm
         /// <param name="p_handlers">注册自定义请求处理</param>
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            Kit.GetObj<SqliteModelHandler>().Init(p_handlers);
+            Kit.GetService<SqliteModelHandler>().Init(p_handlers);
         }
     }
 }

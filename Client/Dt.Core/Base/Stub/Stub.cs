@@ -7,10 +7,7 @@
 #endregion
 
 #region 引用命名
-using Microsoft.UI.Xaml;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace Dt.Core
@@ -24,6 +21,10 @@ namespace Dt.Core
         {
             Inst = this;
             Init();
+
+            var svc = new ServiceCollection();
+            ConfigureServices(svc);
+            ServiceProvider = svc.BuildServiceProvider();
         }
         
         /// <summary>
@@ -42,19 +43,20 @@ namespace Dt.Core
         public LogSetting LogSetting { get; } = new LogSetting();
 
         /// <summary>
-        /// 是否启用后台任务，在AppStub构造方法设置有效
+        /// 依赖注入的全局服务对象提供者
         /// </summary>
-        protected bool EnableBgTask { get; set; }
+        internal readonly IServiceProvider ServiceProvider;
 
         /// <summary>
-        /// 系统启动
+        /// 注入全局服务
+        /// </summary>
+        /// <param name="p_svcs"></param>
+        protected virtual void ConfigureServices(IServiceCollection p_svcs) { }
+
+        /// <summary>
+        /// 初始化完毕，系统启动
         /// </summary>
         protected abstract Task OnStartup();
-
-        /// <summary>
-        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
-        /// </summary>
-        protected virtual Task OnBgTaskRun() => Task.CompletedTask;
 
         /// <summary>
         /// 接收分享内容
@@ -111,11 +113,6 @@ namespace Dt.Core
         {
             Kit.InitCmSvcUrl(p_url);
         }
-
-        /// <summary>
-        /// 处理后台任务
-        /// </summary>
-        public Task BgTaskRun() => OnBgTaskRun();
 
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();

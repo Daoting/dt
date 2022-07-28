@@ -32,10 +32,6 @@ namespace Dt.Mgr.Home
                 LoadMenus();
             else
                 Kit.LoginSuc += LoadMenus;
-
-            int cntFixed = MenuKit.FixedMenus == null ? 0 : MenuKit.FixedMenus.Count;
-            if (MenuKit.FavMenus.Count > cntFixed)
-                _miReset.Visibility = Visibility.Visible;
         }
 
         async void LoadMenus()
@@ -43,6 +39,9 @@ namespace Dt.Mgr.Home
             await MenuKit.LoadMenus();
             _lv.Data = MenuKit.RootPageMenus;
             _lv.Loaded += OnLoaded;
+
+            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
+                _miReset.Visibility = Visibility.Visible;
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
@@ -64,8 +63,7 @@ namespace Dt.Mgr.Home
 
         async void OnReset(object sender, Mi e)
         {
-            int cntFixed = MenuKit.FixedMenus == null ? 0 : MenuKit.FixedMenus.Count;
-            if (MenuKit.FavMenus.Count > cntFixed)
+            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
             {
                 var cnt = AtState.Exec($"delete from menufav where userid={Kit.UserID}");
                 if (cnt > 0)

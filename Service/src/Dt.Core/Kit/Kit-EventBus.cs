@@ -27,7 +27,7 @@ namespace Dt.Core
         /// <param name="p_isAllSvcInst">true表示所有服务的所有副本，false表示当服务有多个副本时只投递给其中一个</param>
         public static void RemoteBroadcast(IEvent p_event, bool p_isAllSvcInst = true)
         {
-            GetObj<RemoteEventBus>().Broadcast(p_event, p_isAllSvcInst);
+            GetService<RemoteEventBus>().Broadcast(p_event, p_isAllSvcInst);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Dt.Core
         /// <param name="p_isAllSvcInst">true表示所有服务的所有副本，false表示当服务有多个副本时只投递给其中一个</param>
         public static void RemoteBroadcast(IEvent p_event, List<string> p_svcs, bool p_isAllSvcInst = true)
         {
-            GetObj<RemoteEventBus>().Broadcast(p_event, p_svcs, p_isAllSvcInst);
+            GetService<RemoteEventBus>().Broadcast(p_event, p_svcs, p_isAllSvcInst);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Dt.Core
         /// <param name="p_svcName">服务名称，null表示当前服务</param>
         public static void RemoteMulticast(IEvent p_event, string p_svcName = null)
         {
-            GetObj<RemoteEventBus>().Multicast(p_event, p_svcName);
+            GetService<RemoteEventBus>().Multicast(p_event, p_svcName);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Dt.Core
         /// <param name="p_svcName">服务名称</param>
         public static void RemotePush(IEvent p_event, string p_svcName)
         {
-            GetObj<RemoteEventBus>().Push(p_event, p_svcName);
+            GetService<RemoteEventBus>().Push(p_event, p_svcName);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Dt.Core
         /// <param name="p_svcID">服务副本ID</param>
         public static void RemotePushFixed(IEvent p_event, string p_svcID)
         {
-            GetObj<RemoteEventBus>().PushFixed(p_event, p_svcID);
+            GetService<RemoteEventBus>().PushFixed(p_event, p_svcID);
         }
         #endregion
 
@@ -79,7 +79,7 @@ namespace Dt.Core
         /// <param name="p_event">事件内容</param>
         public static void LocalPublish(IEvent p_event)
         {
-            GetObj<LocalEventBus>().Publish(p_event);
+            GetService<LocalEventBus>().Publish(p_event);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Dt.Core
         /// <returns>返回响应值</returns>
         public static Task<TResponse> LocalCall<TResponse>(IRequest<TResponse> p_request)
         {
-            return GetObj<LocalEventBus>().Call(p_request);
+            return GetService<LocalEventBus>().Call(p_request);
         }
         #endregion
     }
