@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.IO.Compression;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace Dt.Base
@@ -48,8 +49,7 @@ namespace Dt.Base
                     ShowAutoStartOnce();
                 Kit.MainWin.Activate();
 
-                if (p_shareInfo != null)
-                    OnReceiveShare(p_shareInfo);
+                RecvShare(p_shareInfo);
                 return;
             }
 
@@ -62,15 +62,14 @@ namespace Dt.Base
                 InitNotify();
 
                 // 连接cm服务，获取全局参数，更新/打开模型库
-                if (Kit.IsUsingDtSvc)
+                if (Kit.IsUsingSvc)
                     await InitConfig();
 
                 // 由外部控制启动过程
                 await OnStartup();
 
                 // 接收分享
-                if (p_shareInfo != null)
-                    OnReceiveShare(p_shareInfo);
+                RecvShare(p_shareInfo);
 
                 InputManager.Init();
 
@@ -189,6 +188,20 @@ namespace Dt.Base
             pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
             dlg.Content = pnl;
             dlg.Show();
+        }
+
+        /// <summary>
+        /// 接收分享内容
+        /// </summary>
+        /// <param name="p_info">分享内容描述</param>
+        void RecvShare(ShareInfo p_info)
+        {
+            if (p_info != null)
+            {
+                var svc = SvcProvider.GetService<IReceiveShare>();
+                if (svc != null)
+                    svc.OnReceive(p_info);
+            }
         }
 
         void ShowAutoStartOnce()

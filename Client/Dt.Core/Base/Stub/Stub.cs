@@ -17,35 +17,43 @@ namespace Dt.Core
     /// </summary>
     public abstract partial class Stub
     {
+        string _cmSvcUrl;
+
         public Stub()
         {
             Inst = this;
             Init();
 
-            var svc = new ServiceCollection();
-            ConfigureServices(svc);
-            ServiceProvider = svc.BuildServiceProvider();
+            SvcCollection = new ServiceCollection();
+            ConfigureServices(SvcCollection);
+            SvcProvider = SvcCollection.BuildServiceProvider();
         }
         
-        /// <summary>
-        /// 内部访问存根实例
-        /// </summary>
-        internal static Stub Inst { get; private set; }
-
         /// <summary>
         /// 系统标题
         /// </summary>
         public string Title { get; protected set; }
 
         /// <summary>
+        /// 设置cm服务地址，如：https://10.10.1.16/fz-cm
+        /// <para>单机版无需设置</para>
+        /// </summary>
+        public string SvcUrl
+        {
+            get { return _cmSvcUrl; }
+            protected set
+            {
+                if (string.IsNullOrEmpty(value))
+                    _cmSvcUrl = null;
+                else
+                    _cmSvcUrl = value.TrimEnd('/');
+            }
+        }
+
+        /// <summary>
         /// 日志设置，在AppStub构造方法设置有效，默认输出到：Console和trace
         /// </summary>
         public LogSetting LogSetting { get; } = new LogSetting();
-
-        /// <summary>
-        /// 依赖注入的全局服务对象提供者
-        /// </summary>
-        internal readonly IServiceProvider ServiceProvider;
 
         /// <summary>
         /// 注入全局服务
@@ -59,60 +67,24 @@ namespace Dt.Core
         protected abstract Task OnStartup();
 
         /// <summary>
-        /// 接收分享内容
-        /// </summary>
-        /// <param name="p_info">分享内容描述</param>
-        protected virtual void OnReceiveShare(ShareInfo p_info) { }
-
-        /// <summary>
         /// 系统注销时的处理
         /// </summary>
         protected virtual Task OnLogout() => Task.CompletedTask;
 
         /// <summary>
-        /// 后台登录，因后台独立运行，涉及验证身份的API，先确保已登录
+        /// 内部访问存根实例
         /// </summary>
-        /// <returns></returns>
-        protected async Task<bool> BackgroundLogin()
-        {
-            if (Kit.IsLogon)
-            {
-                //Kit.Toast("后台", "已登录");
-                return true;
-            }
-
-            string phone = AtState.GetCookie("LoginPhone");
-            string pwd = AtState.GetCookie("LoginPwd");
-            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-            {
-                // 自动登录
-                var result = await Kit.Rpc<LoginResult>(
-                    "cm",
-                    "Entry.LoginByPwd",
-                    phone,
-                    pwd
-                );
-
-                // 登录成功
-                if (result.IsSuc)
-                {
-                    //Kit.Toast("后台", "登录成功");
-                    Kit.InitUser(result);
-                    return true;
-                }
-            }
-            return false;
-        }
+        internal static Stub Inst { get; private set; }
 
         /// <summary>
-        /// 设置cm服务地址，如：https://10.10.1.16/fz-cm
-        /// <para>不使用dt服务的无需设置</para>
+        /// 依赖注入的全局服务对象提供者
         /// </summary>
-        /// <param name="p_url"></param>
-        protected void InitCmUrl(string p_url)
-        {
-            Kit.InitCmSvcUrl(p_url);
-        }
+        internal readonly IServiceProvider SvcProvider;
+
+        /// <summary>
+        /// 依赖注入的全局服务集合
+        /// </summary>
+        internal readonly IServiceCollection SvcCollection;
 
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();

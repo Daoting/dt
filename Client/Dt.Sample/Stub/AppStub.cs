@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr;
 using Dt.Base;
-using Dt.Core.Model;
+using Dt.Mgr;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
@@ -23,7 +22,7 @@ namespace Dt.Sample
         public AppStub()
         {
             Title = "搬运工";
-            InitCmUrl("http://10.10.1.16/dt-cm");
+            SvcUrl = "http://10.10.1.16/dt-cm";
             LogSetting.FileEnabled = true;
         }
 
@@ -35,6 +34,7 @@ namespace Dt.Sample
         {
             p_svcs.AddTransient<IFixedMenus, FixedMenusDemo>();
             p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
+            p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
         }
 
         /// <summary>
@@ -54,15 +54,6 @@ namespace Dt.Sample
 
             // 2. 自定义启动
             await StartRun(typeof(Sample.SamplesMain), false);
-        }
-
-        /// <summary>
-        /// 接收分享内容
-        /// </summary>
-        /// <param name="p_info">分享内容描述</param>
-        protected override void OnReceiveShare(ShareInfo p_info)
-        {
-            Kit.OpenWin(typeof(ReceiveShareWin), "接收分享", Icons.分享, p_info);
         }
 
         #region 自动生成

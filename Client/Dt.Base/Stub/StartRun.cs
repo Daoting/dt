@@ -34,7 +34,7 @@ namespace Dt.Base
             _loginPageType = p_loginPageType;
 
             // 不使用dt服务，直接显示主页
-            if (!Kit.IsUsingDtSvc)
+            if (!Kit.IsUsingSvc)
             {
                 ShowHome();
                 return;

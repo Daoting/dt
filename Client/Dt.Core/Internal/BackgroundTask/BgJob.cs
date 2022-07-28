@@ -52,7 +52,7 @@ namespace Dt.Core
                 Serilogger.Init();
             }
 
-            var bgJob = stub.ServiceProvider.GetService<IBackgroundJob>();
+            var bgJob = stub.SvcProvider.GetService<IBackgroundJob>();
             if (bgJob != null)
             {
                 Log.Debug("开始后台任务");

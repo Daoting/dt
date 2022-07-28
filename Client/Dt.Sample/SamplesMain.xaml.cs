@@ -123,7 +123,7 @@ namespace Dt.Sample
                 new Nav("通用搜索视图", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
             };
 
-            if (Kit.IsUsingDtSvc)
+            if (Kit.IsUsingSvc)
             {
                 group.AddRange(new List<Nav>
                 {
@@ -138,7 +138,7 @@ namespace Dt.Sample
             #endregion
 
             #region 综合
-            if (Kit.IsUsingDtSvc)
+            if (Kit.IsUsingSvc)
             {
                 group = new GroupData<Nav>
                 {
