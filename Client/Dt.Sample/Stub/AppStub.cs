@@ -32,9 +32,9 @@ namespace Dt.Sample
         /// <param name="p_svcs"></param>
         protected override void ConfigureServices(IServiceCollection p_svcs)
         {
-            p_svcs.AddTransient<IFixedMenus, FixedMenusDemo>();
             p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+            p_svcs.AddTransient<IFixedMenus, FixedMenusDemo>();
         }
 
         /// <summary>

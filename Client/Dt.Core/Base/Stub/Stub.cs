@@ -24,9 +24,9 @@ namespace Dt.Core
             Inst = this;
             Init();
 
-            SvcCollection = new ServiceCollection();
-            ConfigureServices(SvcCollection);
-            SvcProvider = SvcCollection.BuildServiceProvider();
+            var svc = new ServiceCollection();
+            ConfigureServices(svc);
+            SvcProvider = svc.BuildServiceProvider();
         }
         
         /// <summary>
@@ -43,10 +43,7 @@ namespace Dt.Core
             get { return _cmSvcUrl; }
             protected set
             {
-                if (string.IsNullOrEmpty(value))
-                    _cmSvcUrl = null;
-                else
-                    _cmSvcUrl = value.TrimEnd('/');
+                _cmSvcUrl = string.IsNullOrEmpty(value) ? null : value.TrimEnd('/');
             }
         }
 
@@ -80,11 +77,6 @@ namespace Dt.Core
         /// 依赖注入的全局服务对象提供者
         /// </summary>
         internal readonly IServiceProvider SvcProvider;
-
-        /// <summary>
-        /// 依赖注入的全局服务集合
-        /// </summary>
-        internal readonly IServiceCollection SvcCollection;
 
         //--------------------以下内容自动生成----------------------------------
         protected abstract void Init();

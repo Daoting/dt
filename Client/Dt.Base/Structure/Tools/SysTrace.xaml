@@ -11,7 +11,6 @@
             <a:Mi ID="本地文件" Icon="文件" Click="OnLocalFiles" />
             <a:Mi ID="页面类型" Icon="地址" Click="OnPageType" />
             <a:Mi ID="库路径" Icon="文件夹" Click="OnLocalPath" />
-            <a:Mi ID="依赖注入" Icon="设置" Click="OnService" />
             <a:Mi ID="安装路径" Icon="文件夹" Click="OnInstallPath" />
             <a:Mi ID="操作系统" Icon="服务器" Click="OnHostOS" />
         </a:Menu>

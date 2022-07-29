@@ -119,19 +119,6 @@ namespace Dt.Base.Tools
             Log.Debug(ApplicationData.Current.LocalFolder.Path);
         }
 
-        void OnService(object sender, Mi e)
-        {
-            StringBuilder sb = new StringBuilder("注入服务：");
-            foreach (var svc in Stub.Inst.SvcCollection)
-            {
-                sb.AppendLine();
-                sb.Append(svc.ServiceType.Name);
-                sb.Append(" <- ");
-                sb.Append(svc.ImplementationType?.Name);
-            }
-            Log.Debug(sb.ToString());
-        }
-
         void OnInstallPath(object sender, Mi e)
         {
             Log.Debug(Package.Current.InstalledLocation.Path);
