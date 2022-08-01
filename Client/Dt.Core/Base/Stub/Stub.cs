@@ -21,6 +21,9 @@ namespace Dt.Core
 
         public Stub()
         {
+            if (Inst != null)
+                throw new Exception("Stub为单例对象！");
+
             Inst = this;
             Init();
 

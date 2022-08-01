@@ -30,28 +30,30 @@ namespace Dt.Core
         public static async Task Run()
         {
             // 打开状态库
-            bool notRun = AtState.OpenDbBackground();
+            AtState.OpenDbBackground();
 
-            // 因后台任务独立运行，存根类型需要从State库获取！
-            Stub stub = null;
-            string tpName = AtState.GetCookie(_stubType);
-            if (!string.IsNullOrEmpty(tpName))
+            // 前端在运行或后台资源未释放，Stub实例存在
+            Stub stub = Stub.Inst;
+            if (stub == null)
             {
-                Type tp = Type.GetType(tpName);
-                if (tp != null)
-                    stub = Activator.CreateInstance(tp) as Stub;
+                // 因后台任务独立运行，存根类型需要从State库获取！
+                string tpName = AtState.GetCookie(_stubType);
+                if (!string.IsNullOrEmpty(tpName))
+                {
+                    Type tp = Type.GetType(tpName);
+                    if (tp != null)
+                    {
+                        stub = Activator.CreateInstance(tp) as Stub;
+
+                        // 前端没运行，完全后台启动，避免涉及UI！
+                        stub.LogSetting.TraceEnabled = false;
+                        Serilogger.Init();
+                    }
+                }
             }
 
             if (stub == null)
                 return;
-
-            if (notRun)
-            {
-                // 前端没运行，完全后台启动
-                // 避免涉及UI
-                stub.LogSetting.TraceEnabled = false;
-                Serilogger.Init();
-            }
 
             string msg = "后台任务：";
             var bgJob = stub.SvcProvider.GetService<IBackgroundJob>();
