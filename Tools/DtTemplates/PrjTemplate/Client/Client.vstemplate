@@ -10,7 +10,9 @@
 	<TemplateContent>
 		<Project File="Client.csproj" ReplaceParameters="true">
 			<ProjectItem TargetFileName="Common.props">Common.props</ProjectItem>
-			<ProjectItem TargetFileName="AppStub.cs" ReplaceParameters="true">AppStub.cs</ProjectItem>
+			<ProjectItem TargetFileName="AppStub.cs" ReplaceParameters="true">Stub\AppStub.cs</ProjectItem>
+			<ProjectItem TargetFileName="BackgroundJob.cs" ReplaceParameters="true">Stub\BackgroundJob.cs</ProjectItem>
+			<ProjectItem TargetFileName="ReceiveShare.cs" ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml" ReplaceParameters="true">Home.xaml</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml.cs" ReplaceParameters="true">Home.xaml.cs</ProjectItem>
 		</Project>

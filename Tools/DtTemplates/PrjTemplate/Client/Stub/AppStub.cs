@@ -7,13 +7,13 @@
 #endregion
 
 #region 引用命名
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace $ext_safeprojectname$
 {
     /// <summary>
-    /// 系统存根，完整用法请参见：https://github.com/Daoting/dt/blob/master/Client/Dt.Sample/App/AppStub.cs
+    /// 系统存根，完整用法请参见：https://github.com/Daoting/dt/blob/master/Client/Dt.Sample/Stub/AppStub.cs
     /// </summary>
     public class AppStub : DefaultStub
     {
@@ -21,18 +21,23 @@ namespace $ext_safeprojectname$
         {
             Title = "搬运工";
 
-            // 启用后台任务，重写OnBgTaskRun
-            EnableBgTask = true;
-
-            // 注释后为单机模式
-            // 联网时先启动服务$ext_safeprojectname$.Svc
-            // ip是本机ip不能为localhost，确保android ios虚拟机能够访问
-            InitCmUrl("https://ip:1234");
+            // 注释后为单机模式，联网时先启动服务$ext_safeprojectname$.Svc
+            // ip不能为localhost，确保android ios虚拟机能够访问
+            //SvcUrl = "https://ip:1234";
         }
 
         /// <summary>
-        /// 多种启动方式请参见：
-        /// https://github.com/Daoting/dt/blob/428a4f039c13fa5cc5dba427eb0b00b12822e60b/Client/Dt.Sample/App/AppStub.cs#L75
+        /// 注入全局服务
+        /// </summary>
+        /// <param name="p_svcs"></param>
+        protected override void ConfigureServices(IServiceCollection p_svcs)
+        {
+            //p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
+            //p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+        }
+
+        /// <summary>
+        /// 初始化完毕，系统启动
         /// </summary>
         protected override async Task OnStartup()
         {
@@ -41,22 +46,6 @@ namespace $ext_safeprojectname$
 
             // 2. 自定义启动
             //await StartRun(typeof(Home), false);
-        }
-
-        /// <summary>
-        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
-        /// </summary>
-        protected override async Task OnBgTaskRun()
-        {
-            //string tpName = AtState.GetCookie("LoginPhone");
-            //var cfg = await AtCm.GetConfig();
-            //await BackgroundLogin();
-            //Kit.Toast(
-            //    "样例",
-            //    tpName + "\r\n" + cfg.Date("now").ToString(),
-            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
-
-            await Task.CompletedTask;
         }
 
         #region 自动生成

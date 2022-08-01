@@ -78,7 +78,7 @@
     <None Include="Win\Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
     <None Include="Win\Win.csproj" />
-    <None Include="Client\AppStub.cs" />
+    <None Include="Client\Stub\AppStub.cs" />
     <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
@@ -89,6 +89,8 @@
     <None Include="iOS\Main.cs" />
     <None Include="Svc\Program.cs" />
     <None Include="Svc\SvcStub.cs" />
+    <None Include="Client\Stub\BackgroundJob.cs" />
+    <None Include="Client\Stub\ReceiveShare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
