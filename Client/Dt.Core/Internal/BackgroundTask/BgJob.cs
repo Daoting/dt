@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -52,25 +53,37 @@ namespace Dt.Core
                 Serilogger.Init();
             }
 
+            string msg = "后台任务：";
             var bgJob = stub.SvcProvider.GetService<IBackgroundJob>();
             if (bgJob != null)
             {
-                Log.Debug("开始后台任务");
+                msg += "启动";
                 try
                 {
+                    // HttpClient头的用户信息 
+                    if (Kit.IsUsingSvc
+                        && !Kit.IsLogon
+                        && long.TryParse(AtState.GetCookie("LoginID"), out var id))
+                    {
+                        Kit.UserID = id;
+                        BaseRpc.RefreshHeader();
+                        msg += " -> 登录";
+                    }
+
                     await bgJob.Run();
-                    Log.Debug("后台任务结束");
+                    msg += " -> 结束";
                 }
                 catch (Exception ex)
                 {
-                    Log.Warning(ex, "后台任务运行异常");
+                    msg += $" -> 运行异常\r\n{ex.Message}";
                 }
             }
             else
             {
                 Unregister();
-                Log.Warning("后台任务无处理内容，已注销！");
+                msg += "无处理内容，已注销！";
             }
+            Log.Debug(msg);
         }
     }
 }

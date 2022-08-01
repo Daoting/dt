@@ -90,6 +90,7 @@ namespace Dt.Mgr
                     // 保存以备自动登录
                     AtState.SaveCookie("LoginPhone", phone);
                     AtState.SaveCookie("LoginPwd", pwd);
+                    AtState.SaveCookie("LoginID", result.UserID.ToString());
 
                     Kit.InitUser(result);
                     var dlg = this.FindParentByType<Dlg>();

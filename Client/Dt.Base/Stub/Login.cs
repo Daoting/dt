@@ -74,6 +74,7 @@ namespace Dt.Base
 
             AtState.DeleteCookie("LoginPhone");
             AtState.DeleteCookie("LoginPwd");
+            AtState.DeleteCookie("LoginID");
 
             await OnLogout();
             ShowLogin(false);

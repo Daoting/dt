@@ -26,7 +26,7 @@ namespace Dt.Core
         /// <summary>
         /// 用户ID
         /// </summary>
-        public static long UserID { get; private set; } = -1;
+        public static long UserID { get; internal set; } = -1;
 
         /// <summary>
         /// 姓名
