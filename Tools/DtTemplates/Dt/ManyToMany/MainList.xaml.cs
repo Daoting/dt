@@ -7,16 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
-using Dt.Base;
-using Dt.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace $rootnamespace$

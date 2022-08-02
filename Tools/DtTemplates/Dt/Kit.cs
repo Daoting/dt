@@ -119,5 +119,37 @@ namespace Dt
             }
             return txt;
         }
+
+        #region Tooltip
+        public static void ShowDataProviderTip(this LinkLabel p_label)
+        {
+            p_label.ShowTooltip("该类在生成的代码中用到，但本次并不生成该类\r\n继承自DataProvider<TSvc>或SqliteProvider<Sqlite_name>\r\n支持本地sqlite库或远程服务的数据操作\r\n通过静态方法实现CRUD");
+        }
+
+        public static void ShowEntityTip(this LinkLabel p_label)
+        {
+            p_label.ShowTooltip("一般为不包含前后缀的表名，是所有生成类的根命名\r\n生成的实体类、窗口、列表、表单等的命名规范：\r\n实体类：实体 + Obj\r\n窗口：实体 + Win\r\n列表：实体 + List\r\n表单：实体 + Form");
+        }
+
+        public static void ShowTooltip(this LinkLabel p_label, string p_msg)
+        {
+            if (_tip == null)
+                _tip = new ToolTip();
+
+            var pt = p_label.PointToClient(Control.MousePosition);
+            _tip.Show(p_msg, p_label, pt);
+            _tip.Active = true;
+            p_label.LostFocus += OnLabelLostFocus;
+        }
+
+        private static void OnLabelLostFocus(object sender, EventArgs e)
+        {
+            var lbl = (LinkLabel)sender;
+            lbl.LostFocus -= OnLabelLostFocus;
+            _tip.Hide(lbl);
+        }
+
+        static ToolTip _tip;
+        #endregion
     }
 }

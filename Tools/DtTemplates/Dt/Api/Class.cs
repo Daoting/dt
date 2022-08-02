@@ -7,9 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;

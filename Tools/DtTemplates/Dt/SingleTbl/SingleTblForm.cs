@@ -110,6 +110,14 @@ namespace Dt
             Close();
         }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowDataProviderTip();
+        }
 
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowEntityTip();
+        }
     }
 }

@@ -43,7 +43,9 @@ namespace Dt
             this._cbWin = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this._agentName = new System.Windows.Forms.TextBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label6 = new System.Windows.Forms.Label();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label2
@@ -70,7 +72,6 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "实体类名";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _entityName
@@ -99,7 +100,7 @@ namespace Dt
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 201);
+            this._btnOK.Location = new System.Drawing.Point(381, 190);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -111,11 +112,11 @@ namespace Dt
             // 
             this._info.AutoSize = true;
             this._info.ForeColor = System.Drawing.Color.Black;
-            this._info.Location = new System.Drawing.Point(12, 201);
+            this._info.Location = new System.Drawing.Point(10, 146);
             this._info.Name = "_info";
-            this._info.Size = new System.Drawing.Size(35, 12);
+            this._info.Size = new System.Drawing.Size(161, 12);
             this._info.TabIndex = 23;
-            this._info.Text = " 提示";
+            this._info.Text = "实现单表增删改查(CRUD)功能";
             // 
             // _cbSearch
             // 
@@ -169,6 +170,17 @@ namespace Dt
             this._agentName.TabIndex = 11;
             this._agentName.Text = "AtLob";
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(14, 31);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(65, 12);
+            this.linkLabel1.TabIndex = 102;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "数据提供类";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -176,14 +188,26 @@ namespace Dt
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(176, 21);
             this.label6.TabIndex = 30;
-            this.label6.Text = "代理服务";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(14, 51);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel2.TabIndex = 103;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "实体名称";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // SingleTblForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 240);
+            this.ClientSize = new System.Drawing.Size(473, 229);
+            this.Controls.Add(this.linkLabel2);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this._agentName);
             this.Controls.Add(this.label6);
             this.Controls.Add(this._cbWin);
@@ -225,6 +249,8 @@ namespace Dt
         private System.Windows.Forms.ComboBox _cbWin;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox _agentName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.LinkLabel linkLabel2;
     }
 }
