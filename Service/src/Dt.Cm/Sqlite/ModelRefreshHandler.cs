@@ -129,7 +129,7 @@ namespace Dt.Cm
 
                 // 将结果模型文件内容压缩
                 sb.Append("生成压缩文件...");
-                using (FileStream inFile = File.OpenRead(dbFile))
+                using (FileStream inFile = File.Open(dbFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     using (FileStream outFile = File.Create(System.IO.Path.Combine(path, p_event.Version + ".gz")))
                     {
