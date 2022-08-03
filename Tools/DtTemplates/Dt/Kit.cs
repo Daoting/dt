@@ -123,7 +123,11 @@ namespace Dt
         #region Tooltip
         public static void ShowDataProviderTip(this LinkLabel p_label)
         {
-            p_label.ShowTooltip("该类在生成的代码中用到，但本次并不生成该类\r\n继承自DataProvider<TSvc>或SqliteProvider<Sqlite_name>\r\n支持本地sqlite库或远程服务的数据操作\r\n通过静态方法实现CRUD");
+            p_label.ShowTooltip(
+@"该类在生成的代码中用到，但本次并不生成该类
+默认提供 AtSvc 和 AtLocal 类
+支持远程服务和本地sqlite库的数据操作
+提供静态方法实现CRUD");
         }
 
         public static void ShowEntityTip(this LinkLabel p_label)

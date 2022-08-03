@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net6.0-windows10.0.19041</TargetFramework>
-		<RootNamespace>Dt.Shell</RootNamespace>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<Platforms>x86;x64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64</RuntimeIdentifiers>
@@ -12,7 +12,7 @@
 		<DefaultLanguage>zh-CN</DefaultLanguage>
 	</PropertyGroup>
 
-	<Import Project="..\$ext_safeprojectname$.Client\Common.props" />
+	<Import Project="..\$ext_safeprojectname$.Client\Stub\Common.props" />
 
 	<ItemGroup>
 		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />

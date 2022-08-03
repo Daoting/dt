@@ -21,9 +21,8 @@ namespace $ext_safeprojectname$
         {
             Title = "搬运工";
 
-            // 注释后为单机模式，联网时先启动服务$ext_safeprojectname$.Svc
-            // ip不能为localhost，确保android ios虚拟机能够访问
-            //SvcUrl = "https://ip:1234";
+            // 注释后为单机模式，ip不能为localhost，确保android ios虚拟机能够访问
+            SvcUrl = "https://ip:1234";
         }
 
         /// <summary>
@@ -41,11 +40,21 @@ namespace $ext_safeprojectname$
         /// </summary>
         protected override async Task OnStartup()
         {
+            // 初次运行，显示用户协议、隐私政策、向导
+            if (AtState.GetCookie("FirstRun") == "")
+            {
+                await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
+                AtState.SaveCookie("FirstRun", "0");
+            }
+
+            // 打开本地sqlite库
+            AtLocal.OpenDb();
+
             // 1. 默认启动
-            await StartRun();
+            //await StartRun();
 
             // 2. 自定义启动
-            //await StartRun(typeof(Home), false);
+            await StartRun(typeof(Home), false);
         }
 
         #region 自动生成

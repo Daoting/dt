@@ -60,7 +60,7 @@
     <None Include="iOS\iOS\Entitlements.plist" />
     <None Include="iOS\iOS\Info.plist" />
     <None Include="iOS\iOS\LaunchScreen.storyboard" />
-    <None Include="Client\Common.props" />
+    <None Include="Client\Stub\Common.props" />
     <None Include="Client\Client.csproj" />
     <None Include="Svc\etc\config\global.json" />
     <None Include="Svc\etc\config\logger.json" />
@@ -91,6 +91,9 @@
     <None Include="Svc\SvcStub.cs" />
     <None Include="Client\Stub\BackgroundJob.cs" />
     <None Include="Client\Stub\ReceiveShare.cs" />
+    <None Include="Client\Agent\AtSvc.cs" />
+    <None Include="Client\Agent\AtLocal.cs" />
+    <None Include="Client\Stub\TestTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +171,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

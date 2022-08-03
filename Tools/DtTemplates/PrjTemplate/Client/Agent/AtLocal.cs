@@ -8,12 +8,14 @@
 
 namespace $ext_safeprojectname$
 {
-    [Api]
-    public class TestApi : BaseApi
+    /// <summary>
+    /// 本地sqlite库，文件名 project.db
+    /// </summary>
+    public class AtLocal : SqliteProvider<Sqlite_project>
     {
-        public string Hello(string p_str)
-        {
-            return p_str;
-        }
+        
     }
+
+    public class Sqlite_project
+    { }
 }

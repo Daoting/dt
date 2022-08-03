@@ -9,7 +9,9 @@
 	</TemplateData>
 	<TemplateContent>
 		<Project File="Client.csproj" ReplaceParameters="true">
-			<ProjectItem TargetFileName="Common.props">Common.props</ProjectItem>
+			<ProjectItem TargetFileName="Common.props">Stub\Common.props</ProjectItem>
+			<ProjectItem TargetFileName="AtSvc.cs" ReplaceParameters="true">Agent\AtSvc.cs</ProjectItem>
+			<ProjectItem TargetFileName="AtLocal.cs" ReplaceParameters="true">Agent\AtLocal.cs</ProjectItem>
 			<ProjectItem TargetFileName="AppStub.cs" ReplaceParameters="true">Stub\AppStub.cs</ProjectItem>
 			<ProjectItem TargetFileName="BackgroundJob.cs" ReplaceParameters="true">Stub\BackgroundJob.cs</ProjectItem>
 			<ProjectItem TargetFileName="ReceiveShare.cs" ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>

@@ -180,7 +180,7 @@ namespace Dt
             this._agentName.Name = "_agentName";
             this._agentName.Size = new System.Drawing.Size(269, 21);
             this._agentName.TabIndex = 11;
-            this._agentName.Text = "AtLob";
+            this._agentName.Text = "AtSvc";
             // 
             // label8
             // 

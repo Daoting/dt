@@ -8,12 +8,11 @@
 
 namespace $ext_safeprojectname$
 {
-    [Api]
-    public class TestApi : BaseApi
-    {
-        public string Hello(string p_str)
-        {
-            return p_str;
-        }
-    }
+    /// <summary>
+    /// lob服务Api
+    /// </summary>
+    public partial class AtSvc : DataProvider<lob>
+    { }
+
+    public class lob { }
 }
