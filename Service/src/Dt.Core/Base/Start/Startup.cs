@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Autofac;
 using Dt.Core.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_services"></param>
         /// <returns></returns>
-        public IServiceProvider ConfigureServices(IServiceCollection p_services)
+        public void ConfigureServices(IServiceCollection p_services)
         {
             // 配置 KestrelServer
             p_services.Configure<KestrelServerOptions>(options =>
@@ -65,7 +66,15 @@ namespace Dt.Core
             });
 
             Kit.ConfigureServices(p_services);
-            return Silo.ConfigureServices(p_services);
+        }
+
+        /// <summary>
+        /// ConfigureServices之后调用
+        /// </summary>
+        /// <param name="p_builder"></param>
+        public void ConfigureContainer(ContainerBuilder p_builder)
+        {
+            Silo.ConfigureContainer(p_builder);
         }
 
         /// <summary>

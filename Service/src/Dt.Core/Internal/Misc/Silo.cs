@@ -303,25 +303,20 @@ namespace Dt.Core
         /// <summary>
         /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务，添加拦截
         /// </summary>
-        /// <param name="p_services"></param>
+        /// <param name="p_builder"></param>
         /// <returns></returns>
-        public static IServiceProvider ConfigureServices(IServiceCollection p_services)
+        public static void ConfigureContainer(ContainerBuilder p_builder)
         {
-            var builder = new ContainerBuilder();
-            builder.Populate(p_services);
-
             // 提取微服务和Dt.Core程序集
-            LoadAssembly(typeof(Silo).Assembly, builder, "公共");
+            LoadAssembly(typeof(Silo).Assembly, p_builder, "公共");
             foreach (var stub in Kit.Stubs)
             {
-                LoadAssembly(stub.GetType().Assembly, builder, stub.SvcName);
+                LoadAssembly(stub.GetType().Assembly, p_builder, stub.SvcName);
             }
 
             // 内部服务管理Api
-            ExtractApi(typeof(Admin), null, builder, null);
+            ExtractApi(typeof(Admin), null, p_builder, null);
             Log.Information("注入服务成功");
-
-            return new AutofacServiceProvider(builder.Build());
         }
 
         static void LoadAssembly(Assembly p_asm, ContainerBuilder p_builder, string p_svcName)

@@ -27,7 +27,7 @@
     <!-- 公共引用包 -->
     <ItemGroup>
         <PackageReference Include="Dt.Infras" Version="2.0.1" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.6" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.7" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->
         <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.0" />

@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using Microsoft.AspNetCore;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Serilog;
+using Microsoft.Extensions.Hosting;
 using Serilog.Formatting.Compact;
-using System;
-using System.IO;
 #endregion
 
 namespace Dt.Core
@@ -193,7 +191,11 @@ namespace Dt.Core
                 // 部署在IIS进程内模式时创建 IISHttpServer
                 // 其他情况创建 KestrelServer
                 // 两种 Web服务器的配置在Startup.ConfigureServices
-                WebHost.CreateDefaultBuilder<Startup>(p_args)
+                Host.CreateDefaultBuilder(p_args)
+                    // 为WebHost配置默认设置
+                    .ConfigureWebHostDefaults(web => web.UseStartup<Startup>())
+                    // 改用Autofac来实现依赖注入
+                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
                     .UseSerilog()
                     // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
