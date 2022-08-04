@@ -694,6 +694,9 @@ namespace Dt.Core
 
         void AppendClsComment(Type p_type, StringBuilder p_sb, IEnumerable<XElement> p_results)
         {
+            if (p_results == null)
+                return;
+
             var name = $"T:{p_type.FullName}";
             var member = (from result in p_results
                           where result.Attribute("name").Value == name

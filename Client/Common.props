@@ -7,6 +7,11 @@
         <UseMauiEssentials Condition="'$(TargetFramework)' != 'net6.0'">true</UseMauiEssentials>
     </PropertyGroup>
 
+    <!-- release不输出pbd调试信息 -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
     <!-- 定义平台常量 -->
     <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
         <DefineConstants>$(DefineConstants);WIN</DefineConstants>
@@ -26,7 +31,7 @@
 
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="2.0.1" />
+        <PackageReference Include="Dt.Infras" Version="2.0.2" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.7" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->

@@ -5,6 +5,11 @@
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
     </PropertyGroup>
 
+    <!-- release不输出pbd调试信息 -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+    
     <!-- 定义平台常量 -->
     <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
         <DefineConstants>$(DefineConstants);WIN</DefineConstants>
