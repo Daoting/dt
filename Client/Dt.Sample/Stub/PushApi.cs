@@ -2,21 +2,24 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-09-06 创建
+* 日志: 2022-08-05 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System;
+using Dt.Base;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Sample
 {
     /// <summary>
-    /// 推送处理标志
+    /// 服务端推送的处理Api
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class PushApiAttribute : Attribute
+    public class PushApi : IPushApi
     {
+        public void Hello(string p_msg)
+        {
+            Kit.Msg($"【收到服务端推送】\r\n{p_msg}");
+        }
     }
 }

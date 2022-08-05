@@ -13,15 +13,15 @@ using Dt.Core.Sqlite;
 namespace $ext_safeprojectname$
 {
     /// <summary>
-    /// 客户端Cookie字典
+    /// 本地字典表
     /// </summary>
-    [Sqlite("project")]
-    public class TestTable : Entity
+    [Sqlite("local")]
+    public class LocalDict : Entity
     {
         #region 构造方法
-        ClientCookie() { }
+        LocalDict() { }
 
-        public ClientCookie(
+        public LocalDict(
             string Key,
             string Val = default)
         {

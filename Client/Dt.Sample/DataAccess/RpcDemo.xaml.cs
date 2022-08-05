@@ -12,6 +12,7 @@ using Dt.Core;
 using Dt.Core.Rpc;
 using Microsoft.UI.Xaml;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
@@ -46,5 +47,9 @@ namespace Dt.Sample
             _tbInfo.Text += Environment.NewLine + "结束";
         }
 
+        void OnPush(object sender, RoutedEventArgs e)
+        {
+            AtMsg.SendCmd(Kit.UserID, new MsgInfo { MethodName = "PushApi.Hello", Params = new List<object> { "Hello myself" } });
+        }
     }
 }

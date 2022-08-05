@@ -16,7 +16,6 @@ namespace Dt.Base
     /// <summary>
     /// 系统内置推送处理
     /// </summary>
-    [PushApi]
     public class SysPushApi
     {
         /// <summary>
@@ -44,7 +43,6 @@ namespace Dt.Base.Chat
     /// <summary>
     /// 空，占位用，因WebRtc只支持WebAssembly
     /// </summary>
-    [PushApi]
     public partial class WebRtcApi
     { }
 }

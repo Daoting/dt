@@ -31,8 +31,10 @@ namespace $ext_safeprojectname$
         /// <param name="p_svcs"></param>
         protected override void ConfigureServices(IServiceCollection p_svcs)
         {
-            //p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
-            //p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+            p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
+            p_svcs.AddTransient<IPushApi, PushApi>();
+            p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+            p_svcs.AddTransient<IFixedMenus, FixedMenus>();
         }
 
         /// <summary>
@@ -40,15 +42,15 @@ namespace $ext_safeprojectname$
         /// </summary>
         protected override async Task OnStartup()
         {
+			// 打开本地sqlite库
+            AtLocal.OpenDb();
+
             // 初次运行，显示用户协议、隐私政策、向导
-            if (AtState.GetCookie("FirstRun") == "")
+            if (AtLocal.GetDict("FirstRun") == "")
             {
                 await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
-                AtState.SaveCookie("FirstRun", "0");
+                AtLocal.SaveDict("FirstRun", "0");
             }
-
-            // 打开本地sqlite库
-            AtLocal.OpenDb();
 
             // 1. 默认启动
             //await StartRun();
@@ -58,57 +60,34 @@ namespace $ext_safeprojectname$
         }
 
         #region 自动生成
-        protected override void Init()
+        // 本地库结构变化或视图类型变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！
+
+        /// <summary>
+        /// 视图名称与窗口类型的映射字典，菜单项用，同名时覆盖内置的视图类型
+        /// </summary>
+        /// <returns></returns>
+        protected override Dictionary<string, Type> GetViewTypes()
         {
-            // 视图名称与窗口类型的映射字典，主要菜单项用
-            ViewTypes = new Dictionary<string, Type>
-            {
-                { "通讯录", typeof(Dt.Base.Chat.ChatHome) },
-                { "报表", typeof(Dt.Mgr.ReportView) },
-                { "流程设计", typeof(Dt.Mgr.Workflow.WorkflowMgr) },
-                { "任务", typeof(Dt.Mgr.Workflow.TasksView) },
-                { "发布", typeof(Dt.Mgr.Publish.PublishView) },
-                { "发布管理", typeof(Dt.Mgr.Publish.PublishMgr) },
-                { "基础选项", typeof(Dt.Mgr.Model.BaseOption) },
-                { "菜单管理", typeof(Dt.Mgr.Model.MenuWin) },
-                { "我的设置", typeof(Dt.Mgr.Model.MyParamsSetting) },
-                { "参数定义", typeof(Dt.Mgr.Model.UserParamsWin) },
-                { "基础权限", typeof(Dt.Mgr.Model.PrvWin) },
-                { "报表设计", typeof(Dt.Mgr.Model.RptWin) },
-                { "系统角色", typeof(Dt.Mgr.Model.RoleWin) },
-                { "用户账号", typeof(Dt.Mgr.Model.UserAccountWin) },
-                { "文件", typeof(Dt.Mgr.File.FileHome) },
-            };
+            return new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
+            { };
+        }
 
-            // 处理服务器推送的类型字典
-            PushHandlers = new Dictionary<string, Type>
-            {
-                { "syspushapi", typeof(Dt.Base.SysPushApi) },
-                { "webrtcapi", typeof(Dt.Base.Chat.WebRtcApi) },
-            };
-
-            // 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
-            SqliteDb = new Dictionary<string, SqliteTblsInfo>
+        /// <summary>
+        /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
+        /// </summary>
+        /// <returns></returns>
+        protected override Dictionary<string, SqliteTblsInfo> GetSqliteDbs()
+        {
+            return new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase)
             {
                 {
-                    "state",
+                    "local",
                     new SqliteTblsInfo
                     {
-                        Version = "047ebd4f0ef4957193958ba8aff3966b",
+                        Version = "0a68f7fe86b78452e885c5e7394762ca",
                         Tables = new List<Type>
                         {
-                            typeof(Dt.Core.Model.ClientCookie),
-                            typeof(Dt.Core.Model.DataVersion),
-                            typeof(Dt.Core.Model.UserParams),
-                            typeof(Dt.Core.Model.UserPrivilege),
-                            typeof(Dt.Base.Docking.DockLayout),
-                            typeof(Dt.Base.ModuleView.SearchHistory),
-                            typeof(Dt.Base.FormView.CellLastVal),
-                            typeof(Dt.Base.Chat.ChatMember),
-                            typeof(Dt.Base.Chat.Letter),
-                            typeof(Dt.Mgr.MenuFav),
-                            typeof(Dt.Mgr.UserMenu),
-                            typeof(Dt.Mgr.File.ReadFileHistory),
+                            typeof(LocalDict),
                         }
                     }
                 },

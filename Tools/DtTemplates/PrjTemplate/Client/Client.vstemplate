@@ -9,11 +9,14 @@
 	</TemplateData>
 	<TemplateContent>
 		<Project File="Client.csproj" ReplaceParameters="true">
-			<ProjectItem TargetFileName="Common.props">Stub\Common.props</ProjectItem>
 			<ProjectItem TargetFileName="AtSvc.cs" ReplaceParameters="true">Agent\AtSvc.cs</ProjectItem>
 			<ProjectItem TargetFileName="AtLocal.cs" ReplaceParameters="true">Agent\AtLocal.cs</ProjectItem>
 			<ProjectItem TargetFileName="AppStub.cs" ReplaceParameters="true">Stub\AppStub.cs</ProjectItem>
 			<ProjectItem TargetFileName="BackgroundJob.cs" ReplaceParameters="true">Stub\BackgroundJob.cs</ProjectItem>
+			<ProjectItem TargetFileName="Common.props">Stub\Common.props</ProjectItem>
+			<ProjectItem TargetFileName="FixedMenus.cs" ReplaceParameters="true">Stub\FixedMenus.cs</ProjectItem>
+			<ProjectItem TargetFileName="LocalDict.cs" ReplaceParameters="true">Stub\LocalDict.cs</ProjectItem>
+			<ProjectItem TargetFileName="PushApi.cs" ReplaceParameters="true">Stub\PushApi.cs</ProjectItem>
 			<ProjectItem TargetFileName="ReceiveShare.cs" ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml" ReplaceParameters="true">Home.xaml</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml.cs" ReplaceParameters="true">Home.xaml.cs</ProjectItem>

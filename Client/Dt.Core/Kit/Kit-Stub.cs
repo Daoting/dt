@@ -158,10 +158,7 @@ namespace Dt.Core
         /// <returns>返回类型</returns>
         public static Type GetViewType(string p_typeName)
         {
-            Type tp;
-            if (!string.IsNullOrEmpty(p_typeName) && Stub.Inst.ViewTypes.TryGetValue(p_typeName, out tp))
-                return tp;
-            return null;
+            return Stub.Inst.GetViewType(p_typeName);
         }
         #endregion
 

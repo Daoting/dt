@@ -93,7 +93,9 @@
     <None Include="Client\Stub\ReceiveShare.cs" />
     <None Include="Client\Agent\AtSvc.cs" />
     <None Include="Client\Agent\AtLocal.cs" />
-    <None Include="Client\Stub\TestTable.cs" />
+    <None Include="Client\Stub\FixedMenus.cs" />
+    <None Include="Client\Stub\LocalDict.cs" />
+    <None Include="Client\Stub\PushApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

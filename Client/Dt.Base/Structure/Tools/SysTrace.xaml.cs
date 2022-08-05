@@ -39,9 +39,12 @@ namespace Dt.Base.Tools
             _lv.CellEx = typeof(TraceViewEx);
 
 #if DEBUG && WIN
-            Mi mi = new Mi { ID = "存根代码", Icon = Icons.链接 };
+            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
             mi.Click += OnStub;
             Menu.Items.Insert(1, mi);
+            mi = new Mi { ID = "内置存根", Icon = Icons.链接 };
+            mi.Click += OnDefaultStub;
+            Menu.Items.Insert(2, mi);
 #endif
         }
 
@@ -209,7 +212,6 @@ namespace Dt.Base.Tools
         #region 生成存根代码
 #if DEBUG && WIN
         Dictionary<string, Type> _viewTypes;
-        Dictionary<string, Type> _pushHandlers;
         Dictionary<string, SqliteDbTbls> _sqliteTbls;
 
         /// <summary>
@@ -220,7 +222,42 @@ namespace Dt.Base.Tools
         void OnStub(object sender, Mi e)
         {
             _viewTypes = new Dictionary<string, Type>();
-            _pushHandlers = new Dictionary<string, Type>();
+            _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
+
+            ExtractAssembly(Stub.Inst.GetType().Assembly);
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("\t\t#region 自动生成");
+            sb.AppendLine("\t\t// 本地库结构变化或视图类型变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！");
+            sb.AppendLine();
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 视图名称与窗口类型的映射字典，菜单项用，同名时覆盖内置的视图类型");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\t/// <returns></returns>");
+            sb.AppendLine("\t\tprotected override Dictionary<string, Type> GetViewTypes()\r\n\t\t{");
+            BuildStubDict(sb, _viewTypes, false);
+
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\t/// <returns></returns>");
+            sb.AppendLine("\t\tprotected override Dictionary<string, SqliteTblsInfo> GetSqliteDbs()\r\n\t\t{");
+            BuildSqliteDict(sb, false);
+
+            sb.Append("\t\t#endregion");
+
+            DataPackage data = new DataPackage();
+            data.SetText(sb.ToString());
+            Clipboard.SetContent(data);
+            Kit.Msg("已复制到剪切板！");
+
+            _viewTypes.Clear();
+            _sqliteTbls.Clear();
+        }
+
+        void OnDefaultStub(object sender, Mi e)
+        {
+            _viewTypes = new Dictionary<string, Type>();
             _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
 
             //IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
@@ -233,27 +270,12 @@ namespace Dt.Base.Tools
             ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Base")));
             ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Mgr")));
 
-            // 最后提取业务程序集，确保业务程序集的类型优先级最高，比如替换系统自带的视图
-            ExtractAssembly(Stub.Inst.GetType().Assembly);
-
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("\t\t#region 自动生成");
-            sb.AppendLine("\t\tprotected override void Init()\r\n\t\t{");
+            sb.AppendLine("\t\tprotected override Dictionary<string, Type> GetInternalViewTypes()\r\n\t\t{");
+            BuildStubDict(sb, _viewTypes, true);
 
-            sb.AppendLine("\t\t\t// 视图名称与窗口类型的映射字典，主要菜单项用");
-            sb.AppendLine("\t\t\tViewTypes = new Dictionary<string, Type>");
-            BuildStubDict(sb, _viewTypes);
-
-            sb.AppendLine("\t\t\t// 处理服务器推送的类型字典");
-            sb.AppendLine("\t\t\tPushHandlers = new Dictionary<string, Type>");
-            BuildStubDict(sb, _pushHandlers);
-
-            sb.AppendLine("\t\t\t// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
-            sb.AppendLine("\t\t\tSqliteDb = new Dictionary<string, SqliteTblsInfo>");
-            BuildSqliteDict(sb);
-
-            sb.AppendLine("\t\t}");
-            sb.Append("\t\t#endregion");
+            sb.AppendLine("\t\tprotected override Dictionary<string, SqliteTblsInfo> GetInternalSqliteDbs()\r\n\t\t{");
+            BuildSqliteDict(sb, true);
 
             DataPackage data = new DataPackage();
             data.SetText(sb.ToString());
@@ -261,7 +283,6 @@ namespace Dt.Base.Tools
             Kit.Msg("已复制到剪切板！");
 
             _viewTypes.Clear();
-            _pushHandlers.Clear();
             _sqliteTbls.Clear();
         }
 
@@ -304,11 +325,6 @@ namespace Dt.Base.Tools
                                     tbls.Cols.Append(pro.Name);
                             }
                         }
-                        else if (attr is PushApiAttribute)
-                        {
-                            // 客户端服务方法
-                            _pushHandlers[tp.Name.ToLower()] = tp;
-                        }
                     }
                 }
             }
@@ -331,29 +347,48 @@ namespace Dt.Base.Tools
             }
         }
 
-        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt)
+        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt, bool p_isInternal)
         {
+            p_sb.AppendLine("\t\t\treturn new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)");
             if (p_dt.Count == 0)
             {
-                p_sb.AppendLine("\t\t\t{};");
+                p_sb.AppendLine("\t\t\t{};\r\n\t\t}");
                 p_sb.AppendLine();
                 return;
             }
 
             p_sb.AppendLine("\t\t\t{");
-            foreach (var item in p_dt)
+            if (p_isInternal)
             {
-                p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
+                foreach (var item in p_dt)
+                {
+                    if (item.Value.Assembly.GetName().Name == "Dt.Mgr")
+                    {
+                        p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", Type.GetType(\"{1},Dt.Mgr\") }},\r\n", item.Key, item.Value.FullName);
+                    }
+                    else
+                    {
+                        p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
+                    }
+                }
             }
-            p_sb.AppendLine("\t\t\t};");
+            else
+            {
+                foreach (var item in p_dt)
+                {
+                    p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
+                }
+            }
+            p_sb.AppendLine("\t\t\t};\r\n\t\t}");
             p_sb.AppendLine();
         }
 
-        void BuildSqliteDict(StringBuilder p_sb)
+        void BuildSqliteDict(StringBuilder p_sb, bool p_isInternal)
         {
+            p_sb.AppendLine("\t\t\treturn new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase)");
             if (_sqliteTbls.Count == 0)
             {
-                p_sb.AppendLine("\t\t\t{};");
+                p_sb.AppendLine("\t\t\t{};\r\n\t\t}");
                 return;
             }
 
@@ -369,16 +404,33 @@ namespace Dt.Base.Tools
                 p_sb.AppendLine("\t\t\t\t\t\tTables = new List<Type>");
                 p_sb.AppendLine("\t\t\t\t\t\t{");
 
-                foreach (var tp in item.Value.Tbls)
+                if (p_isInternal)
                 {
-                    p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
+                    foreach (var tp in item.Value.Tbls)
+                    {
+                        if (tp.Assembly.GetName().Name == "Dt.Mgr")
+                        {
+                            p_sb.AppendLine($"\t\t\t\t\t\t\tType.GetType(\"{tp.FullName},Dt.Mgr\"),");
+                        }
+                        else
+                        {
+                            p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var tp in item.Value.Tbls)
+                    {
+                        p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
+                    }
                 }
 
                 p_sb.AppendLine("\t\t\t\t\t\t}");
                 p_sb.AppendLine("\t\t\t\t\t}");
                 p_sb.AppendLine("\t\t\t\t},");
             }
-            p_sb.AppendLine("\t\t\t};");
+            p_sb.Append("\t\t\t};\r\n\t\t}");
         }
 
         class SqliteDbTbls

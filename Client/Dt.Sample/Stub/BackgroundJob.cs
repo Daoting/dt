@@ -21,17 +21,11 @@ namespace Dt.Sample
         public async Task Run()
         {
             //string tpName = AtState.GetCookie("LoginPhone");
-            //var cfg = await AtCm.GetConfig();
-            //await BackgroundLogin();
-            //Kit.Toast(
-            //    "样例",
-            //    tpName + "\r\n" + cfg.Date("now").ToString(),
-            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
-
             //Kit.Toast(
             //    "样例",
             //    DateTime.Now.ToString(),
             //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+
             await Task.CompletedTask;
         }
     }

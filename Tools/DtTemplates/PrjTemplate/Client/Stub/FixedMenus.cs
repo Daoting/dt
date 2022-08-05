@@ -1,19 +1,14 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: Daoting
+* 创建: $username$
 * 摘要: 
-* 日志: 2022-07-28 创建
+* 日志: $time$ 创建
 ******************************************************************************/
 #endregion
 
-#region 引用命名
-using Dt.Core.Model;
-using Dt.Mgr;
-#endregion
-
-namespace Dt.Sample
+namespace $ext_safeprojectname$
 {
-    public class FixedMenusDemo : IFixedMenus
+    public class FixedMenus : IFixedMenus
     {
         /// <summary>
         /// 获取默认主页(DefaultHome)的固定菜单项
@@ -45,11 +40,6 @@ namespace Dt.Sample
                 Icon: "公告",
                 ViewName: "发布"),
 
-            new OmMenu(
-                ID: 1,
-                Name: "样例",
-                Icon: "词典",
-                ViewName: "样例"),
         };
     }
 }

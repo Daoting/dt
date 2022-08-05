@@ -536,7 +536,8 @@ namespace Dt.Core
                 _db.Open();
 
                 // 初次运行、库表结构版本变化或文件被删除时创建库表结构
-                if (Stub.Inst.SqliteDb.TryGetValue(dbName, out var dbInfo))
+                var dbInfo = Stub.Inst.GetSqliteDbInfo(dbName);
+                if (dbInfo != null)
                 {
                     path = Path.Combine(Kit.DataPath, $"{dbName}-{dbInfo.Version}.ver");
                     if (!exists || !File.Exists(path))

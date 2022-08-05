@@ -15,6 +15,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using Dt.Base.Chat;
 #if !WASM
 using Microsoft.Maui.Devices;
 #endif
@@ -29,7 +31,7 @@ namespace Dt.Base
     {
         #region 静态内容
         const int _maxRetry = 4;
-        static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
+        static Dictionary<string, MethodInfo> _methods;
         // 会话标识，区分同一账号多个登录的情况
         static readonly string _sessionID = Guid.NewGuid().ToString().Substring(0, 8);
         static ResponseReader _reader;
@@ -196,22 +198,47 @@ namespace Dt.Base
             }
         }
 
-        MethodInfo GetMethod(string _method)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_method">方法名，形如：SysPushApi.ReceiveLetter</param>
+        /// <returns></returns>
+        MethodInfo GetMethod(string p_method)
         {
-            MethodInfo mi;
-            if (_methods.TryGetValue(_method, out mi))
-                return mi;
+            if (_methods == null)
+                InitMethods();
 
-            Type tp;
-            string[] arr = _method.Split('.');
-            if (arr.Length == 2 && Stub.Inst.PushHandlers.TryGetValue(arr[0], out tp))
-            {
-                mi = tp.GetMethod(arr[1], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                if (mi != null)
-                    _methods[_method] = mi;
+            if (_methods.TryGetValue(p_method, out var mi))
                 return mi;
-            }
             return null;
+        }
+
+        void InitMethods()
+        {
+            _methods = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
+
+            ExtractApi(typeof(SysPushApi));
+            ExtractApi(typeof(WebRtcApi));
+
+            // 外部定义的api
+            var apis = Kit.GetServices<IPushApi>();
+            foreach (var api in apis)
+            {
+                ExtractApi(api.GetType());
+            }
+        }
+
+        /// <summary>
+        /// 提取类型中的Api
+        /// </summary>
+        /// <param name="p_type"></param>
+        void ExtractApi(Type p_type)
+        {
+            MethodInfo[] methods = p_type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            foreach (MethodInfo mi in methods)
+            {
+                _methods[$"{p_type.Name}.{mi.Name}"] = mi;
+            }
         }
     }
 }
