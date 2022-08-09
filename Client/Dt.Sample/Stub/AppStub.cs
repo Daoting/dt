@@ -52,10 +52,10 @@ namespace Dt.Sample
                 AtLocal.SaveDict("FirstRun", "0");
             }
 
-            // 1. 默认启动
+            // 以默认登录页、主页方式启动
             //await StartRun();
 
-            // 2. 自定义启动
+            // 以自定义方式启动
             await StartRun(typeof(Sample.SamplesMain), false);
         }
 

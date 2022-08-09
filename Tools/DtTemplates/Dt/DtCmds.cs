@@ -1,4 +1,5 @@
 ﻿using Dt.Editor;
+using Dt.SingleTbl;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -67,24 +68,25 @@ namespace Dt
             ThreadHelper.ThrowIfNotOnUIThread();
             cs.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
             cs.AddCommand(CmdPaste(FvCommandId, _fvXaml));
-            cs.AddCommand(CmdCustom(CellCmdId, typeof(CellXaml)));
+            cs.AddCommand(CmdClient(CellCmdId, typeof(CellXaml)));
             cs.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
             cs.AddCommand(CmdPaste(TabMenuCmdId, _tabMenu));
             cs.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
             cs.AddCommand(CmdPaste(DotCmdId, _dot));
             cs.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
 
-            cs.AddCommand(CmdCustom(SingleTblCmdId, typeof(SingleTblForm)));
-            cs.AddCommand(CmdCustom(OnToManyCmdId, typeof(OnToManyForm)));
-            cs.AddCommand(CmdCustom(ManyToManyCmdId, typeof(ManyToManyForm)));
+            cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
+            cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
+            cs.AddCommand(CmdClient(ManyToManyCmdId, typeof(ManyToManyForm)));
 
-            cs.AddCommand(CmdCustom(InsertMvCmdId, typeof(InsertMvForm)));
-            cs.AddCommand(CmdCustom(InsertWinCmdId, typeof(InsertWinForm)));
-            cs.AddCommand(CmdCustom(InsertDlgCmdId, typeof(InsertDlgForm)));
+            cs.AddCommand(CmdClient(InsertMvCmdId, typeof(InsertMvForm)));
+            cs.AddCommand(CmdClient(InsertWinCmdId, typeof(InsertWinForm)));
+            cs.AddCommand(CmdClient(InsertDlgCmdId, typeof(InsertDlgForm)));
 
-            cs.AddCommand(CmdCustom(InsertEntityCmdId, typeof(InsertEntityForm)));
-            cs.AddCommand(CmdCustom(InsertAgentCmdId, typeof(InsertAgentForm)));
-            cs.AddCommand(CmdCustom(InsertApiCmdId, typeof(InsertApiForm)));
+            cs.AddCommand(CmdClient(InsertEntityCmdId, typeof(InsertEntityForm)));
+            cs.AddCommand(CmdClient(InsertAgentCmdId, typeof(InsertAgentForm)));
+
+            cs.AddCommand(CmdServer(InsertApiCmdId, typeof(InsertApiForm)));
         }
 
         /// <summary>
@@ -106,17 +108,47 @@ namespace Dt
         }
 
         /// <summary>
-        /// 显示自定义编辑窗口
+        /// 显示客户端自定义编辑窗口
         /// </summary>
         /// <param name="p_cmdID"></param>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        MenuCommand CmdCustom(int p_cmdID, Type p_type)
+        MenuCommand CmdClient(int p_cmdID, Type p_type)
         {
             return new MenuCommand(
                 (s, e) =>
                 {
                     ThreadHelper.ThrowIfNotOnUIThread();
+                    if (!Kit.IsClientPrj())
+                    {
+                        Kit.Output("客户端不支持");
+                        return;
+                    }
+
+                    var dlg = Activator.CreateInstance(p_type) as Form;
+                    dlg.ShowDialog();
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        /// <summary>
+        /// 显示服务端自定义编辑窗口
+        /// </summary>
+        /// <param name="p_cmdID"></param>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        MenuCommand CmdServer(int p_cmdID, Type p_type)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    if (!Kit.IsSvcPrj())
+                    {
+                        Kit.Output("服务端Api无法用在客户端");
+                        return;
+                    }
+
                     var dlg = Activator.CreateInstance(p_type) as Form;
                     dlg.ShowDialog();
                 },

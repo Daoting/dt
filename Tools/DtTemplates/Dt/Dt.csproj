@@ -35,7 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>VSTHRD010</NoWarn>
+    <NoWarn>VSTHRD010,VSTHRD200,VSTHRD100</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -302,19 +302,41 @@
     <EmbeddedResource Include="Win\BlankWin.xaml.cs">
       <DependentUpon>BlankWin.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\TwoPanWin.xaml.cs">
       <DependentUpon>TwoPanWin.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\TwoPanList.xaml.cs">
       <DependentUpon>TwoPanList.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\EntitySearch.xaml.cs">
       <DependentUpon>EntitySearch.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityDefSearch.cs" />
-    <EmbeddedResource Include="SingleTbl\EntityCusSearch.cs" />
-    <EmbeddedResource Include="SingleTbl\TwoDefSearch.cs" />
-    <EmbeddedResource Include="SingleTbl\TwoCusSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\EntityDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\EntityCusSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\TwoDefSearch.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\TwoCusSearch.cs" />
+    <Compile Include="SingleTbl\FileParams.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\EntityObj-tbl.cs" />
+    <Compile Include="Svc\Collection\Dict.cs" />
+    <Compile Include="Svc\Collection\Table\Cell.cs" />
+    <Compile Include="Svc\Collection\Table\CellList.cs" />
+    <Compile Include="Svc\Collection\Table\Column.cs" />
+    <Compile Include="Svc\Collection\Table\ColumnList.cs" />
+    <Compile Include="Svc\Collection\Table\Entity.cs" />
+    <Compile Include="Svc\Collection\Table\Row.cs" />
+    <Compile Include="Svc\Collection\Table\Table.cs" />
+    <Compile Include="Svc\Collection\Table\Table`1.cs" />
+    <Compile Include="Svc\Rpc\IRpcJson.cs" />
+    <Compile Include="Svc\Rpc\JsonOptions.cs" />
+    <Compile Include="Svc\Rpc\JsonRpcSerializer.cs" />
+    <Compile Include="Svc\Rpc\PushStreamContent.cs" />
+    <Compile Include="Svc\Rpc\Rpc.cs" />
+    <Compile Include="Svc\Rpc\RpcClientKit.cs" />
+    <Compile Include="Svc\Rpc\RpcKit.cs" />
+    <Compile Include="Svc\Rpc\RpcResult.cs" />
+    <Compile Include="Svc\Rpc\RpcResultType.cs" />
+    <Compile Include="Svc\Rpc\SerializeTypeAlias.cs" />
+    <Compile Include="Svc\AtSvc.cs" />
     <Compile Include="Win\InsertWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -330,16 +352,16 @@
     <EmbeddedResource Include="OnToMany\OnToManyForm.resx">
       <DependentUpon>OnToManyForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityWin.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\EntityWin.xaml.cs">
       <DependentUpon>EntityWin.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityForm.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\EntityForm.xaml.cs">
       <DependentUpon>EntityForm.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityList.xaml.cs">
+    <EmbeddedResource Include="SingleTbl\Res\EntityList.xaml.cs">
       <DependentUpon>EntityList.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityObj.cs" />
+    <EmbeddedResource Include="SingleTbl\Res\EntityObj.cs" />
     <Compile Include="SingleTbl\SingleTblForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -378,6 +400,9 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>6.0.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -470,17 +495,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleTbl\EntityWin.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\EntityWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleTbl\EntityForm.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\EntityForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SingleTbl\EntityList.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\EntityList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -551,19 +576,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleTbl\TwoPanWin.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\TwoPanWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleTbl\TwoPanList.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\TwoPanList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleTbl\EntitySearch.xaml">
+    <EmbeddedResource Include="SingleTbl\Res\EntitySearch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

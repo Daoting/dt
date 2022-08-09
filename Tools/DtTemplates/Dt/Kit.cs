@@ -1,4 +1,5 @@
-﻿using EnvDTE;
+﻿using Dt.Core;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dt
@@ -83,6 +85,54 @@ namespace Dt
             return folder.Properties.Item("FullPath").Value.ToString();
         }
 
+        /// <summary>
+        /// 是否为客户端项目
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsClientPrj()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            var folder = ((UIHierarchyItem[])dte2?.ToolWindows.SolutionExplorer.SelectedItems)[0].Object as ProjectItem;
+            var tgts = folder.ContainingProject.Properties.Item("TargetFrameworks").Value.ToString();
+            return tgts.Contains("-android") && tgts.Contains("-ios") && tgts.Contains("-windows");
+        }
+
+        /// <summary>
+        /// 是否为服务项目
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSvcPrj()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            var folder = ((UIHierarchyItem[])dte2?.ToolWindows.SolutionExplorer.SelectedItems)[0].Object as ProjectItem;
+            var tgts = folder.ContainingProject.Properties.Item("TargetFrameworks").Value.ToString();
+            return string.IsNullOrEmpty(tgts);
+        }
+
+        /// <summary>
+        /// 在输出窗口显示信息
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public static void Output(string p_msg)
+        {
+            var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            var win = dte2?.ToolWindows.OutputWindow;
+            OutputWindowPane pane;
+            try
+            {
+                pane = win.OutputWindowPanes.Item("搬运工");
+            }
+            catch
+            {
+                pane = win.OutputWindowPanes.Add("搬运工");
+            }
+
+            pane.OutputString(p_msg + "\r\n");
+            pane.Activate();
+        }
+
         public static void WritePrjFile(string p_filePath, string p_templateName, Dictionary<string, string> p_replace)
         {
             if (File.Exists(p_filePath))
@@ -124,15 +174,36 @@ namespace Dt
         public static void ShowDataProviderTip(this LinkLabel p_label)
         {
             p_label.ShowTooltip(
-@"该类在生成的代码中用到，但本次并不生成该类
-默认提供 AtSvc 和 AtLocal 类
-支持远程服务和本地sqlite库的数据操作
-提供静态方法实现CRUD");
+@"该类在生成的代码中用到，请确认该类存在
+默认提供 AtSvc 类做为远程服务的数据操作");
         }
 
         public static void ShowEntityTip(this LinkLabel p_label)
         {
-            p_label.ShowTooltip("一般为不包含前后缀的表名，是所有生成类的根命名\r\n生成的实体类、窗口、列表、表单等的命名规范：\r\n实体类：实体 + Obj\r\n窗口：实体 + Win\r\n列表：实体 + List\r\n表单：实体 + Form");
+            p_label.ShowTooltip(
+@"一般为不包含前后缀的表名，是所有生成类的根命名
+生成的实体类、窗口、列表、表单等的命名规范：
+实体类：实体 + Obj
+窗口：实体 + Win
+列表：实体 + List
+表单：实体 + Form");
+        }
+
+        public static void ShowSvcUrlTip(this LinkLabel p_label)
+        {
+            p_label.ShowTooltip(
+@"请确保该服务正在运行，通过服务可：
+获取所有表目录
+获取表结构
+生成实体类、列表、表单代码
+服务未运行只能生成框架代码");
+        }
+
+        public static void ShowAllTblsTip(this LinkLabel p_label)
+        {
+            p_label.ShowTooltip(
+@"通过服务获取的所有表目录
+服务不可用时目录为空");
         }
 
         public static void ShowTooltip(this LinkLabel p_label, string p_msg)

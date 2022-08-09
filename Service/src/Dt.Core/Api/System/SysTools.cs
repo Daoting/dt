@@ -275,6 +275,11 @@ namespace Dt.Core
             return Kit.GetAllSvcs(true);
         }
 
+        public List<string> 所有表名()
+        {
+            return DbSchema.Schema.Keys.ToList();
+        }
+
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)
         {
             // 枚举类型特殊
