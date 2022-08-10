@@ -53,6 +53,10 @@ namespace Dt.SingleTbl
             this.label9 = new System.Windows.Forms.Label();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this._cbSql = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label2
@@ -107,7 +111,7 @@ namespace Dt.SingleTbl
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 262);
+            this._btnOK.Location = new System.Drawing.Point(381, 284);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -119,7 +123,7 @@ namespace Dt.SingleTbl
             // 
             this._info.AutoSize = true;
             this._info.ForeColor = System.Drawing.Color.Black;
-            this._info.Location = new System.Drawing.Point(10, 242);
+            this._info.Location = new System.Drawing.Point(10, 264);
             this._info.Name = "_info";
             this._info.Size = new System.Drawing.Size(161, 12);
             this._info.TabIndex = 23;
@@ -132,7 +136,7 @@ namespace Dt.SingleTbl
             this._cbSearch.Items.AddRange(new object[] {
             "通用搜索面板",
             "自定义搜索面板"});
-            this._cbSearch.Location = new System.Drawing.Point(187, 186);
+            this._cbSearch.Location = new System.Drawing.Point(187, 208);
             this._cbSearch.Name = "_cbSearch";
             this._cbSearch.Size = new System.Drawing.Size(269, 20);
             this._cbSearch.TabIndex = 14;
@@ -140,7 +144,7 @@ namespace Dt.SingleTbl
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(12, 186);
+            this.label4.Location = new System.Drawing.Point(12, 208);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(176, 21);
             this.label4.TabIndex = 26;
@@ -154,7 +158,7 @@ namespace Dt.SingleTbl
             this._cbWin.Items.AddRange(new object[] {
             "窗口三栏，左侧搜索栏",
             "窗口两栏，左侧列表栏，搜索合并到列表栏"});
-            this._cbWin.Location = new System.Drawing.Point(187, 206);
+            this._cbWin.Location = new System.Drawing.Point(187, 228);
             this._cbWin.Name = "_cbWin";
             this._cbWin.Size = new System.Drawing.Size(269, 20);
             this._cbWin.TabIndex = 15;
@@ -162,7 +166,7 @@ namespace Dt.SingleTbl
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(12, 206);
+            this.label5.Location = new System.Drawing.Point(12, 228);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(176, 21);
             this.label5.TabIndex = 28;
@@ -214,7 +218,7 @@ namespace Dt.SingleTbl
             this._svcUrl.Name = "_svcUrl";
             this._svcUrl.Size = new System.Drawing.Size(269, 21);
             this._svcUrl.TabIndex = 105;
-            this._svcUrl.Text = "https://localhost:1234";
+            this._svcUrl.Leave += new System.EventHandler(this._svcUrl_Leave);
             // 
             // label7
             // 
@@ -277,11 +281,54 @@ namespace Dt.SingleTbl
             this.linkLabel4.Text = "选择表";
             this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
+            // _cbSql
+            // 
+            this._cbSql.AutoSize = true;
+            this._cbSql.Checked = true;
+            this._cbSql.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._cbSql.Location = new System.Drawing.Point(257, 170);
+            this._cbSql.Name = "_cbSql";
+            this._cbSql.Size = new System.Drawing.Size(15, 14);
+            this._cbSql.TabIndex = 112;
+            this._cbSql.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label10.Location = new System.Drawing.Point(12, 167);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(176, 21);
+            this.label10.TabIndex = 113;
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label11
+            // 
+            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label11.Location = new System.Drawing.Point(187, 167);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(269, 21);
+            this.label11.TabIndex = 114;
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.Location = new System.Drawing.Point(14, 172);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(71, 12);
+            this.linkLabel5.TabIndex = 115;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "自动生成sql";
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            // 
             // SingleTblForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 294);
+            this.ClientSize = new System.Drawing.Size(473, 323);
+            this.Controls.Add(this.linkLabel5);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this._cbSql);
             this.Controls.Add(this.linkLabel4);
             this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this._cbTbls);
@@ -305,6 +352,7 @@ namespace Dt.SingleTbl
             this.Controls.Add(this.label1);
             this.Controls.Add(this._nameSpace);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.label11);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -342,5 +390,9 @@ namespace Dt.SingleTbl
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.CheckBox _cbSql;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.LinkLabel linkLabel5;
     }
 }

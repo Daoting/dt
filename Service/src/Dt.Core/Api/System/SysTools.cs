@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 #endregion
 
 namespace Dt.Core
@@ -278,6 +279,100 @@ namespace Dt.Core
         public List<string> 所有表名()
         {
             return DbSchema.Schema.Keys.ToList();
+        }
+
+        public string 生成Fv格内容(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return null;
+
+            string tblName = p_tblName.ToLower();
+            var schema = DbSchema.GetTableSchema(tblName);
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var col in schema.Columns)
+            {
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                AppendTabSpace(sb, 2);
+
+                if (IsEnumCol(col))
+                {
+                    string tpName = GetEnumName(col);
+                    var title = col.Comments.Substring(tpName.Length + 2);
+                    sb.Append($"<a:CList ID=\"{col.Name}\" Title=\"{title}\" Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
+                }
+                else if (col.Type == typeof(bool))
+                {
+                    sb.Append($"<a:CBool ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                }
+                else if (col.Type == typeof(int))
+                {
+                    sb.Append($"<a:CNum ID=\"{col.Name}\" Title=\"{col.Comments}\" IsInteger=\"True\" />");
+                }
+                else if (col.Type == typeof(long) || col.Type == typeof(double))
+                {
+                    sb.Append($"<a:CNum ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                }
+                else if (col.Type == typeof(DateTime))
+                {
+                    sb.Append($"<a:CDate ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                }
+                else
+                {
+                    sb.Append($"<a:CText ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                }
+            }
+            return sb.ToString();
+        }
+
+        public string 生成Lv项模板(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return null;
+
+            string tblName = p_tblName.ToLower();
+            var schema = DbSchema.GetTableSchema(tblName);
+            StringBuilder sb = new StringBuilder();
+            AppendTabSpace(sb, 3);
+            sb.Append("<StackPanel Padding=\"10\">");
+            foreach (var col in schema.Columns)
+            {
+                sb.AppendLine();
+                AppendTabSpace(sb, 4);
+                sb.Append($"<a:Dot ID=\"{col.Name}\" />");
+            }
+            sb.AppendLine();
+            AppendTabSpace(sb, 3);
+            sb.Append("</StackPanel>");
+            return sb.ToString();
+        }
+
+        public string 生成Lv表格列(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return null;
+
+            string tblName = p_tblName.ToLower();
+            var schema = DbSchema.GetTableSchema(tblName);
+            StringBuilder sb = new StringBuilder();
+            AppendTabSpace(sb, 2);
+            sb.Append("<a:Cols>");
+            foreach (var col in schema.Columns)
+            {
+                sb.AppendLine();
+                AppendTabSpace(sb, 3);
+                sb.Append($"<a:Col ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+            }
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            sb.Append("</a:Cols>");
+            return sb.ToString();
+        }
+
+        public bool 生成表的框架sql(string p_tblName)
+        {
+            return true;
         }
 
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)

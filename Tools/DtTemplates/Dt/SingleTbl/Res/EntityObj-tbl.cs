@@ -25,5 +25,5 @@ namespace $rootnamespace$
 		//}
 	}
 
-    $entitybody$
+$entitybody$
 }

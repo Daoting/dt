@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Dt.SingleTbl
@@ -19,9 +20,10 @@ namespace Dt.SingleTbl
             _nameSpace.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
+            _svcUrl.Text = AtSvc.SvcUrl;
         }
 
-        private void _btnOK_Click(object sender, EventArgs e)
+        async void _btnOK_Click(object sender, EventArgs e)
         {
             try
             {
@@ -39,71 +41,42 @@ namespace Dt.SingleTbl
                 return;
             }
 
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("正在生成单表框架...")
+                .AppendLine(_isSelectTbl ? $"选择表：{_cbTbls.SelectedItem}" : "未选择表")
+                .Append("窗口布局：")
+                .AppendLine(_cbWin.SelectedIndex == 0 ? "三栏" : "两栏")
+                .AppendLine(_cbSearch.SelectedIndex == 0 ? "通用搜索面板" : "自定义搜索面板");
+
             _path = Kit.GetFolderPath();
             WriteEntityObj();
+            WriteEntityForm();
 
-            //Kit.WritePrjFile(Path.Combine(path, $"{entity}Form.xaml"), "Dt.SingleTbl.EntityForm.xaml", dt);
-            //Kit.WritePrjFile(Path.Combine(path, $"{entity}Form.xaml.cs"), "Dt.SingleTbl.EntityForm.xaml.cs", dt);
+            if (_cbWin.SelectedIndex == 0)
+            {
+                // 三栏
+                WriteThreePane();
+            }
+            else
+            {
+                // 两栏
+                WriteTwoPane();
+            }
 
-            //if (_cbWin.SelectedIndex == 0)
-            //{
-            //    // 三栏
-            //    string listSearchCs;
-            //    if (_cbSearch.SelectedIndex == 0)
-            //    {
-            //        // 通用搜索面板
-            //        dt["$winsearchxaml$"] = $"                <a:SearchMv x:Name=\"_search\" Placeholder=\"{title}\" Search=\"OnSearch\">\r\n                    <x:String>全部</x:String>\r\n                </a:SearchMv>";
-            //        dt["$winsearchcs$"] = "        public SearchMv Search => _search;\r\n\r\n        void OnSearch(object sender, string e)\r\n        {\r\n            _list.OnSearch(e);\r\n        }";
-            //        listSearchCs = "EntityDefSearch";
-            //    }
-            //    else
-            //    {
-            //        // 自定义搜索面板
-            //        dt["$winsearchxaml$"] = $"                <l:{entity}Search x:Name=\"_search\" Search=\"OnSearch\" />";
-            //        dt["$winsearchcs$"] = $"        public {entity}Search Search => _search;\r\n\r\n        void OnSearch(object sender, Row e)\r\n        {{\r\n            _list.OnSearch(e);\r\n        }}";
-            //        listSearchCs = "EntityCusSearch";
+            if (_isSelectTbl && _cbSql.Checked)
+            {
+                bool suc = await AtSvc.CreateTblSql(_cbTbls.SelectedItem.ToString());
+                if (suc)
+                    sb.AppendLine("已自动生成sql");
+                else
+                    sb.AppendLine("sql已存在，未更新");
+            }
+            else
+            {
+                sb.AppendLine("不生成sql");
+            }
 
-            //        Kit.WritePrjFile(Path.Combine(path, $"{entity}Search.xaml"), "Dt.SingleTbl.EntitySearch.xaml", dt);
-            //        Kit.WritePrjFile(Path.Combine(path, $"{entity}Search.xaml.cs"), "Dt.SingleTbl.EntitySearch.xaml.cs", dt);
-            //    }
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}Win.xaml"), "Dt.SingleTbl.EntityWin.xaml", dt);
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}Win.xaml.cs"), "Dt.SingleTbl.EntityWin.xaml.cs", dt);
-
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}List.xaml"), "Dt.SingleTbl.EntityList.xaml", dt);
-
-            //    using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.{listSearchCs}.cs")))
-            //    {
-            //        dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", title).Replace("$entityname$", entity).Replace("$agent$", agent);
-            //    }
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}List.xaml.cs"), "Dt.SingleTbl.EntityList.xaml.cs", dt);
-            //}
-            //else
-            //{
-            //    // 两栏
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}Win.xaml"), "Dt.SingleTbl.TwoPanWin.xaml", dt);
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}Win.xaml.cs"), "Dt.SingleTbl.TwoPanWin.xaml.cs", dt);
-
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}List.xaml"), "Dt.SingleTbl.TwoPanList.xaml", dt);
-
-            //    string cs;
-            //    if (_cbSearch.SelectedIndex == 0)
-            //    {
-            //        cs = "TwoDefSearch";
-            //    }
-            //    else
-            //    {
-            //        cs = "TwoCusSearch";
-            //        Kit.WritePrjFile(Path.Combine(path, $"{entity}Search.xaml"), "Dt.SingleTbl.EntitySearch.xaml", dt);
-            //        Kit.WritePrjFile(Path.Combine(path, $"{entity}Search.xaml.cs"), "Dt.SingleTbl.EntitySearch.xaml.cs", dt);
-            //    }
-
-            //    using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.{cs}.cs")))
-            //    {
-            //        dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", title).Replace("$entityname$", entity);
-            //    }
-            //    Kit.WritePrjFile(Path.Combine(path, $"{entity}List.xaml.cs"), "Dt.SingleTbl.TwoPanList.xaml.cs", dt);
-            //}
-
+            Kit.Output(sb.ToString());
             Close();
         }
 
@@ -130,22 +103,113 @@ namespace Dt.SingleTbl
             }
         }
 
+        async void WriteEntityForm()
+        {
+            var dt = _params.Params;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Form.xaml.cs"), "Dt.SingleTbl.Res.EntityForm.xaml.cs", dt);
+
+            if (_isSelectTbl)
+            {
+                var body = await AtSvc.GetFvContent(_cbTbls.SelectedItem.ToString());
+                // 可能包含命名空间
+                dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
+            }
+            else
+            {
+                dt["$fvbody$"] = "        <a:CText ID=\"name\" Title=\"名称\" />\r\n        <a:CText ID=\"note\" Title=\"描述\" />";
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Form.xaml"), "Dt.SingleTbl.Res.EntityForm.xaml", dt);
+        }
+
+        async void WriteTwoPane()
+        {
+            var dt = _params.Params;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Win.xaml"), "Dt.SingleTbl.Res.TwoPanWin.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Win.xaml.cs"), "Dt.SingleTbl.Res.TwoPanWin.xaml.cs", dt);
+
+            if (_cbSearch.SelectedIndex == 1)
+            {
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Search.xaml"), "Dt.SingleTbl.Res.EntitySearch.xaml", dt);
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Search.xaml.cs"), "Dt.SingleTbl.Res.EntitySearch.xaml.cs", dt);
+            }
+
+            // 搜索方式
+            string cs = _cbSearch.SelectedIndex == 0 ? "TwoDefSearch" : "TwoCusSearch";
+            using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{cs}.cs")))
+            {
+                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", _params.Title).Replace("$entityname$", _params.Entity);
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml.cs"), "Dt.SingleTbl.Res.TwoPanList.xaml.cs", dt);
+            dt.Remove("$listsearchcs$");
+
+            if (_isSelectTbl)
+            {
+                var body = await AtSvc.GetLvItemTemplates(_cbTbls.SelectedItem.ToString());
+                dt["$lvbody$"] = body;
+            }
+            else
+            {
+                dt["$lvbody$"] = "            <StackPanel Padding=\"10\">\r\n                <a:Dot ID=\"name\" />\r\n                <a:Dot ID=\"note\" Font=\"小灰\" />\r\n            </StackPanel>";
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml"), "Dt.SingleTbl.Res.TwoPanList.xaml", dt);
+        }
+
+        async void WriteThreePane()
+        {
+            var dt = _params.Params;
+            if (_cbSearch.SelectedIndex == 1)
+            {
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Search.xaml"), "Dt.SingleTbl.Res.EntitySearch.xaml", dt);
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Search.xaml.cs"), "Dt.SingleTbl.Res.EntitySearch.xaml.cs", dt);
+            }
+
+            dt["$winsearchxaml$"] = _cbSearch.SelectedIndex == 0 ?
+                $"                <a:SearchMv x:Name=\"_search\" Placeholder=\"{_params.Title}\" Search=\"OnSearch\">\r\n                    <x:String>全部</x:String>\r\n                </a:SearchMv>"
+                : $"                <l:{_params.Entity}Search x:Name=\"_search\" Search=\"OnSearch\" />";
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Win.xaml"), "Dt.SingleTbl.Res.EntityWin.xaml", dt);
+            dt.Remove("$winsearchxaml$");
+
+            dt["$winsearchcs$"] = _cbSearch.SelectedIndex == 0 ?
+                "        public SearchMv Search => _search;\r\n\r\n        void OnSearch(object sender, string e)\r\n        {\r\n            _list.OnSearch(e);\r\n        }"
+                : $"        public {_params.Entity}Search Search => _search;\r\n\r\n        void OnSearch(object sender, Row e)\r\n        {{\r\n            _list.OnSearch(e);\r\n        }}";
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Win.xaml.cs"), "Dt.SingleTbl.Res.EntityWin.xaml.cs", dt);
+            dt.Remove("$winsearchcs$");
+
+            string listSearchCs = _cbSearch.SelectedIndex == 0 ? "EntityDefSearch" : "EntityCusSearch";
+            using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{listSearchCs}.cs")))
+            {
+                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", _params.Title).Replace("$entityname$", _params.Entity).Replace("$agent$", _params.Agent);
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml.cs"), "Dt.SingleTbl.Res.EntityList.xaml.cs", dt);
+            dt.Remove("$listsearchcs$");
+
+            if (_isSelectTbl)
+            {
+                var body = await AtSvc.GetLvItemTemplates(_cbTbls.SelectedItem.ToString());
+                dt["$lvbody$"] = body;
+            }
+            else
+            {
+                dt["$lvbody$"] = "            <StackPanel Padding=\"10\">\r\n                <a:Dot ID=\"name\" />\r\n                <a:Dot ID=\"note\" Font=\"小灰\" />\r\n            </StackPanel>";
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml"), "Dt.SingleTbl.Res.EntityList.xaml", dt);
+        }
+
         async void _cbTbls_DropDown(object sender, EventArgs e)
         {
-            if (_svcUrl.Text == AtSvc.SvcUrl && _cbTbls.DataSource != null)
-                return;
-
-            AtSvc.SvcUrl = _svcUrl.Text;
             var ls = await AtSvc.GetAllTables();
-            if (ls != null && ls.Count > 0)
-                ls.Insert(0, "");
-            _cbTbls.DataSource = ls;
+            if (_cbTbls.DataSource != ls)
+                _cbTbls.DataSource = ls;
         }
 
         private void _cbTbls_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var tbl = _cbTbls.SelectedItem.ToString();
             _isSelectTbl = !string.IsNullOrEmpty(tbl);
+            if (_isSelectTbl)
+            {
+                _entityName.Text = GetClsName(tbl);
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -168,5 +232,45 @@ namespace Dt.SingleTbl
             ((LinkLabel)sender).ShowAllTblsTip();
         }
 
+        private void _svcUrl_Leave(object sender, EventArgs e)
+        {
+            var url = _svcUrl.Text.Trim();
+            if (url != AtSvc.SvcUrl)
+                AtSvc.SvcUrl = url;
+        }
+
+        static string GetClsName(string p_tblName)
+        {
+            string clsName;
+            string[] arr = p_tblName.Split('_');
+            if (arr.Length > 1)
+            {
+                clsName = SetFirstToUpper(arr[1]);
+                if (arr.Length > 2)
+                {
+                    for (int i = 2; i < arr.Length; i++)
+                    {
+                        clsName += SetFirstToUpper(arr[i]);
+                    }
+                }
+            }
+            else
+            {
+                clsName = SetFirstToUpper(p_tblName);
+            }
+            return clsName;
+        }
+
+        static string SetFirstToUpper(string p_str)
+        {
+            char[] a = p_str.ToCharArray();
+            a[0] = char.ToUpper(a[0]);
+            return new string(a);
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowAutoSqlTip();
+        }
     }
 }

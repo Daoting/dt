@@ -72,6 +72,15 @@ namespace Dt
             return root + "." + ns;
         }
 
+        public static string GetRootNamespace()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            var projects = (UIHierarchyItem[])dte2?.ToolWindows.SolutionExplorer.SelectedItems;
+            var folder = projects[0].Object as ProjectItem;
+            return folder.ContainingProject.Properties.Item("RootNamespace").Value.ToString();
+        }
+
         /// <summary>
         /// 获取选择的文件夹的完整路径
         /// </summary>
@@ -192,10 +201,9 @@ namespace Dt
         public static void ShowSvcUrlTip(this LinkLabel p_label)
         {
             p_label.ShowTooltip(
-@"请确保该服务正在运行，通过服务可：
-获取所有表目录
-获取表结构
-生成实体类、列表、表单代码
+@"当服务正在运行时，可通过服务：
+1. 获取所有表目录
+2. 根据表结构生成实体类代码、列表和表单xaml内容
 服务未运行只能生成框架代码");
         }
 
@@ -204,6 +212,17 @@ namespace Dt
             p_label.ShowTooltip(
 @"通过服务获取的所有表目录
 服务不可用时目录为空");
+        }
+
+        public static void ShowAutoSqlTip(this LinkLabel p_label)
+        {
+            p_label.ShowTooltip(
+@"当选择的表名有效时，可生成以下键名的sql：
+1. XXX-全部
+2. XXX-模糊查询
+3. XXX-编辑
+XXX为实体中文标题
+当lob_sql中存在时，不覆盖");
         }
 
         public static void ShowTooltip(this LinkLabel p_label, string p_msg)
