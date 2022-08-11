@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Castle.Components.DictionaryAdapter.Xml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,15 @@ namespace Dt.Core
         /// 生成实体类
         /// </summary>
         /// <param name="p_tblName">表名</param>
+        /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string 生成实体类(string p_tblName)
+        public string 生成实体类(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
 
             string tblName = p_tblName.ToLower();
-            string clsName = GetClsName(tblName);
+            string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
@@ -186,14 +188,15 @@ namespace Dt.Core
         /// 生成实体类框架
         /// </summary>
         /// <param name="p_tblName">表名</param>
+        /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string 实体类框架(string p_tblName)
+        public string 实体类框架(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
 
             string tblName = p_tblName.ToLower();
-            string clsName = GetClsName(tblName);
+            string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
@@ -295,32 +298,40 @@ namespace Dt.Core
                 if (sb.Length > 0)
                     sb.AppendLine();
                 AppendTabSpace(sb, 2);
+                bool isEnum = IsEnumCol(col);
 
-                if (IsEnumCol(col))
+                string title = "";
+                if (!string.IsNullOrEmpty(col.Comments) && !isEnum)
+                {
+                    title = " Title=\"{col.Comments}\"";
+                }
+
+                if (isEnum)
                 {
                     string tpName = GetEnumName(col);
-                    var title = col.Comments.Substring(tpName.Length + 2);
-                    sb.Append($"<a:CList ID=\"{col.Name}\" Title=\"{title}\" Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
+                    title = col.Comments.Substring(tpName.Length + 2);
+                    title = string.IsNullOrEmpty(title) ? "" : " Title=\"{title}\"";
+                    sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
                 }
                 else if (col.Type == typeof(bool))
                 {
-                    sb.Append($"<a:CBool ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                    sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
                 }
                 else if (col.Type == typeof(int))
                 {
-                    sb.Append($"<a:CNum ID=\"{col.Name}\" Title=\"{col.Comments}\" IsInteger=\"True\" />");
+                    sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" />");
                 }
                 else if (col.Type == typeof(long) || col.Type == typeof(double))
                 {
-                    sb.Append($"<a:CNum ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                    sb.Append($"<a:CNum ID=\"{col.Name}\"{title} />");
                 }
                 else if (col.Type == typeof(DateTime))
                 {
-                    sb.Append($"<a:CDate ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                    sb.Append($"<a:CDate ID=\"{col.Name}\"{title} />");
                 }
                 else
                 {
-                    sb.Append($"<a:CText ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+                    sb.Append($"<a:CText ID=\"{col.Name}\"{title} />");
                 }
             }
             return sb.ToString();
@@ -370,9 +381,52 @@ namespace Dt.Core
             return sb.ToString();
         }
 
-        public bool 生成表的框架sql(string p_tblName)
+        public async Task<string> 生成表的框架sql(string p_tblName, string p_title, bool p_blurQuery)
         {
-            return true;
+            if (!DbSchema.Schema.ContainsKey("lob_sql"))
+                return "lob_sql表不存在，无法生成框架sql";
+
+            string msg = await CreateSql(p_title + "-全部", $"select * from {p_tblName}");
+            msg += await CreateSql(p_title + "-编辑", $"select * from {p_tblName} where id=@id");
+
+            if (p_blurQuery)
+            {
+                var schema = DbSchema.GetTableSchema(p_tblName);
+                StringBuilder sb = new StringBuilder();
+                foreach (var col in schema.Columns)
+                {
+                    if (col.Type == typeof(string))
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(" OR ");
+                        sb.Append(col.Name);
+                        sb.AppendLine(" LIKE @input");
+                    }
+                }
+
+                msg += await CreateSql(p_title + "-模糊查询", $"select * from {p_tblName} where \r\n {sb.ToString()}");
+            }
+
+            return msg;
+        }
+
+        const string _sqlInsert = "insert into lob_sql (id, `sql`) values (@id, @sql)";
+        const string _sqlSelect = "select count(*) from lob_sql where id=@id";
+
+        async Task<string> CreateSql(string p_key, string p_sql)
+        {
+            string msg;
+            int cnt = await Dp.GetScalar<int>(_sqlSelect, new { id = p_key });
+            if (cnt == 0)
+            {
+                cnt = await Dp.Exec(_sqlInsert, new { id = p_key, sql = p_sql });
+                msg = cnt > 0 ? $"[{p_key}] sql生成成功\r\n" : $"[{p_key}] sql生成失败\r\n";
+            }
+            else
+            {
+                msg = $"[{p_key}] sql已存在\r\n";
+            }
+            return msg;
         }
 
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)

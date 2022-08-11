@@ -219,7 +219,7 @@ namespace Dt
             p_label.ShowTooltip(
 @"当选择的表名有效时，可生成以下键名的sql：
 1. XXX-全部
-2. XXX-模糊查询
+2. XXX-模糊查询，通用搜索面板时生成
 3. XXX-编辑
 XXX为实体中文标题
 当lob_sql中存在时，不覆盖");

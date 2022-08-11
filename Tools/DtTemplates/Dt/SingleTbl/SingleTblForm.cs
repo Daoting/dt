@@ -44,6 +44,8 @@ namespace Dt.SingleTbl
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("正在生成单表框架...")
                 .AppendLine(_isSelectTbl ? $"选择表：{_cbTbls.SelectedItem}" : "未选择表")
+                .AppendLine($"实体名称：{_params.Entity}")
+                .AppendLine($"实体标题：{_params.Title}")
                 .Append("窗口布局：")
                 .AppendLine(_cbWin.SelectedIndex == 0 ? "三栏" : "两栏")
                 .AppendLine(_cbSearch.SelectedIndex == 0 ? "通用搜索面板" : "自定义搜索面板");
@@ -65,11 +67,8 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl && _cbSql.Checked)
             {
-                bool suc = await AtSvc.CreateTblSql(_cbTbls.SelectedItem.ToString());
-                if (suc)
-                    sb.AppendLine("已自动生成sql");
-                else
-                    sb.AppendLine("sql已存在，未更新");
+                string msg = await AtSvc.CreateTblSql(_cbTbls.SelectedItem.ToString(), _params.Title, _cbSearch.SelectedIndex == 0);
+                sb.AppendLine(msg);
             }
             else
             {
@@ -84,7 +83,7 @@ namespace Dt.SingleTbl
         {
             if (_isSelectTbl)
             {
-                var entity = await AtSvc.CreateAgent(_cbTbls.SelectedItem.ToString());
+                var entity = await AtSvc.CreateAgent(_cbTbls.SelectedItem.ToString(), _params.Entity + "Obj");
                 if (string.IsNullOrEmpty(entity))
                 {
                     _isSelectTbl = false;
@@ -137,7 +136,11 @@ namespace Dt.SingleTbl
             string cs = _cbSearch.SelectedIndex == 0 ? "TwoDefSearch" : "TwoCusSearch";
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{cs}.cs")))
             {
-                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", _params.Title).Replace("$entityname$", _params.Entity);
+                var txt = sr.ReadToEnd();
+                dt["$listsearchcs$"] = txt
+                    .Replace("$entitytitle$", _params.Title)
+                    .Replace("$entityname$", _params.Entity)
+                    .Replace("$agent$", _params.Agent);
             }
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml.cs"), "Dt.SingleTbl.Res.TwoPanList.xaml.cs", dt);
             dt.Remove("$listsearchcs$");
@@ -178,7 +181,11 @@ namespace Dt.SingleTbl
             string listSearchCs = _cbSearch.SelectedIndex == 0 ? "EntityDefSearch" : "EntityCusSearch";
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{listSearchCs}.cs")))
             {
-                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$entitytitle$", _params.Title).Replace("$entityname$", _params.Entity).Replace("$agent$", _params.Agent);
+                var txt = sr.ReadToEnd();
+                dt["$listsearchcs$"] = txt
+                    .Replace("$entitytitle$", _params.Title)
+                    .Replace("$entityname$", _params.Entity)
+                    .Replace("$agent$", _params.Agent);
             }
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml.cs"), "Dt.SingleTbl.Res.EntityList.xaml.cs", dt);
             dt.Remove("$listsearchcs$");

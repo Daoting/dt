@@ -27,7 +27,7 @@
             }
             else
             {
-                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await $agent$.Query<$entityname$Obj>("$entitytitle$-模糊查询", new { input = $"%{_query}%" });
             }
         }
         #endregion

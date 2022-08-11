@@ -88,6 +88,11 @@ namespace $rootnamespace$
                 return;
             }
 
+            if (await $agent$.Delete(d))
+            {
+                Clear();
+                _win.List.Update();
+            }
         }
 
         protected override Task<bool> OnClosing()

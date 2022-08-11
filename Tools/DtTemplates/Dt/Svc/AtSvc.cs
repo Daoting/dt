@@ -42,12 +42,19 @@ namespace Dt
             return _allTables;
         }
 
-        public static Task<string> CreateAgent(string p_tblName)
+        /// <summary>
+        /// 生成实体类
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
+        /// <returns></returns>
+        public static Task<string> CreateAgent(string p_tblName, string p_clsName)
         {
             return new Rpc().Call<string>(
                 SvcUrl,
                 "SysTools.生成实体类",
-                p_tblName
+                p_tblName,
+                p_clsName
             );
         }
 
@@ -78,12 +85,14 @@ namespace Dt
             );
         }
 
-        public static Task<bool> CreateTblSql(string p_tblName)
+        public static Task<string> CreateTblSql(string p_tblName, string p_title, bool p_blurQuery)
         {
-            return new Rpc().Call<bool>(
+            return new Rpc().Call<string>(
                 SvcUrl,
                 "SysTools.生成表的框架sql",
-                p_tblName
+                p_tblName,
+                p_title,
+                p_blurQuery
             );
         }
     }
