@@ -14,7 +14,6 @@
     </a:Mv.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CText ID="name" Title="名称" />
-        <a:CText ID="note" Title="描述" />
+$fvbody$
     </a:Fv>
 </a:Mv>

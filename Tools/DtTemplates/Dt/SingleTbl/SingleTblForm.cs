@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dt.SingleTbl
@@ -51,18 +52,18 @@ namespace Dt.SingleTbl
                 .AppendLine(_cbSearch.SelectedIndex == 0 ? "通用搜索面板" : "自定义搜索面板");
 
             _path = Kit.GetFolderPath();
-            WriteEntityObj();
-            WriteEntityForm();
+            await WriteEntityObj();
+            await WriteEntityForm();
 
             if (_cbWin.SelectedIndex == 0)
             {
                 // 三栏
-                WriteThreePane();
+                await WriteThreePane();
             }
             else
             {
                 // 两栏
-                WriteTwoPane();
+                await WriteTwoPane();
             }
 
             if (_isSelectTbl && _cbSql.Checked)
@@ -79,7 +80,7 @@ namespace Dt.SingleTbl
             Close();
         }
 
-        async void WriteEntityObj()
+        async Task WriteEntityObj()
         {
             if (_isSelectTbl)
             {
@@ -102,7 +103,7 @@ namespace Dt.SingleTbl
             }
         }
 
-        async void WriteEntityForm()
+        async Task WriteEntityForm()
         {
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Form.xaml.cs"), "Dt.SingleTbl.Res.EntityForm.xaml.cs", dt);
@@ -120,7 +121,7 @@ namespace Dt.SingleTbl
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Form.xaml"), "Dt.SingleTbl.Res.EntityForm.xaml", dt);
         }
 
-        async void WriteTwoPane()
+        async Task WriteTwoPane()
         {
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}Win.xaml"), "Dt.SingleTbl.Res.TwoPanWin.xaml", dt);
@@ -136,7 +137,7 @@ namespace Dt.SingleTbl
             string cs = _cbSearch.SelectedIndex == 0 ? "TwoDefSearch" : "TwoCusSearch";
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{cs}.cs")))
             {
-                var txt = sr.ReadToEnd();
+                var txt = await sr.ReadToEndAsync();
                 dt["$listsearchcs$"] = txt
                     .Replace("$entitytitle$", _params.Title)
                     .Replace("$entityname$", _params.Entity)
@@ -157,7 +158,7 @@ namespace Dt.SingleTbl
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.Entity}List.xaml"), "Dt.SingleTbl.Res.TwoPanList.xaml", dt);
         }
 
-        async void WriteThreePane()
+        async Task WriteThreePane()
         {
             var dt = _params.Params;
             if (_cbSearch.SelectedIndex == 1)

@@ -410,6 +410,35 @@ namespace Dt.Core
             return msg;
         }
 
+        public async Task<string> 生成一对多sql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
+        {
+            if (!DbSchema.Schema.ContainsKey("lob_sql"))
+                return "lob_sql表不存在，无法生成框架sql";
+
+            string msg;
+            if (!string.IsNullOrEmpty(p_parentTbl) && !string.IsNullOrEmpty(p_parentTitle))
+                msg = await 生成表的框架sql(p_parentTbl, p_parentTitle, p_blurQuery);
+            else
+                msg = "未生成父表sql\r\n";
+
+            if (!string.IsNullOrEmpty(p_parentTitle)
+                && p_childTbls != null
+                && p_childTitles != null
+                && p_childTbls.Count == p_childTitles.Count)
+            {
+                for (int i = 0; i < p_childTbls.Count; i++)
+                {
+                    msg += await CreateSql($"{p_parentTitle}-关联{p_childTitles[i]}", $"select * from {p_childTbls[i]} where ParentID=@ParentID");
+                    msg += await CreateSql(p_childTitles[i] + "-编辑", $"select * from {p_childTbls[i]} where id=@id");
+                }
+            }
+            else
+            {
+                msg += "未生成子表sql\r\n";
+            }
+            return msg;
+        }
+
         const string _sqlInsert = "insert into lob_sql (id, `sql`) values (@id, @sql)";
         const string _sqlSelect = "select count(*) from lob_sql where id=@id";
 

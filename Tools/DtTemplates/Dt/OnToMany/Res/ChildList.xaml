@@ -20,7 +20,7 @@
             </a:Menu>
         </a:Ex.Menu>
         <DataTemplate>
-            <a:Dot ID="name" Margin="10,0,10,0" />
+$lvbody$
         </DataTemplate>
     </a:Lv>
 </a:Mv>

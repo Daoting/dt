@@ -1,32 +1,51 @@
-﻿using System;
+﻿using Dt.Core;
+using Microsoft.VisualStudio.RpcContracts.Commands;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Dt
+namespace Dt.OnToMany
 {
     public partial class OnToManyForm : Form
     {
+        FileParams _params;
+        string _path;
+
         public OnToManyForm()
         {
             InitializeComponent();
             _nameSpace.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
+            _svcUrl.Text = AtSvc.SvcUrl;
         }
 
-        private void _btnOK_Click(object sender, EventArgs e)
+        async void _btnOK_Click(object sender, EventArgs e)
         {
-            string ns, agent, mainCls, mainTitle, bClss, bTitles;
             try
             {
-                ns = Kit.GetText(_nameSpace);
-                agent = Kit.GetText(_agentName);
-                mainCls = Kit.GetText(_clsa);
-                mainTitle = Kit.GetText(_clsaTitle);
-                bClss = Kit.GetText(_clsb);
-                bTitles = Kit.GetText(_clsbTitle);
+                _params = new FileParams
+                {
+                    NameSpace = Kit.GetText(_nameSpace),
+                    Agent = Kit.GetText(_agentName),
+                    MainTbl = _cbTbls.SelectedItem.ToString(),
+                    MainEntity = Kit.GetText(_clsa),
+                    MainTitle = Kit.GetText(_clsaTitle),
+                };
+
+                var ctbls = _childTbls.Text;
+                if (!string.IsNullOrEmpty(ctbls))
+                    _params.ChildTbls = ctbls.Replace(" ", "").Split(',');
+
+                var bClss = Kit.GetText(_clsb);
+                _params.ChildEntities = bClss.Replace(" ", "").Split(',');
+                var bTitles = Kit.GetText(_clsbTitle);
+                _params.ChildTitles = bTitles.Replace(" ", "").Split(',');
             }
             catch
             {
@@ -34,96 +53,304 @@ namespace Dt
                 return;
             }
 
-            var childClss = bClss.Split(',');
-            var childTitles = bTitles.Split(',');
-            if (childClss.Length != childTitles.Length)
+            if (_params.ChildEntities.Length != _params.ChildTitles.Length)
             {
-                MessageBox.Show("子类个数和子类标题个数不同！");
+                MessageBox.Show("子实体个数和子实体标题个数不同！");
                 return;
             }
 
-            var dt = new Dictionary<string, string>
-                {
-                    {"$rootnamespace$", ns },
-                    {"$agent$", agent },
-                    {"$maincls$", mainCls },
-                    {"$maintitle$", mainTitle },
-                    {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
-                    {"$username$", Environment.UserName },
-                };
-            var path = Kit.GetFolderPath();
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Obj.cs"), "Dt.OnToMany.ParentObj.cs", dt);
-
-            string winXaml, winCode, naviTo, update, clear;
-            winXaml = winCode = naviTo = update = clear = "";
-            for (int i = 0; i < childClss.Length; i++)
+            if (_params.IsSelectedChildTbls && _params.ChildTbls.Length != _params.ChildEntities.Length)
             {
-                var cls = childClss[i].Trim();
-                var rtitle = childTitles[i].Trim();
-                dt["$childcls$"] = cls;
-                dt["$childtitle$"] = rtitle;
-
-                Kit.WritePrjFile(Path.Combine(path, $"{cls}Obj.cs"), "Dt.OnToMany.ChildObj.cs", dt);
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}{cls}List.xaml"), "Dt.OnToMany.ChildList.xaml", dt);
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}{cls}List.xaml.cs"), "Dt.OnToMany.ChildList.xaml.cs", dt);
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}{cls}Form.xaml"), "Dt.OnToMany.ChildForm.xaml", dt);
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}{cls}Form.xaml.cs"), "Dt.OnToMany.ChildForm.xaml.cs", dt);
-
-                if (i > 0)
-                {
-                    winXaml += "\r\n";
-                    winCode += "\r\n";
-                    update += "\r\n";
-                    clear += "\r\n";
-                }
-
-                winXaml += $"            <a:Tab>\r\n                <l:{mainCls}{cls}List x:Name=\"_{char.ToLower(cls[0])}{cls.Substring(1)}List\" />\r\n            </a:Tab>";
-                winCode += $"        public {mainCls}{cls}List {cls}List => _{char.ToLower(cls[0])}{cls.Substring(1)}List;\r\n";
-                naviTo += $" _win.{cls}List,";
-                update += $"            _win?.{cls}List.Update(p_id);";
-                clear += $"            _win?.{cls}List.Clear();";
+                MessageBox.Show("子表个数和子实体个数不同！");
+                return;
             }
 
-            // MainWin
-            dt["$relatedlistxaml$"] = winXaml;
-            dt["$relatedlistcs$"] = winCode;
-            var resName = _cbWin.SelectedIndex == 0 ? "TreeWin" : "TwoWin";
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Win.xaml"), $"Dt.OnToMany.{resName}.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Win.xaml.cs"), $"Dt.OnToMany.{resName}.xaml.cs", dt);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("正在生成一对多框架...")
+                .AppendLine(_params.IsSelectedMainTbl ? $"选择父表：{_cbTbls.SelectedItem}" : "未选择父表")
+                .AppendLine($"父实体名称：{_params.MainEntity}")
+                .AppendLine($"父实体标题：{_params.MainTitle}")
+                .AppendLine(_params.IsSelectedChildTbls ? $"选择子表：{_childTbls.Text}" : "未选择子表")
+                .AppendLine($"子实体名称：{_clsb.Text}")
+                .AppendLine($"子实体标题：{_clsbTitle.Text}")
+                .Append("窗口布局：")
+                .AppendLine(_cbWin.SelectedIndex == 0 ? "三栏" : "两栏")
+                .AppendLine(_cbSearch.SelectedIndex == 0 ? "通用搜索面板" : "自定义搜索面板");
 
-            // MainForm
-            dt["$relatedupdate$"] = update;
-            dt["$relatedclear$"] = clear;
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml"), "Dt.OnToMany.ParentForm.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Form.xaml.cs"), "Dt.OnToMany.ParentForm.xaml.cs", dt);
+            _path = Kit.GetFolderPath();
+            await WriteEntityObj(_params.MainTbl, _params.MainEntity);
 
-            string cs;
-            if (_cbSearch.SelectedIndex == 0)
+            for (int i = 0; i < _params.ChildEntities.Length; i++)
             {
-                cs = "DefaultSearch";
-            }
-            else
-            {
-                // 复用ManyToMany中的文件
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Search.xaml"), "Dt.ManyToMany.MainSearch.xaml", dt);
-                Kit.WritePrjFile(Path.Combine(path, $"{mainCls}Search.xaml.cs"), "Dt.ManyToMany.MainSearch.xaml.cs", dt);
-                cs = "CustomSearch";
+                await WriteEntityObj(_params.ChildTbls != null ? _params.ChildTbls[i] : null, _params.ChildEntities[i]);
             }
 
-            // MainList
-            // 复用ManyToMany中的文件
-            using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.{cs}.cs")))
-            {
-                dt["$listsearchcs$"] = sr.ReadToEnd().Replace("$maincls$", mainCls).Replace("$maintitle$", mainTitle).Replace("$agent$", agent);
-            }
-            dt["$navitolist$"] = naviTo;
-            resName = _cbWin.SelectedIndex == 0 ? "ThreeList" : "TwoList";
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml"), $"Dt.OnToMany.{resName}.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{mainCls}List.xaml.cs"), $"Dt.OnToMany.{resName}.xaml.cs", dt);
+            var code = await WriteChildren();
 
+            WriteMainWin(code);
+            await WriteMainForm(code);
+            WriteMainSearch();
+            await WriteMainList(code);
+
+            await CreateSql(sb);
+            Kit.Output(sb.ToString());
             Close();
         }
 
+        async Task WriteEntityObj(string p_tbl, string p_entity)
+        {
+            var dt = new Dictionary<string, string>
+            {
+                {"$rootnamespace$", _params.NameSpace },
+                {"$agent$", _params.Agent },
+                {"$entityname$", p_entity },
+                {"$time$", _params.Time },
+                {"$username$", _params.UserName },
+            };
 
+            if (string.IsNullOrEmpty(p_tbl))
+            {
+                var entity = await AtSvc.CreateAgent(p_tbl, p_entity + "Obj");
+                dt["$entitybody$"] = entity;
+                Kit.WritePrjFile(Path.Combine(_path, $"{p_entity}Obj.cs"), "Dt.SingleTbl.Res.EntityObj-tbl.cs", dt);
+            }
+            else
+            {
+                Kit.WritePrjFile(Path.Combine(_path, $"{p_entity}Obj.cs"), "Dt.SingleTbl.Res.EntityObj.cs", dt);
+            }
+        }
+
+        async Task<GenaralCode> WriteChildren()
+        {
+            var dt = new Dictionary<string, string>
+            {
+                {"$rootnamespace$", _params.NameSpace },
+                {"$agent$", _params.Agent },
+                {"$maincls$", _params.MainEntity },
+                {"$maintitle$", _params.MainTitle },
+                {"$time$", _params.Time },
+                {"$username$", _params.UserName },
+            };
+
+            GenaralCode code = new GenaralCode();
+            for (int i = 0; i < _params.ChildEntities.Length; i++)
+            {
+                var cls = _params.ChildEntities[i];
+                var rtitle = _params.ChildTitles[i];
+                dt["$childcls$"] = cls;
+                dt["$childtitle$"] = rtitle;
+
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}{cls}Form.xaml.cs"), "Dt.OnToMany.Res.ChildForm.xaml.cs", dt);
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}{cls}List.xaml.cs"), "Dt.OnToMany.Res.ChildList.xaml.cs", dt);
+
+                if (_params.IsSelectedChildTbls)
+                {
+                    var body = await AtSvc.GetFvContent(_params.ChildTbls[i]);
+                    // 可能包含命名空间
+                    dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
+                }
+                else
+                {
+                    dt["$fvbody$"] = "        <a:CText ID=\"name\" Title=\"名称\" />\r\n        <a:CText ID=\"note\" Title=\"描述\" />";
+                }
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}{cls}Form.xaml"), "Dt.OnToMany.Res.ChildForm.xaml", dt);
+                dt.Remove("$fvbody$");
+
+                if (_params.IsSelectedChildTbls)
+                {
+                    var body = await AtSvc.GetLvItemTemplates(_params.ChildTbls[i]);
+                    dt["$lvbody$"] = body;
+                }
+                else
+                {
+                    dt["$lvbody$"] = "            <StackPanel Padding=\"10\">\r\n                <a:Dot ID=\"name\" />\r\n                <a:Dot ID=\"note\" Font=\"小灰\" />\r\n            </StackPanel>";
+                }
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}{cls}List.xaml"), "Dt.OnToMany.Res.ChildList.xaml", dt);
+                dt.Remove("$lvbody$");
+
+                if (i > 0)
+                {
+                    code.WinXaml += "\r\n";
+                    code.WinCode += "\r\n";
+                    code.Update += "\r\n";
+                    code.Clear += "\r\n";
+                }
+
+                code.WinXaml += $"            <a:Tab>\r\n                <l:{_params.MainEntity}{cls}List x:Name=\"_{char.ToLower(cls[0])}{cls.Substring(1)}List\" />\r\n            </a:Tab>";
+                code.WinCode += $"        public {_params.MainEntity}{cls}List {cls}List => _{char.ToLower(cls[0])}{cls.Substring(1)}List;\r\n";
+                code.NaviTo += $" _win.{cls}List,";
+                code.Update += $"            _win?.{cls}List.Update(p_id);";
+                code.Clear += $"            _win?.{cls}List.Clear();";
+            }
+            return code;
+        }
+
+        void WriteMainWin(GenaralCode p_code)
+        {
+            var dt = new Dictionary<string, string>
+            {
+                {"$rootnamespace$", _params.NameSpace },
+                {"$maincls$", _params.MainEntity },
+            };
+
+            var resName = _cbWin.SelectedIndex == 0 ? "ThreeWin" : "TwoWin";
+            dt["$relatedlist$"] = p_code.WinXaml;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Win.xaml"), $"Dt.OnToMany.Res.{resName}.xaml", dt);
+
+            dt["$time$"] = _params.Time;
+            dt["$username$"] = _params.UserName;
+            dt["$relatedlist$"] = p_code.WinCode;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Win.xaml.cs"), $"Dt.OnToMany.Res.{resName}.xaml.cs", dt);
+        }
+
+        async Task WriteMainForm(GenaralCode p_code)
+        {
+            var dt = new Dictionary<string, string>
+            {
+                {"$rootnamespace$", _params.NameSpace },
+                {"$maincls$", _params.MainEntity },
+                {"$maintitle$", _params.MainTitle },
+            };
+
+            if (_params.IsSelectedMainTbl)
+            {
+                var body = await AtSvc.GetFvContent(_params.MainTbl);
+                // 可能包含命名空间
+                dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
+            }
+            else
+            {
+                dt["$fvbody$"] = "        <a:CText ID=\"name\" Title=\"名称\" />\r\n        <a:CText ID=\"note\" Title=\"描述\" />";
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Form.xaml"), "Dt.OnToMany.Res.ParentForm.xaml", dt);
+            dt.Remove("$fvbody$");
+
+            dt["$time$"] = _params.Time;
+            dt["$username$"] = _params.UserName;
+            dt["$relatedupdate$"] = p_code.Update;
+            dt["$relatedclear$"] = p_code.Clear;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Form.xaml.cs"), "Dt.OnToMany.Res.ParentForm.xaml.cs", dt);
+        }
+
+        private void WriteMainSearch()
+        {
+            if (_cbSearch.SelectedIndex == 1)
+            {
+                var dt = new Dictionary<string, string>
+                {
+                    {"$rootnamespace$", _params.NameSpace },
+                    {"$entityname$", _params.MainEntity },
+                };
+
+                // 复用SingleTbl中的文件
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Search.xaml"), "Dt.SingleTbl.Res.EntitySearch.xaml", dt);
+
+                dt["$time$"] = _params.Time;
+                dt["$username$"] = _params.UserName;
+                Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Search.xaml.cs"), "Dt.SingleTbl.Res.EntitySearch.xaml.cs", dt);
+            }
+        }
+
+        async Task WriteMainList(GenaralCode p_code)
+        {
+            var dt = new Dictionary<string, string>
+            {
+                {"$rootnamespace$", _params.NameSpace },
+                {"$maincls$", _params.MainEntity },
+                {"$maintitle$", _params.MainTitle },
+            };
+
+            var resName = _cbWin.SelectedIndex == 0 ? "ThreeList" : "TwoList";
+            if (_params.IsSelectedMainTbl)
+            {
+                var body = await AtSvc.GetLvItemTemplates(_params.MainTbl);
+                dt["$lvbody$"] = body;
+            }
+            else
+            {
+                dt["$lvbody$"] = "            <StackPanel Padding=\"10\">\r\n                <a:Dot ID=\"name\" />\r\n                <a:Dot ID=\"note\" Font=\"小灰\" />\r\n            </StackPanel>";
+            }
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}List.xaml"), $"Dt.OnToMany.Res.{resName}.xaml", dt);
+            dt.Remove("$lvbody$");
+
+            // 复用ManyToMany中的文件
+            string cs = _cbSearch.SelectedIndex == 0 ? "DefaultSearch" : "CustomSearch";
+            using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.ManyToMany.Res.{cs}.cs")))
+            {
+                var content = await sr.ReadToEndAsync();
+                dt["$listsearchcs$"] = content
+                    .Replace("$maincls$", _params.MainEntity)
+                    .Replace("$maintitle$", _params.MainTitle)
+                    .Replace("$agent$", _params.Agent);
+            }
+
+            dt["$agent$"] = _params.Agent;
+            dt["$time$"] = _params.Time;
+            dt["$username$"] = _params.UserName;
+            dt["$navitolist$"] = p_code.NaviTo;
+            dt["$relatedupdate$"] = p_code.Update;
+            dt["$relatedclear$"] = p_code.Clear;
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}List.xaml.cs"), $"Dt.OnToMany.Res.{resName}.xaml.cs", dt);
+        }
+
+        async Task CreateSql(StringBuilder p_sb)
+        {
+            if (_cbSql.Checked
+                && (_params.IsSelectedMainTbl || _params.IsSelectedChildTbls))
+            {
+                string msg = await AtSvc.CreateOnToManySql(
+                        _params.MainTbl,
+                        _params.MainTitle,
+                        _params.ChildTbls?.ToList(),
+                        _params.ChildTitles?.ToList(),
+                        _cbSearch.SelectedIndex == 0);
+                p_sb.AppendLine(msg);
+            }
+            else
+            {
+                p_sb.AppendLine("不生成sql");
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowDataProviderTip();
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowSvcUrlTip();
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowAllTblsTip();
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowEntityTip();
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowTooltip("服务运行时可选择多个子表");
+        }
+
+        private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowTooltip(
+@"和父实体相同，一般为不包含前后缀的表名，是所有生成类的根命名
+生成的实体类、窗口、列表、表单等的命名规范：
+实体类：实体 + Obj
+窗口：实体 + Win
+列表：实体 + List
+表单：实体 + Form");
+        }
+
+        private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ((LinkLabel)sender).ShowAutoSqlTip();
+        }
     }
 }

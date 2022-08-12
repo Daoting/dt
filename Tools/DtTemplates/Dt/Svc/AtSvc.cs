@@ -95,5 +95,18 @@ namespace Dt
                 p_blurQuery
             );
         }
+
+        public static Task<string> CreateOnToManySql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
+        {
+            return new Rpc().Call<string>(
+                SvcUrl,
+                "SysTools.生成一对多sql",
+                p_parentTbl,
+                p_parentTitle,
+                p_childTbls,
+                p_childTitles,
+                p_blurQuery
+            );
+        }
     }
 }

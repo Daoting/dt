@@ -14,7 +14,7 @@
     </a:Pane>
     <a:Main>
         <a:Tabs>
-$relatedlistxaml$
+$relatedlist$
         </a:Tabs>
     </a:Main>
 </a:Win>
