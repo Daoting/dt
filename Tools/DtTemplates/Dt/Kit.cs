@@ -179,6 +179,35 @@ namespace Dt
             return txt;
         }
 
+        public static string GetClsName(string p_tblName)
+        {
+            string clsName;
+            string[] arr = p_tblName.Split('_');
+            if (arr.Length > 1)
+            {
+                clsName = SetFirstToUpper(arr[1]);
+                if (arr.Length > 2)
+                {
+                    for (int i = 2; i < arr.Length; i++)
+                    {
+                        clsName += SetFirstToUpper(arr[i]);
+                    }
+                }
+            }
+            else
+            {
+                clsName = SetFirstToUpper(p_tblName);
+            }
+            return clsName;
+        }
+
+        static string SetFirstToUpper(string p_str)
+        {
+            char[] a = p_str.ToCharArray();
+            a[0] = char.ToUpper(a[0]);
+            return new string(a);
+        }
+
         #region Tooltip
         public static void ShowDataProviderTip(this LinkLabel p_label)
         {

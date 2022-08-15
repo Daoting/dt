@@ -68,7 +68,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl && _cbSql.Checked)
             {
-                string msg = await AtSvc.CreateTblSql(_cbTbls.SelectedItem.ToString(), _params.Title, _cbSearch.SelectedIndex == 0);
+                string msg = await AtSvc.GetSingleTblSql(_cbTbls.SelectedItem.ToString(), _params.Title, _cbSearch.SelectedIndex == 0);
                 sb.AppendLine(msg);
             }
             else
@@ -84,7 +84,7 @@ namespace Dt.SingleTbl
         {
             if (_isSelectTbl)
             {
-                var entity = await AtSvc.CreateAgent(_cbTbls.SelectedItem.ToString(), _params.Entity + "Obj");
+                var entity = await AtSvc.GetEntityClass(_cbTbls.SelectedItem.ToString(), _params.Entity + "Obj");
                 if (string.IsNullOrEmpty(entity))
                 {
                     _isSelectTbl = false;
@@ -110,7 +110,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetFvContent(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetFvCells(_cbTbls.SelectedItem.ToString());
                 // 可能包含命名空间
                 dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
             }
@@ -148,7 +148,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetLvItemTemplates(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetLvItemTemplate(_cbTbls.SelectedItem.ToString());
                 dt["$lvbody$"] = body;
             }
             else
@@ -182,7 +182,7 @@ namespace Dt.SingleTbl
             string listSearchCs = _cbSearch.SelectedIndex == 0 ? "EntityDefSearch" : "EntityCusSearch";
             using (var sr = new StreamReader(Assembly.GetAssembly(typeof(Kit)).GetManifestResourceStream($"Dt.SingleTbl.Res.{listSearchCs}.cs")))
             {
-                var txt = sr.ReadToEnd();
+                var txt = await sr.ReadToEndAsync();
                 dt["$listsearchcs$"] = txt
                     .Replace("$entitytitle$", _params.Title)
                     .Replace("$entityname$", _params.Entity)
@@ -193,7 +193,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetLvItemTemplates(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetLvItemTemplate(_cbTbls.SelectedItem.ToString());
                 dt["$lvbody$"] = body;
             }
             else
@@ -216,7 +216,7 @@ namespace Dt.SingleTbl
             _isSelectTbl = !string.IsNullOrEmpty(tbl);
             if (_isSelectTbl)
             {
-                _entityName.Text = GetClsName(tbl);
+                _entityName.Text = Kit.GetClsName(tbl);
             }
         }
 
@@ -245,35 +245,6 @@ namespace Dt.SingleTbl
             var url = _svcUrl.Text.Trim();
             if (url != AtSvc.SvcUrl)
                 AtSvc.SvcUrl = url;
-        }
-
-        static string GetClsName(string p_tblName)
-        {
-            string clsName;
-            string[] arr = p_tblName.Split('_');
-            if (arr.Length > 1)
-            {
-                clsName = SetFirstToUpper(arr[1]);
-                if (arr.Length > 2)
-                {
-                    for (int i = 2; i < arr.Length; i++)
-                    {
-                        clsName += SetFirstToUpper(arr[i]);
-                    }
-                }
-            }
-            else
-            {
-                clsName = SetFirstToUpper(p_tblName);
-            }
-            return clsName;
-        }
-
-        static string SetFirstToUpper(string p_str)
-        {
-            char[] a = p_str.ToCharArray();
-            a[0] = char.ToUpper(a[0]);
-            return new string(a);
         }
 
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

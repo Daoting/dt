@@ -31,7 +31,7 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string 生成实体类(string p_tblName, string p_clsName = null)
+        public string GetEntityClass(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -185,12 +185,12 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 生成实体类框架
+        /// 生成实体类的扩展部分，如 OnSaving OnDeleting
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string 实体类框架(string p_tblName, string p_clsName = null)
+        public string GetEntityClassEx(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -256,7 +256,11 @@ namespace Dt.Core
             return sb.ToString();
         }
 
-        public string 更新表结构缓存()
+        /// <summary>
+        /// 更新表结构缓存
+        /// </summary>
+        /// <returns></returns>
+        public string UpdateDbSchema()
         {
             return DbSchema.LoadSchema();
         }
@@ -264,27 +268,44 @@ namespace Dt.Core
         /// <summary>
         /// 重新加载Cache.db中的sql语句
         /// </summary>
-        public void 刷新sql缓存()
+        public void UpdateSqlCache()
         {
             Silo.LoadCacheSql();
         }
 
-        public List<string> 所有微服务()
+        /// <summary>
+        /// 获取所有微服务
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSvcs()
         {
             return Kit.GetAllSvcs(false);
         }
 
-        public List<string> 所有微服务副本()
+        /// <summary>
+        /// 获取所有微服务副本
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSvcInsts()
         {
             return Kit.GetAllSvcs(true);
         }
 
-        public List<string> 所有表名()
+        /// <summary>
+        /// 获取所有表名
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllTables()
         {
             return DbSchema.Schema.Keys.ToList();
         }
 
-        public string 生成Fv格内容(string p_tblName)
+        /// <summary>
+        /// 生成Fv格内容
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public string GetFvCells(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -303,7 +324,7 @@ namespace Dt.Core
                 string title = "";
                 if (!string.IsNullOrEmpty(col.Comments) && !isEnum)
                 {
-                    title = " Title=\"{col.Comments}\"";
+                    title = $" Title=\"{col.Comments}\"";
                 }
 
                 if (isEnum)
@@ -337,7 +358,12 @@ namespace Dt.Core
             return sb.ToString();
         }
 
-        public string 生成Lv项模板(string p_tblName)
+        /// <summary>
+        /// 生成Lv项模板
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public string GetLvItemTemplate(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -359,7 +385,12 @@ namespace Dt.Core
             return sb.ToString();
         }
 
-        public string 生成Lv表格列(string p_tblName)
+        /// <summary>
+        /// 生成Lv表格列
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public string GetLvTableCols(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -381,11 +412,81 @@ namespace Dt.Core
             return sb.ToString();
         }
 
-        public async Task<string> 生成表的框架sql(string p_tblName, string p_title, bool p_blurQuery)
+        /// <summary>
+        /// 生成单表框架用到的sql
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <param name="p_title"></param>
+        /// <param name="p_blurQuery"></param>
+        /// <returns></returns>
+        public async Task<string> GetSingleTblSql(string p_tblName, string p_title, bool p_blurQuery)
         {
             if (!DbSchema.Schema.ContainsKey("lob_sql"))
                 return "lob_sql表不存在，无法生成框架sql";
 
+            if (string.IsNullOrEmpty(p_tblName) || string.IsNullOrEmpty(p_title))
+                return "表名和标题不可为空！";
+
+            return await CreateTblSql(p_tblName, p_title, p_blurQuery);
+        }
+
+        /// <summary>
+        /// 生成一对多框架用到的sql
+        /// </summary>
+        /// <param name="p_parentTbl"></param>
+        /// <param name="p_parentTitle"></param>
+        /// <param name="p_childTbls"></param>
+        /// <param name="p_childTitles"></param>
+        /// <param name="p_blurQuery"></param>
+        /// <returns></returns>
+        public async Task<string> GetOneToManySql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
+        {
+            if (!DbSchema.Schema.ContainsKey("lob_sql"))
+                return "lob_sql表不存在，无法生成框架sql";
+
+            if (string.IsNullOrEmpty(p_parentTbl) || string.IsNullOrEmpty(p_parentTitle))
+                return "父表表名和标题不可为空，未生成sql！";
+
+            string msg = await CreateTblSql(p_parentTbl, p_parentTitle, p_blurQuery);
+            
+            if (p_childTbls != null
+                && p_childTitles != null
+                && p_childTbls.Count == p_childTitles.Count)
+            {
+                for (int i = 0; i < p_childTbls.Count; i++)
+                {
+                    msg += await CreateSql($"{p_parentTitle}-关联{p_childTitles[i]}", $"select * from {p_childTbls[i]} where ParentID=@ParentID");
+                    msg += await CreateSql(p_childTitles[i] + "-编辑", $"select * from {p_childTbls[i]} where id=@id");
+                }
+            }
+            else
+            {
+                msg += "未生成子表sql\r\n";
+            }
+            return msg;
+        }
+
+        /// <summary>
+        /// 表是否包含ParentID字段
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public bool ExistParentID(string p_tblName)
+        {
+            var schema = DbSchema.GetTableSchema(p_tblName);
+            foreach (var col in schema.Columns)
+            {
+                if (col.Name == "ParentID")
+                    return true;
+            }
+            return false;
+        }
+
+        const string _sqlInsert = "insert into lob_sql (id, `sql`) values (@id, @sql)";
+        const string _sqlSelect = "select count(*) from lob_sql where id=@id";
+
+        async Task<string> CreateTblSql(string p_tblName, string p_title, bool p_blurQuery)
+        {
             string msg = await CreateSql(p_title + "-全部", $"select * from {p_tblName}");
             msg += await CreateSql(p_title + "-编辑", $"select * from {p_tblName} where id=@id");
 
@@ -409,38 +510,6 @@ namespace Dt.Core
 
             return msg;
         }
-
-        public async Task<string> 生成一对多sql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
-        {
-            if (!DbSchema.Schema.ContainsKey("lob_sql"))
-                return "lob_sql表不存在，无法生成框架sql";
-
-            string msg;
-            if (!string.IsNullOrEmpty(p_parentTbl) && !string.IsNullOrEmpty(p_parentTitle))
-                msg = await 生成表的框架sql(p_parentTbl, p_parentTitle, p_blurQuery);
-            else
-                msg = "未生成父表sql\r\n";
-
-            if (!string.IsNullOrEmpty(p_parentTitle)
-                && p_childTbls != null
-                && p_childTitles != null
-                && p_childTbls.Count == p_childTitles.Count)
-            {
-                for (int i = 0; i < p_childTbls.Count; i++)
-                {
-                    msg += await CreateSql($"{p_parentTitle}-关联{p_childTitles[i]}", $"select * from {p_childTbls[i]} where ParentID=@ParentID");
-                    msg += await CreateSql(p_childTitles[i] + "-编辑", $"select * from {p_childTbls[i]} where id=@id");
-                }
-            }
-            else
-            {
-                msg += "未生成子表sql\r\n";
-            }
-            return msg;
-        }
-
-        const string _sqlInsert = "insert into lob_sql (id, `sql`) values (@id, @sql)";
-        const string _sqlSelect = "select count(*) from lob_sql where id=@id";
 
         async Task<string> CreateSql(string p_key, string p_sql)
         {

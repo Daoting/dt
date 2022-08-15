@@ -1,4 +1,5 @@
 ﻿using Dt.Core;
+using Dt.Editor;
 using Microsoft.VisualStudio.RpcContracts.Commands;
 using System;
 using System.Collections.Generic;
@@ -108,9 +109,9 @@ namespace Dt.OnToMany
                 {"$username$", _params.UserName },
             };
 
-            if (string.IsNullOrEmpty(p_tbl))
+            if (!string.IsNullOrEmpty(p_tbl))
             {
-                var entity = await AtSvc.CreateAgent(p_tbl, p_entity + "Obj");
+                var entity = await AtSvc.GetEntityClass(p_tbl, p_entity + "Obj");
                 dt["$entitybody$"] = entity;
                 Kit.WritePrjFile(Path.Combine(_path, $"{p_entity}Obj.cs"), "Dt.SingleTbl.Res.EntityObj-tbl.cs", dt);
             }
@@ -145,7 +146,7 @@ namespace Dt.OnToMany
 
                 if (_params.IsSelectedChildTbls)
                 {
-                    var body = await AtSvc.GetFvContent(_params.ChildTbls[i]);
+                    var body = await AtSvc.GetFvCells(_params.ChildTbls[i]);
                     // 可能包含命名空间
                     dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
                 }
@@ -158,7 +159,7 @@ namespace Dt.OnToMany
 
                 if (_params.IsSelectedChildTbls)
                 {
-                    var body = await AtSvc.GetLvItemTemplates(_params.ChildTbls[i]);
+                    var body = await AtSvc.GetLvItemTemplate(_params.ChildTbls[i]);
                     dt["$lvbody$"] = body;
                 }
                 else
@@ -214,7 +215,7 @@ namespace Dt.OnToMany
 
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetFvContent(_params.MainTbl);
+                var body = await AtSvc.GetFvCells(_params.MainTbl);
                 // 可能包含命名空间
                 dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
             }
@@ -225,6 +226,7 @@ namespace Dt.OnToMany
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.MainEntity}Form.xaml"), "Dt.OnToMany.Res.ParentForm.xaml", dt);
             dt.Remove("$fvbody$");
 
+            dt["$agent$"] = _params.Agent;
             dt["$time$"] = _params.Time;
             dt["$username$"] = _params.UserName;
             dt["$relatedupdate$"] = p_code.Update;
@@ -263,7 +265,7 @@ namespace Dt.OnToMany
             var resName = _cbWin.SelectedIndex == 0 ? "ThreeList" : "TwoList";
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetLvItemTemplates(_params.MainTbl);
+                var body = await AtSvc.GetLvItemTemplate(_params.MainTbl);
                 dt["$lvbody$"] = body;
             }
             else
@@ -295,10 +297,9 @@ namespace Dt.OnToMany
 
         async Task CreateSql(StringBuilder p_sb)
         {
-            if (_cbSql.Checked
-                && (_params.IsSelectedMainTbl || _params.IsSelectedChildTbls))
+            if (_cbSql.Checked && _params.IsSelectedMainTbl)
             {
-                string msg = await AtSvc.CreateOnToManySql(
+                string msg = await AtSvc.GetOneToManySql(
                         _params.MainTbl,
                         _params.MainTitle,
                         _params.ChildTbls?.ToList(),
@@ -309,6 +310,21 @@ namespace Dt.OnToMany
             else
             {
                 p_sb.AppendLine("不生成sql");
+            }
+        }
+        async void _cbTbls_DropDown(object sender, EventArgs e)
+        {
+            var ls = await AtSvc.GetAllTables();
+            if (_cbTbls.DataSource != ls)
+                _cbTbls.DataSource = ls;
+        }
+
+        private void _cbTbls_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            var tbl = _cbTbls.SelectedItem.ToString();
+            if (!string.IsNullOrEmpty(tbl))
+            {
+                _clsa.Text = Kit.GetClsName(tbl);
             }
         }
 
@@ -334,7 +350,7 @@ namespace Dt.OnToMany
 
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ((LinkLabel)sender).ShowTooltip("服务运行时可选择多个子表");
+            ((LinkLabel)sender).ShowTooltip("服务运行时可选择多个子表\r\n子表需包含 [ParentID] 字段");
         }
 
         private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -351,6 +367,29 @@ namespace Dt.OnToMany
         private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ((LinkLabel)sender).ShowAutoSqlTip();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var dlg = new SelectChildTbls(_childTbls.Text);
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                string tbls = "";
+                string titles = "";
+                foreach (var item in dlg.GetSelection())
+                {
+                    if (tbls.Length > 0)
+                        tbls += ",";
+                    tbls += item;
+
+                    if (titles.Length > 0)
+                        titles += ",";
+                    titles += Kit.GetClsName(item);
+                }
+                _childTbls.Text = tbls;
+                if (!string.IsNullOrEmpty(titles))
+                    _clsb.Text = titles;
+            }
         }
     }
 }

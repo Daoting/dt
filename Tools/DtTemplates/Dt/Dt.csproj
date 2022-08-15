@@ -247,6 +247,9 @@
     <Compile Include="Mv\InsertMvForm.Designer.cs">
       <DependentUpon>InsertMvForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="OnToMany\SelectChildTbls.resx">
+      <DependentUpon>SelectChildTbls.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OnToMany\Res\ThreeWin.xaml.cs">
       <DependentUpon>ThreeWin.xaml</DependentUpon>
     </EmbeddedResource>
@@ -268,6 +271,12 @@
     <EmbeddedResource Include="OnToMany\Res\ChildForm.xaml.cs">
       <DependentUpon>ChildForm.xaml</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="OnToMany\SelectChildTbls.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OnToMany\SelectChildTbls.Designer.cs">
+      <DependentUpon>SelectChildTbls.cs</DependentUpon>
+    </Compile>
     <Compile Include="OnToMany\GenaralCode.cs" />
     <Compile Include="OnToMany\FileParams.cs" />
     <Compile Include="OnToMany\OnToManyForm.cs">

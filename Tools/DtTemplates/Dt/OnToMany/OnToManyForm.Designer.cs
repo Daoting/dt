@@ -273,6 +273,8 @@ namespace Dt.OnToMany
             this._cbTbls.Name = "_cbTbls";
             this._cbTbls.Size = new System.Drawing.Size(269, 20);
             this._cbTbls.TabIndex = 115;
+            this._cbTbls.DropDown += new System.EventHandler(this._cbTbls_DropDown);
+            this._cbTbls.SelectionChangeCommitted += new System.EventHandler(this._cbTbls_SelectionChangeCommitted);
             // 
             // label9
             // 
@@ -407,6 +409,7 @@ namespace Dt.OnToMany
             this.button1.TabIndex = 128;
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // OnToManyForm
             // 
