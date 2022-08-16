@@ -41,9 +41,9 @@ namespace $rootnamespace$
             _lv.Data = null;
         }
 
-        async void Query()
+        void Query()
         {
-            _lv.Data = await $agent$.Query<$relatedcls$Obj>("$maintitle$-关联$relatedtitle$", new { $maincls$id = _id });
+            //_lv.Data = await $agent$.Query<$relatedcls$Obj>("$maintitle$-关联$relatedtitle$", new { $maincls$id = _id });
         }
 
         void OnAdd(object sender, Mi e)
@@ -58,7 +58,7 @@ namespace $rootnamespace$
 
         void OnRemove2(object sender, Mi e)
         {
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode == Dt.Base.SelectionMode.Multiple)
                 DoRemove(_lv.SelectedRows);
             else
                 DoRemove(new List<Row> { e.Row });
@@ -76,14 +76,14 @@ namespace $rootnamespace$
 
         void OnMultiMode(object sender, Mi e)
         {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
+            _lv.SelectionMode = Dt.Base.SelectionMode.Multiple;
             Menu.Hide("添加", "选择");
             Menu.Show("移除", "全选", "取消");
         }
 
         void OnCancelMulti(object sender, Mi e)
         {
-            _lv.SelectionMode = Base.SelectionMode.Single;
+            _lv.SelectionMode = Dt.Base.SelectionMode.Single;
             Menu.Show("添加", "选择");
             Menu.Hide("移除", "全选", "取消");
         }

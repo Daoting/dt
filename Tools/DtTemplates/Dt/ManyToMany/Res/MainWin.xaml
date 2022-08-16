@@ -21,7 +21,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-$relatedlistxaml$
+$relatedlist$
         </a:Tabs>
     </a:Pane>
 </a:Win>

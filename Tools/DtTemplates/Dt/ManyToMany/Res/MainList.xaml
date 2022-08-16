@@ -14,10 +14,7 @@
 
     <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <DataTemplate>
-            <StackPanel Padding="10">
-                <a:Dot ID="name" />
-                <a:Dot ID="note" Font="小灰" />
-            </StackPanel>
+$lvbody$
         </DataTemplate>
     </a:Lv>
 </a:Mv>

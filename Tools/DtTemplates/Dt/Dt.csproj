@@ -223,7 +223,8 @@
     <EmbeddedResource Include="ManyToMany\Res\MainWin.xaml.cs">
       <DependentUpon>MainWin.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ManyToMany\Res\MainObj.cs" />
+    <Compile Include="ManyToMany\FileParams.cs" />
+    <Compile Include="ManyToMany\GenaralCode.cs" />
     <Compile Include="ManyToMany\ManyToManyForm.cs">
       <SubType>Form</SubType>
     </Compile>

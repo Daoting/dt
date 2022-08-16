@@ -467,6 +467,25 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 生成多对多框架用到的sql
+        /// </summary>
+        /// <param name="p_mainTbl"></param>
+        /// <param name="p_mainTitle"></param>
+        /// <param name="p_blurQuery"></param>
+        /// <returns></returns>
+        public async Task<string> GetManyToManySql(string p_mainTbl, string p_mainTitle, bool p_blurQuery)
+        {
+            if (!DbSchema.Schema.ContainsKey("lob_sql"))
+                return "lob_sql表不存在，无法生成框架sql";
+
+            if (string.IsNullOrEmpty(p_mainTbl) || string.IsNullOrEmpty(p_mainTitle))
+                return "主表表名和标题不可为空，未生成sql！";
+
+            string msg = await CreateTblSql(p_mainTbl, p_mainTitle, p_blurQuery);
+            return msg;
+        }
+
+        /// <summary>
         /// 表是否包含ParentID字段
         /// </summary>
         /// <param name="p_tblName"></param>

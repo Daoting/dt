@@ -117,5 +117,16 @@ namespace Dt
                 p_tblName
             );
         }
+
+        public static Task<string> GetManyToManySql(string p_mainTbl, string p_mainTitle, bool p_blurQuery)
+        {
+            return new Rpc().Call<string>(
+                SvcUrl,
+                "SysTools.GetManyToManySql",
+                p_mainTbl,
+                p_mainTitle,
+                p_blurQuery
+            );
+        }
     }
 }

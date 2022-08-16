@@ -29,6 +29,6 @@ namespace $rootnamespace$
 
         public $maincls$Form Form => _form;
 
-$relatedlistcs$
+$relatedlist$
     }
 }

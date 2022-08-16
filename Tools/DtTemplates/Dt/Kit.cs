@@ -251,7 +251,7 @@ namespace Dt
 2. XXX-模糊查询，通用搜索面板时生成
 3. XXX-编辑
 XXX为实体中文标题
-当lob_sql中存在时，不覆盖");
+当lob_sql中存在某键名时，不覆盖");
         }
 
         public static void ShowTooltip(this LinkLabel p_label, string p_msg)
