@@ -129,7 +129,7 @@ namespace Dt.ManyToMany
             this._info.Name = "_info";
             this._info.Size = new System.Drawing.Size(444, 35);
             this._info.TabIndex = 23;
-            this._info.Text = " 只生成主实体类，关联的实体类在它作为主实体时生成";
+            this._info.Text = " 本框架只生成主实体类，不生成关联的实体类，关联实体类在生成代码中已注释掉";
             // 
             // _clsb
             // 

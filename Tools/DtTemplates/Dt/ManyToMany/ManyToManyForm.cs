@@ -305,7 +305,12 @@ namespace Dt.ManyToMany
 
         private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ((LinkLabel)sender).ShowAutoSqlTip();
+            ((LinkLabel)sender).ShowTooltip(
+@"当选择的表名有效时，可生成以下键名的sql：
+1. 主实体标题-全部
+2. 主实体标题-模糊查询，通用搜索面板时生成
+3. 主实体标题-编辑
+当lob_sql中存在某键名时，不覆盖");
         }
 
         private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
