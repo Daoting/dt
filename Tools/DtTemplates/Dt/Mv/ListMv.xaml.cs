@@ -30,11 +30,11 @@ namespace $rootnamespace$
         {
             //if (string.IsNullOrEmpty(_query) || _query == "#全部")
             //{
-            //    _lv.Data = await AtCm.Query<>("xx-所有");
+            //    _lv.Data = await AtSvc.Query<>("$title$-所有");
             //}
             //else
             //{
-            //    _lv.Data = await AtCm.Query<>("xx-模糊查询", new { name = $"%{_query}%" });
+            //    _lv.Data = await AtSvc.Query<>("$title$-模糊查询", new { name = $"%{_query}%" });
             //}
         }
 
@@ -73,6 +73,6 @@ namespace $rootnamespace$
             //NaviTo(_win.Form);
         }
 
-        //RoleWin _win => (RoleWin)_tab.OwnWin;
+        //$safeitemname$Win _win => ($safeitemname$Win)_tab.OwnWin;
     }
 }

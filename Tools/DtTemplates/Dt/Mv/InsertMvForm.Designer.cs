@@ -66,7 +66,7 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "类名";
+            this.label1.Text = "类名(建议后缀 Mv)";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _cls
@@ -93,7 +93,7 @@ namespace Dt
             this._lbl.Name = "_lbl";
             this._lbl.Size = new System.Drawing.Size(444, 38);
             this._lbl.TabIndex = 26;
-            this._lbl.Text = "Mv是最常用的业务模块视图，放在Tab中，支持内部导航输入输出参数、带遮罩的模式视图等";
+            this._lbl.Text = "Mv是最常用的业务模块视图，放在Tab中，支持内部导航时输入输出参数、带遮罩的模式视图等";
             // 
             // _cb
             // 
@@ -101,8 +101,8 @@ namespace Dt
             this._cb.FormattingEnabled = true;
             this._cb.Items.AddRange(new object[] {
             "空白",
-            "编辑表单",
-            "数据列表"});
+            "表单Fv",
+            "列表Lv"});
             this._cb.Location = new System.Drawing.Point(187, 67);
             this._cb.Name = "_cb";
             this._cb.Size = new System.Drawing.Size(269, 20);

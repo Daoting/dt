@@ -62,7 +62,7 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "类名";
+            this.label1.Text = "类名(加后缀Obj)";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _cls
@@ -71,7 +71,6 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "XxxObj";
             // 
             // _btnOK
             // 
@@ -90,7 +89,7 @@ namespace Dt
             this._lbl.Name = "_lbl";
             this._lbl.Size = new System.Drawing.Size(444, 38);
             this._lbl.TabIndex = 26;
-            this._lbl.Text = "Entity子类模板，包含OnSaving OnDeleting";
+            this._lbl.Text = "Entity子类模板，只包含OnSaving OnDeleting，其他实体类属性由服务根据表名自动生成";
             // 
             // InsertEntityForm
             // 

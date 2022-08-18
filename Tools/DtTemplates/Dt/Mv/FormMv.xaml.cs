@@ -32,7 +32,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                //_fv.Data = await AtCm.First<>("xxx", new { id = p_id });
+                //_fv.Data = await AtSvc.First<>("$title$-编辑", new { id = p_id });
             }
             else
             {
@@ -48,7 +48,7 @@ namespace $rootnamespace$
         void Create()
         {
             //_fv.Data = new xxx(
-            //    ID: await AtCm.NewID());
+            //    ID: await AtSvc.NewID());
         }
 
         void OnSave(object sender, Mi e)
@@ -69,7 +69,7 @@ namespace $rootnamespace$
         void Save()
         {
             //var d = _fv.Data.To<>();
-            //if (await AtCm.Save(d))
+            //if (await AtSvc.Save(d))
             //{
             //    _win.List.Update();
             //}

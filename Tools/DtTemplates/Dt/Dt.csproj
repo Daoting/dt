@@ -62,7 +62,7 @@
     <Compile Include="Agent\InsertAgentForm.Designer.cs">
       <DependentUpon>InsertAgentForm.cs</DependentUpon>
     </Compile>
-    <None Include="Api\Class.cs" />
+    <EmbeddedResource Include="Api\Class.cs" />
     <Compile Include="Api\InsertApiForm.cs">
       <SubType>Form</SubType>
     </Compile>
