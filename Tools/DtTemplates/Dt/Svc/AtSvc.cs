@@ -9,7 +9,7 @@ namespace Dt
     /// </summary>
     public class AtSvc
     {
-        static string _svcUrl = "http://localhost/dt-cm";
+        static string _svcUrl = "https://localhost:1234";
         static List<string> _allTables;
 
         public static string SvcUrl
@@ -27,17 +27,18 @@ namespace Dt
 
         public static async Task<List<string>> GetAllTables()
         {
-            if (_allTables == null)
+            if (_allTables == null || _allTables.Count == 0)
             {
                 _allTables = await new Rpc().Call<List<string>>(
                     SvcUrl,
                     "SysTools.GetAllTables"
                 );
 
-                if (_allTables == null)
-                    _allTables = new List<string>();
-                // 空
-                _allTables.Insert(0, "");
+                if (_allTables != null)
+                {
+                    // 空
+                    _allTables.Insert(0, "");
+                }
             }
             return _allTables;
         }
