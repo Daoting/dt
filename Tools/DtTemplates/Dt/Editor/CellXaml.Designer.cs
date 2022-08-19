@@ -61,7 +61,8 @@ namespace Dt.Editor
             "CMask",
             "CHtml",
             "CLink",
-            "CPassword"});
+            "CPassword",
+            "批量生成格"});
             this._lb.Location = new System.Drawing.Point(0, 0);
             this._lb.Name = "_lb";
             this._lb.Size = new System.Drawing.Size(123, 490);

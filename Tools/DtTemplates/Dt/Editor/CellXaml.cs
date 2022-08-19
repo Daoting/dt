@@ -31,6 +31,10 @@ namespace Dt.Editor
             }
             else
             {
+                // 特殊
+                if (name == "批量生成格")
+                    name = "BatchCells";
+
                 var tp = Type.GetType($"Dt.Editor.{name}");
                 if (tp != null)
                 {

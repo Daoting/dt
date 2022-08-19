@@ -20,6 +20,7 @@ namespace Dt.ManyToMany
             _ns.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _svcUrl.Text = AtSvc.SvcUrl;
+            AddTooltip();
         }
 
         async void _btnOK_Click(object sender, EventArgs e)
@@ -275,47 +276,25 @@ namespace Dt.ManyToMany
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void AddTooltip()
         {
-            ((LinkLabel)sender).ShowDataProviderTip();
-        }
+            var tip = new ToolTip();
+            tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
+            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
+            tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowSvcUrlTip();
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowAllTblsTip();
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowEntityTip();
-        }
-
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip(
+            tip.SetToolTip(linkLabel5,
 @"和主实体相同，一般为不包含前后缀的表名
 请确保所有关联实体类在其他位置已生成
 本次不生成任何关联实体类");
-        }
 
-        private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip(
+            tip.SetToolTip(linkLabel7,
 @"当选择的表名有效时，可生成以下键名的sql：
 1. 主实体标题-全部
 2. 主实体标题-模糊查询，通用搜索面板时生成
 3. 主实体标题-编辑
 当lob_sql中存在某键名时，不覆盖");
-        }
-
-        private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip("服务运行时可选择多个关联表\r\n子表需包含 [ParentID] 字段");
         }
     }
 }

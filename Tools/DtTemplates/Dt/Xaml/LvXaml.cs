@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Dt.Editor
@@ -15,14 +17,11 @@ namespace Dt.Editor
             _selectionMode.SelectedIndex = 1;
             _enteredBrush.SelectedIndex = 0;
             _pressedBrush.SelectedIndex = 0;
-
-            ToolTip tip = new ToolTip();
-            tip.SetToolTip(_itemHeight, _tipItemHeight);
-            tip.SetToolTip(label4, _tipItemHeight);
-            tip.SetToolTip(_minItemWidth, "只磁贴视图有效！");
+            _svcUrl.Text = AtSvc.SvcUrl;
+            AddTooltip();
         }
 
-        string ICmdForm.GetText()
+        async Task<string> ICmdForm.GetText()
         {
             StringBuilder sb = new StringBuilder();
             var txt = _name.Text.Trim() == "" ? "_lv" : _name.Text.Trim();
@@ -30,7 +29,7 @@ namespace Dt.Editor
 
             if (_viewMode.SelectedIndex > 0)
                 sb.Append($" ViewMode=\"{_viewMode.SelectedItem}\"");
-            
+
             if (_selectionMode.SelectedIndex != 1)
                 sb.Append($" SelectionMode=\"{_selectionMode.SelectedItem}\"");
 
@@ -78,18 +77,57 @@ namespace Dt.Editor
                 sb.Append(" AutoScrollBottom=\"True\"");
 
             sb.AppendLine(">");
+
+            string tbl = null;
+            if (_cbTbls.SelectedItem != null)
+                tbl = _cbTbls.SelectedItem.ToString();
             switch (_viewMode.SelectedIndex)
             {
                 case 0:
                 case 2:
-                    sb.AppendLine("<DataTemplate>\r\n<StackPanel Padding=\"10\">\r\n<a:Dot ID=\"x1\" />\r\n<a:Dot ID=\"x2\" Foreground=\"{StaticResource 深灰边框}\" />\r\n</StackPanel>\r\n</DataTemplate>");
+                    if (string.IsNullOrEmpty(tbl))
+                    {
+                        sb.AppendLine("<DataTemplate>\r\n<StackPanel Padding=\"10\">\r\n<a:Dot ID=\"x1\" />\r\n<a:Dot ID=\"x2\" Foreground=\"{StaticResource 深灰边框}\" />\r\n</StackPanel>\r\n</DataTemplate>");
+                    }
+                    else
+                    {
+                        var xaml = await AtSvc.GetLvItemTemplate(tbl);
+                        sb.AppendLine("<DataTemplate>");
+                        sb.AppendLine(xaml);
+                        sb.AppendLine("</DataTemplate>");
+                    }
                     break;
                 case 1:
-                    sb.AppendLine("<a:Cols>\r\n<a:Col ID=\"xm\" Title=\"名称\" Width=\"120\" />\r\n</a:Cols>");
+                    if (string.IsNullOrEmpty(tbl))
+                    {
+                        sb.AppendLine("<a:Cols>\r\n<a:Col ID=\"xm\" Title=\"名称\" Width=\"120\" />\r\n</a:Cols>");
+                    }
+                    else
+                    {
+                        var xaml = await AtSvc.GetLvTableCols(tbl);
+                        sb.AppendLine(xaml);
+                    }
                     break;
             }
             sb.Append("</a:Lv>");
             return sb.ToString();
+        }
+
+        async void _cbTbls_DropDown(object sender, EventArgs e)
+        {
+            var ls = await AtSvc.GetAllTables();
+            if (_cbTbls.DataSource != ls)
+                _cbTbls.DataSource = ls;
+        }
+
+        void AddTooltip()
+        {
+            ToolTip tip = new ToolTip();
+            tip.SetToolTip(_itemHeight, _tipItemHeight);
+            tip.SetToolTip(linkLabel1, _tipItemHeight);
+            tip.SetToolTip(_minItemWidth, "只磁贴视图有效！");
+            tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
+            tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
         }
 
         // 编辑器中的光标位置

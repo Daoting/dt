@@ -24,22 +24,16 @@ namespace Dt
     /// </summary>
     internal sealed class DtCmds
     {
-        const string _fvXaml = "<a:Fv x:Name=\"_fv\">\r\n\r\n</a:Fv>";
         const string _cellExCls = "\r\n#region ViewEx\r\nclass ViewEx1\r\n{\r\npublic static void SetStyle(ViewItem p_item)\r\n{}\r\n\r\npublic static TextBlock xb(ViewItem p_item)\r\n{}\r\n}\r\n#endregion\r\n";
-        const string _tabMenu = "<a:Tab.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Tab.Menu>";
-        const string _contextMenu = "<a:Ex.Menu>\r\n<a:Menu>\r\n<a:Mi ID=\"保存\" Icon=\"保存\" />\r\n</a:Menu>\r\n</a:Ex.Menu>";
-        const string _dot = "<a:Dot ID=\"xx\" />";
-        const string _dotSmall = "<a:Dot ID=\"xx\" Font=\"小灰\" />";
-
+        
         const int LvCommandId = 0x0100;
-        const int FvCommandId = 0x0101;
-        const int LvCellExClsCmdId = 0x2000;
-        const int CellCmdId = 0x0102;
-        const int TabMenuCmdId = 0x0103;
-        const int ContextMenuCmdId = 0x0104;
-        const int DotCmdId = 0x0105;
-        const int DotSmallCmdId = 0x0106;
+        const int DotCmdId = 0x0101;
+        const int FvCommandId = 0x0102;
+        const int CellCmdId = 0x0103;
+        const int MenuCmdId = 0x0104;
 
+        const int LvCellExClsCmdId = 0x2000;
+        
         const int SingleTblCmdId = 0x3000;
         const int OnToManyCmdId = 0x3001;
         const int ManyToManyCmdId = 0x3002;
@@ -71,13 +65,12 @@ namespace Dt
 
             ThreadHelper.ThrowIfNotOnUIThread();
             cs.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
-            cs.AddCommand(CmdPaste(FvCommandId, _fvXaml));
-            cs.AddCommand(CmdClient(CellCmdId, typeof(CellXaml)));
+            cs.AddCommand(CmdXamlForm(DotCmdId, typeof(DotXaml)));
+            cs.AddCommand(CmdForm(FvCommandId, typeof(FvXaml)));
+            cs.AddCommand(CmdXamlForm(CellCmdId, typeof(CellXaml)));
+            cs.AddCommand(CmdXamlForm(MenuCmdId, typeof(MenuXaml)));
+
             cs.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
-            cs.AddCommand(CmdPaste(TabMenuCmdId, _tabMenu));
-            cs.AddCommand(CmdPaste(ContextMenuCmdId, _contextMenu));
-            cs.AddCommand(CmdPaste(DotCmdId, _dot));
-            cs.AddCommand(CmdPaste(DotSmallCmdId, _dotSmall));
 
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
@@ -108,6 +101,24 @@ namespace Dt
                     ThreadHelper.ThrowIfNotOnUIThread();
                     // 显示编辑窗口
                     new CmdForm(p_type).ShowDialog();
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        /// <summary>
+        /// 显示客户端xaml自定义编辑窗口
+        /// </summary>
+        /// <param name="p_cmdID"></param>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        MenuCommand CmdXamlForm(int p_cmdID, Type p_type)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    var dlg = Activator.CreateInstance(p_type) as Form;
+                    dlg.ShowDialog();
                 },
                 new CommandID(CommandSet, p_cmdID));
         }

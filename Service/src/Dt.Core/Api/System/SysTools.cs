@@ -331,7 +331,7 @@ namespace Dt.Core
                 {
                     string tpName = GetEnumName(col);
                     title = col.Comments.Substring(tpName.Length + 2);
-                    title = string.IsNullOrEmpty(title) ? "" : " Title=\"{title}\"";
+                    title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
                     sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
                 }
                 else if (col.Type == typeof(bool))

@@ -190,7 +190,6 @@ namespace Dt.SingleTbl
             this.linkLabel1.TabIndex = 102;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "服务代理类";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // label6
             // 
@@ -210,7 +209,6 @@ namespace Dt.SingleTbl
             this.linkLabel2.TabIndex = 103;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "实体名称";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // _svcUrl
             // 
@@ -268,7 +266,6 @@ namespace Dt.SingleTbl
             this.linkLabel3.TabIndex = 110;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "服务地址";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // linkLabel4
             // 
@@ -279,7 +276,6 @@ namespace Dt.SingleTbl
             this.linkLabel4.TabIndex = 111;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "选择表";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // _cbSql
             // 
@@ -319,7 +315,6 @@ namespace Dt.SingleTbl
             this.linkLabel5.TabIndex = 115;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "自动生成sql";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
             // 
             // SingleTblForm
             // 

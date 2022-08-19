@@ -24,6 +24,7 @@ namespace Dt.OnToMany
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
             _svcUrl.Text = AtSvc.SvcUrl;
+            AddTooltip();
         }
 
         async void _btnOK_Click(object sender, EventArgs e)
@@ -329,54 +330,6 @@ namespace Dt.OnToMany
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowDataProviderTip();
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowSvcUrlTip();
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowAllTblsTip();
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowEntityTip();
-        }
-
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip("服务运行时可选择多个子表\r\n子表需包含 [ParentID] 字段");
-        }
-
-        private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip(
-@"和父实体相同，一般为不包含前后缀的表名，是所有生成类的根命名
-生成的实体类、窗口、列表、表单等的命名规范：
-实体类：实体 + Obj
-窗口：实体 + Win
-列表：实体 + List
-表单：实体 + Form");
-        }
-
-        private void linkLabel7_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip(
-@"当选择的表名有效时，可生成以下键名的sql：
-1. 父标题-全部
-2. 父标题-模糊查询，通用搜索面板时生成
-3. 父标题-编辑
-4. 父标题-关联子标题
-5. 子标题-编辑
-当lob_sql中存在某键名时，不覆盖");
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             var dlg = new SelectChildTbls(_childTbls.Text);
@@ -398,6 +351,33 @@ namespace Dt.OnToMany
                 if (!string.IsNullOrEmpty(titles))
                     _clsb.Text = titles;
             }
+        }
+
+        private void AddTooltip()
+        {
+            var tip = new ToolTip();
+            tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
+            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
+            tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
+            tip.SetToolTip(linkLabel5, "服务运行时可选择多个子表\r\n子表需包含 [ParentID] 字段");
+
+            tip.SetToolTip(linkLabel6,
+@"和父实体相同，一般为不包含前后缀的表名，是所有生成类的根命名
+生成的实体类、窗口、列表、表单等的命名规范：
+实体类：实体 + Obj
+窗口：实体 + Win
+列表：实体 + List
+表单：实体 + Form");
+
+            tip.SetToolTip(linkLabel7,
+@"当选择的表名有效时，可生成以下键名的sql：
+1. 父标题-全部
+2. 父标题-模糊查询，通用搜索面板时生成
+3. 父标题-编辑
+4. 父标题-关联子标题
+5. 子标题-编辑
+当lob_sql中存在某键名时，不覆盖");
         }
     }
 }

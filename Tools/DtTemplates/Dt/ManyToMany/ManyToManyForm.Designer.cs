@@ -212,7 +212,6 @@ namespace Dt.ManyToMany
             this.linkLabel1.TabIndex = 104;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "服务代理类";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // label10
             // 
@@ -233,7 +232,6 @@ namespace Dt.ManyToMany
             this.linkLabel3.TabIndex = 120;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "服务地址";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // _svcUrl
             // 
@@ -260,7 +258,6 @@ namespace Dt.ManyToMany
             this.linkLabel4.TabIndex = 123;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "主表";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // _cbTbls
             // 
@@ -291,7 +288,6 @@ namespace Dt.ManyToMany
             this.linkLabel2.TabIndex = 124;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "主实体名称";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // linkLabel5
             // 
@@ -302,7 +298,6 @@ namespace Dt.ManyToMany
             this.linkLabel5.TabIndex = 125;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "关联实体名称(逗号隔开多个)";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
             // 
             // linkLabel7
             // 
@@ -313,7 +308,6 @@ namespace Dt.ManyToMany
             this.linkLabel7.TabIndex = 136;
             this.linkLabel7.TabStop = true;
             this.linkLabel7.Text = "自动生成主实体sql";
-            this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
             // 
             // label13
             // 

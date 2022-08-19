@@ -46,6 +46,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Editor\BatchCells.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editor\BatchCells.Designer.cs">
+      <DependentUpon>BatchCells.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\MenuXaml.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Xaml\MenuXaml.Designer.cs">
+      <DependentUpon>MenuXaml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\DotXaml.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Xaml\DotXaml.Designer.cs">
+      <DependentUpon>DotXaml.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Agent\InsertAgentForm.resx">
       <DependentUpon>InsertAgentForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -196,6 +214,9 @@
     <Compile Include="Editor\CTree.Designer.cs">
       <DependentUpon>CTree.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Editor\BatchCells.resx">
+      <DependentUpon>BatchCells.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Entity\Entity.cs" />
     <Compile Include="Entity\InsertEntityForm.cs">
       <SubType>Form</SubType>
@@ -229,11 +250,17 @@
     <Compile Include="LocalTbl\Sqlite\SqliteProvider.cs" />
     <Compile Include="LocalTbl\Sqlite\SqliteTblsInfo.cs" />
     <Compile Include="LocalTbl\Sqlite\TableMapping.cs" />
-    <Compile Include="LvXaml\ICmdForm.cs" />
-    <Compile Include="LvXaml\LvXaml.cs">
+    <Compile Include="Xaml\ICmdForm.cs" />
+    <Compile Include="Xaml\FvXaml.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="LvXaml\LvXaml.Designer.cs">
+    <Compile Include="Xaml\FvXaml.Designer.cs">
+      <DependentUpon>FvXaml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\LvXaml.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Xaml\LvXaml.Designer.cs">
       <DependentUpon>LvXaml.cs</DependentUpon>
     </Compile>
     <Compile Include="Kit.cs" />
@@ -407,6 +434,12 @@
     <EmbeddedResource Include="Win\InsertWinForm.resx">
       <DependentUpon>InsertWinForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Xaml\MenuXaml.resx">
+      <DependentUpon>MenuXaml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Xaml\DotXaml.resx">
+      <DependentUpon>DotXaml.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -529,7 +562,10 @@
     <EmbeddedResource Include="Editor\CTree.resx">
       <DependentUpon>CTree.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LvXaml\LvXaml.resx">
+    <EmbeddedResource Include="Xaml\FvXaml.resx">
+      <DependentUpon>FvXaml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Xaml\LvXaml.resx">
       <DependentUpon>LvXaml.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SingleTbl\SingleTblForm.resx">

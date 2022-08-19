@@ -37,15 +37,21 @@
          must be a menu. -->
 		<Groups>
 			<!-- xaml编辑器上下文菜单的添加结构：
-           xaml上下文菜单 > MyXamlMenuGroup > MyXamlSubMenu > MyXamlMenuItemsGroup > Command Buttons
+           xaml上下文菜单 > MyXamlMenuGroup > MyXamlSubMenu > MyLvXamlMenuGroup > Command Buttons
       -->
 			<Group guid="guidDtPackageCmdSet" id="MyXamlMenuGroup" priority="0x01">
 				<Parent guid="guidXamlUiCmds" id="IDM_XAML_EDITOR" />
 			</Group>
-			<Group guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" priority="0x0600">
+			<Group guid="guidDtPackageCmdSet" id="MyLvXamlMenuGroup" priority="0x0600">
 				<Parent guid="guidDtPackageCmdSet" id="MyXamlSubMenu" />
 			</Group>
-
+			<Group guid="guidDtPackageCmdSet" id="MyFvXamlMenuGroup" priority="0x0601">
+				<Parent guid="guidDtPackageCmdSet" id="MyXamlSubMenu" />
+			</Group>
+			<Group guid="guidDtPackageCmdSet" id="MyOtherXamlMenuGroup" priority="0x0602">
+				<Parent guid="guidDtPackageCmdSet" id="MyXamlSubMenu" />
+			</Group>
+			
 			<!-- 代码编辑器的分组菜单 -->
 			<Group guid="guidDtPackageCmdSet" id="MyCodeMenuGroup" priority="0x01">
 				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
@@ -106,47 +112,38 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
 			<Button guid="guidDtPackageCmdSet" id="LvCmdId" priority="0x0100" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+				<Parent guid="guidDtPackageCmdSet" id="MyLvXamlMenuGroup" />
 				<Strings>
 					<ButtonText>Lv</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="FvCmdId" priority="0x0101" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+			<Button guid="guidDtPackageCmdSet" id="DotCmdId" priority="0x0101" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyLvXamlMenuGroup" />
+				<Strings>
+					<ButtonText>Dot</ButtonText>
+				</Strings>
+			</Button>
+			
+			<Button guid="guidDtPackageCmdSet" id="FvCmdId" priority="0x0100" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFvXamlMenuGroup" />
 				<Strings>
 					<ButtonText>Fv</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="CellCmdId" priority="0x0102" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+			<Button guid="guidDtPackageCmdSet" id="CellCmdId" priority="0x0101" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFvXamlMenuGroup" />
 				<Strings>
 					<ButtonText>Cell</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="TabMenuCmdId" priority="0x0103" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
+			
+			<Button guid="guidDtPackageCmdSet" id="MenuCmdId" priority="0x0100" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyOtherXamlMenuGroup" />
 				<Strings>
-					<ButtonText>Toolbar Menu</ButtonText>
+					<ButtonText>Menu</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="ContextMenuCmdId" priority="0x0104" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
-				<Strings>
-					<ButtonText>Context Menu</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidDtPackageCmdSet" id="DotCmdId" priority="0x0105" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
-				<Strings>
-					<ButtonText>Dot 默认</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidDtPackageCmdSet" id="DotSmallCmdId" priority="0x0106" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyXamlMenuItemsGroup" />
-				<Strings>
-					<ButtonText>Dot 小灰</ButtonText>
-				</Strings>
-			</Button>
+			
 
 			<Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" />
@@ -238,7 +235,9 @@
 		<GuidSymbol name="guidDtPackageCmdSet" value="{6ef30193-3795-49e0-b034-e320355b74ae}">
 			<IDSymbol name="MyXamlMenuGroup" value="0x1020" />
 			<IDSymbol name="MyXamlSubMenu" value="0x1021" />
-			<IDSymbol name="MyXamlMenuItemsGroup" value="0x1022" />
+			<IDSymbol name="MyLvXamlMenuGroup" value="0x1022" />
+			<IDSymbol name="MyFvXamlMenuGroup" value="0x1023" />
+			<IDSymbol name="MyOtherXamlMenuGroup" value="0x1024" />
 
 			<IDSymbol name="MyCodeMenuGroup" value="0x1030" />
 			<IDSymbol name="MyCodeSubMenu" value="0x1031" />
@@ -252,12 +251,10 @@
 			<IDSymbol name="MyFolderServerGroup" value="0x1045" />
 
 			<IDSymbol name="LvCmdId" value="0x0100" />
-			<IDSymbol name="FvCmdId" value="0x0101" />
-			<IDSymbol name="CellCmdId" value="0x0102" />
-			<IDSymbol name="TabMenuCmdId" value="0x0103" />
-			<IDSymbol name="ContextMenuCmdId" value="0x0104" />
-			<IDSymbol name="DotCmdId" value="0x0105" />
-			<IDSymbol name="DotSmallCmdId" value="0x0106" />
+			<IDSymbol name="DotCmdId" value="0x0101" />
+			<IDSymbol name="FvCmdId" value="0x0102" />
+			<IDSymbol name="CellCmdId" value="0x0103" />
+			<IDSymbol name="MenuCmdId" value="0x0104" />
 
 			<IDSymbol name="LvCellExClsCmdId" value="0x2000" />
 

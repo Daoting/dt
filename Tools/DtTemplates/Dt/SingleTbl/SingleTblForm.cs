@@ -22,6 +22,7 @@ namespace Dt.SingleTbl
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
             _svcUrl.Text = AtSvc.SvcUrl;
+            AddTooltip();
         }
 
         async void _btnOK_Click(object sender, EventArgs e)
@@ -220,26 +221,6 @@ namespace Dt.SingleTbl
             }
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowDataProviderTip();
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowEntityTip();
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowSvcUrlTip();
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowAllTblsTip();
-        }
-
         private void _svcUrl_Leave(object sender, EventArgs e)
         {
             var url = _svcUrl.Text.Trim();
@@ -247,9 +228,14 @@ namespace Dt.SingleTbl
                 AtSvc.SvcUrl = url;
         }
 
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void AddTooltip()
         {
-            ((LinkLabel)sender).ShowAutoSqlTip();
+            var tip = new ToolTip();
+            tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
+            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
+            tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
+            tip.SetToolTip(linkLabel5, Kit.AutoSqlTip);
         }
     }
 }

@@ -83,6 +83,7 @@ namespace Dt.LocalTbl
             // 
             this._entityName.Location = new System.Drawing.Point(187, 107);
             this._entityName.Name = "_entityName";
+            this._entityName.ReadOnly = true;
             this._entityName.Size = new System.Drawing.Size(269, 21);
             this._entityName.TabIndex = 12;
             // 
@@ -184,7 +185,6 @@ namespace Dt.LocalTbl
             this.linkLabel1.TabIndex = 102;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "选择sqlite库文件";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // label6
             // 
@@ -204,7 +204,6 @@ namespace Dt.LocalTbl
             this.linkLabel2.TabIndex = 103;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "实体类名";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // label8
             // 
@@ -244,7 +243,6 @@ namespace Dt.LocalTbl
             this.linkLabel4.TabIndex = 111;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "选择表";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // button1
             // 

@@ -12,6 +12,6 @@ namespace Dt.Editor
         /// 获取要插入的文本
         /// </summary>
         /// <returns></returns>
-        string GetText();
+        Task<string> GetText();
     }
 }

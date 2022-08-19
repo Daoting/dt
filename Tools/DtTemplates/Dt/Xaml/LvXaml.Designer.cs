@@ -48,6 +48,14 @@ namespace Dt.Editor
             this._pressedBrush = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this._minItemWidth = new System.Windows.Forms.TextBox();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this._cbTbls = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this._svcUrl = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label1
@@ -121,7 +129,6 @@ namespace Dt.Editor
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(250, 21);
             this.label4.TabIndex = 8;
-            this.label4.Text = "行/项高(ItemHeight)";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _itemHeight
@@ -137,7 +144,7 @@ namespace Dt.Editor
             this._showGroupHeader.AutoSize = true;
             this._showGroupHeader.Checked = true;
             this._showGroupHeader.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._showGroupHeader.Location = new System.Drawing.Point(0, 178);
+            this._showGroupHeader.Location = new System.Drawing.Point(0, 162);
             this._showGroupHeader.Name = "_showGroupHeader";
             this._showGroupHeader.Size = new System.Drawing.Size(198, 16);
             this._showGroupHeader.TabIndex = 10;
@@ -149,7 +156,7 @@ namespace Dt.Editor
             this._showItemBorder.AutoSize = true;
             this._showItemBorder.Checked = true;
             this._showItemBorder.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._showItemBorder.Location = new System.Drawing.Point(249, 178);
+            this._showItemBorder.Location = new System.Drawing.Point(249, 162);
             this._showItemBorder.Name = "_showItemBorder";
             this._showItemBorder.Size = new System.Drawing.Size(192, 16);
             this._showItemBorder.TabIndex = 11;
@@ -159,7 +166,7 @@ namespace Dt.Editor
             // _autoScrollBottom
             // 
             this._autoScrollBottom.AutoSize = true;
-            this._autoScrollBottom.Location = new System.Drawing.Point(0, 212);
+            this._autoScrollBottom.Location = new System.Drawing.Point(0, 185);
             this._autoScrollBottom.Name = "_autoScrollBottom";
             this._autoScrollBottom.Size = new System.Drawing.Size(264, 16);
             this._autoScrollBottom.TabIndex = 12;
@@ -247,10 +254,93 @@ namespace Dt.Editor
             this._minItemWidth.TabIndex = 20;
             this._minItemWidth.Text = "160";
             // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.Location = new System.Drawing.Point(4, 271);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(41, 12);
+            this.linkLabel4.TabIndex = 118;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "选择表";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(4, 251);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel3.TabIndex = 117;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "服务地址";
+            // 
+            // _cbTbls
+            // 
+            this._cbTbls.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbTbls.FormattingEnabled = true;
+            this._cbTbls.Location = new System.Drawing.Point(183, 266);
+            this._cbTbls.Name = "_cbTbls";
+            this._cbTbls.Size = new System.Drawing.Size(277, 20);
+            this._cbTbls.TabIndex = 115;
+            this._cbTbls.DropDown += new System.EventHandler(this._cbTbls_DropDown);
+            // 
+            // label9
+            // 
+            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label9.Location = new System.Drawing.Point(0, 266);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(184, 21);
+            this.label9.TabIndex = 116;
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label10
+            // 
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label10.Location = new System.Drawing.Point(0, 226);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(460, 21);
+            this.label10.TabIndex = 114;
+            this.label10.Text = "根据表结构自动生成项模板或列";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // _svcUrl
+            // 
+            this._svcUrl.Location = new System.Drawing.Point(183, 246);
+            this._svcUrl.Name = "_svcUrl";
+            this._svcUrl.Size = new System.Drawing.Size(277, 21);
+            this._svcUrl.TabIndex = 112;
+            // 
+            // label11
+            // 
+            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label11.Location = new System.Drawing.Point(0, 246);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(184, 21);
+            this.label11.TabIndex = 113;
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(3, 62);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(119, 12);
+            this.linkLabel1.TabIndex = 119;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "行/项高(ItemHeight)";
+            // 
             // LvXaml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.linkLabel4);
+            this.Controls.Add(this.linkLabel3);
+            this.Controls.Add(this._cbTbls);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this._svcUrl);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this._minItemWidth);
             this.Controls.Add(this.label8);
             this.Controls.Add(this._pressedBrush);
@@ -298,5 +388,13 @@ namespace Dt.Editor
         private System.Windows.Forms.ComboBox _pressedBrush;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox _minItemWidth;
+        private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.ComboBox _cbTbls;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox _svcUrl;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

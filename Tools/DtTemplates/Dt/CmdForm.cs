@@ -29,9 +29,9 @@ namespace Dt
 			Controls.Add(uc);
 		}
 
-        void _btnOK_Click(object sender, EventArgs e)
+        async void _btnOK_Click(object sender, EventArgs e)
         {
-            string txt = _content.GetText();
+            string txt = await _content.GetText();
 			if (!string.IsNullOrEmpty(txt))
             {
 				Kit.Paste(txt);

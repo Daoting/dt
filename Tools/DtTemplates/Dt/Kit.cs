@@ -209,70 +209,35 @@ namespace Dt
         }
 
         #region Tooltip
-        public static void ShowDataProviderTip(this LinkLabel p_label)
-        {
-            p_label.ShowTooltip(
+        public const string DataProviderTip =
 @"该类在生成的代码中用到，请确认该类存在
-默认提供 AtSvc 类做为远程服务的数据操作");
-        }
+默认提供 AtSvc 类做为远程服务的数据操作";
 
-        public static void ShowEntityTip(this LinkLabel p_label)
-        {
-            p_label.ShowTooltip(
+        public const string EntityTip =
 @"一般为不包含前后缀的表名，是所有生成类的根命名
 生成的实体类、窗口、列表、表单等的命名规范：
 实体类：实体 + Obj
 窗口：实体 + Win
 列表：实体 + List
-表单：实体 + Form");
-        }
+表单：实体 + Form";
 
-        public static void ShowSvcUrlTip(this LinkLabel p_label)
-        {
-            p_label.ShowTooltip(
+        public const string SvcUrlTip =
 @"当服务正在运行时，可通过服务：
 1. 获取所有表目录
 2. 根据表结构生成实体类代码、列表和表单xaml内容
-服务未运行只能生成框架代码");
-        }
+服务未运行只能生成框架代码";
 
-        public static void ShowAllTblsTip(this LinkLabel p_label)
-        {
-            p_label.ShowTooltip(
+        public const string AllTblsTip =
 @"通过服务获取的所有表目录
-服务不可用时目录为空");
-        }
+服务不可用时目录为空";
 
-        public static void ShowAutoSqlTip(this LinkLabel p_label)
-        {
-            p_label.ShowTooltip(
+        public const string AutoSqlTip =
 @"当选择的表名有效时，可生成以下键名的sql：
 1. XXX-全部
 2. XXX-模糊查询，通用搜索面板时生成
 3. XXX-编辑
 XXX为实体中文标题
-当lob_sql中存在某键名时，不覆盖");
-        }
-
-        public static void ShowTooltip(this LinkLabel p_label, string p_msg)
-        {
-            if (_tip == null)
-                _tip = new ToolTip();
-
-            var pt = p_label.PointToClient(Control.MousePosition);
-            _tip.Show(p_msg, p_label, pt);
-            _tip.Active = true;
-            p_label.LostFocus += OnLabelLostFocus;
-        }
-
-        private static void OnLabelLostFocus(object sender, EventArgs e)
-        {
-            var lbl = (LinkLabel)sender;
-            lbl.LostFocus -= OnLabelLostFocus;
-            _tip.Hide(lbl);
-        }
-
-        static ToolTip _tip;
+当lob_sql中存在某键名时，不覆盖";
         #endregion
     }
 }

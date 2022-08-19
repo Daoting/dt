@@ -241,7 +241,6 @@ namespace Dt.OnToMany
             this.linkLabel1.TabIndex = 103;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "服务代理类";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // linkLabel4
             // 
@@ -252,7 +251,6 @@ namespace Dt.OnToMany
             this.linkLabel4.TabIndex = 118;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "父表";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
             // linkLabel3
             // 
@@ -263,7 +261,6 @@ namespace Dt.OnToMany
             this.linkLabel3.TabIndex = 117;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "服务地址";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // _cbTbls
             // 
@@ -320,7 +317,6 @@ namespace Dt.OnToMany
             this.linkLabel2.TabIndex = 119;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "父实体名称";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // label12
             // 
@@ -340,7 +336,6 @@ namespace Dt.OnToMany
             this.linkLabel5.TabIndex = 121;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "子表";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
             // 
             // _childTbls
             // 
@@ -359,7 +354,6 @@ namespace Dt.OnToMany
             this.linkLabel6.TabIndex = 123;
             this.linkLabel6.TabStop = true;
             this.linkLabel6.Text = "子实体名称(逗号隔开多个)";
-            this.linkLabel6.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel6_LinkClicked);
             // 
             // linkLabel7
             // 
@@ -370,7 +364,6 @@ namespace Dt.OnToMany
             this.linkLabel7.TabIndex = 127;
             this.linkLabel7.TabStop = true;
             this.linkLabel7.Text = "自动生成sql";
-            this.linkLabel7.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel7_LinkClicked);
             // 
             // label13
             // 

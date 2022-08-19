@@ -23,6 +23,7 @@ namespace Dt.LocalTbl
             _nameSpace.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
+            AddTooltip();
         }
 
         async void _btnOK_Click(object sender, EventArgs e)
@@ -250,21 +251,6 @@ namespace Dt.LocalTbl
             }
         }
         
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip("选择sqlite库文件路径，用于查询所有表目录及表结构");
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip("表映射的实体类名，默认同名\r\n本次不生成实体类，请确保已存在");
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ((LinkLabel)sender).ShowTooltip("从所有表目录中选择表名\r\n根据表结构生成列表和表单xaml内容");
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             var dlg = new OpenFileDialog
@@ -291,5 +277,12 @@ namespace Dt.LocalTbl
             }
         }
 
+        private void AddTooltip()
+        {
+            var tip = new ToolTip();
+            tip.SetToolTip(linkLabel1, "选择sqlite库文件路径，用于查询所有表目录及表结构");
+            tip.SetToolTip(linkLabel2, "表映射的实体类名，默认同名\r\n本次不生成实体类，请确保已存在");
+            tip.SetToolTip(linkLabel4, "从所有表目录中选择表名\r\n根据表结构生成列表和表单xaml内容");
+        }
     }
 }
