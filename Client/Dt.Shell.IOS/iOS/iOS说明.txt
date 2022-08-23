@@ -31,6 +31,7 @@ BundleResource的资源文件输出目录省略 iOS\Resources 两级目录，Content的资源文件输
 如 iOS\Resources\Lottie\Dash.json 资源文件，
 BundleResource 时路径：ms-appx:///Lottie/Dash.json
 Content 时路径：       ms-appx:///iOS/Resources/Lottie/Dash.json
+为了统一资源文件的路径，约定放在ms-appx:///Assets目录下，这就需要在iOS项目中资源文件放在iOS\Resources\Assets目录下
 
 
 》mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/
