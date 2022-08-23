@@ -35,19 +35,11 @@
     <!-- 行内容高度 -->
     <x:Double x:Key="RowInnerHeight">40</x:Double>
 
+    <!-- 所有平台统一自定义字体库写法 https://platform.uno/docs/articles/features/custom-fonts.html -->
     <!--自定义图标字体库-->
-    <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
-    <ios:FontFamily x:Key="IconFont">ms-appx:///Resources/Fonts/icon.ttf#DtIcon</ios:FontFamily>
-    <!--和生成的apk中的assets路径一致-->
-    <android:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</android:FontFamily>
-    <!--Fonts.css中的font-family-->
-    <wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>
-
+    <FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</FontFamily>
     <!--uno中标准控件用到的字体库-->
-    <win:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</win:FontFamily>
-    <ios:FontFamily x:Key="Symbols">ms-appx:///Resources/Fonts/uno-fluentui-assets.ttf#Symbols</ios:FontFamily>
-    <android:FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</android:FontFamily>
-    <wasm:FontFamily x:Key="Symbols">Symbols</wasm:FontFamily>
+    <FontFamily x:Key="Symbols">ms-appx:///Assets/Fonts/uno-fluentui-assets.ttf#Symbols</FontFamily>
     
     <!--
     *****************************************************************
