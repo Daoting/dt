@@ -35,7 +35,7 @@ namespace Dt.Sample
             InitializeComponent();
 
             var data = new CSVData();
-            data.Read(ResKit.GetResource("browsers.csv"), false);
+            data.Read(ResKit.GetStream("browsers.csv"), false);
 
             int len = data.Length;
             var vdata = new VersionInfo[len];

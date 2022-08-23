@@ -190,7 +190,7 @@ namespace Dt.Sample
         {
             _printInfo.HeaderLeft = "<Ts><T Text=\"《:sheetname:》\" Bold=\"true\" Underline=\"true\" /><T Text=\"  :date:\" Foreground=\"#FF4500\" /></Ts>";
             _printInfo.HeaderCenter = "<Ts><T Text=\"标识\" Bold=\"true\" /><Img Width=\"30\" /></Ts>";
-            using (var stream = ResKit.GetResource("Logo.png"))
+            using (var stream = ResKit.GetStream("Logo.png"))
             using (var sr = new StreamReader(stream))
             {
                 byte[] img = new byte[stream.Length];

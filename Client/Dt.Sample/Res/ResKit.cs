@@ -7,10 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Pdf.Exceptions;
-using Dt.Pdf.Utility.zlib;
-using System;
-using System.IO;
 using System.Reflection;
 #endregion
 
@@ -18,10 +14,16 @@ namespace Dt.Sample
 {
     public class ResKit
     {
-        public static Stream GetResource(string p_fileName)
+        /// <summary>
+        /// 返回资源文件流，需要在外部关闭流
+        /// </summary>
+        /// <param name="p_fileName">文件名，在Res下含子目录时需要添加子目录前缀如：Excel.1040.xlsx</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static Stream GetStream(string p_fileName)
         {
             Assembly assembly = typeof(ResKit).Assembly;
-            Stream stream = assembly.GetManifestResourceStream($"Dt.Sample.Resource.{p_fileName}");
+            Stream stream = assembly.GetManifestResourceStream($"Dt.Sample.Res.{p_fileName}");
             if (stream == null)
                 throw new Exception("未发现资源文件：" + p_fileName );
             return stream;
