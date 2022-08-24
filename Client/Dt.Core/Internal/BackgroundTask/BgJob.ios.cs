@@ -45,15 +45,7 @@ namespace Dt.Core
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
                 return;
 
-            var application = UIApplication.SharedApplication;
-            if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
-            {
-                // 注册本地通知
-                var ns = UIUserNotificationSettings.GetSettingsForTypes(
-                    UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
-                application.RegisterUserNotificationSettings(ns);
-            }
-
+            RegisterNotification();
             var content = new UNMutableNotificationContent();
             content.Title = p_title;
             content.Body = p_content;
@@ -83,6 +75,19 @@ namespace Dt.Core
             });
         }
 
+        /// <summary>
+        /// 注册本地通知放在第一次Toast时注册，若Toast是后台任务调用，还能正确注册吗？
+        /// </summary>
+        static void RegisterNotification()
+        {
+            var application = UIApplication.SharedApplication;
+            if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
+            {
+                var ns = UIUserNotificationSettings.GetSettingsForTypes(
+                    UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
+                application.RegisterUserNotificationSettings(ns);
+            }
+        }
     }
 }
 #endif
