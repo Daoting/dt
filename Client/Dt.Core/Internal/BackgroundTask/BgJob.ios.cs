@@ -13,6 +13,7 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using UIKit;
 using UserNotifications;
 #endregion
 
@@ -43,6 +44,15 @@ namespace Dt.Core
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
                 return;
+
+            var application = UIApplication.SharedApplication;
+            if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
+            {
+                // 注册本地通知
+                var ns = UIUserNotificationSettings.GetSettingsForTypes(
+                    UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
+                application.RegisterUserNotificationSettings(ns);
+            }
 
             var content = new UNMutableNotificationContent();
             content.Title = p_title;

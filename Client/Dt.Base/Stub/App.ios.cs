@@ -44,14 +44,6 @@ namespace Dt.Base
         {
             // 设置 Background Fetch 最小时间间隔，10-15分钟不定
             application.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
-
-            if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
-            {
-                // 注册本地通知
-                var ns = UIUserNotificationSettings.GetSettingsForTypes(
-                    UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
-                application.RegisterUserNotificationSettings(ns);
-            }
         }
 
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
