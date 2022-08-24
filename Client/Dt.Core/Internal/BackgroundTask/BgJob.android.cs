@@ -110,7 +110,7 @@ namespace Dt.Core
                 string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
                 intent.PutExtra(ActionToast, json);
             }
-            var pending = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
+            var pending = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
 
             // 一定要设置 channel 和 icon，否则不通知！！！
             Notification notify = new Notification.Builder(context, _channelID)
