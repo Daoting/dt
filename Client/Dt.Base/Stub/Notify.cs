@@ -99,15 +99,15 @@ namespace Dt.Base
             if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
             {
                 var info = ((ItemList<NotifyInfo>)sender)[e.Index];
-                SysVisual.NotifyPanel.Children.Insert(e.Index, new NotifyItem(info));
+                UITree.NotifyPanel.Children.Insert(e.Index, new NotifyItem(info));
             }
             else if (e.CollectionChange == CollectionChange.ItemRemoved)
             {
-                SysVisual.NotifyPanel.Children.RemoveAt(e.Index);
+                UITree.NotifyPanel.Children.RemoveAt(e.Index);
             }
             else
             {
-                SysVisual.NotifyPanel.Children.Clear();
+                UITree.NotifyPanel.Children.Clear();
             }
         }
     }

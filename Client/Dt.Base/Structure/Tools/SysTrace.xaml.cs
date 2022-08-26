@@ -93,7 +93,7 @@ namespace Dt.Base.Tools
 
         void OpenWin(Type p_type, string p_title)
         {
-            if (SysVisual.RootContent is Desktop)
+            if (UITree.RootContent is Desktop)
             {
                 // win模式已登录
                 Kit.OpenWin(p_type);
@@ -151,11 +151,11 @@ namespace Dt.Base.Tools
         void OnPageType(object sender, Mi e)
         {
             string name;
-            if (SysVisual.RootContent is Desktop)
+            if (UITree.RootContent is Desktop)
             {
                 name = Desktop.Inst.MainWin.GetType().FullName;
             }
-            else if (SysVisual.RootContent is Frame frame)
+            else if (UITree.RootContent is Frame frame)
             {
                 if (frame.Content is PhonePage page)
                 {
@@ -173,7 +173,7 @@ namespace Dt.Base.Tools
             }
             else
             {
-                name = SysVisual.RootContent.GetType().FullName;
+                name = UITree.RootContent.GetType().FullName;
             }
             Log.Debug(name);
         }

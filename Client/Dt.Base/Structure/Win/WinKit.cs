@@ -59,7 +59,7 @@ namespace Dt.Base
                     _menu.Items[0].Visibility = Visibility.Visible;
                     _menu.Items[1].Visibility = Visibility.Collapsed;
                 }
-                else if (SysVisual.RootFrame.BackStackDepth > 0)
+                else if (UITree.RootFrame.BackStackDepth > 0)
                 {
                     _menu.Items[0].Visibility = Visibility.Collapsed;
                     _menu.Items[1].Visibility = Visibility.Visible;

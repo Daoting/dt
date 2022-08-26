@@ -82,7 +82,7 @@ namespace Dt.Base
         protected override void OnRightTapped(RightTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            ShowMenu(e.GetPosition(SysVisual.RootContent));
+            ShowMenu(e.GetPosition(UITree.RootContent));
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)

@@ -20,7 +20,7 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// 系统初始化
+        /// 系统初始化：日志、全局事件、本地目录、状态库
         /// </summary>
         internal static async Task Init()
         {
@@ -70,10 +70,7 @@ namespace Dt.Core
 
             // 打开状态库
             AtState.OpenDb();
-
-            // 创建窗口及整个系统可视树
-            SysVisual.Init();
-            Log.Debug("初始化完毕");
+            Debug("Kit.Init完毕");
         }
 
         #region App事件方法

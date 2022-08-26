@@ -323,11 +323,11 @@ namespace Dt.Base
 
         //    var parent = VisualTreeHelper.GetParent(p_element);
         //    if (parent == null)
-        //        SysVisual.InvisibleGrid.Children.Add(p_element);
+        //        UITree.InvisibleGrid.Children.Add(p_element);
         //    RenderTargetBitmap bmp = new RenderTargetBitmap();
         //    await bmp.RenderAsync(p_element);
         //    if (parent == null)
-        //        SysVisual.InvisibleGrid.Children.Remove(p_element);
+        //        UITree.InvisibleGrid.Children.Remove(p_element);
         //    return bmp;
         //}
 

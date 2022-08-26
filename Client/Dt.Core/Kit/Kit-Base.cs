@@ -39,9 +39,9 @@ namespace Dt.Core
         public static void RunAsync(Action p_action)
         {
 #if WIN
-            SysVisual.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
+            UITree.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
 #else
-            _ = SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
+            _ = UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
 #endif
         }
 
@@ -52,24 +52,24 @@ namespace Dt.Core
         public static void RunSync(Action p_action)
         {
 #if WIN
-            if (SysVisual.MainWin.DispatcherQueue.HasThreadAccess)
+            if (UITree.MainWin.DispatcherQueue.HasThreadAccess)
             {
                 p_action();
                 return;
             }
 
             var taskSrc = new TaskCompletionSource<bool>();
-            SysVisual.MainWin.DispatcherQueue.TryEnqueue(() =>
+            UITree.MainWin.DispatcherQueue.TryEnqueue(() =>
             {
                 p_action();
                 taskSrc.TrySetResult(true);
             });
             taskSrc.Task.Wait();
 #else
-            if (SysVisual.RootGrid.Dispatcher.HasThreadAccess)
+            if (UITree.RootGrid.Dispatcher.HasThreadAccess)
                 p_action();
             else
-                WindowsRuntimeSystemExtensions.AsTask(SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action))).Wait();
+                WindowsRuntimeSystemExtensions.AsTask(UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action))).Wait();
 #endif
         }
 
@@ -82,14 +82,14 @@ namespace Dt.Core
         {
 #if WIN
             var taskSrc = new TaskCompletionSource<bool>();
-            SysVisual.MainWin.DispatcherQueue.TryEnqueue(() =>
+            UITree.MainWin.DispatcherQueue.TryEnqueue(() =>
             {
                 p_action();
                 taskSrc.TrySetResult(true);
             });
             return taskSrc.Task;
 #else
-            return SysVisual.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action)).AsTask();
+            return UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action)).AsTask();
 #endif
         }
         #endregion
@@ -115,12 +115,12 @@ namespace Dt.Core
         /// <summary>
         /// 主窗口
         /// </summary>
-        public static Window MainWin => SysVisual.MainWin;
+        public static Window MainWin => UITree.MainWin;
 
         /// <summary>
         /// Window.Content内容，根Grid
         /// </summary>
-        public static Grid RootGrid => SysVisual.RootGrid;
+        public static Grid RootGrid => UITree.RootGrid;
 
         /// <summary>
         /// 可视区域宽度
@@ -133,14 +133,14 @@ namespace Dt.Core
             {
 #if IOS
                 // ios首页未显示前uno中的Bounds为0x0
-                var w = SysVisual.MainWin.Bounds.Width;
+                var w = UITree.MainWin.Bounds.Width;
                 if (w > 0)
                     return w;
 
                 var info = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
                 return info.Width / info.Density;
 #else
-                return SysVisual.MainWin.Bounds.Width;
+                return UITree.MainWin.Bounds.Width;
 #endif
             }
         }
@@ -156,15 +156,15 @@ namespace Dt.Core
             {
 #if IOS
                 // ios首页未显示前uno中的Bounds为0x0
-                var h = SysVisual.MainWin.Bounds.Height;
+                var h = UITree.MainWin.Bounds.Height;
                 if (h <= 0)
                 {
                     var info = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
                     h = info.Height / info.Density;
                 }
-                return h - SysVisual.StatusBarHeight;
+                return h - UITree.StatusBarHeight;
 #else
-                return SysVisual.MainWin.Bounds.Height - SysVisual.StatusBarHeight;
+                return UITree.MainWin.Bounds.Height - UITree.StatusBarHeight;
 #endif
             }
         }

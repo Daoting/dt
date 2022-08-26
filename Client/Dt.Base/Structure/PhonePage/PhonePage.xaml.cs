@@ -32,7 +32,11 @@ namespace Dt.Base
 
         public PhonePage()
         {
+            if (_newParam == null)
+                return;
+
             _param = _newParam;
+            _newParam = null;
 
             // 原来在OnNavigatedFrom方法中卸载内容以便下次重用，但会造成页面返回时无动画！！！
             // 因此再次加载时需要卸载旧页面的内容！
@@ -61,12 +65,12 @@ namespace Dt.Base
                 throw new Exception("PhonePage内容不是可视元素！");
 
             // 避免自己导航到自己的情况
-            if (SysVisual.RootFrame.Content is PhonePage page
+            if (UITree.RootFrame.Content is PhonePage page
                 && page.Content == p_content as UIElement)
                 return;
 
             _newParam = new PhonePageParameter(p_content, null);
-            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
+            UITree.RootFrame.Navigate(typeof(PhonePage), _newParam);
         }
 
         /// <summary>
@@ -79,13 +83,13 @@ namespace Dt.Base
                 throw new Exception("PhonePage内容不是可视元素！");
 
             // 避免自己导航到自己的情况
-            if (SysVisual.RootFrame.Content is PhonePage page
+            if (UITree.RootFrame.Content is PhonePage page
                 && page.Content == p_content as UIElement)
                 return Task.CompletedTask;
 
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PhonePageParameter(p_content, taskSrc);
-            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
+            UITree.RootFrame.Navigate(typeof(PhonePage), _newParam);
             return taskSrc.Task;
         }
 

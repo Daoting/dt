@@ -397,7 +397,7 @@ namespace Dt.Base.Chat
 
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ShowFileMsgMenu((FileList)sender, e.GetPosition(SysVisual.RootContent));
+            ShowFileMsgMenu((FileList)sender, e.GetPosition(UITree.RootContent));
         }
 
         void ShowFileMsgMenu(FileList p_fileList, Point p_pos)
@@ -405,7 +405,7 @@ namespace Dt.Base.Chat
             FileItem item = null;
             foreach (var fi in p_fileList.Items)
             {
-                Point pt = fi.TransformToVisual(SysVisual.RootContent).TransformPoint(new Point());
+                Point pt = fi.TransformToVisual(UITree.RootContent).TransformPoint(new Point());
                 if (p_pos.X > pt.X
                     && p_pos.X < pt.X + fi.ActualWidth
                     && p_pos.Y > pt.Y

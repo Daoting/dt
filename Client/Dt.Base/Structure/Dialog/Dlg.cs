@@ -386,7 +386,7 @@ namespace Dt.Base
         /// </summary>
         public bool IsOpened
         {
-            get { return SysVisual.ContainsDlg(_canvas); }
+            get { return UITree.ContainsDlg(_canvas); }
         }
         #endregion
 
@@ -397,7 +397,7 @@ namespace Dt.Base
         /// <returns>true 正常打开；false 已显示无需再次打开</returns>
         public bool Show()
         {
-            if (!SysVisual.ContainsDlg(_canvas))
+            if (!UITree.ContainsDlg(_canvas))
             {
                 ShowInCanvas();
                 return true;
@@ -411,7 +411,7 @@ namespace Dt.Base
         /// <returns>返回关闭时(通过Close方法)的参数值</returns>
         public Task<bool> ShowAsync()
         {
-            if (!SysVisual.ContainsDlg(_canvas))
+            if (!UITree.ContainsDlg(_canvas))
             {
                 _taskSrc = new TaskCompletionSource<bool>();
                 ShowInCanvas();
@@ -535,7 +535,7 @@ namespace Dt.Base
             DlgPlacement placement = Kit.IsPhoneUI ? PhonePlacement : WinPlacement;
 
             // 未能正确添加到可视树 或 采用相对位置但未设置目标时
-            if (!SysVisual.AddDlg(_canvas)
+            if (!UITree.AddDlg(_canvas)
                 || (placement > DlgPlacement.FromBottom && PlacementTarget == null))
                 return;
 
@@ -581,7 +581,7 @@ namespace Dt.Base
 
                 case DlgPlacement.FromLeft:
                     // Desktop时不覆盖任务栏
-                    Top = SysVisual.RootContent is Desktop ? 44 : 0;
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
                     Left = 0;
                     Height = maxHeight - Top;
                     if (maxWidth < actWidth)
@@ -598,7 +598,7 @@ namespace Dt.Base
 
                 case DlgPlacement.FromRight:
                     // Desktop时不覆盖任务栏
-                    Top = SysVisual.RootContent is Desktop ? 44 : 0;
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
                     Height = maxHeight - Top;
                     if (maxWidth < actWidth)
                     {
@@ -740,7 +740,7 @@ namespace Dt.Base
         {
             // 屏蔽多次触发移除的情况
             // 如：关闭对话框前弹出确认对话框，点击确认对话框时可能触发OnOuterPressed，出现多次触发Closing事件！
-            if (_isRemoving || !SysVisual.ContainsDlg(_canvas))
+            if (_isRemoving || !UITree.ContainsDlg(_canvas))
                 return;
 
             try
@@ -758,7 +758,7 @@ namespace Dt.Base
                 if (!await OnClosing(p_ok))
                     return;
 
-                SysVisual.RemoveDlg(_canvas);
+                UITree.RemoveDlg(_canvas);
 
                 // ShowAsync情况
                 if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
@@ -774,7 +774,7 @@ namespace Dt.Base
                 // 遗漏的外框
                 if (_bdResize != null)
                 {
-                    SysVisual.RemoveDlgResizeFlag(_bdResize);
+                    UITree.RemoveDlgResizeFlag(_bdResize);
                     _bdResize = null;
                 }
             }
@@ -957,7 +957,7 @@ namespace Dt.Base
                     Canvas.SetLeft(_bdResize, offset.X);
                     Canvas.SetTop(_bdResize, offset.Y);
                     Canvas.SetZIndex(_bdResize, _currentZIndex + 10);
-                    SysVisual.AddDlgResizeFlag(_bdResize);
+                    UITree.AddDlgResizeFlag(_bdResize);
                 }
             }
         }
@@ -1054,7 +1054,7 @@ namespace Dt.Base
                 Height = _bdResize.Height;
                 Left = Canvas.GetLeft(_bdResize);
                 Top = Canvas.GetTop(_bdResize);
-                SysVisual.RemoveDlgResizeFlag(_bdResize);
+                UITree.RemoveDlgResizeFlag(_bdResize);
                 _bdResize = null;
             }
         }

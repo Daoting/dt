@@ -11,6 +11,7 @@
 using Dt.Core;
 using Foundation;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using UIKit;
 #endregion
@@ -29,6 +30,24 @@ namespace Dt.Base
 
         public override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
+            //var MainWin = Window.Current;
+            //var frame = new Frame();
+            //new PhonePage();
+            //    frame.Navigate(typeof(PhonePage));
+            //MainWin.Content = frame;
+
+            //if (Uno.UI.DataBinding.BindableMetadata.Provider != null)
+            //{
+            //    var prv = Uno.UI.DataBinding.BindableMetadata.Provider;
+            //    try
+            //    {
+            //        var bindableType = prv.GetBindableTypeByType(typeof(Frame));
+            //        //prv.GetBindableTypeByType(typeof(PhonePage));
+            //    }
+            //    catch { }
+            //}
+            //Kit.Debug("DataBinding");
+            UITree.Init();
             _ = Launch(p_args.Arguments);
         }
 

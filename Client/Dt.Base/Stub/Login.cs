@@ -43,7 +43,7 @@ namespace Dt.Base
                 {
                     // 使用Frame确保PhoneUI模式下正常导航！如 系统日志->本地库
                     Frame fm = new Frame();
-                    SysVisual.RootContent = fm;
+                    UITree.RootContent = fm;
                     fm.Navigate(LoginPageType);
                 }
                 else

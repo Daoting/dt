@@ -24,7 +24,7 @@ namespace Dt.Core
     ///              - 对话框层
     ///              - 提示信息层
     /// </summary>
-    internal static class SysVisual
+    internal static class UITree
     {
         #region 成员变量
         //**************************************************************************
@@ -54,7 +54,7 @@ namespace Dt.Core
         #endregion
 
         #region 静态构造
-        static SysVisual()
+        static UITree()
         {
 #if WIN
             // WinUI中Window.Current为null
@@ -131,10 +131,11 @@ namespace Dt.Core
 
             ApplyNotifyStyle();
             MainWin.Activate();
+            Kit.Debug("创建可视树");
         }
 
         /// <summary>
-        /// 静态构造方法中已创建窗口及整个系统可视树，避免重复创建
+        /// 创建窗口及整个系统可视树，在静态构造方法中完成避免重复创建
         /// </summary>
         internal static void Init()
         { }

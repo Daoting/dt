@@ -23,7 +23,7 @@
     <x:Double x:Key="大字">24</x:Double>
     <!-- 小三，15磅 -->
     <x:Double x:Key="标题字">20</x:Double>
-    <!-- 小四，12磅，SysVisual.SetDefaultStyle已对根元素设置 -->
+    <!-- 小四，12磅，UITree.SetDefaultStyle已对根元素设置 -->
     <x:Double x:Key="默认字">16</x:Double>
     <!-- 五号，10.5磅 -->
     <x:Double x:Key="小字">14</x:Double>

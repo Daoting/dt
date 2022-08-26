@@ -279,7 +279,7 @@ namespace Dt.Base
                 ExtractItems(this);
             }
             // 记录起始索引
-            _frameStartIndex = SysVisual.RootFrame.BackStackDepth;
+            _frameStartIndex = UITree.RootFrame.BackStackDepth;
 
             var ls = (from tab in _tabs.Values
                       where tab.Order > 0
@@ -348,7 +348,7 @@ namespace Dt.Base
             if (!Kit.IsPhoneUI)
                 return;
 
-            if (((PhonePage)SysVisual.RootFrame.Content).Content is PhoneTabs tabs)
+            if (((PhonePage)UITree.RootFrame.Content).Content is PhoneTabs tabs)
             {
                 tabs.Select(p_tabTitle);
             }
@@ -361,7 +361,7 @@ namespace Dt.Base
         internal void NaviToSingleTab(Tab p_tab)
         {
             // 判断是否为向后导航
-            var frame = SysVisual.RootFrame;
+            var frame = UITree.RootFrame;
             if (frame.BackStackDepth > _frameStartIndex)
             {
                 // 向后查询
@@ -405,7 +405,7 @@ namespace Dt.Base
         internal void NaviToMultiTabs(string p_tabTitle)
         {
             // 判断是否为向后导航
-            var frame = SysVisual.RootFrame;
+            var frame = UITree.RootFrame;
             if (frame.BackStackDepth > _frameStartIndex)
             {
                 // 向后查询
@@ -483,7 +483,7 @@ namespace Dt.Base
         /// </summary>
         void CloseAllNaviPages()
         {
-            var frame = SysVisual.RootFrame;
+            var frame = UITree.RootFrame;
             if (frame.BackStackDepth > _frameStartIndex)
             {
                 // 向后导航

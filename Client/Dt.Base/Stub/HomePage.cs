@@ -50,7 +50,7 @@ namespace Dt.Base
         /// </summary>
         void LoadRootFrame()
         {
-            SysVisual.RootContent = new Frame();
+            UITree.RootContent = new Frame();
 
             // 主页作为根
             if (HomePageType != null)
@@ -126,7 +126,7 @@ namespace Dt.Base
 
             if (desktop.MainWin == null)
                 desktop.MainWin = desktop.HomeWin;
-            SysVisual.RootContent = desktop;
+            UITree.RootContent = desktop;
         }
         
         /// <summary>
@@ -135,7 +135,7 @@ namespace Dt.Base
         /// <param name="p_page"></param>
         public void ShowRoot(UIElement p_page)
         {
-            SysVisual.RootContent = p_page;
+            UITree.RootContent = p_page;
         }
     }
 }

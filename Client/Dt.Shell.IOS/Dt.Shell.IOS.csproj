@@ -10,18 +10,6 @@
         <ApplicationVersion>22.6.10</ApplicationVersion>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-        <CodesignKey>iPhone Distribution</CodesignKey>
-        <CodesignProvision>dt.samples</CodesignProvision>
-        <ArchiveOnBuild>true</ArchiveOnBuild>
-        <TcpPort>58181</TcpPort>
-        <ServerAddress>10.10.1.7</ServerAddress>
-        <ServerUser>1234</ServerUser>
-        <ServerPassword>1</ServerPassword>
-        <_DotNetRootRemoteDirectory>/Users/a1234/Library/Caches/Xamarin/XMA/SDKs/dotnet/</_DotNetRootRemoteDirectory>
-    </PropertyGroup>
-
     <Import Project="..\Common.props" />
 
     <ItemGroup>

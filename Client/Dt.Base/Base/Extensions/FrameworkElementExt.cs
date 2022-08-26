@@ -143,7 +143,7 @@ namespace Dt.Base
         {
             try
             {
-                var trans = source.TransformToVisual(p_relativeTo ?? SysVisual.RootContent) as MatrixTransform;
+                var trans = source.TransformToVisual(p_relativeTo ?? UITree.RootContent) as MatrixTransform;
                 if (trans != null)
                     return new Rect(trans.Matrix.OffsetX, trans.Matrix.OffsetY, source.ActualWidth, source.ActualHeight);
             }

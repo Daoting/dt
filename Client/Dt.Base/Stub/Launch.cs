@@ -55,7 +55,7 @@ namespace Dt.Base
 
             try
             {
-                // 系统初始化，内含创建窗口及整个系统可视树
+                // 系统初始化
                 await Kit.Init();
 
                 // 初始化提示信息

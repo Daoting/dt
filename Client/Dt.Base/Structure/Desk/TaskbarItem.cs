@@ -98,7 +98,7 @@ namespace Dt.Base
         {
             e.Handled = true;
             _currentItem = this;
-            ShowMenu(e.GetPosition(SysVisual.RootContent));
+            ShowMenu(e.GetPosition(UITree.RootContent));
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)

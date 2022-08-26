@@ -47,7 +47,7 @@ namespace Dt.Base
                 SysTrace.ShowBox();
             };
             // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
-            SysVisual.RootGrid.Children[SysVisual.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
+            UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
 #endif
         }
 
@@ -58,7 +58,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         public static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            e.Handled = SysVisual.ExistDlg || SysVisual.RootFrame.CanGoBack;
+            e.Handled = UITree.ExistDlg || UITree.RootFrame.CanGoBack;
             GoBack();
         }
 
@@ -78,16 +78,16 @@ namespace Dt.Base
         /// <returns></returns>
         public static async void GoBack()
         {
-            if (SysVisual.ExistDlg)
+            if (UITree.ExistDlg)
             {
-                Dlg dlg = SysVisual.GetTopDlg() as Dlg;
+                Dlg dlg = UITree.GetTopDlg() as Dlg;
                 // 隐藏标题栏的不自动关闭，控制用户操作对话框内容关闭！
                 if (dlg != null && !dlg.HideTitleBar)
                     dlg.Close();
                 return;
             }
 
-            var frame = SysVisual.RootFrame;
+            var frame = UITree.RootFrame;
             if (frame.CanGoBack)
             {
                 if (frame.Content is PhonePage page)

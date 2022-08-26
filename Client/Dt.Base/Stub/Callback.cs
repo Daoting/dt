@@ -235,7 +235,7 @@ namespace Dt.Base
             }
 
             // 重构根元素，将切换前的窗口设为自启动，符合习惯
-            if (SysVisual.RootContent is Frame frame
+            if (UITree.RootContent is Frame frame
                 && frame.Content is PhonePage page)
             {
                 Win win = null;
@@ -254,7 +254,7 @@ namespace Dt.Base
 
                 LoadDesktop();
             }
-            else if (SysVisual.RootContent is Desktop desktop)
+            else if (UITree.RootContent is Desktop desktop)
             {
                 if (desktop.MainWin != desktop.HomeWin)
                 {
