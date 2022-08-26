@@ -94,6 +94,23 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 输出调试信息
+        /// <summary>
+        /// 只在调试时向输出窗口或控制台输出信息(内部用)，不同于Log
+        /// </summary>
+        /// <param name="p_msg">信息</param>
+        public static void Debug(string p_msg)
+        {
+#if DEBUG
+#if WASM
+            Console.WriteLine(p_msg);
+#else
+            System.Diagnostics.Debug.WriteLine(p_msg);
+#endif
+#endif
+        }
+        #endregion
+
         #region 可视区域
         /// <summary>
         /// 主窗口
