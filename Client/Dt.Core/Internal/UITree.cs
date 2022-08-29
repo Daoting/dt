@@ -65,12 +65,14 @@ namespace Dt.Core
             MainWin = Window.Current;
 #endif
 
-#if ANDROID
-            // 解决项目文件多时启动就奔溃的怪异现象，且必须最早创建Frame！！！
-            // 未发现其他解决方法，已提讨论，https://github.com/unoplatform/uno/discussions/8933
-            // 浪费十多天生命，怎能以一个操字了得！
-            new Frame().Navigate(typeof(Page));
-#endif
+            // iOS android 启动就奔溃的现象已发现原因，待uno解决
+            // 参见讨论：https://github.com/unoplatform/uno/discussions/8933
+            //#if ANDROID
+            //            // 解决项目文件多时启动就奔溃的怪异现象，且必须最早创建Frame！！！
+            //            // 未发现其他解决方法，已提讨论
+            //            // 浪费十多天生命，怎能以一个操字了得！
+            //            new Frame().Navigate(typeof(Page));
+            //#endif
 
             // 根Grid，背景主蓝
             RootGrid = new Grid();
@@ -106,7 +108,7 @@ namespace Dt.Core
             //if (resourceId > 0)
             //    StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
 #endif
-           
+
             // ios android 不支持UI自适应
 #if WIN
             // 支持UI自适应
@@ -135,7 +137,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 创建窗口及整个系统可视树，在静态构造方法中完成避免重复创建
+        /// 创建窗口及整个系统可视树，在静态构造方法中完成，避免重复创建
         /// </summary>
         internal static void Init()
         { }

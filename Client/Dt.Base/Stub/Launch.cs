@@ -31,6 +31,9 @@ namespace Dt.Base
         /// <returns></returns>
         async Task Launch(string p_launchArgs = null, ShareInfo p_shareInfo = null)
         {
+            // 创建可视树
+            UITree.Init();
+
             if (!string.IsNullOrEmpty(p_launchArgs))
             {
                 try
