@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
+using Windows.UI;
 #endregion
 
 namespace Dt.Core
@@ -75,17 +76,12 @@ namespace Dt.Core
             //#endif
 
             // 根Grid，背景主蓝
-            RootGrid = new Grid();
-#if !ANDROID
-            // Android已设置顶部状态栏和底部导航栏透明、有窗口背景图片，
-            // 不需设置背景色，状态栏显示的是窗口背景图片的颜色，启动体验好！
-            RootGrid.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
-#endif
-
-            // 放在最后 MainWin.Activate() 之前时在wasm中异常！
-            MainWin.Content = RootGrid;
+            RootGrid = new Grid { Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
+            // 首页加载快时不显示进度动画！
+            _rootContent = new ProgressRing { Height = 80, Width = 80, IsActive = true };
+            RootGrid.Children.Add(_rootContent);
 
             // 对话框层
             _dlgCanvas = new Canvas();
@@ -132,6 +128,7 @@ namespace Dt.Core
 #endif
 
             ApplyNotifyStyle();
+            MainWin.Content = RootGrid;
             MainWin.Activate();
             Kit.Debug("创建可视树");
         }
