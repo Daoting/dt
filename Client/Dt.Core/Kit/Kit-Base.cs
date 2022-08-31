@@ -28,21 +28,26 @@ namespace Dt.Core
         //
         // 1. WinUI 中 Window.Dispatcher 和 DependencyObject.Dispatcher 始终null，只能使用 DispatcherQueue！
         //
-        // 2. uno 中 Window.DispatcherQueue 未实现，RootGrid.DispatcherQueue 在 Task 中访问为 null，只能使用 UWP 时的方式！
+        // 2. uno 中 Window.DispatcherQueue 未实现，RootGrid.DispatcherQueue 在 Task 中访问为 null，只能使用 UWP 时的方式！ (uno4.4 已实现)
         //
         /***********************************************************************************************************************************************************/
 
         /// <summary>
-        /// 确保在UI线程异步调用给定方法
+        /// 确保在UI线程调用给定方法
         /// </summary>
         /// <param name="p_action"></param>
         public static void RunAsync(Action p_action)
         {
-#if WIN
-            UITree.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
-#else
-            _ = UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
-#endif
+            // uno4.4 已实现 Window.DispatcherQueue
+            var dispatcher = UITree.MainWin.DispatcherQueue;
+            if (dispatcher.HasThreadAccess)
+            {
+                p_action();
+            }
+            else
+            {
+                dispatcher.TryEnqueue(new DispatcherQueueHandler(p_action));
+            }
         }
 
         /// <summary>
@@ -51,46 +56,20 @@ namespace Dt.Core
         /// <param name="p_action"></param>
         public static void RunSync(Action p_action)
         {
-#if WIN
-            if (UITree.MainWin.DispatcherQueue.HasThreadAccess)
+            var dispatcher = UITree.MainWin.DispatcherQueue;
+            if (dispatcher.HasThreadAccess)
             {
                 p_action();
                 return;
             }
 
             var taskSrc = new TaskCompletionSource<bool>();
-            UITree.MainWin.DispatcherQueue.TryEnqueue(() =>
+            dispatcher.TryEnqueue(() =>
             {
                 p_action();
                 taskSrc.TrySetResult(true);
             });
             taskSrc.Task.Wait();
-#else
-            if (UITree.RootGrid.Dispatcher.HasThreadAccess)
-                p_action();
-            else
-                WindowsRuntimeSystemExtensions.AsTask(UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action))).Wait();
-#endif
-        }
-
-        /// <summary>
-        /// 确保在UI线程异步调用给定方法，返回可等待任务
-        /// </summary>
-        /// <param name="p_action"></param>
-        /// <returns></returns>
-        public static Task RunTask(Action p_action)
-        {
-#if WIN
-            var taskSrc = new TaskCompletionSource<bool>();
-            UITree.MainWin.DispatcherQueue.TryEnqueue(() =>
-            {
-                p_action();
-                taskSrc.TrySetResult(true);
-            });
-            return taskSrc.Task;
-#else
-            return UITree.RootGrid.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action)).AsTask();
-#endif
         }
         #endregion
 

@@ -5,23 +5,10 @@
     xmlns:a="using:Dt.Base"
     xmlns:s="using:Dt.Sample">
 
-    <!--<TextBlock Text="Hello" />-->
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Title="主区单视图">
-                <!--<a:Tab.Menu>
-                    <a:Menu>
-                        <a:Mi ID="保存" Icon="保存" />
-                        <a:Mi ID="搜索" Icon="搜索" />
-                    </a:Menu>
-                </a:Tab.Menu>-->
-                <StackPanel Margin="10">
-                    <TextBlock Text="Hello" />
-                    <!--<Button Content="切换图标" />-->
-                    <!--<CheckBox Content="禁止关闭" />-->
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-
+    <StackPanel x:Name="_sp" Margin="10">
+        <Button Content="主线程 Kit.RunAsync" Click="OnTest1" />
+        <Button Content="Task中 Kit.RunAsync" Click="OnTest2" />
+        <Button Content="主线程 Kit.RunSync" Click="OnTest3" />
+        <Button Content="Task中 Kit.RunSync" Click="OnTest4" />
+    </StackPanel>
 </a:Win>
