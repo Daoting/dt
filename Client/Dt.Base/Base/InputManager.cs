@@ -7,15 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.Tools;
-using Dt.Core;
+using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
 using Windows.System;
 using Windows.UI.Core;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Input;
-using System;
-using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -25,32 +20,6 @@ namespace Dt.Base
     /// </summary>
     internal static class InputManager
     {
-        /// <summary>
-        /// 附加后退键事件
-        /// </summary>
-        public static void Init()
-        {
-#if !WIN
-            // WinUI中已移除 SystemNavigationManager，删除PhoneUI模式下窗口左上角的后退按钮
-            SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-#else
-            // 全局快捷键
-            var accelerator = new KeyboardAccelerator()
-            {
-                Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Left
-            };
-            accelerator.Invoked += (s, e) =>
-            {
-                // Alt + ← 系统日志
-                e.Handled = true;
-                SysTrace.ShowBox();
-            };
-            // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
-            UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
-#endif
-        }
-
         /// <summary>
         /// 按下后退按钮
         /// </summary>

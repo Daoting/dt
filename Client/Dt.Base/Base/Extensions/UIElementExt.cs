@@ -508,7 +508,12 @@ namespace Dt.Base
         public static Point GetAbsolutePosition(this UIElement source)
         {
             Point pt = new Point();
-            MatrixTransform mat = source.TransformToVisual(null) as MatrixTransform;
+#if WIN
+            UIElement tgt = null;
+#else
+            UIElement tgt = UITree.RootContent;
+#endif
+            MatrixTransform mat = source.TransformToVisual(tgt) as MatrixTransform;
             if (mat != null)
             {
                 pt.X = mat.Matrix.OffsetX;
@@ -526,7 +531,12 @@ namespace Dt.Base
         public static Point GetRelativePosition(this UIElement source, UIElement p_relative)
         {
             Point pt = new Point();
-            MatrixTransform mat = source.TransformToVisual(p_relative) as MatrixTransform;
+#if WIN
+            UIElement tgt = p_relative;
+#else
+            UIElement tgt = p_relative ?? UITree.RootContent;
+#endif
+            MatrixTransform mat = source.TransformToVisual(tgt) as MatrixTransform;
             if (mat != null)
             {
                 pt.X = mat.Matrix.OffsetX;

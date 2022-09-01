@@ -89,7 +89,12 @@ namespace Dt.Base
             try
             {
                 bool result = false;
-                MatrixTransform trans = source.TransformToVisual(null) as MatrixTransform;
+#if WIN
+                UIElement tgt = null;
+#else
+                UIElement tgt = UITree.RootContent;
+#endif
+                MatrixTransform trans = source.TransformToVisual(tgt) as MatrixTransform;
                 if (trans != null)
                 {
                     double offsetX = trans.Matrix.OffsetX;
@@ -143,7 +148,12 @@ namespace Dt.Base
         {
             try
             {
-                var trans = source.TransformToVisual(p_relativeTo ?? UITree.RootContent) as MatrixTransform;
+#if WIN
+                UIElement tgt = p_relativeTo;
+#else
+                UIElement tgt = p_relativeTo ?? UITree.RootContent;
+#endif
+                var trans = source.TransformToVisual(tgt) as MatrixTransform;
                 if (trans != null)
                     return new Rect(trans.Matrix.OffsetX, trans.Matrix.OffsetY, source.ActualWidth, source.ActualHeight);
             }

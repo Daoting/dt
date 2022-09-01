@@ -13,6 +13,10 @@ using Microsoft.UI.Xaml.Controls;
 using System.IO.Compression;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.UI.Core;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
+using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Base
@@ -60,9 +64,12 @@ namespace Dt.Base
             {
                 // 系统初始化
                 await Kit.Init();
-
+                
                 // 初始化提示信息
                 InitNotify();
+
+                // 附加全局按键事件
+                InitInput();
 
                 // 连接cm服务，获取全局参数，更新/打开模型库
                 if (Kit.IsUsingSvc)
@@ -73,8 +80,6 @@ namespace Dt.Base
 
                 // 接收分享
                 RecvShare(p_shareInfo);
-
-                InputManager.Init();
 
                 // 注册后台任务
                 BgJob.Register();
@@ -218,6 +223,32 @@ namespace Dt.Base
                     Desktop.Inst.ShowNewWin(win);
             }
             _autoStartOnce = null;
+        }
+
+        /// <summary>
+        /// 附加后退键、快捷键事件
+        /// </summary>
+        void InitInput()
+        {
+#if !WIN
+            // WinUI中已移除 SystemNavigationManager，删除PhoneUI模式下窗口左上角的后退按钮
+            SystemNavigationManager.GetForCurrentView().BackRequested += InputManager.OnBackRequested;
+#else
+            // 全局快捷键
+            var accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Left
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + ← 系统日志
+                e.Handled = true;
+                SysTrace.ShowBox();
+            };
+            // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
+            UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
+#endif
         }
     }
 }
