@@ -38,7 +38,7 @@ namespace Dt.Base.Tools
 
             _lv.CellEx = typeof(TraceViewEx);
 
-#if DEBUG && WIN
+#if WIN
             Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
             mi.Click += OnStub;
             Menu.Items.Insert(1, mi);
@@ -210,7 +210,7 @@ namespace Dt.Base.Tools
         }
 
         #region 生成存根代码
-#if DEBUG && WIN
+#if WIN
         Dictionary<string, Type> _viewTypes;
         Dictionary<string, SqliteDbTbls> _sqliteTbls;
 
@@ -244,7 +244,7 @@ namespace Dt.Base.Tools
             sb.AppendLine("\t\tprotected override Dictionary<string, SqliteTblsInfo> GetSqliteDbs()\r\n\t\t{");
             BuildSqliteDict(sb, false);
 
-            sb.Append("\t\t#endregion");
+            sb.Append("\r\n\t\t#endregion");
 
             DataPackage data = new DataPackage();
             data.SetText(sb.ToString());

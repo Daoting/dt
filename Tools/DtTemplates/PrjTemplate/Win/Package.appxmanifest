@@ -56,7 +56,7 @@
 				<!--Register COM CLSID LocalServer32 registry key-->
 				<com:Extension Category="windows.comServer">
 					<com:ComServer>
-						<com:ExeServer Executable="Dt.Shell.Win.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
+						<com:ExeServer Executable="$ext_safeprojectname$.Win.exe" Arguments="-ToastActivated" DisplayName="Toast activator">
 							<com:Class Id="$guid1$" DisplayName="Toast activator"/>
 						</com:ExeServer>
 					</com:ComServer>
