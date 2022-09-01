@@ -11,37 +11,38 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
-		<DefineConstants>$(DefineConstants);IOS</DefineConstants>
+		<DefineConstants>$(DefineConstants);IOS;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
-		<DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+		<DefineConstants>$(DefineConstants);ANDROID;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<DefineConstants>$(DefineConstants);WASM</DefineConstants>
+		<DefineConstants>$(DefineConstants);WASM;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
 	</PropertyGroup>
 
     <!-- 引用包 -->
     <ItemGroup>
-		<PackageReference Include="Dt.Client" Version="2.0.1" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.7" />
+		<PackageReference Include="Dt.Client" Version="2.1.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.0" />
 		<PackageReference Include="Serilog" Version="2.11.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
-    </ItemGroup>
+	</ItemGroup>
+
 	<!-- 非windows引用包 -->
 	<ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
 		<PackageReference Include="Uno.WinUI" Version="4.4.13" />
-		<!-- 对应Microsoft.Toolkit.Uwp.UI.Lottie库，渲染 Adobe AfterEffects 格式动画，提供60fps矢量图形动画 -->
+		<!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
 		<PackageReference Include="Uno.WinUI.Lottie" Version="4.4.13" />
 		<!-- uno日志 -->
 		<PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.4.13" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
 	</ItemGroup>
 
 	<!-- windows引用包 -->
@@ -54,7 +55,7 @@
 
 	<!-- android引用包 -->
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-		<PackageReference Include="Square.OkHttp3" Version="4.9.3.1" />
+		<PackageReference Include="Square.OkHttp3" Version="4.9.3.2" />
 		<!-- WorkManager后台任务引用 -->
 		<PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.7.1.4" />
 	</ItemGroup>

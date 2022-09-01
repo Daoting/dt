@@ -66,7 +66,7 @@ namespace Dt.Core
             MainWin = Window.Current;
 #endif
 
-            // iOS android 启动就奔溃的现象已发现原因，待uno解决
+            // iOS android 启动就奔溃的现象已发现原因，uno已解决，增加常量：UNO_DISABLE_KNOWN_MISSING_TYPES
             // 参见讨论：https://github.com/unoplatform/uno/discussions/8933
             //#if ANDROID
             //            // 解决项目文件多时启动就奔溃的怪异现象，且必须最早创建Frame！！！
