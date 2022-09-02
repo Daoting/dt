@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" colorSpace="custom" customColorSpace="sRGB" red="0.106" green="0.631" blue="0.886" alpha="1"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="56" translatesAutoresizingMaskIntoConstraints="NO" image="SplashScreen.png">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="56" translatesAutoresizingMaskIntoConstraints="NO" image="Assets/SplashScreen.png">
                                 <rect key="frame" x="58" y="120" width="204" height="242"/>
                                 <constraints>
                                     <constraint id="91" firstItem="56" firstAttribute="width" constant="204"/>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SplashScreen.png" width="620" height="300"/>
+        <image name="Assets/SplashScreen.png" width="620" height="300"/>
     </resources>
 </document>
