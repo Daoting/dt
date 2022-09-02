@@ -15,9 +15,9 @@
 			<ProjectItem TargetFileName="LaunchScreen.storyboard">iOS\LaunchScreen.storyboard</ProjectItem>
 			<ProjectItem TargetFileName="iOS说明.txt">iOS\iOS说明.txt</ProjectItem>
 
-			<ProjectItem TargetFileName="logo.png">iOS\Resources\logo.png</ProjectItem>
-			<ProjectItem TargetFileName="SplashScreen@2x.png">iOS\Resources\SplashScreen@2x.png</ProjectItem>
-			<ProjectItem TargetFileName="SplashScreen@3x.png">iOS\Resources\SplashScreen@3x.png</ProjectItem>
+			<ProjectItem TargetFileName="logo.png">iOS\Resources\Assets\logo.png</ProjectItem>
+			<ProjectItem TargetFileName="SplashScreen@2x.png">iOS\Resources\Assets\SplashScreen@2x.png</ProjectItem>
+			<ProjectItem TargetFileName="SplashScreen@3x.png">iOS\Resources\Assets\SplashScreen@3x.png</ProjectItem>
 
 			<ProjectItem TargetFileName="Contents.json">iOS\Assets.xcassets\AppIcons.appiconset\Contents.json</ProjectItem>
 			<ProjectItem TargetFileName="Icon-1024.png">iOS\Assets.xcassets\AppIcons.appiconset\Icon-1024.png</ProjectItem>

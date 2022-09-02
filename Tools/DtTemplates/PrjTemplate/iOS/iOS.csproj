@@ -17,11 +17,7 @@
 		<Compile Include="..\$ext_safeprojectname$.Win\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
-		<BundleResource Include="iOS\Resources\SplashScreen%402x.png" />
-		<BundleResource Include="iOS\Resources\SplashScreen%403x.png" />
-		<BundleResource Include="iOS\Resources\logo.png" />
-		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\icon.ttf" Link="iOS\Resources\Fonts\icon.ttf" />
-		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\uno-fluentui-assets.ttf" Link="iOS\Resources\Fonts\uno-fluentui-assets.ttf" />
+		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="iOS\Resources\Fonts\%(Filename).ttf" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />

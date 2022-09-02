@@ -45,7 +45,7 @@ namespace $ext_safeprojectname$
 			// 打开本地sqlite库
             AtLocal.OpenDb();
 
-            // 初次运行，显示用户协议、隐私政策、向导
+            // 初次运行，显示用户协议和隐私政策对话框
             if (AtLocal.GetDict("FirstRun") == "")
             {
                 await new PolicyDlg().ShowAsync();

@@ -8,7 +8,11 @@
 iOS\Assets.xcassets 图标资源，可通过控件样例的工具生成，在项目中不可见
 
 iOS\Resources       名称必须是 Resources，否则字体无法加载
-    \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
+    \Assets
+        
+        -- 图片文件无需指定 BundleResource，生成操作默认“无”即可，会自动 BundleResource 到 Assets目录
+        \logo.png 登录页面等用到
+        \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
 
     \Fonts
         \icon.ttf  自定义矢量字体库，文件链接
@@ -23,6 +27,15 @@ iOS\LaunchScreen.storyboard 启动动画定义
 \App.xaml  全局公共，文件链接
 
 \Main.cs 入口
+
+
+》资源文件的生成操作：BundleResource 和 Content(内容) 的区别
+它们的输出目录不同，参见：Dt.Shell.IOS\bin\Debug\net6.0-ios\iossimulator-x64\Dt.Shell.IOS.app
+BundleResource的资源文件输出目录省略 iOS\Resources 两级目录，Content的资源文件输出到完整目录
+如 iOS\Resources\Lottie\Dash.json 资源文件，
+BundleResource 时路径：ms-appx:///Lottie/Dash.json
+Content 时路径：       ms-appx:///iOS/Resources/Lottie/Dash.json
+为了统一资源文件的路径，约定放在ms-appx:///Assets目录下，这就需要在iOS项目中资源文件放在iOS\Resources\Assets目录下
 
 
 》mac端生成后的位置：/Users/oysd/Library/Caches/Xamarin/mtbs/builds/Dt.Shell.iOS/

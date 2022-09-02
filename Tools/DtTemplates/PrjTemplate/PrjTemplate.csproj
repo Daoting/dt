@@ -127,9 +127,9 @@
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
     <None Include="iOS\iOS\iOS说明.txt" />
-    <None Include="iOS\iOS\Resources\logo.png" />
-    <None Include="iOS\iOS\Resources\SplashScreen%402x.png" />
-    <None Include="iOS\iOS\Resources\SplashScreen%403x.png" />
+    <None Include="iOS\iOS\Resources\Assets\logo.png" />
+    <None Include="iOS\iOS\Resources\Assets\SplashScreen%402x.png" />
+    <None Include="iOS\iOS\Resources\Assets\SplashScreen%403x.png" />
     <VSTemplate Include="iOS\iOS.vstemplate" />
     <None Include="Win\Assets\logo.png" />
     <None Include="Win\Assets\SplashScreen.scale-200.png" />
