@@ -31,4 +31,9 @@
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
     </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Controls\Policy\Privacy.txt" />
+      <EmbeddedResource Include="Controls\Policy\Agreement.txt" />
+    </ItemGroup>
 </Project>

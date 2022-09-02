@@ -48,7 +48,7 @@ namespace $ext_safeprojectname$
             // 初次运行，显示用户协议、隐私政策、向导
             if (AtLocal.GetDict("FirstRun") == "")
             {
-                await new PrivacyDlg("lob/DtAgreement.html", "lob/DtPrivacy.html").ShowAsync();
+                await new PolicyDlg().ShowAsync();
                 AtLocal.SaveDict("FirstRun", "0");
             }
 

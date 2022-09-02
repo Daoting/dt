@@ -104,7 +104,7 @@ namespace Dt
             var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
             var folder = ((UIHierarchyItem[])dte2?.ToolWindows.SolutionExplorer.SelectedItems)[0].Object as ProjectItem;
             var tgts = folder.ContainingProject.Properties.Item("TargetFrameworks").Value.ToString();
-            return tgts.Contains("-android") && tgts.Contains("-ios") && tgts.Contains("-windows");
+            return tgts.Contains("-android") || tgts.Contains("-ios") || tgts.Contains("-windows");
         }
 
         /// <summary>

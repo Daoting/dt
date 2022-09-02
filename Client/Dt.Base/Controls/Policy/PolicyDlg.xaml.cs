@@ -1,43 +1,37 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: Daoting
+* 创建: daoting
 * 摘要: 
-* 日志: 2019-01-21 创建
+* 日志: 2022-09-02 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.Core;
-using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
 {
-    public sealed partial class PrivacyDlg : Dlg
+    public partial class PolicyDlg : Dlg
     {
-        string _agreementUrl;
-        string _privacyUrl;
-
         /// <summary>
-        /// 
+        /// 设置 Company 属性可在《用户协议》和《隐私政策》中显示“开发者名称”
         /// </summary>
-        /// <param name="p_agreementUrl">用户协议url</param>
-        /// <param name="p_privacyUrl">隐私政策url</param>
-        public PrivacyDlg(string p_agreementUrl, string p_privacyUrl)
+        public PolicyDlg()
         {
             InitializeComponent();
 
-            _agreementUrl = p_agreementUrl;
-            _privacyUrl = p_privacyUrl;
             HideTitleBar = true;
             ShowVeil = false;
             IsPinned = true;
             PhonePlacement = DlgPlacement.CenterScreen;
             _tbTitle.Text = $"欢迎使用{Kit.Title}";
         }
+
+        /// <summary>
+        /// 获取设置开发者名称，可在《用户协议》和《隐私政策》中显示
+        /// </summary>
+        public string Company { get; set; }
 
         void OnAgree(object sender, RoutedEventArgs e)
         {
@@ -52,23 +46,12 @@ namespace Dt.Base
 
         void OnAgreement(object sender, RoutedEventArgs e)
         {
-            ShowDlg("《用户协议》", _agreementUrl);
+            new AgreementDlg(this).Show();
         }
 
         void OnPrivacy(object sender, RoutedEventArgs e)
         {
-            ShowDlg("《隐私政策》", _privacyUrl);
-        }
-
-        void ShowDlg(string p_title, string p_url)
-        {
-            new Dlg
-            {
-                Title = p_title,
-                IsPinned = true,
-                WinPlacement = DlgPlacement.Maximized,
-                Content = new WebView2 { Source = new Uri($"{Kit.GetSvcUrl("cm")}/{p_url}") },
-            }.Show();
+            new PrivacyDlg(this).Show();
         }
     }
 }
