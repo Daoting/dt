@@ -18,7 +18,6 @@
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
 		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="iOS\Resources\Fonts\%(Filename).ttf" />
-		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />
