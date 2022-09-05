@@ -93,7 +93,12 @@ namespace Dt.Core
         /// </summary>
         public long ID
         {
-            get { return (long)_cells["id"].Val; }
+            get
+            {
+                if (_cells.Contains("id"))
+                    return _cells["id"].GetVal<long>();
+                return -1;
+            }
             set { _cells["id"].SetVal(value); }
         }
 

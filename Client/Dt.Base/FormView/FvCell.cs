@@ -491,23 +491,34 @@ namespace Dt.Base
             // Row数据源
             if (p_data is Row row)
             {
-                // 缺少当前列
-                if (!row.Contains(ID))
+                // 包含ID列
+                if (row.Contains(ID))
                 {
-                    ClearValue(ValBindingProperty);
-                    // Kit.Msg($"数据源中缺少【{ID}】列！");
+                    var c = row.Cells[ID];
+                    c.PropertyChanged += OnDataPropertyChanged;
+
+                    // 设置新绑定，只设置Source引起immutable异常！
+                    ValBinding = new Binding { Path = new PropertyPath("Val"), Mode = BindingMode.TwoWay, Source = c, ConverterParameter = c.Type };
                     return;
                 }
 
-                var c = row.Cells[ID];
-                c.PropertyChanged += OnDataPropertyChanged;
-
-                // 设置新绑定，只设置Source引起immutable异常！
-                ValBinding = new Binding { Path = new PropertyPath("Val"), Mode = BindingMode.TwoWay, Source = c, ConverterParameter = c.Type };
+                var pi = p_data.GetType().GetProperty(ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                if (pi != null)
+                {
+                    // ID为Row的属性，OneTime且只读，只为同步显示用，无法保存
+                    ValBinding = new Binding { Path = new PropertyPath(pi.Name), Mode = BindingMode.OneTime, Source = p_data, ConverterParameter = pi.PropertyType };
+                    IsReadOnly = true;
+                }
+                else
+                {
+                    // ID既不是列，也不是属性，不绑定
+                    ClearValue(ValBindingProperty);
+                    Kit.Debug($"【{ID}】在数据源中既不是列，也不是属性，无法绑定！");
+                }
                 return;
             }
 
-            // 普通对象数据源，解析绑定路径
+            // ID为普通对象的属性 或 以.分隔的多级子属性(如 Prop1.ChildProp.XXX)，解析绑定路径
             Binding bind = ParseBinding(p_data);
             if (bind == null)
             {
