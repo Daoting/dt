@@ -8,12 +8,8 @@
 
 #region 引用命名
 using Dt.Core.Sqlite;
-using System;
+using Microsoft.Data.Sqlite;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -598,6 +594,8 @@ namespace Dt.Core
             if (_db != null)
             {
                 _db.Close();
+                // Win上不清理连接池将无法删除库文件！其它平台清不清都可
+                SqliteConnection.ClearPool(_db);
                 _db = null;
                 SqliteDbs.All.Remove(GetDbName());
             }
