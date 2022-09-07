@@ -42,6 +42,12 @@ namespace Dt.Base
             typeof(Dot),
             new PropertyMetadata(CellFontStyle.默认, OnFontChanged));
 
+        public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(
+            "AutoHide",
+            typeof(bool),
+            typeof(Dot),
+            new PropertyMetadata(true));
+
         static void OnFontChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Dot)d).ApplyFontStyle();
@@ -85,6 +91,17 @@ namespace Dt.Base
         {
             get { return (CellFontStyle)GetValue(FontProperty); }
             set { SetValue(FontProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置内容为空时是否自动隐藏Dot，默认true
+        /// <para>隐藏时Padding 或 Margin 不再占用位置！</para>
+        /// <para>若false，内容为空时仍然占位</para>
+        /// </summary>
+        public bool AutoHide
+        {
+            get { return (bool)GetValue(AutoHideProperty); }
+            set { SetValue(AutoHideProperty, value); }
         }
 
         void ApplyFontStyle()

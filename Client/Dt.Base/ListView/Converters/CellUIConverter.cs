@@ -30,17 +30,25 @@ namespace Dt.Base.ListView
                 result = vi.GetCellUI(pre);
                 if (parameter is Dot dot)
                 {
-                    if (result == null)
+                    if (dot.AutoHide)
                     {
-                        // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
-                        // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
-                        if (dot.Visibility == Visibility.Visible)
-                            dot.Visibility = Visibility.Collapsed;
+                        if (result == null)
+                        {
+                            // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
+                            // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
+                            if (dot.Visibility == Visibility.Visible)
+                                dot.Visibility = Visibility.Collapsed;
+                        }
+                        else if (dot.Visibility == Visibility.Collapsed)
+                        {
+                            // 数据变化时重新可见
+                            dot.Visibility = Visibility.Visible;
+                        }
                     }
-                    else if (dot.Visibility == Visibility.Collapsed)
+                    else if (result == null)
                     {
-                        // 数据变化时重新可见
-                        dot.Visibility = Visibility.Visible;
+                        // 为占位用
+                        result = new TextBlock();
                     }
                 }
             }
