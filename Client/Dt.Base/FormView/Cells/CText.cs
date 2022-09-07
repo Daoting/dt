@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using System;
+using System.Text;
 using Dt.Base.FormView;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -95,6 +95,7 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(CText);
             _tb = new TextBox { Style = Res.FvTextBox };
+            ValConverter = new TextValConverter(this);
         }
         #endregion
 
@@ -182,6 +183,58 @@ namespace Dt.Base
             BindingExpression expresson = tb.GetBindingExpression(TextBox.TextProperty);
             if (expresson != null)
                 expresson.UpdateSource();
+        }
+    }
+
+    /// <summary>
+    /// 源CText.Data，目标TextBox.Text
+    /// </summary>
+    class TextValConverter : IValueConverter
+    {
+        CText _owner;
+
+        public TextValConverter(CText p_owner)
+        {
+            _owner = p_owner;
+        }
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (!_owner.AcceptsReturn || value == null)
+                return value;
+
+            // TextBox支持多行时：
+            // windows换行符只有\r，每次向TextBox赋值时 \r\n 或 \n 都被强制替换为 \r
+            // 其它平台换行符只有 \n，wasm每次向TextBox赋值时 \r\n 被强制替换为 \n，ios android不强制替换
+
+            // 此处为统一：将单独的\r 或 \n 替换成 \r\n
+            // 未使用正则表达式，效率更高些
+            char[] chars = value.ToString().ToCharArray();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                char c = chars[i];
+                if (c == '\r'
+                    && (i == chars.Length - 1 || chars[i + 1] != '\n'))
+                {
+                    sb.Append("\r\n");
+                }
+                else if (c == '\n'
+                    && (i == 0 || chars[i - 1] != '\r'))
+                {
+                    sb.Append("\r\n");
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
         }
     }
 }

@@ -72,7 +72,7 @@ namespace Dt.Sample
             _fv.Data = _tbl.AddRow(new
             {
                 txt = $"文本{_rowNum}",
-                txtlong = "",
+                txtlong = "\r\nab\r\ncd\r\n\r\n",
                 txtpy = "",
                 num = _rowNum,
                 mask = "",
