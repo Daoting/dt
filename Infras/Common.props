@@ -1,7 +1,6 @@
 <Project ToolsVersion="Current">
     <PropertyGroup>
         <TargetFrameworks>net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
-        <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
     </PropertyGroup>
 
@@ -13,14 +12,17 @@
     <!-- 定义平台常量 -->
     <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
         <DefineConstants>$(DefineConstants);WIN</DefineConstants>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
         <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+        <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
         <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+        <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">

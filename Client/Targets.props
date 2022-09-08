@@ -10,6 +10,5 @@
         <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Win.sln'"></TargetFrameworks>
         <!-- 始终包含windows目标 -->
         <TargetFrameworks>$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
-        <TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
 </Project>

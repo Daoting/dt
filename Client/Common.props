@@ -15,14 +15,17 @@
     <!-- 定义平台常量 -->
     <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
         <DefineConstants>$(DefineConstants);WIN</DefineConstants>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
         <DefineConstants>$(DefineConstants);IOS;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
+        <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
         <DefineConstants>$(DefineConstants);ANDROID;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
+        <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
@@ -31,7 +34,7 @@
 
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="2.0.2" />
+        <PackageReference Include="Dt.Infras" Version="2.1.0" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->
