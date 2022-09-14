@@ -7,15 +7,8 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Devices.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -31,6 +24,7 @@ namespace Dt.Base
         Button _selected;
         #endregion
 
+        #region 构造方法
         public PhoneTabs()
         {
             DefaultStyleKey = typeof(PhoneTabs);
@@ -39,7 +33,9 @@ namespace Dt.Base
             Grid.SetRow(_grid, 1);
             //ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 所属Win
         /// </summary>
@@ -63,7 +59,9 @@ namespace Dt.Base
         /// 是否为首页
         /// </summary>
         internal bool IsHome { get; set; }
+        #endregion
 
+        #region 外部方法
         /// <summary>
         /// 添加标签
         /// </summary>
@@ -117,6 +115,54 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 选择当前标签右侧的标签
+        /// </summary>
+        public void SelectNext()
+        {
+            if (_selected == null)
+            {
+                Select(0);
+                return;
+            }
+
+            int index = GetSelectedIndex();
+            index++;
+
+            if (index >= _grid.Children.Count)
+            {
+                Select(0);
+            }
+            else
+            {
+                Select(index);
+            }
+        }
+
+        /// <summary>
+        /// 选择当前标签左侧的标签
+        /// </summary>
+        /// <returns>false 左侧无标签</returns>
+        public bool SelectPrevious()
+        {
+            if (_selected == null)
+            {
+                Select(0);
+                return true;
+            }
+
+            int index = GetSelectedIndex();
+            index--;
+
+            if (index >= 0)
+            {
+                Select(index);
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         #region 实现接口
         /// <summary>
         /// 关闭或后退之前，返回false表示禁止关闭
@@ -144,6 +190,7 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 内部方法
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -169,7 +216,7 @@ namespace Dt.Base
                     _root.Children.RemoveAt(1);
 
                 var elem = (UIElement)p_btn.DataContext;
-                elem.RenderTransform = new TranslateTransform();
+                //elem.RenderTransform = new TranslateTransform();
                 _root.Children.Add(elem);
                 foreach (var btn in _grid.Children.OfType<Button>())
                 {
@@ -177,6 +224,21 @@ namespace Dt.Base
                 }
             }
         }
+
+        int GetSelectedIndex()
+        {
+            int index = -1;
+            for (int i = 0; i < _grid.Children.Count; i++)
+            {
+                if (_selected == (Button)_grid.Children[i])
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+        #endregion
 
         #region 左右滑动
         /*  交互效果不好，暂时停用

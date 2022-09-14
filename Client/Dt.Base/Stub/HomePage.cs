@@ -7,11 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.IO.Compression;
-using System.Text.Json;
+using Microsoft.UI.Input;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -83,6 +82,9 @@ namespace Dt.Base
                 // 只自启动一次
                 _autoStartOnce = null;
             }
+
+            // 附加左右滑动手势
+            AttachFrameManipulation();
         }
 
         /// <summary>
@@ -137,5 +139,81 @@ namespace Dt.Base
         {
             UITree.RootContent = p_page;
         }
+
+        #region 左右滑动手势
+        static void AttachFrameManipulation()
+        {
+            var frame = UITree.RootFrame;
+            frame.ManipulationMode = ManipulationModes.System | ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            frame.ManipulationInertiaStarting += OnManipulationInertiaStarting;
+        }
+
+        static void OnManipulationInertiaStarting(object sender, ManipulationInertiaStartingRoutedEventArgs e)
+        {
+            PhonePage page;
+            if (e.PointerDeviceType != PointerDeviceType.Touch
+                || e.Handled
+                || (page = UITree.RootFrame.Content as PhonePage) == null)
+                return;
+
+            var trans = e.Cumulative.Translation;
+            Kit.Debug("InertiaStarting：" + trans.ToString());
+
+            // 水平滑动距离必须大于垂直滑动的n倍
+            if (Math.Abs(trans.X) < Math.Abs(trans.Y) * 4)
+                return;
+
+            ScrollViewer sv;
+            var tabs = page.Content as PhoneTabs;
+            if (tabs == null)
+            {
+                // 内容非PhoneTabs，只支持向右滑动，页面后退
+                if (trans.X > 0)
+                {
+                    sv = page.FindChildByType<ScrollViewer>();
+                    if (sv == null
+                        || sv.ScrollableWidth == 0
+                        || sv.HorizontalOffset == 0)
+                    {
+                        InputManager.GoBack();
+                    }
+                }
+                return;
+            }
+
+            // 内容为PhoneTabs，支持左右滑动
+            sv = tabs.FindChildByType<ScrollViewer>();
+            if (sv != null)
+            {
+                // 内容正在垂直滚动
+                //if (trans.Y != 0
+                //    && sv.ScrollableHeight > 0
+                //    && ((trans.Y < 0 && sv.VerticalOffset < sv.ScrollableHeight)
+                //        || (trans.Y > 0 && sv.VerticalOffset > 0)))
+                //    return;
+
+                // 内容正在水平滚动
+                if (sv.ScrollableWidth > 0
+                    && ((trans.X < 0 && sv.HorizontalOffset < sv.ScrollableWidth)
+                        || (trans.X > 0 && sv.HorizontalOffset > 0)))
+                    return;
+            }
+
+            if (trans.X < 0)
+            {
+                // 选择右侧Tab
+                tabs.SelectNext();
+            }
+            else
+            {
+                // 选择左侧Tab，若已是最左侧，页面后退
+                var suc = tabs.SelectPrevious();
+                if (!suc)
+                {
+                    InputManager.GoBack();
+                }
+            }
+        }
+        #endregion
     }
 }
