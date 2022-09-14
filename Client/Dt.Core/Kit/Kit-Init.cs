@@ -34,18 +34,9 @@ namespace Dt.Core
             app.Resuming += OnResuming;
 #endif
 
-            // 异常处理，暂停，参加https://github.com/Daoting/dt/issues/1
-            //#if WIN
-            //            Application.Current.UnhandledException += OnUwpUnhandledException;
-            //#elif ANDROID
-            //            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
-            //#elif IOS
-            //            // 在iOS项目的Main函数处理
-            //#elif WASM
-            //            //TaskScheduler.UnobservedTaskException += (s, e) => OnUnhandledException(e.Exception);
-            //            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
-            //#endif
-
+            // 异常处理，参见 https://github.com/Daoting/dt/issues/1
+            AttachUnhandledException();
+            
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
             // 否则用 Directory 每次都创建新目录！
@@ -110,6 +101,117 @@ namespace Dt.Core
         #endregion
 
         #region 异常处理
+#if WIN
+
+        static void AttachUnhandledException()
+        {
+            // For WinUI 3:
+            //
+            // * Exceptions on background threads are caught by AppDomain.CurrentDomain.UnhandledException,
+            //   not by Microsoft.UI.Xaml.Application.Current.UnhandledException
+            //   See: https://github.com/microsoft/microsoft-ui-xaml/issues/5221
+            //
+            // * Exceptions caught by Microsoft.UI.Xaml.Application.Current.UnhandledException have details removed,
+            //   but that can be worked around by saved by trapping first chance exceptions
+            //   See: https://github.com/microsoft/microsoft-ui-xaml/issues/7160
+            //
+            //  目前只有后台未处理异常不能提醒
+
+            AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
+            {
+                if (_lastException == e.Exception)
+                    return;
+
+                _lastException = e.Exception;
+                if (_lastException is KnownException kex)
+                {
+                    // 已知异常，一般为业务异常，只警告，不保存日志
+                    Warn(kex.Message);
+                }
+            };
+
+            Microsoft.UI.Xaml.Application.Current.UnhandledException += (s, e) =>
+            {
+                e.Handled = true;
+                if (_lastException is KnownException)
+                    return;
+
+                try
+                {
+                    string title;
+                    if (_lastException is ServerException se)
+                    {
+                        title = se.Title;
+                    }
+                    else
+                    {
+                        title = $"未处理异常：{_lastException.GetType().FullName}";
+                    }
+
+                    // 警告、保存日志
+                    var notify = new NotifyInfo
+                    {
+                        NotifyType = NotifyType.Warning,
+                        Message = title,
+                        Delay = 5,
+                        Link = "查看详细",
+                    };
+                    notify.LinkCallback = (e) =>
+                    {
+                        ShowTraceBox();
+                        notify.Close();
+                    };
+                    Notify(notify);
+                    Log.Error(_lastException, title);
+                }
+                catch { }
+            };
+        }
+        static Exception _lastException;
+
+#elif ANDROID
+
+        static void AttachUnhandledException()
+        {
+            // For Android:
+            // All exceptions will flow through Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser,
+            // and NOT through AppDomain.CurrentDomain.UnhandledException
+
+            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += (s, e) =>
+            {
+                e.Handled = true;
+                OnUnhandledException(e.Exception);
+            };
+        }
+
+#elif IOS
+
+        static void AttachUnhandledException()
+        {
+            // For iOS and Mac Catalyst
+            // Exceptions will flow through AppDomain.CurrentDomain.UnhandledException,
+            // but we need to set UnwindNativeCode to get it to work correctly. 
+            // 
+            // See: https://github.com/xamarin/xamarin-macios/issues/15252
+        
+            ObjCRuntime.Runtime.MarshalManagedException += (s, e) => e.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.UnwindNativeCode;
+
+            // This is the normal event expected, and should still be used.
+            // It will fire for exceptions from iOS and Mac Catalyst,
+            // and for exceptions on background threads from WinUI 3.
+
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+        }
+
+#elif WASM
+
+        static void AttachUnhandledException()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+        }
+
+#endif
+
         static void OnUnhandledException(Exception p_ex)
         {
             try
@@ -118,7 +220,7 @@ namespace Dt.Core
                 if ((kex = p_ex as KnownException) != null || (kex = p_ex.InnerException as KnownException) != null)
                 {
                     // 只警告，不保存日志
-                    Kit.Warn(kex.Message);
+                    Warn(kex.Message);
                 }
                 else
                 {
@@ -150,12 +252,6 @@ namespace Dt.Core
                 }
             }
             catch { }
-        }
-
-        static void OnUwpUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-        {
-            e.Handled = true;
-            OnUnhandledException(e.Exception);
         }
 
 #if IOS
@@ -195,14 +291,6 @@ namespace Dt.Core
                 RunLoop();
         }
 #endif
-
-#if ANDROID
-        static void OnAndroidUnhandledException(object sender, Android.Runtime.RaiseThrowableEventArgs e)
-        {
-            e.Handled = true;
-            OnUnhandledException(e.Exception);
-        }
-#endif
-        #endregion
+#endregion
     }
 }
