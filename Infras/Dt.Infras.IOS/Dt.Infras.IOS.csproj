@@ -7,6 +7,8 @@
         <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
         <IsUnoHead>true</IsUnoHead>
         <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+        <!-- 避免模拟器上因TextBox崩溃，等待解决 -->
+        <MtouchExtraArgs>$(MtouchExtraArgs) --registrar=static</MtouchExtraArgs>
     </PropertyGroup>
 
     <ItemGroup>

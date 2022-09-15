@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
         <PackageId>Dt.Infras</PackageId>
 		<Description>搬运工客户端 Excel Chart 等基础控件</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
