@@ -314,7 +314,9 @@ namespace Dt.Base
                     Style = Res.LvTextBlock,
                     Text = txt,
                 };
+#if WIN
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
                 return tb;
             }
 
@@ -428,7 +430,9 @@ namespace Dt.Base
                     Style = Res.LvTextBlock,
                     Text = txt,
                 };
+#if WIN
                 tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
                 return tb;
             }
 
@@ -538,7 +542,9 @@ namespace Dt.Base
                 Style = Res.LvTextBlock,
                 Text = val,
             };
+#if WIN
             tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
             return tb;
         }
         #endregion
