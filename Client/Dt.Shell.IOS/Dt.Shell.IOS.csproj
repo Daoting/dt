@@ -4,7 +4,9 @@
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <IsUnoHead>true</IsUnoHead>
-    
+        <!-- 避免模拟器上因TextBox崩溃，等待解决 -->
+        <MtouchExtraArgs>$(MtouchExtraArgs) --registrar=static</MtouchExtraArgs>
+        
         <!--发布用，和Info.plist中的CFBundleIdentifier CFBundleVersion一致-->
         <ApplicationId>com.dt.samples</ApplicationId>
         <ApplicationVersion>22.6.10</ApplicationVersion>
