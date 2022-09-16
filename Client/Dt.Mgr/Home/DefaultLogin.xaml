@@ -14,7 +14,7 @@
         </Style>
     </Page.Resources>
     
-    <Grid Background="{StaticResource 主蓝}">
+    <Grid x:Name="_grid">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="Auto" />

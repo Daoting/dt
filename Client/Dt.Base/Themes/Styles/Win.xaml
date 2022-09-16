@@ -170,7 +170,6 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
-                              Background="{StaticResource 主蓝}"
                               Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
                               Height="50">
                             <Grid.ColumnDefinitions>

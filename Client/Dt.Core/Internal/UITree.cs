@@ -80,7 +80,7 @@ namespace Dt.Core
             var theme = Kit.GetService<ITheme>();
             Brush bgBrush = (theme == null) ?
                 new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2))
-                : theme.GetThemeBrush();
+                : theme.ThemeBrush;
             
             // 根Grid，背景为主题画刷
             RootGrid = new Grid { Background = bgBrush };

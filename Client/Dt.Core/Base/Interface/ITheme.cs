@@ -18,8 +18,8 @@ namespace Dt.Core
     public interface ITheme
     {
         /// <summary>
-        /// 获取主题画刷
+        /// 获取主题画刷，还需修改各平台的logo和背景图片与主题匹配
         /// </summary>
-        Brush GetThemeBrush();
+        Brush ThemeBrush { get; }
     }
 }

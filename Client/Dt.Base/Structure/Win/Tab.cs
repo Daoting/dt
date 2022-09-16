@@ -413,18 +413,26 @@ namespace Dt.Base
 
         void InitPhoneUITemplate()
         {
-            if (!HideTitleBar)
-            {
-                if (OwnWin != null)
-                {
-                    // 右键菜单
-                    WinKit.OnPhoneTitleTapped((Border)GetTemplateChild("ContextMenuBorder"), OwnWin);
-                }
+            if (HideTitleBar)
+                return;
 
-                Button btn = GetTemplateChild("BackButton") as Button;
-                if (btn != null)
-                    btn.Click += (s, e) => Backward();
+            // 标题背景
+            var grid = GetTemplateChild("HeaderGrid") as Grid;
+            if (grid != null)
+            {
+                var theme = Kit.GetService<ITheme>();
+                grid.Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
             }
+
+            if (OwnWin != null)
+            {
+                // 右键菜单
+                WinKit.OnPhoneTitleTapped((Border)GetTemplateChild("ContextMenuBorder"), OwnWin);
+            }
+
+            Button btn = GetTemplateChild("BackButton") as Button;
+            if (btn != null)
+                btn.Click += (s, e) => Backward();
         }
         #endregion
 

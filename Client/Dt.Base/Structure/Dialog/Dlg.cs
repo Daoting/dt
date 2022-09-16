@@ -518,6 +518,11 @@ namespace Dt.Base
             _headerGrid = (Grid)GetTemplateChild("HeaderGrid");
             if (_headerGrid != null)
             {
+                if (Kit.IsPhoneUI)
+                {
+                    var theme = Kit.GetService<ITheme>();
+                    _headerGrid.Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
+                }
                 _headerGrid.PointerPressed += OnHeaderPointerPressed;
                 _headerGrid.PointerMoved += OnHeaderPointerMoved;
                 _headerGrid.PointerReleased += OnHeaderPointerReleased;

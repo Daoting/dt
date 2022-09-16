@@ -16,13 +16,8 @@ namespace Dt.Sample
     public class CustomTheme : ITheme
     {
         /// <summary>
-        /// 获取主题画刷
+        /// 获取主题画刷，还需修改各平台的logo和背景图片与主题匹配
         /// </summary>
-        public Brush GetThemeBrush()
-        {
-            if (DateTime.Now.Month > 6)
-                return new SolidColorBrush(Colors.Red);
-            return new SolidColorBrush(Colors.Green);
-        }
+        public Brush ThemeBrush { get; } = new SolidColorBrush(Colors.Red);
     }
 }

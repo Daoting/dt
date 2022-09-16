@@ -30,7 +30,12 @@ namespace Dt.Mgr
         {
             InitializeComponent();
 
+            // 背景
+            var theme = Kit.GetService<ITheme>();
+            _grid.Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
+
             _tbTitle.Text = string.IsNullOrEmpty(Kit.Title) ? "无标题" : Kit.Title;
+
             // 设置中间面板宽度
             LoginPanel.Width = Kit.IsPhoneUI ? Kit.ViewWidth - 80 : 400;
             Loaded += (s, e) => _tbPhone.Focus(FocusState.Programmatic);
