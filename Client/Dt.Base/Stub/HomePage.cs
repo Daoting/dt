@@ -157,7 +157,7 @@ namespace Dt.Base
                 return;
 
             var trans = e.Cumulative.Translation;
-            Kit.Debug("InertiaStarting：" + trans.ToString());
+            //Kit.Debug("InertiaStarting：" + trans.ToString());
 
             // 水平滑动距离必须大于垂直滑动的n倍
             if (Math.Abs(trans.X) < Math.Abs(trans.Y) * 4)

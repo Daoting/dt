@@ -36,6 +36,7 @@ namespace Dt.Sample
             p_svcs.AddTransient<IPushApi, PushApi>();
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
             p_svcs.AddTransient<IFixedMenus, FixedMenus>();
+            //p_svcs.AddTransient<ITheme, CustomTheme>();
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -49,9 +50,9 @@ namespace Dt.Core
         static PointerEventHandler _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
 
         /// <summary>
-        /// 内容元素，桌面、Frame、登录页面等，在最底层
+        /// 内容元素的容器
         /// </summary>
-        static UIElement _rootContent;
+        static readonly Border _contentBorder;
         #endregion
 
         #region 静态构造
@@ -75,13 +76,26 @@ namespace Dt.Core
             //            new Frame().Navigate(typeof(Page));
             //#endif
 
-            // 根Grid，背景主蓝
-            RootGrid = new Grid { Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
+            // 背景画刷，默认主蓝
+            var theme = Kit.GetService<ITheme>();
+            Brush bgBrush = (theme == null) ?
+                new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2))
+                : theme.GetThemeBrush();
+            
+            // 根Grid，背景为主题画刷
+            RootGrid = new Grid { Background = bgBrush };
 
-            // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
-            // 首页加载快时不显示进度动画！
-            _rootContent = new ProgressRing { Height = 80, Width = 80, IsActive = true };
-            RootGrid.Children.Add(_rootContent);
+            // 桌面层/页面层，容器为Border，首页加载快时不显示进度动画！
+            _contentBorder = new Border();
+            _contentBorder.Child = new ProgressRing
+            {
+                Height = 80,
+                Width = 80,
+                IsActive = true,
+                Background = bgBrush,
+                Foreground = new SolidColorBrush(Colors.White),
+            };
+            RootGrid.Children.Add(_contentBorder);
 
             // 对话框层
             _dlgCanvas = new Canvas();
@@ -156,17 +170,11 @@ namespace Dt.Core
         /// </summary>
         public static UIElement RootContent
         {
-            get { return _rootContent; }
+            get { return _contentBorder.Child; }
             set
             {
-                if (value != null && value != _rootContent)
-                {
-                    if (_rootContent != null)
-                        RootGrid.Children.Remove(_rootContent);
-                    _rootContent = value;
-                    SetDefaultStyle(_rootContent as Control);
-                    RootGrid.Children.Insert(0, value);
-                }
+                SetDefaultStyle(value as Control);
+                _contentBorder.Child = value;
             }
         }
 
@@ -175,7 +183,7 @@ namespace Dt.Core
         /// </summary>
         public static Frame RootFrame
         {
-            get { return (Frame)_rootContent; }
+            get { return (Frame)_contentBorder.Child; }
         }
 
         /// <summary>
