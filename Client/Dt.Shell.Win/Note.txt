@@ -10,3 +10,6 @@
    Package.appxmanifest 增加 desktop:Extension com:Extension 两节，ToastActivatorCLSID Id 为 Identity.Name
    处理 ToastNotificationManagerCompat.OnActivated 事件
    详见：https://docs.microsoft.com/zh-cn/windows/apps/design/shell/tiles-and-notifications/send-local-toast?tabs=desktop-msix
+
+
+4. Assets目录下的资源为Win专用，Images下的图片为公用

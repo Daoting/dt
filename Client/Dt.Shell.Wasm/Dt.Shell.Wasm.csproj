@@ -22,11 +22,9 @@
 
     <ItemGroup>
         <!-- 内容文件输出到 package_xxx 的对应子目录下 -->
-        <Content Include="assets\logo.png" />
-        <Content Include="assets\SplashScreen.png" />
-        <Content Include="assets\fonts\icon.woff2" />
-        <Content Include="assets\fonts\uno-fluentui-assets.woff2" />
+        <Content Include="assets\**" />
         <Content Include="..\Dt.Shell.Win\Assets\Lottie\*.json" Link="assets\lottie\%(Filename).json" />
+        <Content Include="..\Dt.Shell.Win\Images\*.png" Link="Images\%(Filename).png" />
         <!-- 嵌入资源文件输出到 package_xxx 根目录下 -->
         <EmbeddedResource Include="WasmCSS\*.css" />
         <EmbeddedResource Include="WasmScripts\*.js" />

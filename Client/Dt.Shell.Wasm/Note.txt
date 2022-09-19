@@ -13,6 +13,6 @@
    require([],function(){})：参数和define相同，只是不返回当前object
 
 
-4.
+4. Assets目录下的资源为wasm专用，Images下的图片为公用
 
 

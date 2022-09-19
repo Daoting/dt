@@ -14,6 +14,6 @@
         <Button Content="按 钮" Foreground="White" Background="{StaticResource 主蓝}" Style="{StaticResource SysButton}" />
         <HyperlinkButton Content="链接按钮" />
         <ToggleButton Content="ToggleButton" />
-        <Image Source="ms-appx:///Assets/logo.png" Stretch="None" />
+        <Image Source="ms-appx:///Images/Logo.png" Height="50" Width="50" />
     </StackPanel>
 </a:Win>

@@ -1,22 +1,26 @@
-》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：
-The Bindable attribute is missing and the type [T] is not known by the MetadataProvider. Reflection was used instead of the binding engine and generated static metadata. Add the Bindable attribute to prevent this message and performance issues.
+》项目导入Common.props，包括定义平台常量、引用包版本等
+
+
+》为避免冗余的文件，相同文件的公共文件采取文件链接方式
 
 
 》项目目录说明：
-\Assets\Fonts\icon.ttf  自定义矢量字体库
-              uno-fluentui-assets.ttf：uno用到的字体库
+Android\Assets\Fonts\icon.ttf  自定义矢量字体库
+                     uno-fluentui-assets.ttf：uno用到的字体库
 
-\Resources\drawable\back.png  快速启动背景
-                    logo.png  程序中用到的50X50图标
+Android\Resources\drawable\back.png  快速启动背景
 
-\Resources\mipmap-xxx\ic_launcher.png   sdk26之前版本的图标
-                      ic_launcher_round.png   sdk26之前版本的图标
-                      ic_launcher_foreground.png  sdk26及以上版本的图标，背景透明
+Android\Resources\mipmap-xxx\ic_launcher.png   sdk26之前版本的图标
+                             ic_launcher_round.png   sdk26之前版本的图标
+                             ic_launcher_foreground.png  sdk26及以上版本的图标，背景透明
 
-\Resources\values\styles.xml  定义样式参数
-                  ic_launcher_background.xml  sdk26及以上版本图标使用的背景色
+Android\Resources\values\styles.xml  定义样式参数
+                         ic_launcher_background.xml  sdk26及以上版本图标使用的背景色
 
-\Resources\xml\file_paths.xml 共享路径配置
+Android\Resources\xml\file_paths.xml 共享路径配置
+
+Images\*.png 文件链接方式，项目中用到的图片，作为内容生成，ms-appx:///Images/*.png
+Android目录下的资源为android专用，Images下的图片为公用
 
 \App.xaml  全局公共
 
@@ -32,3 +36,8 @@ dotnet publish -f:net6.0-android -c:Release /p:AndroidSigningKeyPass=around /p:A
 
 原来：
 选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择或创建签名 -> 密码around -> 分发成功
+
+
+》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：
+The Bindable attribute is missing and the type [T] is not known by the MetadataProvider. Reflection was used instead of the binding engine and generated static metadata. Add the Bindable attribute to prevent this message and performance issues.
+

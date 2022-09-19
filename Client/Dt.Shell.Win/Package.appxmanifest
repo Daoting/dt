@@ -16,7 +16,7 @@
     <Properties>
         <DisplayName>新搬运工</DisplayName>
         <PublisherDisplayName>Daoting</PublisherDisplayName>
-        <Logo>Assets\logo.png</Logo>
+        <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
 
     <Dependencies>

@@ -12,7 +12,6 @@ iOS\Resources       名称必须是 Resources，否则字体无法加载
         \Lottie  *.json是lottie格式动画的json文件
 
         -- 图片文件无需指定 BundleResource，生成操作默认“无”即可，会自动 BundleResource 到 Assets目录
-        \logo.png 登录页面等用到
         \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
 
     \Fonts
@@ -24,6 +23,9 @@ iOS\Info.plist  App配置文件
 iOS\Entitlements.plist  需要权限列表
 
 iOS\LaunchScreen.storyboard 启动动画定义
+
+Images\*.png 文件链接方式，项目中用到的图片，作为内容生成，ms-appx:///Images/*.png
+iOS目录下的资源为iOS专用，Images下的图片为公用
 
 \App.xaml  全局公共，文件链接
 
