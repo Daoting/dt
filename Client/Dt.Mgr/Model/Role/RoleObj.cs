@@ -18,7 +18,7 @@ namespace Dt.Mgr.Model
     {
         async Task OnSaving()
         {
-            Throw.IfNullOrEmpty(Name, "角色名称不可为空！");
+            Throw.IfEmpty(Name, "角色名称不可为空！");
 
             if ((IsAdded || Cells["name"].IsChanged)
                 && await AtCm.GetScalar<int>("角色-名称重复", new { name = Name }) > 0)

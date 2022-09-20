@@ -33,7 +33,7 @@ namespace Dt.Core.Caches
 
         public BaseCache(string p_keyPrefix)
         {
-            Throw.IfNullOrEmpty(p_keyPrefix);
+            Throw.IfEmpty(p_keyPrefix);
             _keyPrefix = p_keyPrefix;
         }
 

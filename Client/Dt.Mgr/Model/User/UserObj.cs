@@ -19,10 +19,10 @@ namespace Dt.Mgr.Model
         Task OnSaving()
         {
             if (IsAdded || Cells["Name"].IsChanged)
-                Throw.IfNullOrEmpty(Name, "名称不可为空！");
+                Throw.IfEmpty(Name, "名称不可为空！");
 
             if (IsAdded || Cells["Name"].IsChanged)
-                Throw.IfNullOrEmpty(Phone, "手机号不可为空！");
+                Throw.IfEmpty(Phone, "手机号不可为空！");
             return Task.CompletedTask;
         }
     }

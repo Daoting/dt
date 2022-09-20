@@ -99,40 +99,7 @@ namespace Dt.Sample
 
         void OnKnownException(object sender, RoutedEventArgs e)
         {
-            Throw.Msg("业务警告");
-        }
-
-        void OnTaskKnownException(object sender, RoutedEventArgs e)
-        {
-            Task.Run(async () =>
-            {
-                Throw.Msg("后台业务警告");
-                await Task.CompletedTask;
-            });
-        }
-
-        void OnServerKnownException(object sender, RoutedEventArgs e)
-        {
-            AtTestCm.ThrowBusinessException();
-        }
-
-        void OnServerException(object sender, RoutedEventArgs e)
-        {
-            AtTestCm.ThrowException();
-        }
-
-        void OnUnhandled(object sender, RoutedEventArgs e)
-        {
-            throw new Exception("未处理异常信息");
-        }
-
-        void OnTaskUnhandled(object sender, RoutedEventArgs e)
-        {
-            Task.Run(async () =>
-            {
-                await Task.CompletedTask;
-                throw new Exception("后台未处理异常信息");
-            });
+            Kit.OpenWin(typeof(ExceptionDemo), "异常警告");
         }
     }
 }

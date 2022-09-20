@@ -247,7 +247,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task<bool> DeleteCache(string p_keyPrefix, object p_key = null)
         {
-            Throw.IfNullOrEmpty(p_keyPrefix);
+            Throw.IfEmpty(p_keyPrefix);
             string key;
             if (p_key != null)
                 key = $"{p_keyPrefix}:{p_key}";
@@ -264,7 +264,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task BatchDeleteCache(string p_keyPrefix, IEnumerable<string> p_keys)
         {
-            Throw.IfNullOrEmpty(p_keyPrefix);
+            Throw.IfEmpty(p_keyPrefix);
             if (p_keys == null || p_keys.Count() == 0)
                 return Task.FromResult(false);
 

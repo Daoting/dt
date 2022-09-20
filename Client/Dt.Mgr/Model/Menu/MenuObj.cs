@@ -20,7 +20,7 @@ namespace Dt.Mgr.Model
         {
             // 调序时无name列
             if (Contains("Name"))
-                Throw.IfNullOrEmpty(Name, "菜单名称不可为空！");
+                Throw.IfEmpty(Name, "菜单名称不可为空！");
             return Task.CompletedTask;
         }
 

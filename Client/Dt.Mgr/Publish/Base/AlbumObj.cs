@@ -20,7 +20,7 @@ namespace Dt.Mgr.Publish
     {
         Task OnSaving()
         {
-            Throw.IfNullOrEmpty(Name, "名称不可为空！");
+            Throw.IfEmpty(Name, "名称不可为空！");
             return Task.CompletedTask;
         }
     }

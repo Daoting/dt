@@ -125,7 +125,7 @@ namespace Dt.Cm
         [Transaction]
         public async Task<bool> SaveParams(long p_userID, string p_paramID, string p_value)
         {
-            Throw.IfNullOrEmpty(p_paramID, "参数名不可为空！");
+            Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
             UserparamsObj up = new UserparamsObj(
                 UserID: p_userID,

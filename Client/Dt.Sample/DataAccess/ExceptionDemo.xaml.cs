@@ -26,12 +26,47 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        // 注意uno中存在诡异现象，在UI主线程调用Throw抛出异常时，
-        // 如在Button.Click事件方法中调用，若方法是同步，不catch也没能抛出未处理异常，方法加async就能正常抛出！
+        /// <para>.net6.0 maui抛异常规律：</para>
+        /// <para>1. UI主线程同步方法中抛异常被.net内部拦截，不触发未处理异常事件</para>
+        /// <para>2. UI主线程异步方法中抛异常，触发未处理异常事件</para>
+        /// <para>3. Task内部异常，不管同步或异步都不触发未处理异常事件</para>
+        /// <para>因为触发未处理异常事件的不确定性，无法统一处理，警告提示信息只能在抛出异常前显示</para>
+        /// <para>.net6.0 maui中非KnownException类型的异常，在UI同步方法或后台抛出时都无法捕获！</para>
 
-        async void ThrowIf(object sender, RoutedEventArgs e)
+        #region 同步异常
+        void ThrowIfSync(object sender, RoutedEventArgs e)
         {
             Throw.If(true, "业务条件true时的异常警告");
+            int b = 12;
+            b++;
+        }
+
+        void ThrowIfNullSync(object sender, RoutedEventArgs e)
+        {
+            TextBlock tb = null;
+            Throw.IfNull(tb, "对象null时的异常警告");
+        }
+        
+        void ThrowIfEmptySync(object sender, RoutedEventArgs e)
+        {
+            Throw.IfEmpty(null, "字符串空或null的异常警告");
+        }
+
+        void ThrowMsgSync(object sender, RoutedEventArgs e)
+        {
+            Throw.Msg("业务异常消息");
+        }
+        
+        void ThrowUnhandleSync(object sender, RoutedEventArgs e)
+        {
+            throw new Exception("未处理异常信息");
+        }
+        #endregion
+
+        #region 异步异常
+        async void ThrowAsync(object sender, RoutedEventArgs e)
+        {
+            Throw.If(true, "异步业务异常警告");
             int b = 12;
             string str = "avb";
             b += str.Length;
@@ -39,41 +74,45 @@ namespace Dt.Sample
             await Task.CompletedTask;
         }
 
-        async void ThrowIfNull(object sender, RoutedEventArgs e)
+        void ThrowTaskSync(object sender, RoutedEventArgs e)
         {
-            TextBlock tb = null;
-            Throw.IfNull(tb, "对象null时的异常警告");
-            await Task.CompletedTask;
+            Task.Run(() => Throw.Msg("Task内同步业务异常"));
         }
 
-        async void ThrowIfNullOrEmpty(object sender, RoutedEventArgs e)
+        void ThrowTaskAsync(object sender, RoutedEventArgs e)
         {
-            Throw.IfNullOrEmpty(null, "字符串空或null的异常警告");
-            await Task.CompletedTask;
+            Task.Run(async () =>
+            {
+                Throw.Msg("Task内异步业务异常");
+                await Task.CompletedTask;
+            });
         }
 
-        async void ThrowMsg(object sender, RoutedEventArgs e)
+        async void ThrowUnhandleAsync(object sender, RoutedEventArgs e)
         {
-            Throw.Msg("直接业务异常消息");
             await Task.CompletedTask;
+            throw new Exception("主线程异步未处理异常");
         }
 
-        async void ThrowUnhandle(object sender, RoutedEventArgs e)
+        void ThrowUnhandleTaskSync(object sender, RoutedEventArgs e)
         {
-            //Throw.If(true);
-            Throw.IfNullOrEmpty(null);
-            await Task.CompletedTask;
+            Task.Run(() => throw new Exception("Task内同步未处理异常"));
         }
+
+        void ThrowUnhandleTaskAsync(object sender, RoutedEventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                await Task.CompletedTask;
+                throw new Exception("Task内异步未处理异常");
+            });
+        }
+        #endregion
 
         #region 服务端异常
         async void TestException(object sender, RoutedEventArgs e)
         {
             await AtTestCm.ThrowException();
-        }
-
-        async void TestSerializeException(object sender, RoutedEventArgs e)
-        {
-            await AtTestCm.ThrowSerializeException();
         }
 
         async void TestRpcException(object sender, RoutedEventArgs e)

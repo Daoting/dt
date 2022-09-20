@@ -36,7 +36,7 @@ namespace Dt.Core
 
             // 异常处理，参见 https://github.com/Daoting/dt/issues/1
             AttachUnhandledException();
-            
+
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
             // 否则用 Directory 每次都创建新目录！
@@ -115,56 +115,14 @@ namespace Dt.Core
             //   but that can be worked around by saved by trapping first chance exceptions
             //   See: https://github.com/microsoft/microsoft-ui-xaml/issues/7160
             //
-            //  目前只有后台未处理异常不能提醒
+            //  目前问题：UI主线程异步异常造成崩溃、后台未处理异常不能提醒，V1.2 preview2解决
 
-            AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
-            {
-                if (_lastException == e.Exception)
-                    return;
+            AppDomain.CurrentDomain.FirstChanceException += (_, e) => _lastException = e.Exception;
 
-                _lastException = e.Exception;
-                if (_lastException is KnownException kex)
-                {
-                    // 已知异常，一般为业务异常，只警告，不保存日志
-                    Warn(kex.Message);
-                }
-            };
-
-            Microsoft.UI.Xaml.Application.Current.UnhandledException += (s, e) =>
+            Application.Current.UnhandledException += (s, e) =>
             {
                 e.Handled = true;
-                if (_lastException is KnownException)
-                    return;
-
-                try
-                {
-                    string title;
-                    if (_lastException is ServerException se)
-                    {
-                        title = se.Title;
-                    }
-                    else
-                    {
-                        title = $"未处理异常：{_lastException.GetType().FullName}";
-                    }
-
-                    // 警告、保存日志
-                    var notify = new NotifyInfo
-                    {
-                        NotifyType = NotifyType.Warning,
-                        Message = title,
-                        Delay = 5,
-                        Link = "查看详细",
-                    };
-                    notify.LinkCallback = (e) =>
-                    {
-                        ShowTraceBox();
-                        notify.Close();
-                    };
-                    Notify(notify);
-                    Log.Error(_lastException, title);
-                }
-                catch { }
+                OnUnhandledException(_lastException);
             };
         }
         static Exception _lastException;
@@ -188,73 +146,9 @@ namespace Dt.Core
 
         static void AttachUnhandledException()
         {
-            // For iOS and Mac Catalyst
-            // Exceptions will flow through AppDomain.CurrentDomain.UnhandledException,
-            // but we need to set UnwindNativeCode to get it to work correctly. 
-            // 
-            // See: https://github.com/xamarin/xamarin-macios/issues/15252
-        
-            ObjCRuntime.Runtime.MarshalManagedException += (s, e) => e.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.UnwindNativeCode;
-
-            // This is the normal event expected, and should still be used.
-            // It will fire for exceptions from iOS and Mac Catalyst,
-            // and for exceptions on background threads from WinUI 3.
-
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+            // 在Main函数中try catch
         }
 
-#elif WASM
-
-        static void AttachUnhandledException()
-        {
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
-        }
-
-#endif
-
-        static void OnUnhandledException(Exception p_ex)
-        {
-            try
-            {
-                KnownException kex;
-                if ((kex = p_ex as KnownException) != null || (kex = p_ex.InnerException as KnownException) != null)
-                {
-                    // 只警告，不保存日志
-                    Warn(kex.Message);
-                }
-                else
-                {
-                    string title;
-                    if (p_ex is ServerException se)
-                    {
-                        title = se.Title;
-                    }
-                    else
-                    {
-                        title = $"未处理异常：{p_ex.GetType().FullName}";
-                    }
-
-                    // 警告、保存日志
-                    var notify = new NotifyInfo
-                    {
-                        NotifyType = NotifyType.Warning,
-                        Message = title,
-                        Delay = 5,
-                        Link = "查看详细",
-                    };
-                    notify.LinkCallback = (e) =>
-                    {
-                        ShowTraceBox();
-                        notify.Close();
-                    };
-                    Notify(notify);
-                    Log.Error(p_ex, title);
-                }
-            }
-            catch { }
-        }
-
-#if IOS
         public static void OnIOSUnhandledException(Exception ex)
         {
             OnUnhandledException(ex);
@@ -290,7 +184,52 @@ namespace Dt.Core
             if (hasException)
                 RunLoop();
         }
+
+#elif WASM
+
+        static void AttachUnhandledException()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+        }
+
 #endif
-#endregion
+
+        static void OnUnhandledException(Exception p_ex)
+        {
+            try
+            {
+                // 不处理已知异常，已在抛出异常前警告(Throw类)，不输出日志
+                if (!(p_ex is KnownException) && !(p_ex.InnerException is KnownException))
+                {
+                    string title;
+                    if (p_ex is ServerException se)
+                    {
+                        title = se.Title;
+                    }
+                    else
+                    {
+                        title = $"未处理异常：{p_ex.GetType().FullName}";
+                    }
+
+                    // 警告、保存日志
+                    var notify = new NotifyInfo
+                    {
+                        NotifyType = NotifyType.Warning,
+                        Message = title,
+                        Delay = 5,
+                        Link = "查看详细",
+                    };
+                    notify.LinkCallback = (e) =>
+                    {
+                        ShowTraceBox();
+                        notify.Close();
+                    };
+                    Notify(notify);
+                    Log.Error(p_ex, title);
+                }
+            }
+            catch { }
+        }
+        #endregion
     }
 }

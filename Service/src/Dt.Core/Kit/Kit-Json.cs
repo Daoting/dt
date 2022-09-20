@@ -46,7 +46,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static T Deserialize<T>(string p_content)
         {
-            Throw.IfNullOrEmpty(p_content);
+            Throw.IfEmpty(p_content);
 
             Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
             reader.Read();

@@ -5,17 +5,24 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
-        <a:CBar Title="客户端异常" />
-        <Button Content="业务条件异常" Click="ThrowIf" />
-        <Button Content="业务null异常" Click="ThrowIfNull" />
-        <Button Content="业务字符串空异常" Click="ThrowIfNullOrEmpty" />
-        <Button Content="直接业务异常消息" Click="ThrowMsg" />
-        <Button Content="未处理异常" Click="ThrowUnhandle" />
+        <a:CBar Title="客户端同步异常" />
+        <Button Content="业务条件异常" Click="ThrowIfSync" />
+        <Button Content="业务null异常" Click="ThrowIfNullSync" />
+        <Button Content="业务字符串空异常" Click="ThrowIfEmptySync" />
+        <Button Content="直接业务异常消息" Click="ThrowMsgSync" />
+        <Button Content="未处理异常" Click="ThrowUnhandleSync" />
+        
+        <a:CBar Title="客户端异步异常" />
+        <Button Content="主线程异步业务异常" Click="ThrowAsync" />
+        <Button Content="Task内同步业务异常" Click="ThrowTaskSync" />
+        <Button Content="Task内异步业务异常" Click="ThrowTaskAsync" />
+        <Button Content="主线程异步未处理异常" Click="ThrowUnhandleAsync" />
+        <Button Content="Task内同步未处理异常" Click="ThrowUnhandleTaskSync" />
+        <Button Content="Task内异步未处理异常" Click="ThrowUnhandleTaskAsync" />
         
         <a:CBar Title="服务端" />
         <Button Content="服务端普通异常" Click="TestException" />
         <Button Content="服务端业务异常消息" Click="TestRpcException" />
-        <Button Content="服务端业务位置异常" Click="TestPosException" />
-        <Button Content="服务端序列化异常" Click="TestSerializeException" />
+        <Button Content="服务端业务异常位置" Click="TestPosException" />
     </a:Fv>
 </a:Win>

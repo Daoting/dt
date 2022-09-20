@@ -199,7 +199,7 @@ namespace Dt.Base.Chat
             string p_content,
             LetterType p_type)
         {
-            Throw.IfNullOrEmpty(p_content);
+            Throw.IfEmpty(p_content);
 
             LetterInfo li = new LetterInfo
             {

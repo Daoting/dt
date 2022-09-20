@@ -20,7 +20,7 @@ namespace Dt.Mgr.Publish
     {
         public bool IsValid()
         {
-            Throw.IfNullOrEmpty(Title, "标题不可为空！");
+            Throw.IfEmpty(Title, "标题不可为空！");
             Throw.If(IsPublish && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
             return true;
         }

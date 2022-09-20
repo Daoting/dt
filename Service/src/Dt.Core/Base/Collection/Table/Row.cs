@@ -296,7 +296,7 @@ namespace Dt.Core
         /// <returns>true 包含</returns>
         public bool Contains(string p_columnName)
         {
-            Throw.IfNullOrEmpty(p_columnName);
+            Throw.IfEmpty(p_columnName);
             return _cells.Contains(p_columnName);
         }
 

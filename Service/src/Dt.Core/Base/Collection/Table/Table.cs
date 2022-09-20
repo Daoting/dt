@@ -148,7 +148,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table Create(string p_tblName)
         {
-            Throw.IfNullOrEmpty(p_tblName);
+            Throw.IfEmpty(p_tblName);
             Table tbl = new Table();
 #if SERVER
             var schema = DbSchema.GetTableSchema(p_tblName);

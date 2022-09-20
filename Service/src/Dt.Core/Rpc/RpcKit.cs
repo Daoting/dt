@@ -172,7 +172,7 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         public static T ParseString<T>(string p_json)
         {
-            Throw.IfNullOrEmpty(p_json);
+            Throw.IfEmpty(p_json);
             return ParseBytes<T>(Encoding.UTF8.GetBytes(p_json));
         }
 

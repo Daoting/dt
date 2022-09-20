@@ -62,11 +62,11 @@ namespace Dt.Core.Rpc
                     {
                         // 已登录则提示无权限
                         if (Kit.IsLogon)
-                            throw new KnownException($"⚡对【{_methodName}】无访问权限！");
+                            Throw.Msg($"⚡对【{_methodName}】无访问权限！");
 
                         // 跳转到登录页面
                         Kit.ShowLogin(true);
-                        throw new KnownException("请先登录您的账号！");
+                        Throw.Msg("请先登录您的账号！");
                     }
 #endif
                     throw new ServerException($"服务器返回状态码：{response.StatusCode}", $"调用【{_methodName}】时返回状态码：{response.StatusCode}");
@@ -130,7 +130,7 @@ namespace Dt.Core.Rpc
             
             // ⚡ 为服务器标志
             if (result.ResultType == RpcResultType.Message)
-                throw new KnownException("⚡" + result.Info);
+                Throw.Msg("⚡" + result.Info);
 #endif
 
             if (result.ResultType == RpcResultType.Value)

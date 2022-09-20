@@ -18,7 +18,7 @@ namespace Dt.Mgr.Model
     {
         async Task OnSaving()
         {
-            Throw.IfNullOrEmpty(ID, "参数名不可为空！");
+            Throw.IfEmpty(ID, "参数名不可为空！");
 
             if ((IsAdded || Cells["ID"].IsChanged)
                 && await AtCm.GetScalar<int>("参数-重复名称", new { id = ID }) > 0)

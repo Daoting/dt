@@ -37,6 +37,10 @@ namespace Dt.Cm
             return "test";
         }
 
+        /// <summary>
+        /// 已无异常！！！
+        /// </summary>
+        /// <returns></returns>
         public Dict ThrowSerializeException()
         {
             Dict dt = new Dict();

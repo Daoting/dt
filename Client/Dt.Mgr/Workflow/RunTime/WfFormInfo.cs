@@ -352,7 +352,7 @@ namespace Dt.Mgr
             // 加载流程定义
             PrcDef = await GetPrcDef(_prcID);
 
-            Throw.IfNullOrEmpty(PrcDef.FormType, "流程定义中未设置表单类型！");
+            Throw.IfEmpty(PrcDef.FormType, "流程定义中未设置表单类型！");
             FormType = Type.GetType(PrcDef.FormType);
             Throw.IfNull(FormType, $"表单类型[{PrcDef.FormType}]不存在！");
             if (FormType.GetInterface("IWfForm") != typeof(IWfForm))

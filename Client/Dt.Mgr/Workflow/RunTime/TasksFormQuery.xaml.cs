@@ -43,7 +43,7 @@ namespace Dt.Mgr.Workflow
             }
 
             var tpName = row.Str("ListType");
-            Throw.IfNullOrEmpty(tpName, "流程定义中未设置表单查询类型！");
+            Throw.IfEmpty(tpName, "流程定义中未设置表单查询类型！");
             var type = Type.GetType(tpName);
             Throw.IfNull(type, $"表单查询类型[{tpName}]不存在！");
             var win = Activator.CreateInstance(type);

@@ -24,7 +24,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_dbName">sqlite库文件名，不包括扩展名</param>
         public SqliteAttribute(string p_dbName)
         {
-            Throw.IfNullOrEmpty(p_dbName);
+            Throw.IfEmpty(p_dbName);
             DbName = p_dbName.ToLower();
         }
 
