@@ -89,12 +89,7 @@ namespace Dt.Base
             try
             {
                 bool result = false;
-#if WIN
-                UIElement tgt = null;
-#else
-                UIElement tgt = UITree.RootContent;
-#endif
-                MatrixTransform trans = source.TransformToVisual(tgt) as MatrixTransform;
+                MatrixTransform trans = source.TransformToVisual(null) as MatrixTransform;
                 if (trans != null)
                 {
                     double offsetX = trans.Matrix.OffsetX;

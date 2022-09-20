@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.UI.Xaml;
 using System;
 using Windows.Foundation;
 #endregion
@@ -28,6 +29,10 @@ namespace Dt.Base.MenuView
             Resizeable = false;
             // 不向下层对话框传递Press事件
             AllowRelayPress = false;
+
+            // 全面屏底部易误点
+            if (Kit.IsPhoneUI)
+                _panel.Margin = new Thickness(0, 0, 0, 40);
 
             PlacementTarget = p_mi;
             ClipElement = p_mi;

@@ -124,6 +124,11 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(CList);
             _lv = new Lv();
+
+            // 全面屏底部易误点
+            if (Kit.IsPhoneUI)
+                _lv.Margin = new Thickness(0, 0, 0, 40);
+
             ValConverter = new ListValConverter();
         }
         #endregion
