@@ -1267,6 +1267,10 @@ namespace Dt.Base
             Scroll = scroll;
 
             LoadPanel();
+
+#if IOS || ANDROID
+            LoadPullToRefresh();
+#endif
         }
 
         protected override Size MeasureOverride(Size availableSize)

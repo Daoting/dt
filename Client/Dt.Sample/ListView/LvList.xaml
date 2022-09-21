@@ -7,7 +7,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="列表">
-                <a:Lv x:Name="_lv">
+                <a:Lv x:Name="_lv" PullToRefresh="true">
                     <DataTemplate>
                         <Grid Padding="6">
                             <Grid.ColumnDefinitions>
@@ -72,6 +72,7 @@
                     <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
                     <a:CNum Title="行/项目高" ID="ItemHeight" />
+                    <a:CBool Title="允许下拉刷新" ID="PullToRefresh" />
                     <a:CBar Title="其他" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="自动行高" Click="OnAutoHeight" />
