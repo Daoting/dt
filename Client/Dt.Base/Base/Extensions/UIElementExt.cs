@@ -205,6 +205,10 @@ namespace Dt.Base
             {
                 con.Content = null;
             }
+            else if (parent is Border bd)
+            {
+                bd.Child = null;
+            }
         }
 
         /// <summary>

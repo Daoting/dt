@@ -40,7 +40,12 @@ namespace Dt.Sample
 
         void OnRequestRefresh(object sender, RoutedEventArgs e)
         {
-            _ = _lv.RequestRefresh();
+            _lv.RequestRefresh();
+        }
+
+        void OnPullToRefreshCheck(object sender, RoutedEventArgs e)
+        {
+            _lv.PullToRefresh = (bool)_cb.IsChecked;
         }
     }
 }

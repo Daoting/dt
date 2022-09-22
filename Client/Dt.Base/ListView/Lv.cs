@@ -33,7 +33,7 @@ namespace Dt.Base
     /// 列表控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class Lv : DtControl, IViewItemHost, IMenuHost
+    public partial class Lv : Control, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
@@ -375,6 +375,7 @@ namespace Dt.Base
             _rows = new List<LvItem>();
             _selectedLvItems = new ObservableCollection<LvItem>();
             _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
+            Loaded += OnLoaded;
         }
         #endregion
 
@@ -848,10 +849,7 @@ namespace Dt.Base
         /// <summary>
         /// 滚动栏是否在内部
         /// </summary>
-        internal bool IsInnerScroll
-        {
-            get { return _root.Child is ScrollViewer; }
-        }
+        internal bool IsInnerScroll => _root != null && (_root.Child is ScrollViewer || _root.Child is RefreshContainer);
 
         internal Cols Cols
         {
@@ -1236,41 +1234,116 @@ namespace Dt.Base
         // uno: UpdateLayout调用时未同步调用上述方法，内部异步测量布局，和InvalidateMeasure功能相似
         /************************************************************************************************************************************/
 
-        /// <summary>
-        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
-        /// </summary>
-        protected override void OnLoadTemplate()
+
+        /************************************************************************************************************************************/
+        // Lv控件模板只有一个Border，内部元素动态构造
+        //
+        // 调整说明：
+        // 1. 原来继承 DtControl，主要原因是 uno 在 OnApplyTemplate 方法中无法查找父元素中是否有 ScrollViewer
+        //    所以动态构造内部元素 win 在 OnApplyTemplate 中处理，uno 在 Loaded 事件中处理
+        // 2. 后因增加下拉刷新功能，RefreshContainer 在 Loaded 事件动态添加时，在iOS上下拉刷新功能无效
+        // 3. 因 uno 无法在 OnApplyTemplate 中查找父元素，先假设无外部滚动栏动态添加元素，在 Loaded 事件中再处理外部滚动栏的情况
+        //    外部滚动栏情况非常少，故效率不受影响
+        /************************************************************************************************************************************/
+
+
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _root = (Border)GetTemplateChild("Border");
 
-            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
-            var scroll = this.FindParentInWin<ScrollViewer>();
-            if (scroll == null)
+            ScrollViewer sv;
+
+#if WIN
+            // win模式可查找父元素，查询范围限制在Tabs内
+            sv = this.FindParentInWin<ScrollViewer>();
+            if (sv == null)
             {
                 // 内部滚动栏
-                scroll = new ScrollViewer();
-                _root.Child = scroll;
+                sv = new ScrollViewer();
+                if (PullToRefresh)
+                {
+                    // 只有滚动栏在内部时支持下拉刷新
+                    var rc = new RefreshContainer { Content = sv };
+                    _root.Child = rc;
+                    rc.RefreshRequested += OnRefreshRequested;
+                }
+                else
+                {
+                    _root.Child = sv;
+                }
             }
             else if (Kit.IsPhoneUI)
             {
+                // 外部滚动栏
                 // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
                 // 因phone模式Lv所属的Tab始终不变
-                _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
+                _sizedPresenter = sv.FindParentInWin<SizedPresenter>();
             }
-            scroll.HorizontalScrollMode = ScrollMode.Auto;
-            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            scroll.VerticalScrollMode = ScrollMode.Auto;
-            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            // 滚动到顶部或底部时添加分页数据
-            if (PageData != null)
-                scroll.ViewChanged += OnScrollViewChanged;
-            Scroll = scroll;
+#else
+            // uno无法查找父元素，假设无外部滚动栏，在 Loaded 事件中再处理外部滚动栏的情况
+            sv = new ScrollViewer();
+            if (PullToRefresh)
+            {
+                // 只有滚动栏在内部时支持下拉刷新
+                var rc = new RefreshContainer { Content = sv };
+                _root.Child = rc;
+                rc.RefreshRequested += OnRefreshRequested;
+            }
+            else
+            {
+                _root.Child = sv;
+            }
+#endif
+
+            sv.HorizontalScrollMode = ScrollMode.Auto;
+            sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            sv.VerticalScrollMode = ScrollMode.Auto;
+            sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            Scroll = sv;
 
             LoadPanel();
+        }
 
-#if IOS || ANDROID
-            LoadPullToRefresh();
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+
+#if !WIN
+            // 处理外部滚动栏的情况，因 uno 在 OnApplyTemplate 方法中无法查找父元素
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            var sv = this.FindParentInWin<ScrollViewer>();
+            if (sv != null)
+            {
+                if (_root.Child is RefreshContainer rc)
+                {
+                    rc.RefreshRequested -= OnRefreshRequested;
+                    rc.Content = null;
+                }
+                Scroll.Content = null;
+                _root.Child = _panel;
+
+                if (Kit.IsPhoneUI)
+                {
+                    // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                    // 因phone模式Lv所属的Tab始终不变
+                    _sizedPresenter = sv.FindParentInWin<SizedPresenter>();
+                }
+
+                sv.HorizontalScrollMode = ScrollMode.Auto;
+                sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                sv.VerticalScrollMode = ScrollMode.Auto;
+                sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                Scroll = sv;
+            }
 #endif
+
+            // 滚动到顶部或底部时添加分页数据
+            if (PageData != null)
+                Scroll.ViewChanged += OnScrollViewChanged;
+
+            // 确保初次加载后键盘操作有效
+            Focus(FocusState.Programmatic);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -1308,12 +1381,6 @@ namespace Dt.Base
             }
             return base.MeasureOverride(availableSize);
         }
-
-        protected override void OnControlLoaded()
-        {
-            // 确保初次加载后键盘操作有效
-            Focus(FocusState.Programmatic);
-        }
         #endregion
 
         #region 加载过程
@@ -1327,7 +1394,7 @@ namespace Dt.Base
 
             if (_panel != null)
             {
-                if (_root.Child == Scroll)
+                if (IsInnerScroll)
                     Scroll.Content = null;
                 else
                     _root.Child = null;
@@ -1368,7 +1435,7 @@ namespace Dt.Base
             }
 
             // 内部有滚动栏时，面板放在滚动栏内
-            if (_root.Child == Scroll)
+            if (IsInnerScroll)
                 Scroll.Content = _panel;
             else
                 _root.Child = _panel;

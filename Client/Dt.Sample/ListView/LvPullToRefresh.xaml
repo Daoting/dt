@@ -8,8 +8,11 @@
         <a:Tabs>
             <a:Tab Title="下拉刷新">
                 <Grid RowDefinitions="Auto,*">
-                    <Button Content="模拟下拉刷新" Click="OnRequestRefresh" />
-                    <a:Lv x:Name="_lv" PullToRefresh="true" Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="_cb" Content="启用下拉以刷新" IsChecked="True" Margin="10,0,40,0" Click="OnPullToRefreshCheck" />
+                        <Button Content="模拟下拉刷新" Click="OnRequestRefresh" />
+                    </StackPanel>
+                    <a:Lv x:Name="_lv" PullToRefresh="True" Grid.Row="1">
                         <DataTemplate>
                             <Grid Padding="6">
                                 <Grid.ColumnDefinitions>
