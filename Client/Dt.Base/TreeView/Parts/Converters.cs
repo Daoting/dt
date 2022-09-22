@@ -20,9 +20,12 @@ namespace Dt.Base.TreeViews
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool? selected = (bool?)value;
-            if (selected.HasValue)
-                return selected.Value ? "\uE059" : "\uE057";
+            if (value != null)
+            {
+                bool? selected = (bool?)value;
+                if (selected.HasValue)
+                    return selected.Value ? "\uE059" : "\uE057";
+            }
             return "\uE058";
         }
 
@@ -39,9 +42,12 @@ namespace Dt.Base.TreeViews
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            bool? selected = (bool?)value;
-            if (selected.HasValue)
-                return selected.Value ? Res.暗遮罩 : null;
+            if (value != null)
+            {
+                bool? selected = (bool?)value;
+                if (selected.HasValue)
+                    return selected.Value ? Res.暗遮罩 : null;
+            }
             return Res.暗遮罩;
         }
 

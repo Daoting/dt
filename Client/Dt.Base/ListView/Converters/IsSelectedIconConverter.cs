@@ -20,7 +20,9 @@ namespace Dt.Base.ListView
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (bool)value ? "\uE059" : "\uE057";
+            if (value != null && value is bool b)
+                return b ? "\uE059" : "\uE057";
+            return "\uE057";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
