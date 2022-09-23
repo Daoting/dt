@@ -47,40 +47,7 @@ namespace Dt.Base
 
         static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Lv lv = (Lv)d;
-
-            // 重新指定数据源时，清除分页数据源
-            if (lv.PageData != null && lv.PageData.State == PageDataState.Normal)
-                lv.ClearValue(PageDataProperty);
-
-            if (lv._dataView != null)
-                lv._dataView.Unload();
-
-            if (e.NewValue == null)
-            {
-                lv._dataView = null;
-                lv.ClearAllRows();
-            }
-            else if (e.NewValue is Table tbl)
-            {
-                if (lv.AutoCreateCol)
-                {
-                    lv.ClearAllRows();
-                    lv.OnAutoCreateCol(tbl);
-                }
-                lv._dataView = new LvDataView(lv, tbl);
-            }
-            else if (e.NewValue is INotifyList ls)
-            {
-                if (lv.AutoCreateCol)
-                {
-                    lv.ClearAllRows();
-                    if (ls.Count > 0)
-                        lv.OnAutoCreateProp(ls[0].GetType());
-                }
-                lv._dataView = new LvDataView(lv, ls);
-            }
-            lv.OnDataChanged();
+            ((Lv)d).LoadDataSource();
         }
 
         static void OnPageDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -152,6 +119,47 @@ namespace Dt.Base
         {
             get { return (SortDescription)GetValue(SortDescProperty); }
             set { SetValue(SortDescProperty, value); }
+        }
+        #endregion
+
+        #region 切换数据源
+        void LoadDataSource()
+        {
+            // 重新指定数据源时，清除分页数据源
+            if (PageData != null && PageData.State == PageDataState.Normal)
+                ClearValue(PageDataProperty);
+
+            if (_dataView != null)
+                _dataView.Unload();
+
+            var data = Data;
+            if (data == null)
+            {
+                _dataView = null;
+                ClearAllRows();
+            }
+            else if (data is Table tbl)
+            {
+                if (AutoCreateCol)
+                {
+                    ClearAllRows();
+                    OnAutoCreateCol(tbl);
+                }
+                _dataView = new LvDataView(this, tbl);
+            }
+            else if (data is INotifyList ls)
+            {
+                if (AutoCreateCol)
+                {
+                    ClearAllRows();
+                    if (ls.Count > 0)
+                        OnAutoCreateProp(ls[0].GetType());
+                }
+                _dataView = new LvDataView(this, ls);
+            }
+
+            _dataView?.Refresh();
+            OnDataChanged();
         }
         #endregion
 

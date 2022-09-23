@@ -34,7 +34,6 @@ namespace Dt.Base.ListView
             _owner = p_owner;
             _data = p_data;
             _data.CollectionChanged += OnCollectionChanged;
-            Refresh();
         }
         #endregion
 
