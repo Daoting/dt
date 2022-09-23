@@ -9,9 +9,23 @@
         
         <!--发布用，和Info.plist中的CFBundleIdentifier CFBundleVersion一致-->
         <ApplicationId>com.dt.samples</ApplicationId>
-        <ApplicationVersion>22.6.10</ApplicationVersion>
+        <ApplicationVersion>22.9.23</ApplicationVersion>
+        <CodesignProvision />
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+        <CodesignKey>iPhone Distribution</CodesignKey>
+        <!-- 预配配置文件名称 -->
+        <CodesignProvision>dt.samples</CodesignProvision>
+        <ArchiveOnBuild>true</ArchiveOnBuild>
+        <TcpPort>58181</TcpPort>
+        <ServerAddress>10.10.1.7</ServerAddress>
+        <ServerUser>hdt</ServerUser>
+        <ServerPassword>1111</ServerPassword>
+        <_DotNetRootRemoteDirectory>/Users/hdt/Library/Caches/Xamarin/XMA/SDKs/dotnet/</_DotNetRootRemoteDirectory>
+    </PropertyGroup>
+    
     <Import Project="..\Common.props" />
 
     <ItemGroup>
