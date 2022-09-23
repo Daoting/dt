@@ -167,7 +167,8 @@ namespace Dt.Base
         /// <summary>
         /// 根据数据行生成视图行列表
         /// </summary>
-        internal void LoadRows(IEnumerable p_rows)
+        /// <param name="p_rows"></param>
+        internal void LoadRows(IList p_rows)
         {
             _rows.Clear();
             if (_selectedLvItems.Count > 0)

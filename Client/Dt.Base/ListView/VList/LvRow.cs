@@ -57,6 +57,8 @@ namespace Dt.Base.ListView
             _row = p_row;
             if (_row != null)
             {
+                // 只一次初始化
+                _row.Init();
                 // 值变化时通过切换DataContext更新
                 _row.ValueChanged = OnValueChanged;
             }

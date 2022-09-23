@@ -59,9 +59,9 @@ namespace Dt.Base
 
         #region 构造方法
         public TvItem(TreeView p_tv, object p_data, TvItem p_parent)
+            : base(p_data)
         {
             _owner = p_tv;
-            Data = p_data;
             Parent = p_parent;
             Depth = (p_parent == null) ? 0 : p_parent.Depth + 1;
             Children = new List<TvItem>();

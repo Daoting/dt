@@ -89,9 +89,14 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        protected Dictionary<string, object> _cacheUI;
-        object _data;
+        readonly object _data;
+        bool _isInit;
         #endregion
+
+        public ViewItem(object p_data)
+        {
+            _data = p_data ?? throw new Exception("视图项数据不可为空！");
+        }
 
         /// <summary>
         /// 获取视图项数据
@@ -99,15 +104,6 @@ namespace Dt.Base
         public object Data
         {
             get { return _data; }
-            protected set
-            {
-                _data = value ?? throw new Exception("视图项数据不可为空！");
-                Host.SetItemStyle(this);
-                if (_data is Row row)
-                    row.Changed += (s, e) => OnValueChanged();
-                else if (_data is INotifyPropertyChanged pro)
-                    pro.PropertyChanged += (s, e) => OnValueChanged();
-            }
         }
 
         /// <summary>
@@ -206,9 +202,10 @@ namespace Dt.Base
         /// <returns></returns>
         internal object GetCellUI(ICellUI p_cell)
         {
-            object elem = null;
+            object elem;
+
             // 从缓存取
-            if (_cacheUI != null && _cacheUI.TryGetValue(p_cell.ID, out elem))
+            if (GetCacheUI(p_cell.ID, out elem))
                 return elem;
 
             object val;
@@ -276,22 +273,8 @@ namespace Dt.Base
                 }
             }
 
-            if (_cacheUI != null)
-                _cacheUI[p_cell.ID] = elem;
+            AddCacheUI(p_cell.ID, elem);
             return elem;
-        }
-
-        /// <summary>
-        /// 值变化
-        /// </summary>
-        void OnValueChanged()
-        {
-            // 清除缓存，再次绑定时重新生成
-            if (_cacheUI != null)
-                _cacheUI.Clear();
-            // 重新设置行/项目样式
-            Host.SetItemStyle(this);
-            ValueChanged?.Invoke();
         }
 
         #region 默认UI
@@ -750,6 +733,36 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 内部方法
+        /// <summary>
+        /// 初始化视图行，包括调用外部 CellEx.SetStyle 设置行样式、附加值变化事件、初始化缓存字典等
+        /// </summary>
+        internal void Init()
+        {
+            if (_isInit)
+                return;
+
+            _isInit = true;
+            Host.SetItemStyle(this);
+            if (_data is Row row)
+                row.Changed += (s, e) => OnValueChanged();
+            else if (_data is INotifyPropertyChanged pro)
+                pro.PropertyChanged += (s, e) => OnValueChanged();
+            OnInit();
+        }
+
+        /// <summary>
+        /// 值变化
+        /// </summary>
+        void OnValueChanged()
+        {
+            // 清除缓存，再次绑定时重新生成
+            ClearCacheUI();
+            // 重新设置行/项目样式
+            Host.SetItemStyle(this);
+            ValueChanged?.Invoke();
+        }
+
         /// <summary>
         /// 提示被截断的长文本
         /// </summary>
@@ -760,6 +773,27 @@ namespace Dt.Base
             p_tb.IsTextTrimmedChanged -= OnIsTextTrimmedChanged;
             ToolTipService.SetToolTip(p_tb, p_tb.Text);
         }
+        #endregion
+
+        #region 虚方法
+        protected virtual void OnInit()
+        {
+        }
+
+        protected virtual void AddCacheUI(string p_key, object p_ui)
+        {
+        }
+
+        protected virtual bool GetCacheUI(string p_key, out object p_ui)
+        {
+            p_ui = null;
+            return false;
+        }
+
+        protected virtual void ClearCacheUI()
+        {
+        }
+        #endregion
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

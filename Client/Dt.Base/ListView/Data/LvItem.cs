@@ -37,16 +37,15 @@ namespace Dt.Base
         #region 成员变量
         Lv _owner;
         int _index;
+        Dictionary<string, object> _cacheUI;
         #endregion
 
         #region 构造方法
         public LvItem(Lv p_lv, object p_data, int p_index)
+            : base(p_data)
         {
             _owner = p_lv;
-            Data = p_data;
             _index = p_index;
-            if (_owner.IsVir)
-                _cacheUI = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
 
@@ -127,5 +126,35 @@ namespace Dt.Base
         {
             _owner.OnItemDoubleClick(Data);
         }
+
+        #region 重写
+        protected override void OnInit()
+        {
+            if (_owner.IsVir)
+                _cacheUI = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        protected override void AddCacheUI(string p_key, object p_ui)
+        {
+            if (_cacheUI != null)
+                _cacheUI[p_key] = p_ui;
+        }
+
+        protected override bool GetCacheUI(string p_key, out object p_ui)
+        {
+            if (_cacheUI != null && _cacheUI.TryGetValue(p_key, out p_ui))
+                return true;
+
+            p_ui = null;
+            return false;
+        }
+
+        protected override void ClearCacheUI()
+        {
+            // 清除缓存，再次绑定时重新生成
+            if (_cacheUI != null)
+                _cacheUI.Clear();
+        }
+        #endregion
     }
 }

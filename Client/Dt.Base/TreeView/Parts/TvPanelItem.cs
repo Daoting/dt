@@ -73,6 +73,8 @@ namespace Dt.Base.TreeViews
             _row = p_item;
             if (_row != null)
             {
+                // 只一次初始化
+                _row.Init();
                 // 值变化时通过切换DataContext更新
                 _row.ValueChanged = OnValueChanged;
                 SetIndent(_row.Depth * _owner.Indent);
