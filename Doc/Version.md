@@ -11,8 +11,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
-## Release 2.0.0 
-### 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
+## Release 2.8.0 
+### 功能 
+* 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
 * 不再支持的API列表：https://docs.microsoft.com/en-us/windows/apps/desktop/modernize/desktop-to-uwp-supported-api
 * 删除PhoneUI模式下窗口左上角的后退按钮
 * Window.Current.CoreWindow.GetKeyState  -> InputKeyboardSource.GetKeyStateForCurrentThread
@@ -32,6 +33,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * wasm通过StorageFile 可以保存文件
 * Xamarin.Essentials 升级到 Microsoft.Maui.Essentials
 * wasm不引用Microsoft.Maui.Essentials 
+* [window]升级 Microsoft.Maui.Essentials 后，除无法"分享"外，其余正常
 * 升级maui rc2后 Dt.Cells包的GMImagePicker 引用Xamarin.iOS 转为 Micorsoft.iOS
 * Dt.Core不依赖Dt.Base中的样式 ，修改NotifyItem
 * 增加uno在debug状态下的日志输出
@@ -39,8 +41,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Dt.App因App名称易混改为Dt.Mgr
 * Agent项目合并到Dt.Base
 * Notify的UI移动到Dt.Base 
+* [ios] SqliteConnection初始化异常 ，无法启动，SQLitePCLRaw 2.1.0 preview以后版本无异常
 * 字体ttf文件放在win项目中，其他项目引用
-* Client-Stable 改名Infra 
+* Client-Stable 改名Infra  
 
 ### Bug修改  
 * Release版的Service Api生成代理类时方法无注释
@@ -64,7 +67,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * cm的GetConfig增加提供服务url列表，service.json 调整后支持实时更新服务地址
 * 客户端rpc采用动态服务路径
 * 用Kit.Rpc<T>封装Api调用，客户端和微服务之间rpc相同
-* 每个微服务Api的Rpc调用采用独立程序集，供客户端和其他微服务调用
+* 每个微服务Api的Rpc调用
+采用独立程序集，供客户端和其他微服务调用
 * 支持非内置类型序列化
 * 原pub的管理功能，表名规范按cm
 * 服务监听rabbitmq的队列变化事件，更新服务列表

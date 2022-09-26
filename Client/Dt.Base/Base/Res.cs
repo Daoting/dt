@@ -388,12 +388,12 @@ namespace Dt.Base
         /// <summary>
         /// 默认行外高，含边框1
         /// </summary>
-        public static double RowOuterHeight => (double)_dict["RowOuterHeight"];
+        public const double RowOuterHeight = 41d;
 
         /// <summary>
         /// 默认行内容高度
         /// </summary>
-        public static double RowInnerHeight => (double)_dict["RowInnerHeight"];
+        public const double RowInnerHeight = 40d;
         #endregion
 
         #region 动画
