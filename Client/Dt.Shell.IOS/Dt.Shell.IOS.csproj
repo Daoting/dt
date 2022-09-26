@@ -10,7 +10,6 @@
         <!--发布用，和Info.plist中的CFBundleIdentifier CFBundleVersion一致-->
         <ApplicationId>com.dt.samples</ApplicationId>
         <ApplicationVersion>22.9.23</ApplicationVersion>
-        <CodesignProvision />
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
