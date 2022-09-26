@@ -18,6 +18,7 @@
 			<ProjectItem TargetFileName="LocalDict.cs" ReplaceParameters="true">Stub\LocalDict.cs</ProjectItem>
 			<ProjectItem TargetFileName="PushApi.cs" ReplaceParameters="true">Stub\PushApi.cs</ProjectItem>
 			<ProjectItem TargetFileName="ReceiveShare.cs" ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>
+			<ProjectItem TargetFileName="CustomTheme.cs" ReplaceParameters="true">Stub\CustomTheme.cs</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml" ReplaceParameters="true">Home.xaml</ProjectItem>
 			<ProjectItem TargetFileName="Home.xaml.cs" ReplaceParameters="true">Home.xaml.cs</ProjectItem>
 		</Project>

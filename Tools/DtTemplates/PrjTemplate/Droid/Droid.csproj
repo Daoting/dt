@@ -13,8 +13,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\icon.ttf" Link="Android\Assets\Fonts\icon.ttf" />
-		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\uno-fluentui-assets.ttf" Link="Android\Assets\Fonts\uno-fluentui-assets.ttf" />
+		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="Android\Assets\Fonts\%(Filename).ttf" />
+		<Content Include="..\$ext_safeprojectname$.Win\Images\*.png" Link="Images\%(Filename).png" />
 	</ItemGroup>
 	
 	<ItemGroup>

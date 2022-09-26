@@ -9,9 +9,9 @@ iOS\Assets.xcassets 图标资源，可通过控件样例的工具生成，在项目中不可见
 
 iOS\Resources       名称必须是 Resources，否则字体无法加载
     \Assets
-        
+        \Lottie  *.json是lottie格式动画的json文件
+
         -- 图片文件无需指定 BundleResource，生成操作默认“无”即可，会自动 BundleResource 到 Assets目录
-        \logo.png 登录页面等用到
         \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
 
     \Fonts
@@ -23,6 +23,9 @@ iOS\Info.plist  App配置文件
 iOS\Entitlements.plist  需要权限列表
 
 iOS\LaunchScreen.storyboard 启动动画定义
+
+Images\*.png 文件链接方式，项目中用到的图片，作为内容生成，ms-appx:///Images/*.png
+iOS目录下的资源为iOS专用，Images下的图片为公用
 
 \App.xaml  全局公共，文件链接
 
@@ -45,6 +48,11 @@ Content 时路径：       ms-appx:///iOS/Resources/Lottie/Dash.json
 1. 使用UIDocumentInterationController发起的分享，接收时只需要在Info.plist中配置CFBundleDocumentTypes，并在App.xaml.cs中重写OpenUrl，如app 文件；
 2. 使用UIActivityViewController发起的分享，接收时需要在独立的dll项目中实现Share Extension，iOS8.0 以后增加的方式，如 照片 邮箱；
 本系统只处理第一种情况！未实现“照片”中的接收分享功能
+
+
+》发布：选择Release，生成前先确认Info.plist和iOS项目文件csproj中的版本相同，重新生成iOS项目，过程比较漫长，生成成功后使用命令发布，
+使用PowerShell切到iOS项目的路径下，运行：
+dotnet publish -f:net6.0-ios -c:Release
 
 
 》开发、调试、发布上架的详细过程参见《搬运工客户端手册.docx》

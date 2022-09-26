@@ -16,7 +16,7 @@
     <Properties>
         <DisplayName>$ext_safeprojectname$</DisplayName>
         <PublisherDisplayName>$username$</PublisherDisplayName>
-        <Logo>Assets\logo.png</Logo>
+        <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
 
     <Dependencies>

@@ -13,9 +13,8 @@
 			<ProjectItem ReplaceParameters="true" TargetFileName="Info.plist">iOS\Info.plist</ProjectItem>
 			<ProjectItem TargetFileName="Entitlements.plist">iOS\Entitlements.plist</ProjectItem>
 			<ProjectItem TargetFileName="LaunchScreen.storyboard">iOS\LaunchScreen.storyboard</ProjectItem>
-			<ProjectItem TargetFileName="iOS说明.txt">iOS\iOS说明.txt</ProjectItem>
+			<ProjectItem TargetFileName="Note.txt">iOS\Note.txt</ProjectItem>
 
-			<ProjectItem TargetFileName="logo.png">iOS\Resources\Assets\logo.png</ProjectItem>
 			<ProjectItem TargetFileName="SplashScreen@2x.png">iOS\Resources\Assets\SplashScreen@2x.png</ProjectItem>
 			<ProjectItem TargetFileName="SplashScreen@3x.png">iOS\Resources\Assets\SplashScreen@3x.png</ProjectItem>
 

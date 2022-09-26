@@ -96,7 +96,9 @@
     <None Include="Client\Stub\FixedMenus.cs" />
     <None Include="Client\Stub\LocalDict.cs" />
     <None Include="Client\Stub\PushApi.cs" />
+    <None Include="Client\Stub\CustomTheme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Win\WinRT.Host.runtimeconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Droid\Droid.csproj" />
@@ -126,12 +128,11 @@
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
-    <None Include="iOS\iOS\iOS说明.txt" />
-    <None Include="iOS\iOS\Resources\Assets\logo.png" />
+    <None Include="iOS\iOS\Note.txt" />
     <None Include="iOS\iOS\Resources\Assets\SplashScreen%402x.png" />
     <None Include="iOS\iOS\Resources\Assets\SplashScreen%403x.png" />
     <VSTemplate Include="iOS\iOS.vstemplate" />
-    <None Include="Win\Assets\logo.png" />
+    <None Include="Win\Assets\StoreLogo.png" />
     <None Include="Win\Assets\SplashScreen.scale-200.png" />
     <None Include="Win\Assets\Square150x150Logo.scale-200.png" />
     <None Include="Win\Assets\Square44x44Logo.scale-200.png" />
@@ -139,7 +140,6 @@
     <None Include="Win\Assets\Wide310x150Logo.scale-200.png" />
     <None Include="Droid\Android\AndroidManifest.xml" />
     <None Include="Droid\Android\Resources\drawable\back.png" />
-    <None Include="Droid\Android\Resources\drawable\logo.png" />
     <None Include="Droid\Android\Resources\mipmap-anydpi-v26\ic_launcher.xml" />
     <None Include="Droid\Android\Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
     <None Include="Droid\Android\Resources\mipmap-hdpi\ic_launcher.png" />
@@ -173,7 +173,15 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Win\Images\Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Win\Note.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Droid\Android\Note.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

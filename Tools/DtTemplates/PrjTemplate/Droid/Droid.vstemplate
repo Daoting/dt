@@ -13,7 +13,6 @@
 			<ProjectItem ReplaceParameters="true" TargetFileName="AndroidManifest.xml">Android\AndroidManifest.xml</ProjectItem>
 			
 			<ProjectItem TargetFileName="back.png">Android\Resources\drawable\back.png</ProjectItem>
-			<ProjectItem TargetFileName="logo.png">Android\Resources\drawable\logo.png</ProjectItem>
 			
 			<ProjectItem TargetFileName="ic_launcher.xml">Android\Resources\mipmap-anydpi-v26\ic_launcher.xml</ProjectItem>
 			<ProjectItem TargetFileName="ic_launcher_round.xml">Android\Resources\mipmap-anydpi-v26\ic_launcher_round.xml</ProjectItem>
@@ -41,6 +40,8 @@
 			<ProjectItem TargetFileName="ic_launcher_background.xml">Android\Resources\values\ic_launcher_background.xml</ProjectItem>
 			<ProjectItem TargetFileName="styles.xml">Android\Resources\values\styles.xml</ProjectItem>
 			<ProjectItem TargetFileName="file_paths.xml">Android\Resources\xml\file_paths.xml</ProjectItem>
+
+			<ProjectItem TargetFileName="Note.txt">Android\Note.txt</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>
