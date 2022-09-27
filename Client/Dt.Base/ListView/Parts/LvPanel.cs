@@ -135,8 +135,8 @@ namespace Dt.Base.ListView
         /// </summary>
         internal void SetMaxSize(Size p_size)
         {
-            // 尺寸变化大于1有效，否则iOS版因分组头造成死循环，每次 p_size.Height 变化 0.06 ！！！
-            if (Math.Abs(_maxSize.Width - p_size.Width) > 1 || Math.Abs(_maxSize.Height - p_size.Height) > 1)
+            // 尺寸变化大于2有效，否则iOS版因分组头造成死循环，每次 p_size.Height 变化 0.06 ！！！
+            if (Math.Abs(_maxSize.Width - p_size.Width) > 2 || Math.Abs(_maxSize.Height - p_size.Height) > 2)
             {
                 _maxSize = p_size;
                 if (_owner.IsVir)
