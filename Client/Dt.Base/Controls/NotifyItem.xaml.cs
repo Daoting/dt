@@ -29,6 +29,7 @@ namespace Dt.Base
         NotifyInfo _info;
         ThreadPoolTimer _timerAutoClose;
         Point? _ptStart;
+        bool _disposed;
 
         public NotifyItem(NotifyInfo p_info)
         {
@@ -51,10 +52,14 @@ namespace Dt.Base
             if (_info.Delay > 0)
                 StartAutoClose();
 
+#if WIN
             // 动画，uno暂时未实现
             TransitionCollection tc = new TransitionCollection();
             tc.Add(new EdgeUIThemeTransition { Edge = Kit.IsPhoneUI ? EdgeTransitionLocation.Top : EdgeTransitionLocation.Right });
             _grid.Transitions = tc;
+#else
+            RenderTransform = new TranslateTransform();
+#endif
         }
 
         void OnInfoChanged(object sender, PropertyChangedEventArgs e)
@@ -125,12 +130,33 @@ namespace Dt.Base
         /// </summary>
         async void CloseInternal()
         {
+            if (_disposed)
+                return;
+
+            _disposed = true;
             KillCloseTimer();
+#if WIN
             Height = _grid.ActualHeight;
             Content = null;
             // 保证动画播放完毕
             await Task.Delay(200);
             Stub.Inst.NotifyList.Remove(_info);
+#else
+            var trans = (TranslateTransform)RenderTransform;
+            Storyboard sb = new Storyboard();
+            DoubleAnimation da = new DoubleAnimation();
+            Storyboard.SetTarget(da, trans);
+            Storyboard.SetTargetProperty(da, "Y");
+            da.Duration = new Duration(TimeSpan.FromSeconds(0.2));
+            da.From = 0;
+            da.To = -ActualHeight;
+            da.EasingFunction = new QuadraticEase();
+            da.EnableDependentAnimation = true;
+            sb.Children.Add(da);
+            sb.Begin();
+            sb.Completed += (sender, e) => Stub.Inst.NotifyList.Remove(_info);
+            await Task.CompletedTask;
+#endif
         }
 
         /// <summary>

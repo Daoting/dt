@@ -11,6 +11,14 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
+## Release 2.8.1 
+### 功能 
+* PhoneUI版提示信息框增加动画
+
+### Bug修改   
+*  Lv TreeView 解决iOS版绘制死循环
+
+
 ## Release 2.8.0 
 ### 功能 
 * 升级到 WinAppSdk1.0(WinUI3.0) + .Net6.0 + 一声叹息
