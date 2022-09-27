@@ -48,7 +48,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    
     <!--Tabs-->
     <Style TargetType="a:Tabs">
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
@@ -100,6 +100,17 @@
 
                         <docking:GridResizer x:Name="Resizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Tabs PhoneUI模式始终不在可视树-->
+    <Style x:Key="PhoneEmptyTabs" TargetType="a:Tabs">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Tabs">
+                    <Grid></Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

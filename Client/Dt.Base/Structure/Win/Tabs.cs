@@ -70,8 +70,10 @@ namespace Dt.Base
         #region 构造方法
         public Tabs()
         {
-            // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
-            if (!Kit.IsPhoneUI)
+            // PhoneUI模式时不在可视树，指定空模板，否则会应用 TabControl 模板
+            if (Kit.IsPhoneUI)
+                Style = (Style)Res.WinRes["PhoneEmptyTabs"];
+            else
                 DefaultStyleKey = typeof(Tabs);
         }
         #endregion
