@@ -45,18 +45,13 @@ namespace Dt.Base.FormView
                 Type type = typeof(Microsoft.UI.Colors);
                 _colors = new Nl<ColorItem>();
                 _colors.Add(new ColorItem(new Color(), "无"));
-#if WIN
-                foreach (PropertyInfo info in type.GetProperties())
+                foreach (PropertyInfo info in type.GetProperties(BindingFlags.Static | BindingFlags.Public))
                 {
-                    var color = (Color)info.GetValue(type);
-                    _colors.Add(new ColorItem(color, $"{info.Name} ({color})"));
+                    if (info.GetValue(type) is Color color)
+                    {
+                        _colors.Add(new ColorItem(color, $"{info.Name} ({color})"));
+                    }
                 }
-#else
-                foreach (FieldInfo info in type.GetFields())
-                {
-                    _colors.Add(new ColorItem(Microsoft.UI.Colors.Parse(info.Name), info.Name));
-                }
-#endif
             }
             return _colors;
         }

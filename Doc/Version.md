@@ -17,8 +17,12 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * PhoneUI模式增加切换Tab方法
 
 ### Bug修改   
-* Lv TreeView 解决iOS版绘制死循环
-* [ios]Fv中颜色选择不显示
+* [ios]Lv TreeView 绘制死循环
+* Fv中颜色选择不显示
+* [ios] 工具栏菜单死循环 
+* [ios] Excel迷你图和分组排序死循环
+* [ios] 报表死循环
+
 
 
 ## Release 2.8.0 
