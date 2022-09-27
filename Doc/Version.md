@@ -14,9 +14,11 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ## Release 2.8.1 
 ### 功能 
 * PhoneUI版提示信息框增加动画
+* PhoneUI模式增加切换Tab方法
 
 ### Bug修改   
-*  Lv TreeView 解决iOS版绘制死循环
+* Lv TreeView 解决iOS版绘制死循环
+* [ios]Fv中颜色选择不显示
 
 
 ## Release 2.8.0 

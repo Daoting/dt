@@ -147,6 +147,8 @@ namespace Dt.Core
         static void AttachUnhandledException()
         {
             // 在Main函数中try catch
+
+            // UI主线程异步方法中抛异常，调试时不崩溃，正式运行时崩溃，无法解决
         }
 
         public static void OnIOSUnhandledException(Exception ex)

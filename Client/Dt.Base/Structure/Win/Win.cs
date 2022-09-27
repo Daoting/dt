@@ -342,7 +342,7 @@ namespace Dt.Base
         /// <summary>
         /// 在多页Tab中选择指定Tab
         /// </summary>
-        /// <param name="p_tabTitle"></param>
+        /// <param name="p_tabTitle">Tab标题</param>
         public void SelectTab(string p_tabTitle)
         {
             if (!Kit.IsPhoneUI)
@@ -351,6 +351,21 @@ namespace Dt.Base
             if (((PhonePage)UITree.RootFrame.Content).Content is PhoneTabs tabs)
             {
                 tabs.Select(p_tabTitle);
+            }
+        }
+
+        /// <summary>
+        /// 在多页Tab中选择指定Tab
+        /// </summary>
+        /// <param name="p_index">Tab索引</param>
+        public void SelectTab(int p_index)
+        {
+            if (!Kit.IsPhoneUI)
+                return;
+
+            if (((PhonePage)UITree.RootFrame.Content).Content is PhoneTabs tabs)
+            {
+                tabs.Select(p_index);
             }
         }
 

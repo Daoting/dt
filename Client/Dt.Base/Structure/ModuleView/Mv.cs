@@ -209,6 +209,28 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 切换Tab
+        /// <summary>
+        /// 在多页Tab中选择指定Tab
+        /// </summary>
+        /// <param name="p_tabTitle">Tab标题</param>
+        public void SelectTab(string p_tabTitle)
+        {
+            if (Kit.IsPhoneUI && _tab?.OwnWin != null)
+                _tab.OwnWin.SelectTab(p_tabTitle);
+        }
+
+        /// <summary>
+        /// 在多页Tab中选择指定Tab
+        /// </summary>
+        /// <param name="p_index">Tab索引</param>
+        public void SelectTab(int p_index)
+        {
+            if (Kit.IsPhoneUI && _tab?.OwnWin != null)
+                _tab.OwnWin.SelectTab(p_index);
+        }
+        #endregion
+
         #region 虚方法
         /// <summary>
         /// 初始化，Loaded事件时调用一次

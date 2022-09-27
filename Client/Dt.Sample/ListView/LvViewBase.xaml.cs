@@ -24,34 +24,41 @@ namespace Dt.Sample
         public LvViewBase()
         {
             InitializeComponent();
-            _lv.View = Resources["TableView"];
-            _lv.ViewMode = ViewMode.Table;
-            _lv.GroupName = "bumen";
+            //_lv.View = Resources["TableView"];
+            //_lv.ViewMode = ViewMode.Table;
+            //_lv.GroupName = "bumen";
+
+            _lv.View = Resources["ListView"];
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
+            SelectTab(0);
             _lv.ChangeView(Resources["TableView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
+            SelectTab(0);
             _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
         void OnFormList(object sender, RoutedEventArgs e)
         {
+            SelectTab(0);
             _lv.ChangeView(Resources["TableView"], ViewMode.List);
         }
 
         void OnTileView(object sender, RoutedEventArgs e)
         {
+            SelectTab(0);
             _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
         }
 
         void OnFormTile(object sender, RoutedEventArgs e)
         {
+            SelectTab(0);
             _lv.ChangeView(Resources["TableView"], ViewMode.Tile);
         }
 
@@ -198,6 +205,7 @@ namespace Dt.Sample
 
         void OnLoadData(object sender, RoutedEventArgs e)
         {
+            SelectTab("列表");
             _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
         }
 
