@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Order="1" Title="树">
                 <ScrollViewer x:Name="_sv">
                     <StackPanel>
                         <Border x:Name="_top" Height="100" Background="Gray" />

@@ -288,6 +288,16 @@ namespace Dt.Base.ListView
         {
             SyncToolbarSortIcon();
         }
+
+        /// <summary>
+        /// 切换 ScrollViewer，重新附加事件
+        /// </summary>
+        /// <param name="p_svNew"></param>
+        internal void ToggleScrollViewer(ScrollViewer p_svNew)
+        {
+            _owner.Scroll.ViewChanged -= OnScrollViewChanged;
+            p_svNew.ViewChanged += OnScrollViewChanged;
+        }
         #endregion
 
         #region 滚动到

@@ -155,6 +155,7 @@ namespace Dt.Base
                 sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
                 sv.VerticalScrollMode = ScrollMode.Auto;
                 sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                _panel.ToggleScrollViewer(sv);
                 Scroll = sv;
             }
 #endif
