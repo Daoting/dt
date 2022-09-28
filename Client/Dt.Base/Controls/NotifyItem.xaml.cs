@@ -146,10 +146,19 @@ namespace Dt.Base
             Storyboard sb = new Storyboard();
             DoubleAnimation da = new DoubleAnimation();
             Storyboard.SetTarget(da, trans);
-            Storyboard.SetTargetProperty(da, "Y");
+            if (Kit.IsPhoneUI)
+            {
+                Storyboard.SetTargetProperty(da, "Y");
+                da.From = 0;
+                da.To = -ActualHeight;
+            }
+            else
+            {
+                Storyboard.SetTargetProperty(da, "X");
+                da.From = 0;
+                da.To = ActualWidth;
+            }
             da.Duration = new Duration(TimeSpan.FromSeconds(0.2));
-            da.From = 0;
-            da.To = -ActualHeight;
             da.EasingFunction = new QuadraticEase();
             da.EnableDependentAnimation = true;
             sb.Children.Add(da);
