@@ -64,7 +64,9 @@ namespace Dt.Base.FormView
         /// </summary>
         internal void SetMaxSize(Size p_size)
         {
-            _maxSize = p_size;
+            // 尺寸变化大于2有效，否则iOS版易造成死循环，每次 p_size 有微小变化！！！
+            if (Math.Abs(_maxSize.Width - p_size.Width) > 2 || Math.Abs(_maxSize.Height - p_size.Height) > 2)
+                _maxSize = p_size;
         }
 
         /// <summary>

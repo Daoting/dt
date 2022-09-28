@@ -6,13 +6,12 @@
         <IsUnoHead>true</IsUnoHead>
         <!-- 避免模拟器上因TextBox崩溃，等待解决 -->
         <MtouchExtraArgs>$(MtouchExtraArgs) --registrar=static</MtouchExtraArgs>
-        
-        <!--发布用，和Info.plist中的CFBundleIdentifier CFBundleVersion一致-->
-        <ApplicationId>com.dt.samples</ApplicationId>
-        <ApplicationVersion>22.9.23</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <!-- 确保和Info.plist中的CFBundleIdentifier CFBundleVersion一致 -->
+        <ApplicationId>com.dt.samples</ApplicationId>
+        <ApplicationVersion>22.9.28</ApplicationVersion>
         <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
         <CodesignKey>iPhone Distribution</CodesignKey>
         <!-- 预配配置文件名称 -->
@@ -23,6 +22,11 @@
         <ServerUser>hdt</ServerUser>
         <ServerPassword>1111</ServerPassword>
         <_DotNetRootRemoteDirectory>/Users/hdt/Library/Caches/Xamarin/XMA/SDKs/dotnet/</_DotNetRootRemoteDirectory>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+      <CodesignKey>iPhone Developer</CodesignKey>
+      <CodesignProvision>dt.samples.debug</CodesignProvision>
     </PropertyGroup>
     
     <Import Project="..\Common.props" />
