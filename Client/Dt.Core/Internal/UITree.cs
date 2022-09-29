@@ -67,14 +67,15 @@ namespace Dt.Core
             MainWin = Window.Current;
 #endif
 
-            // iOS android 启动就奔溃的现象已发现原因，uno已解决，增加常量：UNO_DISABLE_KNOWN_MISSING_TYPES
-            // 参见讨论：https://github.com/unoplatform/uno/discussions/8933
-            //#if ANDROID
-            //            // 解决项目文件多时启动就奔溃的怪异现象，且必须最早创建Frame！！！
-            //            // 未发现其他解决方法，已提讨论
-            //            // 浪费十多天生命，怎能以一个操字了得！
-            //            new Frame().Navigate(typeof(Page));
-            //#endif
+            // iOS android 启动就崩溃的现象已提uno讨论：https://github.com/unoplatform/uno/discussions/8933
+            // 浪费十多天生命，怎能以一个操字了得！根本原因是项目类型过多引起uno异常，uno认为是.net6.0的原因
+            // 解决方法：uno增加常量 UNO_DISABLE_KNOWN_MISSING_TYPES , 控制调试状态不检查未绑定类型
+            // iOS 在 debug release 状态都不再崩溃
+            // android 在 uno4.5 后只联调状态正常，单独运行仍然启动就崩溃
+            // 仍然采用老的解决方法：必须最早创建Frame，不能注掉！！！
+#if ANDROID
+            new Frame().Navigate(typeof(Page));
+#endif
 
             // 背景画刷，默认主蓝
             var theme = Kit.GetService<ITheme>();
