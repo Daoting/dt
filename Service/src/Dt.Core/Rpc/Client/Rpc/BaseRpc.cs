@@ -43,17 +43,24 @@ namespace Dt.Core.Rpc
                 // 验证时服务端证书始终有效！
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
             });
+
+#elif ANDROID || IOS
+            _client = new HttpClient(new NativeMessageHandler());
+
+#elif WASM
+            _client = new HttpClient();
+#endif
+
+
 #if SERVER
             // 内部用户标识
             _client.DefaultRequestHeaders.Add("uid", "110");
-#endif
-#elif ANDROID || IOS
-            _client = new HttpClient(new NativeMessageHandler());
+
 #elif WASM
-            _client = new HttpClient();
             // 识别wasm客户端，允许跨域请求
             _client.DefaultRequestHeaders.Add("dt-wasm", "");
 #endif
+
             // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1
             _client.DefaultRequestVersion = new Version(2, 0);
         }
