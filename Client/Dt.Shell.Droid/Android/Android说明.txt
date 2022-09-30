@@ -31,11 +31,10 @@ Android目录下的资源为android专用，Images下的图片为公用
 
 
 》生成手机apk：
-选择 Release -> 生成项目 -> 在项目目录下使用以下命令发布 -> apk文件在 bin\Release\net6.0-android\publish 目录下
-dotnet publish -f:net6.0-android -c:Release /p:AndroidSigningKeyPass=around /p:AndroidSigningStorePass=around
-
-原来：
-选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择或创建签名 -> 密码around -> 分发成功
+https://learn.microsoft.com/zh-cn/dotnet/maui/android/deployment/overview
+选择 Release -> 生成android项目 -> VS根据csproj文件配置生成并签名apk -> apk文件在 bin\Release\net6.0-android\ 目录下
+也可用命令发布：
+dotnet publish -f:net6.0-android -c:Release 
 
 
 》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：

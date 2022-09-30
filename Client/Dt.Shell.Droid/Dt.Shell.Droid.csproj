@@ -6,6 +6,19 @@
         <IsUnoHead>true</IsUnoHead>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <!-- 确保和AndroidManifest.xml中的值一致 -->
+        <!-- package -->
+        <ApplicationId>com.dt.samples</ApplicationId>
+        <!-- versionCode -->
+        <ApplicationVersion>8</ApplicationVersion>
+        <AndroidKeyStore>True</AndroidKeyStore>
+        <AndroidSigningKeyStore>app.keystore</AndroidSigningKeyStore>
+        <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+        <AndroidSigningKeyPass>around</AndroidSigningKeyPass>
+        <AndroidSigningStorePass>around</AndroidSigningStorePass>
+    </PropertyGroup>
+    
     <Import Project="..\Common.props" />
     
     <ItemGroup>
