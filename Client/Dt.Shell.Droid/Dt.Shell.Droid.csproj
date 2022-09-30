@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <!-- 确保和AndroidManifest.xml中的值一致 -->
-        <!-- package -->
-        <ApplicationId>com.dt.samples</ApplicationId>
-        <!-- versionCode -->
-        <ApplicationVersion>8</ApplicationVersion>
+        <!-- apk支持的ABI架构，默认支持4种架构，减少支持ABI能缩小apk -->
+        <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+        <!--<RuntimeIdentifier>android-x64</RuntimeIdentifier>-->
+        <!--<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>-->
+        <!-- 签名相关 -->
         <AndroidKeyStore>True</AndroidKeyStore>
         <AndroidSigningKeyStore>app.keystore</AndroidSigningKeyStore>
         <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
