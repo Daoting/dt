@@ -21,6 +21,8 @@ namespace Dt.Sample
 {
     public partial class ExceptionDemo : Win
     {
+        const string _msg = "异常未被中断！";
+
         public ExceptionDemo()
         {
             InitializeComponent();
@@ -37,26 +39,34 @@ namespace Dt.Sample
         void ThrowIfSync(object sender, RoutedEventArgs e)
         {
             Throw.If(true, "业务条件true时的异常警告");
-            int b = 12;
-            b++;
+            Kit.Msg(_msg);
         }
 
         void ThrowIfNullSync(object sender, RoutedEventArgs e)
         {
             TextBlock tb = null;
             Throw.IfNull(tb, "对象null时的异常警告");
+            Kit.Msg(_msg);
         }
-        
+
         void ThrowIfEmptySync(object sender, RoutedEventArgs e)
         {
             Throw.IfEmpty(null, "字符串空或null的异常警告");
+            Kit.Msg(_msg);
         }
 
         void ThrowMsgSync(object sender, RoutedEventArgs e)
         {
             Throw.Msg("业务异常消息");
+            Kit.Msg(_msg);
         }
-        
+
+        void ThrowMethod(object sender, RoutedEventArgs e)
+        {
+            Throw.IfEmpty(null);
+            Kit.Msg(_msg);
+        }
+
         void ThrowUnhandleSync(object sender, RoutedEventArgs e)
         {
             throw new Exception("未处理异常信息");
@@ -67,16 +77,27 @@ namespace Dt.Sample
         async void ThrowAsync(object sender, RoutedEventArgs e)
         {
             Throw.If(true, "异步业务异常警告");
-            int b = 12;
-            string str = "avb";
-            b += str.Length;
-            Kit.Msg(b.ToString());
+            Kit.Msg(_msg);
             await Task.CompletedTask;
         }
 
-        void ThrowTaskSync(object sender, RoutedEventArgs e)
+        async void ThrowMethodAsync(object sender, RoutedEventArgs e)
         {
-            Task.Run(() => Throw.Msg("Task内同步业务异常"));
+            Throw.If(true);
+            Kit.Msg(_msg);
+            await Task.CompletedTask;
+        }
+
+        async void ThrowTaskSync(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                Throw.Msg("Task内同步业务异常");
+                Kit.Msg(_msg);
+            }).Wait();
+
+            Kit.Msg(_msg);
+            await Task.CompletedTask;
         }
 
         void ThrowTaskAsync(object sender, RoutedEventArgs e)
@@ -84,8 +105,23 @@ namespace Dt.Sample
             Task.Run(async () =>
             {
                 Throw.Msg("Task内异步业务异常");
+                Kit.Msg(_msg);
                 await Task.CompletedTask;
-            });
+            }).Wait();
+
+            Kit.Msg(_msg);
+        }
+
+        void ThrowTaskMethod(object sender, RoutedEventArgs e)
+        {
+            Task.Run(async () =>
+            {
+                Throw.If(true);
+                Kit.Msg(_msg);
+                await Task.CompletedTask;
+            }).Wait();
+
+            Kit.Msg(_msg);
         }
 
         async void ThrowUnhandleAsync(object sender, RoutedEventArgs e)
@@ -96,7 +132,8 @@ namespace Dt.Sample
 
         void ThrowUnhandleTaskSync(object sender, RoutedEventArgs e)
         {
-            Task.Run(() => throw new Exception("Task内同步未处理异常"));
+            Task.Run(() => throw new Exception("Task内同步未处理异常")).Wait();
+            Kit.Msg(_msg);
         }
 
         void ThrowUnhandleTaskAsync(object sender, RoutedEventArgs e)
@@ -105,7 +142,9 @@ namespace Dt.Sample
             {
                 await Task.CompletedTask;
                 throw new Exception("Task内异步未处理异常");
-            });
+            }).Wait();
+
+            Kit.Msg(_msg);
         }
         #endregion
 
