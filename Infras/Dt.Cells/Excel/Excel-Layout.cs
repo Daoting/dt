@@ -72,11 +72,11 @@ namespace Dt.Base
                 _progressRing.Measure(availableSize);
             }
 
-//#if WIN
-//            System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
-//#else
-//            Console.WriteLine("Excel.MeasureOverride");
-//#endif
+            //#if WIN
+            //            System.Diagnostics.Debug.WriteLine("Excel.MeasureOverride");
+            //#else
+            //            Console.WriteLine("Excel.MeasureOverride");
+            //#endif
             return _availableSize;
         }
 
@@ -112,11 +112,11 @@ namespace Dt.Base
 
             Clip = new RectangleGeometry { Rect = rcFull };
 
-//#if WIN
-//            System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
-//#else
-//            Console.WriteLine("Excel.ArrangeOverride");
-//#endif
+            //#if WIN
+            //            System.Diagnostics.Debug.WriteLine("Excel.ArrangeOverride");
+            //#else
+            //            Console.WriteLine("Excel.ArrangeOverride");
+            //#endif
             return finalSize;
         }
         #endregion
@@ -135,16 +135,18 @@ namespace Dt.Base
                 for (int i = -1; i <= p_layout.RowPaneCount; i++)
                 {
                     double height = p_layout.GetViewportHeight(i);
-                    if ((_rowHeaders[i + 1] == null) && (height > 0.0))
-                    {
-                        _rowHeaders[i + 1] = new RowHeaderPanel(this);
-                    }
-
                     var header = _rowHeaders[i + 1];
+
                     if (height > 0.0)
                     {
+                        if (header == null)
+                        {
+                            header = new RowHeaderPanel(this);
+                            _rowHeaders[i + 1] = header;
+                        }
                         header.Location = new Point(p_layout.HeaderX, p_layout.GetViewportY(i));
                         header.RowViewportIndex = i;
+
                         if (!Children.Contains(header))
                         {
                             // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
@@ -154,7 +156,8 @@ namespace Dt.Base
                     }
                     else if (header != null)
                     {
-                        Children.Remove(header);
+                        if (Children.Contains(header))
+                            Children.Remove(header);
                         _rowHeaders[i + 1] = null;
                     }
                 }
@@ -248,7 +251,7 @@ namespace Dt.Base
             {
                 foreach (var header in _rowHeaders)
                 {
-                    if (header != null)
+                    if (header != null && Children.Contains(header))
                         Children.Remove(header);
                 }
                 _rowHeaders = null;
@@ -270,16 +273,18 @@ namespace Dt.Base
                 for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
                 {
                     double width = p_layout.GetViewportWidth(i);
-                    if ((_colHeaders[i + 1] == null) && (width > 0.0))
-                    {
-                        _colHeaders[i + 1] = new ColHeaderPanel(this);
-                    }
-
                     var colPanel = _colHeaders[i + 1];
+
                     if (width > 0.0)
                     {
+                        if (colPanel == null)
+                        {
+                            colPanel = new ColHeaderPanel(this);
+                            _colHeaders[i + 1] = colPanel;
+                        }
                         colPanel.Location = new Point(p_layout.GetViewportX(i), p_layout.HeaderY);
                         colPanel.ColumnViewportIndex = i;
+
                         if (!Children.Contains(colPanel))
                         {
                             // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
@@ -289,7 +294,8 @@ namespace Dt.Base
                     }
                     else if (colPanel != null)
                     {
-                        Children.Remove(colPanel);
+                        if (Children.Contains(colPanel))
+                            Children.Remove(colPanel);
                         _colHeaders[i + 1] = null;
                     }
                 }
@@ -383,7 +389,7 @@ namespace Dt.Base
             {
                 foreach (var header in _colHeaders)
                 {
-                    if (header != null)
+                    if (header != null && Children.Contains(header))
                         Children.Remove(header);
                 }
                 _colHeaders = null;
@@ -405,7 +411,8 @@ namespace Dt.Base
             }
             else if (_cornerPanel != null)
             {
-                Children.Remove(_cornerPanel);
+                if (Children.Contains(_cornerPanel))
+                    Children.Remove(_cornerPanel);
                 _cornerPanel = null;
             }
         }
@@ -451,7 +458,7 @@ namespace Dt.Base
                     for (int j = _cellsPanels.GetLowerBound(1); j <= upperCol; j++)
                     {
                         CellsPanel viewport = _cellsPanels[i, j];
-                        if (viewport != null)
+                        if (viewport != null && Children.Contains(viewport))
                             Children.Remove(viewport);
                     }
                 }
@@ -466,12 +473,19 @@ namespace Dt.Base
             {
                 double viewportWidth = p_layout.GetViewportWidth(i);
                 double viewportX = p_layout.GetViewportX(i);
+
                 for (int j = -1; j <= p_layout.RowPaneCount; j++)
                 {
                     double viewportHeight = p_layout.GetViewportHeight(j);
-                    if (((_cellsPanels[j + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
+
+                    if (_cellsPanels[j + 1, i + 1] == null
+                        && viewportWidth > 0.0
+                        && viewportHeight > 0.0)
                     {
-                        if (((viewportArray != null) && ((j + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[j + 1, i + 1] != null)))
+                        if (viewportArray != null
+                            && (j + 1) < viewportArray.GetUpperBound(0)
+                            && (i + 1) < viewportArray.GetUpperBound(1)
+                            && (viewportArray[j + 1, i + 1] != null))
                         {
                             _cellsPanels[j + 1, i + 1] = viewportArray[j + 1, i + 1];
                         }
@@ -482,11 +496,12 @@ namespace Dt.Base
                     }
 
                     CellsPanel cellPanel = _cellsPanels[j + 1, i + 1];
-                    if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
+                    if (viewportWidth > 0.0 && viewportHeight > 0.0)
                     {
                         cellPanel.Location = new Point(viewportX, p_layout.GetViewportY(j));
                         cellPanel.ColumnViewportIndex = i;
                         cellPanel.RowViewportIndex = j;
+
                         if (!Children.Contains(cellPanel))
                         {
                             // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
@@ -496,7 +511,8 @@ namespace Dt.Base
                     }
                     else if (cellPanel != null)
                     {
-                        Children.Remove(cellPanel);
+                        if (Children.Contains(cellPanel))
+                            Children.Remove(cellPanel);
                         _cellsPanels[j + 1, i + 1] = null;
                     }
                 }
@@ -626,7 +642,7 @@ namespace Dt.Base
                         }
                         bar.Measure(new Size(barWidth, HorizontalScrollBarHeight));
                     }
-                    else
+                    else if (bar != null && Children.Contains(bar))
                     {
                         Children.Remove(bar);
                     }
@@ -655,14 +671,16 @@ namespace Dt.Base
                 {
                     foreach (ScrollBar bar2 in _horizontalScrollBar)
                     {
-                        Children.Remove(bar2);
+                        if (bar2 != null && Children.Contains(bar2))
+                            Children.Remove(bar2);
                     }
                 }
                 if (_horizontalSplitBox != null)
                 {
                     foreach (var box2 in _horizontalSplitBox)
                     {
-                        Children.Remove(box2);
+                        if (box2 != null && Children.Contains(box2))
+                            Children.Remove(box2);
                     }
                 }
             }
@@ -685,7 +703,7 @@ namespace Dt.Base
                         }
                         bar.Measure(new Size(VerticalScrollBarWidth, barHeight));
                     }
-                    else
+                    else if (bar != null && Children.Contains(bar))
                     {
                         Children.Remove(bar);
                     }
@@ -714,14 +732,16 @@ namespace Dt.Base
                 {
                     foreach (ScrollBar bar4 in _verticalScrollBar)
                     {
-                        Children.Remove(bar4);
+                        if (bar4 != null && Children.Contains(bar4))
+                            Children.Remove(bar4);
                     }
                 }
                 if (_verticalSplitBox != null)
                 {
                     foreach (var box4 in _verticalSplitBox)
                     {
-                        Children.Remove(box4);
+                        if (box4 != null && Children.Contains(box4))
+                            Children.Remove(box4);
                     }
                 }
             }
@@ -883,19 +903,22 @@ namespace Dt.Base
 
                 if (_rowGroupHeaderPresenter != null)
                 {
-                    Children.Remove(_rowGroupHeaderPresenter);
+                    if (Children.Contains(_rowGroupHeaderPresenter))
+                        Children.Remove(_rowGroupHeaderPresenter);
                     _rowGroupHeaderPresenter = null;
                 }
 
                 if (_columnGroupHeaderPresenter != null)
                 {
-                    Children.Remove(_columnGroupHeaderPresenter);
+                    if (Children.Contains(_columnGroupHeaderPresenter))
+                        Children.Remove(_columnGroupHeaderPresenter);
                     _columnGroupHeaderPresenter = null;
                 }
 
                 if (_groupCornerPresenter != null)
                 {
-                    Children.Remove(_groupCornerPresenter);
+                    if (Children.Contains(_groupCornerPresenter))
+                        Children.Remove(_groupCornerPresenter);
                     _groupCornerPresenter = null;
                 }
                 return;
@@ -907,36 +930,38 @@ namespace Dt.Base
                 ClearRowGroups();
             }
 
-            if (_rowGroupPresenters == null)
-            {
-                _rowGroupPresenters = new GcRangeGroup[p_layout.RowPaneCount + 2];
-            }
             if (groupLayout.Width > 0.0)
             {
+                if (_rowGroupPresenters == null)
+                    _rowGroupPresenters = new GcRangeGroup[p_layout.RowPaneCount + 2];
+
                 for (int i = -1; i <= p_layout.RowPaneCount; i++)
                 {
                     double viewportY = p_layout.GetViewportY(i);
                     double viewportHeight = p_layout.GetViewportHeight(i);
-                    if (_rowGroupPresenters[i + 1] == null)
-                    {
-                        GcRangeGroup group2 = new GcRangeGroup(this);
-                        _rowGroupPresenters[i + 1] = group2;
-                    }
                     GcRangeGroup group3 = _rowGroupPresenters[i + 1];
-                    group3.Orientation = Orientation.Horizontal;
-                    group3.ViewportIndex = i;
-                    group3.Location = new Point(groupLayout.X, viewportY);
+
                     if (viewportHeight > 0.0)
                     {
+                        if (group3 == null)
+                        {
+                            group3 = new GcRangeGroup(this);
+                            _rowGroupPresenters[i + 1] = group3;
+                        }
+                        group3.Orientation = Orientation.Horizontal;
+                        group3.ViewportIndex = i;
+                        group3.Location = new Point(groupLayout.X, viewportY);
+
                         if (!Children.Contains(group3))
                         {
                             Children.Add(group3);
                         }
                         group3.Measure(new Size(groupLayout.Width, viewportHeight));
                     }
-                    else
+                    else if (group3 != null)
                     {
-                        Children.Remove(group3);
+                        if (Children.Contains(group3))
+                            Children.Remove(group3);
                         _rowGroupPresenters[i + 1] = null;
                     }
                 }
@@ -951,36 +976,39 @@ namespace Dt.Base
             {
                 ClearColumnGroups();
             }
-            if (_columnGroupPresenters == null)
-            {
-                _columnGroupPresenters = new GcRangeGroup[p_layout.ColumnPaneCount + 2];
-            }
+
             if (groupLayout.Height > 0.0)
             {
+                if (_columnGroupPresenters == null)
+                    _columnGroupPresenters = new GcRangeGroup[p_layout.ColumnPaneCount + 2];
+
                 for (int k = -1; k <= p_layout.ColumnPaneCount; k++)
                 {
                     double viewportX = p_layout.GetViewportX(k);
                     double viewportWidth = p_layout.GetViewportWidth(k);
-                    if (_columnGroupPresenters[k + 1] == null)
-                    {
-                        GcRangeGroup group5 = new GcRangeGroup(this);
-                        _columnGroupPresenters[k + 1] = group5;
-                    }
                     GcRangeGroup group6 = _columnGroupPresenters[k + 1];
-                    group6.Orientation = Orientation.Vertical;
-                    group6.ViewportIndex = k;
-                    group6.Location = new Point(viewportX, groupLayout.Y);
+
                     if (viewportWidth > 0.0)
                     {
+                        if (group6 == null)
+                        {
+                            group6 = new GcRangeGroup(this);
+                            _columnGroupPresenters[k + 1] = group6;
+                        }
+                        group6.Orientation = Orientation.Vertical;
+                        group6.ViewportIndex = k;
+                        group6.Location = new Point(viewportX, groupLayout.Y);
+
                         if (!Children.Contains(group6))
                         {
                             Children.Add(group6);
                         }
                         group6.Measure(new Size(viewportWidth, groupLayout.Height));
                     }
-                    else
+                    else if (group6 != null)
                     {
-                        Children.Remove(group6);
+                        if (Children.Contains(group6))
+                            Children.Remove(group6);
                         _columnGroupPresenters[k + 1] = null;
                     }
                 }
@@ -990,62 +1018,62 @@ namespace Dt.Base
                 ClearColumnGroups();
             }
 
-            if (_rowGroupHeaderPresenter == null)
-            {
-                _rowGroupHeaderPresenter = new GcRangeGroupHeader(this);
-            }
-            _rowGroupHeaderPresenter.Orientation = Orientation.Horizontal;
-            _rowGroupHeaderPresenter.Location = new Point(groupLayout.X, groupLayout.Y + groupLayout.Height);
             if (groupLayout.Width > 0.0)
             {
+                if (_rowGroupHeaderPresenter == null)
+                    _rowGroupHeaderPresenter = new GcRangeGroupHeader(this);
+                _rowGroupHeaderPresenter.Orientation = Orientation.Horizontal;
+                _rowGroupHeaderPresenter.Location = new Point(groupLayout.X, groupLayout.Y + groupLayout.Height);
+
                 if (!Children.Contains(_rowGroupHeaderPresenter))
                 {
                     Children.Add(_rowGroupHeaderPresenter);
                 }
                 _rowGroupHeaderPresenter.Measure(new Size(groupLayout.Width, p_layout.HeaderHeight));
             }
-            else
+            else if (_rowGroupHeaderPresenter != null)
             {
-                Children.Remove(_rowGroupHeaderPresenter);
+                if (Children.Contains(_rowGroupHeaderPresenter))
+                    Children.Remove(_rowGroupHeaderPresenter);
                 _rowGroupHeaderPresenter = null;
             }
 
-            if (_columnGroupHeaderPresenter == null)
-            {
-                _columnGroupHeaderPresenter = new GcRangeGroupHeader(this);
-            }
-            _columnGroupHeaderPresenter.Orientation = Orientation.Vertical;
-            _columnGroupHeaderPresenter.Location = new Point(groupLayout.X + groupLayout.Width, groupLayout.Y);
             if (groupLayout.Height > 0.0)
             {
+                if (_columnGroupHeaderPresenter == null)
+                    _columnGroupHeaderPresenter = new GcRangeGroupHeader(this);
+                _columnGroupHeaderPresenter.Orientation = Orientation.Vertical;
+                _columnGroupHeaderPresenter.Location = new Point(groupLayout.X + groupLayout.Width, groupLayout.Y);
+
                 if (!Children.Contains(_columnGroupHeaderPresenter))
                 {
                     Children.Add(_columnGroupHeaderPresenter);
                 }
                 _columnGroupHeaderPresenter.Measure(new Size(p_layout.HeaderWidth, groupLayout.Height));
             }
-            else
+            else if (_columnGroupHeaderPresenter != null)
             {
-                Children.Remove(_columnGroupHeaderPresenter);
+                if (Children.Contains(_columnGroupHeaderPresenter))
+                    Children.Remove(_columnGroupHeaderPresenter);
                 _columnGroupHeaderPresenter = null;
             }
 
-            if (_groupCornerPresenter == null)
-            {
-                _groupCornerPresenter = new GcRangeGroupCorner(this);
-            }
-            _groupCornerPresenter.Location = new Point(groupLayout.X, groupLayout.Y);
             if ((groupLayout.Width > 0.0) && (groupLayout.Height > 0.0))
             {
+                if (_groupCornerPresenter == null)
+                    _groupCornerPresenter = new GcRangeGroupCorner(this);
+                _groupCornerPresenter.Location = new Point(groupLayout.X, groupLayout.Y);
+
                 if (!Children.Contains(_groupCornerPresenter))
                 {
                     Children.Add(_groupCornerPresenter);
                 }
                 _groupCornerPresenter.Measure(new Size(groupLayout.Width, groupLayout.Height));
             }
-            else
+            else if (_groupCornerPresenter != null)
             {
-                Children.Remove(_groupCornerPresenter);
+                if (Children.Contains(_groupCornerPresenter))
+                    Children.Remove(_groupCornerPresenter);
                 _groupCornerPresenter = null;
             }
         }
@@ -1158,20 +1186,28 @@ namespace Dt.Base
 
         void ClearRowGroups()
         {
-            foreach (GcRangeGroup group in _rowGroupPresenters)
+            if (_rowGroupPresenters != null)
             {
-                Children.Remove(group);
+                foreach (GcRangeGroup group in _rowGroupPresenters)
+                {
+                    if (Children.Contains(group))
+                        Children.Remove(group);
+                }
+                _rowGroupPresenters = null;
             }
-            _rowGroupPresenters = null;
         }
 
         void ClearColumnGroups()
         {
-            foreach (GcRangeGroup group4 in _columnGroupPresenters)
+            if (_columnGroupPresenters != null)
             {
-                Children.Remove(group4);
+                foreach (GcRangeGroup group4 in _columnGroupPresenters)
+                {
+                    if (Children.Contains(group4))
+                        Children.Remove(group4);
+                }
+                _columnGroupPresenters = null;
             }
-            _columnGroupPresenters = null;
         }
         #endregion
 
@@ -1196,7 +1232,8 @@ namespace Dt.Base
             }
             else if (_tabStrip != null)
             {
-                Children.Remove(_tabStrip);
+                if (Children.Contains(_tabStrip))
+                    Children.Remove(_tabStrip);
                 _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
                 _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
                 _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
