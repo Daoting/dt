@@ -9,10 +9,11 @@
         <DefineConstants>$(DefineConstants);IOS</DefineConstants>
         <!-- 避免模拟器上因TextBox崩溃，等待解决 -->
         <MtouchExtraArgs>$(MtouchExtraArgs) --registrar=static</MtouchExtraArgs>
+        <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Uno.WinUI" Version="4.4.13" />
+        <PackageReference Include="Uno.WinUI" Version="4.5.9" />
     </ItemGroup>
 
     <ItemGroup>

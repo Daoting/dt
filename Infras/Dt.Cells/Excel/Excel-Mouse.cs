@@ -69,6 +69,10 @@ namespace Dt.Base
                 // 触摸模式
                 IsTouching = false;
                 _isTouchScrolling = false;
+#if !WIN
+                StopInertialTimer();
+#endif
+
                 var intermediatePoints = e.GetIntermediatePoints(this);
                 if ((intermediatePoints != null) && (intermediatePoints.Count > 0))
                 {
@@ -93,9 +97,7 @@ namespace Dt.Base
                                 }
                             }
                             _touchProcessedPointIds.Add(point.PointerId);
-#if !WIN
-                            StopInertialTimer();
-#endif
+
 
                             try
                             {
