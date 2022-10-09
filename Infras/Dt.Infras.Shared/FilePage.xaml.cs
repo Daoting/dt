@@ -25,7 +25,7 @@ namespace Dt.Shell
 
             var file = e.Parameter.ToString();
             var assembly = typeof(FilePage).Assembly;
-            using (var stream = assembly.GetManifestResourceStream($"Dt.Shell.Res.{file}"))
+            using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Res.{file}"))
             {
                 if (file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
                     await _excel.OpenExcel(stream);

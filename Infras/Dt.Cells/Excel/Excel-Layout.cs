@@ -1862,11 +1862,14 @@ namespace Dt.Base
 
         void ArrangeTrackersPanel(Rect rcFull)
         {
+#if !IOS
+            // iOS上canvas重布局造成测量、布局死循环！
             _trackersPanel.Arrange(rcFull);
             _rowFreezeLine?.Arrange(rcFull);
             _rowTrailingFreezeLine?.Arrange(rcFull);
             _columnFreezeLine?.Arrange(rcFull);
             _columnTrailingFreezeLine?.Arrange(rcFull);
+#endif
         }
         #endregion
 
