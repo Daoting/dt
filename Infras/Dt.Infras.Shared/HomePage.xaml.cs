@@ -22,6 +22,16 @@ namespace Dt.Shell
             Frame.Navigate(typeof(ChartPage));
         }
 
+        void OnMutiTab(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MutiTabPage));
+        }
+
+        void OnSparkline(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SparklinePage));
+        }
+
         void OnLoadFile(object sender, RoutedEventArgs e)
         {
             var file = ((Button)sender).Tag.ToString();

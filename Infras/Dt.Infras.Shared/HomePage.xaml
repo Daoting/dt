@@ -11,6 +11,10 @@
             <Button Content="xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Click="OnMutiTab" Content="分组排序" />
+            <Button Click="OnSparkline" Content="迷你图" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="20">
             <Button Click="OnPieStacked" Content="饼图" />
             
         </StackPanel>

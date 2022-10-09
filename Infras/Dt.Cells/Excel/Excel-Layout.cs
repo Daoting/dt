@@ -35,7 +35,9 @@ namespace Dt.Base
             if (!IsWorking)
                 SaveHitInfo(null);
 
-            //**************最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层**************/
+            //************** 最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层 **************/
+            //*** uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式，不再Insert到0的方式！因每层都有Clip，滚动时仍为分层效果 ***/
+
             SheetLayout layout = GetSheetLayout();
             bool reload = (_cellsPanels != null)
                 && (ActiveSheet == null || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1 || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1);
@@ -145,7 +147,8 @@ namespace Dt.Base
                         header.RowViewportIndex = i;
                         if (!Children.Contains(header))
                         {
-                            Children.Insert(0, header);
+                            // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
+                            Children.Add(header);
                         }
                         header.Measure(new Size(p_layout.HeaderWidth, height));
                     }
@@ -279,7 +282,8 @@ namespace Dt.Base
                         colPanel.ColumnViewportIndex = i;
                         if (!Children.Contains(colPanel))
                         {
-                            Children.Insert(0, colPanel);
+                            // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
+                            Children.Add(colPanel);
                         }
                         colPanel.Measure(new Size(width, p_layout.HeaderHeight));
                     }
@@ -485,8 +489,8 @@ namespace Dt.Base
                         cellPanel.RowViewportIndex = j;
                         if (!Children.Contains(cellPanel))
                         {
-                            // 单元格区域放最低层
-                            Children.Insert(0, cellPanel);
+                            // uno4.5.x 后因iOS版切换Tab时内容不显示，改为Add方式
+                            Children.Add(cellPanel);
                         }
                         cellPanel.Measure(new Size(viewportWidth, viewportHeight));
                     }

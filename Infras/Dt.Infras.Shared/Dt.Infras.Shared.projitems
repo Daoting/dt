@@ -21,6 +21,13 @@
 		 without manipulating the projitem file.
 	-->
     <Compile Include="$(MSBuildThisFileDirectory)ChartSampleData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SparklinePage.xaml.cs">
+      <DependentUpon>SparklinePage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="$(MSBuildThisFileDirectory)SparklinePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
