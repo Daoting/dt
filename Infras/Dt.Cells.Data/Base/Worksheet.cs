@@ -4669,12 +4669,17 @@ namespace Dt.Cells.Data
                     }
                     return _gridLine;
                 }
+
                 if (_gridLine == null)
                 {
-                    _gridLine = new BorderLine(Colors.Transparent, BorderLineStyleDatas.GridLine);
+                    // 无需绘制
+                    _gridLine = BorderLine.NoBorder;
+                    //_gridLine = new BorderLine(Colors.Transparent, BorderLineStyleDatas.GridLine);
                 }
                 return _gridLine;
             }
+
+            // 默认网格线
             if (_defaultGridLine == null)
             {
                 _defaultGridLine = new BorderLine(DefaultGridLineColor, BorderLineStyleDatas.GridLine);

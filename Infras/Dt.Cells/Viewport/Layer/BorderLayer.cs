@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using System;
 #endregion
 
 namespace Dt.Cells.UI
@@ -37,6 +38,7 @@ namespace Dt.Cells.UI
         int _viewportBottomRow = -1;
         int _viewportRightColumn = -1;
         Point _location;
+        Size _lastSize;
 
         readonly Dictionary<ulong, BorderLine> _hBorderLineCache = new Dictionary<ulong, BorderLine>();
         readonly Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
@@ -46,6 +48,8 @@ namespace Dt.Cells.UI
         public BorderLayer(CellsPanel viewport)
         {
             _owner = viewport;
+            var sheet = _owner.Excel.ActiveSheet;
+            _gridLine = sheet.GetGridLine(SheetArea.Cells);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -53,8 +57,17 @@ namespace Dt.Cells.UI
             if (_owner.Excel._fastScroll)
                 return availableSize;
 
-            var sheet = _owner.Excel.ActiveSheet;
-            _gridLine = sheet.GetGridLine(SheetArea.Cells);
+            // uno中尺寸有时容易多出小数，造成测量死循环！小数用Floor Ceiling Round取值都可能死循环！
+            if (double.IsInfinity(availableSize.Width))
+                _lastSize.Width = 5000;
+            else if (Math.Abs(availableSize.Width - _lastSize.Width) > 1)
+                _lastSize.Width = Math.Round(availableSize.Width);
+
+            if (double.IsInfinity(availableSize.Height))
+                _lastSize.Height = 5000;
+            else if (Math.Abs(availableSize.Height - _lastSize.Height) > 1)
+                _lastSize.Height = Math.Round(availableSize.Height);
+
             _recycledStart = 0;
             _location = _owner.PointToClient(new Point());
             _lines.Clear();
@@ -65,10 +78,14 @@ namespace Dt.Cells.UI
             CalcVisibleRowColumnIndexes();
             BuildHorizontalBorders();
             BuildVerticalBorders();
-            LinkBorders(availableSize);
-            RecycleBorders();
 
-            return availableSize;
+            if (_lines.Count > 0)
+                LinkBorders();
+
+            if (_recycledStart < Children.Count)
+                RecycleBorders();
+
+            return _lastSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -212,7 +229,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void LinkBorders(Size availableSize)
+        void LinkBorders()
         {
             foreach (var l in _lines)
             {
@@ -301,8 +318,8 @@ namespace Dt.Cells.UI
                     }
                 }
 
-                l.Line1.Measure(availableSize);
-                l.Line2?.Measure(availableSize);
+                l.Line1.Measure(_lastSize);
+                l.Line2?.Measure(_lastSize);
             }
         }
 
