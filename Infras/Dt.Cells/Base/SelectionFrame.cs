@@ -19,7 +19,9 @@ namespace Dt.Cells.UI
 {
     internal partial class SelectionFrame : Panel
     {
+        static Size _szEmpty = new Size();
         static Rect _rcEmpty = new Rect();
+        const double _minSize = 10;
         SolidColorBrush _brush;
         Rectangle _bottomRectangle;
         Rectangle _fillIndicator;
@@ -71,16 +73,39 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            _leftRectangle.Measure(new Size(Thickness, availableSize.Height));
-            _rightRectangle.Measure(new Size(Thickness, availableSize.Height));
-            _topRectangle.Measure(new Size(availableSize.Width, Thickness));
-            _bottomRectangle.Measure(new Size(availableSize.Width, Thickness));
-            _fillIndicator.Measure(new Size(5.0, 5.0));
+            if (availableSize.Width < _minSize && availableSize.Height < _minSize)
+            {
+                // 隐藏报表初始化时左上角的黑点
+                _leftRectangle.Measure(_szEmpty);
+                _rightRectangle.Measure(_szEmpty);
+                _topRectangle.Measure(_szEmpty);
+                _bottomRectangle.Measure(_szEmpty);
+                _fillIndicator.Measure(_szEmpty);
+            }
+            else
+            {
+                _leftRectangle.Measure(new Size(Thickness, availableSize.Height));
+                _rightRectangle.Measure(new Size(Thickness, availableSize.Height));
+                _topRectangle.Measure(new Size(availableSize.Width, Thickness));
+                _bottomRectangle.Measure(new Size(availableSize.Width, Thickness));
+                _fillIndicator.Measure(new Size(5.0, 5.0));
+            }
+
             return availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            if (finalSize.Width < _minSize && finalSize.Height < _minSize)
+            {
+                _leftRectangle.Arrange(_rcEmpty);
+                _rightRectangle.Arrange(_rcEmpty);
+                _topRectangle.Arrange(_rcEmpty);
+                _bottomRectangle.Arrange(_rcEmpty);
+                _fillIndicator.Arrange(_rcEmpty);
+                return finalSize;
+            }
+
             Rect rc;
             bool indicatorVisible = IsFillIndicatorVisible;
 
