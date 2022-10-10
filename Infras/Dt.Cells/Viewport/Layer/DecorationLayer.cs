@@ -38,6 +38,8 @@ namespace Dt.Cells.UI
         int _toCol;
         bool _moving;
         Rectangle _dragRect;
+        double _lastWidth;
+        double _lastHeight;
 
         /// <summary>
         /// 构造方法
@@ -68,13 +70,16 @@ namespace Dt.Cells.UI
             if (_viewport.Excel == null || _viewport.Excel.ActiveSheet == null)
                 return _viewport.GetViewportSize(availableSize);
 
-            double width = availableSize.Width;
-            double height = availableSize.Height;
-            // WinUI
-            if (double.IsInfinity(width))
-                width = 5000;
-            if (double.IsInfinity(height))
-                height = 5000;
+            // uno中尺寸有时容易多出小数，造成测量死循环！小数用Floor Ceiling Round取值都可能死循环！
+            if (double.IsInfinity(availableSize.Width))
+                _lastWidth = 5000;
+            else if (Math.Abs(availableSize.Width - _lastWidth) > 1)
+                _lastWidth = Math.Round(availableSize.Width);
+            
+            if (double.IsInfinity(availableSize.Height))
+                _lastHeight = 5000;
+            else if (Math.Abs(availableSize.Height - _lastHeight) > 1)
+                _lastHeight = Math.Round(availableSize.Height);
 
             // 计算选择框位置区域
             bool isEmpty = true;
@@ -103,15 +108,15 @@ namespace Dt.Cells.UI
             Size paperSize = _viewport.Excel.PaperSize;
             if (paperSize.Width > 0 && paperSize.Height > 0)
             {
-                PrepareLines(width, height, true, paperSize);
-                PrepareLines(width, height, false, paperSize);
+                PrepareLines(_lastWidth, _lastHeight, true, paperSize);
+                PrepareLines(_lastWidth, _lastHeight, false, paperSize);
             }
             else
             {
                 ClearLines(true);
                 ClearLines(false);
             }
-            return _viewport.GetViewportSize(availableSize);
+            return _viewport.GetViewportSize(new Size(_lastWidth, _lastHeight));
         }
 
         /// <summary>
