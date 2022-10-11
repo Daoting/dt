@@ -22,7 +22,7 @@ namespace Dt.Sample
         public AppStub()
         {
             Title = "搬运工";
-            SvcUrl = "http://mapp.wicp.net/sample";
+            SvcUrl = "https://x13382a571.oicp.vip/sample";
             LogSetting.FileEnabled = true;
         }
 

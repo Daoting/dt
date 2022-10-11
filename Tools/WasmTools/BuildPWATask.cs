@@ -79,7 +79,8 @@ namespace WasmTools
                 DelFile(file);
             }
 
-            DelFile(Path.Combine(_pkgDir, "uno-assets.txt"));
+            // 不可删除，加载嵌入的资源时用到
+            //DelFile(Path.Combine(_pkgDir, "uno-assets.txt"));
         }
 
         void WriteServiceWorker()
@@ -87,8 +88,9 @@ namespace WasmTools
             StringBuilder sb = new StringBuilder();
             sb.Append("[\"./\", \"./service-worker.js\"");
 
+            // .config文件默认被iis拒绝，无法缓存！
             var ls = from file in Directory.EnumerateFiles(_pkgDir, "*.*", SearchOption.AllDirectories)
-                     where !file.EndsWith(".br", StringComparison.OrdinalIgnoreCase)
+                     where !file.EndsWith(".br", StringComparison.OrdinalIgnoreCase) && !file.EndsWith(".config", StringComparison.OrdinalIgnoreCase)
                      select file.Replace(OutDir, ".").Replace("\\", "/");
             foreach (var file in ls)
             {

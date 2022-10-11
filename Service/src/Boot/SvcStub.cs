@@ -31,11 +31,13 @@ namespace Dt.Boot
             mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
             mp.TryAdd(".blat", MediaTypeNames.Application.Octet);
             mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".config", MediaTypeNames.Text.Xml);
             mp.TryAdd(".rsp", MediaTypeNames.Text.Plain);
 
             // mime类型在 OnPrepareResponse 时重置到非压缩文件的类型
             mp.TryAdd(".br", MediaTypeNames.Application.Octet);
+
+            // .config文件默认被iis拒绝，无法获取
+            //mp.TryAdd(".config", MediaTypeNames.Text.Xml);
         }
 
         /// <summary>
