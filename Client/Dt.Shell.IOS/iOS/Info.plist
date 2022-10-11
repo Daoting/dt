@@ -7,9 +7,9 @@
 	<key>CFBundleDisplayName</key>
 	<string>搬运工</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.8.0</string>
+	<string>2.8.2</string>
 	<key>CFBundleVersion</key>
-	<string>22.9.28</string>
+	<string>22.10.10</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
     <key>MinimumOSVersion</key>
