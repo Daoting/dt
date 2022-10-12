@@ -19,18 +19,14 @@
 
 * 同时，两部分都支持独立使用，也可根据规范在不同层面、不同粒度下扩展框架，从而满足特定的业务需求。
 
-# 正在进行
-* 客户端迁移到 .NET6.0 + WinAppSdk1.0(WinUI3.0) + Uno.WinUI 4.x
-* 服务端升级到 .NET6.0
-* 打造VS扩展工具，提高搬运工使用体验
-
 # 客户端
-客户端样例已上传到各平台商店，请搜索【搬运工】或使用以下链接进行安装：
+客户端样例已升级到2.8.2，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
 * [微软商店](https://www.microsoft.com/store/productId/9NBLGGH4QJ52)
 * [苹果商店](https://apps.apple.com/cn/app/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%A0%B7%E4%BE%8B/id1591859126)
-* [华为商店](https://appstore.huawei.com/app/C104883437)
+* [Android 安装包](https://x13382a571.oicp.vip/packages/com.dt.samples-2.8.2.apk)
+* [WebAssembly 样例](https://x13382a571.oicp.vip/sampleui/)
 
-客户端在界面布局上有个小的创新，内置两种界面模式：windows模式和phone模式，iOS和Android上是Phone模式；windows和wasm上支持两种模式的自动切换，当应用界面的实际宽度足够时按照windows模式显示，宽度较小时自动切换到Phone模式，两种模式的可视树根节点完全不同。
+客户端在界面布局上有个创新，内置两种界面模式：windows模式和phone模式，iOS和Android上是Phone模式；windows和wasm上支持两种模式的自动切换，当应用界面的实际宽度足够时按照windows模式显示，宽度较小时自动切换到Phone模式，两种模式的可视树根节点完全不同。
 
 https://user-images.githubusercontent.com/29876815/145145784-f0ef05f3-2144-4769-83ab-dda76eb404d7.mp4
 
@@ -41,6 +37,8 @@ https://user-images.githubusercontent.com/29876815/145151944-549bec31-b599-4d2d-
 也能保证phone模式时的正确导航
 
 https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-b978-2523a0f82f5d.mp4
+
+客户端已完成到 .NET6.0 + WinAppSdk1.0(WinUI3.0) + Uno.WinUI 4.x 的迁移。
 
 客户端完整功能请参考《[搬运工客户端手册](https://github.com/Daoting/dt/blob/master/Doc/%E6%90%AC%E8%BF%90%E5%B7%A5%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%89%8B%E5%86%8C.docx)》
 
@@ -56,6 +54,8 @@ https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-
 * 消息服务(msg)，平台内置的基础消息服务，支持多副本部署，所有已注册的客户端在启动时调用服务端的Register方法，该Api采用基于http2协议的ServerStream模式，即：客户端发送一个请求，服务端返回数据流响应，相当于在服务端和客户端建立了长连接，服务端可以实时向客户端推送信息
 * 文件服务(fsm)，统一管理应用范围内使用的文件，在k8s中支持多副本部署，支持分卷存储文件，可通过ConfigMap将数据卷Volume挂载到指定目录，该服务只负责文件的上传下载和文件管理功能，不涉及具体的业务问题，在功能和Api上较稳定。
 * 网页发布服务(pub)，是静态网页服务，包括html富文本编辑器和动态生成的网页两部分，html编辑器用于编辑网页内容，编辑后的网页内容可以保存在数据库或根据模板生成完整网页。
+
+服务端已升级到 .NET6.0。
 
 服务端完整功能请参考《[搬运工服务端手册](https://github.com/Daoting/dt/blob/master/Doc/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%89%8B%E5%86%8C.docx)》
 
