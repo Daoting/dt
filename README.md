@@ -61,6 +61,6 @@ https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-
 
 # 开始使用
 
-* 为了提高搬运工的使用体验，先安装[VS扩展工具]()
+* 为了提高搬运工的使用体验，请先安装 [VS扩展工具](https://marketplace.visualstudio.com/items?itemName=daoting.dt)，下载慢也可 [本地下载](https://x13382a571.oicp.vip/packages/Dt-2.8.2.vsix)
 * 添加新项目
 
