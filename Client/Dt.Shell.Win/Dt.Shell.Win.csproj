@@ -9,6 +9,15 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
         <DefaultLanguage>zh-CN</DefaultLanguage>
+        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>False</GenerateTestArtifacts>
+        <AppxBundle>Never</AppxBundle>
+        <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <AppxPackageDir>D:\Dt\Client\Dt.Shell.Win\bin\AppPackages\</AppxPackageDir>
     </PropertyGroup>
 
     <Import Project="..\Common.props" />

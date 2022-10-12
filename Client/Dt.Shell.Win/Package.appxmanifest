@@ -9,13 +9,13 @@
   IgnorableNamespaces="uap rescap com desktop">
 
     <Identity
-      Name="10ab3dd3-6a3c-41b1-93a2-5fde2f2c7c28"
-      Publisher="CN=Daoting"
-      Version="1.0.0.0" />
+      Name="19855Modern.91683A99ECB1"
+      Publisher="CN=61C2C806-8989-430B-8C58-9882D00412CA"
+      Version="2.8.2.0" />
 
     <Properties>
-        <DisplayName>新搬运工</DisplayName>
-        <PublisherDisplayName>Daoting</PublisherDisplayName>
+        <DisplayName>搬运工样例</DisplayName>
+        <PublisherDisplayName>Modern</PublisherDisplayName>
         <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
 
