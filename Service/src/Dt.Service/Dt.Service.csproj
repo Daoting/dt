@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>2.8.0</Version>
+		<Version>2.8.2</Version>
 		<!-- 将引用项目合并打包 -->
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<Authors>Daoting</Authors>

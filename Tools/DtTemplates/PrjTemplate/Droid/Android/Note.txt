@@ -30,12 +30,11 @@ Android目录下的资源为android专用，Images下的图片为公用
 》App标题定义有两处：AndroidManifest.xml AppStub.Title
 
 
-》生成手机apk：
-选择 Release -> 生成项目 -> 在项目目录下使用以下命令发布 -> apk文件在 bin\Release\net6.0-android\publish 目录下
-dotnet publish -f:net6.0-android -c:Release /p:AndroidSigningKeyPass=around /p:AndroidSigningStorePass=around
-
-原来：
-选择 Release -> 右键选择“存档...” -> 生成apk包 -> 分发到“临时”目录 -> 选择或创建签名 -> 密码around -> 分发成功
+》生成apk：
+真机apk：选择 Release -> AndroidManifest.xml设置版本 -> 调整csproj文件的RuntimeIdentifier配置 -> 右键选择“发布...” -> apk文件在 bin\Release\net6.0-android\android-arm64\ 目录下
+虚拟机：选择 Release -> 调整csproj文件的RuntimeIdentifier为android-x64 -> Ctrl + F5 自动打包部署到虚拟机并运行
+也可用命令发布：
+dotnet publish -f:net6.0-android -c:Release
 
 
 》app必须引用所有用到的程序集项目，否则绑定类型使用反射方法，影响性能，uno警告提示：
