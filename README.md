@@ -21,7 +21,7 @@
 
 # 客户端
 客户端样例已升级到2.8.2，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
-* [微软商店](https://www.microsoft.com/store/productId/9NBLGGH4QJ52)
+* [微软商店](https://www.microsoft.com/store/productId/9PBFQ5NHPH14)
 * [苹果商店](https://apps.apple.com/cn/app/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%A0%B7%E4%BE%8B/id1591859126)
 * [Android 安装包](https://x13382a571.oicp.vip/packages/com.dt.samples-2.8.2.apk)
 * [WebAssembly 样例](https://x13382a571.oicp.vip/sampleui/)
