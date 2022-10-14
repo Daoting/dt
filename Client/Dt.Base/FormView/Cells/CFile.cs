@@ -286,9 +286,13 @@ namespace Dt.Base
                 return;
 
             Menu menu = new Menu();
-            Mi mi = new Mi { ID = "分享", Icon = Icons.分享 };
+            Mi mi;
+
+#if IOS || ANDROID
+            mi = new Mi { ID = "分享", Icon = Icons.分享 };
             mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdShare") });
             menu.Items.Add(mi);
+#endif
 
             mi = new Mi { ID = "保存", Icon = Icons.保存 };
             mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdSaveAs") });

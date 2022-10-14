@@ -5,6 +5,7 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv>
+        <a:CBar Title="选择文件功能" />
         <StackPanel Orientation="Horizontal">
             <Button Content="选择单个照片" Click="OnPickPhoto" />
             <Button Content="选择多个照片" Click="OnPickPhotos" />

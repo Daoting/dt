@@ -11,7 +11,7 @@
                     <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished" ColCount="3" >
                         <a:Ex.Menu>
                             <a:Menu>
-                                <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" />
+                                <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" Scope="Phone" />
                                 <a:Mi ID="保存" Icon="保存" Cmd="{Binding CmdSaveAs}" />
                                 <a:Mi ID="更新" Icon="刷新" Cmd="{Binding CmdUpdate}" />
                                 <a:Mi ID="删除" Icon="删除" Cmd="{Binding CmdDelete}" />
