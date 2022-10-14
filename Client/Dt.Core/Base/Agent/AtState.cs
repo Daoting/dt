@@ -48,6 +48,25 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 是否启用后台作业，默认 true
+        /// </summary>
+        public static bool EnableBgJob
+        {
+            get { return _db.GetScalar<int>("select count(*) from ClientCookie where key='DisableBgJob'") == 0; }
+            set
+            {
+                if (value)
+                {
+                    _db.Execute("delete from ClientCookie where key='DisableBgJob'");
+                }
+                else
+                {
+                    _db.Execute("insert OR REPLACE into ClientCookie (key,val) values ('DisableBgJob','true')");
+                }
+            }
+        }
+
+        /// <summary>
         /// 查询自启动信息
         /// </summary>
         /// <returns></returns>

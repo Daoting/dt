@@ -11,7 +11,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <!-- 确保和Info.plist中的CFBundleIdentifier CFBundleVersion一致 -->
         <ApplicationId>com.dt.samples</ApplicationId>
-        <ApplicationVersion>22.10.10</ApplicationVersion>
+        <ApplicationVersion>22.10.16</ApplicationVersion>
         <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
         <CodesignKey>iPhone Distribution</CodesignKey>
         <!-- 预配配置文件名称 -->

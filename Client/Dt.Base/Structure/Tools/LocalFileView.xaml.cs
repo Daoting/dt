@@ -55,7 +55,7 @@ namespace Dt.Base.Tools
                 ScrollViewer sv = new ScrollViewer { HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
                 TextBlock tb = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10), IsTextSelectionEnabled = true };
                 sv.Content = tb;
-                using (var stream = new StreamReader(fi.Info.OpenRead()))
+                using (var stream = new StreamReader(fi.Info.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
                 {
                     tb.Text = stream.ReadToEnd();
                 }

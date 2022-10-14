@@ -7,13 +7,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>搬运工</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.8.2</string>
+	<string>2.8.6</string>
 	<key>CFBundleVersion</key>
-	<string>22.10.10</string>
+	<string>22.10.16</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>MinimumOSVersion</key>
-    <string>10.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -63,11 +63,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+    <!--接收分享-->
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-      <key>CFBundleTypeName</key>
-      <string>public.data</string>
+			<key>CFBundleTypeName</key>
+			<string>public.data</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.data</string>
@@ -77,9 +78,16 @@
 			<string>Alternate</string>
 		</dict>
 	</array>
+    <!--后台模式-->
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 	</array>
+    <!--后台任务标识，代码中注册和请求时一致-->
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>Dt.Core.BgJob</string>
+    </array>
 </dict>
 </plist>

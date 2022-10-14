@@ -21,10 +21,10 @@ namespace Dt.Sample
         public async Task Run()
         {
             //string tpName = AtState.GetCookie("LoginPhone");
-            //Kit.Toast(
-            //    "样例",
-            //    DateTime.Now.ToString(),
-            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+            Kit.Toast(
+                "样例",
+                DateTime.Now.ToString(),
+                new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
 
             await Task.CompletedTask;
         }

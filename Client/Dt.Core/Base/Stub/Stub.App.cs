@@ -31,10 +31,6 @@ namespace Dt.Core
 #if IOS
         public virtual void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options) { }
 
-        public virtual void FinishedLaunching(UIApplication p_app, NSDictionary p_options) { }
-
-        public virtual void PerformFetch(UIApplication p_app, Action<UIBackgroundFetchResult> p_completionHandler) { }
-
         public virtual void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification) { }
 #endif
     }

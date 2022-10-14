@@ -43,15 +43,9 @@ namespace Dt.Sample
             return true;
         }
 
-        public override bool FinishedLaunching(UIApplication p_app, NSDictionary p_options)
+        public override void DidEnterBackground(UIApplication application)
         {
-            _stub.FinishedLaunching(p_app, p_options);
-            return base.FinishedLaunching(p_app, p_options);
-        }
-
-        public override void PerformFetch(UIApplication p_app, Action<UIBackgroundFetchResult> p_completionHandler)
-        {
-            _stub.PerformFetch(p_app, p_completionHandler);
+            BgJob.OnEnterBackground();
         }
 
         public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)

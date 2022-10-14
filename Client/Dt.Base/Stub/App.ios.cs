@@ -25,6 +25,7 @@ namespace Dt.Base
     {
         public DefaultStub()
         {
+            BgJob.RegisterEarliest();
             UnoKit.Init();
         }
 
@@ -39,24 +40,6 @@ namespace Dt.Base
             string path = doc.FileUrl?.Path;
             if (!string.IsNullOrEmpty(path))
                 _ = Launch(null, new ShareInfo(path));
-        }
-
-        public override void FinishedLaunching(UIApplication application, NSDictionary launchOptions)
-        {
-            // 设置 Background Fetch 最小时间间隔，10-15分钟不定
-            application.SetMinimumBackgroundFetchInterval(UIApplication.BackgroundFetchIntervalMinimum);
-        }
-
-        public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
-        {
-            try
-            {
-                // 该方法耗时必须在30秒内！
-                BgJob.Run().Wait();
-            }
-            catch { }
-
-            completionHandler(UIBackgroundFetchResult.NewData);
         }
 
         public override void ReceivedLocalNotification(UIApplication application, UILocalNotification notification)

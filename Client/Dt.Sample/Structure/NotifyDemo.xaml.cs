@@ -20,6 +20,17 @@ namespace Dt.Sample
         public NotifyDemo()
         {
             InitializeComponent();
+
+            if (Kit.GetService<IBackgroundJob>() == null)
+            {
+                _tbJob.Text = "无后台任务";
+                _cbBgJob.IsEnabled = false;
+                _btnBgJob.IsEnabled = false;
+            }
+            else
+            {
+                _cbBgJob.IsChecked = AtState.EnableBgJob;
+            }
         }
 
         void OnShowNotify(object sender, RoutedEventArgs e)
@@ -100,6 +111,20 @@ namespace Dt.Sample
         void OnKnownException(object sender, RoutedEventArgs e)
         {
             Kit.OpenWin(typeof(ExceptionDemo), "异常警告");
+        }
+
+        void OnToggleBgJob(object sender, RoutedEventArgs e)
+        {
+            AtState.EnableBgJob = (bool)_cbBgJob.IsChecked;
+        }
+
+        void OnRunBgJob(object sender, RoutedEventArgs e)
+        {
+#if IOS
+            BgJob.OnEnterBackground();
+#else
+            _ = BgJob.Run();
+#endif
         }
     }
 }

@@ -78,9 +78,16 @@
 			<string>Alternate</string>
 		</dict>
 	</array>-->
+	<!--后台模式-->
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
+	</array>
+	<!--后台任务标识，代码中注册和请求时一致-->
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>Dt.Core.BgJob</string>
 	</array>
 </dict>
 </plist>

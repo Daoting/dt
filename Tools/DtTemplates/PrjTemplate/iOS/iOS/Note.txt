@@ -50,7 +50,7 @@ Content 时路径：       ms-appx:///iOS/Resources/Lottie/Dash.json
 本系统只处理第一种情况！未实现“照片”中的接收分享功能
 
 
-》发布：选择Release，生成前先确认Info.plist和iOS项目文件csproj中的版本相同，重新生成iOS项目，过程比较漫长，生成成功后使用命令发布，
+》发布：选择Release + iPhone + 远程设备，生成前先确认Info.plist和iOS项目文件csproj中的版本相同，重新生成iOS项目，过程比较漫长，生成成功后使用命令发布，
 使用PowerShell切到iOS项目的路径下，运行：
 dotnet publish -f:net6.0-ios -c:Release
 
