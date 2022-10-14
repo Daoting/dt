@@ -132,7 +132,7 @@ namespace Dt.Base
             return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_fileTypes));
         }
 
-#region 内部方法
+        #region 内部方法
         static async Task<FileData> PickFile(FileOpenPicker p_picker)
         {
             var file = await p_picker.PickSingleFileAsync();
@@ -157,9 +157,9 @@ namespace Dt.Base
 
         static async Task<FileData> GetFileData(StorageFile p_file)
         {
-            string id = StorageApplicationPermissions.FutureAccessList.Add(p_file);
-            var fd = new FileData(id, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            var fd = new FileData(p_file.Name, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
             string ext = fd.Ext;
+            fd.FileStream = await p_file.OpenStreamForReadAsync();
             bool existThumb = false;
 
             // 详细描述
@@ -217,7 +217,7 @@ namespace Dt.Base
                 picker.FileTypeFilter.Add("*");
             return picker;
         }
-#endregion
+        #endregion
     }
 }
 #endif

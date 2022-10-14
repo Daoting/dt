@@ -118,11 +118,11 @@ namespace Dt.Base
             return Task.FromResult($"{Kit.GetSvcUrl("fsm")}/drv/{ID}");
         }
 
-        Task LoadImage()
+        async Task LoadImage()
         {
-            var path = new Uri($"{Kit.GetSvcUrl("fsm")}/drv/{ID}{ThumbPostfix}");
+            var exists = await AtFsm.IsFileExists(ID + ThumbPostfix);
+            var path = exists ?  new Uri($"{Kit.GetSvcUrl("fsm")}/drv/{ID}{ThumbPostfix}") : new Uri($"{Kit.GetSvcUrl("fsm")}/drv/{ID}");
             Bitmap = new BitmapImage(path);
-            return Task.CompletedTask;
         }
     }
 }

@@ -369,7 +369,7 @@ namespace Dt.Base
 #elif IOS
                 () => Kit.PickFiles(p_iosFileTypes),
 #elif WASM
-                () => Task.FromResult((List<FileData>)null),
+                () => Kit.PickFiles(p_uwpFileTypes),
 #endif
 
 #if WIN
@@ -379,7 +379,7 @@ namespace Dt.Base
 #elif IOS
                 () => Kit.PickFile(p_iosFileTypes));
 #elif WASM
-                () => Task.FromResult((FileData)null));
+                () => Kit.PickFile(p_uwpFileTypes));
 #endif
         }
 

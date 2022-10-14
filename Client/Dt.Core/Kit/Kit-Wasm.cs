@@ -152,7 +152,7 @@ namespace Dt.Core
         /// <param name="p_name">文件名称</param>
         public static void Download(string p_url, string p_name)
         {
-            InvokeJS($"var a = document.createElement(\"a\");a.href = \"{p_url}\";a.download = \"{p_name}\";a.click();");
+            InvokeJS($"var a=document.createElement(\"a\");a.href=\"{p_url}\";a.target=\"_blank\";a.download=\"{p_name}\";a.click();");
         }
 
         static HostOS GetHostOS()

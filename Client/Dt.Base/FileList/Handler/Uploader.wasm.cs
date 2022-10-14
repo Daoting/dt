@@ -30,15 +30,20 @@ namespace Dt.Base
     /// </summary>
     public static class Uploader
     {
-        static readonly AsyncLocker _locker = new AsyncLocker();
-        readonly static HttpClient _client = new HttpClient(new HttpClientHandler
-        {
-            // 验证时服务端证书始终有效！
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-        });
+        static readonly AsyncLocker _locker;
+        readonly static HttpClient _client;
         // 取消上传的令牌
         static CancellationTokenSource _tokenSource;
 
+        static Uploader()
+        {
+            _locker = new AsyncLocker();
+            _client = new HttpClient();
+
+            // 识别wasm客户端，允许跨域请求
+            _client.DefaultRequestHeaders.Add("dt-wasm", "");
+        }
+        
         /// <summary>
         /// 执行上传
         /// </summary>

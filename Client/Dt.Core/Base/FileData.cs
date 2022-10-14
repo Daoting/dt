@@ -136,12 +136,17 @@ namespace Dt.Core
         }
 #elif WASM
         /// <summary>
+        /// web上选择文件后即读取文件流，安全原因无法获取文件路径
+        /// </summary>
+        public Stream FileStream { get; set; }
+
+        /// <summary>
         /// 获取文件流
         /// </summary>
         /// <returns></returns>
         public Task<Stream> GetStream()
         {
-            return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
+            return Task.FromResult(FileStream);
         }
 #endif
 
