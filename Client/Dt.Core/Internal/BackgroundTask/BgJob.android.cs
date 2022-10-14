@@ -12,6 +12,7 @@ using Android.App;
 using Android.Content;
 using AndroidX.Work;
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
@@ -52,8 +53,8 @@ namespace Dt.Core
         {
             Task.Run(() =>
             {
-                // 无后台任务
-                if (Kit.GetService<IBackgroundJob>() == null)
+                // 无后台 或 未启用
+                if (Kit.GetService<IBackgroundJob>() == null || !AtState.EnableBgJob)
                     return;
 
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
@@ -68,10 +69,11 @@ namespace Dt.Core
                         AtState.SaveCookie(_mainActivityName, name);
                 }
 
-                // 注册后台服务，后台Worker每15分钟运行一次，系统要求最短间隔15分钟！
+                // 注册后台任务，后台Worker每15分钟运行一次，系统要求最短间隔15分钟！
                 var workRequest = PeriodicWorkRequest.Builder.From<PluginWorker>(TimeSpan.FromMinutes(15)).Build();
-                // 设为Replace时每次启动都运行后台服务，方便调试！
-                WorkManager.GetInstance(Android.App.Application.Context).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Replace, workRequest);
+                // 若已注册，保持原有，设为Replace时每次启动都运行后台服务！
+                WorkManager.GetInstance(Android.App.Application.Context).EnqueueUniquePeriodicWork("PluginWorker", ExistingPeriodicWorkPolicy.Keep, workRequest);
+                Debug.WriteLine("后台任务注册成功");
             });
         }
 
@@ -81,6 +83,7 @@ namespace Dt.Core
         public static void Unregister()
         {
             WorkManager.GetInstance(Android.App.Application.Context).CancelAllWork();
+            Debug.WriteLine("注销后台任务");
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)

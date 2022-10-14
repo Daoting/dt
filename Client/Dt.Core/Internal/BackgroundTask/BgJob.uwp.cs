@@ -10,6 +10,7 @@
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -39,8 +40,8 @@ namespace Dt.Core
         {
             Task.Run(async () =>
             {
-                // 无后台任务
-                if (Kit.GetService<IBackgroundJob>() == null)
+                // 无后台 或 未启用
+                if (Kit.GetService<IBackgroundJob>() == null || !AtState.EnableBgJob)
                     return;
 
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
@@ -89,6 +90,7 @@ namespace Dt.Core
                     break;
                 }
             }
+            Debug.WriteLine("注销后台任务");
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)

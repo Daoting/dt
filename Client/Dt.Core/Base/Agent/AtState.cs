@@ -55,13 +55,19 @@ namespace Dt.Core
             get { return _db.GetScalar<int>("select count(*) from ClientCookie where key='DisableBgJob'") == 0; }
             set
             {
-                if (value)
+                bool enabled = _db.GetScalar<int>("select count(*) from ClientCookie where key='DisableBgJob'") == 0;
+                if (enabled != value)
                 {
-                    _db.Execute("delete from ClientCookie where key='DisableBgJob'");
-                }
-                else
-                {
-                    _db.Execute("insert OR REPLACE into ClientCookie (key,val) values ('DisableBgJob','true')");
+                    if (value)
+                    {
+                        _db.Execute("delete from ClientCookie where key='DisableBgJob'");
+                        BgJob.Register();
+                    }
+                    else
+                    {
+                        _db.Execute("insert OR REPLACE into ClientCookie (key,val) values ('DisableBgJob','true')");
+                        BgJob.Unregister();
+                    }
                 }
             }
         }
