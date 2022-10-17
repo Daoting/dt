@@ -2,14 +2,12 @@
     <!-- 所有项目都需Import -->
     <PropertyGroup>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
+        <!-- 启用全局using -->
         <ImplicitUsings>enable</ImplicitUsings>
         <!-- wasm不支持Essentials, android编译产生缺androidx.window.extensions.jar androidx.window.sidecar.jar警告 -->
         <UseMauiEssentials Condition="'$(TargetFramework)' != 'net6.0'">true</UseMauiEssentials>
-    </PropertyGroup>
-
-    <!-- release不输出pbd调试信息 -->
-    <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <DebugType>none</DebugType>
+        <!-- release不输出pbd调试信息 -->
+		<DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
     </PropertyGroup>
 
     <!-- 定义平台常量 -->
@@ -34,23 +32,23 @@
 
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="2.3.0" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.9" />
+        <PackageReference Include="Dt.Infras" Version="2.3.2" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-        <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化，2.1.1在iOS中无法AOT -->
-        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.0" />
-        <PackageReference Include="Serilog" Version="2.11.0" />
+        <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+        <PackageReference Include="Serilog" Version="2.12.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
     </ItemGroup>
 
     <!-- 非windows引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.5.12" />
+        <PackageReference Include="Uno.WinUI" Version="4.5.14" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-        <PackageReference Include="Uno.WinUI.Lottie" Version="4.5.12" />
+        <PackageReference Include="Uno.WinUI.Lottie" Version="4.5.14" />
         <!-- uno日志 -->
-        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.5.12" />
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.5.14" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     </ItemGroup>
@@ -58,7 +56,6 @@
     <!-- windows引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
         <!-- Toast参数启动引用 -->
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
     </ItemGroup>
@@ -77,9 +74,9 @@
 
     <!-- wasm引用包 -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.5.12" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.5.14" />
         <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
-        <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.0" />
+        <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.2" />
     </ItemGroup>
 
     <ItemGroup>
