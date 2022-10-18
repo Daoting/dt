@@ -13,7 +13,7 @@
 
 	<!-- 包公共属性 -->
 	<PropertyGroup>
-		<Version>1.2.0</Version>
+		<Version>1.3.0</Version>
 		<Description>搬运工wasm客户端工具包</Description>
 		<Authors>Daoting</Authors>
 		<Product>搬运工基础平台</Product>
@@ -39,10 +39,32 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.3.409" PrivateAssets="All" />
 		<PackageReference Include="BrotliSharpLib" Version="0.3.3" IncludeAssets="all" PrivateAssets="All" />
+		<!-- 为项目添加 TypeScript 编译支持，打包时注释掉，否则包内多出js文件 -->
+		<!--<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4" PrivateAssets="All" />-->
 	</ItemGroup>
 
+	<!-- TypeScript参数，不使用tsconfig.json -->
+	<PropertyGroup>
+		<!-- 指定编译的ES版本 -->
+		<TypeScriptTarget>ES2020</TypeScriptTarget>
+		<!-- 保存后不立即编译 -->
+		<TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
+		<!-- 不允许隐式的any类型 -->
+		<TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+		<!-- 如果报告了任何类型检查错误，则禁用输出文件 -->
+		<TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+		<!-- 移除注释 -->
+		<TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+		<!-- 合并输出文件 -->
+		<TypeScriptOutFile>build/embedded/scripts/dt.js</TypeScriptOutFile>
+		<!-- 不输出map文件 -->
+		<TypeScriptSourceMap>False</TypeScriptSourceMap>
+		<!-- ts文件根目录 -->
+		<TypeScriptInclude>TypeScript/**/*</TypeScriptInclude>
+	</PropertyGroup>
+	
 	<ItemGroup>
-		<Content Include="build/*.targets">
+		<Content Include="build/**">
 			<Pack>true</Pack>
 			<PackagePath>build</PackagePath>
 		</Content>

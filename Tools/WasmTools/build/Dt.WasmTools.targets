@@ -7,4 +7,10 @@
 		<BuildPWATask OutDir="$(OutDir)dist" />
 	</Target>
 	
+	<ItemGroup Condition="'$(IsUnoHead)' == 'True' and '$(UnoRuntimeIdentifier)' == 'WebAssembly'">
+		<!-- 字体文件为内容，输出到 package_xxx 的对应子目录下 -->
+		<Content Include="$(MSBuildThisFileDirectory)content/**" Visible="False" />
+		<!-- js css文件为嵌入资源，输出到 package_xxx 根目录下，WasmCSS WasmScripts目录名不可修改，uno用到 -->
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)embedded/**" Visible="False" />
+	</ItemGroup>
 </Project>
