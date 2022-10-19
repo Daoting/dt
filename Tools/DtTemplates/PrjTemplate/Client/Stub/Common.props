@@ -9,9 +9,9 @@
 		<DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
 	</PropertyGroup>
 
-	<!-- 公共引用包 -->
 	<ItemGroup>
-		<PackageReference Include="Dt.Client" Version="2.8.6" />
+		<!-- 调试包源码可引用 Dt.Client.Debug 包 -->
+		<PackageReference Include="Dt.Client" Version="2.8.7" />
 	</ItemGroup>
 
 	<!-- 定义平台常量 -->
@@ -55,6 +55,17 @@
 		<Using Remove="CoreGraphics" />
 		<Using Remove="Foundation" />
 		<Using Remove="UIKit" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<Using Remove="Microsoft.AspNetCore.Builder" />
+		<Using Remove="Microsoft.AspNetCore.Hosting" />
+		<Using Remove="Microsoft.AspNetCore.Http" />
+		<Using Remove="Microsoft.AspNetCore.Routing" />
+		<Using Remove="Microsoft.Extensions.Configuration" />
+		<Using Remove="Microsoft.Extensions.DependencyInjection" />
+		<Using Remove="Microsoft.Extensions.Hosting" />
+		<Using Remove="Microsoft.Extensions.Logging" />
 	</ItemGroup>
 
 	<!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->

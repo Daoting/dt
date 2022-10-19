@@ -36,6 +36,9 @@
 				<ProjectTemplateLink ProjectName="$safeprojectname$.iOS" CopyParameters="true">
 					iOS\iOS.vstemplate
 				</ProjectTemplateLink>
+				<ProjectTemplateLink ProjectName="$safeprojectname$.Wasm" CopyParameters="true">
+					Wasm\Wasm.vstemplate
+				</ProjectTemplateLink>
 			</SolutionFolder>
 		</ProjectCollection>
 	</TemplateContent>

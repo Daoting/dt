@@ -74,11 +74,23 @@
 
     <!-- wasm引用包 -->
     <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.5.14" />
+        <!-- 打包后提供给外部 web 项目引用时，需要 build 里的 .target -->
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.5.14" PrivateAssets="none" />
         <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.2" />
     </ItemGroup>
 
+    <!-- 引用包控制
+    IncludeAssets：将使用这些资产，默认 all
+    ExcludeAssets：不会使用这些资产，默认 none
+    PrivateAssets：将使用这些资产，但它们不会流入上级项目，默认 contentfiles;analyzers;build
+    
+    PrivateAssets="none" 用在 PackageReference 时，上级项目的包被更高级项目引用时，所有资产都会流入更高级项目
+    PrivateAssets="all" 用在 ProjectReference 时，避免打包上级项目时引用该项目的nuget包
+                   
+    所有选项：contentfiles analyzers build compile runtime buildTransitive native none all
+    -->
+    
     <ItemGroup>
         <Using Include="Dt.Core" />
         <Using Include="Dt.Agent" />
@@ -98,6 +110,17 @@
         <Using Remove="UIKit" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+        <Using Remove="Microsoft.AspNetCore.Builder" />
+        <Using Remove="Microsoft.AspNetCore.Hosting" />
+        <Using Remove="Microsoft.AspNetCore.Http" />
+        <Using Remove="Microsoft.AspNetCore.Routing" />
+        <Using Remove="Microsoft.Extensions.Configuration" />
+        <Using Remove="Microsoft.Extensions.DependencyInjection" />
+        <Using Remove="Microsoft.Extensions.Hosting" />
+        <Using Remove="Microsoft.Extensions.Logging" />
+    </ItemGroup>
+    
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

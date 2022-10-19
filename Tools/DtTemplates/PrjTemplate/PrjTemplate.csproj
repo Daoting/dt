@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Wasm\manifest.json" />
+    <None Include="Wasm\Program.cs" />
     <None Include="Svc\TestApi.cs" />
     <None Include="iOS\iOS.csproj" />
     <None Include="iOS\iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
@@ -67,6 +69,7 @@
     <None Include="Svc\etc\config\service.json" />
     <None Include="Svc\Svc.csproj" />
     <None Include="Svc\Properties\launchSettings.json" />
+    <None Include="Wasm\Wasm.csproj" />
     <None Include="Win\app.manifest" />
     <None Include="Win\Assets\Fonts\icon.ttf" />
     <None Include="Win\Assets\Fonts\uno-fluentui-assets.ttf" />
@@ -181,6 +184,53 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Droid\Android\Note.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <VSTemplate Include="Wasm\Wasm.vstemplate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Note.txt" />
+    <Content Include="Wasm\assets\SplashScreen.png" />
+    <Content Include="Wasm\LinkerConfig.xml" />
+    <Content Include="Wasm\Note.txt" />
+    <Content Include="Wasm\pwa\android\android-launchericon-144-144.png" />
+    <Content Include="Wasm\pwa\android\android-launchericon-192-192.png" />
+    <Content Include="Wasm\pwa\android\android-launchericon-48-48.png" />
+    <Content Include="Wasm\pwa\android\android-launchericon-512-512.png" />
+    <Content Include="Wasm\pwa\android\android-launchericon-72-72.png" />
+    <Content Include="Wasm\pwa\android\android-launchericon-96-96.png" />
+    <Content Include="Wasm\pwa\ios\100.png" />
+    <Content Include="Wasm\pwa\ios\1024.png" />
+    <Content Include="Wasm\pwa\ios\114.png" />
+    <Content Include="Wasm\pwa\ios\120.png" />
+    <Content Include="Wasm\pwa\ios\128.png" />
+    <Content Include="Wasm\pwa\ios\144.png" />
+    <Content Include="Wasm\pwa\ios\152.png" />
+    <Content Include="Wasm\pwa\ios\16.png" />
+    <Content Include="Wasm\pwa\ios\167.png" />
+    <Content Include="Wasm\pwa\ios\180.png" />
+    <Content Include="Wasm\pwa\ios\192.png" />
+    <Content Include="Wasm\pwa\ios\20.png" />
+    <Content Include="Wasm\pwa\ios\256.png" />
+    <Content Include="Wasm\pwa\ios\29.png" />
+    <Content Include="Wasm\pwa\ios\32.png" />
+    <Content Include="Wasm\pwa\ios\40.png" />
+    <Content Include="Wasm\pwa\ios\50.png" />
+    <Content Include="Wasm\pwa\ios\512.png" />
+    <Content Include="Wasm\pwa\ios\57.png" />
+    <Content Include="Wasm\pwa\ios\58.png" />
+    <Content Include="Wasm\pwa\ios\60.png" />
+    <Content Include="Wasm\pwa\ios\64.png" />
+    <Content Include="Wasm\pwa\ios\72.png" />
+    <Content Include="Wasm\pwa\ios\76.png" />
+    <Content Include="Wasm\pwa\ios\80.png" />
+    <Content Include="Wasm\pwa\ios\87.png" />
+    <Content Include="Wasm\pwa\windows11\SplashScreen.scale-200.png" />
+    <Content Include="Wasm\pwa\windows11\Square150x150Logo.scale-200.png" />
+    <Content Include="Wasm\pwa\windows11\Square44x44Logo.scale-200.png" />
+    <Content Include="Wasm\pwa\windows11\StoreLogo.scale-200.png" />
+    <Content Include="Wasm\pwa\windows11\Wide310x150Logo.scale-200.png" />
+    <Content Include="Wasm\WasmScripts\AppManifest.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

@@ -1,7 +1,7 @@
 {
-  "name": "搬运工-Wasm",
-  "short_name": "搬运工",
-  "description": "搬运工平台样例",
+  "name": "$ext_safeprojectname$",
+  "short_name": "$ext_safeprojectname$",
+  "description": "$ext_safeprojectname$描述",
   "start_url": "..",
   "background_color": "#1BA1E2",
   "display": "standalone",
