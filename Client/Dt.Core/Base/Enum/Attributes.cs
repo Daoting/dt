@@ -37,20 +37,4 @@ namespace Dt.Core
             _alias = p_alias;
         }
     }
-
-    /// <summary>
-    /// 视图类属性
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public class ViewAttribute : AliasAttribute
-    {
-        /// <summary>
-        /// 构造视图类属性
-        /// </summary>
-        /// <param name="p_alias">名称</param>
-        public ViewAttribute(string p_alias)
-            : base(p_alias)
-        {
-        }
-    }
 }

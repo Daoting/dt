@@ -94,25 +94,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 根据视图名称激活旧窗口或打开新窗口
-        /// </summary>
-        /// <param name="p_viewName">窗口视图名称</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">启动参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public override object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
-        {
-            Type tp = Kit.GetViewType(p_viewName);
-            if (tp == null)
-            {
-                Kit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
-                return null;
-            }
-            return OpenWin(tp, p_title, p_icon, p_params);
-        }
-
-        /// <summary>
         /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
         /// </summary>
         /// <param name="p_type">窗口/视图类型</param>
@@ -207,12 +188,7 @@ namespace Dt.Base
         /// </summary>
         public override void OnResuming()
         {
-            if (Kit.IsLogon)
-            {
-                // 在线推送可能被停止，重新启动
-                PushHandler.RetryTimes = 0;
-                PushHandler.Register();
-            }
+            
         }
 
         /// <summary>
@@ -247,12 +223,11 @@ namespace Dt.Base
                 {
                     win = tabs.OwnWin;
                 }
-                if (win != null && win.GetType() != HomePageType)
+                if (win != null && win.GetType() != _rootElementType)
                 {
                     _autoStartOnce = AutoStartKit.GetAutoStartInfo(win);
                 }
-
-                LoadDesktop();
+                LoadRootDesktop(CreateRootWin());
             }
             else if (UITree.RootContent is Desktop desktop)
             {
@@ -260,7 +235,7 @@ namespace Dt.Base
                 {
                     _autoStartOnce = AutoStartKit.GetAutoStartInfo(desktop.MainWin);
                 }
-                LoadRootFrame();
+                LoadRootFrame(CreateRootWin());
             }
         }
     }

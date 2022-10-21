@@ -10,7 +10,7 @@
 using Dt.Core.Sqlite;
 #endregion
 
-namespace Dt.Core.Model
+namespace Dt.Core
 {
     /// <summary>
     /// 系统列定义，在模型库中

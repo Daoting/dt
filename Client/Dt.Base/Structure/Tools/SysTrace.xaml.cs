@@ -42,9 +42,6 @@ namespace Dt.Base.Tools
             Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
             mi.Click += OnStub;
             Menu.Items.Insert(1, mi);
-            mi = new Mi { ID = "内置存根", Icon = Icons.链接 };
-            mi.Click += OnDefaultStub;
-            Menu.Items.Insert(2, mi);
 #endif
         }
 
@@ -211,7 +208,6 @@ namespace Dt.Base.Tools
 
         #region 生成存根代码
 #if WIN
-        Dictionary<string, Type> _viewTypes;
         Dictionary<string, SqliteDbTbls> _sqliteTbls;
 
         /// <summary>
@@ -221,69 +217,39 @@ namespace Dt.Base.Tools
         /// <param name="e"></param>
         void OnStub(object sender, Mi e)
         {
-            _viewTypes = new Dictionary<string, Type>();
             _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
-
-            ExtractAssembly(Stub.Inst.GetType().Assembly);
-
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("\t\t#region 自动生成");
-            sb.AppendLine("\t\t// 本地库结构变化或视图类型变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！");
-            sb.AppendLine();
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 视图名称与窗口类型的映射字典，菜单项用，同名时覆盖内置的视图类型");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\t/// <returns></returns>");
-            sb.AppendLine("\t\tprotected override Dictionary<string, Type> GetViewTypes()\r\n\t\t{");
-            BuildStubDict(sb, _viewTypes, false);
 
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine("\t\t/// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
-            sb.AppendLine("\t\t/// </summary>");
-            sb.AppendLine("\t\t/// <returns></returns>");
-            sb.AppendLine("\t\tprotected override Dictionary<string, SqliteTblsInfo> GetSqliteDbs()\r\n\t\t{");
-            BuildSqliteDict(sb, false);
+            var stubType = Stub.Inst.GetType();
+            while (stubType != typeof(Stub))
+            {
+                ExtractAssembly(stubType.Assembly);
 
-            sb.Append("\r\n\t\t#endregion");
+                if (stubType == typeof(DefaultStub))
+                    ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Core")));
+
+                sb.AppendLine(stubType.Name);
+                sb.AppendLine("\t\t#region 自动生成");
+                sb.AppendLine("\t\t// 本地库结构变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！");
+                sb.AppendLine();
+                sb.AppendLine("\t\t/// <summary>");
+                sb.AppendLine("\t\t/// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型");
+                sb.AppendLine("\t\t/// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库");
+                sb.AppendLine("\t\t/// </summary>");
+                sb.AppendLine("\t\t/// <param name=\"p_sqliteDbs\"></param>");
+                sb.AppendLine("\t\tprotected override void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_sqliteDbs)\r\n\t\t{");
+                BuildSqliteDict(sb, false);
+
+                sb.AppendLine("\r\n\t\t#endregion\r\n\r\n\r\n");
+
+                _sqliteTbls.Clear();
+                stubType = stubType.BaseType;
+            }
 
             DataPackage data = new DataPackage();
             data.SetText(sb.ToString());
             Clipboard.SetContent(data);
             Kit.Msg("已复制到剪切板！");
-
-            _viewTypes.Clear();
-            _sqliteTbls.Clear();
-        }
-
-        void OnDefaultStub(object sender, Mi e)
-        {
-            _viewTypes = new Dictionary<string, Type>();
-            _sqliteTbls = new Dictionary<string, SqliteDbTbls>();
-
-            //IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
-            //foreach (StorageFile file in files)
-            //{
-            //    if (file.DisplayName.StartsWith("Dt.") && file.FileType == ".dll")
-            //        ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
-            //}
-            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Core")));
-            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Base")));
-            ExtractAssembly(Assembly.Load(new AssemblyName("Dt.Mgr")));
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("\t\tprotected override Dictionary<string, Type> GetInternalViewTypes()\r\n\t\t{");
-            BuildStubDict(sb, _viewTypes, true);
-
-            sb.AppendLine("\t\tprotected override Dictionary<string, SqliteTblsInfo> GetInternalSqliteDbs()\r\n\t\t{");
-            BuildSqliteDict(sb, true);
-
-            DataPackage data = new DataPackage();
-            data.SetText(sb.ToString());
-            Clipboard.SetContent(data);
-            Kit.Msg("已复制到剪切板！");
-
-            _viewTypes.Clear();
-            _sqliteTbls.Clear();
         }
 
         /// <summary>
@@ -303,12 +269,7 @@ namespace Dt.Base.Tools
                     // 枚举标签
                     foreach (Attribute attr in tpInfo.GetCustomAttributes(false))
                     {
-                        if (attr is ViewAttribute va)
-                        {
-                            // 视图
-                            _viewTypes[va.Alias] = tp;
-                        }
-                        else if (attr is SqliteAttribute sqlite)
+                        if (attr is SqliteAttribute sqlite)
                         {
                             // 本地sqlite库类型
                             SqliteDbTbls tbls;
@@ -347,90 +308,32 @@ namespace Dt.Base.Tools
             }
         }
 
-        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt, bool p_isInternal)
-        {
-            p_sb.AppendLine("\t\t\treturn new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)");
-            if (p_dt.Count == 0)
-            {
-                p_sb.AppendLine("\t\t\t{};\r\n\t\t}");
-                p_sb.AppendLine();
-                return;
-            }
-
-            p_sb.AppendLine("\t\t\t{");
-            if (p_isInternal)
-            {
-                foreach (var item in p_dt)
-                {
-                    if (item.Value.Assembly.GetName().Name == "Dt.Mgr")
-                    {
-                        p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", Type.GetType(\"{1},Dt.Mgr\") }},\r\n", item.Key, item.Value.FullName);
-                    }
-                    else
-                    {
-                        p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var item in p_dt)
-                {
-                    p_sb.AppendFormat("\t\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
-                }
-            }
-            p_sb.AppendLine("\t\t\t};\r\n\t\t}");
-            p_sb.AppendLine();
-        }
-
         void BuildSqliteDict(StringBuilder p_sb, bool p_isInternal)
         {
-            p_sb.AppendLine("\t\t\treturn new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase)");
+            p_sb.AppendLine("\t\t\tbase.MergeSqliteDbs(p_sqliteDbs);");
             if (_sqliteTbls.Count == 0)
             {
-                p_sb.AppendLine("\t\t\t{};\r\n\t\t}");
+                p_sb.AppendLine("\r\n\t\t}");
                 return;
             }
 
-            p_sb.AppendLine("\t\t\t{");
             foreach (var item in _sqliteTbls)
             {
+                p_sb.AppendLine($"\t\t\tp_sqliteDbs[\"{item.Key}\"] = new SqliteTblsInfo");
+                p_sb.AppendLine("\t\t\t{");
+                p_sb.AppendLine($"\t\t\t\tVersion = \"{item.Value.GetVer()}\",");
+                p_sb.AppendLine("\t\t\t\tTables = new List<Type>");
                 p_sb.AppendLine("\t\t\t\t{");
-                p_sb.AppendLine($"\t\t\t\t\t\"{item.Key}\",");
 
-                p_sb.AppendLine("\t\t\t\t\tnew SqliteTblsInfo");
-                p_sb.AppendLine("\t\t\t\t\t{");
-                p_sb.AppendLine($"\t\t\t\t\t\tVersion = \"{item.Value.GetVer()}\",");
-                p_sb.AppendLine("\t\t\t\t\t\tTables = new List<Type>");
-                p_sb.AppendLine("\t\t\t\t\t\t{");
-
-                if (p_isInternal)
+                foreach (var tp in item.Value.Tbls)
                 {
-                    foreach (var tp in item.Value.Tbls)
-                    {
-                        if (tp.Assembly.GetName().Name == "Dt.Mgr")
-                        {
-                            p_sb.AppendLine($"\t\t\t\t\t\t\tType.GetType(\"{tp.FullName},Dt.Mgr\"),");
-                        }
-                        else
-                        {
-                            p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var tp in item.Value.Tbls)
-                    {
-                        p_sb.AppendLine($"\t\t\t\t\t\t\ttypeof({tp.FullName}),");
-                    }
+                    p_sb.AppendLine($"\t\t\t\t\ttypeof({tp.FullName}),");
                 }
 
-                p_sb.AppendLine("\t\t\t\t\t\t}");
-                p_sb.AppendLine("\t\t\t\t\t}");
-                p_sb.AppendLine("\t\t\t\t},");
+                p_sb.AppendLine("\t\t\t\t}");
+                p_sb.AppendLine("\t\t\t};");
             }
-            p_sb.Append("\t\t\t};\r\n\t\t}");
+            p_sb.Append("\t\t}");
         }
 
         class SqliteDbTbls

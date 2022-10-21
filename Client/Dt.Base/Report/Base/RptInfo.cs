@@ -58,13 +58,7 @@ namespace Dt.Base
         /// <returns></returns>
         public virtual Task<string> ReadTemplate()
         {
-            return Task.Run(() =>
-            {
-                string define = AtModel.GetScalar<string>("select define from OmReport where name=:name", new Dict { { "name", Name } });
-                if (string.IsNullOrEmpty(define))
-                    Kit.Warn($"未找到报表模板【{Name}】！");
-                return define;
-            });
+            return Kit.GetRequiredService<ISvc>().GetReportTemplate(Name);
         }
 
         /// <summary>

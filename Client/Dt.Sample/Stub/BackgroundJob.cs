@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
-using Dt.Mgr;
 #endregion
 
 namespace Dt.Sample

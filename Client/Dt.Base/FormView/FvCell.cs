@@ -8,17 +8,12 @@
 
 #region 引用命名
 using Dt.Base.FormView;
-using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.ComponentModel;
-using System.Reflection;
-using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
+using System.ComponentModel;
+using System.Reflection;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Base

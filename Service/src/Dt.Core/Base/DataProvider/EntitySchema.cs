@@ -80,10 +80,12 @@ namespace Dt.Core
             return DbSchema.GetTableSchema(p_tblName);
         }
 #else
-        internal static TableSchema GetTableSchema(string p_tblName)
+        static TableSchema GetTableSchema(string p_tblName)
         {
-            TableSchema schema = new TableSchema(p_tblName.ToLower());
-            foreach (var oc in AtModel.EachColumns(p_tblName.ToLower()))
+            var tblName = p_tblName.ToLower();
+            var cols = Kit.GetRequiredService<ISvc>().GetTableColumns(tblName);
+            TableSchema schema = new TableSchema(tblName);
+            foreach (var oc in cols)
             {
                 TableCol col = new TableCol();
                 col.Name = oc.ColName;

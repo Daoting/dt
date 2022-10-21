@@ -157,9 +157,14 @@ namespace Dt.Core
                 tbl._columns.Add(new Column(col.Name, col.Type));
             }
 #else
-            foreach (var col in AtModel.EachColumns(p_tblName))
+            var svc = Kit.GetService<ISvc>();
+            if (svc != null)
             {
-                tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));
+                var cols = svc.GetTableColumns(p_tblName.ToLower());
+                foreach (var col in cols)
+                {
+                    tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));
+                }
             }
 #endif
             return tbl;

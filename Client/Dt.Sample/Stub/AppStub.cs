@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Mgr;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
@@ -22,7 +21,6 @@ namespace Dt.Sample
         public AppStub()
         {
             Title = "搬运工";
-            SvcUrl = "https://x13382a571.oicp.vip/sample";
             LogSetting.FileEnabled = true;
         }
 
@@ -32,10 +30,9 @@ namespace Dt.Sample
         /// <param name="p_svcs"></param>
         protected override void ConfigureServices(IServiceCollection p_svcs)
         {
+            p_svcs.AddSingleton<IRpcConfig, RpcConfig>();
             p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
-            p_svcs.AddTransient<IPushApi, PushApi>();
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
-            p_svcs.AddTransient<IFixedMenus, FixedMenus>();
             //p_svcs.AddTransient<ITheme, CustomTheme>();
         }
 
@@ -53,48 +50,27 @@ namespace Dt.Sample
                 AtLocal.SaveDict("FirstRun", "0");
             }
 
-            // 以默认登录页、主页方式启动
-            //await StartRun();
-
-            // 以自定义方式启动
-            await StartRun(typeof(Sample.SamplesMain), false);
+            ShowRoot(typeof(SamplesMain));
         }
 
         #region 自动生成
-        // 本地库结构变化或视图类型变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！
+        // 本地库结构变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！
 
         /// <summary>
-        /// 视图名称与窗口类型的映射字典，菜单项用，同名时覆盖内置的视图类型
+        /// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
+        /// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
         /// </summary>
-        /// <returns></returns>
-        protected override Dictionary<string, Type> GetViewTypes()
+        /// <param name="p_sqliteDbs"></param>
+        protected override void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_sqliteDbs)
         {
-            return new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
+            base.MergeSqliteDbs(p_sqliteDbs);
+            p_sqliteDbs["local"] = new SqliteTblsInfo
             {
-                { "样例", typeof(Dt.Sample.SamplesMain) },
-                { "ShoppingWin", typeof(Dt.Sample.ModuleView.OneToMany1.ShoppingWin) },
-            };
-        }
-
-        /// <summary>
-        /// 本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
-        /// </summary>
-        /// <returns></returns>
-        protected override Dictionary<string, SqliteTblsInfo> GetSqliteDbs()
-        {
-            return new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase)
-            {
+                Version = "0a68f7fe86b78452e885c5e7394762ca",
+                Tables = new List<Type>
                 {
-                    "local",
-                    new SqliteTblsInfo
-                    {
-                        Version = "0a68f7fe86b78452e885c5e7394762ca",
-                        Tables = new List<Type>
-                        {
-                            typeof(Dt.Sample.LocalDict),
-                        }
-                    }
-                },
+                    typeof(Dt.Sample.LocalDict),
+                }
             };
         }
         #endregion

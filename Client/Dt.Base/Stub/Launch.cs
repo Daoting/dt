@@ -71,10 +71,6 @@ namespace Dt.Base
                 // 附加全局按键事件
                 InitInput();
 
-                // 连接cm服务，获取全局参数，更新/打开模型库
-                if (Kit.IsUsingSvc)
-                    await InitConfig();
-
                 // 由外部控制启动过程
                 await OnStartup();
 
@@ -87,93 +83,6 @@ namespace Dt.Base
             catch (Exception ex)
             {
                 ShowError(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 连接cm服务，获取全局参数，更新打开模型库
-        /// </summary>
-        /// <returns></returns>
-        static async Task InitConfig()
-        {
-            // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
-            List<object> cfg;
-            try
-            {
-                cfg = await AtCm.GetConfig();
-            }
-            catch
-            {
-                throw new Exception("服务器连接失败！");
-            }
-
-            if (cfg == null || cfg.Count != 3)
-                throw new Exception("获取参数失败！");
-
-            // 服务器时间、初始化服务地址
-            Kit.SyncTime((DateTime)cfg[0]);
-            Kit.InitSvcUrls(cfg[1]);
-
-            // 更新打开模型库
-            await OpenModelDb(cfg[2] as string);
-        }
-
-        /// <summary>
-        /// 更新打开模型文件
-        /// 1. 与本地不同时下载新模型文件；
-        /// 2. 打开模型库；
-        /// </summary>
-        /// <param name="p_ver"></param>
-        /// <returns></returns>
-        static async Task OpenModelDb(string p_ver)
-        {
-            // 更新模型文件
-            string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
-            if (!File.Exists(modelVer))
-            {
-                string modelFile = Path.Combine(Kit.DataPath, "model.db");
-
-                // 删除旧版的模型文件和版本号文件
-                try { File.Delete(modelFile); } catch { }
-                foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"model-*.ver"))
-                {
-                    try { file.Delete(); } catch { }
-                }
-
-                try
-                {
-                    // 下载模型文件，下载地址如 https://localhost/app-cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
-                    using (var stream = await response.Content.ReadAsStreamAsync())
-                    using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
-                    using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))
-                    {
-                        gzipStream.CopyTo(fs);
-                        fs.Flush();
-                    }
-
-                    // 版本号文件
-                    File.Create(modelVer);
-                }
-                catch (Exception ex)
-                {
-                    try
-                    {
-                        File.Delete(modelFile);
-                    }
-                    catch { }
-                    throw new Exception("下载模型文件失败！" + ex.Message);
-                }
-            }
-
-            // 打开模型库
-            try
-            {
-                AtModel.OpenDb();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("打开模型库失败！" + ex.Message);
             }
         }
 

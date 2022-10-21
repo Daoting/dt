@@ -9,7 +9,6 @@
 	<ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-		<ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
     
 	<ItemGroup>

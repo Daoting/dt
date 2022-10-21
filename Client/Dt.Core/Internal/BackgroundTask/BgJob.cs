@@ -69,16 +69,6 @@ namespace Dt.Core
                 string msg = "启动";
                 try
                 {
-                    // HttpClient头的用户信息 
-                    if (Kit.IsUsingSvc
-                        && !Kit.IsLogon
-                        && long.TryParse(AtState.GetCookie("LoginID"), out var id))
-                    {
-                        Kit.UserID = id;
-                        BaseRpc.RefreshHeader();
-                        msg += " -> 登录";
-                    }
-
                     await bgJob.Run();
                     msg += " -> 结束";
                 }

@@ -60,13 +60,7 @@ namespace Dt.Core.Rpc
                     // 无权限时
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
-                        // 已登录则提示无权限
-                        if (Kit.IsLogon)
-                            Throw.Msg($"⚡对【{_methodName}】无访问权限！");
-
-                        // 跳转到登录页面
-                        Kit.ShowLogin(true);
-                        Throw.Msg("请先登录您的账号！");
+                        Kit.GetService<IRpcConfig>()?.OnRpcUnauthorized(_methodName);
                     }
 #endif
                     throw new ServerException($"服务器返回状态码：{response.StatusCode}", $"调用【{_methodName}】时返回状态码：{response.StatusCode}");

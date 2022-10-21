@@ -86,21 +86,6 @@ namespace Dt.Core.Rpc
         /// </summary>
         public static HttpClient Client => _client;
 
-#if !SERVER
-        /// <summary>
-        /// 刷新HttpClient头的用户信息
-        /// </summary>
-        internal static void RefreshHeader()
-        {
-            var header = _client.DefaultRequestHeaders;
-            header.Remove("uid");
-            if (Kit.IsLogon)
-            {
-                header.Add("uid", Kit.UserID.ToString());
-            }
-        }
-#endif
-
         /// <summary>
         /// 创建http2协议的Request
         /// </summary>

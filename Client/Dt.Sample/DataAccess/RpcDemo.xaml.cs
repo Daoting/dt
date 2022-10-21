@@ -49,7 +49,23 @@ namespace Dt.Sample
 
         void OnPush(object sender, RoutedEventArgs e)
         {
-            AtMsg.SendCmd(Kit.UserID, new MsgInfo { MethodName = "PushApi.Hello", Params = new List<object> { "Hello myself" } });
+            SendCmd(Kit.UserID, new MsgInfo { MethodName = "PushApi.Hello", Params = new List<object> { "Hello myself" } });
+        }
+
+        /// <summary>
+        /// 向某用户的客户端推送指令信息
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_msg"></param>
+        /// <returns>true 在线推送</returns>
+        static Task<bool> SendCmd(long p_userID, MsgInfo p_msg)
+        {
+            return Kit.Rpc<bool>(
+                "msg",
+                "CmdMsg.SendCmd",
+                p_userID,
+                p_msg
+            );
         }
     }
 }

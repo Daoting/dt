@@ -22,54 +22,13 @@ namespace Dt.Core
     public abstract partial class Stub
     {
         /// <summary>
-        /// 按默认流程开始运行，加载根页面。初次启动或刷新到根页面时调用
-        /// <para>1. 记录主页和登录页的类型，以备登录、注销、自动登录、中途登录时用</para>
-        /// <para>2. 不使用dt服务时，直接显示主页</para>
-        /// <para>3. 已登录过，先自动登录</para>
-        /// <para>4. 未登录或登录失败时，根据 p_loginFirst 显示登录页或主页</para>
+        /// 加载根内容，支持任意类型的UIElement，特殊类型有：
+        /// <para>Win：PhoneUI模式加载Frame、导航到窗口主页、再导航到自启动窗口主页；Win模式加载桌面、打开窗口、再打开自启动窗口</para>
+        /// <para>Page：加载Frame，导航到页面</para>
+        /// <para>其余可视元素直接加载</para>
         /// </summary>
-        /// <param name="p_homePageType">主页类型，null时采用默认主页 DefaultHome</param>
-        /// <param name="p_loginFirst">是否强制先登录，默认true</param>
-        /// <param name="p_loginPageType">登录页类型，null时采用默认登录页 DefaultLogin</param>
-        /// <returns></returns>
-        public abstract Task StartRun(Type p_homePageType = null, bool p_loginFirst = true, Type p_loginPageType = null);
-
-        /// <summary>
-        /// 显示登录页面
-        /// </summary>
-        /// <param name="p_isPopup">是否为弹出式</param>
-        public abstract void ShowLogin(bool p_isPopup);
-
-        /// <summary>
-        /// 注销后重新登录
-        /// </summary>
-        /// <returns></returns>
-        public abstract void Logout();
-
-        /// <summary>
-        /// 加载根内容 Desktop/Frame 和主页
-        /// </summary>
-        public abstract void ShowHome();
-
-        /// <summary>
-        /// 当前登录页面类型，未设置时采用 DefaultLogin
-        /// </summary>
-        public abstract Type LoginPageType { get; }
-
-        /// <summary>
-        /// 主页类型
-        /// </summary>
-        public abstract Type HomePageType { get; }
-
-        /// <summary>
-        /// 注册接收服务器推送
-        /// </summary>
-        public abstract void RegisterSysPush();
-
-        /// <summary>
-        /// 主动停止接收推送
-        /// </summary>
-        public abstract void StopSysPush();
+        /// <param name="p_elementType">类型：Win Page 或 任意可视元素UIElement</param>
+        public abstract void ShowRoot(Type p_elementType);
 
         /// <summary>
         /// 显示确认对话框
@@ -95,16 +54,6 @@ namespace Dt.Core
         /// <param name="p_params">初始参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
         public abstract object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params);
-
-        /// <summary>
-        /// 根据视图名称激活旧窗口或打开新窗口
-        /// </summary>
-        /// <param name="p_viewName">窗口视图名称</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">启动参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public abstract object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params);
 
         /// <summary>
         /// 显示系统日志窗口

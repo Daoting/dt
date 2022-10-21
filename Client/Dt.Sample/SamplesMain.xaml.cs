@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr;
 using Dt.Base;
 using Dt.Core;
 using System;
@@ -22,7 +21,6 @@ namespace Dt.Sample
     /// <summary>
     /// 样例
     /// </summary>
-    [View("样例")]
     public sealed partial class SamplesMain : Win
     {
         /// <summary>
@@ -122,17 +120,6 @@ namespace Dt.Sample
                 new Nav("功能列表视图", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
                 new Nav("通用搜索视图", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
             };
-
-            if (Kit.IsUsingSvc)
-            {
-                group.AddRange(new List<Nav>
-                {
-                    new Nav("单表模板", typeof(MyEntityWin)) { Desc = "单表增删改模板，需要联网" },
-                    new Nav("多对多模板", typeof(ModuleView.MainWin)) { Desc = "多对多增删改模板，需要联网" },
-                    new Nav("一对多，三栏", typeof(ModuleView.OneToMany1.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
-                    new Nav("一对多，两栏", typeof(ModuleView.OneToMany2.ShoppingWin)) { Desc = "一对多增删改模板，需要联网" },
-                });
-            }
             group.Title = "模块视图";
             ds.Add(group);
             #endregion
@@ -142,9 +129,9 @@ namespace Dt.Sample
             {
                 group = new GroupData<Nav>
                 {
-                    new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，外网无法访问" },
-                    new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，外网无法访问" },
-                    new Nav("切换到默认主页") { Callback = OpenHomeWin, Desc = "平台提供的默认主页，需要登录后才可加载，需要联网" },
+                    new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，需要联网" },
+                    new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，需要联网" },
+                    new Nav("切换到后台管理") { Callback = OpenHomeWin, Desc = "平台提供的默认后台管理，需要联网登录" },
                 };
                 group.Title = "综合";
                 ds.Add(group);
@@ -154,17 +141,9 @@ namespace Dt.Sample
             _navModule.Data = ds;
         }
 
-        async void OpenHomeWin(Win p_win, Nav p_nav)
+        void OpenHomeWin(Win p_win, Nav p_nav)
         {
-            var tp = typeof(DefaultHome);
-            if (Kit.HomePageType != tp)
-            {
-                await Kit.StartRun();
-            }
-            else
-            {
-                Kit.Msg("当前已加载默认主页！");
-            }
+            
         }
     }
 }

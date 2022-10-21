@@ -76,7 +76,9 @@ namespace Dt.Base.FormView
             else if (!string.IsNullOrEmpty(_owner.Option))
             {
                 // 基础选项
-                lv.Data = AtModel.Query($"select name from OmOption where Category=\"{_owner.Option}\"");
+                var svc = Kit.GetService<ISvc>();
+                if (svc != null)
+                    lv.Data = await svc.GetCListOption(_owner.Option);
             }
             else if (!string.IsNullOrEmpty(_owner.Sql))
             {
