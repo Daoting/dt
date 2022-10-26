@@ -1,0 +1,11 @@
+﻿
+1. Wasm目录功能：
+   向wasm项目添加默认字体文件、字体css、dt.js
+   Release模式生成时处理PWA相关的后续工作
+
+
+2. SourceGenerator 自动生成字典类型代码，否则通过反射在app启动影响效率且AOT可能被裁剪
+
+
+3. TypeScript：引用包 Microsoft.TypeScript.MSBuild NuGet 支持 TypeScript，
+TypeScript编译参数在 csproj 文件配置，不使用 tsconfig.json
