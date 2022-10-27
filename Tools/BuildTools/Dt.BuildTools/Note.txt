@@ -4,7 +4,7 @@
    Release模式生成时处理PWA相关的后续工作
 
 
-2. SourceGenerator 自动生成字典类型代码，否则通过反射在app启动影响效率且AOT可能被裁剪
+2. SourceGenerator 自动生成 Stub 代码，否则在app启动时通过反射构造类型字典影响效率且 AOT 时可能被裁剪
 
 
 3. TypeScript：引用包 Microsoft.TypeScript.MSBuild NuGet 支持 TypeScript，

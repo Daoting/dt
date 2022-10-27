@@ -13,15 +13,17 @@ using Dt.Core;
 namespace Dt.Core
 {
     
-    [View("主页")]
-    public class MainPage
+    [Api]
+    public class SysCall
     {
 
     }
 
-    [View("登录")]
-    public class LoginPage
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class ApiAttribute : TypeAliasAttribute
     {
-
+        public ApiAttribute()
+        {
+        }
     }
 }

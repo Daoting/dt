@@ -5,9 +5,10 @@
     /// </summary>
     public partial class AppStub : Stub
     {
-        //protected override void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_dict)
+        //protected override void MergeTypeAlias(Dictionary<string, Type> p_dict)
         //{
-        //    base.MergeSqliteDbs(p_dict);
+        //    base.MergeTypeAlias(p_dict);
+        //    p_dict["abc"] = typeof(string);
         //}
     }
 }

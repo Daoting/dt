@@ -41,7 +41,6 @@ namespace Dt.BuildTools
             INamedTypeSymbol _stub;
             Dictionary<string, SqliteDbTbls> _sqliteTypes;
             Dictionary<string, string> _aliasTypes;
-            string _defaultNamespace;
 
             internal void Generate(GeneratorExecutionContext context)
             {
@@ -58,6 +57,7 @@ namespace Dt.BuildTools
                     _tpIgnore = context.Compilation.GetTypeByMetadataName("Dt.Core.IgnoreAttribute");
                     _tpAttribute = context.Compilation.GetTypeByMetadataName("System.Attribute");
 
+                    // 未定义以上类型不处理
                     if (_tpSqliteAttr == null
                         || _tpAliasAttr == null
                         || _baseStub == null
@@ -83,6 +83,7 @@ namespace Dt.BuildTools
 
                         if (IsStub(type))
                         {
+                            // 多个存根，取最后一个
                             _stub = type;
                         }
                         else
@@ -94,13 +95,13 @@ namespace Dt.BuildTools
                             var attr = attrs[0];
                             if (SymbolEqualityComparer.Default.Equals(attr.AttributeClass, _tpSqliteAttr))
                             {
+                                // 有 SqliteAttribute 标签
                                 ExtractSqliteDb(type, attr);
                             }
                             else if (IsAliasAttr(attr))
                             {
-                                var val = attr.ConstructorArguments.FirstOrDefault().Value;
-                                var name = attr.AttributeClass.Name;
-                                _aliasTypes[$"{name.Substring(0, name.Length - 9)}-{val}"] = type.ToString();
+                                // 为继承 TypeAliasAttribute 的子标签
+                                ExtractTypeAlias(type, attr);
                             }
                         }
                     }
@@ -108,7 +109,6 @@ namespace Dt.BuildTools
                     // 无存根，不生成代码
                     if (_stub != null)
                     {
-                        _defaultNamespace = context.GetMSBuildPropertyValue("RootNamespace");
                         context.AddSource("AutoGenerateStub", BuildSource());
                     }
                 }
@@ -120,7 +120,7 @@ namespace Dt.BuildTools
                 {
                     var desc = new DiagnosticDescriptor(
                         "Dt0001",
-                        "搬运工自动生成字典代码失败",
+                        "生成 AutoGenerateStub 失败",
                         "{0}",
                         "Dictionary",
                         DiagnosticSeverity.Error,
@@ -129,7 +129,7 @@ namespace Dt.BuildTools
                     var diagnostic = Diagnostic.Create(
                         desc,
                         null,
-                        $"自动生成字典代码失败！({e.Message})");
+                        $"生成 AutoGenerateStub 失败！({e.Message})");
 
                     context.ReportDiagnostic(diagnostic);
                 }
@@ -165,19 +165,39 @@ namespace Dt.BuildTools
                 }
             }
 
+            void ExtractTypeAlias(INamedTypeSymbol type, AttributeData attr)
+            {
+                string alias;
+                var args = attr.ConstructorArguments;
+                if (args.Length == 0 || args[0].Value == null)
+                {
+                    // 标签的构造方法无参数，取被贴标签的类名为别名，如 ApiAttribute
+                    alias = type.Name;
+                }
+                else
+                {
+                    alias = args[0].Value.ToString();
+                }
+
+                // 键规则：类名去掉尾部的Attribute-别名
+                var name = attr.AttributeClass.Name;
+                _aliasTypes[$"{name.Substring(0, name.Length - 9)}-{alias}"] = type.ToString();
+            }
+
             string BuildSource()
             {
                 var sb = new IndentedStringBuilder();
 
-                sb.AppendLine("// auto-generated");
-                sb.AppendLine();
+                sb.AppendLine("// auto-generated 搬运工");
                 sb.AppendLine("#pragma warning disable 618  // Ignore obsolete members warnings");
                 sb.AppendLine("#pragma warning disable 1591 // Ignore missing XML comment warnings");
                 sb.AppendLine("using System;");
                 sb.AppendLine("using System.Linq;");
+                sb.AppendLine("using System.Collections.Generic;");
                 sb.AppendLine("using Dt.Core;");
+                sb.AppendLine();
 
-                using (sb.Block("namespace {0}", _defaultNamespace))
+                using (sb.Block("namespace {0}", _stub.ContainingNamespace))
                 using (sb.Block("public partial class {0}", _stub.Name))
                 {
                     BuildSqliteDbs(sb);
@@ -191,6 +211,7 @@ namespace Dt.BuildTools
             {
                 using (sb.Block("protected override void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_dict)"))
                 {
+                    // 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
                     sb.AppendLine("base.MergeSqliteDbs(p_dict);");
                     if (_sqliteTypes.Count > 0)
                     {
@@ -198,7 +219,7 @@ namespace Dt.BuildTools
                         {
                             _cancellationToken.ThrowIfCancellationRequested();
 
-                            using (sb.Block("p_dict[\"{0}\"] = new SqliteTblsInfo", item.Key))
+                            using (sb.Block("p_dict.TryAdd(\"{0}\", new SqliteTblsInfo", item.Key))
                             {
                                 sb.AppendLine($"Version = \"{item.Value.GetVer()}\",");
                                 using (sb.Block("Tables = new List<Type>"))
@@ -209,16 +230,27 @@ namespace Dt.BuildTools
                                     }
                                 }
                             }
-                            sb.AppendLine(";");
-                            sb.AppendLine();
+                            sb.AppendLine(");");
                         }
                     }
                 }
+                sb.AppendLine();
             }
 
             void BuildTypeAlias(IndentedStringBuilder sb)
             {
-
+                using (sb.Block("protected override void MergeTypeAlias(Dictionary<string, Type> p_dict)"))
+                {
+                    sb.AppendLine("base.MergeTypeAlias(p_dict);");
+                    if (_aliasTypes.Count > 0)
+                    {
+                        foreach (var item in _aliasTypes)
+                        {
+                            _cancellationToken.ThrowIfCancellationRequested();
+                            sb.AppendLine($"p_dict[\"{item.Key}\"] = typeof({item.Value});");
+                        }
+                    }
+                }
             }
 
             bool IsStub(INamedTypeSymbol p_type)
@@ -256,17 +288,17 @@ namespace Dt.BuildTools
             }
 
         }
-    }
 
-    class SqliteDbTbls
-    {
-        public List<INamedTypeSymbol> Tbls { get; } = new List<INamedTypeSymbol>();
-
-        public StringBuilder Cols { get; } = new StringBuilder();
-
-        public string GetVer()
+        class SqliteDbTbls
         {
-            return Kit.GetMD5(Cols.ToString());
+            public List<INamedTypeSymbol> Tbls { get; } = new List<INamedTypeSymbol>();
+
+            public StringBuilder Cols { get; } = new StringBuilder();
+
+            public string GetVer()
+            {
+                return Kit.GetMD5(Cols.ToString());
+            }
         }
     }
 }

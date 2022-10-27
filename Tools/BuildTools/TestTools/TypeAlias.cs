@@ -7,10 +7,11 @@
     {
         protected TypeAliasAttribute(string p_alias)
         {
-            var name = GetType().Name;
-            // 去掉尾部的Attribute
-            Alias = $"{name.Substring(0, name.Length - 9)}-{p_alias}";
+            Alias = p_alias;
         }
+
+        protected TypeAliasAttribute()
+        { }
 
         /// <summary>
         /// 类型别名

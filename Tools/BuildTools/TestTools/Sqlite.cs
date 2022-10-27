@@ -17,6 +17,31 @@
         public string Val { get; set; }
     }
 
+    [Sqlite("state")]
+    public class CellLastVal
+    {
+        /// <summary>
+        /// 单元格唯一标识：BaseUri + Fv.Name + FvCell.ID
+        /// </summary>
+        public string ID { get; set; }
+
+        /// <summary>
+        /// 单元格最后编辑的值
+        /// </summary>
+        public string Val { get; set; }
+    }
+
+    [Sqlite("local")]
+    public class LocalDict
+    {
+        public string Key { get; set; }
+
+        /// <summary>
+        /// 值
+        /// </summary>
+        public string Val { get; set; }
+    }
+
     /// <summary>
     /// 类型和sqlite表的映射
     /// </summary>
