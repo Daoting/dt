@@ -8,12 +8,11 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 个人文件管理

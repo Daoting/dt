@@ -85,7 +85,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取Rpc的单例HttpClient
         /// </summary>
-        public static HttpClient Client => BaseRpc.Client;
+        public static HttpClient RpcClient => BaseRpc.Client;
 
         /// <summary>
         /// 是否使用服务

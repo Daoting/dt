@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 文件夹内容
@@ -62,11 +62,11 @@ namespace Dt.Mgr.File
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = AtState.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new { id = row.ID });
+                var his = AtLob.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new { id = row.ID });
                 if (his == null)
                     his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
                 his.LastReadTime = Kit.Now;
-                if (await AtState.Save(his, false))
+                if (await AtLob.Save(his, false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
         }

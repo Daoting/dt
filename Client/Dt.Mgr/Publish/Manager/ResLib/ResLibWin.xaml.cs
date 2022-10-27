@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr.File;
+using Dt.Mgr.Files;
 using Dt.Base;
 using Dt.Core;
 #endregion
@@ -26,7 +26,7 @@ namespace Dt.Mgr.Publish
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await Kit.HasPrv("素材库管理"),
+                AllowEdit = await Lob.HasPrv("素材库管理"),
                 SaveHistory = false,
             };
             _tab.Content = new FolderPage(new ResFileMgr { Setting = setting });

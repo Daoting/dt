@@ -14,12 +14,12 @@ using System.Linq;
 using System.Text;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 文件
     /// </summary>
-    [View("文件")]
+    [View(LobViews.文件)]
     public partial class FileHome : Win
     {
         public FileHome()
@@ -32,7 +32,7 @@ namespace Dt.Mgr.File
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await Kit.HasPrv("公共文件管理"),
+                AllowEdit = await Lob.HasPrv("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });
@@ -51,7 +51,7 @@ namespace Dt.Mgr.File
         {
             Kit.RunAsync(() =>
             {
-                var ls = AtState.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
+                var ls = AtLob.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
                 StringBuilder sb = new StringBuilder();
                 foreach (var file in ls)
                 {
@@ -82,7 +82,7 @@ namespace Dt.Mgr.File
 
             if (await Kit.Confirm("确认要清空历史记录吗？"))
             {
-                AtState.Exec("delete from ReadFileHistory");
+                AtLob.Exec("delete from ReadFileHistory");
                 _fl.Data = null;
             }
         }
@@ -91,7 +91,7 @@ namespace Dt.Mgr.File
         {
             if (await Kit.Confirm("确认要删除当前历史记录吗？"))
             {
-                if (AtState.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
+                if (AtLob.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
                     LoadHistory();
             }
         }

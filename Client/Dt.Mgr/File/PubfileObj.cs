@@ -11,7 +11,7 @@ using Dt.Core;
 using System;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     #region 自动生成
     [Tbl("cm_pubfile")]

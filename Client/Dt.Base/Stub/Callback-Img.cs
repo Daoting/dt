@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 加载图片
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
 #if WASM
         /// <summary>

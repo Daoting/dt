@@ -22,6 +22,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 主页
     /// </summary>
+    [View(LobViews.主页)]
     public partial class DefaultHome : Win
     {
         public DefaultHome()

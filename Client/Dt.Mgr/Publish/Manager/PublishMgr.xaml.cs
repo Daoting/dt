@@ -14,7 +14,7 @@ using System;
 
 namespace Dt.Mgr.Publish
 {
-    [View("发布管理")]
+    [View(LobViews.发布管理)]
     public sealed partial class PublishMgr : Win
     {
         public PublishMgr()

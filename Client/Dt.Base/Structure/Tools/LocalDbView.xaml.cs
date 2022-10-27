@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +16,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Dt.Core.Sqlite;
 #endregion
 
 namespace Dt.Base.Tools

@@ -2,20 +2,19 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2013-12-16 创建
+* 日志: 2022-10-21 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Base;
 #endregion
 
 namespace Dt.Mgr
 {
     /// <summary>
-    /// 内核模型服务Api代理类（自动生成）
+    /// 模型管理相关
     /// </summary>
-    public static class ModelKit
+    public partial class Lob
     {
         /// <summary>
         /// 提示需要更新模型

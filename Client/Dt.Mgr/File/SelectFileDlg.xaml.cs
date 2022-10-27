@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     public sealed partial class SelectFileDlg : Dlg, ISelectFileDlg
     {

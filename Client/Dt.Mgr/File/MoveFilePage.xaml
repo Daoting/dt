@@ -1,5 +1,5 @@
 ﻿<a:Mv
-    x:Class="Dt.Mgr.File.MoveFilePage"
+    x:Class="Dt.Mgr.Files.MoveFilePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

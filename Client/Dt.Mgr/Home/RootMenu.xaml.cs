@@ -8,10 +8,6 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using Dt.Core.Rpc;
-using System;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -31,16 +27,16 @@ namespace Dt.Mgr.Home
             if (Kit.IsLogon)
                 LoadMenus();
             else
-                Kit.LoginSuc += LoadMenus;
+                Lob.LoginSuc += LoadMenus;
         }
 
         async void LoadMenus()
         {
-            await MenuKit.LoadMenus();
-            _lv.Data = MenuKit.RootPageMenus;
+            await Lob.LoadMenus();
+            _lv.Data = Lob.RootPageMenus;
             _lv.Loaded += OnLoaded;
 
-            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
+            if (Lob.FavMenus.Count > Lob.FixedMenusCount)
                 _miReset.Visibility = Visibility.Visible;
         }
 
@@ -52,7 +48,7 @@ namespace Dt.Mgr.Home
                 if (menu.IsGroup)
                     Forward(new GroupMenu(menu));
                 else
-                    MenuKit.OpenMenu(menu);
+                    Lob.OpenMenu(menu);
             });
         }
 
@@ -63,13 +59,13 @@ namespace Dt.Mgr.Home
 
         async void OnReset(object sender, Mi e)
         {
-            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
+            if (Lob.FavMenus.Count > Lob.FixedMenusCount)
             {
-                var cnt = AtState.Exec($"delete from menufav where userid={Kit.UserID}");
+                var cnt = AtLob.Exec($"delete from menufav where userid={Kit.UserID}");
                 if (cnt > 0)
                 {
-                    await MenuKit.LoadMenus();
-                    _lv.Data = MenuKit.RootPageMenus;
+                    await Lob.LoadMenus();
+                    _lv.Data = Lob.RootPageMenus;
                     e.Visibility = Visibility.Collapsed;
                     Kit.Msg("重置常用菜单成功！");
                 }
@@ -92,7 +88,7 @@ namespace Dt.Mgr.Home
             {
                 // 只取常用组菜单项的提示信息
                 // 原来采用每个服务批量获取的方式，现改为简单方式，互不影响！
-                foreach (var mi in MenuKit.FavMenus)
+                foreach (var mi in Lob.FavMenus)
                 {
                     if (string.IsNullOrEmpty(mi.SvcName))
                         continue;

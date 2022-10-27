@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 默认存根
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         public DefaultStub()
         {

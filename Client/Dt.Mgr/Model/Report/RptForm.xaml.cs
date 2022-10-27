@@ -45,7 +45,7 @@ namespace Dt.Mgr.Model
             if (await AtCm.Save(_fv.Data.To<RptObj>()))
             {
                 _win.List.Update();
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 
@@ -78,7 +78,7 @@ namespace Dt.Mgr.Model
             {
                 Clear();
                 _win.List.Update();
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 

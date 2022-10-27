@@ -10,7 +10,7 @@
 using Dt.Base;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 搜索文件

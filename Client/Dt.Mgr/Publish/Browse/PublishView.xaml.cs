@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Publish
 {
-    [View("发布")]
+    [View(LobViews.发布)]
     public partial class PublishView : Win
     {
         public PublishView() : this(-1)

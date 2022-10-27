@@ -34,9 +34,9 @@ namespace Dt.Mgr.Home
             else
             {
                 var btn = new Button { Content = "点击登录", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                btn.Click += (s, e) => Kit.ShowLogin(false);
+                btn.Click += (s, e) => Lob.ShowLogin(false);
                 Content = btn;
-                Kit.LoginSuc += () => { Content = _fv; LoadInfo(); };
+                Lob.LoginSuc += () => { Content = _fv; LoadInfo(); };
             }
         }
 
@@ -50,7 +50,7 @@ namespace Dt.Mgr.Home
 
         void OnExit(object sender, RoutedEventArgs e)
         {
-            Kit.Logout();
+            Lob.Logout();
         }
 
         async void OnClearLocalFile(object sender, RoutedEventArgs e)
@@ -78,7 +78,7 @@ namespace Dt.Mgr.Home
 
         void OnSetting(object sender, TappedRoutedEventArgs e)
         {
-            Type tp = Kit.GetViewType("我的设置");
+            Type tp = Kit.GetViewTypeByAlias("我的设置");
             if (tp == null)
             {
                 Kit.Msg("未找到设置视图！");
@@ -97,8 +97,8 @@ namespace Dt.Mgr.Home
 
         async void OnAbout(object sender, TappedRoutedEventArgs e)
         {
-            var b = await Kit.GetParam<string>("接收新任务");
-            var c = await Kit.GetParam<bool>("接收新发布通知");
+            var b = await Lob.GetParam<string>("接收新任务");
+            var c = await Lob.GetParam<bool>("接收新发布通知");
         }
     }
 }

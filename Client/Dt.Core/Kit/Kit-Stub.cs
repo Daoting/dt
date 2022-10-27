@@ -106,6 +106,54 @@ namespace Dt.Core
         {
             return Stub.Inst.OpenWin(p_type, p_title, p_icon, p_params);
         }
+
+        /// <summary>
+        /// 根据视图名称激活旧窗口或打开新窗口
+        /// </summary>
+        /// <param name="p_viewName">窗口视图名称</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public static object OpenView(
+            string p_viewName,
+            string p_title = null,
+            Icons p_icon = Icons.None,
+            object p_params = null)
+        {
+            return Stub.Inst.OpenView(p_viewName, p_title, p_icon, p_params);
+        }
+
+        /// <summary>
+        /// 根据别名获取视图类型
+        /// </summary>
+        /// <param name="p_alias">类型别名</param>
+        /// <returns>返回类型</returns>
+        public static Type GetViewTypeByAlias(string p_alias)
+        {
+            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_alias);
+        }
+
+        /// <summary>
+        /// 根据别名获取视图类型
+        /// </summary>
+        /// <param name="p_aliasEnum">别名取枚举成员名称</param>
+        /// <returns>返回类型</returns>
+        public static Type GetViewTypeByAlias(Enum p_aliasEnum)
+        {
+            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_aliasEnum.ToString());
+        }
+
+        /// <summary>
+        /// 根据类型别名获取类型
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回类型</returns>
+        public static Type GetTypeByAlias(Type p_attrType, string p_alias)
+        {
+            return Stub.Inst.GetTypeByAlias(p_attrType, p_alias);
+        }
         #endregion
 
         #region 系统

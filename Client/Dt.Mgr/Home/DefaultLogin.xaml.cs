@@ -24,6 +24,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 默认登录页面
     /// </summary>
+    [View(LobViews.登录页)]
     public partial class DefaultLogin : Page
     {
         public DefaultLogin()
@@ -97,7 +98,7 @@ namespace Dt.Mgr
                     AtState.SaveCookie("LoginPwd", pwd);
                     AtState.SaveCookie("LoginID", result.UserID.ToString());
 
-                    Kit.InitUser(result);
+                    Lob.InitUser(result);
                     var dlg = this.FindParentByType<Dlg>();
                     if (dlg != null)
                     {
@@ -107,10 +108,10 @@ namespace Dt.Mgr
                     else
                     {
                         // 正常登录后切换到主页
-                        Kit.ShowHome();
+                        Lob.ShowHome();
                     }
                     // 接收服务器推送
-                    Kit.RegisterSysPush();
+                    Lob.RegisterSysPush();
                 }
                 catch
                 {

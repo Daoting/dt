@@ -11,7 +11,7 @@ using Dt.Base;
 using System;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 选择移动到的目标文件夹

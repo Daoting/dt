@@ -19,9 +19,17 @@ namespace Dt.Core
 
     }
 
-    [View("登录")]
+    [View(LobViews.登录页)]
     public class LoginPage
     {
+
+    }
+
+    public enum LobViews
+    {
+        主页,
+        登录页,
+        通讯录,
 
     }
 }

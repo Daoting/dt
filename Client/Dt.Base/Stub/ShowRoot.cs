@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 根内容
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         // 自启动信息，加载主页前设置有效
         AutoStartInfo _autoStartOnce;

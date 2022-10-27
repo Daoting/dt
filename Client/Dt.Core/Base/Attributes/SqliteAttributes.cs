@@ -10,7 +10,7 @@
 using System;
 #endregion
 
-namespace Dt.Core.Sqlite
+namespace Dt.Core
 {
     /// <summary>
     /// 类型和sqlite表的映射

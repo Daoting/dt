@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    [View("报表设计")]
+    [View(LobViews.报表设计)]
     public partial class RptWin : Win
     {
         public RptWin()

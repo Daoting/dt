@@ -12,7 +12,7 @@ using Dt.Core;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     public sealed partial class EditFolder : Mv
     {

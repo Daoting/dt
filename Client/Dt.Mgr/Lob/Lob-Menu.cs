@@ -7,26 +7,15 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using Dt.Core.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Mgr
 {
     /// <summary>
-    /// 当前登录用户相关的管理类，内容包括：
-    /// 1. 登录用户基本信息
-    /// 2. 菜单，收藏菜单
-    /// 3. 权限
+    /// 当前登录用户相关的菜单
     /// </summary>
-    public static class MenuKit
+    public partial class Lob
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
@@ -45,7 +34,7 @@ namespace Dt.Mgr
         }
 
         /// <summary>
-        /// 获取当前登录用户的收藏菜单
+        /// 获取当前登录用户的常用菜单项：固定项 + 点击次数最多的前n项，总项数不超过 8 个
         /// </summary>
         public static GroupData<OmMenu> FavMenus
         {
@@ -53,9 +42,14 @@ namespace Dt.Mgr
         }
 
         /// <summary>
-        /// 获取默认主页(DefaultHome)的固定菜单项数
+        /// 获取设置固定菜单项，通常在 LoadMenus 前由外部设置
         /// </summary>
-        public static int FixedMenusCount { get; private set; }
+        public static IList<OmMenu> FixedMenus { get; set; }
+
+        /// <summary>
+        /// 获取固定菜单项数
+        /// </summary>
+        public static int FixedMenusCount => FixedMenus == null ? 0 : FixedMenus.Count;
         #endregion
 
         #region 菜单相关
@@ -72,7 +66,7 @@ namespace Dt.Mgr
                 return null;
             }
 
-            Type tp = Kit.GetViewType(p_menu.ViewName);
+            Type tp = Kit.GetViewTypeByAlias(p_menu.ViewName);
             if (tp == null)
             {
                 Kit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
@@ -94,9 +88,9 @@ namespace Dt.Mgr
                         Dict dt = new Dict();
                         dt["userid"] = Kit.UserID;
                         dt["menuid"] = p_menu.ID;
-                        int cnt = AtState.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
+                        int cnt = AtLob.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
                         if (cnt == 0)
-                            AtState.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
+                            AtLob.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
                     }
                     // 收集使用频率
                     //await AtAuth.ClickMenu(p_menu.ID);
@@ -135,27 +129,18 @@ namespace Dt.Mgr
 
             // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
             _favMenus.Clear();
-            
+
             // 外部注入的固定项
-            var svc = Kit.GetService<IFixedMenus>();
-            if (svc != null)
+            if (FixedMenus != null && FixedMenus.Count > 0)
             {
-                var fixedMenus = svc.GetFixedMenus();
-                if (fixedMenus != null && fixedMenus.Count > 0)
-                {
-                    FixedMenusCount = fixedMenus.Count;
-                    foreach (var om in fixedMenus)
-                    {
-                        _favMenus.Add(om);
-                    }
-                }
+                _favMenus.AddRange(FixedMenus);
             }
 
             // 点击次数最多的前n项
             int maxFav = 8;
             if (_favMenus.Count < maxFav)
             {
-                var favMenu = AtState.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
+                var favMenu = AtLob.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
                 foreach (var fav in favMenu)
                 {
                     // 过滤无权限的项
@@ -317,14 +302,16 @@ namespace Dt.Mgr
             }
             return sb.ToString();
         }
+        #endregion
 
+        #region 内部方法
         /// <summary>
         /// 获取用户可访问的菜单
         /// </summary>
         /// <returns></returns>
         static async Task<List<long>> GetAllUserMenus()
         {
-            int cnt = AtState.GetScalar<int>("select count(*) from DataVersion where id='menu'");
+            int cnt = AtLob.GetScalar<int>("select count(*) from DataVersion where id='menu'");
             if (cnt == 0)
             {
                 // 查询服务端
@@ -332,10 +319,10 @@ namespace Dt.Mgr
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));
-                await AtState.Save(ver, false);
+                await AtLob.Save(ver, false);
 
                 // 清空旧数据
-                AtState.Exec("delete from UserMenu");
+                AtLob.Exec("delete from UserMenu");
 
                 // 插入新数据
                 var ls = (List<long>)dt["result"];
@@ -346,12 +333,12 @@ namespace Dt.Mgr
                     {
                         dts.Add(new Dict { { "id", id } });
                     }
-                    AtState.BatchExec("insert into UserMenu (id) values (:id)", dts);
+                    AtLob.BatchExec("insert into UserMenu (id) values (:id)", dts);
                 }
                 return ls;
             }
 
-            return AtState.FirstCol<long>("select id from UserMenu");
+            return AtLob.FirstCol<long>("select id from UserMenu");
         }
 
         /// <summary>
@@ -373,30 +360,5 @@ namespace Dt.Mgr
             return false;
         }
         #endregion
-    }
-
-    /// <summary>
-    /// 用户可访问的菜单
-    /// </summary>
-    [Sqlite("state")]
-    public class UserMenu : Entity
-    {
-        #region 构造方法
-        UserMenu() { }
-
-        public UserMenu(long ID)
-        {
-            AddCell("ID", ID);
-            IsAdded = true;
-            AttachHook();
-        }
-        #endregion
-
-        [PrimaryKey]
-        new public long ID
-        {
-            get { return (long)this["ID"]; }
-            set { this["ID"] = value; }
-        }
     }
 }

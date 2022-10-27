@@ -29,8 +29,8 @@
         /// 
         /// </summary>
         /// <param name="p_alias">别名</param>
-        public ViewAttribute(string p_alias)
-            : base(p_alias)
+        public ViewAttribute(object p_alias)
+            : base(p_alias == null ? null : p_alias.ToString())
         {
         }
     }

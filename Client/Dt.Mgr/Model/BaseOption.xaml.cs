@@ -8,16 +8,11 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Mgr.Model
 {
-    [View("基础选项")]
+    [View(LobViews.基础选项)]
     public partial class BaseOption : Win
     {
         public BaseOption()
@@ -77,7 +72,7 @@ namespace Dt.Mgr.Model
             if (await AtCm.BatchSave(tbl))
             {
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_src.Category });
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 
@@ -103,7 +98,7 @@ namespace Dt.Mgr.Model
             {
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = op.Category });
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 
@@ -138,7 +133,7 @@ namespace Dt.Mgr.Model
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_option.Category });
                 _fv.Data = null;
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
     }

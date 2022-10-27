@@ -24,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 启动入口
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         /// <summary>
         /// 启动入口

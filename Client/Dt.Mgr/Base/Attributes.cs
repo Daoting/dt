@@ -2,24 +2,24 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2022-07-28 创建
+* 日志: 2017-12-06 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
+using System;
 #endregion
 
 namespace Dt.Mgr
 {
     /// <summary>
-    /// 默认主页的固定菜单项
+    /// 标志处理服务器推送的标签
     /// </summary>
-    public interface IFixedMenus
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class PushApiAttribute : TypeAliasAttribute
     {
-        /// <summary>
-        /// 获取默认主页(DefaultHome)的固定菜单项
-        /// </summary>
-        IList<OmMenu> GetFixedMenus();
+        public PushApiAttribute()
+        {
+        }
     }
 }

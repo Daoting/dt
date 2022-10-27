@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    [View("菜单管理")]
+    [View(LobViews.菜单管理)]
     public partial class MenuWin : Win
     {
         public MenuWin()

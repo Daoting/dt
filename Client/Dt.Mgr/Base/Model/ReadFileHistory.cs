@@ -8,16 +8,15 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using System;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 打开过的文件历史
     /// </summary>
-    [Sqlite("state")]
+    [Sqlite("lob")]
     public class ReadFileHistory : Entity
     {
         #region 构造方法

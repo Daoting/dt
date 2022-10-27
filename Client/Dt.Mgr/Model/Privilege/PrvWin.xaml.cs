@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    [View("基础权限")]
+    [View(LobViews.基础权限)]
     public partial class PrvWin : Win
     {
         public PrvWin()

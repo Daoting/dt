@@ -87,7 +87,7 @@ namespace Dt.Mgr.Model
             if (await AtCm.ExchangeDispidx(src, tgt))
             {
                 Update();
-                ModelKit.PromptForUpdateModel("菜单调序成功");
+                Lob.PromptForUpdateModel("菜单调序成功");
             }
         }
 

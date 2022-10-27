@@ -20,7 +20,7 @@ namespace Dt.Base
     /// <summary>
     /// 默认系统回调
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         /// <summary>
         /// 显示确认对话框
@@ -150,6 +150,25 @@ namespace Dt.Base
 
             Kit.Msg("打开窗口失败，窗口类型继承自Win或实现IView接口！");
             return null;
+        }
+
+        /// <summary>
+        /// 根据视图名称激活旧窗口、打开新窗口 或 自定义启动(IView)
+        /// </summary>
+        /// <param name="p_viewName">视图别名</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public override object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
+        {
+            Type tp = Kit.GetViewTypeByAlias(p_viewName);
+            if (tp == null)
+            {
+                Kit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
+                return null;
+            }
+            return OpenWin(tp, p_title, p_icon, p_params);
         }
 
         /// <summary>

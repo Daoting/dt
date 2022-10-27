@@ -27,6 +27,9 @@ namespace Dt.Core
             var svc = new ServiceCollection();
             ConfigureServices(svc);
             SvcProvider = svc.BuildServiceProvider();
+
+            MergeSqliteDbs(_sqliteDbs);
+            MergeTypeAlias(_typeAlias);
         }
 
         /// <summary>
@@ -48,21 +51,7 @@ namespace Dt.Core
         /// <summary>
         /// 初始化完毕，系统启动
         /// </summary>
-        protected abstract Task OnStartup();
-
-        /// <summary>
-        /// 系统注销时的处理
-        /// </summary>
-        protected virtual Task OnLogout() => Task.CompletedTask;
-
-        #region 自动生成
-        /// <summary>
-        /// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
-        /// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_sqliteDbs) { }
-        #endregion
+        protected virtual Task OnStartup() { return Task.CompletedTask; }
 
         #region 内部成员
         /// <summary>
@@ -84,19 +73,52 @@ namespace Dt.Core
         {
             if (!string.IsNullOrEmpty(p_dbName))
             {
-                if (_sqliteDbs == null)
-                {
-                    _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-                    MergeSqliteDbs(_sqliteDbs);
-                }
-
                 if (_sqliteDbs.TryGetValue(p_dbName, out var info))
                     return info;
             }
             return null;
         }
 
-        Dictionary<string, SqliteTblsInfo> _sqliteDbs;
+        /// <summary>
+        /// 根据类型别名获取类型
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回类型</returns>
+        internal Type GetTypeByAlias(Type p_attrType, string p_alias)
+        {
+            if (p_attrType != null && !string.IsNullOrEmpty(p_alias))
+            {
+                // 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
+                var name = p_attrType.Name;
+                var key = $"{name.Substring(0, name.Length - 9)}-{p_alias}";
+                if (_typeAlias.TryGetValue(key, out var tp))
+                    return tp;
+            }
+            return null;
+        }
+
+        readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
+        readonly Dictionary<string, Type> _typeAlias = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+        #endregion
+
+        #region 自动生成
+        // 以下方法内容由 Dt.BuildTools 在编译前自动生成
+
+        /// <summary>
+        /// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
+        /// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
+        /// </summary>
+        /// <param name="p_dict"></param>
+        protected virtual void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_dict) { }
+
+        /// <summary>
+        /// 合并类型别名字典，程序集中所有贴有 TypeAliasAttribute 子标签的类型都会收集到字典，如视图类型、工作流表单类型等
+        /// 先调用 base.MergeTypeAlias，可以覆盖上级的别名相同的项
+        /// 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
+        /// </summary>
+        /// <param name="p_dict"></param>
+        protected virtual void MergeTypeAlias(Dictionary<string, Type> p_dict) { }
         #endregion
     }
 }

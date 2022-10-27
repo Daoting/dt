@@ -13,7 +13,7 @@ using Dt.Core;
 
 namespace Dt.Mgr.Workflow
 {
-    [View("流程设计")]
+    [View(LobViews.流程设计)]
     public partial class WorkflowMgr : Win
     {
         public WorkflowMgr()

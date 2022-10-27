@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml;
 
 namespace Dt.Mgr.Workflow
 {
-    [View("任务")]
+    [View(LobViews.任务)]
     public partial class TasksView : Win
     {
         StartWorkflow _dlgStart;

@@ -10,7 +10,7 @@
 using System;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 文件管理的参数设置

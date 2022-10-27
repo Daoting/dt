@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 跨平台工具集：选择图片、视频、音频文件，拍照、录像、录音
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         #region 选择文件
         /// <summary>

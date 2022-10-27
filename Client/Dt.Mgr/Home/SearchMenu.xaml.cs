@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
@@ -35,7 +33,7 @@ namespace Dt.Mgr.Home
                 if (menu.IsGroup)
                     Forward(new GroupMenu(menu));
                 else
-                    MenuKit.OpenMenu(menu);
+                    Lob.OpenMenu(menu);
             });
         }
 
@@ -49,7 +47,7 @@ namespace Dt.Mgr.Home
             if (string.IsNullOrEmpty(p_filter))
                 _lv.Data = null;
             else
-                _lv.Data = MenuKit.LoadMenusByName(p_filter.ToLower());
+                _lv.Data = Lob.LoadMenusByName(p_filter.ToLower());
         }
 
         void LoadTopBar()

@@ -8,16 +8,10 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.Collections.Generic;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Mgr.File
+namespace Dt.Mgr.Files
 {
     /// <summary>
     /// 选择移动到的目标文件夹

@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Sqlite;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Serilog.Events;
@@ -38,11 +37,11 @@ namespace Dt.Base.Tools
 
             _lv.CellEx = typeof(TraceViewEx);
 
-#if WIN
-            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
-            mi.Click += OnStub;
-            Menu.Items.Insert(1, mi);
-#endif
+//#if WIN
+//            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
+//            mi.Click += OnStub;
+//            Menu.Items.Insert(1, mi);
+//#endif
         }
 
         public static void ShowBox()

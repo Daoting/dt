@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
 #endregion
 
 namespace Dt.Mgr.Home
@@ -25,8 +23,8 @@ namespace Dt.Mgr.Home
         {
             InitializeComponent();
             _parent = p_parent;
-            _tb.Text = MenuKit.GetMenuPath(p_parent);
-            _lv.Data = MenuKit.LoadGroupMenus(p_parent);
+            _tb.Text = Lob.GetMenuPath(p_parent);
+            _lv.Data = Lob.LoadGroupMenus(p_parent);
             Title = _parent.Name;
         }
 
@@ -38,7 +36,7 @@ namespace Dt.Mgr.Home
                 if (menu.IsGroup)
                     Forward(new GroupMenu(menu));
                 else
-                    MenuKit.OpenMenu(menu);
+                    Lob.OpenMenu(menu);
             });
         }
 

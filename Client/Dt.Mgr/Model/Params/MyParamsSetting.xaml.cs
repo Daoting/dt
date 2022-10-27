@@ -18,7 +18,7 @@ namespace Dt.Mgr.Model
     /// <summary>
     /// 分组菜单项页面
     /// </summary>
-    [View("我的设置")]
+    [View(LobViews.我的设置)]
     public sealed partial class MyParamsSetting : UserControl
     {
         public MyParamsSetting()

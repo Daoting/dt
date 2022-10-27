@@ -32,7 +32,7 @@ namespace Dt.BuildTools
 
         class Generator
         {
-            CancellationToken _cancellationToken;
+            GeneratorExecutionContext _context;
             INamedTypeSymbol _tpSqliteAttr;
             INamedTypeSymbol _tpAliasAttr;
             INamedTypeSymbol _tpAttribute;
@@ -44,7 +44,6 @@ namespace Dt.BuildTools
 
             internal void Generate(GeneratorExecutionContext context)
             {
-                Debugger.Launch();
                 try
                 {
                     // 项目csproj文件无 <UseStub>true</UseStub> 不处理
@@ -64,7 +63,8 @@ namespace Dt.BuildTools
                         || _tpIgnore == null)
                         return;
 
-                    _cancellationToken = context.CancellationToken;
+                    Debugger.Launch();
+                    _context = context;
 
                     // 从当前项目过滤所有类型
                     var types = from type in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
@@ -79,7 +79,7 @@ namespace Dt.BuildTools
 
                     foreach (var type in types)
                     {
-                        _cancellationToken.ThrowIfCancellationRequested();
+                        context.CancellationToken.ThrowIfCancellationRequested();
 
                         if (IsStub(type))
                         {
@@ -176,7 +176,17 @@ namespace Dt.BuildTools
                 }
                 else
                 {
-                    alias = args[0].Value.ToString();
+                    if (args[0].Kind == TypedConstantKind.Enum)
+                    {
+                        // 枚举类型，取枚举成员的名称做别名
+                        int index = (int)args[0].Value;
+                        var mems = args[0].Type.GetMembers();
+                        alias = index < mems.Length ? mems[index].Name : type.Name;
+                    }
+                    else
+                    {
+                        alias = args[0].Value.ToString();
+                    }
                 }
 
                 // 键规则：类名去掉尾部的Attribute-别名
@@ -217,7 +227,7 @@ namespace Dt.BuildTools
                     {
                         foreach (var item in _sqliteTypes)
                         {
-                            _cancellationToken.ThrowIfCancellationRequested();
+                            _context.CancellationToken.ThrowIfCancellationRequested();
 
                             using (sb.Block("p_dict.TryAdd(\"{0}\", new SqliteTblsInfo", item.Key))
                             {
@@ -246,7 +256,7 @@ namespace Dt.BuildTools
                     {
                         foreach (var item in _aliasTypes)
                         {
-                            _cancellationToken.ThrowIfCancellationRequested();
+                            _context.CancellationToken.ThrowIfCancellationRequested();
                             sb.AppendLine($"p_dict[\"{item.Key}\"] = typeof({item.Value});");
                         }
                     }

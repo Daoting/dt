@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 提示信息相关
     /// </summary>
-    public abstract partial class DefaultStub : Stub
+    public partial class DefaultStub : Stub
     {
         /// <summary>
         /// 获取提示信息列表

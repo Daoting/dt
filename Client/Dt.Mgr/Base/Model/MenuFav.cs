@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 #endregion
 
 namespace Dt.Mgr
@@ -16,7 +15,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 收藏菜单项
     /// </summary>
-    [Sqlite("state")]
+    [Sqlite("lob")]
     public class MenuFav : Entity
     {
         #region 构造方法

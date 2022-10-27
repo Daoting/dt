@@ -7,17 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr;
 using Dt.Base;
-using Dt.Core;
-using Dt.Core.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace Dt.Mgr.Model
@@ -89,7 +79,7 @@ namespace Dt.Mgr.Model
             {
                 _win.List.Update();
                 UpdateRelated(d);
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 
@@ -115,7 +105,7 @@ namespace Dt.Mgr.Model
             {
                 Clear();
                 _win.List.Update();
-                ModelKit.PromptForUpdateModel();
+                Lob.PromptForUpdateModel();
             }
         }
 
@@ -128,7 +118,7 @@ namespace Dt.Mgr.Model
                 Icon: row.Icon,
                 ViewName: row.ViewName,
                 Params: row.Params);
-            MenuKit.OpenMenu(menu);
+            Lob.OpenMenu(menu);
         }
 
         async void OnLoadTreeGroup(object sender, AsyncEventArgs e)
