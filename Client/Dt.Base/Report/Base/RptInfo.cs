@@ -58,7 +58,7 @@ namespace Dt.Base
         /// <returns></returns>
         public virtual Task<string> ReadTemplate()
         {
-            return Kit.GetRequiredService<ISvc>().GetReportTemplate(Name);
+            return Kit.GetRequiredService<IModelCallback>().GetReportTemplate(Name);
         }
 
         /// <summary>

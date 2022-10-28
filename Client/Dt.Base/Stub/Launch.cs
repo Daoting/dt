@@ -65,11 +65,10 @@ namespace Dt.Base
                 // 系统初始化
                 await Kit.Init();
                 
-                // 初始化提示信息
-                InitNotify();
-
                 // 附加全局按键事件
                 InitInput();
+
+                await InitConfig();
 
                 // 由外部控制启动过程
                 await OnStartup();
@@ -158,6 +157,15 @@ namespace Dt.Base
             // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
             UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
 #endif
+        }
+
+        /// <summary>
+        /// 留给 LobStub 初始化用
+        /// </summary>
+        /// <returns></returns>
+        internal virtual Task InitConfig()
+        {
+            return Task.CompletedTask;
         }
     }
 }

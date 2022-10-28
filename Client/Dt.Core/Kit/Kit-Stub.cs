@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
@@ -20,6 +21,11 @@ namespace Dt.Core
     {
         #region 提示信息
         /// <summary>
+        /// 属性，不缓存对象
+        /// </summary>
+        static INotify _notify => Stub.Inst.SvcProvider.GetRequiredService<INotify>();
+
+        /// <summary>
         /// 发布消息提示
         /// </summary>
         /// <param name="p_content">显示内容</param>
@@ -31,7 +37,7 @@ namespace Dt.Core
         /// </param>
         public static NotifyInfo Msg(string p_content, int p_delaySeconds = 3)
         {
-            return Stub.Inst.Msg(p_content, p_delaySeconds);
+            return _notify.Msg(p_content, p_delaySeconds);
         }
 
         /// <summary>
@@ -46,7 +52,7 @@ namespace Dt.Core
         /// </param>
         public static NotifyInfo Warn(string p_content, int p_delaySeconds = 5)
         {
-            return Stub.Inst.Warn(p_content, p_delaySeconds);
+            return _notify.Warn(p_content, p_delaySeconds);
         }
 
         /// <summary>
@@ -55,7 +61,7 @@ namespace Dt.Core
         /// <param name="p_notify">消息提示实例</param>
         public static void Notify(NotifyInfo p_notify)
         {
-            Stub.Inst.Notify(p_notify);
+            _notify.Notify(p_notify);
         }
 
         /// <summary>
@@ -64,8 +70,13 @@ namespace Dt.Core
         /// <param name="p_notify"></param>
         public static void CloseNotify(NotifyInfo p_notify)
         {
-            Stub.Inst.CloseNotify(p_notify);
+            _notify.CloseNotify(p_notify);
         }
+
+        /// <summary>
+        /// 获取提示信息列表
+        /// </summary>
+        public static IList<NotifyInfo> NotifyList => _notify.NotifyList;
         #endregion
 
         #region 窗口对话框

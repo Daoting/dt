@@ -15,26 +15,26 @@ namespace Dt.Core
     /// <summary>
     /// 日志设置
     /// </summary>
-    public class LogSetting
+    public interface ILogSetting
     {
         /// <summary>
-        /// 是否将日志输出到Console，默认true
+        /// 是否将日志输出到Console
         /// </summary>
-        public bool ConsoleEnabled { get; set; } = true;
+        bool ConsoleEnabled { get; }
 
         /// <summary>
-        /// 是否将日志保存到文件，默认false
+        /// 是否将日志保存到文件
         /// </summary>
-        public bool FileEnabled { get; set; }
+        bool FileEnabled { get; }
 
         /// <summary>
-        /// 是否将日志输出到Trace，默认true
+        /// 是否将日志输出到Trace
         /// </summary>
-        public bool TraceEnabled { get; set; } = true;
+        bool TraceEnabled { get; }
 
         /// <summary>
-        /// 日志输出级别，默认Debug
+        /// 日志输出级别
         /// </summary>
-        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Debug;
+        LogEventLevel LogLevel { get; }
     }
 }

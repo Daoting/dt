@@ -140,7 +140,7 @@ namespace Dt.Base
             Content = null;
             // 保证动画播放完毕
             await Task.Delay(200);
-            Stub.Inst.NotifyList.Remove(_info);
+            Kit.NotifyList.Remove(_info);
 #else
             var trans = (TranslateTransform)RenderTransform;
             Storyboard sb = new Storyboard();
@@ -163,7 +163,7 @@ namespace Dt.Base
             da.EnableDependentAnimation = true;
             sb.Children.Add(da);
             sb.Begin();
-            sb.Completed += (sender, e) => Stub.Inst.NotifyList.Remove(_info);
+            sb.Completed += (sender, e) => Kit.NotifyList.Remove(_info);
             await Task.CompletedTask;
 #endif
         }

@@ -76,7 +76,7 @@ namespace Dt.Base.FormView
             else if (!string.IsNullOrEmpty(_owner.Option))
             {
                 // 基础选项
-                var svc = Kit.GetService<ISvc>();
+                var svc = Kit.GetService<IModelCallback>();
                 if (svc != null)
                     lv.Data = await svc.GetCListOption(_owner.Option);
             }

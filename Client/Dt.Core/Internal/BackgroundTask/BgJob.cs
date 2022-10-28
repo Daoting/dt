@@ -47,13 +47,7 @@ namespace Dt.Core
                 {
                     Type tp = Type.GetType(tpName);
                     if (tp != null)
-                    {
                         stub = Activator.CreateInstance(tp) as Stub;
-
-                        // 前端没运行，完全后台启动，避免涉及UI！
-                        stub.LogSetting.TraceEnabled = false;
-                        Serilogger.Init();
-                    }
                 }
             }
 
@@ -85,7 +79,11 @@ namespace Dt.Core
             }
         }
 
-        static void WriteLog(string p_msg)
+        /// <summary>
+        /// 未启用 Serilogger，使用该方法在 .doc/BgJob.log 记录日志
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public static void WriteLog(string p_msg)
         {
             Debug.WriteLine(p_msg);
 

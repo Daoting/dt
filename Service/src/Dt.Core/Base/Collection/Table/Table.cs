@@ -157,10 +157,10 @@ namespace Dt.Core
                 tbl._columns.Add(new Column(col.Name, col.Type));
             }
 #else
-            var svc = Kit.GetService<ISvc>();
-            if (svc != null)
+            var callback = Kit.GetService<IModelCallback>();
+            if (callback != null)
             {
-                var cols = svc.GetTableColumns(p_tblName.ToLower());
+                var cols = callback.GetTableColumns(p_tblName.ToLower());
                 foreach (var col in cols)
                 {
                     tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));

@@ -83,7 +83,7 @@ namespace Dt.Core
         static TableSchema GetTableSchema(string p_tblName)
         {
             var tblName = p_tblName.ToLower();
-            var cols = Kit.GetRequiredService<ISvc>().GetTableColumns(tblName);
+            var cols = Kit.GetRequiredService<IModelCallback>().GetTableColumns(tblName);
             TableSchema schema = new TableSchema(tblName);
             foreach (var oc in cols)
             {

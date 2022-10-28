@@ -109,7 +109,7 @@ namespace Dt.Mgr.Chat
         static void ShowUnreadNotify(Letter p_letter)
         {
             // 避免过多
-            if (Stub.Inst.NotifyList.Count > 5)
+            if (Kit.NotifyList.Count > 5)
                 return;
 
             var notify = new NotifyInfo();
@@ -120,7 +120,7 @@ namespace Dt.Mgr.Chat
             {
                 Letter l = (Letter)e.Tag;
                 // 关闭所有对方为同一人的提示
-                foreach (var ni in Stub.Inst.NotifyList)
+                foreach (var ni in Kit.NotifyList)
                 {
                     if (ni.Tag is Letter letter && letter.OtherID == l.OtherID)
                         Kit.CloseNotify(ni);

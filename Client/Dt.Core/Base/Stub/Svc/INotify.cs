@@ -15,12 +15,12 @@ namespace Dt.Core
     /// <summary>
     /// 提示信息相关
     /// </summary>
-    public abstract partial class Stub
+    public interface INotify
     {
         /// <summary>
         /// 获取提示信息列表
         /// </summary>
-        public abstract ItemList<NotifyInfo> NotifyList { get; }
+        ItemList<NotifyInfo> NotifyList { get; }
 
         /// <summary>
         /// 发布消息提示
@@ -32,7 +32,7 @@ namespace Dt.Core
         /// <para>0：不自动关闭，但点击关闭</para>
         /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </param>
-        public abstract NotifyInfo Msg(string p_content, int p_delaySeconds);
+        NotifyInfo Msg(string p_content, int p_delaySeconds);
 
         /// <summary>
         /// 警告提示
@@ -44,18 +44,18 @@ namespace Dt.Core
         /// <para>0：不自动关闭，但点击关闭</para>
         /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </param>
-        public abstract NotifyInfo Warn(string p_content, int p_delaySeconds);
+        NotifyInfo Warn(string p_content, int p_delaySeconds);
 
         /// <summary>
         /// 发布消息提示
         /// </summary>
         /// <param name="p_notify">消息提示实例</param>
-        public abstract void Notify(NotifyInfo p_notify);
+        void Notify(NotifyInfo p_notify);
 
         /// <summary>
         /// 关闭消息提示，通常在连接按钮中执行关闭
         /// </summary>
         /// <param name="p_notify"></param>
-        public abstract void CloseNotify(NotifyInfo p_notify);
+        void CloseNotify(NotifyInfo p_notify);
     }
 }

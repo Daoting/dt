@@ -38,7 +38,7 @@ namespace Dt.BuildTools
             INamedTypeSymbol _tpAttribute;
             INamedTypeSymbol _tpIgnore;
             INamedTypeSymbol _baseStub;
-            INamedTypeSymbol _stub;
+            List<INamedTypeSymbol> _stubs;
             Dictionary<string, SqliteDbTbls> _sqliteTypes;
             Dictionary<string, string> _aliasTypes;
 
@@ -47,8 +47,8 @@ namespace Dt.BuildTools
                 try
                 {
                     // 项目csproj文件无 <UseStub>true</UseStub> 不处理
-                    //if (!Kit.IsUseStub(context) || Kit.IsDesignTime(context))
-                    //    return;
+                    if (!Kit.IsUseStub(context) || Kit.IsDesignTime(context))
+                        return;
 
                     _tpSqliteAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.SqliteAttribute");
                     _tpAliasAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.TypeAliasAttribute");
@@ -63,7 +63,7 @@ namespace Dt.BuildTools
                         || _tpIgnore == null)
                         return;
 
-                    Debugger.Launch();
+                    //Debugger.Launch();
                     _context = context;
 
                     // 从当前项目过滤所有类型
@@ -77,14 +77,15 @@ namespace Dt.BuildTools
                     _sqliteTypes = new Dictionary<string, SqliteDbTbls>();
                     _aliasTypes = new Dictionary<string, string>();
 
+                    _stubs = new List<INamedTypeSymbol>();
                     foreach (var type in types)
                     {
                         context.CancellationToken.ThrowIfCancellationRequested();
 
                         if (IsStub(type))
                         {
-                            // 多个存根，取最后一个
-                            _stub = type;
+                            // 支持多个存根
+                            _stubs.Add(type);
                         }
                         else
                         {
@@ -107,7 +108,7 @@ namespace Dt.BuildTools
                     }
 
                     // 无存根，不生成代码
-                    if (_stub != null)
+                    if (_stubs.Count > 0)
                     {
                         context.AddSource("AutoGenerateStub", BuildSource());
                     }
@@ -205,13 +206,16 @@ namespace Dt.BuildTools
                 sb.AppendLine("using System.Linq;");
                 sb.AppendLine("using System.Collections.Generic;");
                 sb.AppendLine("using Dt.Core;");
-                sb.AppendLine();
 
-                using (sb.Block("namespace {0}", _stub.ContainingNamespace))
-                using (sb.Block("public partial class {0}", _stub.Name))
+                foreach (var stub in _stubs)
                 {
-                    BuildSqliteDbs(sb);
-                    BuildTypeAlias(sb);
+                    sb.AppendLine();
+                    using (sb.Block("namespace {0}", stub.ContainingNamespace))
+                    using (sb.Block("public partial class {0}", stub.Name))
+                    {
+                        BuildSqliteDbs(sb);
+                        BuildTypeAlias(sb);
+                    }
                 }
 
                 return sb.ToString();

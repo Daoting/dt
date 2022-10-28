@@ -5,6 +5,7 @@
         <PackageId Condition="'$(Configuration)'=='Release'">Dt.Client</PackageId>
 		<Description>搬运工客户端基础包</Description>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <UseStub>true</UseStub>
 	</PropertyGroup>
 
     <Import Project="..\Targets.props" />
@@ -16,6 +17,7 @@
 		<None Include="..\..\logo.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+            <Visible>false</Visible>
 		</None>
 		<None Include="Chat\WebRTC\WebRTC通信流程.png" />
 	</ItemGroup>

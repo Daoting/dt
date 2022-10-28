@@ -9,6 +9,7 @@
 #region 引用命名
 using Serilog.Formatting.Compact;
 using Windows.Storage;
+using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace Dt.Core
@@ -17,7 +18,7 @@ namespace Dt.Core
     {
         public static void Init()
         {
-            var setting = Stub.Inst.LogSetting;
+            var setting = Stub.Inst.SvcProvider.GetRequiredService<ILogSetting>();
             try
             {
                 var cfg = new LoggerConfiguration();

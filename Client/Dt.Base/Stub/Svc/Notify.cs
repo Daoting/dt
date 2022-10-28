@@ -16,12 +16,17 @@ namespace Dt.Base
     /// <summary>
     /// 提示信息相关
     /// </summary>
-    public partial class DefaultStub : Stub
+    class DefaultNotify : INotify
     {
+        public DefaultNotify()
+        {
+            NotifyList.ItemsChanged += OnNotifyItemsChanged;
+        }
+
         /// <summary>
         /// 获取提示信息列表
         /// </summary>
-        public override ItemList<NotifyInfo> NotifyList { get; } = new ItemList<NotifyInfo>();
+        public ItemList<NotifyInfo> NotifyList { get; } = new ItemList<NotifyInfo>();
 
         /// <summary>
         /// 发布消息提示
@@ -33,7 +38,7 @@ namespace Dt.Base
         /// <para>0：不自动关闭，但点击关闭</para>
         /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </param>
-        public override NotifyInfo Msg(string p_content, int p_delaySeconds)
+        public NotifyInfo Msg(string p_content, int p_delaySeconds)
         {
             if (string.IsNullOrEmpty(p_content))
                 return null;
@@ -56,7 +61,7 @@ namespace Dt.Base
         /// <para>0：不自动关闭，但点击关闭</para>
         /// <para>小于0：始终不关闭，只有程序控制关闭</para>
         /// </param>
-        public override NotifyInfo Warn(string p_content, int p_delaySeconds)
+        public NotifyInfo Warn(string p_content, int p_delaySeconds)
         {
             if (string.IsNullOrEmpty(p_content))
                 return null;
@@ -73,7 +78,7 @@ namespace Dt.Base
         /// 发布消息提示
         /// </summary>
         /// <param name="p_notify">消息提示实例</param>
-        public override void Notify(NotifyInfo p_notify)
+        public void Notify(NotifyInfo p_notify)
         {
             if (p_notify != null && !string.IsNullOrEmpty(p_notify.Message))
                 Kit.RunAsync(() => NotifyList.Add(p_notify));
@@ -83,15 +88,10 @@ namespace Dt.Base
         /// 关闭消息提示，通常在连接按钮中执行关闭
         /// </summary>
         /// <param name="p_notify"></param>
-        public override void CloseNotify(NotifyInfo p_notify)
+        public void CloseNotify(NotifyInfo p_notify)
         {
             if (p_notify != null)
                 Kit.RunAsync(() => NotifyList.Remove(p_notify));
-        }
-
-        void InitNotify()
-        {
-            NotifyList.ItemsChanged += OnNotifyItemsChanged;
         }
 
         void OnNotifyItemsChanged(object sender, ItemListChangedArgs e)

@@ -10,7 +10,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-        <!--<PackageReference Include="Dt.BuildTools" Version="1.0.0" />-->
     </ItemGroup>
 
     <ItemGroup>

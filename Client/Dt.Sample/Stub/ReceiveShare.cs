@@ -11,7 +11,7 @@
 
 namespace Dt.Sample
 {
-    public class ReceiveShare : IReceiveShare
+    class ReceiveShare : IReceiveShare
     {
         /// <summary>
         /// 接收分享内容

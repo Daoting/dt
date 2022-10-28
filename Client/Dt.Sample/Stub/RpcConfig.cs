@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Dt.Sample
 {
-    public class RpcConfig : IRpcConfig
+    class RpcConfig : IRpcConfig
     {
         /// <summary>
         /// 获取服务地址，末尾无/，如：https://10.10.1.16/dt-cm

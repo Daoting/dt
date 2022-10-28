@@ -12,3 +12,12 @@
         //}
     }
 }
+
+
+namespace Dt.Core.Cust
+{
+    public partial class CustomStub : Stub
+    {
+        
+    }
+}

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace Dt.Mgr
 {
-    public class LobRpcConfig : IRpcConfig
+    class LobRpcConfig : IRpcConfig
     {
         #region 成员变量
         bool _isSingletonSvc = true;

@@ -49,7 +49,7 @@ namespace Dt.Sample
 
         void OnPush(object sender, RoutedEventArgs e)
         {
-            SendCmd(Kit.UserID, new MsgInfo { MethodName = "PushApi.Hello", Params = new List<object> { "Hello myself" } });
+            SendCmd(Kit.UserID, new MsgInfo { MethodName = "PushDemoApi.Hello", Params = new List<object> { "Hello myself" } });
         }
 
         /// <summary>

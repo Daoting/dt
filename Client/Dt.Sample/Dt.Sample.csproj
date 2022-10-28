@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Description>样例库(搬运工客户端)</Description>
+        <UseStub>true</UseStub>
 	</PropertyGroup>
 
     <Import Project="..\Targets.props" />
@@ -9,6 +10,7 @@
 	<ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+        <ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
     
 	<ItemGroup>

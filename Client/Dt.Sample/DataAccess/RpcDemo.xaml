@@ -14,7 +14,7 @@
         <a:CBar Title="流模式" />
         <StackPanel Orientation="Horizontal">
             <Button Content="启动ServerStream" Click="OnServerStream" />
-            <Button Content="服务端推送给自己" Click="OnPush" />
+            <Button Content="服务端推送给自己(需标准服务)" Click="OnPush" />
         </StackPanel>
         <a:CFree RowSpan="8" ShowTitle="False">
             <TextBox x:Name="_tbInfo"

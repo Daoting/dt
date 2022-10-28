@@ -14,14 +14,13 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Dt.Sample
 {
     /// <summary>
-    /// 存根
+    /// 未使用标准服务的存根
     /// </summary>
-    public class AppStub : DefaultStub
+    public partial class AppStub : DefaultStub
     {
         public AppStub()
         {
             Title = "搬运工";
-            LogSetting.FileEnabled = true;
         }
 
         /// <summary>
@@ -30,9 +29,11 @@ namespace Dt.Sample
         /// <param name="p_svcs"></param>
         protected override void ConfigureServices(IServiceCollection p_svcs)
         {
+            base.ConfigureServices(p_svcs);
             p_svcs.AddSingleton<IRpcConfig, RpcConfig>();
             p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+            //p_svcs.AddSingleton<ILogSetting, LogSetting>();
             //p_svcs.AddTransient<ITheme, CustomTheme>();
         }
 
@@ -52,27 +53,5 @@ namespace Dt.Sample
 
             ShowRoot(typeof(SamplesMain));
         }
-
-        #region 自动生成
-        // 本地库结构变化后，需通过《 win版app -> 系统日志 -> 存根 》重新生成！
-
-        /// <summary>
-        /// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
-        /// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
-        /// </summary>
-        /// <param name="p_sqliteDbs"></param>
-        protected override void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_sqliteDbs)
-        {
-            base.MergeSqliteDbs(p_sqliteDbs);
-            p_sqliteDbs["local"] = new SqliteTblsInfo
-            {
-                Version = "0a68f7fe86b78452e885c5e7394762ca",
-                Tables = new List<Type>
-                {
-                    typeof(Dt.Sample.LocalDict),
-                }
-            };
-        }
-        #endregion
     }
 }

@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -36,11 +35,6 @@ namespace Dt.Core
         /// 系统标题
         /// </summary>
         public string Title { get; protected set; }
-
-        /// <summary>
-        /// 日志设置，在AppStub构造方法设置有效，默认输出到：Console和trace
-        /// </summary>
-        public LogSetting LogSetting { get; } = new LogSetting();
 
         /// <summary>
         /// 注入全局服务
