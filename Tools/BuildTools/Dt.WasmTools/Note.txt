@@ -1,0 +1,8 @@
+﻿
+1. 功能：
+   向wasm项目添加默认字体文件、字体css、dt.js
+   Release模式生成时处理PWA相关的后续工作
+
+
+2. TypeScript：引用包 Microsoft.TypeScript.MSBuild NuGet 支持 TypeScript，
+TypeScript编译参数在 csproj 文件配置，不使用 tsconfig.json

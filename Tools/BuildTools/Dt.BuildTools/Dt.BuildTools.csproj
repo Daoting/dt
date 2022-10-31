@@ -4,9 +4,6 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>9.0</LangVersion>
 		<NoWarn>NU5128</NoWarn>
-		<!-- 打包时包含pdb文件，用于调试 -->
-		<AllowedOutputExtensionsInPackageBuildOutputFolder Condition="'$(Configuration)'=='Debug'">$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
 		<!-- 将输出目录的内容打包到 analyzers 一份 -->
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<!-- release不输出pdb调试信息 -->
@@ -40,24 +37,12 @@
 	<ItemGroup>
 		<!-- Rolsyn生成代码 -->
 		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.3.409" PrivateAssets="All" />
-		<!-- Brotli压缩 -->
-		<PackageReference Include="BrotliSharpLib" Version="0.3.3" PrivateAssets="All" />
-		<!-- 为项目添加 TypeScript 编译支持，打包时注释掉，否则包内多出js文件 -->
-		<!--<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4" PrivateAssets="All" />-->
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Wasm\Res\service-worker.js" />
-		<Content Include="Wasm\build\**">
+		<Content Include="build\**">
 			<Pack>true</Pack>
 			<PackagePath>build</PackagePath>
-		</Content>
-		<Content Include="$(NuGetPackageRoot)/brotlisharplib/0.3.3/lib/netstandard2.0/*.dll">
-			<Pack>true</Pack>
-			<PackagePath>tools</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<Visible>false</Visible>
 		</Content>
 	</ItemGroup>
 
@@ -65,26 +50,10 @@
 		<ItemGroup>
 			<!-- 将本项目输出目录的所有内容打包，不包括子目录 -->
 			<TfmSpecificPackageFile Include="$(OutputPath)Dt.BuildTools.*" Exclude="$(OutputPath)Dt.BuildTools.deps.json" PackagePath="analyzers\dotnet\cs" />
+			<!-- Dt.WasmTools 压缩br文件用 -->
+			<TfmSpecificPackageFile Include="$(NuGetPackageRoot)/brotlisharplib/0.3.3/lib/netstandard2.0/*.dll" PackagePath="tools" />
+			<!-- 打包 Dt.WasmTools -->
+			<TfmSpecificPackageFile Include="..\Dt.WasmTools\bin\$(Configuration)\netstandard2.0\Dt.WasmTools.*" Exclude="..\Dt.WasmTools\bin\$(Configuration)\netstandard2.0\Dt.WasmTools.deps.json" PackagePath="tools" />
 		</ItemGroup>
 	</Target>
-
-	<!-- TypeScript参数，不使用tsconfig.json -->
-	<PropertyGroup>
-		<!-- 指定编译的ES版本 -->
-		<TypeScriptTarget>ES2020</TypeScriptTarget>
-		<!-- 保存后不立即编译 -->
-		<TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
-		<!-- 不允许隐式的any类型 -->
-		<TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-		<!-- 如果报告了任何类型检查错误，则禁用输出文件 -->
-		<TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-		<!-- 移除注释 -->
-		<TypeScriptRemoveComments>True</TypeScriptRemoveComments>
-		<!-- 合并输出文件 -->
-		<TypeScriptOutFile>Wasm/build/embedded/WasmScripts/dt.js</TypeScriptOutFile>
-		<!-- 不输出map文件 -->
-		<TypeScriptSourceMap>False</TypeScriptSourceMap>
-		<!-- ts文件根目录 -->
-		<TypeScriptInclude>Wasm/TypeScript/**/*</TypeScriptInclude>
-	</PropertyGroup>
 </Project>

@@ -16,7 +16,7 @@ using System.Text;
 using System.Xml.Linq;
 #endregion
 
-namespace Dt.BuildTools
+namespace Dt.WasmTools
 {
     public partial class BuildPWATask : Microsoft.Build.Utilities.Task
     {
@@ -28,7 +28,7 @@ namespace Dt.BuildTools
         {
             try
             {
-                Debugger.Launch();
+                //Debugger.Launch();
 
                 if (!IsValidate())
                     return false;
@@ -112,7 +112,7 @@ namespace Dt.BuildTools
             sb.Append("]");
 
             string js;
-            using (Stream stream = typeof(BuildPWATask).Assembly.GetManifestResourceStream("Dt.BuildTools.Wasm.Res.service-worker.js"))
+            using (Stream stream = typeof(BuildPWATask).Assembly.GetManifestResourceStream("Dt.WasmTools.Res.service-worker.js"))
             using (StreamReader sr = new StreamReader(stream))
             {
                 js = sr.ReadToEnd();

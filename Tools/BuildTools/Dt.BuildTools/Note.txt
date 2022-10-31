@@ -1,11 +1,8 @@
 ﻿
-1. Wasm目录功能：
+1. SourceGenerator 自动生成 Stub 代码，否则在app启动时通过反射构造类型字典影响效率且 AOT 时可能被裁剪
+   与 Dt.WasmTools 分成两个独立项目，原因：BuildPWATask 在wasm项目无法运行，提示缺少 Microsoft.CodeAnalysis 引用
+   分析器dll的名称必须和包名相同，否则无法找到！共同为 Dt.BuildTools
+
+
+2. build 目录：
    向wasm项目添加默认字体文件、字体css、dt.js
-   Release模式生成时处理PWA相关的后续工作
-
-
-2. SourceGenerator 自动生成 Stub 代码，否则在app启动时通过反射构造类型字典影响效率且 AOT 时可能被裁剪
-
-
-3. TypeScript：引用包 Microsoft.TypeScript.MSBuild NuGet 支持 TypeScript，
-TypeScript编译参数在 csproj 文件配置，不使用 tsconfig.json

@@ -7,10 +7,10 @@
 #endregion
 
 #region 引用命名
-
+using Dt.Mgr;
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Sample
 {
     [PushApi]
     public class PushDemoApi

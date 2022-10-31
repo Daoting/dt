@@ -1,13 +1,13 @@
 <Project>
 
-	<UsingTask TaskName="BuildPWATask" AssemblyFile="../tools/Dt.BuildTools.dll" Condition="'$(Configuration)'=='Release'" />
+	<UsingTask TaskName="BuildPWATask" AssemblyFile="../tools/Dt.WasmTools.dll" Condition="'$(Configuration)'=='Release' and '$(UseWasmTools)' == 'true'" />
 	
 	<!-- BuildDist 在 Uno.Wasm.Bootstrap.targets 中定义 -->
-	<Target Name="BuildPWA" AfterTargets="BuildDist" Condition="'$(Configuration)'=='Release'">
+	<Target Name="BuildPWA" AfterTargets="BuildDist" Condition="'$(Configuration)'=='Release' and '$(UseWasmTools)' == 'true'">
 		<BuildPWATask OutDir="$(OutDir)dist" />
 	</Target>
 	
-	<ItemGroup Condition="'$(IsUnoHead)' == 'True' and '$(UnoRuntimeIdentifier)' == 'WebAssembly'">
+	<ItemGroup Condition="'$(UseWasmTools)' == 'true'">
 		<!-- 字体文件为内容，输出到 package_xxx 的对应子目录下 -->
 		<Content Include="$(MSBuildThisFileDirectory)content/**" Visible="False" />
 		<!-- js css文件为嵌入资源，输出到 package_xxx 根目录下，WasmCSS WasmScripts目录名不可修改，uno用到 -->

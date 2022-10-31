@@ -20,7 +20,7 @@
    LinkerConfig.xml 生成包时不参加裁剪的dll列表
    pwa目录是pwa用到的图片，可在 https://www.pwabuilder.com/imageGenerator 生成
 
-5. Dt.WasmTools 功能：
+5. Dt.BuildTools 功能：
    向项目添加默认字体文件、字体css、dt.js
    Release模式生成时处理PWA相关的后续工作
 
