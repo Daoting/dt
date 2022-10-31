@@ -15,6 +15,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ### 变更
 * 将使用标准服务的管理功能全部拆分迁移到Dt.Mgr，Dt.Core Dt.Base与标准服务无任何耦合
 * 增加Dt.BuildTools，自动生成Stub的字典代码
+* sqlite数据查询转异步方法
 
 ## Release 2.8.2 
 ### 功能 

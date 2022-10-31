@@ -32,11 +32,11 @@ namespace Dt.Base.Tools
             _lvDb.Data = SqliteDbs.GetAllDbInfo();
         }
 
-        void OnDbClick(object sender, ItemClickArgs e)
+        async void OnDbClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
             {
-                _lvTbl.Data = GetDb().QueryTblsName();
+                _lvTbl.Data = await GetDb().QueryTblsName();
                 _lvData.Data = null;
             }
             NaviTo("表");
@@ -132,10 +132,10 @@ namespace Dt.Base.Tools
             _ = Kit.ShareFile(dbFile);
         }
 
-        void OnTblClick(object sender, ItemClickArgs e)
+        async void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvData.Data = GetDb().Query($"select * from '{e.Row.Str("name")}'");
+                _lvData.Data = await GetDb().Query($"select * from '{e.Row.Str("name")}'");
             NaviTo("数据");
         }
 

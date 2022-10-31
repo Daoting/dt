@@ -338,7 +338,7 @@ namespace Dt.Mgr
                 return ls;
             }
 
-            return AtLob.FirstCol<long>("select id from UserMenu");
+            return await AtLob.FirstCol<long>("select id from UserMenu");
         }
 
         /// <summary>

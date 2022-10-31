@@ -28,7 +28,7 @@ namespace Dt.Core
         /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public static Table Query(string p_sql, object p_params = null)
+        public static Task<Table> Query(string p_sql, object p_params = null)
         {
             return _db.Query(p_sql, p_params);
         }
@@ -40,7 +40,7 @@ namespace Dt.Core
         /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Table<TEntity> Query<TEntity>(string p_sql, object p_params = null)
+        public static Task<Table<TEntity>> Query<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
             return _db.Query<TEntity>(p_sql, p_params);
@@ -51,7 +51,7 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-        public static Table<TEntity> GetAll<TEntity>()
+        public static Task<Table<TEntity>> GetAll<TEntity>()
             where TEntity : Entity
         {
             return _db.Query<TEntity>($"select * from `{typeof(TEntity).Name}`");
@@ -123,7 +123,7 @@ namespace Dt.Core
         /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
-        public static List<T> FirstCol<T>(string p_sql, object p_params = null)
+        public static Task<List<T>> FirstCol<T>(string p_sql, object p_params = null)
         {
             return _db.GetFirstCol<T>(p_sql, p_params);
         }
@@ -508,7 +508,7 @@ namespace Dt.Core
         /// 获取库中的所有表名
         /// </summary>
         /// <returns></returns>
-        public static Table GetAllTables()
+        public static Task<Table> GetAllTables()
         {
             return _db.QueryTblsName();
         }

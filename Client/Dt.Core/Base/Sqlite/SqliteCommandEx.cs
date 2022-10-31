@@ -43,7 +43,7 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
-        public Table<TEntity> ExecuteQuery<TEntity>()
+        public async Task<Table<TEntity>> ExecuteQuery<TEntity>()
             where TEntity : Entity
         {
             Table<TEntity> tbl = new Table<TEntity>();
@@ -55,7 +55,7 @@ namespace Dt.Core.Sqlite
                 tbl.Add(col.Name, col.ColumnType);
             }
 
-            var reader = ExecuteReader();
+            var reader = await ExecuteReaderAsync();
             if (reader != null && reader.FieldCount > 0)
             {
                 while (reader.Read())
@@ -115,10 +115,10 @@ namespace Dt.Core.Sqlite
         /// 执行查询，返回数据集
         /// </summary>
         /// <returns></returns>
-        public Table ExecuteQuery()
+        public async Task<Table> ExecuteQuery()
         {
             Table tbl = new Table();
-            var reader = ExecuteReader();
+            var reader = await ExecuteReaderAsync();
             if (reader != null && reader.FieldCount > 0)
             {
                 // 列定义
@@ -274,10 +274,10 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> GetFirstCol<T>()
+        public async Task<List<T>> GetFirstCol<T>()
         {
             List<T> ls = new List<T>();
-            var reader = ExecuteReader();
+            var reader = await ExecuteReaderAsync();
             if (reader != null && reader.FieldCount > 0)
             {
                 if (reader.GetFieldType(0) == typeof(T))

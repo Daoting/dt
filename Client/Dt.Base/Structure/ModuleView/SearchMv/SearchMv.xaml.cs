@@ -181,9 +181,9 @@ namespace Dt.Base
         }
 
         #region 搜索历史
-        void LoadHisItems()
+        async void LoadHisItems()
         {
-            _lvHis.Data = AtState.Query<SearchHistory>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
+            _lvHis.Data = await AtState.Query<SearchHistory>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
         }
 
         async void SaveCookie(string p_text)

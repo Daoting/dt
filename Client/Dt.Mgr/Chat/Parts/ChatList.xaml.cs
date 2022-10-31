@@ -34,9 +34,9 @@ namespace Dt.Mgr.Chat
             Unloaded += OnUnloaded;
         }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
+        async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            LoadData();
+            await LoadData();
             LetterManager.StateChanged += OnStateChanged;
         }
 
@@ -48,15 +48,15 @@ namespace Dt.Mgr.Chat
 
         void OnStateChanged(long obj)
         {
-            LoadData();
+            _ = LoadData();
         }
 
         /// <summary>
         /// 每次加载时刷新目录
         /// </summary>
-        void LoadData()
+        async Task LoadData()
         {
-            _lv.Data = AtLob.Query(
+            _lv.Data = await AtLob.Query(
                 "select l.*, \n" +
                 "       m.photo \n" +
                 "from   (select id, \n" +
@@ -93,7 +93,7 @@ namespace Dt.Mgr.Chat
             if (await Kit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
             {
                 AtLob.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={Kit.UserID}");
-                LoadData();
+                await LoadData();
             }
         }
     }

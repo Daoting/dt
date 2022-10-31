@@ -288,7 +288,7 @@ namespace Dt.Base.FormView
             Table data;
             string sql = string.IsNullOrEmpty(p_filter) ? info[1] : $"select * from ({info[1]}) a where {p_filter}";
             if (info[0].ToLower() == "local")
-                data = AtState.Query(sql);
+                data = await AtState.Query(sql);
             else
                 data = await Kit.Rpc<Table>(info[0], "Da.Query", sql, null);
             return data;

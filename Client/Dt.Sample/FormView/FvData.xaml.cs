@@ -37,9 +37,9 @@ namespace Dt.Sample
             }
         }
 
-        void OnQueryLocal(object sender, Mi e)
+        async void OnQueryLocal(object sender, Mi e)
         {
-            var tbl = AtState.Query<ClientCookie>("select * from ClientCookie limit 1");
+            var tbl = await AtState.Query<ClientCookie>("select * from ClientCookie limit 1");
             if (tbl.Count > 0)
                 _fv1.Data = tbl[0];
             else

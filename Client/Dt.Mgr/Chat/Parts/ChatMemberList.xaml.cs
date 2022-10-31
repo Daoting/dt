@@ -38,12 +38,7 @@ namespace Dt.Mgr.Chat
             Loaded -= OnLoaded;
 
             await FriendMemberList.Refresh();
-            LoadLocalList();
-        }
-
-        void LoadLocalList()
-        {
-            _lv.Data = AtLob.Query("select * from chatmember");
+            _lv.Data = await AtLob.Query("select * from chatmember");
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

@@ -26,7 +26,7 @@ namespace Dt.Mgr
         /// 登录后初始化用户信息
         /// </summary>
         /// <param name="p_result"></param>
-        public static void InitUser(LoginResult p_result)
+        public static async void InitUser(LoginResult p_result)
         {
             Kit.UserID = p_result.UserID;
             Kit.UserPhone = p_result.Phone;
@@ -35,7 +35,7 @@ namespace Dt.Mgr
 
             RefreshHeader();
             if (p_result.Contains("Version"))
-                UpdateDataVersion(p_result.Version);
+                await UpdateDataVersion(p_result.Version);
             LoginSuc?.Invoke();
         }
 
@@ -65,12 +65,12 @@ namespace Dt.Mgr
             }
         }
 
-        static void UpdateDataVersion(string p_ver)
+        static async Task UpdateDataVersion(string p_ver)
         {
             if (!string.IsNullOrEmpty(p_ver))
             {
                 var ls = p_ver.Split(',');
-                var tbl = AtLob.Query("select id,ver from DataVersion");
+                var tbl = await AtLob.Query("select id,ver from DataVersion");
                 if (tbl != null && tbl.Count > 0)
                 {
                     foreach (var row in tbl)

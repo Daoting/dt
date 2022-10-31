@@ -47,7 +47,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>Table</returns>
-        public Table Query(string p_sql, object p_params = null)
+        public Task<Table> Query(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -67,7 +67,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql">sql语句</param>
         /// <param name="p_params">参数值列表</param>
         /// <returns>对象列表</returns>
-        public Table<TEntity> Query<TEntity>(string p_sql, object p_params = null)
+        public Task<Table<TEntity>> Query<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
             if (string.IsNullOrEmpty(p_sql))
@@ -129,7 +129,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public List<T> GetFirstCol<T>(string p_sql, object p_params = null)
+        public Task<List<T>> GetFirstCol<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -166,7 +166,7 @@ namespace Dt.Core.Sqlite
         /// 获取库中的所有表名
         /// </summary>
         /// <returns></returns>
-        internal Table QueryTblsName()
+        internal Task<Table> QueryTblsName()
         {
             using (var cmd = CreateCmd())
             {
@@ -713,10 +713,12 @@ namespace Dt.Core.Sqlite
         {
             TableMapping map = GetMapping(p_type);
 
-            // 查询所有列名，原来使用 pragma table_info(tblName)
-            var cols = GetFirstCol<string>($"select name from pragma_table_info('{p_type.Name}')");
-            if (cols.Count > 0)
+            bool exist = GetScalar<int>($"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{p_type.Name}'") > 0;
+            if (exist)
             {
+                // 查询所有列名，原来使用 pragma table_info(tblName)
+                var cols = EachFirstCol<string>($"select name from pragma_table_info('{p_type.Name}')").ToList();
+
                 // 若表存在，判断是否需要增加列
                 var toBeAdded = new List<TableMapping.Column>();
                 foreach (var p in map.Columns)
