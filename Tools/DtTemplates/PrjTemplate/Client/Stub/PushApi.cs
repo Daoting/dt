@@ -6,12 +6,14 @@
 ******************************************************************************/
 #endregion
 
+#region 引用命名
+
+#endregion
+
 namespace $ext_safeprojectname$
 {
-    /// <summary>
-    /// 服务端推送的处理Api
-    /// </summary>
-    public class PushApi : IPushApi
+    [PushApi]
+    public class PushApi
     {
         public void Hello(string p_msg)
         {

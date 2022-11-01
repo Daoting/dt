@@ -1,0 +1,8 @@
+﻿安装
+gacutil /i D:\Dt\Tools\DtTemplates\PrjWizard\bin\Debug\net472\Dt.PrjWizard.dll
+
+卸载
+gacutil /u Dt.PrjWizard
+
+查看PublicKeyToken
+gacutil /l Dt.PrjWizard

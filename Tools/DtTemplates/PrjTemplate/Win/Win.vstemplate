@@ -9,28 +9,28 @@
 	</TemplateData>
 	<TemplateContent>
 		<Project File="Win.csproj" ReplaceParameters="true">
-			<ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package.appxmanifest</ProjectItem>
-			<ProjectItem ReplaceParameters="true" TargetFileName="app.manifest">app.manifest</ProjectItem>
-			<ProjectItem ReplaceParameters="true" TargetFileName="launchSettings.json">Properties\launchSettings.json</ProjectItem>
-			<ProjectItem TargetFileName="win10-arm64.pubxml">Properties\PublishProfiles\win10-arm64.pubxml</ProjectItem>
-			<ProjectItem TargetFileName="win10-x64.pubxml">Properties\PublishProfiles\win10-x64.pubxml</ProjectItem>
-			<ProjectItem TargetFileName="win10-x86.pubxml">Properties\PublishProfiles\win10-x86.pubxml</ProjectItem>
-			<ProjectItem TargetFileName="StoreLogo.png">Assets\StoreLogo.png</ProjectItem>
-			<ProjectItem TargetFileName="SplashScreen.scale-200.png">Assets\SplashScreen.scale-200.png</ProjectItem>
-			<ProjectItem TargetFileName="Square150x150Logo.scale-200.png">Assets\Square150x150Logo.scale-200.png</ProjectItem>
-			<ProjectItem TargetFileName="Square44x44Logo.scale-200.png">Assets\Square44x44Logo.scale-200.png</ProjectItem>
-			<ProjectItem TargetFileName="Square44x44Logo.targetsize-24_altform-unplated.png">Assets\Square44x44Logo.targetsize-24_altform-unplated.png</ProjectItem>
-			<ProjectItem TargetFileName="Wide310x150Logo.scale-200.png">Assets\Wide310x150Logo.scale-200.png</ProjectItem>
-			<ProjectItem TargetFileName="Logo.png">Images\Logo.png</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Package.appxmanifest</ProjectItem>
+			<ProjectItem ReplaceParameters="true">app.manifest</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Properties\launchSettings.json</ProjectItem>
+			<ProjectItem>Properties\PublishProfiles\win10-arm64.pubxml</ProjectItem>
+			<ProjectItem>Properties\PublishProfiles\win10-x64.pubxml</ProjectItem>
+			<ProjectItem>Properties\PublishProfiles\win10-x86.pubxml</ProjectItem>
+			<ProjectItem>Assets\StoreLogo.png</ProjectItem>
+			<ProjectItem>Assets\SplashScreen.scale-200.png</ProjectItem>
+			<ProjectItem>Assets\Square150x150Logo.scale-200.png</ProjectItem>
+			<ProjectItem>Assets\Square44x44Logo.scale-200.png</ProjectItem>
+			<ProjectItem>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</ProjectItem>
+			<ProjectItem>Assets\Wide310x150Logo.scale-200.png</ProjectItem>
+			<ProjectItem>Images\Logo.png</ProjectItem>
 			
-			<ProjectItem TargetFileName="icon.ttf">Assets\Fonts\icon.ttf</ProjectItem>
-			<ProjectItem TargetFileName="uno-fluentui-assets.ttf">Assets\Fonts\uno-fluentui-assets.ttf</ProjectItem>
+			<ProjectItem>Assets\Fonts\icon.ttf</ProjectItem>
+			<ProjectItem>Assets\Fonts\uno-fluentui-assets.ttf</ProjectItem>
 
-			<ProjectItem TargetFileName="App.xaml" ReplaceParameters="true">App.xaml</ProjectItem>
-			<ProjectItem TargetFileName="App.xaml.cs" ReplaceParameters="true">App.xaml.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">App.xaml</ProjectItem>
+			<ProjectItem ReplaceParameters="true">App.xaml.cs</ProjectItem>
 
-			<ProjectItem TargetFileName="WinRT.Host.runtimeconfig.json">WinRT.Host.runtimeconfig.json</ProjectItem>
-			<ProjectItem TargetFileName="Note.txt">Note.txt</ProjectItem>
+			<ProjectItem>WinRT.Host.runtimeconfig.json</ProjectItem>
+			<ProjectItem>Note.txt</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

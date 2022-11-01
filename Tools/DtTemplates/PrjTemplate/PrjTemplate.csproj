@@ -81,7 +81,7 @@
     <None Include="Win\Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
     <None Include="Win\Win.csproj" />
-    <None Include="Client\Stub\AppStub.cs" />
+    <None Include="Client\Stub\Options\AppStub-Lob.cs" />
     <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
@@ -96,10 +96,13 @@
     <None Include="Client\Stub\ReceiveShare.cs" />
     <None Include="Client\Agent\AtSvc.cs" />
     <None Include="Client\Agent\AtLocal.cs" />
-    <None Include="Client\Stub\FixedMenus.cs" />
+    <None Include="Client\Stub\LogSetting.cs" />
     <None Include="Client\Stub\LocalDict.cs" />
     <None Include="Client\Stub\PushApi.cs" />
     <None Include="Client\Stub\CustomTheme.cs" />
+    <None Include="Client\Stub\Options\AppStub-Custom.cs" />
+    <None Include="Client\Stub\Options\AppStub-Single.cs" />
+    <None Include="Client\Stub\RpcConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Win\WinRT.Host.runtimeconfig.json" />
   </ItemGroup>
@@ -189,6 +192,7 @@
     <VSTemplate Include="Wasm\Wasm.vstemplate" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Client\Stub\Readme.txt" />
     <Content Include="Note.txt" />
     <Content Include="Wasm\assets\SplashScreen.png" />
     <Content Include="Wasm\LinkerConfig.xml" />

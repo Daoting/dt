@@ -7,12 +7,12 @@
 #endregion
 
 #region 引用命名
-using System;
+
 #endregion
 
 namespace $ext_safeprojectname$
 {
-    public class ReceiveShare : IReceiveShare
+    class ReceiveShare : IReceiveShare
     {
         /// <summary>
         /// 接收分享内容

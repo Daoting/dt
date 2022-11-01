@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace $ext_safeprojectname$
 {
-    public class CustomTheme : ITheme
+    class CustomTheme : ITheme
     {
         /// <summary>
         /// 获取主题画刷，还需修改各平台的logo和背景图片与主题匹配

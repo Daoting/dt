@@ -9,39 +9,39 @@
 	</TemplateData>
 	<TemplateContent>
 		<Project File="Droid.csproj" ReplaceParameters="true">
-			<ProjectItem ReplaceParameters="true" TargetFileName="MainActivity.cs">MainActivity.cs</ProjectItem>
-			<ProjectItem ReplaceParameters="true" TargetFileName="AndroidManifest.xml">Android\AndroidManifest.xml</ProjectItem>
+			<ProjectItem ReplaceParameters="true">MainActivity.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Android\AndroidManifest.xml</ProjectItem>
 			
-			<ProjectItem TargetFileName="back.png">Android\Resources\drawable\back.png</ProjectItem>
+			<ProjectItem>Android\Resources\drawable\back.png</ProjectItem>
 			
-			<ProjectItem TargetFileName="ic_launcher.xml">Android\Resources\mipmap-anydpi-v26\ic_launcher.xml</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.xml">Android\Resources\mipmap-anydpi-v26\ic_launcher_round.xml</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-anydpi-v26\ic_launcher.xml</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-anydpi-v26\ic_launcher_round.xml</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher.png">Android\Resources\mipmap-hdpi\ic_launcher.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_foreground.png">Android\Resources\mipmap-hdpi\ic_launcher_foreground.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.png">Android\Resources\mipmap-hdpi\ic_launcher_round.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-hdpi\ic_launcher.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-hdpi\ic_launcher_foreground.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-hdpi\ic_launcher_round.png</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher.png">Android\Resources\mipmap-mdpi\ic_launcher.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_foreground.png">Android\Resources\mipmap-mdpi\ic_launcher_foreground.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.png">Android\Resources\mipmap-mdpi\ic_launcher_round.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-mdpi\ic_launcher.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-mdpi\ic_launcher_foreground.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-mdpi\ic_launcher_round.png</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher.png">Android\Resources\mipmap-xhdpi\ic_launcher.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_foreground.png">Android\Resources\mipmap-xhdpi\ic_launcher_foreground.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.png">Android\Resources\mipmap-xhdpi\ic_launcher_round.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xhdpi\ic_launcher.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xhdpi\ic_launcher_foreground.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xhdpi\ic_launcher_round.png</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher.png">Android\Resources\mipmap-xxhdpi\ic_launcher.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_foreground.png">Android\Resources\mipmap-xxhdpi\ic_launcher_foreground.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.png">Android\Resources\mipmap-xxhdpi\ic_launcher_round.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxhdpi\ic_launcher.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxhdpi\ic_launcher_foreground.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxhdpi\ic_launcher_round.png</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher.png">Android\Resources\mipmap-xxxhdpi\ic_launcher.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_foreground.png">Android\Resources\mipmap-xxxhdpi\ic_launcher_foreground.png</ProjectItem>
-			<ProjectItem TargetFileName="ic_launcher_round.png">Android\Resources\mipmap-xxxhdpi\ic_launcher_round.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxxhdpi\ic_launcher.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxxhdpi\ic_launcher_foreground.png</ProjectItem>
+			<ProjectItem>Android\Resources\mipmap-xxxhdpi\ic_launcher_round.png</ProjectItem>
 
-			<ProjectItem TargetFileName="ic_launcher_background.xml">Android\Resources\values\ic_launcher_background.xml</ProjectItem>
-			<ProjectItem TargetFileName="styles.xml">Android\Resources\values\styles.xml</ProjectItem>
-			<ProjectItem TargetFileName="file_paths.xml">Android\Resources\xml\file_paths.xml</ProjectItem>
+			<ProjectItem>Android\Resources\values\ic_launcher_background.xml</ProjectItem>
+			<ProjectItem>Android\Resources\values\styles.xml</ProjectItem>
+			<ProjectItem>Android\Resources\xml\file_paths.xml</ProjectItem>
 
-			<ProjectItem TargetFileName="Note.txt">Android\Note.txt</ProjectItem>
+			<ProjectItem>Android\Note.txt</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

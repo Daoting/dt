@@ -42,4 +42,8 @@
 			</SolutionFolder>
 		</ProjectCollection>
 	</TemplateContent>
+	<WizardExtension>
+		<Assembly>Dt.PrjWizard, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0b2d56b243b80bbe</Assembly>
+		<FullClassName>Dt.PrjWizard.DtWizard</FullClassName>
+	</WizardExtension>
 </VSTemplate>

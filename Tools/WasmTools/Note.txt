@@ -1,3 +1,0 @@
-﻿
-1. TypeScript：引用包 Microsoft.TypeScript.MSBuild NuGet 支持 TypeScript，
-TypeScript编译参数在 csproj 文件配置，不使用 tsconfig.json
