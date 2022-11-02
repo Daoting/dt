@@ -42,7 +42,7 @@ namespace Dt.Mgr.Workflow
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (InputManager.IsCtrlPressed)
+            if (InputKit.IsCtrlPressed)
             {
                 AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Edit));
             }

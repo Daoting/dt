@@ -28,7 +28,7 @@ namespace Dt.Base
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
         /// <returns>true表确认</returns>
-        public override Task<bool> Confirm(string p_content, string p_title)
+        internal override Task<bool> Confirm(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
             if (Kit.IsPhoneUI)
@@ -67,7 +67,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
-        public override void Error(string p_content, string p_title)
+        internal override void Error(string p_content, string p_title)
         {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
             if (Kit.IsPhoneUI)
@@ -101,7 +101,7 @@ namespace Dt.Base
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public override object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params)
+        internal override object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params)
         {
             Throw.IfNull(p_type, "待显示的窗口类型不可为空！");
 
@@ -153,28 +153,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 根据视图名称激活旧窗口、打开新窗口 或 自定义启动(IView)
-        /// </summary>
-        /// <param name="p_viewName">视图别名</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">启动参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public override object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params)
-        {
-            Type tp = Kit.GetViewTypeByAlias(p_viewName);
-            if (tp == null)
-            {
-                Kit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
-                return null;
-            }
-            return OpenWin(tp, p_title, p_icon, p_params);
-        }
-
-        /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        public override void ShowTraceBox()
+        internal override void ShowTraceBox()
         {
             SysTrace.ShowBox();
         }
@@ -184,7 +165,7 @@ namespace Dt.Base
         /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
         /// </summary>
         /// <returns></returns>
-        public override Task OnSuspending()
+        internal override Task OnSuspending()
         {
             // ios在转入后台有180s的处理时间，过后停止所有操作，http连接瞬间自动断开
             // android各版本不同
@@ -205,7 +186,7 @@ namespace Dt.Base
         /// <summary>
         /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
         /// </summary>
-        public override void OnResuming()
+        internal override void OnResuming()
         {
             
         }
@@ -213,7 +194,7 @@ namespace Dt.Base
         /// <summary>
         /// WinUI模式 和 PhoneUI模式切换
         /// </summary>
-        public override void OnUIModeChanged()
+        internal override void OnUIModeChanged()
         {
             // WinUI中已移除 SystemNavigationManager
             //#if WIN

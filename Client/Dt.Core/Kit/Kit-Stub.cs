@@ -119,20 +119,26 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 根据视图名称激活旧窗口或打开新窗口
+        /// 根据视图名称激活旧窗口、打开新窗口 或 自定义启动(IView)
         /// </summary>
-        /// <param name="p_viewName">窗口视图名称</param>
+        /// <param name="p_viewAlias">视图别名</param>
         /// <param name="p_title">标题</param>
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">启动参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
         public static object OpenView(
-            string p_viewName,
+            string p_viewAlias,
             string p_title = null,
             Icons p_icon = Icons.None,
             object p_params = null)
         {
-            return Stub.Inst.OpenView(p_viewName, p_title, p_icon, p_params);
+            Type tp = GetViewTypeByAlias(p_viewAlias);
+            if (tp == null)
+            {
+                Msg(string.Format("【{0}】视图未找到！", p_viewAlias));
+                return null;
+            }
+            return OpenWin(tp, p_title, p_icon, p_params);
         }
 
         /// <summary>
@@ -148,11 +154,11 @@ namespace Dt.Core
         /// <summary>
         /// 根据别名获取视图类型
         /// </summary>
-        /// <param name="p_aliasEnum">别名取枚举成员名称</param>
+        /// <param name="p_enumAlias">别名取枚举成员名称</param>
         /// <returns>返回类型</returns>
-        public static Type GetViewTypeByAlias(Enum p_aliasEnum)
+        public static Type GetViewTypeByAlias(Enum p_enumAlias)
         {
-            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_aliasEnum.ToString());
+            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_enumAlias.ToString());
         }
 
         /// <summary>
@@ -183,6 +189,30 @@ namespace Dt.Core
         public static void ShowRoot(Type p_elementType)
         {
             Stub.Inst.ShowRoot(p_elementType);
+        }
+
+        /// <summary>
+        /// 加载根内容，视图别名对应的视图类型可以为任意类型的 UIElement，特殊类型有：
+        /// <para>Win：PhoneUI模式加载Frame、导航到窗口主页、再导航到自启动窗口主页；Win模式加载桌面、打开窗口、再打开自启动窗口</para>
+        /// <para>Page：加载Frame，导航到页面</para>
+        /// <para>其余可视元素直接加载</para>
+        /// </summary>
+        /// <param name="p_viewAlias">视图别名</param>
+        public static void ShowRoot(string p_viewAlias)
+        {
+            Stub.Inst.ShowRoot(GetViewTypeByAlias(p_viewAlias));
+        }
+
+        /// <summary>
+        /// 加载根内容，视图别名对应的视图类型可以为任意类型的 UIElement，特殊类型有：
+        /// <para>Win：PhoneUI模式加载Frame、导航到窗口主页、再导航到自启动窗口主页；Win模式加载桌面、打开窗口、再打开自启动窗口</para>
+        /// <para>Page：加载Frame，导航到页面</para>
+        /// <para>其余可视元素直接加载</para>
+        /// </summary>
+        /// <param name="p_viewEnumAlias">视图别名</param>
+        public static void ShowRoot(Enum p_viewEnumAlias)
+        {
+            Stub.Inst.ShowRoot(GetViewTypeByAlias(p_viewEnumAlias));
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Mgr;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
@@ -34,7 +35,28 @@ namespace Dt.Sample
 
     //    protected override async Task OnStartup()
     //    {
-    //        await StartRun();
+    //        // 初次运行，显示用户协议和隐私政策对话框
+    //        AtLocal.OpenDb();
+    //        if (AtLocal.GetDict("FirstRun") == "")
+    //        {
+    //            await new PolicyDlg().ShowAsync();
+    //            AtLocal.SaveDict("FirstRun", "0");
+    //        }
+
+    //        // 已登录过先自动登录，未登录或登录失败时显示登录页
+    //        string phone = AtState.GetCookie("LoginPhone");
+    //        string pwd = AtState.GetCookie("LoginPwd");
+    //        if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
+    //        {
+    //            var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
+    //            if (result.IsSuc)
+    //            {
+    //                await Lob.AfterLogin(result);
+    //                Kit.ShowRoot(LobViews.主页);
+    //                return;
+    //            }
+    //        }
+    //        Kit.ShowRoot(LobViews.登录页);
     //    }
 
     //    /// <summary>

@@ -74,7 +74,11 @@ namespace Dt.PrjWizard
                 GetSubPrj(folder, ".Droid")?.Delete();
 
             if (_useSvcType == SvcType.None)
-                GetSubPrj(folder, ".Svc")?.Delete();
+            {
+                var svc = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
+                if (svc != null)
+                    svc.Delete();
+            }
 
             // 设置启动项目
             var prj = GetSubPrj(folder, ".Win");

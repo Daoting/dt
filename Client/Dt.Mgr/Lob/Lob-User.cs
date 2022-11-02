@@ -23,10 +23,10 @@ namespace Dt.Mgr
         public static event Action LoginSuc;
 
         /// <summary>
-        /// 登录后初始化用户信息
+        /// 登录后的初始化处理：用户信息、数据版本、启动接收推送
         /// </summary>
         /// <param name="p_result"></param>
-        public static async void InitUser(LoginResult p_result)
+        public static async Task AfterLogin(LoginResult p_result)
         {
             Kit.UserID = p_result.UserID;
             Kit.UserPhone = p_result.Phone;
@@ -37,6 +37,9 @@ namespace Dt.Mgr
             if (p_result.Contains("Version"))
                 await UpdateDataVersion(p_result.Version);
             LoginSuc?.Invoke();
+
+            // 接收服务器推送
+            _ = Task.Run(() => PushHandler.Register());
         }
 
         /// <summary>
@@ -88,6 +91,32 @@ namespace Dt.Mgr
                 // 所有缓存数据失效
                 AtLob.Exec("delete from DataVersion");
             }
+        }
+        #endregion
+
+        #region 注销
+        /// <summary>
+        /// 注销后事件
+        /// </summary>
+        public static event Action AfterLogout;
+
+        /// <summary>
+        /// 注销后重新登录
+        /// </summary>
+        public static void Logout()
+        {
+            // 先停止接收，再清空用户信息
+            PushHandler.StopRecvPush();
+            // 注销时清空用户信息
+            ResetUser();
+
+            AtState.DeleteCookie("LoginPhone");
+            AtState.DeleteCookie("LoginPwd");
+            AtState.DeleteCookie("LoginID");
+
+            Kit.ShowRoot(LobViews.登录页);
+
+            AfterLogout?.Invoke();
         }
         #endregion
 

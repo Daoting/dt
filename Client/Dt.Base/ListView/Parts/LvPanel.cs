@@ -961,7 +961,7 @@ namespace Dt.Base.ListView
 
                 case VirtualKey.C:
                     // 复制选择行数据
-                    if (InputManager.IsCtrlPressed)
+                    if (InputKit.IsCtrlPressed)
                     {
                         _owner.CopySelection();
                         e.Handled = true;
@@ -969,7 +969,7 @@ namespace Dt.Base.ListView
                     return;
 
                 case VirtualKey.A:
-                    if (InputManager.IsCtrlPressed && _owner.SelectionMode == SelectionMode.Multiple)
+                    if (InputKit.IsCtrlPressed && _owner.SelectionMode == SelectionMode.Multiple)
                     {
                         // 全选
                         _owner.SelectAll();

@@ -140,7 +140,7 @@ namespace Dt.Base
         {
 #if !WIN
             // WinUI中已移除 SystemNavigationManager，删除PhoneUI模式下窗口左上角的后退按钮
-            SystemNavigationManager.GetForCurrentView().BackRequested += InputManager.OnBackRequested;
+            SystemNavigationManager.GetForCurrentView().BackRequested += InputKit.OnBackRequested;
 #else
             // 全局快捷键
             var accelerator = new KeyboardAccelerator()
@@ -163,7 +163,7 @@ namespace Dt.Base
         /// 留给 LobStub 初始化用
         /// </summary>
         /// <returns></returns>
-        internal virtual Task InitConfig()
+        protected virtual Task InitConfig()
         {
             return Task.CompletedTask;
         }

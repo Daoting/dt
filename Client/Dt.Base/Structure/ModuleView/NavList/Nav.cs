@@ -134,7 +134,13 @@ namespace Dt.Base
         public bool Cache { get; set; } = true;
 
         object _obj;
-        internal object GetCenter(object p_params = null)
+
+        /// <summary>
+        /// 获取主区内容
+        /// </summary>
+        /// <param name="p_params"></param>
+        /// <returns></returns>
+        public object GetCenter(object p_params = null)
         {
             if (!Cache)
             {

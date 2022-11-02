@@ -234,7 +234,7 @@ namespace Dt.Mgr.Workflow
                         _prc.Trss.Add(trs);
                     }
                     if (e.Count == 1)
-                        _sketch.SelectionClerk.SelectLine(line);
+                        _sketch.SelectLine(line);
                 }
             }
 

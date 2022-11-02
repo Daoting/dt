@@ -102,6 +102,11 @@ namespace Dt.Core
         public static Grid RootGrid => UITree.RootGrid;
 
         /// <summary>
+        /// 桌面层/页面层的内容元素
+        /// </summary>
+        public static UIElement RootContent => UITree.RootContent;
+
+        /// <summary>
         /// 可视区域宽度
         /// 手机：页面宽度
         /// PC上：除标题栏和外框的窗口内部宽度

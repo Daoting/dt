@@ -226,7 +226,7 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         void RefreshSketch()
         {
-            _sketch.SelectionClerk.Select(_sketch.SelectionClerk.Selection);
+            _sketch.SelectCurrent();
             _sketch.RefreshAllLines();
         }
     }

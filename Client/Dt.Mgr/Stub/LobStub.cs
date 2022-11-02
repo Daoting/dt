@@ -25,11 +25,11 @@ namespace Dt.Mgr
         /// </summary>
         public string SvcUrl
         {
-            get { return (SvcProvider.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrl; }
+            get { return (Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrl; }
             protected set
             {
                 if (!string.IsNullOrWhiteSpace(value))
-                    (SvcProvider.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrl = value.TrimEnd('/');
+                    (Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrl = value.TrimEnd('/');
             }
         }
 
@@ -48,7 +48,7 @@ namespace Dt.Mgr
         /// 连接cm服务，获取全局参数，更新打开模型库
         /// </summary>
         /// <returns></returns>
-        internal override async Task InitConfig()
+        protected sealed override async Task InitConfig()
         {
             AtLob.OpenDb();
 
@@ -101,7 +101,7 @@ namespace Dt.Mgr
                 try
                 {
                     // 下载模型文件，下载地址如 https://localhost/app-cm/.model
-                    using (var response = await BaseRpc.Client.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
+                    using (var response = await Kit.RpcClient.GetAsync($"{Kit.GetSvcUrl("cm")}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                     using (var fs = File.Create(modelFile, 262140, FileOptions.WriteThrough))

@@ -40,17 +40,15 @@ namespace $ext_safeprojectname$
         /// </summary>
         protected override async Task OnStartup()
         {
-			// 打开本地sqlite库
+			// 初次运行，显示用户协议和隐私政策对话框
             AtLocal.OpenDb();
-
-            // 初次运行，显示用户协议和隐私政策对话框
             if (AtLocal.GetDict("FirstRun") == "")
             {
                 await new PolicyDlg().ShowAsync();
                 AtLocal.SaveDict("FirstRun", "0");
             }
 
-            ShowRoot(typeof(typeof(Home));
+            Kit.ShowRoot("主窗");
         }
     }
 }

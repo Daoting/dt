@@ -303,7 +303,7 @@ namespace Dt.Base
             {
                 // 普通内容
                 if (Kit.IsPhoneUI)
-                    InputManager.GoBack();
+                    InputKit.GoBack();
                 return;
             }
 
@@ -312,7 +312,7 @@ namespace Dt.Base
                 // 允许返回
                 if (await mv.BeforeClose())
                 {
-                    InputManager.GoBack();
+                    InputKit.GoBack();
                     mv.AfterClosed();
                 }
             }

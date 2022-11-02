@@ -471,6 +471,20 @@ namespace Dt.Base
             _cmdDelete.Execute(items);
         }
 
+        public void SelectCurrent()
+        {
+            _selectionClerk.Select(_selectionClerk.Selection);
+        }
+
+        /// <summary>
+        /// 选择连线
+        /// </summary>
+        /// <param name="p_line"></param>
+        public void SelectLine(SLine p_line)
+        {
+            _selectionClerk.SelectLine(p_line);
+        }
+
         /// <summary>
         /// 设置节点的位置，此位置未考虑尺子及对齐到网格
         /// </summary>
@@ -499,7 +513,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_pt"></param>
         /// <returns></returns>
-        internal FrameworkElement GetItemByPosition(Point p_pt)
+        public FrameworkElement GetItemByPosition(Point p_pt)
         {
             foreach (object obj in _container.Children)
             {
@@ -676,7 +690,7 @@ namespace Dt.Base
         /// 刷新所有连线
         /// </summary>
         /// <returns></returns>
-        internal void RefreshAllLines()
+        public void RefreshAllLines()
         {
             var lines = from obj in _container.Children
                         let item = obj as SLine

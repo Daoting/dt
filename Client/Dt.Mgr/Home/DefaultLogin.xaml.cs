@@ -98,7 +98,7 @@ namespace Dt.Mgr
                     AtState.SaveCookie("LoginPwd", pwd);
                     AtState.SaveCookie("LoginID", result.UserID.ToString());
 
-                    Lob.InitUser(result);
+                    await Lob.AfterLogin(result);
                     var dlg = this.FindParentByType<Dlg>();
                     if (dlg != null)
                     {
@@ -108,10 +108,8 @@ namespace Dt.Mgr
                     else
                     {
                         // 正常登录后切换到主页
-                        Lob.ShowHome();
+                        Kit.ShowRoot(LobViews.主页);
                     }
-                    // 接收服务器推送
-                    Lob.RegisterSysPush();
                 }
                 catch
                 {

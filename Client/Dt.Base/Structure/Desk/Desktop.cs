@@ -168,7 +168,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win">窗口</param>
         /// <returns>是否激活成功</returns>
-        internal bool ActiveWin(Win p_win)
+        public bool ActiveWin(Win p_win)
         {
             if (Items.Contains(p_win))
             {
@@ -184,7 +184,7 @@ namespace Dt.Base
         /// <param name="p_type">窗口类型</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>激活的窗口</returns>
-        internal Win ActiveWin(Type p_type, object p_params)
+        public Win ActiveWin(Type p_type, object p_params)
         {
             foreach (var win in Items)
             {

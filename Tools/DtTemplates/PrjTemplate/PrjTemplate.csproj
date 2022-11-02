@@ -85,8 +85,8 @@
     <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
-    <None Include="Client\Home.xaml.cs">
-      <DependentUpon>Home.xaml</DependentUpon>
+    <None Include="Client\MainWin.xaml.cs">
+      <DependentUpon>MainWin.xaml</DependentUpon>
     </None>
     <None Include="Droid\MainActivity.cs" />
     <None Include="iOS\Main.cs" />
@@ -174,7 +174,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\Home.xaml">
+    <None Include="Client\MainWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

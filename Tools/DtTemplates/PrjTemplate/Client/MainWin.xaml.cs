@@ -15,11 +15,12 @@ using Microsoft.UI.Xaml.Controls;
 namespace $ext_safeprojectname$
 {
     /// <summary>
-    /// 主页
+    /// 主窗
     /// </summary>
-    public partial class Home : Win
+    [View("主窗")]
+    public partial class MainWin : Win
     {
-        public Home()
+        public MainWin()
         {
             InitializeComponent();
         }

@@ -78,7 +78,7 @@ namespace Dt.Core
         /// 同步服务器时间
         /// </summary>
         /// <param name="p_serverTime"></param>
-        internal static void SyncTime(DateTime p_serverTime)
+        public static void SyncTime(DateTime p_serverTime)
         {
             // 与服务器时差
             _timeSpan = p_serverTime - DateTime.Now;

@@ -112,7 +112,7 @@ namespace Dt.Base.Sketches
             _ptStart = e.GetCurrentPoint(_grid).Position;
             _ptOld = _ptStart;
 
-            if (clerk.IsInSelectionRect(_ptStart) && !InputManager.IsCtrlPressed)
+            if (clerk.IsInSelectionRect(_ptStart) && !InputKit.IsCtrlPressed)
             {
                 // 在多选矩形内部
                 if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
@@ -130,13 +130,13 @@ namespace Dt.Base.Sketches
                 {
                     e.Handled = true;
                     _isDragging = true;
-                    clerk.Select(hit, InputManager.IsCtrlPressed);
+                    clerk.Select(hit, InputKit.IsCtrlPressed);
                     clerk.ShowTipLines();
                     _selectionStart = clerk.GetCurrentPos();
                 }
                 else
                 {
-                    clerk.Select(hit, InputManager.IsCtrlPressed);
+                    clerk.Select(hit, InputKit.IsCtrlPressed);
                 }
             }
             else
@@ -144,7 +144,7 @@ namespace Dt.Base.Sketches
                 // 空白区域
                 _isDragging = false;
                 _rect.Visibility = Visibility.Visible;
-                if (!InputManager.IsCtrlPressed)
+                if (!InputKit.IsCtrlPressed)
                     clerk.Clear();
             }
         }

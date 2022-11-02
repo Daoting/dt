@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 输入管理类
     /// </summary>
-    internal static class InputManager
+    public static class InputKit
     {
         /// <summary>
         /// 按下后退按钮

@@ -17,7 +17,6 @@
 	<Import Project="..\$ext_safeprojectname$.Client\Stub\Common.props" />
 
 	<ItemGroup>
-		<PackageReference Include="Dt.WasmTools" Version="1.3.0" />
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.1" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="3.3.1" />
 		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />

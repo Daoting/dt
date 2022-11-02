@@ -16,7 +16,7 @@ namespace Dt.Core
     /// <summary>
     /// 日志的Trace输出内容
     /// </summary>
-    internal static class TraceLogs
+    public static class TraceLogs
     {
         const int _maxTrace = 30;
         static readonly List<byte[]> _rpcJsons = new List<byte[]>();
@@ -25,13 +25,13 @@ namespace Dt.Core
         /// <summary>
         /// Trace日志列表
         /// </summary>
-        public static readonly Nl<TraceLogItem> Data = new Nl<TraceLogItem>();
+        internal static readonly Nl<TraceLogItem> Data = new Nl<TraceLogItem>();
 
         /// <summary>
         /// 向Trace窗口输出信息
         /// </summary>
         /// <param name="p_logEvent"></param>
-        public static void AddItem(LogEvent p_logEvent)
+        internal static void AddItem(LogEvent p_logEvent)
         {
             var item = new TraceLogItem { Log = p_logEvent };
             Kit.RunAsync(() =>
@@ -51,7 +51,7 @@ namespace Dt.Core
         /// <summary>
         /// 清空输出
         /// </summary>
-        public static void Clear()
+        internal static void Clear()
         {
             Data.Clear();
             _rpcJsons.Clear();
@@ -81,7 +81,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id"></param>
         /// <returns></returns>
-        public static string GetRpcJson(string p_id)
+        internal static string GetRpcJson(string p_id)
         {
             if (!int.TryParse(p_id, out int id))
                 return null;

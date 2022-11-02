@@ -33,16 +33,9 @@ namespace Dt.Mgr
             if (!Kit.IsPhoneUI)
             {
                 // 因p_info.Init耗时，先激活已打开的窗口，Kit.OpenWin中也有判断
-                foreach (var win in Desktop.Inst.Items)
-                {
-                    if (win.GetType() == typeof(WfFormWin)
-                        && win.Params != null
-                        && win.Params.Equals(p_info))
-                    {
-                        Desktop.Inst.ActiveWin(win);
-                        return;
-                    }
-                }
+                Win win = Desktop.Inst.ActiveWin(typeof(WfFormWin), p_info);
+                if (win != null)
+                    return;
             }
 
             await p_info.Init();

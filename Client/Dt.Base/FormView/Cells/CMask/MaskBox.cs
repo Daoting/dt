@@ -737,7 +737,7 @@ namespace Dt.Base
                     handled = true;
                     break;
                 case VirtualKey.A:
-                    if (InputManager.IsCtrlPressed)
+                    if (InputKit.IsCtrlPressed)
                     {
                         _owner.MaskManager.SelectAll();
                         handled = true;
@@ -936,7 +936,7 @@ namespace Dt.Base
         public void CursorLeft()
         {
             PrepareForSelectAll();
-            _masker.CursorLeft(InputManager.IsShiftPressed, false);
+            _masker.CursorLeft(InputKit.IsShiftPressed, false);
             UpdateTextAndValue(_isUpdateRequired);
             ApplyMaskSelection();
         }
@@ -947,7 +947,7 @@ namespace Dt.Base
         public void CursorRight()
         {
             PrepareForSelectAll();
-            _masker.CursorRight(InputManager.IsShiftPressed, false);
+            _masker.CursorRight(InputKit.IsShiftPressed, false);
             UpdateTextAndValue(_isUpdateRequired);
             ApplyMaskSelection();
         }
@@ -958,7 +958,7 @@ namespace Dt.Base
         public void CursorHome()
         {
             PrepareForSelectAll();
-            _masker.CursorHome(InputManager.IsShiftPressed);
+            _masker.CursorHome(InputKit.IsShiftPressed);
             UpdateTextAndValue(_isUpdateRequired);
             ApplyMaskSelection();
         }
@@ -969,7 +969,7 @@ namespace Dt.Base
         public void CursorEnd()
         {
             PrepareForSelectAll();
-            _masker.CursorEnd(InputManager.IsShiftPressed);
+            _masker.CursorEnd(InputKit.IsShiftPressed);
             UpdateTextAndValue(_isUpdateRequired);
             ApplyMaskSelection();
         }

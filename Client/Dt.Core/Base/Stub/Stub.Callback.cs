@@ -28,7 +28,7 @@ namespace Dt.Core
         /// <para>其余可视元素直接加载</para>
         /// </summary>
         /// <param name="p_elementType">类型：Win Page 或 任意可视元素UIElement</param>
-        public abstract void ShowRoot(Type p_elementType);
+        internal abstract void ShowRoot(Type p_elementType);
 
         /// <summary>
         /// 显示确认对话框
@@ -36,14 +36,14 @@ namespace Dt.Core
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
         /// <returns>true表确认</returns>
-        public abstract Task<bool> Confirm(string p_content, string p_title);
+        internal abstract Task<bool> Confirm(string p_content, string p_title);
 
         /// <summary>
         /// 显示错误对话框
         /// </summary>
         /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
-        public abstract void Error(string p_content, string p_title);
+        internal abstract void Error(string p_content, string p_title);
 
         /// <summary>
         /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
@@ -53,87 +53,77 @@ namespace Dt.Core
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public abstract object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params);
-
-        /// <summary>
-        /// 根据视图名称激活旧窗口、打开新窗口 或 自定义启动(IView)
-        /// </summary>
-        /// <param name="p_viewName">视图别名</param>
-        /// <param name="p_title">标题</param>
-        /// <param name="p_icon">图标</param>
-        /// <param name="p_params">启动参数</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public abstract object OpenView(string p_viewName, string p_title, Icons p_icon, object p_params);
+        internal abstract object OpenWin(Type p_type, string p_title, Icons p_icon, object p_params);
 
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        public abstract void ShowTraceBox();
+        internal abstract void ShowTraceBox();
 
         /// <summary>
         /// 挂起时的处理，必须耗时小！
         /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
         /// </summary>
         /// <returns></returns>
-        public abstract Task OnSuspending();
+        internal abstract Task OnSuspending();
 
         /// <summary>
         /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
         /// </summary>
-        public abstract void OnResuming();
+        internal abstract void OnResuming();
 
         /// <summary>
         /// UI模式切换的回调方法，Phone UI 与 PC UI 切换
         /// </summary>
-        public abstract void OnUIModeChanged();
+        internal abstract void OnUIModeChanged();
 
         /// <summary>
         /// 选择单个图片
         /// </summary>
         /// <returns></returns>
-        public abstract Task<FileData> PickImage();
+        internal abstract Task<FileData> PickImage();
 
         /// <summary>
         /// 选择多个图片
         /// </summary>
         /// <returns></returns>
-        public abstract Task<List<FileData>> PickImages();
+        internal abstract Task<List<FileData>> PickImages();
 
         /// <summary>
         /// 选择单个视频
         /// </summary>
         /// <returns></returns>
-        public abstract Task<FileData> PickVideo();
+        internal abstract Task<FileData> PickVideo();
 
         /// <summary>
         /// 选择多个视频
         /// </summary>
         /// <returns></returns>
-        public abstract Task<List<FileData>> PickVideos();
+        internal abstract Task<List<FileData>> PickVideos();
 
         /// <summary>
         /// 选择单个音频文件
         /// </summary>
         /// <returns></returns>
-        public abstract Task<FileData> PickAudio();
+        internal abstract Task<FileData> PickAudio();
 
         /// <summary>
         /// 选择多个音频文件
         /// </summary>
         /// <returns></returns>
-        public abstract Task<List<FileData>> PickAudios();
+        internal abstract Task<List<FileData>> PickAudios();
 
         /// <summary>
         /// 选择单个媒体文件
         /// </summary>
         /// <returns></returns>
-        public abstract Task<FileData> PickMedia();
+        internal abstract Task<FileData> PickMedia();
 
         /// <summary>
         /// 选择多个媒体文件
         /// </summary>
         /// <returns></returns>
-        public abstract Task<List<FileData>> PickMedias();
+        internal abstract Task<List<FileData>> PickMedias();
 
         /// <summary>
         /// 选择单个文件
@@ -144,7 +134,7 @@ namespace Dt.Core
         /// ios文件过滤类型，如 UTType.Image，null时不过滤
         /// </param>
         /// <returns></returns>
-        public abstract Task<FileData> PickFile(string[] p_fileTypes);
+        internal abstract Task<FileData> PickFile(string[] p_fileTypes);
 
         /// <summary>
         /// 选择多个文件
@@ -155,34 +145,34 @@ namespace Dt.Core
         /// ios文件过滤类型，如 UTType.Image，null时不过滤
         /// </param>
         /// <returns></returns>
-        public abstract Task<List<FileData>> PickFiles(string[] p_fileTypes);
+        internal abstract Task<List<FileData>> PickFiles(string[] p_fileTypes);
 
         /// <summary>
         /// 拍照
         /// </summary>
         /// <param name="p_options">选项</param>
         /// <returns>照片文件信息，失败或放弃时返回null</returns>
-        public abstract Task<FileData> TakePhoto(CapturePhotoOptions p_options);
+        internal abstract Task<FileData> TakePhoto(CapturePhotoOptions p_options);
 
         /// <summary>
         /// 录像
         /// </summary>
         /// <param name="p_options">选项</param>
         /// <returns>视频文件信息，失败或放弃时返回null</returns>
-        public abstract Task<FileData> TakeVideo(CaptureVideoOptions p_options);
+        internal abstract Task<FileData> TakeVideo(CaptureVideoOptions p_options);
 
         /// <summary>
         /// 开始录音
         /// </summary>
         /// <param name="p_target">计时对话框居中的目标</param>
         /// <returns>录音文件信息，失败或放弃时返回null</returns>
-        public abstract Task<FileData> TakeAudio(FrameworkElement p_target);
+        internal abstract Task<FileData> TakeAudio(FrameworkElement p_target);
 
         /// <summary>
         /// 加载文件服务的图片，优先加载缓存，支持路径 或 FileList中json格式
         /// </summary>
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
-        public abstract Task LoadImage(string p_path, Image p_img);
+        internal abstract Task LoadImage(string p_path, Image p_img);
     }
 }

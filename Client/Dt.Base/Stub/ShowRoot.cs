@@ -31,7 +31,7 @@ namespace Dt.Base
         /// <para>其余可视元素直接加载</para>
         /// </summary>
         /// <param name="p_elementType">类型：Win Page 或 任意可视元素UIElement</param>
-        public override void ShowRoot(Type p_elementType)
+        internal sealed override void ShowRoot(Type p_elementType)
         {
             if (p_elementType == null)
                 throw new ArgumentNullException(nameof(p_elementType));
@@ -184,7 +184,7 @@ namespace Dt.Base
                         || sv.ScrollableWidth == 0
                         || sv.HorizontalOffset == 0)
                     {
-                        InputManager.GoBack();
+                        InputKit.GoBack();
                     }
                 }
                 return;
@@ -219,7 +219,7 @@ namespace Dt.Base
                 var suc = tabs.SelectPrevious();
                 if (!suc)
                 {
-                    InputManager.GoBack();
+                    InputKit.GoBack();
                 }
             }
         }

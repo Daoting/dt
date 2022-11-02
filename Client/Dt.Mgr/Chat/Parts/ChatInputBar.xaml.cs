@@ -178,18 +178,18 @@ namespace Dt.Mgr.Chat
             DetachPressedEvent();
         }
 
-        PointerEventHandler _pressedHandler;
+        //PointerEventHandler _pressedHandler;
         void AttachPressedEvent()
         {
-            if (_pressedHandler == null)
-                _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
-            // iOS的ScrollViewer无法AddHandler，暂时取内容，bug
-            (Owner.Lv.Scroll.Content as UIElement).AddHandler(PointerPressedEvent, _pressedHandler, true);
+            //if (_pressedHandler == null)
+            //    _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
+            //// iOS的ScrollViewer无法AddHandler，暂时取内容，bug
+            //(Owner.Lv.Scroll.Content as UIElement).AddHandler(PointerPressedEvent, _pressedHandler, true);
         }
 
         void DetachPressedEvent()
         {
-            (Owner.Lv.Scroll.Content as UIElement).RemoveHandler(PointerPressedEvent, _pressedHandler);
+            //(Owner.Lv.Scroll.Content as UIElement).RemoveHandler(PointerPressedEvent, _pressedHandler);
         }
 
         void OnPanelPointerPressed(object sender, PointerRoutedEventArgs e)

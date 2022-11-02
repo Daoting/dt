@@ -26,8 +26,8 @@
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Custom.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Single.cs</ProjectItem>
 			
-			<ProjectItem ReplaceParameters="true">Home.xaml</ProjectItem>
-			<ProjectItem ReplaceParameters="true">Home.xaml.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">MainWin.xaml</ProjectItem>
+			<ProjectItem ReplaceParameters="true">MainWin.xaml.cs</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

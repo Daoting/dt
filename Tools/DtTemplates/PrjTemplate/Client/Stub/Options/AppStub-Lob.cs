@@ -41,16 +41,28 @@ namespace $ext_safeprojectname$
 
         protected override async Task OnStartup()
         {
-            AtLocal.OpenDb();
-
             // 初次运行，显示用户协议和隐私政策对话框
+            AtLocal.OpenDb();
             if (AtLocal.GetDict("FirstRun") == "")
             {
                 await new PolicyDlg().ShowAsync();
                 AtLocal.SaveDict("FirstRun", "0");
             }
 
-            await StartRun();
+            // 已登录过先自动登录，未登录或登录失败时显示登录页
+            string phone = AtState.GetCookie("LoginPhone");
+            string pwd = AtState.GetCookie("LoginPwd");
+            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
+            {
+                var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
+                if (result.IsSuc)
+                {
+                    await Lob.AfterLogin(result);
+                    Kit.ShowRoot(LobViews.主页);
+                    return;
+                }
+            }
+            Kit.ShowRoot(LobViews.登录页);
         }
 
         /// <summary>
@@ -60,6 +72,12 @@ namespace $ext_safeprojectname$
         {
             Lob.FixedMenus = new List<OmMenu>
             {
+                new OmMenu(
+                    ID: 6000,
+                    Name: "主窗",
+                    Icon: "搬运工",
+                    ViewName: "主窗"),
+
                 new OmMenu(
                     ID: 1110,
                     Name: "通讯录",
