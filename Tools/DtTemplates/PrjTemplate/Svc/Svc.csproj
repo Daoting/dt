@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<!-- 调试包源码可引用 Dt.Service.Debug 包 -->
-		<PackageReference Include="Dt.Service" Version="2.8.7" />
+		<PackageReference Include="Dt.Service" Version="3.0.1" />
 	</ItemGroup>
 	
 	<ItemGroup>

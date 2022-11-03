@@ -1,1 +1,1 @@
-﻿Launcher.Run(args, new $ext_safeprojectname$.SvcStub(), true);
+﻿Launcher.Run(args, new $ext_safeprojectname$.SvcStub(), $issingletonsvc$);

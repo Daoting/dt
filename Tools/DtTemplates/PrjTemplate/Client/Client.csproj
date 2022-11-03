@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-windows10.0.19041;net6.0-android;net6.0-ios;net6.0</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows10.0.19041$targetframeworks$</TargetFrameworks>
 		<RootNamespace>$ext_safeprojectname$</RootNamespace>
 		<!-- 使用Dt.BuildTools标志 -->
 		<UseStub>true</UseStub>

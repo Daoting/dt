@@ -18,7 +18,7 @@
 			<ProjectItem ReplaceParameters="true">Stub\LocalDict.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\LogSetting.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\PushApi.cs</ProjectItem>
-			<ProjectItem>Stub\Readme.txt</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Stub\Readme.txt</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\RpcConfig.cs</ProjectItem>
 			
