@@ -33,7 +33,7 @@ namespace Dt.Mgr.Home
                 if (menu.IsGroup)
                     Forward(new GroupMenu(menu));
                 else
-                    Lob.OpenMenu(menu);
+                    LobKit.OpenMenu(menu);
             });
         }
 
@@ -47,7 +47,7 @@ namespace Dt.Mgr.Home
             if (string.IsNullOrEmpty(p_filter))
                 _lv.Data = null;
             else
-                _lv.Data = Lob.LoadMenusByName(p_filter.ToLower());
+                _lv.Data = LobKit.LoadMenusByName(p_filter.ToLower());
         }
 
         void LoadTopBar()

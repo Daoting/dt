@@ -32,7 +32,7 @@ namespace Dt.Mgr.Files
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await Lob.HasPrv("公共文件管理"),
+                AllowEdit = await LobKit.HasPrv("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });

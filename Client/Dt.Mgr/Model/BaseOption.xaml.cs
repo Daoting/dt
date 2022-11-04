@@ -72,7 +72,7 @@ namespace Dt.Mgr.Model
             if (await AtCm.BatchSave(tbl))
             {
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_src.Category });
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
             }
         }
 
@@ -98,7 +98,7 @@ namespace Dt.Mgr.Model
             {
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = op.Category });
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
             }
         }
 
@@ -133,7 +133,7 @@ namespace Dt.Mgr.Model
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_option.Category });
                 _fv.Data = null;
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
             }
         }
     }

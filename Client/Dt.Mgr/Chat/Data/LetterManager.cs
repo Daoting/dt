@@ -119,13 +119,17 @@ namespace Dt.Mgr.Chat
             notify.LinkCallback = (e) =>
             {
                 Letter l = (Letter)e.Tag;
+                Kit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
+                
                 // 关闭所有对方为同一人的提示
+                var list = new List<NotifyInfo>();
                 foreach (var ni in Kit.NotifyList)
                 {
                     if (ni.Tag is Letter letter && letter.OtherID == l.OtherID)
-                        Kit.CloseNotify(ni);
+                        list.Add(ni);
                 }
-                Kit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
+                if (list.Count > 0)
+                    list.ForEach((ni) => Kit.CloseNotify(ni));
             };
 
             switch (p_letter.LetterType)

@@ -98,7 +98,7 @@ namespace Dt.Mgr
                     AtState.SaveCookie("LoginPwd", pwd);
                     AtState.SaveCookie("LoginID", result.UserID.ToString());
 
-                    await Lob.AfterLogin(result);
+                    await LobKit.AfterLogin(result);
                     var dlg = this.FindParentByType<Dlg>();
                     if (dlg != null)
                     {

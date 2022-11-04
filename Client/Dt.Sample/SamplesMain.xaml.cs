@@ -132,6 +132,7 @@ namespace Dt.Sample
                 {
                     new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，需要联网" },
                     new Nav("数据访问与异常", typeof(DataAccessHome)) { Desc = "创建数据对象、序列化、远程/本地数据的增删改查、远程过程调用等，需要联网" },
+                    new Nav("切换到后台管理") { Callback = OpenHomeWin, Desc = "平台提供的默认后台管理，需要联网登录" },
                 };
                 group.Title = "综合";
                 ds.Add(group);
@@ -139,6 +140,11 @@ namespace Dt.Sample
             #endregion
 
             _navModule.Data = ds;
+        }
+
+        void OpenHomeWin(Win p_win, Nav p_nav)
+        {
+            Stub.Reboot<LobAppStub>();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 当前登录用户相关信息
     /// </summary>
-    public partial class Lob
+    public partial class LobKit
     {
         #region 用户信息
         /// <summary>

@@ -23,8 +23,8 @@ namespace Dt.Mgr.Home
         {
             InitializeComponent();
             _parent = p_parent;
-            _tb.Text = Lob.GetMenuPath(p_parent);
-            _lv.Data = Lob.LoadGroupMenus(p_parent);
+            _tb.Text = LobKit.GetMenuPath(p_parent);
+            _lv.Data = LobKit.LoadGroupMenus(p_parent);
             Title = _parent.Name;
         }
 
@@ -36,7 +36,7 @@ namespace Dt.Mgr.Home
                 if (menu.IsGroup)
                     Forward(new GroupMenu(menu));
                 else
-                    Lob.OpenMenu(menu);
+                    LobKit.OpenMenu(menu);
             });
         }
 

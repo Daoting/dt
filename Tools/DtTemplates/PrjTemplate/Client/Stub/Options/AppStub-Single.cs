@@ -38,6 +38,7 @@ namespace $ext_safeprojectname$
         /// <summary>
         /// 初始化完毕，系统启动
         /// </summary>
+        /// <returns></returns>
         protected override async Task OnStartup()
         {
 			// 初次运行，显示用户协议和隐私政策对话框

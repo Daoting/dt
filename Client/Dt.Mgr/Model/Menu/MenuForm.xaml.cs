@@ -79,7 +79,7 @@ namespace Dt.Mgr.Model
             {
                 _win.List.Update();
                 UpdateRelated(d);
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
             }
         }
 
@@ -105,7 +105,7 @@ namespace Dt.Mgr.Model
             {
                 Clear();
                 _win.List.Update();
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
             }
         }
 
@@ -118,7 +118,7 @@ namespace Dt.Mgr.Model
                 Icon: row.Icon,
                 ViewName: row.ViewName,
                 Params: row.Params);
-            Lob.OpenMenu(menu);
+            LobKit.OpenMenu(menu);
         }
 
         async void OnLoadTreeGroup(object sender, AsyncEventArgs e)

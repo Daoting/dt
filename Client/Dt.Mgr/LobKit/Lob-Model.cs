@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 模型管理相关
     /// </summary>
-    public partial class Lob
+    public partial class LobKit
     {
         /// <summary>
         /// 提示需要更新模型

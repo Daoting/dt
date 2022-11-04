@@ -167,5 +167,15 @@ namespace Dt.Base
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Stub新实例启动
+        /// </summary>
+        /// <returns></returns>
+        protected sealed override async Task OnReboot()
+        {
+            await InitConfig();
+            await OnStartup();
+        }
     }
 }

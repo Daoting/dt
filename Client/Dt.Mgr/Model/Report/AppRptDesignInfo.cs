@@ -46,7 +46,7 @@ namespace Dt.Mgr.Model
             }
 
             if (await AtCm.Save(_rpt))
-                Lob.PromptForUpdateModel();
+                LobKit.PromptForUpdateModel();
         }
     }
 }
