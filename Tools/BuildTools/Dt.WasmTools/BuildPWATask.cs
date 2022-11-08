@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -20,6 +21,8 @@ namespace Dt.WasmTools
 {
     public partial class BuildPWATask : Microsoft.Build.Utilities.Task
     {
+        //// 和 Uno.Wasm.Bootstrap 中的 Uno.Wasm.Bootstrap.targets 的默认设置相同
+        //string[] _brTypes = new string[] { ".wasm", ".clr", ".js", ".json", ".css", ".html", ".dat", ".ttf", ".txt" };
         string _pkgDir;
 
         public string OutDir { get; set; }
@@ -90,6 +93,37 @@ namespace Dt.WasmTools
                 DelFile(file);
             }
 
+            foreach (var file in Directory.EnumerateFiles(_pkgDir))
+            {
+                if (file.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".runtime.json", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".runtime.json.br", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".ts", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".rsp", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".c", StringComparison.OrdinalIgnoreCase)
+                    || file.EndsWith(".h", StringComparison.OrdinalIgnoreCase))
+                {
+                    DelFile(file);
+                }
+            }
+
+            DelFile(Path.Combine(_pkgDir, "emcc-props.json"));
+            DelFile(Path.Combine(_pkgDir, "emcc-props.json.br"));
+
+            DelDirectory(Path.Combine(_pkgDir, "obj"));
+
+            //// favicon.ico移到根目录
+            //var ico = Path.Combine(_pkgDir, "pwa", "favicon.ico");
+            //if (File.Exists(ico))
+            //{
+            //    try
+            //    {
+            //        File.Copy(ico, Path.Combine(OutDir, "favicon.ico"));
+            //        File.Delete(ico);
+            //    }
+            //    catch { }
+            //}
+
             // 不可删除，加载嵌入的资源时用到
             //DelFile(Path.Combine(_pkgDir, "uno-assets.txt"));
         }
@@ -99,16 +133,52 @@ namespace Dt.WasmTools
             StringBuilder sb = new StringBuilder();
             sb.Append("[\"./\", \"./service-worker.js\"");
 
-            // .config文件默认被iis拒绝，无法缓存！
+            // 缓存两部分文件：
+            // 1. 已被uno压缩为br的文件，默认有：.wasm .clr .js .json .css .html .dat .ttf .txt
+            // 2. uno-assets.txt包含的Content文件，已被压缩br的不重复记录，重复时PWA缓存失败！！！
+
+            // 已被uno压缩为br的文件
             var ls = from file in Directory.EnumerateFiles(_pkgDir, "*.*", SearchOption.AllDirectories)
-                     where !file.EndsWith(".br", StringComparison.OrdinalIgnoreCase) && !file.EndsWith(".config", StringComparison.OrdinalIgnoreCase)
+                     where file.EndsWith(".br", StringComparison.OrdinalIgnoreCase)
                      select file.Replace(OutDir, ".").Replace("\\", "/");
             foreach (var file in ls)
             {
                 sb.Append(", \"");
-                sb.Append(file);
+                // 小写避免 caches.match 不匹配
+                sb.Append(file.Substring(0, file.Length - 3).ToLower());
                 sb.Append("\"");
             }
+
+            // Content文件
+            string assetsPath = Path.Combine(_pkgDir, "uno-assets.txt");
+            if (File.Exists(assetsPath))
+            {
+                StringBuilder assets = new StringBuilder();
+                using (var fs = File.OpenRead(assetsPath))
+                using (var sr = new StreamReader(fs))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string path = Path.Combine(_pkgDir, line);
+
+                        // 避免重复的行，已压缩的已记录
+                        if (File.Exists(path))
+                        {
+                            assets.AppendLine(line);
+                            if (!File.Exists(path + ".br"))
+                            {
+                                sb.Append(", \"");
+                                // 小写避免 caches.match 不匹配
+                                sb.Append(path.Replace(OutDir, ".").Replace("\\", "/").ToLower());
+                                sb.Append("\"");
+                            }
+                        }
+                    }
+                }
+                File.WriteAllText(assetsPath, assets.ToString());
+            }
+
             sb.Append("]");
 
             string js;
@@ -176,6 +246,16 @@ namespace Dt.WasmTools
                 {
                     File.Delete(p_filePath);
                 }
+            }
+            catch { }
+        }
+
+        void DelDirectory(string p_path)
+        {
+            try
+            {
+                if (Directory.Exists(p_path))
+                    Directory.Delete(p_path, true);
             }
             catch { }
         }

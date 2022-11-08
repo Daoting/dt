@@ -40,8 +40,4 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Res\service-worker.js" />
 	</ItemGroup>
-
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="copy $(OutputPath)Dt.WasmTools.* ..\Dt.BuildTools\WasmTools\ " />
-	</Target>
 </Project>

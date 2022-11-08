@@ -35,6 +35,7 @@
         <!-- 内容文件输出到 package_xxx 的对应子目录下 -->
         <Content Include="assets\**" />
         <Content Include="..\Dt.Shell.Win\Images\*.png" Link="images\%(Filename).png" />
+        <Content Include="..\Dt.Shell.Win\Assets\Lottie\*.json" Link="assets\lottie\%(Filename).json" />
 
         <!-- 嵌入资源文件输出到 package_xxx 根目录下，目录名不可修改，uno用 -->
         <EmbeddedResource Include="WasmCSS\*.css" />
@@ -59,9 +60,9 @@
 
     <!-- PWA相关，只在Release时有效 -->
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <WasmPWAManifestFile>manifest.json</WasmPWAManifestFile>
+        <WasmPWAManifestFile>pwa/manifest.json</WasmPWAManifestFile>
     </PropertyGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
-        <Content Include="pwa\**" />
+        <Content Include="pwa\**" Exclude="pwa\manifest.json" />
     </ItemGroup>
 </Project>

@@ -12,35 +12,24 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-    console.debug('[ServiceWorker] activate事件');
-
-    // 更新立即生效：
+    // 不可删除旧缓存，因以域名管理缓存，二级虚拟目录时造成互相删除！！！
     // skipWaiting -> 触发activate事件 -> claim -> 新Service Worker接管 -> 有旧缓存? -> 删除旧缓存 -> 刷新页面
     event.waitUntil(self.clients.claim().then(() => {
-        return caches.keys().then(keys => {
-            var isUpdate = false;
-            return Promise.all(keys.map(key => {
-                if (key !== '$(CACHE_KEY)') {
-                    isUpdate = true;
-                    return caches.delete(key);
-                }
-            })).then(() => {
-                if (isUpdate) {
-                    console.debug('[ServiceWorker] 删除旧版本缓存，刷新页面');
-                    return self.clients.matchAll().then(clients => {
-                        clients.forEach(client => client.navigate(client.url));
-                    });
-                }
-            });
-        })
+        console.debug('[ServiceWorker] 刷新页面，更新立即生效！');
+        return self.clients.matchAll().then(clients => {
+            clients.forEach(client => client.navigate(client.url));
+        });
     }));
 });
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then(response => {
-            // 本地缓存优先，查不到再请求服务端
-            return response || fetch(event.request);
+        // 旧缓存和当前缓存的根url的键值是相同的，避免错误！
+        caches.open('$(CACHE_KEY)').then(cache => {
+            return cache.match(event.request.url.toLowerCase()).then(response => {
+                // 本地缓存优先，查不到再请求服务端
+                return response || fetch(event.request);
+            });
         })
     );
 });
