@@ -7,9 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.ListView;
-using System;
-using Windows.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -20,10 +17,10 @@ namespace Dt.Base
     /// <summary>
     /// 列表中行模板的占位格
     /// </summary>
-    public partial class Dot : ContentPresenter, ICellUI
+    public partial class Dot : ContentPresenter
     {
+        #region 静态内容
         const double _defaultFontSize = 16;
-        static CellUIConverter _uiConverter = new CellUIConverter();
         public static readonly DependencyProperty UIProperty = DependencyProperty.Register(
             "UI",
             typeof(CellUIType),
@@ -40,7 +37,7 @@ namespace Dt.Base
             "Font",
             typeof(CellFontStyle),
             typeof(Dot),
-            new PropertyMetadata(CellFontStyle.默认, OnFontChanged));
+            new PropertyMetadata(CellFontStyle.默认));
 
         public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(
             "AutoHide",
@@ -48,17 +45,14 @@ namespace Dt.Base
             typeof(Dot),
             new PropertyMetadata(true));
 
-        static void OnFontChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((Dot)d).ApplyFontStyle();
-        }
+        bool _isInit;
+        #endregion
 
         public Dot()
         {
             // 系统默认大小14，uwp初次测量结果偏小
             FontSize = _defaultFontSize;
-            SetBinding(ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = this, Mode = BindingMode.OneTime });
-            Loaded += OnLoaded;
+            DataContextChanged += OnDataContextChanged;
         }
 
         /// <summary>
@@ -104,91 +98,50 @@ namespace Dt.Base
             set { SetValue(AutoHideProperty, value); }
         }
 
-        void ApplyFontStyle()
+        void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
         {
-            switch (Font)
+            if (!_isInit)
             {
-                case CellFontStyle.小灰:
-                    Foreground = Res.深灰2;
-                    FontSize = Res.小字;
-                    break;
+                // OnApplyTemplate 或 Loaded 中绑定在uno上已晚！！
+                // 初次触发 DataContextChanged 在加载 DataTemplate 后，还未在可视树上
+                _isInit = true;
 
-                case CellFontStyle.黑白:
-                    Foreground = Res.WhiteBrush;
-                    Background = Res.BlackBrush;
-                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
-                        Padding = new Thickness(10, 4, 10, 4);
-                    break;
-
-                case CellFontStyle.蓝白:
-                    Foreground = Res.WhiteBrush;
-                    Background = Res.主蓝;
-                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
-                        Padding = new Thickness(10, 4, 10, 4);
-                    break;
-
-                case CellFontStyle.红白:
-                    Foreground = Res.WhiteBrush;
-                    Background = Res.RedBrush;
-                    if (ReadLocalValue(PaddingProperty) == DependencyProperty.UnsetValue)
-                        Padding = new Thickness(10, 4, 10, 4);
-                    break;
-
-                case CellFontStyle.默认:
-                    SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
-                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-                    SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
-                    break;
+                // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
+                if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
+                if (FontSize == _defaultFontSize)
+                    SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
             }
-        }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-
-            switch (Font)
+            ViewItem vi = e.NewValue as ViewItem;
+            var result = vi.GetCellUI(this);
+            if (AutoHide)
             {
-                case CellFontStyle.默认:
-                    {
-                        // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
-                        if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
-                        if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
-                        if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-                        if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-                        if (FontSize == _defaultFontSize)
-                            SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
-                    }
-                    break;
-
-                case CellFontStyle.小灰:
-                    {
-                        if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
-                        if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-                        if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-                    }
-                    break;
-
-                case CellFontStyle.黑白:
-                case CellFontStyle.蓝白:
-                case CellFontStyle.红白:
-                    {
-                        if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-                        if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                            SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-                        if (FontSize == _defaultFontSize)
-                            SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
-                    }
-                    break;
-
+                if (result == null)
+                {
+                    // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
+                    // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
+                    if (Visibility == Visibility.Visible)
+                        Visibility = Visibility.Collapsed;
+                }
+                else if (Visibility == Visibility.Collapsed)
+                {
+                    // 数据变化时重新可见
+                    Visibility = Visibility.Visible;
+                }
             }
+            else if (result == null)
+            {
+                // 为占位用
+                result = new TextBlock();
+            }
+            Content = result;
         }
     }
 }

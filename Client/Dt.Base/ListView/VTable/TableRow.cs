@@ -125,10 +125,10 @@ namespace Dt.Base.ListView
             Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
             foreach (var col in cols)
             {
-                ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-                SetContentBinding(col, pre);
-                Children.Add(pre);
-                _cells[col.ID] = pre;
+                Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                CopyColToDot(col, dot);
+                Children.Add(dot);
+                _cells[col.ID] = dot;
             }
 
             // 行头

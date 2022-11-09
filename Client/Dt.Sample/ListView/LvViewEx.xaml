@@ -64,7 +64,7 @@
                         <a:Col ID="xb" Title="性别" Width="50" />
                         <a:Col ID="hunfou" Title="婚否" Width="50" />
                         <a:Col ID="line" Title="身高曲线" Width="150" />
-                        <a:Col ID="bumen" Title="所属部门" Width="160" />
+                        <a:Col ID="bumen" Title="所属部门" Width="160" Background="Black" Foreground="White" />
                         <a:Col ID="shengao" Title="身高" Width="150" />
                     </a:Cols>
                 </a:Lv>
@@ -87,13 +87,19 @@
                         <Button Content="删除分组" Click="OnDelGroup" />
                     </StackPanel>
                     <a:CBar Title="说明" />
-                    <a:CBar RowSpan="3">
-                        <StackPanel Margin="10">
-                            <TextBlock Text="9月份出生的为浅黄；" />
-                            <TextBlock Text="身高1.75以上行字体红色；" />
-                            <TextBlock Text="循环门诊的粗体，内分泌门诊斜体；" />
-                            <TextBlock Text="性别头像，身高曲线；" />
-                        </StackPanel>
+                    <a:CBar RowSpan="8">
+                        <TextBlock Margin="10">
+                            <LineBreak />
+                            <Run Text="行样式：" /><LineBreak />
+                            <Run Text="9月份出生的为浅黄底色；" /><LineBreak />
+                            <Run Text="身高1.75以上行字体红色；" /><LineBreak />
+                            <Run Text="循环门诊的粗体；" /><LineBreak />
+                            <Run Text="内分泌门诊斜体；" /><LineBreak /><LineBreak />
+                            <Run Text="格样式：" /><LineBreak />
+                            <Run Text="性别头像；" /><LineBreak />
+                            <Run Text="身高曲线；" /><LineBreak />
+                            <Run Text="所属部门黑底白字；" />
+                        </TextBlock>
                     </a:CBar>
                 </a:Fv>
             </a:Tab>

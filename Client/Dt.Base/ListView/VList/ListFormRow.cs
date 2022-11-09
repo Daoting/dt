@@ -153,10 +153,10 @@ namespace Dt.Base.ListView
                 grid.Children.Add(tb);
 
                 // 内容
-                ContentPresenter pre = new ContentPresenter { Padding = TableRow.TextMargin, BorderBrush = Res.浅灰2, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-                SetContentBinding(col, pre);
-                Grid.SetColumn(pre, 1);
-                grid.Children.Add(pre);
+                Dot dot = new Dot { Padding = TableRow.TextMargin, BorderBrush = Res.浅灰2, BorderThickness = bdThickness, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+                CopyColToDot(col, dot);
+                Grid.SetColumn(dot, 1);
+                grid.Children.Add(dot);
 
                 root.Children.Add(grid);
             }

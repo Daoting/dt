@@ -26,7 +26,6 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class LvRow : Panel
     {
-        static CellUIConverter _uiConverter = new CellUIConverter();
         protected const double _flagWidth = 40;
 
         protected Lv _owner;
@@ -70,39 +69,38 @@ namespace Dt.Base.ListView
         }
 
         /// <summary>
-        /// 绑定单元格，数据源为ViewItem
+        /// Col属性复制到Dot
         /// </summary>
         /// <param name="p_col"></param>
-        /// <param name="p_pre"></param>
-        protected void SetContentBinding(Col p_col, ContentPresenter p_pre)
+        /// <param name="p_dot"></param>
+        protected void CopyColToDot(Col p_col, Dot p_dot)
         {
-            p_pre.SetBinding(ContentPresenter.ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = p_col, Mode = BindingMode.OneTime });
+            p_dot.ID = p_col.ID;
 
-            // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
-            if (p_col.ReadLocalValue(Col.ForegroundProperty) == DependencyProperty.UnsetValue)
-                p_pre.SetBinding(ContentPresenter.ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
-            else
-                p_pre.Foreground = p_col.Foreground;
+            // 将Col中的已设置属性值复制到Dot
+            if (p_col.ReadLocalValue(Col.UIProperty) != DependencyProperty.UnsetValue)
+                p_dot.UI = p_col.UI;
+            
+            if (p_col.ReadLocalValue(Col.FormatProperty) != DependencyProperty.UnsetValue)
+                p_dot.Format = p_col.Format;
 
-            if (p_col.ReadLocalValue(Col.BackgroundProperty) == DependencyProperty.UnsetValue)
-                p_pre.SetBinding(ContentPresenter.BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
-            else
-                p_pre.Background = p_col.Background;
+            if (p_col.ReadLocalValue(Col.ForegroundProperty) != DependencyProperty.UnsetValue)
+                p_dot.Foreground = p_col.Foreground;
 
-            if (p_col.ReadLocalValue(Col.FontWeightProperty) == DependencyProperty.UnsetValue)
-                p_pre.SetBinding(ContentPresenter.FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-            else
-                p_pre.FontWeight = p_col.FontWeight;
+            if (p_col.ReadLocalValue(Col.BackgroundProperty) != DependencyProperty.UnsetValue)
+                p_dot.Background = p_col.Background;
 
-            if (p_col.ReadLocalValue(Col.FontStyleProperty) == DependencyProperty.UnsetValue)
-                p_pre.SetBinding(ContentPresenter.FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-            else
-                p_pre.FontStyle = p_col.FontStyle;
+            if (p_col.ReadLocalValue(Col.FontWeightProperty) != DependencyProperty.UnsetValue)
+                p_dot.FontWeight = p_col.FontWeight;
 
-            if (p_col.ReadLocalValue(Col.FontSizeProperty) == DependencyProperty.UnsetValue)
-                p_pre.SetBinding(ContentPresenter.FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
-            else
-                p_pre.FontSize = p_col.FontSize;
+            if (p_col.ReadLocalValue(Col.FontStyleProperty) != DependencyProperty.UnsetValue)
+                p_dot.FontStyle = p_col.FontStyle;
+
+            if (p_col.ReadLocalValue(Col.FontSizeProperty) != DependencyProperty.UnsetValue)
+                p_dot.FontSize = p_col.FontSize;
+
+            // 内容为空时不自动隐藏，因其负责画右下边线！
+            p_dot.AutoHide = false;
         }
 
         /// <summary>

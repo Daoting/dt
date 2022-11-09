@@ -198,18 +198,18 @@ namespace Dt.Base
         /// <summary>
         /// 获取单元格界面元素，提供给单元格容器ContentPresenter或Dot绑定用
         /// </summary>
-        /// <param name="p_cell"></param>
+        /// <param name="p_dot"></param>
         /// <returns></returns>
-        internal object GetCellUI(ICellUI p_cell)
+        internal object GetCellUI(Dot p_dot)
         {
             object elem;
 
             // 从缓存取
-            if (GetCacheUI(p_cell.ID, out elem))
+            if (GetCacheUI(p_dot.ID, out elem))
                 return elem;
 
             object val;
-            MethodInfo mi = Host.GetViewExMethod(p_cell.ID);
+            MethodInfo mi = Host.GetViewExMethod(p_dot.ID);
             if (mi != null)
             {
                 // 从外部扩展方法中获取
@@ -223,15 +223,15 @@ namespace Dt.Base
                         elem = new TextBlock { Style = Res.LvTextBlock, Text = obj.ToString(), };
                 }
             }
-            else if (p_cell.UI == CellUIType.Default)
+            else if (p_dot.UI == CellUIType.Default)
             {
                 // 默认方式：根据数据类型生成可视元素
-                if (_data is Row dr && dr.Contains(p_cell.ID))
+                if (_data is Row dr && dr.Contains(p_dot.ID))
                 {
                     // 从Row取
-                    elem = CreateCellUI(dr.Cells[p_cell.ID], p_cell);
+                    elem = CreateCellUI(dr.Cells[p_dot.ID], p_dot);
                 }
-                else if (p_cell.ID == "#")
+                else if (p_dot.ID == "#")
                 {
                     // # 直接输出对象
                     elem = CreateObjectUI(_data);
@@ -239,15 +239,15 @@ namespace Dt.Base
                 else
                 {
                     // 输出对象属性
-                    var pi = _data.GetType().GetProperty(p_cell.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    var pi = _data.GetType().GetProperty(p_dot.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (pi != null && (val = pi.GetValue(_data)) != null)
-                        elem = CreatePropertyUI(pi, val, p_cell);
+                        elem = CreatePropertyUI(pi, val, p_dot);
                 }
             }
-            else if ((val = this[p_cell.ID]) != null)
+            else if ((val = this[p_dot.ID]) != null)
             {
                 // 自定义方式：按设置的内容类型生成可视元素
-                switch (p_cell.UI)
+                switch (p_dot.UI)
                 {
                     case CellUIType.Icon:
                         elem = CreateIcon(val);
@@ -262,7 +262,7 @@ namespace Dt.Base
                         elem = CreateFileLink(val);
                         break;
                     case CellUIType.Enum:
-                        elem = CreateEnumText(val, p_cell);
+                        elem = CreateEnumText(val, p_dot);
                         break;
                     case CellUIType.AutoDate:
                         elem = CreateAutoDate(val);
@@ -273,7 +273,7 @@ namespace Dt.Base
                 }
             }
 
-            AddCacheUI(p_cell.ID, elem);
+            AddCacheUI(p_dot.ID, elem);
             return elem;
         }
 
@@ -282,9 +282,9 @@ namespace Dt.Base
         /// 根据Cell创建UI
         /// </summary>
         /// <param name="p_dc"></param>
-        /// <param name="p_cellUI"></param>
+        /// <param name="p_dot"></param>
         /// <returns></returns>
-        static UIElement CreateCellUI(Cell p_dc, ICellUI p_cellUI)
+        static UIElement CreateCellUI(Cell p_dc, Dot p_dot)
         {
             if (p_dc.Type == typeof(string))
             {
@@ -322,7 +322,7 @@ namespace Dt.Base
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = p_dc.GetVal<double>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
+                    Text = p_dc.GetVal<double>().ToString(string.IsNullOrEmpty(p_dot.Format) ? "n2" : p_dot.Format),
                     TextAlignment = TextAlignment.Right,
                 };
             }
@@ -344,7 +344,7 @@ namespace Dt.Base
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = p_dc.GetVal<DateTime>().ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
+                    Text = p_dc.GetVal<DateTime>().ToString(string.IsNullOrEmpty(p_dot.Format) ? "yyyy-MM-dd" : p_dot.Format),
                 };
             }
 
@@ -398,9 +398,9 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_pi"></param>
         /// <param name="p_val"></param>
-        /// <param name="p_cellUI"></param>
+        /// <param name="p_dot"></param>
         /// <returns></returns>
-        static UIElement CreatePropertyUI(PropertyInfo p_pi, object p_val, ICellUI p_cellUI)
+        static UIElement CreatePropertyUI(PropertyInfo p_pi, object p_val, Dot p_dot)
         {
             if (p_pi.PropertyType == typeof(string))
             {
@@ -438,7 +438,7 @@ namespace Dt.Base
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = ((double)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "n2" : p_cellUI.Format),
+                    Text = ((double)p_val).ToString(string.IsNullOrEmpty(p_dot.Format) ? "n2" : p_dot.Format),
                     TextAlignment = TextAlignment.Right,
                 };
             }
@@ -460,7 +460,7 @@ namespace Dt.Base
                 return new TextBlock
                 {
                     Style = Res.LvTextBlock,
-                    Text = ((DateTime)p_val).ToString(string.IsNullOrEmpty(p_cellUI.Format) ? "yyyy-MM-dd" : p_cellUI.Format),
+                    Text = ((DateTime)p_val).ToString(string.IsNullOrEmpty(p_dot.Format) ? "yyyy-MM-dd" : p_dot.Format),
                 };
             }
 
@@ -615,9 +615,9 @@ namespace Dt.Base
             return tb;
         }
 
-        TextBlock CreateEnumText(object p_val, ICellUI p_cellUI)
+        TextBlock CreateEnumText(object p_val, Dot p_dot)
         {
-            string tpName = p_cellUI.Format;
+            string tpName = p_dot.Format;
             if (string.IsNullOrEmpty(tpName))
                 return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
 
