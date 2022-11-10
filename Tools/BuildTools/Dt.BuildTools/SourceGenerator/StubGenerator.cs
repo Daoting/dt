@@ -40,7 +40,7 @@ namespace Dt.BuildTools
             INamedTypeSymbol _baseStub;
             List<INamedTypeSymbol> _stubs;
             Dictionary<string, SqliteDbTbls> _sqliteTypes;
-            Dictionary<string, string> _aliasTypes;
+            Dictionary<string, List<string>> _aliasTypes;
 
             internal void Generate(GeneratorExecutionContext context)
             {
@@ -70,12 +70,11 @@ namespace Dt.BuildTools
                     var types = from type in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
                                 where !type.IsAbstract
                                     && !type.IsGenericType
-                                    && !type.IsStatic
                                     && type.DeclaredAccessibility == Accessibility.Public
                                 select type;
 
                     _sqliteTypes = new Dictionary<string, SqliteDbTbls>();
-                    _aliasTypes = new Dictionary<string, string>();
+                    _aliasTypes = new Dictionary<string, List<string>>();
 
                     _stubs = new List<INamedTypeSymbol>();
                     foreach (var type in types)
@@ -192,7 +191,20 @@ namespace Dt.BuildTools
 
                 // 键规则：类名去掉尾部的Attribute-别名
                 var name = attr.AttributeClass.Name;
-                _aliasTypes[$"{name.Substring(0, name.Length - 9)}-{alias}"] = type.ToString();
+                var key = $"{name.Substring(0, name.Length - 9)}-{alias}";
+
+                List<string> ls;
+                if (!_aliasTypes.TryGetValue(key, out ls))
+                {
+                    ls = new List<string>();
+                    ls.Add(type.ToString());
+                    _aliasTypes[key] = ls;
+                }
+                else
+                {
+                    // 插入头部
+                    ls.Insert(0, type.ToString());
+                }
             }
 
             string BuildSource()
@@ -253,7 +265,7 @@ namespace Dt.BuildTools
 
             void BuildTypeAlias(IndentedStringBuilder sb)
             {
-                using (sb.Block("protected override void MergeTypeAlias(Dictionary<string, Type> p_dict)"))
+                using (sb.Block("protected override void MergeTypeAlias(Dictionary<string, List<Type>> p_dict)"))
                 {
                     sb.AppendLine("base.MergeTypeAlias(p_dict);");
                     if (_aliasTypes.Count > 0)
@@ -261,7 +273,10 @@ namespace Dt.BuildTools
                         foreach (var item in _aliasTypes)
                         {
                             _context.CancellationToken.ThrowIfCancellationRequested();
-                            sb.AppendLine($"p_dict[\"{item.Key}\"] = typeof({item.Value});");
+                            foreach (var tp in item.Value)
+                            {
+                                sb.AppendLine($"DoMergeTypeAlias(p_dict, \"{item.Key}\", typeof({tp}));");
+                            }
                         }
                     }
                 }
