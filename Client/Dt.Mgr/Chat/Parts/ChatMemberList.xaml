@@ -19,7 +19,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="photo" UI="Image" Width="50" Height="50" Margin="0,0,10,0" />
+                <a:Dot ID="photo" Call="Def.Image" Width="50" Height="50" Margin="0,0,10,0" />
                 <a:Dot ID="name" Grid.Column="1" />
             </Grid>
         </DataTemplate>

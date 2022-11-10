@@ -79,21 +79,21 @@ namespace Dt.Core
         /// <param name="p_attrType">标签类型</param>
         /// <param name="p_alias">别名</param>
         /// <returns>返回类型</returns>
-        internal Type GetTypeByAlias(Type p_attrType, string p_alias)
+        internal List<Type> GetTypesByAlias(Type p_attrType, string p_alias)
         {
             if (p_attrType != null && !string.IsNullOrEmpty(p_alias))
             {
                 // 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
                 var name = p_attrType.Name;
                 var key = $"{name.Substring(0, name.Length - 9)}-{p_alias}";
-                if (_typeAlias.TryGetValue(key, out var tp))
-                    return tp;
+                if (_typeAlias.TryGetValue(key, out var ls))
+                    return ls;
             }
-            return null;
+            return new List<Type>();
         }
 
         readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-        readonly Dictionary<string, Type> _typeAlias = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+        readonly Dictionary<string, List<Type>> _typeAlias = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         #region 自动生成
@@ -108,11 +108,33 @@ namespace Dt.Core
 
         /// <summary>
         /// 合并类型别名字典，程序集中所有贴有 TypeAliasAttribute 子标签的类型都会收集到字典，如视图类型、工作流表单类型等
-        /// 先调用 base.MergeTypeAlias，可以覆盖上级的别名相同的项
+        /// 先调用 base.MergeTypeAlias，后添加的别名相同的项放在列表的头部
         /// 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
         /// </summary>
         /// <param name="p_dict"></param>
-        protected virtual void MergeTypeAlias(Dictionary<string, Type> p_dict) { }
+        protected virtual void MergeTypeAlias(Dictionary<string, List<Type>> p_dict) { }
+
+        /// <summary>
+        /// 合并新类型，若存在相同别名的列表则插入头部，不存在则创建新列表
+        /// </summary>
+        /// <param name="p_dict"></param>
+        /// <param name="p_key"></param>
+        /// <param name="p_type"></param>
+        protected void DoMergeTypeAlias(Dictionary<string, List<Type>> p_dict, string p_key, Type p_type)
+        {
+            List<Type> ls;
+            if (!p_dict.TryGetValue(p_key, out ls))
+            {
+                ls = new List<Type>();
+                ls.Add(p_type);
+                p_dict[p_key] = ls;
+            }
+            else
+            {
+                // 插入头部
+                ls.Insert(0, p_type);
+            }
+        }
         #endregion
     }
 }

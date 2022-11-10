@@ -209,16 +209,13 @@ namespace Dt.Mgr
                 return null;
             }
 
-            Type tp = Kit.GetTypeByAlias(typeof(PushApiAttribute), arr[0]);
-            if (tp != null)
+            mi = Kit.GetMethodByAlias(typeof(PushApiAttribute), arr[0], arr[1], BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (mi != null)
             {
-                mi = tp.GetMethod(arr[1], BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (mi != null)
-                {
-                    _methods[p_method] = mi;
-                    return mi;
-                }
+                _methods[p_method] = mi;
+                return mi;
             }
+            Log.Warning("未找到推送处理方法：" + p_method);
             return null;
         }
     }

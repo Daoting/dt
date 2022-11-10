@@ -26,7 +26,7 @@
         </a:Ex.Menu>
         <DataTemplate>
             <StackPanel Padding="10,0,10,10">
-                <a:Dot ID="Title" />
+                <a:Dot ID="Title" Call="SysTraceCellUI.FormatTitle" />
                 <a:Dot ID="Message" Foreground="White" />
             </StackPanel>
         </DataTemplate>

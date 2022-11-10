@@ -23,12 +23,5 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_item">视图项</param>
         void SetItemStyle(ViewItem p_item);
-
-        /// <summary>
-        /// 获取外部定义的视图扩展方法
-        /// </summary>
-        /// <param name="p_colName">列名</param>
-        /// <returns></returns>
-        MethodInfo GetViewExMethod(string p_colName);
     }
 }

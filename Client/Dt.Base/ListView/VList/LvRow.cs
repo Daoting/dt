@@ -78,8 +78,8 @@ namespace Dt.Base.ListView
             p_dot.ID = p_col.ID;
 
             // 将Col中的已设置属性值复制到Dot
-            if (p_col.ReadLocalValue(Col.UIProperty) != DependencyProperty.UnsetValue)
-                p_dot.UI = p_col.UI;
+            if (p_col.ReadLocalValue(Col.CallProperty) != DependencyProperty.UnsetValue)
+                p_dot.Call = p_col.Call;
             
             if (p_col.ReadLocalValue(Col.FormatProperty) != DependencyProperty.UnsetValue)
                 p_dot.Format = p_col.Format;

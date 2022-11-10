@@ -196,7 +196,7 @@ namespace Dt.Base
         protected abstract IViewItemHost Host { get; }
 
         /// <summary>
-        /// 获取单元格界面元素，提供给单元格容器ContentPresenter或Dot绑定用
+        /// 获取单元格界面元素，提供给Dot.Content用
         /// </summary>
         /// <param name="p_dot"></param>
         /// <returns></returns>
@@ -208,69 +208,43 @@ namespace Dt.Base
             if (GetCacheUI(p_dot.ID, out elem))
                 return elem;
 
-            object val;
-            MethodInfo mi = Host.GetViewExMethod(p_dot.ID);
-            if (mi != null)
+            List<MethodInfo> lsMethods;
+            if (!string.IsNullOrEmpty(p_dot.Call)
+                && (lsMethods = GetAllCellUIMethods(p_dot.Call)).Count > 0)
             {
-                // 从外部扩展方法中获取
-                // 扩展列方法原型： object ColName(ViewItem p_vr)
-                object obj = mi.Invoke(null, new object[] { this });
-                if (obj != null)
+                // 自定义单元格UI，支持多个方法顺序调用。方法原型：static void Fun(Env e)
+                var args = new Env(this, p_dot);
+                lsMethods.ForEach((mi) => mi.Invoke(null, new object[] { args }));
+
+                if (args.UI == null && args.Root == null)
                 {
-                    // uno中的Image不是继承UIElement！
-                    elem = obj as DependencyObject;
-                    if (elem == null)
-                        elem = new TextBlock { Style = Res.LvTextBlock, Text = obj.ToString(), };
+                    // 未创建UI也未设置样式，则无子元素时返回null
+                    elem = null;
                 }
-            }
-            else if (p_dot.UI == CellUIType.Default)
-            {
-                // 默认方式：根据数据类型生成可视元素
-                if (_data is Row dr && dr.Contains(p_dot.ID))
+                else if (args.UI == null)
                 {
-                    // 从Row取
-                    elem = CreateCellUI(dr.Cells[p_dot.ID], p_dot);
+                    // 已设置样式但未创建UI，则创建默认UI，如：只设置背景色
+                    var def = CreateDefaultUI(p_dot);
+                    if (def != null)
+                        args.Root.Content = def;
+                    elem = args.Root;
                 }
-                else if (p_dot.ID == "#")
+                else if (args.Root == null)
                 {
-                    // # 直接输出对象
-                    elem = CreateObjectUI(_data);
+                    // 只创建UI，未设置样式
+                    elem = args.UI;
                 }
                 else
                 {
-                    // 输出对象属性
-                    var pi = _data.GetType().GetProperty(p_dot.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (pi != null && (val = pi.GetValue(_data)) != null)
-                        elem = CreatePropertyUI(pi, val, p_dot);
+                    // 已设置样式且已创建UI
+                    args.Root.Content = args.UI;
+                    elem = args.Root;
                 }
             }
-            else if ((val = this[p_dot.ID]) != null)
+            else
             {
-                // 自定义方式：按设置的内容类型生成可视元素
-                switch (p_dot.UI)
-                {
-                    case CellUIType.Icon:
-                        elem = CreateIcon(val);
-                        break;
-                    case CellUIType.CheckBox:
-                        elem = CreateCheckBox(val);
-                        break;
-                    case CellUIType.Image:
-                        elem = CreateImage(val);
-                        break;
-                    case CellUIType.File:
-                        elem = CreateFileLink(val);
-                        break;
-                    case CellUIType.Enum:
-                        elem = CreateEnumText(val, p_dot);
-                        break;
-                    case CellUIType.AutoDate:
-                        elem = CreateAutoDate(val);
-                        break;
-                    case CellUIType.Warning:
-                        elem = CreateWarning(val);
-                        break;
-                }
+                // 默认方式：根据数据类型生成可视元素
+                elem = CreateDefaultUI(p_dot);
             }
 
             AddCacheUI(p_dot.ID, elem);
@@ -278,6 +252,30 @@ namespace Dt.Base
         }
 
         #region 默认UI
+        internal UIElement CreateDefaultUI(Dot p_dot)
+        {
+            // 默认方式：根据数据类型生成可视元素
+            if (_data is Row dr && dr.Contains(p_dot.ID))
+            {
+                // 从Row取
+                return CreateCellUI(dr.Cells[p_dot.ID], p_dot);
+            }
+
+            if (p_dot.ID == "#")
+            {
+                // # 直接输出对象
+                return CreateObjectUI(_data);
+            }
+
+            // 输出对象属性
+            object val;
+            var pi = _data.GetType().GetProperty(p_dot.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (pi != null && (val = pi.GetValue(_data)) != null)
+                return CreatePropertyUI(pi, val, p_dot);
+
+            return null;
+        }
+
         /// <summary>
         /// 根据Cell创建UI
         /// </summary>
@@ -532,207 +530,6 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 自定义UI
-        TextBlock CreateIcon(object p_val)
-        {
-            string txt;
-            if (p_val is int || p_val is byte)
-                txt = Res.GetIconChar((Icons)p_val);
-            else
-                txt = Res.ParseIconChar(p_val.ToString());
-
-            // 无字符，返回null
-            if (string.IsNullOrEmpty(txt))
-                return null;
-
-            return new TextBlock
-            {
-                Style = Res.LvTextBlock,
-                Text = txt,
-                FontFamily = Res.IconFont,
-                TextAlignment = TextAlignment.Center,
-            };
-        }
-
-        TextBlock CreateCheckBox(object p_val)
-        {
-            // 字符模拟CheckBox
-            var tb = new TextBlock
-            {
-                Style = Res.LvTextBlock,
-                FontFamily = Res.IconFont,
-                TextAlignment = TextAlignment.Center,
-            };
-
-            bool b;
-            if (p_val is bool)
-            {
-                b = (bool)p_val;
-            }
-            else
-            {
-                string temp = p_val.ToString().ToLower();
-                b = (temp == "1" || temp == "true");
-            }
-            tb.Text = b ? "\uE059" : "\uE057";
-            return tb;
-        }
-
-        Image CreateImage(object p_val)
-        {
-            Image img = new Image();
-            string path = p_val.ToString();
-
-            if (path.StartsWith("ms-appx:", StringComparison.OrdinalIgnoreCase))
-            {
-                // 因 uno 中的 Image.Source 目前只支持ms-appx，故 ms-appdata 和 http都暂不支持！！！
-                img.Source = new BitmapImage(new Uri(path));
-            }
-            else
-            {
-                // 文件服务的路径，json格式同FileList
-                _ = Kit.LoadImage(path, img);
-            }
-            return img;
-        }
-
-        TextBlock CreateFileLink(object p_val)
-        {
-            int cnt = p_val.ToString().Split(new string[] { "[\"" }, StringSplitOptions.None).Length - 1;
-            if (cnt <= 0)
-                return null;
-
-            TextBlock tb = new TextBlock
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Foreground = Res.主蓝,
-                Text = $"共{cnt}个文件",
-                Tag = p_val,
-            };
-
-            tb.PointerPressed += OnFileLinkPressed;
-            return tb;
-        }
-
-        TextBlock CreateEnumText(object p_val, Dot p_dot)
-        {
-            string tpName = p_dot.Format;
-            if (string.IsNullOrEmpty(tpName))
-                return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
-
-            // 将byte int等数值类型转成枚举类型，显示枚举项
-            Type type = Type.GetType(tpName, false, true);
-            if (type != null)
-            {
-                try
-                {
-                    var txt = Enum.ToObject(type, p_val).ToString();
-                    return new TextBlock { Style = Res.LvTextBlock, Text = txt };
-                }
-                catch { }
-            }
-            return new TextBlock { Style = Res.LvTextBlock, Text = "无枚举" };
-        }
-
-        TextBlock CreateAutoDate(object p_val)
-        {
-            var tb = new TextBlock();
-            DateTime dt;
-            if (p_val.GetType() == typeof(DateTime))
-            {
-                dt = (DateTime)p_val;
-            }
-            else
-            {
-                try
-                {
-                    dt = (DateTime)System.Convert.ChangeType(p_val, typeof(DateTime));
-                }
-                catch
-                {
-                    return tb;
-                }
-            }
-
-            TimeSpan ts = DateTime.Now.Date - dt.Date;
-            switch (ts.Days)
-            {
-                case 0:
-                    tb.Text = dt.ToString("HH:mm:ss");
-                    break;
-                case 1:
-                    tb.Text = "昨天";
-                    break;
-                case -1:
-                    tb.Text = "明天";
-                    break;
-                default:
-                    tb.Text = dt.ToString("yyyy-MM-dd");
-                    break;
-            }
-            return tb;
-        }
-
-        Grid CreateWarning(object p_val)
-        {
-            var txt = p_val.ToString();
-            if (txt == "")
-                return null;
-
-            if (txt.Length > 2)
-                txt = "┅";
-
-            return new Grid
-            {
-                Children =
-                {
-                    new Ellipse { Fill = Res.RedBrush, Width = 23, Height = 23 },
-                    new TextBlock {Text = txt, Foreground = Res.WhiteBrush, FontSize = 14, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
-                }
-            };
-        }
-
-        void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var tb = sender as TextBlock;
-            if (tb == null || tb.Tag == null)
-                return;
-
-            Dlg dlg;
-            e.Handled = true;
-            if (Kit.IsPhoneUI)
-            {
-                dlg = new Dlg { ClipElement = tb, Title = "文件列表", };
-            }
-            else
-            {
-                dlg = new Dlg()
-                {
-                    WinPlacement = DlgPlacement.TargetBottomLeft,
-                    PlacementTarget = tb,
-                    ClipElement = tb,
-                    MaxHeight = 500,
-                    MaxWidth = 400,
-                    Title = "文件列表",
-                };
-            }
-            FileList fl = new FileList();
-            fl.Data = (string)tb.Tag;
-
-            ScrollViewer sv = new ScrollViewer
-            {
-                VerticalScrollMode = ScrollMode.Auto,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                HorizontalScrollMode = ScrollMode.Disabled,
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
-            };
-            sv.Content = fl;
-            dlg.Content = sv;
-            dlg.Show();
-        }
-        #endregion
-
         #region 内部方法
         /// <summary>
         /// 初始化视图行，包括调用外部 CellEx.SetStyle 设置行样式、附加值变化事件、初始化缓存字典等
@@ -792,6 +589,58 @@ namespace Dt.Base
 
         protected virtual void ClearCacheUI()
         {
+        }
+        #endregion
+
+        #region 自定义单元格UI
+        static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_method">方法名，形如：Def.Icon,Def.小灰</param>
+        /// <returns></returns>
+        static List<MethodInfo> GetAllCellUIMethods(string p_method)
+        {
+            List<MethodInfo> ls = new List<MethodInfo>();
+
+            // 逗号隔开多个方法
+            var arrMethods = p_method.Split(',');
+            foreach (var method in arrMethods)
+            {
+                var mi = GetMethod(method);
+                if (mi != null)
+                    ls.Add(mi);
+            }
+            return ls;
+        }
+
+        static MethodInfo GetMethod(string p_method)
+        {
+            if (_methods.TryGetValue(p_method, out var mi))
+                return mi;
+
+            var arr = p_method.Split('.');
+            if (arr.Length != 2)
+            {
+                Log.Warning($"自定义单元格UI的方法名 {p_method} 不符合规范");
+                return null;
+            }
+
+            mi = Kit.GetMethodByAlias(typeof(CellUIAttribute), arr[0], arr[1], BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+            if (mi != null)
+            {
+                var pars = mi.GetParameters();
+                if (pars.Length == 1
+                    && pars[0].ParameterType == typeof(Env)
+                    && mi.ReturnType == typeof(void))
+                {
+                    _methods[p_method] = mi;
+                    return mi;
+                }
+            }
+            Log.Warning("未找到自定义单元格UI方法：" + p_method);
+            return null;
         }
         #endregion
 

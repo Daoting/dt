@@ -21,23 +21,17 @@ namespace Dt.Base
     {
         #region 静态内容
         const double _defaultFontSize = 16;
-        public static readonly DependencyProperty UIProperty = DependencyProperty.Register(
-            "UI",
-            typeof(CellUIType),
+        public static readonly DependencyProperty CallProperty = DependencyProperty.Register(
+            "Call",
+            typeof(string),
             typeof(Dot),
-            new PropertyMetadata(CellUIType.Default));
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
             "Format",
             typeof(string),
             typeof(Dot),
             new PropertyMetadata(null));
-
-        public static readonly DependencyProperty FontProperty = DependencyProperty.Register(
-            "Font",
-            typeof(CellFontStyle),
-            typeof(Dot),
-            new PropertyMetadata(CellFontStyle.默认));
 
         public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(
             "AutoHide",
@@ -61,30 +55,22 @@ namespace Dt.Base
         public string ID { get; set; }
 
         /// <summary>
-        /// 获取设置单元格UI类型
+        /// 获取设置自定义单元格UI的方法名，多个方法名用逗号隔开，形如：Def.Icon,Def.小灰
         /// </summary>
-        public CellUIType UI
+        public string Call
         {
-            get { return (CellUIType)GetValue(UIProperty); }
-            set { SetValue(UIProperty, value); }
+            get { return (string)GetValue(CallProperty); }
+            set { SetValue(CallProperty, value); }
         }
 
         /// <summary>
         /// 获取设置格式串，null或空时按默认显示，如：时间格式、小数位格式、枚举类型名称
+        /// <para>也是自定义单元格UI方法的参数</para>
         /// </summary>
         public string Format
         {
             get { return (string)GetValue(FormatProperty); }
             set { SetValue(FormatProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置文字样式，默认时绑定到ViewItem属性
-        /// </summary>
-        public CellFontStyle Font
-        {
-            get { return (CellFontStyle)GetValue(FontProperty); }
-            set { SetValue(FontProperty, value); }
         }
 
         /// <summary>
@@ -120,6 +106,9 @@ namespace Dt.Base
             }
 
             ViewItem vi = e.NewValue as ViewItem;
+            if (vi == null)
+                return;
+
             var result = vi.GetCellUI(this);
             if (AutoHide)
             {

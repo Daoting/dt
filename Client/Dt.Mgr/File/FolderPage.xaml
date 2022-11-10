@@ -14,7 +14,7 @@
                 <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" FontSize="30" Margin="4,0,10,0" VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding [name]}" TextWrapping="NoWrap" />
-                    <a:Dot ID="ctime" UI="AutoDate" Font="小灰" />
+                    <a:Dot ID="ctime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

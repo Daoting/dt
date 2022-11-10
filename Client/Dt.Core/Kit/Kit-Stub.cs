@@ -10,6 +10,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -148,7 +149,7 @@ namespace Dt.Core
         /// <returns>返回类型</returns>
         public static Type GetViewTypeByAlias(string p_alias)
         {
-            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_alias);
+            return Stub.Inst.GetTypesByAlias(typeof(ViewAttribute), p_alias).FirstOrDefault();
         }
 
         /// <summary>
@@ -158,18 +159,35 @@ namespace Dt.Core
         /// <returns>返回类型</returns>
         public static Type GetViewTypeByAlias(Enum p_enumAlias)
         {
-            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_enumAlias.ToString());
+            return Stub.Inst.GetTypesByAlias(typeof(ViewAttribute), p_enumAlias.ToString()).FirstOrDefault();
         }
 
         /// <summary>
-        /// 根据类型别名获取类型
+        /// 根据类型别名获取所有类型列表
         /// </summary>
         /// <param name="p_attrType">标签类型</param>
         /// <param name="p_alias">别名</param>
         /// <returns>返回类型</returns>
-        public static Type GetTypeByAlias(Type p_attrType, string p_alias)
+        public static List<Type> GetAllTypesByAlias(Type p_attrType, string p_alias)
         {
-            return Stub.Inst.GetTypeByAlias(p_attrType, p_alias);
+            return Stub.Inst.GetTypesByAlias(p_attrType, p_alias);
+        }
+
+        /// <summary>
+        /// 根据类型别名和方法名获取方法定义，取列表中第一个匹配项
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <param name="p_methodName">方法名</param>
+        /// <param name="p_flags">要包含BindingFlags.Public，否则返回null，静态的方法还要有BindingFlags.Static</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodByAlias(Type p_attrType, string p_alias, string p_methodName, BindingFlags p_flags)
+        {
+            var ls = Stub.Inst.GetTypesByAlias(p_attrType, p_alias);
+            return (from tp in ls
+                    let mi = tp.GetMethod(p_methodName, p_flags)
+                    where mi != null
+                    select mi).FirstOrDefault();
         }
         #endregion
 

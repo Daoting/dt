@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" />
+                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" />
                 <!--Data不能写在Style中-->
                 <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
@@ -43,7 +43,7 @@
                            Foreground="White"
                            Background="{StaticResource 中绿}"
                            Padding="10" />
-                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                    <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -55,7 +55,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" />
+                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" />
                 <!--Data不能写在Style中-->
                 <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
@@ -63,7 +63,7 @@
                                 RightTapped="OnFileRightTapped"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 中绿}" />
-                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                    <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -88,11 +88,11 @@
                            Foreground="White"
                            Background="{StaticResource 主蓝}"
                            Padding="10" />
-                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                    <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
                 <!--Data不能写在Style中-->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
-                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
             </Grid>
         </DataTemplate>
 
@@ -109,11 +109,11 @@
                                 FixedVolume="chat"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 主蓝}" />
-                    <a:Dot ID="stime" UI="AutoDate" Font="小灰" />
+                    <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
                 <!--Data不能写在Style中-->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
-                <a:Dot ID="Photo" UI="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
             </Grid>
         </DataTemplate>
 

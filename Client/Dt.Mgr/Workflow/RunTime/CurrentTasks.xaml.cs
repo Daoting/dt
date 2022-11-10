@@ -26,7 +26,6 @@ namespace Dt.Mgr.Workflow
         {
             InitializeComponent();
 
-            _lv.CellEx = typeof(ViewEx1);
             _lv.Loaded += (s, e) => Refresh();
         }
 
@@ -56,9 +55,10 @@ namespace Dt.Mgr.Workflow
         }
     }
 
-    public class ViewEx1
+    [CellUI]
+    public class CurrentTasksUI
     {
-        public static Grid title(ViewItem p_item)
+        public static void FormatTitle(Env e)
         {
             Grid grid = new Grid
             {
@@ -70,7 +70,7 @@ namespace Dt.Mgr.Workflow
                         },
                 Children =
                         {
-                            new TextBlock { Text = p_item.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
+                            new TextBlock { Text = e.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
                         }
             };
 
@@ -78,11 +78,11 @@ namespace Dt.Mgr.Workflow
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
-            var tb = new TextBlock { Text = p_item.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
+            var tb = new TextBlock { Text = e.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
             Grid.SetColumn(tb, 1);
             grid.Children.Add(tb);
 
-            var kind = (WfiItemAssignKind)p_item.Row.Int("AssignKind");
+            var kind = (WfiItemAssignKind)e.Row.Int("AssignKind");
             switch (kind)
             {
                 case WfiItemAssignKind.起始指派:
@@ -125,7 +125,7 @@ namespace Dt.Mgr.Workflow
                     grid.Children.Add(tb);
                     break;
             }
-            return grid;
+            e.UI = grid;
         }
     }
 }

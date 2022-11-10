@@ -35,8 +35,6 @@ namespace Dt.Base.Tools
             IsPinned = true;
             WinPlacement = DlgPlacement.FromRight;
 
-            _lv.CellEx = typeof(TraceViewEx);
-
 //#if WIN
 //            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
 //            mi.Click += OnStub;
@@ -350,11 +348,12 @@ namespace Dt.Base.Tools
         #endregion
     }
 
-    public class TraceViewEx
+    [CellUI]
+    public class SysTraceCellUI
     {
-        public static Grid Title(LvItem p_vr)
+        public static void FormatTitle(Env e)
         {
-            var item = (TraceLogItem)p_vr.Data;
+            var item = (TraceLogItem)e.Data;
             Grid grid = new Grid
             {
                 ColumnDefinitions =
@@ -398,7 +397,7 @@ namespace Dt.Base.Tools
                 Grid.SetColumn(btn, 2);
                 grid.Children.Add(btn);
             }
-            return grid;
+            e.UI = grid;
         }
 
         static void OnShowDetail(object sender, RoutedEventArgs e)

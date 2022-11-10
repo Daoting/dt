@@ -40,8 +40,8 @@
                         <StackPanel Margin="10">
                             <a:Dot ID="Name" />
                             <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                                <a:Dot ID="Date" Font="小灰" />
-                                <a:Dot ID="Size" Font="小灰" Margin="60,0,0,0" />
+                                <a:Dot ID="Date" Call="Def.小灰" />
+                                <a:Dot ID="Size" Call="Def.小灰" Margin="60,0,0,0" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

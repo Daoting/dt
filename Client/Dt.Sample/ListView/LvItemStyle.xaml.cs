@@ -21,13 +21,28 @@ using Microsoft.UI.Text;
 
 namespace Dt.Sample
 {
-    public partial class LvViewEx : Win
+    public partial class LvItemStyle : Win
     {
-        public LvViewEx()
+        public LvItemStyle()
         {
             InitializeComponent();
-            _lv.CellEx = typeof(ViewEx1);
+            _lv.ChangeView(Resources["GridView"], ViewMode.Table);
             _lv.Data = SampleData.CreatePersonsTbl(100);
+
+            _lv.ItemStyle = (e) =>
+            {
+                var row = e.Row;
+                if (row.Date("chushengrq").Month == 9)
+                    e.Background = Res.浅黄;
+
+                if (row.Double("Shengao") > 1.75)
+                    e.Foreground = Res.RedBrush;
+
+                if (row.Str("bumen") == "循环门诊")
+                    e.FontWeight = FontWeights.Bold;
+                else if (row.Str("bumen") == "内分泌门诊")
+                    e.FontStyle = FontStyle.Italic;
+            };
         }
 
         void OnGridView(object sender, RoutedEventArgs e)
@@ -54,37 +69,21 @@ namespace Dt.Sample
         {
             _lv.GroupName = null;
         }
+    }
 
-        #region ViewEx
-        class ViewEx1
+    [CellUI]
+    public static class LvItemStyleUI
+    {
+        public static void 性别头像(Env e)
         {
-            public static void SetStyle(ViewItem p_item)
-            {
-                var row = p_item.Row;
-                if (row.Date("chushengrq").Month == 9)
-                    p_item.Background = Res.浅黄;
-
-                if (row.Double("Shengao") > 1.75)
-                    p_item.Foreground = Res.RedBrush;
-
-                if (row.Str("bumen") == "循环门诊")
-                    p_item.FontWeight = FontWeights.Bold;
-                else if (row.Str("bumen") == "内分泌门诊")
-                    p_item.FontStyle = FontStyle.Italic;
-            }
-
-            public static TextBlock xb(ViewItem p_item)
-            {
-                TextBlock tb = new TextBlock { FontFamily = Res.IconFont, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                tb.Text = p_item.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
-                return tb;
-            }
-
-            public static NumericTicker Line(ViewItem p_item)
-            {
-                return new NumericTicker(p_item.Row.Double("shengao"));
-            }
+            TextBlock tb = new TextBlock { FontFamily = Res.IconFont, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            tb.Text = e.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
+            e.UI = tb;
         }
-        #endregion
+
+        public static void 曲线(Env e)
+        {
+            e.UI = new NumericTicker(e.Row.Double("shengao"));
+        }
     }
 }

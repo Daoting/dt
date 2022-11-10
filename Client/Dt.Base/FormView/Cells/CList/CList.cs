@@ -174,12 +174,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置外部自定义单元格的类型，方法名和Dot或Col的ID相同，SetStyle方法控制行样式
+        /// 获取设置自定义行/项目样式的回调方法
         /// </summary>
-        public Type CellEx
+        public Action<ItemStyleArgs> ItemStyle
         {
-            get { return _lv.CellEx; }
-            set { _lv.CellEx = value; }
+            get { return _lv.ItemStyle; }
+            set { _lv.ItemStyle = value; }
         }
 
         /// <summary>

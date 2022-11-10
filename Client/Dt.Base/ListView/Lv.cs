@@ -41,11 +41,11 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(ViewMode.List, OnViewModeChanged));
 
-        public readonly static DependencyProperty CellExProperty = DependencyProperty.Register(
-            "CellEx",
-            typeof(Type),
+        public readonly static DependencyProperty ItemStyleProperty = DependencyProperty.Register(
+            "ItemStyle",
+            typeof(Action<ItemStyleArgs>),
             typeof(Lv),
-            new PropertyMetadata(null, OnViewExChanged));
+            new PropertyMetadata(null));
 
         public readonly static DependencyProperty PhoneViewModeProperty = DependencyProperty.Register(
             "PhoneViewMode",
@@ -146,43 +146,6 @@ namespace Dt.Base
                 ((Lv)d).LoadPanel();
         }
 
-        static void OnViewExChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Lv lv = (Lv)d;
-            Type tp = (Type)e.NewValue;
-            if (tp == null)
-            {
-                lv._exMethod = null;
-                lv._styleMethod = null;
-            }
-            else
-            {
-                // 提取静态公共方法
-                var mis = tp.GetMethods(BindingFlags.Static | BindingFlags.Public);
-                lv._exMethod = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
-                foreach (var mi in mis)
-                {
-                    var pis = mi.GetParameters();
-                    if (pis.Length == 1
-                        && (pis[0].ParameterType == typeof(ViewItem) || pis[0].ParameterType == typeof(LvItem))
-                        && mi.ReturnType != typeof(void))
-                    {
-                        lv._exMethod[mi.Name] = mi;
-                        continue;
-                    }
-
-                    if (mi.ReturnType == typeof(void)
-                        && pis.Length == 1
-                        && pis[0].ParameterType == typeof(ViewItem)
-                        && mi.Name == "SetStyle")
-                    {
-                        lv._styleMethod = mi;
-                    }
-                }
-            }
-            lv.Reload();
-        }
-
         static void OnReload(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Lv)d).Reload();
@@ -195,8 +158,6 @@ namespace Dt.Base
         LvDataView _dataView;
         readonly List<LvItem> _rows;
         readonly ObservableCollection<LvItem> _selectedLvItems;
-        Dictionary<string, MethodInfo> _exMethod;
-        MethodInfo _styleMethod;
         bool _updatingView;
         SizedPresenter _sizedPresenter;
         #endregion
@@ -257,12 +218,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置外部自定义单元格的类型，方法名和Dot或Col的ID相同，SetStyle方法控制行样式
+        /// 获取设置自定义行样式的回调方法
         /// </summary>
-        public Type CellEx
+        public Action<ItemStyleArgs> ItemStyle
         {
-            get { return (Type)GetValue(CellExProperty); }
-            set { SetValue(CellExProperty, value); }
+            get { return (Action<ItemStyleArgs>)GetValue(ItemStyleProperty); }
+            set { SetValue(ItemStyleProperty, value); }
         }
 
         /// <summary>
@@ -437,8 +398,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_view">null时不切换</param>
         /// <param name="p_viewMode">null时不切换</param>
-        /// <param name="p_cellEx">null时不切换</param>
-        public void ChangeView(object p_view, ViewMode? p_viewMode, Type p_cellEx = null)
+        public void ChangeView(object p_view, ViewMode? p_viewMode)
         {
             if (Scroll == null)
             {
@@ -447,8 +407,6 @@ namespace Dt.Base
                     View = p_view;
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                     ViewMode = p_viewMode.Value;
-                if (p_cellEx != null)
-                    CellEx = p_cellEx;
                 return;
             }
 
@@ -458,8 +416,6 @@ namespace Dt.Base
                 Scroll.ChangeView(0, 0, null, true);
                 if (p_view != null)
                     View = p_view;
-                if (p_cellEx != null)
-                    CellEx = p_cellEx;
 
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
@@ -654,15 +610,7 @@ namespace Dt.Base
         #region IViewItemHost
         void IViewItemHost.SetItemStyle(ViewItem p_item)
         {
-            if (_styleMethod != null)
-                _styleMethod.Invoke(null, new object[] { p_item });
-        }
-
-        MethodInfo IViewItemHost.GetViewExMethod(string p_colName)
-        {
-            if (_exMethod != null && _exMethod.TryGetValue(p_colName, out MethodInfo mi))
-                return mi;
-            return null;
+            ItemStyle?.Invoke(new ItemStyleArgs(p_item));
         }
         #endregion
 

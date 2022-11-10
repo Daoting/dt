@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-01-07 创建
+* 日志: 2022-11-10 创建
 ******************************************************************************/
 #endregion
 
@@ -14,51 +14,13 @@ using Windows.UI.Text;
 namespace Dt.Base
 {
     /// <summary>
-    /// 单击行事件参数
-    /// </summary>
-    public class ItemClickArgs : EventArgs
-    {
-        public ItemClickArgs(object p_data, object p_oldData)
-        {
-            Data = p_data;
-            OldData = p_oldData;
-        }
-
-        /// <summary>
-        /// 当前点击行是否和上次点击行相同
-        /// </summary>
-        public bool IsChanged
-        {
-            get { return Data != OldData; }
-        }
-
-        /// <summary>
-        /// 当前点击行
-        /// </summary>
-        public object Data { get; }
-
-        /// <summary>
-        /// 上次点击行
-        /// </summary>
-        public object OldData { get; }
-
-        /// <summary>
-        /// 当前点击的Row
-        /// </summary>
-        public Row Row
-        {
-            get { return Data as Row; }
-        }
-    }
-
-    /// <summary>
     /// 设置行样式参数
     /// </summary>
-    public class ItemStyleArgs
+    public class TvItemStyleArgs
     {
-        ViewItem _item;
+        TvItem _item;
 
-        internal ItemStyleArgs(ViewItem p_item)
+        internal TvItemStyleArgs(TvItem p_item)
         {
             _item = p_item;
         }
@@ -72,6 +34,11 @@ namespace Dt.Base
         /// 获取Row数据源
         /// </summary>
         public Row Row => _item.Row;
+
+        /// <summary>
+        /// 获取子级节点集合
+        /// </summary>
+        public List<TvItem> Children => _item.Children;
 
         /// <summary>
         /// 获取设置行前景画刷

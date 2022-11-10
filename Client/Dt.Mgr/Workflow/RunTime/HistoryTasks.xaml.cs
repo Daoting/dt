@@ -26,7 +26,6 @@ namespace Dt.Mgr.Workflow
         {
             InitializeComponent();
             LoadSearchData();
-            _lv.CellEx = typeof(HistoryTaskView);
         }
 
         void LoadSearchData()
@@ -185,9 +184,10 @@ namespace Dt.Mgr.Workflow
         }
     }
 
-    public class HistoryTaskView
+    [CellUI]
+    public class HistoryTaskUI
     {
-        public static Grid title(ViewItem p_item)
+        public static void FormatTile(Env e)
         {
             Grid grid = new Grid
             {
@@ -198,12 +198,12 @@ namespace Dt.Mgr.Workflow
                         },
                 Children =
                         {
-                            new TextBlock { Text = p_item.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
+                            new TextBlock { Text = e.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
                         }
             };
 
             var rc = new Rectangle();
-            int status = p_item.Row.Int("status");
+            int status = e.Row.Int("status");
             if (status == 0)
                 rc.Fill = Res.中绿;
             else if (status == 1)
@@ -213,10 +213,10 @@ namespace Dt.Mgr.Workflow
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
-            var tb = new TextBlock { Text = p_item.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
+            var tb = new TextBlock { Text = e.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
             Grid.SetColumn(tb, 1);
             grid.Children.Add(tb);
-            return grid;
+            e.UI = grid;
         }
     }
 }

@@ -6,11 +6,11 @@
 
     <a:Win.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="fs" Title="文件" UI="File" Width="200" />
+            <a:Col ID="fs" Title="文件" Call="Def.FileLink" Width="200" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
-            <a:Dot ID="fs" UI="File" Margin="10" />
+            <a:Dot ID="fs" Call="Def.FileLink" Margin="10" />
         </DataTemplate>
     </a:Win.Resources>
     

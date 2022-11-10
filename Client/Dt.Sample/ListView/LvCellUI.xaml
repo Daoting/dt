@@ -8,15 +8,19 @@
         <a:Cols x:Key="GridView">
             <a:Col ID="scale" Title="小数位" Format="n4" />
             <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
-            <a:Col ID="Icon" Title="图标1" UI="Icon" Width="80" />
+            <a:Col ID="Icon" Title="图标1" Call="Def.Icon" Width="80" />
             <a:Col ID="IconName" Title="图标2" Width="80" />
-            <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
-            <a:Col ID="Image" Title="图片" UI="Image" Width="60" />
-            <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
-            <a:Col ID="enum1" Title="枚举1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
+            <a:Col ID="CheckBox" Title="选择框" Call="Def.CheckBox" Width="80" />
+            <a:Col ID="Image" Title="图片" Call="Def.Image" Width="60" />
+            <a:Col ID="File" Title="文件列表" Call="Def.FileLink" Width="150" />
+            <a:Col ID="enum1" Title="枚举1" Call="Def.EnumText" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
             <a:Col ID="enum2" Title="枚举2" Width="90" />
-            <a:Col ID="AutoDate" Title="自适应时间" UI="AutoDate" Width="110" />
-            <a:Col ID="Warning" Title="醒目提醒" UI="Warning" Width="100" />
+            <a:Col ID="AutoDate" Title="自适应时间" Call="Def.AutoDate" Width="110" />
+            <a:Col ID="Warning" Title="醒目提醒" Call="Def.Warning" Width="100" />
+            <a:Col ID="小灰" Title="小灰" Call="Def.小灰" Width="110" />
+            <a:Col ID="黑白" Title="黑白" Call="Def.黑白" Width="110" />
+            <a:Col ID="蓝白" Title="蓝白" Call="Def.蓝白" Width="110" />
+            <a:Col ID="红白" Title="红白" Call="Def.红白" Width="110" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
@@ -24,19 +28,31 @@
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <a:Dot ID="scale" Format="n4" />
                     <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
-                    <a:Dot ID="Icon" UI="Icon" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="Icon" Call="Def.Icon" />
                     <a:Dot ID="IconName" />
-                    <a:Dot ID="CheckBox" UI="CheckBox" />
+                    <a:Dot ID="CheckBox" Call="Def.CheckBox" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <a:Dot ID="Image" UI="Image" Height="50" />
-                    <a:Dot ID="File" UI="File" />
+                    <a:Dot ID="Image" Call="Def.Image" Height="50" />
+                    <a:Dot ID="File" Call="Def.FileLink" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="10">
-                    <a:Dot ID="enum1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" />
+                    <a:Dot ID="enum1" Call="Def.EnumText" Format="Dt.Core.HostOS,Dt.Core" />
                     <a:Dot ID="enum2" />
-                    <a:Dot ID="AutoDate" UI="AutoDate" />
-                    <a:Dot ID="Warning" UI="Warning" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="AutoDate" Call="Def.AutoDate" />
+                    <a:Dot ID="Warning" Call="Def.Warning" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="小灰" Call="Def.小灰" />
+                    <a:Dot ID="黑白" Call="Def.黑白" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="蓝白" Call="Def.蓝白" />
+                    <a:Dot ID="红白" Call="Def.红白" />
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -45,21 +61,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="列表">
-                <a:Lv x:Name="_lv" ViewMode="Table">
-                    <a:Cols>
-                        <a:Col ID="scale" Title="小数位" Format="n4" />
-                        <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
-                        <a:Col ID="Icon" Title="图标1" UI="Icon" Width="80" />
-                        <a:Col ID="IconName" Title="图标2" Width="80" />
-                        <a:Col ID="CheckBox" Title="选择框" UI="CheckBox" Width="80" />
-                        <a:Col ID="Image" Title="图片" UI="Image" Width="60" />
-                        <a:Col ID="File" Title="文件列表" UI="File" Width="150" />
-                        <a:Col ID="enum1" Title="枚举1" UI="Enum" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
-                        <a:Col ID="enum2" Title="枚举2" Width="90" />
-                        <a:Col ID="AutoDate" Title="自适应时间" UI="AutoDate" Width="110" />
-                        <a:Col ID="Warning" Title="醒目提醒" UI="Warning" Width="100" />
-                    </a:Cols>
-                </a:Lv>
+                <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
@@ -71,6 +73,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="表格" Click="OnGridView" />
                         <Button Content="普通列表" Click="OnListView" />
+                        <Button Content="磁贴列表" Click="OnFormView" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

@@ -25,7 +25,7 @@
             <DataTemplate>
                 <StackPanel Padding="10">
                     <a:Dot ID="name" />
-                    <a:Dot ID="desc" Font="小灰" />
+                    <a:Dot ID="desc" Call="Def.小灰" />
                 </StackPanel>
             </DataTemplate>
         </a:CList>

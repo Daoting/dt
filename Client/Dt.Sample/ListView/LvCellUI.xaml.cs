@@ -25,6 +25,7 @@ namespace Dt.Sample
         public LvCellUI()
         {
             InitializeComponent();
+            _lv.ChangeView(Resources["GridView"], ViewMode.Table);
             LoadData();
         }
 
@@ -43,6 +44,10 @@ namespace Dt.Sample
                 { "Enum2", typeof(HostOS) },
                 { "AutoDate", typeof(DateTime) },
                 { "Warning", typeof(int) },
+                { "小灰" },
+                { "黑白" },
+                { "蓝白" },
+                { "红白" },
             };
 
             Random rand = new Random();
@@ -62,6 +67,10 @@ namespace Dt.Sample
                     Enum2 = (HostOS)rand.Next(0, 6),
                     AutoDate = birth.AddHours(-rand.Next(100)),
                     Warning = rand.Next(200),
+                    小灰 = "深灰小字",
+                    黑白 = "黑底白字",
+                    蓝白 = "蓝底白字",
+                    红白 = "红底白字",
                 });
             }
             _lv.Data = tbl;
@@ -75,6 +84,11 @@ namespace Dt.Sample
         void OnListView(object sender, RoutedEventArgs e)
         {
             _lv.ChangeView(Resources["ListView"], ViewMode.List);
+        }
+
+        void OnFormView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(Resources["ListView"], ViewMode.Tile);
         }
     }
 }

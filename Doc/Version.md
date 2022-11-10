@@ -5,11 +5,18 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
-## Release 3.1.0 
+## Release 3.1.0
+### 变更
+* Lv自定义行列UI的调整：
+  移除CellEx静态类自定义行列UI的方式
+  增加 Lv.ItemStyle 回调方法自定义行样式
+  移除 Col.UI Dot.UI 属性
+  增加 Col.Call Dot.Call 属性，自定义单元格UI的方法名，多个方法名用逗号隔开，形如：Def.Icon,Def.小灰
+
 ### 功能
 * 增加Stub.Reboot方法支持切换Stub新实例重启
-* 
-* 
+* Dt.BuildTools 增加对wasm发布时清理无用文件，处理PWA缓存文件重复的问题
+* 类型别名字典中每个别名对应一个类型列表
 * 后台功能确认：文件 通讯录
 
 

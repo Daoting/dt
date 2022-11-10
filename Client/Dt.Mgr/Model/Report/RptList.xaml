@@ -16,12 +16,10 @@
         <DataTemplate>
             <StackPanel Padding="10">
                 <a:Dot ID="name" />
-                <a:Dot ID="note" Font="小灰" />
+                <a:Dot ID="note" Call="Def.小灰" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="创建：" />
-                    <a:Dot ID="ctime" FontSize="12" />
-                    <TextBlock Text="最后修改：" Margin="20,0,0,0"  />
-                    <a:Dot ID="mtime" FontSize="12" />
+                    <a:Dot ID="ctime" FontSize="14" />
+                    <a:Dot ID="mtime" FontSize="14" Margin="20,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </DataTemplate>

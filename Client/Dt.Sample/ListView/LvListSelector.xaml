@@ -12,8 +12,8 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <a:Dot ID="xm" Font="小灰" />
-                <a:Dot ID="chushengrq" Font="小灰" HorizontalAlignment="Right"/>
+                <a:Dot ID="xm" Call="Def.小灰" />
+                <a:Dot ID="chushengrq" Call="Def.小灰" HorizontalAlignment="Right"/>
                 <Border Background="{StaticResource 主蓝}" BorderThickness="0" Padding="10,6" Grid.Row="1">
                     <a:Dot ID="note" Foreground="White" />
                 </Border>
@@ -37,7 +37,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <a:Dot ID="xm" Font="小灰" />
+                <a:Dot ID="xm" Call="Def.小灰" />
                 <Path Data="M0,0 L4,8 L20,8"
                       Fill="{StaticResource 中绿}"
                       StrokeThickness="0"
@@ -51,7 +51,7 @@
                 <Border Background="{StaticResource 中绿}" BorderThickness="0" Padding="10,6" Grid.Row="2">
                     <a:Dot ID="note" Foreground="White" />
                 </Border>
-                <a:Dot ID="chushengrq" Font="小灰" Grid.Row="3"/>
+                <a:Dot ID="chushengrq" Call="Def.小灰" Grid.Row="3"/>
             </Grid>
         </DataTemplate>
     </a:Win.Resources>

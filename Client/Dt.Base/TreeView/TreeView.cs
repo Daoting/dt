@@ -47,11 +47,11 @@ namespace Dt.Base
             typeof(TreeView),
             new PropertyMetadata(null, OnViewChanged));
 
-        public readonly static DependencyProperty CellExProperty = DependencyProperty.Register(
-            "CellEx",
-            typeof(Type),
+        public readonly static DependencyProperty ItemStyleProperty = DependencyProperty.Register(
+            "ItemStyle",
+            typeof(Action<TvItemStyleArgs>),
             typeof(TreeView),
-            new PropertyMetadata(null, OnViewExChanged));
+            new PropertyMetadata(null));
 
         public readonly static DependencyProperty IsVirtualizedProperty = DependencyProperty.Register(
             "IsVirtualized",
@@ -132,45 +132,6 @@ namespace Dt.Base
                 tv._panel.Reload();
         }
 
-        static void OnViewExChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            TreeView tv = (TreeView)d;
-            Type tp = (Type)e.NewValue;
-            if (tp == null)
-            {
-                tv._exMethod = null;
-                tv._styleMethod = null;
-            }
-            else
-            {
-                // 提取静态公共方法
-                var mis = tp.GetMethods(BindingFlags.Static | BindingFlags.Public);
-                tv._exMethod = new Dictionary<string, MethodInfo>(StringComparer.OrdinalIgnoreCase);
-                foreach (var mi in mis)
-                {
-                    var pis = mi.GetParameters();
-                    if (pis.Length == 1
-                        && (pis[0].ParameterType == typeof(ViewItem) || pis[0].ParameterType == typeof(TvItem))
-                        && mi.ReturnType != typeof(void))
-                    {
-                        tv._exMethod[mi.Name] = mi;
-                        continue;
-                    }
-
-                    if (mi.ReturnType == typeof(void)
-                        && pis.Length == 1
-                        && pis[0].ParameterType == typeof(ViewItem)
-                        && mi.Name == "SetStyle")
-                    {
-                        tv._styleMethod = mi;
-                    }
-                }
-            }
-
-            if (tv._isLoaded)
-                tv._panel.Reload();
-        }
-
         static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TreeView tv = (TreeView)d;
@@ -229,8 +190,6 @@ namespace Dt.Base
         TvPanel _panel;
         bool _isLoaded;
         readonly ObservableCollection<TvItem> _selectedRows;
-        Dictionary<string, MethodInfo> _exMethod;
-        MethodInfo _styleMethod;
         #endregion
 
         #region 构造方法
@@ -290,12 +249,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置外部自定义单元格的类型，方法名和Dot的ID相同，SetStyle方法控制行样式
+        /// 获取设置自定义行样式的回调方法
         /// </summary>
-        public Type CellEx
+        public Action<TvItemStyleArgs> ItemStyle
         {
-            get { return (Type)GetValue(CellExProperty); }
-            set { SetValue(CellExProperty, value); }
+            get { return (Action<TvItemStyleArgs>)GetValue(ItemStyleProperty); }
+            set { SetValue(ItemStyleProperty, value); }
         }
 
         /// <summary>
@@ -810,18 +769,6 @@ namespace Dt.Base
                 _panel.OnRowsChanged();
         }
 
-        /// <summary>
-        /// 获取视图扩展方法
-        /// </summary>
-        /// <param name="p_methodName"></param>
-        /// <returns></returns>
-        internal MethodInfo GetViewExMethod(string p_methodName)
-        {
-            if (_exMethod != null && _exMethod.TryGetValue(p_methodName, out MethodInfo mi))
-                return mi;
-            return null;
-        }
-
         void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             // 虚拟化滚动时重新布局
@@ -1081,19 +1028,11 @@ namespace Dt.Base
         #region IViewItemHost
         void IViewItemHost.SetItemStyle(ViewItem p_item)
         {
-            if (_styleMethod != null)
-                _styleMethod.Invoke(null, new object[] { p_item });
-        }
-
-        MethodInfo IViewItemHost.GetViewExMethod(string p_colName)
-        {
-            if (_exMethod != null && _exMethod.TryGetValue(p_colName, out MethodInfo mi))
-                return mi;
-            return null;
+            ItemStyle?.Invoke(new TvItemStyleArgs(p_item as TvItem));
         }
         #endregion
 
-        #region IViewItemHost
+        #region IMenuHost
         /// <summary>
         /// 切换上下文菜单或修改触发事件种类时通知宿主刷新
         /// </summary>

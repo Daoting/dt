@@ -33,7 +33,7 @@
     <!-- 公共引用包 -->
     <ItemGroup>
         <PackageReference Include="Dt.Infras" Version="2.3.2" /> 
-        <PackageReference Include="Dt.BuildTools" Version="1.1.0" PrivateAssets="none" />
+        <PackageReference Include="Dt.BuildTools" Version="1.2.0" PrivateAssets="none" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <!-- 2.1.0后支持.net6 maui，旧版在iOS中无法初始化 -->

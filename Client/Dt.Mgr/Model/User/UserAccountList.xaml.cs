@@ -25,7 +25,14 @@ namespace Dt.Mgr.Model
         {
             InitializeComponent();
             _lv.View = Resources[Kit.IsPhoneUI ? "TileView" : "TableView"];
-            _lv.CellEx = typeof(UserViewEx);
+            _lv.ItemStyle = (e) =>
+            {
+                if (e.Row.Bool("expired"))
+                {
+                    e.Foreground = Res.GrayBrush;
+                    e.FontStyle = Windows.UI.Text.FontStyle.Italic;
+                }
+            };
         }
 
         public async void Update()
@@ -141,17 +148,5 @@ namespace Dt.Mgr.Model
         }
 
         UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
-
-        class UserViewEx
-        {
-            public static void SetStyle(ViewItem p_item)
-            {
-                if (p_item.Row.Bool("expired"))
-                {
-                    p_item.Foreground = Res.GrayBrush;
-                    p_item.FontStyle = Windows.UI.Text.FontStyle.Italic;
-                }
-            }
-        }
     }
 }

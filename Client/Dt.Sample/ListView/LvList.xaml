@@ -29,8 +29,8 @@
 
                             <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
                                 <Grid>
-                                    <a:Dot ID="xm" Font="黑白" HorizontalAlignment="Left" />
-                                    <a:Dot ID="bumen" Font="蓝白" HorizontalAlignment="Right" />
+                                    <a:Dot ID="xm" Call="Def.黑白" HorizontalAlignment="Left" />
+                                    <a:Dot ID="bumen" Call="Def.蓝白" HorizontalAlignment="Right" />
                                 </Grid>
                                 <StackPanel Orientation="Horizontal">
                                     <a:Dot ID="xb" />
@@ -39,7 +39,7 @@
                             </StackPanel>
                             <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
                                 <a:Dot ID="shenfenzh" />
-                                <a:Dot ID="note" Font="小灰" />
+                                <a:Dot ID="note" Call="Def.小灰" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
