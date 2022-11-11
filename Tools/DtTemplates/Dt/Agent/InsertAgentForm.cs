@@ -34,8 +34,9 @@ namespace Dt
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
                     {"$username$", Environment.UserName },
                 };
-            var path = Kit.GetFolderPath();
-            Kit.WritePrjFile(Path.Combine(path, $"{cls}.cs"), "Dt.Agent.Class.cs", dt);
+            var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
+            Kit.WritePrjFile(path, "Dt.Agent.Class.cs", dt);
+            Kit.OpenFile(path);
 
             Close();
         }

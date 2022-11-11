@@ -201,6 +201,13 @@ namespace Dt
             return clsName;
         }
 
+        public static void OpenFile(string p_filePath)
+        {
+            var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            if (File.Exists(p_filePath))
+                dte2.ItemOperations.OpenFile(p_filePath);
+        }
+
         static string SetFirstToUpper(string p_str)
         {
             char[] a = p_str.ToCharArray();

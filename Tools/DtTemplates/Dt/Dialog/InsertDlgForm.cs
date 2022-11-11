@@ -34,10 +34,15 @@ namespace Dt
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
                     {"$username$", Environment.UserName },
                 };
-            var path = Kit.GetFolderPath();
             var res = "Dt.Dialog.Dialog.xaml";
-            Kit.WritePrjFile(Path.Combine(path, $"{cls}.xaml"), res, dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{cls}.xaml.cs"), res + ".cs", dt);
+
+            var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.xaml");
+            Kit.WritePrjFile(path, res, dt);
+            Kit.OpenFile(path);
+
+            path = Path.Combine(Kit.GetFolderPath(), $"{cls}.xaml.cs");
+            Kit.WritePrjFile(path, res + ".cs", dt);
+            Kit.OpenFile(path);
 
             Close();
         }

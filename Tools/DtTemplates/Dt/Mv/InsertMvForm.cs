@@ -52,10 +52,13 @@ namespace Dt
                     break;
             }
 
-            var path = Kit.GetFolderPath();
+            var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.xaml");
+            Kit.WritePrjFile(path, res, dt);
+            Kit.OpenFile(path);
 
-            Kit.WritePrjFile(Path.Combine(path, $"{cls}.xaml"), res, dt);
-            Kit.WritePrjFile(Path.Combine(path, $"{cls}.xaml.cs"), res + ".cs", dt);
+            path = Path.Combine(Kit.GetFolderPath(), $"{cls}.xaml.cs");
+            Kit.WritePrjFile(path, res + ".cs", dt);
+            Kit.OpenFile(path);
 
             Close();
         }

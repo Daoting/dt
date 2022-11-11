@@ -15,7 +15,7 @@
             <a:Col ID="File" Title="文件列表" Call="Def.FileLink" Width="150" />
             <a:Col ID="enum1" Title="枚举1" Call="Def.EnumText" Format="Dt.Core.HostOS,Dt.Core" Width="90" />
             <a:Col ID="enum2" Title="枚举2" Width="90" />
-            <a:Col ID="AutoDate" Title="自适应时间" Call="Def.AutoDate" Width="110" />
+            <a:Col ID="AutoDate" Title="自适应时间" Call="Def.AutoDate,Def.小灰" Width="110" />
             <a:Col ID="Warning" Title="醒目提醒" Call="Def.Warning" Width="100" />
             <a:Col ID="小灰" Title="小灰" Call="Def.小灰" Width="110" />
             <a:Col ID="黑白" Title="黑白" Call="Def.黑白" Width="110" />

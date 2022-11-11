@@ -145,13 +145,6 @@
 			</Button>
 			
 
-			<Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0101" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyCodeMenuItemsGroup" />
-				<Strings>
-					<ButtonText>Lv.CellEx 类</ButtonText>
-				</Strings>
-			</Button>
-
 			<Button guid="guidDtPackageCmdSet" id="SingleTblCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderFrameworkGroup" />
 				<Strings>
@@ -193,6 +186,13 @@
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
 				<Strings>
 					<ButtonText>对话框</ButtonText>
+				</Strings>
+			</Button>
+
+			<Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0100" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
+				<Strings>
+					<ButtonText>自定义单元格UI类</ButtonText>
 				</Strings>
 			</Button>
 

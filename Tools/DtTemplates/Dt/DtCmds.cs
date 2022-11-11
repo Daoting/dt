@@ -1,4 +1,5 @@
-﻿using Dt.Editor;
+﻿using Dt.Cells;
+using Dt.Editor;
 using Dt.LocalTbl;
 using Dt.ManyToMany;
 using Dt.OnToMany;
@@ -24,8 +25,6 @@ namespace Dt
     /// </summary>
     internal sealed class DtCmds
     {
-        const string _cellExCls = "\r\n#region ViewEx\r\nclass ViewEx1\r\n{\r\npublic static void SetStyle(ViewItem p_item)\r\n{}\r\n\r\npublic static TextBlock xb(ViewItem p_item)\r\n{}\r\n}\r\n#endregion\r\n";
-        
         const int LvCommandId = 0x0100;
         const int DotCmdId = 0x0101;
         const int FvCommandId = 0x0102;
@@ -70,7 +69,7 @@ namespace Dt
             cs.AddCommand(CmdXamlForm(CellCmdId, typeof(CellXaml)));
             cs.AddCommand(CmdXamlForm(MenuCmdId, typeof(MenuXaml)));
 
-            cs.AddCommand(CmdPaste(LvCellExClsCmdId, _cellExCls));
+            cs.AddCommand(CmdRun(LvCellExClsCmdId, typeof(CellUI)));
 
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
@@ -175,6 +174,30 @@ namespace Dt
         /// 直接粘贴文本
         /// </summary>
         /// <param name="p_cmdID"></param>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        MenuCommand CmdRun(int p_cmdID, Type p_type)
+        {
+            return new MenuCommand(
+                (s, e) =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    if (!Kit.IsClientPrj())
+                    {
+                        Kit.Output("客户端不支持");
+                        return;
+                    }
+
+                    var cmd = Activator.CreateInstance(p_type) as IAutoRun;
+                    cmd.Run();
+                },
+                new CommandID(CommandSet, p_cmdID));
+        }
+
+        /// <summary>
+        /// 直接粘贴文本
+        /// </summary>
+        /// <param name="p_cmdID"></param>
         /// <param name="p_txt"></param>
         /// <returns></returns>
         MenuCommand CmdPaste(int p_cmdID, string p_txt)
@@ -228,5 +251,10 @@ namespace Dt
             Instance = new DtCmds(package, commandService);
         }
         #endregion
+    }
+
+    public interface IAutoRun
+    {
+        void Run();
     }
 }
