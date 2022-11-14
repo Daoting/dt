@@ -2,8 +2,6 @@
     <PropertyGroup>
         <Description>控件库(搬运工客户端)</Description>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <!-- 使用Dt.BuildTools生成Stub字典代码的标志 -->
-        <UseStub>true</UseStub>
     </PropertyGroup>
 
     <Import Project="..\Targets.props" />

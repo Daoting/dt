@@ -8,6 +8,8 @@
 
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -27,8 +29,7 @@ namespace Dt.Core
             ConfigureServices(svc);
             SvcProvider = svc.BuildServiceProvider();
 
-            MergeSqliteDbs(_sqliteDbs);
-            MergeTypeAlias(_typeAlias);
+            MergeDictionaryResource();
         }
 
         /// <summary>
@@ -92,49 +93,23 @@ namespace Dt.Core
             return new List<Type>();
         }
 
-        readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-        readonly Dictionary<string, List<Type>> _typeAlias = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
-        #endregion
-
-        #region 自动生成
-        // 以下方法内容由 Dt.BuildTools 在编译前自动生成
-
         /// <summary>
-        /// 合并本地库的结构信息，键为小写的库文件名(不含扩展名)，值为该库信息，包括版本号和表结构的映射类型
-        /// 先调用base.MergeSqliteDbs，不可覆盖上级的同名本地库
+        /// 调用 App.MergeDictionaryResource 合并_sqliteDbs _typeAlias两个字典
         /// </summary>
-        /// <param name="p_dict"></param>
-        protected virtual void MergeSqliteDbs(Dictionary<string, SqliteTblsInfo> p_dict) { }
-
-        /// <summary>
-        /// 合并类型别名字典，程序集中所有贴有 TypeAliasAttribute 子标签的类型都会收集到字典，如视图类型、工作流表单类型等
-        /// 先调用 base.MergeTypeAlias，后添加的别名相同的项放在列表的头部
-        /// 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
-        /// </summary>
-        /// <param name="p_dict"></param>
-        protected virtual void MergeTypeAlias(Dictionary<string, List<Type>> p_dict) { }
-
-        /// <summary>
-        /// 合并新类型，若存在相同别名的列表则插入头部，不存在则创建新列表
-        /// </summary>
-        /// <param name="p_dict"></param>
-        /// <param name="p_key"></param>
-        /// <param name="p_type"></param>
-        protected void DoMergeTypeAlias(Dictionary<string, List<Type>> p_dict, string p_key, Type p_type)
+        /// <exception cref="Exception"></exception>
+        void MergeDictionaryResource()
         {
-            List<Type> ls;
-            if (!p_dict.TryGetValue(p_key, out ls))
-            {
-                ls = new List<Type>();
-                ls.Add(p_type);
-                p_dict[p_key] = ls;
-            }
-            else
-            {
-                // 插入头部
-                ls.Insert(0, p_type);
-            }
+            var app = Application.Current;
+            var mi = app.GetType().GetMethod("MergeDictionaryResource", BindingFlags.Public | BindingFlags.Instance);
+            if (mi == null)
+                throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
+
+            mi.Invoke(app, new object[] { this });
         }
+
+        internal readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
+        internal readonly Dictionary<string, List<Type>> _typeAlias = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
         #endregion
+
     }
 }
