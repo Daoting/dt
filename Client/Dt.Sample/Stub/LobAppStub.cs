@@ -17,7 +17,7 @@ namespace Dt.Sample
     /// <summary>
     /// 使用搬运工标准服务的存根
     /// </summary>
-    public partial class LobAppStub : LobStub
+    public class LobAppStub : LobStub
     {
         public LobAppStub()
         {

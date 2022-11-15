@@ -20,6 +20,5 @@
 		<CompilerVisibleProperty Include="DesignTimeBuild" />
 		<CompilerVisibleProperty Include="UseStub" />
 		<CompilerVisibleProperty Include="RootNamespace" />
-		<CompilerVisibleProperty Include="OutputType" />
 	</ItemGroup>
 </Project>

@@ -59,12 +59,6 @@ namespace Dt.BuildTools
             return string.Equals(useStub, "true", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool IsExePrj(GeneratorExecutionContext context)
-        {
-            var exe = context.GetMSBuildPropertyValue("OutputType");
-            return exe.ToLower().Contains("exe");
-        }
-
         public static string GetMD5(string p_str)
         {
             try

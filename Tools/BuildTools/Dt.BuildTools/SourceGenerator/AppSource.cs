@@ -18,31 +18,18 @@ using System.Threading;
 
 namespace Dt.BuildTools
 {
-    class AppGenerator
+    class AppSource
     {
-        GeneratorExecutionContext _context;
-        INamedTypeSymbol _app;
+        StubGenerator _gen;
         List<INamedTypeSymbol> _dicts;
 
-        internal void Generate(GeneratorExecutionContext context)
+        internal void Generate(StubGenerator gen)
         {
+            _gen = gen;
             try
             {
-                Debugger.Launch();
-                _context = context;
-
-                var baseApp = context.Compilation.GetTypeByMetadataName("Microsoft.UI.Xaml.Application");
-
-                // 只查直接继承 Application 的类，多层继承时uno有bug
-                _app = (from type in context.Compilation.SourceModule.GlobalNamespace.GetNamespaceTypes()
-                        where SymbolEqualityComparer.Default.Equals(type.BaseType, baseApp)
-                        select type).FirstOrDefault();
-
-                if (_app == null)
-                    throw new Exception("未找到Application的继承类！");
-
                 ExtractDictionary();
-                _context.AddSource("AutoGenerateApp", BuildSource());
+                _gen.Context.AddSource("AutoGenerateApp", BuildSource());
             }
             catch (OperationCanceledException)
             {
@@ -64,15 +51,15 @@ namespace Dt.BuildTools
                     null,
                     e.Message + "生成 AutoGenerateApp 失败！");
 
-                context.ReportDiagnostic(diagnostic);
+                _gen.Context.ReportDiagnostic(diagnostic);
             }
         }
 
         void ExtractDictionary()
         {
             // 过滤引用 Dt.Core 的程序集
-            var asms = (from ext in _context.Compilation.ExternalReferences
-                        let sym = _context.Compilation.GetAssemblyOrModuleSymbol(ext) as IAssemblySymbol
+            var asms = (from ext in _gen.Context.Compilation.ExternalReferences
+                        let sym = _gen.Context.Compilation.GetAssemblyOrModuleSymbol(ext) as IAssemblySymbol
                         where sym != null
                         from module in sym.Modules
                         where module.ReferencedAssemblies.Any(r => r.Name == "Dt.Core")
@@ -141,14 +128,17 @@ namespace Dt.BuildTools
             sb.AppendLine("using Dt.Core;");
             sb.AppendLine();
 
-            using (sb.Block("namespace {0}", _app.ContainingNamespace))
-            using (sb.Block("public partial class {0}", _app.Name))
-            using (sb.Block("public void MergeDictionaryResource(Stub p_stub)"))
+            using (sb.Block("namespace {0}", _gen.App.ContainingNamespace))
+            using (sb.Block("public partial class {0}", _gen.App.Name))
+            using (sb.Block("public void MergeDictionaryResource()"))
             {
                 foreach (var dict in _dicts)
                 {
-                    sb.AppendLine($"new {dict.ContainingNamespace}.{dict.Name}().Merge(p_stub);");
+                    sb.AppendLine($"new {dict.ContainingNamespace}.{dict.Name}().Merge();");
                 }
+
+                // App所在项目的 DtDictionaryResource
+                sb.AppendLine($"new {_gen.Context.GetMSBuildPropertyValue("RootNamespace")}.DtDictionaryResource().Merge();");
             }
 
             return sb.ToString();

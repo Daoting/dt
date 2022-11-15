@@ -104,7 +104,7 @@ namespace Dt.Core
             if (mi == null)
                 throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
 
-            mi.Invoke(app, new object[] { this });
+            mi.Invoke(app, new object[0]);
         }
 
         internal readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);

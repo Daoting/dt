@@ -16,7 +16,7 @@ namespace Dt.Sample
     /// <summary>
     /// 未使用标准服务的存根
     /// </summary>
-    public partial class AppStub : DefaultStub
+    public class AppStub : DefaultStub
     {
         public AppStub()
         {

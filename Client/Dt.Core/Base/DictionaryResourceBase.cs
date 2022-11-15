@@ -16,12 +16,9 @@ namespace Dt.Core
     /// </summary>
     public class DictionaryResourceBase
     {
-        Stub _stub;
-
-        public void Merge(Stub p_stub)
+        public void Merge()
         {
-            _stub = p_stub;
-            MergeSqliteDbs(_stub._sqliteDbs);
+            MergeSqliteDbs(Stub.Inst._sqliteDbs);
             MergeTypeAlias();
         }
 
@@ -49,11 +46,11 @@ namespace Dt.Core
         protected void DoMergeTypeAlias(string p_key, Type p_type)
         {
             List<Type> ls;
-            if (!_stub._typeAlias.TryGetValue(p_key, out ls))
+            if (!Stub.Inst._typeAlias.TryGetValue(p_key, out ls))
             {
                 ls = new List<Type>();
                 ls.Add(p_type);
-                _stub._typeAlias[p_key] = ls;
+                Stub.Inst._typeAlias[p_key] = ls;
             }
             else
             {
