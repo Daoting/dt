@@ -15,7 +15,7 @@ namespace $ext_safeprojectname$
     /// <summary>
     /// 单机应用的存根
     /// </summary>
-    public partial class AppStub : DefaultStub
+    public class AppStub : DefaultStub
     {
         public AppStub()
         {

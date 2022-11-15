@@ -50,78 +50,14 @@ namespace Dt.PrjWizard
             if (_dte == null)
                 return;
 
-            RemoveUnselectPrj();
-            AdjustStubFiles();
+            AdjustClientPrj();
             AdjustSvcFiles();
+            RemoveUnselectPrj();
             SetStartupPrj();
             ShowWelcomePage();
         }
 
-        void RemoveUnselectPrj()
-        {
-            Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
-            if (folder == null)
-                return;
-
-            try
-            {
-                string target = "";
-
-                if (!_useAndroid)
-                {
-                    GetSubPrj(folder, ".Droid")?.Delete();
-                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".Droid"), true);
-                }
-                else
-                {
-                    target = ";net6.0-android";
-                }
-
-                if (!_useiOS)
-                {
-                    GetSubPrj(folder, ".iOS")?.Delete();
-                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".iOS"), true);
-                }
-                else
-                {
-                    target += ";net6.0-ios";
-                }
-
-                if (!_useWebAssembly)
-                {
-                    GetSubPrj(folder, ".Wasm")?.Delete();
-                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".Wasm"), true);
-                }
-                else
-                {
-                    target += ";net6.0";
-                }
-
-                // Client项目支持的平台
-                using (var fs = File.Open(Path.Combine(_targetPath, _projectName + ".Client", _projectName + ".Client.csproj"), FileMode.Open, FileAccess.ReadWrite))
-                using (var sr = new StreamReader(fs))
-                {
-                    var str = sr.ReadToEnd().Replace("$targetframeworks$", target);
-                    var data = Encoding.UTF8.GetBytes(str);
-                    fs.SetLength(0);
-                    fs.Write(data, 0, data.Length);
-                }
-
-                // 删除单机版的服务
-                if (_useSvcType == SvcType.None)
-                {
-                    var svc = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
-                    if (svc != null)
-                    {
-                        svc.Delete();
-                        Directory.Delete(Path.Combine(_targetPath, _projectName + ".Svc"), true);
-                    }
-                }
-            }
-            catch { }
-        }
-
-        void AdjustStubFiles()
+        void AdjustClientPrj()
         {
             try
             {
@@ -148,6 +84,35 @@ namespace Dt.PrjWizard
                     File.Delete(Path.Combine(stubPath, "RpcConfig.cs"));
                 }
                 Directory.Delete(optionsPath, true);
+
+                // 动态替换TargetFrameworks占位符造成初次无法编译！若删除Client项目重新添加，其它app项目的引用也被删除！
+                //// Client项目支持的平台
+                //string target = "";
+                //if (_useAndroid)
+                //    target = ";net6.0-android";
+                //if (_useiOS)
+                //    target += ";net6.0-ios";
+                //if (_useWebAssembly)
+                //    target += ";net6.0";
+
+                //// 替换项目文件的占位符
+                //string prjFile = Path.Combine(_targetPath, _projectName + ".Client", _projectName + ".Client.csproj");
+                //using (var fs = File.Open(prjFile, FileMode.Open, FileAccess.ReadWrite))
+                //using (var sr = new StreamReader(fs))
+                //{
+                //    var str = sr.ReadToEnd().Replace("$targetframeworks$", target);
+                //    var data = Encoding.UTF8.GetBytes(str);
+                //    fs.SetLength(0);
+                //    fs.Write(data, 0, data.Length);
+                //}
+
+                //Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
+                //_dte.Solution.Remove(folder);
+
+                //// Client项目删除后重新添加，否则初次 TargetFrameworks 不对无法编译
+                //var cli = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Client"));
+                //cli.Delete();
+                //_dte.Solution.AddFromFile(cli.FileName);
             }
             catch { }
         }
@@ -163,6 +128,43 @@ namespace Dt.PrjWizard
                     var data = Encoding.UTF8.GetBytes(str);
                     fs.SetLength(0);
                     fs.Write(data, 0, data.Length);
+                }
+            }
+            catch { }
+        }
+
+        void RemoveUnselectPrj()
+        {
+            try
+            {
+                Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
+                if (!_useAndroid)
+                {
+                    GetSubPrj(folder, ".Droid")?.Delete();
+                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".Droid"), true);
+                }
+
+                if (!_useiOS)
+                {
+                    GetSubPrj(folder, ".iOS")?.Delete();
+                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".iOS"), true);
+                }
+
+                if (!_useWebAssembly)
+                {
+                    GetSubPrj(folder, ".Wasm")?.Delete();
+                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".Wasm"), true);
+                }
+
+                // 删除单机版的服务
+                if (_useSvcType == SvcType.None)
+                {
+                    var svc = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
+                    if (svc != null)
+                    {
+                        svc.Delete();
+                        Directory.Delete(Path.Combine(_targetPath, _projectName + ".Svc"), true);
+                    }
                 }
             }
             catch { }

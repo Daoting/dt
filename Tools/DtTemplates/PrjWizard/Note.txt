@@ -1,4 +1,6 @@
-﻿安装
+﻿以管理员身份运行VS的 Developer Command Prompt for VS
+
+安装
 gacutil /i D:\Dt\Tools\DtTemplates\PrjWizard\bin\Debug\net472\Dt.PrjWizard.dll
 
 卸载

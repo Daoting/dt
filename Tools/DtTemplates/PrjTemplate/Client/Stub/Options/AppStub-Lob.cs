@@ -15,7 +15,7 @@ namespace $ext_safeprojectname$
     /// <summary>
     /// 使用搬运工标准服务的存根
     /// </summary>
-    public partial class AppStub : LobStub
+    public class AppStub : LobStub
     {
         public AppStub()
         {
