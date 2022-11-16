@@ -50,11 +50,13 @@ namespace Dt.PrjWizard
             if (_dte == null)
                 return;
 
+            _appFolder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
+
+            ShowWelcomePage();
             AdjustClientPrj();
             AdjustSvcFiles();
             RemoveUnselectPrj();
-            SetStartupPrj();
-            ShowWelcomePage();
+            SetPrjConfiguration();
         }
 
         void AdjustClientPrj()
@@ -66,6 +68,8 @@ namespace Dt.PrjWizard
                 var optionsPath = Path.Combine(stubPath, "Options");
                 var stubFile = Path.Combine(stubPath, "AppStub.cs");
 
+                // Common.props复制到根目录
+                File.Copy(Path.Combine(optionsPath, "Common.props"), Path.Combine(_targetPath, "Common.props"));
                 if (_useSvcType == SvcType.DtSvc)
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Lob.cs"), stubFile);
@@ -84,37 +88,41 @@ namespace Dt.PrjWizard
                     File.Delete(Path.Combine(stubPath, "RpcConfig.cs"));
                 }
                 Directory.Delete(optionsPath, true);
-
-                // 动态替换TargetFrameworks占位符造成初次无法编译！若删除Client项目重新添加，其它app项目的引用也被删除！
-                //// Client项目支持的平台
-                //string target = "";
-                //if (_useAndroid)
-                //    target = ";net6.0-android";
-                //if (_useiOS)
-                //    target += ";net6.0-ios";
-                //if (_useWebAssembly)
-                //    target += ";net6.0";
-
-                //// 替换项目文件的占位符
-                //string prjFile = Path.Combine(_targetPath, _projectName + ".Client", _projectName + ".Client.csproj");
-                //using (var fs = File.Open(prjFile, FileMode.Open, FileAccess.ReadWrite))
-                //using (var sr = new StreamReader(fs))
-                //{
-                //    var str = sr.ReadToEnd().Replace("$targetframeworks$", target);
-                //    var data = Encoding.UTF8.GetBytes(str);
-                //    fs.SetLength(0);
-                //    fs.Write(data, 0, data.Length);
-                //}
-
-                //Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
-                //_dte.Solution.Remove(folder);
-
-                //// Client项目删除后重新添加，否则初次 TargetFrameworks 不对无法编译
-                //var cli = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Client"));
-                //cli.Delete();
-                //_dte.Solution.AddFromFile(cli.FileName);
             }
             catch { }
+
+            /* 动态替换TargetFrameworks占位符造成初次无法编译！很多方法都无法解决！！
+            try
+            {
+                // Client项目支持的平台
+                string target = "";
+                if (_useAndroid)
+                    target = ";net6.0-android";
+                if (_useiOS)
+                    target += ";net6.0-ios";
+                if (_useWebAssembly)
+                    target += ";net6.0";
+
+                // 替换占位符
+                using (var fs = File.Open(Path.Combine(_targetPath, "Targets.props"), FileMode.Open, FileAccess.ReadWrite))
+                using (var sr = new StreamReader(fs))
+                {
+                    var str = sr.ReadToEnd().Replace("$targetframeworks$", target);
+                    var data = Encoding.UTF8.GetBytes(str);
+                    fs.SetLength(0);
+                    fs.Write(data, 0, data.Length);
+                }
+
+                // 动态替换TargetFrameworks占位符造成初次无法编译！删除Test项目使依赖它的项目重新加载！
+                var prj = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Test"));
+                prj.Delete();
+                Directory.Delete(Path.Combine(_targetPath, _projectName + ".Test"), true);
+
+                var cli = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Client"));
+                cli.Save();
+            }
+            catch { }
+            */
         }
 
         void AdjustSvcFiles()
@@ -137,22 +145,21 @@ namespace Dt.PrjWizard
         {
             try
             {
-                Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
                 if (!_useAndroid)
                 {
-                    GetSubPrj(folder, ".Droid")?.Delete();
+                    GetAppSubPrj(".Droid")?.Delete();
                     Directory.Delete(Path.Combine(_targetPath, _projectName + ".Droid"), true);
                 }
-
+                
                 if (!_useiOS)
                 {
-                    GetSubPrj(folder, ".iOS")?.Delete();
+                    GetAppSubPrj(".iOS")?.Delete();
                     Directory.Delete(Path.Combine(_targetPath, _projectName + ".iOS"), true);
                 }
-
+                
                 if (!_useWebAssembly)
                 {
-                    GetSubPrj(folder, ".Wasm")?.Delete();
+                    GetAppSubPrj(".Wasm")?.Delete();
                     Directory.Delete(Path.Combine(_targetPath, _projectName + ".Wasm"), true);
                 }
 
@@ -170,26 +177,27 @@ namespace Dt.PrjWizard
             catch { }
         }
 
-        void SetStartupPrj()
+        void SetPrjConfiguration()
         {
-            Project folder = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name == "App");
-            if (folder == null)
-                return;
-
             try
             {
-                // 设置启动项目
-                var prj = GetSubPrj(folder, ".Win");
                 var sln = _dte.Solution.SolutionBuild as SolutionBuild2;
-                if (sln != null && prj != null)
+                if (sln == null)
+                    return;
+
+                // 设置活动配置
+                var cfg = sln.SolutionConfigurations.Cast<SolutionConfiguration2>().FirstOrDefault((SolutionConfiguration2 c) => c.Name == "Debug" && c.PlatformName == "x86");
+                if (cfg != null)
                 {
-                    sln.StartupProjects = prj.UniqueName;
-                    var cfg = sln.SolutionConfigurations.Cast<SolutionConfiguration2>().FirstOrDefault((SolutionConfiguration2 c) => c.Name == "Debug" && c.PlatformName == "x86");
-                    if (cfg != null)
-                    {
-                        cfg.Activate();
-                    }
+                    cfg.Activate();
                 }
+
+                // 设置启动项目
+                var prj = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
+                if (prj == null)
+                    prj = GetAppSubPrj(".Win");
+                if (prj != null)
+                    sln.StartupProjects = prj.UniqueName;
             }
             catch { }
         }
@@ -205,11 +213,13 @@ namespace Dt.PrjWizard
             //_dte.ItemOperations.Navigate("https://github.com/daoting/dt");
         }
 
-        Project GetSubPrj(Project p_folder, string p_ends)
+        Project _appFolder;
+
+        Project GetAppSubPrj(string p_ends)
         {
-            for (int i = 1; i <= p_folder.ProjectItems.Count; i++)
+            for (int i = 1; i <= _appFolder.ProjectItems.Count; i++)
             {
-                Project subPrj = p_folder.ProjectItems.Item(i).SubProject;
+                Project subPrj = _appFolder.ProjectItems.Item(i).SubProject;
                 if (subPrj != null && subPrj.Name.EndsWith(p_ends))
                 {
                     return subPrj;

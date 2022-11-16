@@ -21,8 +21,8 @@ namespace $ext_safeprojectname$
         {
             Title = "搬运工";
 
-            // ip不能为localhost，确保android ios虚拟机能够访问
-            SvcUrl = "https://x13382a571.oicp.vip/sample";
+            // 先启动$ext_safeprojectname$.Svc服务，localhost只能win wasm访问，若确保android ios虚拟机能够访问请使用IP
+            SvcUrl = "https://localhost:1234";
             InitFixedMenus();
         }
 

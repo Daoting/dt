@@ -14,7 +14,7 @@
         <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
     </PropertyGroup>
 
-	<Import Project="..\$ext_safeprojectname$.Client\Stub\Common.props" />
+	<Import Project="..\Common.props" />
 
 	<ItemGroup>
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="3.3.1" />

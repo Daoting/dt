@@ -4,5 +4,5 @@
 		<RootNamespace>$ext_safeprojectname$</RootNamespace>
 	</PropertyGroup>
 
-	<Import Project="Stub\Common.props" />
+	<Import Project="..\Common.props" />
 </Project>

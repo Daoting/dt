@@ -6,7 +6,7 @@
 		<IsUnoHead>true</IsUnoHead>
 	</PropertyGroup>
 
-	<Import Project="..\$ext_safeprojectname$.Client\Stub\Common.props" />
+	<Import Project="..\Common.props" />
 
 	<ItemGroup>
 		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />

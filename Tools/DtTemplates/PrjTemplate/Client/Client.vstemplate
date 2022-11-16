@@ -13,7 +13,6 @@
 			<ProjectItem ReplaceParameters="true">Agent\AtLocal.cs</ProjectItem>
 
 			<ProjectItem ReplaceParameters="true">Stub\BackgroundJob.cs</ProjectItem>
-			<ProjectItem>Stub\Common.props</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\CustomTheme.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\LocalDict.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\LogSetting.cs</ProjectItem>
@@ -21,10 +20,11 @@
 			<ProjectItem ReplaceParameters="true">Stub\Readme.txt</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\ReceiveShare.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\RpcConfig.cs</ProjectItem>
-			
+
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Lob.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Custom.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Single.cs</ProjectItem>
+			<ProjectItem>Stub\Options\Common.props</ProjectItem>
 			
 			<ProjectItem ReplaceParameters="true">MainWin.xaml</ProjectItem>
 			<ProjectItem ReplaceParameters="true">MainWin.xaml.cs</ProjectItem>
