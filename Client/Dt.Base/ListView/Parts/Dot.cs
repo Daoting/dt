@@ -40,6 +40,7 @@ namespace Dt.Base
             new PropertyMetadata(true));
 
         bool _isInit;
+        bool _isBinding;
         #endregion
 
         public Dot()
@@ -86,6 +87,11 @@ namespace Dt.Base
 
         void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
         {
+            // 已绑定的不再重置 Content
+            ViewItem vi;
+            if (_isBinding || (vi = e.NewValue as ViewItem) == null)
+                return;
+
             if (!_isInit)
             {
                 // OnApplyTemplate 或 Loaded 中绑定在uno上已晚！！
@@ -105,14 +111,14 @@ namespace Dt.Base
                     SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
             }
 
-            ViewItem vi = e.NewValue as ViewItem;
-            if (vi == null)
-                return;
+            var cui = vi.GetCellUI(this);
+            UIElement elem = cui.UI;
+            if (cui.IsBinding)
+                _isBinding = true;
 
-            var result = vi.GetCellUI(this);
             if (AutoHide)
             {
-                if (result == null)
+                if (elem == null)
                 {
                     // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
                     // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
@@ -125,12 +131,12 @@ namespace Dt.Base
                     Visibility = Visibility.Visible;
                 }
             }
-            else if (result == null)
+            else if (elem == null)
             {
                 // 为占位用
-                result = new TextBlock();
+                elem = new TextBlock();
             }
-            Content = result;
+            Content = elem;
         }
     }
 }

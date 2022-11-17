@@ -56,7 +56,7 @@ namespace Dt.PrjWizard
             AdjustClientPrj();
             AdjustSvcFiles();
             RemoveUnselectPrj();
-            SetPrjConfiguration();
+            SetStartupPrj();
         }
 
         void AdjustClientPrj()
@@ -177,7 +177,7 @@ namespace Dt.PrjWizard
             catch { }
         }
 
-        void SetPrjConfiguration()
+        void SetStartupPrj()
         {
             try
             {

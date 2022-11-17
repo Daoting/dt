@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml;
 namespace Dt.Base
 {
     /// <summary>
-    /// 视图行，Row/object 和 ListRow/GridRow 的中间对象
+    /// 视图行，Row/object 和 LvRow 的中间对象
     /// </summary>
     public partial class LvItem : ViewItem
     {
@@ -37,7 +37,6 @@ namespace Dt.Base
         #region 成员变量
         Lv _owner;
         int _index;
-        Dictionary<string, object> _cacheUI;
         #endregion
 
         #region 构造方法
@@ -92,6 +91,11 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 是否启用缓存
+        /// </summary>
+        protected override bool EnableCache => _owner.IsVir;
+
+        /// <summary>
         /// 单击行
         /// </summary>
         internal void OnClick()
@@ -126,35 +130,5 @@ namespace Dt.Base
         {
             _owner.OnItemDoubleClick(Data);
         }
-
-        #region 重写
-        protected override void OnInit()
-        {
-            if (_owner.IsVir)
-                _cacheUI = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        protected override void AddCacheUI(string p_key, object p_ui)
-        {
-            if (_cacheUI != null)
-                _cacheUI[p_key] = p_ui;
-        }
-
-        protected override bool GetCacheUI(string p_key, out object p_ui)
-        {
-            if (_cacheUI != null && _cacheUI.TryGetValue(p_key, out p_ui))
-                return true;
-
-            p_ui = null;
-            return false;
-        }
-
-        protected override void ClearCacheUI()
-        {
-            // 清除缓存，再次绑定时重新生成
-            if (_cacheUI != null)
-                _cacheUI.Clear();
-        }
-        #endregion
     }
 }

@@ -193,6 +193,11 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 是否启用缓存
+        /// </summary>
+        protected override bool EnableCache => _owner.IsVirtualized;
+
+        /// <summary>
         /// 单击行
         /// </summary>
         internal void OnClick()

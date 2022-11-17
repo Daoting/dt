@@ -17,7 +17,7 @@ namespace Dt.Mgr
     class LobRpcConfig : IRpcConfig
     {
         #region 成员变量
-        bool _isSingletonSvc = true;
+        bool _isSingletonSvc = false;
         Dictionary<string, string> _urlDict;
         #endregion
 

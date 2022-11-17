@@ -60,12 +60,17 @@ namespace Dt.Base
         public Dot Dot => _dot;
 
         /// <summary>
+        /// 单元格UI是否采用绑定方式
+        /// </summary>
+        public bool IsBinding { get; set; }
+
+        /// <summary>
         /// 获取设置单元格前景画刷
         /// </summary>
         public Brush Foreground
         {
-            get { return Root == null ? _dot.Foreground : Root.Foreground; }
-            set { GetRoot().Foreground = value; }
+            get { return _dot.Foreground; }
+            set { _dot.Foreground = value; }
         }
 
         /// <summary>
@@ -73,8 +78,8 @@ namespace Dt.Base
         /// </summary>
         public Brush Background
         {
-            get { return Root == null ? _dot.Background : Root.Background; }
-            set { GetRoot().Background = value; }
+            get { return _dot.Background; }
+            set { _dot.Background = value; }
         }
 
         /// <summary>
@@ -82,8 +87,8 @@ namespace Dt.Base
         /// </summary>
         public FontWeight FontWeight
         {
-            get { return Root == null ? _dot.FontWeight : Root.FontWeight; }
-            set { GetRoot().FontWeight = value; }
+            get { return _dot.FontWeight; }
+            set { _dot.FontWeight = value; }
         }
 
         /// <summary>
@@ -91,8 +96,8 @@ namespace Dt.Base
         /// </summary>
         public FontStyle FontStyle
         {
-            get { return Root == null ? _dot.FontStyle : Root.FontStyle; }
-            set { GetRoot().FontStyle = value; }
+            get { return _dot.FontStyle; }
+            set { _dot.FontStyle = value; }
         }
 
         /// <summary>
@@ -100,8 +105,8 @@ namespace Dt.Base
         /// </summary>
         public double FontSize
         {
-            get { return Root == null ? _dot.FontSize : Root.FontSize; }
-            set { GetRoot().FontSize = value; }
+            get { return _dot.FontSize; }
+            set { _dot.FontSize = value; }
         }
 
         /// <summary>
@@ -109,8 +114,8 @@ namespace Dt.Base
         /// </summary>
         public Thickness Padding
         {
-            get { return Root == null ? _dot.Padding : Root.Padding; }
-            set { GetRoot().Padding = value; }
+            get { return _dot.Padding; }
+            set { _dot.Padding = value; }
         }
 
         /// <summary>
@@ -118,8 +123,8 @@ namespace Dt.Base
         /// </summary>
         public Thickness Margin
         {
-            get { return Root == null ? _dot.Margin : Root.Margin; }
-            set { GetRoot().Margin = value; }
+            get { return _dot.Margin; }
+            set { _dot.Margin = value; }
         }
 
         /// <summary>
@@ -128,7 +133,7 @@ namespace Dt.Base
         /// <returns></returns>
         public UIElement CreateDefaultUI()
         {
-            return _item.CreateDefaultUI(_dot);
+            return _item.CreateDefaultUI(_dot).UI;
         }
         #endregion
 
@@ -192,71 +197,7 @@ namespace Dt.Base
         /// <returns>指定类型的值</returns>
         public T GetVal<T>(string p_id)
         {
-            object val = _item[p_id];
-            Type tgtType = typeof(T);
-
-            // null时
-            if (val == null)
-            {
-                // 字符串返回Empty！！！
-                if (tgtType == typeof(string))
-                    return (T)(object)string.Empty;
-
-                // 值类型，可空类型Nullable<>也是值类型
-                if (tgtType.IsValueType)
-                    return (T)Activator.CreateInstance(tgtType);
-
-                return default(T);
-            }
-
-            // 若指定类型和当前类型匹配
-            if (tgtType.IsAssignableFrom(val.GetType()))
-                return (T)val;
-
-            // 枚举类型
-            if (tgtType.IsEnum)
-            {
-                if (val is string str)
-                    return (str == string.Empty) ? (T)Enum.ToObject(tgtType, 0) : (T)Enum.Parse(tgtType, str);
-                return (T)Enum.ToObject(tgtType, val);
-            }
-
-            // 可空类型
-            if (tgtType.IsGenericType && tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                Type tp = tgtType.GetGenericArguments()[0];
-                // 参数类型不同时先转换
-                if (tp != val.GetType())
-                    return (T)Convert.ChangeType(val, tp);
-                return (T)val;
-            }
-
-            // bool特殊处理
-            if (tgtType == typeof(bool))
-            {
-                string str = val.ToString().ToLower();
-                return (T)(object)(str == "1" || str == "true");
-            }
-
-            // 执行转换
-            if (val is IConvertible)
-                return (T)Convert.ChangeType(val, tgtType);
-
-            throw new Exception($"【{p_id}】列值转换异常：无法将【{val}】转换到【{tgtType.Name}】类型！");
-        }
-        #endregion
-
-        #region 内部
-        /// <summary>
-        /// 承载样式的根元素，设置样式时自动创建
-        /// </summary>
-        internal ContentPresenter Root { get; set; }
-
-        ContentPresenter GetRoot()
-        {
-            if (Root == null)
-                Root = new ContentPresenter();
-            return Root;
+            return ObjectEx.To<T>(_item[p_id]);
         }
         #endregion
     }

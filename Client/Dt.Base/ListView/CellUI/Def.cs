@@ -28,27 +28,44 @@ namespace Dt.Base
         /// <param name="e"></param>
         public static void Icon(Env e)
         {
-            var val = e.CellVal;
-            if (val == null)
-                return;
-
-            string txt;
-            if (val is int || val is byte)
-                txt = Res.GetIconChar((Icons)val);
-            else
-                txt = Res.ParseIconChar(val.ToString());
-
-            // 无字符，返回null
-            if (string.IsNullOrEmpty(txt))
-                return;
-
-            e.UI = new TextBlock
+            var tb = new TextBlock
             {
                 Style = Res.LvTextBlock,
-                Text = txt,
                 FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
             };
+            e.UI = tb;
+
+            if (e.Data is Row)
+            {
+                tb.SetBinding(TextBlock.TextProperty, new LvBind(e, (c) =>
+                {
+                    var val = c.CellVal;
+                    string txt = null;
+                    if (val != null)
+                    {
+                        if (val is int || val is byte)
+                            txt = Res.GetIconChar((Icons)val);
+                        else
+                            txt = Res.ParseIconChar(val.ToString());
+                    }
+                    return string.IsNullOrEmpty(txt) ? "" : txt;
+                }));
+            }
+            else
+            {
+                var val = e.CellVal;
+                string txt = null;
+                if (val != null)
+                {
+                    if (val is int || val is byte)
+                        txt = Res.GetIconChar((Icons)val);
+                    else
+                        txt = Res.ParseIconChar(val.ToString());
+                }
+                
+                tb.Text = string.IsNullOrEmpty(txt) ? "" : txt;
+            }
         }
 
         /// <summary>
@@ -57,10 +74,6 @@ namespace Dt.Base
         /// <param name="e"></param>
         public static void CheckBox(Env e)
         {
-            var val = e.CellVal;
-            if (val == null)
-                return;
-
             // 字符模拟CheckBox
             var tb = new TextBlock
             {
@@ -68,19 +81,16 @@ namespace Dt.Base
                 FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
             };
+            e.UI = tb;
 
-            bool b;
-            if (val is bool)
+            if (e.Data is Row)
             {
-                b = (bool)val;
+                tb.SetBinding(TextBlock.TextProperty, new LvBind(e, (c) => c.Bool ? "\uE059" : "\uE057"));
             }
             else
             {
-                string temp = val.ToString().ToLower();
-                b = (temp == "1" || temp == "true");
+                tb.Text = e.CellVal == null ? "" : (e.Bool ? "\uE059" : "\uE057");
             }
-            tb.Text = b ? "\uE059" : "\uE057";
-            e.UI = tb;
         }
 
         /// <summary>
