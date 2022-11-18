@@ -212,7 +212,6 @@ namespace Dt.Base
                 row.Changed += (s, e) => OnValueChanged();
             else if (_data is INotifyPropertyChanged pro)
                 pro.PropertyChanged += (s, e) => OnValueChanged();
-            InitCache();
         }
 
         /// <summary>
@@ -220,7 +219,6 @@ namespace Dt.Base
         /// </summary>
         void OnValueChanged()
         {
-            ClearCache();
             // 重新设置行/项目样式
             Host.SetItemStyle(this);
             ValueChanged?.Invoke();

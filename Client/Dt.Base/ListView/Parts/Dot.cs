@@ -38,9 +38,6 @@ namespace Dt.Base
             typeof(bool),
             typeof(Dot),
             new PropertyMetadata(true));
-
-        bool _isInit;
-        bool _isBinding;
         #endregion
 
         public Dot()
@@ -78,6 +75,7 @@ namespace Dt.Base
         /// 获取设置内容为空时是否自动隐藏Dot，默认true
         /// <para>隐藏时Padding 或 Margin 不再占用位置！</para>
         /// <para>若false，内容为空时仍然占位</para>
+        /// <para>未处理Table模式的Dot，因其负责画右下边线！</para>
         /// </summary>
         public bool AutoHide
         {
@@ -85,58 +83,56 @@ namespace Dt.Base
             set { SetValue(AutoHideProperty, value); }
         }
 
-        void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
+        /// <summary>
+        /// 切换Dot显示隐藏
+        /// </summary>
+        /// <param name="p_isEmpty"></param>
+        internal void ToggleVisible(bool p_isEmpty)
         {
-            // 已绑定的不再重置 Content
-            ViewItem vi;
-            if (_isBinding || (vi = e.NewValue as ViewItem) == null)
+            if (!AutoHide)
                 return;
 
-            if (!_isInit)
+            if (p_isEmpty)
             {
-                // OnApplyTemplate 或 Loaded 中绑定在uno上已晚！！
-                // 初次触发 DataContextChanged 在加载 DataTemplate 后，还未在可视树上
-                _isInit = true;
-
-                // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
-                if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
-                if (FontSize == _defaultFontSize)
-                    SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+                if (Visibility == Visibility.Visible)
+                    Visibility = Visibility.Collapsed;
             }
-
-            var cui = vi.GetCellUI(this);
-            UIElement elem = cui.UI;
-            if (cui.IsBinding)
-                _isBinding = true;
-
-            if (AutoHide)
+            else if (Visibility == Visibility.Collapsed)
             {
-                if (elem == null)
-                {
-                    // 隐藏Dot为了其 Padding 或 Margin 不再占用位置！！！
-                    // 未处理Table模式的单元格ContentPresenter，因其负责画右下边线！
-                    if (Visibility == Visibility.Visible)
-                        Visibility = Visibility.Collapsed;
-                }
-                else if (Visibility == Visibility.Collapsed)
-                {
-                    // 数据变化时重新可见
-                    Visibility = Visibility.Visible;
-                }
+                // 数据变化时重新可见
+                Visibility = Visibility.Visible;
             }
-            else if (elem == null)
-            {
-                // 为占位用
-                elem = new TextBlock();
-            }
-            Content = elem;
+        }
+
+        void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
+        {
+            /*******************************************************************/
+            // 只在初次触发 DataContextChanged 执行一次！
+            // 发生在加载 DataTemplate 后设置 DataContext 时，还未在可视树上！
+            // 若在 OnApplyTemplate 或 Loaded 中绑定在uno上已晚！
+            // Dot及内部元素的所有绑定都为 OneTime ，靠切换 DataContext 更新Dot！！！
+            /*******************************************************************/
+
+            ViewItem vi = e.NewValue as ViewItem;
+            if (vi == null)
+                return;
+
+            DataContextChanged -= OnDataContextChanged;
+
+            // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
+            if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
+                SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
+            if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
+            if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
+                SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
+            if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
+                SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
+            if (FontSize == _defaultFontSize)
+                SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+
+            // 构造内部元素
+            Content = vi.GetCellUI(this);
         }
     }
 }

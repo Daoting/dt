@@ -76,14 +76,24 @@ namespace Dt.Sample
     {
         public static void 性别头像(Env e)
         {
-            TextBlock tb = new TextBlock { FontFamily = Res.IconFont, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-            tb.Text = e.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
+            var tb = new TextBlock { FontFamily = Res.IconFont, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             e.UI = tb;
+
+            e.Set += (c) =>
+            {
+                tb.Text = c.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
+            };
         }
 
         public static void 曲线(Env e)
         {
-            e.UI = new NumericTicker(e.Row.Double("shengao"));
+            var ticker = new NumericTicker();
+            e.UI = ticker;
+
+            e.Set += (c) =>
+            {
+                ticker.Apply(c.Row.Double("shengao"));
+            };
         }
     }
 }

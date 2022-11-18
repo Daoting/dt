@@ -22,15 +22,13 @@ namespace Dt.Sample
         const double _norm = 1.74;
         string _format = "n2";
 
-        public NumericTicker(double p_curValue)
+        public NumericTicker()
         {
             InitializeComponent();
-
             _arrow.Fill = null;
-            ApplyCurValue(p_curValue);
         }
 
-        void ApplyCurValue(double p_curValue)
+        public void Apply(double p_curValue)
         {
             if (double.IsNaN(p_curValue))
             {

@@ -189,34 +189,34 @@ namespace Dt.Mgr.Workflow
     {
         public static void FormatTile(Env e)
         {
-            Grid grid = new Grid
-            {
-                ColumnDefinitions =
-                        {
-                            new ColumnDefinition { Width = GridLength.Auto },
-                            new ColumnDefinition { Width = GridLength.Auto },
-                        },
-                Children =
-                        {
-                            new TextBlock { Text = e.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
-                        }
-            };
+            Grid grid = new Grid { ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto }, } };
+
+            var tbName = new TextBlock { Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center };
+            grid.Children.Add(tbName);
 
             var rc = new Rectangle();
-            int status = e.Row.Int("status");
-            if (status == 0)
-                rc.Fill = Res.中绿;
-            else if (status == 1)
-                rc.Fill = Res.深灰2;
-            else
-                rc.Fill = Res.BlackBrush;
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
-            var tb = new TextBlock { Text = e.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-            Grid.SetColumn(tb, 1);
-            grid.Children.Add(tb);
+            var tbAtv = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
+            Grid.SetColumn(tbAtv, 1);
+            grid.Children.Add(tbAtv);
             e.UI = grid;
+
+            e.Set += (c) =>
+            {
+                tbName.Text = c.Row.Str("formname");
+
+                int status = c.Row.Int("status");
+                if (status == 0)
+                    rc.Fill = Res.中绿;
+                else if (status == 1)
+                    rc.Fill = Res.深灰2;
+                else
+                    rc.Fill = Res.BlackBrush;
+
+                tbAtv.Text = c.Row.Str("atvname");
+            };
         }
     }
 }

@@ -76,43 +76,58 @@ namespace Dt.Sample
     {
         public static void ApplyStyle(Env e)
         {
-            HostOS os = (HostOS)e.CellVal;
-            switch (os)
+            e.Set += (c) =>
             {
-                case HostOS.Linux:
-                    Dt.Base.Def.红白(e);
-                    break;
-                case HostOS.Android:
-                    Dt.Base.Def.蓝白(e);
-                    break;
-                case HostOS.iOS:
-                    Dt.Base.Def.黑白(e);
-                    break;
-                default:
-                    e.Background = Res.GreenBrush;
-                    e.Foreground = Res.WhiteBrush;
-                    e.FontSize = 22;
-                    e.FontWeight = FontWeights.Bold;
-                    e.FontStyle = FontStyle.Italic;
-                    break;
-            }
+                HostOS os = c.GetVal<HostOS>(c.ID);
+                switch (os)
+                {
+                    case HostOS.Linux:
+                        c.Background = Res.RedBrush;
+                        break;
+                    case HostOS.Android:
+                        c.Background = Res.主蓝;
+                        break;
+                    case HostOS.iOS:
+                        c.Background = Res.BlackBrush;
+                        break;
+                    default:
+                        c.Background = Res.GreenBrush;
+                        c.FontSize = 22;
+                        c.FontWeight = FontWeights.Bold;
+                        c.FontStyle = FontStyle.Italic;
+                        break;
+                }
+            };
+            e.Dot.Foreground = Res.WhiteBrush;
         }
 
         public static void 曲线(Env e)
         {
-            e.UI = new NumericTicker(e.Row.Double("shengao"));
+            var ticker = new NumericTicker();
+            e.UI = ticker;
+
+            e.Set += (c) =>
+            {
+                ticker.Apply(c.Row.Double("shengao"));
+            };
         }
 
         public static void 背景(Env e)
         {
-            double d = e.Row.Double(e.ID);
-            e.Background = (d > 1.8) ? Res.GreenBrush : Res.WhiteBrush;
+            e.Set += (c) =>
+            {
+                double d = c.Double;
+                c.Background = (d > 1.8) ? Res.GreenBrush : Res.WhiteBrush;
+            };
         }
 
         public static void 前景(Env e)
         {
-            double d = e.Row.Double(e.ID);
-            e.Foreground = (d > 1.8) ? Res.WhiteBrush : Res.RedBrush;
+            e.Set += (c) =>
+            {
+                double d = c.Double;
+                c.Foreground = (d > 1.8) ? Res.WhiteBrush : Res.RedBrush;
+            };
         }
 
         public static void ModiDef(Env e)
@@ -130,8 +145,13 @@ namespace Dt.Sample
 
         public static void Format(Env e)
         {
-            double d = e.Row.Double("shengao");
-            e.UI = new TextBlock { Style = Res.LvTextBlock, Text = d.ToString(e.Format) };
+            var tb = new TextBlock { Style = Res.LvTextBlock,  };
+            e.UI = tb;
+
+            e.Set += (c) =>
+            {
+                tb.Text = c.Double.ToString(c.Format);
+            };
         }
     }
 

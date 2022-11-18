@@ -353,7 +353,6 @@ namespace Dt.Base.Tools
     {
         public static void FormatTitle(Env e)
         {
-            var item = (TraceLogItem)e.Data;
             Grid grid = new Grid
             {
                 ColumnDefinitions =
@@ -364,40 +363,53 @@ namespace Dt.Base.Tools
                 },
                 Height = 40,
             };
+            var tbTime = new TextBlock { Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center };
+            grid.Children.Add(tbTime);
 
-            TextBlock tb = new TextBlock { Text = item.Log.Timestamp.ToString("HH:mm:ss"), Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center };
-            grid.Children.Add(tb);
+            var tbLevel = new TextBlock { Foreground = Res.WhiteBrush, Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+            Grid.SetColumn(tbLevel, 1);
+            grid.Children.Add(tbLevel);
 
-            tb = new TextBlock { Foreground = Res.WhiteBrush, Text = item.Log.Level.ToString(), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-            if (item.Log.Level == LogEventLevel.Error || item.Log.Level == LogEventLevel.Fatal)
-            {
-                tb.Foreground = Res.RedBrush;
-            }
-            else if (item.Log.Level == LogEventLevel.Warning)
-            {
-                tb.Foreground = Res.YellowBrush;
-            }
-            else if (item.Log.Properties.TryGetValue("Rpc", out var val))
-            {
-                tb.Foreground = Res.湖蓝;
-                var tp = val.ToString("l", null);
-                tb.Text = (tp == "Call") ? "Call" : "Recv";
-            }
-            else if (item.Log.Level == LogEventLevel.Information)
-            {
-                tb.Text = "Inf";
-            }
-            Grid.SetColumn(tb, 1);
-            grid.Children.Add(tb);
-
-            if (item.Log.Exception != null || item.Log.Properties.ContainsKey("Json"))
-            {
-                Button btn = new Button { Content = "\uE006", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
-                btn.Click += OnShowDetail;
-                Grid.SetColumn(btn, 2);
-                grid.Children.Add(btn);
-            }
+            Button btn = new Button { Content = "\uE006", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
+            btn.Click += OnShowDetail;
+            Grid.SetColumn(btn, 2);
+            grid.Children.Add(btn);
             e.UI = grid;
+
+            e.Set += (c) =>
+            {
+                var item = (TraceLogItem)c.Data;
+                tbTime.Text = item.Log.Timestamp.ToString("HH:mm:ss");
+
+                tbLevel.Text = item.Log.Level.ToString();
+                if (item.Log.Level == LogEventLevel.Error || item.Log.Level == LogEventLevel.Fatal)
+                {
+                    tbLevel.Foreground = Res.RedBrush;
+                }
+                else if (item.Log.Level == LogEventLevel.Warning)
+                {
+                    tbLevel.Foreground = Res.YellowBrush;
+                }
+                else if (item.Log.Properties.TryGetValue("Rpc", out var val))
+                {
+                    tbLevel.Foreground = Res.湖蓝;
+                    var tp = val.ToString("l", null);
+                    tbLevel.Text = (tp == "Call") ? "Call" : "Recv";
+                }
+                else if (item.Log.Level == LogEventLevel.Information)
+                {
+                    tbLevel.Text = "Inf";
+                }
+
+                if (item.Log.Exception != null || item.Log.Properties.ContainsKey("Json"))
+                {
+                    btn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btn.Visibility = Visibility.Collapsed;
+                }
+            };
         }
 
         static void OnShowDetail(object sender, RoutedEventArgs e)

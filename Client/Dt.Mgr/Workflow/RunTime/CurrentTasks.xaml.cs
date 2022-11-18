@@ -60,72 +60,56 @@ namespace Dt.Mgr.Workflow
     {
         public static void FormatTitle(Env e)
         {
-            Grid grid = new Grid
-            {
-                ColumnDefinitions =
-                        {
-                            new ColumnDefinition { Width = GridLength.Auto },
-                            new ColumnDefinition { Width = GridLength.Auto },
-                            new ColumnDefinition { Width = GridLength.Auto }
-                        },
-                Children =
-                        {
-                            new TextBlock { Text = e.Row.Str("formname"), Margin= new Thickness(0,0,4,0), VerticalAlignment = VerticalAlignment.Center },
-                        }
-            };
+            Grid grid = new Grid { ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto } } };
+            var tbName = new TextBlock { Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center };
+            grid.Children.Add(tbName);
 
             var rc = new Rectangle { Fill = Res.深灰2 };
             Grid.SetColumn(rc, 1);
             grid.Children.Add(rc);
 
-            var tb = new TextBlock { Text = e.Row.Str("atvname"), Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-            Grid.SetColumn(tb, 1);
-            grid.Children.Add(tb);
+            var tbAtv = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
+            Grid.SetColumn(tbAtv, 1);
+            grid.Children.Add(tbAtv);
 
-            var kind = (WfiItemAssignKind)e.Row.Int("AssignKind");
-            switch (kind)
-            {
-                case WfiItemAssignKind.起始指派:
-                    rc = new Rectangle { Fill = Res.中绿 };
-                    Grid.SetColumn(rc, 2);
-                    grid.Children.Add(rc);
+            rc = new Rectangle();
+            Grid.SetColumn(rc, 2);
+            grid.Children.Add(rc);
 
-                    tb = new TextBlock { Text = "发起", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-                    Grid.SetColumn(tb, 2);
-                    grid.Children.Add(tb);
-                    break;
-
-                case WfiItemAssignKind.回退:
-                    rc = new Rectangle { Fill = Res.亮红 };
-                    Grid.SetColumn(rc, 2);
-                    grid.Children.Add(rc);
-
-                    tb = new TextBlock { Text = "回退", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-                    Grid.SetColumn(tb, 2);
-                    grid.Children.Add(tb);
-                    break;
-
-                case WfiItemAssignKind.追回:
-                    rc = new Rectangle { Fill = Res.亮蓝 };
-                    Grid.SetColumn(rc, 2);
-                    grid.Children.Add(rc);
-
-                    tb = new TextBlock { Text = "追回", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-                    Grid.SetColumn(tb, 2);
-                    grid.Children.Add(tb);
-                    break;
-
-                case WfiItemAssignKind.跳转:
-                    rc = new Rectangle { Fill = Res.BlackBrush };
-                    Grid.SetColumn(rc, 2);
-                    grid.Children.Add(rc);
-
-                    tb = new TextBlock { Text = "跳转", Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-                    Grid.SetColumn(tb, 2);
-                    grid.Children.Add(tb);
-                    break;
-            }
+            var tbInfo = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
+            Grid.SetColumn(tbInfo, 2);
+            grid.Children.Add(tbInfo);
             e.UI = grid;
+
+            e.Set += (c) =>
+            {
+                tbName.Text = c.Row.Str("formname");
+                tbAtv.Text = c.Row.Str("atvname");
+
+                var kind = (WfiItemAssignKind)c.Row.Int("AssignKind");
+                switch (kind)
+                {
+                    case WfiItemAssignKind.起始指派:
+                        rc.Fill = Res.中绿;
+                        tbInfo.Text = "发起";
+                        break;
+
+                    case WfiItemAssignKind.回退:
+                        rc.Fill = Res.亮红;
+                        tbInfo.Text = "回退";
+                        break;
+
+                    case WfiItemAssignKind.追回:
+                        rc.Fill = Res.亮蓝;
+                        tbInfo.Text = "追回";
+                        break;
+
+                    case WfiItemAssignKind.跳转:
+                        rc.Fill = Res.BlackBrush;
+                        tbInfo.Text = "跳转";
+                        break;
+                }
+            };
         }
     }
 }

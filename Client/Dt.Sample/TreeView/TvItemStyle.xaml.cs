@@ -45,13 +45,14 @@ namespace Dt.Sample
     {
         public static void 图标(Env e)
         {
-            e.UI = new TextBlock
+            var tb = new TextBlock
             {
                 Style = Res.LvTextBlock,
                 FontFamily = Res.IconFont,
                 TextAlignment = TextAlignment.Center,
-                Text = ((TvItem)e.ViewItem).Children.Count > 0 ? "\uE067" : "\uE002",
             };
+            e.UI = tb;
+            e.Set += (c) => tb.Text = ((TvItem)c.ViewItem).Children.Count > 0 ? "\uE067" : "\uE002";
         }
     }
 }

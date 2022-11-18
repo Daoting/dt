@@ -7,41 +7,30 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.ListView
 {
     /// <summary>
     /// 简洁版bind，DataContext为ViewItem
     /// </summary>
-    public class LvBind : Binding
+    class LvBind : Binding
     {
-        
-        public LvBind(Env p_env, Func<ConverterArgs, object> p_convert)
+        public LvBind(Dot p_dot, Func<CallArgs, object> p_convert)
         {
-            if (p_env != null && p_convert != null)
-            {
-                Converter = new FreeConverter(p_env.Dot, p_convert);
-                // 自动置绑定标志
-                p_env.IsBinding = true;
-            }
-        }
-        internal LvBind(Dot p_dot, Func<ConverterArgs, object> p_convert)
-        {
-            if (p_dot != null && p_convert != null)
-                Converter = new FreeConverter(p_dot, p_convert);
+            Converter = new FreeConverter(p_dot, p_convert);
+            // Dot及内部元素的所有绑定都为 OneTime ，靠切换 DataContext 更新Dot！！！
+            Mode = BindingMode.OneTime;
         }
     }
 
     class FreeConverter : IValueConverter
     {
         Dot _dot;
-        Func<ConverterArgs, object> _convert;
+        Func<CallArgs, object> _convert;
 
-        public FreeConverter(Dot p_dot, Func<ConverterArgs, object> p_convert)
+        public FreeConverter(Dot p_dot, Func<CallArgs, object> p_convert)
         {
             _dot = p_dot;
             _convert = p_convert;
@@ -51,7 +40,7 @@ namespace Dt.Base
         {
             if (value is ViewItem vi)
             {
-                return _convert.Invoke(new ConverterArgs(vi, _dot));
+                return _convert.Invoke(new CallArgs(vi, _dot));
             }
             return null;
         }

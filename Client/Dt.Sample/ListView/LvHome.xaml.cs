@@ -32,7 +32,6 @@ namespace Dt.Sample
                 new Nav("内置单元格UI", typeof(LvCellUI), Icons.书籍) { Desc = "内置单元格UI的所有方法" },
                 new Nav("自定义单元格UI", typeof(LvCustomCellUI), Icons.Bug) { Desc = "自定义样式、UI，支持多个方法同用，支持重写内置方法" },
                 new Nav("自定义行样式", typeof(LvItemStyle), Icons.修改) { Desc = "定义行样式、单元格样式" },
-                new Nav("单元格值频变", typeof(LvCellValChanging), Icons.Excel) { Desc = "单元格值频繁变化" },
                 new Nav("下拉刷新", typeof(LvPullToRefresh), Icons.刷新) { Desc = "只支持触摸模式" },
                 new Nav("行模板选择", typeof(LvListSelector), Icons.划卡) { Desc = "根据数据动态选择行模板" },
                 new Nav("动态行内容", typeof(LvRowView), Icons.划卡) { Desc = "根据数据动态生成行UI内容" },
