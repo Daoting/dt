@@ -255,8 +255,21 @@ namespace Dt.Base.ListView
 
         void OnValueChanged()
         {
-            DataContext = null;
-            DataContext = _row;
+            if (_owner.View is IRowView rv)
+            {
+                // 动态创建的行内容无法通过切换 DataContext 实现界面刷新
+                ReloadRowView();
+            }
+            else
+            {
+                // 切换行数据上下文
+                DataContext = null;
+                DataContext = _row;
+            }
+        }
+
+        protected virtual void ReloadRowView()
+        {
         }
 
         /// <summary>

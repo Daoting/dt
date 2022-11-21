@@ -176,5 +176,24 @@ namespace Dt.Base.ListView
             _rcPointer = new Rectangle { IsHitTestVisible = false };
             Children.Add(_rcPointer);
         }
+
+        /// <summary>
+        /// 动态创建的行内容无法通过切换DataContext实现界面刷新，重新生成行内容
+        /// </summary>
+        protected override void ReloadRowView()
+        {
+            var rv = (IRowView)_owner.View;
+            var con = rv.Create(_row);
+            if (_owner.SelectionMode == SelectionMode.Multiple)
+            {
+                Children.RemoveAt(1);
+                Children.Insert(1, con);
+            }
+            else
+            {
+                Children.RemoveAt(0);
+                Children.Insert(0, con);
+            }
+        }
     }
 }

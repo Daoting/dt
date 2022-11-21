@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -41,7 +40,7 @@ namespace Dt.Base
             }
             else
             {
-                nav._lv.View = nav._lv.ViewMode == Base.ViewMode.List ? nav.Resources["ListView"] : nav.Resources["TileView"];
+                nav._lv.View = new NavRowView(nav);
             }
         }
         #endregion
@@ -52,7 +51,7 @@ namespace Dt.Base
 
             // 默认采用自动行高，因数据行数较少！
             _lv.ItemHeight = double.NaN;
-            _lv.View = Resources["ListView"];
+            _lv.View = new NavRowView(this);
         }
 
         /// <summary>
@@ -81,14 +80,14 @@ namespace Dt.Base
                     }
                     else
                     {
-                        _lv.ChangeView(mode == Base.ViewMode.List ? Resources["ListView"] : Resources["TileView"], mode);
+                        _lv.ChangeView(new NavRowView(this), mode);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// 获取设置数据源对象，Table或集合对象
+        /// 获取设置 Nav 类型的数据源列表，其它类型不支持
         /// </summary>
         public INotifyList Data
         {

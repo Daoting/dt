@@ -197,6 +197,19 @@ namespace Dt.Base
         protected abstract bool EnableCache { get; }
         #endregion
 
+        #region 方法
+        /// <summary>
+        /// 获取当前行某列的值
+        /// </summary>
+        /// <typeparam name="T">将值转换为指定的类型</typeparam>
+        /// <param name="p_id">列名</param>
+        /// <returns>指定类型的值</returns>
+        public T GetVal<T>(string p_id)
+        {
+            return ObjectEx.To<T>(this[p_id]);
+        }
+        #endregion
+
         #region 内部方法
         /// <summary>
         /// 初始化视图行，包括调用外部 CellEx.SetStyle 设置行样式、附加值变化事件、初始化缓存字典等
