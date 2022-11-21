@@ -376,7 +376,7 @@ namespace Dt.Base.Tools
             grid.Children.Add(btn);
             e.UI = grid;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 var item = (TraceLogItem)c.Data;
                 tbTime.Text = item.Log.Timestamp.ToString("HH:mm:ss");

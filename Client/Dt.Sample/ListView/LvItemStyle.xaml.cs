@@ -79,7 +79,7 @@ namespace Dt.Sample
             var tb = new TextBlock { FontFamily = Res.IconFont, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 tb.Text = c.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
             };
@@ -90,7 +90,7 @@ namespace Dt.Sample
             var ticker = new NumericTicker();
             e.UI = ticker;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 ticker.Apply(c.Row.Double("shengao"));
             };

@@ -27,7 +27,6 @@ namespace Dt.Base
         {
             _item = p_item;
             _dot = p_dot;
-            _dot.DataContextChanged += OnDataContextChanged;
         }
         #endregion
 
@@ -57,35 +56,20 @@ namespace Dt.Base
         public Dot Dot => _dot;
 
         /// <summary>
-        /// 以默认方式生成单元格UI，该元素无需再设置值
+        /// 以默认方式生成单元格UI，该元素无需再设置值内部已处理
         /// </summary>
         /// <returns></returns>
         public UIElement CreateDefaultUI()
         {
-            return _item.CreateDefaultUI(_dot);
+            return _dot.CreateDefaultUI(_item);
         }
 
         /// <summary>
-        /// 初次设置可视元素属性值
+        /// DataContext切换时设置可视元素属性值
         /// </summary>
-        internal void InitSet()
+        internal void InternalSet(CallArgs c)
         {
-            OnSet(_item);
-        }
-
-        void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
-        {
-            if (e.NewValue is ViewItem vi)
-                OnSet(vi);
-        }
-
-        void OnSet(ViewItem p_vi)
-        {
-            if (Set != null)
-            {
-                Set.Invoke(new CallArgs(p_vi, _dot));
-                //_dot.ToggleVisible();
-            }
+            Set?.Invoke(c);
         }
     }
 }

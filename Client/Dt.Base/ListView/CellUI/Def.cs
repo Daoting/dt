@@ -36,7 +36,7 @@ namespace Dt.Base
             };
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 var val = c.CellVal;
                 string txt = null;
@@ -66,7 +66,7 @@ namespace Dt.Base
                 TextAlignment = TextAlignment.Center,
             };
             e.UI = tb;
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 tb.Text = c.Bool ? "\uE059" : "\uE057";
                 c.Dot.ToggleVisible(c.CellVal == null);
@@ -82,7 +82,7 @@ namespace Dt.Base
             Image img = new Image();
             e.UI = img;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 string path = c.Str;
                 if (path.StartsWith("ms-appx:", StringComparison.OrdinalIgnoreCase))
@@ -114,7 +114,7 @@ namespace Dt.Base
             tb.PointerPressed += OnFileLinkPressed;
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 string str = c.Str;
                 int cnt = str.Split(new string[] { "[\"" }, StringSplitOptions.None).Length - 1;
@@ -133,7 +133,7 @@ namespace Dt.Base
             var tb = new TextBlock { Style = Res.LvTextBlock };
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 string txt = "";
                 if (string.IsNullOrEmpty(c.Format) || c.Str == "")
@@ -166,7 +166,7 @@ namespace Dt.Base
             var tb = new TextBlock { Style = Res.LvTextBlock };
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 var val = c.CellVal;
                 DateTime dt;
@@ -217,7 +217,7 @@ namespace Dt.Base
             grid.Children.Add(tb);
             e.UI = grid;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 var txt = c.Str;
                 if (txt.Length > 2)

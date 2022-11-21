@@ -20,7 +20,7 @@
                       BorderBrush="{StaticResource 浅灰2}"
                       BorderThickness="0,1,0,0">
                     <DataTemplate>
-                        <a:Dot ID="#" Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
+                        <a:Dot Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
                     </DataTemplate>
                 </a:Lv>
                 <a:CBar Margin="0,10,0,0">

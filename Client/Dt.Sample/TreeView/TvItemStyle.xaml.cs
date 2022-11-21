@@ -52,7 +52,7 @@ namespace Dt.Sample
                 TextAlignment = TextAlignment.Center,
             };
             e.UI = tb;
-            e.Set += (c) => tb.Text = ((TvItem)c.ViewItem).Children.Count > 0 ? "\uE067" : "\uE002";
+            e.Set += c => tb.Text = ((TvItem)c.ViewItem).Children.Count > 0 ? "\uE067" : "\uE002";
         }
     }
 }

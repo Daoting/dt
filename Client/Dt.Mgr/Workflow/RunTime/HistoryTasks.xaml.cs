@@ -203,7 +203,7 @@ namespace Dt.Mgr.Workflow
             grid.Children.Add(tbAtv);
             e.UI = grid;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 tbName.Text = c.Row.Str("formname");
 

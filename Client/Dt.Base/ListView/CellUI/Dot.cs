@@ -40,15 +40,22 @@ namespace Dt.Base
             new PropertyMetadata(true));
         #endregion
 
+        #region 成员变量
+        bool _isInit;
+        Action<CallArgs> _set;
+        #endregion
+
+        #region 构造方法
         public Dot()
         {
             // 系统默认大小14，uwp初次测量结果偏小
             FontSize = _defaultFontSize;
             DataContextChanged += OnDataContextChanged;
         }
+        #endregion
 
         /// <summary>
-        /// 获取设置列名(字段名)
+        /// 获取设置Dot内容对应的数据对象的属性名，null或空时对应数据对象本身
         /// </summary>
         public string ID { get; set; }
 
@@ -87,7 +94,7 @@ namespace Dt.Base
         /// 切换Dot显示隐藏
         /// </summary>
         /// <param name="p_isEmpty"></param>
-        internal void ToggleVisible(bool p_isEmpty)
+        public void ToggleVisible(bool p_isEmpty)
         {
             if (!AutoHide)
                 return;
@@ -106,33 +113,37 @@ namespace Dt.Base
 
         void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
         {
-            /*******************************************************************/
-            // 只在初次触发 DataContextChanged 执行一次！
-            // 发生在加载 DataTemplate 后设置 DataContext 时，还未在可视树上！
-            // 若在 OnApplyTemplate 或 Loaded 中绑定在uno上已晚！
-            // Dot及内部元素的所有绑定都为 OneTime ，靠切换 DataContext 更新Dot！！！
-            /*******************************************************************/
-
             ViewItem vi = e.NewValue as ViewItem;
             if (vi == null)
                 return;
 
-            DataContextChanged -= OnDataContextChanged;
+            if (!_isInit)
+            {
+                _isInit = true;
 
-            // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
-            if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
-                SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
-            if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
-            if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
-            if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
-            if (FontSize == _defaultFontSize)
-                SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+                /*****************************************************************************************/
+                // 只在初次触发 DataContextChanged 构造内部元素！
+                // 初次触发发生在加载 DataTemplate 后设置 DataContext 时，还未在可视树上！
+                // 若在 OnApplyTemplate 或 Loaded 中绑定在uno上已晚！
+                // Dot及内部元素的只有以下5种样式采用OneTime绑定，其余依靠切换 DataContext 更新Dot！！！
+                /*****************************************************************************************/
 
-            // 构造内部元素
-            Content = vi.GetCellUI(this);
+                // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
+                if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
+                if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
+                    SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
+                if (FontSize == _defaultFontSize)
+                    SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+
+                // 构造内部元素
+                Content = GetCellUI(vi);
+            }
+            _set?.Invoke(new CallArgs(vi, this));
         }
     }
 }

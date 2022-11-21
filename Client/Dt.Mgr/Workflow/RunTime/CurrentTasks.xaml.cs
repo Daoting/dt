@@ -81,7 +81,7 @@ namespace Dt.Mgr.Workflow
             grid.Children.Add(tbInfo);
             e.UI = grid;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 tbName.Text = c.Row.Str("formname");
                 tbAtv.Text = c.Row.Str("atvname");

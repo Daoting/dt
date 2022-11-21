@@ -76,7 +76,7 @@ namespace Dt.Sample
     {
         public static void ApplyStyle(Env e)
         {
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 HostOS os = c.GetVal<HostOS>(c.ID);
                 switch (os)
@@ -106,7 +106,7 @@ namespace Dt.Sample
             var ticker = new NumericTicker();
             e.UI = ticker;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 ticker.Apply(c.Row.Double("shengao"));
             };
@@ -114,7 +114,7 @@ namespace Dt.Sample
 
         public static void 背景(Env e)
         {
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 double d = c.Double;
                 c.Background = (d > 1.8) ? Res.GreenBrush : Res.WhiteBrush;
@@ -123,7 +123,7 @@ namespace Dt.Sample
 
         public static void 前景(Env e)
         {
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 double d = c.Double;
                 c.Foreground = (d > 1.8) ? Res.WhiteBrush : Res.RedBrush;
@@ -148,7 +148,7 @@ namespace Dt.Sample
             var tb = new TextBlock { Style = Res.LvTextBlock,  };
             e.UI = tb;
 
-            e.Set += (c) =>
+            e.Set += c =>
             {
                 tb.Text = c.Double.ToString(c.Format);
             };
