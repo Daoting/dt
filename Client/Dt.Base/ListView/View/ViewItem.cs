@@ -29,56 +29,31 @@ namespace Dt.Base
             "Foreground",
             typeof(SolidColorBrush),
             typeof(ViewItem),
-            new PropertyMetadata(Res.默认前景, OnForegroundChanged));
+            new PropertyMetadata(Res.默认前景));
 
         public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
             "Background",
             typeof(SolidColorBrush),
             typeof(ViewItem),
-            new PropertyMetadata(Res.TransparentBrush, OnBackgroundChanged));
+            new PropertyMetadata(Res.TransparentBrush));
 
         public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register(
             "FontWeight",
             typeof(FontWeight),
             typeof(ViewItem),
-            new PropertyMetadata(FontWeights.Normal, OnFontWeightChanged));
+            new PropertyMetadata(FontWeights.Normal));
 
         public static readonly DependencyProperty FontStyleProperty = DependencyProperty.Register(
             "FontStyle",
             typeof(FontStyle),
             typeof(ViewItem),
-            new PropertyMetadata(FontStyle.Normal, OnFontStyleChanged));
+            new PropertyMetadata(FontStyle.Normal));
 
         public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register(
             "FontSize",
             typeof(double),
             typeof(ViewItem),
-            new PropertyMetadata(16d, OnFontSizeChanged));
-
-        static void OnForegroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewItem)d).OnPropertyChanged("Foreground");
-        }
-
-        static void OnBackgroundChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewItem)d).OnPropertyChanged("Background");
-        }
-
-        static void OnFontWeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewItem)d).OnPropertyChanged("FontWeight");
-        }
-
-        static void OnFontStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewItem)d).OnPropertyChanged("FontStyle");
-        }
-
-        static void OnFontSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewItem)d).OnPropertyChanged("FontSize");
-        }
+            new PropertyMetadata(16d));
         #endregion
 
         #region 成员变量

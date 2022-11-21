@@ -170,7 +170,7 @@ namespace Dt.Sample
                 var row = tbl[0];
                 row["xm"] = row.Str("xm") + "+";
             }
-            else if (_lv.Data is List<Person> pers)
+            else if (_lv.Data is Nl<Person> pers)
             {
                 pers[0].Xm = pers[0].Xm + "-";
             }

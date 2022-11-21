@@ -32,16 +32,10 @@ namespace Dt.Sample
             _lv.ItemStyle = (e) =>
             {
                 var row = e.Row;
-                if (row.Date("chushengrq").Month == 9)
-                    e.Background = Res.浅黄;
-
-                if (row.Double("Shengao") > 1.75)
-                    e.Foreground = Res.RedBrush;
-
-                if (row.Str("bumen") == "循环门诊")
-                    e.FontWeight = FontWeights.Bold;
-                else if (row.Str("bumen") == "内分泌门诊")
-                    e.FontStyle = FontStyle.Italic;
+                e.Background = row.Date("chushengrq").Month == 9 ? Res.浅黄 : Res.WhiteBrush;
+                e.Foreground = row.Double("Shengao") > 1.75 ? Res.RedBrush : Res.BlackBrush;
+                e.FontWeight = row.Str("bumen") == "循环门诊" ? FontWeights.Bold : FontWeights.Normal;
+                e.FontStyle = row.Str("bumen") == "内分泌门诊" ? FontStyle.Italic : FontStyle.Normal;
             };
         }
 
@@ -68,6 +62,33 @@ namespace Dt.Sample
         void OnDelGroup(object sender, RoutedEventArgs e)
         {
             _lv.GroupName = null;
+        }
+
+        void OnUpdateSg(object sender, RoutedEventArgs e)
+        {
+            var row = _lv.Table[0];
+            if (row.Double("shengao") > 1.75)
+                row["shengao"] = 1.69;
+            else
+                row["shengao"] = 1.89;
+        }
+
+        void OnUpdateBirth(object sender, RoutedEventArgs e)
+        {
+            var row = _lv.Table[0];
+            if (row.Date("chushengrq").Month == 9)
+                row["chushengrq"] = row.Date("chushengrq").AddMonths(1);
+            else
+                row["chushengrq"] = new DateTime(1950, 9, 12);
+        }
+
+        void OnUpdateDep(object sender, RoutedEventArgs e)
+        {
+            var row = _lv.Table[0];
+            if (row.Str("bumen") == "循环门诊")
+                row["bumen"] = "内分泌门诊";
+            else
+                row["bumen"] = "循环门诊";
         }
     }
 

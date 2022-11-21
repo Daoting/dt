@@ -69,6 +69,12 @@
                         <Button Content="普通列表" Click="OnListView" />
                         <Button Content="磁贴列表" Click="OnFormView" />
                     </StackPanel>
+                    <a:CBar Title="修改第一行列值" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="修改身高" Click="OnUpdateSg" />
+                        <Button Content="修改出生月份" Click="OnUpdateBirth" />
+                        <Button Content="修改部门" Click="OnUpdateDep" />
+                    </StackPanel>
                     <a:CBar Title="分组统计" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="按部门分组" Click="OnGroup" />
