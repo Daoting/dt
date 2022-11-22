@@ -128,7 +128,13 @@ namespace Dt.Base
                 // Dot及内部元素的只有以下5种样式采用OneTime绑定，其余依靠切换 DataContext 更新Dot！！！
                 /*****************************************************************************************/
 
-                // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
+                // 构造内部元素
+                Content = GetCellUI(vi);
+
+                // 设置初始值
+                _set?.Invoke(new CallArgs(vi, this));
+
+                // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中的行样式
                 if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
                     SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
                 if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
@@ -139,11 +145,11 @@ namespace Dt.Base
                     SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
                 if (FontSize == _defaultFontSize)
                     SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
-
-                // 构造内部元素
-                Content = GetCellUI(vi);
             }
-            _set?.Invoke(new CallArgs(vi, this));
+            else
+            {
+                _set?.Invoke(new CallArgs(vi, this));
+            }
         }
     }
 }

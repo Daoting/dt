@@ -1402,6 +1402,8 @@ namespace Dt.Base
         {
             Closed?.Invoke(this, EventArgs.Empty);
             OnClosed();
+            // 以窗口为单位释放
+            GC.Collect();
         }
 
         /// <summary>

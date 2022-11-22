@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>3.2.1</Version>
+		<Version>3.2.2</Version>
         <PackageId Condition="'$(Configuration)'=='Debug'">Dt.Client.Debug</PackageId>
         <PackageId Condition="'$(Configuration)'=='Release'">Dt.Client</PackageId>
 		<Description>搬运工客户端基础包</Description>
@@ -49,9 +49,5 @@
 
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Agent\Local\" />
     </ItemGroup>
 </Project>

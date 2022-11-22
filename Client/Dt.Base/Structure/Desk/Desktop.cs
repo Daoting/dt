@@ -242,7 +242,6 @@ namespace Dt.Base
 
             // 关闭后
             p_win.AfterClosed();
-            GC.Collect();
             return true;
         }
 
@@ -272,7 +271,6 @@ namespace Dt.Base
                     }
                 }
             }
-            GC.Collect();
         }
 
         /// <summary>
