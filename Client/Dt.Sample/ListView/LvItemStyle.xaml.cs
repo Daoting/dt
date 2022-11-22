@@ -29,7 +29,7 @@ namespace Dt.Sample
             _lv.ChangeView(Resources["GridView"], ViewMode.Table);
             _lv.Data = SampleData.CreatePersonsTbl(100);
 
-            _lv.ItemStyle = (e) =>
+            _lv.ItemStyle = e =>
             {
                 var row = e.Row;
                 e.Background = row.Date("chushengrq").Month == 9 ? Res.浅黄 : Res.WhiteBrush;

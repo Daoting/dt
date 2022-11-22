@@ -74,7 +74,6 @@ namespace Dt.Base
                 }
             }
 
-            chart._dataChanged = true;
             chart._forceRebuild = true;
             chart.InvalidateChart();
         }
@@ -214,7 +213,6 @@ namespace Dt.Base
         bool _loaded;
         StyleGenerator _stgen;
         int _updateCount;
-        bool _dataChanged = true;
         internal bool _forceRebuild = true;
         Point _pinchCenter = new Point();
         #endregion
@@ -362,7 +360,6 @@ namespace Dt.Base
                 if (_autoSeries != value)
                 {
                     _autoSeries = value;
-                    _dataChanged = true;
                     InvalidateChart();
                 }
             }
@@ -376,7 +373,6 @@ namespace Dt.Base
                 if (_bindings != value)
                 {
                     _bindings = value;
-                    _dataChanged = true;
                     InvalidateChart();
                 }
             }
@@ -443,7 +439,6 @@ namespace Dt.Base
                 StyleGenerator.Reset();
             }
             _forceRebuild = true;
-            _dataChanged = true;
             InvalidateChart();
         }
 
@@ -628,9 +623,8 @@ namespace Dt.Base
                 if (_forceRebuild)
                 {
                     _forceRebuild = false;
-                    if (renderer != null && _dataChanged)
+                    if (renderer != null)
                     {
-                        _dataChanged = false;
                         renderer.StyleGen.Reset();
                         irender.Clear();
                         RebuildRenderer(irender);
