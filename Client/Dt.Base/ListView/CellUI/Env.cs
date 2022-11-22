@@ -61,7 +61,10 @@ namespace Dt.Base
         /// <returns></returns>
         public UIElement CreateDefaultUI()
         {
-            return _dot.CreateDefaultUI(_item);
+            var elem = _dot.CreateDefaultUI(_item);
+            if (_dot.SetCallback != null)
+                Set += _dot.SetCallback;
+            return elem;
         }
 
         /// <summary>

@@ -22,6 +22,7 @@ namespace Dt.Base
     /// </summary>
     public partial class Dot
     {
+        #region 创建Content
         /// <summary>
         /// 获取单元格界面元素，提供给Dot.Content用
         /// </summary>
@@ -39,17 +40,26 @@ namespace Dt.Base
                 var args = new Env(p_vi, this);
                 methods.ForEach((mi) => mi.Invoke(null, new object[] { args }));
 
+                // 未创建UI时使用默认UI，如：只设置背景色
+                if (args.UI == null)
+                {
+                    // 内部将默认UI的set回调附加到事件上！
+                    args.UI = args.CreateDefaultUI();
+                }
+                elem = args.UI;
+
                 // DataContext切换时设置可视元素属性值的回调方法
                 _set = args.InternalSet;
-
-                // 可能未创建UI，null时后续会创建默认UI，如：只设置背景色
-                elem = args.UI;
             }
-
-            if (elem == null)
+            else
+            {
                 elem = CreateDefaultUI(p_vi);
+            }
             return elem;
         }
+
+        internal Action<CallArgs> SetCallback => _set;
+        #endregion
 
         #region 默认UI
         internal UIElement CreateDefaultUI(ViewItem p_vi)

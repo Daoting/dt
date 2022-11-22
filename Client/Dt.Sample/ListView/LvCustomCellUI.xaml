@@ -9,6 +9,7 @@
             <a:Col ID="style" Title="样式" Call="LvCustomUI.ApplyStyle" Width="150" />
             <a:Col ID="line" Title="曲线" Call="LvCustomUI.曲线" Width="150" />
             <a:Col ID="shengao" Title="多次处理" Call="LvCustomUI.背景,LvCustomUI.前景" Width="100" />
+            <a:Col ID="async" Title="异步设置" Call="LvCustomUI.AsyncFunc" Width="100" />
             <a:Col ID="date" Title="修改默认UI" Call="LvCustomUI.ModiDef" Width="160" />
             <a:Col ID="format" Title="Format参数" Call="LvCustomUI.Format" Format="n4" Width="110" />
             <a:Col ID="warning" Title="重写内置方法" Call="Def.Warning" Width="120" />
@@ -22,6 +23,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="10">
                     <a:Dot ID="shengao" Call="LvCustomUI.背景,LvCustomUI.前景" />
+                    <a:Dot ID="async" Call="LvCustomUI.AsyncFunc" />
                     <a:Dot ID="date" Call="LvCustomUI.ModiDef" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="10">
@@ -49,16 +51,19 @@
                         <Button Content="普通列表" Click="OnListView" />
                         <Button Content="磁贴列表" Click="OnFormView" />
                     </StackPanel>
-                    <a:CBar RowSpan="5">
+                    <Button x:Name="_btn" Content="开始动态修改数据" Click="OnUpdate" />
+                    <a:CBar RowSpan="6">
                         <TextBlock Margin="10">
                             <LineBreak />
                             <Run Text="列说明：" /><LineBreak />
                             <Run Text="样式：只修改背景前景字体样式" /><LineBreak />
                             <Run Text="曲线：根据行数据完全自定义UI" /><LineBreak />
                             <Run Text="多次处理：任意多的方法按顺序调用" /><LineBreak />
+                            <Run Text="异步设置：Set事件为异步方法" /><LineBreak />
                             <Run Text="修改默认UI：在默认UI的基础上修改" /><LineBreak />
                             <Run Text="Format参数：e.Format获取参数值，多用在通用方法" /><LineBreak />
                             <Run Text="重写内置方法：同名方法覆盖内置，全局有效" /><LineBreak />
+                            <Run Text="通用的数据处理可以使用CallArgs扩展方法复用" /><LineBreak />
                         </TextBlock>
                     </a:CBar>
                 </a:Fv>

@@ -8,8 +8,8 @@
         <a:Cols x:Key="GridView">
             <a:Col ID="scale" Title="小数位" Format="n4" />
             <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
-            <a:Col ID="Icon" Title="图标1" Call="Def.Icon" Width="80" />
-            <a:Col ID="IconName" Title="图标2" Width="80" />
+            <a:Col ID="Icon" Title="整数型图标" Call="Def.Icon" Width="100" />
+            <a:Col ID="IconName" Title="枚举型图标" Width="100" />
             <a:Col ID="CheckBox" Title="选择框" Call="Def.CheckBox" Width="80" />
             <a:Col ID="Image" Title="图片" Call="Def.Image" Width="60" />
             <a:Col ID="File" Title="文件列表" Call="Def.FileLink" Width="150" />
@@ -75,6 +75,7 @@
                         <Button Content="普通列表" Click="OnListView" />
                         <Button Content="磁贴列表" Click="OnFormView" />
                     </StackPanel>
+                    <Button x:Name="_btn" Content="开始动态修改数据" Click="OnUpdate" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

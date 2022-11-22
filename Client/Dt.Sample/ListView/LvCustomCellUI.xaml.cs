@@ -42,7 +42,7 @@ namespace Dt.Sample
 
             Random rand = new Random();
             DateTime birth = Kit.Now;
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 tbl.AddRow(new
                 {
@@ -69,6 +69,41 @@ namespace Dt.Sample
         {
             _lv.ChangeView(Resources["ListView"], ViewMode.Tile);
         }
+
+        void OnUpdate(object sender, RoutedEventArgs e)
+        {
+            if (_dt == null)
+            {
+                _dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                _dt.Tick += (s, e) => Update();
+            }
+
+            if (_dt.IsEnabled)
+            {
+                _btn.Content = "开始动态修改数据";
+                _dt.Stop();
+            }
+            else
+            {
+                _btn.Content = "停止修改";
+                _dt.Start();
+            }
+        }
+
+        void Update()
+        {
+            Random rand = new Random();
+            DateTime birth = Kit.Now;
+            foreach (var row in _lv.Table)
+            {
+                row["style"] = (HostOS)rand.Next(0, 6);
+                row["shengao"] = (double)rand.Next(150, 190) / 100;
+                row["date"] = birth.AddMonths(rand.Next(100));
+                row["warning"] = rand.Next(0, 20);
+            }
+        }
+
+        DispatcherTimer _dt;
     }
 
     [CellUI]
@@ -78,23 +113,39 @@ namespace Dt.Sample
         {
             e.Set += c =>
             {
+                // 动态设置样式时，每种情况都需设置相同属性
                 HostOS os = c.GetVal<HostOS>(c.ID);
                 switch (os)
                 {
                     case HostOS.Linux:
                         c.Background = Res.RedBrush;
+                        c.FontWeight = FontWeights.Normal;
+                        c.FontStyle = FontStyle.Italic;
                         break;
                     case HostOS.Android:
                         c.Background = Res.主蓝;
+                        c.FontWeight = FontWeights.Bold;
+                        c.FontStyle = FontStyle.Normal;
                         break;
                     case HostOS.iOS:
                         c.Background = Res.BlackBrush;
+                        c.FontWeight = FontWeights.Normal;
+                        c.FontStyle = FontStyle.Normal;
+                        break;
+                    case HostOS.Windows:
+                        c.Background = Res.GrayBrush;
+                        c.FontWeight = FontWeights.Bold;
+                        c.FontStyle = FontStyle.Italic;
+                        break;
+                    case HostOS.Mac:
+                        c.Background = Res.亮蓝;
+                        c.FontWeight = FontWeights.Normal;
+                        c.FontStyle = FontStyle.Normal;
                         break;
                     default:
                         c.Background = Res.GreenBrush;
-                        c.FontSize = 22;
-                        c.FontWeight = FontWeights.Bold;
-                        c.FontStyle = FontStyle.Italic;
+                        c.FontWeight = FontWeights.Black;
+                        c.FontStyle = FontStyle.Oblique;
                         break;
                 }
             };
@@ -116,8 +167,7 @@ namespace Dt.Sample
         {
             e.Set += c =>
             {
-                double d = c.Double;
-                c.Background = (d > 1.8) ? Res.GreenBrush : Res.WhiteBrush;
+                c.Background = c.IsHeigher() ? Res.GreenBrush : Res.WhiteBrush;
             };
         }
 
@@ -125,8 +175,19 @@ namespace Dt.Sample
         {
             e.Set += c =>
             {
-                double d = c.Double;
-                c.Foreground = (d > 1.8) ? Res.WhiteBrush : Res.RedBrush;
+                c.Foreground = c.IsHeigher() ? Res.WhiteBrush : Res.RedBrush;
+            };
+        }
+
+        public static void AsyncFunc(Env e)
+        {
+            var tb = new TextBlock { Style = Res.LvTextBlock, };
+            e.UI = tb;
+
+            e.Set += async c =>
+            {
+                await Task.Delay(1000);
+                tb.Text = new Random().Next(1000).ToString();
             };
         }
 
@@ -150,8 +211,16 @@ namespace Dt.Sample
 
             e.Set += c =>
             {
-                tb.Text = c.Double.ToString(c.Format);
+                tb.Text = c.GetVal<double>("shengao").ToString(c.Format);
             };
+        }
+    }
+
+    public static class MyCallArgsEx
+    {
+        public static bool IsHeigher(this CallArgs c)
+        {
+            return c.Double > 1.8;
         }
     }
 

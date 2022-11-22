@@ -52,7 +52,7 @@ namespace Dt.Sample
 
             Random rand = new Random();
             DateTime birth = Kit.Now;
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 tbl.AddRow(new
                 {
@@ -90,5 +90,41 @@ namespace Dt.Sample
         {
             _lv.ChangeView(Resources["ListView"], ViewMode.Tile);
         }
+
+        void OnUpdate(object sender, RoutedEventArgs e)
+        {
+            if (_dt == null)
+            {
+                _dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                _dt.Tick += (s, e) => Update();
+            }
+
+            if (_dt.IsEnabled)
+            {
+                _btn.Content = "开始动态修改数据";
+                _dt.Stop();
+            }
+            else
+            {
+                _btn.Content = "停止修改";
+                _dt.Start();
+            }
+        }
+
+        void Update()
+        {
+            Random rand = new Random();
+            DateTime birth = Kit.Now;
+            foreach (var row in _lv.Table)
+            {
+                row["scale"] = rand.NextDouble();
+                row["date"] = birth.AddMonths(rand.Next(100));
+                row["Icon"] = rand.Next(50);
+                row["IconName"] = (Icons)rand.Next(50);
+                row["CheckBox"] = (rand.Next(50) % 2 == 0);
+            }
+        }
+
+        DispatcherTimer _dt;
     }
 }
