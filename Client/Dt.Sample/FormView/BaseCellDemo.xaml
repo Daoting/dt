@@ -15,7 +15,6 @@
                     <a:CText ID="txtpy" Title="拼音码" UpdateTimely="False" Changed="OnPyChanged" />
                     <a:CText ID="tgtpy" Title="输出拼音码" IsReadOnly="True" />
                     <a:CNum ID="num" Title="数值" Decimals="4" Placeholder="填写数字" />
-                    <a:CMask ID="mask" Title="掩码" />
                     <a:CPassword ID="pwd" Title="密码" />
                     <a:CHtml ID="html" Title="富文本" />
 
@@ -39,6 +38,14 @@
                     <a:CBool ID="checkstr" Title="字符串选择框" TrueVal="男" FalseVal="女" />
                     <a:CBool ID="checkswitch" Title="开关" IsSwitch="True" />
 
+                    <a:CBar Title="掩码" />
+                    <a:CMask ID="masknum" Title="数字型" MaskType="Numeric" Mask="d6" />
+                    <a:CMask ID="maskregex" Title="正则表达式" MaskType="RegEx" Mask="\d{3}-\d{2}-\d{4}" />
+                    <a:CMask ID="maskreg" Title="简单正则" MaskType="Regular" Mask="\d\d\d-\d\d-\d\d\d\d" />
+                    <a:CMask ID="masksimple" Title="简单表达式" MaskType="Simple" Mask="000-00-0000" />
+                    <a:CMask ID="maskdate" Title="日期时间" MaskType="DateTime" Mask="d, dddd" />
+                    <a:CNum ID="numcust" Title="格式数字" Placeholder="填写数字" />
+                    
                     <a:CBar Title="链接格" />
                     <a:CLink Title="默认链接格" />
                     <a:CLink RowSpan="2" IsHorStretch="False">

@@ -43,7 +43,6 @@ namespace Dt.Sample
                 { "txtpy" },
                 { "tgtpy" },
                 { "num", typeof(double) },
-                { "mask" },
                 { "pwd" },
                 { "html" },
 
@@ -57,6 +56,13 @@ namespace Dt.Sample
                 { "checkint", typeof(int) },
                 { "checkstr" },
                 { "checkswitch", typeof(bool) },
+
+                { "masknum", typeof(double) },
+                { "maskregex" },
+                { "maskreg" },
+                { "masksimple" },
+                { "maskdate", typeof(DateTime) },
+                { "numcust", typeof(double) },
 
                 { "tip" },
                 { "tipdate", typeof(DateTime) },
@@ -88,6 +94,13 @@ namespace Dt.Sample
                 checkint = 1,
                 checkstr = "男",
                 checkswitch = true,
+
+                masknum = 12345d,
+                maskregex = "321124321",
+                maskreg = "321124321",
+                masksimple = "321124321",
+                maskdate = now,
+                numcust = 4321,
 
                 tip = "只读信息内容",
                 tipdate = now,
