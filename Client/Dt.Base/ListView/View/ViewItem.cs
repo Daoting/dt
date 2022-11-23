@@ -164,12 +164,7 @@ namespace Dt.Base
         /// <summary>
         /// 宿主
         /// </summary>
-        protected abstract IViewItemHost Host { get; }
-
-        /// <summary>
-        /// 是否启用缓存
-        /// </summary>
-        protected abstract bool EnableCache { get; }
+        internal abstract IViewItemHost Host { get; }
         #endregion
 
         #region 方法

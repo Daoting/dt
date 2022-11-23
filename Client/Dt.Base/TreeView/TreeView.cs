@@ -1026,6 +1026,8 @@ namespace Dt.Base
         #endregion
 
         #region IViewItemHost
+        bool IViewItemHost.IsCustomItemStyle => ItemStyle != null;
+
         void IViewItemHost.SetItemStyle(ViewItem p_item)
         {
             ItemStyle?.Invoke(new TvItemStyleArgs(p_item as TvItem));

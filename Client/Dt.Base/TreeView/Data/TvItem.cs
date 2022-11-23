@@ -187,15 +187,7 @@ namespace Dt.Base
         /// <summary>
         /// 宿主
         /// </summary>
-        protected override IViewItemHost Host
-        {
-            get { return _owner; }
-        }
-
-        /// <summary>
-        /// 是否启用缓存
-        /// </summary>
-        protected override bool EnableCache => _owner.IsVirtualized;
+        internal override IViewItemHost Host => _owner;
 
         /// <summary>
         /// 单击行

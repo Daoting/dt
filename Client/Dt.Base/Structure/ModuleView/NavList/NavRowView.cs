@@ -44,29 +44,13 @@ namespace Dt.Base
 
             if (string.IsNullOrEmpty(p_nav.Desc))
             {
-                grid.Children.Add(new TextBlock
-                {
-                    Text = p_nav.Title,
-                    Style = Res.LvTextBlock,
-                });
+                grid.Children.Add(CreateTitle(p_nav));
             }
             else
             {
                 var sp = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-                sp.Children.Add(new TextBlock
-                {
-                    Text = p_nav.Title,
-                    Style = Res.LvTextBlock,
-                });
-                sp.Children.Add(new TextBlock
-                {
-                    Text = p_nav.Desc,
-                    Style = Res.LvTextBlock,
-                    Foreground = Res.深灰2,
-                    FontSize = Res.小字,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left
-                });
+                sp.Children.Add(CreateTitle(p_nav));
+                sp.Children.Add(CreateDesc(p_nav));
                 grid.Children.Add(sp);
             }
 
@@ -89,22 +73,7 @@ namespace Dt.Base
 
             if (!string.IsNullOrEmpty(p_nav.Warning))
             {
-                var g = new Grid
-                {
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Children = { new Ellipse { Fill = Res.RedBrush, Width = 23, Height = 23 } }
-                };
-                var tb = new TextBlock
-                {
-                    Text = p_nav.Warning.Length > 2 ? "┅" : p_nav.Warning,
-                    Foreground = Res.WhiteBrush,
-                    FontSize = 14,
-                    TextAlignment = TextAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                g.Children.Add(tb);
-
+                var g = CreateWarning(p_nav);
                 grid.Children.Add(g);
                 if (p_nav.Icon != Icons.None)
                     Grid.SetColumn(g, 1);
@@ -130,47 +99,70 @@ namespace Dt.Base
                 });
             }
 
-            sp.Children.Add(new TextBlock
-            {
-                Text = p_nav.Title,
-                Style = Res.LvTextBlock,
-                HorizontalAlignment = HorizontalAlignment.Center
-            });
+            var title = CreateTitle(p_nav);
+            title.HorizontalAlignment = HorizontalAlignment.Center;
+            sp.Children.Add(title);
 
             if (!string.IsNullOrEmpty(p_nav.Desc))
             {
-                sp.Children.Add(new TextBlock
-                {
-                    Text = p_nav.Desc,
-                    Style = Res.LvTextBlock,
-                    Foreground = Res.深灰2,
-                    FontSize = Res.小字,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                });
+                var desc = CreateDesc(p_nav);
+                desc.HorizontalAlignment = HorizontalAlignment.Center;
+                sp.Children.Add(desc);
             }
             grid.Children.Add(sp);
 
             if (!string.IsNullOrEmpty(p_nav.Warning))
             {
-                var g = new Grid
-                {
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Children = { new Ellipse { Fill = Res.RedBrush, Width = 23, Height = 23 } }
-                };
-                var tb = new TextBlock
-                {
-                    Text = p_nav.Warning.Length > 2 ? "┅" : p_nav.Warning,
-                    Foreground = Res.WhiteBrush,
-                    FontSize = 14,
-                    TextAlignment = TextAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                g.Children.Add(tb);
-
+                var g = CreateWarning(p_nav);
                 grid.Children.Add(g);
             }
             return grid;
+        }
+
+        TextBlock CreateTitle(Nav p_nav)
+        {
+            return new TextBlock
+            {
+                Text = p_nav.Title,
+                FontSize = 16d,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                TextWrapping = TextWrapping.Wrap,
+            };
+        }
+
+        TextBlock CreateDesc(Nav p_nav)
+        {
+            return new TextBlock
+            {
+                Text = p_nav.Desc,
+                FontSize = Res.小字,
+                Foreground = Res.深灰2,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                TextWrapping = TextWrapping.Wrap,
+            };
+        }
+
+        Grid CreateWarning(Nav p_nav)
+        {
+            var g = new Grid
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Children = { new Ellipse { Fill = Res.RedBrush, Width = 23, Height = 23 } }
+            };
+            var tb = new TextBlock
+            {
+                Text = p_nav.Warning.Length > 2 ? "┅" : p_nav.Warning,
+                Foreground = Res.WhiteBrush,
+                FontSize = 14,
+                TextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            g.Children.Add(tb);
+            return g;
         }
     }
 }

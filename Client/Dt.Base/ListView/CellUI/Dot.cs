@@ -135,16 +135,19 @@ namespace Dt.Base
                 _set?.Invoke(new CallArgs(vi, this));
 
                 // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中的行样式
-                if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
-                if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
-                    SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
-                if (FontSize == _defaultFontSize)
-                    SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+                if (vi.Host.IsCustomItemStyle)
+                {
+                    if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
+                        SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground"), Mode = BindingMode.OneTime });
+                    if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                        SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background"), Mode = BindingMode.OneTime });
+                    if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
+                        SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight"), Mode = BindingMode.OneTime });
+                    if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)
+                        SetBinding(FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle"), Mode = BindingMode.OneTime });
+                    if (FontSize == _defaultFontSize)
+                        SetBinding(FontSizeProperty, new Binding { Path = new PropertyPath("FontSize"), Mode = BindingMode.OneTime });
+                }
             }
             else
             {
