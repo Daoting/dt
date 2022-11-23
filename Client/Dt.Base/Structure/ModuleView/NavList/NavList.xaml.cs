@@ -156,5 +156,22 @@ namespace Dt.Base
                 }
             }
         }
+
+        protected override void OnInit(object p_params)
+        {
+            if (_tab.OwnWin != null)
+                _tab.OwnWin.Closed += OwnWin_Closed;
+        }
+
+        void OwnWin_Closed(object sender, EventArgs e)
+        {
+            // 释放缓存，引用置null
+            foreach (var row in _lv.Rows)
+            {
+                if (row.Data is Nav nav)
+                    nav.ClearCache();
+            }
+            _lv.Data = null;
+        }
     }
 }

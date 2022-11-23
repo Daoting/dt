@@ -157,6 +157,16 @@ namespace Dt.Base
             return _obj;
         }
 
+        internal void ClearCache()
+        {
+            if (_obj != null)
+            {
+                if (_obj is Win win)
+                    win.AfterClosed();
+                _obj = null;
+            }
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
