@@ -56,7 +56,6 @@ namespace Dt.Base
         public CTip()
         {
             DefaultStyleKey = typeof(CTip);
-            ValConverter = new TipValConverter(this);
         }
         #endregion
 
@@ -108,7 +107,9 @@ namespace Dt.Base
             set { SetValue(ChildProperty, value); }
         }
 
-        #region 重写方法
+        #region 重写
+        protected override IMidVal DefaultMiddle => new TipValConverter();
+
         protected override void OnApplyCellTemplate()
         {
             if (Child == null)
@@ -211,44 +212,39 @@ namespace Dt.Base
     /// <summary>
     /// 源CTip.Data，目标TextBlock.Text
     /// </summary>
-    class TipValConverter : IValueConverter
+    class TipValConverter : IMidVal
     {
-        CTip _owner;
-
-        public TipValConverter(CTip p_owner)
+        public object Get(Mid m)
         {
-            _owner = p_owner;
-        }
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value == null)
+            var val = m.Val;
+            if (val == null)
                 return "";
 
-            if (value is DateTime dt)
+            string format = ((CTip)m.Cell).Format;
+            if (val is DateTime dt)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(_owner.Format))
+                    if (string.IsNullOrEmpty(format))
                         return dt.ToString("yyyy-MM-dd");
-                    return dt.ToString(_owner.Format);
+                    return dt.ToString(format);
                 }
                 catch { }
             }
-            else if (!string.IsNullOrEmpty(_owner.Format) && value is IFormattable f)
+            else if (!string.IsNullOrEmpty(format) && val is IFormattable f)
             {
                 try
                 {
-                    return f.ToString(_owner.Format, null);
+                    return f.ToString(format, null);
                 }
                 catch { }
             }
-            return value.ToString();
+            return val.ToString();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object Set(Mid m)
         {
-            throw new NotImplementedException();
+            return m.Val;
         }
     }
 }

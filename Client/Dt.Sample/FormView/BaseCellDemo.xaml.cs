@@ -132,6 +132,13 @@ namespace Dt.Sample
                 Checkstr = "男",
                 CheckSwitch = true,
 
+                masknum = 12345d,
+                maskregex = "321124321",
+                maskreg = "321124321",
+                masksimple = "321124321",
+                maskdate = now,
+                numcust = 4321,
+
                 Tip = "只读信息内容",
                 TipDate = now,
                 TipNum = 367d,
@@ -213,6 +220,13 @@ namespace Dt.Sample
             public int CheckInt { get; set; }
             public string Checkstr { get; set; }
             public bool CheckSwitch { get; set; }
+
+            public double masknum { get; set; }
+            public string maskregex { get; set; }
+            public string maskreg { get; set; }
+            public string masksimple { get; set; }
+            public DateTime maskdate { get; set; }
+            public double numcust { get; set; }
 
             public string Tip { get; set; }
             public DateTime TipDate { get; set; }

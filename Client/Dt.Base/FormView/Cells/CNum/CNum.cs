@@ -300,7 +300,6 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(CNum);
             NumberFormatInfo = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
-            ValConverter = new NumValConverter();
         }
         #endregion
 
@@ -463,6 +462,8 @@ namespace Dt.Base
                 return FormatDisplay();
             }
         }
+
+        protected override IMidVal DefaultMiddle => new NumValConverter();
         #endregion
 
         #region 外部方法

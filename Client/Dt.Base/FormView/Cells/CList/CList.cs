@@ -128,8 +128,6 @@ namespace Dt.Base
             // 全面屏底部易误点
             if (Kit.IsPhoneUI)
                 _lv.Margin = new Thickness(0, 0, 0, 40);
-
-            ValConverter = new ListValConverter();
         }
         #endregion
 
@@ -326,6 +324,8 @@ namespace Dt.Base
         {
             get { return _lv; }
         }
+
+        protected override IMidVal DefaultMiddle => new ListValConverter();
         #endregion
 
         #region 重写方法

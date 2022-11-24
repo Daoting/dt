@@ -28,108 +28,78 @@ namespace Dt.Base
         internal const double DefaultTitleWidth = 140;
         internal const int DefaultColumnSpan = 8;
 
-        /// <summary>
-        /// 列名(字段名)
-        /// </summary>
         public readonly static DependencyProperty IDProperty = DependencyProperty.Register(
             "ID",
             typeof(string),
             typeof(FvCell),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 列标题
-        /// </summary>
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
             typeof(FvCell),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 列名的宽度
-        /// </summary>
         public static readonly DependencyProperty TitleWidthProperty = DependencyProperty.Register(
             "TitleWidth",
             typeof(double),
             typeof(FvCell),
             new PropertyMetadata(DefaultTitleWidth, OnInvalidatePanel));
 
-        /// <summary>
-        /// 是否显示标题列
-        /// </summary>
         public static readonly DependencyProperty ShowTitleProperty = DependencyProperty.Register(
             "ShowTitle",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(true, OnShowTitleChanged));
 
-        /// <summary>
-        /// 是否垂直显示标题
-        /// </summary>
+        public static readonly DependencyProperty CallProperty = DependencyProperty.Register(
+            "Call",
+            typeof(string),
+            typeof(FvCell),
+            new PropertyMetadata(null));
+
         public static readonly DependencyProperty IsVerticalTitleProperty = DependencyProperty.Register(
             "IsVerticalTitle",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(false, OnIsVerticalTitleChanged));
 
-        /// <summary>
-        /// 单元格是否水平填充
-        /// </summary>
         public static readonly DependencyProperty IsHorStretchProperty = DependencyProperty.Register(
             "IsHorStretch",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(false, OnUpdateLayout));
 
-        /// <summary>
-        /// 占用的行数
-        /// </summary>
         public static readonly DependencyProperty RowSpanProperty = DependencyProperty.Register(
             "RowSpan",
             typeof(int),
             typeof(FvCell),
             new PropertyMetadata(1, OnUpdateLayout));
 
-        /// <summary>
-        /// 是否只读
-        /// </summary>
         public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
             "IsReadOnly",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(false, OnIsReadOnlyChanged));
 
-        /// <summary>
-        /// 是否自动保存单元格最后一次编辑值，默认False
-        /// </summary>
         public static readonly DependencyProperty AutoCookieProperty = DependencyProperty.Register(
             "AutoCookie",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(false));
 
-        /// <summary>
-        /// 占位符文本
-        /// </summary>
         public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
             "Placeholder",
             typeof(string),
             typeof(FvCell),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 最终是否只读，内部绑定用
-        /// </summary>
         public static readonly DependencyProperty ReadOnlyBindingProperty = DependencyProperty.Register(
             "ReadOnlyBinding",
             typeof(bool),
             typeof(FvCell),
             new PropertyMetadata(false, OnReadOnlyChanged));
 
-        /// <summary>
-        /// 格的值绑定
-        /// </summary>
         public static readonly DependencyProperty ValBindingProperty = DependencyProperty.Register(
             "ValBinding",
             typeof(Binding),
@@ -181,9 +151,6 @@ namespace Dt.Base
                 {
                     if (cell._panel != null && cell._panel.Child != null)
                         cell._panel.Child.ClearValue(VisibilityProperty);
-
-                    if (cell.ValConverter != null)
-                        bind.Converter = cell.ValConverter;
                     cell.SetValBinding();
                 }
                 else if (cell._panel != null && cell._panel.Child != null)
@@ -254,6 +221,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowTitleProperty); }
             set { SetValue(ShowTitleProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置自定义取值赋值过程的类名
+        /// </summary>
+        public string Call
+        {
+            get { return (string)GetValue(CallProperty); }
+            set { SetValue(CallProperty, value); }
         }
 
         /// <summary>
@@ -328,8 +304,6 @@ namespace Dt.Base
             set { SetValue(ValBindingProperty, value); }
         }
 
-        internal IValueConverter ValConverter { get; set; }
-
         /// <summary>
         /// 获取所属的Fv
         /// </summary>
@@ -339,6 +313,11 @@ namespace Dt.Base
         /// 在面板上的布局区域
         /// </summary>
         Rect IFvCell.Bounds { get; set; }
+
+        /// <summary>
+        /// 默认的取值赋值处理对象
+        /// </summary>
+        protected virtual IMidVal DefaultMiddle { get; }
         #endregion
 
         #region 外部方法
@@ -389,8 +368,6 @@ namespace Dt.Base
             {
                 if (ReadLocalValue(ValBindingProperty) != DependencyProperty.UnsetValue)
                 {
-                    if (ValConverter != null)
-                        ValBinding.Converter = ValConverter;
                     SetValBinding();
                 }
                 else if (_panel != null && _panel.Child != null)
@@ -435,6 +412,21 @@ namespace Dt.Base
                 return SetFocus();
             }
             return false;
+        }
+
+        /// <summary>
+        /// 获取格的取值赋值处理对象
+        /// </summary>
+        /// <returns></returns>
+        internal IMidVal GetMiddle()
+        {
+            if (!string.IsNullOrEmpty(Call))
+            {
+                var tp = Kit.GetAllTypesByAlias(typeof(MidValAttribute), Call).FirstOrDefault();
+                if (tp.GetInterface("IMidVal") == typeof(IMidVal))
+                    return Activator.CreateInstance(tp) as IMidVal;
+            }
+            return DefaultMiddle;
         }
         #endregion
 
@@ -493,7 +485,13 @@ namespace Dt.Base
                     c.PropertyChanged += OnDataPropertyChanged;
 
                     // 设置新绑定，只设置Source引起immutable异常！
-                    ValBinding = new Binding { Path = new PropertyPath("Val"), Mode = BindingMode.TwoWay, Source = c, ConverterParameter = c.Type };
+                    ValBinding = new FvCellBind(this, p_data)
+                    {
+                        Path = new PropertyPath("Val"),
+                        Mode = BindingMode.TwoWay,
+                        Source = c,
+                        ConverterParameter = c.Type
+                    };
                     return;
                 }
 
@@ -501,7 +499,13 @@ namespace Dt.Base
                 if (pi != null)
                 {
                     // ID为Row的属性，OneTime且只读，只为同步显示用，无法保存
-                    ValBinding = new Binding { Path = new PropertyPath(pi.Name), Mode = BindingMode.OneTime, Source = p_data, ConverterParameter = pi.PropertyType };
+                    ValBinding = new FvCellBind(this, p_data)
+                    {
+                        Path = new PropertyPath(pi.Name),
+                        Mode = BindingMode.OneTime,
+                        Source = p_data,
+                        ConverterParameter = pi.PropertyType
+                    };
                     IsReadOnly = true;
                 }
                 else
@@ -610,13 +614,15 @@ namespace Dt.Base
             }
 
             if (tgt != null)
-                return new Binding
+            {
+                return new FvCellBind(this, p_data)
                 {
                     Path = new PropertyPath("Val"),
                     Mode = pi.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
                     Source = new PropertyView(Owner.DataView, pi, tgt),
-                    ConverterParameter = pi.PropertyType,
+                    ConverterParameter = pi.PropertyType
                 };
+            }
             return null;
         }
 

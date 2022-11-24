@@ -16,34 +16,33 @@ namespace Dt.Base
     /// <summary>
     /// 源CDate.Data，目标CDate.Value
     /// </summary>
-    class DateValConverter : IValueConverter
+    class DateValConverter : IMidVal
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object Get(Mid m)
         {
-            if (value == null)
+            if (m.Val == null)
                 return default(DateTime);
 
-            if (value.GetType() == typeof(DateTime))
-                return (DateTime)value;
+            if (m.Val.GetType() == typeof(DateTime))
+                return (DateTime)m.Val;
 
             try
             {
-                return System.Convert.ToDateTime(value);
+                return System.Convert.ToDateTime(m.Val);
             }
             catch { }
             return default(DateTime);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object Set(Mid m)
         {
-            Type dataType = (Type)parameter;
-            if (dataType == typeof(DateTime))
-                return value;
+            if (m.ValType == typeof(DateTime))
+                return m.Val;
 
             object result = null;
             try
             {
-                result = System.Convert.ChangeType(value, dataType);
+                result = System.Convert.ChangeType(m.Val, m.ValType);
             }
             catch { }
             return result;

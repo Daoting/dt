@@ -60,7 +60,6 @@ namespace Dt.Base
         public CBool()
         {
             DefaultStyleKey = typeof(CBool);
-            ValConverter = new BoolBoxConverter(this);
         }
 
         /// <summary>
@@ -92,6 +91,8 @@ namespace Dt.Base
             get { return GetValue(FalseValProperty); }
             set { SetValue(FalseValProperty, value); }
         }
+
+        protected override IMidVal DefaultMiddle => new BoolBoxConverter();
 
         protected override void OnApplyCellTemplate()
         {
@@ -129,23 +130,17 @@ namespace Dt.Base
         }
     }
 
-    public class BoolBoxConverter : IValueConverter
+    class BoolBoxConverter : IMidVal
     {
-        CBool _cell;
-
-        public BoolBoxConverter(CBool p_cell)
+        public object Get(Mid m)
         {
-            _cell = p_cell;
+            return object.Equals(m.Val, ((CBool)m.Cell).TrueVal);
         }
 
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object Set(Mid m)
         {
-            return object.Equals(value, _cell.TrueVal);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return (bool)value ? _cell.TrueVal : _cell.FalseVal;
+            var cell = (CBool)m.Cell;
+            return (bool)m.Val ? cell.TrueVal : cell.FalseVal;
         }
     }
 }

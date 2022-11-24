@@ -16,34 +16,33 @@ namespace Dt.Base
     /// <summary>
     /// 源Cell.Val，目标CList.Value
     /// </summary>
-    class ListValConverter : IValueConverter
+    class ListValConverter : IMidVal
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object Get(Mid m)
         {
-            return value;
+            return m.Val;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object Set(Mid m)
         {
-            Type dataType = (Type)parameter;
-            if (value == null)
+            if (m.Val == null)
             {
-                if (dataType.IsEnum)
+                if (m.ValType.IsEnum)
                     return default(Enum);
                 return null;
             }
 
-            if (value.GetType() == dataType)
-                return value;
+            if (m.Val.GetType() == m.ValType)
+                return m.Val;
 
             // 从ListDlg选择对象后回填数据时
-            if (dataType == typeof(string))
-                return value.ToString();
+            if (m.ValType == typeof(string))
+                return m.Val.ToString();
 
             object result = null;
             try
             {
-                result = System.Convert.ChangeType(value, dataType);
+                result = System.Convert.ChangeType(m.Val, m.ValType);
             }
             catch { }
             return result;

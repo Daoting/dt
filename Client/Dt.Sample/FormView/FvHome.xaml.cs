@@ -28,6 +28,7 @@ namespace Dt.Sample
                 new Nav("基础格", typeof(BaseCellDemo), Icons.词典) { Desc = "基本格、日期格、布尔格、链接格，可通过属性编辑器动态设置格属" },
                 new Nav("选择格", typeof(SelectionCellDemo), Icons.分组) { Desc = "列表格、树形格、图标格、颜色格" },
                 new Nav("文件格", typeof(FileCellDemo), Icons.图片) { Desc = "文件格、图像格" },
+                new Nav("自定义格值", typeof(FvCustomVal), Icons.Bug) { Desc = "自定义编辑器值与数据源值的转换" },
                 new Nav("数据操作", typeof(FvData), Icons.全选) { Desc = "对二维表格数据的增删改或对普通对象的修改" },
                 new Nav("属性编辑器", typeof(FvObjData), Icons.小图标) { Desc = "对控件或普通对象的属性进行编辑" },
                 new Nav("自动生成格", typeof(FvAutoCell), Icons.排列) { Desc = "根据数据源列类型生成对应格" },

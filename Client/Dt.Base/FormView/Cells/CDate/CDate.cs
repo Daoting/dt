@@ -97,7 +97,6 @@ namespace Dt.Base
         public CDate()
         {
             DefaultStyleKey = typeof(CDate);
-            ValConverter = new DateValConverter();
         }
         #endregion
 
@@ -130,8 +129,9 @@ namespace Dt.Base
             set { SetValue(ValueProperty, value); }
         }
 
+        #region 重写
+        protected override IMidVal DefaultMiddle => new DateValConverter();
 
-        #region 重写方法
         protected override void OnApplyCellTemplate()
         {
             LoadContent();
