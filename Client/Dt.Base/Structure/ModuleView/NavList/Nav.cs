@@ -133,7 +133,7 @@ namespace Dt.Base
         /// </summary>
         public bool Cache { get; set; } = true;
 
-        object _obj;
+        WeakReference _obj;
 
         /// <summary>
         /// 获取主区内容
@@ -148,22 +148,27 @@ namespace Dt.Base
                 return Activator.CreateInstance(Type, Params);
             }
 
-            if (_obj != null)
-                return _obj;
+            if (_obj != null && _obj.IsAlive)
+                return _obj.Target;
 
             if (Type != null)
-                _obj = (Params == null) ? Activator.CreateInstance(Type) : Activator.CreateInstance(Type, Params);
-            return _obj;
+            {
+                var obj = (Params == null) ? Activator.CreateInstance(Type) : Activator.CreateInstance(Type, Params);
+                _obj = new WeakReference(obj);
+                return obj;
+            }
+            return null;
         }
 
-        internal void ClearCache()
+        internal Task<bool> AllowClose()
         {
-            if (_obj != null)
+            if (_obj != null
+                && _obj.IsAlive
+                && _obj.Target is Win win)
             {
-                if (_obj is Win win)
-                    win.AfterClosed();
-                _obj = null;
+                return win.AllowClose();
             }
+            return Task.FromResult(true);
         }
 
         #region INotifyPropertyChanged

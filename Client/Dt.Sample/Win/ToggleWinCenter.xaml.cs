@@ -19,16 +19,20 @@ namespace Dt.Sample
 {
     public partial class ToggleWinCenter : Win
     {
+        string _id;
+
         public ToggleWinCenter()
         {
             InitializeComponent();
 
+            _id = new Random().Next(1000).ToString();
             _nav.Data = new Nl<Nav>
             {
                 new Nav("内容为窗口", typeof(SingleViewWin), Icons.公告),
                 new Nav("内容为嵌套窗口", typeof(ToggleWinCenter), Icons.田字格),
                 new Nav("内容为UserControl", typeof(TabNav1), Icons.饼图),
                 new Nav("内容为空", default(Type), Icons.全选),
+                new Nav("窗口标识：" + _id),
             };
 
             LoadMain(new Button { Content = "abc" });
@@ -72,6 +76,11 @@ namespace Dt.Sample
             if (btn.Tag == null)
                 btn.Tag = "字符串";
             LoadMain(btn.Tag);
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            return Kit.Confirm("确认允许关闭吗？窗口标识：" + _id);
         }
     }
 }

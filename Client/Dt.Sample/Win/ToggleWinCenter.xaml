@@ -6,7 +6,10 @@
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Order="1" Title="自定义">
+            <a:Tab Order="1">
+                <a:NavList x:Name="_nav" Title="描述列表" />
+            </a:Tab>
+            <a:Tab Order="2" Title="自定义">
                 <StackPanel Margin="-1,-1,0,0">
                     <a:BtnItem Icon="公告" Title="内容为窗口" Click="OnChanged" a:Ex.TagCls="Dt.Sample.SingleViewWin" />
                     <a:BtnItem Icon="田字格" Title="内容为嵌套窗口" Click="OnChanged" a:Ex.TagCls="Dt.Sample.ToggleWinCenter" />
@@ -15,9 +18,6 @@
                     <a:BtnItem Icon="pos机" Title="内容为字符串" Click="OnCenterStr" />
                     <a:BtnItem Title="内容为空" Click="OnCenterNull" />
                 </StackPanel>
-            </a:Tab>
-            <a:Tab Order="2">
-                <a:NavList x:Name="_nav" Title="描述列表" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

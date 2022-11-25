@@ -159,19 +159,33 @@ namespace Dt.Base
 
         protected override void OnInit(object p_params)
         {
-            if (_tab.OwnWin != null)
-                _tab.OwnWin.Closed += OwnWin_Closed;
+            // 递归触发嵌套子窗口Closing事件，PhoneUI模式页面返回时已处理
+            if (!Kit.IsPhoneUI && _tab.OwnWin != null)
+            {
+                _tab.OwnWin.Closing += OwnWin_Closing;
+            }
         }
 
-        void OwnWin_Closed(object sender, EventArgs e)
+        async void OwnWin_Closing(object sender, AsyncCancelEventArgs e)
         {
-            // 释放缓存，引用置null
-            foreach (var row in _lv.Rows)
+            using (e.Wait())
             {
-                if (row.Data is Nav nav)
-                    nav.ClearCache();
+                foreach (var row in _lv.Rows)
+                {
+                    if (row.Data is Nav nav)
+                    {
+                        var to = nav.To == null ? To : nav.To.Value;
+                        if (to == NavTarget.WinMain)
+                        {
+                            if (!await nav.AllowClose())
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                    }
+                }
             }
-            _lv.Data = null;
         }
     }
 }
