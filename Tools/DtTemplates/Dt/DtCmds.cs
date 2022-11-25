@@ -1,5 +1,6 @@
 ﻿using Dt.Cells;
 using Dt.Editor;
+using Dt.Fv;
 using Dt.LocalTbl;
 using Dt.ManyToMany;
 using Dt.OnToMany;
@@ -32,7 +33,8 @@ namespace Dt
         const int MenuCmdId = 0x0104;
 
         const int LvCellExClsCmdId = 0x2000;
-        
+        const int FvCellCallCmdId = 0x2001;
+
         const int SingleTblCmdId = 0x3000;
         const int OnToManyCmdId = 0x3001;
         const int ManyToManyCmdId = 0x3002;
@@ -70,6 +72,7 @@ namespace Dt
             cs.AddCommand(CmdXamlForm(MenuCmdId, typeof(MenuXaml)));
 
             cs.AddCommand(CmdRun(LvCellExClsCmdId, typeof(CellUI)));
+            cs.AddCommand(CmdRun(FvCellCallCmdId, typeof(FvCall)));
 
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));

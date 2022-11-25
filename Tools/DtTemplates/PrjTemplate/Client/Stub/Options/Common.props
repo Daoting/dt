@@ -11,7 +11,7 @@
 
 	<ItemGroup>
 		<!-- 调试包源码可引用 Dt.Client.Debug 包 -->
-		<PackageReference Include="Dt.Client" Version="3.2.1" />
+		<PackageReference Include="Dt.Client" Version="3.2.3" />
 	</ItemGroup>
 
 	<!-- 定义平台常量 -->

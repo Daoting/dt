@@ -55,6 +55,8 @@
     <Compile Include="Editor\BatchCells.Designer.cs">
       <DependentUpon>BatchCells.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FvCall\FvCallTemp.cs" />
+    <Compile Include="FvCall\FvCall.cs" />
     <Compile Include="Xaml\MenuXaml.cs">
       <SubType>Form</SubType>
     </Compile>

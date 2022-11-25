@@ -148,7 +148,8 @@ namespace Dt.Mgr
                     {
                         var om = AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
                         _favMenus.Add(om);
-                        idsAll.Remove(fav.MenuID);
+                        // 原位置仍存在
+                        //idsAll.Remove(fav.MenuID);
                         if (_favMenus.Count >= maxFav)
                             break;
                     }

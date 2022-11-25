@@ -192,23 +192,30 @@
 			<Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0100" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
-					<ButtonText>自定义单元格UI类</ButtonText>
+					<ButtonText>Lv的Call类</ButtonText>
 				</Strings>
 			</Button>
 
-			<Button guid="guidDtPackageCmdSet" id="InsertEntityCmdId" priority="0x0101" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="FvCellCallCmdId" priority="0x0101" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
+				<Strings>
+					<ButtonText>Fv的Call类</ButtonText>
+				</Strings>
+			</Button>
+			
+			<Button guid="guidDtPackageCmdSet" id="InsertEntityCmdId" priority="0x0102" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
 					<ButtonText>Entity子类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="InsertAgentCmdId" priority="0x0102" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="InsertAgentCmdId" priority="0x0103" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
 					<ButtonText>客户端Agent类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="InsertApiCmdId" priority="0x0103" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="InsertApiCmdId" priority="0x0104" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderServerGroup" />
 				<Strings>
 					<ButtonText>服务端Api类</ButtonText>
@@ -257,6 +264,7 @@
 			<IDSymbol name="MenuCmdId" value="0x0104" />
 
 			<IDSymbol name="LvCellExClsCmdId" value="0x2000" />
+			<IDSymbol name="FvCellCallCmdId" value="0x2001" />
 
 			<IDSymbol name="SingleTblCmdId" value="0x3000" />
 			<IDSymbol name="OnToManyCmdId" value="0x3001" />

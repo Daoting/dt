@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Dt.Cells
+namespace Dt.Fv
 {
-    class CellUI : IAutoRun
+    class FvCall : IAutoRun
     {
         public void Run()
         {
-            string name = "LvCall" + new Random().Next(10, 99).ToString();
+            string name = "FvCall" + new Random().Next(10, 99).ToString();
             var dt = new Dictionary<string, string>
                 {
                     {"$rootnamespace$", Kit.GetNamespace() },
@@ -17,7 +17,7 @@ namespace Dt.Cells
                     {"$username$", Environment.UserName },
                 };
             var path = Path.Combine(Kit.GetFolderPath(), $"{name}.cs");
-            Kit.WritePrjFile(path, "Dt.CellUI.CellUITemp.cs", dt);
+            Kit.WritePrjFile(path, "Dt.FvCall.FvCallTemp.cs", dt);
             Kit.OpenFile(path);
         }
     }
