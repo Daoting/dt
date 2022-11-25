@@ -21,42 +21,51 @@ namespace Dt.Base.Report
     public sealed partial class RptDesignHome : Win
     {
         RptDesignInfo _info;
-        RptDesignWin _design;
-        TextBox _tbXaml;
-        ViewSettingWin _viewSetting;
-        PageSettingWin _pageSetting;
-        ParamsWin _params;
-        DbDataWin _dbData;
-        ScriptDataWin _scriptData;
 
         public RptDesignHome(RptDesignInfo p_info)
         {
             InitializeComponent();
+
             _info = p_info;
-            _design = new RptDesignWin(_info);
-            LoadMain(_design);
-            _btnSave.Command = new SaveCmd(_info);
-        }
 
-        void OnEditTemplate(object sender, RoutedEventArgs e)
-        {
-            LoadMain(_design);
-        }
-
-        void OnExport(object sender, RoutedEventArgs e)
-        {
-            if (_tbXaml == null)
+            Nav nav = new Nav("模板编辑", typeof(RptDesignWin), Icons.修改) { Desc = "编辑报表模板", Params = _info };
+            Nl<GroupData<Nav>> ds = new Nl<GroupData<Nav>>();
+            var group = new GroupData<Nav>
             {
-                _tbXaml = new TextBox { AcceptsReturn = true, Style = Res.FvTextBox };
-                ScrollViewer.SetHorizontalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
-                ScrollViewer.SetVerticalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
-            }
-                
-            _tbXaml.Text = AtRpt.SerializeTemplate(_info.Root);
-            LoadMain(_tbXaml);
+                nav,
+                new Nav("参数定义", typeof(ParamsWin), Icons.信件) { Desc = "报表输入参数可以为内部宏参数或外部输入参数", Params = _info },
+                new Nav("Db数据源", typeof(DbDataWin), Icons.数据库) { Desc = "定义查询数据的SQL语句", Params = _info },
+                new Nav("脚本数据源", typeof(ScriptDataWin), Icons.U盘) { Desc = "程序中动态提供的数据", Params = _info },
+                new Nav("页面设置", typeof(PageSettingWin), Icons.文件) { Desc = "设置报表页面大小", Params = _info },
+                new Nav("报表预览设置", typeof(ViewSettingWin), Icons.大图标) { Desc = "定制报表预览窗口的内容", Params = _info },
+            };
+            group.Title = "设计";
+            ds.Add(group);
+
+            group = new GroupData<Nav>
+            {
+                new Nav("保存模板", null, Icons.保存) { Callback = OnSave, Desc = "保存报表模板Xml内容" },
+                new Nav("查看模板Xml", null, Icons.导出) { Callback = OnExport, Desc = "浏览当前报表模板的Xml内容" },
+                new Nav("导入", null, Icons.导入) { Callback = OnImport, Desc = "从外部导入报表模板" },
+                new Nav("报表预览", null, Icons.门卫) { Callback = OnPreview, Desc = "浏览运行时报表" },
+            };
+            group.Title = "操作";
+            ds.Add(group);
+
+            _nav.Data = ds;
+            LoadMain(nav.GetCenter());
         }
 
-        async void OnImport(object sender, RoutedEventArgs e)
+        void OnExport(Win p_win, Nav p_nav)
+        {
+            var tb = new TextBox { AcceptsReturn = true, Style = Res.FvTextBox };
+            ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
+            ScrollViewer.SetVerticalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
+            tb.Text = AtRpt.SerializeTemplate(_info.Root);
+            LoadMain(tb);
+        }
+
+        async void OnImport(Win p_win, Nav p_nav)
         {
             if (_info.IsDirty && !await Kit.Confirm("当前模板已修改，导入新模板会丢失修改内容，继续导入吗？"))
                 return;
@@ -81,7 +90,7 @@ namespace Dt.Base.Report
             }
         }
 
-        void OnPreview(object sender, RoutedEventArgs e)
+        void OnPreview(Win p_win, Nav p_nav)
         {
             // 比较窗口类型和初始参数，关闭旧窗口
             var info = new RptInfo { Name = _info.Name, Root = _info.Root };
@@ -95,44 +104,12 @@ namespace Dt.Base.Report
             AtRpt.Show(info);
         }
 
-        void OnPageSetting(object sender, RoutedEventArgs e)
+        void OnSave(Win p_win, Nav p_nav)
         {
-            if (_pageSetting == null)
-                _pageSetting = new PageSettingWin(_info);
-            LoadMain(_pageSetting);
-        }
-
-        void OnViewSetting(object sender, RoutedEventArgs e)
-        {
-            if (_viewSetting == null)
-                _viewSetting = new ViewSettingWin(_info);
-            LoadMain(_viewSetting);
-        }
-
-        void OnParams(object sender, RoutedEventArgs e)
-        {
-            if (_params == null)
-                _params = new ParamsWin(_info);
-            LoadMain(_params);
-        }
-
-        void OnDbData(object sender, RoutedEventArgs e)
-        {
-            if (_dbData == null)
-                _dbData = new DbDataWin(_info);
-            LoadMain(_dbData);
-        }
-
-        void OnScriptData(object sender, RoutedEventArgs e)
-        {
-            if (_scriptData == null)
-                _scriptData = new ScriptDataWin(_info);
-            LoadMain(_scriptData);
-        }
-
-        void OnSave(object sender, RoutedEventArgs e)
-        {
-            _info.SaveTemplate();
+            if (_info.IsDirty)
+                _info.SaveTemplate();
+            else
+                Kit.Msg("报表模板未修改，无需保存！");
         }
     }
 }

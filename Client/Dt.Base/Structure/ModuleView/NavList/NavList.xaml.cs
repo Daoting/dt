@@ -141,7 +141,7 @@ namespace Dt.Base
                 var to = nav.To == null ? To : nav.To.Value;
                 if (to == NavTarget.WinMain)
                 {
-                    var center = nav.GetCenter(nav.Params);
+                    var center = nav.GetCenter();
                     if (center is Win win)
                     {
                         win.Title = nav.Title;

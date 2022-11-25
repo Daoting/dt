@@ -138,22 +138,21 @@ namespace Dt.Base
         /// <summary>
         /// 获取主区内容
         /// </summary>
-        /// <param name="p_params"></param>
         /// <returns></returns>
-        public object GetCenter(object p_params = null)
+        public object GetCenter()
         {
             if (!Cache)
             {
-                if (p_params == null)
+                if (Params == null)
                     return Activator.CreateInstance(Type);
-                return Activator.CreateInstance(Type, p_params);
+                return Activator.CreateInstance(Type, Params);
             }
 
             if (_obj != null)
                 return _obj;
 
             if (Type != null)
-                _obj = (p_params == null) ? Activator.CreateInstance(Type) : Activator.CreateInstance(Type, p_params);
+                _obj = (Params == null) ? Activator.CreateInstance(Type) : Activator.CreateInstance(Type, Params);
             return _obj;
         }
 
