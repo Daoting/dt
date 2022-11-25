@@ -18,7 +18,7 @@ namespace Dt.Base
     /// 窗口主区，中部停靠项列表，在xaml中标志作用，不加载到可视树
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Main : Control, IPaneList
+    public sealed partial class Main : Control, IPaneList
     {
         /// <summary>
         /// 获取内容元素集合

@@ -24,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 增加属性控制的TabItem
     /// </summary>
-    public partial class Tab : TabItem, IPhonePage
+    public sealed partial class Tab : TabItem, IPhonePage
     {
         #region 静态内容
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(

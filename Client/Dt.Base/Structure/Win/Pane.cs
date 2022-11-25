@@ -25,7 +25,7 @@ namespace Dt.Base
     /// 可停靠项，内部子项为 Tabs 或 Pane
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Pane : DtControl, IPaneList
+    public sealed partial class Pane : DtControl, IPaneList
     {
         #region 静态内容
         public static readonly DependencyProperty PosProperty = DependencyProperty.Register(
