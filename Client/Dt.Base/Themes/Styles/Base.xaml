@@ -9,29 +9,25 @@
 
     <!--BtnItem-->
     <Style TargetType="a:BtnItem">
-        <Setter Property="Background" Value="{StaticResource 主蓝}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:BtnItem">
-                    <Grid x:Name="RootGrid" Background="Transparent">
-                        <Grid x:Name="ContentGrid" Margin="6">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" MinHeight="60">
+                        <Grid x:Name="ContentGrid" Margin="10,8,10,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{TemplateBinding Background}"
-                                    Height="50"
-                                    Width="50"
-                                    VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}, RelativeSource={RelativeSource TemplatedParent}}"
-                                           FontFamily="{StaticResource IconFont}"
-                                           FontSize="30"
-                                           Foreground="White"
-                                           VerticalAlignment="Center"
-                                           TextAlignment="Center" />
-                            </Border>
+                            <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}, RelativeSource={RelativeSource TemplatedParent}}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="30"
+                                       Foreground="{StaticResource 主蓝}"
+                                       Margin="0,0,10,0"
+                                       VerticalAlignment="Center"
+                                       TextAlignment="Center" />
 
                             <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
                                 <Grid>
