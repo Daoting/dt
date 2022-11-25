@@ -111,5 +111,14 @@ namespace Dt.Base.Report
             else
                 Kit.Msg("报表模板未修改，无需保存！");
         }
+
+        protected override async Task<bool> OnClosing()
+        {
+            if (_info.IsDirty)
+            {
+                return await Kit.Confirm("当前模板已修改，窗口关闭会丢失修改内容，确认要关闭吗？");
+            }
+            return true;
+        }
     }
 }

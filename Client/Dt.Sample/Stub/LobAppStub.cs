@@ -22,7 +22,8 @@ namespace Dt.Sample
         public LobAppStub()
         {
             Title = "搬运工";
-            SvcUrl = "https://x13382a571.oicp.vip/sample";
+            SvcUrl = "http://10.10.1.2/sample";
+            //SvcUrl = "https://x13382a571.oicp.vip/sample";
             InitFixedMenus();
         }
 
