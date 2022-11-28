@@ -13,7 +13,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CText ID="script" Title="完整脚本类型" />
+                    <a:CText ID="script" Title="脚本类型名称" />
                     <a:CBool ID="showsearchform" Title="显示查询面板" />
                     <a:CBool ID="autoquery" Title="初始自动查询" />
                     <a:CBool ID="showcolheader" Title="显示列头" />

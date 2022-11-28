@@ -27,5 +27,5 @@
     <Text row="4" col="1" val=":&quot;合计 &quot;&#xD;&#xA;+ Count(菜单)&#xD;&#xA;+ &quot; 个&quot;" horalign="Left" lbs="None" tbs="None" rbs="None" bbs="None" />
   </Body>
   <Footer />
-  <View script="Dt.Sample.MyRptScript,Dt.Sample" autoquery="True" showsearchform="False" />
+  <View script="MyRptScript" autoquery="True" showsearchform="False" />
 </Rpt>

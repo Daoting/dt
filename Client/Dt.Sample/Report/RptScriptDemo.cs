@@ -26,44 +26,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public class MyRptDesignInfo : RptDesignInfo
-    {
-        public override Task<string> ReadTemplate()
-        {
-            return Task.Run(() =>
-            {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            });
-        }
-
-        public override void SaveTemplate(string p_xml)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_xml);
-            Clipboard.SetContent(data);
-            Kit.Msg("已保存到剪切板！");
-        }
-    }
-
-    public class MyRptInfo : RptInfo
-    {
-        public override Task<string> ReadTemplate()
-        {
-            return Task.Run(() =>
-            {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            });
-        }
-    }
-
+    [RptScript]
     public class DataRptScript : RptScript
     {
         public override Task<Table> GetData(string p_name)
@@ -78,6 +41,7 @@ namespace Dt.Sample
         }
     }
 
+    [RptScript]
     public class RptSearchFormScript : DataRptScript
     {
         public override IRptSearchForm GetSearchForm(RptInfo p_info)
@@ -86,6 +50,7 @@ namespace Dt.Sample
         }
     }
 
+    [RptScript]
     public class MyRptScript : DataRptScript
     {
         public override Task<Table> GetData(string p_name)

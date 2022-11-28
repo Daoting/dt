@@ -45,7 +45,7 @@ namespace Dt.Base.Report
         public Row Data { get; }
 
         /// <summary>
-        /// 报表脚本类型，形如 Dt.Base.MyScript,Dt.Base
+        /// 报表脚本的类型名称，继承RptScript且带有 [RptScript] 标签的类型
         /// </summary>
         public string Script
         {

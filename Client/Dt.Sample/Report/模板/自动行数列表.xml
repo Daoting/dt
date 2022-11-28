@@ -31,5 +31,5 @@
     </Table>
   </Body>
   <Footer />
-  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+  <View script="DataRptScript" />
 </Rpt>

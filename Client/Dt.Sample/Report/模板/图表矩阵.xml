@@ -26,5 +26,5 @@
     <Chart row="22" col="1" rowspan="12" colspan="7" type="Line" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" title="成绩折线" titlex="姓名" titley="成绩" />
   </Body>
   <Footer />
-  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+  <View script="DataRptScript" />
 </Rpt>

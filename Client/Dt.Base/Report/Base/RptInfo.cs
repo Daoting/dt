@@ -213,16 +213,14 @@ namespace Dt.Base
             // 脚本对象
             if (!string.IsNullOrEmpty(Root.ViewSetting.Script))
             {
-                Type type = Type.GetType(Root.ViewSetting.Script);
-                if (type == null)
+                var tp = Kit.GetAllTypesByAlias(typeof(RptScriptAttribute), Root.ViewSetting.Script).FirstOrDefault();
+                if (tp != null && tp.IsSubclassOf(typeof(RptScript)))
                 {
-                    Kit.Warn($"缺少脚本类型【{Root.ViewSetting.Script}】");
+                    ScriptObj = Activator.CreateInstance(tp) as RptScript;
                 }
                 else
                 {
-                    ScriptObj = (RptScript)Activator.CreateInstance(type);
-                    if (ScriptObj == null)
-                        Kit.Warn($"脚本类型【{Root.ViewSetting.Script}】需继承RptScript");
+                    Kit.Warn($"报表缺少继承自RptScript的脚本类型【{Root.ViewSetting.Script}】");
                 }
             }
 

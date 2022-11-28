@@ -35,5 +35,5 @@
     <Text colspan="2" val=":Global(日期时间)" lbs="None" tbs="None" rbs="None" bbs="None" />
     <Text col="3" val=":&quot;【&quot;&#xD;+ Global(水平页号) &#xD;+ &quot;-&quot;&#xD;+ Global(垂直页号) &#xD;+&quot;】&quot;" lbs="None" tbs="None" rbs="None" bbs="None" />
   </Footer>
-  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
+  <View script="DataRptScript" />
 </Rpt>

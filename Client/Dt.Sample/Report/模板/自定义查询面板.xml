@@ -13,5 +13,5 @@
     <Text row="2" col="1" colspan="2" val=":参数3：+ Param(param3)" />
   </Body>
   <Footer />
-  <View script="Dt.Sample.RptSearchFormScript,Dt.Sample" />
+  <View script="RptSearchFormScript" />
 </Rpt>

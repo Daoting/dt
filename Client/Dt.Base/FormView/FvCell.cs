@@ -423,7 +423,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(Call))
             {
                 var tp = Kit.GetAllTypesByAlias(typeof(MidValAttribute), Call).FirstOrDefault();
-                if (tp.GetInterface("IMidVal") == typeof(IMidVal))
+                if (tp != null && tp.GetInterface("IMidVal") == typeof(IMidVal))
                     return Activator.CreateInstance(tp) as IMidVal;
             }
             return DefaultMiddle;
