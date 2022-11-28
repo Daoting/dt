@@ -90,7 +90,7 @@ namespace Dt.Base
             }
             else
             {
-                tbl = await AtRpt.Query(srcItem.Srv, srcItem.Sql, Params);
+                tbl = await Rpt.Query(srcItem.Srv, srcItem.Sql, Params);
             }
 
             if (tbl != null)
@@ -192,7 +192,7 @@ namespace Dt.Base
                     try
                     {
                         string define = await ReadTemplate();
-                        Root = await AtRpt.DeserializeTemplate(define);
+                        Root = await Rpt.DeserializeTemplate(define);
 
                         if (CacheTemplate)
                         {

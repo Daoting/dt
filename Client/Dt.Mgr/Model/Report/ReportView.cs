@@ -39,7 +39,7 @@ namespace Dt.Mgr
             var ls = param.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (ls.Length == 1)
             {
-                AtRpt.Show(new RptInfo { Name = ls[0] }, title, icon);
+                Rpt.Show(new RptInfo { Name = ls[0] }, title, icon);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace Dt.Mgr
                 {
                     infos.Add(new RptInfo { Name = name });
                 }
-                AtRpt.Show(infos, title, icon);
+                Rpt.Show(infos, title, icon);
             }
         }
     }

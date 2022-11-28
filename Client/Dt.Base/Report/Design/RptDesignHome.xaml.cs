@@ -61,7 +61,7 @@ namespace Dt.Base.Report
             var tb = new TextBox { AcceptsReturn = true, Style = Res.FvTextBox };
             ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
             ScrollViewer.SetVerticalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
-            tb.Text = AtRpt.SerializeTemplate(_info.Root);
+            tb.Text = Rpt.SerializeTemplate(_info.Root);
             LoadMain(tb);
         }
 
@@ -101,7 +101,7 @@ namespace Dt.Base.Report
                 win.Close();
             }
 
-            AtRpt.Show(info);
+            Rpt.Show(info);
         }
 
         void OnSave(Win p_win, Nav p_nav)

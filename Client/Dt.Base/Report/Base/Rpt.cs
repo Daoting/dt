@@ -23,7 +23,7 @@ namespace Dt.Base
     /// <summary>
     /// 数据源包装类
     /// </summary>
-    public static class AtRpt
+    public static class Rpt
     {
         const string _assertMsg = "报表描述信息不完整！";
 

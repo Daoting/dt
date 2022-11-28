@@ -99,7 +99,7 @@ namespace Dt.Mgr.Model
                         return;
                     }
                 }
-                _ = AtRpt.ShowDesign(new AppRptDesignInfo(rpt));
+                _ = Rpt.ShowDesign(new AppRptDesignInfo(rpt));
             }
         }
 

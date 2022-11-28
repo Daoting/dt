@@ -89,7 +89,7 @@ namespace Dt.Base.Report
                 return;
             }
 
-            _lvCols.Data = await AtRpt.Query(row.Str("srv"), row.Str("sql"), fv.Row.ToDict());
+            _lvCols.Data = await Rpt.Query(row.Str("srv"), row.Str("sql"), fv.Row.ToDict());
             NaviTo("查询结果");
         }
 

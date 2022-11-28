@@ -54,10 +54,10 @@ namespace Dt.Sample
                     _rptView.LoadReport(new MyRptInfo { Name = name });
                     break;
                 case "打开报表预览窗口":
-                    AtRpt.Show(new MyRptInfo { Name = name });
+                    Rpt.Show(new MyRptInfo { Name = name });
                     break;
                 case "打开模板编辑窗口":
-                    _ = AtRpt.ShowDesign(new MyRptDesignInfo { Name = name });
+                    _ = Rpt.ShowDesign(new MyRptDesignInfo { Name = name });
                     break;
             }
         }
@@ -71,10 +71,10 @@ namespace Dt.Sample
                     _rptView.LoadReport(new MyRptInfo { Name = name, Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
                     break;
                 case "打开报表预览窗口":
-                    AtRpt.Show(new MyRptInfo { Name = name, Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
+                    Rpt.Show(new MyRptInfo { Name = name, Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
                     break;
                 case "打开模板编辑窗口":
-                    _ = AtRpt.ShowDesign(new MyRptDesignInfo { Name = name });
+                    _ = Rpt.ShowDesign(new MyRptDesignInfo { Name = name });
                     break;
             }
         }
@@ -86,7 +86,7 @@ namespace Dt.Sample
                 new MyRptInfo { Name = "默认查询面板" },
                 new MyRptInfo { Name = "自定义查询面板" }
             };
-            AtRpt.Show(ls, "报表组");
+            Rpt.Show(ls, "报表组");
         }
     }
 }

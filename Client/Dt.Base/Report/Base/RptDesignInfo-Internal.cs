@@ -65,7 +65,7 @@ namespace Dt.Base
             {
                 // 报表设计时始终不缓存模板！
                 string define = await ReadTemplate();
-                Root = await AtRpt.DeserializeTemplate(define);
+                Root = await Rpt.DeserializeTemplate(define);
                 AttachRootEvent();
                 return true;
             }
@@ -85,7 +85,7 @@ namespace Dt.Base
             if (old != null)
                 DetachRootEvent();
 
-            Root = await AtRpt.DeserializeTemplate(p_define);
+            Root = await Rpt.DeserializeTemplate(p_define);
             AttachRootEvent();
             TemplateChanged?.Invoke(this, new TemplateChangedArgs { NewRoot = Root, OldRoot = old });
         }
@@ -97,7 +97,7 @@ namespace Dt.Base
         {
             if (Root != null && Root.IsValid())
             {
-                SaveTemplate(AtRpt.SerializeTemplate(Root));
+                SaveTemplate(Rpt.SerializeTemplate(Root));
                 History.Clear();
                 Saved?.Invoke(this, EventArgs.Empty);
                 OnCellValueChanged(this, EventArgs.Empty);
