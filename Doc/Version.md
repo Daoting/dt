@@ -9,6 +9,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Lv自定义单元格UI重复绘制
 * NavList递归触发嵌套子窗口Closing事件
 * Win的Main或Pane的子项类型错误时不抛异常，提示错误，winappsdk 1.2已处理异常但没升级
+* 继承Win的子类或任意Control子类若没有对应的xaml，放可视树不显示，会异常退出，和uwp早期版本一样
 
 ### 功能
 * 优化NavList
