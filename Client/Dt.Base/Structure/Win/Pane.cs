@@ -536,8 +536,10 @@ namespace Dt.Base
             }
             else
             {
-                throw new Exception("Pane子项类型为Tabs或Pane！");
+                Kit.Warn("Main和Pane子项类型为Tabs或Pane！不支持 " + p_item.GetType().Name);
+                return;
             }
+
             _itemsPanel.Children.Insert(p_index, elem);
         }
 
@@ -556,7 +558,7 @@ namespace Dt.Base
             }
             else
             {
-                throw new Exception("Pane不支持子项重置！");
+                Kit.Warn("Pane不支持子项重置！");
             }
         }
         #endregion
