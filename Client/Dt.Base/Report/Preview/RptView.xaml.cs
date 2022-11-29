@@ -10,24 +10,21 @@
 using Dt.Base.Report;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Text;
-using Windows.Foundation;
-using Windows.Graphics.Printing;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using System.ComponentModel;
+using System.Text;
+using Windows.Foundation;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base
 {
-    public sealed partial class RptView : UserControl
+    /// <summary>
+    /// 报表预览控件
+    /// </summary>
+    public sealed partial class RptView : Mv
     {
         #region 成员变量
         Menu _selectionMenu;
@@ -44,6 +41,7 @@ namespace Dt.Base
         BaseCommand _cmdClearChart;
         #endregion
 
+        #region 构造方法
         public RptView()
         {
             InitializeComponent();
@@ -53,6 +51,7 @@ namespace Dt.Base
             _excel.SelectionChanged += OnSelectionChanged;
             _excel.RightTapped += OnExcelRightTapped;
         }
+        #endregion
 
         /// <summary>
         /// 对应的报表描述信息
@@ -81,6 +80,7 @@ namespace Dt.Base
                 || !p_info.IsParamsValid())
                 return;
 
+            LoadMenu(p_info);
             _excel.IsBusy = true;
             try
             {
@@ -196,7 +196,7 @@ namespace Dt.Base
 
         void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (!Info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
+            if (Info == null || !Info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
                 return;
 
             if (_rightMenu == null)
@@ -422,6 +422,49 @@ namespace Dt.Base
                     sheet.Charts.Clear();
                     _excel.DecorationRange = null;
                 }
+            }
+        }
+        #endregion
+
+        #region 工具栏
+        /// <summary>
+        /// 加载报表工具栏菜单
+        /// </summary>
+        /// <param name="p_info"></param>
+        void LoadMenu(RptInfo p_info)
+        {
+            // 未切换报表不需要生成Menu
+            if (Info == p_info)
+                return;
+
+            if (p_info.Root.ViewSetting.ShowMenu)
+            {
+                if (p_info.ViewMenu == null)
+                {
+                    var menu = new Menu
+                    {
+                        Items =
+                        {
+                            new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport },
+                            new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint },
+                        }
+                    };
+
+                    // 左侧不显示查询面板时，显示查询菜单
+                    if (!p_info.Root.ViewSetting.ShowSearchForm
+                        && (p_info.Root.Params.ExistXaml || p_info.ScriptObj?.GetSearchForm(p_info) != null))
+                    {
+                        menu.Items.Insert(0, new Mi { ID = "查询", Icon = Icons.搜索, Cmd = CmdSearch });
+                    }
+
+                    p_info.ViewMenu = menu;
+                    p_info.ScriptObj?.InitMenu(menu);
+                }
+                Menu = p_info.ViewMenu;
+            }
+            else if (Menu != null)
+            {
+                Menu = null;
             }
         }
         #endregion

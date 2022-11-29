@@ -70,8 +70,8 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="2" Title="RptView">
-                <a:RptView x:Name="_rptView" />
+            <a:Tab Order="2">
+                <a:RptView x:Name="_rptView" Title="RptView" />
             </a:Tab>
         </a:Tabs>
     </a:Main>

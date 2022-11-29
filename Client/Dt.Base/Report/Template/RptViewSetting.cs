@@ -54,7 +54,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置是否显示报表查询面板，默认true，报表组时始终true
+        /// 获取设置是否显示报表查询面板，默认true
         /// </summary>
         public bool ShowSearchForm
         {

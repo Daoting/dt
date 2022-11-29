@@ -18,7 +18,7 @@ namespace Dt.Base.Report
     /// </summary>
     internal partial class RptViewWin : Win
     {
-        readonly RptView _view = new RptView();
+        readonly RptView _view = new RptView { Title = "内容" };
         Tab _tabCenter;
 
         public RptViewWin(RptInfo p_info)
@@ -34,38 +34,23 @@ namespace Dt.Base.Report
 
             Main wc = new Main();
             var tabs = new Tabs();
-            var tab = new Tab { Title = "内容" };
+            var tab = new Tab();
             tab.Content = _view;
             tabs.Items.Add(tab);
             wc.Items.Add(tabs);
             Items.Add(wc);
 
             var setting = p_info.Root.ViewSetting;
-            if (setting.ShowMenu)
-            {
-                var menu = new Menu();
-                if (!setting.ShowSearchForm
-                    && (searchForm != null || p_info.Root.Params.ExistXaml))
-                {
-                    menu.Items.Add(new Mi { ID = "查询", Icon = Icons.搜索, Cmd = _view.CmdSearch });
-                }
-                menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport });
-                menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint });
-                p_info.ScriptObj?.InitMenu(menu);
-                tab.Menu = menu;
-            }
-
             if (setting.ShowSearchForm
                 && (searchForm != null || p_info.Root.Params.ExistXaml))
             {
                 Pane wi = new Pane();
                 tabs = new Tabs();
-                tab = new Tab { Title = "查询" };
+                tab = new Tab();
 
                 // 加载查询面板内容
                 if (searchForm == null)
                     searchForm = new RptSearchForm(p_info);
-                tab.Menu = searchForm.Menu;
                 searchForm.Query += (s, e) => _view.LoadReport(e);
                 tab.Content = searchForm;
 

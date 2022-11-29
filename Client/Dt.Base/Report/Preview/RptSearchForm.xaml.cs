@@ -14,10 +14,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Base.Report
 {
-    public sealed partial class RptSearchForm : UserControl, IRptSearchForm
+    public sealed partial class RptSearchForm : Mv, IRptSearchForm
     {
         readonly RptInfo _info;
-        Menu _menu;
 
         public RptSearchForm(RptInfo p_info)
         {
@@ -30,27 +29,6 @@ namespace Dt.Base.Report
         /// 查询事件
         /// </summary>
         public event EventHandler<RptInfo> Query;
-
-        /// <summary>
-        /// 查询面板菜单
-        /// </summary>
-        public Menu Menu
-        {
-            get
-            {
-                if (_menu == null)
-                {
-                    _menu = new Menu();
-                    Mi mi = new Mi { ID = "查询", Icon = Icons.搜索 };
-                    mi.Click += OnQuery;
-                    _menu.Items.Add(mi);
-                    mi = new Mi { ID = "重置", Icon = Icons.撤消 };
-                    mi.Click += OnResetParams;
-                    _menu.Items.Add(mi);
-                }
-                return _menu;
-            }
-        }
 
         void OnQuery(object sender, Mi e)
         {
