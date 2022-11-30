@@ -61,7 +61,7 @@ namespace Dt.Base
                 // 使用 RptInfoList 只为识别窗口用
                 var ls = new RptInfoList();
                 ls.AddRange(p_infos);
-                Kit.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle, p_icon, ls);
+                Kit.OpenWin(typeof(RptGroupWin), string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle, p_icon, ls);
             }
         }
 

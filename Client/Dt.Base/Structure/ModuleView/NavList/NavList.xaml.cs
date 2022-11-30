@@ -45,6 +45,11 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 成员变量
+        Nav _initNav;
+        #endregion
+
+        #region 构造方法
         public NavList()
         {
             InitializeComponent();
@@ -53,7 +58,9 @@ namespace Dt.Base
             _lv.ItemHeight = double.NaN;
             _lv.View = new NavRowView(this);
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 加载内容的目标位置，默认WinMain(当前Win的主区)，Nav.To的优先级更高
         /// </summary>
@@ -87,7 +94,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置 Nav 类型的数据源列表，其它类型不支持
+        /// 获取设置 Nav 类型的数据源列表，如 Nl&lt;Nav&gt; 和 Nl&lt;GroupData&lt;Nav&gt;&gt;，其它类型不支持
         /// </summary>
         public INotifyList Data
         {
@@ -122,47 +129,110 @@ namespace Dt.Base
             get { return _lv.SelectionMode; }
             set { _lv.SelectionMode = value; }
         }
+        #endregion
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        #region 外部方法
+        /// <summary>
+        /// 选择某项
+        /// </summary>
+        /// <param name="p_index">索引</param>
+        public void Select(int p_index)
         {
-            var nav = e.Data as Nav;
-            if (nav == null)
+            if (p_index < 0)
+                return;
+
+            Nav nav = null;
+            int index = -1;
+            foreach (var item in Data)
             {
-                Kit.Warn("NavList仅支持Nav类型的数据源！");
+                if (item is Nav n)
+                {
+                    if (++index == p_index)
+                    {
+                        nav = n;
+                        break;
+                    }
+                }
+                else if (item is GroupData<Nav> group)
+                {
+                    foreach (var gi in group)
+                    {
+                        if (++index == p_index)
+                        {
+                            nav = gi;
+                            break;
+                        }
+                    }
+                    if (nav != null)
+                        break;
+                }
+            }
+            Select(nav);
+        }
+
+        /// <summary>
+        /// 选择某项
+        /// </summary>
+        /// <param name="p_nav">项对象</param>
+        public void Select(Nav p_nav)
+        {
+            if (p_nav == null)
+                return;
+            
+            if (_tab.OwnWin == null && !IsLoaded)
+            {
+                // OnInit中重新选择
+                _initNav = p_nav;
                 return;
             }
 
-            if (nav.Callback != null)
+            if (p_nav.Callback != null)
             {
-                nav.Callback.Invoke(_tab.OwnWin, nav);
+                p_nav.Callback.Invoke(_tab.OwnWin, p_nav);
             }
-            else if (nav.Type != null)
+            else if (p_nav.Type != null)
             {
-                var to = nav.To == null ? To : nav.To.Value;
+                var to = p_nav.To == null ? To : p_nav.To.Value;
                 if (to == NavTarget.WinMain)
                 {
-                    var center = nav.GetCenter();
+                    var center = p_nav.GetCenter();
                     if (center is Win win)
                     {
-                        win.Title = nav.Title;
-                        if (nav.Icon != Icons.None)
-                            win.Icon = nav.Icon;
+                        win.Title = p_nav.Title;
+                        if (p_nav.Icon != Icons.None)
+                            win.Icon = p_nav.Icon;
                     }
                     _tab.OwnWin?.LoadMain(center);
                 }
                 else
                 {
-                    Kit.OpenWin(nav.Type, nav.Title, nav.Icon, nav.Params);
+                    Kit.OpenWin(p_nav.Type, p_nav.Title, p_nav.Icon, p_nav.Params);
                 }
             }
+        }
+        #endregion
+
+        #region 外部方法
+        void OnItemClick(object sender, ItemClickArgs e)
+        {
+            Select(e.Data as Nav);
         }
 
         protected override void OnInit(object p_params)
         {
             // 递归触发嵌套子窗口Closing事件，PhoneUI模式页面返回时已处理
-            if (!Kit.IsPhoneUI && _tab.OwnWin != null)
+            if (_tab.OwnWin != null)
             {
-                _tab.OwnWin.Closing += OwnWin_Closing;
+                if (_initNav != null)
+                {
+                    Select(_initNav);
+                    _initNav = null;
+                }
+
+                if (!Kit.IsPhoneUI)
+                {
+                    _tab.OwnWin.Closing += OwnWin_Closing;
+                }
             }
         }
 
@@ -187,5 +257,6 @@ namespace Dt.Base
                 }
             }
         }
+        #endregion
     }
 }

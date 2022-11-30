@@ -20,14 +20,12 @@ namespace Dt.Mgr.Workflow
         {
             InitializeComponent();
 
-            var ls = new Nl<Nav>
+            _nav.Data = new Nl<Nav>
             {
                 new Nav("流程模板", typeof(WfTemplateMgr), Icons.修改) { Desc = "新增、编辑、删除流程模板" },
                 new Nav("流程实例", typeof(WfInstMgr), Icons.信件) { Desc = "查看流程实例的活动、工作项、表单，删除实例" },
             };
-            _nav.Data = ls;
-
-            LoadMain(ls[0].GetCenter());
+            _nav.Select(0);
         }
     }
 }

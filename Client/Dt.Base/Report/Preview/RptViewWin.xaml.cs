@@ -7,8 +7,6 @@
 #endregion
 
 #region 命名空间
-using Dt.Base.Docking;
-using Dt.Core;
 #endregion
 
 namespace Dt.Base.Report
@@ -18,28 +16,35 @@ namespace Dt.Base.Report
     /// </summary>
     internal partial class RptViewWin : Win
     {
-        readonly RptView _view = new RptView { Title = "内容" };
-        Tab _tabCenter;
-
         public RptViewWin(RptInfo p_info)
         {
+            // 虽然未调用InitializeComponent()，xaml文件不能删除，否则win上不可见！
+
             // 确保RptInfo已初始化，因含异步！
+            LoadRptView(p_info);
+        }
+
+        void LoadRptView(RptInfo p_info)
+        {
+            RptView view = new RptView { Title = p_info.Name };
 
             IRptSearchForm searchForm = null;
             if (p_info.ScriptObj != null)
             {
-                p_info.ScriptObj.View = _view;
+                p_info.ScriptObj.View = view;
                 searchForm = p_info.ScriptObj.GetSearchForm(p_info);
             }
 
+            // 主区RptView
             Main wc = new Main();
             var tabs = new Tabs();
             var tab = new Tab();
-            tab.Content = _view;
+            tab.Content = view;
             tabs.Items.Add(tab);
             wc.Items.Add(tabs);
             Items.Add(wc);
 
+            // 左侧查询面板
             var setting = p_info.Root.ViewSetting;
             if (setting.ShowSearchForm
                 && (searchForm != null || p_info.Root.Params.ExistXaml))
@@ -51,7 +56,7 @@ namespace Dt.Base.Report
                 // 加载查询面板内容
                 if (searchForm == null)
                     searchForm = new RptSearchForm(p_info);
-                searchForm.Query += (s, e) => _view.LoadReport(e);
+                searchForm.Query += (s, e) => view.LoadReport(e);
                 tab.Content = searchForm;
 
                 tabs.Items.Add(tab);
@@ -61,102 +66,7 @@ namespace Dt.Base.Report
 
             // 初次加载自动执行查询
             if (setting.AutoQuery || p_info.Root.Params.Data.Count == 0)
-                _view.LoadReport(p_info);
+                view.LoadReport(p_info);
         }
-
-        #region 报表组
-        public RptViewWin(RptInfoList p_infos)
-        {
-            if (p_infos == null || p_infos.Count < 2)
-            {
-                Kit.Warn("浏览报表组时描述信息不完整！");
-                return;
-            }
-
-            LoadRptView();
-            Pane wi = new Pane();
-            var tabs = new Tabs();
-            tabs.SelectedChanged += OnSelectedTabChanged;
-            foreach (var info in p_infos)
-            {
-                tabs.Items.Add(new Tab { Title = info.Name, Tag = info });
-            }
-            wi.Items.Add(tabs);
-            Items.Add(wi);
-        }
-
-        async void OnSelectedTabChanged(object sender, SelectedChangedEventArgs e)
-        {
-            Tab tab = e.SelectItem as Tab;
-            if (tab.Content != null)
-                return;
-
-            RptInfo info = tab.Tag as RptInfo;
-            if (!await info.Init())
-                return;
-
-            // 加载查询面板内容，脚本优先
-            IRptSearchForm searchForm = null;
-            if (info.ScriptObj != null)
-                searchForm = info.ScriptObj.GetSearchForm(info);
-            if (searchForm == null && info.Root.Params.ExistXaml)
-                searchForm = new RptSearchForm(info);
-            if (searchForm != null)
-            {
-                tab.Content = searchForm;
-                tab.Menu = searchForm.Menu;
-                searchForm.Query += OnQuery;
-            }
-
-            // 初次加载自动执行查询
-            if (info.Root.ViewSetting.AutoQuery || searchForm == null)
-                _view.LoadReport(info);
-        }
-
-        /// <summary>
-        /// 已提供完整查询参数值，加载报表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnQuery(object sender, RptInfo e)
-        {
-            if (_view.Info != e)
-            {
-                if (e.Root.ViewSetting.ShowMenu)
-                {
-                    if (e.ViewMenu == null)
-                    {
-                        var menu = new Menu
-                        {
-                            Items =
-                            {
-                                new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport },
-                                new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint },
-                            }
-                        };
-                        e.ViewMenu = menu;
-                        e.ScriptObj?.InitMenu(menu);
-                    }
-                    _tabCenter.Menu = e.ViewMenu;
-                }
-                else if (_tabCenter.Menu != null)
-                {
-                    _tabCenter.ClearValue(Tab.MenuProperty);
-                }
-            }
-            _view.LoadReport(e);
-        }
-
-        void LoadRptView()
-        {
-            Main wc = new Main();
-            var tabs = new Tabs();
-            _tabCenter = new Tab { Title = "内容" };
-            _tabCenter.Content = _view;
-            tabs.Items.Add(_tabCenter);
-            wc.Items.Add(tabs);
-            Items.Add(wc);
-        }
-        #endregion
     }
 }

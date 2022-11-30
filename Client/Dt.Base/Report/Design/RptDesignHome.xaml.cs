@@ -28,11 +28,10 @@ namespace Dt.Base.Report
 
             _info = p_info;
 
-            Nav nav = new Nav("模板编辑", typeof(RptDesignWin), Icons.修改) { Desc = "编辑报表模板", Params = _info };
             Nl<GroupData<Nav>> ds = new Nl<GroupData<Nav>>();
             var group = new GroupData<Nav>
             {
-                nav,
+                new Nav("模板编辑", typeof(RptDesignWin), Icons.修改) { Desc = "编辑报表模板", Params = _info },
                 new Nav("参数定义", typeof(ParamsWin), Icons.信件) { Desc = "报表输入参数可以为内部宏参数或外部输入参数", Params = _info },
                 new Nav("Db数据源", typeof(DbDataWin), Icons.数据库) { Desc = "定义查询数据的SQL语句", Params = _info },
                 new Nav("脚本数据源", typeof(ScriptDataWin), Icons.U盘) { Desc = "程序中动态提供的数据", Params = _info },
@@ -53,7 +52,7 @@ namespace Dt.Base.Report
             ds.Add(group);
 
             _nav.Data = ds;
-            LoadMain(nav.GetCenter());
+            _nav.Select(0);
         }
 
         void OnExport(Win p_win, Nav p_nav)
