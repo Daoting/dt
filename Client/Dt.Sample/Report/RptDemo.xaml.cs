@@ -62,6 +62,21 @@ namespace Dt.Sample
             }
         }
 
+        void OnParamsPnl(object sender, RoutedEventArgs e)
+        {
+            string name = ((Button)sender).Content.ToString();
+            switch (_fv.Row.Str("type"))
+            {
+                case "使用RptView预览":
+                case "打开报表预览窗口":
+                    Rpt.Show(new MyRptInfo { Name = name });
+                    break;
+                case "打开模板编辑窗口":
+                    _ = Rpt.ShowDesign(new MyRptDesignInfo { Name = name });
+                    break;
+            }
+        }
+
         void OnScript(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();

@@ -16,11 +16,21 @@
                     <a:CText ID="script" Title="脚本类型名称" />
                     <a:CBool ID="showsearchform" Title="显示查询面板" />
                     <a:CBool ID="autoquery" Title="初始自动查询" />
+                    <a:CBar Title="Excel页面" />
                     <a:CBool ID="showcolheader" Title="显示列头" />
                     <a:CBool ID="showrowheader" Title="显示行头" />
                     <a:CBool ID="showgridline" Title="显示网格" />
-                    <a:CBool ID="showmenu" Title="显示工具栏菜单" />
-                    <a:CBool ID="showcontextmenu" Title="显示上下文菜单" />
+                    <a:CBar Title="菜单" />
+                    <a:CBool ID="showmenu" Title="显示工具栏菜单" TitleWidth="220" />
+                    <a:CBool ID="showcontextmenu" Title="显示上下文菜单" TitleWidth="220" />
+                    <a:CBool ID="showselectionmenu" Title="显示选择区域的上下文菜单" TitleWidth="220" />
+                    <a:CBar Title="菜单项" />
+                    <a:CBool ID="showquery" Title="查询" />
+                    <a:CBool ID="showexport" Title="导出" />
+                    <a:CBool ID="showprint" Title="打印" />
+                    <a:CBool ID="colheaderitem" Title="列头" />
+                    <a:CBool ID="rowheaderitem" Title="行头" />
+                    <a:CBool ID="gridlineitem" Title="网格" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

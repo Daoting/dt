@@ -28,8 +28,6 @@ namespace Dt.Base
     {
         #region 成员变量
         RptInfo _info;
-        Menu _selectionMenu;
-        Menu _rightMenu;
         SheetTable _selectedTable;
 
         BaseCommand _cmdExport;
@@ -207,7 +205,7 @@ namespace Dt.Base
             {
                 // 切换报表时需要重新加载Menu
                 _info = p_info;
-                LoadMenu();
+                LoadToolbarMenu();
             }
 
             // 清除旧数据
@@ -222,8 +220,10 @@ namespace Dt.Base
             {
                 // 查询参数不完备
                 _excel.Sheets.Clear();
-                if ((_info.Root.Params.ExistXaml || _info.ScriptObj?.GetSearchForm(_info) != null)
-                    && _info.Root.ViewSetting.AutoQuery)
+
+                // 不显示查询面板且需要查询时弹出查询框
+                if (!_info.Root.ViewSetting.ShowSearchForm
+                    && (_info.Root.Params.ExistXaml || _info.ScriptObj?.GetSearchForm(_info) != null))
                 {
                     // 显示查询对话框
                     DoSearch();
@@ -275,45 +275,9 @@ namespace Dt.Base
                 _excel.IsBusy = false;
             }
         }
-
-        /// <summary>
-        /// 加载报表工具栏菜单
-        /// </summary>
-        void LoadMenu()
-        {
-            if (_info.Root.ViewSetting.ShowMenu)
-            {
-                if (_info.ViewMenu == null)
-                {
-                    var menu = new Menu
-                    {
-                        Items =
-                        {
-                            new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport },
-                            new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint },
-                        }
-                    };
-
-                    // 查询参数不完备时，显示查询菜单
-                    if (!_info.IsParamsValid()
-                        && (_info.Root.Params.ExistXaml || _info.ScriptObj?.GetSearchForm(_info) != null))
-                    {
-                        menu.Items.Insert(0, new Mi { ID = "查询", Icon = Icons.搜索, Cmd = CmdSearch });
-                    }
-
-                    _info.ViewMenu = menu;
-                    _info.ScriptObj?.InitMenu(menu);
-                }
-                Menu = _info.ViewMenu;
-            }
-            else if (Menu != null)
-            {
-                Menu = null;
-            }
-        }
         #endregion
 
-        #region 命令
+        #region 命令方法
         /// <summary>
         /// 导出
         /// </summary>
@@ -436,6 +400,55 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 菜单
+        /// <summary>
+        /// 加载报表工具栏菜单
+        /// </summary>
+        void LoadToolbarMenu()
+        {
+            if (_info.Root.ViewSetting.ShowMenu)
+            {
+                if (_info.ToolbarMenu == null)
+                {
+                    var menu = new Menu();
+                    AddMenuItems(menu);
+                    _info.ToolbarMenu = menu;
+                    _info.ScriptObj?.InitMenu(menu);
+                }
+                Menu = _info.ToolbarMenu;
+            }
+            else if (Menu != null)
+            {
+                Menu = null;
+            }
+        }
+
+        /// <summary>
+        /// 添加公共菜单项
+        /// </summary>
+        /// <param name="p_menu"></param>
+        void AddMenuItems(Menu p_menu)
+        {
+            var setting = _info.Root.ViewSetting;
+            if (setting.ShowQuery)
+                p_menu.Items.Add(new Mi { ID = "查询", Icon = Icons.搜索, Cmd = CmdSearch });
+            if (setting.ShowExport)
+                p_menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport });
+            if (setting.ShowPrint)
+                p_menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint });
+
+            if (p_menu.IsContextMenu && _excel.ActiveSheet != null)
+            {
+                if (setting.ShowGridLineItem)
+                    p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ActiveSheet.ShowGridLine, Cmd = CmdGridLine });
+                if (setting.ShowColHeaderItem)
+                    p_menu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, IsChecked = _excel.ActiveSheet.ColumnHeader.IsVisible, Cmd = CmdColHeader });
+                if (setting.ShowRowHeaderItem)
+                    p_menu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, IsChecked = _excel.ActiveSheet.RowHeader.IsVisible, Cmd = CmdRowHeader });
+            }
+        }
+        #endregion
+
         #region Excel事件
         /// <summary>
         /// 点击单元格
@@ -462,7 +475,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (!_info.Root.ViewSetting.ShowContextMenu)
+            if (!_info.Root.ViewSetting.ShowSelectionMenu)
                 return;
 
             _selectedTable = null;
@@ -484,61 +497,82 @@ namespace Dt.Base
                 }
             }
             // 选择区包含表格 单行时不显示菜单
-            if (_selectedTable != null || range.RowCount == 1)
+            if (_selectedTable != null || range.RowCount < 2)
                 return;
 
-            if (_selectionMenu == null)
+            var menu = _info.SelectionMenu;
+            if (menu == null)
             {
-                _selectionMenu = new Menu { IsContextMenu = true };
+                menu = new Menu { IsContextMenu = true };
                 Mi mi = new Mi { ID = "转为表格", Icon = Icons.田字格 };
                 mi.Click += (s, args) => AddSheetTable(_excel.ActiveSheet.Selections[0]);
-                _selectionMenu.Items.Add(mi);
+                menu.Items.Add(mi);
 
                 mi = new Mi { ID = "生成柱状图", Icon = Icons.对比图 };
                 mi.Click += (s, args) => AddChart(_excel.ActiveSheet.Selections[0]);
-                _selectionMenu.Items.Add(mi);
+                menu.Items.Add(mi);
+                _info.SelectionMenu = menu;
             }
 
             Point topLeft = _excel.GetAbsolutePosition();
             Rect rc = _excel.ActiveSheet.GetRangeBound(range);
             double x = topLeft.X + rc.X + rc.Width + 5 - (_excel.ActiveSheet.RowHeader.IsVisible ? 0 : _excel.ActiveSheet.RowHeader.DefaultColumnWidth);
             double y = topLeft.Y + rc.Y - (_excel.ActiveSheet.ColumnHeader.IsVisible ? 0 : _excel.ActiveSheet.ColumnHeader.DefaultRowHeight);
-            _ = _selectionMenu.OpenContextMenu(new Point(x, y));
+            _ = menu.OpenContextMenu(new Point(x, y));
         }
 
         void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (_info == null || !_info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
-                return;
-
-            if (_rightMenu == null)
+            if (_info == null
+                || _excel.ActiveSheet == null
+                || (!_info.Root.ViewSetting.ShowContextMenu && !_info.Root.ViewSetting.ShowSelectionMenu))
             {
-                _rightMenu = new Menu { IsContextMenu = true };
-                Mi mi = new Mi { ID = "删除表格", Icon = Icons.田字格 };
-                mi.Click += (s, args) => DelSheetTable();
-                _rightMenu.Items.Add(mi);
-
-                mi = new Mi { ID = "清除所有图表", Icon = Icons.对比图 };
-                mi.Click += (s, args) => ClearChart();
-                _rightMenu.Items.Add(mi);
-
-                mi = new Mi { ID = "清除所有表格", Icon = Icons.田字格 };
-                mi.Click += (s, args) => ClearTable();
-                _rightMenu.Items.Add(mi);
-
-                _rightMenu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport });
-                _rightMenu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint });
-                _rightMenu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ActiveSheet.ShowGridLine, Cmd = CmdGridLine });
-                _rightMenu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, IsChecked = _excel.ActiveSheet.ColumnHeader.IsVisible, Cmd = CmdColHeader });
-                _rightMenu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, IsChecked = _excel.ActiveSheet.RowHeader.IsVisible, Cmd = CmdRowHeader });
+                return;
             }
 
-            _rightMenu["删除表格"].Visibility = _selectedTable != null ? Visibility.Visible : Visibility.Collapsed;
-            _rightMenu["清除所有图表"].Visibility = _excel.ActiveSheet.Charts.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-            _rightMenu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
-            // 脚本处理上下文菜单
-            _info.ScriptObj?.OpenContextMenu(_rightMenu);
-            _ = _rightMenu.OpenContextMenu(e.GetPosition(null));
+            var menu = _info.ContextMenu;
+            if (menu == null)
+            {
+                menu = new Menu { IsContextMenu = true };
+                if (_info.Root.ViewSetting.ShowSelectionMenu)
+                {
+                    Mi mi = new Mi { ID = "删除表格", Icon = Icons.田字格 };
+                    mi.Click += (s, args) => DelSheetTable();
+                    menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "清除所有图表", Icon = Icons.对比图 };
+                    mi.Click += (s, args) => ClearChart();
+                    menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "清除所有表格", Icon = Icons.田字格 };
+                    mi.Click += (s, args) => ClearTable();
+                    menu.Items.Add(mi);
+                }
+
+                if (_info.Root.ViewSetting.ShowContextMenu)
+                {
+                    AddMenuItems(menu);
+                }
+
+                _info.ContextMenu = menu;
+            }
+
+            if (_info.Root.ViewSetting.ShowSelectionMenu)
+            {
+                menu["删除表格"].Visibility = _selectedTable != null ? Visibility.Visible : Visibility.Collapsed;
+                menu["清除所有图表"].Visibility = _excel.ActiveSheet.Charts.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                menu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            bool exist = (from mi in menu.Items
+                          where mi.Visibility == Visibility.Visible
+                          select mi).Any();
+            if (exist)
+            {
+                // 脚本处理上下文菜单
+                _info.ScriptObj?.OpenContextMenu(menu);
+                _ = menu.OpenContextMenu(e.GetPosition(null));
+            }
         }
         #endregion
 

@@ -64,9 +64,8 @@ namespace Dt.Base.Report
                 Items.Add(wi);
             }
 
-            // 初次加载自动执行查询
-            if (setting.AutoQuery || p_info.Root.Params.Data.Count == 0)
-                view.LoadReport(p_info);
+            // 初次加载，参数不完备时不绘制内容
+            view.LoadReport(p_info);
         }
     }
 }

@@ -165,7 +165,17 @@ namespace Dt.Base
         /// <summary>
         /// 当前报表预览的工具栏菜单
         /// </summary>
-        internal Menu ViewMenu { get; set; }
+        internal Menu ToolbarMenu { get; set; }
+
+        /// <summary>
+        /// 当前报表预览的上下文菜单
+        /// </summary>
+        internal Menu ContextMenu { get; set; }
+
+        /// <summary>
+        /// 当前报表预览的选中区域上下文菜单
+        /// </summary>
+        internal Menu SelectionMenu { get; set; }
         #endregion
 
         #region 内部方法

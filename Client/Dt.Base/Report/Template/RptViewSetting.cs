@@ -22,16 +22,28 @@ namespace Dt.Base.Report
         public RptViewSetting(RptRoot p_root)
         {
             Root = p_root;
-            Data = new Row();
-            Data.AddCell<string>("script");
-            Data.AddCell("showsearchform", true);
-            Data.AddCell<bool>("autoquery");
-            Data.AddCell<bool>("showcolheader");
-            Data.AddCell<bool>("showrowheader");
-            Data.AddCell<bool>("showgridline");
-            Data.AddCell("showmenu", true);
-            Data.AddCell("showcontextmenu", true);
-            Data.Changed += Root.OnCellValueChanged;
+            var row = new Row();
+            row.AddCell<string>("script");
+            row.AddCell("showsearchform", true);
+            row.AddCell<bool>("autoquery");
+
+            row.AddCell<bool>("showcolheader");
+            row.AddCell<bool>("showrowheader");
+            row.AddCell<bool>("showgridline");
+
+            row.AddCell("showmenu", true);
+            row.AddCell<bool>("showcontextmenu");
+            row.AddCell<bool>("showselectionmenu");
+
+            row.AddCell<bool>("showquery");
+            row.AddCell("showexport", true);
+            row.AddCell("showprint", true);
+            row.AddCell<bool>("colheaderitem");
+            row.AddCell<bool>("rowheaderitem");
+            row.AddCell<bool>("gridlineitem");
+
+            row.Changed += Root.OnCellValueChanged;
+            Data = row;
         }
 
         /// <summary>
@@ -108,12 +120,75 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置是否显示上下文菜单，默认true
+        /// 获取设置是否显示上下文菜单，默认false
         /// </summary>
         public bool ShowContextMenu
         {
             get { return Data.Bool("showcontextmenu"); }
             set { Data["showcontextmenu"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示显示选中区域的上下文菜单，默认false
+        /// </summary>
+        public bool ShowSelectionMenu
+        {
+            get { return Data.Bool("showselectionmenu"); }
+            set { Data["showselectionmenu"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示查询菜单项，默认false
+        /// </summary>
+        public bool ShowQuery
+        {
+            get { return Data.Bool("showquery"); }
+            set { Data["showquery"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示导出菜单项，默认true
+        /// </summary>
+        public bool ShowExport
+        {
+            get { return Data.Bool("showexport"); }
+            set { Data["showexport"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示打印菜单项，默认true
+        /// </summary>
+        public bool ShowPrint
+        {
+            get { return Data.Bool("showprint"); }
+            set { Data["showprint"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示列头菜单项，默认false
+        /// </summary>
+        public bool ShowColHeaderItem
+        {
+            get { return Data.Bool("colheaderitem"); }
+            set { Data["contextcolheader"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示行头菜单项，默认false
+        /// </summary>
+        public bool ShowRowHeaderItem
+        {
+            get { return Data.Bool("rowheaderitem"); }
+            set { Data["rowheaderitem"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示网格菜单项，默认false
+        /// </summary>
+        public bool ShowGridLineItem
+        {
+            get { return Data.Bool("gridlineitem"); }
+            set { Data["gridlineitem"] = value; }
         }
 
         public void ReadXml(XmlReader p_reader)
@@ -138,10 +213,27 @@ namespace Dt.Base.Report
                 p_writer.WriteAttributeString("showrowheader", "True");
             if (ShowGridLine)
                 p_writer.WriteAttributeString("showgridline", "True");
+
             if (!ShowMenu)
                 p_writer.WriteAttributeString("showmenu", "False");
-            if (!ShowContextMenu)
-                p_writer.WriteAttributeString("showcontextmenu", "False");
+            if (ShowContextMenu)
+                p_writer.WriteAttributeString("showcontextmenu", "True");
+            if (ShowSelectionMenu)
+                p_writer.WriteAttributeString("showselectionmenu", "True");
+
+            if (ShowQuery)
+                p_writer.WriteAttributeString("showquery", "True");
+            if (!ShowExport)
+                p_writer.WriteAttributeString("showexport", "False");
+            if (!ShowPrint)
+                p_writer.WriteAttributeString("showprint", "False");
+            if (ShowColHeaderItem)
+                p_writer.WriteAttributeString("colheaderitem", "True");
+            if (ShowRowHeaderItem)
+                p_writer.WriteAttributeString("rowheaderitem", "True");
+            if (ShowGridLineItem)
+                p_writer.WriteAttributeString("gridlineitem", "True");
+
             p_writer.WriteEndElement();
         }
     }

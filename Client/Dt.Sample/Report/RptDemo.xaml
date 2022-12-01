@@ -49,13 +49,19 @@
                                 <Button Content="图表矩阵" />
                                 <Button Content="图表表格" />
                             </StackPanel>
-                            <a:CBar Title="报表参数" />
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="默认查询面板" />
-                                <Button Content="自定义查询面板" />
-                            </StackPanel>
                         </a:Fv>
                         <a:Fv x:Name="_fvOther">
+                            <a:CBar Title="报表参数" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="默认查询面板" Click="OnParamsPnl" />
+                                <Button Content="自定义查询面板" Click="OnParamsPnl" />
+                                <Button Content="查询对话框" Click="OnBtnClick" />
+                            </StackPanel>
+                            <a:CBar Title="菜单" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="完整菜单项" Click="OnBtnClick" />
+                                <Button Content="只选择区域菜单" Click="OnBtnClick" />
+                            </StackPanel>
                             <a:CBar Title="其他" />
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="脚本" Click="OnScript" />
