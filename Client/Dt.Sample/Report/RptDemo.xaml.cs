@@ -84,7 +84,9 @@ namespace Dt.Sample
             List<RptInfo> ls = new List<RptInfo>
             {
                 new MyRptInfo { Name = "默认查询面板" },
-                new MyRptInfo { Name = "自定义查询面板" }
+                new MyRptInfo { Name = "自定义查询面板" },
+                new MyRptInfo { Name = "完整表格" },
+                new MyRptInfo { Name = "完整矩阵" },
             };
             Rpt.Show(ls, "报表组");
         }

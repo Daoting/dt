@@ -29,7 +29,6 @@ namespace Dt.Base
         #region 成员变量
         // 报表模板缓存
         static readonly Dictionary<string, RptRoot> _tempCache = new Dictionary<string, RptRoot>();
-        const string _paramsMsg = "报表查询参数不完整！";
         readonly Dictionary<string, RptData> _dataSet = new Dictionary<string, RptData>(StringComparer.OrdinalIgnoreCase);
         bool _inited;
         #endregion
@@ -129,10 +128,16 @@ namespace Dt.Base
         public void UpdateParams(Core.Row p_row)
         {
             if (p_row != null)
-            {
                 Params = p_row.ToDict();
-                Sheet = null;
-            }
+        }
+
+        /// <summary>
+        /// 清除旧数据及旧Sheet
+        /// </summary>
+        public void ClearData()
+        {
+            _dataSet.Clear();
+            Sheet = null;
         }
         #endregion
 
@@ -158,7 +163,7 @@ namespace Dt.Base
         internal RptScript ScriptObj { get; private set; }
 
         /// <summary>
-        /// 报表组时当前报表预览的工具栏菜单
+        /// 当前报表预览的工具栏菜单
         /// </summary>
         internal Menu ViewMenu { get; set; }
         #endregion
@@ -241,38 +246,24 @@ namespace Dt.Base
         internal bool IsParamsValid()
         {
             if (Root == null)
-            {
-                Kit.Msg("未加载报表模板，无法验证查询参数！");
                 return false;
-            }
 
             int count = Root.Params.Data.Count;
             Dict dt = Params;
 
             // 未提供查询参数
             if (dt == null || dt.Count == 0)
-            {
-                if (count > 0)
-                {
-                    Kit.Msg(_paramsMsg);
-                    return false;
-                }
-                return true;
-            }
+                return count == 0;
 
             // 参数个数不够
             if (dt.Count < count)
-            {
-                Kit.Msg(_paramsMsg);
                 return false;
-            }
 
             // 确保每个参数都包含
             foreach (var row in Root.Params.Data)
             {
                 if (!dt.ContainsKey(row.Str("name")))
                 {
-                    Kit.Msg(_paramsMsg);
                     return false;
                 }
             }

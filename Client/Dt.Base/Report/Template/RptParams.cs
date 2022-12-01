@@ -251,7 +251,6 @@ namespace Dt.Base.Report
                     }
                 }
             }
-            p_fv.Data = BuildInitRow();
         }
 
         public bool IsValid()

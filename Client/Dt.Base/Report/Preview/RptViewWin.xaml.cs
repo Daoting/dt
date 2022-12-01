@@ -28,11 +28,11 @@ namespace Dt.Base.Report
         {
             RptView view = new RptView { Title = p_info.Name };
 
-            IRptSearchForm searchForm = null;
+            RptSearchMv mvSearch = null;
             if (p_info.ScriptObj != null)
             {
                 p_info.ScriptObj.View = view;
-                searchForm = p_info.ScriptObj.GetSearchForm(p_info);
+                mvSearch = p_info.ScriptObj.GetSearchForm(p_info);
             }
 
             // 主区RptView
@@ -47,17 +47,17 @@ namespace Dt.Base.Report
             // 左侧查询面板
             var setting = p_info.Root.ViewSetting;
             if (setting.ShowSearchForm
-                && (searchForm != null || p_info.Root.Params.ExistXaml))
+                && (mvSearch != null || p_info.Root.Params.ExistXaml))
             {
                 Pane wi = new Pane();
                 tabs = new Tabs();
                 tab = new Tab();
 
                 // 加载查询面板内容
-                if (searchForm == null)
-                    searchForm = new RptSearchForm(p_info);
-                searchForm.Query += (s, e) => view.LoadReport(e);
-                tab.Content = searchForm;
+                if (mvSearch == null)
+                    mvSearch = new DefaultRptSearch(p_info);
+                mvSearch.Query += (s, e) => view.LoadReport(e);
+                tab.Content = mvSearch;
 
                 tabs.Items.Add(tab);
                 wi.Items.Add(tabs);

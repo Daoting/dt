@@ -27,6 +27,7 @@ namespace Dt.Base
     public sealed partial class RptView : Mv
     {
         #region 成员变量
+        RptInfo _info;
         Menu _selectionMenu;
         Menu _rightMenu;
         SheetTable _selectedTable;
@@ -53,10 +54,11 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 属性
         /// <summary>
         /// 对应的报表描述信息
         /// </summary>
-        public RptInfo Info { get; private set; }
+        public RptInfo Info => _info;
 
         /// <summary>
         /// 内部Excel
@@ -67,49 +69,199 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 加载报表内容，前提条件:
-        /// <para>报表模板名称</para>
-        /// <para>确保查询参数完备</para>
+        /// 获取导出命令对象
+        /// </summary>
+        public BaseCommand CmdExport
+        {
+            get
+            {
+                if (_cmdExport == null)
+                    _cmdExport = new BaseCommand((p_param) => { DoExport(); });
+                return _cmdExport;
+            }
+        }
+
+        /// <summary>
+        /// 获取打印命令对象
+        /// </summary>
+        public BaseCommand CmdPrint
+        {
+            get
+            {
+                if (_cmdPrint == null)
+                    _cmdPrint = new BaseCommand((p_param) => { DoPrint(); });
+                return _cmdPrint;
+            }
+        }
+
+        /// <summary>
+        /// 获取查询命令对象
+        /// </summary>
+        public BaseCommand CmdSearch
+        {
+            get
+            {
+                if (_cmdSearch == null)
+                    _cmdSearch = new BaseCommand((p_param) => { DoSearch(); });
+                return _cmdSearch;
+            }
+        }
+
+        /// <summary>
+        /// 获取网格命令对象
+        /// </summary>
+        public BaseCommand CmdGridLine
+        {
+            get
+            {
+                if (_cmdGridLine == null)
+                {
+                    _cmdGridLine = new BaseCommand((p_param) =>
+                    {
+                        if (_excel.ActiveSheet != null)
+                            DoShowGridLine(!_excel.ActiveSheet.ShowGridLine);
+                    });
+                }
+
+                return _cmdGridLine;
+            }
+        }
+
+        /// <summary>
+        /// 获取列头命令对象
+        /// </summary>
+        public BaseCommand CmdColHeader
+        {
+            get
+            {
+                if (_cmdColHeader == null)
+                {
+                    _cmdColHeader = new BaseCommand((p_param) =>
+                    {
+                        if (_excel.ActiveSheet != null)
+                            DoShowColHeader(!_excel.ActiveSheet.ColumnHeader.IsVisible);
+                    });
+                }
+                return _cmdColHeader;
+            }
+        }
+
+        /// <summary>
+        /// 获取行头命令对象
+        /// </summary>
+        public BaseCommand CmdRowHeader
+        {
+            get
+            {
+                if (_cmdRowHeader == null)
+                {
+                    _cmdRowHeader = new BaseCommand((p_param) =>
+                    {
+                        if (_excel.ActiveSheet != null)
+                            DoShowRowHeader(!_excel.ActiveSheet.RowHeader.IsVisible);
+                    });
+                }
+                return _cmdRowHeader;
+            }
+        }
+
+        /// <summary>
+        /// 获取清除表格命令对象
+        /// </summary>
+        public BaseCommand CmdClearTable
+        {
+            get
+            {
+                if (_cmdClearTable == null)
+                    _cmdClearTable = new BaseCommand((p_param) => { ClearTable(); });
+                return _cmdClearTable;
+            }
+        }
+
+        /// <summary>
+        /// 获取清除图表命令对象
+        /// </summary>
+        public BaseCommand CmdClearChart
+        {
+            get
+            {
+                if (_cmdClearChart == null)
+                    _cmdClearChart = new BaseCommand((p_param) => { ClearChart(); });
+                return _cmdClearChart;
+            }
+        }
+        #endregion
+
+        #region 加载报表
+        /// <summary>
+        /// 加载报表内容
         /// </summary>
         /// <param name="p_info">报表描述信息</param>
         public async void LoadReport(RptInfo p_info)
         {
-            // 确保正确加载模板，参数完备
-            if (p_info == null
-                || !await p_info.Init()
-                || !p_info.IsParamsValid())
+            // 确保正确加载模板
+            if (p_info == null || !await p_info.Init())
                 return;
 
-            LoadMenu(p_info);
+            if (_info != p_info)
+            {
+                // 切换报表时需要重新加载Menu
+                _info = p_info;
+                LoadMenu();
+            }
+
+            // 清除旧数据
+            _info.ClearData();
+
+            if (_info.IsParamsValid())
+            {
+                // 查询参数完备，绘制报表
+                await DrawData();
+            }
+            else
+            {
+                // 查询参数不完备
+                _excel.Sheets.Clear();
+                if ((_info.Root.Params.ExistXaml || _info.ScriptObj?.GetSearchForm(_info) != null)
+                    && _info.Root.ViewSetting.AutoQuery)
+                {
+                    // 显示查询对话框
+                    DoSearch();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 绘制报表
+        /// </summary>
+        /// <returns></returns>
+        async Task DrawData()
+        {
             _excel.IsBusy = true;
             try
             {
-                Info = p_info;
-                if (p_info.ScriptObj != null && p_info.ScriptObj.View != this)
-                    p_info.ScriptObj.View = this;
+                if (_info.ScriptObj != null && _info.ScriptObj.View != this)
+                    _info.ScriptObj.View = this;
 
                 // 绘制报表内容
-                if (Info.Sheet == null)
-                {
-                    RptRootInst inst = new RptRootInst(Info);
-                    await inst.Draw();
-                }
+                var inst = new RptRootInst(_info);
+                await inst.Draw();
 
                 using (_excel.Defer())
                 {
                     _excel.Sheets.Clear();
 
                     // 设置分页线
-                    _excel.PaperSize = new Size(Info.Root.PageSetting.ValidWidth, Info.Root.PageSetting.ValidHeight);
+                    _excel.PaperSize = new Size(_info.Root.PageSetting.ValidWidth, _info.Root.PageSetting.ValidHeight);
 
                     // 添加报表页
-                    var ws = Info.Sheet;
+                    var ws = _info.Sheet;
                     if (ws != null)
                     {
                         // 应用外部可控制属性
-                        ws.ColumnHeader.IsVisible = Info.Root.ViewSetting.ShowColHeader;
-                        ws.RowHeader.IsVisible = Info.Root.ViewSetting.ShowRowHeader;
-                        ws.ShowGridLine = Info.Root.ViewSetting.ShowGridLine;
+                        ws.ColumnHeader.IsVisible = _info.Root.ViewSetting.ShowColHeader;
+                        ws.RowHeader.IsVisible = _info.Root.ViewSetting.ShowRowHeader;
+                        ws.ShowGridLine = _info.Root.ViewSetting.ShowGridLine;
                         _excel.Sheets.Add(ws);
                     }
                 }
@@ -124,6 +276,166 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 加载报表工具栏菜单
+        /// </summary>
+        void LoadMenu()
+        {
+            if (_info.Root.ViewSetting.ShowMenu)
+            {
+                if (_info.ViewMenu == null)
+                {
+                    var menu = new Menu
+                    {
+                        Items =
+                        {
+                            new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport },
+                            new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint },
+                        }
+                    };
+
+                    // 查询参数不完备时，显示查询菜单
+                    if (!_info.IsParamsValid()
+                        && (_info.Root.Params.ExistXaml || _info.ScriptObj?.GetSearchForm(_info) != null))
+                    {
+                        menu.Items.Insert(0, new Mi { ID = "查询", Icon = Icons.搜索, Cmd = CmdSearch });
+                    }
+
+                    _info.ViewMenu = menu;
+                    _info.ScriptObj?.InitMenu(menu);
+                }
+                Menu = _info.ViewMenu;
+            }
+            else if (Menu != null)
+            {
+                Menu = null;
+            }
+        }
+        #endregion
+
+        #region 命令
+        /// <summary>
+        /// 导出
+        /// </summary>
+        public async void DoExport()
+        {
+            if (_excel.ActiveSheet == null)
+                return;
+
+            var filePicker = Kit.GetFileSavePicker();
+            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
+            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
+            filePicker.SuggestedFileName = "新文件";
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null)
+            {
+                var stream = await storageFile.OpenStreamForWriteAsync();
+                var fileName = storageFile.FileType.ToUpperInvariant();
+                var fileFormat = ExcelFileFormat.XLS;
+                if (fileName.EndsWith(".XLSX"))
+                    fileFormat = ExcelFileFormat.XLSX;
+                else
+                    fileFormat = ExcelFileFormat.XLS;
+                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
+                stream.Dispose();
+                Kit.Msg("导出成功！");
+            }
+        }
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        public void DoPrint()
+        {
+            if (_excel.ActiveSheet != null)
+            {
+                PrintInfo info = new PrintInfo();
+                RptPageSetting setting = _info.Root.PageSetting;
+                info.PaperSize = new PaperSize(setting.Width, setting.Height);
+                info.Margin = new Margins((int)setting.TopMargin, (int)setting.BottomMargin, (int)setting.LeftMargin, (int)setting.RightMargin);
+                info.Orientation = setting.Landscape ? PrintPageOrientation.Landscape : PrintPageOrientation.Portrait;
+                info.ShowBorder = false;
+                info.PageOrder = PrintPageOrder.OverThenDown;
+                Worksheet sheet = _excel.ActiveSheet;
+                info.ShowRowHeader = sheet.RowHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
+                info.ShowColumnHeader = sheet.ColumnHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
+                info.ShowGridLine = sheet.ShowGridLine;
+
+                _excel.Print(info, -1, _info.Name);
+            }
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        public void DoSearch()
+        {
+            if (_info == null || _info.Root == null)
+                return;
+
+            var mvSearch = _info.ScriptObj?.GetSearchForm(_info);
+            if (mvSearch != null || _info.Root.Params.ExistXaml)
+            {
+                if (mvSearch == null)
+                    mvSearch = new DefaultRptSearch(_info);
+
+                var dlg = new Dlg { Title = _info.Name, IsPinned = true };
+                if (!Kit.IsPhoneUI)
+                {
+                    dlg.WinPlacement = DlgPlacement.CenterScreen;
+                    dlg.MinHeight = 300;
+                    dlg.ShowVeil = true;
+                }
+                dlg.LoadMv(mvSearch);
+                dlg.Show();
+
+                mvSearch.Query += (s, e) =>
+                {
+                    LoadReport(e);
+                    dlg.Close();
+                };
+            }
+            else
+            {
+                // 无参数或都隐藏时刷新
+                LoadReport(_info);
+            }
+        }
+
+        /// <summary>
+        /// 显示网格
+        /// </summary>
+        /// <param name="p_show"></param>
+        public void DoShowGridLine(bool p_show)
+        {
+            var st = _excel.ActiveSheet;
+            if (st != null)
+                st.ShowGridLine = p_show;
+        }
+
+        /// <summary>
+        /// 显示列头
+        /// </summary>
+        /// <param name="p_show"></param>
+        public void DoShowColHeader(bool p_show)
+        {
+            var st = _excel.ActiveSheet;
+            if (st != null)
+                st.ColumnHeader.IsVisible = p_show;
+        }
+
+        /// <summary>
+        /// 显示行头
+        /// </summary>
+        /// <param name="p_show"></param>
+        public void DoShowRowHeader(bool p_show)
+        {
+            var st = _excel.ActiveSheet;
+            if (st != null)
+                st.RowHeader.IsVisible = p_show;
+        }
+        #endregion
+
         #region Excel事件
         /// <summary>
         /// 点击单元格
@@ -132,14 +444,14 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnCellClick(object sender, CellClickEventArgs e)
         {
-            if (Info.ScriptObj != null
+            if (_info.ScriptObj != null
                 && _excel.ActiveSheet[e.Row, e.Column].Tag is RptTextInst inst
                 && inst.Item is RptText txt
                 && txt.HandleClick)
             {
                 _selectedTable = null;
                 _excel.DecorationRange = null;
-                Info.ScriptObj.OnCellClick(new RptCellArgs(inst));
+                _info.ScriptObj.OnCellClick(new RptCellArgs(inst));
             }
         }
 
@@ -150,7 +462,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (!Info.Root.ViewSetting.ShowContextMenu)
+            if (!_info.Root.ViewSetting.ShowContextMenu)
                 return;
 
             _selectedTable = null;
@@ -196,7 +508,7 @@ namespace Dt.Base
 
         void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (Info == null || !Info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
+            if (_info == null || !_info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
                 return;
 
             if (_rightMenu == null)
@@ -225,7 +537,7 @@ namespace Dt.Base
             _rightMenu["清除所有图表"].Visibility = _excel.ActiveSheet.Charts.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             _rightMenu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
             // 脚本处理上下文菜单
-            Info.ScriptObj?.OpenContextMenu(_rightMenu);
+            _info.ScriptObj?.OpenContextMenu(_rightMenu);
             _ = _rightMenu.OpenContextMenu(e.GetPosition(null));
         }
         #endregion
@@ -423,293 +735,6 @@ namespace Dt.Base
                     _excel.DecorationRange = null;
                 }
             }
-        }
-        #endregion
-
-        #region 工具栏
-        /// <summary>
-        /// 加载报表工具栏菜单
-        /// </summary>
-        /// <param name="p_info"></param>
-        void LoadMenu(RptInfo p_info)
-        {
-            // 未切换报表不需要生成Menu
-            if (Info == p_info)
-                return;
-
-            if (p_info.Root.ViewSetting.ShowMenu)
-            {
-                if (p_info.ViewMenu == null)
-                {
-                    var menu = new Menu
-                    {
-                        Items =
-                        {
-                            new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport },
-                            new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint },
-                        }
-                    };
-
-                    // 左侧不显示查询面板时，显示查询菜单
-                    if (!p_info.Root.ViewSetting.ShowSearchForm
-                        && (p_info.Root.Params.ExistXaml || p_info.ScriptObj?.GetSearchForm(p_info) != null))
-                    {
-                        menu.Items.Insert(0, new Mi { ID = "查询", Icon = Icons.搜索, Cmd = CmdSearch });
-                    }
-
-                    p_info.ViewMenu = menu;
-                    p_info.ScriptObj?.InitMenu(menu);
-                }
-                Menu = p_info.ViewMenu;
-            }
-            else if (Menu != null)
-            {
-                Menu = null;
-            }
-        }
-        #endregion
-
-        #region 命令
-        /// <summary>
-        /// 获取导出命令对象
-        /// </summary>
-        public BaseCommand CmdExport
-        {
-            get
-            {
-                if (_cmdExport == null)
-                    _cmdExport = new BaseCommand((p_param) => { DoExport(); });
-                return _cmdExport;
-            }
-        }
-
-        /// <summary>
-        /// 获取打印命令对象
-        /// </summary>
-        public BaseCommand CmdPrint
-        {
-            get
-            {
-                if (_cmdPrint == null)
-                    _cmdPrint = new BaseCommand((p_param) => { DoPrint(); });
-                return _cmdPrint;
-            }
-        }
-
-        /// <summary>
-        /// 获取查询命令对象
-        /// </summary>
-        public BaseCommand CmdSearch
-        {
-            get
-            {
-                if (_cmdSearch == null)
-                    _cmdSearch = new BaseCommand((p_param) => { DoSearch(); });
-                return _cmdSearch;
-            }
-        }
-
-        /// <summary>
-        /// 获取网格命令对象
-        /// </summary>
-        public BaseCommand CmdGridLine
-        {
-            get
-            {
-                if (_cmdGridLine == null)
-                {
-                    _cmdGridLine = new BaseCommand((p_param) =>
-                    {
-                        if (_excel.ActiveSheet != null)
-                            DoShowGridLine(!_excel.ActiveSheet.ShowGridLine);
-                    });
-                }
-
-                return _cmdGridLine;
-            }
-        }
-
-        /// <summary>
-        /// 获取列头命令对象
-        /// </summary>
-        public BaseCommand CmdColHeader
-        {
-            get
-            {
-                if (_cmdColHeader == null)
-                {
-                    _cmdColHeader = new BaseCommand((p_param) =>
-                    {
-                        if (_excel.ActiveSheet != null)
-                            DoShowColHeader(!_excel.ActiveSheet.ColumnHeader.IsVisible);
-                    });
-                }
-                return _cmdColHeader;
-            }
-        }
-
-        /// <summary>
-        /// 获取行头命令对象
-        /// </summary>
-        public BaseCommand CmdRowHeader
-        {
-            get
-            {
-                if (_cmdRowHeader == null)
-                {
-                    _cmdRowHeader = new BaseCommand((p_param) =>
-                    {
-                        if (_excel.ActiveSheet != null)
-                            DoShowRowHeader(!_excel.ActiveSheet.RowHeader.IsVisible);
-                    });
-                }
-                return _cmdRowHeader;
-            }
-        }
-
-        /// <summary>
-        /// 获取清除表格命令对象
-        /// </summary>
-        public BaseCommand CmdClearTable
-        {
-            get
-            {
-                if (_cmdClearTable == null)
-                    _cmdClearTable = new BaseCommand((p_param) => { ClearTable(); });
-                return _cmdClearTable;
-            }
-        }
-
-        /// <summary>
-        /// 获取清除图表命令对象
-        /// </summary>
-        public BaseCommand CmdClearChart
-        {
-            get
-            {
-                if (_cmdClearChart == null)
-                    _cmdClearChart = new BaseCommand((p_param) => { ClearChart(); });
-                return _cmdClearChart;
-            }
-        }
-
-        /// <summary>
-        /// 导出
-        /// </summary>
-        public async void DoExport()
-        {
-            if (_excel.ActiveSheet == null)
-                return;
-
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        /// <summary>
-        /// 打印
-        /// </summary>
-        public void DoPrint()
-        {
-            if (_excel.ActiveSheet != null)
-            {
-                PrintInfo info = new PrintInfo();
-                RptPageSetting setting = Info.Root.PageSetting;
-                info.PaperSize = new PaperSize(setting.Width, setting.Height);
-                info.Margin = new Margins((int)setting.TopMargin, (int)setting.BottomMargin, (int)setting.LeftMargin, (int)setting.RightMargin);
-                info.Orientation = setting.Landscape ? PrintPageOrientation.Landscape : PrintPageOrientation.Portrait;
-                info.ShowBorder = false;
-                info.PageOrder = PrintPageOrder.OverThenDown;
-                Worksheet sheet = _excel.ActiveSheet;
-                info.ShowRowHeader = sheet.RowHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
-                info.ShowColumnHeader = sheet.ColumnHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
-                info.ShowGridLine = sheet.ShowGridLine;
-
-                _excel.Print(info, -1, Info.Name);
-            }
-        }
-
-        /// <summary>
-        /// 查询
-        /// </summary>
-        public void DoSearch()
-        {
-            //if (_info == null || _info.Root == null)
-            //    return;
-
-            //// 可能存在报表链接，始终构造
-            //bool has = (from c in _info.Root.Params.Data
-            //            where !c.Bool("hide")
-            //            select c).Any();
-            //if (has)
-            //{
-            //    var fm = new RptParamsForm();
-            //    fm.LoadParams(_info);
-            //    Dialog dlg = new Dialog();
-            //    dlg.Content = fm;
-            //    dlg.PopInit += (sender, pop) => pop.StartPosition = PopStartPosition.CenterScreen;
-            //    fm.Query += (sender, e) =>
-            //    {
-            //        LoadReport(_info);
-            //        dlg.Close();
-            //    };
-            //    dlg.Show(null, "查询");
-            //}
-            //else
-            //{
-            //    // 无参数或都隐藏时刷新
-            //    _info.Sheet = null;
-            //    _info.DataSet = null;
-            //    LoadReport(_info);
-            //}
-        }
-
-        /// <summary>
-        /// 显示网格
-        /// </summary>
-        /// <param name="p_show"></param>
-        public void DoShowGridLine(bool p_show)
-        {
-            var st = _excel.ActiveSheet;
-            if (st != null)
-                st.ShowGridLine = p_show;
-        }
-
-        /// <summary>
-        /// 显示列头
-        /// </summary>
-        /// <param name="p_show"></param>
-        public void DoShowColHeader(bool p_show)
-        {
-            var st = _excel.ActiveSheet;
-            if (st != null)
-                st.ColumnHeader.IsVisible = p_show;
-        }
-
-        /// <summary>
-        /// 显示行头
-        /// </summary>
-        /// <param name="p_show"></param>
-        public void DoShowRowHeader(bool p_show)
-        {
-            var st = _excel.ActiveSheet;
-            if (st != null)
-                st.RowHeader.IsVisible = p_show;
         }
         #endregion
     }
