@@ -13,6 +13,7 @@
             <Button Content="返回" Click="OnBack" />
             <Button Content="切换行头显示" Click="OnToggleRowHearder" />
             <Button Content="切换列头显示" Click="OnToggleColHearder" />
+            <Button Content="切换网格显示" Click="OnToggleGridLine" />
         </StackPanel>
         <a:Excel x:Name="_excel" Grid.Row="1" />
     </Grid>

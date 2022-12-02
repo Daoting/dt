@@ -114,11 +114,7 @@ namespace Dt.Base
             {
                 if (_cmdGridLine == null)
                 {
-                    _cmdGridLine = new BaseCommand((p_param) =>
-                    {
-                        if (_excel.ActiveSheet != null)
-                            DoShowGridLine(!_excel.ActiveSheet.ShowGridLine);
-                    });
+                    _cmdGridLine = new BaseCommand(p => DoShowGridLine(!_excel.ShowGridLine));
                 }
 
                 return _cmdGridLine;
@@ -323,7 +319,7 @@ namespace Dt.Base
                 Worksheet sheet = _excel.ActiveSheet;
                 info.ShowRowHeader = sheet.RowHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
                 info.ShowColumnHeader = sheet.ColumnHeader.IsVisible ? VisibilityType.Show : VisibilityType.Hide;
-                info.ShowGridLine = sheet.ShowGridLine;
+                info.ShowGridLine = _excel.ShowGridLine;
 
                 _excel.Print(info, -1, _info.Name);
             }
@@ -372,9 +368,7 @@ namespace Dt.Base
         /// <param name="p_show"></param>
         public void DoShowGridLine(bool p_show)
         {
-            var st = _excel.ActiveSheet;
-            if (st != null)
-                st.ShowGridLine = p_show;
+            _excel.ShowGridLine = p_show;
         }
 
         /// <summary>
@@ -440,7 +434,7 @@ namespace Dt.Base
             if (p_menu.IsContextMenu && _excel.ActiveSheet != null)
             {
                 if (setting.ShowGridLineItem)
-                    p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ActiveSheet.ShowGridLine, Cmd = CmdGridLine });
+                    p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ShowGridLine, Cmd = CmdGridLine });
                 if (setting.ShowColHeaderItem)
                     p_menu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, IsChecked = _excel.ActiveSheet.ColumnHeader.IsVisible, Cmd = CmdColHeader });
                 if (setting.ShowRowHeaderItem)

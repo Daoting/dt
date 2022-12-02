@@ -345,7 +345,7 @@ namespace Dt.Base.Report
         /// <param name="e"></param>
         void OnCheckChanged(object sender, Mi e)
         {
-            _excel.ActiveSheet.ShowGridLine = e.IsChecked;
+            _excel.ShowGridLine = e.IsChecked;
         }
 
         /// <summary>

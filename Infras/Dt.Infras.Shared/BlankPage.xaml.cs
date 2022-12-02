@@ -33,5 +33,14 @@ namespace Dt.Shell
             if (st != null)
                 st.ColumnHeader.IsVisible = !st.ColumnHeader.IsVisible;
         }
+
+        void OnToggleGridLine(object sender, RoutedEventArgs e)
+        {
+            _excel.ShowGridLine = !_excel.ShowGridLine;
+            //_excel.AutoRefresh= true;
+            //var st = _excel.ActiveSheet;
+            //if (st != null)
+            //    st.ShowGridLine = !st.ShowGridLine;
+        }
     }
 }

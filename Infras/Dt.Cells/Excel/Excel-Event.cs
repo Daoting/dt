@@ -613,185 +613,185 @@ namespace Dt.Base
 
         void HandleSheetPropertyChanged(object sender, PropertyChangedEventArgs e, bool autoRefresh)
         {
-            if (ActiveSheet != null)
+            if (ActiveSheet == null)
+                return;
+
+            if (e.PropertyName == "Visible")
             {
-                if (e.PropertyName == "Visible")
+                Worksheet sheet = sender as Worksheet;
+                if (sheet != null)
                 {
-                    Worksheet sheet = sender as Worksheet;
-                    if (sheet != null)
+                    HandleVisibleChanged(sheet);
+                    if (autoRefresh)
                     {
-                        HandleVisibleChanged(sheet);
+                        RefreshAll();
+                    }
+                }
+            }
+            else if ((e.PropertyName == "SheetTabColor") || (e.PropertyName == "SheetTabThemeColor"))
+            {
+                UpdateTabStrip();
+            }
+            else if (sender == ActiveSheet)
+            {
+                switch (e.PropertyName)
+                {
+                    case "ActiveCell":
+                    case "ActiveColumnIndex":
+                    case "ActiveRowIndex":
+                        Navigation.UpdateStartPosition(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
+                        UpdateHeaderCellsStateInSpanArea();
+                        UpdateFocusIndicator();
+                        UpdateHeaderCellsStateInSpanArea();
+                        PrepareCellEditing();
+                        return;
+
+                    case "FrozenRowCount":
+                        SetViewportTopRow(0, ActiveSheet.FrozenRowCount);
+                        if (autoRefresh)
+                        {
+                            RefreshRows(0, ActiveSheet.FrozenRowCount, SheetArea.Cells | SheetArea.RowHeader);
+                        }
+                        return;
+
+                    case "FrozenColumnCount":
+                        SetViewportLeftColumn(0, ActiveSheet.FrozenColumnCount);
+                        if (autoRefresh)
+                        {
+                            RefreshColumns(0, ActiveSheet.FrozenColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                        }
+                        return;
+
+                    case "FrozenTrailingRowCount":
+                        if (autoRefresh)
+                        {
+                            RefreshRows(Math.Max(0, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount), ActiveSheet.FrozenTrailingRowCount, SheetArea.Cells | SheetArea.RowHeader);
+                        }
+                        return;
+
+                    case "FrozenTrailingColumnCount":
+                        if (autoRefresh)
+                        {
+                            RefreshRows(Math.Max(0, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount), ActiveSheet.FrozenTrailingColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                        }
+                        return;
+
+                    case "RowFilter":
+                        if (_cachedFilterButtonInfoModel != null)
+                        {
+                            _cachedFilterButtonInfoModel.Clear();
+                            _cachedFilterButtonInfoModel = null;
+                        }
+                        if (autoRefresh)
+                        {
+                            RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        }
+                        return;
+
+                    case "ZoomFactor":
+                    case "DefaultColumnWidth":
+                    case "DefaultRowHeight":
+                    case "NamedStyles":
+                    case "DefaultStyle":
+                    case "[Sort]":
+                    case "[MoveTo]":
+                    case "[CopyTo]":
+                    case "SelectionBorderColor":
+                    case "SelectionBorderThemeColor":
+                    case "SelectionBackground":
+                        if (autoRefresh)
+                        {
+                            RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        }
+                        return;
+
+                    case "ShowGridLine":
+                    case "GridLineColor":
+                    case "DataSource":
                         if (autoRefresh)
                         {
                             RefreshAll();
                         }
-                    }
-                }
-                if ((e.PropertyName == "SheetTabColor") || (e.PropertyName == "SheetTabThemeColor"))
-                {
-                    UpdateTabStrip();
-                }
-                if (sender == ActiveSheet)
-                {
-                    switch (e.PropertyName)
-                    {
-                        case "ActiveCell":
-                        case "ActiveColumnIndex":
-                        case "ActiveRowIndex":
-                            Navigation.UpdateStartPosition(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
-                            UpdateHeaderCellsStateInSpanArea();
-                            UpdateFocusIndicator();
-                            UpdateHeaderCellsStateInSpanArea();
-                            PrepareCellEditing();
-                            return;
+                        return;
 
-                        case "FrozenRowCount":
-                            SetViewportTopRow(0, ActiveSheet.FrozenRowCount);
-                            if (autoRefresh)
-                            {
-                                RefreshRows(0, ActiveSheet.FrozenRowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
+                    case "[ViewportInfo]":
+                        return;
 
-                        case "FrozenColumnCount":
-                            SetViewportLeftColumn(0, ActiveSheet.FrozenColumnCount);
-                            if (autoRefresh)
-                            {
-                                RefreshColumns(0, ActiveSheet.FrozenColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
+                    case "RowCount":
+                    case "RowRangeGroup":
+                        if (autoRefresh)
+                        {
+                            RefreshRows(0, ActiveSheet.RowCount, SheetArea.Cells | SheetArea.RowHeader);
+                        }
+                        return;
 
-                        case "FrozenTrailingRowCount":
-                            if (autoRefresh)
-                            {
-                                RefreshRows(Math.Max(0, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount), ActiveSheet.FrozenTrailingRowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
+                    case "ColumnCount":
+                    case "ColumnRangeGroup":
+                        if (autoRefresh)
+                        {
+                            RefreshColumns(0, ActiveSheet.ColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                        }
+                        return;
 
-                        case "FrozenTrailingColumnCount":
-                            if (autoRefresh)
-                            {
-                                RefreshRows(Math.Max(0, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount), ActiveSheet.FrozenTrailingColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
+                    case "StartingRowNumber":
+                    case "RowHeaderColumnCount":
+                        if (autoRefresh)
+                        {
+                            RefreshColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        }
+                        return;
 
-                        case "RowFilter":
-                            if (_cachedFilterButtonInfoModel != null)
-                            {
-                                _cachedFilterButtonInfoModel.Clear();
-                                _cachedFilterButtonInfoModel = null;
-                            }
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            return;
+                    case "StartingColumnNumber":
+                    case "ColumnHeaderRowCount":
+                        if (autoRefresh)
+                        {
+                            RefreshRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+                        }
+                        return;
 
-                        case "ShowGridLine":
-                        case "GridLineColor":
-                        case "ZoomFactor":
-                        case "DefaultColumnWidth":
-                        case "DefaultRowHeight":
-                        case "NamedStyles":
-                        case "DefaultStyle":
-                        case "[Sort]":
-                        case "[MoveTo]":
-                        case "[CopyTo]":
-                        case "SelectionBorderColor":
-                        case "SelectionBorderThemeColor":
-                        case "SelectionBackground":
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            return;
+                    case "RowHeaderDefaultStyle":
+                        if (autoRefresh)
+                        {
+                            RefreshRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        }
+                        return;
 
-                        case "DataSource":
-                            if (autoRefresh)
-                            {
-                                RefreshAll();
-                            }
-                            return;
+                    case "ColumnHeaderDefaultStyle":
+                        if (autoRefresh)
+                        {
+                            RefreshRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
+                        }
+                        return;
 
-                        case "[ViewportInfo]":
-                            return;
+                    case "ReferenceStyle":
+                    case "Names":
+                        if (autoRefresh)
+                        {
+                            RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
+                        }
+                        return;
 
-                        case "RowCount":
-                        case "RowRangeGroup":
-                            if (autoRefresh)
-                            {
-                                RefreshRows(0, ActiveSheet.RowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "ColumnCount":
-                        case "ColumnRangeGroup":
-                            if (autoRefresh)
-                            {
-                                RefreshColumns(0, ActiveSheet.ColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "StartingRowNumber":
-                        case "RowHeaderColumnCount":
-                            if (autoRefresh)
-                            {
-                                RefreshColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "StartingColumnNumber":
-                        case "ColumnHeaderRowCount":
-                            if (autoRefresh)
-                            {
-                                RefreshRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "RowHeaderDefaultStyle":
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "ColumnHeaderDefaultStyle":
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "ReferenceStyle":
-                        case "Names":
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
-                            }
-                            return;
-
-                        case "[ImportFile]":
-                            if (autoRefresh)
-                            {
-                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            HideProgressRing();
-                            return;
-
-                        case "[OpenXml]":
+                    case "[ImportFile]":
+                        if (autoRefresh)
+                        {
                             RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            return;
+                        }
+                        HideProgressRing();
+                        return;
 
-                        case "Charts":
-                        case "SurfaceCharts":
-                        case "FloatingObjects":
-                        case "Pictures":
-                            if (autoRefresh)
-                            {
-                                InvalidateFloatingObjectLayout();
-                            }
-                            return;
-                    }
+                    case "[OpenXml]":
+                        RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        return;
+
+                    case "Charts":
+                    case "SurfaceCharts":
+                    case "FloatingObjects":
+                    case "Pictures":
+                        if (autoRefresh)
+                        {
+                            InvalidateFloatingObjectLayout();
+                        }
+                        return;
                 }
             }
         }
