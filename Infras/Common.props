@@ -1,6 +1,6 @@
 <Project ToolsVersion="Current">
     <PropertyGroup>
-        <TargetFrameworks>net6.0-windows10.0.19041;net6.0;net6.0-android;net6.0-ios</TargetFrameworks>
+        <TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-android;net7.0-ios</TargetFrameworks>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
     </PropertyGroup>
 
@@ -25,16 +25,16 @@
         <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
         <DefineConstants>$(DefineConstants);WASM</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.5.9" />
+        <PackageReference Include="Uno.WinUI" Version="4.6.19" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
     </ItemGroup>
 
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->

@@ -30,7 +30,7 @@
         <Using Include="Dt.Base" />
     </ItemGroup>
     
-    <ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
+    <ItemGroup Condition="$(TargetFramework.Contains('-'))">
         <None Include="Chat\WebRTC\VideoCaller.xaml" />
         <Page Remove="Chat\WebRTC\VideoCaller.xaml" />
 

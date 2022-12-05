@@ -22,7 +22,7 @@ namespace Dt.Mgr.Publish
     [View(LobViews.发布)]
     public partial class PublishView : Win
     {
-        public PublishView() : this(-1)
+        public PublishView() : this(-1L)
         {
         }
 
