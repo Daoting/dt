@@ -3,7 +3,7 @@
     /// <summary>
     /// 公共测试的Api
     /// </summary>
-    public partial class AtTestMsg : SvcTestAgent<msg>
+    public partial class AtTestMsg : SvcTestAgent<AtMsg.MSG>
     {
         public static Task<int> CloseAllOnline()
         {

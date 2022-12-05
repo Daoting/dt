@@ -76,7 +76,7 @@ namespace Dt.Core.Rpc
             if (string.IsNullOrEmpty(p_serviceName) || string.IsNullOrEmpty(p_methodName))
                 throw new InvalidOperationException("Rpc调用时需要指定服务名称和API名称！");
 
-            _svcName = p_serviceName;
+            _svcName = p_serviceName.ToLower();
             _methodName = p_methodName;
             _data = GetRpcData(p_methodName, p_params);
         }
