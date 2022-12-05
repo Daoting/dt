@@ -4998,9 +4998,9 @@ namespace Dt.Xls.Biff
                 case BiffRecordNumber.MULRK:
                 {
                     uint num9 = 0;
-                    rkrec[] rkrecArray = null;
+                    Rkrec[] rkrecArray = null;
                     num9 = (uint)((biff.DataLength - 6) / 6);
-                    rkrecArray = new rkrec[num9];
+                    rkrecArray = new Rkrec[num9];
                     for (int i = 0; i < num9; i++)
                     {
                         rkrecArray[i].ixfe = BitConverter.ToInt16(biff.DataBuffer, startIndex);
@@ -6648,7 +6648,7 @@ namespace Dt.Xls.Biff
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct rkrec
+        internal struct Rkrec
         {
             public int ixfe;
             public int RK;

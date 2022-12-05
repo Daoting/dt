@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0-ios</TargetFramework>
+        <TargetFramework>net7.0-ios</TargetFramework>
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Uno.WinUI" Version="4.5.9" />
+        <PackageReference Include="Uno.WinUI" Version="4.6.19" />
     </ItemGroup>
 
     <ItemGroup>
