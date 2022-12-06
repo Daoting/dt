@@ -84,7 +84,9 @@ namespace Dt.Base
                     info.DataType = ShareDataType.File;
                 }
 
+#pragma warning disable CA1422 // 类型或成员已过时
                 Android.Net.Uri uri = (Android.Net.Uri)it.GetParcelableExtra(Intent.ExtraStream);
+#pragma warning restore CA1422 // 类型或成员已过时
                 var path = IOUtil.GetPath(Android.App.Application.Context, uri);
                 // 通过FileProvider分享时无法获取路径但可读取文件内容，参见ShareInfo.GetStream
                 if (string.IsNullOrEmpty(path))

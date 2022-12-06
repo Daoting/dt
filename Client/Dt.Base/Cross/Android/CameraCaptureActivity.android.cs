@@ -229,7 +229,9 @@ namespace Dt.Base
 
         void GrantUriPermissionsForIntent(Intent intent, Android.Net.Uri uri)
         {
+#pragma warning disable CA1422 // 类型或成员已过时
             var resInfoList = PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly);
+#pragma warning restore CA1422 // 类型或成员已过时
             foreach (var resolveInfo in resInfoList)
             {
                 var packageName = resolveInfo.ActivityInfo.PackageName;

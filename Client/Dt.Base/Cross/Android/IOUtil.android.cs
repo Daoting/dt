@@ -231,9 +231,9 @@ namespace Dt.Base
 
                     MemoryStream ms = new MemoryStream();
                     bmp.Compress(Bitmap.CompressFormat.Jpeg, 100, ms);
-#pragma warning disable CS0618 // 类型或成员已过时
+#pragma warning disable CA1422 // 类型或成员已过时
                     string path = MediaStore.Images.Media.InsertImage(context.ContentResolver, bmp, null, null);
-#pragma warning restore CS0618 // 类型或成员已过时
+#pragma warning restore CA1422 // 类型或成员已过时
                     return GetDataColumn(context, Android.Net.Uri.Parse(path), null, null);
                 }
                 catch { }
