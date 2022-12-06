@@ -49,7 +49,7 @@ namespace Dt.Core.Rpc
             // System.Net.ServicePointManager.SecurityProtocol provides a mechanism for specifying supported protocol types
             // for System.Net. Since iOS only provides an API for a minimum and maximum protocol we are not able to port
             // this configuration directly and instead use the specified minimum value when one is specified.
-            configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
+            configuration.TlsMinimumSupportedProtocolVersion = TlsProtocolVersion.Tls12;
 
             var urlSessionDelegate = new DataTaskDelegate(this);
             _session = NSUrlSession.FromConfiguration(configuration, (INSUrlSessionDelegate)urlSessionDelegate, null);

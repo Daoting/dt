@@ -43,8 +43,10 @@ namespace Dt.Base
 
 		Task<FileData> TakeMedia(bool p_isPhoto, CapturePhotoOptions p_options)
 		{
-			StatusBarStyle = UIApplication.SharedApplication.StatusBarStyle;
-			var viewController = GetHostViewController();
+#pragma warning disable CA1422 // 类型或成员已过时
+            StatusBarStyle = UIApplication.SharedApplication.StatusBarStyle;
+#pragma warning restore CA1422
+            var viewController = GetHostViewController();
 
 			var ndelegate = new CaptureDelegate();
 			var od = Interlocked.CompareExchange(ref _pickerDelegate, ndelegate, null);
@@ -88,7 +90,8 @@ namespace Dt.Base
 			Interlocked.Exchange(ref _pickerDelegate, null);
 		}
 
-		static UIViewController GetHostViewController()
+#pragma warning disable CA1422 // 类型或成员已过时
+        static UIViewController GetHostViewController()
 		{
 			UIViewController viewController = null;
 			var window = UIApplication.SharedApplication.KeyWindow;
@@ -112,8 +115,9 @@ namespace Dt.Base
 
 			return viewController;
 		}
+#pragma warning restore CA1422
 
-		async Task<bool> IsCameraAvailable()
+        async Task<bool> IsCameraAvailable()
         {
             bool isCameraAvailable = UIImagePickerController.IsCameraDeviceAvailable(UIKit.UIImagePickerControllerCameraDevice.Front)
                                       | UIImagePickerController.IsCameraDeviceAvailable(UIKit.UIImagePickerControllerCameraDevice.Rear);

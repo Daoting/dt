@@ -28,6 +28,7 @@ using NSAction = System.Action;
 
 namespace Dt.Base
 {
+#pragma warning disable CA1422 // 类型或成员已过时
     /// <summary>
     /// 参加 https://github.com/jamesmontemagno/MediaPlugin
     /// </summary>
@@ -306,5 +307,6 @@ namespace Dt.Base
             picker.DismissViewController(true, onDismiss);
         }
     }
+#pragma warning restore CA1422
 }
 #endif

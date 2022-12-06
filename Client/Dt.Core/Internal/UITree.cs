@@ -109,7 +109,9 @@ namespace Dt.Core
 
 #if IOS
             // 状态栏边距
+#pragma warning disable CA1422 // 类型或成员已过时
             StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
+#pragma warning restore CA1422
             RootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #elif ANDROID
             // .net6.0 后 Window.Bounds 不包含顶部状态栏高度！！！

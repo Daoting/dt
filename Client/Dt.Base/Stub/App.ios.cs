@@ -44,6 +44,7 @@ namespace Dt.Base
 
         public override void ReceivedLocalNotification(UIApplication application, UILocalNotification notification)
         {
+#pragma warning disable CA1422 // 类型或成员已过时
             // 点击本地通知自定义启动
             if (notification.UserInfo.ContainsKey(NSObject.FromObject(BgJob.ToastStart)))
             {
@@ -58,6 +59,7 @@ namespace Dt.Base
 
             // 桌面图标的提醒数字
             UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
+#pragma warning restore CA1422
         }
     }
 }

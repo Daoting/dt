@@ -23,6 +23,7 @@ using UIKit;
 
 namespace Dt.Base
 {
+#pragma warning disable CA1422 // 类型或成员已过时
     /// <summary>
     /// IOS版文件选择
     /// </summary>
@@ -277,5 +278,6 @@ namespace Dt.Base
         }
         #endregion
     }
+#pragma warning restore CA1422
 }
 #endif

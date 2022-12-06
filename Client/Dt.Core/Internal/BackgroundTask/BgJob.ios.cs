@@ -194,12 +194,14 @@ namespace Dt.Core
             Kit.RunAsync(() =>
             {
                 var application = UIApplication.SharedApplication;
+#pragma warning disable CA1422 // 类型或成员已过时
                 if (application.CurrentUserNotificationSettings.Types == UIUserNotificationType.None)
                 {
                     var ns = UIUserNotificationSettings.GetSettingsForTypes(
                         UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound, null);
                     application.RegisterUserNotificationSettings(ns);
                 }
+#pragma warning restore CA1422
             });
         }
     }

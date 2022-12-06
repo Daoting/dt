@@ -93,7 +93,7 @@ namespace Dt.Base
         Uploader()
         {
             var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
-            config.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
+            config.TlsMinimumSupportedProtocolVersion = TlsProtocolVersion.Tls12;
             config.AllowsCellularAccess = true;
             _session = NSUrlSession.FromConfiguration(config, (INSUrlSessionDelegate)this, NSOperationQueue.MainQueue);
             _uploadFiles = new List<IosUploadFile>();
