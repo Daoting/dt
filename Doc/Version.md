@@ -4,6 +4,21 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
+## Release 3.3.0
+### 变更
+* 解决代理服务DataProvider<TSvc>类型小写的警告，调整为大写内联类型
+* SqliteProvider<TDbName>库名类型调整为大写内联类型
+
+### 功能
+* 升级.net7.0，wasm编译错误，其它有警告
+* 升级服务端、客户端引用包
+
+### Bug修改
+* android平台过时API警告
+* iOS平台过时API警告
+
+
+
 ## Release 3.2.4
 ### Bug修改
 * Lv自定义单元格UI重复绘制

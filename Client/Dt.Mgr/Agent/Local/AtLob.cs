@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 本地业务库
     /// </summary>
-    public class AtLob : SqliteProvider<Sqlite_lob>
+    public class AtLob : SqliteProvider<AtLob.LOB>
     {
         /// <summary>
         /// 查询指定表的所有列
@@ -26,8 +26,10 @@ namespace Dt.Mgr
             return _db.ForEach<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
         }
 
+        /// <summary>
+        /// 库名
+        /// </summary>
+        public class LOB
+        { }
     }
-
-    public class Sqlite_lob
-    { }
 }

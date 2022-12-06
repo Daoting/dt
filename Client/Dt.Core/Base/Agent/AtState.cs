@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 本地sqlite状态库
     /// </summary>
-    public class AtState : SqliteProvider<Sqlite_state>
+    public class AtState : SqliteProvider<AtState.STATE>
     {
         /// <summary>
         /// 查询本地存储的Cookie值
@@ -108,11 +108,11 @@ namespace Dt.Core
         {
             _db.Execute("delete from ClientCookie where key='AutoStart'");
         }
-    }
 
-    /// <summary>
-    /// Sqlite_为前缀，后面为文件名
-    /// </summary>
-    public class Sqlite_state
-    { }
+        /// <summary>
+        /// 库名
+        /// </summary>
+        public class STATE
+        { }
+    }
 }

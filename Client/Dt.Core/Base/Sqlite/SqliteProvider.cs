@@ -18,8 +18,8 @@ namespace Dt.Core
     /// Sqlite本地数据提供者，为保证使用习惯一致，和DataProvider方法基本相同
     /// 为方便使用都采用静态方法，巧妙使用泛型传递库名
     /// </summary>
-    /// <typeparam name="Sqlite_name">类型名称：Sqlite_xxx，xxx为库文件名称(无扩展名)，Sqlite_为前缀</typeparam>
-    public abstract class SqliteProvider<Sqlite_name>
+    /// <typeparam name="TDbName">类型名称为库文件名称(无扩展名)，通常为内联类型</typeparam>
+    public abstract class SqliteProvider<TDbName>
     {
         #region 查询
         /// <summary>
@@ -608,13 +608,14 @@ namespace Dt.Core
 
         protected static string GetDbName()
         {
-            return typeof(Sqlite_name).Name.Substring(7);
+            return typeof(TDbName).Name.ToLower();
         }
         #endregion
 
         #region 成员变量
         const string _unchangedMsg = "没有需要保存的数据！";
         const string _saveError = "数据源不可为空！";
+        // 每个具有不同泛型类型参数的类型是一个独立的类型，静态变量独立
         protected static SqliteConnectionEx _db;
         #endregion
     }

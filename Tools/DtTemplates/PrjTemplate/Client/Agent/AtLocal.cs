@@ -11,7 +11,7 @@ namespace $ext_safeprojectname$
     /// <summary>
     /// 本地sqlite库，文件名 local.db
     /// </summary>
-    public class AtLocal : SqliteProvider<Sqlite_local>
+    public class AtLocal : SqliteProvider<AtLocal.LOCAL>
     {
         /// <summary>
         /// 查询本地库的字典值
@@ -43,8 +43,10 @@ namespace $ext_safeprojectname$
             _db.Execute($"delete from LocalDict where key='{p_key}'");
         }
 
+        /// <summary>
+        /// 库名
+        /// </summary>
+        public class LOCAL
+        { }
     }
-
-    public class Sqlite_local
-    { }
 }

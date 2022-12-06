@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 本地sqlite模型库
     /// </summary>
-    public class AtModel : SqliteProvider<Sqlite_model>
+    public class AtModel : SqliteProvider<AtModel.MODEL>
     {
         /// <summary>
         /// 查询指定表的所有列
@@ -26,8 +26,10 @@ namespace Dt.Mgr
             return _db.ForEach<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
         }
 
+        /// <summary>
+        /// 库名
+        /// </summary>
+        public class MODEL
+        { }
     }
-
-    public class Sqlite_model
-    { }
 }
