@@ -117,15 +117,13 @@ namespace Dt.Core
             //
             //  目前问题：UI主线程异步异常造成崩溃、后台未处理异常不能提醒，V1.2 preview2解决
 
-            AppDomain.CurrentDomain.FirstChanceException += (_, e) => _lastException = e.Exception;
-
+            // V1.2 已完美解决
             Application.Current.UnhandledException += (s, e) =>
             {
                 e.Handled = true;
-                OnUnhandledException(_lastException);
+                OnUnhandledException(e.Exception);
             };
         }
-        static Exception _lastException;
 
 #elif ANDROID
 
