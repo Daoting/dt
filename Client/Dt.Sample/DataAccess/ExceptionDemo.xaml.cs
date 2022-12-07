@@ -28,12 +28,15 @@ namespace Dt.Sample
             InitializeComponent();
         }
 
-        /// <para>.net6.0 maui抛异常规律：</para>
-        /// <para>1. UI主线程同步方法中抛异常被.net内部拦截，不触发未处理异常事件</para>
-        /// <para>2. UI主线程异步方法中抛异常，触发未处理异常事件</para>
-        /// <para>3. Task内部异常，不管同步或异步都不触发未处理异常事件</para>
-        /// <para>因为触发未处理异常事件的不确定性，无法统一处理，警告提示信息只能在抛出异常前显示</para>
-        /// <para>.net6.0 maui中非KnownException类型的异常，在UI同步方法或后台抛出时都无法捕获！</para>
+        // .net7.0 maui抛异常规律：
+        // 1. UI主线程同步方法中抛异常被.net内部拦截处理，不触发未处理异常事件
+        // 2. UI主线程异步方法中抛异常，触发未处理异常事件
+        // 3. Task内部异常，不管同步或异步都不触发未处理异常事件
+        // 因为触发未处理异常事件的不确定性，要想统一提供警告提示信息，只能在抛出KnownException异常前显示
+        // 
+        // WinAppSdk V1.2 都能触发未处理异常事件，已完美解决崩溃问题
+        // 
+        // 总结：所有平台都不会因为异常而崩溃，对于maui上的非KnownException类型异常，在UI同步方法或后台抛出时无法给出警告提示！
 
         #region 同步异常
         void ThrowIfSync(object sender, RoutedEventArgs e)

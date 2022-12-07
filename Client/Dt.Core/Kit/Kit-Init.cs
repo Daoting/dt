@@ -144,9 +144,13 @@ namespace Dt.Core
 
         static void AttachUnhandledException()
         {
-            // 在Main函数中try catch
+            // .net7.0 崩溃已治愈
+            // 1. 在Main函数中try catch，延用xamarin中 RunLoop 的方法
+            // 2. 处理以下两事件，否则 "调试时不崩溃，正式运行时崩溃"
+            // UI主线程异步方法中抛异常，不再崩溃
 
-            // UI主线程异步方法中抛异常，调试时不崩溃，正式运行时崩溃，无法解决
+            ObjCRuntime.Runtime.MarshalManagedException += (s, e) => e.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.UnwindNativeCode;
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
         }
 
         public static void OnIOSUnhandledException(Exception ex)
