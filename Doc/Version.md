@@ -10,12 +10,13 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * SqliteProvider<TDbName>库名类型调整为大写内联类型
 
 ### 功能
-* 升级.net7.0，wasm编译错误，其它有警告
+* 升级.net7.0
 * 升级服务端、客户端引用包
 
 ### Bug修改
 * android平台过时API警告
 * iOS平台过时API警告
+* 解决升级.net7.0后wasm生存错误
 
 
 

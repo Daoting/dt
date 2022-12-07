@@ -19,7 +19,9 @@
     <ItemGroup>
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.8" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.8" />
-
+        <!-- 不引用link出错 -->
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+        
         <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.js、dotnet.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
         <!--<PackageReference Include="Uno.sqlite-wasm" Version="3.34.1.4" />-->
     </ItemGroup>
@@ -56,6 +58,8 @@
         <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
         <DebugType>portable</DebugType>
         <DebugSymbols>true</DebugSymbols>
+        <!-- 完全禁用链接器，不裁剪dll，生成速度快，裁剪61M，不裁剪82M -->
+        <!--<WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>-->
     </PropertyGroup>
 
     <!-- PWA相关，只在Release时有效 -->

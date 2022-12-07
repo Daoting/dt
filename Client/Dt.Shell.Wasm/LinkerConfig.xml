@@ -6,7 +6,7 @@
   <assembly fullname="Dt.Shell.Wasm" />
 
   <assembly fullname="Uno.UI" />
-  <assembly fullname="mscorlib" />
+  <assembly fullname="Microsoft.Extensions.Options" />
   <assembly fullname="System.Core">
 	  <!-- This is required by JSon.NET and any expression.Compile caller -->
 	  <type fullname="System.Linq.Expressions*" />
