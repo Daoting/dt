@@ -100,11 +100,15 @@ namespace Dt.Core
         void MergeDictionaryResource()
         {
             var app = Application.Current;
-            var mi = app.GetType().GetMethod("MergeDictionaryResource", BindingFlags.Public | BindingFlags.Instance);
-            if (mi == null)
-                throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
+            // 后台任务启动时可能为null
+            if (app != null)
+            {
+                var mi = app.GetType().GetMethod("MergeDictionaryResource", BindingFlags.Public | BindingFlags.Instance);
+                if (mi == null)
+                    throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
 
-            mi.Invoke(app, new object[0]);
+                mi.Invoke(app, new object[0]);
+            }
         }
 
         internal readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
