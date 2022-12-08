@@ -33,7 +33,7 @@ iOS目录下的资源为iOS专用，Images下的图片为公用
 
 
 》资源文件的生成操作：BundleResource 和 Content(内容) 的区别
-它们的输出目录不同，参见：Dt.Shell.IOS\bin\Debug\net6.0-ios\iossimulator-x64\Dt.Shell.IOS.app
+它们的输出目录不同，参见：Dt.Shell.IOS\bin\Debug\net7.0-ios\iossimulator-x64\Dt.Shell.IOS.app
 BundleResource的资源文件输出目录省略 iOS\Resources 两级目录，Content的资源文件输出到完整目录
 如 iOS\Resources\Lottie\Dash.json 资源文件，
 BundleResource 时路径：ms-appx:///Lottie/Dash.json
@@ -52,7 +52,7 @@ Content 时路径：       ms-appx:///iOS/Resources/Lottie/Dash.json
 
 》发布：选择Release + iPhone + 远程设备，生成前先确认Info.plist和iOS项目文件csproj中的版本相同，重新生成iOS项目，过程比较漫长，生成成功后使用命令发布，
 使用PowerShell切到iOS项目的路径下，运行：
-dotnet publish -f:net6.0-ios -c:Release
+dotnet publish -f:net7.0-ios -c:Release
 
 
 》开发、调试、发布上架的详细过程参见《搬运工客户端手册.docx》

@@ -25,6 +25,6 @@
    Release模式生成时处理PWA相关的后续工作
 
 
-6. 发布：选择Release -> 生成wasm项目 -> 生成完整的单页面静态网站：bin\Release\net6.0\dist  -> 用boot服务承载静态网站（参见文档）
+6. 发布：选择Release -> 生成wasm项目 -> 生成完整的单页面静态网站：bin\Release\net7.0\dist  -> 用boot服务承载静态网站（参见文档）
 生成时默认会为js css wasm clr格式的文件生成Brotli压缩文件(*.br)，Uno的DevServer缺少自动下载同名br文件、PWA、允许跨域访问的功能
 启用PWA网站必须为https，且跨域请求的服务都为https

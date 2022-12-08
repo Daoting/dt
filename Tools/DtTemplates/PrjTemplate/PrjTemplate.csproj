@@ -54,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Wasm\manifest.json" />
+    <None Include="Wasm\pwa\manifest.json" />
     <None Include="Wasm\Program.cs" />
     <None Include="Svc\TestApi.cs" />
     <None Include="iOS\iOS.csproj" />

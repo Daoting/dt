@@ -17,6 +17,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * android平台过时API警告
 * iOS平台过时API警告
 * 解决升级.net7.0后wasm生存错误
+* 后台任务启动构造Stub时App为null
 
 
 

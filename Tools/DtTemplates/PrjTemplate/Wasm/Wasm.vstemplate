@@ -11,12 +11,12 @@
 		<Project File="Wasm.csproj" ReplaceParameters="true">
 			<ProjectItem ReplaceParameters="true">Program.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">LinkerConfig.xml</ProjectItem>
-			<ProjectItem ReplaceParameters="true">manifest.json</ProjectItem>
 			<ProjectItem>Note.txt</ProjectItem>
 
 			<ProjectItem ReplaceParameters="true">WasmScripts\AppManifest.js</ProjectItem>
 			<ProjectItem>assets\SplashScreen.png</ProjectItem>
 			
+			<ProjectItem ReplaceParameters="true">pwa/manifest.json</ProjectItem>
 			<ProjectItem>pwa/windows11/SplashScreen.scale-200.png</ProjectItem>
 			<ProjectItem>pwa/windows11/Square150x150Logo.scale-200.png</ProjectItem>
 			<ProjectItem>pwa/windows11/Square44x44Logo.scale-200.png</ProjectItem>

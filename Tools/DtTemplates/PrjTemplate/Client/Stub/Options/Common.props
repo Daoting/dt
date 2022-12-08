@@ -4,7 +4,7 @@
 		<!-- 启用全局using -->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<!-- wasm不支持Essentials, android编译产生缺androidx.window.extensions.jar androidx.window.sidecar.jar警告 -->
-		<UseMauiEssentials Condition="'$(TargetFramework)' != 'net6.0'">true</UseMauiEssentials>
+		<UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
 		<!-- release不输出pbd调试信息 -->
 		<DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
 	</PropertyGroup>
@@ -30,7 +30,7 @@
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	<PropertyGroup Condition="!$(TargetFramework.Contains('-'))">
 		<DefineConstants>$(DefineConstants);WASM;UNO_DISABLE_KNOWN_MISSING_TYPES</DefineConstants>
 	</PropertyGroup>
 
@@ -56,7 +56,7 @@
 		<Using Remove="UIKit" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+	<ItemGroup Condition="!$(TargetFramework.Contains('-'))">
 		<Using Remove="Microsoft.AspNetCore.Builder" />
 		<Using Remove="Microsoft.AspNetCore.Hosting" />
 		<Using Remove="Microsoft.AspNetCore.Http" />

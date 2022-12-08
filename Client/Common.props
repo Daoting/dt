@@ -43,7 +43,7 @@
 
     <!-- 非windows引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.6.19" />
+        <PackageReference Include="Uno.WinUI" Version="4.6.19" PrivateAssets="none" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
         <PackageReference Include="Uno.WinUI.Lottie" Version="4.6.19" />
         <!-- uno日志 -->
@@ -54,7 +54,7 @@
 
     <!-- windows引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" PrivateAssets="none" />
         <!-- Toast参数启动引用 -->
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     </ItemGroup>
