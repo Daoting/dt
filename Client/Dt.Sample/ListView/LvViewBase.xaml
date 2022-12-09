@@ -76,8 +76,13 @@
             <a:Menu>
                 <a:Mi ID="姓名" CmdParam="xm" />
                 <a:Mi ID="出生日期" CmdParam="chushengrq desc" />
-                <a:Mi ID="视图" Icon="汉堡" Click="OnToggleViewMode" />
                 <a:Mi ID="筛选" Icon="漏斗" CmdParam="#Filter" />
+            </a:Menu>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="CustToolbar">
+            <a:Menu>
+                <a:Mi ID="视图" Icon="汉堡" Click="OnToggleViewMode" />
             </a:Menu>
         </DataTemplate>
     </a:Win.Resources>
@@ -132,6 +137,7 @@
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
                     <a:CNum Title="行/项目高" ID="ItemHeight" />
                     <a:CNum Title="磁贴最小宽度" ID="MinItemWidth" />
+                    <a:CBool Title="显示搜索框" ID="ShowSearchBox" />
                     <a:CFree Title="鼠标进入背景色">
                         <StackPanel Orientation="Horizontal">
                             <Button Content="无色" Click="OnNoEnteredBrush" />
@@ -146,11 +152,25 @@
                             <Button Content="默认色" Click="OnDefPressedBrush" />
                         </StackPanel>
                     </a:CFree>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="自动行高" Click="OnAutoHeight" />
-                        <Button Content="设置工具栏" Click="OnToolbar" />
-                        <Button Content="删除工具栏" Click="OnDelToolbar" />
-                    </StackPanel>
+                    <a:CFree Title="筛选框">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="默认" Click="OnFilter" />
+                            <Button Content="自定义" Click="OnCustFilter" />
+                            <Button Content="隐藏" Click="OnDelFilter" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="工具栏">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="排序筛选" Click="OnToolbar" />
+                            <Button Content="自定义" Click="OnCustToolbar" />
+                            <Button Content="隐藏" Click="OnDelToolbar" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="其他">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="自动行高" Click="OnAutoHeight" />
+                        </StackPanel>
+                    </a:CFree>
                     
                     <a:CBar Title="附加事件" />
                     <StackPanel Orientation="Horizontal">

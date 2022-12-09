@@ -183,7 +183,7 @@ namespace Dt.Base.ListView
                 return;
             }
 
-            double startTop = _colHeader.DesiredSize.Height + _toolbarHeight;
+            double startTop = _colHeader.DesiredSize.Height + _topMargin;
 
             // 面板可见，在滚动栏下方，按正常顺序布局
             if (_deltaY >= 0 && _deltaY < _maxSize.Height)
@@ -282,7 +282,7 @@ namespace Dt.Base.ListView
             // 分组导航头宽度
             double groupWidth = _finalWidth - _deltaX;
             // 顶部起始位置：列头高 + 工具栏高
-            double startTop = _colHeader.DesiredSize.Height + _toolbarHeight;
+            double startTop = _colHeader.DesiredSize.Height + _topMargin;
 
             int iAllRow = 0, iGrpRow = 0, iDataRow = 0;
             double totalHeight = 0;
@@ -553,7 +553,7 @@ namespace Dt.Base.ListView
                 return;
             }
 
-            double totalHeight = _colHeader.DesiredSize.Height + _toolbarHeight;
+            double totalHeight = _colHeader.DesiredSize.Height + _topMargin;
             int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
@@ -623,7 +623,7 @@ namespace Dt.Base.ListView
             // 分组导航头宽度
             double groupWidth = _finalWidth - _deltaX;
             // 顶部起始位置：列头高 + 工具栏高
-            double startTop = _colHeader.DesiredSize.Height + _toolbarHeight;
+            double startTop = _colHeader.DesiredSize.Height + _topMargin;
             int iGrpRow = 0, iDataRow = 0;
             double totalHeight = startTop;
             FrameworkElement row;
@@ -765,7 +765,7 @@ namespace Dt.Base.ListView
         void ArrangeHeader()
         {
             // 面板在滚动栏下侧时正常布局，超出上侧时始终布局在滚动栏顶部位置
-            double top = _deltaY < 0 ? -_deltaY + _toolbarHeight : _toolbarHeight;
+            double top = _deltaY < 0 ? -_deltaY + _topMargin : _topMargin;
             _colHeader.Arrange(new Rect(_topLeftWidth, top, _owner.Cols.TotalWidth, _colHeader.DesiredSize.Height));
             // 测量时DesiredSize(0,0)
             _topLeft.Arrange(new Rect(-_deltaX, top, _topLeftWidth, _colHeader.DesiredSize.Height));

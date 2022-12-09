@@ -112,6 +112,12 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(160d, OnReload));
 
+        public static readonly DependencyProperty FilterCfgProperty = DependencyProperty.Register(
+            "FilterCfg",
+            typeof(FilterCfg),
+            typeof(Lv),
+            new PropertyMetadata(null, OnReload));
+
         public readonly static DependencyProperty ToolbarProperty = DependencyProperty.Register(
             "Toolbar",
             typeof(Menu),
@@ -308,6 +314,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置筛选框配置，默认null
+        /// </summary>
+        public FilterCfg FilterCfg
+        {
+            get { return (FilterCfg)GetValue(FilterCfgProperty); }
+            set { SetValue(FilterCfgProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置顶部的工具栏
         /// </summary>
         public Menu Toolbar
@@ -381,6 +396,11 @@ namespace Dt.Base
         {
             get { return _selectedLvItems; }
         }
+
+        /// <summary>
+        /// 是否存在默认筛选框过滤
+        /// </summary>
+        internal bool ExistDefaultFilterCfg => FilterCfg != null && FilterCfg.MyFilter == null;
         #endregion
 
         #region 外部方法

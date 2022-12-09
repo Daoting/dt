@@ -259,6 +259,12 @@ namespace Dt.Sample
             _lv.Toolbar = temp.LoadContent() as Menu;
         }
 
+        void OnCustToolbar(object sender, RoutedEventArgs e)
+        {
+            var temp = (DataTemplate)Resources["CustToolbar"];
+            _lv.Toolbar = temp.LoadContent() as Menu;
+        }
+
         void OnDelToolbar(object sender, RoutedEventArgs e)
         {
             _lv.Toolbar = null;
@@ -306,6 +312,21 @@ namespace Dt.Sample
                 _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
                 e.Icon = Icons.汉堡;
             }
+        }
+
+        void OnFilter(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = new FilterCfg();
+        }
+
+        void OnCustFilter(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = new FilterCfg();
+        }
+
+        void OnDelFilter(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = null;
         }
     }
 }

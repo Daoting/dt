@@ -173,12 +173,15 @@ namespace Dt.Base
             _rows.Clear();
             if (_selectedLvItems.Count > 0)
                 _selectedLvItems.Clear();
+
+            bool existGroup = false;
             if (GroupRows != null)
             {
                 // 清空原有分组行
                 GroupRows.Clear();
                 GroupRows = null;
                 MapRows = null;
+                existGroup = true;
             }
 
             int i = 1;
@@ -187,7 +190,7 @@ namespace Dt.Base
                 _rows.Add(new LvItem(this, row, i++));
             }
 
-            _panel?.OnRowsChanged();
+            _panel?.OnRowsChanged(existGroup);
         }
 
         /// <summary>
@@ -216,7 +219,7 @@ namespace Dt.Base
             if (GroupRows.Count > 0)
                 GroupRows[0].IsFirst = true;
 
-            _panel?.OnRowsChanged();
+            _panel?.OnRowsChanged(true);
         }
 
         /// <summary>
@@ -289,13 +292,16 @@ namespace Dt.Base
             _rows.Clear();
             if (_selectedLvItems.Count > 0)
                 _selectedLvItems.Clear();
+
+            bool existGroup = false;
             if (GroupRows != null)
             {
                 GroupRows.Clear();
                 GroupRows = null;
                 MapRows = null;
+                existGroup = true;
             }
-            _panel?.OnRowsChanged();
+            _panel?.OnRowsChanged(existGroup);
         }
         #endregion
 

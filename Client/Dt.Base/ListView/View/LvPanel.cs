@@ -94,9 +94,9 @@ namespace Dt.Base.ListView
         protected double _deltaY;
 
         /// <summary>
-        /// 工具栏高度
+        /// 数据与顶部的间距，因为筛选框、工具栏占用
         /// </summary>
-        protected double _toolbarHeight;
+        protected double _topMargin;
 
         /// <summary>
         /// 当前是否正在滚动中
@@ -161,23 +161,21 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 切换数据源时，调整所有分组行和数据行
         /// </summary>
-        internal void OnRowsChanged()
+        /// <param name="p_existGroup">是否有分组行</param>
+        internal void OnRowsChanged(bool p_existGroup)
         {
             if (_owner.IsVir)
             {
-                // 为避免布局错误统一重绘！
-                LoadVirRows();
-
-                //if (p_existGroup || !_initVirRow)
-                //{
-                //    // 含分组 或 第一次加载数据源时需重绘
-                //    LoadVirRows();
-                //}
-                //else
-                //{
-                //    // 无分组时只需重新测量布局
-                //    InvalidateMeasure();
-                //}
+                if (p_existGroup || !_initVirRow)
+                {
+                    // 含分组 或 第一次加载数据源时需重绘
+                    LoadVirRows();
+                }
+                else
+                {
+                    // 无分组时只需重新测量布局
+                    InvalidateMeasure();
+                }
             }
             else
             {
@@ -196,19 +194,16 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
             {
-                // 为避免布局错误统一重绘！
-                LoadVirRows();
-
-                //if (!_initVirRow)
-                //{
-                //    // 第一次加载数据源时需重绘
-                //    LoadVirRows();
-                //}
-                //else
-                //{
-                //    // 只需重新测量布局
-                //    InvalidateMeasure();
-                //}
+                if (!_initVirRow)
+                {
+                    // 第一次加载数据源时需重绘
+                    LoadVirRows();
+                }
+                else
+                {
+                    // 只需重新测量布局
+                    InvalidateMeasure();
+                }
             }
             else
             {
@@ -232,8 +227,8 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
             {
-                // 为避免布局错误统一重绘！
-                LoadVirRows();
+                // 只需重新测量布局
+                InvalidateMeasure();
             }
             else
             {
@@ -417,12 +412,19 @@ namespace Dt.Base.ListView
             // 虚拟行/真实行
             Size size = _owner.IsVir ? MeasureVirRows() : MeasureRealRows();
 
-            // 工具栏
+            // 筛选框工具栏
+            _topMargin = 0;
+            if (_filterBox != null)
+            {
+                _filterBox.Measure(_maxSize);
+                _topMargin = _filterBox.DesiredSize.Height;
+                size.Height += _topMargin;
+            }
             if (_toolbar != null)
             {
                 _toolbar.Measure(_maxSize);
-                _toolbarHeight = _toolbar.DesiredSize.Height;
-                size = new Size(size.Width, size.Height + _toolbarHeight);
+                _topMargin += _toolbar.DesiredSize.Height;
+                size.Height += _toolbar.DesiredSize.Height;
             }
             return size;
         }
@@ -471,7 +473,13 @@ namespace Dt.Base.ListView
             }
 
             // 宽度采用_maxSize.Width，若finalSize.Width造成iOS上死循环！
-            _toolbar?.Arrange(new Rect(-_deltaX, _deltaY > 0 ? 0 : -_deltaY, _maxSize.Width, _toolbarHeight));
+            double top = _deltaY > 0 ? 0 : -_deltaY;
+            if (_filterBox != null)
+            {
+                _filterBox.Arrange(new Rect(-_deltaX, top, _maxSize.Width, _filterBox.DesiredSize.Height));
+                top += _filterBox.DesiredSize.Height;
+            }
+            _toolbar?.Arrange(new Rect(-_deltaX, top, _maxSize.Width, _toolbar.DesiredSize.Height));
             return finalSize;
         }
 
@@ -508,6 +516,7 @@ namespace Dt.Base.ListView
             LoadGroupRows();
             LoadColHeader();
             LoadToolbar();
+            LoadFilterBox();
 
             //if (_initVirRow)
             //    Log.Debug($"{_owner.BaseUri} 生成{_dataRows.Count}个虚拟行");
@@ -535,6 +544,7 @@ namespace Dt.Base.ListView
             LoadGroupRows();
             LoadColHeader();
             LoadToolbar();
+            LoadFilterBox();
         }
 
         /// <summary>
@@ -546,6 +556,7 @@ namespace Dt.Base.ListView
                 Children.Clear();
             _dataRows.Clear();
             RemoveToolbar();
+            RemoveFilterBox();
         }
 
         /// <summary>
@@ -757,14 +768,96 @@ namespace Dt.Base.ListView
         }
         #endregion
 
+        #region FilterBox
+        TextBox _filterBox;
+        DispatcherTimer _filterTimer;
+
+        void LoadFilterBox()
+        {
+            if (_owner.FilterCfg == null)
+                return;
+
+            if (_filterBox == null)
+            {
+                _filterBox = _owner.FilterCfg.FilterBox;
+                _filterBox.TextChanged += OnTextChanged;
+                // android只支持KeyUp，只在enter时触发！
+                _filterBox.KeyUp += OnTextKeyUp;
+                Children.Add(_filterBox);
+            }
+        }
+
+        void RemoveFilterBox()
+        {
+            // 非虚拟行或有分组时数据变化会清除所以元素
+            if (_filterBox != null)
+            {
+                _filterBox.TextChanged -= OnTextChanged;
+                _filterBox.KeyUp -= OnTextKeyUp;
+                if (_filterTimer != null)
+                {
+                    _filterTimer.Stop();
+                    _filterTimer.Tick -= OnTimerTick;
+                    _filterTimer = null;
+                }
+                _filterBox = null;
+            }
+        }
+
+        void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_owner.FilterCfg.IsRealtime)
+                StartTimer();
+        }
+
+        void StartTimer()
+        {
+            if (_filterTimer == null)
+            {
+                _filterTimer = new DispatcherTimer();
+                _filterTimer.Interval = TimeSpan.FromMilliseconds(300);
+                _filterTimer.Tick += OnTimerTick;
+            }
+            _filterTimer.Start();
+        }
+
+        void OnTimerTick(object sender, object e)
+        {
+            _filterTimer.Stop();
+            OnSearch();
+        }
+
+        void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // android只支持KeyUp，只在enter时触发！
+            if (e.Key == VirtualKey.Enter)
+            {
+                e.Handled = true;
+                OnSearch();
+            }
+        }
+
+        void OnSearch()
+        {
+            if (_owner.FilterCfg.MyFilter != null)
+            {
+                _owner.FilterCfg.MyFilter(_filterBox.Text);
+            }
+            else
+            {
+                _owner.Refresh();
+            }
+        }
+        #endregion
+
         #region Toolbar
         Menu _toolbar;
 
         void LoadToolbar()
         {
-            _toolbar = _owner.Toolbar;
-            if (_toolbar != null)
+            if (_owner.Toolbar != null && _toolbar == null)
             {
+                _toolbar = _owner.Toolbar;
                 _toolbar.Background = Res.浅灰1;
                 _toolbar.BorderBrush = Res.浅灰2;
                 _toolbar.BorderThickness = new Thickness(0, 0, 0, 1);
@@ -780,7 +873,7 @@ namespace Dt.Base.ListView
                 _toolbar.ItemClick -= OnToolbarClick;
                 _toolbar = null;
             }
-            _toolbarHeight = 0;
+            _topMargin = 0;
         }
 
         void OnToolbarClick(object sender, Mi e)

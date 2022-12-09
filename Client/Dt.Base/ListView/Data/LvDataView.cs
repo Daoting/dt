@@ -45,10 +45,15 @@ namespace Dt.Base.ListView
         {
             IList rows;
             if ((_owner.SortDesc != null && !string.IsNullOrEmpty(_owner.SortDesc.ID))
-                || _owner.Filter != null)
+                || _owner.Filter != null
+                || _owner.ExistDefaultFilterCfg)
+            {
                 rows = GetTransformedList();
+            }
             else
+            {
                 rows = _data;
+            }
 
             if (rows.Count == 0)
             {
@@ -89,7 +94,8 @@ namespace Dt.Base.ListView
             if ((args.Action == NotifyCollectionChangedAction.Add || args.Action == NotifyCollectionChangedAction.Remove)
                 && _owner.SortDesc == null
                 && string.IsNullOrEmpty(_owner.GroupName)
-                && _owner.Filter == null)
+                && _owner.Filter == null
+                && !_owner.ExistDefaultFilterCfg)
             {
                 if (args.Action == NotifyCollectionChangedAction.Add)
                 {
@@ -118,41 +124,81 @@ namespace Dt.Base.ListView
         /// 获得过滤排序后的列表
         /// </summary>
         /// <returns></returns>
-        List<object> GetTransformedList()
+        IList GetTransformedList()
         {
-            List<object> list = new List<object>();
             // 过滤
-            if (_owner.Filter != null)
+            if (_owner.Filter != null || _owner.ExistDefaultFilterCfg)
             {
-                foreach (var row in _data)
+                // 先执行过滤回调
+                var list = new List<object>();
+                if (_owner.Filter != null)
                 {
-                    if (_owner.Filter(row))
-                        list.Add(row);
+                    foreach (var row in _data)
+                    {
+                        if (_owner.Filter(row))
+                            list.Add(row);
+                    }
                 }
-            }
-            else
-            {
-                list.AddRange(_data.Cast<object>());
+
+                // 筛选框过滤
+                if (_owner.ExistDefaultFilterCfg)
+                {
+                    if(_owner.Filter != null)
+                    {
+                        // 在结果中再次过滤
+                        var ls = new List<object>();
+                        foreach (var row in list)
+                        {
+                            if (_owner.FilterCfg.DoDefaultFilter(row))
+                                ls.Add(row);
+                        }
+                        list = ls;
+                    }
+                    else
+                    {
+                        foreach (var row in _data)
+                        {
+                            if (_owner.FilterCfg.DoDefaultFilter(row))
+                                list.Add(row);
+                        }
+                    }
+                }
+
+                // 排序
+                if (list.Count > 0
+                    && _owner.SortDesc != null
+                    && !string.IsNullOrEmpty(_owner.SortDesc.ID))
+                {
+                    // 使用RowComparer的Compare方法排序
+                    if (_data is Table)
+                    {
+                        list.Sort(new RowComparer(_owner.SortDesc, null));
+                    }
+                    else
+                    {
+                        var pi = list[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                        if (pi != null)
+                            list.Sort(new RowComparer(_owner.SortDesc, pi));
+                    }
+                }
+                return list;
             }
 
-            // 排序
-            if (list.Count > 0
+            // 无过滤，只排序
+            if (_data.Count > 0
                 && _owner.SortDesc != null
                 && !string.IsNullOrEmpty(_owner.SortDesc.ID))
             {
                 // 使用RowComparer的Compare方法排序
-                if (_data is Table)
-                {
-                    list.Sort(new RowComparer(_owner.SortDesc, null));
-                }
-                else
-                {
-                    var pi = list[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (pi != null)
-                        list.Sort(new RowComparer(_owner.SortDesc, pi));
-                }
+                if (_data is Table tbl)
+                    return tbl.Order(new RowComparer(_owner.SortDesc, null)).ToList();
+
+                var pi = _data[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                if (pi != null)
+                    return _data.Cast<object>().Order(new RowComparer(_owner.SortDesc, pi)).ToList();
             }
-            return list;
+
+            return _data;
         }
 
         /// <summary>
