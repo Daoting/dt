@@ -156,6 +156,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Button Content="默认" Click="OnFilter" />
                             <Button Content="自定义" Click="OnCustFilter" />
+                            <Button Content="定制" Click="OnMyFilter" />
                             <Button Content="隐藏" Click="OnDelFilter" />
                         </StackPanel>
                     </a:CFree>

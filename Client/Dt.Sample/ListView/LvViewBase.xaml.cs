@@ -321,7 +321,22 @@ namespace Dt.Sample
 
         void OnCustFilter(object sender, RoutedEventArgs e)
         {
-            _lv.FilterCfg = new FilterCfg();
+            _lv.FilterCfg = new FilterCfg
+            {
+                FilterCols = "xm,bh",
+                EnablePinYin = true,
+                IsRealtime= true,
+            };
+        }
+
+        void OnMyFilter(object sender, RoutedEventArgs e)
+        {
+            var cfg = new FilterCfg();
+            cfg.MyFilter = (s) =>
+            {
+                _lv.Data = SampleData.CreatePersonsTbl(new Random().Next(100));
+            };
+            _lv.FilterCfg = cfg;
         }
 
         void OnDelFilter(object sender, RoutedEventArgs e)

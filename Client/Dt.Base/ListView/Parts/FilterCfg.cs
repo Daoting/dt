@@ -22,6 +22,7 @@ namespace Dt.Base
     public class FilterCfg
     {
         readonly TextBox _tb;
+        bool _pinyin;
 
         public FilterCfg()
         {
@@ -60,7 +61,15 @@ namespace Dt.Base
         /// </summary>
         public bool IsRealtime { get; set; }
 
+        /// <summary>
+        /// 过滤的列名，多列用逗号隔开，null或空时过滤所用列
+        /// </summary>
         public string FilterCols { get; set; }
+
+        /// <summary>
+        /// 是否启用拼音简码过滤，默认false
+        /// </summary>
+        public bool EnablePinYin { get; set; }
 
         /// <summary>
         /// 自定义筛选，外部重置数据源的方式
@@ -74,14 +83,34 @@ namespace Dt.Base
         /// <returns></returns>
         internal bool DoDefaultFilter(object p_obj)
         {
-            var txt = _tb.Text;
+            var txt = _tb.Text.Trim();
+            if (txt == "")
+                return true;
+
+            // 启用拼音简码
+            _pinyin = EnablePinYin;
+            if (_pinyin)
+            {
+                foreach (char vChar in txt)
+                {
+                    if ((vChar >= 'a' && vChar <= 'z')
+                        || (vChar >= 'A' && vChar <= 'Z')
+                        || (vChar >= '0' && vChar <= '9'))
+                    {
+                        continue;
+                    }
+                    _pinyin = false;
+                    break;
+                }
+            }
+
             if (p_obj is Row row)
             {
                 foreach (var c in row.Cells)
                 {
                     if (string.IsNullOrEmpty(FilterCols) || FilterCols.Contains(c.ID, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (c.GetVal<string>().Contains(txt))
+                        if (IsContains(c.Val))
                             return true;
                     }
                 }
@@ -94,10 +123,27 @@ namespace Dt.Base
                     if (string.IsNullOrEmpty(FilterCols) || FilterCols.Contains(p.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         var val = p.GetValue(p_obj, null);
-                        if (val != null && val.ToString().Contains(txt, StringComparison.OrdinalIgnoreCase))
+                        if (IsContains(val))
                             return true;
                     }
                 }
+            }
+            return false;
+        }
+
+        bool IsContains(object p_val)
+        {
+            if (p_val == null || string.IsNullOrEmpty(p_val.ToString()))
+                return false;
+
+            var txt = _tb.Text.Trim();
+            if (p_val.ToString().Contains(txt, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (_pinyin && p_val.GetType() == typeof(string))
+            {
+                var py = Kit.GetPinYin(p_val.ToString());
+                return py.Contains(txt.ToLower());
             }
             return false;
         }
