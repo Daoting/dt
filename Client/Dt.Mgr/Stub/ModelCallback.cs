@@ -42,15 +42,5 @@ namespace Dt.Mgr
                 return define;
             });
         }
-
-        /// <summary>
-        /// 为CList格提供下拉选项，默认取模型库的 OmOption
-        /// </summary>
-        /// <param name="p_category">分组名</param>
-        /// <returns></returns>
-        public Task<Table> GetCListOption(string p_category)
-        {
-            return Task.Run(() => AtModel.Query($"select name from OmOption where Category=\"{p_category}\""));
-        }
     }
 }

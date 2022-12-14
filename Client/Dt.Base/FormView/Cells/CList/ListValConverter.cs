@@ -69,10 +69,10 @@ namespace Dt.Base
             if (value is string)
                 return value;
 
-            if (!string.IsNullOrEmpty(_owner.Enum))
+            if (!string.IsNullOrEmpty(_owner.Ex) && _owner.Ex.StartsWith("EnumData#"))
             {
                 // 将byte int等数值类型转成枚举类型，显示枚举项
-                Type type = Type.GetType(_owner.Enum, false, true);
+                Type type = Type.GetType(_owner.Ex.Substring(9), false, true);
                 if (type != null)
                 {
                     try

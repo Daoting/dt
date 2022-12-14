@@ -4,6 +4,20 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
+## Release 3.3.1
+### 变更
+* 将CList的SqlKey,Enum,Option合并到Ex属性
+* 
+
+### 功能
+* Lv增加内置过滤
+* 
+
+### Bug修改
+* 
+
+
+
 ## Release 3.3.0
 ### 变更
 * 解决代理服务DataProvider<TSvc>类型小写的警告，调整为大写内联类型

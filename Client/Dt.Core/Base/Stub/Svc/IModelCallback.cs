@@ -30,12 +30,5 @@ namespace Dt.Core
         /// <param name="p_rptName">报表名称</param>
         /// <returns></returns>
         Task<string> GetReportTemplate(string p_rptName);
-
-        /// <summary>
-        /// 为CList格提供下拉选项，默认取模型库的 OmOption
-        /// </summary>
-        /// <param name="p_category">分组名</param>
-        /// <returns></returns>
-        Task<Table> GetCListOption(string p_category);
     }
 }

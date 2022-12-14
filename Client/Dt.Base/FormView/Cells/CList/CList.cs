@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 列表选择格
     /// 数据源优先级：
     /// 1. 外部直接设置Data
-    /// 2. 基础选项
+    /// 2. 调用外部CListEx对象
     /// 3. Sql查询
     /// 4. Sql语句键值
     /// 5. 外部设置的Enum数据
@@ -39,32 +39,8 @@ namespace Dt.Base
     public partial class CList : FvCell
     {
         #region 静态内容
-        public readonly static DependencyProperty OptionProperty = DependencyProperty.Register(
-            "Option",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata(null, OnClearData));
-
-        public readonly static DependencyProperty SqlProperty = DependencyProperty.Register(
-            "Sql",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata(null, OnClearData));
-
-        public readonly static DependencyProperty SqlKeyProperty = DependencyProperty.Register(
-            "SqlKey",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata(null, OnClearData));
-
-        public readonly static DependencyProperty SqlKeyFilterProperty = DependencyProperty.Register(
-            "SqlKeyFilter",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata(null, OnClearData));
-
-        public readonly static DependencyProperty EnumProperty = DependencyProperty.Register(
-            "Enum",
+        public readonly static DependencyProperty ExProperty = DependencyProperty.Register(
+            "Ex",
             typeof(string),
             typeof(CList),
             new PropertyMetadata(null, OnClearData));
@@ -143,115 +119,17 @@ namespace Dt.Base
         public event EventHandler<object> AfterSelect;
         #endregion
 
-        #region Lv属性
-        /// <summary>
-        /// 获取设置数据源对象，Table或集合对象
-        /// </summary>
-        public INotifyList Data
-        {
-            get { return _lv.Data; }
-            set { _lv.Data = value; }
-        }
-
-        /// <summary>
-        /// 获取设置行视图，DataTemplate、DataTemplateSelector、Cols列定义 或 IRowView
-        /// </summary>
-        public object View
-        {
-            get { return _lv.View; }
-            set { _lv.View = value; }
-        }
-
-        /// <summary>
-        /// 获取设置视图类型：列表、表格、磁贴，默认List
-        /// </summary>
-        public ViewMode ViewMode
-        {
-            get { return _lv.ViewMode; }
-            set { _lv.ViewMode = value; }
-        }
-
-        /// <summary>
-        /// 获取设置自定义行/项目样式的回调方法
-        /// </summary>
-        public Action<ItemStyleArgs> ItemStyle
-        {
-            get { return _lv.ItemStyle; }
-            set { _lv.ItemStyle = value; }
-        }
-
-        /// <summary>
-        /// 获取设置Phone模式下的视图类型，null时Win,Phone两模式统一采用ViewMode，默认null
-        /// </summary>
-        public ViewMode? PhoneViewMode
-        {
-            get { return _lv.PhoneViewMode; }
-            set { _lv.PhoneViewMode = value; }
-        }
-
-        /// <summary>
-        /// 获取设置选择模式，默认Single，只第一次设置有效！
-        /// </summary>
-        [CellParam("选择模式")]
-        public SelectionMode SelectionMode
-        {
-            get { return _lv.SelectionMode; }
-            set { _lv.SelectionMode = value; }
-        }
-        #endregion
-
         #region 属性
         /// <summary>
-        /// 获取设置基础选项
+        /// 获取设置扩展CList功能的类名和参数，用于控制下拉对话框和数据源，类名和参数之间用#隔开，如：
+        /// <para>EnumData#Dt.Base.DlgPlacement,Dt.Base</para>
+        /// <para>Option#民族</para>
         /// </summary>
-        [CellParam("基础选项")]
-        public string Option
+        [CellParam("功能扩展")]
+        public string Ex
         {
-            get { return (string)GetValue(OptionProperty); }
-            set { SetValue(OptionProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置数据查询语句，sql必须含有服务名前缀，如：
-        /// Cm:select * from dt_log
-        /// local:select * from letter
-        /// </summary>
-        [CellParam("数据查询语句")]
-        public string Sql
-        {
-            get { return (string)GetValue(SqlProperty); }
-            set { SetValue(SqlProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置数据查询语句键值，键值必须含有服务名前缀
-        /// </summary>
-        [CellParam("Sql语句键值")]
-        public string SqlKey
-        {
-            get { return (string)GetValue(SqlKeyProperty); }
-            set { SetValue(SqlKeyProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置使用sql键值查询时的动态过滤条件
-        /// </summary>
-        public string SqlKeyFilter
-        {
-            get { return (string)GetValue(SqlKeyFilterProperty); }
-            set { SetValue(SqlKeyFilterProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置枚举格式串；
-        /// 格式：枚举名(包含命名空间),程序集；
-        /// 例：Dt.Base.CtType,Dt.Base
-        /// </summary>
-        [CellParam("枚举格式串")]
-        public string Enum
-        {
-            get { return (string)GetValue(EnumProperty); }
-            set { SetValue(EnumProperty, value); }
+            get { return (string)GetValue(ExProperty); }
+            set { SetValue(ExProperty, value); }
         }
 
         /// <summary>
@@ -317,14 +195,6 @@ namespace Dt.Base
             set { SetValue(ValueProperty, value); }
         }
 
-        /// <summary>
-        /// 获取Lv对象
-        /// </summary>
-        public Lv Lv
-        {
-            get { return _lv; }
-        }
-
         protected override IMidVal DefaultMiddle => new ListValConverter();
         #endregion
 
@@ -384,10 +254,10 @@ namespace Dt.Base
                         WinPlacement = DlgPlacement.TargetBottomLeft,
                         PlacementTarget = _grid,
                         ClipElement = _grid,
-                        HideTitleBar = (_lv.SelectionMode != SelectionMode.Multiple),
                         MaxHeight = 300,
-                        Width = _grid.ActualWidth,
                     };
+                    if (ViewMode != ViewMode.Table)
+                        _dlg.Width = _grid.ActualWidth;
                 }
             }
             _dlg.ShowDlg();

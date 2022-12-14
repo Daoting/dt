@@ -27,18 +27,18 @@
         <a:CBool ID="italic" Title="斜体" />
         <a:CBool ID="underline" Title="下划线" />
         <a:CBool ID="strikeout" Title="删除线" />
-        <a:CList ID="horalign" Title="水平对齐方式" Enum="Dt.Cells.Data.CellHorizontalAlignment,Dt.Cells.Data" />
-        <a:CList ID="veralign" Title="垂直对齐方式" Enum="Dt.Cells.Data.CellVerticalAlignment,Dt.Cells.Data" />
+        <a:CList ID="horalign" Title="水平对齐方式" Ex="EnumData#Dt.Cells.Data.CellHorizontalAlignment,Dt.Cells.Data" />
+        <a:CList ID="veralign" Title="垂直对齐方式" Ex="EnumData#Dt.Cells.Data.CellVerticalAlignment,Dt.Cells.Data" />
         <a:CColor ID="foreground" Title="前景色"/>
         <a:CColor ID="background" Title="背景色"/>
         <a:CNum ID="margin" Title="缩进" Minimum="0" IsInteger="True" />
-        <a:CList ID="lbs" Title="左边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CList ID="lbs" Title="左边框样式" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
         <a:CColor ID="lbc" Title="左边框颜色" />
-        <a:CList ID="tbs" Title="上边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CList ID="tbs" Title="上边框样式" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
         <a:CColor ID="tbc" Title="上边框颜色" />
-        <a:CList ID="rbs" Title="右边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CList ID="rbs" Title="右边框样式" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
         <a:CColor ID="rbc" Title="右边框颜色" />
-        <a:CList ID="bbs" Title="下边框样式" Enum="Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
+        <a:CList ID="bbs" Title="下边框样式" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" />
         <a:CColor ID="bbc" Title="下边框颜色" />
     </a:Fv>
 </UserControl>

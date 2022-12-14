@@ -7,58 +7,31 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.System;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base
 {
     public partial class ListDlg : Dlg
     {
         CList _owner;
         string[] _srcIDs;
         string[] _tgtIDs;
+        CListEx _ex;
 
         public ListDlg(CList p_owner)
         {
-            InitializeComponent();
             Title = "选择";
             _owner = p_owner;
-            Lv lv = _owner.Lv;
-            Content = lv;
+            LoadLv();
+            InitEx();
 
-            if (lv.SelectionMode == SelectionMode.Multiple)
+            if (!Kit.IsPhoneUI)
             {
-                Mi mi = new Mi { ID = "确定", Icon = Icons.保存 };
-                mi.Click += OnMultipleOK;
-                Menu menu = new Menu();
-                menu.Items.Add(mi);
-                Menu = menu;
-            }
-            else
-            {
-                lv.ItemClick += OnSingleClick;
-            }
-
-            // 拆分填充列
-            if (!string.IsNullOrEmpty(_owner.SrcID) && !string.IsNullOrEmpty(_owner.TgtID))
-            {
-                _srcIDs = _owner.SrcID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
-                _tgtIDs = _owner.TgtID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
-                if (_srcIDs.Length != _tgtIDs.Length)
-                {
-                    _srcIDs = null;
-                    _tgtIDs = null;
-                    Kit.Error("数据填充：源列表、目标列表列个数不一致！");
-                }
+                HideTitleBar = Menu == null;
             }
         }
 
@@ -73,28 +46,10 @@ namespace Dt.Base.FormView
             {
                 // 外部自定义数据源
             }
-            else if (!string.IsNullOrEmpty(_owner.Option))
+            else if (_ex != null)
             {
-                // 基础选项
-                var svc = Kit.GetService<IModelCallback>();
-                if (svc != null)
-                    lv.Data = await svc.GetCListOption(_owner.Option);
-            }
-            else if (!string.IsNullOrEmpty(_owner.Sql))
-            {
-                // Sql查询数据
-                lv.Data = await GetDataBySql(_owner.Sql);
-            }
-            else if (!string.IsNullOrEmpty(_owner.SqlKey))
-            {
-                // Sql键值查询
-                lv.Data = await GetDataByKey(_owner.SqlKey, _owner.SqlKeyFilter);
-            }
-            else if (!string.IsNullOrEmpty(_owner.Enum))
-            {
-                // 枚举数据
-                Type type = Type.GetType(_owner.Enum, true, true);
-                lv.Data = CreateEnumData(type);
+                // 功能扩展提供的数据源
+                lv.Data = await _ex.GetData();
             }
             else if (((Type)_owner.ValBinding.ConverterParameter).IsEnum)
             {
@@ -256,7 +211,7 @@ namespace Dt.Base.FormView
         /// </summary>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        Nl<object> CreateEnumData(Type p_type)
+        internal Nl<object> CreateEnumData(Type p_type)
         {
             Nl<object> ls = new Nl<object>();
             foreach (var fi in from f in p_type.GetRuntimeFields()
@@ -268,47 +223,60 @@ namespace Dt.Base.FormView
             return ls;
         }
 
-        /// <summary>
-        /// 根据sql、过滤条件获取数据源，sql必须含有服务名前缀，如：
-        /// Cm:select * from dt_log
-        /// local:select * from letter
-        /// </summary>
-        /// <param name="p_sql">带前缀的sql</param>
-        /// <param name="p_filter"></param>
-        /// <returns></returns>
-        static async Task<Table> GetDataBySql(string p_sql, string p_filter = null)
+        void LoadLv()
         {
-            if (string.IsNullOrEmpty(p_sql))
-                return null;
+            Lv lv = _owner.Lv;
+            Content = lv;
 
-            string[] info = p_sql.Trim().Split(':');
-            if (info.Length != 2 || string.IsNullOrEmpty(info[0]) || string.IsNullOrEmpty(info[1]))
-                throw new Exception("Sql格式不正确！" + p_sql);
-
-            Table data;
-            string sql = string.IsNullOrEmpty(p_filter) ? info[1] : $"select * from ({info[1]}) a where {p_filter}";
-            if (info[0].ToLower() == "local")
-                data = await AtState.Query(sql);
+            if (lv.SelectionMode == SelectionMode.Multiple)
+            {
+                Mi mi = new Mi { ID = "确定", Icon = Icons.保存 };
+                mi.Click += OnMultipleOK;
+                Menu menu = new Menu();
+                menu.Items.Add(mi);
+                Menu = menu;
+            }
             else
-                data = await Kit.Rpc<Table>(info[0], "Da.Query", sql, null);
-            return data;
+            {
+                lv.ItemClick += OnSingleClick;
+            }
+
+            // 拆分填充列
+            if (!string.IsNullOrEmpty(_owner.SrcID) && !string.IsNullOrEmpty(_owner.TgtID))
+            {
+                _srcIDs = _owner.SrcID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+                _tgtIDs = _owner.TgtID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+                if (_srcIDs.Length != _tgtIDs.Length)
+                {
+                    _srcIDs = null;
+                    _tgtIDs = null;
+                    Kit.Error("数据填充：源列表、目标列表列个数不一致！");
+                }
+            }
         }
 
-        /// <summary>
-        /// 根据Sql语句键值、过滤条件获取数据源，键值必须含有服务名前缀
-        /// </summary>
-        /// <param name="p_key">带服务名前缀的键</param>
-        /// <param name="p_filter"></param>
-        /// <returns></returns>
-        static Task<Table> GetDataByKey(string p_key, string p_filter = null)
+        void InitEx()
         {
-            if (string.IsNullOrEmpty(p_key))
-                return null;
+            if (string.IsNullOrEmpty(_owner.Ex))
+                return;
 
-            string[] info = p_key.Trim().Split(':');
-            if (info.Length != 2 || string.IsNullOrEmpty(info[0]) || string.IsNullOrEmpty(info[1]))
-                throw new Exception("Key格式不正确！" + p_key);
-            return Kit.Rpc<Table>(info[0], "Da.GetDataByKey", info[1], p_filter);
+            string cls, pars = null;
+            int index = _owner.Ex.IndexOf("#");
+            if (index != -1)
+            {
+                cls = _owner.Ex.Substring(0, index);
+                pars = _owner.Ex.Substring(index + 1);
+            }
+            else
+            {
+                cls = _owner.Ex;
+            }
+            var tp = Kit.GetAllTypesByAlias(typeof(CListExAttribute), cls).FirstOrDefault();
+            if (tp != null && tp.IsSubclassOf(typeof(CListEx)))
+            {
+                _ex = Activator.CreateInstance(tp) as CListEx;
+                _ex.Init(_owner, this, pars);
+            }
         }
     }
 }

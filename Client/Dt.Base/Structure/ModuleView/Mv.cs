@@ -113,7 +113,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 返回值
+        /// 导航返回值
         /// </summary>
         protected object Result { get; set; }
         #endregion

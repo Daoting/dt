@@ -17,7 +17,7 @@
 
     <a:Fv x:Name="_fv" MaxColCount="2">
         <a:CText ID="Title" Title="标题" />
-        <a:CList ID="TempType" Title="列表模板类型" Enum="Dt.Mgr.Publish.PostTempType,Dt.Mgr" />
+        <a:CList ID="TempType" Title="列表模板类型" Ex="EnumData#Dt.Mgr.Publish.PostTempType,Dt.Mgr" />
         <a:CFile ID="Cover" Title="封面" ColCount="3" />
         <a:CText ID="Summary" Title="摘要" RowSpan="2" AcceptsReturn="True" />
         <a:CBool ID="AllowComment" Title="允许评论" />
