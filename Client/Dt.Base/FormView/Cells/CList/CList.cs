@@ -195,6 +195,11 @@ namespace Dt.Base
             set { SetValue(ValueProperty, value); }
         }
 
+        /// <summary>
+        /// 下拉框
+        /// </summary>
+        public ListDlg Dlg => _dlg;
+
         protected override IMidVal DefaultMiddle => new ListValConverter();
         #endregion
 

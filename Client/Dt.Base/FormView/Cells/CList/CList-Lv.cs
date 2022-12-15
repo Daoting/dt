@@ -86,5 +86,24 @@ namespace Dt.Base
             get { return _lv.SelectionMode; }
             set { _lv.SelectionMode = value; }
         }
+
+        /// <summary>
+        /// 获取设置筛选框配置，默认null
+        /// </summary>
+        public FilterCfg FilterCfg
+        {
+            get { return _lv.FilterCfg; }
+            set { _lv.FilterCfg = value; }
+        }
+
+        /// <summary>
+        /// 获取设置顶部的工具栏
+        /// </summary>
+        public Menu Toolbar
+        {
+            get { return _lv.Toolbar; }
+            set { _lv.Toolbar = value; }
+        }
+
     }
 }

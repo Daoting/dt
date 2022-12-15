@@ -48,6 +48,9 @@ namespace Dt.Sample
                 { "degree" },
                 { "allusers" },
                 { "userroles" },
+                { "filter" },
+                { "order" },
+                { "filterorder" },
             };
 
             _fv.Data = tbl.AddRow(new
@@ -88,5 +91,10 @@ namespace Dt.Sample
             Kit.Msg($"填充ID：{((Row)_fv.Data).Str("listrowid")}");
         }
 
+        void OnEdit(object sender, Mi e)
+        {
+            ((CList)_fv["order"]).Dlg.Close();
+            Kit.Msg("打开编辑窗口");
+        }
     }
 }
