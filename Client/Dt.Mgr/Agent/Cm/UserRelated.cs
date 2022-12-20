@@ -158,21 +158,5 @@
                 p_roleID
             );
         }
-
-        /// <summary>
-        /// 获取菜单项的数字提示信息
-        /// </summary>
-        /// <param name="p_menuID"></param>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public static Task<int> GetMenuTip(long p_menuID, long p_userID)
-        {
-            return Kit.Rpc<int>(
-                "cm",
-                "UserRelated.GetMenuTip",
-                p_menuID,
-                p_userID
-            );
-        }
     }
 }

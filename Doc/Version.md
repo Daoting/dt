@@ -7,7 +7,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ## Release 3.3.1
 ### 变更
 * 将CList的SqlKey,Enum,Option合并到Ex属性
-* 
+* OmMenu cm_menu移除SvcName，视图类通过静态方法GetMenuTip提供提醒数字
 
 ### 功能
 * Lv增加内置过滤

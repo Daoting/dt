@@ -29,7 +29,6 @@ namespace Dt.Mgr
             string ViewName = default,
             string Params = default,
             string Icon = default,
-            string SvcName = default,
             string Note = default,
             int Dispidx = default,
             string Warning = default)
@@ -41,7 +40,6 @@ namespace Dt.Mgr
             AddCell("ViewName", ViewName);
             AddCell("Params", Params);
             AddCell("Icon", Icon);
-            AddCell("SvcName", SvcName);
             AddCell("Note", Note);
             AddCell("Dispidx", Dispidx);
             AddCell("Warning", Warning);
@@ -117,15 +115,6 @@ namespace Dt.Mgr
                 return icon;
             }
             set { this["Icon"] = value; }
-        }
-
-        /// <summary>
-        /// 提供提示信息的服务Api名称，格式如：cm:UserRelated.GetMenuTip，空表示无提示信息
-        /// </summary>
-        public string SvcName
-        {
-            get { return (string)this["SvcName"]; }
-            set { this["SvcName"] = value; }
         }
 
         /// <summary>

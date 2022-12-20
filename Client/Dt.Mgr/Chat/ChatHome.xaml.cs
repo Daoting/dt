@@ -35,5 +35,11 @@ namespace Dt.Mgr.Chat
             _detail.OtherID = e;
             NaviTo("聊天内容");
         }
+
+        public static Task<int> GetMenuTip()
+        {
+            int cnt = AtLob.GetScalar<int>("select count(*) from letter where loginid = @loginid and IsReceived=1 and Unread=1", new { loginid = Kit.UserID });
+            return Task.FromResult(cnt);
+        }
     }
 }

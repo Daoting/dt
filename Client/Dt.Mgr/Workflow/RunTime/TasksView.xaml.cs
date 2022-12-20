@@ -41,5 +41,10 @@ namespace Dt.Mgr.Workflow
                 _dlgStart = new StartWorkflow();
             _dlgStart.Show();
         }
+
+        public static Task<int> GetMenuTip()
+        {
+            return AtCm.GetScalar<int>("流程-待办任务总数", new { userid = Kit.UserID });
+        }
     }
 }

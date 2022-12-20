@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Microsoft.UI.Xaml;
+using System.Reflection;
 #endregion
 
 namespace Dt.Mgr.Home
@@ -80,26 +81,32 @@ namespace Dt.Mgr.Home
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             // 过滤太频繁的刷新
-            if ((DateTime.Now - _dtLast).TotalSeconds < 30)
+            if ((DateTime.Now - _dtLast).TotalSeconds < 15)
                 return;
 
             _dtLast = DateTime.Now;
             Kit.RunAsync(async () =>
             {
                 // 只取常用组菜单项的提示信息
-                // 原来采用每个服务批量获取的方式，现改为简单方式，互不影响！
+                // 原来采用每个服务批量获取的方式，现改为每个视图独自提供方式，互不影响！
                 foreach (var mi in LobKit.FavMenus)
                 {
-                    if (string.IsNullOrEmpty(mi.SvcName))
-                        continue;
-
-                    var strs = mi.SvcName.Split(':');
-                    if (strs.Length == 2)
+                    MethodInfo method;
+                    Type tp = Kit.GetViewTypeByAlias(mi.ViewName);
+                    if (tp != null
+                        && (method = tp.GetMethod("GetMenuTip", BindingFlags.Public | BindingFlags.Static)) != null
+                        && method.ReturnType == typeof(Task<int>))
                     {
-                        int num = await Kit.Rpc<int>(strs[0], strs[1], mi.ID, Kit.UserID);
-                        mi.SetWarningNum(num);
+                        // 视图类型中包含静态以下方法
+                        // 方法原型： public static Task<int> GetMenuTip()
+                        try
+                        {
+                            var task = (Task<int>)method.Invoke(null, new object[0]);
+                            int num = await task;
+                            mi.SetWarningNum(num);
+                        }
+                        catch { }
                     }
-                    
                 }
             });
         }

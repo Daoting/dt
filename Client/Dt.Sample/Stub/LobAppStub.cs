@@ -85,8 +85,7 @@ namespace Dt.Sample
                     ID: 3000,
                     Name: "任务",
                     Icon: "双绞线",
-                    ViewName: "任务",
-                    SvcName: "cm:UserRelated.GetMenuTip"),
+                    ViewName: "任务"),
 
                 new OmMenu(
                     ID: 4000,

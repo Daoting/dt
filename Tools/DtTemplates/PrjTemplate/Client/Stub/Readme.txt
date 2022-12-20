@@ -9,4 +9,4 @@ $ext_safeprojectname$.Svc          服务项目
 
 https://github.com/daoting/dt
 
-https://github.com/daoting/dt-demo
+https://github.com/daoting/dt.demo
