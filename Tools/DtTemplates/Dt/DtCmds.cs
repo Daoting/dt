@@ -1,23 +1,13 @@
-﻿using Dt.Cells;
-using Dt.Editor;
-using Dt.Fv;
+﻿using Dt.Editor;
 using Dt.LocalTbl;
 using Dt.ManyToMany;
 using Dt.OnToMany;
 using Dt.SingleTbl;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text;
 using System;
-using System.ComponentModel.Composition;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
-using Window = System.Windows;
 
 namespace Dt
 {
@@ -32,9 +22,6 @@ namespace Dt
         const int CellCmdId = 0x0103;
         const int MenuCmdId = 0x0104;
 
-        const int LvCellExClsCmdId = 0x2000;
-        const int FvCellCallCmdId = 0x2001;
-
         const int SingleTblCmdId = 0x3000;
         const int OnToManyCmdId = 0x3001;
         const int ManyToManyCmdId = 0x3002;
@@ -44,9 +31,8 @@ namespace Dt
         const int InsertWinCmdId = 0x4001;
         const int InsertDlgCmdId = 0x4002;
 
-        const int InsertEntityCmdId = 0x5000;
-        const int InsertAgentCmdId = 0x5001;
-        const int InsertApiCmdId = 0x5002;
+        const int InsertClassCmdId = 0x5000;
+        const int InsertSvcClassCmdId = 0x5001;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -71,9 +57,6 @@ namespace Dt
             cs.AddCommand(CmdXamlForm(CellCmdId, typeof(CellXaml)));
             cs.AddCommand(CmdXamlForm(MenuCmdId, typeof(MenuXaml)));
 
-            cs.AddCommand(CmdRun(LvCellExClsCmdId, typeof(CellUI)));
-            cs.AddCommand(CmdRun(FvCellCallCmdId, typeof(FvCall)));
-
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
             cs.AddCommand(CmdClient(ManyToManyCmdId, typeof(ManyToManyForm)));
@@ -83,10 +66,8 @@ namespace Dt
             cs.AddCommand(CmdClient(InsertWinCmdId, typeof(InsertWinForm)));
             cs.AddCommand(CmdClient(InsertDlgCmdId, typeof(InsertDlgForm)));
 
-            cs.AddCommand(CmdClient(InsertEntityCmdId, typeof(InsertEntityForm)));
-            cs.AddCommand(CmdClient(InsertAgentCmdId, typeof(InsertAgentForm)));
-
-            cs.AddCommand(CmdServer(InsertApiCmdId, typeof(InsertApiForm)));
+            cs.AddCommand(CmdClient(InsertClassCmdId, typeof(InsertClassForm)));
+            cs.AddCommand(CmdServer(InsertSvcClassCmdId, typeof(InsertSvcClassForm)));
         }
 
         /// <summary>

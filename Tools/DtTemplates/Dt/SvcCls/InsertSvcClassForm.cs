@@ -5,15 +5,15 @@ using System.Windows.Forms;
 
 namespace Dt
 {
-    public partial class InsertEntityForm : Form
+    public partial class InsertSvcClassForm : Form
     {
-        public InsertEntityForm()
+        public InsertSvcClassForm()
         {
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
         }
 
-        private void _btnOK_Click(object sender, EventArgs e)
+        void InsertClass(string p_fileName)
         {
             string ns, cls;
             try
@@ -23,22 +23,27 @@ namespace Dt
             }
             catch
             {
-                _lbl.Text = "当前内容不可为空！";
+                _lbl.Text = "命名空间和类名不可为空！";
                 return;
             }
 
             var dt = new Dictionary<string, string>
                 {
                     {"$rootnamespace$", ns },
-                    {"$safeitemname$", cls },
+                    {"$clsname$", cls },
                     {"$time$", DateTime.Now.ToString("yyyy-MM-dd") },
                     {"$username$", Environment.UserName },
                 };
             var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
-            Kit.WritePrjFile(path, "Dt.Entity.Entity.cs", dt);
+            Kit.WritePrjFile(path, "Dt.SvcCls." + p_fileName, dt);
             Kit.OpenFile(path);
 
             Close();
+        }
+
+        private void _btnOK_Click(object sender, EventArgs e)
+        {
+            InsertClass("ApiTemp.cs");
         }
     }
 }

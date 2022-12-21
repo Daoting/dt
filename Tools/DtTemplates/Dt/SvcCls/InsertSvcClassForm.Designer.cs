@@ -1,7 +1,7 @@
 ﻿
 namespace Dt
 {
-    partial class InsertAgentForm
+    partial class InsertSvcClassForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertAgentForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertSvcClassForm));
             this.label2 = new System.Windows.Forms.Label();
             this._ns = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -62,7 +62,7 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "类名(加前缀 At)";
+            this.label1.Text = "类名";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _cls
@@ -71,28 +71,27 @@ namespace Dt
             this._cls.Name = "_cls";
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
-            this._cls.Text = "At";
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 201);
+            this._btnOK.Location = new System.Drawing.Point(12, 69);
             this._btnOK.Name = "_btnOK";
-            this._btnOK.Size = new System.Drawing.Size(75, 23);
+            this._btnOK.Size = new System.Drawing.Size(165, 23);
             this._btnOK.TabIndex = 22;
-            this._btnOK.Text = "确认";
+            this._btnOK.Text = "Api类(加后缀 Api)";
             this._btnOK.UseVisualStyleBackColor = true;
             this._btnOK.Click += new System.EventHandler(this._btnOK_Click);
             // 
             // _lbl
             // 
             this._lbl.ForeColor = System.Drawing.Color.Black;
-            this._lbl.Location = new System.Drawing.Point(12, 76);
+            this._lbl.Location = new System.Drawing.Point(12, 193);
             this._lbl.Name = "_lbl";
-            this._lbl.Size = new System.Drawing.Size(444, 38);
+            this._lbl.Size = new System.Drawing.Size(372, 30);
             this._lbl.TabIndex = 26;
-            this._lbl.Text = "服务Api代理类";
+            this._lbl.Text = "Info";
             // 
-            // InsertAgentForm
+            // InsertSvcClassForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -107,10 +106,10 @@ namespace Dt
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "InsertAgentForm";
+            this.Name = "InsertSvcClassForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "添加Agent类";
+            this.Text = "添加类";
             this.ResumeLayout(false);
             this.PerformLayout();
 

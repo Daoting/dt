@@ -74,9 +74,7 @@
 			<Group guid="guidDtPackageCmdSet" id="MyFolderClassGroup" priority="0x0602">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderSubMenu" />
 			</Group>
-			<Group guid="guidDtPackageCmdSet" id="MyFolderServerGroup" priority="0x0603">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderSubMenu" />
-			</Group>
+			
 		</Groups>
 
 		<Menus>
@@ -189,36 +187,16 @@
 				</Strings>
 			</Button>
 
-			<Button guid="guidDtPackageCmdSet" id="LvCellExClsCmdId" priority="0x0100" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="InsertClassCmdId" priority="0x0100" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
-					<ButtonText>Lv的Call类</ButtonText>
+					<ButtonText>客户端常用类</ButtonText>
 				</Strings>
 			</Button>
-
-			<Button guid="guidDtPackageCmdSet" id="FvCellCallCmdId" priority="0x0101" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="InsertSvcClassCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
-					<ButtonText>Fv的Call类</ButtonText>
-				</Strings>
-			</Button>
-			
-			<Button guid="guidDtPackageCmdSet" id="InsertEntityCmdId" priority="0x0102" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
-				<Strings>
-					<ButtonText>Entity子类</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidDtPackageCmdSet" id="InsertAgentCmdId" priority="0x0103" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
-				<Strings>
-					<ButtonText>客户端Agent类</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidDtPackageCmdSet" id="InsertApiCmdId" priority="0x0104" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderServerGroup" />
-				<Strings>
-					<ButtonText>服务端Api类</ButtonText>
+					<ButtonText>服务端常用类</ButtonText>
 				</Strings>
 			</Button>
 		</Buttons>
@@ -255,16 +233,12 @@
 			<IDSymbol name="MyFolderFrameworkGroup" value="0x1042" />
 			<IDSymbol name="MyFolderPrjItemGroup" value="0x1043" />
 			<IDSymbol name="MyFolderClassGroup" value="0x1044" />
-			<IDSymbol name="MyFolderServerGroup" value="0x1045" />
 
 			<IDSymbol name="LvCmdId" value="0x0100" />
 			<IDSymbol name="DotCmdId" value="0x0101" />
 			<IDSymbol name="FvCmdId" value="0x0102" />
 			<IDSymbol name="CellCmdId" value="0x0103" />
 			<IDSymbol name="MenuCmdId" value="0x0104" />
-
-			<IDSymbol name="LvCellExClsCmdId" value="0x2000" />
-			<IDSymbol name="FvCellCallCmdId" value="0x2001" />
 
 			<IDSymbol name="SingleTblCmdId" value="0x3000" />
 			<IDSymbol name="OnToManyCmdId" value="0x3001" />
@@ -275,9 +249,8 @@
 			<IDSymbol name="InsertWinCmdId" value="0x4001" />
 			<IDSymbol name="InsertDlgCmdId" value="0x4002" />
 
-			<IDSymbol name="InsertEntityCmdId" value="0x5000" />
-			<IDSymbol name="InsertAgentCmdId" value="0x5001" />
-			<IDSymbol name="InsertApiCmdId" value="0x5002" />
+			<IDSymbol name="InsertClassCmdId" value="0x5000" />
+			<IDSymbol name="InsertSvcClassCmdId" value="0x5001" />
 		</GuidSymbol>
 
 		<!-- xaml编辑器上下文菜单的guid -->

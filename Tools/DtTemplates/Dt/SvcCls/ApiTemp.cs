@@ -19,7 +19,7 @@ namespace $rootnamespace$
     /// 
     /// </summary>
     [Api]
-    public class $safeitemname$ : BaseApi
+    public class $clsname$ : BaseApi
     {
         public Dict GetConfig()
         {

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace $rootnamespace$
 {
-	public partial class $safeitemname$
+	public partial class $clsname$
 	{
 		//async Task OnSaving()
 		//{

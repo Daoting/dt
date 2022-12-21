@@ -14,10 +14,11 @@ using System.Threading.Tasks;
 
 namespace $rootnamespace$
 {
-	class $safeitemname$ : DataProvider<lob>
+	public partial class $clsname$ : DataProvider<$clsname$.LOB>
 	{
-
+        /// <summary>
+        /// 服务名称
+        /// </summary>
+        public class LOB { }
 	}
-
-	class lob { }
 }

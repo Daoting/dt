@@ -47,16 +47,15 @@
     <NoWarn>VSTHRD200;VSTHRD100;VSTHRD010</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CellUI\CellUITemp.cs" />
-    <Compile Include="CellUI\CellUI.cs" />
+    <EmbeddedResource Include="ClientCls\CellUITemp.cs" />
+    <EmbeddedResource Include="ClientCls\CListExTemp.cs" />
     <Compile Include="Editor\BatchCells.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editor\BatchCells.Designer.cs">
       <DependentUpon>BatchCells.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FvCall\FvCallTemp.cs" />
-    <Compile Include="FvCall\FvCall.cs" />
+    <EmbeddedResource Include="ClientCls\FvCallTemp.cs" />
     <Compile Include="Xaml\MenuXaml.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,28 +68,19 @@
     <Compile Include="Xaml\DotXaml.Designer.cs">
       <DependentUpon>DotXaml.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Agent\InsertAgentForm.resx">
-      <DependentUpon>InsertAgentForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Api\InsertApiForm.resx">
-      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    <EmbeddedResource Include="SvcCls\InsertSvcClassForm.resx">
+      <DependentUpon>InsertSvcClassForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Agent\Class.cs" />
-    <Compile Include="Agent\InsertAgentForm.cs">
+    <EmbeddedResource Include="ClientCls\AgentTemp.cs" />
+    <EmbeddedResource Include="SvcCls\ApiTemp.cs" />
+    <Compile Include="SvcCls\InsertSvcClassForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Agent\InsertAgentForm.Designer.cs">
-      <DependentUpon>InsertAgentForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Api\Class.cs" />
-    <Compile Include="Api\InsertApiForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Api\InsertApiForm.Designer.cs">
-      <DependentUpon>InsertApiForm.cs</DependentUpon>
+    <Compile Include="SvcCls\InsertSvcClassForm.Designer.cs">
+      <DependentUpon>InsertSvcClassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\InsertDlgForm.cs">
       <SubType>Form</SubType>
@@ -222,12 +212,12 @@
     <EmbeddedResource Include="Editor\BatchCells.resx">
       <DependentUpon>BatchCells.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Entity\Entity.cs" />
-    <Compile Include="Entity\InsertEntityForm.cs">
+    <EmbeddedResource Include="ClientCls\Entity.cs" />
+    <Compile Include="ClientCls\InsertClassForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Entity\InsertEntityForm.Designer.cs">
-      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    <Compile Include="ClientCls\InsertClassForm.Designer.cs">
+      <DependentUpon>InsertClassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LocalTbl\FileParams.cs" />
     <Compile Include="LocalTbl\LocalTblForm.cs">
@@ -352,8 +342,8 @@
     <EmbeddedResource Include="Dialog\InsertDlgForm.resx">
       <DependentUpon>InsertDlgForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Entity\InsertEntityForm.resx">
-      <DependentUpon>InsertEntityForm.cs</DependentUpon>
+    <EmbeddedResource Include="ClientCls\InsertClassForm.resx">
+      <DependentUpon>InsertClassForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mv\InsertMvForm.resx">
       <DependentUpon>InsertMvForm.cs</DependentUpon>
