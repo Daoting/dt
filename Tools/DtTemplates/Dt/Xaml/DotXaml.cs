@@ -16,8 +16,6 @@ namespace Dt.Editor
         public DotXaml()
         {
             InitializeComponent();
-            _cbUI.SelectedIndex = 0;
-            _font.SelectedIndex = 0;
             _svcUrl.Text = AtSvc.SvcUrl;
             AddTooltip();
         }
@@ -34,20 +32,23 @@ namespace Dt.Editor
             StringBuilder sb = new StringBuilder();
             sb.Append($"<a:Dot ID=\"{id}\"");
 
-            if (_cbUI.SelectedIndex != 0)
-                sb.Append($" UI=\"{_cbUI.SelectedItem}\"");
+            if (_call.Text.Trim() != "")
+                sb.Append($" Call=\"{_call.Text.Trim()}\"");
 
             var format = _format.Text.Trim();
             if (format != "")
                 sb.Append($" Format=\"{format}\"");
 
-            if (_font.SelectedIndex != 0)
-                sb.Append($" Font=\"{_font.SelectedItem}\"");
+            if (!_autoHide.Checked)
+                sb.Append(" AutoHide=\"false\"");
 
             sb.Append(" />");
 
             Kit.Paste(sb.ToString());
             _id.Text = "";
+            _call.Text = "";
+            _format.Text = "";
+            _autoHide.Checked = true;
         }
 
         async void button1_Click(object sender, EventArgs e)

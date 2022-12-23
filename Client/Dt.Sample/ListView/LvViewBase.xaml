@@ -137,7 +137,6 @@
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
                     <a:CNum Title="行/项目高" ID="ItemHeight" />
                     <a:CNum Title="磁贴最小宽度" ID="MinItemWidth" />
-                    <a:CBool Title="显示搜索框" ID="ShowSearchBox" />
                     <a:CFree Title="鼠标进入背景色">
                         <StackPanel Orientation="Horizontal">
                             <Button Content="无色" Click="OnNoEnteredBrush" />

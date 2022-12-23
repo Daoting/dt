@@ -40,12 +40,8 @@ namespace Dt.Editor
             this._showGroupHeader = new System.Windows.Forms.CheckBox();
             this._showItemBorder = new System.Windows.Forms.CheckBox();
             this._autoScrollBottom = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this._groupName = new System.Windows.Forms.TextBox();
-            this._enteredBrush = new System.Windows.Forms.ComboBox();
-            this._pressedBrush = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this._minItemWidth = new System.Windows.Forms.TextBox();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
@@ -56,6 +52,8 @@ namespace Dt.Editor
             this._svcUrl = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this._showToolbar = new System.Windows.Forms.CheckBox();
+            this._showFilter = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -125,7 +123,7 @@ namespace Dt.Editor
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(0, 58);
+            this.label4.Location = new System.Drawing.Point(0, 78);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(250, 21);
             this.label4.TabIndex = 8;
@@ -133,7 +131,7 @@ namespace Dt.Editor
             // 
             // _itemHeight
             // 
-            this._itemHeight.Location = new System.Drawing.Point(249, 58);
+            this._itemHeight.Location = new System.Drawing.Point(249, 78);
             this._itemHeight.Name = "_itemHeight";
             this._itemHeight.Size = new System.Drawing.Size(211, 21);
             this._itemHeight.TabIndex = 9;
@@ -144,7 +142,7 @@ namespace Dt.Editor
             this._showGroupHeader.AutoSize = true;
             this._showGroupHeader.Checked = true;
             this._showGroupHeader.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._showGroupHeader.Location = new System.Drawing.Point(0, 162);
+            this._showGroupHeader.Location = new System.Drawing.Point(0, 129);
             this._showGroupHeader.Name = "_showGroupHeader";
             this._showGroupHeader.Size = new System.Drawing.Size(198, 16);
             this._showGroupHeader.TabIndex = 10;
@@ -156,7 +154,7 @@ namespace Dt.Editor
             this._showItemBorder.AutoSize = true;
             this._showItemBorder.Checked = true;
             this._showItemBorder.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._showItemBorder.Location = new System.Drawing.Point(249, 162);
+            this._showItemBorder.Location = new System.Drawing.Point(249, 129);
             this._showItemBorder.Name = "_showItemBorder";
             this._showItemBorder.Size = new System.Drawing.Size(192, 16);
             this._showItemBorder.TabIndex = 11;
@@ -166,37 +164,17 @@ namespace Dt.Editor
             // _autoScrollBottom
             // 
             this._autoScrollBottom.AutoSize = true;
-            this._autoScrollBottom.Location = new System.Drawing.Point(0, 185);
+            this._autoScrollBottom.Location = new System.Drawing.Point(0, 179);
             this._autoScrollBottom.Name = "_autoScrollBottom";
             this._autoScrollBottom.Size = new System.Drawing.Size(264, 16);
             this._autoScrollBottom.TabIndex = 12;
             this._autoScrollBottom.Text = "切换数据自动滚动到底端(AutoScrollBottom)";
             this._autoScrollBottom.UseVisualStyleBackColor = true;
             // 
-            // label5
-            // 
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(0, 78);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(250, 20);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "鼠标进入时行背景色(EnteredBrush)";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label6
-            // 
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(0, 97);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(250, 20);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "点击时行背景色(PressedBrush)";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Location = new System.Drawing.Point(0, 116);
+            this.label7.Location = new System.Drawing.Point(0, 58);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(250, 21);
             this.label7.TabIndex = 15;
@@ -205,41 +183,15 @@ namespace Dt.Editor
             // 
             // _groupName
             // 
-            this._groupName.Location = new System.Drawing.Point(249, 116);
+            this._groupName.Location = new System.Drawing.Point(249, 58);
             this._groupName.Name = "_groupName";
             this._groupName.Size = new System.Drawing.Size(211, 21);
             this._groupName.TabIndex = 16;
             // 
-            // _enteredBrush
-            // 
-            this._enteredBrush.FormattingEnabled = true;
-            this._enteredBrush.Items.AddRange(new object[] {
-            "默认",
-            "无色",
-            "深黄遮罩",
-            "深暗遮罩"});
-            this._enteredBrush.Location = new System.Drawing.Point(249, 78);
-            this._enteredBrush.Name = "_enteredBrush";
-            this._enteredBrush.Size = new System.Drawing.Size(211, 20);
-            this._enteredBrush.TabIndex = 17;
-            // 
-            // _pressedBrush
-            // 
-            this._pressedBrush.FormattingEnabled = true;
-            this._pressedBrush.Items.AddRange(new object[] {
-            "默认",
-            "无色",
-            "深黄遮罩",
-            "深暗遮罩"});
-            this._pressedBrush.Location = new System.Drawing.Point(249, 97);
-            this._pressedBrush.Name = "_pressedBrush";
-            this._pressedBrush.Size = new System.Drawing.Size(211, 20);
-            this._pressedBrush.TabIndex = 18;
-            // 
             // label8
             // 
             this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label8.Location = new System.Drawing.Point(0, 136);
+            this.label8.Location = new System.Drawing.Point(0, 98);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(250, 21);
             this.label8.TabIndex = 19;
@@ -248,7 +200,7 @@ namespace Dt.Editor
             // 
             // _minItemWidth
             // 
-            this._minItemWidth.Location = new System.Drawing.Point(249, 136);
+            this._minItemWidth.Location = new System.Drawing.Point(249, 98);
             this._minItemWidth.Name = "_minItemWidth";
             this._minItemWidth.Size = new System.Drawing.Size(211, 21);
             this._minItemWidth.TabIndex = 20;
@@ -322,17 +274,39 @@ namespace Dt.Editor
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 62);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 82);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(119, 12);
             this.linkLabel1.TabIndex = 119;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "行/项高(ItemHeight)";
             // 
+            // _showToolbar
+            // 
+            this._showToolbar.AutoSize = true;
+            this._showToolbar.Location = new System.Drawing.Point(0, 154);
+            this._showToolbar.Name = "_showToolbar";
+            this._showToolbar.Size = new System.Drawing.Size(84, 16);
+            this._showToolbar.TabIndex = 120;
+            this._showToolbar.Text = "显示工具栏";
+            this._showToolbar.UseVisualStyleBackColor = true;
+            // 
+            // _showFilter
+            // 
+            this._showFilter.AutoSize = true;
+            this._showFilter.Location = new System.Drawing.Point(249, 154);
+            this._showFilter.Name = "_showFilter";
+            this._showFilter.Size = new System.Drawing.Size(84, 16);
+            this._showFilter.TabIndex = 121;
+            this._showFilter.Text = "显示筛选框";
+            this._showFilter.UseVisualStyleBackColor = true;
+            // 
             // LvXaml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._showFilter);
+            this.Controls.Add(this._showToolbar);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.linkLabel4);
             this.Controls.Add(this.linkLabel3);
@@ -343,12 +317,8 @@ namespace Dt.Editor
             this.Controls.Add(this.label11);
             this.Controls.Add(this._minItemWidth);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this._pressedBrush);
-            this.Controls.Add(this._enteredBrush);
             this.Controls.Add(this._groupName);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this._autoScrollBottom);
             this.Controls.Add(this._showItemBorder);
             this.Controls.Add(this._showGroupHeader);
@@ -380,12 +350,8 @@ namespace Dt.Editor
         private System.Windows.Forms.CheckBox _showGroupHeader;
         private System.Windows.Forms.CheckBox _showItemBorder;
         private System.Windows.Forms.CheckBox _autoScrollBottom;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox _groupName;
-        private System.Windows.Forms.ComboBox _enteredBrush;
-        private System.Windows.Forms.ComboBox _pressedBrush;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox _minItemWidth;
         private System.Windows.Forms.LinkLabel linkLabel4;
@@ -396,5 +362,7 @@ namespace Dt.Editor
         private System.Windows.Forms.TextBox _svcUrl;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.CheckBox _showToolbar;
+        private System.Windows.Forms.CheckBox _showFilter;
     }
 }

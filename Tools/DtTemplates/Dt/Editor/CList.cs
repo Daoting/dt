@@ -17,8 +17,7 @@ namespace Dt.Editor
             InitializeComponent();
 
             ToolTip tip = new ToolTip();
-            tip.SetToolTip(_enum, "包含程序集名称，如：Dt.Base.CtType,Dt.Base");
-            tip.SetToolTip(_option, "来自模型库的OmOption表，如：民族、地区");
+            tip.SetToolTip(_ex, "设置扩展CList功能的类名和参数，用于控制下拉对话框和数据源，类名和参数之间用#隔开");
         }
 
         string ICellControl.GetText()
@@ -29,13 +28,9 @@ namespace Dt.Editor
             if (_selectionMode.SelectedIndex != 1)
                 sb.Append($" SelectionMode=\"{_selectionMode.SelectedItem}\"");
 
-            var txt = _enum.Text.Trim();
+            var txt = _ex.Text.Trim();
             if (txt != "")
-                sb.Append($" Enum=\"{txt}\"");
-
-            txt = _option.Text.Trim();
-            if (txt != "")
-                sb.Append($" Option=\"{txt}\"");
+                sb.Append($" Ex=\"{txt}\"");
 
             txt = _srcID.Text.Trim();
             if (txt != "")
@@ -90,8 +85,7 @@ namespace Dt.Editor
             _header.Reset();
             _footer.Reset();
             _selectionMode.SelectedIndex = 1;
-            _enum.Text = "";
-            _option.Text = "";
+            _ex.Text = "";
             _staticData.SelectedIndex = 0;
             _srcID.Text = "";
             _tgtID.Text = "";

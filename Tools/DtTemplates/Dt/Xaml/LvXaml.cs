@@ -15,8 +15,6 @@ namespace Dt.Editor
 
             _viewMode.SelectedIndex = 0;
             _selectionMode.SelectedIndex = 1;
-            _enteredBrush.SelectedIndex = 0;
-            _pressedBrush.SelectedIndex = 0;
             _svcUrl.Text = AtSvc.SvcUrl;
             AddTooltip();
         }
@@ -37,28 +35,6 @@ namespace Dt.Editor
             if (txt != "0")
                 sb.Append($" ItemHeight=\"{txt}\"");
 
-            txt = _enteredBrush.Text.Trim();
-            if (txt != "默认")
-            {
-                if (txt == "无色")
-                    sb.Append(" EnteredBrush=\"{x:Null}\"");
-                else if (txt == "深黄遮罩" || txt == "深暗遮罩")
-                    sb.Append($" EnteredBrush=\"{{StaticResource {txt}}}\"");
-                else
-                    sb.Append($" EnteredBrush=\"{txt}\"");
-            }
-
-            txt = _pressedBrush.Text.Trim();
-            if (txt != "默认")
-            {
-                if (txt == "无色")
-                    sb.Append(" PressedBrush=\"{x:Null}\"");
-                else if (txt == "深黄遮罩" || txt == "深暗遮罩")
-                    sb.Append($" PressedBrush=\"{{StaticResource {txt}}}\"");
-                else
-                    sb.Append($" PressedBrush=\"{txt}\"");
-            }
-
             txt = _groupName.Text.Trim();
             if (txt != "")
                 sb.Append($" GroupName=\"{txt}\"");
@@ -77,6 +53,22 @@ namespace Dt.Editor
                 sb.Append(" AutoScrollBottom=\"True\"");
 
             sb.AppendLine(">");
+
+            if (_showToolbar.Checked)
+            {
+                sb.AppendLine("<a:Lv.Toolbar>");
+                sb.AppendLine("<a:Menu>");
+                sb.AppendLine("<a:Mi ID=\"排序\" CmdParam=\"列名\" />");
+                sb.AppendLine("</a:Menu>");
+                sb.AppendLine("</a:Lv.Toolbar>");
+            }
+
+            if (_showFilter.Checked)
+            {
+                sb.AppendLine("<a:Lv.FilterCfg>");
+                sb.AppendLine("<a:FilterCfg IsRealtime=\"True\" />");
+                sb.AppendLine("</a:Lv.FilterCfg>");
+            }
 
             string tbl = null;
             if (_cbTbls.SelectedItem != null)

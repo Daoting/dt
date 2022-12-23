@@ -35,9 +35,6 @@ namespace Dt.Editor
             this.label1 = new System.Windows.Forms.Label();
             this._format = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
-            this._font = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this._cbUI = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
@@ -47,6 +44,8 @@ namespace Dt.Editor
             this._svcUrl = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this._call = new System.Windows.Forms.TextBox();
+            this._autoHide = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label2
@@ -93,49 +92,6 @@ namespace Dt.Editor
             this._btnOK.UseVisualStyleBackColor = true;
             this._btnOK.Click += new System.EventHandler(this._btnOK_Click);
             // 
-            // _font
-            // 
-            this._font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._font.FormattingEnabled = true;
-            this._font.Items.AddRange(new object[] {
-            "默认",
-            "小灰",
-            "黑白",
-            "蓝白",
-            "红白"});
-            this._font.Location = new System.Drawing.Point(187, 67);
-            this._font.Name = "_font";
-            this._font.Size = new System.Drawing.Size(269, 20);
-            this._font.TabIndex = 14;
-            // 
-            // label4
-            // 
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(12, 67);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(176, 21);
-            this.label4.TabIndex = 26;
-            this.label4.Text = "文字样式";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _cbUI
-            // 
-            this._cbUI.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbUI.FormattingEnabled = true;
-            this._cbUI.Items.AddRange(new object[] {
-            "Default",
-            "Icon",
-            "CheckBox",
-            "Image",
-            "File",
-            "Enum",
-            "AutoDate",
-            "Warning"});
-            this._cbUI.Location = new System.Drawing.Point(187, 27);
-            this._cbUI.Name = "_cbUI";
-            this._cbUI.Size = new System.Drawing.Size(269, 20);
-            this._cbUI.TabIndex = 108;
-            // 
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -143,7 +99,7 @@ namespace Dt.Editor
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(176, 21);
             this.label9.TabIndex = 109;
-            this.label9.Text = "UI类型";
+            this.label9.Text = "Call(如：Def.Icon)";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // linkLabel4
@@ -221,11 +177,32 @@ namespace Dt.Editor
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // _call
+            // 
+            this._call.Location = new System.Drawing.Point(187, 27);
+            this._call.Name = "_call";
+            this._call.Size = new System.Drawing.Size(269, 21);
+            this._call.TabIndex = 127;
+            // 
+            // _autoHide
+            // 
+            this._autoHide.AutoSize = true;
+            this._autoHide.Checked = true;
+            this._autoHide.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._autoHide.Location = new System.Drawing.Point(12, 74);
+            this._autoHide.Name = "_autoHide";
+            this._autoHide.Size = new System.Drawing.Size(216, 16);
+            this._autoHide.TabIndex = 128;
+            this._autoHide.Text = "内容为空时是否自动隐藏，默认true";
+            this._autoHide.UseVisualStyleBackColor = true;
+            // 
             // DotXaml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(473, 300);
+            this.Controls.Add(this._autoHide);
+            this.Controls.Add(this._call);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.linkLabel4);
             this.Controls.Add(this.linkLabel3);
@@ -234,10 +211,7 @@ namespace Dt.Editor
             this.Controls.Add(this.label10);
             this.Controls.Add(this._svcUrl);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this._cbUI);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this._font);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._format);
             this.Controls.Add(this.label1);
@@ -262,9 +236,6 @@ namespace Dt.Editor
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _format;
         private System.Windows.Forms.Button _btnOK;
-        private System.Windows.Forms.ComboBox _font;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox _cbUI;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.LinkLabel linkLabel4;
         private System.Windows.Forms.LinkLabel linkLabel3;
@@ -274,5 +245,7 @@ namespace Dt.Editor
         private System.Windows.Forms.TextBox _svcUrl;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox _call;
+        private System.Windows.Forms.CheckBox _autoHide;
     }
 }

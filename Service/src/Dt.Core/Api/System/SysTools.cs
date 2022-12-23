@@ -322,7 +322,11 @@ namespace Dt.Core
                 bool isEnum = IsEnumCol(col);
 
                 string title = "";
-                if (!string.IsNullOrEmpty(col.Comments) && !isEnum)
+
+                // 字段名中文时不再需要Title
+                if (!string.IsNullOrEmpty(col.Comments)
+                    && !isEnum
+                    && !IsChiness(col.Name))
                 {
                     title = $" Title=\"{col.Comments}\"";
                 }
@@ -404,7 +408,17 @@ namespace Dt.Core
             {
                 sb.AppendLine();
                 AppendTabSpace(sb, 3);
-                sb.Append($"<a:Col ID=\"{col.Name}\" Title=\"{col.Comments}\" />");
+
+                string title = "";
+
+                // 字段名中文时不再需要Title
+                if (!string.IsNullOrEmpty(col.Comments)
+                    && !IsChiness(col.Name))
+                {
+                    title = $" Title=\"{col.Comments}\"";
+                }
+
+                sb.Append($"<a:Col ID=\"{col.Name}\"{title} />");
             }
             sb.AppendLine();
             AppendTabSpace(sb, 2);
@@ -654,6 +668,16 @@ namespace Dt.Core
             char[] a = p_str.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
+        }
+
+        static bool IsChiness(string p_str)
+        {
+            foreach (char vChar in p_str)
+            {
+                if ((int)vChar < 256)
+                    return false;
+            }
+            return true;
         }
     }
 }

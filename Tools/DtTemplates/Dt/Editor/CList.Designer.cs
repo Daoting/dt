@@ -32,10 +32,7 @@ namespace Dt.Editor
             this._header = new Dt.Editor.CellHeader();
             this._selectionMode = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this._enum = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this._option = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this._srcID = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this._tgtID = new System.Windows.Forms.TextBox();
@@ -48,6 +45,7 @@ namespace Dt.Editor
             this._staticData = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this._footer = new Dt.Editor.CellFooter();
+            this._ex = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // _header
@@ -81,13 +79,6 @@ namespace Dt.Editor
             this.label8.Text = "选择模式(SelectionMode)";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // _enum
-            // 
-            this._enum.Location = new System.Drawing.Point(186, 59);
-            this._enum.Name = "_enum";
-            this._enum.Size = new System.Drawing.Size(194, 21);
-            this._enum.TabIndex = 43;
-            // 
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -95,29 +86,12 @@ namespace Dt.Editor
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(187, 21);
             this.label7.TabIndex = 42;
-            this.label7.Text = "枚举类型数据源(Enum)";
+            this.label7.Text = "功能扩展(Ex)";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _option
-            // 
-            this._option.Location = new System.Drawing.Point(186, 79);
-            this._option.Name = "_option";
-            this._option.Size = new System.Drawing.Size(194, 21);
-            this._option.TabIndex = 45;
-            // 
-            // label1
-            // 
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(0, 79);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(187, 21);
-            this.label1.TabIndex = 44;
-            this.label1.Text = "基础选项数据源(Option)";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _srcID
             // 
-            this._srcID.Location = new System.Drawing.Point(186, 118);
+            this._srcID.Location = new System.Drawing.Point(186, 98);
             this._srcID.Name = "_srcID";
             this._srcID.Size = new System.Drawing.Size(194, 21);
             this._srcID.TabIndex = 47;
@@ -125,7 +99,7 @@ namespace Dt.Editor
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label2.Location = new System.Drawing.Point(0, 118);
+            this.label2.Location = new System.Drawing.Point(0, 98);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(187, 21);
             this.label2.TabIndex = 46;
@@ -134,7 +108,7 @@ namespace Dt.Editor
             // 
             // _tgtID
             // 
-            this._tgtID.Location = new System.Drawing.Point(186, 138);
+            this._tgtID.Location = new System.Drawing.Point(186, 118);
             this._tgtID.Name = "_tgtID";
             this._tgtID.Size = new System.Drawing.Size(194, 21);
             this._tgtID.TabIndex = 49;
@@ -142,7 +116,7 @@ namespace Dt.Editor
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(0, 138);
+            this.label3.Location = new System.Drawing.Point(0, 118);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(187, 21);
             this.label3.TabIndex = 48;
@@ -151,7 +125,7 @@ namespace Dt.Editor
             // 
             // _refreshData
             // 
-            this._refreshData.Location = new System.Drawing.Point(4, 186);
+            this._refreshData.Location = new System.Drawing.Point(4, 166);
             this._refreshData.Name = "_refreshData";
             this._refreshData.Size = new System.Drawing.Size(360, 38);
             this._refreshData.TabIndex = 50;
@@ -161,7 +135,7 @@ namespace Dt.Editor
             // _isEditable
             // 
             this._isEditable.AutoSize = true;
-            this._isEditable.Location = new System.Drawing.Point(4, 230);
+            this._isEditable.Location = new System.Drawing.Point(4, 210);
             this._isEditable.Name = "_isEditable";
             this._isEditable.Size = new System.Drawing.Size(132, 16);
             this._isEditable.TabIndex = 51;
@@ -171,7 +145,7 @@ namespace Dt.Editor
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(0, 158);
+            this.label4.Location = new System.Drawing.Point(0, 138);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(187, 20);
             this.label4.TabIndex = 53;
@@ -186,7 +160,7 @@ namespace Dt.Editor
             "List",
             "Table",
             "Tile"});
-            this._viewMode.Location = new System.Drawing.Point(186, 158);
+            this._viewMode.Location = new System.Drawing.Point(186, 138);
             this._viewMode.Name = "_viewMode";
             this._viewMode.Size = new System.Drawing.Size(194, 20);
             this._viewMode.TabIndex = 54;
@@ -194,7 +168,7 @@ namespace Dt.Editor
             // _customView
             // 
             this._customView.AutoSize = true;
-            this._customView.Location = new System.Drawing.Point(4, 264);
+            this._customView.Location = new System.Drawing.Point(4, 244);
             this._customView.Name = "_customView";
             this._customView.Size = new System.Drawing.Size(144, 16);
             this._customView.TabIndex = 55;
@@ -210,7 +184,7 @@ namespace Dt.Editor
             "字符串列表",
             "IDStr列表",
             "整数列表"});
-            this._staticData.Location = new System.Drawing.Point(186, 99);
+            this._staticData.Location = new System.Drawing.Point(186, 79);
             this._staticData.Name = "_staticData";
             this._staticData.Size = new System.Drawing.Size(194, 20);
             this._staticData.TabIndex = 57;
@@ -218,7 +192,7 @@ namespace Dt.Editor
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(0, 99);
+            this.label5.Location = new System.Drawing.Point(0, 79);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(187, 20);
             this.label5.TabIndex = 56;
@@ -232,10 +206,23 @@ namespace Dt.Editor
             this._footer.Size = new System.Drawing.Size(380, 170);
             this._footer.TabIndex = 58;
             // 
+            // _ex
+            // 
+            this._ex.FormattingEnabled = true;
+            this._ex.Items.AddRange(new object[] {
+            "EnumData#Dt.Base.DlgPlacement,Dt.Base",
+            "Option#民族",
+            "SqlKey#cm:用户-所有"});
+            this._ex.Location = new System.Drawing.Point(186, 59);
+            this._ex.Name = "_ex";
+            this._ex.Size = new System.Drawing.Size(194, 20);
+            this._ex.TabIndex = 59;
+            // 
             // CList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._ex);
             this.Controls.Add(this._footer);
             this.Controls.Add(this._staticData);
             this.Controls.Add(this.label5);
@@ -248,9 +235,6 @@ namespace Dt.Editor
             this.Controls.Add(this.label3);
             this.Controls.Add(this._srcID);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this._option);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this._enum);
             this.Controls.Add(this.label7);
             this.Controls.Add(this._selectionMode);
             this.Controls.Add(this.label8);
@@ -267,10 +251,7 @@ namespace Dt.Editor
         private CellHeader _header;
         private System.Windows.Forms.ComboBox _selectionMode;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox _enum;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox _option;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _srcID;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox _tgtID;
@@ -283,5 +264,6 @@ namespace Dt.Editor
         private System.Windows.Forms.ComboBox _staticData;
         private System.Windows.Forms.Label label5;
         private Dt.Editor.CellFooter _footer;
+        private System.Windows.Forms.ComboBox _ex;
     }
 }
