@@ -118,6 +118,10 @@ namespace Dt.Base.FormView
                     };
                     Binding bind = new Binding { Path = new PropertyPath("Title"), Source = _owner };
                     _tbTitle.SetBinding(TextBlock.TextProperty, bind);
+
+#if WIN
+                    _tbTitle.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
                 }
 
                 Children.Insert(0, _rcTitle);
@@ -270,6 +274,17 @@ namespace Dt.Base.FormView
                     e.Handled = true;
                     break;
             }
+        }
+
+        /// <summary>
+        /// 提示被截断的长文本
+        /// </summary>
+        /// <param name="p_tb"></param>
+        /// <param name="e"></param>
+        static void OnIsTextTrimmedChanged(TextBlock p_tb, IsTextTrimmedChangedEventArgs e)
+        {
+            p_tb.IsTextTrimmedChanged -= OnIsTextTrimmedChanged;
+            ToolTipService.SetToolTip(p_tb, p_tb.Text);
         }
     }
 }
