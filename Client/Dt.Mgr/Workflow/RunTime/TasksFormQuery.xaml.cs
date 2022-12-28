@@ -42,11 +42,9 @@ namespace Dt.Mgr.Workflow
                 return;
             }
 
-            var tpName = row.Str("ListType");
-            Throw.IfEmpty(tpName, "流程定义中未设置表单查询类型！");
-            var type = Type.GetType(tpName);
-            Throw.IfNull(type, $"表单查询类型[{tpName}]不存在！");
-            var win = Activator.CreateInstance(type);
+            var tp = Kit.GetAllTypesByAlias(typeof(WfListAttribute), row.Str("Name")).FirstOrDefault();
+            Throw.IfNull(tp, $"未指定流程表单的查询类型，请在流程表单的查询类型上添加 [WfList(\"{row.Str("Name")}\")] 标签！");
+            var win = Activator.CreateInstance(tp);
             row.Tag = win;
             LoadMain(win);
         }

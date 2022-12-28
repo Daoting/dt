@@ -103,8 +103,6 @@ namespace Dt.Mgr.Workflow
             string Diagram = default,
             bool IsLocked = default,
             bool Singleton = default,
-            string FormType = default,
-            string ListType = default,
             string Note = default,
             int Dispidx = default,
             DateTime Ctime = default,
@@ -115,8 +113,6 @@ namespace Dt.Mgr.Workflow
             AddCell<string>("Diagram", Diagram);
             AddCell<bool>("IsLocked", IsLocked);
             AddCell<bool>("Singleton", Singleton);
-            AddCell<string>("FormType", FormType);
-            AddCell<string>("ListType", ListType);
             AddCell<string>("Note", Note);
             AddCell<int>("Dispidx", Dispidx);
             AddCell<DateTime>("Ctime", Ctime);
@@ -161,24 +157,6 @@ namespace Dt.Mgr.Workflow
         {
             get { return (bool)this["Singleton"]; }
             set { this["Singleton"] = value; }
-        }
-
-        /// <summary>
-        /// 表单类型
-        /// </summary>
-        public string FormType
-        {
-            get { return (string)this["FormType"]; }
-            set { this["FormType"] = value; }
-        }
-
-        /// <summary>
-        /// 表单查询类型
-        /// </summary>
-        public string ListType
-        {
-            get { return (string)this["ListType"]; }
-            set { this["ListType"] = value; }
         }
 
         /// <summary>

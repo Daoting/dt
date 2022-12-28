@@ -352,11 +352,10 @@ namespace Dt.Mgr
             // 加载流程定义
             PrcDef = await GetPrcDef(_prcID);
 
-            Throw.IfEmpty(PrcDef.FormType, "流程定义中未设置表单类型！");
-            FormType = Type.GetType(PrcDef.FormType);
-            Throw.IfNull(FormType, $"表单类型[{PrcDef.FormType}]不存在！");
+            FormType = Kit.GetAllTypesByAlias(typeof(WfFormAttribute), PrcDef.Name).FirstOrDefault();
+            Throw.IfNull(FormType, $"未指定流程表单类型，请在流程表单类型上添加 [WfForm(\"{PrcDef.Name}\")] 标签！");
             if (FormType.GetInterface("IWfForm") != typeof(IWfForm))
-                Throw.Msg("任务表单类型需要继承自WfForm！");
+                Throw.Msg("任务表单类型需要继承自IWfForm！");
 
             // 加载活动定义、流程实例、活动实例、工作项
             if (_itemID < 0)
