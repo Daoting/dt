@@ -71,6 +71,17 @@ namespace Dt.Core
             });
             taskSrc.Task.Wait();
         }
+
+        /// <summary>
+        /// 始终在UI线程的DispatcherQueue中调用给定方法，和RunAsync方法不同
+        /// <para>RunAsync根据UI线程的访问情况直接调用 或 在DispatcherQueue中调用给定方法</para>
+        /// </summary>
+        /// <param name="p_action"></param>
+        public static void RunInQueue(Action p_action)
+        {
+            // uno4.4 已实现 Window.DispatcherQueue
+            UITree.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
+        }
         #endregion
 
         #region 输出调试信息

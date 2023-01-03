@@ -179,7 +179,7 @@ namespace Dt.Core
         /// <param name="p_attrType">标签类型</param>
         /// <param name="p_alias">别名</param>
         /// <param name="p_methodName">方法名</param>
-        /// <param name="p_flags">要包含BindingFlags.Public，否则返回null，静态的方法还要有BindingFlags.Static</param>
+        /// <param name="p_flags">要包含BindingFlags.Public 或 BindingFlags.NonPublic，否则返回null，静态的方法还要有BindingFlags.Static</param>
         /// <returns></returns>
         public static MethodInfo GetMethodByAlias(Type p_attrType, string p_alias, string p_methodName, BindingFlags p_flags)
         {
