@@ -65,55 +65,108 @@ namespace Dt.Core
 #endif
 
         #region Hook
-        // 所有实体类型的Hook
-        static readonly Dictionary<Type, Dictionary<string, Action<object>>> _allHooks = new Dictionary<Type, Dictionary<string, Action<object>>>();
-        // 当前实体的Hook
-        Dictionary<string, Action<object>> _hooks;
+        /// <summary>
+        /// 重写该方法用来统一添加当前实体的所有回调方法，回调方法中通过抛出异常使操作失败、阻止继续执行！
+        /// <para>主要包括三类回调：</para>
+        /// <para>Cell.Val值变化前的回调</para>
+        /// <para>Entity保存前回调</para>
+        /// <para>Entity删除前回调</para>
+        /// </summary>
+        protected virtual void OnInit()
+        {
+        }
 
         /// <summary>
-        /// 获取 Cell 的 Hook 方法
+        /// 注册Entity保存前的回调，回调方法中通过抛出异常使保存失败，并且阻止继续执行！
+        /// </summary>
+        /// <param name="p_callback"></param>
+        protected void OnSaving(Func<Task> p_callback)
+        {
+            GetHooks().SavingHook = p_callback;
+        }
+
+        /// <summary>
+        /// 注册Entity删除前的回调，回调方法中通过抛出异常使删除失败，并且阻止继续执行！
+        /// </summary>
+        /// <param name="p_callback"></param>
+        protected void OnDeleting(Func<Task> p_callback)
+        {
+            GetHooks().DeletingHook = p_callback;
+        }
+
+        /// <summary>
+        /// 注册Cell.Val值变化前的回调，回调方法通常为业务校验，校验失败时触发异常使赋值失败，并使UI重绑回原值
+        /// </summary>
+        /// <typeparam name="T">Cell值类型</typeparam>
+        /// <param name="p_id">nameof(ID)，使用 nameof 避免列名不存在</param>
+        /// <param name="p_callback">Hook 方法</param>
+        protected void OnChanging<T>(string p_id, Action<T> p_callback)
+        {
+            if (_cells.Contains(p_id) && p_callback != null)
+                GetHooks().AddCellHook(p_id, p_callback);
+        }
+
+        /// <summary>
+        /// 获取Cell.Val值变化前的回调方法
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public Action<object> GetHook(string p_id)
+        public Action<object> GetCellHook(string p_id)
+        {
+            return GetHooks().GetCellHook(p_id);
+        }
+
+        /// <summary>
+        /// 获取Entity保存前的回调方法
+        /// </summary>
+        /// <returns></returns>
+        public Func<Task> GetSavingHook()
+        {
+            return GetHooks().DeletingHook;
+        }
+
+        /// <summary>
+        /// 获取Entity删除前的回调方法
+        /// </summary>
+        /// <returns></returns>
+        public Func<Task> GetDeletingHook()
+        {
+            return GetHooks().DeletingHook;
+        }
+        
+        EntityHooks GetHooks()
         {
             if (_hooks == null)
             {
-                Type tp = GetType();
-                if (!_allHooks.TryGetValue(tp, out _hooks))
-                {
-                    // 初次解析
-                    _hooks = new Dictionary<string, Action<object>>(StringComparer.OrdinalIgnoreCase);
-                    // 每个类型只调用一次
-                    OnHook();
-                    _allHooks[tp] = _hooks;
-                }
+                // 只在初次值变化前、保存前、删除前时调用OnInit，否则始终不调用 OnInit ！
+                _hooks = new EntityHooks();
+                OnInit();
+            }
+            return _hooks;
+        }
+
+        // 当前实体的Hook
+        EntityHooks _hooks;
+
+        class EntityHooks
+        {
+            readonly Dictionary<string, Action<object>> _cellHooks = new Dictionary<string, Action<object>>(StringComparer.OrdinalIgnoreCase);
+
+            public Func<Task> DeletingHook { get; set;}
+
+            public Func<Task> SavingHook { get; set;}
+
+            public Action<object> GetCellHook(string p_id)
+            {
+                if (_cellHooks.Count > 0 && _cellHooks.TryGetValue(p_id, out var hook))
+                    return hook;
+                return null;
             }
 
-            if (_hooks.Count > 0 && _hooks.TryGetValue(p_id, out var hook))
-                return hook;
-            return null;
-        }
-
-        /// <summary>
-        /// 重写该方法用来统一添加当前实体的所有 Hook
-        /// </summary>
-        protected virtual void OnHook()
-        {
-        }
-
-        /// <summary>
-        /// 注册 Cell 的 Hook 方法
-        /// </summary>
-        /// <typeparam name="T">Cell值类型</typeparam>
-        /// <param name="p_id">Cell.ID</param>
-        /// <param name="p_callback">Hook 方法</param>
-        protected void Hook<T>(string p_id, Action<T> p_callback)
-        {
-            if (_cells.Contains(p_id) && p_callback != null)
+            public void AddCellHook<T>(string p_id, Action<T> p_callback)
             {
                 // Action<T> 无法转成 Action<object>，只能内部调用
-                _hooks[p_id] = new Action<object>((o) => p_callback((T)o));
+                _cellHooks[p_id] = new Action<object>((o) => p_callback((T)o));
             }
         }
         #endregion

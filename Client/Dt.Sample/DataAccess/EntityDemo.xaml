@@ -13,5 +13,6 @@
         <a:CBool ID="IsCheck" Title="联动源不为空" />
         <Button Content="修改有Hook无绑定的Cell" Click="OnNoBinding" />
         <Button Content="修改无Hook的Cell" Click="OnNoHook" />
+        <Button Content="切换数据源" Click="OnToggleData" />
     </a:Fv>
 </a:Win>

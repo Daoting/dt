@@ -246,7 +246,7 @@ namespace Dt.Core
 
             // 调用Entity外部钩子，通常为业务校验，校验失败时触发异常使赋值失败
             if (Row is Entity entity
-                && entity.GetHook(ID) is Action<object> hook)
+                && entity.GetCellHook(ID) is Action<object> hook)
             {
 #if SERVER
                 // 服务端无绑定

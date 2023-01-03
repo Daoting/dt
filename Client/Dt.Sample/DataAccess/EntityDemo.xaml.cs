@@ -21,16 +21,12 @@ namespace Dt.Sample
 {
     public partial class EntityDemo : Win
     {
+        long _id = 100;
+
         public EntityDemo()
         {
             InitializeComponent();
-
-            _fv.Data = new MyEntityObj
-            (
-                ID: 100,
-                MaxLength: "测试",
-                NotNull: "非空"
-            );
+            NewData();
         }
 
         void OnNoBinding(object sender, RoutedEventArgs e)
@@ -42,21 +38,51 @@ namespace Dt.Sample
         {
             _fv.Data.To<MyEntityObj>().NoHook = new Random().Next(100);
         }
+
+        void OnToggleData(object sender, RoutedEventArgs e)
+        {
+            NewData();
+        }
+
+        void NewData()
+        {
+            _fv.Data = new MyEntityObj
+            (
+                ID: _id,
+                MaxLength: _id.ToString(),
+                NotNull: "非空"
+            );
+            _id++;
+        }
     }
 
     public partial class MyEntityObj
     {
-        protected override void OnHook()
+        protected override void OnInit()
         {
-            Hook<string>(nameof(MaxLength), (v) => Throw.If(v.Length > 3, "最大长度3"));
-            Hook<string>(nameof(NotNull), (v) => Throw.If(string.IsNullOrEmpty(v), "不可为空"));
-            Hook<string>(nameof(Src), (v) => Tgt = v);
-            Hook<bool>(nameof(IsCheck), (v) => Throw.If(v && string.IsNullOrEmpty(Src), "联动源不为空"));
+            // 使用 nameof 避免列名不存在
+            OnChanging<string>(nameof(MaxLength), v => Throw.If(v.Length > 3, "最大长度3"));
 
-            Hook<int>(nameof(NoBinding), (v) =>
+            OnChanging<string>(nameof(NotNull), v => Throw.If(string.IsNullOrEmpty(v), "不可为空"));
+
+            OnChanging<string>(nameof(Src), v => Tgt = v);
+
+            OnChanging<bool>(nameof(IsCheck), v => Throw.If(v && string.IsNullOrEmpty(Src), "联动源不为空"));
+
+            OnChanging<int>(nameof(NoBinding), v =>
             {
-                Kit.Msg("新值：" + v.ToString());
-                Throw.If(v > 50, "最大值不可超过50");
+                Kit.Msg($"ID：{ID}\r\n新值：{v}");
+                //Throw.If(v > 50, "最大值不可超过50");
+            });
+
+            OnDeleting(() =>
+            {
+                return Task.CompletedTask;
+            });
+
+            OnSaving(() =>
+            {
+                return Task.CompletedTask;
             });
         }
     }
