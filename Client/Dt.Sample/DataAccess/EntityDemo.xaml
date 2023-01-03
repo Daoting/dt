@@ -5,9 +5,13 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
+        <a:CBar Title="Hook" />
         <a:CText ID="MaxLength" Title="最大长度3" />
+        <a:CText ID="NotNull" Title="不为空" />
         <a:CText ID="Src" Title="联动源" />
         <a:CTip ID="Tgt" Title="联动目标" />
         <a:CBool ID="IsCheck" Title="联动源不为空" />
+        <Button Content="修改有Hook无绑定的Cell" Click="OnNoBinding" />
+        <Button Content="修改无Hook的Cell" Click="OnNoHook" />
     </a:Fv>
 </a:Win>

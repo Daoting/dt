@@ -63,12 +63,12 @@ namespace Dt.Core
         public Type Type { get; private set; }
 
         /// <summary>
-        /// 获取设置数据项值，主要绑定用！非绑定时设置值请使用 SetVal 方法，内部在处理Hook异常时有区别！！！
+        /// 获取设置数据项值
         /// </summary>
         public object Val
         {
             get { return _val; }
-            set { SetValueInternal(value, true, true); }
+            set { SetValueInternal(value, true); }
         }
 
         /// <summary>
@@ -114,15 +114,6 @@ namespace Dt.Core
         /// 获取或设置用于存储与此对象相关的任意对象值
         /// </summary>
         public object Tag { get; set; }
-
-        /// <summary>
-        /// 设置值时的外部钩子，通常为业务处理方法，可通过触发异常的方式使赋值失败
-        /// 钩子方法规范：
-        /// 私有方法，SetXXX中的XXX为Cell.ID
-        /// 一个入参，和Cell.Type相同
-        /// 无返回值，不允许外部动态改变赋值，因出问题不好查找，绑定时UI也未回绑
-        /// </summary>
-        public MethodInfo Hook { get; set; }
         #endregion
 
         #region 外部方法
@@ -154,18 +145,9 @@ namespace Dt.Core
         /// <param name="p_val"></param>
         public void InitVal(object p_val)
         {
-            SetValueInternal(p_val, false, false);
+            SetValueInternal(p_val, false);
             OriginalVal = _val;
             IsChanged = false;
-        }
-
-        /// <summary>
-        /// 非绑定时设置单元格值，和Val属性在处理Hook异常时有区别！！！
-        /// </summary>
-        /// <param name="p_val"></param>
-        public void SetVal(object p_val)
-        {
-            SetValueInternal(p_val, true, false);
         }
 
         /// <summary>
@@ -244,24 +226,6 @@ namespace Dt.Core
             IsChanged = false;
             return true;
         }
-
-        /// <summary>
-        /// ID是否匹配给定列表中的任一名称，忽略大小写
-        /// </summary>
-        /// <param name="p_ids">一个或多个id名称</param>
-        /// <returns>true 匹配任一</returns>
-        public bool IsID(params string[] p_ids)
-        {
-            if (p_ids == null || p_ids.Length == 0)
-                return false;
-
-            foreach (var id in p_ids)
-            {
-                if (string.Equals(id, ID, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
-            return false;
-        }
         #endregion
 
         #region 内部方法
@@ -270,8 +234,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_val"></param>
         /// <param name="p_checkChange">是否逐级检查IsChanged状态</param>
-        /// <param name="p_isBinding">是否为绑定状态</param>
-        void SetValueInternal(object p_val, bool p_checkChange, bool p_isBinding)
+        void SetValueInternal(object p_val, bool p_checkChange)
         {
             // 过滤多次赋值现象，当cell的类型为string时，在给val赋值null时，将一直保持初始的string.Empty的值
             if (object.Equals(_val, p_val)
@@ -281,47 +244,41 @@ namespace Dt.Core
             // 类型不同时转换
             object val = GetValInternal(p_val, Type);
 
-            // 外部钩子通常为业务校验、领域事件等，校验失败时触发异常使赋值失败
-            if (Hook != null)
+            // 调用Entity外部钩子，通常为业务校验，校验失败时触发异常使赋值失败
+            if (Row is Entity entity
+                && entity.GetHook(ID) is Action<object> hook)
             {
 #if SERVER
                 // 服务端无绑定
-                Hook.Invoke(Row, new object[] { val });
+                hook(val);
 #else
-                if (!p_isBinding)
+                if (PropertyChanged == null)
                 {
                     // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
-                    Hook.Invoke(Row, new object[] { val });
+                    hook(val);
                 }
                 else
                 {
                     try
                     {
-                        // 绑定时钩子抛出的异常被WIN内部catch，无法统一提示警告信息，故先catch
-                        Hook.Invoke(Row, new object[] { p_val });
+                        // 绑定时钩子抛出异常会造成绑定失败：无法将值从目标保存回源，故先catch，然后触发Val属性变化重绑回原值
+                        hook(val);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        if (ex.InnerException is KnownException kex)
-                            Kit.Warn(kex.Message);
-                        else
-                            Kit.Warn(ex.Message);
-
                         // 通知UI重置原值
-                        if (PropertyChanged != null)
-                        {
 #if !WIN
-                            // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
-                            var old = OriginalVal;
-                            OriginalVal = _val;
-                            _val = p_val;
-                            PropertyChanged(this, new PropertyChangedEventArgs("Val"));
-                            _val = OriginalVal;
-                            OriginalVal = old;
+                        // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
+                        var old = OriginalVal;
+                        OriginalVal = _val;
+                        _val = p_val;
+                        PropertyChanged(this, new PropertyChangedEventArgs("Val"));
+                        _val = OriginalVal;
+                        OriginalVal = old;
 #endif
-                            // 立即调用时无效！
-                            Kit.RunAsync(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
-                        }
+                        // 立即调用时无效！
+                        Kit.RunInQueue(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
+
                         // 直接返回，赋值失败
                         return;
                     }

@@ -28,26 +28,36 @@ namespace Dt.Sample
             _fv.Data = new MyEntityObj
             (
                 ID: 100,
-                MaxLength: "测试"
+                MaxLength: "测试",
+                NotNull: "非空"
             );
+        }
+
+        void OnNoBinding(object sender, RoutedEventArgs e)
+        {
+            _fv.Data.To<MyEntityObj>().NoBinding = new Random().Next(100);
+        }
+
+        void OnNoHook(object sender, RoutedEventArgs e)
+        {
+            _fv.Data.To<MyEntityObj>().NoHook = new Random().Next(100);
         }
     }
 
     public partial class MyEntityObj
     {
-        void SetMaxLength(string p_value)
+        protected override void OnHook()
         {
-            Throw.If(p_value.Length > 3, "最大长度3");
-        }
+            Hook<string>(nameof(MaxLength), (v) => Throw.If(v.Length > 3, "最大长度3"));
+            Hook<string>(nameof(NotNull), (v) => Throw.If(string.IsNullOrEmpty(v), "不可为空"));
+            Hook<string>(nameof(Src), (v) => Tgt = v);
+            Hook<bool>(nameof(IsCheck), (v) => Throw.If(v && string.IsNullOrEmpty(Src), "联动源不为空"));
 
-        void SetSrc(string p_value)
-        {
-            Tgt = p_value;
-        }
-
-        void SetIsCheck(bool p_value)
-        {
-            Throw.If(p_value && string.IsNullOrEmpty(Src), "联动源不为空");
+            Hook<int>(nameof(NoBinding), (v) =>
+            {
+                Kit.Msg("新值：" + v.ToString());
+                Throw.If(v > 50, "最大值不可超过50");
+            });
         }
     }
 
@@ -61,17 +71,22 @@ namespace Dt.Sample
         public MyEntityObj(
             long ID,
             string MaxLength = default,
+            string NotNull = default,
             string Src = default,
             string Tgt = default,
-            bool IsCheck = default)
+            bool IsCheck = default,
+            int NoBinding = default,
+            int NoHook = default)
         {
             AddCell<long>("ID", ID);
             AddCell<string>("MaxLength", MaxLength);
+            AddCell<string>("NotNull", NotNull);
             AddCell<string>("Src", Src);
             AddCell<string>("Tgt", Tgt);
             AddCell<bool>("IsCheck", IsCheck);
+            AddCell<int>("NoBinding", NoBinding);
+            AddCell<int>("NoHook", NoHook);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 
@@ -80,6 +95,12 @@ namespace Dt.Sample
         {
             get { return (string)this["MaxLength"]; }
             set { this["MaxLength"] = value; }
+        }
+
+        public string NotNull
+        {
+            get { return (string)this["NotNull"]; }
+            set { this["NotNull"] = value; }
         }
 
         public string Src
@@ -98,6 +119,18 @@ namespace Dt.Sample
         {
             get { return (bool)this["IsCheck"]; }
             set { this["IsCheck"] = value; }
+        }
+
+        public int NoBinding
+        {
+            get { return (int)this["NoBinding"]; }
+            set { this["NoBinding"] = value; }
+        }
+
+        public int NoHook
+        {
+            get { return (int)this["NoHook"]; }
+            set { this["NoHook"] = value; }
         }
         #endregion
     }

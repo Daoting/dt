@@ -62,7 +62,7 @@ namespace Dt.Core
         public object this[string p_colName]
         {
             get { return _cells[p_colName].Val; }
-            set { _cells[p_colName].SetVal(value); }
+            set { _cells[p_colName].Val = value; }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Dt.Core
             {
                 if (p_index < 0 || p_index >= _cells.Count)
                     throw new Exception(string.Format(_indexError, p_index, _cells.Count));
-                _cells[p_index].SetVal(value);
+                _cells[p_index].Val = value;
             }
         }
 
@@ -99,7 +99,7 @@ namespace Dt.Core
                     return _cells["id"].GetVal<long>();
                 return -1;
             }
-            set { _cells["id"].SetVal(value); }
+            set { _cells["id"].Val = value; }
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Dt.Core
                 }
 
                 if (item.IsChanged)
-                    new Cell(row, item.ID, tp, item.OriginalVal).SetVal(item.Val);
+                    new Cell(row, item.ID, tp, item.OriginalVal).Val = item.Val;
                 else
                     new Cell(row, item.ID, tp, item.OriginalVal);
             }
@@ -728,7 +728,7 @@ namespace Dt.Core
                         else
                         {
                             // 值变化时传递完整信息 ["类型", "当前值", "原始值"]
-                            new Cell(this, id, type, JsonRpcSerializer.Deserialize(ref p_reader, type)).SetVal(val);
+                            new Cell(this, id, type, JsonRpcSerializer.Deserialize(ref p_reader, type)).Val = val;
                             // ]
                             p_reader.Read();
                         }

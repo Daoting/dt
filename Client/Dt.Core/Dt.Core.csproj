@@ -18,7 +18,8 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\DataProvider\TableSchema.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\TblAttribute.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\Entity.cs" Link="Base\Domain\Entity.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\TblAttribute.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
