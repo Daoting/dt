@@ -9,13 +9,16 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 流程定义中删除FormType ListType字段，使用类型别名
 * 优化Entity的Hook
 * Entity增加OnInit方法用来统一添加当前实体的所有回调方法，主要包括三类回调：保存前、删除前、Cell.Val值变化前
+* 服务端生成Entity方法
+* 客户端和服务端的DataProvider调用Entity的保存前、删除前回调方法
 
 ### 功能
-* 
-* 
+* Row和任意Entity类型转换，共用_cells
+* 删除Row.AttachHook
 
 ### Bug修改
 * Fv格标题提示被截断的长文本
+* Mv中Menu的项无法绑定，如保存按钮的IsEnabled
 
 
 

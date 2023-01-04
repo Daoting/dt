@@ -22,7 +22,8 @@ namespace Dt.Sample
         public LobAppStub()
         {
             Title = "搬运工";
-            SvcUrl = "http://10.10.1.2/sample";
+            SvcUrl = "http://10.10.1.16/dt-cm";
+            //SvcUrl = "http://10.10.1.2/sample";
             //SvcUrl = "https://x13382a571.oicp.vip/sample";
             InitFixedMenus();
         }
@@ -104,6 +105,12 @@ namespace Dt.Sample
                     Name: "样例",
                     Icon: "词典",
                     ViewName: "样例"),
+
+                new OmMenu(
+                    ID: 2,
+                    Name: "业务样例",
+                    Icon: "搬运工",
+                    ViewName: "业务样例"),
             };
         }
     }

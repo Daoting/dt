@@ -30,10 +30,6 @@ namespace Dt.Core
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
 
-            // 私有方法，无入参，返回值Task
-            OnSaving = GetMethod(p_type, "OnSaving");
-            OnDeleting = GetMethod(p_type, "OnDeleting");
-
 #if SERVER
             // 领域事件类型
             var cud = p_type.GetCustomAttribute<CudEventAttribute>(false);
@@ -53,16 +49,6 @@ namespace Dt.Core
         /// 表结构
         /// </summary>
         public TableSchema Schema { get; private set; }
-
-        /// <summary>
-        /// 保存前的处理，抛出异常时取消保存，实体中的方法规范：私有方法 OnSaving，无入参，返回值Task
-        /// </summary>
-        public MethodInfo OnSaving { get; }
-
-        /// <summary>
-        /// 删除前的处理，抛出异常时取消删除，实体中的方法规范：私有方法 OnDeleting，无入参，返回值Task
-        /// </summary>
-        public MethodInfo OnDeleting { get; }
 
 #if SERVER
         /// <summary>
@@ -120,19 +106,6 @@ namespace Dt.Core
             return model;
         }
         #endregion
-
-        static MethodInfo GetMethod(Type p_type, string p_name)
-        {
-            // 私有方法，无入参，返回值Task
-            var mi = p_type.GetMethod(p_name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
-            if (mi != null
-                && mi.ReturnType == typeof(Task)
-                && mi.GetParameters().Length == 0)
-            {
-                return mi;
-            }
-            return null;
-        }
 
         #region 废除子实体
         ///// <summary>

@@ -231,10 +231,13 @@ namespace Dt.Core
         {
             Throw.If(p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged), _unchangedMsg);
 
-            var model = EntitySchema.Get(typeof(TEntity));
-            if (model.OnSaving != null)
-                await (Task)model.OnSaving.Invoke(p_entity, null);
+            if (p_entity.GetSavingHook() is Func<Task> hook)
+            {
+                // 保存前外部校验，校验不通过抛出异常
+                await hook();
+            }
 
+            var model = EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetSaveSql(p_entity);
             if (await _db.Exec((string)dt["text"], (Dict)dt["params"]) != 1)
                 return false;
@@ -279,14 +282,21 @@ namespace Dt.Core
         /// <returns></returns>
         async Task<bool> BatchSaveSameType(IList p_list)
         {
-            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
-            if (model.OnSaving != null)
+            foreach (var item in p_list)
             {
-                foreach (var item in p_list)
+                if (item is Entity en && en.GetSavingHook() is Func<Task> hook)
                 {
-                    await (Task)model.OnSaving.Invoke(item, null);
+                    // 保存前外部校验，校验不通过抛出异常
+                    await hook();
+                }
+                else
+                {
+                    // 第一个实体若不包含Hook，其他也不包含
+                    break;
                 }
             }
+
+            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
             var dts = model.Schema.GetBatchSaveSql(p_list);
 
             // 不需要保存
@@ -321,10 +331,13 @@ namespace Dt.Core
                 {
                     if (entity.IsAdded || entity.IsChanged)
                     {
-                        var model = EntitySchema.Get(item.GetType());
-                        if (model.OnSaving != null)
-                            await (Task)model.OnSaving.Invoke(entity, null);
+                        if (entity.GetSavingHook() is Func<Task> hook)
+                        {
+                            // 保存前外部校验，校验不通过抛出异常
+                            await hook();
+                        }
 
+                        var model = EntitySchema.Get(item.GetType());
                         dts.Add(model.Schema.GetSaveSql(entity));
                     }
                 }
@@ -335,15 +348,21 @@ namespace Dt.Core
                     if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                     {
                         // IList<Entity> 或 Table<Entity>
-                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
-                        if (model.OnSaving != null)
+                        foreach (var ci in clist)
                         {
-                            foreach (var ci in clist)
+                            if (ci is Entity en && en.GetSavingHook() is Func<Task> hook)
                             {
-                                await (Task)model.OnSaving.Invoke(ci, null);
+                                // 保存前外部校验，校验不通过抛出异常
+                                await hook();
+                            }
+                            else
+                            {
+                                // 第一个实体若不包含Hook，其他也不包含
+                                break;
                             }
                         }
 
+                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
                         var cdts = model.Schema.GetBatchSaveSql(clist);
                         if (cdts != null && cdts.Count > 0)
                             dts.AddRange(cdts);
@@ -416,10 +435,13 @@ namespace Dt.Core
         {
             Throw.IfNull(p_entity, _saveError);
 
-            var model = EntitySchema.Get(typeof(TEntity));
-            if (model.OnDeleting != null)
-                await (Task)model.OnDeleting.Invoke(p_entity, null);
+            if (p_entity.GetDeletingHook() is Func<Task> hook)
+            {
+                // 删除前外部校验，校验不通过抛出异常
+                await hook();
+            }
 
+            var model = EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetDeleteSql(new List<Entity> { p_entity });
             return await BatchExecDelete(dt, new List<Entity> { p_entity }, model) == 1;
         }
@@ -527,15 +549,21 @@ namespace Dt.Core
         /// <returns></returns>
         async Task<int> BatchDeleteSameType(IList p_list)
         {
-            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
-            if (model.OnDeleting != null)
+            foreach (var item in p_list)
             {
-                foreach (var item in p_list)
+                if (item is Entity en && en.GetDeletingHook() is Func<Task> hook)
                 {
-                    await (Task)model.OnDeleting.Invoke(item, null);
+                    // 删除前外部校验，校验不通过抛出异常
+                    await hook();
+                }
+                else
+                {
+                    // 第一个实体若不包含Hook，其他也不包含
+                    break;
                 }
             }
 
+            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
             Dict dt = model.Schema.GetDeleteSql(p_list);
             return await BatchExecDelete(dt, p_list, model);
         }
@@ -552,10 +580,13 @@ namespace Dt.Core
             {
                 if (item is Entity entity)
                 {
-                    var model = EntitySchema.Get(item.GetType());
-                    if (model.OnDeleting != null)
-                        await (Task)model.OnDeleting.Invoke(item, null);
+                    if (entity.GetDeletingHook() is Func<Task> hook)
+                    {
+                        // 删除前外部校验，校验不通过抛出异常
+                        await hook();
+                    }
 
+                    var model = EntitySchema.Get(item.GetType());
                     var ls = new List<Row> { entity };
                     Dict dt = model.Schema.GetDeleteSql(ls);
                     cnt += await BatchExecDelete(dt, ls, model);
@@ -566,15 +597,21 @@ namespace Dt.Core
                     if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                     {
                         // IList<Entity> 或 Table<Entity>
-                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
-                        if (model.OnDeleting != null)
+                        foreach (var ci in clist)
                         {
-                            foreach (var ci in clist)
+                            if (ci is Entity en && en.GetDeletingHook() is Func<Task> hook)
                             {
-                                await (Task)model.OnDeleting.Invoke(item, null);
+                                // 删除前外部校验，校验不通过抛出异常
+                                await hook();
+                            }
+                            else
+                            {
+                                // 第一个实体若不包含Hook，其他也不包含
+                                break;
                             }
                         }
 
+                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
                         Dict dt = model.Schema.GetDeleteSql(clist);
                         cnt += await BatchExecDelete(dt, clist, model);
                     }

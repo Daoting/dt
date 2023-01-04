@@ -250,14 +250,13 @@ namespace Dt.Agent
                 return false;
             }
 
-            var model = EntitySchema.Get(typeof(TEntity));
-            if (model.OnSaving != null)
+            if (p_entity.GetSavingHook() is Func<Task> hook)
             {
-                // 保存前外部校验，不合格在外部抛出异常
-                if (!await OnSaving(model, p_entity))
-                    return false;
+                // 保存前外部校验，校验不通过抛出异常
+                await hook();
             }
 
+            var model = EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetSaveSql(p_entity);
             int cnt = await Exec((string)dt["text"], (Dict)dt["params"]);
             if (cnt > 0)
@@ -347,15 +346,21 @@ namespace Dt.Agent
         /// <returns></returns>
         static async Task<bool> BatchSaveSameType(IList p_list, bool p_isNotify)
         {
-            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
-            if (model.OnSaving != null)
+            foreach (var item in p_list)
             {
-                foreach (var item in p_list)
+                if (item is Entity en && en.GetSavingHook() is Func<Task> hook)
                 {
-                    if (item != null && !await OnSaving(model, item))
-                        return false;
+                    // 保存前外部校验，校验不通过抛出异常
+                    await hook();
+                }
+                else
+                {
+                    // 第一个实体若不包含Hook，其他也不包含
+                    break;
                 }
             }
+
+            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
             var dts = model.Schema.GetBatchSaveSql(p_list);
 
             // 不需要保存
@@ -406,13 +411,13 @@ namespace Dt.Agent
                 {
                     if (entity.IsAdded || entity.IsChanged)
                     {
-                        var model = EntitySchema.Get(item.GetType());
-                        if (model.OnSaving != null)
+                        if (entity.GetSavingHook() is Func<Task> hook)
                         {
-                            if (!await OnSaving(model, entity))
-                                return false;
+                            // 保存前外部校验，校验不通过抛出异常
+                            await hook();
                         }
 
+                        var model = EntitySchema.Get(item.GetType());
                         dts.Add(model.Schema.GetSaveSql(entity));
                     }
                 }
@@ -423,16 +428,21 @@ namespace Dt.Agent
                     if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                     {
                         // IList<Entity> 或 Table<Entity>
-                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
-                        if (model.OnSaving != null)
+                        foreach (var ci in clist)
                         {
-                            foreach (var ci in clist)
+                            if (ci is Entity en && en.GetSavingHook() is Func<Task> hook)
                             {
-                                if (!await OnSaving(model, ci))
-                                    return false;
+                                // 保存前外部校验，校验不通过抛出异常
+                                await hook();
+                            }
+                            else
+                            {
+                                // 第一个实体若不包含Hook，其他也不包含
+                                break;
                             }
                         }
 
+                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
                         var cdts = model.Schema.GetBatchSaveSql(clist);
                         if (cdts != null && cdts.Count > 0)
                             dts.AddRange(cdts);
@@ -484,29 +494,6 @@ namespace Dt.Agent
                 Kit.Warn("保存失败！");
             return false;
         }
-
-        /// <summary>
-        /// 保存前外部校验，不合格在外部抛出异常
-        /// </summary>
-        /// <param name="p_model"></param>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        static async Task<bool> OnSaving(EntitySchema p_model, object p_entity)
-        {
-            try
-            {
-                await (Task)p_model.OnSaving.Invoke(p_entity, null);
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is KnownException kex)
-                    Kit.Warn(kex.Message);
-                else
-                    Kit.Warn(ex.Message);
-                return false;
-            }
-            return true;
-        }
         #endregion
 
         #region 删除
@@ -527,13 +514,13 @@ namespace Dt.Agent
                 return false;
             }
 
-            var model = EntitySchema.Get(typeof(TEntity));
-            if (model.OnDeleting != null)
+            if (p_entity.GetDeletingHook() is Func<Task> hook)
             {
-                if (!await OnDeleting(model, p_entity))
-                    return false;
+                // 删除前外部校验，校验不通过抛出异常
+                await hook();
             }
 
+            var model = EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetDeleteSql(new List<Row> { p_entity });
             bool suc = await Exec((string)dt["text"], ((List<Dict>)dt["params"])[0]) == 1;
             if (p_isNotify)
@@ -648,16 +635,21 @@ namespace Dt.Agent
         /// <returns></returns>
         static async Task<bool> BatchDeleteSameType(IList p_list, bool p_isNotify)
         {
-            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
-            if (model.OnDeleting != null)
+            foreach (var item in p_list)
             {
-                foreach (var item in p_list)
+                if (item is Entity en && en.GetDeletingHook() is Func<Task> hook)
                 {
-                    if (item != null && !await OnDeleting(model, item))
-                        return false;
+                    // 删除前外部校验，校验不通过抛出异常
+                    await hook();
+                }
+                else
+                {
+                    // 第一个实体若不包含Hook，其他也不包含
+                    break;
                 }
             }
 
+            var model = EntitySchema.Get(p_list.GetType().GetGenericArguments()[0]);
             Dict dt = model.Schema.GetDeleteSql(p_list);
             bool suc = await BatchExec(new List<Dict> { dt }) > 0;
             if (p_isNotify)
@@ -683,13 +675,13 @@ namespace Dt.Agent
             {
                 if (item is Entity entity)
                 {
-                    var model = EntitySchema.Get(item.GetType());
-                    if (model.OnDeleting != null)
+                    if (entity.GetDeletingHook() is Func<Task> hook)
                     {
-                        if (!await OnDeleting(model, entity))
-                            return false;
+                        // 删除前外部校验，校验不通过抛出异常
+                        await hook();
                     }
 
+                    var model = EntitySchema.Get(item.GetType());
                     dts.Add(model.Schema.GetDeleteSql(new List<Row> { entity }));
                 }
                 else if (item is IList clist && clist.Count > 0)
@@ -698,16 +690,21 @@ namespace Dt.Agent
                     if (tp.IsGenericType && tp.GetGenericArguments()[0].IsSubclassOf(typeof(Entity)))
                     {
                         // IList<Entity> 或 Table<Entity>
-                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
-                        if (model.OnDeleting != null)
+                        foreach (var ci in clist)
                         {
-                            foreach (var ci in clist)
+                            if (ci is Entity en && en.GetDeletingHook() is Func<Task> hook)
                             {
-                                if (!await OnDeleting(model, ci))
-                                    return false;
+                                // 删除前外部校验，校验不通过抛出异常
+                                await hook();
+                            }
+                            else
+                            {
+                                // 第一个实体若不包含Hook，其他也不包含
+                                break;
                             }
                         }
 
+                        var model = EntitySchema.Get(tp.GetGenericArguments()[0]);
                         dts.Add(model.Schema.GetDeleteSql(clist));
                     }
                 }
@@ -730,29 +727,6 @@ namespace Dt.Agent
                     Kit.Warn("删除失败！");
             }
             return suc;
-        }
-
-        /// <summary>
-        /// 删除前外部校验，不合格在外部抛出异常
-        /// </summary>
-        /// <param name="p_model"></param>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        static async Task<bool> OnDeleting(EntitySchema p_model, object p_entity)
-        {
-            try
-            {
-                await (Task)p_model.OnDeleting.Invoke(p_entity, null);
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is KnownException kex)
-                    Kit.Warn(kex.Message);
-                else
-                    Kit.Warn(ex.Message);
-                return false;
-            }
-            return true;
         }
         #endregion
 

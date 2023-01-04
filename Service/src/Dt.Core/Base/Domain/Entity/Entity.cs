@@ -71,8 +71,9 @@ namespace Dt.Core
         /// <para>Cell.Val值变化前的回调</para>
         /// <para>Entity保存前回调</para>
         /// <para>Entity删除前回调</para>
+        /// <para>只在初次值变化前、保存前、删除前时调用InitHook，否则始终不调用 InitHook</para>
         /// </summary>
-        protected virtual void OnInit()
+        protected virtual void InitHook()
         {
         }
 
@@ -122,7 +123,7 @@ namespace Dt.Core
         /// <returns></returns>
         public Func<Task> GetSavingHook()
         {
-            return GetHooks().DeletingHook;
+            return GetHooks().SavingHook;
         }
 
         /// <summary>
@@ -138,9 +139,9 @@ namespace Dt.Core
         {
             if (_hooks == null)
             {
-                // 只在初次值变化前、保存前、删除前时调用OnInit，否则始终不调用 OnInit ！
+                // 只在初次值变化前、保存前、删除前时调用InitHook，否则始终不调用 InitHook ！
                 _hooks = new EntityHooks();
-                OnInit();
+                InitHook();
             }
             return _hooks;
         }

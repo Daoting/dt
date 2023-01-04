@@ -68,7 +68,7 @@ namespace Dt.Core
         public object Val
         {
             get { return _val; }
-            set { SetValueInternal(value, true); }
+            set { SetValueInternal(value, false); }
         }
 
         /// <summary>
@@ -140,12 +140,12 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 设置单元格默认值，恢复IsChanged=false状态
+        /// 设置单元格默认值，恢复IsChanged的false状态，不调用Entity的Hook
         /// </summary>
         /// <param name="p_val"></param>
         public void InitVal(object p_val)
         {
-            SetValueInternal(p_val, false);
+            SetValueInternal(p_val, true);
             OriginalVal = _val;
             IsChanged = false;
         }
@@ -233,8 +233,8 @@ namespace Dt.Core
         /// 内部赋值
         /// </summary>
         /// <param name="p_val"></param>
-        /// <param name="p_checkChange">是否逐级检查IsChanged状态</param>
-        void SetValueInternal(object p_val, bool p_checkChange)
+        /// <param name="p_initVal">是否正在通过InitVal设置默认值，true时不检查IsChanged状态、不调用Entity的Hook</param>
+        void SetValueInternal(object p_val, bool p_initVal)
         {
             // 过滤多次赋值现象，当cell的类型为string时，在给val赋值null时，将一直保持初始的string.Empty的值
             if (object.Equals(_val, p_val)
@@ -245,7 +245,8 @@ namespace Dt.Core
             object val = GetValInternal(p_val, Type);
 
             // 调用Entity外部钩子，通常为业务校验，校验失败时触发异常使赋值失败
-            if (Row is Entity entity
+            if (!p_initVal
+                && Row is Entity entity
                 && entity.GetCellHook(ID) is Action<object> hook)
             {
 #if SERVER
@@ -290,7 +291,7 @@ namespace Dt.Core
             _val = val;
 
             // 向上逐级更新IsChanged状态
-            if (p_checkChange)
+            if (!p_initVal)
                 IsChanged = !object.Equals(_val, OriginalVal);
 
             // 触发属性变化事件
