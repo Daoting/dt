@@ -41,8 +41,6 @@ namespace Dt.Core
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
-            AppendTabSpace(sb, 1);
-            sb.AppendLine("#region 自动生成");
 
             // Tbl标签
             AppendTabSpace(sb, 1);
@@ -131,16 +129,10 @@ namespace Dt.Core
             }
             AppendTabSpace(sb, 3);
             sb.AppendLine("IsAdded = true;");
-            AppendTabSpace(sb, 3);
-            sb.AppendLine("AttachHook();");
             AppendTabSpace(sb, 2);
             sb.AppendLine("}");
             AppendTabSpace(sb, 2);
             sb.AppendLine("#endregion");
-
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.Append("#region 属性");
 
             // 主键属性
             bool existID = false;
@@ -173,19 +165,15 @@ namespace Dt.Core
             {
                 AppendColumn(col, sb, false);
             }
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("#endregion");
 
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
-            AppendTabSpace(sb, 1);
-            sb.AppendLine("#endregion");
 
             return sb.ToString();
         }
 
         /// <summary>
-        /// 生成实体类的扩展部分，如 OnSaving OnDeleting
+        /// 生成实体类的扩展部分，如 InitHook New
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
@@ -206,49 +194,76 @@ namespace Dt.Core
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
 
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("async Task OnSaving()");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("{");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("}");
-
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("async Task OnDeleting()");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("{");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("}");
-
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.AppendLine($"public static async Task<{clsName}> New()");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("{");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("}");
-
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.AppendLine($"public static async Task<{clsName}> Get(long p_id)");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("{");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("}");
-
-            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            // 只对单主键id情况生成 New 方法
+            if (schema.PrimaryKey.Count == 1
+                && schema.PrimaryKey[0].Name.ToLower() == "id"
+                && schema.PrimaryKey[0].Type == typeof(long))
             {
-                // 注释SetXXX方法，提供复制
-                sb.AppendLine();
                 AppendTabSpace(sb, 2);
-                string tpName = GetTypeName(col.Type);
-                sb.AppendLine($"void Set{col.Name}({tpName} p_value)");
+                sb.Append($"public static async Task<{clsName}> New");
+                sb.AppendLine("(");
+
+                foreach (var col in schema.Columns)
+                {
+                    AppendTabSpace(sb, 3);
+                    var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
+                    sb.Append(colType);
+                    sb.Append(" ");
+                    sb.Append(col.Name);
+                    if (string.IsNullOrEmpty(col.Default))
+                    {
+                        sb.AppendLine(" = default,");
+                    }
+                    else if (col.Type == typeof(string))
+                    {
+                        sb.AppendLine($" = \"{col.Default}\",");
+                    }
+                    else if (col.Type == typeof(bool))
+                    {
+                        sb.Append(" = ");
+                        if (col.Default == "1")
+                            sb.AppendLine("true,");
+                        else
+                            sb.AppendLine("false,");
+                    }
+                    else if (col.Type == typeof(byte) && colType != "byte")
+                    {
+                        sb.AppendLine($" = ({colType}){col.Default},");
+                    }
+                    else
+                    {
+                        sb.AppendLine($" = {col.Default},");
+                    }
+                }
+                sb.Remove(sb.Length - 3, 3);
+                sb.AppendLine(")");
                 AppendTabSpace(sb, 2);
                 sb.AppendLine("{");
+
+                AppendTabSpace(sb, 3);
+                int index = p_tblName.IndexOf("_");
+                string svc = index == -1 ? "cm" : p_tblName.Substring(0, index).ToLower();
+                sb.AppendLine($"long id = await NewID(\"{svc}\");");
+
+                AppendTabSpace(sb, 3);
+                sb.Append($"return new {clsName}(id");
+                foreach (var col in schema.Columns)
+                {
+                    sb.Append($", {col.Name}");
+                }
+                sb.AppendLine(");");
+
                 AppendTabSpace(sb, 2);
                 sb.AppendLine("}");
+                sb.AppendLine("");
             }
+
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("protected override void InitHook()");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("{");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("}");
 
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
@@ -462,7 +477,7 @@ namespace Dt.Core
                 return "父表表名和标题不可为空，未生成sql！";
 
             string msg = await CreateTblSql(p_parentTbl, p_parentTitle, p_blurQuery);
-            
+
             if (p_childTbls != null
                 && p_childTitles != null
                 && p_childTbls.Count == p_childTitles.Count)
