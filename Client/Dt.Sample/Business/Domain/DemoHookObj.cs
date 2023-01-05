@@ -26,7 +26,7 @@ namespace Dt.Sample
             int NoHook = default,
             bool NoDelete = default)
         {
-            long id = await AtCm.NewID();
+            long id = await NewID("cm");
             return new DemoHookObj(id, MaxLength, NotNull, Src, Tgt, IsCheck, NoBinding, NoHook, NoDelete);
         }
 

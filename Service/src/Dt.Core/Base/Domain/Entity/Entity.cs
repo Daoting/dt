@@ -134,7 +134,7 @@ namespace Dt.Core
         {
             return GetHooks().DeletingHook;
         }
-        
+
         EntityHooks GetHooks()
         {
             if (_hooks == null)
@@ -153,9 +153,9 @@ namespace Dt.Core
         {
             readonly Dictionary<string, Action<object>> _cellHooks = new Dictionary<string, Action<object>>(StringComparer.OrdinalIgnoreCase);
 
-            public Func<Task> DeletingHook { get; set;}
+            public Func<Task> DeletingHook { get; set; }
 
-            public Func<Task> SavingHook { get; set;}
+            public Func<Task> SavingHook { get; set; }
 
             public Action<object> GetCellHook(string p_id)
             {
@@ -169,6 +169,25 @@ namespace Dt.Core
                 // Action<T> 无法转成 Action<object>，只能内部调用
                 _cellHooks[p_id] = new Action<object>((o) => p_callback((T)o));
             }
+        }
+        #endregion
+
+        #region NewID
+        /// <summary>
+        /// 获取新ID，统一服务端和客户端写法
+        /// </summary>
+        /// <param name="p_svcName">服务名称，如cm，服务端为null</param>
+        /// <returns></returns>
+        public static Task<long> NewID(string p_svcName)
+        {
+#if SERVER
+            return Task.FromResult(Kit.NewID);
+#else
+            return Kit.Rpc<long>(
+                p_svcName,
+                "Da.NewID"
+            );
+#endif
         }
         #endregion
 
