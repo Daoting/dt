@@ -23,7 +23,7 @@ namespace Dt.OnToMany
             _nameSpace.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 

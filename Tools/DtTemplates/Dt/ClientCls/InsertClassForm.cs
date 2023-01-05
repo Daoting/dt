@@ -11,7 +11,7 @@ namespace Dt
         {
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 

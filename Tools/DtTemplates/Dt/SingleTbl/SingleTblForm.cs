@@ -21,7 +21,7 @@ namespace Dt.SingleTbl
             _nameSpace.Text = Kit.GetNamespace();
             _cbSearch.SelectedIndex = 0;
             _cbWin.SelectedIndex = 0;
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 
@@ -219,13 +219,6 @@ namespace Dt.SingleTbl
             {
                 _entityName.Text = Kit.GetClsName(tbl);
             }
-        }
-
-        private void _svcUrl_Leave(object sender, EventArgs e)
-        {
-            var url = _svcUrl.Text.Trim();
-            if (url != AtSvc.SvcUrl)
-                AtSvc.SvcUrl = url;
         }
 
         private void AddTooltip()

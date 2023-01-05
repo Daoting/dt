@@ -56,6 +56,19 @@
       <DependentUpon>BatchCells.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="ClientCls\FvCallTemp.cs" />
+    <EmbeddedResource Include="EntityCls\Entity.cs" />
+    <Compile Include="EntityCls\InsertEntityClsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EntityCls\InsertEntityClsForm.Designer.cs">
+      <DependentUpon>InsertEntityClsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityCls\SelectTbls.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EntityCls\SelectTbls.Designer.cs">
+      <DependentUpon>SelectTbls.cs</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\MenuXaml.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +81,12 @@
     <Compile Include="Xaml\DotXaml.Designer.cs">
       <DependentUpon>DotXaml.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="EntityCls\InsertEntityClsForm.resx">
+      <DependentUpon>InsertEntityClsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntityCls\SelectTbls.resx">
+      <DependentUpon>SelectTbls.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SvcCls\InsertSvcClassForm.resx">
       <DependentUpon>InsertSvcClassForm.cs</DependentUpon>
     </EmbeddedResource>

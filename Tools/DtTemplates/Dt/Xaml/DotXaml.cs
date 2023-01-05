@@ -16,7 +16,7 @@ namespace Dt.Editor
         public DotXaml()
         {
             InitializeComponent();
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 

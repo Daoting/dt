@@ -142,9 +142,9 @@ namespace Dt
             pane.Activate();
         }
 
-        public static void WritePrjFile(string p_filePath, string p_templateName, Dictionary<string, string> p_replace)
+        public static void WritePrjFile(string p_filePath, string p_templateName, Dictionary<string, string> p_replace, bool p_checkExists = true)
         {
-            if (File.Exists(p_filePath))
+            if (p_checkExists && File.Exists(p_filePath))
             {
                 if (MessageBox.Show($"{Path.GetFileName(p_filePath)}已存在，覆盖后不可恢复，确认要覆盖此文件吗？", "覆盖文件", MessageBoxButtons.OKCancel)
                     != DialogResult.OK)

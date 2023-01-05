@@ -33,6 +33,7 @@ namespace Dt
 
         const int InsertClassCmdId = 0x5000;
         const int InsertSvcClassCmdId = 0x5001;
+        const int EntityClassCmdId = 0x5002;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -51,11 +52,11 @@ namespace Dt
             cs = cs ?? throw new ArgumentNullException(nameof(cs));
 
             ThreadHelper.ThrowIfNotOnUIThread();
-            cs.AddCommand(CmdForm(LvCommandId, typeof(LvXaml)));
-            cs.AddCommand(CmdXamlForm(DotCmdId, typeof(DotXaml)));
-            cs.AddCommand(CmdForm(FvCommandId, typeof(FvXaml)));
-            cs.AddCommand(CmdXamlForm(CellCmdId, typeof(CellXaml)));
-            cs.AddCommand(CmdXamlForm(MenuCmdId, typeof(MenuXaml)));
+            cs.AddCommand(CmdUserControl(LvCommandId, typeof(LvXaml)));
+            cs.AddCommand(CmdDialog(DotCmdId, typeof(DotXaml)));
+            cs.AddCommand(CmdUserControl(FvCommandId, typeof(FvXaml)));
+            cs.AddCommand(CmdDialog(CellCmdId, typeof(CellXaml)));
+            cs.AddCommand(CmdDialog(MenuCmdId, typeof(MenuXaml)));
 
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
@@ -68,15 +69,16 @@ namespace Dt
 
             cs.AddCommand(CmdClient(InsertClassCmdId, typeof(InsertClassForm)));
             cs.AddCommand(CmdServer(InsertSvcClassCmdId, typeof(InsertSvcClassForm)));
+            cs.AddCommand(CmdDialog(EntityClassCmdId, typeof(InsertEntityClsForm)));
         }
 
         /// <summary>
-        /// 显示标准编辑窗口
+        /// 显示标准编辑窗口，窗口内部的UserControl是命令
         /// </summary>
         /// <param name="p_cmdID"></param>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        MenuCommand CmdForm(int p_cmdID, Type p_type)
+        MenuCommand CmdUserControl(int p_cmdID, Type p_type)
         {
             return new MenuCommand(
                 (s, e) =>
@@ -89,12 +91,12 @@ namespace Dt
         }
 
         /// <summary>
-        /// 显示客户端xaml自定义编辑窗口
+        /// 显示自定义对话框
         /// </summary>
         /// <param name="p_cmdID"></param>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        MenuCommand CmdXamlForm(int p_cmdID, Type p_type)
+        MenuCommand CmdDialog(int p_cmdID, Type p_type)
         {
             return new MenuCommand(
                 (s, e) =>
@@ -107,7 +109,7 @@ namespace Dt
         }
 
         /// <summary>
-        /// 显示客户端自定义编辑窗口
+        /// 显示客户端自定义对话框
         /// </summary>
         /// <param name="p_cmdID"></param>
         /// <param name="p_type"></param>
@@ -131,7 +133,7 @@ namespace Dt
         }
 
         /// <summary>
-        /// 显示服务端自定义编辑窗口
+        /// 显示服务端自定义对话框
         /// </summary>
         /// <param name="p_cmdID"></param>
         /// <param name="p_type"></param>
@@ -150,30 +152,6 @@ namespace Dt
 
                     var dlg = Activator.CreateInstance(p_type) as Form;
                     dlg.ShowDialog();
-                },
-                new CommandID(CommandSet, p_cmdID));
-        }
-
-        /// <summary>
-        /// 直接粘贴文本
-        /// </summary>
-        /// <param name="p_cmdID"></param>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        MenuCommand CmdRun(int p_cmdID, Type p_type)
-        {
-            return new MenuCommand(
-                (s, e) =>
-                {
-                    ThreadHelper.ThrowIfNotOnUIThread();
-                    if (!Kit.IsClientPrj())
-                    {
-                        Kit.Output("客户端不支持");
-                        return;
-                    }
-
-                    var cmd = Activator.CreateInstance(p_type) as IAutoRun;
-                    cmd.Run();
                 },
                 new CommandID(CommandSet, p_cmdID));
         }
@@ -235,10 +213,5 @@ namespace Dt
             Instance = new DtCmds(package, commandService);
         }
         #endregion
-    }
-
-    public interface IAutoRun
-    {
-        void Run();
     }
 }

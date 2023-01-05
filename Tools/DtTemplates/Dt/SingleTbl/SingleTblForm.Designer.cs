@@ -216,7 +216,6 @@ namespace Dt.SingleTbl
             this._svcUrl.Name = "_svcUrl";
             this._svcUrl.Size = new System.Drawing.Size(269, 21);
             this._svcUrl.TabIndex = 105;
-            this._svcUrl.Leave += new System.EventHandler(this._svcUrl_Leave);
             // 
             // label7
             // 

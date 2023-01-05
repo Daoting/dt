@@ -15,7 +15,7 @@ namespace Dt.Editor
 
             _viewMode.SelectedIndex = 0;
             _selectionMode.SelectedIndex = 1;
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 

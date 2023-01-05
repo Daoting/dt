@@ -13,7 +13,7 @@ namespace Dt.Editor
         {
             InitializeComponent();
 
-            _svcUrl.Text = AtSvc.SvcUrl;
+            AtSvc.BindSvcUrl(_svcUrl);
             AddTooltip();
         }
 

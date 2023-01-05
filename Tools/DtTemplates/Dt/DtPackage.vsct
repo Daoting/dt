@@ -199,6 +199,12 @@
 					<ButtonText>服务端常用类</ButtonText>
 				</Strings>
 			</Button>
+			<Button guid="guidDtPackageCmdSet" id="EntityClassCmdId" priority="0x0101" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
+				<Strings>
+					<ButtonText>实体类</ButtonText>
+				</Strings>
+			</Button>
 		</Buttons>
 
 		<!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -251,6 +257,7 @@
 
 			<IDSymbol name="InsertClassCmdId" value="0x5000" />
 			<IDSymbol name="InsertSvcClassCmdId" value="0x5001" />
+			<IDSymbol name="EntityClassCmdId" value="0x5002" />
 		</GuidSymbol>
 
 		<!-- xaml编辑器上下文菜单的guid -->
