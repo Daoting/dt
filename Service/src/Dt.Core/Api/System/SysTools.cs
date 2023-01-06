@@ -169,6 +169,36 @@ namespace Dt.Core
                 AppendColumn(col, sb, false);
             }
 
+            // 添加 GetByID 方法
+            if (schema.PrimaryKey.Count == 1)
+            {
+                sb.AppendLine();
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("/// <summary>");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("/// 根据主键获得实体对象(包含所有列值)，仅支持单主键，不存在时返回null");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("/// </summary>");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("/// <param name=\"p_id\">主键值</param>");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("/// <returns>返回实体对象或null</returns>");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine($"public static Task<{clsName}> GetByID(object p_id)");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("{");
+                AppendTabSpace(sb, 3);
+                sb.AppendLine($"return GetByID<{clsName}>(_svcName, p_id);");
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("}");
+            }
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            int index = p_tblName.IndexOf("_");
+            string svc = index == -1 ? "cm" : p_tblName.Substring(0, index).ToLower();
+            sb.AppendLine($"const string _svcName = \"{svc}\";");
+
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
 
@@ -244,9 +274,7 @@ namespace Dt.Core
                 sb.AppendLine("{");
 
                 AppendTabSpace(sb, 3);
-                int index = p_tblName.IndexOf("_");
-                string svc = index == -1 ? "cm" : p_tblName.Substring(0, index).ToLower();
-                sb.AppendLine($"long id = await NewID(\"{svc}\");");
+                sb.AppendLine("long id = await NewID(_svcName);");
 
                 AppendTabSpace(sb, 3);
                 sb.Append($"return new {clsName}(id");

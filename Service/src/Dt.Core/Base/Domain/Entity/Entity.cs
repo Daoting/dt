@@ -172,6 +172,26 @@ namespace Dt.Core
         }
         #endregion
 
+        #region GetByID
+        protected static Task<TEntity> GetByID<TEntity>(string p_svcName, object p_id)
+            where TEntity : Entity
+        {
+            if (p_id == null)
+                return null;
+
+#if SERVER
+            var dp = new DataProvider(false);
+            return dp.GetByKey<TEntity>("id", p_id.ToString());
+#else
+            return Kit.Rpc<TEntity>(
+                p_svcName,
+                "Da.First",
+                EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect,
+                new { id = p_id });
+#endif
+        }
+        #endregion
+
         #region NewID
         /// <summary>
         /// 获取新ID，统一服务端和客户端写法

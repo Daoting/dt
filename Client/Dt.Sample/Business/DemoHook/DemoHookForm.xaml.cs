@@ -27,7 +27,7 @@ namespace Dt.Sample
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.GetByID<DemoHookObj>(p_id);
+                _fv.Data = await DemoHookObj.GetByID(p_id);
             }
             else
             {

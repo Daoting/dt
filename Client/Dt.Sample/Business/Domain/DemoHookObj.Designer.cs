@@ -31,65 +31,101 @@ namespace Dt.Sample
             int NoHook = default,
             bool NoDelete = default)
         {
-            AddCell<long>("ID", ID);
-            AddCell<string>("MaxLength", MaxLength);
-            AddCell<string>("NotNull", NotNull);
-            AddCell<string>("Src", Src);
-            AddCell<string>("Tgt", Tgt);
-            AddCell<bool>("IsCheck", IsCheck);
-            AddCell<int>("NoBinding", NoBinding);
-            AddCell<int>("NoHook", NoHook);
-            AddCell<bool>("NoDelete", NoDelete);
+            AddCell("ID", ID);
+            AddCell("MaxLength", MaxLength);
+            AddCell("NotNull", NotNull);
+            AddCell("Src", Src);
+            AddCell("Tgt", Tgt);
+            AddCell("IsCheck", IsCheck);
+            AddCell("NoBinding", NoBinding);
+            AddCell("NoHook", NoHook);
+            AddCell("NoDelete", NoDelete);
             IsAdded = true;
         }
         #endregion
 
+        /// <summary>
+        /// 限制最大长度
+        /// </summary>
         public string MaxLength
         {
             get { return (string)this["MaxLength"]; }
             set { this["MaxLength"] = value; }
         }
 
+        /// <summary>
+        /// 不为空
+        /// </summary>
         public string NotNull
         {
             get { return (string)this["NotNull"]; }
             set { this["NotNull"] = value; }
         }
 
+        /// <summary>
+        /// 联动源
+        /// </summary>
         public string Src
         {
             get { return (string)this["Src"]; }
             set { this["Src"] = value; }
         }
 
+        /// <summary>
+        /// 联动目标
+        /// </summary>
         public string Tgt
         {
             get { return (string)this["Tgt"]; }
             set { this["Tgt"] = value; }
         }
 
+        /// <summary>
+        /// 联动源不为空可选中
+        /// </summary>
         public bool IsCheck
         {
             get { return (bool)this["IsCheck"]; }
             set { this["IsCheck"] = value; }
         }
 
+        /// <summary>
+        /// 未和UI绑定
+        /// </summary>
         public int NoBinding
         {
             get { return (int)this["NoBinding"]; }
             set { this["NoBinding"] = value; }
         }
 
+        /// <summary>
+        /// 无值变化Hook
+        /// </summary>
         public int NoHook
         {
             get { return (int)this["NoHook"]; }
             set { this["NoHook"] = value; }
         }
 
+        /// <summary>
+        /// 禁止删除
+        /// </summary>
         public bool NoDelete
         {
             get { return (bool)this["NoDelete"]; }
             set { this["NoDelete"] = value; }
         }
+
+        /// <summary>
+        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，不存在时返回null
+        /// </summary>
+        /// <param name="p_id">主键值</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<DemoHookObj> GetByID(object p_id)
+        {
+            return GetByID<DemoHookObj>(_svcName, p_id);
+        }
+
+        const string _svcName = "cm";
     }
 }
