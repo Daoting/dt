@@ -28,7 +28,6 @@ namespace $ext_safeprojectname$
             AddCell("Key", Key);
             AddCell("Val", Val);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

@@ -52,9 +52,7 @@ namespace Dt.Mgr.Model
 
         async void Create()
         {
-            _fv.Data = new RoleObj(
-                ID: await AtCm.NewID(),
-                Name: "新角色");
+            _fv.Data = await RoleObj.New();
 
             _win.UserList.Clear();
             _win.MenuList.Clear();

@@ -38,7 +38,6 @@ namespace Dt.Core
             AddCell("Nullable", Nullable);
             AddCell("Comments", Comments);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

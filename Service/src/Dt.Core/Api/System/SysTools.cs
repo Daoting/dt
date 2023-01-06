@@ -200,7 +200,7 @@ namespace Dt.Core
             sb.AppendLine($"const string _svcName = \"{svc}\";");
 
             AppendTabSpace(sb, 1);
-            sb.AppendLine("}");
+            sb.Append("}");
 
             return sb.ToString();
         }
@@ -297,7 +297,7 @@ namespace Dt.Core
             sb.AppendLine("}");
 
             AppendTabSpace(sb, 1);
-            sb.AppendLine("}");
+            sb.Append("}");
 
             return sb.ToString();
         }

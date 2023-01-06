@@ -56,7 +56,7 @@ namespace Dt.Mgr.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            PubPostkeywordObj pk = new PubPostkeywordObj(PostID: _id, Keyword: e.Row.Str(0));
+            PubPostKeywordObj pk = new PubPostKeywordObj(PostID: _id, Keyword: e.Row.Str(0));
             pk.IsAdded = false;
             if (await AtCm.Delete(pk))
                 Refresh();

@@ -51,11 +51,7 @@ namespace Dt.Mgr.Publish
 
         async void Create()
         {
-            _fv.Data = new PubAlbumObj(
-                ID: await AtCm.NewID(),
-                Name: "新专辑",
-                Creator: Kit.UserName,
-                Ctime: Kit.Now);
+            _fv.Data = await PubAlbumObj.New();
         }
 
         void OnSave(object sender, Mi e)

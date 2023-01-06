@@ -70,7 +70,7 @@ namespace Dt.Mgr.Files
 
         public Task<bool> SaveFile(Row p_row)
         {
-            PubfileObj pf = new PubfileObj(
+            FilePubObj pf = new FilePubObj(
                     ID: p_row.ID,
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
@@ -83,10 +83,10 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
         {
-            PubfileObj pf;
+            FilePubObj pf;
             if (p_id == -1)
             {
-                pf = new PubfileObj(
+                pf = new FilePubObj(
                     ID: await AtCm.NewID(),
                     ParentID: FolderID,
                     Name: p_name,
@@ -95,7 +95,7 @@ namespace Dt.Mgr.Files
             }
             else
             {
-                pf = new PubfileObj(ID: p_id);
+                pf = new FilePubObj(ID: p_id);
                 pf.IsAdded = false;
                 pf["name"] = p_name;
             }
@@ -104,7 +104,7 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
         {
-            var ls = new List<PubfileObj>();
+            var ls = new List<FilePubObj>();
             foreach (var row in p_rows)
             {
                 if (row.Bool("IsFolder"))
@@ -117,17 +117,17 @@ namespace Dt.Mgr.Files
                     }
                 }
 
-                ls.Add(new PubfileObj(ID: row.ID));
+                ls.Add(new FilePubObj(ID: row.ID));
             }
             return await AtCm.BatchDelete(ls);
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
         {
-            var ls = new List<PubfileObj>();
+            var ls = new List<FilePubObj>();
             foreach (var row in p_files)
             {
-                var pf = new PubfileObj(ID: row.ID);
+                var pf = new FilePubObj(ID: row.ID);
                 pf.IsAdded = false;
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);

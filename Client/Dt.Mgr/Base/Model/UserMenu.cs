@@ -25,7 +25,6 @@ namespace Dt.Mgr
         {
             AddCell("ID", ID);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

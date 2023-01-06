@@ -28,7 +28,7 @@ namespace Dt.Sample
         public App()
         {
             InitializeComponent();
-            _stub = new AppStub();
+            _stub = new LobAppStub();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)

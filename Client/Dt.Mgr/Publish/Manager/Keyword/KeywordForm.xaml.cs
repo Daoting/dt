@@ -51,10 +51,7 @@ namespace Dt.Mgr.Publish
 
         void Create()
         {
-            _fv.Data = new PubKeywordObj(
-                ID: "新关键字",
-                Creator: Kit.UserName,
-                Ctime: Kit.Now);
+            _fv.Data = PubKeywordObj.New();
         }
 
         void OnSave(object sender, Mi e)

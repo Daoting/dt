@@ -75,7 +75,7 @@ namespace Dt.Mgr.Workflow
             Dict dict = new Dict();
             dict["name"] = await GetSender();
             long userId = await AtCm.GetScalar<long>("流程-获取用户ID", dict);
-            var newItem = await WfiItemObj.Create(newAtvInst.ID, time, false, userId, null, true);
+            var newItem = await WfiItemObj.New(newAtvInst.ID, time, false, userId, null, true);
 
             List<object> ls = new List<object>();
             if (_info.AtvInst.IsChanged)

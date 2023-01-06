@@ -55,7 +55,7 @@ namespace Dt.Mgr.Publish
         }
         async void OnDel(object sender, Mi e)
         {
-            var pa = new PubPostalbumObj(PostID: _id, AlbumID: e.Row.ID);
+            var pa = new PubPostAlbumObj(PostID: _id, AlbumID: e.Row.ID);
             pa.IsAdded = false;
             if (await AtCm.Delete(pa))
                 Refresh();

@@ -160,7 +160,7 @@ namespace Dt.Mgr.Workflow
                 && (!p_manualSend || _info.NextRecvs.FinishedAtv.IsSelected))
             {
                 // 完成
-                _info.PrcInst.Status = WfiAtvStatus.结束;
+                _info.PrcInst.Status = WfiPrcStatus.结束;
                 _info.PrcInst.Mtime = time;
             }
             else
@@ -188,7 +188,7 @@ namespace Dt.Mgr.Workflow
                         atvInst.InstCount = ar.SelectedRecvs.Count;
                         foreach (var recvID in ar.SelectedRecvs)
                         {
-                            var wi = await WfiItemObj.Create(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
+                            var wi = await WfiItemObj.New(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
@@ -198,7 +198,7 @@ namespace Dt.Mgr.Workflow
                         atvInst.InstCount = ar.Recvs.Count;
                         foreach (var row in ar.Recvs)
                         {
-                            var wi = await WfiItemObj.Create(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                            var wi = await WfiItemObj.New(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
                             tblItems.Add(wi);
                         }
                     }
@@ -272,7 +272,7 @@ namespace Dt.Mgr.Workflow
                         nextInst.InstCount = syncAtv.SelectedRecvs.Count;
                         foreach (var recvID in syncAtv.SelectedRecvs)
                         {
-                            var wi = await WfiItemObj.Create(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
+                            var wi = await WfiItemObj.New(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
                             tblItems.Add(wi);
                         }
                     }
@@ -282,7 +282,7 @@ namespace Dt.Mgr.Workflow
                         nextInst.InstCount = syncAtv.Recvs.Count;
                         foreach (var row in syncAtv.Recvs)
                         {
-                            var wi = await WfiItemObj.Create(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
+                            var wi = await WfiItemObj.New(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
                             tblItems.Add(wi);
                         }
                     }
@@ -309,7 +309,7 @@ namespace Dt.Mgr.Workflow
             // 发送是否有效
             // 1. 只有'完成'时有效
             // 2. 至少含有一个活动实例时有效
-            if (tblAtvs.Count == 0 && _info.PrcInst.Status != WfiAtvStatus.结束)
+            if (tblAtvs.Count == 0 && _info.PrcInst.Status != WfiPrcStatus.结束)
             {
                 Kit.Msg("所有后续活动均无接收者，发送失败！");
                 return;

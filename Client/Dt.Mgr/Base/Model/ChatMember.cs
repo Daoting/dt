@@ -37,7 +37,6 @@ namespace Dt.Mgr.Chat
             AddCell("Photo", Photo);
             AddCell("Mtime", Mtime);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

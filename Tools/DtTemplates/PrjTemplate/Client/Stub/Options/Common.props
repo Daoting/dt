@@ -38,6 +38,7 @@
 		<Using Include="Dt.Core" />
 		<Using Include="Dt.Base" />
 		<Using Include="Dt.Mgr" />
+		<Using Include="Dt.Mgr.Domain" />
 		<Using Include="Dt.Agent" />
 		<Using Include="System" />
 		<Using Include="Serilog" />

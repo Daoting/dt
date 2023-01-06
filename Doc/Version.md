@@ -11,10 +11,15 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Entity增加OnInit方法用来统一添加当前实体的所有回调方法，主要包括三类回调：保存前、删除前、Cell.Val值变化前
 * 服务端生成Entity方法
 * 客户端和服务端的DataProvider调用Entity的保存前、删除前回调方法
+* 修改服务端生成实体类及扩展部分的方法
+* VS扩展用到表名列表和表结构信息都采用实时获取方式，不使用服务端缓存
+* 增加demo服务，用于业务样例
 
 ### 功能
 * Row和任意Entity类型转换，共用_cells
-* 删除Row.AttachHook
+* 删除Row.AttachHook，重新生成Entity文件放在Domain下
+* VS扩展增加批量生成实体类功能
+* Entity增加GetByID，调整服务端生成Entity的方法
 
 ### Bug修改
 * Fv格标题提示被截断的长文本

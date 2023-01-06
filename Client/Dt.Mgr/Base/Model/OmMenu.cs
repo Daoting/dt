@@ -44,7 +44,6 @@ namespace Dt.Mgr
             AddCell("Dispidx", Dispidx);
             AddCell("Warning", Warning);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

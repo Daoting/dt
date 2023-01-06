@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Cm.Domain;
 using System.Text;
 using System.Text.RegularExpressions;
 #endregion

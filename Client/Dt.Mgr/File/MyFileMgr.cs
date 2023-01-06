@@ -51,7 +51,7 @@ namespace Dt.Mgr.Files
 
         public Task<bool> SaveFile(Row p_row)
         {
-            var file = new MyfileObj(
+            var file = new FileMyObj(
                 ID: p_row.ID,
                 ParentID: FolderID == -1 ? (long?)null : FolderID,
                 Name: p_row.Str("name"),
@@ -65,10 +65,10 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
         {
-            MyfileObj file;
+            FileMyObj file;
             if (p_id == -1)
             {
-                file = new MyfileObj(
+                file = new FileMyObj(
                     ID: await AtCm.NewID(),
                     ParentID: FolderID == -1 ? (long?)null : FolderID,
                     Name: p_name,
@@ -78,7 +78,7 @@ namespace Dt.Mgr.Files
             }
             else
             {
-                file = new MyfileObj(ID: p_id);
+                file = new FileMyObj(ID: p_id);
                 file.IsAdded = false;
                 file["name"] = p_name;
             }
@@ -87,7 +87,7 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
         {
-            var ls = new List<MyfileObj>();
+            var ls = new List<FileMyObj>();
             foreach (var row in p_rows)
             {
                 if (row.Bool("IsFolder"))
@@ -100,17 +100,17 @@ namespace Dt.Mgr.Files
                     }
                 }
 
-                ls.Add(new MyfileObj(ID: row.ID));
+                ls.Add(new FileMyObj(ID: row.ID));
             }
             return await AtCm.BatchDelete(ls);
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
         {
-            var ls = new List<MyfileObj>();
+            var ls = new List<FileMyObj>();
             foreach (var row in p_files)
             {
-                var pf = new MyfileObj(ID: row.ID);
+                var pf = new FileMyObj(ID: row.ID);
                 pf.IsAdded = false;
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);

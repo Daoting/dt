@@ -57,7 +57,6 @@ namespace Dt.Sample
             AddCell<string>("综合部经理意见", 综合部经理意见);
             AddCell<DateTime>("收文完成时间", 收文完成时间);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

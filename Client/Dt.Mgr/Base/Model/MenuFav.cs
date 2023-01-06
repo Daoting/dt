@@ -30,7 +30,6 @@ namespace Dt.Mgr
             AddCell("MenuID", MenuID);
             AddCell("Clicks", Clicks);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

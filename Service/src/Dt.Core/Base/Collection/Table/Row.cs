@@ -741,19 +741,11 @@ namespace Dt.Core
                 }
                 // 最外层 ]
                 p_reader.Read();
-                AttachHook();
             }
             catch (Exception ex)
             {
                 throw new Exception($"反序列化Row时异常: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// 反序列化时Entity附加Hook方法
-        /// </summary>
-        protected virtual void AttachHook()
-        {
         }
 
         void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)

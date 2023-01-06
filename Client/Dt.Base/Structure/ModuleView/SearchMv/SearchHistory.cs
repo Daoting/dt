@@ -29,7 +29,6 @@ namespace Dt.Base.ModuleView
             AddCell("BaseUri", BaseUri);
             AddCell("Content", Content);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

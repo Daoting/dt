@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Cm.Domain;
 using Dt.Core;
 using Dt.Core.Caches;
 using System;
@@ -127,7 +128,7 @@ namespace Dt.Cm
         {
             Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
-            UserparamsObj up = new UserparamsObj(
+            var up = new UserParamsObj(
                 UserID: p_userID,
                 ParamID: p_paramID,
                 Value: p_value,
@@ -197,8 +198,8 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<UserroleObj> ls = (from id in p_roleIDs
-                                 select new UserroleObj(p_userID, id)).ToList();
+            List<UserRoleObj> ls = (from id in p_roleIDs
+                                    select new UserRoleObj(p_userID, id)).ToList();
             if (await Dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().Delete(p_userID);
@@ -220,8 +221,8 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<UserroleObj> ls = (from id in p_userIDs
-                                 select new UserroleObj(id, p_roleID)).ToList();
+            List<UserRoleObj> ls = (from id in p_userIDs
+                                    select new UserRoleObj(id, p_roleID)).ToList();
             if (await Dp.BatchDelete(ls) > 0)
             {
                 await GetVerCache().BatchDelete(p_userIDs);
@@ -242,13 +243,13 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<UserroleObj> ls = new List<UserroleObj>();
+            List<UserRoleObj> ls = new List<UserRoleObj>();
             foreach (var rid in p_roleIDs)
             {
                 // 任何人不需要关联
                 if (rid != 1)
                 {
-                    ls.Add(new UserroleObj(p_userID, rid));
+                    ls.Add(new UserRoleObj(p_userID, rid));
                 }
             }
 
@@ -272,10 +273,10 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<UserroleObj> ls = new List<UserroleObj>();
+            List<UserRoleObj> ls = new List<UserRoleObj>();
             foreach (var uid in p_userIDs)
             {
-                ls.Add(new UserroleObj(uid, p_roleID));
+                ls.Add(new UserRoleObj(uid, p_roleID));
             }
 
             if (!await Dp.BatchSave(ls))

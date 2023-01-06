@@ -28,7 +28,6 @@ namespace Dt.Base.FormView
             AddCell("ID", ID);
             AddCell("Val", Val);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

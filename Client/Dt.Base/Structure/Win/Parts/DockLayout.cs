@@ -28,7 +28,6 @@ namespace Dt.Base.Docking
             AddCell("BaseUri", BaseUri);
             AddCell("Layout", Layout);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

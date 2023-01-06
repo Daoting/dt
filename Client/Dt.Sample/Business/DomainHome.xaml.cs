@@ -26,7 +26,7 @@ namespace Dt.Sample
             InitializeComponent();
             _nav.Data = new Nl<Nav>
             {
-                new Nav("实体业务校验", typeof(DemoHookWin), Icons.传真),
+                new Nav("实体业务校验", typeof(HookWin), Icons.传真),
             };
         }
 

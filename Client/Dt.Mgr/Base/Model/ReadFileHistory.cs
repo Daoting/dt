@@ -31,7 +31,6 @@ namespace Dt.Mgr.Files
             AddCell("Info", Info);
             AddCell("LastReadTime", LastReadTime);
             IsAdded = true;
-            AttachHook();
         }
         #endregion
 

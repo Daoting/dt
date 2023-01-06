@@ -54,14 +54,7 @@ namespace Dt.Mgr.Publish
 
         async void Create()
         {
-            _fv.Data = new PubPostObj(
-                ID: await AtCm.NewID(),
-                Title: "新文章",
-                TempType: 0,
-                Dispidx: await AtCm.NewSeq("sq_post"),
-                CreatorID: Kit.UserID,
-                Creator: Kit.UserName,
-                Ctime: Kit.Now);
+            _fv.Data = await PubPostObj.New();
 
             ClearRelated();
         }
