@@ -8,8 +8,11 @@
 
 #region 引用命名
 using Castle.Components.DictionaryAdapter.Xml;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -38,7 +41,7 @@ namespace Dt.Core
 
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
-            var schema = DbSchema.GetTableSchema(tblName);
+            var schema = GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
 
@@ -185,7 +188,7 @@ namespace Dt.Core
 
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
-            var schema = DbSchema.GetTableSchema(tblName);
+            var schema = GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 1);
@@ -272,47 +275,33 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 更新表结构缓存
-        /// </summary>
-        /// <returns></returns>
-        public string UpdateDbSchema()
-        {
-            return DbSchema.LoadSchema();
-        }
-
-        /// <summary>
-        /// 重新加载Cache.db中的sql语句
-        /// </summary>
-        public void UpdateSqlCache()
-        {
-            Silo.LoadCacheSql();
-        }
-
-        /// <summary>
-        /// 获取所有微服务
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetAllSvcs()
-        {
-            return Kit.GetAllSvcs(false);
-        }
-
-        /// <summary>
-        /// 获取所有微服务副本
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetAllSvcInsts()
-        {
-            return Kit.GetAllSvcs(true);
-        }
-
-        /// <summary>
-        /// 获取所有表名
+        /// 获取最新的所有表名
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllTables()
         {
-            return DbSchema.Schema.Keys.ToList();
+            using (MySqlConnection conn = new MySqlConnection(MySqlAccess.DefaultConnStr))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    // 所有表名
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                    List<string> tbls = new List<string>();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // 表名小写
+                                tbls.Add(reader.GetString(0).ToLower());
+                            }
+                        }
+                    }
+                    return tbls;
+                }
+            }
         }
 
         /// <summary>
@@ -326,7 +315,7 @@ namespace Dt.Core
                 return null;
 
             string tblName = p_tblName.ToLower();
-            var schema = DbSchema.GetTableSchema(tblName);
+            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
 
             foreach (var col in schema.Columns)
@@ -388,7 +377,7 @@ namespace Dt.Core
                 return null;
 
             string tblName = p_tblName.ToLower();
-            var schema = DbSchema.GetTableSchema(tblName);
+            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 3);
             sb.Append("<StackPanel Padding=\"10\">");
@@ -415,7 +404,7 @@ namespace Dt.Core
                 return null;
 
             string tblName = p_tblName.ToLower();
-            var schema = DbSchema.GetTableSchema(tblName);
+            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 2);
             sb.Append("<a:Cols>");
@@ -450,9 +439,6 @@ namespace Dt.Core
         /// <returns></returns>
         public async Task<string> GetSingleTblSql(string p_tblName, string p_title, bool p_blurQuery)
         {
-            if (!DbSchema.Schema.ContainsKey("lob_sql"))
-                return "lob_sql表不存在，无法生成框架sql";
-
             if (string.IsNullOrEmpty(p_tblName) || string.IsNullOrEmpty(p_title))
                 return "表名和标题不可为空！";
 
@@ -470,9 +456,6 @@ namespace Dt.Core
         /// <returns></returns>
         public async Task<string> GetOneToManySql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
         {
-            if (!DbSchema.Schema.ContainsKey("lob_sql"))
-                return "lob_sql表不存在，无法生成框架sql";
-
             if (string.IsNullOrEmpty(p_parentTbl) || string.IsNullOrEmpty(p_parentTitle))
                 return "父表表名和标题不可为空，未生成sql！";
 
@@ -482,10 +465,11 @@ namespace Dt.Core
                 && p_childTitles != null
                 && p_childTbls.Count == p_childTitles.Count)
             {
+                var sqlTbl = GetSqlTblName(p_parentTbl);
                 for (int i = 0; i < p_childTbls.Count; i++)
                 {
-                    msg += await CreateSql($"{p_parentTitle}-关联{p_childTitles[i]}", $"select * from {p_childTbls[i]} where ParentID=@ParentID");
-                    msg += await CreateSql(p_childTitles[i] + "-编辑", $"select * from {p_childTbls[i]} where id=@id");
+                    msg += await CreateSql($"{p_parentTitle}-关联{p_childTitles[i]}", $"select * from {p_childTbls[i]} where ParentID=@ParentID", sqlTbl);
+                    msg += await CreateSql(p_childTitles[i] + "-编辑", $"select * from {p_childTbls[i]} where id=@id", sqlTbl);
                 }
             }
             else
@@ -504,9 +488,6 @@ namespace Dt.Core
         /// <returns></returns>
         public async Task<string> GetManyToManySql(string p_mainTbl, string p_mainTitle, bool p_blurQuery)
         {
-            if (!DbSchema.Schema.ContainsKey("lob_sql"))
-                return "lob_sql表不存在，无法生成框架sql";
-
             if (string.IsNullOrEmpty(p_mainTbl) || string.IsNullOrEmpty(p_mainTitle))
                 return "主表表名和标题不可为空，未生成sql！";
 
@@ -521,7 +502,7 @@ namespace Dt.Core
         /// <returns></returns>
         public bool ExistParentID(string p_tblName)
         {
-            var schema = DbSchema.GetTableSchema(p_tblName);
+            var schema = GetTableSchema(p_tblName);
             foreach (var col in schema.Columns)
             {
                 if (col.Name == "ParentID")
@@ -530,17 +511,114 @@ namespace Dt.Core
             return false;
         }
 
-        const string _sqlInsert = "insert into lob_sql (id, `sql`) values (@id, @sql)";
-        const string _sqlSelect = "select count(*) from lob_sql where id=@id";
+        /// <summary>
+        /// 重新加载Cache.db中的sql语句
+        /// </summary>
+        public void UpdateSqlCache()
+        {
+            Silo.LoadCacheSql();
+        }
 
+        /// <summary>
+        /// 获取所有微服务
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSvcs()
+        {
+            return Kit.GetAllSvcs(false);
+        }
+
+        /// <summary>
+        /// 获取所有微服务副本
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSvcInsts()
+        {
+            return Kit.GetAllSvcs(true);
+        }
+
+        #region 表结构
+        /// <summary>
+        /// 实时获取表结构，不从DbSchema缓存取避免新修改无效
+        /// </summary>
+        /// <param name="tbl"></param>
+        /// <returns></returns>
+        TableSchema GetTableSchema(string tbl)
+        {
+            using (MySqlConnection conn = new MySqlConnection(MySqlAccess.DefaultConnStr))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    MySqlDataReader reader;
+                    ReadOnlyCollection<DbColumn> cols;
+
+                    TableSchema tblCols = new TableSchema(tbl);
+                    cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
+                    using (reader = cmd.ExecuteReader())
+                    {
+                        cols = reader.GetColumnSchema();
+                    }
+
+                    foreach (var colSchema in cols)
+                    {
+                        TableCol col = new TableCol();
+                        col.Name = colSchema.ColumnName;
+
+                        // 可为null的值类型
+                        if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
+                            col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
+                        else
+                            col.Type = colSchema.DataType;
+
+                        // character_maximum_length
+                        if (colSchema.ColumnSize.HasValue)
+                            col.Length = colSchema.ColumnSize.Value;
+
+                        if (colSchema.AllowDBNull.HasValue)
+                            col.Nullable = colSchema.AllowDBNull.Value;
+
+                        // 读取列结构
+                        cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows && reader.Read())
+                            {
+                                // 默认值
+                                if (!reader.IsDBNull(0))
+                                    col.Default = reader.GetString(0);
+                                // 字段注释
+                                col.Comments = reader.GetString(1);
+                            }
+                        }
+
+                        // 是否为主键
+                        if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
+                            tblCols.PrimaryKey.Add(col);
+                        else
+                            tblCols.Columns.Add(col);
+                    }
+                    return tblCols;
+                }
+            }
+        }
+        #endregion
+
+        #region 生成sql
         async Task<string> CreateTblSql(string p_tblName, string p_title, bool p_blurQuery)
         {
-            string msg = await CreateSql(p_title + "-全部", $"select * from {p_tblName}");
-            msg += await CreateSql(p_title + "-编辑", $"select * from {p_tblName} where id=@id");
+            // 如 lob_sql
+            var sqlTbl = GetSqlTblName(p_tblName);
+            int cnt = await Dp.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
+            if (cnt == 0)
+                return sqlTbl + "表不存在，无法生成框架sql";
+
+            string msg = await CreateSql(p_title + "-全部", $"select * from {p_tblName}", sqlTbl);
+            msg += await CreateSql(p_title + "-编辑", $"select * from {p_tblName} where id=@id", sqlTbl);
 
             if (p_blurQuery)
             {
-                var schema = DbSchema.GetTableSchema(p_tblName);
+                var schema = GetTableSchema(p_tblName);
                 StringBuilder sb = new StringBuilder();
                 foreach (var col in schema.Columns)
                 {
@@ -553,19 +631,19 @@ namespace Dt.Core
                     }
                 }
 
-                msg += await CreateSql(p_title + "-模糊查询", $"select * from {p_tblName} where \r\n {sb.ToString()}");
+                msg += await CreateSql(p_title + "-模糊查询", $"select * from {p_tblName} where \r\n {sb}", sqlTbl);
             }
 
             return msg;
         }
 
-        async Task<string> CreateSql(string p_key, string p_sql)
+        async Task<string> CreateSql(string p_key, string p_sql, string p_tblName)
         {
             string msg;
-            int cnt = await Dp.GetScalar<int>(_sqlSelect, new { id = p_key });
+            int cnt = await Dp.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
             if (cnt == 0)
             {
-                cnt = await Dp.Exec(_sqlInsert, new { id = p_key, sql = p_sql });
+                cnt = await Dp.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
                 msg = cnt > 0 ? $"[{p_key}] sql生成成功\r\n" : $"[{p_key}] sql生成失败\r\n";
             }
             else
@@ -575,6 +653,21 @@ namespace Dt.Core
             return msg;
         }
 
+        /// <summary>
+        /// 根据表名获取存放sql语句的表名，如根据表名cm_menu获取cm_sql
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        static string GetSqlTblName(string p_tblName)
+        {
+            int index = p_tblName.IndexOf("_");
+            if (index > 0)
+                return p_tblName.Substring(0, index) + "_sql";
+            return p_tblName + "_sql";
+        }
+        #endregion
+
+        #region 内部方法
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)
         {
             // 枚举类型特殊
@@ -694,5 +787,6 @@ namespace Dt.Core
             }
             return true;
         }
+        #endregion
     }
 }

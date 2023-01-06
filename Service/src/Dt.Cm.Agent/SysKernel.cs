@@ -18,14 +18,14 @@
         }
 
         /// <summary>
-        /// 更新模型库文件
+        /// 更新服务端表结构缓存和sqlite模型库文件
         /// </summary>
         /// <returns></returns>
-        public static Task<bool> UpdateModelDbFile()
+        public static Task<bool> UpdateModel()
         {
             return Kit.Rpc<bool>(
                 "cm",
-                "SysKernel.UpdateModelDbFile"
+                "SysKernel.UpdateModel"
             );
         }
     }

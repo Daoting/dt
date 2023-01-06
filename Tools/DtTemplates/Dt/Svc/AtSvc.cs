@@ -19,19 +19,16 @@ namespace Dt
             p_tb.TextChanged += (s, e) => _svcUrl = p_tb.Text;
         }
 
-        public static async Task<List<string>> GetAllTables()
+        /// <summary>
+        /// 获取最新的所有表名
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<string>> GetAllTables()
         {
-            var tbls = await new Rpc().Call<List<string>>(
+            return new Rpc().Call<List<string>>(
                     _svcUrl,
                     "SysTools.GetAllTables"
                 );
-
-            if (tbls != null)
-            {
-                // 空
-                tbls.Insert(0, "");
-            }
-            return tbls;
         }
 
         /// <summary>

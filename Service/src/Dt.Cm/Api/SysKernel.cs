@@ -44,10 +44,10 @@ namespace Dt.Cm
         }
 
         /// <summary>
-        /// 更新模型库文件
+        /// 更新服务端表结构缓存和sqlite模型库文件
         /// </summary>
         /// <returns></returns>
-        public bool UpdateModelDbFile()
+        public bool UpdateModel()
         {
             return _modelHandler.Refresh();
         }

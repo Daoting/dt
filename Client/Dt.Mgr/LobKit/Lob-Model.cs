@@ -30,7 +30,7 @@ namespace Dt.Mgr
             {
                 if (await Kit.Confirm("确认要更新模型吗？"))
                 {
-                    if (await AtCm.UpdateModelDbFile())
+                    if (await AtCm.UpdateModel())
                         Kit.Msg("更新模型成功，请重启应用！");
                     else
                         Kit.Warn("更新模型失败！");
