@@ -1,5 +1,5 @@
 ﻿{
-  "DbConn": "bs0",
+  "DbConn": "dt",
   "CacheSql": false,
   "TraceSql": false,
   "TraceRpc": false,

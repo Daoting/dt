@@ -86,7 +86,7 @@ namespace Dt.Cm
         public async Task<Dict> GetParams(long p_userID)
         {
             var tblAll = await Dp.Query("SELECT id,value FROM cm_params");
-            var tblMy = await Dp.Query("SELECT paramid,value FROM cm_userparams where userid=@userid", new { userid = p_userID });
+            var tblMy = await Dp.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in tblAll)
             {
@@ -294,7 +294,7 @@ namespace Dt.Cm
         {
             if (await Dp.Delete(new RoleObj(p_roleID)))
             {
-                var ls = await Dp.FirstCol<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
+                var ls = await Dp.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);
                 return true;
             }

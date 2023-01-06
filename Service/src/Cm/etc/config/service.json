@@ -1,5 +1,5 @@
 ﻿{
-  "DbConn": "bs0",
+  "DbConn": "dt",
   "CacheSql": false,
   "TraceSql": true,
   "TraceRpc": true,
@@ -19,7 +19,8 @@
 
   "SvcUrls": {
     "msg": "*/dt-msg",
-    "fsm": "*/dt-fsm"
+    "fsm": "*/dt-fsm",
+    "demo": "*/dt-demo"
   },
 
   "SqliteModel": {

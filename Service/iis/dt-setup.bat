@@ -5,11 +5,13 @@ set app="dt"
 set cm_path="D:\Dt\Service\src\Cm"
 set msg_path="D:\Dt\Service\src\Msg"
 set fsm_path="D:\Dt\Service\src\Fsm"
+set demo_path="D:\Dt\Service\src\Demo"
 
 
 call :setup_svc cm,%cm_path%
 call :setup_svc msg,%msg_path%
 call :setup_svc fsm,%fsm_path%
+call :setup_svc demo,%demo_path%
 
 pause
 

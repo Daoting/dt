@@ -1,7 +1,7 @@
 ﻿{
   "App": "dt",
   "MySql": {
-    "bs0": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;"
+    "dt": "Server=10.10.1.2;Database=dt;Uid=dt;Pwd=dt;"
   },
   "RabbitMq": {
     "HostName": "10.10.1.2",
