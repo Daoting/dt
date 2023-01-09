@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Core", "Dt.Core\Dt.Core.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Base", "Dt.Base\Dt.Base.csproj", "{07579CEC-F903-455F-8530-A03473F8E2B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Sample", "Dt.Sample\Dt.Sample.csproj", "{DF4FC898-698C-4D3E-B470-B9238E905B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.UIDemo", "Dt.UIDemo\Dt.UIDemo.csproj", "{DF4FC898-698C-4D3E-B470-B9238E905B5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Win", "Dt.Shell.Win\Dt.Shell.Win.csproj", "{F171488D-D2E8-49E4-82BF-9ABF006EB278}"
 EndProject

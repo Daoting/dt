@@ -35,7 +35,7 @@
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
         <ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
-        <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+        <ProjectReference Include="..\Dt.UIDemo\Dt.UIDemo.csproj" />
     </ItemGroup>
 
     <ItemGroup>
