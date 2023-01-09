@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.UIDemo.HookWin"
+    x:Class="Dt.MgrDemo.Hook.HookWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.UIDemo">
+    xmlns:l="using:Dt.MgrDemo.Hook">
 
     <a:Pane>
         <a:Tabs>

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo.Domain
 {
     [Tbl("demo_hook")]
     public partial class HookObj : Entity

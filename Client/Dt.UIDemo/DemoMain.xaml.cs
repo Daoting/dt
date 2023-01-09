@@ -21,7 +21,7 @@ namespace Dt.UIDemo
     /// <summary>
     /// UI样例
     /// </summary>
-    [View("样例")]
+    [View("控件样例")]
     public sealed partial class DemoMain : Win
     {
         /// <summary>
@@ -144,7 +144,7 @@ namespace Dt.UIDemo
 
         void OpenHomeWin(Win p_win, Nav p_nav)
         {
-            Stub.Reboot<LobAppStub>();
+            Stub.Reboot(Type.GetType("Dt.MgrDemo.AppStub,Dt.MgrDemo"));
         }
     }
 }

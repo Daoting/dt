@@ -10,7 +10,7 @@
 using Dt.Base;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo.Hook
 {
     public partial class HookList : Mv
     {

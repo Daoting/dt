@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-04 创建
+* 日志: 2022-12-23 创建
 ******************************************************************************/
 #endregion
 
@@ -16,19 +16,17 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo.Hook
 {
-    [View("业务样例")]
-    public partial class DomainHome : Win
+    public partial class HookWin : Win
     {
-        public DomainHome()
+        public HookWin()
         {
             InitializeComponent();
-            _nav.Data = new Nl<Nav>
-            {
-                new Nav("实体业务校验", typeof(HookWin), Icons.传真),
-            };
         }
 
+        public HookList List => _list;
+
+        public HookForm Form => _form;
     }
 }

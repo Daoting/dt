@@ -2,31 +2,33 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2022-12-23 创建
+* 日志: 2013-12-16 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Dt.Base;
+using Dt.Core;
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
+using Dt.Mgr;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo
 {
-    public partial class HookWin : Win
+    /// <summary>
+    /// 覆盖默认主页
+    /// </summary>
+    [View(LobViews.主页)]
+    public partial class DemoHome : Win
     {
-        public HookWin()
+        public DemoHome()
         {
             InitializeComponent();
         }
-
-        public HookList List => _list;
-
-        public HookForm Form => _form;
     }
 }

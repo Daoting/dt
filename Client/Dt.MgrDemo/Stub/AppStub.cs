@@ -12,14 +12,14 @@ using Dt.Mgr;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo
 {
     /// <summary>
     /// 使用搬运工标准服务的存根
     /// </summary>
-    public class LobAppStub : LobStub
+    public class AppStub : LobStub
     {
-        public LobAppStub()
+        public AppStub()
         {
             Title = "搬运工";
             SvcUrl = "http://10.10.1.16/dt-cm";
@@ -77,6 +77,12 @@ namespace Dt.UIDemo
             LobKit.FixedMenus = new List<OmMenu>
             {
                 new OmMenu(
+                    ID: 1,
+                    Name: "控件样例",
+                    Icon: "词典",
+                    ViewName: "控件样例"),
+
+                new OmMenu(
                     ID: 1110,
                     Name: "通讯录",
                     Icon: "留言",
@@ -99,18 +105,6 @@ namespace Dt.UIDemo
                     Name: "发布",
                     Icon: "公告",
                     ViewName: "发布"),
-
-                new OmMenu(
-                    ID: 1,
-                    Name: "样例",
-                    Icon: "词典",
-                    ViewName: "样例"),
-
-                new OmMenu(
-                    ID: 2,
-                    Name: "业务样例",
-                    Icon: "搬运工",
-                    ViewName: "业务样例"),
             };
         }
     }

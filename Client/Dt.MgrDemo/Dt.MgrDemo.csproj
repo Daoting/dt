@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Description>搬运工控件样例库</Description>
+		<Description>搬运工业务样例库</Description>
 	</PropertyGroup>
 
     <Import Project="..\Targets.props" />
@@ -12,9 +12,11 @@
         <ProjectReference Include="..\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
     
-	<ItemGroup>
-		<EmbeddedResource Include="Res\**" Exclude="Res\ResKit.cs" />
-		<EmbeddedResource Include="Report\数据源\*.json" />
-		<EmbeddedResource Include="Report\模板\*.xml" />
-	</ItemGroup>
+    <ItemGroup>
+        <Using Include="Dt.Base" />
+        <Using Include="Dt.Mgr" />
+        <Using Include="Dt.Mgr.Domain" />
+        <Using Include="Dt.MgrDemo.Domain" />
+        <Using Include="Dt.MgrDemo.Agent" />
+    </ItemGroup>
 </Project>

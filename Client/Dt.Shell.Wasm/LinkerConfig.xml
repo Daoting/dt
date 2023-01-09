@@ -2,7 +2,8 @@
   <assembly fullname="Dt.Core" />
   <assembly fullname="Dt.Base" />
   <assembly fullname="Dt.Mgr" />
-  <assembly fullname="Dt.Sample" />
+  <assembly fullname="Dt.MgrDemo" />
+  <assembly fullname="Dt.UIDemo" />
   <assembly fullname="Dt.Shell.Wasm" />
 
   <assembly fullname="Uno.UI" />

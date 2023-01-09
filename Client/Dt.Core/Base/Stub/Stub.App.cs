@@ -30,14 +30,17 @@ namespace Dt.Core
         /// <summary>
         /// 切换Stub新实例重启
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="p_stubType"></param>
         /// <returns></returns>
-        public static Task Reboot<T>()
-            where T : Stub
+        public static Task Reboot(Type p_stubType)
         {
-            Inst = null;
-            var stub = Activator.CreateInstance<T>();
-            return stub.OnReboot();
+            if (p_stubType != null && p_stubType.IsSubclassOf(typeof(Stub)))
+            {
+                Inst = null;
+                var stub = (Stub)Activator.CreateInstance(p_stubType);
+                return stub.OnReboot();
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Win", "Dt.Shell.Wi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Droid", "Dt.Shell.Droid\Dt.Shell.Droid.csproj", "{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.MgrDemo", "Dt.MgrDemo\Dt.MgrDemo.csproj", "{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,18 @@ Global
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Release|x64.Build.0 = Release|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Release|x86.ActiveCfg = Release|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Release|x86.Build.0 = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|x64.Build.0 = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|x64.ActiveCfg = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|x64.Build.0 = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FFAAE53-ED88-4E09-9E1C-B7B7DA452936}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

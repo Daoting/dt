@@ -1,0 +1,19 @@
+﻿<a:Mv
+    x:Class="Dt.MgrDemo.DemoMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.MgrDemo"
+    Title="业务样例">
+
+    <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick">
+        <DataTemplate>
+            <Grid Padding="12" MinHeight="80">
+                <StackPanel VerticalAlignment="Center">
+                    <a:Dot ID="Title" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <a:Dot ID="Desc" Call="Def.小灰"  HorizontalAlignment="Left" VerticalAlignment="Top" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </a:Lv>
+</a:Mv>
