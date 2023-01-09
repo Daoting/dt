@@ -25,7 +25,7 @@ namespace Dt.Mgr.Domain
             bool p_isBack)
         {
             WfiItemObj item = new WfiItemObj(
-                ID: await AtCm.NewID(),
+                ID: await NewID(),
                 AtviID: p_atviID,
                 AssignKind: (p_isBack ? WfiItemAssignKind.回退 : WfiItemAssignKind.普通指派),
                 Status: WfiItemStatus.活动,

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-06 创建
+* 日志: 2023-01-09 创建
 ******************************************************************************/
 #endregion
 
@@ -116,16 +116,71 @@ namespace Dt.Cm.Domain
             set { this["Mtime"] = value; }
         }
 
+        #region 静态方法
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，不存在时返回null
+        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
         /// </summary>
-        /// <param name="p_id">主键值</param>
+        /// <param name="p_id">主键</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<UserObj> GetByID(object p_id)
+        public static Task<UserObj> GetByID(string p_id)
         {
-            return GetByID<UserObj>(_svcName, p_id);
+            return EntityEx.GetByID<UserObj>(p_id);
         }
 
-        const string _svcName = "cm";
+        /// <summary>
+        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
+        /// </summary>
+        /// <param name="p_id">主键</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<UserObj> GetByID(long p_id)
+        {
+            return EntityEx.GetByID<UserObj>(p_id);
+        }
+
+        /// <summary>
+        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
+        /// </summary>
+        /// <param name="p_keyName">主键或唯一索引列名</param>
+        /// <param name="p_keyVal">键值</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<UserObj> GetByKey(string p_keyName, string p_keyVal)
+        {
+            return EntityEx.GetByKey<UserObj>(p_keyName, p_keyVal);
+        }
+
+        /// <summary>
+        /// 返回所有实体的列表，每个实体包含所有列值
+        /// </summary>
+        /// <returns></returns>
+        public static Task<Table<UserObj>> GetAll()
+        {
+            return EntityEx.GetAll<UserObj>();
+        }
+
+        /// <summary>
+        /// 获取新ID
+        /// </summary>
+        /// <returns></returns>
+        public static Task<long> NewID()
+        {
+            return EntityEx.GetNewID<UserObj>();
+        }
+
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name="p_colName">字段名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        public static Task<int> NewSeq(string p_colName)
+        {
+            return EntityEx.GetNewSeq<UserObj>(p_colName);
+        }
+        #endregion
     }
 }

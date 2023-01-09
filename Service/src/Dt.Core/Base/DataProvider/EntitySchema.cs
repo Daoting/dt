@@ -30,6 +30,9 @@ namespace Dt.Core
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
 
+            int index = tbl.Name.IndexOf("_");
+            SvcName = index == -1 ? "cm" : tbl.Name.Substring(0, index).ToLower();
+
 #if SERVER
             // 领域事件类型
             var cud = p_type.GetCustomAttribute<CudEventAttribute>(false);
@@ -48,7 +51,12 @@ namespace Dt.Core
         /// <summary>
         /// 表结构
         /// </summary>
-        public TableSchema Schema { get; private set; }
+        public TableSchema Schema { get; }
+
+        /// <summary>
+        /// Entity增删用到的服务名称
+        /// </summary>
+        public string SvcName { get; }
 
 #if SERVER
         /// <summary>

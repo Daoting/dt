@@ -27,7 +27,7 @@ namespace Dt.Mgr.Domain
             int Support = default,
             int Oppose = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new PubCommentObj(id, PostID, Content, UserID, UserName, Ctime, IsSpam, ParentID, Support, Oppose);
         }
 

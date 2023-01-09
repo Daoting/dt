@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-06 创建
+* 日志: 2023-01-09 创建
 ******************************************************************************/
 #endregion
 
@@ -72,6 +72,34 @@ namespace Dt.Mgr.Domain
             set { this["Mtime"] = value; }
         }
 
-        const string _svcName = "cm";
+        #region 静态方法
+        /// <summary>
+        /// 返回所有实体的列表，每个实体包含所有列值
+        /// </summary>
+        /// <returns></returns>
+        public static Task<Table<UserParamsObj>> GetAll()
+        {
+            return EntityEx.GetAll<UserParamsObj>();
+        }
+
+        /// <summary>
+        /// 获取新ID
+        /// </summary>
+        /// <returns></returns>
+        public static Task<long> NewID()
+        {
+            return EntityEx.GetNewID<UserParamsObj>();
+        }
+
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name="p_colName">字段名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        public static Task<int> NewSeq(string p_colName)
+        {
+            return EntityEx.GetNewSeq<UserParamsObj>(p_colName);
+        }
+        #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace Dt.Mgr.Domain
         public static async Task<PubPostObj> New()
         {
             return new PubPostObj(
-                ID: await NewID(_svcName),
+                ID: await NewID(),
                 Title: "新文章",
                 TempType: 0,
                 Dispidx: await AtCm.NewSeq("sq_post"),

@@ -25,7 +25,7 @@ namespace Dt.Mgr.Domain
             DateTime Ctime = default,
             long UserID = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new FileMyObj(id, ParentID, Name, IsFolder, ExtName, Info, Ctime, UserID);
         }
 

@@ -26,7 +26,7 @@ namespace Dt.MgrDemo.Domain
             int NoHook = default,
             bool NoDelete = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new HookObj(id, MaxLength, NotNull, Src, Tgt, IsCheck, NoBinding, NoHook, NoDelete);
         }
 

@@ -169,35 +169,18 @@ namespace Dt.Core
                 AppendColumn(col, sb, false);
             }
 
-            // 添加 GetByID 方法
-            if (schema.PrimaryKey.Count == 1)
-            {
-                sb.AppendLine();
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// <summary>");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// 根据主键获得实体对象(包含所有列值)，仅支持单主键，不存在时返回null");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// </summary>");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// <param name=\"p_id\">主键值</param>");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// <returns>返回实体对象或null</returns>");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine($"public static Task<{clsName}> GetByID(object p_id)");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("{");
-                AppendTabSpace(sb, 3);
-                sb.AppendLine($"return GetByID<{clsName}>(_svcName, p_id);");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("}");
-            }
-
+            // 添加静态方法
             sb.AppendLine();
             AppendTabSpace(sb, 2);
-            int index = p_tblName.IndexOf("_");
-            string svc = index == -1 ? "cm" : p_tblName.Substring(0, index).ToLower();
-            sb.AppendLine($"const string _svcName = \"{svc}\";");
+            sb.Append("#region 静态方法");
+            if (schema.PrimaryKey.Count == 1)
+            {
+                sb.AppendLine(_prvStatic.Replace("$Entity$", clsName));
+            }
+            sb.AppendLine(_pubStatic.Replace("$Entity$", clsName));
+
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("#endregion");
 
             AppendTabSpace(sb, 1);
             sb.Append("}");
@@ -816,5 +799,72 @@ namespace Dt.Core
             return true;
         }
         #endregion
+
+        const string _prvStatic = @"
+        /// <summary>
+        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
+        /// </summary>
+        /// <param name=""p_id"">主键</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<$Entity$> GetByID(string p_id)
+        {
+            return EntityEx.GetByID<$Entity$>(p_id);
+        }
+
+        /// <summary>
+        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
+        /// </summary>
+        /// <param name=""p_id"">主键</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<$Entity$> GetByID(long p_id)
+        {
+            return EntityEx.GetByID<$Entity$>(p_id);
+        }
+
+        /// <summary>
+        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
+        /// <para>1. 首先从缓存中获取，有则直接返回</para>
+        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
+        /// </summary>
+        /// <param name=""p_keyName"">主键或唯一索引列名</param>
+        /// <param name=""p_keyVal"">键值</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<$Entity$> GetByKey(string p_keyName, string p_keyVal)
+        {
+            return EntityEx.GetByKey<$Entity$>(p_keyName, p_keyVal);
+        }";
+
+        const string _pubStatic = @"
+        /// <summary>
+        /// 返回所有实体的列表，每个实体包含所有列值
+        /// </summary>
+        /// <returns></returns>
+        public static Task<Table<$Entity$>> GetAll()
+        {
+            return EntityEx.GetAll<$Entity$>();
+        }
+
+        /// <summary>
+        /// 获取新ID
+        /// </summary>
+        /// <returns></returns>
+        public static Task<long> NewID()
+        {
+            return EntityEx.GetNewID<$Entity$>();
+        }
+
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name=""p_colName"">字段名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        public static Task<int> NewSeq(string p_colName)
+        {
+            return EntityEx.GetNewSeq<$Entity$>(p_colName);
+        }";
     }
 }

@@ -18,7 +18,7 @@ namespace Dt.Mgr.Domain
     {
         public static async Task<UserObj> New()
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new UserObj(id, Name: "新用户");
         }
 

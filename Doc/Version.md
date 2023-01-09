@@ -20,6 +20,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 删除Row.AttachHook，重新生成Entity文件放在Domain下
 * VS扩展增加批量生成实体类功能
 * Entity增加GetByID，调整服务端生成Entity的方法
+* 增加业务样例项目
+* 增加EntityEx类，重新生成项目中的Entity
 
 ### Bug修改
 * Fv格标题提示被截断的长文本

@@ -19,7 +19,7 @@ namespace Dt.Mgr.Domain
         public static async Task<WfdPrcObj> New()
         {
             var prc = new WfdPrcObj(
-                ID: await AtCm.NewID(),
+                ID: await NewID(),
                 Name: "新流程",
                 IsLocked: true,
                 Dispidx: await AtCm.NewSeq("sq_wfd_prc"),

@@ -20,7 +20,7 @@ namespace Dt.Cm.Domain
             string Name = default,
             string Note = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new RoleObj(id, Name, Note);
         }
 

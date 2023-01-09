@@ -24,7 +24,7 @@ namespace Dt.Mgr.Domain
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new WfiPrcObj(id, PrcdID, Name, Status, Dispidx, Ctime, Mtime);
         }
 

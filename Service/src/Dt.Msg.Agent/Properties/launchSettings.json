@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Dt.Msg.Agent": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58998;http://localhost:58999"
+    }
+  }
+}

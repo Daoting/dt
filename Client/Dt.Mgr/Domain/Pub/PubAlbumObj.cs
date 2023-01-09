@@ -18,7 +18,7 @@ namespace Dt.Mgr.Domain
     {
         public static async Task<PubAlbumObj> New(string Name = "新专辑")
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new PubAlbumObj(id, Name, Kit.UserName, Kit.Now);
         }
 

@@ -24,7 +24,7 @@ namespace Dt.Mgr.Domain
             string Info = default,
             DateTime Ctime = default)
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new FilePubObj(id, ParentID, Name, IsFolder, ExtName, Info, Ctime);
         }
 

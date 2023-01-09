@@ -18,7 +18,7 @@ namespace Dt.Mgr.Domain
     {
         public static async Task<RoleObj> New()
         {
-            long id = await NewID(_svcName);
+            long id = await NewID();
             return new RoleObj(id, "新角色");
         }
 
