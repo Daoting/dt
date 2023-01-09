@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class TestDemo1 : Win
     {

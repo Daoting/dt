@@ -18,7 +18,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class SerializeDemo : Win
     {

@@ -1,9 +1,9 @@
 ﻿<Page
-    x:Class="Dt.Sample.TestPage"
+    x:Class="Dt.UIDemo.TestPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:local="using:Dt.Sample">
+    xmlns:local="using:Dt.UIDemo">
 
     <Grid Background="White">
         <StackPanel>

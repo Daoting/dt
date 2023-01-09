@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Text;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class LvItemStyle : Win
     {

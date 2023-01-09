@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class ProgressDemo : Win
     {

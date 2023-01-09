@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class ComplexChart : Win
     {

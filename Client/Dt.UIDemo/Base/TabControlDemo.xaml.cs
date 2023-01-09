@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 

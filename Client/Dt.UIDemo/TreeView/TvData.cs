@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public static class TvData
     {

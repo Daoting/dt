@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class BaseCellDemo : Win
     {

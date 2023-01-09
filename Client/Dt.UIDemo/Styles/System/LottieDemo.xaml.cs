@@ -14,7 +14,7 @@ using Microsoft.Toolkit.Uwp.UI.Lottie;
 #endif
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class LottieDemo : Win
     {
@@ -106,7 +106,7 @@ namespace Dt.Sample
         void LoadLottie()
         {
             // uno 支持嵌入资源文件，但winui不支持
-            //Uri uri = new Uri("embedded://Dt.Sample/Dt.Sample.Res.LottieLogo1.json");
+            //Uri uri = new Uri("embedded://Dt.UIDemo/Dt.UIDemo.Res.LottieLogo1.json");
             Uri uri = new Uri($"ms-appx:///Assets/Lottie/{_names[_cur]}.json");
 
             // 切换动画时改变_player.Source无效，只能重置UriSource！

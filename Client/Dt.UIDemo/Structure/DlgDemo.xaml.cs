@@ -20,7 +20,7 @@ using Microsoft.UI;
 
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class DlgDemo : Win
     {

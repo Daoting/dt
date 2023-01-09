@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class FilePickerDemo : Win
     {

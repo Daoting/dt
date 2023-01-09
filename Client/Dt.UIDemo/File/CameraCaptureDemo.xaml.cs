@@ -5,7 +5,7 @@ using Windows.Media.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class CameraCaptureDemo : Win
     {

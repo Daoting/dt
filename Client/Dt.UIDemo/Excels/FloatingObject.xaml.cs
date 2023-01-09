@@ -34,7 +34,7 @@ using Cell = Dt.Cells.Data.Cell;
 using Microsoft.UI;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class FloatingObject : Win
     {

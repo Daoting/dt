@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     class ChartSampleData
     {

@@ -6,7 +6,7 @@
 ******************************************************************************/
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 本地sqlite库，文件名 local.db

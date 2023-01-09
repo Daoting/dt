@@ -13,7 +13,7 @@ using Dt.Core;
 using System.Reflection;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     static class CellDemoKit
     {

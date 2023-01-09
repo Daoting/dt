@@ -1,5 +1,5 @@
 ﻿<a:Win
-    x:Class="Dt.Sample.FvInScrollViewer"
+    x:Class="Dt.UIDemo.FvInScrollViewer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

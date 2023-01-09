@@ -11,7 +11,7 @@ using Dt.Base;
 using Windows.ApplicationModel.DataTransfer;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public class MyRptDesignInfo : RptDesignInfo
     {
@@ -19,7 +19,7 @@ namespace Dt.Sample
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.模板.{Name}.xml"))
                 using (var reader = new StreamReader(stream))
                 {
                     return reader.ReadToEnd();
@@ -42,7 +42,7 @@ namespace Dt.Sample
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.模板.{Name}.xml"))
                 using (var reader = new StreamReader(stream))
                 {
                     return reader.ReadToEnd();

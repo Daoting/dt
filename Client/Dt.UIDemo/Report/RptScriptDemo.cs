@@ -24,7 +24,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [RptScript]
     public class DataRptScript : RptScript
@@ -33,7 +33,7 @@ namespace Dt.Sample
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.数据源.{p_name}.json"))
                 {
                     return Table.Create(stream);
                 }
@@ -57,7 +57,7 @@ namespace Dt.Sample
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.数据源.{p_name}.json"))
                 {
                     var tbl = Table.Create(stream);
                     var tgt = Table.Create(tbl);

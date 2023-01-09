@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class NavListDemo : Win
     {

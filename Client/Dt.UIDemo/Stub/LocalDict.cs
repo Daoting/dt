@@ -10,7 +10,7 @@
 
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 本地字典表

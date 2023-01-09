@@ -26,7 +26,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class StackedPie : Win
     {

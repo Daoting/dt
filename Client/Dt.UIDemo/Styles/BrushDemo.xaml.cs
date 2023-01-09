@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class BrushDemo : Win
     {

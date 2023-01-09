@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 显示数字变化情况

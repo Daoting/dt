@@ -34,7 +34,7 @@ using Microsoft.UI.Xaml.Shapes;
 using Cell = Dt.Cells.Data.Cell;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class ChartPicture : Win
     {

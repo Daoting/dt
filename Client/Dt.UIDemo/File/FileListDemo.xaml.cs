@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class FileListDemo : Win
     {

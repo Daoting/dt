@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class InteractiveChart : Win
     {

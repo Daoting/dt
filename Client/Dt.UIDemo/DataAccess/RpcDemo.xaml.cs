@@ -16,7 +16,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class RpcDemo : Win
     {

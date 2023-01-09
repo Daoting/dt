@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 

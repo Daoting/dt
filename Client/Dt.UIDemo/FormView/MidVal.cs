@@ -11,7 +11,7 @@ using Dt.Base;
 using Microsoft.UI.Text;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [MidVal]
     public class TenTimesMid : IMidVal

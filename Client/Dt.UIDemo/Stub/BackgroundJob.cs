@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     class BackgroundJob : IBackgroundJob
     {

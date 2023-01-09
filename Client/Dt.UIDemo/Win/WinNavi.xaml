@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.Sample.WinNavi"
+    x:Class="Dt.UIDemo.WinNavi"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:sample="using:Dt.Sample">
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Main>
         <a:Tabs>
@@ -19,7 +19,7 @@
     <a:Pane InitWidth="500">
         <a:Tabs InitHeight="600">
             <a:Tab Title="Tab内部导航">
-                <sample:TabNav1 x:Name="_nav1" />
+                <l:TabNav1 x:Name="_nav1" />
             </a:Tab>
             <a:Tab Title="左上">
                 <StackPanel Margin="10">

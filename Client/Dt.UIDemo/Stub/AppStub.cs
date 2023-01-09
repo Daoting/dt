@@ -11,7 +11,7 @@ using Dt.Base;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 未使用标准服务的存根
@@ -51,7 +51,7 @@ namespace Dt.Sample
                 AtLocal.SaveDict("FirstRun", "0");
             }
 
-            Kit.ShowRoot(typeof(SamplesMain));
+            Kit.ShowRoot(typeof(DemoMain));
         }
     }
 }

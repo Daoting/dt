@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class AuthAccess : Win
     {

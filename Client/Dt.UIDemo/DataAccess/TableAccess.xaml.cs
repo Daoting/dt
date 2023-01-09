@@ -12,7 +12,7 @@ using Microsoft.UI.Xaml;
 using System.Text;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class TableAccess : Win
     {

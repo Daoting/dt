@@ -35,7 +35,7 @@ using Microsoft.UI;
 using Microsoft.UI.Text;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class DataExcel : Win
     {

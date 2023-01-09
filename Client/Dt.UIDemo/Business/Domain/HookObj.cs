@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class HookObj
     {

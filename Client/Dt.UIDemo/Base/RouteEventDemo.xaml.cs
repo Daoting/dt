@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Input;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class RouteEventDemo : Win
     {

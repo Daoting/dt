@@ -5,7 +5,7 @@ using System;
 using Microsoft.UI.Xaml;
 
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class LogDemo : Win
     {
@@ -79,7 +79,7 @@ namespace Dt.Sample
 
         void OnSourceContext(object sender, RoutedEventArgs e)
         {
-            // SourceContext：Dt.Sample.LogDemo
+            // SourceContext：Dt.UIDemo.LogDemo
             Log.ForContext<LogDemo>()
                 .Debug("附加SourceContext属性");
         }

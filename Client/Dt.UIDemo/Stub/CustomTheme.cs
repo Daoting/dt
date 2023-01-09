@@ -11,7 +11,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     class CustomTheme : ITheme
     {

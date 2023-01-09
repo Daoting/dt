@@ -11,7 +11,7 @@ using Dt.Base;
 using Dt.Mgr;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [WfList("收文样例")]
     public partial class 收文List : Win

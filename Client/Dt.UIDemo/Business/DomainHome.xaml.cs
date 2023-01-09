@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [View("业务样例")]
     public partial class DomainHome : Win

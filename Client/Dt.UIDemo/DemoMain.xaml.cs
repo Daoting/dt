@@ -16,18 +16,18 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
-    /// 样例
+    /// UI样例
     /// </summary>
     [View("样例")]
-    public sealed partial class SamplesMain : Win
+    public sealed partial class DemoMain : Win
     {
         /// <summary>
         /// 构造方法
         /// </summary>
-        public SamplesMain()
+        public DemoMain()
         {
             InitializeComponent();
             LoadControlList();

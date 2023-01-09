@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Shapes;
 using System.Collections.ObjectModel;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class TestDemo2 : Win
     {

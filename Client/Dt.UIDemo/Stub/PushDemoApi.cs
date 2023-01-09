@@ -10,7 +10,7 @@
 using Dt.Mgr;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [PushApi]
     public class PushDemoApi

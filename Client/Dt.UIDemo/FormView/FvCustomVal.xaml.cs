@@ -11,7 +11,7 @@ using Dt.Base;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class FvCustomVal : Win
     {

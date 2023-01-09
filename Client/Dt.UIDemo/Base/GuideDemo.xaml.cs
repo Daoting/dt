@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Shapes;
 
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class GuideDemo : Dlg
     {

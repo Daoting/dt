@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class MvItem : Mv
     {

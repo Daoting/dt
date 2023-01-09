@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     [WfForm("收文样例")]
     public partial class 收文Form : UserControl, IWfForm

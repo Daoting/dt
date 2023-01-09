@@ -1,6 +1,6 @@
 ﻿using Dt.Base;
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public sealed partial class TestInvokeDemo : Win
     {

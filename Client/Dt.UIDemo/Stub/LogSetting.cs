@@ -10,7 +10,7 @@
 using Serilog.Events;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     /// <summary>
     /// 日志设置

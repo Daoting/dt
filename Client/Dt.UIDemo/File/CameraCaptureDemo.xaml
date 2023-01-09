@@ -1,5 +1,5 @@
 ﻿<a:Win
-    x:Class="Dt.Sample.CameraCaptureDemo"
+    x:Class="Dt.UIDemo.CameraCaptureDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

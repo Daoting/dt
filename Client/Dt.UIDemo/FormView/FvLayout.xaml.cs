@@ -12,7 +12,7 @@ using System;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public partial class FvLayout : Win
     {

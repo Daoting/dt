@@ -10,7 +10,7 @@
 using System.Reflection;
 #endregion
 
-namespace Dt.Sample
+namespace Dt.UIDemo
 {
     public class ResKit
     {
@@ -23,7 +23,7 @@ namespace Dt.Sample
         public static Stream GetStream(string p_fileName)
         {
             Assembly assembly = typeof(ResKit).Assembly;
-            Stream stream = assembly.GetManifestResourceStream($"Dt.Sample.Res.{p_fileName}");
+            Stream stream = assembly.GetManifestResourceStream($"Dt.UIDemo.Res.{p_fileName}");
             if (stream == null)
                 throw new Exception("未发现资源文件：" + p_fileName );
             return stream;
