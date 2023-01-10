@@ -131,15 +131,14 @@ namespace Dt.Mgr.Workflow
 
             // 更新当前实例状态为活动
             DateTime time = Kit.Now;
-            WfiAtvObj curAtvi = await AtCm.GetByID<WfiAtvObj>(row.Long("atviid"));
+            WfiAtvObj curAtvi = await WfiAtvObj.GetByID(row.Long("atviid"));
             curAtvi.Status = WfiAtvStatus.活动;
             curAtvi.InstCount += 1;
             curAtvi.Mtime = time;
 
             // 根据当前工作项创建新工作项并更改指派方式
-            var curItem = await AtCm.GetByID<WfiItemObj>(row.Long("itemid"));
-            var newItem = new WfiItemObj(
-                ID: await AtCm.NewID(),
+            var curItem = await WfiItemObj.GetByID(row.Long("itemid"));
+            var newItem = await WfiItemObj.New(
                 AtviID: curItem.AtviID,
                 Status: WfiItemStatus.活动,
                 AssignKind: WfiItemAssignKind.追回,
@@ -149,7 +148,6 @@ namespace Dt.Mgr.Workflow
                 RoleID: curItem.RoleID,
                 UserID: curItem.UserID,
                 Note: curItem.Note,
-                Dispidx: await AtCm.NewSeq("sq_wfi_item"),
                 Ctime: time,
                 Mtime: time);
 

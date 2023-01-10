@@ -36,7 +36,7 @@ namespace Dt.Mgr.Publish
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.GetByID<PubAlbumObj>(p_id);
+                _fv.Data = await PubAlbumObj.GetByID(p_id);
             }
             else
             {

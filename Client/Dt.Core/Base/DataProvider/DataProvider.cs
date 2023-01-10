@@ -179,56 +179,6 @@ namespace Dt.Agent
                 p_params
             ).Call<List<T>>();
         }
-
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键id，不存在时返回null
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByID<TEntity>(string p_id)
-            where TEntity : Entity
-        {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
-        }
-
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键id，不存在时返回null
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByID<TEntity>(long p_id)
-            where TEntity : Entity
-        {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
-        }
-
-        /// <summary>
-        /// 获取新ID
-        /// </summary>
-        /// <returns></returns>
-        public static Task<long> NewID()
-        {
-            return new UnaryRpc(
-                typeof(TSvc).Name,
-                "Da.NewID"
-            ).Call<long>();
-        }
-
-        /// <summary>
-        /// 获取新序列值
-        /// </summary>
-        /// <param name="p_seqName">序列名称，不可为空</param>
-        /// <returns>新序列值</returns>
-        public static Task<int> NewSeq(string p_seqName)
-        {
-            return new UnaryRpc(
-                typeof(TSvc).Name,
-                "Da.NewSeq",
-                p_seqName
-            ).Call<int>();
-        }
         #endregion
 
         #region 保存

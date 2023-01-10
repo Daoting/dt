@@ -17,15 +17,21 @@ namespace Dt.Mgr.Domain
     public partial class FilePubObj
     {
         public static async Task<FilePubObj> New(
-            long? ParentID = default,
-            string Name = default,
-            bool IsFolder = default,
-            string ExtName = default,
-            string Info = default,
-            DateTime Ctime = default)
+           long? ParentID = default,
+           string Name = default,
+           bool IsFolder = default,
+           string ExtName = default,
+           string Info = default,
+           DateTime Ctime = default)
         {
-            long id = await NewID();
-            return new FilePubObj(id, ParentID, Name, IsFolder, ExtName, Info, Ctime);
+            return new FilePubObj(
+                ID: await NewID(),
+                ParentID: ParentID,
+                Name: Name,
+                IsFolder: IsFolder,
+                ExtName: ExtName,
+                Info: Info,
+                Ctime: Ctime);
         }
 
         protected override void InitHook()

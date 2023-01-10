@@ -85,10 +85,9 @@ namespace Dt.Mgr.Model
             else if (_lvCate.SelectedRow != null)
                 cate = _lvCate.SelectedRow.Str(0);
 
-            _fv.Data = new OptionObj(
+            _fv.Data = await OptionObj.New(
                 Name: "新选项",
-                Category: cate,
-                Dispidx: await AtCm.NewSeq("sq_option"));
+                Category: cate);
         }
 
         async void OnSave(object sender, Mi e)

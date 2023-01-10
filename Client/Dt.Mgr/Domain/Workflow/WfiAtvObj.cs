@@ -16,6 +16,24 @@ namespace Dt.Mgr.Domain
 {
     public partial class WfiAtvObj
     {
+        public static async Task<WfiAtvObj> New(
+            long PrciID = default,
+            long AtvdID = default,
+            WfiAtvStatus Status = default,
+            int InstCount = default,
+            DateTime Ctime = default,
+            DateTime Mtime = default)
+        {
+            return new WfiAtvObj(
+                ID: await NewID(),
+                PrciID: PrciID,
+                AtvdID: AtvdID,
+                Status: Status,
+                InstCount: InstCount,
+                Ctime: Ctime,
+                Mtime: Mtime);
+        }
+
         /// <summary>
         /// 判断当前活动是否完成，发送者是否为当前活动的最后一个发送者
         /// </summary>

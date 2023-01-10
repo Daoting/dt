@@ -257,14 +257,15 @@ namespace Dt.Core
                 sb.AppendLine("{");
 
                 AppendTabSpace(sb, 3);
-                sb.AppendLine("long id = await NewID(_svcName);");
-
-                AppendTabSpace(sb, 3);
-                sb.Append($"return new {clsName}(id");
+                sb.AppendLine($"return new {clsName}(");
+                AppendTabSpace(sb, 4);
+                sb.AppendLine("ID: await NewID(),");
                 foreach (var col in schema.Columns)
                 {
-                    sb.Append($", {col.Name}");
+                    AppendTabSpace(sb, 4);
+                    sb.AppendLine($"{col.Name}: {col.Name},");
                 }
+                sb.Remove(sb.Length - 3, 3);
                 sb.AppendLine(");");
 
                 AppendTabSpace(sb, 2);

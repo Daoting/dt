@@ -16,6 +16,13 @@ namespace Dt.Mgr.Domain
 {
     public partial class OptionObj
     {
+        public static async Task<OptionObj> New(
+            string Name,
+            string Category)
+        {
+            return new OptionObj(Name, Category, await NewSeq("Dispidx"));
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>

@@ -283,8 +283,7 @@ namespace Dt.Mgr
             long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
             Throw.If(trsdid == 0, "未找到流程迁移模板");
 
-            return new WfiTrsObj(
-                ID: await AtCm.NewID(),
+            return await WfiTrsObj.New(
                 TrsdID: trsdid,
                 SrcAtviID: AtvInst.ID,
                 TgtAtviID: p_tatviid,
@@ -313,7 +312,7 @@ namespace Dt.Mgr
             WfdPrcObj def;
             if (!_prcDefs.TryGetValue(p_prcID, out def))
             {
-                def = await AtCm.GetByID<WfdPrcObj>(p_prcID);
+                def = await WfdPrcObj.GetByID(p_prcID);
                 _prcDefs[p_prcID] = def;
             }
             return def;
@@ -380,19 +379,16 @@ namespace Dt.Mgr
         {
             AtvDef = await AtCm.First<WfdAtvObj>("流程-起始活动", new { prcid = _prcID });
 
-            PrcInst = new WfiPrcObj(
-                ID: await AtCm.NewID(),
+            PrcInst = await WfiPrcObj.New(
                 PrcdID: _prcID,
                 Name: PrcDef.Name);
 
-            AtvInst = new WfiAtvObj(
-                ID: await AtCm.NewID(),
+            AtvInst = await WfiAtvObj.New(
                 PrciID: PrcInst.ID,
                 AtvdID: AtvDef.ID,
                 InstCount: 1);
 
-            WorkItem = new WfiItemObj(
-                ID: await AtCm.NewID(),
+            WorkItem = await WfiItemObj.New(
                 AtviID: AtvInst.ID,
                 AssignKind: WfiItemAssignKind.起始指派,
                 IsAccept: true,
@@ -406,8 +402,8 @@ namespace Dt.Mgr
             Dict dt = new Dict { { "itemid", _itemID } };
             PrcInst = await AtCm.First<WfiPrcObj>("流程-工作项的流程实例", dt);
             AtvInst = await AtCm.First<WfiAtvObj>("流程-工作项的活动实例", dt);
-            WorkItem = await AtCm.GetByID<WfiItemObj>(_itemID);
-            AtvDef = await AtCm.GetByID<WfdAtvObj>(AtvInst.AtvdID);
+            WorkItem = await WfiItemObj.GetByID(_itemID);
+            AtvDef = await WfdAtvObj.GetByID(AtvInst.AtvdID);
         }
         #endregion
 

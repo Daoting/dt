@@ -36,7 +36,7 @@ namespace Dt.Mgr.Publish
 
             if (p_id != null)
             {
-                _fv.Data = await AtCm.GetByID<PubKeywordObj>(p_id);
+                _fv.Data = await PubKeywordObj.GetByID(p_id);
             }
             else
             {

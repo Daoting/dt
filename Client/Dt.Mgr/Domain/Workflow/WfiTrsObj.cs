@@ -16,6 +16,20 @@ namespace Dt.Mgr.Domain
 {
     public partial class WfiTrsObj
     {
-        
+        public static async Task<WfiTrsObj> New(
+            long TrsdID = default,
+            long SrcAtviID = default,
+            long TgtAtviID = default,
+            bool IsRollback = default,
+            DateTime Ctime = default)
+        {
+            return new WfiTrsObj(
+                ID: await NewID(),
+                TrsdID: TrsdID,
+                SrcAtviID: SrcAtviID,
+                TgtAtviID: TgtAtviID,
+                IsRollback: IsRollback,
+                Ctime: Ctime);
+        }
     }
 }

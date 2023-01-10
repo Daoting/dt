@@ -173,8 +173,7 @@ namespace Dt.Mgr.Workflow
                         && (ar.SelectedRecvs == null || ar.SelectedRecvs.Count == 0))
                         continue;
 
-                    var atvInst = new WfiAtvObj(
-                        ID: await AtCm.NewID(),
+                    var atvInst = await WfiAtvObj.New(
                         PrciID: _info.PrcInst.ID,
                         AtvdID: ar.Def.ID,
                         Status: WfiAtvStatus.活动,
@@ -188,7 +187,18 @@ namespace Dt.Mgr.Workflow
                         atvInst.InstCount = ar.SelectedRecvs.Count;
                         foreach (var recvID in ar.SelectedRecvs)
                         {
-                            var wi = await WfiItemObj.New(atvInst.ID, time, ar.IsRole, recvID, ar.Note, false);
+                            long? userID = ar.IsRole ? null : recvID;
+                            long? roleID = ar.IsRole ? recvID : null;
+                            var wi = await WfiItemObj.New(
+                                AtviID: atvInst.ID,
+                                Stime: time,
+                                Ctime: time,
+                                Mtime: time,
+                                AssignKind: WfiItemAssignKind.普通指派,
+                                Status: WfiItemStatus.活动,
+                                RoleID: roleID,
+                                UserID: userID,
+                                Note: ar.Note);
                             tblItems.Add(wi);
                         }
                     }
@@ -198,7 +208,18 @@ namespace Dt.Mgr.Workflow
                         atvInst.InstCount = ar.Recvs.Count;
                         foreach (var row in ar.Recvs)
                         {
-                            var wi = await WfiItemObj.New(atvInst.ID, time, ar.IsRole, row.ID, ar.Note, false);
+                            long? userID = ar.IsRole ? null : row.ID;
+                            long? roleID = ar.IsRole ? row.ID : null;
+                            var wi = await WfiItemObj.New(
+                                AtviID: atvInst.ID,
+                                Stime: time,
+                                Ctime: time,
+                                Mtime: time,
+                                AssignKind: WfiItemAssignKind.普通指派,
+                                Status: WfiItemStatus.活动,
+                                RoleID: roleID,
+                                UserID: userID,
+                                Note: ar.Note);
                             tblItems.Add(wi);
                         }
                     }
@@ -214,8 +235,7 @@ namespace Dt.Mgr.Workflow
                     && (!p_manualSend || (syncAtv.SelectedRecvs != null && syncAtv.SelectedRecvs.Count > 0)))
                 {
                     // 同步实例
-                    var syncInst = new WfiAtvObj(
-                        ID: await AtCm.NewID(),
+                    var syncInst = await WfiAtvObj.New(
                         PrciID: _info.PrcInst.ID,
                         AtvdID: syncAtv.SyncDef.ID,
                         Status: WfiAtvStatus.同步,
@@ -225,8 +245,7 @@ namespace Dt.Mgr.Workflow
                     tblAtvs.Add(syncInst);
 
                     // 同步工作项
-                    WfiItemObj item = new WfiItemObj(
-                        ID: await AtCm.NewID(),
+                    WfiItemObj item = await WfiItemObj.New(
                         AtviID: syncInst.ID,
                         AssignKind: WfiItemAssignKind.普通指派,
                         Status: WfiItemStatus.同步,
@@ -235,8 +254,7 @@ namespace Dt.Mgr.Workflow
                         Sender: Kit.UserName,
                         Stime: time,
                         Ctime: time,
-                        Mtime: time,
-                        Dispidx: await AtCm.NewSeq("sq_wfi_item"));
+                        Mtime: time);
                     tblItems.Add(item);
 
                     // 同步迁移实例
@@ -246,9 +264,8 @@ namespace Dt.Mgr.Workflow
                     dt["TgtAtvID"] = syncAtv.SyncDef.ID;
                     dt["IsRollback"] = false;
                     long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
-                    
-                    var trs = new WfiTrsObj(
-                        ID: await AtCm.NewID(),
+
+                    var trs = await WfiTrsObj.New(
                         TrsdID: trsdid,
                         SrcAtviID: _info.AtvInst.ID,
                         TgtAtviID: syncInst.ID,
@@ -257,8 +274,7 @@ namespace Dt.Mgr.Workflow
                     tblTrs.Add(trs);
 
                     // 同步活动的后续活动实例
-                    var nextInst = new WfiAtvObj(
-                        ID: await AtCm.NewID(),
+                    var nextInst = await WfiAtvObj.New(
                         PrciID: _info.PrcInst.ID,
                         AtvdID: syncAtv.Def.ID,
                         Status: WfiAtvStatus.活动,
@@ -272,7 +288,18 @@ namespace Dt.Mgr.Workflow
                         nextInst.InstCount = syncAtv.SelectedRecvs.Count;
                         foreach (var recvID in syncAtv.SelectedRecvs)
                         {
-                            var wi = await WfiItemObj.New(nextInst.ID, time, syncAtv.IsRole, recvID, "", false);
+                            long? userID = syncAtv.IsRole ? null : recvID;
+                            long? roleID = syncAtv.IsRole ? recvID : null;
+                            var wi = await WfiItemObj.New(
+                                AtviID: nextInst.ID,
+                                Stime: time,
+                                Ctime: time,
+                                Mtime: time,
+                                AssignKind: WfiItemAssignKind.普通指派,
+                                Status: WfiItemStatus.活动,
+                                RoleID: roleID,
+                                UserID: userID,
+                                Note: "");
                             tblItems.Add(wi);
                         }
                     }
@@ -282,7 +309,18 @@ namespace Dt.Mgr.Workflow
                         nextInst.InstCount = syncAtv.Recvs.Count;
                         foreach (var row in syncAtv.Recvs)
                         {
-                            var wi = await WfiItemObj.New(nextInst.ID, time, syncAtv.IsRole, row.ID, "", false);
+                            long? userID = syncAtv.IsRole ? null : row.ID;
+                            long? roleID = syncAtv.IsRole ? row.ID : null;
+                            var wi = await WfiItemObj.New(
+                                AtviID: nextInst.ID,
+                                Stime: time,
+                                Ctime: time,
+                                Mtime: time,
+                                AssignKind: WfiItemAssignKind.普通指派,
+                                Status: WfiItemStatus.活动,
+                                RoleID: roleID,
+                                UserID: userID,
+                                Note: "");
                             tblItems.Add(wi);
                         }
                     }
@@ -295,8 +333,7 @@ namespace Dt.Mgr.Workflow
                     dt["IsRollback"] = false;
                     trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
 
-                    trs = new WfiTrsObj(
-                        ID: await AtCm.NewID(),
+                    trs = await WfiTrsObj.New(
                         TrsdID: trsdid,
                         SrcAtviID: syncInst.ID,
                         TgtAtviID: nextInst.ID,

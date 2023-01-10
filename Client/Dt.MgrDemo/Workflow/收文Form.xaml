@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Dt.UIDemo.收文Form"
+    x:Class="Dt.MgrDemo.收文Form"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

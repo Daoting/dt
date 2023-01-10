@@ -22,7 +22,7 @@ namespace Dt.Mgr.Domain
                 ID: await NewID(),
                 Title: "新文章",
                 TempType: 0,
-                Dispidx: await AtCm.NewSeq("sq_post"),
+                Dispidx: await NewSeq("Dispidx"),
                 CreatorID: Kit.UserID,
                 Creator: Kit.UserName,
                 Ctime: Kit.Now);

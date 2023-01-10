@@ -121,12 +121,12 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取新序列值
+        /// 获取新序列值，序列名称全小写：表名+字段名，需要在sequence表中手动添加序列名称行
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="p_colName">字段名称，不可为空</param>
         /// <returns>新序列值</returns>
-        public static Task<int> GetNewSeq<TEntity>(string p_colName)
+        public static async Task<int> GetNewSeq<TEntity>(string p_colName)
             where TEntity : Entity
         {
             Throw.IfEmpty(p_colName, "获取新序列值时，需要提供字段名称！");
@@ -134,16 +134,18 @@ namespace Dt.Core
 
             // 序列名称：表名+字段名，全小写
             var seqName = model.Schema.Name + "+" + p_colName.ToLower();
-
+            int seq = 0;
 #if SERVER
-            return new MySqlAccess().GetScalar<int>($"select nextval('{seqName}')");
+            seq = await new MySqlAccess().GetScalar<int>($"select nextval('{seqName}')");
 #else
-            return Kit.Rpc<int>(
+            seq = await Kit.Rpc<int>(
                 model.SvcName,
                 "Da.NewSeq",
                 seqName
             );
 #endif
+            Throw.If(seq == 0, $"序列【{seqName}】不存在，请在sequence表中手动添加！");
+            return seq;
         }
         #endregion
     }

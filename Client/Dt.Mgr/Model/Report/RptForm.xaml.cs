@@ -51,8 +51,7 @@ namespace Dt.Mgr.Model
 
         async void OnAdd(object sender, Mi e)
         {
-            _fv.Data = new RptObj(
-                ID: await AtCm.NewID(),
+            _fv.Data = await RptObj.New(
                 Name: "新报表");
         }
 

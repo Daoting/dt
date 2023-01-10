@@ -68,8 +68,7 @@ namespace Dt.Mgr.Files
             FileMyObj file;
             if (p_id == -1)
             {
-                file = new FileMyObj(
-                    ID: await AtCm.NewID(),
+                file = await FileMyObj.New(
                     ParentID: FolderID == -1 ? (long?)null : FolderID,
                     Name: p_name,
                     IsFolder: true,

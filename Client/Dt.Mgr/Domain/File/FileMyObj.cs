@@ -25,8 +25,15 @@ namespace Dt.Mgr.Domain
             DateTime Ctime = default,
             long UserID = default)
         {
-            long id = await NewID();
-            return new FileMyObj(id, ParentID, Name, IsFolder, ExtName, Info, Ctime, UserID);
+            return new FileMyObj(
+                ID: await NewID(),
+                ParentID: ParentID,
+                Name: Name,
+                IsFolder: IsFolder,
+                ExtName: ExtName,
+                Info: Info,
+                Ctime: Ctime,
+                UserID: UserID);
         }
 
         protected override void InitHook()

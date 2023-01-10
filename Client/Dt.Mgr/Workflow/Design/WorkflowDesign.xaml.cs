@@ -219,7 +219,7 @@ namespace Dt.Mgr.Workflow
                 {
                     if (item.Tag == null)
                     {
-                        line.ID = await AtCm.NewID();
+                        line.ID = await WfdTrsObj.NewID();
                         WfdTrsObj trs = new WfdTrsObj(
                             ID: line.ID,
                             PrcID: _prc.ID,

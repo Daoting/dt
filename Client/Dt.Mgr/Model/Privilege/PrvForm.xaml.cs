@@ -36,7 +36,7 @@ namespace Dt.Mgr.Model
 
             if (!string.IsNullOrEmpty(p_id))
             {
-                _fv.Data = await AtCm.GetByID<PrvObj>(p_id);
+                _fv.Data = await PrvObj.GetByID(p_id);
                 UpdateRelated(p_id);
             }
             else

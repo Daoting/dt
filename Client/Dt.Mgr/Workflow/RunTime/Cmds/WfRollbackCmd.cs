@@ -54,8 +54,7 @@ namespace Dt.Mgr.Workflow
                 return;
 
             DateTime time = Kit.Now;
-            var newAtvInst = new WfiAtvObj(
-                ID: await AtCm.NewID(),
+            var newAtvInst = await WfiAtvObj.New(
                 PrciID: _info.PrcInst.ID,
                 AtvdID: pre.AtvdID,
                 Status: WfiAtvStatus.活动,
@@ -75,7 +74,14 @@ namespace Dt.Mgr.Workflow
             Dict dict = new Dict();
             dict["name"] = await GetSender();
             long userId = await AtCm.GetScalar<long>("流程-获取用户ID", dict);
-            var newItem = await WfiItemObj.New(newAtvInst.ID, time, false, userId, null, true);
+            var newItem = await WfiItemObj.New(
+                AtviID: newAtvInst.ID,
+                Stime: time,
+                Ctime: time,
+                Mtime: time,
+                AssignKind: WfiItemAssignKind.回退,
+                Status: WfiItemStatus.活动,
+                UserID: userId);
 
             List<object> ls = new List<object>();
             if (_info.AtvInst.IsChanged)

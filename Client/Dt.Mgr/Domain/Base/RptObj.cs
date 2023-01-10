@@ -16,6 +16,22 @@ namespace Dt.Mgr.Domain
 {
     public partial class RptObj
     {
+        public static async Task<RptObj> New(
+           string Name = default,
+           string Define = default,
+           string Note = default,
+           DateTime Ctime = default,
+           DateTime Mtime = default)
+        {
+            return new RptObj(
+                ID: await NewID(),
+                Name: Name,
+                Define: Define,
+                Note: Note,
+                Ctime: Ctime,
+                Mtime: Mtime);
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>

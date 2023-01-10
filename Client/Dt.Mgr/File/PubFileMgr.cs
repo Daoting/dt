@@ -86,8 +86,7 @@ namespace Dt.Mgr.Files
             FilePubObj pf;
             if (p_id == -1)
             {
-                pf = new FilePubObj(
-                    ID: await AtCm.NewID(),
+                pf = await FilePubObj.New(
                     ParentID: FolderID,
                     Name: p_name,
                     IsFolder: true,

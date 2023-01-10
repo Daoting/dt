@@ -17,31 +17,34 @@ namespace Dt.Mgr.Domain
     public partial class WfiItemObj
     {
         public static async Task<WfiItemObj> New(
-            long p_atviID,
-            DateTime p_date,
-            bool p_isRole,
-            long p_receiver,
-            string p_note,
-            bool p_isBack)
+            long AtviID,
+            WfiItemStatus Status = default,
+            WfiItemAssignKind AssignKind = default,
+            string Sender = default,
+            DateTime Stime = default,
+            bool IsAccept = default,
+            DateTime? AcceptTime = default,
+            long? RoleID = default,
+            long? UserID = default,
+            string Note = default,
+            DateTime Ctime = default,
+            DateTime Mtime = default)
         {
-            WfiItemObj item = new WfiItemObj(
+            return new WfiItemObj(
                 ID: await NewID(),
-                AtviID: p_atviID,
-                AssignKind: (p_isBack ? WfiItemAssignKind.回退 : WfiItemAssignKind.普通指派),
-                Status: WfiItemStatus.活动,
-                IsAccept: false,
-                Sender: Kit.UserName,
-                Stime: p_date,
-                Ctime: p_date,
-                Mtime: p_date,
-                Note: p_note,
-                Dispidx: await AtCm.NewSeq("sq_wfi_item"));
-
-            if (p_isRole)
-                item.RoleID = p_receiver;
-            else
-                item.UserID = p_receiver;
-            return item;
+                AtviID: AtviID,
+                Status: Status,
+                AssignKind: AssignKind,
+                Sender: Sender,
+                Stime: Stime,
+                IsAccept: IsAccept,
+                AcceptTime: AcceptTime,
+                RoleID: RoleID,
+                UserID: UserID,
+                Note: Note,
+                Dispidx: await NewSeq("Dispidx"),
+                Ctime: Ctime,
+                Mtime: Mtime);
         }
 
         public void Finished()

@@ -22,7 +22,7 @@ namespace Dt.Mgr.Domain
                 ID: await NewID(),
                 Name: "新流程",
                 IsLocked: true,
-                Dispidx: await AtCm.NewSeq("sq_wfd_prc"),
+                Dispidx: await NewSeq("Dispidx"),
                 Ctime: Kit.Now);
 
             prc.Atvs = Table<WfdAtvObj>.Create();

@@ -58,13 +58,11 @@ namespace Dt.Mgr.Model
 
         async void AddMenu(bool p_isGroup)
         {
-            MenuObj m = new MenuObj(
-                ID: await AtCm.NewID(),
+            MenuObj m = await MenuObj.New(
                 Name: p_isGroup ? "新组" : "新菜单",
                 Icon: p_isGroup ? "文件夹" : "文件",
                 IsGroup: p_isGroup,
                 ParentID: _curItem != null ? (long?)_curItem.ID : null,
-                Dispidx: await AtCm.NewSeq("sq_menu"),
                 Ctime: Kit.Now,
                 Mtime: Kit.Now);
             m.AddCell("parentname", _curItem?.Name);

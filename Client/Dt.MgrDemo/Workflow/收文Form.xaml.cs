@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo
 {
     [WfForm("收文样例")]
     public partial class 收文Form : UserControl, IWfForm
@@ -37,7 +37,7 @@ namespace Dt.UIDemo
             }
             else
             {
-                _fv.Data = await AtCm.GetByID<收文Obj>(_info.ID);
+                _fv.Data = await 收文Obj.GetByID(_info.ID);
             }
 
             switch (_info.State)

@@ -41,8 +41,7 @@ namespace Dt.Mgr.Workflow
         {
             if (_cbBack.IsChecked == true)
             {
-                WfdTrsObj trs = new WfdTrsObj(
-                    ID: await AtCm.NewID(),
+                WfdTrsObj trs = await WfdTrsObj.New(
                     PrcID: _curTrs.PrcID,
                     IsRollback: true,
                     SrcAtvID: _curTrs.TgtAtvID,

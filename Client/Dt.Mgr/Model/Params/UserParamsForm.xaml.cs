@@ -31,7 +31,7 @@ namespace Dt.Mgr.Model
             if (string.IsNullOrEmpty(p_id))
                 OnAdd(null, null);
             else
-                _fv.Data = await AtCm.GetByID<ParamsObj>(p_id);
+                _fv.Data = await ParamsObj.GetByID(p_id);
         }
         
         void OnAdd(object sender, Mi e)
