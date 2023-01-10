@@ -44,7 +44,7 @@ namespace Dt.MgrDemo.Hook
 
         async void Query()
         {
-            _lv.Data = await AtCm.GetAll<HookObj>();
+            _lv.Data = await HookObj.Query();
         }
 
         HookWin _win => (HookWin)_tab.OwnWin;

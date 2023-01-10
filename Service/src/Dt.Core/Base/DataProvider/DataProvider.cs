@@ -165,32 +165,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，主键列名id，仅支持单主键
-        /// 不存在时返回null，启用缓存时首先从缓存中获取
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByID<TEntity>(string p_id)
-            where TEntity : Entity
-        {
-            return GetByKey<TEntity>("id", p_id);
-        }
-
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，主键列名id，仅支持单主键
-        /// 不存在时返回null，启用缓存时首先从缓存中获取
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByID<TEntity>(long p_id)
-            where TEntity : Entity
-        {
-            return GetByKey<TEntity>("id", p_id.ToString());
-        }
-
-        /// <summary>
         /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键
         /// 不存在时返回null，启用缓存时首先从缓存中获取
         /// </summary>

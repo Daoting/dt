@@ -17,8 +17,85 @@ namespace Dt.Core
     /// </summary>
     public static class EntityEx
     {
+        #region 查询
+        /// <summary>
+        /// 查询实体列表，每个实体包含所有列值
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有，可能被注入</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<TEntity>> Query<TEntity>(string p_filter = null)
+        where TEntity : Entity
+        {
+            var model = EntitySchema.Get(typeof(TEntity));
+            var sql = model.Schema.GetSelectAllSql();
+            if (!string.IsNullOrWhiteSpace(p_filter))
+                sql += " where " + p_filter;
 
-        #region 获取实体
+#if SERVER
+            return new MySqlAccess().Query<TEntity>(sql);
+#else
+            return Kit.Rpc<Table<TEntity>>(
+                model.SvcName,
+                "Da.Query",
+                sql,
+                null);
+#endif
+        }
+
+        /// <summary>
+        /// 按页查询实体列表，每个实体包含所有列值
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_pageSize">每页显示行数</param>
+        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_filter = null)
+            where TEntity : Entity
+        {
+            var model = EntitySchema.Get(typeof(TEntity));
+            var sql = model.Schema.GetSelectAllSql();
+            if (!string.IsNullOrWhiteSpace(p_filter))
+                sql += " where " + p_filter;
+            sql += $" limit {p_starRow},{p_pageSize} ";
+
+#if SERVER
+            return new MySqlAccess().Query<TEntity>(sql);
+#else
+            return Kit.Rpc<Table<TEntity>>(
+                model.SvcName,
+                "Da.Query",
+                sql,
+                null);
+#endif
+        }
+
+        /// <summary>
+        /// 返回第一个实体对象，每个实体包含所有列值，不存在时返回null
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<TEntity> First<TEntity>(string p_filter)
+            where TEntity : Entity
+        {
+            var model = EntitySchema.Get(typeof(TEntity));
+            var sql = model.Schema.GetSelectAllSql();
+            if (!string.IsNullOrWhiteSpace(p_filter))
+                sql += " where " + p_filter;
+
+#if SERVER
+            return new MySqlAccess().First<TEntity>(sql);
+#else
+            return Kit.Rpc<TEntity>(
+                model.SvcName,
+                "Da.First",
+                sql,
+                null);
+#endif
+        }
+
         /// <summary>
         /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
         /// <para>1. 首先从缓存中获取，有则直接返回</para>
@@ -74,28 +151,6 @@ namespace Dt.Core
                 "Da.First",
                 sql,
                 dt);
-#endif
-        }
-
-        /// <summary>
-        /// 返回所有实体的列表，每个实体包含所有列值
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public static Task<Table<TEntity>> GetAll<TEntity>()
-            where TEntity : Entity
-        {
-
-            var model = EntitySchema.Get(typeof(TEntity));
-#if SERVER
-            var dp = new DataProvider(false);
-            return new MySqlAccess().Query<TEntity>(model.Schema.GetSelectAllSql());
-#else
-            return Kit.Rpc<Table<TEntity>>(
-                model.SvcName,
-                "Da.Query",
-                model.Schema.GetSelectAllSql(),
-                null);
 #endif
         }
         #endregion

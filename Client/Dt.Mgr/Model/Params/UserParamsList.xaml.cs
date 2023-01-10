@@ -37,7 +37,7 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.GetAll<ParamsObj>();
+                _lv.Data = await ParamsObj.Query();
             }
             else if (_query == "#最近修改")
             {

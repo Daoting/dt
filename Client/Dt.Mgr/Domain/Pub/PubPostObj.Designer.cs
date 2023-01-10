@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-09 创建
+* 日志: 2023-01-10 创建
 ******************************************************************************/
 #endregion
 
@@ -287,12 +287,35 @@ namespace Dt.Mgr.Domain
         }
 
         /// <summary>
-        /// 返回所有实体的列表，每个实体包含所有列值
+        /// 查询实体列表，每个实体包含所有列值，过滤条件null或空时返回所有实体
         /// </summary>
-        /// <returns></returns>
-        public static Task<Table<PubPostObj>> GetAll()
+        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有实体</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<PubPostObj>> Query(string p_filter = null)
         {
-            return EntityEx.GetAll<PubPostObj>();
+            return EntityEx.Query<PubPostObj>();
+        }
+
+        /// <summary>
+        /// 按页查询实体列表，每个实体包含所有列值
+        /// </summary>
+        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_pageSize">每页显示行数</param>
+        /// <param name="p_filter">过滤串，where后面的部分</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<PubPostObj>> Page(int p_starRow, int p_pageSize, string p_filter = null)
+        {
+            return EntityEx.Page<PubPostObj>(p_starRow, p_pageSize, p_filter);
+        }
+
+        /// <summary>
+        /// 返回符合条件的第一个实体对象，每个实体包含所有列值，不存在时返回null
+        /// </summary>
+        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<PubPostObj> First(string p_filter)
+        {
+            return EntityEx.First<PubPostObj>(p_filter);
         }
 
         /// <summary>

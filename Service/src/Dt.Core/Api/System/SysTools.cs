@@ -801,6 +801,7 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 代码模板
         const string _prvStatic = @"
         /// <summary>
         /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
@@ -841,12 +842,35 @@ namespace Dt.Core
 
         const string _pubStatic = @"
         /// <summary>
-        /// 返回所有实体的列表，每个实体包含所有列值
+        /// 查询实体列表，每个实体包含所有列值，过滤条件null或空时返回所有实体
         /// </summary>
-        /// <returns></returns>
-        public static Task<Table<$Entity$>> GetAll()
+        /// <param name=""p_filter"">过滤串，where后面的部分，null或空返回所有实体</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<$Entity$>> Query(string p_filter = null)
         {
-            return EntityEx.GetAll<$Entity$>();
+            return EntityEx.Query<$Entity$>();
+        }
+
+        /// <summary>
+        /// 按页查询实体列表，每个实体包含所有列值
+        /// </summary>
+        /// <param name=""p_starRow"">起始行号：mysql中第一行为0行</param>
+        /// <param name=""p_pageSize"">每页显示行数</param>
+        /// <param name=""p_filter"">过滤串，where后面的部分</param>
+        /// <returns>返回实体列表</returns>
+        public static Task<Table<$Entity$>> Page(int p_starRow, int p_pageSize, string p_filter = null)
+        {
+            return EntityEx.Page<$Entity$>(p_starRow, p_pageSize, p_filter);
+        }
+
+        /// <summary>
+        /// 返回符合条件的第一个实体对象，每个实体包含所有列值，不存在时返回null
+        /// </summary>
+        /// <param name=""p_filter"">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<$Entity$> First(string p_filter)
+        {
+            return EntityEx.First<$Entity$>(p_filter);
         }
 
         /// <summary>
@@ -867,5 +891,6 @@ namespace Dt.Core
         {
             return EntityEx.GetNewSeq<$Entity$>(p_colName);
         }";
+        #endregion
     }
 }

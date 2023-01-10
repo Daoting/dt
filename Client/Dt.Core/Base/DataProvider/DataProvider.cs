@@ -55,22 +55,6 @@ namespace Dt.Agent
         }
 
         /// <summary>
-        /// 返回所有实体列表
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public static Task<Table<TEntity>> GetAll<TEntity>()
-            where TEntity : Entity
-        {
-            return new UnaryRpc(
-                typeof(TSvc).Name,
-                "Da.Query",
-                EntitySchema.Get(typeof(TEntity)).Schema.GetSelectAllSql(),
-                null
-            ).Call<Table<TEntity>>();
-        }
-
-        /// <summary>
         /// 按页查询数据
         /// </summary>
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
