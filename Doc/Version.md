@@ -23,6 +23,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加业务样例项目
 * 增加EntityEx类，重新生成项目中的Entity
 * 增加UnitOfWork类，EntityEx添加保存删除方法
+* Entity增加静态方法DelByID
 
 ### Bug修改
 * Fv格标题提示被截断的长文本

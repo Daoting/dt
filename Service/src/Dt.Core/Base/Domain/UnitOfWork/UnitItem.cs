@@ -46,6 +46,7 @@ namespace Dt.Core
         void Commited<TEntity>()
             where TEntity : Entity
         {
+#if SERVER
             var localEB = Kit.GetService<EventBus.LocalEventBus>();
             foreach (var en in Data)
             {
@@ -92,6 +93,7 @@ namespace Dt.Core
                 if (!IsDelete)
                     en.AcceptChanges();
             }
+#endif
         }
     }
 }
