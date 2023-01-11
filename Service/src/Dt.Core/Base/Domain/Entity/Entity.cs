@@ -17,28 +17,20 @@ namespace Dt.Core
     /// </summary>
     public abstract class Entity : Row
     {
-#if SERVER
-        List<IEvent> _events;
-        DataProvider _dp;
 
-        /// <summary>
-        /// 获取数据提供者，提供给 Entity 内部查询使用，禁止保存或删除操作！
-        /// </summary>
-        public DataProvider Dp
+        public List<IList<Entity>> GetChildren()
         {
-            get
-            {
-                if (_dp == null)
-                    _dp = new DataProvider(false);
-                return _dp;
-            }
+            return null;
         }
+
+        #region 领域事件
+        List<IEvent> _events;
 
         /// <summary>
         /// 增加领域事件
         /// </summary>
         /// <param name="p_event"></param>
-        protected void AddDomainEvent(IEvent p_event)
+        protected void AddEvent(IEvent p_event)
         {
             if (_events == null)
                 _events = new List<IEvent>();
@@ -49,7 +41,7 @@ namespace Dt.Core
         /// 获取实体对象的领域事件
         /// </summary>
         /// <returns></returns>
-        internal List<IEvent> GetDomainEvents()
+        internal List<IEvent> GetEvents()
         {
             return _events;
         }
@@ -57,16 +49,11 @@ namespace Dt.Core
         /// <summary>
         /// 清空实体对象的领域事件
         /// </summary>
-        internal void ClearDomainEvents()
+        internal void ClearEvents()
         {
             _events?.Clear();
         }
-#endif
-
-        public List<IList<Entity>> GetChildren()
-        {
-            return null;
-        }
+        #endregion
 
         #region Hook
         /// <summary>

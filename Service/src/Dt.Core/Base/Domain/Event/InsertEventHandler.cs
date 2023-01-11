@@ -16,7 +16,7 @@ namespace Dt.Core
     /// <summary>
     /// 插入后事件处理的默认基类
     /// </summary>
-    public abstract class InsertEventHandler<TEntity> : IRemoteHandler<InsertEvent<TEntity>>, ILocalHandler<InsertEvent<TEntity>>
+    public abstract class InsertEventHandler<TEntity> : ILocalHandler<InsertEvent<TEntity>>
         where TEntity : Entity
     {
         public virtual Task Handle(InsertEvent<TEntity> p_event)

@@ -16,7 +16,7 @@ namespace Dt.Core
     /// <summary>
     /// 更新后事件处理的默认基类
     /// </summary>
-    public abstract class UpdateEventHandler<TEntity> : IRemoteHandler<UpdateEvent<TEntity>>, ILocalHandler<UpdateEvent<TEntity>>
+    public abstract class UpdateEventHandler<TEntity> : ILocalHandler<UpdateEvent<TEntity>>
         where TEntity : Entity
     {
         public virtual Task Handle(UpdateEvent<TEntity> p_event)

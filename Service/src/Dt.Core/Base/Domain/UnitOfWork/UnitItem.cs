@@ -43,10 +43,9 @@ namespace Dt.Core
             _commited.MakeGenericMethod(Schema.EntityType).Invoke(this, new object[0]);
         }
 
-        void Commited<TEntity>()
+        async Task Commited<TEntity>()
             where TEntity : Entity
         {
-#if SERVER
             var localEB = Kit.GetService<EventBus.LocalEventBus>();
             foreach (var en in Data)
             {
@@ -75,25 +74,24 @@ namespace Dt.Core
                 }
 
                 // 触发自定义领域事件
-                var ls = en.GetDomainEvents();
+                var ls = en.GetEvents();
                 if (ls != null && ls.Count > 0)
                 {
                     ls.ForEach(localEB.Publish);
                     // 发布完毕，清空领域事件
-                    en.ClearDomainEvents();
+                    en.ClearEvents();
                 }
 
                 // 删除服务端缓存
                 if (Schema.CacheHandler != null)
                 {
-
+                    await Schema.CacheHandler.Remove(en);
                 }
 
                 // 状态复位
                 if (!IsDelete)
                     en.AcceptChanges();
             }
-#endif
         }
     }
 }

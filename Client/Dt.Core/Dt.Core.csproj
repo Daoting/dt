@@ -24,6 +24,15 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\CudEventAttribute.cs" Link="Base\Domain\Entity\CudEventAttribute.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\CacheAttribute.cs" Link="Base\Domain\Entity\CacheAttribute.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\CudEvent.cs" Link="Base\Domain\Event\CudEvent.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\DeleteEvent.cs" Link="Base\Domain\Event\DeleteEvent.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\DeleteEventHandler.cs" Link="Base\Domain\Event\DeleteEventHandler.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\InsertEvent.cs" Link="Base\Domain\Event\InsertEvent.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\InsertEventHandler.cs" Link="Base\Domain\Event\InsertEventHandler.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\UpdateEvent.cs" Link="Base\Domain\Event\UpdateEvent.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Event\UpdateEventHandler.cs" Link="Base\Domain\Event\UpdateEventHandler.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEvent.cs" Link="Base\EventBus\IEvent.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEventHandler.cs" Link="Base\EventBus\IEventHandler.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\Local\ILocalHandler.cs" Link="Base\EventBus\ILocalHandler.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\UnitOfWork\UnitOfWork.cs" Link="Base\Domain\UnitOfWork\UnitOfWork.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\UnitOfWork\UnitItem.cs" Link="Base\Domain\UnitOfWork\UnitItem.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />

@@ -642,7 +642,7 @@ namespace Dt.Core
         void GatherSaveEvents<TEntity>(TEntity p_entity, EntitySchema p_model)
             where TEntity : Entity
         {
-            var events = p_entity.GetDomainEvents();
+            var events = p_entity.GetEvents();
             if (events != null)
                 AddDomainEvents(events);
 
@@ -670,7 +670,7 @@ namespace Dt.Core
         void GatherDelEvents<TEntity>(TEntity p_entity, EntitySchema p_model)
             where TEntity : Entity
         {
-            var events = p_entity.GetDomainEvents();
+            var events = p_entity.GetEvents();
             if (events != null)
                 AddDomainEvents(events);
 

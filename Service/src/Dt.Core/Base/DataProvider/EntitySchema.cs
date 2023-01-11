@@ -34,7 +34,6 @@ namespace Dt.Core
             int index = tbl.Name.IndexOf("_");
             SvcName = index == -1 ? "cm" : tbl.Name.Substring(0, index).ToLower();
 
-#if SERVER
             // 领域事件类型
             var cud = p_type.GetCustomAttribute<CudEventAttribute>(false);
             if (cud != null)
@@ -46,7 +45,6 @@ namespace Dt.Core
             var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
             if (cfg != null && !string.IsNullOrEmpty(cfg.PrefixKey))
                 CacheHandler = new CacheHandler(this, cfg);
-#endif
         }
 
         /// <summary>
@@ -64,7 +62,6 @@ namespace Dt.Core
         /// </summary>
         public Type EntityType { get; }
 
-#if SERVER
         /// <summary>
         /// 触发增删改领域事件的类型
         /// </summary>
@@ -75,6 +72,8 @@ namespace Dt.Core
         /// </summary>
         internal CacheHandler CacheHandler { get; }
 
+        #region TableSchema
+#if SERVER
         internal static TableSchema GetTableSchema(string p_tblName)
         {
             return DbSchema.GetTableSchema(p_tblName);
@@ -101,6 +100,7 @@ namespace Dt.Core
             return schema;
         }
 #endif
+        #endregion
 
         #region 静态内容
         static readonly ConcurrentDictionary<Type, EntitySchema> _models = new ConcurrentDictionary<Type, EntitySchema>();
