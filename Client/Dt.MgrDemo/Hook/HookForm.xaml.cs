@@ -58,10 +58,16 @@ namespace Dt.MgrDemo.Hook
         async void OnSave(object sender, Mi e)
         {
             var d = _fv.Data.To<HookObj>();
-            if (await AtCm.Save(d))
+            if (await d.Save())
             {
                 _win.List.Update();
             }
+
+
+            var tbl = await HookObj.Query();
+            var ls = new List<HookObj>();
+            await ls.Save();
+            await tbl.Save();
         }
 
         async void OnDel(object sender, Mi e)

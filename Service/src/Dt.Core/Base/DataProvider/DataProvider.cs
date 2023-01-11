@@ -27,7 +27,7 @@ namespace Dt.Core
         const string _unchangedMsg = "没有需要保存的数据！";
         const string _saveError = "数据源不可为空！";
         readonly MySqlAccess _db;
-        List<DomainEvent> _domainEvents;
+        List<IEvent> _domainEvents;
         #endregion
 
         #region 构造方法
@@ -143,17 +143,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 返回所有实体列表
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public Task<Table<TEntity>> GetAll<TEntity>()
-            where TEntity : Entity
-        {
-            return _db.Query<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectAllSql(), null);
-        }
-
-        /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
@@ -162,34 +151,6 @@ namespace Dt.Core
         public Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
             return _db.GetScalar<T>(p_keyOrSql, p_params);
-        }
-
-        /// <summary>
-        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键
-        /// 不存在时返回null，启用缓存时首先从缓存中获取
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyName">主键列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <returns>返回实体对象或null</returns>
-        public async Task<TEntity> GetByKey<TEntity>(string p_keyName, string p_keyVal)
-            where TEntity : Entity
-        {
-            var model = EntitySchema.Get(typeof(TEntity));
-            TEntity entity = null;
-            if (model.CacheHandler != null)
-                entity = await model.CacheHandler.Get<TEntity>(p_keyName, p_keyVal);
-
-            if (entity == null)
-            {
-                entity = await _db.First<TEntity>(
-                    $"select * from `{model.Schema.Name}` where {p_keyName}=@{p_keyName}",
-                    new Dict { { p_keyName, p_keyVal } });
-
-                if (entity != null && model.CacheHandler != null)
-                    await model.CacheHandler.Cache(entity);
-            }
-            return entity;
         }
         #endregion
 
@@ -416,7 +377,7 @@ namespace Dt.Core
             }
 
             var model = EntitySchema.Get(typeof(TEntity));
-            Dict dt = model.Schema.GetDeleteSql(new List<Entity> { p_entity });
+            Dict dt = model.Schema.GetDeleteSql((IList)new List<Entity> { p_entity });
             return await BatchExecDelete(dt, new List<Entity> { p_entity }, model) == 1;
         }
 
@@ -492,8 +453,7 @@ namespace Dt.Core
 
             // 有缓存或需要触发实体删除事件
             if (model.CacheHandler != null
-                || (model.CudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete
-                || (model.CudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
+                || (model.CudEvent & CudEvent.Delete) == CudEvent.Delete)
             {
                 TEntity entity = null;
                 if (model.CacheHandler != null)
@@ -690,17 +650,13 @@ namespace Dt.Core
             {
                 if (p_entity.IsAdded)
                 {
-                    if ((p_model.CudEvent & CudEvent.LocalInsert) == CudEvent.LocalInsert)
-                        AddDomainEvent(new DomainEvent(false, new InsertEvent<TEntity> { Entity = p_entity }));
-                    if ((p_model.CudEvent & CudEvent.RemoteInsert) == CudEvent.RemoteInsert)
-                        AddDomainEvent(new DomainEvent(true, new InsertEvent<TEntity> { Entity = p_entity }));
+                    if ((p_model.CudEvent & CudEvent.Insert) == CudEvent.Insert)
+                        AddDomainEvent(new InsertEvent<TEntity> { Entity = p_entity });
                 }
                 else if (p_entity.IsChanged)
                 {
-                    if ((p_model.CudEvent & CudEvent.LocalUpdate) == CudEvent.LocalUpdate)
-                        AddDomainEvent(new DomainEvent(false, new UpdateEvent<TEntity> { Entity = p_entity }));
-                    if ((p_model.CudEvent & CudEvent.RemoteUpdate) == CudEvent.RemoteUpdate)
-                        AddDomainEvent(new DomainEvent(true, new UpdateEvent<TEntity> { Entity = p_entity }));
+                    if ((p_model.CudEvent & CudEvent.Update) == CudEvent.Update)
+                        AddDomainEvent(new UpdateEvent<TEntity> { Entity = p_entity });
                 }
             }
         }
@@ -720,24 +676,22 @@ namespace Dt.Core
 
             if (p_model.CudEvent != CudEvent.None)
             {
-                if ((p_model.CudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete)
-                    AddDomainEvent(new DomainEvent(false, new DeleteEvent<TEntity> { Entity = p_entity }));
-                if ((p_model.CudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
-                    AddDomainEvent(new DomainEvent(true, new DeleteEvent<TEntity> { Entity = p_entity }));
+                if ((p_model.CudEvent & CudEvent.Delete) == CudEvent.Delete)
+                    AddDomainEvent(new DeleteEvent<TEntity> { Entity = p_entity });
             }
         }
 
-        void AddDomainEvents(IEnumerable<DomainEvent> p_events)
+        void AddDomainEvents(IEnumerable<IEvent> p_events)
         {
             if (_domainEvents == null)
-                _domainEvents = new List<DomainEvent>();
+                _domainEvents = new List<IEvent>();
             _domainEvents.AddRange(p_events);
         }
 
-        void AddDomainEvent(DomainEvent p_event)
+        void AddDomainEvent(IEvent p_event)
         {
             if (_domainEvents == null)
-                _domainEvents = new List<DomainEvent>();
+                _domainEvents = new List<IEvent>();
             _domainEvents.Add(p_event);
         }
         #endregion
@@ -756,13 +710,9 @@ namespace Dt.Core
             if (p_suc && _domainEvents != null)
             {
                 var localEB = Kit.GetService<LocalEventBus>();
-                var remoteEB = Kit.GetService<RemoteEventBus>();
                 foreach (var de in _domainEvents)
                 {
-                    if (de.IsRemoteEvent)
-                        remoteEB.Broadcast(de.Event, false);
-                    else
-                        localEB.Publish(de.Event);
+                    localEB.Publish(de);
                 }
             }
             _domainEvents?.Clear();

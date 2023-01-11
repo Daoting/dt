@@ -24,33 +24,18 @@ namespace Dt.Core
         None = 0x00,
 
         /// <summary>
-        /// 触发本地插入事件
+        /// 触发插入事件
         /// </summary>
-        LocalInsert = 0x01,
+        Insert = 0x01,
 
         /// <summary>
-        /// 触发远程插入事件
+        /// 触发更新事件
         /// </summary>
-        RemoteInsert = 0x02,
+        Update = 0x04,
 
         /// <summary>
-        /// 触发本地更新事件
+        /// 触发删除事件
         /// </summary>
-        LocalUpdate = 0x04,
-
-        /// <summary>
-        /// 触发远程更新事件
-        /// </summary>
-        RemoteUpdate = 0x08,
-
-        /// <summary>
-        /// 触发本地删除事件
-        /// </summary>
-        LocalDelete = 0x10,
-
-        /// <summary>
-        /// 触发远程删除事件
-        /// </summary>
-        RemoteDelete = 0x20,
+        Delete = 0x10,
     }
 }

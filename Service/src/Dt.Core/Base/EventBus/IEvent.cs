@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.EventBus
+namespace Dt.Core
 {
     /// <summary>
     /// 事件，构造方法无参数！

@@ -18,7 +18,7 @@ namespace Dt.Core
     public abstract class Entity : Row
     {
 #if SERVER
-        List<DomainEvent> _events;
+        List<IEvent> _events;
         DataProvider _dp;
 
         /// <summary>
@@ -38,19 +38,18 @@ namespace Dt.Core
         /// 增加领域事件
         /// </summary>
         /// <param name="p_event"></param>
-        /// <param name="p_isRemoteEvent"></param>
-        protected void AddDomainEvent(EventBus.IEvent p_event, bool p_isRemoteEvent = false)
+        protected void AddDomainEvent(IEvent p_event)
         {
             if (_events == null)
-                _events = new List<DomainEvent>();
-            _events.Add(new DomainEvent(p_isRemoteEvent, p_event));
+                _events = new List<IEvent>();
+            _events.Add(p_event);
         }
 
         /// <summary>
         /// 获取实体对象的领域事件
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<DomainEvent> GetDomainEvents()
+        internal List<IEvent> GetDomainEvents()
         {
             return _events;
         }
@@ -63,6 +62,11 @@ namespace Dt.Core
             _events?.Clear();
         }
 #endif
+
+        public List<IList<Entity>> GetChildren()
+        {
+            return null;
+        }
 
         #region Hook
         /// <summary>

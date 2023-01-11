@@ -22,6 +22,7 @@ namespace Dt.Core
     {
         public EntitySchema(Type p_type)
         {
+            EntityType = p_type;
             var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
             if (tbl == null || string.IsNullOrEmpty(tbl.Name))
                 throw new Exception($"实体{p_type.Name}缺少映射表设置！");
@@ -57,6 +58,11 @@ namespace Dt.Core
         /// Entity增删用到的服务名称
         /// </summary>
         public string SvcName { get; }
+
+        /// <summary>
+        /// 实体类型
+        /// </summary>
+        public Type EntityType { get; }
 
 #if SERVER
         /// <summary>
