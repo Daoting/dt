@@ -430,12 +430,9 @@ namespace Dt.Core
                     }
                 }
 
-                // 是否启用事务
-                bool isTran = mi.GetCustomAttribute<TransactionAttribute>(false) != null;
-
                 var methodAuth = mi.GetCustomAttribute<AuthAttribute>(false);
                 string name = $"{p_type.Name}.{mi.Name}";
-                Methods[name] = new ApiMethod(mi, callMode, methodAuth ?? clsAuth, isTran);
+                Methods[name] = new ApiMethod(mi, callMode, methodAuth ?? clsAuth);
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }

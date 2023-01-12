@@ -128,13 +128,13 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await AtCm.DeleteBySvc(user))
-            {
-                // 删除的为选择行时，清空关联Mv
-                if (isSelected)
-                    _win.Form.Clear();
-                Update();
-            }
+            //if (await AtCm.DeleteBySvc(user))
+            //{
+            //    // 删除的为选择行时，清空关联Mv
+            //    if (isSelected)
+            //        _win.Form.Clear();
+            //    Update();
+            //}
         }
 
         void OnUserMenu(object sender, Mi e)

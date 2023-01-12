@@ -29,47 +29,29 @@ namespace Dt.Core
     /// 基于开源项目 MySqlConnector 和 Dapper
     /// Dapper涉及dynamic的速度非常慢！
     /// </summary>
-    public class MySqlAccess
+    class MySqlAccess : IDataProvider
     {
         #region 成员变量
         // 默认连接串
         internal static string DefaultConnStr;
-        // 是否输出所有运行中的Sql语句
-        public static bool TraceSql;
         static readonly Regex _sqlPattern = new Regex("[0-9a-zA-Z_$]");
 
-        string _dbKey;
-        bool _autoClose;
         MySqlConnection _conn;
         MySqlTransaction _tran;
         #endregion
 
-        #region 构造方法
+        #region 属性
         /// <summary>
-        /// 默认连接串 + 自动关闭连接
+        /// 调用每个公共方法后是否自动关闭连接，默认true，false时切记最后手动关闭！
         /// </summary>
-        public MySqlAccess() : this(null, true)
-        { }
+        public bool AutoClose { get; set; } = true;
 
         /// <summary>
-        /// 默认连接串 + 设置是否自动关闭连接
+        /// 数据源键名，可根据键名获取连接串，在global.json的MySql节，null时使用默认数据源，打开数据库连接前设置有效
         /// </summary>
-        /// <param name="p_autoClose">调用每个公共方法后是否自动关闭连接，false时切记最后手动关闭！</param>
-        public MySqlAccess(bool p_autoClose) : this(null, p_autoClose)
-        { }
-
-        /// <summary>
-        /// 其他数据源连接串 + 设置是否自动关闭连接
-        /// </summary>
-        /// <param name="p_dbKey">数据源键名，在global.json的MySql节</param>
-        /// <param name="p_autoClose">调用每个公共方法后是否自动关闭连接，false时切记最后手动关闭！</param>
-        public MySqlAccess(string p_dbKey, bool p_autoClose = true)
-        {
-            _dbKey = p_dbKey;
-            _autoClose = p_autoClose;
-        }
+        public string DbKey { get; set; }
         #endregion
-
+        
         #region Table查询
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
@@ -814,31 +796,66 @@ namespace Dt.Core
 
         #region 增删改
         /// <summary>
-        /// 以参数值方式执行Sql语句，返回影响的行数，p_params为IEnumerable时执行批量操作
+        /// 以参数值方式执行Sql语句，返回影响的行数
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，为IEnumerable时执行批量操作</param>
-        /// <param name="p_beginTrans">是否启动事务，默认false</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象</param>
         /// <returns>执行后影响的行数</returns>
-        public async Task<int> Exec(string p_keyOrSql, object p_params = null, bool p_beginTrans = false)
+        public async Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
             try
             {
                 await OpenConnection();
-                if (p_beginTrans)
-                    await BeginTrans();
-
                 var cmd = CreateCommand(p_keyOrSql, p_params, false);
                 var result = await _conn.ExecuteAsync(cmd);
-
-                if (p_beginTrans)
-                    await CommitTrans();
                 return result;
             }
             catch (Exception ex)
             {
-                await RollbackTrans();
                 throw GetSqlException(CreateCommand(p_keyOrSql, p_params, false), ex);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
+        /// <summary>
+        /// 一个事务内执行多个Sql
+        /// </summary>
+        /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}</param>
+        /// <returns>返回执行后影响的行数</returns>
+        public async Task<int> BatchExec(List<Dict> p_dts)
+        {
+            if (p_dts == null || p_dts.Count == 0)
+                return 0;
+
+            try
+            {
+                await BeginTrans();
+                int cnt = 0;
+                foreach (Dict dt in p_dts)
+                {
+                    string sql = (string)dt["text"];
+                    if (dt["params"] is List<Dict> ls)
+                    {
+                        foreach (var par in ls)
+                        {
+                            cnt += await Exec(sql, par);
+                        }
+                    }
+                    else if (dt["params"] is Dict par)
+                    {
+                        cnt += await Exec(sql, par);
+                    }
+                }
+                await CommitTrans();
+                return cnt;
+            }
+            catch
+            {
+                await RollbackTrans();
+                throw;
             }
             finally
             {
@@ -849,9 +866,10 @@ namespace Dt.Core
 
         #region 手动关闭
         /// <summary>
-        /// _autoClose为false时需要手动关闭连接，
+        /// AutoClose为false时需要手动关闭连接，
         /// </summary>
         /// <param name="p_commitTrans">若有事务，true表提交，false表回滚</param>
+        /// <returns></returns>
         public async Task Close(bool p_commitTrans)
         {
             if (_tran != null)
@@ -921,7 +939,7 @@ namespace Dt.Core
             if (_conn == null)
             {
                 // 数据源键名在json配置中
-                _conn = new MySqlConnection(string.IsNullOrEmpty(_dbKey) ? DefaultConnStr : Kit.Config["MySql:" + _dbKey]);
+                _conn = new MySqlConnection(string.IsNullOrEmpty(DbKey) ? DefaultConnStr : Kit.Config["MySql:" + DbKey]);
                 await _conn.OpenAsync();
             }
         }
@@ -931,7 +949,7 @@ namespace Dt.Core
         /// </summary>
         void ReleaseConnection()
         {
-            if (_autoClose && _tran == null && _conn != null)
+            if (AutoClose && _tran == null && _conn != null)
             {
                 _conn.Close();
                 _conn = null;
@@ -950,7 +968,7 @@ namespace Dt.Core
         CommandDefinition CreateCommand(string p_keyOrSql, object p_params, bool p_deferred)
         {
             string sql = Kit.Sql(p_keyOrSql);
-            if (TraceSql)
+            if (Kit.TraceSql)
                 Log.Information(BuildSql(sql, p_params));
 
             return new CommandDefinition(

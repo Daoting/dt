@@ -8,13 +8,8 @@
 
 #region 引用命名
 using Dt.Cm.Domain;
-using Dt.Core;
 using Dt.Core.Caches;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
@@ -35,7 +30,7 @@ namespace Dt.Cm
         {
             List<long> ls = new List<long>();
             StringBuilder sb = new StringBuilder();
-            var rows = await Dp.Each("用户-可访问的菜单", new { userid = p_userID });
+            var rows = await _dp.Each("用户-可访问的菜单", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -49,6 +44,8 @@ namespace Dt.Cm
             // 若每次都刷新版本号，两个客户端用相同账号交替登录时，版本号始终不同！
             // 取md5的中间16位，重复几率较低
             string ver = Kit.GetMD5(sb.ToString()).Substring(8, 16);
+
+            // 缓存版本号
             await GetVerCache().SetField(p_userID, "menu", ver);
 
             return new Dict { { "result", ls }, { "ver", ver } };
@@ -63,7 +60,7 @@ namespace Dt.Cm
         {
             List<string> ls = new List<string>();
             StringBuilder sb = new StringBuilder();
-            var rows = await Dp.Each("用户-具有的权限", new { userid = p_userID });
+            var rows = await _dp.Each("用户-具有的权限", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -86,8 +83,8 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<Dict> GetParams(long p_userID)
         {
-            var tblAll = await Dp.Query("SELECT id,value FROM cm_params");
-            var tblMy = await Dp.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
+            var tblAll = await _dp.Query("SELECT id,value FROM cm_params");
+            var tblMy = await _dp.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in tblAll)
             {
@@ -123,27 +120,35 @@ namespace Dt.Cm
         /// <param name="p_paramID"></param>
         /// <param name="p_value"></param>
         /// <returns></returns>
-        [Transaction]
         public async Task<bool> SaveParams(long p_userID, string p_paramID, string p_value)
         {
             Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
-            var up = new UserParamsObj(
-                UserID: p_userID,
-                ParamID: p_paramID,
-                Value: p_value,
-                Mtime: Kit.Now);
-            await Dp.Delete(up);
+            var uw = new UnitOfWork();
 
-            var defVal = await Dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
+            var old = new UserParamsObj(
+                UserID: p_userID,
+                ParamID: p_paramID);
+            await uw.Delete(old);
+
+            var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
             if (defVal != p_value)
             {
                 // 和默认值不同
-                if (!await Dp.Save(up))
-                    return false;
+                var up = new UserParamsObj(
+                    UserID: p_userID,
+                    ParamID: p_paramID,
+                    Value: p_value,
+                    Mtime: Kit.Now);
+                await uw.Save(up);
             }
-            await GetVerCache().DeleteField(p_userID, "params");
-            return true;
+
+            bool suc = await uw.Commit();
+            if (suc)
+            {
+                await GetVerCache().DeleteField(p_userID, "params");
+            }
+            return suc;
         }
 
         /// <summary>
@@ -163,11 +168,11 @@ namespace Dt.Cm
             if (p_roleIDs.Contains(1))
             {
                 // 包含任何人
-                ls = await Dp.EachFirstCol<long>("select id from cm_user");
+                ls = await _dp.EachFirstCol<long>("select id from cm_user");
             }
             else
             {
-                ls = await Dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await _dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
             }
 
             var db = GetVerCache();
@@ -192,7 +197,6 @@ namespace Dt.Cm
         /// <param name="p_userID"></param>
         /// <param name="p_roleIDs"></param>
         /// <returns></returns>
-        [Transaction]
         public async Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
         {
             if (p_roleIDs == null || p_roleIDs.Count == 0)
@@ -200,7 +204,7 @@ namespace Dt.Cm
 
             List<UserRoleObj> ls = (from id in p_roleIDs
                                     select new UserRoleObj(p_userID, id)).ToList();
-            if (await Dp.BatchDelete(ls) > 0)
+            if (await ls.Delete())
             {
                 await GetVerCache().Delete(p_userID);
                 return true;
@@ -214,7 +218,6 @@ namespace Dt.Cm
         /// <param name="p_roleID"></param>
         /// <param name="p_userIDs"></param>
         /// <returns></returns>
-        [Transaction]
         public async Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
         {
             // 任何人 roleid = 1 
@@ -223,7 +226,7 @@ namespace Dt.Cm
 
             List<UserRoleObj> ls = (from id in p_userIDs
                                     select new UserRoleObj(id, p_roleID)).ToList();
-            if (await Dp.BatchDelete(ls) > 0)
+            if (await ls.Delete())
             {
                 await GetVerCache().BatchDelete(p_userIDs);
                 return true;
@@ -237,7 +240,6 @@ namespace Dt.Cm
         /// <param name="p_userID"></param>
         /// <param name="p_roleIDs"></param>
         /// <returns></returns>
-        [Transaction]
         public async Task<bool> AddUserRole(long p_userID, List<long> p_roleIDs)
         {
             if (p_roleIDs == null || p_roleIDs.Count == 0)
@@ -253,7 +255,7 @@ namespace Dt.Cm
                 }
             }
 
-            if (!await Dp.BatchSave(ls))
+            if (!await ls.Save())
                 return false;
 
             await GetVerCache().Delete(p_userID);
@@ -266,7 +268,6 @@ namespace Dt.Cm
         /// <param name="p_roleID"></param>
         /// <param name="p_userIDs"></param>
         /// <returns></returns>
-        [Transaction]
         public async Task<bool> AddRoleUser(long p_roleID, List<long> p_userIDs)
         {
             // 任何人 roleid = 1 
@@ -279,7 +280,7 @@ namespace Dt.Cm
                 ls.Add(new UserRoleObj(uid, p_roleID));
             }
 
-            if (!await Dp.BatchSave(ls))
+            if (!await ls.Save())
                 return false;
 
             await GetVerCache().BatchDelete(p_userIDs);
@@ -293,9 +294,9 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteRole(long p_roleID)
         {
-            if (await Dp.Delete(new RoleObj(p_roleID)))
+            if (await new RoleObj(p_roleID).Delete())
             {
-                var ls = await Dp.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
+                var ls = await _dp.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);
                 return true;
             }

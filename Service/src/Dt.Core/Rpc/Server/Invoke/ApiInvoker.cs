@@ -33,7 +33,7 @@ namespace Dt.Core.Rpc
             get
             {
                 if (_logger == null)
-                    _logger = Serilog.Log.ForContext(new ApiLogEnricher(this));
+                    _logger = Serilog.Log.ForContext(new ApiLogEnricher(ApiName, UserID));
                 return _logger;
             }
         }

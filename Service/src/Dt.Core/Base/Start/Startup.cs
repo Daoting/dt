@@ -65,6 +65,9 @@ namespace Dt.Core
                 Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
             });
 
+            // 添加MySql数据库访问，可根据配置切换成其它库类型
+            p_services.AddTransient<IDataProvider, MySqlAccess>();
+
             Kit.ConfigureServices(p_services);
         }
 

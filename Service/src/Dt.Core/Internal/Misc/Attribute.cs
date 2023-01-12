@@ -80,13 +80,6 @@ namespace Dt.Core
     }
 
     /// <summary>
-    /// 自动为方法启用事务的标志
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class TransactionAttribute : Attribute
-    { }
-
-    /// <summary>
     /// 自定义Agent方法代码
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-11 创建
+* 日志: 2023-01-12 创建
 ******************************************************************************/
 #endregion
 
@@ -103,7 +103,6 @@ namespace Dt.Mgr.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -118,7 +117,6 @@ namespace Dt.Mgr.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -133,7 +131,6 @@ namespace Dt.Mgr.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_keyName">主键或唯一索引列名</param>
         /// <param name="p_keyVal">主键值</param>
         /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>

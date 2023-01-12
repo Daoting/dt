@@ -71,7 +71,7 @@ namespace Dt.Cm
                 }
             }
 
-            bool suc = await Dp.Save(p_post);
+            bool suc = await p_post.Save();
             if (suc && oldUrl != null)
             {
                 // 删除旧文件

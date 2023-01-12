@@ -80,13 +80,13 @@ namespace Dt.Mgr.Model
         {
             var user = _fv.Data.To<UserObj>();
             bool isNew = user.IsAdded;
-            if (await AtCm.SaveBySvc(user))
-            {
-                Result = true;
-                _win?.List.Update();
-                if (isNew)
-                    _win.RoleList.Update(user.ID);
-            }
+            //if (await AtCm.SaveBySvc(user))
+            //{
+            //    Result = true;
+            //    _win?.List.Update();
+            //    if (isNew)
+            //        _win.RoleList.Update(user.ID);
+            //}
         }
 
         UserAccountWin _win => (UserAccountWin)_tab.OwnWin;

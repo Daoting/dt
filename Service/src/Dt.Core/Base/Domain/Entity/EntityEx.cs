@@ -192,7 +192,7 @@ namespace Dt.Core
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有，可能被注入</param>
         /// <returns>返回实体列表</returns>
         public static Task<Table<TEntity>> Query<TEntity>(string p_filter = null)
-        where TEntity : Entity
+            where TEntity : Entity
         {
             var model = EntitySchema.Get(typeof(TEntity));
             var sql = model.Schema.GetSelectAllSql();
@@ -200,7 +200,7 @@ namespace Dt.Core
                 sql += " where " + p_filter;
 
 #if SERVER
-            return new MySqlAccess().Query<TEntity>(sql);
+            return Kit.ContextDp.Query<TEntity>(sql);
 #else
             return Kit.Rpc<Table<TEntity>>(
                 model.SvcName,
@@ -228,7 +228,7 @@ namespace Dt.Core
             sql += $" limit {p_starRow},{p_pageSize} ";
 
 #if SERVER
-            return new MySqlAccess().Query<TEntity>(sql);
+            return Kit.ContextDp.Query<TEntity>(sql);
 #else
             return Kit.Rpc<Table<TEntity>>(
                 model.SvcName,
@@ -253,7 +253,7 @@ namespace Dt.Core
                 sql += " where " + p_filter;
 
 #if SERVER
-            return new MySqlAccess().First<TEntity>(sql);
+            return Kit.ContextDp.First<TEntity>(sql);
 #else
             return Kit.Rpc<TEntity>(
                 model.SvcName,
@@ -309,7 +309,7 @@ namespace Dt.Core
             var dt = new Dict { { p_keyName, p_keyVal } };
 
 #if SERVER
-            return new MySqlAccess().First<TEntity>(
+            return Kit.ContextDp.First<TEntity>(
                 sql,
                 dt);
 #else
@@ -358,7 +358,7 @@ namespace Dt.Core
             var seqName = model.Schema.Name + "+" + p_colName.ToLower();
             int seq = 0;
 #if SERVER
-            seq = await new MySqlAccess().GetScalar<int>($"select nextval('{seqName}')");
+            seq = await Kit.ContextDp.GetScalar<int>($"select nextval('{seqName}')");
 #else
             seq = await Kit.Rpc<int>(
                 model.SvcName,

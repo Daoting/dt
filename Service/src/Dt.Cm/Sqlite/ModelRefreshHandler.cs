@@ -69,8 +69,8 @@ namespace Dt.Cm
             string dbFile = System.IO.Path.Combine(path, p_event.Version + ".db");
             var handler = Kit.GetService<SqliteModelHandler>();
 
-            bool trace = MySqlAccess.TraceSql;
-            MySqlAccess.TraceSql = false;
+            bool trace = Kit.TraceSql;
+            Kit.TraceSql = false;
             try
             {
                 using (var conn = new SqliteConnection($"Data Source={dbFile}"))
@@ -160,7 +160,7 @@ namespace Dt.Cm
             {
                 // 移除标志
                 SqliteModelHandler.Refreshing = false;
-                MySqlAccess.TraceSql = trace;
+                Kit.TraceSql = trace;
             }
 
             // 删除历史文件
@@ -186,7 +186,11 @@ namespace Dt.Cm
             if (string.IsNullOrEmpty(select))
                 return 0;
 
-            Table tbl = await new MySqlAccess(dbConn).Query(select);
+            // 连接不同的库
+            var dp = Kit.GetService<IDataProvider>();
+            dp.DbKey = dbConn;
+
+            Table tbl = await dp.Query(select);
             if (tbl.Count == 0)
                 return 0;
 

@@ -31,7 +31,6 @@ namespace Dt.Cm
         /// 不拦截内嵌方法
         /// </summary>
         /// <returns></returns>
-        [Transaction]
         public virtual Task<string> CallInline()
         {
             return GetSql();
@@ -58,7 +57,7 @@ namespace Dt.Cm
 
         public virtual Task<string> GetSql()
         {
-            return Dp.GetScalar<string>("select `sql` from cm_sql");
+            return _dp.GetScalar<string>("select `sql` from cm_sql");
         }
     }
 
@@ -80,7 +79,7 @@ namespace Dt.Cm
             }
 
             isIntercepted = true;
-            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name + " 用户 " + (p_invocation.InvocationTarget as BaseApi).UserID);
+            Log.Information("1号拦截器已拦截 " + p_invocation.Method.Name);
             var type = p_invocation.Method.ReturnType;
             try
             {

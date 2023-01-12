@@ -1,7 +1,7 @@
 ﻿namespace Dt.Agent
 {
     /// <summary>
-    /// 公共的 DataAccess 和 EntityAccess 的Api
+    /// 公共 DataAccess Api
     /// </summary>
     public partial class AtFsm : DataProvider<AtFsm.FSM>
     {

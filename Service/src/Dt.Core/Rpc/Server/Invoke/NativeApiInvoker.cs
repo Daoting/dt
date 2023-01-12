@@ -30,10 +30,12 @@ namespace Dt.Core.Rpc
             if (tgt == null)
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
-            // 本地调用标识
-            tgt.UserID = 112;
-            tgt.IsTransactional = sm.IsTransactional;
+            // 初始化整个调用期间有效的数据包
+            Bag bag = new Bag(112, Log.ForContext(new ApiLogEnricher(p_methodName, 112)));
+            tgt.Init(bag);
+
             bool suc = await CallMethod(mi, tgt, p_params);
+            
             // Api调用结束后释放资源
             await tgt.Close(suc);
 

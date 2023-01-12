@@ -42,10 +42,11 @@ namespace Dt.Core.Rpc
             _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as BaseApi;
             if (_tgt != null)
             {
-                _tgt.UserID = _invoker.UserID;
-                _tgt.IsTransactional = _invoker.Api.IsTransactional;
+                // 创建整个http请求期间有效的数据包
+                _tgt.Init(new Bag(_invoker));
 
                 bool suc = await CallMethod();
+                
                 // Api调用结束后释放资源
                 await _tgt.Close(suc);
             }

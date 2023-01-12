@@ -117,6 +117,11 @@ namespace Dt.Core
         {
             get { return RuntimeInformation.IsOSPlatform(OSPlatform.Linux); }
         }
+
+        /// <summary>
+        /// 是否输出所有运行中的Sql语句
+        /// </summary>
+        public static bool TraceSql { get; set; }
         #endregion
 
         #region 系统配置
@@ -166,7 +171,7 @@ namespace Dt.Core
         static void ApplyConfig()
         {
             MySqlAccess.DefaultConnStr = _config["MySql:" + _config["DbConn"]];
-            MySqlAccess.TraceSql = _config.GetValue("TraceSql", false);
+            TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
         }
         #endregion

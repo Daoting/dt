@@ -309,7 +309,7 @@ namespace Dt.Core
         Task<int> Exec(string p_sql, object p_params = null)
         {
 #if SERVER
-            return new MySqlAccess().Exec(p_sql, p_params);
+            return Kit.ContextDp.Exec(p_sql, p_params);
 #else
             return Kit.Rpc<int>(
                 _svcName,
@@ -327,7 +327,7 @@ namespace Dt.Core
         Task<int> BatchExec(List<Dict> p_dts)
         {
 #if SERVER
-            return new Da().BatchExec(p_dts);
+            return Kit.ContextDp.BatchExec(p_dts);
 #else
             return Kit.Rpc<int>(
                 _svcName,

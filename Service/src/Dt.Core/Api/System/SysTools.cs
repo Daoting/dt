@@ -621,7 +621,7 @@ namespace Dt.Core
         {
             // 如 lob_sql
             var sqlTbl = GetSqlTblName(p_tblName);
-            int cnt = await Dp.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
+            int cnt = await _dp.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
             if (cnt == 0)
                 return sqlTbl + "表不存在，无法生成框架sql";
 
@@ -652,10 +652,10 @@ namespace Dt.Core
         async Task<string> CreateSql(string p_key, string p_sql, string p_tblName)
         {
             string msg;
-            int cnt = await Dp.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
+            int cnt = await _dp.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
             if (cnt == 0)
             {
-                cnt = await Dp.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
+                cnt = await _dp.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
                 msg = cnt > 0 ? $"[{p_key}] sql生成成功\r\n" : $"[{p_key}] sql生成失败\r\n";
             }
             else
@@ -846,7 +846,6 @@ namespace Dt.Core
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name=""TEntity"">实体类型</typeparam>
         /// <param name=""p_id"">主键</param>
         /// <param name=""p_isNotify"">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -861,7 +860,6 @@ namespace Dt.Core
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name=""TEntity"">实体类型</typeparam>
         /// <param name=""p_id"">主键</param>
         /// <param name=""p_isNotify"">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -876,7 +874,6 @@ namespace Dt.Core
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name=""TEntity"">实体类型</typeparam>
         /// <param name=""p_keyName"">主键或唯一索引列名</param>
         /// <param name=""p_keyVal"">主键值</param>
         /// <param name=""p_isNotify"">是否提示删除结果，客户端有效</param>

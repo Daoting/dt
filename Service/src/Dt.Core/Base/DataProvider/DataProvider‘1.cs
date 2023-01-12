@@ -12,7 +12,7 @@
 namespace Dt.Agent
 {
     /// <summary>
-    /// 当前微服务作为客户端，调用其他微服务的 DataAccess 和 EntityAccess 的Api，和客户端DataProvider'TSvc'不同，单体时直接本地调用
+    /// 当前微服务作为客户端，调用其他微服务的 DataAccess Api，和客户端DataProvider'TSvc'不同，单体时直接本地调用
     /// </summary>
     /// <typeparam name="TSvc">类型名称当服务名用</typeparam>
     public abstract class DataProvider<TSvc>
@@ -231,40 +231,6 @@ namespace Dt.Agent
                 typeof(TSvc).Name,
                 "Da.BatchExec",
                 p_dts
-            );
-        }
-        #endregion
-
-        #region EntityAccess
-        /// <summary>
-        /// 调用服务端EntityAccess保存实体
-        /// </summary>
-        /// <param name="p_row">实体</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns>true 成功</returns>
-        public static Task<bool> Save(Row p_row, string p_tblName)
-        {
-            return Kit.Rpc<bool>(
-                typeof(TSvc).Name,
-                "EntityAccess.Save",
-                p_row,
-                p_tblName
-            );
-        }
-
-        /// <summary>
-        /// 调用服务端EntityAccess删除实体
-        /// </summary>
-        /// <param name="p_row">实体</param>
-        /// <param name="p_tblName">表名</param>
-        /// <returns>删除行数</returns>
-        public static Task<bool> Delete(Row p_row, string p_tblName)
-        {
-            return Kit.Rpc<bool>(
-                typeof(TSvc).Name,
-                "EntityAccess.Delete",
-                p_row,
-                p_tblName
             );
         }
         #endregion

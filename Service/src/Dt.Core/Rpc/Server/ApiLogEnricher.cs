@@ -18,11 +18,13 @@ namespace Dt.Core.Rpc
     /// </summary>
     class ApiLogEnricher : ILogEventEnricher
     {
-        ApiInvoker _invoker;
+        string _apiName;
+        long _userID;
 
-        public ApiLogEnricher(ApiInvoker p_invoker)
+        public ApiLogEnricher(string p_apiName, long p_userID)
         {
-            _invoker = p_invoker;
+            _apiName = p_apiName;
+            _userID = p_userID;
         }
 
         public void Enrich(LogEvent p_logEvent, ILogEventPropertyFactory p_propertyFactory)
@@ -31,14 +33,14 @@ namespace Dt.Core.Rpc
                 return;
 
             LogEventProperty property;
-            if (!string.IsNullOrEmpty(_invoker.ApiName))
+            if (!string.IsNullOrEmpty(_apiName))
             {
-                property = p_propertyFactory.CreateProperty("Api", _invoker.ApiName);
+                property = p_propertyFactory.CreateProperty("Api", _apiName);
                 p_logEvent.AddPropertyIfAbsent(property);
             }
-            if (_invoker.UserID != -1)
+            if (_userID != -1)
             {
-                property = p_propertyFactory.CreateProperty("User", _invoker.UserID);
+                property = p_propertyFactory.CreateProperty("User", _userID);
                 p_logEvent.AddPropertyIfAbsent(property);
             }
         }

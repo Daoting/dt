@@ -4,29 +4,36 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
-## Release 3.4.0
+## Release 4.0.0
 ### 变更
 * 流程定义中删除FormType ListType字段，使用类型别名
 * 优化Entity的Hook
 * Entity增加OnInit方法用来统一添加当前实体的所有回调方法，主要包括三类回调：保存前、删除前、Cell.Val值变化前
 * 服务端生成Entity方法
-* 客户端和服务端的DataProvider调用Entity的保存前、删除前回调方法
+* 修改客户端和服务端的DataProvider调用Entity的保存前、删除前回调方法
 * 修改服务端生成实体类及扩展部分的方法
 * VS扩展用到表名列表和表结构信息都采用实时获取方式，不使用服务端缓存
 * 增加demo服务，用于业务样例
+* 删除Row.AttachHook，重新生成Entity文件放在Domain下
+* Entity增加GetByID，调整服务端生成Entity的方法
+* 增加EntityEx类，添加静态查询方法，重新生成项目中的*.Designer.cs文件
+* 增加EntityEx类，添加静态保存方法
+* 增加EntityEx类，添加静态删除法，重新生成项目中的*.Designer.cs文件
+* 增加UnitOfWork类，添加保存删除方法
+* Entity增加静态方法DelByID，重新生成*.Designer.cs文件
+* 服务端删除EntityAccess和DataProvider，增加IDataProvider接口，为支持多种库类型准备
+
+* 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
 
 ### 功能
-* Row和任意Entity类型转换，共用_cells
-* 删除Row.AttachHook，重新生成Entity文件放在Domain下
 * VS扩展增加批量生成实体类功能
-* Entity增加GetByID，调整服务端生成Entity的方法
 * 增加业务样例项目
-* 增加EntityEx类，重新生成项目中的Entity
-* 增加UnitOfWork类，EntityEx添加保存删除方法
-* Entity增加静态方法DelByID
+
+* Row和任意Entity类型转换，共用_cells
 
 ### Bug修改
 * Fv格标题提示被截断的长文本
+
 * Mv中Menu的项无法绑定，如保存按钮的IsEnabled
 
 

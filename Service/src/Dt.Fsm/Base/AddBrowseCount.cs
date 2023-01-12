@@ -67,7 +67,7 @@ namespace Dt.Fsm
             }
 
             if (!isThumb)
-                await new MySqlAccess().Exec("增加下载次数", new { path = path });
+                await Kit.GetService<IDataProvider>().Exec("增加下载次数", new { path = path });
             await _next(p_context);
         }
     }

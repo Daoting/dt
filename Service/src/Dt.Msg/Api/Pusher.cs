@@ -33,7 +33,7 @@ namespace Dt.Msg
         /// <returns></returns>
         public async Task Register(Dict p_deviceInfo, ResponseWriter p_writer)
         {
-            var ci = new ClientInfo(p_deviceInfo, p_writer, UserID);
+            var ci = new ClientInfo(p_deviceInfo, p_writer, _userID);
             // 注册新会话(同一账号支持多个会话)，并向新会话发送离线信息
             await Online.Register(ci);
 

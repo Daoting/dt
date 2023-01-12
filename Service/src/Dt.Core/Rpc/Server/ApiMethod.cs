@@ -17,12 +17,11 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class ApiMethod
     {
-        public ApiMethod(MethodInfo p_method, ApiCallMode p_callMode, AuthAttribute p_auth, bool p_isTransactional)
+        public ApiMethod(MethodInfo p_method, ApiCallMode p_callMode, AuthAttribute p_auth)
         {
             Method = p_method;
             CallMode = p_callMode;
             Auth = p_auth;
-            IsTransactional = p_isTransactional;
         }
 
         /// <summary>
@@ -39,11 +38,6 @@ namespace Dt.Core.Rpc
         /// 校验Api调用授权
         /// </summary>
         public AuthAttribute Auth { get; }
-
-        /// <summary>
-        /// 是否自动为方法启用事务
-        /// </summary>
-        public bool IsTransactional { get; }
     }
 }
 
