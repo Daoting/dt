@@ -22,7 +22,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加UnitOfWork类，添加保存删除方法
 * Entity增加静态方法DelByID，重新生成*.Designer.cs文件
 * 服务端删除EntityAccess和DataProvider，增加IDataProvider接口，为支持多种库类型准备
+* 修改总体架构图，增加客户端Domain部分
 
+* 移除客户端DataProvider的保存、删除功能，调整到UnitOfWork
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
 
 ### 功能
@@ -30,6 +32,10 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加业务样例项目
 
 * Row和任意Entity类型转换，共用_cells
+* 父子实体的保存和删除
+* 发布领域事件
+* 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的标签
+* 支持实体缓存
 
 ### Bug修改
 * Fv格标题提示被截断的长文本

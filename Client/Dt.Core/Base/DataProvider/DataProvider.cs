@@ -62,7 +62,7 @@ namespace Dt.Agent
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public static Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
                 typeof(TSvc).Name,
@@ -83,7 +83,7 @@ namespace Dt.Agent
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public static Task<Table<TEntity>> GetPage<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
             return new UnaryRpc(
