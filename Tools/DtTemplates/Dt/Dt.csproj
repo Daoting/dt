@@ -47,26 +47,36 @@
     <NoWarn>VSTHRD200;VSTHRD100;VSTHRD010</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ClientCls\CellUITemp.cs" />
-    <EmbeddedResource Include="ClientCls\CListExTemp.cs" />
     <Compile Include="Editor\BatchCells.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editor\BatchCells.Designer.cs">
       <DependentUpon>BatchCells.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ClientCls\FvCallTemp.cs" />
-    <EmbeddedResource Include="EntityCls\Entity.cs" />
-    <Compile Include="EntityCls\InsertEntityClsForm.cs">
+    <EmbeddedResource Include="InsertClass\AgentTemp.cs" />
+    <EmbeddedResource Include="InsertClass\ApiTemp.cs" />
+    <EmbeddedResource Include="InsertClass\CellUITemp.cs" />
+    <EmbeddedResource Include="InsertClass\CListExTemp.cs" />
+    <EmbeddedResource Include="InsertClass\DomainEx.cs" />
+    <Compile Include="InsertClass\ClsType.cs" />
+    <EmbeddedResource Include="InsertClass\FvCallTemp.cs" />
+    <Compile Include="InsertClass\InsertClassForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EntityCls\InsertEntityClsForm.Designer.cs">
+    <Compile Include="InsertClass\InsertClassForm.Designer.cs">
+      <DependentUpon>InsertClassForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="InsertEntity\Entity.cs" />
+    <Compile Include="InsertEntity\InsertEntityClsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InsertEntity\InsertEntityClsForm.Designer.cs">
       <DependentUpon>InsertEntityClsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EntityCls\SelectTbls.cs">
+    <Compile Include="InsertEntity\SelectTbls.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EntityCls\SelectTbls.Designer.cs">
+    <Compile Include="InsertEntity\SelectTbls.Designer.cs">
       <DependentUpon>SelectTbls.cs</DependentUpon>
     </Compile>
     <Compile Include="Xaml\MenuXaml.cs">
@@ -81,26 +91,9 @@
     <Compile Include="Xaml\DotXaml.Designer.cs">
       <DependentUpon>DotXaml.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="EntityCls\InsertEntityClsForm.resx">
-      <DependentUpon>InsertEntityClsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EntityCls\SelectTbls.resx">
-      <DependentUpon>SelectTbls.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SvcCls\InsertSvcClassForm.resx">
-      <DependentUpon>InsertSvcClassForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Dialog\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClientCls\AgentTemp.cs" />
-    <EmbeddedResource Include="SvcCls\ApiTemp.cs" />
-    <Compile Include="SvcCls\InsertSvcClassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SvcCls\InsertSvcClassForm.Designer.cs">
-      <DependentUpon>InsertSvcClassForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Dialog\InsertDlgForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -231,13 +224,6 @@
     <EmbeddedResource Include="Editor\BatchCells.resx">
       <DependentUpon>BatchCells.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ClientCls\Entity.cs" />
-    <Compile Include="ClientCls\InsertClassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ClientCls\InsertClassForm.Designer.cs">
-      <DependentUpon>InsertClassForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="LocalTbl\FileParams.cs" />
     <Compile Include="LocalTbl\LocalTblForm.cs">
       <SubType>Form</SubType>
@@ -245,6 +231,15 @@
     <Compile Include="LocalTbl\LocalTblForm.Designer.cs">
       <DependentUpon>LocalTblForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="InsertClass\InsertClassForm.resx">
+      <DependentUpon>InsertClassForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InsertEntity\InsertEntityClsForm.resx">
+      <DependentUpon>InsertEntityClsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InsertEntity\SelectTbls.resx">
+      <DependentUpon>SelectTbls.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LocalTbl\Res\EntityForm.xaml.cs">
       <DependentUpon>EntityForm.xaml</DependentUpon>
     </EmbeddedResource>
@@ -360,9 +355,6 @@
     <Compile Include="DtPackage.cs" />
     <EmbeddedResource Include="Dialog\InsertDlgForm.resx">
       <DependentUpon>InsertDlgForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ClientCls\InsertClassForm.resx">
-      <DependentUpon>InsertClassForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mv\InsertMvForm.resx">
       <DependentUpon>InsertMvForm.cs</DependentUpon>

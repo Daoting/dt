@@ -88,7 +88,7 @@ namespace Dt
                 var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.Designer.cs");
                 var entity = await AtSvc.GetEntityClass(tbl, cls);
                 dt["$entitybody$"] = entity;
-                Kit.WritePrjFile(path, "Dt.EntityCls.Entity.cs", dt, false);
+                Kit.WritePrjFile(path, "Dt.InsertEntity.Entity.cs", dt, false);
                 cntDesign++;
 
                 path = Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
@@ -105,7 +105,7 @@ namespace Dt
                 }
                 entity = await AtSvc.GetEntityClassEx(tbl, cls);
                 dt["$entitybody$"] = entity;
-                Kit.WritePrjFile(path, "Dt.EntityCls.Entity.cs", dt, false);
+                Kit.WritePrjFile(path, "Dt.InsertEntity.Entity.cs", dt, false);
                 cntCustom++;
             }
 

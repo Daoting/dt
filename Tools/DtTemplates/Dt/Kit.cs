@@ -61,8 +61,11 @@ namespace Dt
                 folder = folder.Collection.Parent as ProjectItem;
                 if (folder != null && folder.Kind == "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}")
                 {
+                    // 只使用第一级的模板名作为命名空间
+                    ns = folder.Name;
+
                     // 父文件夹添加前面
-                    ns = $"{folder.Name}.{ns}";
+                    //ns = $"{folder.Name}.{ns}";
                 }
                 else
                 {

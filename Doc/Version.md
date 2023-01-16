@@ -23,6 +23,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Entity增加静态方法DelByID，重新生成*.Designer.cs文件
 * 服务端删除EntityAccess和DataProvider，增加IDataProvider接口，为支持多种库类型准备
 * 修改总体架构图，增加客户端Domain部分
+* VS扩展工具类的命名空间默认到一级目录模块名
 
 * 移除客户端DataProvider的保存、删除功能，调整到UnitOfWork
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
@@ -31,6 +32,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * VS扩展增加批量生成实体类功能
 * 增加业务样例项目
 
+* 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、EntityEx的方法：增删该及批量、GetByID有缓存、领域事件
 * Row和任意Entity类型转换，共用_cells
 * 父子实体的保存和删除
 * 发布领域事件

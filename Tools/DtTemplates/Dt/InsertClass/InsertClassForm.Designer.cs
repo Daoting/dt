@@ -1,7 +1,7 @@
 ﻿
 namespace Dt
 {
-    partial class InsertSvcClassForm
+    partial class InsertClassForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,13 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertSvcClassForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertClassForm));
             this.label2 = new System.Windows.Forms.Label();
             this._ns = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this._cls = new System.Windows.Forms.TextBox();
-            this._btnOK = new System.Windows.Forms.Button();
-            this._lbl = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this._info = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -72,32 +72,32 @@ namespace Dt
             this._cls.Size = new System.Drawing.Size(269, 21);
             this._cls.TabIndex = 19;
             // 
-            // _btnOK
+            // button1
             // 
-            this._btnOK.Location = new System.Drawing.Point(12, 69);
-            this._btnOK.Name = "_btnOK";
-            this._btnOK.Size = new System.Drawing.Size(165, 23);
-            this._btnOK.TabIndex = 22;
-            this._btnOK.Text = "Api类(加后缀 Api)";
-            this._btnOK.UseVisualStyleBackColor = true;
-            this._btnOK.Click += new System.EventHandler(this._btnOK_Click);
+            this.button1.Location = new System.Drawing.Point(381, 105);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 35;
+            this.button1.Text = "确定";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // _lbl
+            // _info
             // 
-            this._lbl.ForeColor = System.Drawing.Color.Black;
-            this._lbl.Location = new System.Drawing.Point(12, 193);
-            this._lbl.Name = "_lbl";
-            this._lbl.Size = new System.Drawing.Size(372, 30);
-            this._lbl.TabIndex = 26;
-            this._lbl.Text = "Info";
+            this._info.AutoSize = true;
+            this._info.Location = new System.Drawing.Point(13, 68);
+            this._info.Name = "_info";
+            this._info.Size = new System.Drawing.Size(41, 12);
+            this._info.TabIndex = 36;
+            this._info.Text = "label3";
             // 
-            // InsertSvcClassForm
+            // InsertClassForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 240);
-            this.Controls.Add(this._lbl);
-            this.Controls.Add(this._btnOK);
+            this.ClientSize = new System.Drawing.Size(473, 145);
+            this.Controls.Add(this._info);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this._cls);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._ns);
@@ -106,7 +106,7 @@ namespace Dt
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "InsertSvcClassForm";
+            this.Name = "InsertClassForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "添加类";
@@ -120,7 +120,7 @@ namespace Dt
         private System.Windows.Forms.TextBox _ns;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _cls;
-        private System.Windows.Forms.Button _btnOK;
-        private System.Windows.Forms.Label _lbl;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label _info;
     }
 }

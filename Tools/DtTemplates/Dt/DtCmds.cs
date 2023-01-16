@@ -31,9 +31,13 @@ namespace Dt
         const int InsertWinCmdId = 0x4001;
         const int InsertDlgCmdId = 0x4002;
 
-        const int InsertClassCmdId = 0x5000;
-        const int InsertSvcClassCmdId = 0x5001;
-        const int EntityClassCmdId = 0x5002;
+        const int EntityClassCmdId = 0x5000;
+        const int DomainExClsCmdId = 0x5001;
+        const int LvCallClsCmdId = 0x5002;
+        const int FvCallClsCmdId = 0x5003;
+        const int CListExClsCmdId = 0x5004;
+        const int AgentClsCmdId = 0x5005;
+        const int ApiClsCmdId = 0x5006;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -67,9 +71,13 @@ namespace Dt
             cs.AddCommand(CmdClient(InsertWinCmdId, typeof(InsertWinForm)));
             cs.AddCommand(CmdClient(InsertDlgCmdId, typeof(InsertDlgForm)));
 
-            cs.AddCommand(CmdClient(InsertClassCmdId, typeof(InsertClassForm)));
-            cs.AddCommand(CmdServer(InsertSvcClassCmdId, typeof(InsertSvcClassForm)));
             cs.AddCommand(CmdDialog(EntityClassCmdId, typeof(InsertEntityClsForm)));
+            cs.AddCommand(CmdInsertClass(DomainExClsCmdId, ClsType.DomainEx, null));
+            cs.AddCommand(CmdInsertClass(LvCallClsCmdId, ClsType.LvCall, true));
+            cs.AddCommand(CmdInsertClass(FvCallClsCmdId, ClsType.FvCall, true));
+            cs.AddCommand(CmdInsertClass(CListExClsCmdId, ClsType.CListEx, true));
+            cs.AddCommand(CmdInsertClass(AgentClsCmdId, ClsType.Agent, null));
+            cs.AddCommand(CmdInsertClass(ApiClsCmdId, ClsType.Api, false));
         }
 
         /// <summary>
@@ -132,26 +140,29 @@ namespace Dt
                 new CommandID(CommandSet, p_cmdID));
         }
 
-        /// <summary>
-        /// 显示服务端自定义对话框
-        /// </summary>
-        /// <param name="p_cmdID"></param>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        MenuCommand CmdServer(int p_cmdID, Type p_type)
+        
+        MenuCommand CmdInsertClass(int p_cmdID, ClsType p_clsType, bool? p_isClient)
         {
             return new MenuCommand(
                 (s, e) =>
                 {
                     ThreadHelper.ThrowIfNotOnUIThread();
-                    if (!Kit.IsSvcPrj())
+                    if (p_isClient.HasValue)
                     {
-                        Kit.Output("服务端Api无法用在客户端");
-                        return;
-                    }
+                        if ((bool)p_isClient && !Kit.IsClientPrj())
+                        {
+                            MessageBox.Show("服务端不支持该类型！");
+                            return;
+                        }
 
-                    var dlg = Activator.CreateInstance(p_type) as Form;
-                    dlg.ShowDialog();
+                        if (!(bool)p_isClient && !Kit.IsSvcPrj())
+                        {
+                            MessageBox.Show("客户端不支持该类型！");
+                            return;
+                        }
+                    }
+                    
+                    new InsertClassForm(p_clsType).ShowDialog();
                 },
                 new CommandID(CommandSet, p_cmdID));
         }
