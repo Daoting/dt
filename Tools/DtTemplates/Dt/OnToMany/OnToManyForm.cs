@@ -147,7 +147,7 @@ namespace Dt.OnToMany
 
                 if (_params.IsSelectedChildTbls)
                 {
-                    var body = await AtSvc.GetFvCells(_params.ChildTbls[i]);
+                    var body = await AtSvc.GetFvCells(new List<string> { _params.ChildTbls[i] });
                     // 可能包含命名空间
                     dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
                 }
@@ -160,7 +160,7 @@ namespace Dt.OnToMany
 
                 if (_params.IsSelectedChildTbls)
                 {
-                    var body = await AtSvc.GetLvItemTemplate(_params.ChildTbls[i]);
+                    var body = await AtSvc.GetLvItemTemplate(new List<string> { _params.ChildTbls[i] });
                     dt["$lvbody$"] = body;
                 }
                 else
@@ -216,7 +216,7 @@ namespace Dt.OnToMany
 
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetFvCells(_params.MainTbl);
+                var body = await AtSvc.GetFvCells(new List<string> { _params.MainTbl });
                 // 可能包含命名空间
                 dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
             }
@@ -266,7 +266,7 @@ namespace Dt.OnToMany
             var resName = _cbWin.SelectedIndex == 0 ? "ThreeList" : "TwoList";
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetLvItemTemplate(_params.MainTbl);
+                var body = await AtSvc.GetLvItemTemplate(new List<string> { _params.MainTbl });
                 dt["$lvbody$"] = body;
             }
             else
@@ -357,7 +357,7 @@ namespace Dt.OnToMany
         {
             var tip = new ToolTip();
             tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
-            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel2, Kit.RootNameTip);
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
             tip.SetToolTip(linkLabel5, "服务运行时可选择多个子表\r\n子表需包含 [ParentID] 字段");

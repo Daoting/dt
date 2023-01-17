@@ -1,0 +1,34 @@
+﻿<a:Win
+    x:Class="$rootnamespace$.$clsroot$Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:$rootnamespace$">
+
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab>
+                <a:SearchMv x:Name="_search" Search="OnSearch">
+                    <x:String>全部</x:String>
+                </a:SearchMv>
+            </a:Tab>
+            <a:Tab>
+                <l:$clsroot$Query x:Name="_query" Search="OnSearch" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1">
+                <l:$clsroot$List x:Name="_list" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab>
+                <l:$clsroot$Form x:Name="_form" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

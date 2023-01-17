@@ -52,7 +52,7 @@ namespace Dt.Editor
             if (!string.IsNullOrEmpty(tbl))
             {
                 // $namespace$ $rootnamespace$只能手动
-                _xaml = await AtSvc.GetFvCells(tbl);
+                _xaml = await AtSvc.GetFvCells(new List<string> { tbl });
             }
         }
 

@@ -62,7 +62,7 @@ namespace Dt.Editor
                 return;
             }
 
-            var xaml = await AtSvc.GetLvItemTemplate(tbl);
+            var xaml = await AtSvc.GetLvItemTemplate(new List<string> { tbl });
             Kit.Paste(xaml);
         }
 

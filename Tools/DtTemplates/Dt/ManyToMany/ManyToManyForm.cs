@@ -143,7 +143,7 @@ namespace Dt.ManyToMany
 
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetFvCells(_params.MainTbl);
+                var body = await AtSvc.GetFvCells(new List<string> { _params.MainTbl });
                 // 可能包含命名空间
                 dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
             }
@@ -192,7 +192,7 @@ namespace Dt.ManyToMany
 
             if (_params.IsSelectedMainTbl)
             {
-                var body = await AtSvc.GetLvItemTemplate(_params.MainTbl);
+                var body = await AtSvc.GetLvItemTemplate(new List<string> { _params.MainTbl });
                 dt["$lvbody$"] = body;
             }
             else
@@ -280,7 +280,7 @@ namespace Dt.ManyToMany
         {
             var tip = new ToolTip();
             tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
-            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel2, Kit.RootNameTip);
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
 

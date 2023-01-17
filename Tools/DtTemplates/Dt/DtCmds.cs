@@ -62,7 +62,7 @@ namespace Dt
             cs.AddCommand(CmdDialog(CellCmdId, typeof(CellXaml)));
             cs.AddCommand(CmdDialog(MenuCmdId, typeof(MenuXaml)));
 
-            cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleTblForm)));
+            cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
             cs.AddCommand(CmdClient(ManyToManyCmdId, typeof(ManyToManyForm)));
             cs.AddCommand(CmdClient(LocalSingleTblCmdId, typeof(LocalTblForm)));

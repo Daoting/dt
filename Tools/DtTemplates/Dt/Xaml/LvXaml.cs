@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -83,7 +84,7 @@ namespace Dt.Editor
                     }
                     else
                     {
-                        var xaml = await AtSvc.GetLvItemTemplate(tbl);
+                        var xaml = await AtSvc.GetLvItemTemplate(new List<string> { tbl });
                         sb.AppendLine("<DataTemplate>");
                         sb.AppendLine(xaml);
                         sb.AppendLine("</DataTemplate>");
@@ -96,8 +97,10 @@ namespace Dt.Editor
                     }
                     else
                     {
-                        var xaml = await AtSvc.GetLvTableCols(tbl);
+                        sb.AppendLine("<a:Cols>");
+                        var xaml = await AtSvc.GetLvTableCols(new List<string> { tbl });
                         sb.AppendLine(xaml);
+                        sb.AppendLine("</a:Cols>");
                     }
                     break;
             }

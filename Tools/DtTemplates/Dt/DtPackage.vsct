@@ -146,7 +146,7 @@
 			<Button guid="guidDtPackageCmdSet" id="SingleTblCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderFrameworkGroup" />
 				<Strings>
-					<ButtonText>单表框架</ButtonText>
+					<ButtonText>单实体框架</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidDtPackageCmdSet" id="OnToManyCmdId" priority="0x0102" type="Button">

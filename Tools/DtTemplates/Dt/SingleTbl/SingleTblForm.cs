@@ -111,7 +111,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetFvCells(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetFvCells(new List<string> { _cbTbls.SelectedItem.ToString() });
                 // 可能包含命名空间
                 dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
             }
@@ -149,7 +149,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetLvItemTemplate(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetLvItemTemplate(new List<string> { _cbTbls.SelectedItem.ToString() });
                 dt["$lvbody$"] = body;
             }
             else
@@ -194,7 +194,7 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl)
             {
-                var body = await AtSvc.GetLvItemTemplate(_cbTbls.SelectedItem.ToString());
+                var body = await AtSvc.GetLvItemTemplate(new List<string> { _cbTbls.SelectedItem.ToString() });
                 dt["$lvbody$"] = body;
             }
             else
@@ -225,7 +225,7 @@ namespace Dt.SingleTbl
         {
             var tip = new ToolTip();
             tip.SetToolTip(linkLabel1, Kit.DataProviderTip);
-            tip.SetToolTip(linkLabel2, Kit.EntityTip);
+            tip.SetToolTip(linkLabel2, Kit.RootNameTip);
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
             tip.SetToolTip(linkLabel5, Kit.AutoSqlTip);

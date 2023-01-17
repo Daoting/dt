@@ -79,6 +79,25 @@
     <Compile Include="InsertEntity\SelectTbls.Designer.cs">
       <DependentUpon>SelectTbls.cs</DependentUpon>
     </Compile>
+    <Compile Include="Single\FileParams.cs" />
+    <EmbeddedResource Include="Single\Res\EntityForm.xaml.cs">
+      <DependentUpon>EntityForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Single\Res\EntityWin.xaml.cs">
+      <DependentUpon>EntityWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Single\Res\EntityList.xaml.cs">
+      <DependentUpon>EntityList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Single\Res\EntityQuery.xaml.cs">
+      <DependentUpon>EntityQuery.xaml</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Single\SingleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Single\SingleForm.Designer.cs">
+      <DependentUpon>SingleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\MenuXaml.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -358,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Mv\InsertMvForm.resx">
       <DependentUpon>InsertMvForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Single\SingleForm.resx">
+      <DependentUpon>SingleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Win\ToggleMainWin.xaml.cs">
       <DependentUpon>ToggleMainWin.xaml</DependentUpon>
@@ -731,7 +753,30 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Single\Res\EntityForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Single\Res\EntityWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Single\Res\EntityList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Single\Res\EntityQuery.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

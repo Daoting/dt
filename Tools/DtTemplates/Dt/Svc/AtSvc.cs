@@ -63,30 +63,30 @@ namespace Dt
             );
         }
 
-        public static Task<string> GetFvCells(string p_tblName)
+        public static Task<string> GetFvCells(List<string> p_tblNames)
         {
             return new Rpc().Call<string>(
                 _svcUrl,
                 "SysTools.GetFvCells",
-                p_tblName
+                p_tblNames
             );
         }
 
-        public static Task<string> GetLvItemTemplate(string p_tblName)
+        public static Task<string> GetLvItemTemplate(List<string> p_tblNames)
         {
             return new Rpc().Call<string>(
                 _svcUrl,
                 "SysTools.GetLvItemTemplate",
-                p_tblName
+                p_tblNames
             );
         }
 
-        public static Task<string> GetLvTableCols(string p_tblName)
+        public static Task<string> GetLvTableCols(List<string> p_tblNames)
         {
             return new Rpc().Call<string>(
                 _svcUrl,
                 "SysTools.GetLvTableCols",
-                p_tblName
+                p_tblNames
             );
         }
 

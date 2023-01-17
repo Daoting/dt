@@ -319,60 +319,64 @@ namespace Dt.Core
         /// <summary>
         /// 生成Fv格内容
         /// </summary>
-        /// <param name="p_tblName"></param>
+        /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetFvCells(string p_tblName)
+        public string GetFvCells(List<string> p_tblNames)
         {
-            if (string.IsNullOrEmpty(p_tblName))
+            if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
 
-            string tblName = p_tblName.ToLower();
-            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
-
-            foreach (var col in schema.Columns)
+            foreach (var tbl in p_tblNames)
             {
-                if (sb.Length > 0)
-                    sb.AppendLine();
-                AppendTabSpace(sb, 2);
-                bool isEnum = IsEnumCol(col);
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
 
-                string title = "";
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
+                {
+                    if (sb.Length > 0)
+                        sb.AppendLine();
+                    AppendTabSpace(sb, 2);
+                    bool isEnum = IsEnumCol(col);
 
-                // 字段名中文时不再需要Title
-                if (!string.IsNullOrEmpty(col.Comments)
-                    && !isEnum
-                    && !IsChiness(col.Name))
-                {
-                    title = $" Title=\"{col.Comments}\"";
-                }
+                    string title = "";
 
-                if (isEnum)
-                {
-                    string tpName = GetEnumName(col);
-                    title = col.Comments.Substring(tpName.Length + 2);
-                    title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
-                    sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
-                }
-                else if (col.Type == typeof(bool))
-                {
-                    sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
-                }
-                else if (col.Type == typeof(int))
-                {
-                    sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" />");
-                }
-                else if (col.Type == typeof(long) || col.Type == typeof(double))
-                {
-                    sb.Append($"<a:CNum ID=\"{col.Name}\"{title} />");
-                }
-                else if (col.Type == typeof(DateTime))
-                {
-                    sb.Append($"<a:CDate ID=\"{col.Name}\"{title} />");
-                }
-                else
-                {
-                    sb.Append($"<a:CText ID=\"{col.Name}\"{title} />");
+                    // 字段名中文时不再需要Title
+                    if (!string.IsNullOrEmpty(col.Comments)
+                        && !isEnum
+                        && !IsChiness(col.Name))
+                    {
+                        title = $" Title=\"{col.Comments}\"";
+                    }
+
+                    if (isEnum)
+                    {
+                        string tpName = GetEnumName(col);
+                        title = col.Comments.Substring(tpName.Length + 2);
+                        title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
+                    }
+                    else if (col.Type == typeof(bool))
+                    {
+                        sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
+                    }
+                    else if (col.Type == typeof(int))
+                    {
+                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" />");
+                    }
+                    else if (col.Type == typeof(long) || col.Type == typeof(double))
+                    {
+                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} />");
+                    }
+                    else if (col.Type == typeof(DateTime))
+                    {
+                        sb.Append($"<a:CDate ID=\"{col.Name}\"{title} />");
+                    }
+                    else
+                    {
+                        sb.Append($"<a:CText ID=\"{col.Name}\"{title} />");
+                    }
                 }
             }
             return sb.ToString();
@@ -381,23 +385,26 @@ namespace Dt.Core
         /// <summary>
         /// 生成Lv项模板
         /// </summary>
-        /// <param name="p_tblName"></param>
+        /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetLvItemTemplate(string p_tblName)
+        public string GetLvItemTemplate(List<string> p_tblNames)
         {
-            if (string.IsNullOrEmpty(p_tblName))
+            if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
 
-            string tblName = p_tblName.ToLower();
-            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 3);
             sb.Append("<StackPanel Padding=\"10\">");
-            foreach (var col in schema.Columns)
+
+            foreach (var tbl in p_tblNames)
             {
-                sb.AppendLine();
-                AppendTabSpace(sb, 4);
-                sb.Append($"<a:Dot ID=\"{col.Name}\" />");
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
+                {
+                    sb.AppendLine();
+                    AppendTabSpace(sb, 4);
+                    sb.Append($"<a:Dot ID=\"{col.Name}\" />");
+                }
             }
             sb.AppendLine();
             AppendTabSpace(sb, 3);
@@ -408,37 +415,34 @@ namespace Dt.Core
         /// <summary>
         /// 生成Lv表格列
         /// </summary>
-        /// <param name="p_tblName"></param>
+        /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetLvTableCols(string p_tblName)
+        public string GetLvTableCols(List<string> p_tblNames)
         {
-            if (string.IsNullOrEmpty(p_tblName))
+            if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
 
-            string tblName = p_tblName.ToLower();
-            var schema = GetTableSchema(tblName);
             StringBuilder sb = new StringBuilder();
-            AppendTabSpace(sb, 2);
-            sb.Append("<a:Cols>");
-            foreach (var col in schema.Columns)
+            foreach (var tbl in p_tblNames)
             {
-                sb.AppendLine();
-                AppendTabSpace(sb, 3);
-
-                string title = "";
-
-                // 字段名中文时不再需要Title
-                if (!string.IsNullOrEmpty(col.Comments)
-                    && !IsChiness(col.Name))
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
                 {
-                    title = $" Title=\"{col.Comments}\"";
-                }
+                    string title = "";
 
-                sb.Append($"<a:Col ID=\"{col.Name}\"{title} />");
+                    // 字段名中文时不再需要Title
+                    if (!string.IsNullOrEmpty(col.Comments)
+                        && !IsChiness(col.Name))
+                    {
+                        title = $" Title=\"{col.Comments}\"";
+                    }
+
+                    if (sb.Length > 0)
+                        sb.AppendLine();
+                    AppendTabSpace(sb, 3);
+                    sb.Append($"<a:Col ID=\"{col.Name}\"{title} />");
+                }
             }
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.Append("</a:Cols>");
             return sb.ToString();
         }
 
@@ -794,10 +798,10 @@ namespace Dt.Core
         {
             foreach (char vChar in p_str)
             {
-                if ((int)vChar < 256)
-                    return false;
+                if ((int)vChar > 255)
+                    return true;
             }
-            return true;
+            return false;
         }
         #endregion
 

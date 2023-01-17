@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -33,7 +34,7 @@ namespace Dt.Editor
             if (!string.IsNullOrEmpty(tbl))
             {
                 // $namespace$ $rootnamespace$只能手动
-                var xaml = await AtSvc.GetFvCells(tbl);
+                var xaml = await AtSvc.GetFvCells(new List<string> { tbl });
                 if (!string.IsNullOrEmpty(xaml))
                     sb.AppendLine(xaml);
             }

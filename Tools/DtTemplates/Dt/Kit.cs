@@ -171,6 +171,18 @@ namespace Dt
             }
         }
 
+        public static string GetText(TextBox p_tb, string p_msg)
+        {
+            var txt = p_tb.Text.Trim();
+            if (txt == "")
+            {
+                p_tb.Focus();
+                MessageBox.Show(p_msg);
+                throw new Exception();
+            }
+            return txt;
+        }
+
         public static string GetText(TextBox p_tb)
         {
             var txt = p_tb.Text.Trim();
@@ -223,19 +235,17 @@ namespace Dt
 @"该类在生成的代码中用到，请确认该类存在
 默认提供 AtSvc 类做为远程服务的数据操作";
 
-        public const string EntityTip =
-@"一般为不包含前后缀的表名，是所有生成类的根命名
-生成的实体类、窗口、列表、表单等的命名规范：
-实体类：实体 + Obj
-窗口：实体 + Win
-列表：实体 + List
-表单：实体 + Form";
+        public const string RootNameTip =
+@"生成的窗口、列表、表单、查询等类的词根，命名规范如：
+查询：词根 + Query
+窗口：词根 + Win
+列表：词根 + List
+表单：词根 + Form";
 
         public const string SvcUrlTip =
-@"当服务正在运行时，可通过服务：
+@"请确保当前服务正在运行，通过服务：
 1. 获取所有表目录
-2. 根据表结构生成实体类代码、列表和表单xaml内容
-服务未运行只能生成框架代码";
+2. 根据表结构动态生成列表、表单等xaml内容和框架代码";
 
         public const string AllTblsTip =
 @"通过服务获取的所有表目录
