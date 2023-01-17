@@ -34,7 +34,7 @@ namespace Dt.MgrDemo
 
             var group = new GroupData<DemoItem>
             {
-                new DemoItem("实体基础", typeof(实体Win), ""),
+                //new DemoItem("实体基础", typeof(实体Win), ""),
                 
             };
             group.Title = "基础";

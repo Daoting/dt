@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-11 创建
+* 日志: 2023-01-17 创建
 ******************************************************************************/
 #endregion
 
@@ -160,7 +160,6 @@ namespace Dt.MgrDemo.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -175,7 +174,6 @@ namespace Dt.MgrDemo.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
@@ -190,7 +188,6 @@ namespace Dt.MgrDemo.Domain
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_keyName">主键或唯一索引列名</param>
         /// <param name="p_keyVal">主键值</param>
         /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>
@@ -204,10 +201,11 @@ namespace Dt.MgrDemo.Domain
         /// 查询实体列表，每个实体包含所有列值，过滤条件null或空时返回所有实体
         /// </summary>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有实体</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<HookObj>> Query(string p_filter = null)
+        public static Task<Table<HookObj>> Query(string p_filter = null, object p_params = null)
         {
-            return EntityEx.Query<HookObj>();
+            return EntityEx.Query<HookObj>(p_filter, p_params);
         }
 
         /// <summary>
@@ -216,20 +214,22 @@ namespace Dt.MgrDemo.Domain
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_filter">过滤串，where后面的部分</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<HookObj>> Page(int p_starRow, int p_pageSize, string p_filter = null)
+        public static Task<Table<HookObj>> Page(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
         {
-            return EntityEx.Page<HookObj>(p_starRow, p_pageSize, p_filter);
+            return EntityEx.Page<HookObj>(p_starRow, p_pageSize, p_filter, p_params);
         }
 
         /// <summary>
         /// 返回符合条件的第一个实体对象，每个实体包含所有列值，不存在时返回null
         /// </summary>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<HookObj> First(string p_filter)
+        public static Task<HookObj> First(string p_filter, object p_params = null)
         {
-            return EntityEx.First<HookObj>(p_filter);
+            return EntityEx.First<HookObj>(p_filter, p_params);
         }
 
         /// <summary>

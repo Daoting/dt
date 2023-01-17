@@ -190,8 +190,9 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有，可能被注入</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Query<TEntity>(string p_filter = null)
+        public static Task<Table<TEntity>> Query<TEntity>(string p_filter = null, object p_params = null)
             where TEntity : Entity
         {
             var model = EntitySchema.Get(typeof(TEntity));
@@ -200,13 +201,13 @@ namespace Dt.Core
                 sql += " where " + p_filter;
 
 #if SERVER
-            return Kit.ContextDp.Query<TEntity>(sql);
+            return Kit.ContextDp.Query<TEntity>(sql, p_params);
 #else
             return Kit.Rpc<Table<TEntity>>(
                 model.SvcName,
                 "Da.Query",
                 sql,
-                null);
+                p_params);
 #endif
         }
 
@@ -217,8 +218,9 @@ namespace Dt.Core
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_filter = null)
+        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
             where TEntity : Entity
         {
             var model = EntitySchema.Get(typeof(TEntity));
@@ -228,13 +230,13 @@ namespace Dt.Core
             sql += $" limit {p_starRow},{p_pageSize} ";
 
 #if SERVER
-            return Kit.ContextDp.Query<TEntity>(sql);
+            return Kit.ContextDp.Query<TEntity>(sql, p_params);
 #else
             return Kit.Rpc<Table<TEntity>>(
                 model.SvcName,
                 "Da.Query",
                 sql,
-                null);
+                p_params);
 #endif
         }
 
@@ -243,8 +245,9 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> First<TEntity>(string p_filter)
+        public static Task<TEntity> First<TEntity>(string p_filter, object p_params = null)
             where TEntity : Entity
         {
             var model = EntitySchema.Get(typeof(TEntity));
@@ -253,13 +256,13 @@ namespace Dt.Core
                 sql += " where " + p_filter;
 
 #if SERVER
-            return Kit.ContextDp.First<TEntity>(sql);
+            return Kit.ContextDp.First<TEntity>(sql, p_params);
 #else
             return Kit.Rpc<TEntity>(
                 model.SvcName,
                 "Da.First",
                 sql,
-                null);
+                p_params);
 #endif
         }
 
