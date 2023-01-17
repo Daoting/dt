@@ -80,6 +80,8 @@ namespace Dt.Base
             typeof(double),
             typeof(Col),
             new PropertyMetadata(16d));
+
+        string _title;
         #endregion
 
         /// <summary>
@@ -90,7 +92,11 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置列标题
         /// </summary>
-        public string Title { get; set; }
+        public string Title
+        {
+            get { return string.IsNullOrEmpty(_title) ? ID : _title; }
+            set { _title = value; }
+        }
 
         /// <summary>
         /// 获取设置列宽，默认100
