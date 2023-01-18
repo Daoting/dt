@@ -43,18 +43,16 @@ namespace Dt.Base.FormView
             FrameworkElement con = (FrameworkElement)e.OldValue;
             if (con != null)
             {
-                pnl.Children.Remove(con);
                 con.KeyUp -= pnl.OnKeyUp;
+                pnl.Children.Remove(con);
             }
 
             con = (FrameworkElement)e.NewValue;
             if (con != null)
             {
-                if (pnl.Children.Count == 1)
-                    pnl.Children.Insert(0, con);
-                else if (pnl.Children.Count == 3)
-                    pnl.Children.Insert(2, con);
                 con.KeyUp += pnl.OnKeyUp;
+                if (pnl.Children.Count > 0)
+                    pnl.Children.Insert(pnl.Children.Count - 1, con);
             }
         }
         #endregion
@@ -62,20 +60,14 @@ namespace Dt.Base.FormView
         #region 成员变量
         Rectangle _rcTitle;
         TextBlock _tbTitle;
-        readonly Rectangle _rcChild;
+        Rectangle _rcQuery;
+        Button _btnQuery;
+        Rectangle _rcChild;
         FvCell _owner;
         #endregion
 
         public CellPanel()
         {
-            // 内容边框
-            _rcChild = new Rectangle
-            {
-                Stroke = Res.浅灰2,
-                IsHitTestVisible = false,
-                Margin = new Thickness(0, 0, -1, -1)
-            };
-            Children.Add(_rcChild);
             PointerPressed += OnPointerPressed;
         }
 
@@ -91,47 +83,23 @@ namespace Dt.Base.FormView
         internal void SetOwner(FvCell p_cell)
         {
             _owner = p_cell;
-            OnShowTitleChanged();
+            InitChildren();
         }
 
-        internal void OnShowTitleChanged()
+        internal void UpdateChildren()
         {
-            if (_owner.ShowTitle)
+            _rcChild = null;
+            _rcTitle = null;
+            _tbTitle = null;
+            _rcQuery = null;
+            if (_btnQuery != null)
             {
-                if (_rcTitle == null)
-                {
-                    // 标题背景及边框
-                    _rcTitle = new Rectangle
-                    {
-                        Fill = Res.浅灰1,
-                        Stroke = Res.浅灰2,
-                        IsHitTestVisible = false,
-                        Margin = new Thickness(0, 0, -1, -1)
-                    };
-
-                    // 标题
-                    _tbTitle = new TextBlock
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        TextWrapping = TextWrapping.NoWrap,
-                        TextTrimming = TextTrimming.CharacterEllipsis
-                    };
-                    Binding bind = new Binding { Path = new PropertyPath("Title"), Source = _owner };
-                    _tbTitle.SetBinding(TextBlock.TextProperty, bind);
-
-#if WIN
-                    _tbTitle.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
-#endif
-                }
-
-                Children.Insert(0, _rcTitle);
-                Children.Insert(1, _tbTitle);
+                _btnQuery.Click -= OnQueryClick;
+                _btnQuery = null;
             }
-            else if (Children.Count > 2)
-            {
-                Children.RemoveAt(0);
-                Children.RemoveAt(0);
-            }
+
+            Children.Clear();
+            InitChildren();
         }
 
         internal void OnIsVerticalTitleChanged()
@@ -168,8 +136,28 @@ namespace Dt.Base.FormView
             double width = availableSize.Width;
             double height = availableSize.Height;
 
+            // 标题
+            if (_owner.ShowTitle)
+            {
+                Size size = new Size(_owner.TitleWidth, height);
+                _rcTitle.Measure(size);
+                _tbTitle.Measure(new Size(size.Width - 20, height));
+            }
+
+            // 查询比较符
+            if (_owner.Query != QueryType.Disable)
+            {
+                Size size = new Size(_queryWidth, height);
+                _rcQuery.Measure(size);
+                _btnQuery.Measure(size);
+            }
+
             // 内容
-            double conWidth = _owner.ShowTitle ? width - _owner.TitleWidth : width;
+            double conWidth = width;
+            if (_owner.ShowTitle)
+                conWidth -= _owner.TitleWidth;
+            if (_owner.Query != QueryType.Disable)
+                conWidth -= _queryWidth;
             var child = Child;
             if (child != null)
             {
@@ -182,14 +170,6 @@ namespace Dt.Base.FormView
 
             // 内容外框
             _rcChild.Measure(new Size(conWidth, height));
-
-            // 标题
-            if (_owner.ShowTitle)
-            {
-                Size size = new Size(_owner.TitleWidth, height);
-                _rcTitle.Measure(size);
-                _tbTitle.Measure(new Size(size.Width - 20, height));
-            }
             return new Size(width, height);
         }
 
@@ -210,7 +190,17 @@ namespace Dt.Base.FormView
                 left = _owner.IsVerticalTitle ? (_owner.TitleWidth - _tbTitle.DesiredSize.Width) / 2 : 10;
                 _tbTitle.Arrange(new Rect(left, 0, _tbTitle.DesiredSize.Width, height));
                 left = _owner.TitleWidth;
-                conWidth = width - _owner.TitleWidth;
+                conWidth -= _owner.TitleWidth;
+            }
+
+            // 查询比较符
+            if (_owner.Query != QueryType.Disable)
+            {
+                var rc = new Rect(left, 0, _queryWidth, height);
+                _rcQuery.Arrange(rc);
+                _btnQuery.Arrange(rc);
+                left += _queryWidth;
+                conWidth -= _queryWidth;
             }
 
             // 内容，空出左上边线
@@ -221,6 +211,77 @@ namespace Dt.Base.FormView
             // 内容外框
             _rcChild.Arrange(new Rect(left, 0, conWidth, height));
             return finalSize;
+        }
+
+        void InitChildren()
+        {
+            // 标题
+            if (_owner.ShowTitle)
+            {
+                // 背景及边框
+                _rcTitle = new Rectangle
+                {
+                    Fill = Res.浅灰1,
+                    Stroke = Res.浅灰2,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0, 0, -1, -1)
+                };
+
+                // 标题
+                _tbTitle = new TextBlock
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.NoWrap,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                };
+                Binding bind = new Binding { Path = new PropertyPath("Title"), Source = _owner };
+                _tbTitle.SetBinding(TextBlock.TextProperty, bind);
+
+#if WIN
+                _tbTitle.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
+
+                Children.Add(_rcTitle);
+                Children.Add(_tbTitle);
+            }
+
+            // 查询比较符
+            if (_owner.Query != QueryType.Disable)
+            {
+                // 背景及边框
+                _rcQuery = new Rectangle
+                {
+                    Fill = Res.浅灰1,
+                    Stroke = Res.浅灰2,
+                    IsHitTestVisible = false,
+                    Margin = new Thickness(0, 0, -1, -1)
+                };
+
+                _btnQuery = new Button
+                {
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                };
+                _btnQuery.Click += OnQueryClick;
+                OnQueryFlagChanged();
+
+                Children.Add(_rcQuery);
+                Children.Add(_btnQuery);
+            }
+
+            // 内容
+            if (Child != null)
+            {
+                Children.Add(Child);
+            }
+
+            // 内容边框
+            _rcChild = new Rectangle
+            {
+                Stroke = Res.浅灰2,
+                IsHitTestVisible = false,
+                Margin = new Thickness(0, 0, -1, -1)
+            };
+            Children.Add(_rcChild);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)

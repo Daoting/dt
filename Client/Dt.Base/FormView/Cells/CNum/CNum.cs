@@ -505,8 +505,10 @@ namespace Dt.Base
 #endif
                 } }
             };
-
             _textBox.TextChanged += OnTextBoxTextChanged;
+            _textBox.GotFocus += OnBoxGotFocus;
+            _textBox.LostFocus += OnBoxLostFocus;
+
             UpdateText();
         }
 
@@ -569,28 +571,42 @@ namespace Dt.Base
             }
         }
 
-        protected override void OnGotFocus(RoutedEventArgs e)
+        void OnBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            base.OnGotFocus(e);
-
             IsFocused = true;
-            if (_textBox != null)
-                _textBox.Focus(FocusState.Programmatic);
             UpdateText();
         }
 
-        protected override void OnLostFocus(RoutedEventArgs e)
+        void OnBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            base.OnLostFocus(e);
-
-            if ((FocusManager.GetFocusedElement() == null)
-                || !this.IsAncestorOf((FocusManager.GetFocusedElement() as FrameworkElement)))
-            {
-                IsFocused = false;
-            }
+            IsFocused = false;
             UpdateValue();
             UpdateText();
         }
+
+        // 焦点处理放在 _textBox 的GotFocus LostFocus事件中，否则查询按钮始终无法获得焦点！！！
+        //protected override void OnGotFocus(RoutedEventArgs e)
+        //{
+        //    base.OnGotFocus(e);
+
+        //    IsFocused = true;
+        //    if (_textBox != null)
+        //        _textBox.Focus(FocusState.Programmatic);
+        //    UpdateText();
+        //}
+
+        //protected override void OnLostFocus(RoutedEventArgs e)
+        //{
+        //    base.OnLostFocus(e);
+
+        //    if ((FocusManager.GetFocusedElement() == null)
+        //        || !this.IsAncestorOf((FocusManager.GetFocusedElement() as FrameworkElement)))
+        //    {
+        //        IsFocused = false;
+        //    }
+        //    UpdateValue();
+        //    UpdateText();
+        //}
 
         protected override void OnPointerWheelChanged(PointerRoutedEventArgs e)
         {
@@ -674,7 +690,7 @@ namespace Dt.Base
             }
             else
             {
-                if (IsFocusWithin())
+                if (IsFocused)
                 {
                     if (string.IsNullOrEmpty(_textBox.Text))
                     {
@@ -825,11 +841,6 @@ namespace Dt.Base
                     ChangeValue(-SmallChange);
                 }
             }
-        }
-
-        bool IsFocusWithin()
-        {
-            return IsFocused;
         }
 
         bool IsSymbolicException(string keyInput, System.Globalization.NumberFormatInfo formatInfo)

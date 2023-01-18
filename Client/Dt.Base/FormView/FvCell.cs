@@ -94,6 +94,18 @@ namespace Dt.Base
             typeof(FvCell),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty QueryProperty = DependencyProperty.Register(
+            "Query",
+            typeof(QueryType),
+            typeof(FvCell),
+            new PropertyMetadata(QueryType.Disable, OnQueryTypeChanged));
+
+        public static readonly DependencyProperty QueryFlagProperty = DependencyProperty.Register(
+            "QueryFlag",
+            typeof(CompFlag),
+            typeof(FvCell),
+            new PropertyMetadata(CompFlag.Ignore, OnQueryFlagChanged));
+
         public static readonly DependencyProperty ReadOnlyBindingProperty = DependencyProperty.Register(
             "ReadOnlyBinding",
             typeof(bool),
@@ -124,7 +136,7 @@ namespace Dt.Base
         {
             FvCell cell = (FvCell)d;
             if (cell._panel != null)
-                cell._panel.OnShowTitleChanged();
+                cell._panel.UpdateChildren();
         }
 
         static void OnIsVerticalTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -159,6 +171,20 @@ namespace Dt.Base
                     cell._panel.Child.Visibility = Visibility.Collapsed;
                 }
             }
+        }
+
+        static void OnQueryTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            FvCell cell = (FvCell)d;
+            if (cell._panel != null)
+                cell._panel.UpdateChildren();
+        }
+
+        static void OnQueryFlagChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            FvCell cell = (FvCell)d;
+            if (cell._panel != null)
+                cell._panel.OnQueryFlagChanged();
         }
 
         static void OnReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
@@ -284,6 +310,24 @@ namespace Dt.Base
         {
             get { return (string)GetValue(PlaceholderProperty); }
             set { SetValue(PlaceholderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置查询时对条件比较符控制：无比较符、可修改比较符、比较符只读
+        /// </summary>
+        public QueryType Query
+        {
+            get { return (QueryType)GetValue(QueryProperty); }
+            set { SetValue(QueryProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置查询时的条件比较符
+        /// </summary>
+        public CompFlag QueryFlag
+        {
+            get { return (CompFlag)GetValue(QueryFlagProperty); }
+            set { SetValue(QueryFlagProperty, value); }
         }
 
         /// <summary>

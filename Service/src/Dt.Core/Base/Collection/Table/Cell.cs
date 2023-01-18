@@ -329,6 +329,15 @@ namespace Dt.Core
             if (p_tgtType.IsAssignableFrom(p_val.GetType()))
                 return p_val;
 
+            // 空字符串转其他类型
+            if (p_val is string && (string)p_val == string.Empty)
+            {
+                // 值类型，相当于default
+                if (p_tgtType.IsValueType)
+                    return Activator.CreateInstance(p_tgtType);
+                return null;
+            }
+
             // 枚举类型
             if (p_tgtType.IsEnum)
             {

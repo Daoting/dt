@@ -23,6 +23,7 @@
                         <a:CBool Title="水平填充" ID="IsHorStretch" />
                         <a:CNum Title="行数(-1自动)" ID="RowSpan" />
                         <a:CList Title="可见" ID="Visibility" />
+                        <a:CList Title="查询比较符" ID="Query" />
                         <a:CBar Title="单元格增删" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="添加一个" Click="OnAddClick" />

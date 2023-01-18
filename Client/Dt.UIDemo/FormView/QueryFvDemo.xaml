@@ -1,0 +1,36 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.QueryFvDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="查询面板">
+                <a:QueryFv x:Name="_fv">
+                    <a:CText ID="字符串" Query="Editable" QueryFlag="Contains" />
+                    <a:CNum ID="数值" Query="Editable" QueryFlag="Greater" />
+                    <a:CBar Title="时间范围-比较符只读" />
+                    <a:CDate ID="时间_min" Query="ReadOnly" QueryFlag="Floor" ShowTitle="False" />
+                    <a:CDate ID="时间_max" Query="ReadOnly" QueryFlag="Ceil" ShowTitle="False"/>
+                    <a:CBar Title="整数范围" />
+                    <a:CText ID="值_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" />
+                    <a:CText ID="值_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" />
+                    <a:CText ID="忽略" Query="Editable" />
+                    
+                    <Button Content="查询" Command="{Binding CmdQuery,ElementName=_fv}" HorizontalAlignment="Stretch" />
+                </a:QueryFv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv x:Name="_fvCell">
+                    <a:CList Title="查询比较符" ID="Query" />
+                    <a:CList Title="比较符" ID="QueryFlag" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
