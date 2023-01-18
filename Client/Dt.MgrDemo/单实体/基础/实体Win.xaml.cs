@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-01-18 创建
 ******************************************************************************/
 #endregion
 
@@ -15,23 +15,23 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.单实体
 {
-    [View("$clsroot$Win")]
-    public partial class $clsroot$Win : Win
+    [View("实体Win")]
+    public partial class 实体Win : Win
     {
-        public $clsroot$Win()
+        public 实体Win()
         {
             InitializeComponent();
         }
 
-        public $clsroot$List List => _list;
+        public 实体List List => _list;
 
-        public $clsroot$Form Form => _form;
+        public 实体Form Form => _form;
 
         public SearchMv Search => _search;
 
-        public $clsroot$Query Query => _query;
+        public 实体Query Query => _query;
 
         void OnSearch(object sender, string e)
         {
@@ -43,7 +43,7 @@ namespace $rootnamespace$
             {
                 var clause = new QueryClause();
                 clause.Params = new Dict { { "input", $"%{e}%" } };
-                clause.Where = @"$blurclause$";
+                clause.Where = @"限长4 LIKE @input OR 不重复 LIKE @input OR 值变事件 LIKE @input";
                 _list.OnSearch(clause);
             }
         }

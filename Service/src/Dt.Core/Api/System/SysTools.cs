@@ -398,6 +398,9 @@ namespace Dt.Core
 
             foreach (var tbl in p_tblNames)
             {
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
+
                 var schema = GetTableSchema(tbl.ToLower());
                 foreach (var col in schema.Columns)
                 {
@@ -425,6 +428,9 @@ namespace Dt.Core
             StringBuilder sb = new StringBuilder();
             foreach (var tbl in p_tblNames)
             {
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
+
                 var schema = GetTableSchema(tbl.ToLower());
                 foreach (var col in schema.Columns)
                 {
@@ -447,18 +453,129 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 生成单表框架用到的sql
+        /// 生成模糊查询的where子句部分，可能多表(有扩展表)
         /// </summary>
-        /// <param name="p_tblName"></param>
-        /// <param name="p_title"></param>
-        /// <param name="p_blurQuery"></param>
+        /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public async Task<string> GetSingleTblSql(string p_tblName, string p_title, bool p_blurQuery)
+        public string GetBlurClause(List<string> p_tblNames)
         {
-            if (string.IsNullOrEmpty(p_tblName) || string.IsNullOrEmpty(p_title))
-                return "表名和标题不可为空！";
+            if (p_tblNames == null || p_tblNames.Count == 0)
+                return null;
 
-            return await CreateTblSql(p_tblName, p_title, p_blurQuery);
+            StringBuilder sb = new StringBuilder();
+            foreach (var tbl in p_tblNames)
+            {
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
+
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
+                {
+                    if (col.Type == typeof(string))
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(" OR ");
+                        sb.Append(col.Name);
+                        sb.Append(" LIKE @input");
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 生成查询面板的FvCells
+        /// </summary>
+        /// <param name="p_tblNames"></param>
+        /// <returns></returns>
+        public string GetQueryFvCells(List<string> p_tblNames)
+        {
+            if (p_tblNames == null || p_tblNames.Count == 0)
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var tbl in p_tblNames)
+            {
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
+
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
+                {
+                    if (sb.Length > 0)
+                        sb.AppendLine();
+                    AppendTabSpace(sb, 2);
+                    bool isEnum = IsEnumCol(col);
+
+                    string title = "";
+
+                    // 字段名中文时不再需要Title
+                    if (!string.IsNullOrEmpty(col.Comments)
+                        && !isEnum
+                        && !IsChiness(col.Name))
+                    {
+                        title = $" Title=\"{col.Comments}\"";
+                    }
+
+                    if (isEnum)
+                    {
+                        string tpName = GetEnumName(col);
+                        title = col.Comments.Substring(tpName.Length + 2);
+                        title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" Query=\"Editable\" />");
+                    }
+                    else if (col.Type == typeof(bool))
+                    {
+                        sb.Append($"<a:CBool ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                    }
+                    else if (col.Type == typeof(int))
+                    {
+                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" Query=\"Editable\" />");
+                    }
+                    else if (col.Type == typeof(long) || col.Type == typeof(double))
+                    {
+                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                    }
+                    else if (col.Type == typeof(DateTime))
+                    {
+                        sb.Append($"<a:CDate ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                    }
+                    else
+                    {
+                        sb.Append($"<a:CText ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 生成查询面板的Row数据源
+        /// </summary>
+        /// <param name="p_tblNames"></param>
+        /// <returns></returns>
+        public string GetQueryFvData(List<string> p_tblNames)
+        {
+            if (p_tblNames == null || p_tblNames.Count == 0)
+                return null;
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var tbl in p_tblNames)
+            {
+                if (string.IsNullOrEmpty(tbl))
+                    continue;
+
+                var schema = GetTableSchema(tbl.ToLower());
+                foreach (var col in schema.Columns)
+                {
+                    bool isEnum = IsEnumCol(col);
+                    string tpName = isEnum ? GetEnumName(col) : GetTypeName(col.Type);
+
+                    AppendTabSpace(sb, 3);
+                    sb.AppendLine($"row.AddCell<{tpName}>(\"{col.Name}\");");
+                }
+            }
+            return sb.ToString();
         }
 
         /// <summary>

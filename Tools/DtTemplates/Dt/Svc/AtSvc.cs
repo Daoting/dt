@@ -90,14 +90,30 @@ namespace Dt
             );
         }
 
-        public static Task<string> GetSingleTblSql(string p_tblName, string p_title, bool p_blurQuery)
+        public static Task<string> GetBlurClause(List<string> p_tblNames)
         {
             return new Rpc().Call<string>(
                 _svcUrl,
-                "SysTools.GetSingleTblSql",
-                p_tblName,
-                p_title,
-                p_blurQuery
+                "SysTools.GetBlurClause",
+                p_tblNames
+            );
+        }
+
+        public static Task<string> GetQueryFvCells(List<string> p_tblNames)
+        {
+            return new Rpc().Call<string>(
+                _svcUrl,
+                "SysTools.GetQueryFvCells",
+                p_tblNames
+            );
+        }
+
+        public static Task<string> GetQueryFvData(List<string> p_tblNames)
+        {
+            return new Rpc().Call<string>(
+                _svcUrl,
+                "SysTools.GetQueryFvData",
+                p_tblNames
             );
         }
 

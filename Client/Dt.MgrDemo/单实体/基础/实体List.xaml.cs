@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-01-18 创建
 ******************************************************************************/
 #endregion
 
@@ -15,11 +15,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.单实体
 {
-    public partial class $clsroot$List : Mv
+    public partial class 实体List : Mv
     {
-        public $clsroot$List()
+        public 实体List()
         {
             InitializeComponent();
         }
@@ -69,11 +69,11 @@ namespace $rootnamespace$
         {
             if (Clause == null)
             {
-                _lv.Data = await $entity$.Query();
+                _lv.Data = await 基础Obj.Query();
             }
             else
             {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
+                _lv.Data = await 基础Obj.Query(Clause.Where, Clause.Params);
             }
         }
         #endregion
@@ -95,6 +95,6 @@ namespace $rootnamespace$
         }
         #endregion
 
-        $clsroot$Win _win => ($clsroot$Win)_tab.OwnWin;
+        实体Win _win => (实体Win)_tab.OwnWin;
     }
 }

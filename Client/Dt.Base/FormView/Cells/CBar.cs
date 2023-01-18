@@ -126,15 +126,16 @@ namespace Dt.Base
                 con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
                 root.Children.Insert(0, con);
             }
-            else
+            else if (Content != null)
             {
                 StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
                 TextBlock tb = new TextBlock { FontFamily = Res.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
                 sp.Children.Add(tb);
-                tb = new TextBlock { Text = (Content != null ? Content.ToString() : ""), TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
+                tb = new TextBlock { Text = Content.ToString(), TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);
                 root.Children.Insert(0, sp);
             }
+            // Content == null不绘制任何内容，做空行使用
         }
     }
 }

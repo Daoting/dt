@@ -69,8 +69,8 @@ namespace Dt.SingleTbl
 
             if (_isSelectTbl && _cbSql.Checked)
             {
-                string msg = await AtSvc.GetSingleTblSql(_cbTbls.SelectedItem.ToString(), _params.Title, _cbSearch.SelectedIndex == 0);
-                sb.AppendLine(msg);
+                //string msg = await AtSvc.GetSingleTblSql(_cbTbls.SelectedItem.ToString(), _params.Title, _cbSearch.SelectedIndex == 0);
+                //sb.AppendLine(msg);
             }
             else
             {

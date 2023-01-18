@@ -55,7 +55,7 @@ namespace Dt
                 .AppendLine($"框架类的词根：{_params.ClsRoot}");
 
             _path = Kit.GetFolderPath();
-            WriteWin();
+            await WriteWin();
             await WriteForm();
             await WriteList();
             await WriteQuery();
@@ -63,11 +63,14 @@ namespace Dt
             Close();
         }
 
-        void WriteWin()
+        async Task WriteWin()
         {
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml"), "Dt.Single.Res.EntityWin.xaml", dt);
+
+            dt["$blurclause$"] = await AtSvc.GetBlurClause(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml.cs"), "Dt.Single.Res.EntityWin.xaml.cs", dt);
+            dt.Remove("$blurclause$");
         }
 
         async Task WriteForm()
@@ -91,15 +94,20 @@ namespace Dt
             dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(_params.Tbls);
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}List.xaml"), "Dt.Single.Res.EntityList.xaml", dt);
-            dt.Remove("$lvbody$");
+            dt.Remove("$lvtemp$");
+            dt.Remove("$lvcols$");
         }
 
-        Task WriteQuery()
+        async Task WriteQuery()
         {
             var dt = _params.Params;
+            dt["$queryxaml$"] = await AtSvc.GetQueryFvCells(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Query.xaml"), "Dt.Single.Res.EntityQuery.xaml", dt);
+            dt.Remove("$queryxaml$");
+
+            dt["$querydata$"] = await AtSvc.GetQueryFvData(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Query.xaml.cs"), "Dt.Single.Res.EntityQuery.xaml.cs", dt);
-            return Task.CompletedTask;
+            dt.Remove("$querydata$");
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

@@ -5,8 +5,14 @@
     xmlns:a="using:Dt.Base"
     Title="查询">
 
-    <a:Fv x:Name="_fv">
-        <a:CText ID="name" Title="名称" />
-        <Button Content="查询" Click="OnSearch" HorizontalAlignment="Stretch" />
-    </a:Fv>
+    <a:QueryFv x:Name="_fv">
+$queryxaml$
+        <a:CBar />
+        <a:CBar>
+            <Grid ColumnDefinitions="*,*">
+                <Button Content="重置" Command="{Binding CmdReset,ElementName=_fv}" HorizontalAlignment="Stretch" />
+                <Button Content="查询" Command="{Binding CmdQuery,ElementName=_fv}" HorizontalAlignment="Stretch" Grid.Column="1" />
+            </Grid>
+        </a:CBar>
+    </a:QueryFv>
 </a:Mv>
