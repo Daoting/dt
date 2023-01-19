@@ -44,7 +44,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 构造行，和外部共用CellList
+        /// 构造行，和外部共用Cells
         /// </summary>
         /// <param name="p_cells"></param>
         public Row(CellList p_cells)

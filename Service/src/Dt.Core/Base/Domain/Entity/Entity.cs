@@ -17,6 +17,18 @@ namespace Dt.Core
     /// </summary>
     public abstract class Entity : Row
     {
+        #region 构造方法
+        public Entity()
+        { }
+
+        /// <summary>
+        /// 和外部共用Cells
+        /// </summary>
+        /// <param name="p_cells"></param>
+        public Entity(CellList p_cells)
+            : base(p_cells)
+        { }
+        #endregion
 
         public List<IList<Entity>> GetChildren()
         {

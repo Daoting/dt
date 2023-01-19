@@ -64,6 +64,11 @@ namespace Dt.Core
             sb.AppendLine($"{clsName}() {{ }}");
             sb.AppendLine();
 
+            // 构造方法，实体间类型转换时使用
+            AppendTabSpace(sb, 2);
+            sb.AppendLine($"public {clsName}(CellList p_cells) : base(p_cells) {{ }}");
+            sb.AppendLine();
+
             // 构造方法
             AppendTabSpace(sb, 2);
             sb.Append("public ");
