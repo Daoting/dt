@@ -42,6 +42,15 @@ namespace Dt.Core
         {
             _cells = new CellList();
         }
+
+        /// <summary>
+        /// 构造行，和外部共用CellList
+        /// </summary>
+        /// <param name="p_cells"></param>
+        public Row(CellList p_cells)
+        {
+            _cells = p_cells;
+        }
         #endregion
 
         #region 事件
@@ -105,10 +114,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取当前所有数据项
         /// </summary>
-        public CellList Cells
-        {
-            get { return _cells; }
-        }
+        public CellList Cells => _cells;
 
         /// <summary>
         /// 获取当前行是否已发生更改。
@@ -238,6 +244,55 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 判断是否包含给定的列
+        /// </summary>
+        /// <param name="p_columnName">列名</param>
+        /// <returns>true 包含</returns>
+        public bool Contains(string p_columnName)
+        {
+            Throw.IfEmpty(p_columnName);
+            return _cells.Contains(p_columnName);
+        }
+
+        /// <summary>
+        /// 删除当前行
+        /// </summary>
+        public void Remove()
+        {
+            if (Table != null)
+                Table.Remove(this);
+        }
+
+        /// <summary>
+        /// Row转换成Dict对象
+        /// </summary>
+        /// <returns>Dict对象</returns>
+        public Dict ToDict()
+        {
+            Dict dt = new Dict();
+            foreach (var cell in _cells)
+            {
+                dt[cell.ID] = cell.Val;
+            }
+            return dt;
+        }
+        #endregion
+
+        #region 类型转换
+        /// <summary>
+        /// 转换成新的实体对象，和当前对象共用Cells，只套个新实体类型的外壳！
+        /// </summary>
+        /// <typeparam name="TEntity">目标实体类型</typeparam>
+        /// <returns></returns>
+        public TEntity To<TEntity>()
+            where TEntity : Entity
+        {
+            return (TEntity)Activator.CreateInstance(typeof(TEntity), new object[] { _cells });
+        }
+        #endregion
+
+        #region 深度克隆
+        /// <summary>
         /// 深度克隆行对象，返回同类型的独立行
         /// </summary>
         /// <returns>返回独立行</returns>
@@ -287,40 +342,6 @@ namespace Dt.Core
                     new Cell(row, item.ID, tp, item.OriginalVal);
             }
             return row;
-        }
-
-        /// <summary>
-        /// 判断是否包含给定的列
-        /// </summary>
-        /// <param name="p_columnName">列名</param>
-        /// <returns>true 包含</returns>
-        public bool Contains(string p_columnName)
-        {
-            Throw.IfEmpty(p_columnName);
-            return _cells.Contains(p_columnName);
-        }
-
-        /// <summary>
-        /// 删除当前行
-        /// </summary>
-        public void Remove()
-        {
-            if (Table != null)
-                Table.Remove(this);
-        }
-
-        /// <summary>
-        /// Row转换成Dict对象
-        /// </summary>
-        /// <returns>Dict对象</returns>
-        public Dict ToDict()
-        {
-            Dict dt = new Dict();
-            foreach (var cell in _cells)
-            {
-                dt[cell.ID] = cell.Val;
-            }
-            return dt;
         }
         #endregion
 
