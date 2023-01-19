@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-17 创建
+* 日志: 2023-01-18 创建
 ******************************************************************************/
 #endregion
 
@@ -17,7 +17,6 @@ namespace Dt.MgrDemo.单实体
     public partial class 基础Obj
     {
         public static async Task<基础Obj> New(
-            int 序列 = default,
             string 限长4 = default,
             string 不重复 = default,
             bool 禁止选中 = default,
@@ -30,7 +29,7 @@ namespace Dt.MgrDemo.单实体
         {
             return new 基础Obj(
                 ID: await NewID(),
-                序列: 序列,
+                序列: await NewSeq("序列"),
                 限长4: 限长4,
                 不重复: 不重复,
                 禁止选中: 禁止选中,

@@ -465,7 +465,7 @@ namespace Dt.Agent
         public static async Task<bool> DelByID<TEntity>(string p_id, bool p_isNotify = true)
         {
             var model = EntitySchema.Get(typeof(TEntity));
-            bool suc = await Exec(model.Schema.SqlDelete, new { id = p_id }) == 1;
+            bool suc = await Exec(model.Schema.GetDeleteByIDSql(), new { id = p_id }) == 1;
             if (p_isNotify)
                 Kit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
@@ -481,7 +481,7 @@ namespace Dt.Agent
         public static async Task<bool> DelByID<TEntity>(long p_id, bool p_isNotify = true)
         {
             var model = EntitySchema.Get(typeof(TEntity));
-            bool suc = await Exec(model.Schema.SqlDelete, new { id = p_id }) == 1;
+            bool suc = await Exec(model.Schema.GetDeleteByIDSql(), new { id = p_id }) == 1;
             if (p_isNotify)
                 Kit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;

@@ -50,33 +50,27 @@ namespace Dt.Core
         /// <summary>
         /// 根据主键查询实体的sql，只支持单主键
         /// </summary>
-        public string SqlSelect
+        public string GetSelectByIDSql()
         {
-            get
+            if (_sqlSelect == null || PrimaryKey.Count == 1)
             {
-                if (_sqlSelect == null || PrimaryKey.Count == 1)
-                {
-                    // 主键变量名固定为id
-                    _sqlSelect = $"select * from `{Name}` where {PrimaryKey[0].Name}=@id";
-                }
-                return _sqlSelect;
+                // 主键变量名固定为id
+                _sqlSelect = $"select * from `{Name}` where {PrimaryKey[0].Name}=@id";
             }
+            return _sqlSelect;
         }
 
         /// <summary>
         /// 根据主键删除实体的sql，只支持单主键
         /// </summary>
-        public string SqlDelete
+        public string GetDeleteByIDSql()
         {
-            get
+            if (_sqlDelete == null || PrimaryKey.Count == 1)
             {
-                if (_sqlDelete == null || PrimaryKey.Count == 1)
-                {
-                    // 主键变量名固定为id
-                    _sqlDelete = $"delete from `{Name}` where {PrimaryKey[0].Name}=@id";
-                }
-                return _sqlDelete;
+                // 主键变量名固定为id
+                _sqlDelete = $"delete from `{Name}` where {PrimaryKey[0].Name}=@id";
             }
+            return _sqlDelete;
         }
 
         /// <summary>
@@ -228,6 +222,8 @@ namespace Dt.Core
                 dts.Add(dt);
             }
 
+            // 可能存在即使有修改标志，也无需update的情况！
+            // 如虚拟实体中的多个实体可能未全部修改，但只要有一个修改就置标志
             if (update)
             {
                 string upVals = updateVal.ToString();

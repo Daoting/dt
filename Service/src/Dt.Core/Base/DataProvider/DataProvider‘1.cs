@@ -187,7 +187,7 @@ namespace Dt.Agent
         public static Task<TEntity> GetByID<TEntity>(string p_id)
             where TEntity : Entity
         {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
+            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectByIDSql(), new { id = p_id });
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Dt.Agent
         public static Task<TEntity> GetByID<TEntity>(long p_id)
             where TEntity : Entity
         {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.SqlSelect, new { id = p_id });
+            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectByIDSql(), new { id = p_id });
         }
         #endregion
 

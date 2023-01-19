@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 工作单元，解决领域模型存储和变更工作，对所有仓储的的持久化做统一管理
     /// </summary>
-    public class UnitOfWork
+    public class Uw
     {
         #region 成员变量
         readonly List<UnitItem> _items = new List<UnitItem>();
@@ -104,6 +104,13 @@ namespace Dt.Core
             if (p_list == null)
                 return;
 
+            // 虚拟实体特殊处理
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+            {
+                await SaveVirEntity(p_list);
+                return;
+            }
+
             // 提取并校验需要保存的实体
             List<TEntity> ls = new List<TEntity>();
             foreach (var item in p_list)
@@ -129,6 +136,49 @@ namespace Dt.Core
                 {
                     var ui = new UnitItem(model, (IList<Entity>)ls, dts);
                     _items.Add(ui);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存虚拟实体，批量保存时未将相同类型的实体形成列表统一生成sql！
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="p_list"></param>
+        /// <returns></returns>
+        async Task SaveVirEntity<TEntity>(IEnumerable<TEntity> p_list)
+            where TEntity : Entity
+        {
+            // 不再判断null和虚拟实体类型
+
+            foreach (var item in p_list.Cast<VirEntity>())
+            {
+                // 虚拟实体的增加、修改状态仍然有效
+                if (item == null || (!item.IsAdded && !item.IsChanged))
+                    continue;
+
+                // 虚拟实体内部包含的实体对象
+                foreach (var obj in item.GetEntities())
+                {
+                    if (obj.GetSavingHook() is Func<Task> hook)
+                    {
+                        // 保存前外部校验，校验不通过抛出异常
+                        await hook();
+                    }
+
+                    var model = EntitySchema.Get(obj.GetType());
+                    if (IsValidSvc(model))
+                    {
+                        // 单个处理
+                        var ls = new List<Entity> { obj };
+                        // 可能存在即使有修改标志，也无需update的情况！
+                        var dts = model.Schema.GetSaveSql(ls);
+                        if (dts != null && dts.Count > 0)
+                        {
+                            var ui = new UnitItem(model, ls, dts);
+                            _items.Add(ui);
+                        }
+                    }
                 }
             }
         }
@@ -160,6 +210,13 @@ namespace Dt.Core
         {
             if (p_list == null || p_list.Count == 0)
                 return;
+
+            // 虚拟实体特殊处理
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+            {
+                await DeleteVirEntity(p_list);
+                return;
+            }
 
             foreach (var item in p_list)
             {
@@ -214,18 +271,42 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 先根据主键或唯一索引获取该实体，然后添加到待删除，最后由Commit统一提交
+        /// 删除虚拟实体，批量删除时未将相同类型的实体形成列表统一生成sql！
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyName">主键或唯一索引列名</param>
-        /// <param name="p_keyVal">主键值</param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="p_list"></param>
         /// <returns></returns>
-        public async Task DelByKey<TEntity>(string p_keyName, string p_keyVal)
+        async Task DeleteVirEntity<TEntity>(IEnumerable<TEntity> p_list)
             where TEntity : Entity
         {
-            var entity = await EntityEx.GetByKey<TEntity>(p_keyName, p_keyVal);
-            if (entity != null)
-                await Delete(new List<TEntity> { entity });
+            // 不再判断null和虚拟实体类型
+
+            foreach (var item in p_list.Cast<VirEntity>())
+            {
+                if (item == null)
+                    continue;
+
+                // 虚拟实体内部包含的实体对象
+                foreach (var obj in item.GetEntities())
+                {
+                    if (obj.GetDeletingHook() is Func<Task> hook)
+                    {
+                        // 删除前外部校验，校验不通过抛出异常
+                        await hook();
+                    }
+
+                    var model = EntitySchema.Get(obj.GetType());
+                    if (IsValidSvc(model))
+                    {
+                        // 单个处理
+                        var ls = new List<Entity> { obj };
+                        Dict dt = model.Schema.GetDeleteSql((IList<Entity>)ls);
+                        var ui = new UnitItem(model, ls, new List<Dict> { dt });
+                        ui.IsDelete = true;
+                        _items.Add(ui);
+                    }
+                }
+            }
         }
         #endregion
 

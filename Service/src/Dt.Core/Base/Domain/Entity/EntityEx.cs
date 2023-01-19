@@ -31,9 +31,9 @@ namespace Dt.Core
         public static async Task<bool> Save<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.Save(p_entity);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.Save(p_entity);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Dt.Core
         public static async Task<bool> Save<TEntity>(this Table<TEntity> p_tbl, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.Save(p_tbl);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.Save(p_tbl);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace Dt.Core
         public static async Task<bool> Save<TEntity>(this IEnumerable<TEntity> p_list, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.Save(p_list);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.Save(p_list);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace Dt.Core
         public static async Task<bool> SaveWithChild<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.SaveWithChild(p_entity);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.SaveWithChild(p_entity);
+            return await u.Commit(p_isNotify);
         }
         #endregion
 
@@ -107,9 +107,9 @@ namespace Dt.Core
         public static async Task<bool> Delete<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.Delete(p_entity);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.Delete(p_entity);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -123,9 +123,9 @@ namespace Dt.Core
         public static async Task<bool> Delete<TEntity>(this IList<TEntity> p_list, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.Delete(p_list);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.Delete(p_list);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -141,9 +141,9 @@ namespace Dt.Core
         public static async Task<bool> DelByID<TEntity>(string p_id, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.DelByID<TEntity>(p_id);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.DelByID<TEntity>(p_id);
+            return await u.Commit(p_isNotify);
         }
 
         /// <summary>
@@ -159,28 +159,9 @@ namespace Dt.Core
         public static async Task<bool> DelByID<TEntity>(long p_id, bool p_isNotify = true)
             where TEntity : Entity
         {
-            var uw = new UnitOfWork();
-            await uw.DelByID<TEntity>(p_id);
-            return await uw.Commit(p_isNotify);
-        }
-
-        /// <summary>
-        /// 根据单主键或唯一索引列删除实体，删除前先获取该实体对象，并非直接删除！！！
-        /// <para>删除成功后：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyName">主键或唯一索引列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>
-        /// <returns>实际删除行数</returns>
-        public static async Task<bool> DelByKey<TEntity>(string p_keyName, string p_keyVal, bool p_isNotify = true)
-            where TEntity : Entity
-        {
-            var uw = new UnitOfWork();
-            await uw.DelByKey<TEntity>(p_keyName, p_keyVal);
-            return await uw.Commit(p_isNotify);
+            Uw u = new Uw();
+            await u.DelByID<TEntity>(p_id);
+            return await u.Commit(p_isNotify);
         }
         #endregion
 
@@ -195,18 +176,17 @@ namespace Dt.Core
         public static Task<Table<TEntity>> Query<TEntity>(string p_filter = null, object p_params = null)
             where TEntity : Entity
         {
-            var model = EntitySchema.Get(typeof(TEntity));
-            var sql = model.Schema.GetSelectAllSql();
+            var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
+                res.Item1 += " where " + p_filter;
 
 #if SERVER
-            return Kit.ContextDp.Query<TEntity>(sql, p_params);
+            return Kit.ContextDp.Query<TEntity>(res.Item1, p_params);
 #else
             return Kit.Rpc<Table<TEntity>>(
-                model.SvcName,
+                res.Item2,
                 "Da.Query",
-                sql,
+                res.Item1,
                 p_params);
 #endif
         }
@@ -223,19 +203,18 @@ namespace Dt.Core
         public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
             where TEntity : Entity
         {
-            var model = EntitySchema.Get(typeof(TEntity));
-            var sql = model.Schema.GetSelectAllSql();
+            var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
-            sql += $" limit {p_starRow},{p_pageSize} ";
+                res.Item1 += " where " + p_filter;
+            res.Item1 += $" limit {p_starRow},{p_pageSize} ";
 
 #if SERVER
-            return Kit.ContextDp.Query<TEntity>(sql, p_params);
+            return Kit.ContextDp.Query<TEntity>(res.Item1, p_params);
 #else
             return Kit.Rpc<Table<TEntity>>(
-                model.SvcName,
+                res.Item2,
                 "Da.Query",
-                sql,
+                res.Item1,
                 p_params);
 #endif
         }
@@ -250,18 +229,17 @@ namespace Dt.Core
         public static Task<TEntity> First<TEntity>(string p_filter, object p_params = null)
             where TEntity : Entity
         {
-            var model = EntitySchema.Get(typeof(TEntity));
-            var sql = model.Schema.GetSelectAllSql();
+            var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
+                res.Item1 += " where " + p_filter;
 
 #if SERVER
-            return Kit.ContextDp.First<TEntity>(sql, p_params);
+            return Kit.ContextDp.First<TEntity>(res.Item1, p_params);
 #else
             return Kit.Rpc<TEntity>(
-                model.SvcName,
+                res.Item2,
                 "Da.First",
-                sql,
+                res.Item1,
                 p_params);
 #endif
         }
@@ -277,8 +255,34 @@ namespace Dt.Core
         public static Task<TEntity> GetByID<TEntity>(string p_id)
             where TEntity : Entity
         {
+            string sql, svc;
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+            {
+                var vm = VirEntitySchema.Get(typeof(TEntity));
+                sql = vm.GetSelectByIDSql();
+                svc = vm.SvcName;
+            }
+            else
+            {
+                var model = EntitySchema.Get(typeof(TEntity));
+                sql = model.Schema.GetSelectAllSql();
+                svc = model.SvcName;
+            }
+
             // 主键名不一定是id，但sql语句中的变量名是id！
-            return GetByKey<TEntity>("id", p_id);
+            var dt = new Dict { { "id", p_id } };
+
+#if SERVER
+            return Kit.ContextDp.First<TEntity>(
+                sql,
+                dt);
+#else
+            return Kit.Rpc<TEntity>(
+                svc,
+                "Da.First",
+                sql,
+                dt);
+#endif
         }
 
         /// <summary>
@@ -292,7 +296,19 @@ namespace Dt.Core
         public static Task<TEntity> GetByID<TEntity>(long p_id)
             where TEntity : Entity
         {
-            return GetByKey<TEntity>("id", p_id.ToString());
+            return GetByID<TEntity>(p_id.ToString());
+        }
+
+        static (string, string) GetSelectSql(Type p_type)
+        {
+            if (p_type.IsSubclassOf(typeof(VirEntity)))
+            {
+                var vm = VirEntitySchema.Get(p_type);
+                return (vm.GetSelectAllSql(), vm.SvcName);
+            }
+
+            var model = EntitySchema.Get(p_type);
+            return (model.Schema.GetSelectAllSql(), model.SvcName);
         }
 
         /// <summary>
@@ -307,8 +323,21 @@ namespace Dt.Core
         public static Task<TEntity> GetByKey<TEntity>(string p_keyName, string p_keyVal)
             where TEntity : Entity
         {
-            var model = EntitySchema.Get(typeof(TEntity));
-            var sql = $"select * from `{model.Schema.Name}` where {p_keyName}=@{p_keyName}";
+            string sql, svc;
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+            {
+                var vm = VirEntitySchema.Get(typeof(TEntity));
+                sql = vm.GetSelectAllSql();
+                svc = vm.SvcName;
+            }
+            else
+            {
+                var model = EntitySchema.Get(typeof(TEntity));
+                sql = model.Schema.GetSelectAllSql();
+                svc = model.SvcName;
+            }
+
+            sql += $" where {p_keyName}=@{p_keyName}";
             var dt = new Dict { { p_keyName, p_keyVal } };
 
 #if SERVER
@@ -337,9 +366,20 @@ namespace Dt.Core
 #if SERVER
             return Task.FromResult(Kit.NewID);
 #else
-            var model = EntitySchema.Get(typeof(TEntity));
+            string svc;
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+            {
+                var vm = VirEntitySchema.Get(typeof(TEntity));
+                svc = vm.SvcName;
+            }
+            else
+            {
+                var model = EntitySchema.Get(typeof(TEntity));
+                svc = model.SvcName;
+            }
+
             return Kit.Rpc<long>(
-                model.SvcName,
+                svc,
                 "Da.NewID"
             );
 #endif
@@ -355,6 +395,9 @@ namespace Dt.Core
             where TEntity : Entity
         {
             Throw.IfEmpty(p_colName, "获取新序列值时，需要提供字段名称！");
+            if (typeof(TEntity).IsSubclassOf(typeof(VirEntity)))
+                Throw.Msg("无法通过虚拟实体获取新序列值时！");
+
             var model = EntitySchema.Get(typeof(TEntity));
 
             // 序列名称：表名+字段名，全小写

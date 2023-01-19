@@ -124,12 +124,12 @@ namespace Dt.Cm
         {
             Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
-            var uw = new UnitOfWork();
+            Uw u = new Uw();
 
             var old = new UserParamsObj(
                 UserID: p_userID,
                 ParamID: p_paramID);
-            await uw.Delete(old);
+            await u.Delete(old);
 
             var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
             if (defVal != p_value)
@@ -140,10 +140,10 @@ namespace Dt.Cm
                     ParamID: p_paramID,
                     Value: p_value,
                     Mtime: Kit.Now);
-                await uw.Save(up);
+                await u.Save(up);
             }
 
-            bool suc = await uw.Commit();
+            bool suc = await u.Commit();
             if (suc)
             {
                 await GetVerCache().DeleteField(p_userID, "params");

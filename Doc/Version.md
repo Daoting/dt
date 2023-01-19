@@ -36,9 +36,11 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加业务样例项目
 * Col无Title时显示ID
 * 增加查询面板QueryFv，FvCell支持比较符
+* Row增加To<T>方法，和任意Entity类型转换，共用_cells
+* 生成的实体类增加和外部共用Cells的构造方法
+* 增加虚拟实体，并在EntityEx和UnitOfWork中处理
 
 * 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、EntityEx的方法：增删该及批量、GetByID有缓存、领域事件
-* Row和任意Entity类型转换，共用_cells
 * 父子实体的保存和删除
 * 发布领域事件
 * 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的标签

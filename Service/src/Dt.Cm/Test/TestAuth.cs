@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Cm.Domain;
 using Dt.Core;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace Dt.Cm
     {
         public string NoAuth()
         {
+            var sch = VirEntitySchema.Get(typeof(VirObj<UserObj, RoleObj, PubPostObj>));
+            var sql = sch.GetSelectAllSql();
             return "无授权验证";
         }
 

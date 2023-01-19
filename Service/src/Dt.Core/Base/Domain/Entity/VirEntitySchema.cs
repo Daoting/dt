@@ -1,0 +1,153 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2023-01-19 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using System.Collections.Concurrent;
+using System.Text;
+#endregion
+
+namespace Dt.Core
+{
+    /// <summary>
+    /// 虚拟实体结构定义
+    /// </summary>
+    public class VirEntitySchema
+    {
+        readonly List<EntitySchema> schemas = new List<EntitySchema>();
+        string _selectAll;
+        string _selectByID;
+
+        public VirEntitySchema(Type p_type)
+        {
+            if (!p_type.IsGenericType || !p_type.IsSubclassOf(typeof(VirEntity)))
+                throw new Exception($"{p_type.Name}不是虚拟实体类型！");
+
+            var tps = p_type.GetGenericArguments();
+            foreach (var tp in tps)
+            {
+                var schema = EntitySchema.Get(tp);
+                if (SvcName == null)
+                {
+                    SvcName = schema.SvcName;
+                }
+                else if (schema.SvcName != SvcName)
+                {
+                    throw new Exception("虚拟实体中的各实体无法跨服务进行数据存储！");
+                }
+
+                if (schema.Schema.PrimaryKey.Count != 1)
+                {
+                    throw new Exception("虚拟实体中的各实体只支持单主键！");
+                }
+                schemas.Add(schema);
+            }
+        }
+
+        /// <summary>
+        /// Entity增删用到的服务名称
+        /// </summary>
+        public string SvcName { get; }
+
+        /// <summary>
+        /// 获取选择所有数据的sql
+        /// </summary>
+        /// <returns></returns>
+        public string GetSelectAllSql()
+        {
+            if (_selectAll == null)
+                CreateSql();
+            return _selectAll;
+        }
+
+        /// <summary>
+        /// 获取选择所有数据的sql
+        /// </summary>
+        /// <returns></returns>
+        public string GetSelectByIDSql()
+        {
+            if (_selectByID == null)
+                CreateSql();
+            return _selectByID;
+        }
+
+        void CreateSql()
+        {
+            StringBuilder sb = new StringBuilder();
+            string tbls = "";
+            for (int i = 0; i < schemas.Count; i++)
+            {
+                var schema = schemas[i].Schema;
+                char prefix = (char)('a' + i);
+                if (i == 0)
+                {
+                    // 只使用第一个表的主键
+                    sb.Append(prefix);
+                    sb.Append(".");
+                    sb.Append(schema.PrimaryKey[0].Name);
+                    tbls = schema.Name + " " + prefix;
+                }
+                else
+                {
+                    tbls += $" JOIN {schema.Name} {prefix} on a.{schema.PrimaryKey[0].Name}={prefix}.{schema.PrimaryKey[0].Name}";
+                }
+
+                foreach (var col in schema.Columns)
+                {
+                    // 去除多表中列名重复的列
+                    if (i > 0)
+                    {
+                        bool repeat = false;
+                        for (int j = 0; j < i; j++)
+                        {
+                            var ccs = schemas[j].Schema.Columns;
+                            foreach (var cc in ccs)
+                            {
+                                if (col.Name.Equals(cc.Name, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    repeat = true;
+                                    break;
+                                }
+                            }
+                            if (repeat)
+                                break;
+                        }
+                        if (repeat)
+                            continue;
+                    }
+
+                    sb.Append(", ");
+                    sb.Append(prefix);
+                    sb.Append(".");
+                    sb.Append(col.Name);
+                }
+            }
+            _selectAll = $"select {sb} from {tbls}";
+            _selectByID = _selectAll + $" where {schemas[0].Schema.PrimaryKey[0].Name}=@id";
+        }
+
+        #region 静态内容
+        static readonly ConcurrentDictionary<Type, VirEntitySchema> _models = new ConcurrentDictionary<Type, VirEntitySchema>();
+
+        /// <summary>
+        /// 获取实体类型的定义
+        /// </summary>
+        /// <param name="p_type">实体类型</param>
+        /// <returns></returns>
+        public static VirEntitySchema Get(Type p_type)
+        {
+            if (_models.TryGetValue(p_type, out var m))
+                return m;
+
+            var model = new VirEntitySchema(p_type);
+            _models[p_type] = model;
+            return model;
+        }
+        #endregion
+
+    }
+}
