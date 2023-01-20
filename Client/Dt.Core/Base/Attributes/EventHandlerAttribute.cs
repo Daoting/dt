@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-10-17 创建
+* 日志: 2017-12-06 创建
 ******************************************************************************/
 #endregion
 
@@ -13,19 +13,11 @@ using System;
 namespace Dt.Core
 {
     /// <summary>
-    /// 实体对象增删改触发的事件类型标签
+    /// 事件处理类型标签
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class CudEventAttribute : Attribute
+    public class EventHandlerAttribute : TypeAliasAttribute
     {
-        public CudEventAttribute(CudEvent p_event)
-        {
-            Event = p_event;
-        }
-
-        /// <summary>
-        /// 实体对象增删改触发的事件类型，可以触发多个事件
-        /// </summary>
-        public CudEvent Event { get; }
+        public EventHandlerAttribute() { }
     }
 }

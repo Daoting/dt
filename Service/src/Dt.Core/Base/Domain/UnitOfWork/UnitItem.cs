@@ -46,38 +46,13 @@ namespace Dt.Core
         async Task Commited<TEntity>()
             where TEntity : Entity
         {
-            var localEB = Kit.GetService<EventBus.LocalEventBus>();
             foreach (var en in Data)
             {
                 // 发布领域事件
-                if (Schema.CudEvent != CudEvent.None)
-                {
-                    // 触发增删改领域事件
-                    if (IsDelete)
-                    {
-                        if ((Schema.CudEvent & CudEvent.Delete) == CudEvent.Delete)
-                            localEB.Publish(new DeleteEvent<TEntity> { Entity = (TEntity)en });
-                    }
-                    else
-                    {
-                        if (en.IsAdded)
-                        {
-                            if ((Schema.CudEvent & CudEvent.Insert) == CudEvent.Insert)
-                                localEB.Publish(new InsertEvent<TEntity> { Entity = (TEntity)en });
-                        }
-                        else if (en.IsChanged)
-                        {
-                            if ((Schema.CudEvent & CudEvent.Update) == CudEvent.Update)
-                                localEB.Publish(new UpdateEvent<TEntity> { Entity = (TEntity)en });
-                        }
-                    }
-                }
-
-                // 触发自定义领域事件
                 var ls = en.GetEvents();
                 if (ls != null && ls.Count > 0)
                 {
-                    ls.ForEach(localEB.Publish);
+                    ls.ForEach(Kit.PublishEvent);
                     // 发布完毕，清空领域事件
                     en.ClearEvents();
                 }

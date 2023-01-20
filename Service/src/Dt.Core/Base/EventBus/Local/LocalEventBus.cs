@@ -32,12 +32,7 @@ namespace Dt.Core.EventBus
         /// <summary>
         /// 键为事件类型名称，值为ILocalHandler泛型
         /// </summary>
-        internal static readonly Dictionary<string, Type> NoticeEvents = new Dictionary<string, Type>();
-
-        /// <summary>
-        /// 键为事件类型，值为Handler类型
-        /// </summary>
-        internal static readonly Dictionary<Type, Type> RequestEvents = new Dictionary<Type, Type>();
+        internal static readonly Dictionary<string, Type> EventHandlerTypes = new Dictionary<string, Type>();
 
         /// <summary>
         /// 发布本地事件，不等待
@@ -46,7 +41,7 @@ namespace Dt.Core.EventBus
         public async void Publish(IEvent p_event)
         {
             Type tp;
-            if (p_event == null || !NoticeEvents.TryGetValue(p_event.GetType().Name, out tp))
+            if (p_event == null || !EventHandlerTypes.TryGetValue(p_event.GetType().Name, out tp))
                 return;
 
             var mi = tp.GetMethod("Handle");
@@ -62,32 +57,6 @@ namespace Dt.Core.EventBus
                     _log.LogWarning(e, $"{h.GetType().Name}处理本地事件时异常！");
                 }
             }
-        }
-
-        /// <summary>
-        /// 发布请求/响应模式的事件
-        /// </summary>
-        /// <typeparam name="TResponse">返回类型</typeparam>
-        /// <param name="p_request">请求内容</param>
-        /// <returns>返回响应值</returns>
-        public Task<TResponse> Call<TResponse>(IRequest<TResponse> p_request)
-        {
-            Type tp;
-            if (p_request == null || !RequestEvents.TryGetValue(p_request.GetType(), out tp))
-                return Task.FromResult(default(TResponse));
-
-            object handler = Kit.GetService(tp);
-            var mi = tp.GetMethod("Handle");
-            try
-            {
-                return (Task<TResponse>)mi.Invoke(handler, new object[] { p_request });
-            }
-            catch (Exception e)
-            {
-                _log.LogWarning(e, $"{tp.Name}处理本地事件时异常！");
-                // 异常时未再次抛出
-            }
-            return Task.FromResult(default(TResponse));
         }
     }
 }

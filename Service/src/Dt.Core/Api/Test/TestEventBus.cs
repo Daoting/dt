@@ -42,19 +42,9 @@ namespace Dt.Core
             Kit.RemotePushFixed(new TestEventData(), p_svcID);
         }
 
-        public void PushGenericEvent(string p_name)
-        {
-            Kit.RemoteMulticast(new GenericEvent<EventData>(new EventData { Name = p_name }));
-        }
-
         public void LocalPublish()
         {
-            Kit.LocalPublish(new KesEvent());
-        }
-
-        public Task<string> LocalCall(string p_name)
-        {
-            return Kit.LocalCall(new UyEvent { Name = p_name });
+            Kit.PublishEvent(new KesEvent());
         }
 
         public string TestLoadBalance()
@@ -68,7 +58,8 @@ namespace Dt.Core
 
     }
 
-    public class TestHandler1 : IRemoteHandler<TestEventData>
+    [EventHandler]
+    public class TestHandler1 : IRemoteEventHandler<TestEventData>
     {
         public Task Handle(TestEventData p_event)
         {
@@ -77,7 +68,8 @@ namespace Dt.Core
         }
     }
 
-    public class TestHandler2 : IRemoteHandler<TestEventData>
+    [EventHandler]
+    public class TestHandler2 : IRemoteEventHandler<TestEventData>
     {
         public Task Handle(TestEventData p_event)
         {
@@ -86,7 +78,8 @@ namespace Dt.Core
         }
     }
 
-    public class KesHandler : IRemoteHandler<KesEvent>
+    [EventHandler]
+    public class KesHandler : IRemoteEventHandler<KesEvent>
     {
         public Task Handle(KesEvent p_event)
         {
@@ -95,10 +88,12 @@ namespace Dt.Core
         }
     }
 
-    public class KesLocalHandler : ILocalHandler<KesEvent>
+    [EventHandler]
+    public class KesLocalHandler : IEventHandler<KesEvent>
     {
         public Task Handle(KesEvent p_event)
         {
+            Log.Information($"{GetType().Name}已处理");
             return Task.CompletedTask;
         }
     }
@@ -106,58 +101,14 @@ namespace Dt.Core
     {
     }
 
-    public class KesLocalHandler2 : ILocalHandler<KesEvent>
+    [EventHandler]
+    public class KesLocalHandler2 : IEventHandler<KesEvent>
     {
         public Task Handle(KesEvent p_event)
         {
-            throw new Exception("测试异常");
-        }
-    }
-
-    public class EventData
-    {
-        public string Name { get; set; }
-    }
-
-    public class GenericEvent<T> : IEvent
-    {
-        public GenericEvent(T p_entity)
-        {
-            Entity = p_entity;
-        }
-
-        public T Entity { get; set; }
-    }
-
-    public abstract class GenericHandler<T> : IRemoteHandler<GenericEvent<T>>
-    {
-        public virtual Task Handle(GenericEvent<T> p_event)
-        {
             Log.Information($"{GetType().Name}已处理");
             return Task.CompletedTask;
-        }
-    }
-
-    public class GenHandler : GenericHandler<EventData>
-    {
-        public override Task Handle(GenericEvent<EventData> p_event)
-        {
-            base.Handle(p_event);
-            Log.Information("Name:" + (p_event.Entity.Name ?? "null"));
-            return Task.CompletedTask;
-        }
-    }
-
-    public class UyEvent : IRequest<string>
-    {
-        public string Name { get; set; }
-    }
-
-    public class UyHandler : IRequestHandler<UyEvent, string>
-    {
-        public Task<string> Handle(UyEvent p_request)
-        {
-            return Task.FromResult($"Hello {p_request.Name}");
+            //throw new Exception("测试异常");
         }
     }
 }

@@ -80,6 +80,15 @@ namespace Dt.Core
     }
 
     /// <summary>
+    /// 事件处理类型标签
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class EventHandlerAttribute : Attribute
+    {
+        public EventHandlerAttribute() { }
+    }
+
+    /// <summary>
     /// 自定义Agent方法代码
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

@@ -26,7 +26,6 @@ namespace Dt.Core
     {
         #region 成员变量
         static readonly Dictionary<string, string> _sqlDict;
-        static readonly Dictionary<string, Type> _entityDict;
         #endregion
 
         #region 构造方法
@@ -37,7 +36,6 @@ namespace Dt.Core
             GroupMethods = new Dictionary<string, List<string>>();
             // Sql缓存字典
             _sqlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _entityDict = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
 
@@ -285,20 +283,6 @@ namespace Dt.Core
 
         #endregion
 
-        #region 实体类型
-        /// <summary>
-        /// 获取实体类型，不存在时抛出异常
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns>实体类型</returns>
-        public static Type GetEntityType(string p_tblName)
-        {
-            if (_entityDict.TryGetValue(p_tblName, out var type))
-                return type;
-            throw new Exception($"表{p_tblName}不存在实体类型！");
-        }
-        #endregion
-
         #region Startup
         /// <summary>
         /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务，添加拦截
@@ -365,14 +349,6 @@ namespace Dt.Core
                             .ConfigureLifecycle(svcAttr.Lifetime, null);
                     }
                     continue;
-                }
-
-                // 实体类型字典
-                if (type.IsSubclassOf(typeof(Entity)))
-                {
-                    var tbl = type.GetCustomAttribute<TblAttribute>(false);
-                    if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
-                        _entityDict[tbl.Name.ToLower()] = type;
                 }
             }
         }
@@ -465,7 +441,8 @@ namespace Dt.Core
         /// <returns></returns>
         static bool IsEventHandler(Type p_type, ContainerBuilder p_builder)
         {
-            if (p_type.GetInterface("IEventHandler") == null)
+            // 不含标签的排除
+            if (p_type.GetCustomAttribute<EventHandlerAttribute>(false) == null)
                 return false;
 
             // 获取泛型接口类型，一个事件处理可以同时支持本地和远程
@@ -475,24 +452,18 @@ namespace Dt.Core
             {
                 Type eventType = iType.GetGenericArguments()[0];
                 Type genType = iType.GetGenericTypeDefinition();
-                if (genType == typeof(IRemoteHandler<>))
+                if (genType == typeof(IRemoteEventHandler<>))
                 {
-                    Type tgtType = typeof(IRemoteHandler<>).MakeGenericType(eventType);
+                    Type tgtType = typeof(IRemoteEventHandler<>).MakeGenericType(eventType);
                     p_builder.RegisterType(p_type).As(tgtType);
                     RemoteEventBus.Events[eventType.Name] = tgtType;
                     isHandler = true;
                 }
-                else if (genType == typeof(ILocalHandler<>))
+                else if (genType == typeof(IEventHandler<>))
                 {
-                    Type tgtType = typeof(ILocalHandler<>).MakeGenericType(eventType);
+                    Type tgtType = typeof(IEventHandler<>).MakeGenericType(eventType);
                     p_builder.RegisterType(p_type).As(tgtType);
-                    LocalEventBus.NoticeEvents[eventType.Name] = tgtType;
-                    isHandler = true;
-                }
-                else if (genType == typeof(IRequestHandler<,>))
-                {
-                    p_builder.RegisterType(p_type);
-                    LocalEventBus.RequestEvents[eventType] = p_type;
+                    LocalEventBus.EventHandlerTypes[eventType.Name] = tgtType;
                     isHandler = true;
                 }
             }

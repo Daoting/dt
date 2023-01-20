@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm.Domain
 {
-    [CudEvent(CudEvent.Insert | CudEvent.Update | CudEvent.Delete)]
     [Cache(PrefixKey = "user", OtherKey = "Phone")]
     public partial class UserObj
     {

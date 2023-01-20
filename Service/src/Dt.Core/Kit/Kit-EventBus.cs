@@ -72,25 +72,14 @@ namespace Dt.Core
         }
         #endregion
 
-        #region LocalEventBus
+        #region 本地事件
         /// <summary>
         /// 发布本地事件，不等待
         /// </summary>
         /// <param name="p_event">事件内容</param>
-        public static void LocalPublish(IEvent p_event)
+        public static void PublishEvent(IEvent p_event)
         {
             GetService<LocalEventBus>().Publish(p_event);
-        }
-
-        /// <summary>
-        /// 发布请求/响应模式的事件
-        /// </summary>
-        /// <typeparam name="TResponse">返回类型</typeparam>
-        /// <param name="p_request">请求内容</param>
-        /// <returns>返回响应值</returns>
-        public static Task<TResponse> LocalCall<TResponse>(IRequest<TResponse> p_request)
-        {
-            return GetService<LocalEventBus>().Call(p_request);
         }
         #endregion
     }

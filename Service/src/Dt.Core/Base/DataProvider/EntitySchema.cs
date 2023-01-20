@@ -34,13 +34,6 @@ namespace Dt.Core
             int index = tbl.Name.IndexOf("_");
             SvcName = index == -1 ? "cm" : tbl.Name.Substring(0, index).ToLower();
 
-            // 领域事件类型
-            var cud = p_type.GetCustomAttribute<CudEventAttribute>(false);
-            if (cud != null)
-                CudEvent = cud.Event;
-            else
-                CudEvent = CudEvent.None;
-
             // 缓存设置
             var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
             if (cfg != null && !string.IsNullOrEmpty(cfg.PrefixKey))
@@ -61,11 +54,6 @@ namespace Dt.Core
         /// 实体类型
         /// </summary>
         public Type EntityType { get; }
-
-        /// <summary>
-        /// 触发增删改领域事件的类型
-        /// </summary>
-        public CudEvent CudEvent { get; }
 
         /// <summary>
         /// 缓存处理对象，无缓存时null

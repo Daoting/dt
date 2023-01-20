@@ -12,7 +12,7 @@
 namespace Dt.Core
 {
     /// <summary>
-    /// 事件，构造方法无参数！
+    /// 事件，构造方法无参数！禁止事件为泛型！
     /// </summary>
     public interface IEvent
     { }

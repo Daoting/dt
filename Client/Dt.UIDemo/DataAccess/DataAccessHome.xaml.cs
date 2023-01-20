@@ -28,7 +28,8 @@ namespace Dt.UIDemo
                 new Nav("数据表操作", typeof(TableAccess), Icons.分组) { Desc = "Table, Row, Column, Cell的常用方法" },
                 new Nav("序列化类型", typeof(SerializeDemo), Icons.全选),
                 new Nav("异常处理", typeof(ExceptionDemo), Icons.警告),
-                new Nav("远程过程调用", typeof(RpcDemo), Icons.耳麦), 
+                new Nav("远程过程调用", typeof(RpcDemo), Icons.耳麦),
+                new Nav("本地事件", typeof(LocalEventDemo), Icons.危险),
                 new Nav("服务端Api授权控制", typeof(AuthAccess), Icons.小图标),
             };
         }

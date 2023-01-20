@@ -10,19 +10,19 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.EventBus
+namespace Dt.Core
 {
     /// <summary>
     /// 远程事件处理接口
     /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    public interface IRemoteHandler<TEvent> : IEventHandler
+    /// <typeparam name="TEvent">禁止事件为泛型</typeparam>
+    public interface IRemoteEventHandler<TEvent>
         where TEvent : IEvent
     {
         /// <summary>
         /// 事件处理
         /// </summary>
-        /// <param name="p_event">事件内容</param>
+        /// <param name="p_event">事件对象，禁止事件为泛型</param>
         /// <returns></returns>
         Task Handle(TEvent p_event);
     }

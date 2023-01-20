@@ -15,32 +15,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm.Domain
 {
-    public class InsertUserHandler : InsertEventHandler<UserObj>
-    {
-        public override Task Handle(InsertEvent<UserObj> p_event)
-        {
-            return Task.CompletedTask;
-        }
-    }
-
-    public class UpdateUserHandler : UpdateEventHandler<UserObj>
-    {
-        public override Task Handle(UpdateEvent<UserObj> p_event)
-        {
-            return Task.CompletedTask;
-        }
-    }
-
-    public class DeleteUserHandler : DeleteEventHandler<UserObj>
-    {
-        public override Task Handle(DeleteEvent<UserObj> p_event)
-        {
-            // 删除用户时同步删除缓存
-            return new HashCache("ver").Delete(p_event.Entity.ID);
-        }
-    }
-
-    public class UserPhoneChangedHandler : ILocalHandler<UserPhoneChangedEvent>
+    public class UserPhoneChangedHandler : IEventHandler<UserPhoneChangedEvent>
     {
         public Task Handle(UserPhoneChangedEvent p_event)
         {

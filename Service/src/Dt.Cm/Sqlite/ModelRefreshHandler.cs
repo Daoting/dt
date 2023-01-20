@@ -28,7 +28,7 @@ namespace Dt.Cm
     /// <summary>
     /// Sqlite模型文件生成类
     /// </summary>
-    public class ModelRefreshHandler : IRemoteHandler<ModelRefreshEvent>
+    public class ModelRefreshHandler : IRemoteEventHandler<ModelRefreshEvent>
     {
         #region 成员变量
         const string _createOmColumn = "CREATE TABLE OmColumn (\n" +
