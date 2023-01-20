@@ -346,7 +346,7 @@ namespace Dt.Core
                 dt);
 #else
             return Kit.Rpc<TEntity>(
-                model.SvcName,
+                svc,
                 "Da.First",
                 sql,
                 dt);

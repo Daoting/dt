@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-18 创建
+* 日志: 2023-01-19 创建
 ******************************************************************************/
 #endregion
 
@@ -19,6 +19,8 @@ namespace Dt.MgrDemo.单实体
     {
         #region 构造方法
         基础Obj() { }
+
+        public 基础Obj(CellList p_cells) : base(p_cells) { }
 
         public 基础Obj(
             long ID,
@@ -202,21 +204,6 @@ namespace Dt.MgrDemo.单实体
         public static Task<bool> DelByID(long p_id, bool p_isNotify = true)
         {
             return EntityEx.DelByID<基础Obj>(p_id, p_isNotify);
-        }
-
-        /// <summary>
-        /// 根据单主键或唯一索引列删除实体，删除前先获取该实体对象，并非直接删除！！！
-        /// <para>删除成功后：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// </summary>
-        /// <param name="p_keyName">主键或唯一索引列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>
-        /// <returns>实际删除行数</returns>
-        public static Task<bool> DelByKey(string p_keyName, string p_keyVal, bool p_isNotify = true)
-        {
-            return EntityEx.DelByKey<基础Obj>(p_keyName, p_keyVal);
         }
 
         /// <summary>

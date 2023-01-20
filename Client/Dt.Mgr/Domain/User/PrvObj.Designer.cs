@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-12 创建
+* 日志: 2023-01-19 创建
 ******************************************************************************/
 #endregion
 
@@ -19,6 +19,8 @@ namespace Dt.Mgr.Domain
     {
         #region 构造方法
         PrvObj() { }
+
+        public PrvObj(CellList p_cells) : base(p_cells) { }
 
         public PrvObj(
             string ID,
@@ -115,28 +117,14 @@ namespace Dt.Mgr.Domain
         }
 
         /// <summary>
-        /// 根据单主键或唯一索引列删除实体，删除前先获取该实体对象，并非直接删除！！！
-        /// <para>删除成功后：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// </summary>
-        /// <param name="p_keyName">主键或唯一索引列名</param>
-        /// <param name="p_keyVal">主键值</param>
-        /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>
-        /// <returns>实际删除行数</returns>
-        public static Task<bool> DelByKey(string p_keyName, string p_keyVal, bool p_isNotify = true)
-        {
-            return EntityEx.DelByKey<PrvObj>(p_keyName, p_keyVal);
-        }
-
-        /// <summary>
         /// 查询实体列表，每个实体包含所有列值，过滤条件null或空时返回所有实体
         /// </summary>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有实体</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<PrvObj>> Query(string p_filter = null)
+        public static Task<Table<PrvObj>> Query(string p_filter = null, object p_params = null)
         {
-            return EntityEx.Query<PrvObj>();
+            return EntityEx.Query<PrvObj>(p_filter, p_params);
         }
 
         /// <summary>
@@ -145,20 +133,22 @@ namespace Dt.Mgr.Domain
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_filter">过滤串，where后面的部分</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<PrvObj>> Page(int p_starRow, int p_pageSize, string p_filter = null)
+        public static Task<Table<PrvObj>> Page(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
         {
-            return EntityEx.Page<PrvObj>(p_starRow, p_pageSize, p_filter);
+            return EntityEx.Page<PrvObj>(p_starRow, p_pageSize, p_filter, p_params);
         }
 
         /// <summary>
         /// 返回符合条件的第一个实体对象，每个实体包含所有列值，不存在时返回null
         /// </summary>
         /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<PrvObj> First(string p_filter)
+        public static Task<PrvObj> First(string p_filter, object p_params = null)
         {
-            return EntityEx.First<PrvObj>(p_filter);
+            return EntityEx.First<PrvObj>(p_filter, p_params);
         }
 
         /// <summary>
