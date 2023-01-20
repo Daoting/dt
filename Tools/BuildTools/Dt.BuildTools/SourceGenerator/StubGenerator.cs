@@ -46,6 +46,7 @@ namespace Dt.BuildTools
                 _tpAliasAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.TypeAliasAttribute");
                 _tpIgnore = context.Compilation.GetTypeByMetadataName("Dt.Core.IgnoreAttribute");
                 _tpAttribute = context.Compilation.GetTypeByMetadataName("System.Attribute");
+                _tpEventHandlerAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.EventHandlerAttribute");
 
                 foreach (var type in types)
                 {
@@ -142,12 +143,28 @@ namespace Dt.BuildTools
 
         void ExtractTypeAlias(INamedTypeSymbol type, AttributeData attr)
         {
-            string alias;
+            string alias = "";
             var args = attr.ConstructorArguments;
             if (args.Length == 0 || args[0].Value == null)
             {
-                // 标签的构造方法无参数，取被贴标签的类名为别名，如 ApiAttribute
-                alias = type.Name;
+                // 标签的构造方法无参数
+
+                // 标签为EventHandlerAttribute且基类是泛型接口，泛型参数为事件类型，取事件类型作为名称
+                if (SymbolEqualityComparer.Default.Equals(attr.AttributeClass, _tpEventHandlerAttr)
+                        && type.Interfaces.Length > 0
+                        && type.Interfaces[0].IsGenericType
+                        && !type.Interfaces[0].TypeArguments.IsEmpty)
+                {
+                    //Debugger.Launch();
+
+                    // TypeParameters是接口定义中的泛型参数，TypeArguments是当前泛型接口的参数
+                    alias = type.Interfaces[0].TypeArguments[0].Name;
+                }
+                else
+                {
+                    // 取被贴标签的类名为别名，如 ApiAttribute
+                    alias = type.Name;
+                }
             }
             else
             {
@@ -207,6 +224,7 @@ namespace Dt.BuildTools
         INamedTypeSymbol _tpAliasAttr;
         INamedTypeSymbol _tpAttribute;
         INamedTypeSymbol _tpIgnore;
+        INamedTypeSymbol _tpEventHandlerAttr;
     }
 
     public class SqliteDbTbls
