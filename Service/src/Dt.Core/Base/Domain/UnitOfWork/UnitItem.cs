@@ -14,8 +14,6 @@ namespace Dt.Core
 {
     class UnitItem
     {
-        static MethodInfo _commited = typeof(UnitItem).GetMethod("Commited", BindingFlags.Instance | BindingFlags.NonPublic);
-
         public UnitItem(EntitySchema p_schema, IList<Entity> p_data, List<Dict> p_exec)
         {
             Schema = p_schema;
@@ -37,14 +35,7 @@ namespace Dt.Core
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
         /// <para>3. 对于新增、修改的实体进行状态复位</para>
         /// </summary>
-        public void OnCommited()
-        {
-            // 动态构造泛型方法，确保事件参数类型准确，不然发布事件时无法类型转换！
-            _commited.MakeGenericMethod(Schema.EntityType).Invoke(this, new object[0]);
-        }
-
-        async Task Commited<TEntity>()
-            where TEntity : Entity
+        public async void OnCommited()
         {
             foreach (var en in Data)
             {

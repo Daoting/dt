@@ -10,6 +10,8 @@
 
 #endregion
 
+using Dt.Core.Rpc;
+
 namespace Dt.Core
 {
     /// <summary>
@@ -26,6 +28,10 @@ namespace Dt.Core
         public Task Cache<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
+            Throw.IfNull(p_entity);
+            string val = RpcKit.GetObjectString(p_entity);
+            string id = p_entity.Str(_primaryKey);
+
             return Task.CompletedTask;
         }
 
