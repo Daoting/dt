@@ -46,16 +46,15 @@ namespace Dt.MgrDemo
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议和隐私政策对话框
-            AtLocal.OpenDb();
-            if (AtLocal.GetDict("FirstRun") == "")
+            if (await LocalDictObj.GetByID("FirstRun") == null)
             {
                 await new PolicyDlg().ShowAsync();
-                AtLocal.SaveDict("FirstRun", "0");
+                await new LocalDictObj("FirstRun", "0").Save(false);
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            string phone = AtState.GetCookie("LoginPhone");
-            string pwd = AtState.GetCookie("LoginPwd");
+            string phone = await ClientCookie.GetCookie("LoginPhone");
+            string pwd = await ClientCookie.GetCookie("LoginPwd");
             if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
                 var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);

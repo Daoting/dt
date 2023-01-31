@@ -20,7 +20,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(Interceptors = new Type[] { typeof(Interceptor1), typeof(Interceptor2) }, IsTest = true)]
-    public class TestIntercept : BaseApi
+    public class TestIntercept : DomainSvc
     {
         public virtual Task<string> NoTrans()
         {
@@ -57,7 +57,7 @@ namespace Dt.Cm
 
         public virtual Task<string> GetSql()
         {
-            return _dp.GetScalar<string>("select `sql` from cm_sql");
+            return _ea.GetScalar<string>("select `sql` from cm_sql");
         }
     }
 

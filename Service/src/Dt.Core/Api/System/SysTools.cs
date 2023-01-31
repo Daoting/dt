@@ -26,7 +26,7 @@ namespace Dt.Core
     /// 所有服务内部使用的工具Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class SysTools : BaseApi
+    public class SysTools : DomainSvc
     {
         /// <summary>
         /// 生成实体类
@@ -51,7 +51,7 @@ namespace Dt.Core
 
             sb.AppendLine();
             AppendTabSpace(sb, 1);
-            sb.Append($"public partial class {clsName} : Entity");
+            sb.Append($"public partial class {clsName} : EntityX<{clsName}>");
             sb.AppendLine();
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
@@ -173,19 +173,6 @@ namespace Dt.Core
             {
                 AppendColumn(col, sb, false);
             }
-
-            // 添加静态方法
-            sb.AppendLine();
-            AppendTabSpace(sb, 2);
-            sb.Append("#region 静态方法");
-            if (schema.PrimaryKey.Count == 1)
-            {
-                sb.AppendLine(_prvStatic.Replace("$Entity$", clsName));
-            }
-            sb.AppendLine(_pubStatic.Replace("$Entity$", clsName));
-
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("#endregion");
 
             AppendTabSpace(sb, 1);
             sb.Append("}");
@@ -747,7 +734,7 @@ namespace Dt.Core
         {
             // 如 lob_sql
             var sqlTbl = GetSqlTblName(p_tblName);
-            int cnt = await _dp.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
+            int cnt = await _ea.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
             if (cnt == 0)
                 return sqlTbl + "表不存在，无法生成框架sql";
 
@@ -778,10 +765,10 @@ namespace Dt.Core
         async Task<string> CreateSql(string p_key, string p_sql, string p_tblName)
         {
             string msg;
-            int cnt = await _dp.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
+            int cnt = await _ea.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
             if (cnt == 0)
             {
-                cnt = await _dp.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
+                cnt = await _ea.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
                 msg = cnt > 0 ? $"[{p_key}] sql生成成功\r\n" : $"[{p_key}] sql生成失败\r\n";
             }
             else
@@ -925,129 +912,6 @@ namespace Dt.Core
             }
             return false;
         }
-        #endregion
-
-        #region 代码模板
-        const string _prvStatic = @"
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
-        /// <para>1. 首先从缓存中获取，有则直接返回</para>
-        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
-        /// </summary>
-        /// <param name=""p_id"">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<$Entity$> GetByID(string p_id)
-        {
-            return EntityEx.GetByID<$Entity$>(p_id);
-        }
-
-        /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
-        /// <para>1. 首先从缓存中获取，有则直接返回</para>
-        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
-        /// </summary>
-        /// <param name=""p_id"">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<$Entity$> GetByID(long p_id)
-        {
-            return EntityEx.GetByID<$Entity$>(p_id);
-        }
-
-        /// <summary>
-        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键，当启用实体缓存时：
-        /// <para>1. 首先从缓存中获取，有则直接返回</para>
-        /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
-        /// </summary>
-        /// <param name=""p_keyName"">主键或唯一索引列名</param>
-        /// <param name=""p_keyVal"">键值</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<$Entity$> GetByKey(string p_keyName, string p_keyVal)
-        {
-            return EntityEx.GetByKey<$Entity$>(p_keyName, p_keyVal);
-        }
-
-        /// <summary>
-        /// 根据主键删除实体对象，仅支持单主键，删除前先根据主键获取该实体对象，并非直接删除！！！
-        /// <para>删除成功后：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// </summary>
-        /// <param name=""p_id"">主键</param>
-        /// <param name=""p_isNotify"">是否提示删除结果</param>
-        /// <returns>true 删除成功</returns>
-        public static Task<bool> DelByID(string p_id, bool p_isNotify = true)
-        {
-            return EntityEx.DelByID<$Entity$>(p_id, p_isNotify);
-        }
-
-        /// <summary>
-        /// 根据主键删除实体对象，仅支持单主键，删除前先根据主键获取该实体对象，并非直接删除！！！
-        /// <para>删除成功后：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// </summary>
-        /// <param name=""p_id"">主键</param>
-        /// <param name=""p_isNotify"">是否提示删除结果</param>
-        /// <returns>true 删除成功</returns>
-        public static Task<bool> DelByID(long p_id, bool p_isNotify = true)
-        {
-            return EntityEx.DelByID<$Entity$>(p_id, p_isNotify);
-        }";
-
-        const string _pubStatic = @"
-        /// <summary>
-        /// 查询实体列表，每个实体包含所有列值，过滤条件null或空时返回所有实体
-        /// </summary>
-        /// <param name=""p_filter"">过滤串，where后面的部分，null或空返回所有实体</param>
-        /// <param name=""p_params"">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回实体列表</returns>
-        public static Task<Table<$Entity$>> Query(string p_filter = null, object p_params = null)
-        {
-            return EntityEx.Query<$Entity$>(p_filter, p_params);
-        }
-
-        /// <summary>
-        /// 按页查询实体列表，每个实体包含所有列值
-        /// </summary>
-        /// <param name=""p_starRow"">起始行号：mysql中第一行为0行</param>
-        /// <param name=""p_pageSize"">每页显示行数</param>
-        /// <param name=""p_filter"">过滤串，where后面的部分</param>
-        /// <param name=""p_params"">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回实体列表</returns>
-        public static Task<Table<$Entity$>> Page(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
-        {
-            return EntityEx.Page<$Entity$>(p_starRow, p_pageSize, p_filter, p_params);
-        }
-
-        /// <summary>
-        /// 返回符合条件的第一个实体对象，每个实体包含所有列值，不存在时返回null
-        /// </summary>
-        /// <param name=""p_filter"">过滤串，where后面的部分，null或空返回所有中的第一行</param>
-        /// <param name=""p_params"">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<$Entity$> First(string p_filter, object p_params = null)
-        {
-            return EntityEx.First<$Entity$>(p_filter, p_params);
-        }
-
-        /// <summary>
-        /// 获取新ID
-        /// </summary>
-        /// <returns></returns>
-        public static Task<long> NewID()
-        {
-            return EntityEx.GetNewID<$Entity$>();
-        }
-
-        /// <summary>
-        /// 获取新序列值
-        /// </summary>
-        /// <param name=""p_colName"">字段名称，不可为空</param>
-        /// <returns>新序列值</returns>
-        public static Task<int> NewSeq(string p_colName)
-        {
-            return EntityEx.GetNewSeq<$Entity$>(p_colName);
-        }";
         #endregion
     }
 }

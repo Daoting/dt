@@ -18,7 +18,7 @@ namespace Dt.Cm
     /// 用户相关的Api
     /// </summary>
     [Api]
-    public class UserRelated : BaseApi
+    public class UserRelated : DomainSvc
     {
         #region 缓存数据
         /// <summary>
@@ -30,7 +30,7 @@ namespace Dt.Cm
         {
             List<long> ls = new List<long>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.Each("用户-可访问的菜单", new { userid = p_userID });
+            var rows = await _ea.Each("用户-可访问的菜单", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -60,7 +60,7 @@ namespace Dt.Cm
         {
             List<string> ls = new List<string>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _dp.Each("用户-具有的权限", new { userid = p_userID });
+            var rows = await _ea.Each("用户-具有的权限", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -83,8 +83,8 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<Dict> GetParams(long p_userID)
         {
-            var tblAll = await _dp.Query("SELECT id,value FROM cm_params");
-            var tblMy = await _dp.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
+            var tblAll = await _ea.Query("SELECT id,value FROM cm_params");
+            var tblMy = await _ea.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in tblAll)
             {
@@ -124,14 +124,13 @@ namespace Dt.Cm
         {
             Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
-            Uw u = new Uw();
-
+            var ew = NewWriter;
             var old = new UserParamsObj(
                 UserID: p_userID,
                 ParamID: p_paramID);
-            await u.Delete(old);
+            await ew.Delete(old);
 
-            var defVal = await _dp.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
+            var defVal = await _ea.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
             if (defVal != p_value)
             {
                 // 和默认值不同
@@ -140,10 +139,10 @@ namespace Dt.Cm
                     ParamID: p_paramID,
                     Value: p_value,
                     Mtime: Kit.Now);
-                await u.Save(up);
+                await ew.Save(up);
             }
 
-            bool suc = await u.Commit();
+            bool suc = await ew.Commit();
             if (suc)
             {
                 await GetVerCache().DeleteField(p_userID, "params");
@@ -168,11 +167,11 @@ namespace Dt.Cm
             if (p_roleIDs.Contains(1))
             {
                 // 包含任何人
-                ls = await _dp.EachFirstCol<long>("select id from cm_user");
+                ls = await _ea.EachFirstCol<long>("select id from cm_user");
             }
             else
             {
-                ls = await _dp.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await _ea.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
             }
 
             var db = GetVerCache();
@@ -296,7 +295,7 @@ namespace Dt.Cm
         {
             if (await new RoleObj(p_roleID).Delete())
             {
-                var ls = await _dp.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
+                var ls = await _ea.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);
                 return true;
             }

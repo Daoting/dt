@@ -22,7 +22,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        IEnumerable<OmColumn> GetTableColumns(string p_tblName);
+        Task<IEnumerable<OmColumn>> GetTableColumns(string p_tblName);
 
         /// <summary>
         /// 读取模板内容，默认取模型库的 OmReport

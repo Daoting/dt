@@ -28,6 +28,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * VS扩展工具单实体框架生成自定义查询面板
 * 客户端增加本地事件的定义、发布、处理，和服务端用法相同
 
+* EntityEx.DelByID支持直接删除，不经过校验领域事件等
 * VS扩展工具单实体框架支持多表的虚拟实体
 * 移除客户端DataProvider的保存、删除功能，调整到UnitOfWork
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
@@ -40,6 +41,25 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Row增加To<T>方法，和任意Entity类型转换，共用_cells
 * 生成的实体类增加和外部共用Cells的构造方法
 * 增加虚拟实体，并在EntityEx和UnitOfWork中处理
+
+* BuildToos增加Dt.Core.DtDictionaryResource().Merge()
+* 增加EntityX<T>，将Designer的静态方法放入泛型中
+* 增加 IEntityAccess IEntityWriter 接口
+* UnitOfWork 改 EntityWriter私有类
+* 两端增加 DomainSvc 领域服务基类，BaseApi 改为 DomainSvc
+
+未测
+Table.cs 163行GetTableColumns
+SqliteCommandEx SqliteConnectionEx改动
+FvCell 598行
+TaskbarItem 112行
+SearchMv 188行
+LocalDbView
+LayoutManager
+WinKit 36行
+Launch.cs 51行
+ShowRoot
+整个Chat
 
 * 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、EntityEx的方法：增删该及批量、GetByID有缓存、领域事件
 * 父子实体的保存和删除

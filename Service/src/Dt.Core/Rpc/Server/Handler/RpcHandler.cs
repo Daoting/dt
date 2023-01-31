@@ -24,7 +24,7 @@ namespace Dt.Core.Rpc
         internal static bool TraceRpc;
 
         protected readonly ApiInvoker _invoker;
-        protected BaseApi _tgt;
+        protected DomainSvc _tgt;
         #endregion
 
         public RpcHandler(ApiInvoker p_invoker)
@@ -39,7 +39,7 @@ namespace Dt.Core.Rpc
         public async Task Call()
         {
             // 创建服务实例
-            _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as BaseApi;
+            _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as DomainSvc;
             if (_tgt != null)
             {
                 // 创建整个http请求期间有效的数据包

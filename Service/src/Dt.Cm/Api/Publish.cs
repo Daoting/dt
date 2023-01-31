@@ -7,13 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Agent;
 using Dt.Cm.Domain;
-using Dt.Core;
-using Dt.Core.Rpc;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
@@ -22,7 +16,7 @@ namespace Dt.Cm
     /// 发布服务Api
     /// </summary>
     [Api]
-    public class Publish : BaseApi
+    public class Publish : DomainSvc
     {
         const string _template =
             "<!DOCTYPE html>\n" +
@@ -75,7 +69,7 @@ namespace Dt.Cm
             if (suc && oldUrl != null)
             {
                 // 删除旧文件
-                await AtFsm.DeleteFile($"g/{oldUrl}");
+                await DeleteFile($"g/{oldUrl}");
             }
 
             Throw.If(!suc, "文章保存失败");
@@ -113,10 +107,40 @@ namespace Dt.Cm
 
             string pageContent = string.Format(_template, p_title, p_content);
             string pageName = $"{Kit.NewID}.html";
-            var result = await AtFsm.SaveFile($"g/{p_folder}/{pageName}", pageContent);
+            var result = await SaveFile($"g/{p_folder}/{pageName}", pageContent);
             if (string.IsNullOrEmpty(result))
                 return $"{p_folder}/{pageName}";
             return null;
+        }
+
+        /// <summary>
+        /// 保存文本内容的文件
+        /// </summary>
+        /// <param name="p_filePath">文件路径</param>
+        /// <param name="p_content">文件内容</param>
+        /// <returns>null 保存成功</returns>
+        static Task<string> SaveFile(string p_filePath, string p_content)
+        {
+            return Kit.Rpc<string>(
+                "fsm",
+                "FileMgr.SaveFile",
+                p_filePath,
+                p_content
+            );
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
+        /// <returns></returns>
+        static Task<bool> DeleteFile(string p_filePath)
+        {
+            return Kit.Rpc<bool>(
+                "fsm",
+                "FileMgr.DeleteFile",
+                p_filePath
+            );
         }
     }
 }

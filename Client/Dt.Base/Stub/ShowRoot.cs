@@ -63,7 +63,7 @@ namespace Dt.Base
         /// 加载PhoneUI模式的根Frame
         /// </summary>
         /// <param name="p_win"></param>
-        void LoadRootFrame(Win p_win)
+        async void LoadRootFrame(Win p_win)
         {
             UITree.RootContent = new Frame();
 
@@ -71,7 +71,7 @@ namespace Dt.Base
             p_win.NaviToHome();
 
             // 自启动
-            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : AtState.GetAutoStart();
+            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await ClientCookie.GetAutoStart();
             if (autoStart != null)
             {
                 // 用户设置的自启动
@@ -83,7 +83,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    AtState.DelAutoStart();
+                    ClientCookie.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;
@@ -97,7 +97,7 @@ namespace Dt.Base
         /// 加载Windows模式桌面
         /// </summary>
         /// <param name="p_win"></param>
-        void LoadRootDesktop(Win p_win)
+        async void LoadRootDesktop(Win p_win)
         {
             Desktop desktop = new Desktop();
 
@@ -105,7 +105,7 @@ namespace Dt.Base
             desktop.HomeWin = p_win;
 
             // 自启动
-            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : AtState.GetAutoStart();
+            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await ClientCookie.GetAutoStart();
             if (autoStart != null)
             {
                 // 用户设置的自启动
@@ -117,7 +117,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    AtState.DelAutoStart();
+                    ClientCookie.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;

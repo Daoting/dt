@@ -81,7 +81,7 @@ namespace Dt.Mgr
                         if (!ls.Contains($"{row[0]}+{row[1]}"))
                         {
                             // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
-                            AtLob.Exec($"delete from DataVersion where id='{row.Str(0)}'");
+                            await AtLob.Exec($"delete from DataVersion where id='{row.Str(0)}'");
                         }
                     }
                 }
@@ -89,7 +89,7 @@ namespace Dt.Mgr
             else
             {
                 // 所有缓存数据失效
-                AtLob.Exec("delete from DataVersion");
+                await AtLob.Exec("delete from DataVersion");
             }
         }
         #endregion
@@ -103,16 +103,16 @@ namespace Dt.Mgr
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        public static void Logout()
+        public static async void Logout()
         {
             // 先停止接收，再清空用户信息
             PushHandler.StopRecvPush();
             // 注销时清空用户信息
             ResetUser();
 
-            AtState.DeleteCookie("LoginPhone");
-            AtState.DeleteCookie("LoginPwd");
-            AtState.DeleteCookie("LoginID");
+            await ClientCookie.DelByID("LoginPhone");
+            await ClientCookie.DelByID("LoginPwd");
+            await ClientCookie.DelByID("LoginID");
 
             Kit.ShowRoot(LobViews.登录页);
 
@@ -128,7 +128,7 @@ namespace Dt.Mgr
         /// <returns>true 表示有权限</returns>
         public static async Task<bool> HasPrv(string p_id)
         {
-            int cnt = AtLob.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
             if (cnt == 0)
             {
                 // 查询服务端
@@ -140,10 +140,10 @@ namespace Dt.Mgr
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "privilege", Ver: dt.Str("ver"));
-                await AtLob.Save(ver, false);
+                await ver.Save(false);
 
                 // 清空旧数据
-                AtLob.Exec("delete from UserPrivilege");
+                await AtLob.Exec("delete from UserPrivilege");
                 // 插入新数据
                 var ls = (List<string>)dt["result"];
                 if (ls != null && ls.Count > 0)
@@ -153,11 +153,14 @@ namespace Dt.Mgr
                     {
                         dts.Add(new Dict { { "prv", prv } });
                     }
-                    AtLob.BatchExec("insert into UserPrivilege (prv) values (:prv)", dts);
+                    var d = new Dict();
+                    d["text"] = "insert into UserPrivilege (prv) values (@prv)";
+                    d["params"] = dts;
+                    await AtLob.BatchExec(new List<Dict> { d });
                 }
             }
 
-            return AtLob.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
+            return await AtLob.GetScalar<int>($"select count(*) from UserPrivilege where Prv='{p_id}'") > 0;
         }
         #endregion
 
@@ -172,7 +175,7 @@ namespace Dt.Mgr
         {
             await InitParams();
 
-            var row = AtLob.First($"select val from UserParams where id='{p_paramID}'");
+            var row = await AtLob.First($"select val from UserParams where id='{p_paramID}'");
             Throw.IfNull(row, $"无参数【{p_paramID}】");
 
             string val = row.Str(0);
@@ -197,7 +200,7 @@ namespace Dt.Mgr
 
         static async Task InitParams()
         {
-            int cnt = AtLob.GetScalar<int>("select count(*) from DataVersion where id='params'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='params'");
             if (cnt > 0)
                 return;
 
@@ -210,10 +213,10 @@ namespace Dt.Mgr
 
             // 记录版本号
             var ver = new DataVersion(ID: "params", Ver: dt.Str("ver"));
-            await AtLob.Save(ver, false);
+            await ver.Save(false);
 
             // 清空旧数据
-            AtLob.Exec("delete from UserParams");
+            await AtLob.Exec("delete from UserParams");
 
             // 插入新数据
             var tbl = (Table)dt["result"];
@@ -224,7 +227,10 @@ namespace Dt.Mgr
                 {
                     dts.Add(new Dict { { "id", row.Str(0) }, { "val", row.Str(1) } });
                 }
-                AtLob.BatchExec("insert into UserParams (id,val) values (:id, :val)", dts);
+                var d = new Dict();
+                d["text"] = "insert into UserParams (id,val) values (@id, @val)";
+                d["params"] = dts;
+                await AtLob.BatchExec(new List<Dict> { d });
             }
         }
         #endregion

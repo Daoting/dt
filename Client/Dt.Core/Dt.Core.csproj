@@ -8,7 +8,6 @@
 	<Import Project="..\Common.props" />
 
 	<ItemGroup>
-		<Compile Include="..\..\Service\src\Dt.Core\Api\Test\SvcTestAgent.cs" Link="Internal\SvcTestAgent.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\CellList.cs" Link="Base\Collection\Table\CellList.cs" />
@@ -17,28 +16,31 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\DataProvider\TableSchema.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\Entity.cs" Link="Base\Domain\Entity\Entity.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityEx.cs" Link="Base\Domain\Entity\EntityEx.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirEntity.cs" Link="Base\Domain\Entity\VirEntity.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityX.cs" Link="Base\Domain\Entity\EntityX.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\IVirEntity.cs" Link="Base\Domain\Entity\IVirEntity.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirObj.cs" Link="Base\Domain\Entity\VirObj.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirEntitySchema.cs" Link="Base\Domain\Entity\VirEntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\CacheAttribute.cs" Link="Base\Domain\Entity\CacheAttribute.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\IEntityAccess.cs" Link="Base\Domain\IEntityAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEvent.cs" Link="Base\Domain\Event\IEvent.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\Local\IEventHandler.cs" Link="Base\Domain\Event\IEventHandler.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\UnitOfWork\UnitOfWork.cs" Link="Base\Domain\UnitOfWork\UnitOfWork.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\UnitOfWork\UnitItem.cs" Link="Base\Domain\UnitOfWork\UnitItem.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Base\DataProvider\EntitySchema.cs" Link="Base\DataProvider\EntitySchema.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\IEntityWriter.cs" Link="Base\Domain\Writer\IEntityWriter.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\EntityWriter.cs" Link="Base\Domain\Writer\EntityWriter.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\UnitItem.cs" Link="Base\Domain\Writer\UnitItem.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\MySql\TableSchema.cs" Link="Base\DataAccess\TableSchema.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\EntitySchema.cs" Link="Base\DataAccess\EntitySchema.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\AsyncLocker.cs" Link="Base\Locker\AsyncLocker.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Enums.cs" Link="Base\Enum\Enums.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\ServerException.cs" Link="Base\ServerException.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Throw.cs" Link="Base\Throw.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Enums.cs" Link="Base\Misc\Enums.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\Exception\KnownException.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\Misc\RpcJson\LetterInfo.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\Misc\RpcJson\MsgInfo.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\ServerException.cs" Link="Base\Exception\ServerException.cs" />
+		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Throw.cs" Link="Base\Exception\Throw.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />

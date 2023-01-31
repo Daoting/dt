@@ -49,9 +49,9 @@ namespace Dt.Mgr.Files
 
         void LoadHistory()
         {
-            Kit.RunAsync(() =>
+            Kit.RunAsync(async () =>
             {
-                var ls = AtLob.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
+                var ls = await AtLob.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
                 StringBuilder sb = new StringBuilder();
                 foreach (var file in ls)
                 {
@@ -82,7 +82,7 @@ namespace Dt.Mgr.Files
 
             if (await Kit.Confirm("确认要清空历史记录吗？"))
             {
-                AtLob.Exec("delete from ReadFileHistory");
+                await AtLob.Exec("delete from ReadFileHistory");
                 _fl.Data = null;
             }
         }
@@ -91,7 +91,7 @@ namespace Dt.Mgr.Files
         {
             if (await Kit.Confirm("确认要删除当前历史记录吗？"))
             {
-                if (AtLob.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
+                if (await AtLob.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
                     LoadHistory();
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace Dt.Agent
+﻿namespace Dt.Mgr
 {
     /// <summary>
     /// 即时消息Api
@@ -50,22 +50,6 @@
                 "InstantMsg.SendMsgToOnline",
                 p_msg,
                 p_checkReplica
-            );
-        }
-
-        /// <summary>
-        /// 向某用户的客户端推送聊天信息，可通过指定LetterInfo.LetterType为Undo撤回信息
-        /// </summary>
-        /// <param name="p_userID">目标用户</param>
-        /// <param name="p_letter">聊天信息</param>
-        /// <returns>true 在线推送</returns>
-        public static Task<bool> SendLetter(long p_userID, LetterInfo p_letter)
-        {
-            return Kit.Rpc<bool>(
-                "msg",
-                "InstantMsg.SendLetter",
-                p_userID,
-                p_letter
             );
         }
 

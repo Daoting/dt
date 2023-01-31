@@ -18,7 +18,7 @@ namespace Dt.Cm
     /// 登录入口Api
     /// </summary>
     [Api]
-    public class Entry : BaseApi
+    public class Entry : DomainSvc
     {
         const string _prefixCode = "vercode";
 

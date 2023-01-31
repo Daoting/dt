@@ -29,14 +29,34 @@ namespace Dt.Base.Tools
         public LocalDbView()
         {
             InitializeComponent();
-            _lvDb.Data = SqliteDbs.GetAllDbInfo();
+            LoadData();
+        }
+
+        async void LoadData()
+        {
+            var tbl = new Table { { "name" }, { "info" } };
+            var di = new DirectoryInfo(Kit.DataPath);
+            foreach (var fi in di.EnumerateFiles("*.db"))
+            {
+                var name = fi.Name.Substring(0, fi.Name.Length - 3);
+
+                // 避免多个 *.xx.db 的情况
+                if (name.IndexOf('.') != -1)
+                    continue;
+
+                var ea = AccessInfo.GetSqliteAccess(name);
+                int cnt = await ea.GetScalar<int>("select count(*) from sqlite_master where type='table'");
+                tbl.AddRow(new { name = name, info = $"{cnt}张表，{Kit.GetFileSizeDesc((ulong)fi.Length)}" });
+            }
+            _lvDb.Data = tbl;
         }
 
         async void OnDbClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
             {
-                _lvTbl.Data = await GetDb().QueryTblsName();
+                var ea = AccessInfo.GetSqliteAccess(e.Row.Str("name"));
+                _lvTbl.Data = await ea.Query("select name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name");
                 _lvData.Data = null;
             }
             NaviTo("表");
@@ -152,7 +172,7 @@ namespace Dt.Base.Tools
 
             var db = GetDb();
             var tblName = _lvTbl.SelectedRow.Str(0);
-            var pk = db.GetScalar<string>($"select name from pragma_table_info('{tblName}') where pk=1");
+            var pk = await db.GetScalar<string>($"select name from pragma_table_info('{tblName}') where pk=1");
             if (string.IsNullOrEmpty(pk))
             {
                 Kit.Warn("该表无主键！");
@@ -164,15 +184,15 @@ namespace Dt.Base.Tools
             {
                 ls.Add(new Dict { { pk, row[pk] } });
             }
-            if (db.BatchExecute($"delete from '{tblName}' where {pk}=@{pk}", ls) > 0)
+            if (await db.Exec($"delete from '{tblName}' where {pk}=@{pk}", ls) > 0)
             {
                 _lvData.DeleteSelection();
             }
         }
 
-        SqliteConnectionEx GetDb()
+        IEntityAccess GetDb()
         {
-            return SqliteDbs.GetDb(_lvDb.SelectedRow.Str("name"));
+            return AccessInfo.GetSqliteAccess(_lvDb.SelectedRow.Str("name"));
         }
 
     }

@@ -35,6 +35,16 @@ namespace Dt.Core
             return null;
         }
 
+        /// <summary>
+        /// 是否为虚拟实体
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public static bool IsVirEntity(Type p_type)
+        {
+            return p_type.GetInterface("IVirEntity") == typeof(IVirEntity);
+        }
+
         #region 领域事件
         List<IEvent> _events;
 

@@ -1,4 +1,4 @@
-﻿namespace Dt.Agent
+﻿namespace Dt.Mgr
 {
     /// <summary>
     /// 订阅消息Api

@@ -62,9 +62,9 @@ namespace Dt.Base.Report
                 p_tabs.Select("编辑");
         }
 
-        void OnAdd(object sender, Mi e)
+        async void OnAdd(object sender, Mi e)
         {
-            _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", srv = _fv.GetCookie("srv") });
+            _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", srv = await _fv.GetCookie("srv") });
         }
 
         void OnDel(object sender, Mi e)

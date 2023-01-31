@@ -15,7 +15,7 @@ namespace Dt.Core
     /// 默认库的数据访问Api，全称DataAccess
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class Da : BaseApi
+    public class Da : DomainSvc
     {
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
@@ -25,7 +25,7 @@ namespace Dt.Core
         /// <returns>返回Table数据</returns>
         public Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
-            return _dp.Query(p_keyOrSql, p_params);
+            return _ea.Query(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -36,10 +36,9 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
-            string sql = $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
-            return _dp.Query(sql, p_params);
+            return _ea.Page(p_starRow, p_pageSize, p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace Dt.Core
         /// <returns>返回第一行Row或null</returns>
         public Task<Row> First(string p_keyOrSql, object p_params = null)
         {
-            return _dp.First(p_keyOrSql, p_params);
+            return _ea.First(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace Dt.Core
         /// <returns>返回第一列数据的泛型列表</returns>
         public Task<object> FirstCol(string p_type, string p_keyOrSql, object p_params = null)
         {
-            return _dp.FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
+            return _ea.FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -84,18 +83,18 @@ namespace Dt.Core
 ")]
         public Task<object> GetScalar(string p_keyOrSql, object p_params = null)
         {
-            return _dp.GetScalar<object>(p_keyOrSql, p_params);
+            return _ea.GetScalar<object>(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 一个事务内执行Sql语句，返回影响的行数，p_params为IEnumerable时执行批量操作
+        /// 以参数值方式执行Sql语句，返回影响的行数
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，为IEnumerable时执行批量操作</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象</param>
         /// <returns>返回执行后影响的行数</returns>
         public Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
-            return _dp.Exec(p_keyOrSql, p_params);
+            return _ea.Exec(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public Task<int> BatchExec(List<Dict> p_dts)
         {
-            return _dp.BatchExec(p_dts);
+            return _ea.BatchExec(p_dts);
         }
 
         /// <summary>
@@ -125,7 +124,7 @@ namespace Dt.Core
         public Task<int> NewSeq(string p_seqName)
         {
             if (!string.IsNullOrEmpty(p_seqName))
-                return _dp.GetScalar<int>($"select nextval('{p_seqName}')");
+                return _ea.GetScalar<int>($"select nextval('{p_seqName}')");
             return Task.FromResult(0);
         }
     }

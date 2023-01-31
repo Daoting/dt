@@ -11,7 +11,7 @@ using Dt.Core.Rpc;
 using System.Collections;
 #endregion
 
-namespace Dt.Agent
+namespace Dt.Core
 {
     /// <summary>
     /// 客户端数据提供者，和服务端DataProvider方法基本相同

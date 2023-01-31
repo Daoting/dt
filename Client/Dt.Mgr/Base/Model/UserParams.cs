@@ -15,7 +15,7 @@ namespace Dt.Mgr
     /// 用户参数
     /// </summary>
     [Sqlite("lob")]
-    public class UserParams : Entity
+    public class UserParams : EntityX<UserParams>
     {
         #region 构造方法
         UserParams() { }

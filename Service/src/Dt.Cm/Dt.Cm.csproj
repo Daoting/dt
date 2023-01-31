@@ -3,6 +3,5 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-		<ProjectReference Include="..\Dt.Fsm.Agent\Dt.Fsm.Agent.csproj" />
 	</ItemGroup>
 </Project>

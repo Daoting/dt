@@ -168,85 +168,15 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="TRow"></typeparam>
         /// <returns></returns>
-        public IEnumerable<TRow> ForEach<TRow>()
+        public async Task<IEnumerable<TRow>> ForEach<TRow>()
             where TRow : Row
         {
-            var reader = ExecuteReader();
+            var reader = await ExecuteReaderAsync();
             if (reader != null && reader.FieldCount > 0)
             {
-                var map = typeof(TRow).IsSubclassOf(typeof(Entity)) ? SqliteConnectionEx.GetMapping(typeof(TRow)) : null;
-                while (reader.Read())
-                {
-                    // 无参数构造方法可能为private，如实体类型
-                    var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        if (map == null)
-                        {
-                            // Row
-                            var tp = reader.GetFieldType(i);
-                            if (reader.IsDBNull(i))
-                            {
-                                // sqlite中无可空类型，只能遇到DBNull按可空类型，会造成所有Row的列类型不同！
-                                // 列为可空类型时重置，因sqlie无可空类型
-                                if (tp == typeof(byte[]))
-                                {
-                                    // 返回结果的首行数据出现dbnull时列类型不正确！
-                                    tp = typeof(string);
-                                }
-                                else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
-                                {
-                                    tp = typeof(Nullable<>).MakeGenericType(tp);
-                                }
-                                new Cell(row, reader.GetName(i), tp);
-                            }
-                            else
-                            {
-                                new Cell(row, reader.GetName(i), tp, reader.GetValue(i));
-                            }
-                        }
-                        else
-                        {
-                            // Entity
-                            var name = reader.GetName(i);
-                            var col = map.FindColumn(name);
-
-                            if (col == null)
-                            {
-                                // 映射类型中不存在该属性，使用数据的实际类型
-                                var tp = reader.GetFieldType(i);
-                                if (reader.IsDBNull(i))
-                                {
-                                    // 列为可空类型时重置，因sqlie无可空类型
-                                    if (tp == typeof(byte[]))
-                                    {
-                                        // 返回结果的首行数据出现dbnull时列类型不正确！
-                                        tp = typeof(string);
-                                    }
-                                    else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
-                                    {
-                                        tp = typeof(Nullable<>).MakeGenericType(tp);
-                                    }
-                                    new Cell(row, name, tp);
-                                }
-                                else
-                                {
-                                    new Cell(row, name, tp, reader.GetValue(i));
-                                }
-                            }
-                            else
-                            {
-                                // 有映射属性的以属性类型为准，因sqlie数据类型少，无可空类型、bool、DateTime等
-                                if (reader.IsDBNull(i))
-                                    new Cell(row, name, col.ColumnType);
-                                else
-                                    new Cell(row, name, col.ColumnType, reader.GetValue(i));
-                            }
-                        }
-                    }
-                    yield return row;
-                }
+                return ForEachInternal<TRow>(reader);
             }
+            return Enumerable.Empty<TRow>();
         }
 
         /// <summary>
@@ -254,9 +184,29 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T ExecuteScalar<T>()
+        public async Task<T> ExecuteScalar<T>()
         {
-            var reader = ExecuteReader();
+            using var reader = await ExecuteReaderAsync();
+            if (reader != null
+                && reader.FieldCount > 0
+                && reader.Read())
+            {
+                if (reader.GetFieldType(0) == typeof(T))
+                    return reader.GetFieldValue<T>(0);
+
+                return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
+            }
+            return default(T);
+        }
+
+        /// <summary>
+        /// 同步取得查询数据库中单个值。
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T ExecuteScalarSync<T>()
+        {
+            using var reader = ExecuteReader();
             if (reader != null
                 && reader.FieldCount > 0
                 && reader.Read())
@@ -303,26 +253,118 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<T> EachFirstCol<T>()
+        public async Task<IEnumerable<T>> EachFirstCol<T>()
         {
-            var reader = ExecuteReader();
+            var reader = await ExecuteReaderAsync();
             if (reader != null && reader.FieldCount > 0)
             {
-                if (reader.GetFieldType(0) == typeof(T))
+                return EachFirstColInternal<T>(reader);
+            }
+            return Enumerable.Empty<T>();
+        }
+
+        IEnumerable<T> EachFirstColInternal<T>(SqliteDataReader reader)
+        {
+            // yield无法使用await，无法在含catch的try内
+            // 一定要在枚举完成后使用Dispose释放资源，因外部未释放！！！
+
+            if (reader.GetFieldType(0) == typeof(T))
+            {
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        yield return reader.GetFieldValue<T>(0);
-                    }
-                }
-                else
-                {
-                    while (reader.Read())
-                    {
-                        yield return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
-                    }
+                    yield return reader.GetFieldValue<T>(0);
                 }
             }
+            else
+            {
+                while (reader.Read())
+                {
+                    yield return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
+                }
+            }
+            Dispose();
+        }
+
+        IEnumerable<TRow> ForEachInternal<TRow>(SqliteDataReader reader)
+            where TRow : Row
+        {
+            // yield无法使用await，无法在含catch的try内
+            // 一定要在枚举完成后使用Dispose释放资源，因外部未释放！！！
+
+            var map = typeof(TRow).IsSubclassOf(typeof(Entity)) ? SqliteConnectionEx.GetMapping(typeof(TRow)) : null;
+            while (reader.Read())
+            {
+                // 无参数构造方法可能为private，如实体类型
+                var row = (TRow)Activator.CreateInstance(typeof(TRow), true);
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    if (map == null)
+                    {
+                        // Row
+                        var tp = reader.GetFieldType(i);
+                        if (reader.IsDBNull(i))
+                        {
+                            // sqlite中无可空类型，只能遇到DBNull按可空类型，会造成所有Row的列类型不同！
+                            // 列为可空类型时重置，因sqlie无可空类型
+                            if (tp == typeof(byte[]))
+                            {
+                                // 返回结果的首行数据出现dbnull时列类型不正确！
+                                tp = typeof(string);
+                            }
+                            else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
+                            {
+                                tp = typeof(Nullable<>).MakeGenericType(tp);
+                            }
+                            new Cell(row, reader.GetName(i), tp);
+                        }
+                        else
+                        {
+                            new Cell(row, reader.GetName(i), tp, reader.GetValue(i));
+                        }
+                    }
+                    else
+                    {
+                        // Entity
+                        var name = reader.GetName(i);
+                        var col = map.FindColumn(name);
+
+                        if (col == null)
+                        {
+                            // 映射类型中不存在该属性，使用数据的实际类型
+                            var tp = reader.GetFieldType(i);
+                            if (reader.IsDBNull(i))
+                            {
+                                // 列为可空类型时重置，因sqlie无可空类型
+                                if (tp == typeof(byte[]))
+                                {
+                                    // 返回结果的首行数据出现dbnull时列类型不正确！
+                                    tp = typeof(string);
+                                }
+                                else if (tp.IsValueType && Nullable.GetUnderlyingType(tp) == null)
+                                {
+                                    tp = typeof(Nullable<>).MakeGenericType(tp);
+                                }
+                                new Cell(row, name, tp);
+                            }
+                            else
+                            {
+                                new Cell(row, name, tp, reader.GetValue(i));
+                            }
+                        }
+                        else
+                        {
+                            // 有映射属性的以属性类型为准，因sqlie数据类型少，无可空类型、bool、DateTime等
+                            if (reader.IsDBNull(i))
+                                new Cell(row, name, col.ColumnType);
+                            else
+                                new Cell(row, name, col.ColumnType, reader.GetValue(i));
+                        }
+                    }
+                }
+                yield return row;
+            }
+
+            Dispose();
         }
 
         /*

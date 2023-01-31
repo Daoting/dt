@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>3.1.1</Version>
+		<Version>4.0.0</Version>
 		<PackageId Condition="'$(Configuration)'=='Debug'">Dt.Service.Debug</PackageId>
 		<PackageId Condition="'$(Configuration)'=='Release'">Dt.Service</PackageId>
 		<!-- 将引用项目合并打包 -->
@@ -54,9 +54,6 @@
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Cm.Agent\Dt.Cm.Agent.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Fsm.Agent\Dt.Fsm.Agent.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Msg.Agent\Dt.Msg.Agent.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

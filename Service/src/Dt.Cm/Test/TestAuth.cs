@@ -20,7 +20,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(IsTest = true)]
-    public class TestAuth : BaseApi
+    public class TestAuth : DomainSvc
     {
         public string NoAuth()
         {

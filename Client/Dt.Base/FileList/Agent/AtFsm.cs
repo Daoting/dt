@@ -1,4 +1,4 @@
-﻿namespace Dt.Agent
+﻿namespace Dt.Base
 {
     /// <summary>
     /// 公共 DataAccess Api

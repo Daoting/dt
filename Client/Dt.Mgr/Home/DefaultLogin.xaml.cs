@@ -94,9 +94,9 @@ namespace Dt.Mgr
                     }
 
                     // 保存以备自动登录
-                    AtState.SaveCookie("LoginPhone", phone);
-                    AtState.SaveCookie("LoginPwd", pwd);
-                    AtState.SaveCookie("LoginID", result.UserID.ToString());
+                    await new ClientCookie("LoginPhone", phone).Save(false);
+                    await new ClientCookie("LoginPwd", pwd).Save(false);
+                    await new ClientCookie("LoginID", result.UserID.ToString()).Save(false);
 
                     await LobKit.AfterLogin(result);
                     var dlg = this.FindParentByType<Dlg>();

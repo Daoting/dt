@@ -56,10 +56,10 @@ namespace Dt.Base.Docking
         /// 1. 删除状态库的历史布局
         /// 2. 加载最初布局
         /// </summary>
-        public void LoadDefaultLayout()
+        public async void LoadDefaultLayout()
         {
             if (AllowSaveLayout())
-                AtState.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                await DockLayout.DelByID(_owner.BaseUri.AbsolutePath);
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -76,12 +76,12 @@ namespace Dt.Base.Docking
             Kit.RunAsync(async () =>
             {
                 var xml = WriteXml();
-                DockLayout cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri='{_owner.BaseUri.AbsolutePath}'");
+                var cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath);
                 if (cookie == null)
                     cookie = new DockLayout(_owner.BaseUri.AbsolutePath, xml);
                 else
                     cookie.Layout = xml;
-                await AtState.Save(cookie, false);
+                await cookie.Save(false);
                 _owner.AllowResetLayout = true;
             });
         }
@@ -97,7 +97,7 @@ namespace Dt.Base.Docking
         /// Win宽度变化时自动调整
         /// </summary>
         /// <param name="p_width"></param>
-        public void OnWidthChanged(double p_width)
+        public async void OnWidthChanged(double p_width)
         {
             double width = 0;
             int index = -1;
@@ -119,7 +119,7 @@ namespace Dt.Base.Docking
                 // 宽度足够，加载历史布局或默认布局
                 DockLayout cookie;
                 if (AllowSaveLayout()
-                    && (cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
+                    && (cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath)) != null
                     && ApplyLayout(cookie.Layout))
                 {
                     _owner.AllowResetLayout = true;
@@ -165,13 +165,13 @@ namespace Dt.Base.Docking
         /// 2. 加载状态库中的历史布局
         /// 3. 无历史布局则加载默认布局
         /// </summary>
-        void Init()
+        async void Init()
         {
             // 记录默认布局
             SaveDefaultXml();
             if (AllowSaveLayout())
             {
-                DockLayout cookie = AtState.First<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                DockLayout cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath);
                 if (cookie != null)
                 {
                     // 加载历史布局
@@ -526,7 +526,7 @@ namespace Dt.Base.Docking
             {
                 succ = false;
                 if (AllowSaveLayout())
-                    AtState.Exec($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                    _ = DockLayout.DelByID(_owner.BaseUri.AbsolutePath, false);
             }
             finally
             {

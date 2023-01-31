@@ -37,13 +37,13 @@ namespace Dt.Mgr.Chat
         async void OnLoaded(object sender, RoutedEventArgs e)
         {
             await LoadData();
-            LetterManager.StateChanged += OnStateChanged;
+            ChatDs.Me.StateChanged += OnStateChanged;
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             // 页面卸载停止接收新信息
-            LetterManager.StateChanged -= OnStateChanged;
+            ChatDs.Me.StateChanged -= OnStateChanged;
         }
 
         void OnStateChanged(long obj)
@@ -92,7 +92,7 @@ namespace Dt.Mgr.Chat
             Row row = e.Row;
             if (await Kit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
             {
-                AtLob.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={Kit.UserID}");
+                await AtLob.Exec($"delete from letter where otherid={row.Str("otherid")} and loginid={Kit.UserID}");
                 await LoadData();
             }
         }

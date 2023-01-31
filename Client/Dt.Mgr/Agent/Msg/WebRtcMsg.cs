@@ -1,4 +1,4 @@
-﻿namespace Dt.Agent
+﻿namespace Dt.Mgr
 {
     /// <summary>
     /// WebRTC信令服务器Api

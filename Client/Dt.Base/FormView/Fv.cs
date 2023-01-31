@@ -481,7 +481,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_cellID"></param>
         /// <returns></returns>
-        public string GetCookie(string p_cellID)
+        public async Task<string> GetCookie(string p_cellID)
         {
             FvCell cell;
             if (string.IsNullOrEmpty(Name)
@@ -490,7 +490,8 @@ namespace Dt.Base
                 return null;
 
             string path = $"{BaseUri.AbsolutePath}+{Name}+{cell.ID}";
-            return AtState.GetScalar<string>($"select val from CellLastVal where id=\"{path}\"");
+            var cl = await CellLastVal.GetByID(path);
+            return cl == null || string.IsNullOrEmpty(cl.Val) ? "" : cl.Val;
         }
 
         /// <summary>

@@ -41,13 +41,13 @@ namespace Dt.Core
             Task.Run(async () =>
             {
                 // 无后台 或 未启用
-                if (Kit.GetService<IBackgroundJob>() == null || !AtState.EnableBgJob)
+                if (Kit.GetService<IBackgroundJob>() == null || !await ClientCookie.IsEnableBgJob())
                     return;
 
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
                 string name = Stub.Inst.GetType().AssemblyQualifiedName;
-                if (name != AtState.GetCookie(_stubType))
-                    AtState.SaveCookie(_stubType, name);
+                if (name != await ClientCookie.GetCookie(_stubType))
+                    await new ClientCookie(_stubType, name).Save(false);
 
                 var res = await BackgroundExecutionManager.RequestAccessAsync();
                 if (res == BackgroundAccessStatus.Unspecified

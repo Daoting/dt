@@ -62,7 +62,7 @@ namespace Dt.Mgr.Home
         {
             if (LobKit.FavMenus.Count > LobKit.FixedMenusCount)
             {
-                var cnt = AtLob.Exec($"delete from menufav where userid={Kit.UserID}");
+                var cnt = await AtLob.Exec($"delete from menufav where userid={Kit.UserID}");
                 if (cnt > 0)
                 {
                     await LobKit.LoadMenus();

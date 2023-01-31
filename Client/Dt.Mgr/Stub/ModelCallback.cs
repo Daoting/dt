@@ -22,9 +22,9 @@ namespace Dt.Mgr
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        public IEnumerable<OmColumn> GetTableColumns(string p_tblName)
+        public Task<IEnumerable<OmColumn>> GetTableColumns(string p_tblName)
         {
-            return AtModel.EachColumns(p_tblName);
+            return AtModel.Each<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
         }
 
         /// <summary>
@@ -32,15 +32,12 @@ namespace Dt.Mgr
         /// </summary>
         /// <param name="p_rptName">报表名称</param>
         /// <returns></returns>
-        public Task<string> GetReportTemplate(string p_rptName)
+        public async Task<string> GetReportTemplate(string p_rptName)
         {
-            return Task.Run(() =>
-            {
-                string define = AtModel.GetScalar<string>("select define from OmReport where name=:name", new Dict { { "name", p_rptName } });
-                if (string.IsNullOrEmpty(define))
-                    Kit.Warn($"未找到报表模板【{p_rptName}】！");
-                return define;
-            });
+            string define = await AtModel.GetScalar<string>("select define from OmReport where name=@name", new Dict { { "name", p_rptName } });
+            if (string.IsNullOrEmpty(define))
+                Kit.Warn($"未找到报表模板【{p_rptName}】！");
+            return define;
         }
     }
 }

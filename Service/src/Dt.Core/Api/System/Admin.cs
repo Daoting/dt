@@ -18,7 +18,7 @@ namespace Dt.Core
     /// <summary>
     /// 内部提供给 admin.html 页面的Api
     /// </summary>
-    public class Admin : BaseApi
+    public class Admin : DomainSvc
     {
         #region Admin页面
         /// <summary>

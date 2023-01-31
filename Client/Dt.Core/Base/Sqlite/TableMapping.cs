@@ -31,7 +31,12 @@ namespace Dt.Core.Sqlite
         public TableMapping(Type type)
         {
             _type = type;
-            _tableName = _type.Name;
+
+            // 删除尾部Obj
+            var name = type.Name;
+            if (name.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - 3);
+            _tableName = name;
 
             // 不包括继承的属性
             var props = _type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);

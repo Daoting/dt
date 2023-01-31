@@ -16,7 +16,7 @@ namespace Dt.Mgr
     /// 收藏菜单项
     /// </summary>
     [Sqlite("lob")]
-    public class MenuFav : Entity
+    public class MenuFav : EntityX<MenuFav>
     {
         #region 构造方法
         MenuFav() { }

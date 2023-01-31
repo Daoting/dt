@@ -34,15 +34,12 @@ namespace Dt.Core
         {
             WriteLog("进入Run");
 
-            // 打开状态库
-            AtState.OpenDbBackground();
-
             // 前端在运行或后台资源未释放，Stub实例存在
             Stub stub = Stub.Inst;
             if (stub == null)
             {
                 // 因后台任务独立运行，存根类型需要从State库获取！
-                string tpName = AtState.GetCookie(_stubType);
+                string tpName = await ClientCookie.GetCookie(_stubType);
                 if (!string.IsNullOrEmpty(tpName))
                 {
                     Type tp = Type.GetType(tpName);

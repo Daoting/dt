@@ -7,15 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.FormView;
-using Dt.Base.ModuleView;
-using Dt.Core;
-using System;
-using Windows.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
+using Windows.System;
 #endregion
 
 namespace Dt.Base
@@ -189,17 +185,18 @@ namespace Dt.Base
         async void SaveCookie(string p_text)
         {
             _lastText = p_text;
-            // 删除重复
-            AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}' and Content='{p_text}'");
-
-            SearchHistory his = new SearchHistory(BaseUri: _baseUri, Content: p_text);
-            await AtState.Save(his, false);
-            LoadHisItems();
+            var sh = await SearchHistory.First("BaseUri='{_baseUri}' and Content='{p_text}'");
+            if (sh == null)
+            {
+                SearchHistory his = new SearchHistory(BaseUri: _baseUri, Content: p_text);
+                await his.Save(false);
+                LoadHisItems();
+            }
         }
 
-        void OnClearHis(object sender, RoutedEventArgs e)
+        async void OnClearHis(object sender, RoutedEventArgs e)
         {
-            AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}'");
+            await AtState.Exec($"delete from SearchHistory where BaseUri='{_baseUri}'");
             _lvHis.Data = null;
         }
 
@@ -208,10 +205,10 @@ namespace Dt.Base
             OnSearch(e.Data.To<SearchHistory>().Content);
         }
 
-        void OnDelHis(object sender, RoutedEventArgs e)
+        async void OnDelHis(object sender, RoutedEventArgs e)
         {
             var his = ((LvItem)((Button)sender).DataContext).Data.To<SearchHistory>();
-            AtState.Exec($"delete from SearchHistory where ID={his.ID}");
+            await his.Delete(false);
             LoadHisItems();
         }
         #endregion

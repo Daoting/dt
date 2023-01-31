@@ -29,7 +29,7 @@ namespace Dt.UIDemo
             }
             else
             {
-                _cbBgJob.IsChecked = AtState.EnableBgJob;
+                Kit.RunAsync(async () => _cbBgJob.IsChecked = await ClientCookie.IsEnableBgJob());
             }
         }
 
@@ -115,7 +115,7 @@ namespace Dt.UIDemo
 
         void OnToggleBgJob(object sender, RoutedEventArgs e)
         {
-            AtState.EnableBgJob = (bool)_cbBgJob.IsChecked;
+            ClientCookie.SetEnableBgJob((bool)_cbBgJob.IsChecked);
         }
 
         void OnRunBgJob(object sender, RoutedEventArgs e)

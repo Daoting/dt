@@ -19,7 +19,7 @@ namespace Dt.Msg
     /// 即时消息Api
     /// </summary>
     [Api]
-    public class InstantMsg : BaseApi
+    public class InstantMsg : DomainSvc
     {
         #region 系统消息
         /// <summary>

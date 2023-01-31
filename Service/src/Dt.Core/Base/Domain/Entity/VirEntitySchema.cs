@@ -24,34 +24,35 @@ namespace Dt.Core
 
         public VirEntitySchema(Type p_type)
         {
-            if (!p_type.IsGenericType || !p_type.IsSubclassOf(typeof(VirEntity)))
+            if (!p_type.IsGenericType || !Entity.IsVirEntity(p_type))
                 throw new Exception($"{p_type.Name}不是虚拟实体类型！");
 
+#if !SERVER
+            AccessInfo ai = null;
+#endif
             var tps = p_type.GetGenericArguments();
             foreach (var tp in tps)
             {
                 var schema = EntitySchema.Get(tp);
-                if (SvcName == null)
-                {
-                    SvcName = schema.SvcName;
-                }
-                else if (schema.SvcName != SvcName)
-                {
-                    throw new Exception("虚拟实体中的各实体无法跨服务进行数据存储！");
-                }
 
                 if (schema.Schema.PrimaryKey.Count != 1)
                 {
                     throw new Exception("虚拟实体中的各实体只支持单主键！");
                 }
+
+#if !SERVER
+                if (ai == null)
+                {
+                    ai = schema.AccessInfo;
+                }
+                else if (ai != schema.AccessInfo)
+                {
+                    throw new Exception("虚拟实体中的各实体无法跨服务进行数据存储！");
+                }
+#endif
                 schemas.Add(schema);
             }
         }
-
-        /// <summary>
-        /// Entity增删用到的服务名称
-        /// </summary>
-        public string SvcName { get; }
 
         /// <summary>
         /// 获取选择所有数据的sql
@@ -74,6 +75,13 @@ namespace Dt.Core
                 CreateSql();
             return _selectByID;
         }
+
+#if !SERVER
+        /// <summary>
+        /// 获取内部实体的AccessInfo
+        /// </summary>
+        public AccessInfo AccessInfo => schemas[0].AccessInfo;
+#endif
 
         void CreateSql()
         {

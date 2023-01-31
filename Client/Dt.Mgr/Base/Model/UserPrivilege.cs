@@ -15,7 +15,7 @@ namespace Dt.Mgr
     /// 用户具有的权限
     /// </summary>
     [Sqlite("lob")]
-    public class UserPrivilege : Entity
+    public class UserPrivilege : EntityX<UserPrivilege>
     {
         #region 构造方法
         UserPrivilege() { }

@@ -314,7 +314,7 @@ namespace Dt.Core
             foreach (Type type in ls)
             {
                 // 提取Api
-                if (type.IsSubclassOf(typeof(BaseApi)))
+                if (type.IsSubclassOf(typeof(DomainSvc)))
                 {
                     ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
                     if (rpcAttr != null)

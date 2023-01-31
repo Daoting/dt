@@ -17,7 +17,12 @@ namespace Dt.UIDemo
         public FileListDemo()
         {
             InitializeComponent();
-            var xml = AtState.GetCookie("FileTransDemo");
+            LoadData();
+        }
+
+        async void LoadData()
+        {
+            var xml =  await ClientCookie.GetCookie("FileTransDemo");
             if (!string.IsNullOrEmpty(xml))
             {
                 _fl.Data = xml;
@@ -29,15 +34,15 @@ namespace Dt.UIDemo
             }
         }
 
-        void OnUploadFinished(object sender, bool suc)
+        async void OnUploadFinished(object sender, bool suc)
         {
             if (suc)
-                AtState.SaveCookie("FileTransDemo", _fl.Data);
+                await new ClientCookie("FileTransDemo", _fl.Data).Save(false);
         }
 
-        void OnClear(object sender, RoutedEventArgs e)
+        async void OnClear(object sender, RoutedEventArgs e)
         {
-            AtState.DeleteCookie("FileTransDemo");
+            await ClientCookie.DelByID("FileTransDemo");
             _fl.Data = null;
         }
 

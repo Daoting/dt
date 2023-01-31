@@ -19,7 +19,7 @@ namespace Dt.Msg
     /// 指令消息Api
     /// </summary>
     [Api]
-    public class CmdMsg : BaseApi
+    public class CmdMsg : DomainSvc
     {
         /// <summary>
         /// 向某用户的客户端推送指令信息

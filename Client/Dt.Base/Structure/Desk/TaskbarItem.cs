@@ -109,7 +109,7 @@ namespace Dt.Base
         #endregion
 
         #region 上下文菜单
-        static void ShowMenu(Point p_pos)
+        static async void ShowMenu(Point p_pos)
         {
             if (_menu == null)
             {
@@ -134,7 +134,7 @@ namespace Dt.Base
                 _menu.Items.Add(item);
             }
 
-            var autoStart = AtState.GetAutoStart();
+            var autoStart = await ClientCookie.GetAutoStart();
             Win win = _currentItem._win;
             if (autoStart != null
                 && win != null

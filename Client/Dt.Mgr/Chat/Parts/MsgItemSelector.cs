@@ -39,7 +39,7 @@ namespace Dt.Mgr.Chat
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            Letter l = (Letter)((LvItem)item).Data;
+            LetterObj l = (LetterObj)((LvItem)item).Data;
             switch (l.LetterType)
             {
                 case LetterType.Text:

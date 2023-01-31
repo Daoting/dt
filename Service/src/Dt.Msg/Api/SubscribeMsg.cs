@@ -19,7 +19,7 @@ namespace Dt.Msg
     /// 订阅消息Api
     /// </summary>
     [Api]
-    public class SubscribeMsg : BaseApi
+    public class SubscribeMsg : DomainSvc
     {
         /// <summary>
         /// 发布订阅信息

@@ -26,7 +26,7 @@ namespace Dt.UIDemo
 
         async void OnLocalSave(object sender, Mi e)
         {
-            if (await AtState.Save((ClientCookie)_fv1.Data, false))
+            if (await ((ClientCookie)_fv1.Data).Save(false))
             {
                 _fv1.AcceptChanges();
                 Kit.Msg("本地库保存成功！");
@@ -50,7 +50,7 @@ namespace Dt.UIDemo
         {
             if (await Kit.Confirm("确认要删除码？"))
             {
-                if (await AtState.Delete((ClientCookie)_fv1.Data))
+                if (await ((ClientCookie)_fv1.Data).Delete())
                     _fv1.Data = null;
             }
         }

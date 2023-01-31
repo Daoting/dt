@@ -18,7 +18,7 @@ namespace Dt.Fsm
     /// 文件服务Api
     /// </summary>
     [Api]
-    public class FileMgr : BaseApi
+    public class FileMgr : DomainSvc
     {
         /// <summary>
         /// 判断文件是否存在
@@ -71,7 +71,7 @@ namespace Dt.Fsm
                     }
                 }
             }
-            await _dp.Exec($"delete from fsm_file where path='{p_filePath}'");
+            await _ea.Exec($"delete from fsm_file where path='{p_filePath}'");
             return true;
         }
 

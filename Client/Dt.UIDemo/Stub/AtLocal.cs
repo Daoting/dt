@@ -11,42 +11,13 @@ namespace Dt.UIDemo
     /// <summary>
     /// 本地sqlite库，文件名 local.db
     /// </summary>
-    public class AtLocal : SqliteProvider<AtLocal.LOCAL>
+    public class AtLocal : EntityAccess<AtLocal.LocalInfo>
     {
-        /// <summary>
-        /// 查询本地库的字典值
-        /// </summary>
-        /// <param name="p_key"></param>
-        /// <returns></returns>
-        public static string GetDict(string p_key)
+        public class LocalInfo : AccessInfo
         {
-            string val = _db.GetScalar<string>($"select val from LocalDict where key='{p_key}'");
-            return val == null ? string.Empty : val;
-        }
+            public override AccessType Type => AccessType.Local;
 
-        /// <summary>
-        /// 保存字典行
-        /// </summary>
-        /// <param name="p_key"></param>
-        /// <param name="p_val"></param>
-        public static void SaveDict(string p_key, string p_val)
-        {
-            _db.Execute($"insert OR REPLACE into LocalDict (key,val) values ('{p_key}','{p_val}')");
+            public override string Name => "local";
         }
-
-        /// <summary>
-        /// 删除指定字典行
-        /// </summary>
-        /// <param name="p_key"></param>
-        public static void DeleteDict(string p_key)
-        {
-            _db.Execute($"delete from LocalDict where key='{p_key}'");
-        }
-
-        /// <summary>
-        /// 库名
-        /// </summary>
-        public class LOCAL
-        { }
     }
 }

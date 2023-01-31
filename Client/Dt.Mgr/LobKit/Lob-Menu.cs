@@ -80,20 +80,18 @@ namespace Dt.Mgr
             // 保存点击次数，用于确定哪些是收藏菜单
             if (win != null)
             {
-                Task.Run(() =>
+                Task.Run(async () =>
                 {
-                    if (AtModel.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+                    if (await AtModel.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
                     {
                         // 点击次数保存在客户端
                         Dict dt = new Dict();
                         dt["userid"] = Kit.UserID;
                         dt["menuid"] = p_menu.ID;
-                        int cnt = AtLob.Exec("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
+                        int cnt = await AtLob.Exec("update menufav set clicks=clicks+1 where userid=@userid and menuid=@menuid", dt);
                         if (cnt == 0)
-                            AtLob.Exec("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
+                            await AtLob.Exec("insert into menufav (userid, menuid, clicks) values (@userid, @menuid, 1)", dt);
                     }
-                    // 收集使用频率
-                    //await AtAuth.ClickMenu(p_menu.ID);
                 });
             }
             return win;
@@ -140,13 +138,13 @@ namespace Dt.Mgr
             int maxFav = 8;
             if (_favMenus.Count < maxFav)
             {
-                var favMenu = AtLob.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
+                var favMenu = await AtLob.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
                 foreach (var fav in favMenu)
                 {
                     // 过滤无权限的项
                     if (idsAll.Contains(fav.MenuID))
                     {
-                        var om = AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                        var om = await AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
                         _favMenus.Add(om);
                         // 原位置仍存在
                         //idsAll.Remove(fav.MenuID);
@@ -164,7 +162,7 @@ namespace Dt.Mgr
             var roots = new List<OmMenu>();
 
             // 整理菜单项
-            foreach (var item in AtModel.Each<OmMenu>("select * from OmMenu"))
+            foreach (var item in await AtModel.Each<OmMenu>("select * from OmMenu"))
             {
                 // 过滤无权限的项，保留所有分组
                 if (!item.IsGroup && !idsAll.Contains(item.ID))
@@ -312,7 +310,7 @@ namespace Dt.Mgr
         /// <returns></returns>
         static async Task<List<long>> GetAllUserMenus()
         {
-            int cnt = AtLob.GetScalar<int>("select count(*) from DataVersion where id='menu'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='menu'");
             if (cnt == 0)
             {
                 // 查询服务端
@@ -320,10 +318,10 @@ namespace Dt.Mgr
 
                 // 记录版本号
                 var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));
-                await AtLob.Save(ver, false);
+                await ver.Save(false);
 
                 // 清空旧数据
-                AtLob.Exec("delete from UserMenu");
+                await AtLob.Exec("delete from UserMenu");
 
                 // 插入新数据
                 var ls = (List<long>)dt["result"];
@@ -334,7 +332,10 @@ namespace Dt.Mgr
                     {
                         dts.Add(new Dict { { "id", id } });
                     }
-                    AtLob.BatchExec("insert into UserMenu (id) values (:id)", dts);
+                    var d = new Dict();
+                    d["text"] = "insert into UserMenu (id) values (@id)";
+                    d["params"] = dts;
+                    await AtLob.BatchExec(new List<Dict> { d });
                 }
                 return ls;
             }

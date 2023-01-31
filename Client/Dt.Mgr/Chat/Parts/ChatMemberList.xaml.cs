@@ -37,8 +37,8 @@ namespace Dt.Mgr.Chat
         {
             Loaded -= OnLoaded;
 
-            await FriendMemberList.Refresh();
-            _lv.Data = await AtLob.Query("select * from chatmember");
+            await ChatDs.Me.Refresh();
+            _lv.Data = await ChatMemberObj.Query();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

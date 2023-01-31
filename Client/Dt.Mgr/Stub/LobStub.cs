@@ -50,8 +50,6 @@ namespace Dt.Mgr
         /// <returns></returns>
         protected sealed override async Task InitConfig()
         {
-            AtLob.OpenDb();
-
             // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
             List<object> cfg;
             try
@@ -72,18 +70,16 @@ namespace Dt.Mgr
             if (rpc != null)
                 rpc.InitSvcUrls(cfg[1]);
 
-            // 更新打开模型库
-            await OpenModelDb(cfg[2] as string);
+            // 更新模型库
+            await UpdateModelDb(cfg[2] as string);
         }
 
         /// <summary>
-        /// 更新打开模型文件
-        /// 1. 与本地不同时下载新模型文件；
-        /// 2. 打开模型库；
+        /// 更新模型文件，与本地不同时下载新模型文件；
         /// </summary>
         /// <param name="p_ver"></param>
         /// <returns></returns>
-        async Task OpenModelDb(string p_ver)
+        async Task UpdateModelDb(string p_ver)
         {
             // 更新模型文件
             string modelVer = Path.Combine(Kit.DataPath, $"model-{p_ver}.ver");
@@ -122,16 +118,6 @@ namespace Dt.Mgr
                     catch { }
                     throw new Exception("下载模型文件失败！" + ex.Message);
                 }
-            }
-
-            // 打开模型库
-            try
-            {
-                AtModel.OpenDb();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("打开模型库失败！" + ex.Message);
             }
         }
     }

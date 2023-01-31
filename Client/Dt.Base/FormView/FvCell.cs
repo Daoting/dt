@@ -595,16 +595,27 @@ namespace Dt.Base
                     return;
 
                 // 记录单元格最近一次编辑值
-                Kit.RunAsync(() =>
+                Kit.RunAsync(async () =>
                 {
                     string id = string.Format("{0}+{1}+{2}", BaseUri.AbsolutePath, Owner.Name, ID);
                     object val = cell.Val;
-                    // 删除旧记录
-                    AtState.Exec($"delete from CellLastVal where id=\"{id}\"");
                     if (val != null && !string.IsNullOrEmpty(val.ToString()))
                     {
-                        CellLastVal cookie = new CellLastVal(id, val.ToString());
-                        _ = AtState.Save(cookie, false);
+                        var clv = await CellLastVal.GetByID(id);
+                        if (clv != null)
+                        {
+                            clv.Val = val.ToString();
+                            await clv.Save(false);
+                        }
+                        else
+                        {
+                            await new CellLastVal(id, val.ToString()).Save(false);
+                        }
+                    }
+                    else
+                    {
+                        // 删除旧记录
+                        await CellLastVal.DelByID(id);
                     }
                 });
             }

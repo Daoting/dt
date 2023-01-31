@@ -16,12 +16,12 @@ namespace Dt.MgrDemo
     /// 本地字典表
     /// </summary>
     [Sqlite("local")]
-    public class LocalDict : Entity
+    public class LocalDictObj : EntityX<LocalDictObj>
     {
         #region 构造方法
-        LocalDict() { }
+        LocalDictObj() { }
 
-        public LocalDict(
+        public LocalDictObj(
             string Key,
             string Val = default)
         {

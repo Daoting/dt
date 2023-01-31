@@ -62,11 +62,11 @@ namespace Dt.Mgr.Files
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = AtLob.First<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new { id = row.ID });
+                var his = await ReadFileHistory.GetByID(row.ID);
                 if (his == null)
                     his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
                 his.LastReadTime = Kit.Now;
-                if (await AtLob.Save(his, false))
+                if (await his.Save(false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
             });
         }

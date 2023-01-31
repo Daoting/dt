@@ -33,7 +33,7 @@ namespace Dt.Base
             if (p_elem == null || p_win == null)
                 return;
 
-            p_elem.RightTapped += (s, e) =>
+            p_elem.RightTapped += async (s, e) =>
             {
                 if (_menu == null)
                 {
@@ -51,7 +51,7 @@ namespace Dt.Base
                     _menu.Items.Add(item);
                 }
 
-                var autoStart = AtState.GetAutoStart();
+                var autoStart = await ClientCookie.GetAutoStart();
                 if (autoStart != null
                     && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
                     && (p_win.Params == null || autoStart.Params == JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer)))

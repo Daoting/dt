@@ -38,8 +38,7 @@ namespace Dt.Mgr.Chat
 
         public static Task<int> GetMenuTip()
         {
-            int cnt = AtLob.GetScalar<int>("select count(*) from letter where loginid = @loginid and IsReceived=1 and Unread=1", new { loginid = Kit.UserID });
-            return Task.FromResult(cnt);
+            return AtLob.GetScalar<int>("select count(*) from letter where loginid = @loginid and IsReceived=1 and Unread=1", new { loginid = Kit.UserID });
         }
     }
 }

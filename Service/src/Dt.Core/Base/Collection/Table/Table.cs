@@ -160,7 +160,7 @@ namespace Dt.Core
             var callback = Kit.GetService<IModelCallback>();
             if (callback != null)
             {
-                var cols = callback.GetTableColumns(p_tblName.ToLower());
+                var cols = callback.GetTableColumns(p_tblName.ToLower()).Result;
                 foreach (var col in cols)
                 {
                     tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));

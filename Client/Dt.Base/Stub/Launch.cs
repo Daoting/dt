@@ -48,8 +48,8 @@ namespace Dt.Base
                 catch { }
             }
 
-            // 状态库打开表示app已启动过
-            if (AtState.IsOpened)
+            // app已启动过
+            if (Kit.IsInited)
             {
                 // 带参数启动
                 if (_autoStartOnce != null)

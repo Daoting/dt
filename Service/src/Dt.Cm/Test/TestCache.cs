@@ -19,7 +19,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(IsTest = true)]
-    public class TestCache : BaseApi
+    public class TestCache : DomainSvc
     {
         public async Task<string> CacheStr(string p_key, string p_val)
         {

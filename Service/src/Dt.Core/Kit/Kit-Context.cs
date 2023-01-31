@@ -20,16 +20,16 @@ namespace Dt.Core
         internal const string ContextItemName = "bag";
 
         /// <summary>
-        /// 获取当前http请求上下文的数据提供者，无http请求上下文时返回新对象！AutoClose为true
+        /// 获取当前http请求上下文的数据访问对象，无http请求上下文时返回新对象！AutoClose为true
         /// <para>如：本地定时器调用或RabbitMQ消息产生的调用无http请求上下文</para>
         /// </summary>
-        public static IDataProvider ContextDp
+        public static IEntityAccess ContextEa
         {
             get
             {
                 if (HttpContext != null)
-                    return ((Bag)HttpContext.Items[ContextItemName]).Dp;
-                return GetService<IDataProvider>();
+                    return ((Bag)HttpContext.Items[ContextItemName]).Ea;
+                return GetService<IEntityAccess>();
             }
         }
 

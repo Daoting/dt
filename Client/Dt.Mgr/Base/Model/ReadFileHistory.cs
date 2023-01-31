@@ -17,7 +17,7 @@ namespace Dt.Mgr.Files
     /// 打开过的文件历史
     /// </summary>
     [Sqlite("lob")]
-    public class ReadFileHistory : Entity
+    public class ReadFileHistory : EntityX<ReadFileHistory>
     {
         #region 构造方法
         ReadFileHistory() { }

@@ -132,6 +132,9 @@ namespace Dt.BuildTools
             using (sb.Block("public partial class {0}", _gen.App.Name))
             using (sb.Block("public void MergeDictionaryResource()"))
             {
+                // 固定
+                sb.AppendLine("new Dt.Core.DtDictionaryResource().Merge();");
+
                 foreach (var dict in _dicts)
                 {
                     sb.AppendLine($"new {dict.ContainingNamespace}.{dict.Name}().Merge();");

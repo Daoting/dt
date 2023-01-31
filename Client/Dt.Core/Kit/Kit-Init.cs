@@ -58,11 +58,14 @@ namespace Dt.Core
 #if WASM
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
 #endif
-
-            // 打开状态库
-            AtState.OpenDb();
+            IsInited = true;
             Debug("Kit.Init完毕");
         }
+
+        /// <summary>
+        /// app已初始化
+        /// </summary>
+        internal static bool IsInited { get; private set; }
 
         #region App事件方法
         /// <summary>

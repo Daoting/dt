@@ -19,7 +19,7 @@ namespace Dt.Core
     /// 客户端与服务之间Rpc功能测试
     /// </summary>
     [Api(AgentMode = AgentMode.Generic, IsTest = true)]
-    public class TestRpc : BaseApi
+    public class TestRpc : DomainSvc
     {
         public string GetRpcString()
         {

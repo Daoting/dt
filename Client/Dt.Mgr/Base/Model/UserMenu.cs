@@ -16,7 +16,7 @@ namespace Dt.Mgr
     /// 用户可访问的菜单
     /// </summary>
     [Sqlite("lob")]
-    public class UserMenu : Entity
+    public class UserMenu : EntityX<UserMenu>
     {
         #region 构造方法
         UserMenu() { }

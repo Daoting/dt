@@ -88,18 +88,17 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public IEnumerable<TRow> ForEach<TRow>(string p_sql, object p_params = null)
+        public Task<IEnumerable<TRow>> ForEach<TRow>(string p_sql, object p_params = null)
             where TRow : Row
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
 
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = p_sql;
-                WrapParams(cmd.Parameters, p_params);
-                return cmd.ForEach<TRow>();
-            }
+            // 因用到yield返回，在SqliteCommandEx内部释放！
+            var cmd = CreateCmd();
+            cmd.CommandText = p_sql;
+            WrapParams(cmd.Parameters, p_params);
+            return cmd.ForEach<TRow>();
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public T GetScalar<T>(string p_sql, object p_params = null)
+        public Task<T> GetScalar<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
@@ -118,7 +117,29 @@ namespace Dt.Core.Sqlite
             {
                 cmd.CommandText = p_sql;
                 WrapParams(cmd.Parameters, p_params);
+                cmd.ExecuteScalar();
                 return cmd.ExecuteScalar<T>();
+            }
+        }
+
+        /// <summary>
+        /// 同步查询单个值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_sql"></param>
+        /// <param name="p_params"></param>
+        /// <returns></returns>
+        public T GetScalarSync<T>(string p_sql, object p_params = null)
+        {
+            if (string.IsNullOrEmpty(p_sql))
+                throw new Exception(_errQuery);
+
+            using (var cmd = CreateCmd())
+            {
+                cmd.CommandText = p_sql;
+                WrapParams(cmd.Parameters, p_params);
+                cmd.ExecuteScalar();
+                return cmd.ExecuteScalarSync<T>();
             }
         }
 
@@ -149,30 +170,16 @@ namespace Dt.Core.Sqlite
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public IEnumerable<T> EachFirstCol<T>(string p_sql, object p_params = null)
+        public Task<IEnumerable<T>> EachFirstCol<T>(string p_sql, object p_params = null)
         {
             if (string.IsNullOrEmpty(p_sql))
                 throw new Exception(_errQuery);
 
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = p_sql;
-                WrapParams(cmd.Parameters, p_params);
-                return cmd.EachFirstCol<T>();
-            }
-        }
-
-        /// <summary>
-        /// 获取库中的所有表名
-        /// </summary>
-        /// <returns></returns>
-        internal Task<Table> QueryTblsName()
-        {
-            using (var cmd = CreateCmd())
-            {
-                cmd.CommandText = "select name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name";
-                return cmd.ExecuteQuery();
-            }
+            // 因用到yield返回，在SqliteCommandEx内部释放！
+            var cmd = CreateCmd();
+            cmd.CommandText = p_sql;
+            WrapParams(cmd.Parameters, p_params);
+            return cmd.EachFirstCol<T>();
         }
         #endregion
 
@@ -629,34 +636,38 @@ namespace Dt.Core.Sqlite
         }
 
         /// <summary>
-        /// 批量执行
+        /// 一个事务内执行多个Sql
         /// </summary>
-        /// <param name="p_sql"></param>
-        /// <param name="p_list"></param>
-        /// <returns></returns>
-        public int BatchExecute(string p_sql, List<Dict> p_list)
+        /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}</param>
+        /// <returns>返回执行后影响的行数</returns>
+        public int BatchExec(List<Dict> p_dts)
         {
-            if (p_list == null || p_list.Count == 0)
-                throw new Exception(_errQuery);
+            if (p_dts == null || p_dts.Count == 0)
+                return 0;
 
             int cnt = 0;
             RunInTransaction(() =>
             {
                 using (var cmd = CreateCmd())
                 {
-                    cmd.CommandText = p_sql;
-                    foreach (var item in p_list[0])
+                    foreach (Dict dt in p_dts)
                     {
-                        cmd.Parameters.Add(item.Key, item.Value == null ? SqliteType.Text : ToDbType(item.Value.GetType()));
-                    }
-
-                    foreach (var dt in p_list)
-                    {
-                        foreach (var item in dt)
+                        cmd.CommandText = (string)dt["text"];
+                        if (dt["params"] is List<Dict> ls)
                         {
-                            cmd.Parameters[item.Key].Value = item.Value;
+                            foreach (var par in ls)
+                            {
+                                cmd.Parameters.Clear();
+                                WrapParams(cmd.Parameters, par);
+                                cnt += cmd.ExecuteNonQuery();
+                            }
                         }
-                        cnt += cmd.ExecuteNonQuery();
+                        else if (dt["params"] is Dict par)
+                        {
+                            cmd.Parameters.Clear();
+                            WrapParams(cmd.Parameters, par);
+                            cnt += cmd.ExecuteNonQuery();
+                        }
                     }
                 }
             });
@@ -713,11 +724,16 @@ namespace Dt.Core.Sqlite
         {
             TableMapping map = GetMapping(p_type);
 
-            bool exist = GetScalar<int>($"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{p_type.Name}'") > 0;
+            // 删除尾部Obj
+            var tblName = p_type.Name;
+            if (tblName.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
+                tblName = tblName.Substring(0, tblName.Length - 3);
+
+            bool exist = GetScalarSync<int>($"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tblName}'") > 0;
             if (exist)
             {
                 // 查询所有列名，原来使用 pragma table_info(tblName)
-                var cols = EachFirstCol<string>($"select name from pragma_table_info('{p_type.Name}')").ToList();
+                var cols = GetFirstCol<string>($"select name from pragma_table_info('{tblName}')").Result;
 
                 // 若表存在，判断是否需要增加列
                 var toBeAdded = new List<TableMapping.Column>();
@@ -738,7 +754,7 @@ namespace Dt.Core.Sqlite
 
                 foreach (var p in toBeAdded)
                 {
-                    var addCol = "alter table \"" + map.TableName + "\" add column " + TableMapping.SqlDecl(p);
+                    var addCol = "alter table \"" + tblName + "\" add column " + TableMapping.SqlDecl(p);
                     Execute(addCol);
                 }
             }
@@ -754,14 +770,14 @@ namespace Dt.Core.Sqlite
             {
                 foreach (var i in c.Indices)
                 {
-                    var iname = i.Name ?? map.TableName + "_" + c.Name;
+                    var iname = i.Name ?? tblName + "_" + c.Name;
                     IndexInfo iinfo;
                     if (!indexes.TryGetValue(iname, out iinfo))
                     {
                         iinfo = new IndexInfo
                         {
                             IndexName = iname,
-                            TableName = map.TableName,
+                            TableName = tblName,
                             Unique = i.Unique,
                             Columns = new List<IndexedColumn>()
                         };
@@ -803,7 +819,12 @@ namespace Dt.Core.Sqlite
         /// <returns></returns>
         internal static TableMapping GetMapping(Type type)
         {
-            return _mappings.GetOrAdd(type.FullName, (name) => new TableMapping(type));
+            // 删除尾部Obj
+            var tblName = type.Name;
+            if (tblName.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
+                tblName = tblName.Substring(0, tblName.Length - 3);
+
+            return _mappings.GetOrAdd(tblName, (name) => new TableMapping(type));
         }
 
         /// <summary>

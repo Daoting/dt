@@ -15,7 +15,7 @@ namespace Dt.Mgr
     /// 用户缓存数据的版本号
     /// </summary>
     [Sqlite("lob")]
-    public class DataVersion : Entity
+    public class DataVersion : EntityX<DataVersion>
     {
         #region 构造方法
         DataVersion() { }
