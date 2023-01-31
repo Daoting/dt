@@ -42,7 +42,7 @@ namespace Dt.Mgr.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await AtCm.Save(_fv.Data.To<RptObj>()))
+            if (await _fv.Data.To<RptObj>().Save())
             {
                 _win.List.Update();
                 LobKit.PromptForUpdateModel();
@@ -73,7 +73,7 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await AtCm.DelByID<RptObj>(d.ID))
+            if (await RptObj.DelByID(d.ID))
             {
                 Clear();
                 _win.List.Update();
@@ -88,7 +88,7 @@ namespace Dt.Mgr.Model
             {
                 if (rpt.IsAdded || rpt.IsChanged)
                 {
-                    if (await AtCm.Save(rpt, false))
+                    if (await rpt.Save(false))
                     {
                         _win.List.Update();
                     }

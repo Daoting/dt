@@ -370,7 +370,7 @@ namespace Dt.Mgr
             {
                 WorkItem.IsAccept = true;
                 WorkItem.AcceptTime = Kit.Now;
-                if (await AtCm.Save(WorkItem))
+                if (await WorkItem.Save())
                     Kit.Msg("已自动签收！");
             }
         }

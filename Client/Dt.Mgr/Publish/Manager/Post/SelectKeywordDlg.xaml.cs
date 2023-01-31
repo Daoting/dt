@@ -57,7 +57,7 @@ namespace Dt.Mgr.Publish
             {
                 ls.Add(new PubPostKeywordObj(PostID: _postID, Keyword: row.Str("id")));
             }
-            if (await AtCm.BatchSave(ls))
+            if (await ls.Save())
                 Close(true);
         }
 

@@ -76,7 +76,7 @@ namespace Dt.Mgr.Model
         {
             var d = _fv.Data.To<PrvObj>();
             bool isNew = d.IsAdded;
-            if (await AtCm.Save(d))
+            if (await d.Save())
             {
                 _win.List.Update();
                 if (isNew)
@@ -104,7 +104,7 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await d.Delete())
             {
                 _win.List.Update();
                 ClearRelated();

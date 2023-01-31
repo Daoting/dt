@@ -74,7 +74,7 @@ namespace Dt.Mgr.Workflow
                 return;
             }
 
-            if (await AtCm.Delete(p_prc))
+            if (await p_prc.Delete())
             {
                 LoadAll();
             }

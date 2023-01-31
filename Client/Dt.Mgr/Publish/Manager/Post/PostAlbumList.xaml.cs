@@ -57,7 +57,7 @@ namespace Dt.Mgr.Publish
         {
             var pa = new PubPostAlbumObj(PostID: _id, AlbumID: e.Row.ID);
             pa.IsAdded = false;
-            if (await AtCm.Delete(pa))
+            if (await pa.Delete())
                 Refresh();
         }
 

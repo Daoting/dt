@@ -78,7 +78,7 @@ namespace Dt.Mgr.Model
         {
             var d = _fv.Data.To<RoleObj>();
             bool isNew = d.IsAdded;
-            if (await AtCm.Save(d))
+            if (await d.Save())
             {
                 _win.List.Update();
                 if (isNew)

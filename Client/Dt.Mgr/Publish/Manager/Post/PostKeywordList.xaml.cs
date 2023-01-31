@@ -58,7 +58,7 @@ namespace Dt.Mgr.Publish
         {
             PubPostKeywordObj pk = new PubPostKeywordObj(PostID: _id, Keyword: e.Row.Str(0));
             pk.IsAdded = false;
-            if (await AtCm.Delete(pk))
+            if (await pk.Delete())
                 Refresh();
         }
 

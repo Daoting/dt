@@ -72,7 +72,7 @@ namespace Dt.MgrDemo
         {
             var data = _fv.Data.To<收文Obj>();
             if (data.IsAdded || data.IsChanged)
-                return AtCm.Save(data);
+                return data.Save();
 
             return Task.FromResult(true);
         }
@@ -81,7 +81,7 @@ namespace Dt.MgrDemo
         {
             var data = _fv.Data.To<收文Obj>();
             if (!data.IsAdded)
-                return AtCm.Delete(data);
+                return data.Delete();
 
             return Task.FromResult(true);
         }

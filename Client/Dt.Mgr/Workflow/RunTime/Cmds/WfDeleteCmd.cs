@@ -54,7 +54,7 @@ namespace Dt.Mgr.Workflow
             {
                 if (!_info.PrcInst.IsAdded)
                 {
-                    if (!await AtCm.Delete(_info.PrcInst, false))
+                    if (!await _info.PrcInst.Delete(false))
                         Kit.Warn("表单已删除，未找到待删除的流程实例！");
                 }
                 _info.CloseWin();

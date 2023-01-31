@@ -59,7 +59,7 @@ namespace Dt.Mgr.Model
                 {
                     ls.Add(new RoleMenuObj(row.ID, _id));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await ls.Save())
                 {
                     Refresh();
                     await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");
@@ -87,7 +87,7 @@ namespace Dt.Mgr.Model
             {
                 ls.Add(new RoleMenuObj(row.Long("roleid"), _id));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
+            if (ls.Count > 0 && await ls.Delete())
             {
                 Refresh();
                 await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "menu");

@@ -54,7 +54,7 @@ namespace Dt.Mgr.Model
                 {
                     ls.Add(new RolePrvObj(_roleID, row.Str("id")));
                 }
-                if (ls.Count > 0 && await AtCm.BatchSave(ls))
+                if (ls.Count > 0 && await ls.Save())
                 {
                     Refresh();
                     await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");
@@ -82,7 +82,7 @@ namespace Dt.Mgr.Model
             {
                 ls.Add(new RolePrvObj(_roleID, row.Str("prvid")));
             }
-            if (ls.Count > 0 && await AtCm.BatchDelete(ls))
+            if (ls.Count > 0 && await ls.Delete())
             {
                 Refresh();
                 await AtCm.DeleteDataVer(ls.Select(rm => rm.RoleID).ToList(), "privilege");

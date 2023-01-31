@@ -105,7 +105,7 @@ namespace Dt.Mgr.Publish
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await d.Delete())
             {
                 _win.List.Update();
                 Clear();

@@ -78,7 +78,7 @@ namespace Dt.Mgr.Publish
                 return;
             }
 
-            if (await AtCm.Save(d))
+            if (await d.Save())
             {
                 _win?.List.Update();
             }
@@ -106,7 +106,7 @@ namespace Dt.Mgr.Publish
             if (await IsUsed(d.ID))
                 return;
 
-            if (await AtCm.Delete(d))
+            if (await d.Delete())
             {
                 _win?.List.Update();
                 Clear();

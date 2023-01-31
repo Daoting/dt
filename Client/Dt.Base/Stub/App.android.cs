@@ -42,7 +42,7 @@ namespace Dt.Base
         public void ToastStart(string p_params)
         {
             // 点击通知栏启动
-            if (AtState.IsOpened)
+            if (Kit.IsInited)
             {
                 // 状态库打开表示app已启动过，不会再调用 OnLaunched
                 _ = Launch(p_params);

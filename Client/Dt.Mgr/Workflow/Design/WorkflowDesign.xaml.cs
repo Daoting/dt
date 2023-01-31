@@ -145,7 +145,7 @@ namespace Dt.Mgr.Workflow
         {
             if (await Kit.Confirm($"确认要删除流程模板[{_prc.Name}]吗？"))
             {
-                if (await AtCm.Delete(_prc))
+                if (await _prc.Delete())
                     Close();
             }
             else

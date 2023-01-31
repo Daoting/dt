@@ -69,7 +69,7 @@ namespace Dt.Mgr.Model
             save.AcceptChanges();
             save.Dispidx = p_src.Dispidx;
 
-            if (await AtCm.BatchSave(tbl))
+            if (await tbl.Save())
             {
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_src.Category });
                 LobKit.PromptForUpdateModel();
@@ -93,7 +93,7 @@ namespace Dt.Mgr.Model
         async void OnSave(object sender, Mi e)
         {
             var op = _fv.Data.To<OptionObj>();
-            if (await AtCm.Save(op))
+            if (await op.Save())
             {
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = op.Category });
@@ -127,7 +127,7 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await AtCm.Delete(p_option))
+            if (await p_option.Delete())
             {
                 LoadCategory();
                 _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_option.Category });

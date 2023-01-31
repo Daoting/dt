@@ -45,7 +45,7 @@ namespace Dt.Mgr.Model
                 _rpt["mtime"] = Kit.Now;
             }
 
-            if (await AtCm.Save(_rpt))
+            if (await _rpt.Save())
                 LobKit.PromptForUpdateModel();
         }
     }

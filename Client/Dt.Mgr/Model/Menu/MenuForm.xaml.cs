@@ -73,7 +73,7 @@ namespace Dt.Mgr.Model
         async void OnSave(object sender, Mi e)
         {
             var d = _fv.Data.To<MenuObj>();
-            if (await AtCm.Save(d))
+            if (await d.Save())
             {
                 _win.List.Update();
                 UpdateRelated(d);
@@ -99,7 +99,7 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await d.Delete())
             {
                 Clear();
                 _win.List.Update();

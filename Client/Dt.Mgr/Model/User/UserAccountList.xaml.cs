@@ -93,7 +93,7 @@ namespace Dt.Mgr.Model
             string phone = e.Row.Str("phone");
             usr.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
 
-            if (await AtCm.Save(usr, false))
+            if (await usr.Save(false))
                 Kit.Msg("密码已重置为手机号后4位！");
             else
                 Kit.Msg("重置密码失败！");
@@ -107,7 +107,7 @@ namespace Dt.Mgr.Model
             usr.Expired = !expired;
 
             string act = expired ? "启用" : "停用";
-            if (await AtCm.Save(usr, false))
+            if (await usr.Save(false))
             {
                 Kit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
                 Update();

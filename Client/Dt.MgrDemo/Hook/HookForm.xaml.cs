@@ -88,7 +88,7 @@ namespace Dt.MgrDemo.Hook
                 return;
             }
 
-            if (await AtCm.Delete(d))
+            if (await d.Delete())
             {
                 _fv.Data = null;
                 _win.List.Update();

@@ -196,7 +196,7 @@ namespace Dt.Core
             else
             {
                 var model = EntitySchema.Get(typeof(TEntity));
-                sql = model.Schema.GetSelectAllSql();
+                sql = model.Schema.GetSelectByIDSql();
             }
 
             return Kit.ContextEa.First<TEntity>(sql, dt);
@@ -212,7 +212,7 @@ namespace Dt.Core
             else
             {
                 var model = EntitySchema.Get(typeof(TEntity));
-                sql = model.Schema.GetSelectAllSql();
+                sql = model.Schema.GetSelectByIDSql();
                 ea = model.AccessInfo.GetEntityAccess();
             }
             return ea.First<TEntity>(sql, dt);

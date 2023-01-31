@@ -37,14 +37,14 @@ namespace Dt.Mgr.Workflow
             {
                 _info.WorkItem.IsAccept = false;
                 _info.WorkItem.AcceptTime = null;
-                if (await AtCm.Save(_info.WorkItem, false))
+                if (await _info.WorkItem.Save(false))
                     Kit.Msg("已取消签收！");
             }
             else
             {
                 _info.WorkItem.IsAccept = true;
                 _info.WorkItem.AcceptTime = Kit.Now;
-                if (await AtCm.Save(_info.WorkItem, false))
+                if (await _info.WorkItem.Save(false))
                     Kit.Msg("已签收！");
             }
         }

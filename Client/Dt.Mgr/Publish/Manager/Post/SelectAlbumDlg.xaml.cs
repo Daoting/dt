@@ -57,7 +57,7 @@ namespace Dt.Mgr.Publish
             {
                 ls.Add(new PubPostAlbumObj(PostID: _postID, AlbumID: row.ID));
             }
-            if (await AtCm.BatchSave(ls))
+            if (await ls.Save())
                 Close(true);
         }
 

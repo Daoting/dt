@@ -46,7 +46,7 @@ namespace Dt.Mgr.Model
                 return;
 
             bool delVer = par.IsAdded || par.Cells["ID"].IsChanged || par.Cells["Value"].IsChanged;
-            if (await AtCm.Save(par))
+            if (await par.Save())
             {
                 _win.List.Update();
                 if (delVer)
@@ -79,7 +79,7 @@ namespace Dt.Mgr.Model
                     return;
             }
 
-            if (await AtCm.Delete(par))
+            if (await par.Delete())
             {
                 _fv.Data = null;
                 _win.List.Update();

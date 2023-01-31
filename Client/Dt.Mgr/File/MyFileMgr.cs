@@ -60,7 +60,7 @@ namespace Dt.Mgr.Files
                 Info: p_row.Str("info"),
                 Ctime: p_row.Date("ctime"),
                 UserID: Kit.UserID);
-            return AtCm.Save(file, false);
+            return file.Save(false);
         }
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
@@ -81,7 +81,7 @@ namespace Dt.Mgr.Files
                 file.IsAdded = false;
                 file["name"] = p_name;
             }
-            return await AtCm.Save(file);
+            return await file.Save();
         }
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
@@ -101,7 +101,7 @@ namespace Dt.Mgr.Files
 
                 ls.Add(new FileMyObj(ID: row.ID));
             }
-            return await AtCm.BatchDelete(ls);
+            return await ls.Delete();
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
@@ -114,7 +114,7 @@ namespace Dt.Mgr.Files
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);
             }
-            return AtCm.BatchSave(ls, false);
+            return ls.Save(false);
         }
     }
 }

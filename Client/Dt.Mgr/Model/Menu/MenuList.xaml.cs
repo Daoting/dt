@@ -84,11 +84,34 @@ namespace Dt.Mgr.Model
 
         async void Exchange(MenuObj src, MenuObj tgt)
         {
-            if (await AtCm.ExchangeDispidx(src, tgt))
+            if (await ExchangeDispidx(src, tgt))
             {
                 Update();
                 LobKit.PromptForUpdateModel("菜单调序成功");
             }
+        }
+
+        /// <summary>
+        /// 互换两行的显示位置，确保包含 id,dispidx 列
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_src"></param>
+        /// <param name="p_tgt"></param>
+        /// <returns>true 互换成功</returns>
+        public static Task<bool> ExchangeDispidx<TEntity>(TEntity p_src, TEntity p_tgt)
+            where TEntity : Entity
+        {
+            var tbl = new Table<TEntity> { { "id", typeof(long) }, { "dispidx", typeof(int) } };
+
+            var save = tbl.AddRow(new { id = p_src.ID });
+            save.AcceptChanges();
+            save["dispidx"] = p_tgt["dispidx"];
+
+            save = tbl.AddRow(new { id = p_tgt.ID });
+            save.AcceptChanges();
+            save["dispidx"] = p_src["dispidx"];
+
+            return tbl.Save(false);
         }
 
         MenuWin _win => (MenuWin)_tab.OwnWin;
