@@ -37,7 +37,7 @@ namespace Dt.Core
             {
                 if (_mainActivity == null)
                 {
-                    string tpName = ClientCookie.GetCookie(_mainActivityName).Result;
+                    string tpName = Cookie.Get(_mainActivityName).Result;
                     if (!string.IsNullOrEmpty(tpName))
                         _mainActivity = Type.GetType(tpName);
                 }
@@ -54,19 +54,19 @@ namespace Dt.Core
             Task.Run(async () =>
             {
                 // 无后台 或 未启用
-                if (Kit.GetService<IBackgroundJob>() == null || !await ClientCookie.IsEnableBgJob())
+                if (Kit.GetService<IBackgroundJob>() == null || !await Cookie.IsEnableBgJob())
                     return;
 
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
                 string name = Stub.Inst.GetType().AssemblyQualifiedName;
-                if (name != await ClientCookie.GetCookie(_stubType))
-                    await new ClientCookie(_stubType, name).Save(false);
+                if (name != await Cookie.Get(_stubType))
+                    await Cookie.Save(_stubType, name);
 
                 if (_mainActivity != null)
                 {
                     name = _mainActivity.AssemblyQualifiedName;
-                    if (name != await ClientCookie.GetCookie(_mainActivityName))
-                        await new ClientCookie(_mainActivityName, name).Save(false);
+                    if (name != await Cookie.Get(_mainActivityName))
+                        await Cookie.Save(_mainActivityName, name);
                 }
 
                 // 注册后台任务，后台Worker每15分钟运行一次，系统要求最短间隔15分钟！

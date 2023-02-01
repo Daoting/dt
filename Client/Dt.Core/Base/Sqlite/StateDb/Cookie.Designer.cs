@@ -2,26 +2,25 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2022/8/4 13:04:15 创建
+* 日志: 2017-12-06 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-
 #endregion
 
-namespace Dt.MgrDemo
+namespace Dt.Core
 {
     /// <summary>
-    /// 本地字典表
+    /// 客户端Cookie字典
     /// </summary>
-    [Sqlite("local")]
-    public class LocalDictObj : EntityX<LocalDictObj>
+    [Sqlite("state")]
+    public partial class Cookie : EntityX<Cookie>
     {
         #region 构造方法
-        LocalDictObj() { }
+        Cookie() { }
 
-        public LocalDictObj(
+        public Cookie(
             string Key,
             string Val = default)
         {

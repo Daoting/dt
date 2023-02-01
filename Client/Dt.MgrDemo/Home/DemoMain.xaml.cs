@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dt.Base;
-using Dt.MgrDemo.Hook;
 using Dt.MgrDemo.单实体;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -34,7 +33,7 @@ namespace Dt.MgrDemo
 
             var group = new GroupData<DemoItem>
             {
-                new DemoItem("实体基础", typeof(实体Win), ""),
+                new DemoItem("实体基础", typeof(AccessDemo), ""),
                 
             };
             group.Title = "基础";

@@ -22,7 +22,7 @@ namespace Dt.UIDemo
 
         async void LoadData()
         {
-            var xml =  await ClientCookie.GetCookie("FileTransDemo");
+            var xml =  await Cookie.Get("FileTransDemo");
             if (!string.IsNullOrEmpty(xml))
             {
                 _fl.Data = xml;
@@ -37,12 +37,12 @@ namespace Dt.UIDemo
         async void OnUploadFinished(object sender, bool suc)
         {
             if (suc)
-                await new ClientCookie("FileTransDemo", _fl.Data).Save(false);
+                await Cookie.Save("FileTransDemo", _fl.Data);
         }
 
         async void OnClear(object sender, RoutedEventArgs e)
         {
-            await ClientCookie.DelByID("FileTransDemo");
+            await Cookie.DelByID("FileTransDemo");
             _fl.Data = null;
         }
 

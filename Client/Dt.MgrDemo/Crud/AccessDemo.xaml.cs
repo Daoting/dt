@@ -2,23 +2,22 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2013-12-16 创建
+* 日志: 2023-02-01 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Microsoft.UI.Xaml;
 using System.Text;
 #endregion
 
-namespace Dt.UIDemo
+namespace Dt.MgrDemo
 {
-    public partial class TableAccess : Win
+    public partial class AccessDemo : Win
     {
         int _index;
 
-        public TableAccess()
+        public AccessDemo()
         {
             InitializeComponent();
         }

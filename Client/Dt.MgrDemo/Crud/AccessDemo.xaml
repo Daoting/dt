@@ -1,0 +1,23 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.AccessDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="创建表" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新实体" Click="OnCreateTable" />
+            <Button Content="更新实体" Click="OnCreateTableByName" />
+            <Button Content="由本地库表名创建" Click="OnCreateTableByLocalName" />
+        </StackPanel>
+        
+        <a:CFree RowSpan="5" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

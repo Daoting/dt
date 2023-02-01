@@ -267,14 +267,14 @@ namespace Dt.Mgr.Chat
             }
 
             // 记录刷新时间
-            await new ClientCookie(_refreshKey, Kit.Now.ToString()).Save(false);
+            await Cookie.Save(_refreshKey, Kit.Now.ToString());
         }
 
         async Task<bool> NeedRefresh()
         {
             // 超过10小时需要刷新
             bool refresh = true;
-            string val = await ClientCookie.GetCookie(_refreshKey);
+            string val = await Cookie.Get(_refreshKey);
             if (!string.IsNullOrEmpty(val) && DateTime.TryParse(val, out var last))
                 refresh = (Kit.Now - last).TotalHours >= 10;
             return refresh;

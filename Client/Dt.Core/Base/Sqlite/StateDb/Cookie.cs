@@ -15,17 +15,28 @@ namespace Dt.Core
     /// <summary>
     /// 客户端Cookie字典
     /// </summary>
-    public partial class ClientCookie
+    public partial class Cookie
     {
         /// <summary>
         /// 查询本地存储的Cookie值
         /// </summary>
         /// <param name="p_key"></param>
         /// <returns></returns>
-        public static async Task<string> GetCookie(string p_key)
+        public static async Task<string> Get(string p_key)
         {
             var cc = await GetByID(p_key);
             return cc == null || cc.Val == null ? string.Empty : cc.Val;
+        }
+
+        /// <summary>
+        /// 保存Cookie
+        /// </summary>
+        /// <param name="p_key">键</param>
+        /// <param name="p_val">值</param>
+        /// <returns></returns>
+        public static Task<bool> Save(string p_key, string p_val)
+        {
+            return new Cookie(p_key, p_val).Save(false);
         }
 
         /// <summary>
@@ -37,6 +48,10 @@ namespace Dt.Core
             return cc == null;
         }
 
+        /// <summary>
+        /// 设置是否启用后台作业
+        /// </summary>
+        /// <param name="p_enable"></param>
         public static async void SetEnableBgJob(bool p_enable)
         {
             var cc = await GetByID("DisableBgJob");
@@ -44,7 +59,7 @@ namespace Dt.Core
             {
                 if (!p_enable)
                 {
-                    await new ClientCookie("DisableBgJob", "true").Save(false);
+                    await Save("DisableBgJob", "true");
                 }
             }
             else if (p_enable)
@@ -81,7 +96,7 @@ namespace Dt.Core
                 var cc = await GetByID("AutoStart");
                 if (cc == null)
                 {
-                    await new ClientCookie("AutoStart", json).Save(false);
+                    await Cookie.Save("AutoStart", json);
                 }
                 else
                 {

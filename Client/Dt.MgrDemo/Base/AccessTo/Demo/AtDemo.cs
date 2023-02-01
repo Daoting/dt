@@ -12,7 +12,7 @@
 namespace Dt.MgrDemo
 {
     /// <summary>
-    /// 服务的数据访问
+    /// demo服务的数据访问
     /// </summary>
     public partial class AtDemo : EntityAccess<AtDemo.Info>
     {

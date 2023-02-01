@@ -110,9 +110,9 @@ namespace Dt.Mgr
             // 注销时清空用户信息
             ResetUser();
 
-            await ClientCookie.DelByID("LoginPhone");
-            await ClientCookie.DelByID("LoginPwd");
-            await ClientCookie.DelByID("LoginID");
+            await Cookie.DelByID("LoginPhone");
+            await Cookie.DelByID("LoginPwd");
+            await Cookie.DelByID("LoginID");
 
             Kit.ShowRoot(LobViews.登录页);
 
