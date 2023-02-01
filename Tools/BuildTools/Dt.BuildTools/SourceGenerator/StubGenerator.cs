@@ -125,6 +125,8 @@ namespace Dt.BuildTools
             }
 
             tbls.Tbls.Add(type);
+            // 表名也可能变化
+            tbls.Cols.Append(type.Name);
             foreach (var mem in type.GetMembers())
             {
                 if (mem is IPropertySymbol prop
