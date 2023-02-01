@@ -30,52 +30,7 @@ namespace Dt.Mgr.Workflow
 
         protected override void DoExecute(object p_parameter)
         {
-            _info.RunCmd(Save);
-        }
-
-        public async Task<bool> Save()
-        {
-            // 先保存表单数据
-            if (!await _info.FormWin.Save())
-                return false;
-
-            // 标题
-            string name = _info.FormWin.GetPrcName();
-            if (name != _info.PrcInst.Name)
-            {
-                _info.PrcInst.Name = name;
-                _info.FormWin.Title = name;
-            }
-
-            bool suc = true;
-            if (_info.PrcInst.IsAdded)
-            {
-                DateTime time = Kit.Now;
-                _info.PrcInst.Ctime = time;
-                _info.PrcInst.Mtime = time;
-                _info.PrcInst.Dispidx = await WfiPrcObj.NewSeq("Dispidx");
-
-                _info.AtvInst.Ctime = time;
-                _info.AtvInst.Mtime = time;
-
-                _info.WorkItem.AcceptTime = time;
-                _info.WorkItem.Dispidx = await WfiItemObj.NewSeq("Dispidx");
-                _info.WorkItem.Ctime = time;
-                _info.WorkItem.Mtime = time;
-                _info.WorkItem.Stime = time;
-            }
-
-            List<object> ls = new List<object>();
-            if (_info.PrcInst.IsAdded || _info.PrcInst.IsChanged)
-                ls.Add(_info.PrcInst);
-            if (_info.AtvInst.IsAdded || _info.AtvInst.IsChanged)
-                ls.Add(_info.AtvInst);
-            if (_info.WorkItem.IsAdded || _info.WorkItem.IsChanged)
-                ls.Add(_info.WorkItem);
-
-            if (ls.Count > 0)
-                suc = await AtCm.BatchSave(ls, false);
-            return suc;
+            _info.RunCmd(WfiDs.Me.SaveForm);
         }
     }
 }

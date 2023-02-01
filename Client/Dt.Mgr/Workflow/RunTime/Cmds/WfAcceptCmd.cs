@@ -28,25 +28,7 @@ namespace Dt.Mgr.Workflow
 
         protected override void DoExecute(object p_parameter)
         {
-            _info.RunCmd(ToggleAccept);
-        }
-
-        async Task ToggleAccept()
-        {
-            if (_info.WorkItem.IsAccept)
-            {
-                _info.WorkItem.IsAccept = false;
-                _info.WorkItem.AcceptTime = null;
-                if (await _info.WorkItem.Save(false))
-                    Kit.Msg("已取消签收！");
-            }
-            else
-            {
-                _info.WorkItem.IsAccept = true;
-                _info.WorkItem.AcceptTime = Kit.Now;
-                if (await _info.WorkItem.Save(false))
-                    Kit.Msg("已签收！");
-            }
+            _info.RunCmd(WfiDs.Me.ToggleAccept);
         }
     }
 }

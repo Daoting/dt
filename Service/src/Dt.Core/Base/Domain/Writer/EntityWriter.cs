@@ -7,22 +7,20 @@
 #endregion
 
 #region 引用命名
-
-#endregion
-
 using System.Collections;
+#endregion
 
 namespace Dt.Core
 {
     /// <summary>
     /// 实体写入器，对所有实体的的持久化做统一管理，解决领域模型存储和变更工作
-    /// <para>写入器在一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚，不可重复提交！</para>
+    /// <para>写入器在一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚</para>
+    /// <para>无论提交成功失败都清空状态，准备下次提交！</para>
     /// </summary>
-    class EntityWriter : IEntityWriter
+    class EntityWriter
     {
         #region 成员变量
         readonly List<UnitItem> _items = new List<UnitItem>();
-        bool _commited;
         #endregion
 
         #region 保存
@@ -330,18 +328,17 @@ namespace Dt.Core
 
         #region 提交
         /// <summary>
-        /// 一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚，不可重复提交！
+        /// 一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚
+        /// <para>无论提交成功失败都清空状态，准备下次提交！</para>
         /// <para>处理成功后，对于每个实体：</para>
-        /// <para>1. 若存在领域事件，则发布事件</para>
-        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// <para>3. 对于新增、修改的实体进行状态复位</para>
+        /// <para>1. 对于新增、修改的实体进行状态复位</para>
+        /// <para>2. 若存在领域事件，则发布事件</para>
+        /// <para>3. 若已设置服务端缓存，则删除缓存</para>
         /// </summary>
-        /// <param name="p_isNotify"></param>
-        /// <returns></returns>
+        /// <param name="p_isNotify">是否提示保存结果，客户端有效</param>
+        /// <returns>是否成功</returns>
         public async Task<bool> Commit(bool p_isNotify = true)
         {
-            Throw.If(_commited, "当前工作单元已经提交，不可重复提交！");
-
             if (_items.Count == 0)
             {
 #if !SERVER
@@ -351,7 +348,6 @@ namespace Dt.Core
                 return false;
             }
 
-            _commited = true;
             var dts = new List<Dict>();
             _items.ForEach(item => dts.AddRange(item.Exec));
 
@@ -372,10 +368,27 @@ namespace Dt.Core
             }
 #endif
             if (!suc)
+            {
+                _items.Clear();
                 return false;
+            }
 
-            // 数据存储成功的后续处理：发布领域事件、删除服务端缓存、实体状态复位
-            _items.ForEach(item => item.OnCommited());
+            // 成功后实体状态复位，因后续的发布领域事件、删除服务端缓存为异步，故单独处理
+            _items.ForEach(item => item.AcceptChanges());
+
+            // 复制到新列表
+            var items = new List<UnitItem>(_items);
+            _ = Task.Run(async () =>
+            {
+                // 数据存储成功的后续处理：发布领域事件、删除服务端缓存
+                foreach (var item in items)
+                {
+                    await item.OnCommited();
+                }
+            });
+
+            // 清空后可复用
+            _items.Clear();
             return true;
         }
         #endregion

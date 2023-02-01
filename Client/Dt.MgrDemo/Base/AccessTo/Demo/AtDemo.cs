@@ -2,25 +2,23 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-11-20 创建
+* 日志: 2023-02-01 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.MgrDemo
 {
     /// <summary>
-    /// 本地业务库，At = Access To
+    /// 服务的数据访问
     /// </summary>
-    public class AtLob : EntityAccess<AtLob.Info>
+    public partial class AtDemo : EntityAccess<AtDemo.Info>
     {
         public class Info : AccessInfo
         {
-            public override AccessType Type => AccessType.Local;
-
-            public override string Name => "lob";
+            public override string Name => "demo";
         }
     }
 }

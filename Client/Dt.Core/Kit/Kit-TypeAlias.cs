@@ -66,10 +66,10 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 发布本地事件，不等待
+        /// 发布本地事件
         /// </summary>
         /// <param name="p_event">事件对象，禁止事件为泛型</param>
-        public static async void PublishEvent(IEvent p_event)
+        public static async Task PublishEvent(IEvent p_event)
         {
             if (p_event == null)
                 return;

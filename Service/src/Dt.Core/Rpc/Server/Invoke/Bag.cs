@@ -43,7 +43,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取当前数据提供者
+        /// 获取当前数据访问对象
         /// </summary>
         public IEntityAccess Ea { get; }
 

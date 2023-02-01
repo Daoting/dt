@@ -17,6 +17,5 @@
         <Using Include="Dt.Mgr" />
         <Using Include="Dt.Mgr.Domain" />
         <Using Include="Dt.MgrDemo.Domain" />
-        <Using Include="Dt.MgrDemo.Agent" />
     </ItemGroup>
 </Project>

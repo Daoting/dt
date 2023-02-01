@@ -12,15 +12,13 @@
 namespace Dt.Mgr
 {
     /// <summary>
-    /// 本地业务库，At = Access To
+    /// cm服务的数据访问
     /// </summary>
-    public class AtLob : EntityAccess<AtLob.Info>
+    public partial class AtCm : EntityAccess<AtCm.Info>
     {
         public class Info : AccessInfo
         {
-            public override AccessType Type => AccessType.Local;
-
-            public override string Name => "lob";
+            public override string Name => "cm";
         }
     }
 }

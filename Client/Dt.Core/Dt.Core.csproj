@@ -27,7 +27,6 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\IEntityAccess.cs" Link="Base\Domain\IEntityAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEvent.cs" Link="Base\Domain\Event\IEvent.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\Local\IEventHandler.cs" Link="Base\Domain\Event\IEventHandler.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\IEntityWriter.cs" Link="Base\Domain\Writer\IEntityWriter.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\EntityWriter.cs" Link="Base\Domain\Writer\EntityWriter.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\UnitItem.cs" Link="Base\Domain\Writer\UnitItem.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\MySql\TableSchema.cs" Link="Base\DataAccess\TableSchema.cs" />

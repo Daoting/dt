@@ -120,7 +120,7 @@ namespace Dt.Mgr.Workflow
                 }
             }
 
-            if (await AtCm.BatchSave(new List<object> { _prc, _prc.Atvs, _prc.Trss, _prc.AtvRoles }))
+            if (await WfdDs.Me.SavePrc(_prc))
             {
                 _sketch.His.Clear();
                 UpdateSaveState();

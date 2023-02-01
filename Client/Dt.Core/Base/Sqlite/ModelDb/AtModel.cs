@@ -14,9 +14,9 @@ namespace Dt.Core
     /// <summary>
     /// 本地sqlite模型库，At = Access To，只读
     /// </summary>
-    public class AtModel : EntityAccess<AtModel.ModelInfo>
+    public class AtModel : EntityAccess<AtModel.Info>
     {
-        public class ModelInfo : AccessInfo
+        public class Info : AccessInfo
         {
             public override AccessType Type => AccessType.Local;
 

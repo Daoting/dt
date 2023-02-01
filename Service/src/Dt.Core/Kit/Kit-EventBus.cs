@@ -74,12 +74,12 @@ namespace Dt.Core
 
         #region 本地事件
         /// <summary>
-        /// 发布本地事件，不等待
+        /// 发布本地事件
         /// </summary>
         /// <param name="p_event">事件内容</param>
-        public static void PublishEvent(IEvent p_event)
+        public static Task PublishEvent(IEvent p_event)
         {
-            GetService<LocalEventBus>().Publish(p_event);
+            return GetService<LocalEventBus>().Publish(p_event);
         }
         #endregion
     }

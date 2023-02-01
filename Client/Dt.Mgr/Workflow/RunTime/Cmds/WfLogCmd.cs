@@ -31,7 +31,7 @@ namespace Dt.Mgr.Workflow
             _info.RunCmd(OpenLog);
         }
 
-        Task OpenLog()
+        Task OpenLog(WfFormInfo p_info)
         {
             AtWf.ShowLog(_info.PrcInst.ID, _info.PrcDef.ID);
             return Task.CompletedTask;

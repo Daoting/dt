@@ -23,12 +23,12 @@ namespace Dt.UIDemo
 
         void OnPub(object sender, RoutedEventArgs e)
         {
-            Kit.PublishEvent(new TestEventData { Name = new Random().Next().ToString() });
+            _ = Kit.PublishEvent(new TestEventData { Name = new Random().Next().ToString() });
         }
 
         void OnPubMulti(object sender, RoutedEventArgs e)
         {
-            Kit.PublishEvent(new KesEvent { Name = new Random().Next().ToString() });
+            _ = Kit.PublishEvent(new KesEvent { Name = new Random().Next().ToString() });
         }
     }
 

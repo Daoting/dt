@@ -2,18 +2,21 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2022/8/4 13:04:15 创建
+* 日志: 2023-02-01 创建
 ******************************************************************************/
 #endregion
 
-namespace Dt.MgrDemo.Agent
+#region 引用命名
+#endregion
+
+namespace Dt.MgrDemo
 {
     /// <summary>
     /// 本地sqlite库，文件名 local.db
     /// </summary>
-    public class AtLocal : EntityAccess<AtLocal.LocalInfo>
+    public class AtLocal : EntityAccess<AtLocal.Info>
     {
-        public class LocalInfo : AccessInfo
+        public class Info : AccessInfo
         {
             public override AccessType Type => AccessType.Local;
 

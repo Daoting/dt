@@ -35,10 +35,10 @@ namespace Dt.Core.EventBus
         internal static readonly Dictionary<string, Type> EventHandlerTypes = new Dictionary<string, Type>();
 
         /// <summary>
-        /// 发布本地事件，不等待
+        /// 发布本地事件
         /// </summary>
         /// <param name="p_event">事件内容</param>
-        public async void Publish(IEvent p_event)
+        public async Task Publish(IEvent p_event)
         {
             Type tp;
             if (p_event == null || !EventHandlerTypes.TryGetValue(p_event.GetType().Name, out tp))

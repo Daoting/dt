@@ -15,9 +15,9 @@ namespace Dt.Core
     /// <summary>
     /// 本地sqlite状态库，At = Access To
     /// </summary>
-    public class AtState : EntityAccess<AtState.StateInfo>
+    public class AtState : EntityAccess<AtState.Info>
     {
-        public class StateInfo : AccessInfo
+        public class Info : AccessInfo
         {
             public override AccessType Type => AccessType.Local;
 

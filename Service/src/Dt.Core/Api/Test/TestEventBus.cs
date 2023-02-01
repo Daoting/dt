@@ -44,7 +44,7 @@ namespace Dt.Core
 
         public void LocalPublish()
         {
-            Kit.PublishEvent(new KesEvent());
+            _ = Kit.PublishEvent(new KesEvent());
         }
 
         public string TestLoadBalance()

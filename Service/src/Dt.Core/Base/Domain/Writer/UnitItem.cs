@@ -8,7 +8,6 @@
 
 #region 引用命名
 using System.Collections;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -31,12 +30,26 @@ namespace Dt.Core
         public bool IsDelete { get; set; }
 
         /// <summary>
+        /// 对于新增、修改的实体进行状态复位，因后续的发布领域事件、删除服务端缓存为异步，故单独处理
+        /// </summary>
+        public void AcceptChanges()
+        {
+            // 状态复位
+            if (!IsDelete)
+            {
+                foreach (var en in Data.Cast<Entity>())
+                {
+                    en.AcceptChanges();
+                }
+            }
+        }
+
+        /// <summary>
         /// 提交成功后的处理，对于每个实体：
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>
-        /// <para>3. 对于新增、修改的实体进行状态复位</para>
         /// </summary>
-        public async void OnCommited()
+        public async Task OnCommited()
         {
             foreach (var en in Data.Cast<Entity>())
             {
@@ -44,7 +57,10 @@ namespace Dt.Core
                 var ls = en.GetEvents();
                 if (ls != null && ls.Count > 0)
                 {
-                    ls.ForEach(Kit.PublishEvent);
+                    foreach (var ev in ls)
+                    {
+                        await Kit.PublishEvent(ev);
+                    }
                     // 发布完毕，清空领域事件
                     en.ClearEvents();
                 }
@@ -54,10 +70,6 @@ namespace Dt.Core
                 {
                     await Schema.CacheHandler.Remove(en);
                 }
-
-                // 状态复位
-                if (!IsDelete)
-                    en.AcceptChanges();
             }
         }
     }

@@ -249,7 +249,7 @@ namespace Dt.Mgr
         #endregion
 
         #region 外部方法
-        internal async void RunCmd(Func<Task> p_func)
+        internal async void RunCmd(Func<WfFormInfo, Task> p_func)
         {
             if (_locked)
                 return;
@@ -257,7 +257,7 @@ namespace Dt.Mgr
             try
             {
                 _locked = true;
-                await p_func();
+                await p_func(this);
             }
             finally
             {
