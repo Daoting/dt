@@ -31,7 +31,7 @@ namespace Dt.Mgr.Model
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<RoleObj>("角色-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<RoleX>("角色-编辑", new { id = p_id });
                 _win.UserList.Update(p_id);
                 _win.MenuList.Update(p_id);
                 _win.PrvList.Update(p_id);
@@ -52,7 +52,7 @@ namespace Dt.Mgr.Model
 
         async void Create()
         {
-            _fv.Data = await RoleObj.New();
+            _fv.Data = await RoleX.New();
 
             _win.UserList.Clear();
             _win.MenuList.Clear();
@@ -76,7 +76,7 @@ namespace Dt.Mgr.Model
 
         async void Save()
         {
-            var d = _fv.Data.To<RoleObj>();
+            var d = _fv.Data.To<RoleX>();
             bool isNew = d.IsAdded;
             if (await d.Save())
             {
@@ -92,7 +92,7 @@ namespace Dt.Mgr.Model
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<RoleObj>();
+            var d = _fv.Data.To<RoleX>();
             if (d == null)
                 return;
 

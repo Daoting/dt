@@ -134,11 +134,8 @@ namespace Dt.Core
             // 不包括继承的属性
             var props = p_type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
 
-            // 删除尾部Obj
-            var name = p_type.Name;
-            if (name.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
-                name = name.Substring(0, name.Length - 3);
-            
+            // 删除后缀 X
+            var name = p_type.Name.TrimEnd('X');
             TableSchema schema = new TableSchema(name);
             foreach (var p in props)
             {

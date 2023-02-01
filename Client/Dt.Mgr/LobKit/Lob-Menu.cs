@@ -138,7 +138,7 @@ namespace Dt.Mgr
             int maxFav = 8;
             if (_favMenus.Count < maxFav)
             {
-                var favMenu = await AtLob.Each<MenuFav>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
+                var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
                 foreach (var fav in favMenu)
                 {
                     // 过滤无权限的项
@@ -310,14 +310,14 @@ namespace Dt.Mgr
         /// <returns></returns>
         static async Task<List<long>> GetAllUserMenus()
         {
-            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='menu'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='menu'");
             if (cnt == 0)
             {
                 // 查询服务端
                 Dict dt = await AtCm.GetMenus(Kit.UserID);
 
                 // 记录版本号
-                var ver = new DataVersion(ID: "menu", Ver: dt.Str("ver"));
+                var ver = new DataVerX(ID: "menu", Ver: dt.Str("ver"));
                 await ver.Save(false);
 
                 // 清空旧数据

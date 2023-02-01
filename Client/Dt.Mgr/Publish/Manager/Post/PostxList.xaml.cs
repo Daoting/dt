@@ -69,11 +69,11 @@ namespace Dt.Mgr.Publish
         {
             if (string.IsNullOrEmpty(_query))
             {
-                _lv.Data = await AtCm.Query<PubPostObj>("文章-管理列表");
+                _lv.Data = await AtCm.Query<PubPostX>("文章-管理列表");
             }
             else
             {
-                _lv.Data = await AtCm.Query<PubPostObj>("文章-模糊查询", new { input = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<PubPostX>("文章-模糊查询", new { input = $"%{_query}%" });
             }
         }
         #endregion

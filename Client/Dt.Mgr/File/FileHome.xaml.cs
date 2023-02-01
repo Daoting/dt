@@ -51,7 +51,7 @@ namespace Dt.Mgr.Files
         {
             Kit.RunAsync(async () =>
             {
-                var ls = await AtLob.Each<ReadFileHistory>("select info from ReadFileHistory order by LastReadTime desc limit 20");
+                var ls = await AtLob.Each<ReadFileHistoryX>("select info from ReadFileHistory order by LastReadTime desc limit 20");
                 StringBuilder sb = new StringBuilder();
                 foreach (var file in ls)
                 {

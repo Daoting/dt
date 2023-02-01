@@ -20,19 +20,19 @@ namespace Dt.Mgr.Workflow
     /// </summary>
     public sealed partial class WfTrsForm : UserControl
     {
-        Table<WfdTrsObj> _trss;
-        WfdTrsObj _curTrs;
+        Table<WfdTrsX> _trss;
+        WfdTrsX _curTrs;
 
         public WfTrsForm()
         {
             InitializeComponent();
         }
 
-        public void LoadData(Table<WfdTrsObj> p_trss, WfdTrsObj p_trs)
+        public void LoadData(Table<WfdTrsX> p_trss, WfdTrsX p_trs)
         {
             _trss = p_trss;
             _curTrs = p_trs;
-            _cbBack.IsChecked = (from item in _trss.OfType<WfdTrsObj>()
+            _cbBack.IsChecked = (from item in _trss.OfType<WfdTrsX>()
                                  where item.TrsID == _curTrs.ID
                                  select item).Any();
         }
@@ -41,7 +41,7 @@ namespace Dt.Mgr.Workflow
         {
             if (_cbBack.IsChecked == true)
             {
-                WfdTrsObj trs = await WfdTrsObj.New(
+                WfdTrsX trs = await WfdTrsX.New(
                     PrcID: _curTrs.PrcID,
                     IsRollback: true,
                     SrcAtvID: _curTrs.TgtAtvID,
@@ -51,7 +51,7 @@ namespace Dt.Mgr.Workflow
             }
             else
             {
-                var trs = (from item in _trss.OfType<WfdTrsObj>()
+                var trs = (from item in _trss.OfType<WfdTrsX>()
                            where item.TrsID == _curTrs.ID
                            select item).FirstOrDefault();
                 if (trs != null)

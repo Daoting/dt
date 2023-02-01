@@ -69,11 +69,11 @@ namespace Dt.MgrDemo.单实体
         {
             if (Clause == null)
             {
-                _lv.Data = await 基础Obj.Query();
+                _lv.Data = await 基础X.Query();
             }
             else
             {
-                _lv.Data = await 基础Obj.Query(Clause.Where, Clause.Params);
+                _lv.Data = await 基础X.Query(Clause.Where, Clause.Params);
             }
         }
         #endregion

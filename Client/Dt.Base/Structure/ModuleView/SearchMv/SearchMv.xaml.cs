@@ -179,16 +179,16 @@ namespace Dt.Base
         #region 搜索历史
         async void LoadHisItems()
         {
-            _lvHis.Data = await AtState.Query<SearchHistory>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
+            _lvHis.Data = await AtState.Query<SearchHistoryX>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
         }
 
         async void SaveCookie(string p_text)
         {
             _lastText = p_text;
-            var sh = await SearchHistory.First("BaseUri='{_baseUri}' and Content='{p_text}'");
+            var sh = await SearchHistoryX.First("BaseUri='{_baseUri}' and Content='{p_text}'");
             if (sh == null)
             {
-                SearchHistory his = new SearchHistory(BaseUri: _baseUri, Content: p_text);
+                SearchHistoryX his = new SearchHistoryX(BaseUri: _baseUri, Content: p_text);
                 await his.Save(false);
                 LoadHisItems();
             }
@@ -202,12 +202,12 @@ namespace Dt.Base
 
         void OnHisClick(object sender, ItemClickArgs e)
         {
-            OnSearch(e.Data.To<SearchHistory>().Content);
+            OnSearch(e.Data.To<SearchHistoryX>().Content);
         }
 
         async void OnDelHis(object sender, RoutedEventArgs e)
         {
-            var his = ((LvItem)((Button)sender).DataContext).Data.To<SearchHistory>();
+            var his = ((LvItem)((Button)sender).DataContext).Data.To<SearchHistoryX>();
             await his.Delete(false);
             LoadHisItems();
         }

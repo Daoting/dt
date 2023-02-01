@@ -7,9 +7,9 @@
     <a:Fv x:Name="_fv">
         <a:CBar Title="创建表" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="增加新实体" Click="OnCreateTable" />
-            <Button Content="更新实体" Click="OnCreateTableByName" />
-            <Button Content="由本地库表名创建" Click="OnCreateTableByLocalName" />
+            <Button Content="增加新实体" Click="OnInsert" />
+            <Button Content="更新实体" Click="OnUpdate" />
+            
         </StackPanel>
         
         <a:CFree RowSpan="5" ShowTitle="False">

@@ -30,15 +30,15 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<RoleObj>("角色-所有");
+                _lv.Data = await AtCm.Query<RoleX>("角色-所有");
             }
             else if (_query == "#系统角色")
             {
-                _lv.Data = await AtCm.Query<RoleObj>("角色-系统角色");
+                _lv.Data = await AtCm.Query<RoleX>("角色-系统角色");
             }
             else
             {
-                _lv.Data = await AtCm.Query<RoleObj>("角色-模糊查询", new { name = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<RoleX>("角色-模糊查询", new { name = $"%{_query}%" });
             }
         }
 

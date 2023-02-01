@@ -36,7 +36,7 @@ namespace Dt.Mgr.Publish
 
             if (p_id != null)
             {
-                _fv.Data = await PubKeywordObj.GetByID(p_id);
+                _fv.Data = await PubKeywordX.GetByID(p_id);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Dt.Mgr.Publish
 
         void Create()
         {
-            _fv.Data = PubKeywordObj.New();
+            _fv.Data = PubKeywordX.New();
         }
 
         void OnSave(object sender, Mi e)
@@ -66,7 +66,7 @@ namespace Dt.Mgr.Publish
 
         async void Save()
         {
-            var d = _fv.Data.To<PubKeywordObj>();
+            var d = _fv.Data.To<PubKeywordX>();
             if (d == null)
                 return;
 
@@ -86,7 +86,7 @@ namespace Dt.Mgr.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<PubKeywordObj>();
+            var d = _fv.Data.To<PubKeywordX>();
             if (d == null)
                 return;
 

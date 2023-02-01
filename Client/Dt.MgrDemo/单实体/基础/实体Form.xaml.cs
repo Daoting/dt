@@ -32,7 +32,7 @@ namespace Dt.MgrDemo.单实体
 
             if (p_id > 0)
             {
-                _fv.Data = await 基础Obj.GetByID(p_id);
+                _fv.Data = await 基础X.GetByID(p_id);
     }
             else
             {
@@ -47,7 +47,7 @@ namespace Dt.MgrDemo.单实体
 
         async void Create()
         {
-            _fv.Data = await 基础Obj.New();
+            _fv.Data = await 基础X.New();
 }
 
         void OnSave(object sender, Mi e)
@@ -62,7 +62,7 @@ namespace Dt.MgrDemo.单实体
 
         async void Save()
         {
-            var d = _fv.Data.To<基础Obj> ();
+            var d = _fv.Data.To<基础X> ();
             if (await d.Save())
             {
                 _win.List.Update();
@@ -71,7 +71,7 @@ namespace Dt.MgrDemo.单实体
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<基础Obj> ();
+            var d = _fv.Data.To<基础X> ();
             if (d == null)
                 return;
 

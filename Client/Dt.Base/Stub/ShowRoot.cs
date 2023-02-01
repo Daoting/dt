@@ -71,7 +71,7 @@ namespace Dt.Base
             p_win.NaviToHome();
 
             // 自启动
-            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await Cookie.GetAutoStart();
+            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await CookieX.GetAutoStart();
             if (autoStart != null)
             {
                 // 用户设置的自启动
@@ -83,7 +83,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    Cookie.DelAutoStart();
+                    CookieX.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;
@@ -105,7 +105,7 @@ namespace Dt.Base
             desktop.HomeWin = p_win;
 
             // 自启动
-            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await Cookie.GetAutoStart();
+            AutoStartInfo autoStart = _autoStartOnce != null ? _autoStartOnce : await CookieX.GetAutoStart();
             if (autoStart != null)
             {
                 // 用户设置的自启动
@@ -117,7 +117,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    Cookie.DelAutoStart();
+                    CookieX.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;

@@ -7,18 +7,15 @@
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace $rootnamespace$
 {
-	public partial class $clsname$ : DataProvider<$clsname$.LOB>
+	public partial class $clsname$ : EntityAccess<$clsname$.Info>
 	{
-        /// <summary>
-        /// 服务名称
-        /// </summary>
-        public class LOB { }
+        public class Info : AccessInfo
+        {
+            public override string Name => "svc";
+        }
 	}
 }

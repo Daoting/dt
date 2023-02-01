@@ -24,12 +24,12 @@ namespace Dt.Mgr.Chat
         /// <summary>
         /// 增加一条聊天信息事件
         /// </summary>
-        public event Action<LetterObj> NewLetter;
+        public event Action<LetterX> NewLetter;
 
         /// <summary>
         /// 收到撤回消息事件
         /// </summary>
-        public event Action<LetterObj> UndoLetter;
+        public event Action<LetterX> UndoLetter;
 
         /// <summary>
         /// 未读消息状态变化事件，参数为对方的userid
@@ -50,7 +50,7 @@ namespace Dt.Mgr.Chat
             // 撤回消息
             if (p_letter.LetterType == LetterType.Undo)
             {
-                var letter = await LetterObj.First("MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", Kit.UserID } });
+                var letter = await LetterX.First("MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", Kit.UserID } });
                 if (letter != null)
                 {
                     // 删除
@@ -61,7 +61,7 @@ namespace Dt.Mgr.Chat
             }
 
             // 新消息
-            var l = new LetterObj(
+            var l = new LetterX(
                 LoginID: Kit.UserID,
                 MsgID: p_letter.ID,
                 OtherID: p_letter.SenderID,
@@ -123,7 +123,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_content"></param>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        public async Task<LetterObj> SendLetter(
+        public async Task<LetterX> SendLetter(
             long p_recvID,
             string p_recvName,
             string p_content,
@@ -143,7 +143,7 @@ namespace Dt.Mgr.Chat
             bool isOnline = await SendLetter(p_recvID, li);
 
             // 本地记录
-            LetterObj l = new LetterObj(
+            LetterX l = new LetterX(
                 LoginID: Kit.UserID,
                 MsgID: li.ID,
                 OtherID: p_recvID,
@@ -173,7 +173,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_action"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public Task<LetterObj> SendLink(
+        public Task<LetterX> SendLink(
             long p_recvID,
             string p_recvName,
             string p_title,
@@ -205,7 +205,7 @@ namespace Dt.Mgr.Chat
         /// </summary>
         /// <param name="p_letter">待撤消息</param>
         /// <returns></returns>
-        public async Task<bool> SendUndoLetter(LetterObj p_letter)
+        public async Task<bool> SendUndoLetter(LetterX p_letter)
         {
             if (p_letter == null)
                 return false;
@@ -219,7 +219,7 @@ namespace Dt.Mgr.Chat
                 SendTime = Kit.Now
             };
             await SendLetter(p_letter.OtherID, li);
-            await LetterObj.DelByID(p_letter.ID, true, false);
+            await LetterX.DelByID(p_letter.ID, true, false);
             return true;
         }
 
@@ -253,7 +253,7 @@ namespace Dt.Mgr.Chat
                 return;
 
             // 暂时取所有，后续增加好友功能
-            var tbl = await AtCm.Query<ChatMemberObj>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
+            var tbl = await AtCm.Query<ChatMemberX>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
 
             // 将新列表缓存到本地库
             await _ea.Exec("delete from ChatMember");
@@ -267,14 +267,14 @@ namespace Dt.Mgr.Chat
             }
 
             // 记录刷新时间
-            await Cookie.Save(_refreshKey, Kit.Now.ToString());
+            await CookieX.Save(_refreshKey, Kit.Now.ToString());
         }
 
         async Task<bool> NeedRefresh()
         {
             // 超过10小时需要刷新
             bool refresh = true;
-            string val = await Cookie.Get(_refreshKey);
+            string val = await CookieX.Get(_refreshKey);
             if (!string.IsNullOrEmpty(val) && DateTime.TryParse(val, out var last))
                 refresh = (Kit.Now - last).TotalHours >= 10;
             return refresh;
@@ -286,7 +286,7 @@ namespace Dt.Mgr.Chat
         /// 显示未读提示
         /// </summary>
         /// <param name="p_letter"></param>
-        static void ShowUnreadNotify(LetterObj p_letter)
+        static void ShowUnreadNotify(LetterX p_letter)
         {
             // 避免过多
             if (Kit.NotifyList.Count > 5)
@@ -298,14 +298,14 @@ namespace Dt.Mgr.Chat
             notify.Link = "查看内容";
             notify.LinkCallback = (e) =>
             {
-                LetterObj l = (LetterObj)e.Tag;
+                LetterX l = (LetterX)e.Tag;
                 Kit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
 
                 // 关闭所有对方为同一人的提示
                 var list = new List<NotifyInfo>();
                 foreach (var ni in Kit.NotifyList)
                 {
-                    if (ni.Tag is LetterObj letter && letter.OtherID == l.OtherID)
+                    if (ni.Tag is LetterX letter && letter.OtherID == l.OtherID)
                         list.Add(ni);
                 }
                 if (list.Count > 0)

@@ -32,7 +32,7 @@ namespace Dt.Mgr.Model
         public async void Update(long p_id)
         {
             if (await _fv.DiscardChanges())
-                _fv.Data = await AtCm.First<RptObj>("报表-ID", new { id = p_id });
+                _fv.Data = await AtCm.First<RptX>("报表-ID", new { id = p_id });
         }
 
         public void Clear()
@@ -42,7 +42,7 @@ namespace Dt.Mgr.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (await _fv.Data.To<RptObj>().Save())
+            if (await _fv.Data.To<RptX>().Save())
             {
                 _win.List.Update();
                 LobKit.PromptForUpdateModel();
@@ -51,13 +51,13 @@ namespace Dt.Mgr.Model
 
         async void OnAdd(object sender, Mi e)
         {
-            _fv.Data = await RptObj.New(
+            _fv.Data = await RptX.New(
                 Name: "新报表");
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<RptObj>();
+            var d = _fv.Data.To<RptX>();
             if (d == null)
                 return;
 
@@ -73,7 +73,7 @@ namespace Dt.Mgr.Model
                 return;
             }
 
-            if (await RptObj.DelByID(d.ID))
+            if (await RptX.DelByID(d.ID))
             {
                 Clear();
                 _win.List.Update();
@@ -83,7 +83,7 @@ namespace Dt.Mgr.Model
 
         async void OnEditTemp(object sender, RoutedEventArgs e)
         {
-            RptObj rpt = _fv.Data.To<RptObj>();
+            RptX rpt = _fv.Data.To<RptX>();
             if (rpt != null)
             {
                 if (rpt.IsAdded || rpt.IsChanged)

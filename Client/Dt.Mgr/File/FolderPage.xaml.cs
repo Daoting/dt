@@ -62,9 +62,9 @@ namespace Dt.Mgr.Files
             {
                 // 记录到本地已读文件目录
                 var row = ((LvItem)e.DataContext).Row;
-                var his = await ReadFileHistory.GetByID(row.ID);
+                var his = await ReadFileHistoryX.GetByID(row.ID);
                 if (his == null)
-                    his = new ReadFileHistory(ID: row.ID, Info: row.Str("info"));
+                    his = new ReadFileHistoryX(ID: row.ID, Info: row.Str("info"));
                 his.LastReadTime = Kit.Now;
                 if (await his.Save(false))
                     _fileMgr.Setting.OnOpenedFile?.Invoke();
@@ -87,7 +87,7 @@ namespace Dt.Mgr.Files
             foreach (var file in files)
             {
                 Row row = new Row();
-                row.AddCell("id", await FilePubObj.NewID());
+                row.AddCell("id", await FilePubX.NewID());
                 row.AddCell("parentid", _fileMgr.FolderID);
                 row.AddCell("name", file.DisplayName);
                 row.AddCell("isfolder", false);

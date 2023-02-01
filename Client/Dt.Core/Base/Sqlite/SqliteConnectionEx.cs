@@ -724,11 +724,8 @@ namespace Dt.Core.Sqlite
         {
             TableMapping map = GetMapping(p_type);
 
-            // É¾³ýÎ²²¿Obj
-            var tblName = p_type.Name;
-            if (tblName.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
-                tblName = tblName.Substring(0, tblName.Length - 3);
-
+            // É¾³ýºó×º X
+            var tblName = p_type.Name.TrimEnd('X');
             bool exist = GetScalarSync<int>($"SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{tblName}'") > 0;
             if (exist)
             {
@@ -819,11 +816,8 @@ namespace Dt.Core.Sqlite
         /// <returns></returns>
         internal static TableMapping GetMapping(Type type)
         {
-            // É¾³ýÎ²²¿Obj
-            var tblName = type.Name;
-            if (tblName.EndsWith("Obj", StringComparison.OrdinalIgnoreCase))
-                tblName = tblName.Substring(0, tblName.Length - 3);
-
+            // É¾³ýºó×º X
+            var tblName = type.Name.TrimEnd('X');
             return _mappings.GetOrAdd(tblName, (name) => new TableMapping(type));
         }
 

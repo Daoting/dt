@@ -21,6 +21,5 @@ namespace Dt
         FvCall,
         CListEx,
         Agent,
-        Api
     }
 }

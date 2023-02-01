@@ -124,7 +124,7 @@ namespace Dt.Cm
         {
             Throw.IfEmpty(p_paramID, "参数名不可为空！");
 
-            var old = new UserParamsObj(
+            var old = new UserParamsX(
                 UserID: p_userID,
                 ParamID: p_paramID);
             await Delete(old);
@@ -133,7 +133,7 @@ namespace Dt.Cm
             if (defVal != p_value)
             {
                 // 和默认值不同
-                var up = new UserParamsObj(
+                var up = new UserParamsX(
                     UserID: p_userID,
                     ParamID: p_paramID,
                     Value: p_value,
@@ -200,8 +200,8 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<UserRoleObj> ls = (from id in p_roleIDs
-                                    select new UserRoleObj(p_userID, id)).ToList();
+            List<UserRoleX> ls = (from id in p_roleIDs
+                                    select new UserRoleX(p_userID, id)).ToList();
             if (await ls.Delete())
             {
                 await GetVerCache().Delete(p_userID);
@@ -222,8 +222,8 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<UserRoleObj> ls = (from id in p_userIDs
-                                    select new UserRoleObj(id, p_roleID)).ToList();
+            List<UserRoleX> ls = (from id in p_userIDs
+                                    select new UserRoleX(id, p_roleID)).ToList();
             if (await ls.Delete())
             {
                 await GetVerCache().BatchDelete(p_userIDs);
@@ -243,13 +243,13 @@ namespace Dt.Cm
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
-            List<UserRoleObj> ls = new List<UserRoleObj>();
+            List<UserRoleX> ls = new List<UserRoleX>();
             foreach (var rid in p_roleIDs)
             {
                 // 任何人不需要关联
                 if (rid != 1)
                 {
-                    ls.Add(new UserRoleObj(p_userID, rid));
+                    ls.Add(new UserRoleX(p_userID, rid));
                 }
             }
 
@@ -272,10 +272,10 @@ namespace Dt.Cm
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
-            List<UserRoleObj> ls = new List<UserRoleObj>();
+            List<UserRoleX> ls = new List<UserRoleX>();
             foreach (var uid in p_userIDs)
             {
-                ls.Add(new UserRoleObj(uid, p_roleID));
+                ls.Add(new UserRoleX(uid, p_roleID));
             }
 
             if (!await ls.Save())
@@ -292,7 +292,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteRole(long p_roleID)
         {
-            if (await new RoleObj(p_roleID).Delete())
+            if (await new RoleX(p_roleID).Delete())
             {
                 var ls = await _ea.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);

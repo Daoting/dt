@@ -70,7 +70,7 @@ namespace Dt.Mgr.Files
 
         public Task<bool> SaveFile(Row p_row)
         {
-            FilePubObj pf = new FilePubObj(
+            FilePubX pf = new FilePubX(
                     ID: p_row.ID,
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
@@ -83,10 +83,10 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> SaveFolder(long p_id, string p_name)
         {
-            FilePubObj pf;
+            FilePubX pf;
             if (p_id == -1)
             {
-                pf = await FilePubObj.New(
+                pf = await FilePubX.New(
                     ParentID: FolderID,
                     Name: p_name,
                     IsFolder: true,
@@ -94,7 +94,7 @@ namespace Dt.Mgr.Files
             }
             else
             {
-                pf = new FilePubObj(ID: p_id);
+                pf = new FilePubX(ID: p_id);
                 pf.IsAdded = false;
                 pf["name"] = p_name;
             }
@@ -103,7 +103,7 @@ namespace Dt.Mgr.Files
 
         public async Task<bool> Delete(IEnumerable<Row> p_rows)
         {
-            var ls = new List<FilePubObj>();
+            var ls = new List<FilePubX>();
             foreach (var row in p_rows)
             {
                 if (row.Bool("IsFolder"))
@@ -116,17 +116,17 @@ namespace Dt.Mgr.Files
                     }
                 }
 
-                ls.Add(new FilePubObj(ID: row.ID));
+                ls.Add(new FilePubX(ID: row.ID));
             }
             return await ls.Delete();
         }
 
         public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
         {
-            var ls = new List<FilePubObj>();
+            var ls = new List<FilePubX>();
             foreach (var row in p_files)
             {
-                var pf = new FilePubObj(ID: row.ID);
+                var pf = new FilePubX(ID: row.ID);
                 pf.IsAdded = false;
                 pf["ParentID"] = p_folderID;
                 ls.Add(pf);

@@ -31,17 +31,17 @@ namespace Dt.Mgr.Model
             if (string.IsNullOrEmpty(p_id))
                 OnAdd(null, null);
             else
-                _fv.Data = await ParamsObj.GetByID(p_id);
+                _fv.Data = await ParamsX.GetByID(p_id);
         }
         
         void OnAdd(object sender, Mi e)
         {
-            _fv.Data = new ParamsObj(ID: "新参数");
+            _fv.Data = new ParamsX(ID: "新参数");
         }
 
         async void OnSave(object sender, Mi e)
         {
-            var par = _fv.Data.To<ParamsObj>();
+            var par = _fv.Data.To<ParamsX>();
             if (par == null || (!par.IsAdded && !par.IsChanged))
                 return;
 
@@ -56,7 +56,7 @@ namespace Dt.Mgr.Model
 
         async void OnDel(object sender, Mi e)
         {
-            var par = _fv.Data.To<ParamsObj>();
+            var par = _fv.Data.To<ParamsX>();
             if (par == null)
                 return;
 
@@ -100,7 +100,7 @@ namespace Dt.Mgr.Model
 
         void OnUserSetting(object sender, Mi e)
         {
-            var par = _fv.Data.To<ParamsObj>();
+            var par = _fv.Data.To<ParamsX>();
             if (par != null)
                 new UserParamsDlg().Show(par.ID);
         }

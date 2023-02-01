@@ -25,20 +25,20 @@ namespace Dt.Mgr.Workflow
             InitializeComponent();
         }
 
-        public void LoadNode(SNode p_node, Table<WfdAtvRoleObj> p_atvRoles)
+        public void LoadNode(SNode p_node, Table<WfdAtvRoleX> p_atvRoles)
         {
             if (p_node.Tag != _fv.Data)
             {
                 _propBox.LoadNode(p_node);
                 _fv.Data = p_node.Tag;
                 _atvRole.LoadRoles(p_node.ID, p_atvRoles);
-                LoadExecDrop((WfdAtvObj)p_node.Tag);
+                LoadExecDrop((WfdAtvX)p_node.Tag);
             }
         }
 
-        void LoadExecDrop(WfdAtvObj p_atv)
+        void LoadExecDrop(WfdAtvX p_atv)
         {
-            var items = from item in p_atv.Table.OfType<WfdAtvObj>()
+            var items = from item in p_atv.Table.OfType<WfdAtvX>()
                         where item != p_atv && item.Type != WfdAtvType.Sync && item.Type != WfdAtvType.Finish
                         select item;
             Nl<IDStr> ls = new Nl<IDStr>();

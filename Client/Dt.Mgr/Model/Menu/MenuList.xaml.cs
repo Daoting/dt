@@ -31,9 +31,9 @@ namespace Dt.Mgr.Model
         public async void Update()
         {
             // 记录已选择的节点
-            var m = _tv.Selected<MenuObj>();
+            var m = _tv.Selected<MenuX>();
             long id = m == null ? -1 : m.ID;
-            _tv.Data = await AtCm.Query<MenuObj>("菜单-完整树");
+            _tv.Data = await AtCm.Query<MenuX>("菜单-完整树");
 
             object select = null;
             if (id > 0)
@@ -47,7 +47,7 @@ namespace Dt.Mgr.Model
 
         protected override void OnInit(object p_params)
         {
-            MenuObj m = new MenuObj(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
+            MenuX m = new MenuX(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
             m.AddCell("parentname", "");
             _tv.FixedRoot = m;
 
@@ -62,27 +62,27 @@ namespace Dt.Mgr.Model
 
         void OnMoveUp(object sender, Mi e)
         {
-            var src = e.Data.To<MenuObj>();
+            var src = e.Data.To<MenuX>();
             if (src.ID == 0)
                 return;
 
-            var tgt = _tv.GetTopBrother(src) as MenuObj;
+            var tgt = _tv.GetTopBrother(src) as MenuX;
             if (tgt != null)
                 Exchange(src, tgt);
         }
 
         void OnMoveDown(object sender, Mi e)
         {
-            var src = e.Data.To<MenuObj>();
+            var src = e.Data.To<MenuX>();
             if (src.ID == 0)
                 return;
 
-            var tgt = _tv.GetFollowingBrother(src) as MenuObj;
+            var tgt = _tv.GetFollowingBrother(src) as MenuX;
             if (tgt != null)
                 Exchange(src, tgt);
         }
 
-        async void Exchange(MenuObj src, MenuObj tgt)
+        async void Exchange(MenuX src, MenuX tgt)
         {
             if (await ExchangeDispidx(src, tgt))
             {

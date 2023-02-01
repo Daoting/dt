@@ -36,7 +36,7 @@ namespace Dt.Mgr.Chat
         #endregion
 
         #region 成员变量
-        ChatMemberObj _other;
+        ChatMemberX _other;
         Menu _msgMenu;
         Menu _fileMenu;
         #endregion
@@ -64,7 +64,7 @@ namespace Dt.Mgr.Chat
             set { SetValue(OtherIDProperty, value); }
         }
 
-        internal ChatMemberObj Other => _other;
+        internal ChatMemberX Other => _other;
 
         internal Lv Lv => _lv;
         #endregion
@@ -79,7 +79,7 @@ namespace Dt.Mgr.Chat
         {
             if (string.IsNullOrEmpty(p_otherName))
             {
-                var other = await ChatMemberObj.GetByID(p_otherID);
+                var other = await ChatMemberX.GetByID(p_otherID);
                 if (other != null && !string.IsNullOrEmpty(other.Name))
                     p_otherName = other.Name;
                 else
@@ -136,17 +136,17 @@ namespace Dt.Mgr.Chat
             if (OtherID < 0)
                 return;
 
-            _other = await ChatMemberObj.GetByID(OtherID);
+            _other = await ChatMemberX.GetByID(OtherID);
             if (_other == null)
             {
                 // 初次打开，还未下载好友列表
                 await ChatDs.Me.Refresh();
-                _other = await ChatMemberObj.GetByID(OtherID);
+                _other = await ChatMemberX.GetByID(OtherID);
 
                 // 不在好友列表时，创建虚拟
                 if (_other == null)
                 {
-                    _other = new ChatMemberObj(
+                    _other = new ChatMemberX(
                         ID: OtherID,
                         Name: OtherID.ToString(),
                         Photo: "photo/profilephoto.jpg");
@@ -178,8 +178,8 @@ namespace Dt.Mgr.Chat
             if (start < 0)
                 limit = cnt - e.PageNo * e.PageSize;
 
-            Nl<LetterObj> data = new Nl<LetterObj>();
-            var ls = await AtLob.Each<LetterObj>($"select * from Letter where otherid={OtherID} and loginid={Kit.UserID} order by stime limit {limit} offset {start}");
+            Nl<LetterX> data = new Nl<LetterX>();
+            var ls = await AtLob.Each<LetterX>($"select * from Letter where otherid={OtherID} and loginid={Kit.UserID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
                 var photo = l.IsReceived ? _other.Photo : Kit.UserPhoto;
@@ -197,7 +197,7 @@ namespace Dt.Mgr.Chat
         /// 增加聊天消息事件
         /// </summary>
         /// <param name="p_letter"></param>
-        void OnNewLetter(LetterObj p_letter)
+        void OnNewLetter(LetterX p_letter)
         {
             // 是否为当前聊天人
             if (p_letter.OtherID != OtherID)
@@ -222,14 +222,14 @@ namespace Dt.Mgr.Chat
         /// 收到撤回消息
         /// </summary>
         /// <param name="p_letter"></param>
-        void OnRecvUndoLetter(LetterObj p_letter)
+        void OnRecvUndoLetter(LetterX p_letter)
         {
             if (p_letter.OtherID != OtherID)
                 return;
 
             for (int i = 0; i < _lv.Data.Count; i++)
             {
-                var l = (LetterObj)_lv.Data[i];
+                var l = (LetterX)_lv.Data[i];
                 if (l.ID == p_letter.ID)
                 {
                     _lv.Data.RemoveAt(i);
@@ -255,7 +255,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_files"></param>
         public async void SendFiles(List<FileData> p_files)
         {
-            LetterObj l = new LetterObj
+            LetterX l = new LetterX
             {
                 OtherID = OtherID,
                 OtherName = _other.Name,
@@ -311,15 +311,15 @@ namespace Dt.Mgr.Chat
         #region 菜单
         void OnMsgTapped(object sender, TappedRoutedEventArgs e)
         {
-            ShowMsgMenu((LetterObj)((LvItem)((Dot)sender).DataContext).Data, e);
+            ShowMsgMenu((LetterX)((LvItem)((Dot)sender).DataContext).Data, e);
         }
 
         void OnMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ShowMsgMenu((LetterObj)((LvItem)((Dot)sender).DataContext).Data, e);
+            ShowMsgMenu((LetterX)((LvItem)((Dot)sender).DataContext).Data, e);
         }
 
-        void ShowMsgMenu(LetterObj p_letter, RoutedEventArgs e)
+        void ShowMsgMenu(LetterX p_letter, RoutedEventArgs e)
         {
             if (_msgMenu == null)
             {
@@ -365,7 +365,7 @@ namespace Dt.Mgr.Chat
 
         void OnCopyMsg(object sender, Mi e)
         {
-            var l = (LetterObj)e.DataContext;
+            var l = (LetterX)e.DataContext;
             DataPackage data = new DataPackage();
             data.SetText(l.Content);
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
@@ -373,7 +373,7 @@ namespace Dt.Mgr.Chat
 
         async void OnUndoMsg(object sender, Mi e)
         {
-            var l = (LetterObj)e.DataContext;
+            var l = (LetterX)e.DataContext;
             if ((Kit.Now - l.STime).TotalMinutes > 2)
             {
                 Kit.Warn("超过2分钟无法撤回");
@@ -386,14 +386,14 @@ namespace Dt.Mgr.Chat
 
         void OnDelMsg(object sender, Mi e)
         {
-            var l = (LetterObj)e.DataContext;
+            var l = (LetterX)e.DataContext;
             AtLob.Exec($"delete from Letter where ID={l.ID}");
             _lv.Data.Remove(l);
         }
 
         void OnShareMsg(object sender, Mi e)
         {
-            _ = Kit.ShareText(((LetterObj)e.DataContext).Content);
+            _ = Kit.ShareText(((LetterX)e.DataContext).Content);
         }
 
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -441,7 +441,7 @@ namespace Dt.Mgr.Chat
             }
 
             _fileMenu.DataContext = item;
-            LetterObj letter = (LetterObj)((LvItem)p_fileList.DataContext).Data;
+            LetterX letter = (LetterX)((LvItem)p_fileList.DataContext).Data;
             _fileMenu["删除"].DataContext = letter;
             mi = _fileMenu["撤回"];
             if (letter.IsReceived)

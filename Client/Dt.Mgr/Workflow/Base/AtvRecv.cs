@@ -24,7 +24,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 获取设置活动定义
         /// </summary>
-        public WfdAtvObj Def { get; set; }
+        public WfdAtvX Def { get; set; }
 
         /// <summary>
         /// 获取设置是否按角色接收
@@ -71,7 +71,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 同步活动定义
         /// </summary>
-        public WfdAtvObj SyncDef { get; set; }
+        public WfdAtvX SyncDef { get; set; }
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 结束活动
         /// </summary>
-        public WfdAtvObj Def { get; set; }
+        public WfdAtvX Def { get; set; }
 
         /// <summary>
         /// 是否选择结束活动

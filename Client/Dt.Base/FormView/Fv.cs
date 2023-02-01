@@ -490,7 +490,7 @@ namespace Dt.Base
                 return null;
 
             string path = $"{BaseUri.AbsolutePath}+{Name}+{cell.ID}";
-            var cl = await CellLastVal.GetByID(path);
+            var cl = await CellLastValX.GetByID(path);
             return cl == null || string.IsNullOrEmpty(cl.Val) ? "" : cl.Val;
         }
 

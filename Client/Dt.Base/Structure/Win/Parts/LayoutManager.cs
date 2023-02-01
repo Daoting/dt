@@ -59,7 +59,7 @@ namespace Dt.Base.Docking
         public async void LoadDefaultLayout()
         {
             if (AllowSaveLayout())
-                await DockLayout.DelByID(_owner.BaseUri.AbsolutePath);
+                await DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath);
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -76,9 +76,9 @@ namespace Dt.Base.Docking
             Kit.RunAsync(async () =>
             {
                 var xml = WriteXml();
-                var cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath);
+                var cookie = await DockLayoutX.GetByID(_owner.BaseUri.AbsolutePath);
                 if (cookie == null)
-                    cookie = new DockLayout(_owner.BaseUri.AbsolutePath, xml);
+                    cookie = new DockLayoutX(_owner.BaseUri.AbsolutePath, xml);
                 else
                     cookie.Layout = xml;
                 await cookie.Save(false);
@@ -117,9 +117,9 @@ namespace Dt.Base.Docking
             if (_fitCols == -1)
             {
                 // 宽度足够，加载历史布局或默认布局
-                DockLayout cookie;
+                DockLayoutX cookie;
                 if (AllowSaveLayout()
-                    && (cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath)) != null
+                    && (cookie = await DockLayoutX.GetByID(_owner.BaseUri.AbsolutePath)) != null
                     && ApplyLayout(cookie.Layout))
                 {
                     _owner.AllowResetLayout = true;
@@ -171,7 +171,7 @@ namespace Dt.Base.Docking
             SaveDefaultXml();
             if (AllowSaveLayout())
             {
-                DockLayout cookie = await DockLayout.GetByID(_owner.BaseUri.AbsolutePath);
+                DockLayoutX cookie = await DockLayoutX.GetByID(_owner.BaseUri.AbsolutePath);
                 if (cookie != null)
                 {
                     // 加载历史布局
@@ -526,7 +526,7 @@ namespace Dt.Base.Docking
             {
                 succ = false;
                 if (AllowSaveLayout())
-                    _ = DockLayout.DelByID(_owner.BaseUri.AbsolutePath, false);
+                    _ = DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath, false);
             }
             finally
             {

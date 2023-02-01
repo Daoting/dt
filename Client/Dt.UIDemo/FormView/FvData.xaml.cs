@@ -21,12 +21,12 @@ namespace Dt.UIDemo
 
         void OnNewLocal(object sender, Mi e)
         {
-            _fv1.Data = new Cookie("键名");
+            _fv1.Data = new CookieX("键名");
         }
 
         async void OnLocalSave(object sender, Mi e)
         {
-            if (await ((Cookie)_fv1.Data).Save(false))
+            if (await ((CookieX)_fv1.Data).Save(false))
             {
                 _fv1.AcceptChanges();
                 Kit.Msg("本地库保存成功！");
@@ -39,7 +39,7 @@ namespace Dt.UIDemo
 
         async void OnQueryLocal(object sender, Mi e)
         {
-            var tbl = await AtState.Query<Cookie>("select * from Cookie limit 1");
+            var tbl = await AtState.Query<CookieX>("select * from Cookie limit 1");
             if (tbl.Count > 0)
                 _fv1.Data = tbl[0];
             else
@@ -50,7 +50,7 @@ namespace Dt.UIDemo
         {
             if (await Kit.Confirm("确认要删除码？"))
             {
-                if (await ((Cookie)_fv1.Data).Delete())
+                if (await ((CookieX)_fv1.Data).Delete())
                     _fv1.Data = null;
             }
         }

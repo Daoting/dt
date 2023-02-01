@@ -46,15 +46,15 @@ namespace Dt.MgrDemo
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议和隐私政策对话框
-            if (await Cookie.Get("FirstRun") != "0")
+            if (await CookieX.Get("FirstRun") != "0")
             {
                 await new PolicyDlg().ShowAsync();
-                await Cookie.Save("FirstRun", "0");
+                await CookieX.Save("FirstRun", "0");
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            string phone = await Cookie.Get("LoginPhone");
-            string pwd = await Cookie.Get("LoginPwd");
+            string phone = await CookieX.Get("LoginPhone");
+            string pwd = await CookieX.Get("LoginPwd");
             if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
                 var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);

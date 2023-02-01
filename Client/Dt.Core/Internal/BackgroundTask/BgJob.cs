@@ -39,7 +39,7 @@ namespace Dt.Core
             if (stub == null)
             {
                 // 因后台任务独立运行，存根类型需要从State库获取！
-                string tpName = await Cookie.Get(_stubType);
+                string tpName = await CookieX.Get(_stubType);
                 if (!string.IsNullOrEmpty(tpName))
                 {
                     Type tp = Type.GetType(tpName);

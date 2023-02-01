@@ -36,7 +36,7 @@ namespace Dt.Mgr.Model
 
             if (!string.IsNullOrEmpty(p_id))
             {
-                _fv.Data = await PrvObj.GetByID(p_id);
+                _fv.Data = await PrvX.GetByID(p_id);
                 UpdateRelated(p_id);
             }
             else
@@ -53,7 +53,7 @@ namespace Dt.Mgr.Model
 
         void Create()
         {
-            _fv.Data = new PrvObj("");
+            _fv.Data = new PrvX("");
             ClearRelated();
         }
 
@@ -74,7 +74,7 @@ namespace Dt.Mgr.Model
 
         async void Save()
         {
-            var d = _fv.Data.To<PrvObj>();
+            var d = _fv.Data.To<PrvX>();
             bool isNew = d.IsAdded;
             if (await d.Save())
             {
@@ -88,7 +88,7 @@ namespace Dt.Mgr.Model
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<PrvObj>();
+            var d = _fv.Data.To<PrvX>();
             if (d == null)
                 return;
 

@@ -20,7 +20,7 @@ namespace Dt.Mgr.Workflow
     {
         WfdDs() { }
 
-        public async Task<bool> SavePrc(WfdPrcObj p_prc)
+        public async Task<bool> SavePrc(WfdPrcX p_prc)
         {
             await Save(p_prc);
             await Save(p_prc.Atvs);

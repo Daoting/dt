@@ -31,20 +31,20 @@ namespace Dt.MgrDemo
 
             if (_info.IsNew)
             {
-                _fv.Data = new 收文Obj(
+                _fv.Data = new 收文X(
                     ID: _info.ID,
                     来文时间: Kit.Now);
             }
             else
             {
-                _fv.Data = await 收文Obj.GetByID(_info.ID);
+                _fv.Data = await 收文X.GetByID(_info.ID);
             }
 
             switch (_info.State)
             {
                 case "接收文件":
                     _fv.Hide("市场部经理意见", "综合部经理意见", "收文完成时间");
-                    _fv.Data.To<收文Obj>().Cells["文件附件"].PropertyChanged += OnUploaded;
+                    _fv.Data.To<收文X>().Cells["文件附件"].PropertyChanged += OnUploaded;
                     break;
                 case "市场部":
                     _fv.Hide("综合部经理意见", "收文完成时间");
@@ -64,13 +64,13 @@ namespace Dt.MgrDemo
             {
                 var fi = _fv["文件附件"].To<CFile>().FileList.Items.FirstOrDefault();
                 if (fi != null)
-                    _fv.Data.To<收文Obj>().文件标题 = fi.Title;
+                    _fv.Data.To<收文X>().文件标题 = fi.Title;
             }
         }
 
         public Task<bool> Save()
         {
-            var data = _fv.Data.To<收文Obj>();
+            var data = _fv.Data.To<收文X>();
             if (data.IsAdded || data.IsChanged)
                 return data.Save();
 
@@ -79,7 +79,7 @@ namespace Dt.MgrDemo
 
         public Task<bool> Delete()
         {
-            var data = _fv.Data.To<收文Obj>();
+            var data = _fv.Data.To<收文X>();
             if (!data.IsAdded)
                 return data.Delete();
 
@@ -88,7 +88,7 @@ namespace Dt.MgrDemo
 
         public string GetPrcName()
         {
-            return _fv.Data.To<收文Obj>().文件标题;
+            return _fv.Data.To<收文X>().文件标题;
         }
     }
 }

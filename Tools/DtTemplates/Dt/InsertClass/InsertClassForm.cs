@@ -17,10 +17,19 @@ namespace Dt
             switch (p_clsType)
             {
                 case ClsType.DomainEx:
-                    Text = "添加业务扩展类";
-                    _info.Text = "命名规则：以Ex为后缀，建议以【模块名+Ex】 命名";
-                    _tempFile = "DomainEx.cs";
-                    _cls.Text = _ns.Text.Substring(_ns.Text.LastIndexOf(".") + 1) + "Ex";
+                    Text = "添加领域服务类";
+                    if (Kit.IsClientPrj())
+                    {
+                        _info.Text = "命名规则：以Ds为后缀，建议以【模块名+Ds】命名";
+                        _tempFile = "DomainSvc.cs";
+                        _cls.Text = _ns.Text.Substring(_ns.Text.LastIndexOf(".") + 1) + "Ds";
+                    }
+                    else
+                    {
+                        _info.Text = "命名规则：以Ds为后缀";
+                        _tempFile = "ServerDomainSvc.cs";
+                        _cls.Text = "MyDs";
+                    }
                     break;
 
                 case ClsType.LvCall:
@@ -45,18 +54,12 @@ namespace Dt
                     break;
 
                 case ClsType.Agent:
-                    Text = "添加Agent类";
-                    _info.Text = "命名规则：以At为前缀";
+                    Text = "添加数据访问类";
+                    _info.Text = "命名规则：以At为前缀，Access To";
                     _tempFile = "AgentTemp.cs";
-                    _cls.Text = "AtMyCls";
+                    _cls.Text = "AtMySvc";
                     break;
 
-                case ClsType.Api:
-                    Text = "添加Api类";
-                    _info.Text = "命名规则：以Api为后缀";
-                    _tempFile = "ApiTemp.cs";
-                    _cls.Text = "MyClsApi";
-                    break;
             }
         }
 

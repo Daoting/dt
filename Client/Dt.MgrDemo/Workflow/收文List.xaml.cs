@@ -20,13 +20,13 @@ namespace Dt.MgrDemo
         {
             InitializeComponent();
 
-            _fv.Data = new 收文Obj(ID: 0);
+            _fv.Data = new 收文X(ID: 0);
             AtWf.AddMenu(_lv);
         }
 
         async void OnSearch(object sender, Mi e)
         {
-            _lv.Data = await 收文Obj.Query();
+            _lv.Data = await 收文X.Query();
             NaviTo("结果");
         }
 

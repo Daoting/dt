@@ -38,7 +38,7 @@ namespace Dt.Mgr.Chat
             Loaded -= OnLoaded;
 
             await ChatDs.Me.Refresh();
-            _lv.Data = await ChatMemberObj.Query();
+            _lv.Data = await ChatMemberX.Query();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

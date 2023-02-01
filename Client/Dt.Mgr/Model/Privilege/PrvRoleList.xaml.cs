@@ -54,10 +54,10 @@ namespace Dt.Mgr.Model
             SelectRolesDlg dlg = new SelectRolesDlg();
             if (await dlg.Show(RoleRelations.Prv, _id, e))
             {
-                List<RolePrvObj> ls = new List<RolePrvObj>();
+                List<RolePrvX> ls = new List<RolePrvX>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RolePrvObj(row.ID, _id));
+                    ls.Add(new RolePrvX(row.ID, _id));
                 }
                 if (ls.Count > 0 && await ls.Save())
                 {
@@ -82,10 +82,10 @@ namespace Dt.Mgr.Model
 
         async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<RolePrvObj> ls = new List<RolePrvObj>();
+            List<RolePrvX> ls = new List<RolePrvX>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RolePrvObj(row.Long("roleid"), _id));
+                ls.Add(new RolePrvX(row.Long("roleid"), _id));
             }
             if (ls.Count > 0 && await ls.Delete())
             {

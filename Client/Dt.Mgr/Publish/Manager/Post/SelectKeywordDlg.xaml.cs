@@ -52,10 +52,10 @@ namespace Dt.Mgr.Publish
                 return;
             }
 
-            List<PubPostKeywordObj> ls = new List<PubPostKeywordObj>();
+            List<PubPostKeywordX> ls = new List<PubPostKeywordX>();
             foreach (var row in selected)
             {
-                ls.Add(new PubPostKeywordObj(PostID: _postID, Keyword: row.Str("id")));
+                ls.Add(new PubPostKeywordX(PostID: _postID, Keyword: row.Str("id")));
             }
             if (await ls.Save())
                 Close(true);

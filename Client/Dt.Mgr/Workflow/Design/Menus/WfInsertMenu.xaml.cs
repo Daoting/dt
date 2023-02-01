@@ -123,7 +123,7 @@ namespace Dt.Mgr.Workflow
         {
             _sketch.SetNodePos(p_elem, this.GetRelativePosition(_sketch));
             if (p_elem is SNode node)
-                node.ID = await WfdAtvObj.NewID();
+                node.ID = await WfdAtvX.NewID();
             _sketch.Insert(p_elem);
         }
 

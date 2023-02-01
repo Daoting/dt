@@ -46,15 +46,15 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<RptObj>("报表-所有");
+                _lv.Data = await AtCm.Query<RptX>("报表-所有");
             }
             else if (_query == "#最近修改")
             {
-                _lv.Data = await AtCm.Query<RptObj>("报表-最近修改");
+                _lv.Data = await AtCm.Query<RptX>("报表-最近修改");
             }
             else
             {
-                _lv.Data = await AtCm.Query<RptObj>("报表-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<RptX>("报表-模糊查询", new { ID = $"%{_query}%" });
             }
         }
 

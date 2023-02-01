@@ -36,7 +36,7 @@ namespace Dt.Mgr.Publish
 
             if (p_id > 0)
             {
-                _fv.Data = await PubAlbumObj.GetByID(p_id);
+                _fv.Data = await PubAlbumX.GetByID(p_id);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Dt.Mgr.Publish
 
         async void Create()
         {
-            _fv.Data = await PubAlbumObj.New();
+            _fv.Data = await PubAlbumX.New();
         }
 
         void OnSave(object sender, Mi e)
@@ -66,7 +66,7 @@ namespace Dt.Mgr.Publish
 
         async void Save()
         {
-            var d = _fv.Data.To<PubAlbumObj>();
+            var d = _fv.Data.To<PubAlbumX>();
             if (d == null)
                 return;
 
@@ -86,7 +86,7 @@ namespace Dt.Mgr.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<PubAlbumObj>();
+            var d = _fv.Data.To<PubAlbumX>();
             if (d == null)
                 return;
 

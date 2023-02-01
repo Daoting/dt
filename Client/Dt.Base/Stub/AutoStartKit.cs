@@ -25,7 +25,7 @@ namespace Dt.Base
         public static void SetAutoStart(Win p_win)
         {
             AutoStartInfo info = GetAutoStartInfo(p_win);
-            Cookie.SaveAutoStart(info);
+            CookieX.SaveAutoStart(info);
             Kit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
 
@@ -34,7 +34,7 @@ namespace Dt.Base
         /// </summary>
         public static void DelAutoStart()
         {
-            Cookie.DelAutoStart();
+            CookieX.DelAutoStart();
             Kit.Msg("已取消自启动设置！");
         }
 

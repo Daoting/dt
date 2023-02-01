@@ -36,7 +36,7 @@ namespace Dt
                 {
                     int i = _dg.Rows.Add();
                     _dg.Rows[i].Cells[0].Value = item;
-                    _dg.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "Obj";
+                    _dg.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
                 }
             }
         }

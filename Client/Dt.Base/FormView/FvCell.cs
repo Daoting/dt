@@ -601,7 +601,7 @@ namespace Dt.Base
                     object val = cell.Val;
                     if (val != null && !string.IsNullOrEmpty(val.ToString()))
                     {
-                        var clv = await CellLastVal.GetByID(id);
+                        var clv = await CellLastValX.GetByID(id);
                         if (clv != null)
                         {
                             clv.Val = val.ToString();
@@ -609,13 +609,13 @@ namespace Dt.Base
                         }
                         else
                         {
-                            await new CellLastVal(id, val.ToString()).Save(false);
+                            await new CellLastValX(id, val.ToString()).Save(false);
                         }
                     }
                     else
                     {
                         // 删除旧记录
-                        await CellLastVal.DelByID(id);
+                        await CellLastValX.DelByID(id);
                     }
                 });
             }

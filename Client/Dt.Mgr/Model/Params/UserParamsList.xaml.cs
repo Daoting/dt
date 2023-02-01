@@ -37,15 +37,15 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await ParamsObj.Query();
+                _lv.Data = await ParamsX.Query();
             }
             else if (_query == "#最近修改")
             {
-                _lv.Data = await AtCm.Query<ParamsObj>("参数-最近修改");
+                _lv.Data = await AtCm.Query<ParamsX>("参数-最近修改");
             }
             else
             {
-                _lv.Data = await AtCm.Query<ParamsObj>("参数-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<ParamsX>("参数-模糊查询", new { ID = $"%{_query}%" });
             }
         }
 
@@ -68,7 +68,7 @@ namespace Dt.Mgr.Model
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Form.Update(e.Data.To<ParamsObj>().ID);
+                _win.Form.Update(e.Data.To<ParamsX>().ID);
             NaviTo(_win.Form);
         }
 

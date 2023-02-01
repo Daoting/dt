@@ -24,7 +24,7 @@ namespace Dt.Mgr.Workflow
     public partial class WorkflowDesign : Win
     {
         #region 成员变量
-        WfdPrcObj _prc;
+        WfdPrcX _prc;
 
         WfInsertMenu _insertMenu;
         AlignMenu _alignMenu;
@@ -50,7 +50,7 @@ namespace Dt.Mgr.Workflow
         #region 数据处理
         async void LoadPrc(long p_prcID)
         {
-            _prc = (p_prcID < 0) ? await WfdPrcObj.New() : await WfdPrcObj.Get(p_prcID);
+            _prc = (p_prcID < 0) ? await WfdPrcX.New() : await WfdPrcX.Get(p_prcID);
 
             IsChanged = false;
             _sketch.His.CmdChanged -= OnSketchChanged;
@@ -105,14 +105,14 @@ namespace Dt.Mgr.Workflow
 
             foreach (var elem in _sketch.Container.Children)
             {
-                if (elem is SNode node && node.Tag is WfdAtvObj atv)
+                if (elem is SNode node && node.Tag is WfdAtvX atv)
                 {
                     // 标题以属性值为准
                     atv.Name = node.Title;
                     if (atv.IsChanged)
                         atv.Mtime = now;
                 }
-                else if (elem is SLine line && line.Tag is WfdTrsObj trs)
+                else if (elem is SLine line && line.Tag is WfdTrsX trs)
                 {
                     // 以最终起点终点标识为准
                     trs.SrcAtvID = line.HeaderID;
@@ -190,7 +190,7 @@ namespace Dt.Mgr.Workflow
                                 break;
                         }
 
-                        WfdAtvObj atv = new WfdAtvObj(
+                        WfdAtvX atv = new WfdAtvX(
                             ID: node.ID,
                             PrcID: _prc.ID,
                             Name: node.Title,
@@ -209,7 +209,7 @@ namespace Dt.Mgr.Workflow
                         node.Tag = atv;
                         _prc.Atvs.Add(atv);
                     }
-                    else if (node.Tag is WfdAtvObj atv)
+                    else if (node.Tag is WfdAtvX atv)
                     {
                         // 删除后撤消 或 撤消后重做
                         _prc.Atvs.Add(atv);
@@ -219,8 +219,8 @@ namespace Dt.Mgr.Workflow
                 {
                     if (item.Tag == null)
                     {
-                        line.ID = await WfdTrsObj.NewID();
-                        WfdTrsObj trs = new WfdTrsObj(
+                        line.ID = await WfdTrsX.NewID();
+                        WfdTrsX trs = new WfdTrsX(
                             ID: line.ID,
                             PrcID: _prc.ID,
                             SrcAtvID: line.HeaderID,
@@ -229,7 +229,7 @@ namespace Dt.Mgr.Workflow
                         line.Tag = trs;
                         _prc.Trss.Add(trs);
                     }
-                    else if (item.Tag is WfdTrsObj trs)
+                    else if (item.Tag is WfdTrsX trs)
                     {
                         _prc.Trss.Add(trs);
                     }
@@ -261,12 +261,12 @@ namespace Dt.Mgr.Workflow
             {
                 if (item is SNode node)
                 {
-                    if (node.Tag is WfdAtvObj atv)
+                    if (node.Tag is WfdAtvX atv)
                         _prc.Atvs.Remove(atv);
                 }
                 else if (item is SLine line)
                 {
-                    if (line.Tag is WfdTrsObj trs)
+                    if (line.Tag is WfdTrsX trs)
                         _prc.Trss.Remove(trs);
                 }
             }
@@ -356,7 +356,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_node"></param>
         void LoadAtvForm(SNode p_node)
         {
-            var data = p_node.Tag as WfdAtvObj;
+            var data = p_node.Tag as WfdAtvX;
             if (data == null)
             {
                 _tab.Content = null;
@@ -402,7 +402,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_line"></param>
         void LoadTrsForm(SLine p_line)
         {
-            var data = p_line.Tag as WfdTrsObj;
+            var data = p_line.Tag as WfdTrsX;
             if (data == null)
             {
                 _tab.Content = null;

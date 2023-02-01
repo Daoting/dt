@@ -168,7 +168,7 @@ namespace Dt
             // 
             this._rbDef.AutoSize = true;
             this._rbDef.Checked = true;
-            this._rbDef.Location = new System.Drawing.Point(16, 352);
+            this._rbDef.Location = new System.Drawing.Point(16, 373);
             this._rbDef.Name = "_rbDef";
             this._rbDef.Size = new System.Drawing.Size(83, 16);
             this._rbDef.TabIndex = 137;
@@ -179,7 +179,7 @@ namespace Dt
             // _rbReplace
             // 
             this._rbReplace.AutoSize = true;
-            this._rbReplace.Location = new System.Drawing.Point(16, 377);
+            this._rbReplace.Location = new System.Drawing.Point(16, 398);
             this._rbReplace.Name = "_rbReplace";
             this._rbReplace.Size = new System.Drawing.Size(155, 16);
             this._rbReplace.TabIndex = 138;
@@ -191,14 +191,14 @@ namespace Dt
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(14, 287);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 12);
+            this.label1.Size = new System.Drawing.Size(185, 36);
             this.label1.TabIndex = 139;
-            this.label1.Text = "* 按F2或双击【实体类名】可编辑";
+            this.label1.Text = "* 按F2或双击【实体类名】可编辑\r\n\r\n* 建议实体类名后缀：X";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 331);
+            this.label3.Location = new System.Drawing.Point(16, 352);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(185, 12);
             this.label3.TabIndex = 140;

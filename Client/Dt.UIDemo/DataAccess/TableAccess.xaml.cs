@@ -49,7 +49,7 @@ namespace Dt.UIDemo
 
         void OnCreateTableByLocalName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(new Cookie("test"));
+            Table tbl = Table.Create(new CookieX("test"));
             WriteColumns(tbl);
         }
 

@@ -46,7 +46,7 @@ namespace Dt.Mgr.Model
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query<RoleMenuObj>("菜单-关联的角色", new { menuid = _id });
+            _lv.Data = await AtCm.Query<RoleMenuX>("菜单-关联的角色", new { menuid = _id });
         }
 
         async void OnAdd(object sender, Mi e)
@@ -54,10 +54,10 @@ namespace Dt.Mgr.Model
             SelectRolesDlg dlg = new SelectRolesDlg();
             if (await dlg.Show(RoleRelations.Menu, _id.ToString(), e))
             {
-                List<RoleMenuObj> ls = new List<RoleMenuObj>();
+                List<RoleMenuX> ls = new List<RoleMenuX>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    ls.Add(new RoleMenuObj(row.ID, _id));
+                    ls.Add(new RoleMenuX(row.ID, _id));
                 }
                 if (ls.Count > 0 && await ls.Save())
                 {
@@ -82,10 +82,10 @@ namespace Dt.Mgr.Model
 
         async void DoRemove(IEnumerable<Row> p_rows)
         {
-            List<RoleMenuObj> ls = new List<RoleMenuObj>();
+            List<RoleMenuX> ls = new List<RoleMenuX>();
             foreach (var row in p_rows)
             {
-                ls.Add(new RoleMenuObj(row.Long("roleid"), _id));
+                ls.Add(new RoleMenuX(row.Long("roleid"), _id));
             }
             if (ls.Count > 0 && await ls.Delete())
             {

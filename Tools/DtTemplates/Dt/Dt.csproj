@@ -54,10 +54,10 @@
       <DependentUpon>BatchCells.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="InsertClass\AgentTemp.cs" />
-    <EmbeddedResource Include="InsertClass\ApiTemp.cs" />
+    <EmbeddedResource Include="InsertClass\ServerDomainSvc.cs" />
     <EmbeddedResource Include="InsertClass\CellUITemp.cs" />
     <EmbeddedResource Include="InsertClass\CListExTemp.cs" />
-    <EmbeddedResource Include="InsertClass\DomainEx.cs" />
+    <EmbeddedResource Include="InsertClass\DomainSvc.cs" />
     <Compile Include="InsertClass\ClsType.cs" />
     <EmbeddedResource Include="InsertClass\FvCallTemp.cs" />
     <Compile Include="InsertClass\InsertClassForm.cs">

@@ -30,48 +30,48 @@ namespace Dt.Mgr.Model
 
         async void OnCateClick(object sender, ItemClickArgs e)
         {
-            _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = _lvCate.SelectedRow.Str(0) });
+            _lv.Data = await AtCm.Query<OptionX>("选项-分类选项", new { Category = _lvCate.SelectedRow.Str(0) });
             SelectTab("选项列表");
         }
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            var op = _lv.SelectedRow.To<OptionObj>();
-            _fv.Data = await AtCm.First<OptionObj>("选项-选项", new { Category = op.Category, Name = op.Name });
+            var op = _lv.SelectedRow.To<OptionX>();
+            _fv.Data = await AtCm.First<OptionX>("选项-选项", new { Category = op.Category, Name = op.Name });
             SelectTab("选项");
         }
 
         void OnMoveUp(object sender, Mi e)
         {
-            var src = e.Data.To<OptionObj>();
+            var src = e.Data.To<OptionX>();
             int index = _lv.Data.IndexOf(src);
             if (index > 0)
-                Exchange(src, _lv.Data[index - 1].To<OptionObj>());
+                Exchange(src, _lv.Data[index - 1].To<OptionX>());
         }
 
         void OnMoveDown(object sender, Mi e)
         {
-            var src = e.Data.To<OptionObj>();
+            var src = e.Data.To<OptionX>();
             int index = _lv.Data.IndexOf(src);
             if (index < _lv.Data.Count - 1 && index >= 0)
-                Exchange(src, _lv.Data[index + 1].To<OptionObj>());
+                Exchange(src, _lv.Data[index + 1].To<OptionX>());
         }
 
-        async void Exchange(OptionObj p_src, OptionObj p_tgt)
+        async void Exchange(OptionX p_src, OptionX p_tgt)
         {
-            var tbl = Table<OptionObj>.Create();
+            var tbl = Table<OptionX>.Create();
 
-            var save = (OptionObj)tbl.AddRow(new { Name = p_src.Name, Category = p_src.Category });
+            var save = (OptionX)tbl.AddRow(new { Name = p_src.Name, Category = p_src.Category });
             save.AcceptChanges();
             save.Dispidx = p_tgt.Dispidx;
 
-            save = (OptionObj)tbl.AddRow(new { Name = p_tgt.Name, Category = p_tgt.Category });
+            save = (OptionX)tbl.AddRow(new { Name = p_tgt.Name, Category = p_tgt.Category });
             save.AcceptChanges();
             save.Dispidx = p_src.Dispidx;
 
             if (await tbl.Save())
             {
-                _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_src.Category });
+                _lv.Data = await AtCm.Query<OptionX>("选项-分类选项", new { Category = p_src.Category });
                 LobKit.PromptForUpdateModel();
             }
         }
@@ -79,41 +79,41 @@ namespace Dt.Mgr.Model
         async void OnAdd(object sender, Mi e)
         {
             string cate = "";
-            var op = _fv.Data.To<OptionObj>();
+            var op = _fv.Data.To<OptionX>();
             if (op != null)
                 cate = op.Category;
             else if (_lvCate.SelectedRow != null)
                 cate = _lvCate.SelectedRow.Str(0);
 
-            _fv.Data = await OptionObj.New(
+            _fv.Data = await OptionX.New(
                 Name: "新选项",
                 Category: cate);
         }
 
         async void OnSave(object sender, Mi e)
         {
-            var op = _fv.Data.To<OptionObj>();
+            var op = _fv.Data.To<OptionX>();
             if (await op.Save())
             {
                 LoadCategory();
-                _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = op.Category });
+                _lv.Data = await AtCm.Query<OptionX>("选项-分类选项", new { Category = op.Category });
                 LobKit.PromptForUpdateModel();
             }
         }
 
         void OnListDel(object sender, Mi e)
         {
-            DelOption(e.Data.To<OptionObj>());
+            DelOption(e.Data.To<OptionX>());
         }
 
         void OnDel(object sender, Mi e)
         {
-            var op = _fv.Data.To<OptionObj>();
+            var op = _fv.Data.To<OptionX>();
             if (op != null)
                 DelOption(op);
         }
 
-        async void DelOption(OptionObj p_option)
+        async void DelOption(OptionX p_option)
         {
             if (!await Kit.Confirm("确认要删除吗？"))
             {
@@ -130,7 +130,7 @@ namespace Dt.Mgr.Model
             if (await p_option.Delete())
             {
                 LoadCategory();
-                _lv.Data = await AtCm.Query<OptionObj>("选项-分类选项", new { Category = p_option.Category });
+                _lv.Data = await AtCm.Query<OptionX>("选项-分类选项", new { Category = p_option.Category });
                 _fv.Data = null;
                 LobKit.PromptForUpdateModel();
             }

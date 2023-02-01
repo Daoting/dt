@@ -39,15 +39,15 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<UserObj>("用户-所有");
+                _lv.Data = await AtCm.Query<UserX>("用户-所有");
             }
             else if (_query == "#最近修改")
             {
-                _lv.Data = await AtCm.Query<UserObj>("用户-最近修改");
+                _lv.Data = await AtCm.Query<UserX>("用户-最近修改");
             }
             else
             {
-                _lv.Data = await AtCm.Query<UserObj>("用户-模糊查询", new { input = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<UserX>("用户-模糊查询", new { input = $"%{_query}%" });
             }
         }
 
@@ -88,7 +88,7 @@ namespace Dt.Mgr.Model
 
         async void OnResetPwd(object sender, Mi e)
         {
-            var usr = new UserObj(ID: e.Row.ID);
+            var usr = new UserX(ID: e.Row.ID);
             usr.IsAdded = false;
             string phone = e.Row.Str("phone");
             usr.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
@@ -102,7 +102,7 @@ namespace Dt.Mgr.Model
         async void OnToggleExpired(object sender, Mi e)
         {
             bool expired = e.Row.Bool("expired");
-            var usr = new UserObj(ID: e.Row.ID, Expired: expired);
+            var usr = new UserX(ID: e.Row.ID, Expired: expired);
             usr.IsAdded = false;
             usr.Expired = !expired;
 
@@ -121,7 +121,7 @@ namespace Dt.Mgr.Model
         async void OnDelUser(object sender, Mi e)
         {
             var isSelected = _lv.SelectedItem == e.Data;
-            UserObj user = e.Data.To<UserObj>();
+            UserX user = e.Data.To<UserX>();
             if (!await Kit.Confirm($"确认要删除[{user.Name}]吗？"))
             {
                 Kit.Msg("已取消删除！");

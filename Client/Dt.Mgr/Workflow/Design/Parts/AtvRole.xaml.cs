@@ -31,7 +31,7 @@ namespace Dt.Mgr.Workflow
             _lv.Filter = OnFilter;
         }
 
-        public void LoadRoles(long p_atvID, Table<WfdAtvRoleObj> p_atvRoles)
+        public void LoadRoles(long p_atvID, Table<WfdAtvRoleX> p_atvRoles)
         {
             _atvID = p_atvID;
             _lv.Data = p_atvRoles;
@@ -45,7 +45,7 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         bool OnFilter(object row)
         {
-            return ((WfdAtvRoleObj)row).AtvID == _atvID;
+            return ((WfdAtvRoleX)row).AtvID == _atvID;
         }
 
         async void OnAddRole(object sender, RoutedEventArgs e)
@@ -55,7 +55,7 @@ namespace Dt.Mgr.Workflow
             {
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
-                    var ar = new WfdAtvRoleObj(
+                    var ar = new WfdAtvRoleX(
                         AtvID: _atvID,
                         RoleID: row.ID);
                     ar.AddCell("role", row.Str("name"));

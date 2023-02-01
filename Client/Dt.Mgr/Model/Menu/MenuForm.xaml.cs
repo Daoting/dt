@@ -14,7 +14,7 @@ namespace Dt.Mgr.Model
 {
     public sealed partial class MenuForm : Mv
     {
-        MenuObj _curItem;
+        MenuX _curItem;
 
         public MenuForm()
         {
@@ -29,7 +29,7 @@ namespace Dt.Mgr.Model
 
             if (p_id > 0)
             {
-                _curItem = await AtCm.First<MenuObj>("菜单-id菜单项", new { id = p_id });
+                _curItem = await AtCm.First<MenuX>("菜单-id菜单项", new { id = p_id });
                 _fv.Data = _curItem;
                 UpdateRelated(_curItem);
             }
@@ -58,7 +58,7 @@ namespace Dt.Mgr.Model
 
         async void AddMenu(bool p_isGroup)
         {
-            MenuObj m = await MenuObj.New(
+            MenuX m = await MenuX.New(
                 Name: p_isGroup ? "新组" : "新菜单",
                 Icon: p_isGroup ? "文件夹" : "文件",
                 IsGroup: p_isGroup,
@@ -72,7 +72,7 @@ namespace Dt.Mgr.Model
 
         async void OnSave(object sender, Mi e)
         {
-            var d = _fv.Data.To<MenuObj>();
+            var d = _fv.Data.To<MenuX>();
             if (await d.Save())
             {
                 _win.List.Update();
@@ -83,7 +83,7 @@ namespace Dt.Mgr.Model
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<MenuObj>();
+            var d = _fv.Data.To<MenuX>();
             if (d == null)
                 return;
 
@@ -109,7 +109,7 @@ namespace Dt.Mgr.Model
 
         void OnOpen(object sender, Mi e)
         {
-            var row = _fv.Data.To<MenuObj>();
+            var row = _fv.Data.To<MenuX>();
             OmMenu menu = new OmMenu(
                 ID: row.ID,
                 Name: row.Name,
@@ -123,7 +123,7 @@ namespace Dt.Mgr.Model
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await AtCm.Query<MenuObj>("菜单-分组树");
+                ((CTree)sender).Data = await AtCm.Query<MenuX>("菜单-分组树");
             }
         }
 
@@ -134,7 +134,7 @@ namespace Dt.Mgr.Model
 
         void OnFvDataChanged(object sender, object e)
         {
-            var m = e as MenuObj;
+            var m = e as MenuX;
             if (m == null)
             {
                 // 根节点
@@ -153,7 +153,7 @@ namespace Dt.Mgr.Model
             }
         }
 
-        void UpdateRelated(MenuObj p_mi)
+        void UpdateRelated(MenuX p_mi)
         {
             if (p_mi.IsGroup)
                 _win.RoleList.Clear();

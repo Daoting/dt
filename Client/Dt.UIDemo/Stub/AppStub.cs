@@ -44,10 +44,10 @@ namespace Dt.UIDemo
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议和隐私政策对话框
-            if (await LocalDictObj.GetByID("FirstRun") == null)
+            if (await CookieX.Get("FirstRun") != "0")
             {
                 await new PolicyDlg().ShowAsync();
-                await new LocalDictObj("FirstRun", "0").Save(false);
+                await CookieX.Save("FirstRun", "0");
             }
 
             Kit.ShowRoot(typeof(DemoMain));

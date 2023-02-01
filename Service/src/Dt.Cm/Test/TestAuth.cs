@@ -24,7 +24,7 @@ namespace Dt.Cm
     {
         public string NoAuth()
         {
-            var sch = VirEntitySchema.Get(typeof(VirObj<UserObj, RoleObj, PubPostObj>));
+            var sch = VirEntitySchema.Get(typeof(VirObj<UserX, RoleX, PubPostX>));
             var sql = sch.GetSelectAllSql();
             return "无授权验证";
         }

@@ -134,7 +134,7 @@ namespace Dt.Base
                 _menu.Items.Add(item);
             }
 
-            var autoStart = await Cookie.GetAutoStart();
+            var autoStart = await CookieX.GetAutoStart();
             Win win = _currentItem._win;
             if (autoStart != null
                 && win != null

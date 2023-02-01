@@ -73,7 +73,7 @@ namespace Dt.Mgr
             if (!string.IsNullOrEmpty(p_ver))
             {
                 var ls = p_ver.Split(',');
-                var tbl = await AtLob.Query("select id,ver from DataVersion");
+                var tbl = await AtLob.Query("select id,ver from DataVer");
                 if (tbl != null && tbl.Count > 0)
                 {
                     foreach (var row in tbl)
@@ -81,7 +81,7 @@ namespace Dt.Mgr
                         if (!ls.Contains($"{row[0]}+{row[1]}"))
                         {
                             // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
-                            await AtLob.Exec($"delete from DataVersion where id='{row.Str(0)}'");
+                            await AtLob.Exec($"delete from DataVer where id='{row.Str(0)}'");
                         }
                     }
                 }
@@ -89,7 +89,7 @@ namespace Dt.Mgr
             else
             {
                 // 所有缓存数据失效
-                await AtLob.Exec("delete from DataVersion");
+                await AtLob.Exec("delete from DataVer");
             }
         }
         #endregion
@@ -110,9 +110,9 @@ namespace Dt.Mgr
             // 注销时清空用户信息
             ResetUser();
 
-            await Cookie.DelByID("LoginPhone");
-            await Cookie.DelByID("LoginPwd");
-            await Cookie.DelByID("LoginID");
+            await CookieX.DelByID("LoginPhone");
+            await CookieX.DelByID("LoginPwd");
+            await CookieX.DelByID("LoginID");
 
             Kit.ShowRoot(LobViews.登录页);
 
@@ -128,7 +128,7 @@ namespace Dt.Mgr
         /// <returns>true 表示有权限</returns>
         public static async Task<bool> HasPrv(string p_id)
         {
-            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='privilege'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='privilege'");
             if (cnt == 0)
             {
                 // 查询服务端
@@ -139,7 +139,7 @@ namespace Dt.Mgr
                 );
 
                 // 记录版本号
-                var ver = new DataVersion(ID: "privilege", Ver: dt.Str("ver"));
+                var ver = new DataVerX(ID: "privilege", Ver: dt.Str("ver"));
                 await ver.Save(false);
 
                 // 清空旧数据
@@ -200,7 +200,7 @@ namespace Dt.Mgr
 
         static async Task InitParams()
         {
-            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVersion where id='params'");
+            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='params'");
             if (cnt > 0)
                 return;
 
@@ -212,7 +212,7 @@ namespace Dt.Mgr
                 );
 
             // 记录版本号
-            var ver = new DataVersion(ID: "params", Ver: dt.Str("ver"));
+            var ver = new DataVerX(ID: "params", Ver: dt.Str("ver"));
             await ver.Save(false);
 
             // 清空旧数据

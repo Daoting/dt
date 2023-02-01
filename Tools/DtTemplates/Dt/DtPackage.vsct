@@ -196,7 +196,7 @@
 			<Button guid="guidDtPackageCmdSet" id="DomainExClsCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
-					<ButtonText>业务扩展类</ButtonText>
+					<ButtonText>领域服务类</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidDtPackageCmdSet" id="LvCallClsCmdId" priority="0x0102" type="Button">
@@ -220,15 +220,10 @@
 			<Button guid="guidDtPackageCmdSet" id="AgentClsCmdId" priority="0x0105" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
-					<ButtonText>Agent类</ButtonText>
+					<ButtonText>数据访问类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="ApiClsCmdId" priority="0x0106" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
-				<Strings>
-					<ButtonText>Api类</ButtonText>
-				</Strings>
-			</Button>
+			
 		</Buttons>
 
 		<!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -285,7 +280,6 @@
 			<IDSymbol name="FvCallClsCmdId" value="0x5003" />
 			<IDSymbol name="CListExClsCmdId" value="0x5004" />
 			<IDSymbol name="AgentClsCmdId" value="0x5005" />
-			<IDSymbol name="ApiClsCmdId" value="0x5006" />
 		</GuidSymbol>
 
 		<!-- xaml编辑器上下文菜单的guid -->

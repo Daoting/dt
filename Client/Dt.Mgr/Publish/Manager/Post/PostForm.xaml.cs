@@ -37,7 +37,7 @@ namespace Dt.Mgr.Publish
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<PubPostObj>("文章-编辑", new { id = p_id });
+                _fv.Data = await AtCm.First<PubPostX>("文章-编辑", new { id = p_id });
                 UpdateRelated(p_id);
             }
             else
@@ -54,7 +54,7 @@ namespace Dt.Mgr.Publish
 
         async void Create()
         {
-            _fv.Data = await PubPostObj.New();
+            _fv.Data = await PubPostX.New();
 
             ClearRelated();
         }
@@ -71,7 +71,7 @@ namespace Dt.Mgr.Publish
 
         async Task<bool> Save()
         {
-            var d = _fv.Data.To<PubPostObj>();
+            var d = _fv.Data.To<PubPostX>();
             if (d == null || !d.IsValid())
                 return false;
 
@@ -89,7 +89,7 @@ namespace Dt.Mgr.Publish
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<PubPostObj>();
+            var d = _fv.Data.To<PubPostX>();
             if (d == null)
                 return;
 
@@ -114,14 +114,14 @@ namespace Dt.Mgr.Publish
 
         void OnEditContent(object sender, Mi e)
         {
-            var d = _fv.Data.To<PubPostObj>();
+            var d = _fv.Data.To<PubPostX>();
             if (d != null)
                 new HtmlEditDlg().ShowDlg(this);
         }
 
         void OnExplore(object sender, Mi e)
         {
-            var d = _fv.Data.To<PubPostObj>();
+            var d = _fv.Data.To<PubPostX>();
             if (d != null)
             {
                 if (string.IsNullOrEmpty(d.Url))
@@ -132,11 +132,11 @@ namespace Dt.Mgr.Publish
         }
 
         #region IHtmlEditHost
-        string IHtmlEditHost.CurrentHtml => _fv.Data.To<PubPostObj>().Content;
+        string IHtmlEditHost.CurrentHtml => _fv.Data.To<PubPostX>().Content;
 
         Task<bool> IHtmlEditHost.SaveHtml(string p_html)
         {
-            ((PubPostObj)_fv.Data).Content = p_html;
+            ((PubPostX)_fv.Data).Content = p_html;
             return Save();
         }
         #endregion

@@ -23,7 +23,7 @@ namespace Dt.Mgr.Workflow
 
         async void LoadAll()
         {
-            _lv.Data = await AtCm.Query<WfdPrcObj>("流程-所有流程模板");
+            _lv.Data = await AtCm.Query<WfdPrcX>("流程-所有流程模板");
         }
 
         async void OnSearch(object sender, string e)
@@ -34,11 +34,11 @@ namespace Dt.Mgr.Workflow
             }
             else if (e == "#最近修改")
             {
-                _lv.Data = await AtCm.Query<WfdPrcObj>("流程-最近修改");
+                _lv.Data = await AtCm.Query<WfdPrcX>("流程-最近修改");
             }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtCm.Query<WfdPrcObj>("流程-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await AtCm.Query<WfdPrcX>("流程-模糊查询", new { input = $"%{e}%" });
             }
             NaviTo("列表");
         }
@@ -50,13 +50,13 @@ namespace Dt.Mgr.Workflow
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            var prc = e.Data.To<WfdPrcObj>();
+            var prc = e.Data.To<WfdPrcX>();
             EditTemplate(prc.Name, prc.ID);
         }
 
         void OnEditTemplateContext(object sender, Mi e)
         {
-            var prc = e.Data.To<WfdPrcObj>();
+            var prc = e.Data.To<WfdPrcX>();
             EditTemplate(prc.Name, prc.ID);
         }
 
@@ -67,7 +67,7 @@ namespace Dt.Mgr.Workflow
 
         async void OnDelContext(object sender, Mi e)
         {
-            var p_prc = e.Data.To<WfdPrcObj>();
+            var p_prc = e.Data.To<WfdPrcX>();
             if (!await Kit.Confirm($"确认要删除流程模板[{p_prc.Name}]吗？"))
             {
                 Kit.Msg("已取消删除！");

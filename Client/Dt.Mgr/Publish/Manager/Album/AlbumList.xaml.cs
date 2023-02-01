@@ -76,11 +76,11 @@ namespace Dt.Mgr.Publish
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<PubAlbumObj>("发布-所有专辑");
+                _lv.Data = await AtCm.Query<PubAlbumX>("发布-所有专辑");
             }
             else
             {
-                _lv.Data = await AtCm.Query<PubAlbumObj>("发布-模糊查询专辑", new { name = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<PubAlbumX>("发布-模糊查询专辑", new { name = $"%{_query}%" });
             }
         }
         #endregion

@@ -94,9 +94,9 @@ namespace Dt.Mgr
                     }
 
                     // 保存以备自动登录
-                    await Cookie.Save("LoginPhone", phone);
-                    await Cookie.Save("LoginPwd", pwd);
-                    await Cookie.Save("LoginID", result.UserID.ToString());
+                    await CookieX.Save("LoginPhone", phone);
+                    await CookieX.Save("LoginPwd", pwd);
+                    await CookieX.Save("LoginID", result.UserID.ToString());
 
                     await LobKit.AfterLogin(result);
                     var dlg = this.FindParentByType<Dlg>();

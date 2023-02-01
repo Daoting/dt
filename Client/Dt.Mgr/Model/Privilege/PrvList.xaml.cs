@@ -34,11 +34,11 @@ namespace Dt.Mgr.Model
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<PrvObj>("权限-所有");
+                _lv.Data = await AtCm.Query<PrvX>("权限-所有");
             }
             else
             {
-                _lv.Data = await AtCm.Query<PrvObj>("权限-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await AtCm.Query<PrvX>("权限-模糊查询", new { ID = $"%{_query}%" });
             }
         }
 
@@ -73,13 +73,13 @@ namespace Dt.Mgr.Model
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _win.Form.Update(e.Data.To<PrvObj>().ID);
+                _win.Form.Update(e.Data.To<PrvX>().ID);
             NaviToChildren();
         }
 
         void OnUserList(object sender, Mi e)
         {
-            Forward(new PrvUserList(), e.Data.To<PrvObj>().ID);
+            Forward(new PrvUserList(), e.Data.To<PrvX>().ID);
         }
 
         void NaviToChildren()
