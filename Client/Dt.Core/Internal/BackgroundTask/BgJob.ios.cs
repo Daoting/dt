@@ -57,16 +57,16 @@ namespace Dt.Core
         /// </summary>
         public static void Register()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 // 无后台 或 未启用
-                if (Kit.GetService<IBackgroundJob>() == null || !AtState.EnableBgJob)
+                if (Kit.GetService<IBackgroundJob>() == null || !await ClientCookie.IsEnableBgJob())
                     return;
 
                 // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
                 string name = Stub.Inst.GetType().AssemblyQualifiedName;
-                if (name != AtState.GetCookie(_stubType))
-                    AtState.SaveCookie(_stubType, name);
+                if (name != await ClientCookie.GetCookie(_stubType))
+                    await new ClientCookie(_stubType, name).Save(false);
 
                 // 有后台需要注册通知，因后台任务无法注册
                 RegisterNotification();
@@ -85,9 +85,9 @@ namespace Dt.Core
         /// <summary>
         /// 进入后台
         /// </summary>
-        public static void OnEnterBackground()
+        public static async void OnEnterBackground()
         {
-            if (Kit.GetService<IBackgroundJob>() != null && AtState.EnableBgJob)
+            if (Kit.GetService<IBackgroundJob>() != null && await ClientCookie.IsEnableBgJob())
             {
                 Unregister();
                 SendRequest(true);

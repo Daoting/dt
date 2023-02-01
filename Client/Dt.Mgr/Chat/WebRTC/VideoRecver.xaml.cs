@@ -48,7 +48,7 @@ namespace Dt.Mgr.Chat
                 SetSize(600, -60);
             }
 
-            _other = AtLob.First<ChatMemberObj>($"select * from ChatMember where id={p_fromUserID}");
+            _other = await ChatMemberObj.GetByID(p_fromUserID);
             _tbInfo.Text = $"[{_other.Name}] 邀请您视频通话...";
             await ShowAsync();
         }
