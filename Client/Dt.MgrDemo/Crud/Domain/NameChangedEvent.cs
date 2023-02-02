@@ -13,7 +13,9 @@ namespace Dt.MgrDemo.Crud
 {
     public class NameChangedEvent : IEvent
     {
-        public CrudX Tgt { get; set; }
+        public string OriginalVal { get; set; }
+
+        public string NewVal { get; set; }
     }
 
     [EventHandler]
@@ -21,6 +23,7 @@ namespace Dt.MgrDemo.Crud
     {
         public Task Handle(NameChangedEvent p_event)
         {
+            Kit.Msg($"原值：{p_event.OriginalVal}，\r\n新值：{p_event.NewVal}");
             return Task.CompletedTask;
         }
     }

@@ -23,6 +23,7 @@ namespace Dt.MgrDemo
             InitializeComponent();
         }
 
+        #region 增删改
         async void OnInsert(object sender, RoutedEventArgs e)
         {
             var x = await CrudX.New("单个" + rnd.Next(10000).ToString());
@@ -124,5 +125,36 @@ namespace Dt.MgrDemo
                 await CrudX.DelByID(x.ID, false);
             }
         }
+        #endregion
+
+        #region 领域事件
+        async void OnInsertEvent(object sender, RoutedEventArgs e)
+        {
+            var x = await CrudX.New("新增事件" + rnd.Next(10000).ToString());
+            x.EnableInsertEvent = true;
+            await x.Save();
+        }
+
+        async void OnUpdateEvent(object sender, RoutedEventArgs e)
+        {
+            var x = await CrudX.First(null);
+            if (x != null)
+            {
+                x.EnableNameChangedEvent = true;
+                x.Name = "Name变化事件" + rnd.Next(1000).ToString();
+                await x.Save();
+            }
+        }
+
+        async void OnDelEvent(object sender, RoutedEventArgs e)
+        {
+            var x = await CrudX.First(null);
+            if (x != null)
+            {
+                x.EnableDelEvent = true;
+                await x.Delete();
+            }
+        }
+        #endregion
     }
 }

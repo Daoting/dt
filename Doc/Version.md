@@ -27,13 +27,12 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * VS扩展工具单实体框架调整
 * VS扩展工具单实体框架生成自定义查询面板
 * 客户端增加本地事件的定义、发布、处理，和服务端用法相同
-* 替换DataProvider<TSvc>中Save Delete方法
+* 替换DataProvider<TSvc>中Save Delete方法，移除DataProvider<>，调整到EntityWriter
 * 实体类后缀 Obj -> X
+* EntityEx.DelByID支持直接删除，不经过校验领域事件等
 * CellUI -> LvCall, MidVal -> FvCall, IMidVal -> IFvCall
 
-* EntityEx.DelByID支持直接删除，不经过校验领域事件等
 * VS扩展工具单实体框架支持多表的虚拟实体
-* 移除客户端DataProvider的保存、删除功能，调整到UnitOfWork
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
 
 ### 功能
@@ -50,6 +49,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * UnitOfWork 改 EntityWriter私有类
 * 两端增加 DomainSvc 领域服务基类，BaseApi 改为 DomainSvc
 * EntityEx的普通实体方法：增删改及批量，及EntityX.DelByID
+* 实体领域事件样例
 
 未测
 SqliteCommandEx SqliteConnectionEx改动
@@ -63,10 +63,10 @@ Launch.cs 51行
 ShowRoot
 整个Chat
 
-* 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存、领域事件
+* 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存
 * 父子实体的保存和删除
 * 发布领域事件
-* 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的标签
+* 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的类型标签
 * 支持实体缓存
 
 ### Bug修改

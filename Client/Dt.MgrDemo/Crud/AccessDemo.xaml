@@ -21,6 +21,13 @@
             <Button Content="根据ID直接删除" Click="OnDirectDel" />
             <Button Content="根据ID通过实体系统删除" Click="OnDelByID" />
         </StackPanel>
+
+        <a:CBar Title="领域事件" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="新实体事件" Click="OnInsertEvent" />
+            <Button Content="Name修改事件" Click="OnUpdateEvent" />
+            <Button Content="删除实体事件" Click="OnDelEvent" />
+        </StackPanel>
         
         <a:CFree RowSpan="5" ShowTitle="False">
             <TextBox x:Name="_tbInfo"

@@ -21,6 +21,7 @@ namespace Dt.MgrDemo.Crud
     {
         public Task Handle(InsertCrudEvent p_event)
         {
+            Kit.Msg("新增ID：" + p_event.ID.ToString());
             return Task.CompletedTask;
         }
     }

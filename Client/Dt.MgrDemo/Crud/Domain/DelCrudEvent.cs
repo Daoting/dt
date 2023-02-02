@@ -21,7 +21,7 @@ namespace Dt.MgrDemo.Crud
     {
         public Task Handle(DelCrudEvent p_event)
         {
-            Kit.Msg("处理 DelCrudEvent 事件，被删实体 Name：" + p_event.Tgt.Name);
+            Kit.Msg("被删实体 Name：" + p_event.Tgt.Name);
             return Task.CompletedTask;
         }
     }
