@@ -685,7 +685,7 @@ namespace Dt.Core
         /// <summary>
         /// 开始记录被删除的行，IsAdded为true的行不参加，当被删除的行重新添加时移除记录
         /// </summary>
-        public void StartRecordDelRows()
+        public void RecordDeleted()
         {
             DeletedRows = new List<Row>();
             CollectionChanged += OnCollectionChanged;
@@ -694,7 +694,7 @@ namespace Dt.Core
         /// <summary>
         /// 停止记录被删除的行
         /// </summary>
-        public void StopRecordDelRows()
+        public void UnrecordDeleted()
         {
             // 未清空或重置 DeletedRows，可能历史记录仍有用！
             CollectionChanged -= OnCollectionChanged;

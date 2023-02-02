@@ -77,13 +77,13 @@ namespace Dt.Mgr.Domain
         void AttachEvent()
         {
             Changed += (s, e) => OnModified();
-            Atvs.StartRecordDelRows();
+            Atvs.RecordDeleted();
             Atvs.Changed += (s, e) => OnModified();
 
-            Trss.StartRecordDelRows();
+            Trss.RecordDeleted();
             Trss.CollectionChanged += (s, e) => OnModified();
 
-            AtvRoles.StartRecordDelRows();
+            AtvRoles.RecordDeleted();
             AtvRoles.CollectionChanged += (s, e) => OnModified();
         }
 

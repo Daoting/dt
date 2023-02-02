@@ -33,10 +33,11 @@ namespace Dt
 
         const int EntityClassCmdId = 0x5000;
         const int DomainExClsCmdId = 0x5001;
-        const int LvCallClsCmdId = 0x5002;
-        const int FvCallClsCmdId = 0x5003;
-        const int CListExClsCmdId = 0x5004;
-        const int AgentClsCmdId = 0x5005;
+        const int AgentClsCmdId = 0x5002;
+        const int EventClsCmdId = 0x5003;
+        const int LvCallClsCmdId = 0x5004;
+        const int FvCallClsCmdId = 0x5005;
+        const int CListExClsCmdId = 0x5006;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -72,10 +73,11 @@ namespace Dt
 
             cs.AddCommand(CmdDialog(EntityClassCmdId, typeof(InsertEntityClsForm)));
             cs.AddCommand(CmdInsertClass(DomainExClsCmdId, ClsType.DomainEx, null));
+            cs.AddCommand(CmdInsertClass(AgentClsCmdId, ClsType.Agent, null));
+            cs.AddCommand(CmdInsertClass(EventClsCmdId, ClsType.Event, null));
             cs.AddCommand(CmdInsertClass(LvCallClsCmdId, ClsType.LvCall, true));
             cs.AddCommand(CmdInsertClass(FvCallClsCmdId, ClsType.FvCall, true));
             cs.AddCommand(CmdInsertClass(CListExClsCmdId, ClsType.CListEx, true));
-            cs.AddCommand(CmdInsertClass(AgentClsCmdId, ClsType.Agent, null));
         }
 
         /// <summary>

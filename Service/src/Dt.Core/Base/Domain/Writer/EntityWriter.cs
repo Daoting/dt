@@ -364,7 +364,10 @@ namespace Dt.Core
 #if !SERVER
             if (p_isNotify)
             {
-                Kit.Warn(suc ? "保存成功！" : "保存失败！");
+                if (suc)
+                    Kit.Msg("保存成功！");
+                else
+                    Kit.Warn("保存失败！");
             }
 #endif
             if (!suc)

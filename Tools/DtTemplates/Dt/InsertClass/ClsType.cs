@@ -21,5 +21,6 @@ namespace Dt
         FvCall,
         CListEx,
         Agent,
+        Event
     }
 }

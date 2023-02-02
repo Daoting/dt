@@ -5,11 +5,21 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
-        <a:CBar Title="创建表" />
+        <a:CBar Title="实体增删改" />
         <StackPanel Orientation="Horizontal">
             <Button Content="增加新实体" Click="OnInsert" />
             <Button Content="更新实体" Click="OnUpdate" />
-            
+            <Button Content="删除实体" Click="OnDelete" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="批量增加" Click="OnBatchInsert" />
+            <Button Content="批量增更" Click="OnBatch" />
+            <Button Content="Table增删改" Click="OnSaveTable" />
+            <Button Content="批量删" Click="OnBatchDel" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="根据ID直接删除" Click="OnDirectDel" />
+            <Button Content="根据ID通过实体系统删除" Click="OnDelByID" />
         </StackPanel>
         
         <a:CFree RowSpan="5" ShowTitle="False">

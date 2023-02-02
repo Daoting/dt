@@ -238,7 +238,7 @@ namespace Dt.Mgr.Workflow
 
             // 删除已发送的后续活动实例，关联删除工作项及迁移实例
             Table<WfiAtvX> nextAtvs = new Table<WfiAtvX>();
-            nextAtvs.StartRecordDelRows();
+            nextAtvs.RecordDeleted();
             foreach (var id in ls)
             {
                 nextAtvs.DeletedRows.Add(new WfiAtvX(id));

@@ -18,8 +18,4 @@
         <Using Include="Dt.Mgr.Domain" />
         <Using Include="Dt.MgrDemo.Domain" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Crud\Domain\" />
-    </ItemGroup>
 </Project>

@@ -16,20 +16,45 @@ namespace Dt.MgrDemo.Crud
 {
     public partial class CrudX
     {
-        public static async Task<CrudX> New(
-            string Name = default,
-            int Dispidx = default,
-            DateTime Mtime = default)
+        public static async Task<CrudX> New(string Name)
         {
             return new CrudX(
                 ID: await NewID(),
                 Name: Name,
-                Dispidx: Dispidx,
-                Mtime: Mtime);
+                Dispidx: await NewSeq("Dispidx"),
+                Mtime: Kit.Now);
         }
 
         protected override void InitHook()
         {
+            OnSaving(() =>
+            {
+                if (IsAdded && EnableInsertEvent)
+                {
+                    AddEvent(new InsertCrudEvent { ID = ID });
+                }
+                else if (!IsAdded
+                    && EnableNameChangedEvent
+                    && _cells["Name"].IsChanged)
+                {
+                    AddEvent(new NameChangedEvent { Tgt = this });
+                }
+                return Task.CompletedTask;
+            });
+
+            OnDeleting(() =>
+            {
+                if (EnableDelEvent)
+                {
+                    AddEvent(new DelCrudEvent { Tgt = this });
+                }
+                return Task.CompletedTask;
+            });
+
+            OnChanging<string>(nameof(Name), v =>
+            {
+                //Kit.Msg("Name新值：" + v);
+            });
         }
     }
 }

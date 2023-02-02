@@ -52,10 +52,17 @@ namespace Dt.Core
         /// </summary>
         public string GetSelectByIDSql()
         {
-            if (_sqlSelect == null || PrimaryKey.Count == 1)
+            if (_sqlSelect == null)
             {
-                // 主键变量名固定为id
-                _sqlSelect = $"select * from `{Name}` where {PrimaryKey[0].Name}=@id";
+                if (PrimaryKey.Count == 1)
+                {
+                    // 主键变量名固定为id
+                    _sqlSelect = $"select * from `{Name}` where {PrimaryKey[0].Name}=@id";
+                }
+                else
+                {
+                    throw new Exception("根据主键查询实体的sql，只支持单主键！");
+                }
             }
             return _sqlSelect;
         }
@@ -65,10 +72,17 @@ namespace Dt.Core
         /// </summary>
         public string GetDeleteByIDSql()
         {
-            if (_sqlDelete == null || PrimaryKey.Count == 1)
+            if (_sqlDelete == null)
             {
-                // 主键变量名固定为id
-                _sqlDelete = $"delete from `{Name}` where {PrimaryKey[0].Name}=@id";
+                if (PrimaryKey.Count == 1)
+                {
+                    // 主键变量名固定为id
+                    _sqlDelete = $"delete from `{Name}` where {PrimaryKey[0].Name}=@id";
+                }
+                else
+                {
+                    throw new Exception("根据主键删除实体的sql，只支持单主键！");
+                }
             }
             return _sqlDelete;
         }
@@ -288,6 +302,30 @@ namespace Dt.Core
             Dict result = new Dict();
             result["text"] = sql.ToString();
             result["params"] = GenRowParm(dtParams);
+            return result;
+        }
+
+        /// <summary>
+        /// 生成删除行数据的sql，Dict结构：text(值为sql模板)，params(值为List`Dict`，每个Dict为sql参数)
+        /// </summary>
+        /// <param name="p_ids">主键列表</param>
+        /// <returns></returns>
+        internal Dict GetDelSqlByIDs(IList p_ids)
+        {
+            List<Dict> ls = new List<Dict>();
+            foreach (var id in p_ids)
+            {
+                if (id != null && !string.IsNullOrEmpty(id.ToString()))
+                {
+                    ls.Add(new Dict { { "id", id.ToString() } });
+                }
+            }
+            if (ls.Count == 0)
+                return null;
+
+            Dict result = new Dict();
+            result["text"] = GetDeleteByIDSql();
+            result["params"] = ls.Count == 1 ? ls[0] : ls;
             return result;
         }
 

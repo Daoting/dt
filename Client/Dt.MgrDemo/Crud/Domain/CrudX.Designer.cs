@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-01 创建
+* 日志: 2023-02-02 创建
 ******************************************************************************/
 #endregion
 
@@ -26,12 +26,18 @@ namespace Dt.MgrDemo.Crud
             long ID,
             string Name = default,
             int Dispidx = default,
-            DateTime Mtime = default)
+            DateTime Mtime = default,
+            bool EnableInsertEvent = default,
+            bool EnableNameChangedEvent = default,
+            bool EnableDelEvent = default)
         {
             AddCell("ID", ID);
             AddCell("Name", Name);
             AddCell("Dispidx", Dispidx);
             AddCell("Mtime", Mtime);
+            AddCell("EnableInsertEvent", EnableInsertEvent);
+            AddCell("EnableNameChangedEvent", EnableNameChangedEvent);
+            AddCell("EnableDelEvent", EnableDelEvent);
             IsAdded = true;
         }
         #endregion
@@ -61,6 +67,33 @@ namespace Dt.MgrDemo.Crud
         {
             get { return (DateTime)this["Mtime"]; }
             set { this["Mtime"] = value; }
+        }
+
+        /// <summary>
+        /// true时允许发布插入事件
+        /// </summary>
+        public bool EnableInsertEvent
+        {
+            get { return (bool)this["EnableInsertEvent"]; }
+            set { this["EnableInsertEvent"] = value; }
+        }
+
+        /// <summary>
+        /// true时允许发布Name变化事件
+        /// </summary>
+        public bool EnableNameChangedEvent
+        {
+            get { return (bool)this["EnableNameChangedEvent"]; }
+            set { this["EnableNameChangedEvent"] = value; }
+        }
+
+        /// <summary>
+        /// true时允许发布删除事件
+        /// </summary>
+        public bool EnableDelEvent
+        {
+            get { return (bool)this["EnableDelEvent"]; }
+            set { this["EnableDelEvent"] = value; }
         }
     }
 }

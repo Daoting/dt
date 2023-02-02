@@ -7,10 +7,8 @@
 #endregion
 
 #region 引用命名
-
-#endregion
-
 using System.Collections;
+#endregion
 
 namespace Dt.Core
 {
@@ -63,6 +61,9 @@ namespace Dt.Core
                 await ew.DelByID<TEntity>(p_id);
                 return await ew.Commit(p_isNotify);
             }
+
+            if (IsVirEntity(typeof(TEntity)))
+                return await DelVirEntityDirect(new List<object> { p_id }, p_isNotify);
             return await DelDirect(new List<object> { p_id }, p_isNotify);
         }
 
@@ -94,12 +95,91 @@ namespace Dt.Core
                 await ew.DelByIDs<TEntity>(p_ids);
                 return await ew.Commit(p_isNotify);
             }
+
+            if (IsVirEntity(typeof(TEntity)))
+                return await DelVirEntityDirect(p_ids, p_isNotify);
             return await DelDirect(p_ids, p_isNotify);
         }
 
         static async Task<bool> DelDirect(IList p_ids, bool p_isNotify = true)
         {
-            return false;
+            var model = EntitySchema.Get(typeof(TEntity));
+            Dict dt = model.Schema.GetDelSqlByIDs(p_ids);
+            if (dt == null)
+            {
+#if !SERVER
+                if (p_isNotify)
+                    Kit.Warn("没有需要删除的数据！");
+#endif
+                return false;
+            }
+
+            var ac = model.AccessInfo.GetEntityAccess();
+            bool suc;
+            if (dt["params"] is Dict par)
+            {
+                suc = await ac.Exec((string)dt["text"], par) > 0;
+            }
+            else
+            {
+                suc = await ac.BatchExec(new List<Dict> { dt }) > 0;
+            }
+
+#if !SERVER
+            if (p_isNotify)
+            {
+                if (suc)
+                    Kit.Msg("删除成功！");
+                else
+                    Kit.Warn("删除失败！");
+            }
+#endif
+            return suc;
+        }
+
+        static async Task<bool> DelVirEntityDirect(IList p_ids, bool p_isNotify = true)
+        {
+            Type tpVir = typeof(TEntity);
+            while (!tpVir.IsGenericType)
+            {
+                tpVir = tpVir.BaseType;
+            }
+
+            var ls = new List<Dict>();
+            var entities = tpVir.GenericTypeArguments;
+
+            // 虚拟实体内部包含的实体对象
+            foreach (var tp in entities)
+            {
+                var model = EntitySchema.Get(tp);
+                Dict dt = model.Schema.GetDelSqlByIDs(p_ids);
+                if (dt != null)
+                    ls.Add(dt);
+            }
+
+            if (ls.Count == 0)
+            {
+#if !SERVER
+                if (p_isNotify)
+                    Kit.Warn("没有需要删除的数据！");
+#endif
+                return false;
+            }
+
+            var m = EntitySchema.Get(entities[0]);
+            var ac = m.AccessInfo.GetEntityAccess();
+            bool suc = await ac.BatchExec(ls) > 0;
+
+#if !SERVER
+            if (p_isNotify)
+            {
+                if (suc)
+                    Kit.Msg("删除成功！");
+                else
+                    Kit.Warn("删除失败！");
+            }
+#endif
+            return suc;
         }
         #endregion
 
@@ -289,7 +369,7 @@ namespace Dt.Core
 
             if (ai.Type == AccessType.Remote)
             {
-                return Kit.Rpc<long>(ai.Name, "Da.NewID" );
+                return Kit.Rpc<long>(ai.Name, "Da.NewID");
             }
 
             // 本地库采用自增

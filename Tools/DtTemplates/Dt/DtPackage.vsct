@@ -199,28 +199,34 @@
 					<ButtonText>领域服务类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="LvCallClsCmdId" priority="0x0102" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="AgentClsCmdId" priority="0x0102" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
+				<Strings>
+					<ButtonText>数据访问类</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidDtPackageCmdSet" id="EventClsCmdId" priority="0x0103" type="Button">
+				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
+				<Strings>
+					<ButtonText>事件及处理类</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidDtPackageCmdSet" id="LvCallClsCmdId" priority="0x0104" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
 					<ButtonText>Lv的Call类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="FvCallClsCmdId" priority="0x0103" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="FvCallClsCmdId" priority="0x0105" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
 					<ButtonText>Fv的Call类</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="CListExClsCmdId" priority="0x0104" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="CListExClsCmdId" priority="0x0106" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
 				<Strings>
 					<ButtonText>CList的Ex类</ButtonText>
-				</Strings>
-			</Button>
-			<Button guid="guidDtPackageCmdSet" id="AgentClsCmdId" priority="0x0105" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderClassGroup" />
-				<Strings>
-					<ButtonText>数据访问类</ButtonText>
 				</Strings>
 			</Button>
 			
@@ -276,10 +282,11 @@
 
 			<IDSymbol name="EntityClassCmdId" value="0x5000" />
 			<IDSymbol name="DomainExClsCmdId" value="0x5001" />
-			<IDSymbol name="LvCallClsCmdId" value="0x5002" />
-			<IDSymbol name="FvCallClsCmdId" value="0x5003" />
-			<IDSymbol name="CListExClsCmdId" value="0x5004" />
-			<IDSymbol name="AgentClsCmdId" value="0x5005" />
+			<IDSymbol name="AgentClsCmdId" value="0x5002" />
+			<IDSymbol name="EventClsCmdId" value="0x5003" />
+			<IDSymbol name="LvCallClsCmdId" value="0x5004" />
+			<IDSymbol name="FvCallClsCmdId" value="0x5005" />
+			<IDSymbol name="CListExClsCmdId" value="0x5006" />
 		</GuidSymbol>
 
 		<!-- xaml编辑器上下文菜单的guid -->

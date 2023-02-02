@@ -113,6 +113,25 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 一个事务内批量删除Table的所有实体数据，成功后对于每个删除的实体：
+        /// <para>1. 若存在领域事件，则发布事件</para>
+        /// <para>2. 若已设置服务端缓存，则删除缓存</para>
+        /// </summary>
+        /// <param name="p_tbl">待删除实体列表</param>
+        /// <param name="p_isNotify">是否提示删除结果，客户端有效</param>
+        /// <returns>true 删除成功</returns>
+        public static Task<bool> Delete<TEntity>(this Table<TEntity> p_tbl, bool p_isNotify = true)
+            where TEntity : Entity
+        {
+            if (p_tbl == null || p_tbl.Count == 0)
+                return Task.FromResult(false);
+
+            var ls = new List<TEntity>();
+            ls.AddRange(p_tbl);
+            return Delete(ls, p_isNotify);
+        }
+
+        /// <summary>
         /// 一个事务内批量删除实体数据，成功后对于每个删除的实体：
         /// <para>1. 若存在领域事件，则发布事件</para>
         /// <para>2. 若已设置服务端缓存，则删除缓存</para>

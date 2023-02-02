@@ -8,11 +8,13 @@ namespace Dt
     public partial class InsertClassForm : Form
     {
         string _tempFile;
+        ClsType _clsType;
 
         public InsertClassForm(ClsType p_clsType)
         {
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
+            _clsType = p_clsType;
 
             switch (p_clsType)
             {
@@ -60,6 +62,12 @@ namespace Dt
                     _cls.Text = "AtMySvc";
                     break;
 
+                case ClsType.Event:
+                    Text = "添加事件及处理类";
+                    _info.Text = "内部自动为事件类添加 Event 后缀，为处理类添加 Handler 为后缀";
+                    _tempFile = "EventTemp.cs";
+                    _cls.Text = "InsertAbc";
+                    break;
             }
         }
 
@@ -85,7 +93,7 @@ namespace Dt
                     {"$username$", Environment.UserName },
                 };
             
-            var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
+            var path = _clsType == ClsType.Event ? Path.Combine(Kit.GetFolderPath(), $"{cls}Event.cs") : Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
             Kit.WritePrjFile(path, "Dt.InsertClass." + _tempFile, dt);
             Kit.OpenFile(path);
 
