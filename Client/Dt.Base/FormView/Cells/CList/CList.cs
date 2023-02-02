@@ -200,7 +200,7 @@ namespace Dt.Base
         /// </summary>
         public ListDlg Dlg => _dlg;
 
-        protected override IMidVal DefaultMiddle => new ListValConverter();
+        protected override IFvCall DefaultMiddle => new ListValConverter();
         #endregion
 
         #region 重写方法

@@ -361,7 +361,7 @@ namespace Dt.Base
         /// <summary>
         /// 默认的取值赋值处理对象
         /// </summary>
-        protected virtual IMidVal DefaultMiddle { get; }
+        protected virtual IFvCall DefaultMiddle { get; }
         #endregion
 
         #region 外部方法
@@ -462,13 +462,13 @@ namespace Dt.Base
         /// 获取格的取值赋值处理对象
         /// </summary>
         /// <returns></returns>
-        internal IMidVal GetMiddle()
+        internal IFvCall GetMiddle()
         {
             if (!string.IsNullOrEmpty(Call))
             {
-                var tp = Kit.GetAllTypesByAlias(typeof(MidValAttribute), Call).FirstOrDefault();
-                if (tp != null && tp.GetInterface("IMidVal") == typeof(IMidVal))
-                    return Activator.CreateInstance(tp) as IMidVal;
+                var tp = Kit.GetAllTypesByAlias(typeof(FvCallAttribute), Call).FirstOrDefault();
+                if (tp != null && tp.GetInterface("IFvCall") == typeof(IFvCall))
+                    return Activator.CreateInstance(tp) as IFvCall;
             }
             return DefaultMiddle;
         }

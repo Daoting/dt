@@ -130,7 +130,7 @@ namespace Dt.Base
         }
 
         #region 重写
-        protected override IMidVal DefaultMiddle => new DateValConverter();
+        protected override IFvCall DefaultMiddle => new DateValConverter();
 
         protected override void OnApplyCellTemplate()
         {

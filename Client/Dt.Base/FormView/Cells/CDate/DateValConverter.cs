@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CDate.Data，目标CDate.Value
     /// </summary>
-    class DateValConverter : IMidVal
+    class DateValConverter : IFvCall
     {
         public object Get(Mid m)
         {

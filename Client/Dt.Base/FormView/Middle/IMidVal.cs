@@ -14,7 +14,7 @@ namespace Dt.Base
     /// <summary>
     /// 格取值赋值接口
     /// </summary>
-    public interface IMidVal
+    public interface IFvCall
     {
         /// <summary>
         /// 从数据源取值

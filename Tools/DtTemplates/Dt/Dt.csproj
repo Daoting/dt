@@ -55,7 +55,7 @@
     </Compile>
     <EmbeddedResource Include="InsertClass\AgentTemp.cs" />
     <EmbeddedResource Include="InsertClass\ServerDomainSvc.cs" />
-    <EmbeddedResource Include="InsertClass\CellUITemp.cs" />
+    <EmbeddedResource Include="InsertClass\LvCallTemp.cs" />
     <EmbeddedResource Include="InsertClass\CListExTemp.cs" />
     <EmbeddedResource Include="InsertClass\DomainSvc.cs" />
     <EmbeddedResource Include="InsertClass\EventTemp.cs" />

@@ -137,7 +137,7 @@ namespace Dt.Base
             set { SetValue(InputScopeProperty, value); }
         }
 
-        protected override IMidVal DefaultMiddle => new TextValConverter();
+        protected override IFvCall DefaultMiddle => new TextValConverter();
 
         protected override void OnApplyCellTemplate()
         {
@@ -190,7 +190,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CText.Data，目标TextBox.Text
     /// </summary>
-    class TextValConverter : IMidVal
+    class TextValConverter : IFvCall
     {
         public object Get(Mid m)
         {

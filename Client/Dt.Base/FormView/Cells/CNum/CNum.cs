@@ -463,7 +463,7 @@ namespace Dt.Base
             }
         }
 
-        protected override IMidVal DefaultMiddle => new NumValConverter();
+        protected override IFvCall DefaultMiddle => new NumValConverter();
         #endregion
 
         #region 外部方法

@@ -40,7 +40,7 @@ namespace Dt.UIDemo
         }
     }
 
-    [CellUI]
+    [LvCall]
     public class TvItemStyleUI
     {
         public static void 图标(Env e)

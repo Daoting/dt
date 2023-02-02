@@ -16,8 +16,8 @@ using Microsoft.UI.Xaml.Shapes;
 
 namespace $rootnamespace$
 {
-    [MidVal]
-    public class $clsname$ : IMidVal
+    [FvCall]
+    public class $clsname$ : IFvCall
     {
         public object Get(Mid m)
         {

@@ -55,7 +55,7 @@ namespace Dt.Mgr.Workflow
         }
     }
 
-    [CellUI]
+    [LvCall]
     public class CurrentTasksUI
     {
         public static void FormatTitle(Env e)

@@ -16,7 +16,7 @@ namespace Dt.Base.FormView
     /// <summary>
     /// 特殊处理CNum与Cell之间null的转换
     /// </summary>
-    public class NumValConverter : IMidVal
+    public class NumValConverter : IFvCall
     {
         public object Get(Mid m)
         {

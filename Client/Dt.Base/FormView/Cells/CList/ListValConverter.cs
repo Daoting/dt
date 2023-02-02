@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 源Cell.Val，目标CList.Value
     /// </summary>
-    class ListValConverter : IMidVal
+    class ListValConverter : IFvCall
     {
         public object Get(Mid m)
         {

@@ -271,7 +271,7 @@ namespace Dt.Base
                 return null;
             }
 
-            mi = Kit.GetMethodByAlias(typeof(CellUIAttribute), arr[0], arr[1], BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
+            mi = Kit.GetMethodByAlias(typeof(LvCallAttribute), arr[0], arr[1], BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase);
             if (mi != null)
             {
                 var pars = mi.GetParameters();

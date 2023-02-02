@@ -108,7 +108,7 @@ namespace Dt.Base
         }
 
         #region 重写
-        protected override IMidVal DefaultMiddle => new TipValConverter();
+        protected override IFvCall DefaultMiddle => new TipValConverter();
 
         protected override void OnApplyCellTemplate()
         {
@@ -212,7 +212,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CTip.Data，目标TextBlock.Text
     /// </summary>
-    class TipValConverter : IMidVal
+    class TipValConverter : IFvCall
     {
         public object Get(Mid m)
         {

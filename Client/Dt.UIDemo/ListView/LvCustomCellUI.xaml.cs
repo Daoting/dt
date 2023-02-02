@@ -106,7 +106,7 @@ namespace Dt.UIDemo
         DispatcherTimer _dt;
     }
 
-    [CellUI]
+    [LvCall]
     public static class LvCustomUI
     {
         public static void ApplyStyle(Env e)
@@ -227,7 +227,7 @@ namespace Dt.UIDemo
     ///// <summary>
     ///// 重写的不注释会影响全局
     ///// </summary>
-    //[CellUI]
+    //[LvCall]
     //public class Def
     //{
     //    public static void Warning(Env e)

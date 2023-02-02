@@ -92,7 +92,7 @@ namespace Dt.UIDemo
         }
     }
 
-    [CellUI]
+    [LvCall]
     public static class LvItemStyleUI
     {
         public static void 性别头像(Env e)

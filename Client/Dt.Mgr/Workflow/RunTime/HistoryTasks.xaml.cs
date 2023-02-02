@@ -108,7 +108,7 @@ namespace Dt.Mgr.Workflow
         }
     }
 
-    [CellUI]
+    [LvCall]
     public class HistoryTaskUI
     {
         public static void FormatTile(Env e)

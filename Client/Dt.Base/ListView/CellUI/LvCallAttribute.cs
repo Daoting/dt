@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2022-11-24 创建
+* 日志: 2022-11-09 创建
 ******************************************************************************/
 #endregion
 
@@ -13,12 +13,12 @@
 namespace Dt.Base
 {
     /// <summary>
-    /// 格取值赋值过程的类型标签
+    /// 自定义单元格UI类型的标签
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class MidValAttribute : TypeAliasAttribute
+    public class LvCallAttribute : TypeAliasAttribute
     {
-        public MidValAttribute()
+        public LvCallAttribute()
         {
         }
     }

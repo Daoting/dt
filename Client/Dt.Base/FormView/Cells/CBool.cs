@@ -92,7 +92,7 @@ namespace Dt.Base
             set { SetValue(FalseValProperty, value); }
         }
 
-        protected override IMidVal DefaultMiddle => new BoolBoxConverter();
+        protected override IFvCall DefaultMiddle => new BoolBoxConverter();
 
         protected override void OnApplyCellTemplate()
         {
@@ -130,7 +130,7 @@ namespace Dt.Base
         }
     }
 
-    class BoolBoxConverter : IMidVal
+    class BoolBoxConverter : IFvCall
     {
         public object Get(Mid m)
         {

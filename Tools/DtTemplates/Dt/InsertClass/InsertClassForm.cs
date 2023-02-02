@@ -37,7 +37,7 @@ namespace Dt
                 case ClsType.LvCall:
                     Text = "添加Lv的Call类";
                     _info.Text = "命名规则：以UI为后缀";
-                    _tempFile = "CellUITemp.cs";
+                    _tempFile = "LvCallTemp.cs";
                     _cls.Text = "MyCallUI";
                     break;
 

@@ -348,7 +348,7 @@ namespace Dt.Base.Tools
         #endregion
     }
 
-    [CellUI]
+    [LvCall]
     public class SysTraceCellUI
     {
         public static void FormatTitle(Env e)

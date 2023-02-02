@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml.Shapes;
 
 namespace $rootnamespace$
 {
-    [CellUI]
+    [LvCall]
     public class $clsname$
     {
         public static void Format(Env e)

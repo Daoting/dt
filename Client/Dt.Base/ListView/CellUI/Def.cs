@@ -19,7 +19,7 @@ namespace Dt.Base
     /// <summary>
     /// 常用的单元格UI类型
     /// </summary>
-    [CellUI]
+    [LvCall]
     public class Def
     {
         /// <summary>

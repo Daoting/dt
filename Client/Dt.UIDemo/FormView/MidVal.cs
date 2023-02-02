@@ -13,8 +13,8 @@ using Microsoft.UI.Text;
 
 namespace Dt.UIDemo
 {
-    [MidVal]
-    public class TenTimesMid : IMidVal
+    [FvCall]
+    public class TenTimesMid : IFvCall
     {
         public object Get(Mid m)
         {
@@ -27,8 +27,8 @@ namespace Dt.UIDemo
         }
     }
 
-    [MidVal]
-    public class StyleMid : IMidVal
+    [FvCall]
+    public class StyleMid : IFvCall
     {
         public object Get(Mid m)
         {
@@ -66,8 +66,8 @@ namespace Dt.UIDemo
         }
     }
 
-    [MidVal]
-    public class PrefixMid : IMidVal
+    [FvCall]
+    public class PrefixMid : IFvCall
     {
         public object Get(Mid m)
         {
@@ -80,8 +80,8 @@ namespace Dt.UIDemo
         }
     }
 
-    [MidVal]
-    public class MergeMid : IMidVal
+    [FvCall]
+    public class MergeMid : IFvCall
     {
         public object Get(Mid m)
         {
@@ -104,8 +104,8 @@ namespace Dt.UIDemo
         }
     }
 
-    [MidVal]
-    public class ReplaceMid : IMidVal
+    [FvCall]
+    public class ReplaceMid : IFvCall
     {
         public object Get(Mid m)
         {
