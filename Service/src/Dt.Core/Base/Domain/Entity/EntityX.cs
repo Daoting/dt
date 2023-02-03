@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System.Collections;
+using System.Linq;
 #endregion
 
 namespace Dt.Core
@@ -105,12 +106,25 @@ namespace Dt.Core
         {
             var model = EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetDelSqlByIDs(p_ids);
+#if SERVER
+            if (dt == null)
+                return false;
+
+            bool suc;
+            if (dt["params"] is Dict par)
+            {
+                suc = await Kit.ContextEa.Exec((string)dt["text"], par) > 0;
+            }
+            else
+            {
+                suc = await Kit.ContextEa.BatchExec(new List<Dict> { dt }) > 0;
+            }
+            return suc;
+#else
             if (dt == null)
             {
-#if !SERVER
                 if (p_isNotify)
                     Kit.Warn("没有需要删除的数据！");
-#endif
                 return false;
             }
 
@@ -125,7 +139,6 @@ namespace Dt.Core
                 suc = await ac.BatchExec(new List<Dict> { dt }) > 0;
             }
 
-#if !SERVER
             if (p_isNotify)
             {
                 if (suc)
@@ -133,8 +146,8 @@ namespace Dt.Core
                 else
                     Kit.Warn("删除失败！");
             }
-#endif
             return suc;
+#endif
         }
 
         static async Task<bool> DelVirEntityDirect(IList p_ids, bool p_isNotify = true)
@@ -157,12 +170,16 @@ namespace Dt.Core
                     ls.Add(dt);
             }
 
+#if SERVER
+            if (ls.Count == 0)
+                return false;
+
+            return await Kit.ContextEa.BatchExec(ls) > 0;
+#else
             if (ls.Count == 0)
             {
-#if !SERVER
                 if (p_isNotify)
                     Kit.Warn("没有需要删除的数据！");
-#endif
                 return false;
             }
 
@@ -170,7 +187,6 @@ namespace Dt.Core
             var ac = m.AccessInfo.GetEntityAccess();
             bool suc = await ac.BatchExec(ls) > 0;
 
-#if !SERVER
             if (p_isNotify)
             {
                 if (suc)
@@ -178,8 +194,8 @@ namespace Dt.Core
                 else
                     Kit.Warn("删除失败！");
             }
-#endif
             return suc;
+#endif
         }
         #endregion
 
@@ -405,6 +421,20 @@ namespace Dt.Core
 #endif
             Throw.If(seq == 0, $"序列【{seqName}】不存在，请在sequence表中手动添加！");
             return seq;
+        }
+        #endregion
+
+        #region 工具方法
+        protected static void AddEntityCells(Entity p_entity, Type p_type)
+        {
+            var schema = EntitySchema.Get(p_type).Schema;
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                if (!p_entity.Contains(col.Name))
+                {
+                    new Cell(p_entity, col.Name, col.Type);
+                }
+            }
         }
         #endregion
     }

@@ -97,11 +97,11 @@ namespace Dt.Core
                     sb.Append(prefix);
                     sb.Append(".");
                     sb.Append(schema.PrimaryKey[0].Name);
-                    tbls = schema.Name + " " + prefix;
+                    tbls = $"`{schema.Name}` {prefix}";
                 }
                 else
                 {
-                    tbls += $" JOIN {schema.Name} {prefix} on a.{schema.PrimaryKey[0].Name}={prefix}.{schema.PrimaryKey[0].Name}";
+                    tbls += $" JOIN `{schema.Name}` {prefix} on a.{schema.PrimaryKey[0].Name}={prefix}.{schema.PrimaryKey[0].Name}";
                 }
 
                 foreach (var col in schema.Columns)
@@ -135,7 +135,7 @@ namespace Dt.Core
                 }
             }
             _selectAll = $"select {sb} from {tbls}";
-            _selectByID = _selectAll + $" where {schemas[0].Schema.PrimaryKey[0].Name}=@id";
+            _selectByID = _selectAll + $" where a.{schemas[0].Schema.PrimaryKey[0].Name}=@id";
         }
 
         #region 静态内容

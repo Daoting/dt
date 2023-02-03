@@ -20,7 +20,7 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityEx.cs" Link="Base\Domain\Entity\EntityEx.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityX.cs" Link="Base\Domain\Entity\EntityX.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\IVirEntity.cs" Link="Base\Domain\Entity\IVirEntity.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirObj.cs" Link="Base\Domain\Entity\VirObj.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirX.cs" Link="Base\Domain\Entity\VirX.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirEntitySchema.cs" Link="Base\Domain\Entity\VirEntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\CacheAttribute.cs" Link="Base\Domain\Entity\CacheAttribute.cs" />

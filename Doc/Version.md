@@ -50,6 +50,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 两端增加 DomainSvc 领域服务基类，BaseApi 改为 DomainSvc
 * EntityEx的普通实体方法：增删改及批量，及EntityX.DelByID
 * 实体领域事件样例
+* 虚拟实体的增删改查样例
 
 未测
 SqliteCommandEx SqliteConnectionEx改动
@@ -63,9 +64,9 @@ Launch.cs 51行
 ShowRoot
 整个Chat
 
-* 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存
+
 * 父子实体的保存和删除
-* 发布领域事件
+* 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存
 * 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的类型标签
 * 支持实体缓存
 

@@ -143,7 +143,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取设置当前行是否为新增
         /// </summary>
-        public bool IsAdded { get; set; }
+        public virtual bool IsAdded { get; set; }
 
         /// <summary>
         /// 获得已改变的Cell

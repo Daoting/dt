@@ -16,7 +16,7 @@ namespace Dt.MgrDemo
 {
     public partial class AccessDemo : Win
     {
-        Random rnd = new Random();
+        Random _rnd = new Random();
 
         public AccessDemo()
         {
@@ -26,7 +26,7 @@ namespace Dt.MgrDemo
         #region 增删改
         async void OnInsert(object sender, RoutedEventArgs e)
         {
-            var x = await CrudX.New("单个" + rnd.Next(10000).ToString());
+            var x = await CrudX.New("单个" + _rnd.Next(10000).ToString());
             await x.Save();
 
             //await EntityEx.Save(default(CrudX));
@@ -37,7 +37,7 @@ namespace Dt.MgrDemo
             var x = await CrudX.First(null);
             if (x != null)
             {
-                x.Name = rnd.Next(1000).ToString();
+                x.Name = _rnd.Next(1000).ToString();
                 await x.Save();
             }
         }
@@ -63,7 +63,7 @@ namespace Dt.MgrDemo
             var tbl = new Table<CrudX>();
             for (int i = 0; i < 3; i++)
             {
-                tbl.Add(await CrudX.New("批量" + rnd.Next(1000)));
+                tbl.Add(await CrudX.New("批量" + _rnd.Next(1000)));
             }
             await tbl.Save();
         }
@@ -73,9 +73,9 @@ namespace Dt.MgrDemo
             var tbl = await CrudX.Query(" true limit 2");
             // 更
             if (tbl.Count > 0)
-                tbl[0].Name = "批增更" + rnd.Next(1000);
+                tbl[0].Name = "批增更" + _rnd.Next(1000);
             // 增
-            tbl.Add(await CrudX.New("批增更" + rnd.Next(1000)));
+            tbl.Add(await CrudX.New("批增更" + _rnd.Next(1000)));
             await tbl.Save();
         }
 
@@ -88,10 +88,10 @@ namespace Dt.MgrDemo
                 // 删
                 tbl.RemoveAt(0);
                 // 更
-                tbl[0].Name = "批增更删" + rnd.Next(1000);
+                tbl[0].Name = "批增更删" + _rnd.Next(1000);
             }
             // 增
-            tbl.Add(await CrudX.New("批增更删" + rnd.Next(1000)));
+            tbl.Add(await CrudX.New("批增更删" + _rnd.Next(1000)));
             await tbl.Save();
         }
 
@@ -130,7 +130,7 @@ namespace Dt.MgrDemo
         #region 领域事件
         async void OnInsertEvent(object sender, RoutedEventArgs e)
         {
-            var x = await CrudX.New("新增事件" + rnd.Next(10000).ToString());
+            var x = await CrudX.New("新增事件" + _rnd.Next(10000).ToString());
             x.EnableInsertEvent = true;
             await x.Save();
         }
@@ -141,7 +141,7 @@ namespace Dt.MgrDemo
             if (x != null)
             {
                 x.EnableNameChangedEvent = true;
-                x.Name = "Name变化事件" + rnd.Next(1000).ToString();
+                x.Name = "Name变化事件" + _rnd.Next(1000).ToString();
                 await x.Save();
             }
         }
@@ -154,6 +154,76 @@ namespace Dt.MgrDemo
                 x.EnableDelEvent = true;
                 await x.Delete();
             }
+        }
+        #endregion
+
+        #region 虚拟实体
+        async void OnInsertVir(object sender, RoutedEventArgs e)
+        {
+            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
+            x.E1.ID = await Virtbl1X.NewID();
+            x.E1.Name1 = "新1";
+            x.E2.Name2 = "新2";
+            x.E3.Name3 = "新3";
+            await x.Save();
+        }
+
+        async void OnUpdateVir(object sender, RoutedEventArgs e)
+        {
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.First(null);
+            if (x != null)
+            {
+                var name = "更" + _rnd.Next(1000);
+                x.E1.Name1 = name;
+                x.E2.Name2 = name;
+                x.E3.Name3 = name;
+                await x.Save();
+            }
+        }
+
+        async void OnDelVir(object sender, RoutedEventArgs e)
+        {
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.First(null);
+            if (x != null)
+                await x.Delete();
+        }
+
+        async void OnSaveVir(object sender, RoutedEventArgs e)
+        {
+            var tbl = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.Query(" true limit 4");
+            if (tbl.Count > 1)
+            {
+                tbl.RecordDeleted();
+                // 删
+                tbl.RemoveAt(0);
+                // 更
+                var name = "批更" + _rnd.Next(1000);
+                tbl[0].E1.Name1 = name;
+                tbl[0].E2.Name2 = name;
+                tbl[0].E3.Name3 = name;
+            }
+            // 增
+            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
+            x.E1.ID = await Virtbl1X.NewID();
+            x.E1.Name1 = "批增1";
+            x.E2.Name2 = "批增2";
+            x.E3.Name3 = "批增3";
+            tbl.Add(x);
+            await tbl.Save();
+        }
+
+        async void OnDirectDelVir(object sender, RoutedEventArgs e)
+        {
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.First(null);
+            if (x != null)
+                await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.DelByID(x.ID);
+        }
+
+        async void OnDelByIDVir(object sender, RoutedEventArgs e)
+        {
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.First(null);
+            if (x != null)
+                await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.DelByID(x.ID, false);
         }
         #endregion
     }
