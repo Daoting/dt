@@ -66,7 +66,7 @@ namespace Dt.Core
             });
 
             // 添加MySql数据库访问，可根据配置切换成其它库类型
-            p_services.AddTransient<IEntityAccess, MySqlAccess>();
+            p_services.AddTransient<IDataAccess, MySqlAccess>();
 
             Kit.ConfigureServices(p_services);
         }

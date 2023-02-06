@@ -14,7 +14,7 @@ namespace Dt.MgrDemo
     /// <summary>
     /// demo服务的数据访问
     /// </summary>
-    public partial class AtDemo : EntityAccess<AtDemo.Info>
+    public partial class AtDemo : DataAccess<AtDemo.Info>
     {
         public class Info : AccessInfo
         {

@@ -81,14 +81,28 @@ namespace Dt.Core
             if (p_entity.IsAdded || p_entity.IsChanged)
                 await Save(new List<TEntity> { p_entity });
 
-            var ls = p_entity.GetChildren();
-            if (ls != null && ls.Count > 0)
+            var model = EntitySchema.Get(typeof(TEntity));
+            if (model.Children.Count == 0)
+                return;
+
+            // 构造方法里的泛型参数 TEntity
+            Type tpEntity = Type.MakeGenericMethodParameter(0);
+            // 构造泛型Table<>
+            var tpTbl = typeof(Table<>).MakeGenericType(tpEntity);
+            // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
+            var save = GetType().GetMethod("Save", 1, new Type[1] { tpTbl });
+
+            foreach (var child in model.Children)
             {
-                foreach (var child in ls)
-                {
-                    if (child != null && child.Count > 0)
-                        await Save(child);
-                }
+                // 获取子实体列表
+                var tbl = child.PropInfo.GetValue(p_entity);
+
+                // 构造泛型方法
+                var mi = save.MakeGenericMethod(child.Type);
+
+                // 调用Save<>方法
+                var task = (Task)mi.Invoke(this, new object[1] { tbl });
+                await task;
             }
         }
 
@@ -408,7 +422,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         Task<int> Exec(string p_sql, object p_params = null)
         {
-            return Kit.ContextEa.Exec(p_sql, p_params);
+            return Kit.DataAccess.Exec(p_sql, p_params);
         }
 
         /// <summary>
@@ -418,7 +432,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         Task<int> BatchExec(List<Dict> p_dts)
         {
-            return Kit.ContextEa.BatchExec(p_dts);
+            return Kit.DataAccess.BatchExec(p_dts);
         }
 
 #else
@@ -451,7 +465,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         Task<int> Exec(string p_sql, object p_params = null)
         {
-            var ac = _ai.GetEntityAccess();
+            var ac = _ai.GetDataAccess();
             return ac.Exec(p_sql, p_params);
         }
 
@@ -462,7 +476,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         Task<int> BatchExec(List<Dict> p_dts)
         {
-            var ac = _ai.GetEntityAccess();
+            var ac = _ai.GetDataAccess();
             return ac.BatchExec(p_dts);
         }
 #endif

@@ -22,8 +22,8 @@ namespace Dt.Core
             UserID = p_invoker.UserID;
             Log = p_invoker.Log;
 
-            Ea = Kit.GetService<IEntityAccess>();
-            Ea.AutoClose = false;
+            DataAccess = Kit.GetService<IDataAccess>();
+            DataAccess.AutoClose = false;
 
             // RabbitMQ或本地调用时，无法通过HttpContext获取Bag
             if (p_invoker is HttpApiInvoker ha)
@@ -38,14 +38,14 @@ namespace Dt.Core
             UserID = p_userID;
             Log = p_log;
 
-            Ea = Kit.GetService<IEntityAccess>();
-            Ea.AutoClose = false;
+            DataAccess = Kit.GetService<IDataAccess>();
+            DataAccess.AutoClose = false;
         }
 
         /// <summary>
         /// 获取当前数据访问对象
         /// </summary>
-        public IEntityAccess Ea { get; }
+        public IDataAccess DataAccess { get; }
 
         /// <summary>
         /// 获取当前用户标识，UI客户端rpc为实际登录用户ID

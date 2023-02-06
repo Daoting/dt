@@ -44,8 +44,8 @@ namespace Dt.Base.Tools
                 if (name.IndexOf('.') != -1)
                     continue;
 
-                var ea = AccessInfo.GetSqliteAccess(name);
-                int cnt = await ea.GetScalar<int>("select count(*) from sqlite_master where type='table'");
+                var da = AccessInfo.GetSqliteAccess(name);
+                int cnt = await da.GetScalar<int>("select count(*) from sqlite_master where type='table'");
                 tbl.AddRow(new { name = name, info = $"{cnt}张表，{Kit.GetFileSizeDesc((ulong)fi.Length)}" });
             }
             _lvDb.Data = tbl;
@@ -55,8 +55,8 @@ namespace Dt.Base.Tools
         {
             if (e.IsChanged)
             {
-                var ea = AccessInfo.GetSqliteAccess(e.Row.Str("name"));
-                _lvTbl.Data = await ea.Query("select name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name");
+                var da = AccessInfo.GetSqliteAccess(e.Row.Str("name"));
+                _lvTbl.Data = await da.Query("select name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name");
                 _lvData.Data = null;
             }
             NaviTo("表");
@@ -190,7 +190,7 @@ namespace Dt.Base.Tools
             }
         }
 
-        IEntityAccess GetDb()
+        IDataAccess GetDb()
         {
             return AccessInfo.GetSqliteAccess(_lvDb.SelectedRow.Str("name"));
         }

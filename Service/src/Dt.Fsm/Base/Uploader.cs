@@ -34,7 +34,7 @@ namespace Dt.Fsm
         readonly HttpContext _context;
         readonly List<string> _result;
         string _volume;
-        IEntityAccess _ea;
+        IDataAccess _da;
 
         public Uploader(HttpContext p_context)
         {
@@ -84,8 +84,8 @@ namespace Dt.Fsm
             }
 
             SortedSetCache cache = null;
-            _ea = Kit.GetService<IEntityAccess>();
-            _ea.AutoClose = false;
+            _da = Kit.GetService<IDataAccess>();
+            _da.AutoClose = false;
 
             // 记录已成功接收的文件，以备后续异常时删除这些文件
             List<FileDesc> sucFiles = new List<FileDesc>();
@@ -178,14 +178,14 @@ namespace Dt.Fsm
 
                     try
                     {
-                        await _ea.Exec($"delete from fsm_file where id in ({sb.ToString().TrimStart(',')})");
+                        await _da.Exec($"delete from fsm_file where id in ({sb.ToString().TrimStart(',')})");
                     }
                     catch { }
                 }
             }
             finally
             {
-                await _ea.Close(true);
+                await _da.Close(true);
                 // 卷使用数减1
                 if (cache != null)
                     await cache.Decrement(_volume);
@@ -227,7 +227,7 @@ namespace Dt.Fsm
                     await p_section.FileStream.CopyToAsync(writeStream, _bufferSize, _context.RequestAborted);
                     desc.Size = writeStream.Length;
                 }
-                await _ea.Exec("上传文件", desc);
+                await _da.Exec("上传文件", desc);
             }
             catch
             {

@@ -57,7 +57,7 @@ namespace Dt.Cm
 
         public virtual Task<string> GetSql()
         {
-            return _ea.GetScalar<string>("select `sql` from cm_sql");
+            return _da.GetScalar<string>("select `sql` from cm_sql");
         }
     }
 

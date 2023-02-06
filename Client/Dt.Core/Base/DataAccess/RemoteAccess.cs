@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 客户端数据访问提供者，服务端DataAccess的代理
     /// </summary>
-    class RemoteAccess : IEntityAccess
+    class RemoteAccess : IDataAccess
     {
         #region 构造方法
         readonly string _svc;

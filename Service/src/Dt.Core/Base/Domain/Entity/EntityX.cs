@@ -9,6 +9,7 @@
 #region 引用命名
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -113,11 +114,11 @@ namespace Dt.Core
             bool suc;
             if (dt["params"] is Dict par)
             {
-                suc = await Kit.ContextEa.Exec((string)dt["text"], par) > 0;
+                suc = await Kit.DataAccess.Exec((string)dt["text"], par) > 0;
             }
             else
             {
-                suc = await Kit.ContextEa.BatchExec(new List<Dict> { dt }) > 0;
+                suc = await Kit.DataAccess.BatchExec(new List<Dict> { dt }) > 0;
             }
             return suc;
 #else
@@ -128,7 +129,7 @@ namespace Dt.Core
                 return false;
             }
 
-            var ac = model.AccessInfo.GetEntityAccess();
+            var ac = model.AccessInfo.GetDataAccess();
             bool suc;
             if (dt["params"] is Dict par)
             {
@@ -174,7 +175,7 @@ namespace Dt.Core
             if (ls.Count == 0)
                 return false;
 
-            return await Kit.ContextEa.BatchExec(ls) > 0;
+            return await Kit.DataAccess.BatchExec(ls) > 0;
 #else
             if (ls.Count == 0)
             {
@@ -184,7 +185,7 @@ namespace Dt.Core
             }
 
             var m = EntitySchema.Get(entities[0]);
-            var ac = m.AccessInfo.GetEntityAccess();
+            var ac = m.AccessInfo.GetDataAccess();
             bool suc = await ac.BatchExec(ls) > 0;
 
             if (p_isNotify)
@@ -212,7 +213,7 @@ namespace Dt.Core
             var sql = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
                 sql += " where " + p_filter;
-            return Kit.ContextEa.Query<TEntity>(sql, p_params);
+            return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
@@ -236,7 +237,7 @@ namespace Dt.Core
             if (!string.IsNullOrWhiteSpace(p_filter))
                 sql += " where " + p_filter;
             sql += $" limit {p_starRow},{p_pageSize} ";
-            return Kit.ContextEa.Query<TEntity>(sql, p_params);
+            return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
@@ -258,7 +259,7 @@ namespace Dt.Core
             var sql = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
                 sql += " where " + p_filter;
-            return Kit.ContextEa.First<TEntity>(sql, p_params);
+            return Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
@@ -295,24 +296,64 @@ namespace Dt.Core
                 sql = model.Schema.GetSelectByIDSql();
             }
 
-            return Kit.ContextEa.First<TEntity>(sql, dt);
+            return Kit.DataAccess.First<TEntity>(sql, dt);
 #else
             string sql;
-            IEntityAccess ea;
+            IDataAccess da;
             if (IsVirEntity(typeof(TEntity)))
             {
                 var vm = VirEntitySchema.Get(typeof(TEntity));
                 sql = vm.GetSelectByIDSql();
-                ea = vm.AccessInfo.GetEntityAccess();
+                da = vm.AccessInfo.GetDataAccess();
             }
             else
             {
                 var model = EntitySchema.Get(typeof(TEntity));
                 sql = model.Schema.GetSelectByIDSql();
-                ea = model.AccessInfo.GetEntityAccess();
+                da = model.AccessInfo.GetDataAccess();
             }
-            return ea.First<TEntity>(sql, dt);
+            return da.First<TEntity>(sql, dt);
 #endif
+        }
+
+        /// <summary>
+        /// 根据主键获得实体对象及所有子实体列表，仅支持单主键
+        /// </summary>
+        /// <param name="p_id">主键</param>
+        /// <returns>返回实体对象或null</returns>
+        public static async Task<TEntity> GetByIDWithChild(object p_id)
+        {
+            if (IsVirEntity(typeof(TEntity)))
+                Throw.Msg("虚拟实体不支持子实体列表！");
+
+            var parent = await GetByID(p_id);
+            if (parent == null)
+                return default;
+
+            var model = EntitySchema.Get(typeof(TEntity));
+            if (model.Children.Count == 0)
+                return parent;
+
+#if SERVER
+            var da = Kit.DataAccess;
+#else
+            var da = model.AccessInfo.GetDataAccess();
+#endif
+            var query = typeof(IDataAccess).GetMethod("Query", 1, new Type[2] { typeof(string), typeof(object) });
+            foreach (var child in model.Children)
+            {
+                // 构造泛型方法
+                var mi = query.MakeGenericMethod(child.Type);
+
+                // 调用Query<>方法，sql变量名parentid固定
+                var task = (Task)mi.Invoke(da, new object[2] { child.SqlSelect, new Dict { { "parentid", p_id } } });
+                await task;
+                var result = task.GetType().GetProperty("Result").GetValue(task);
+
+                // 设置属性值为子实体列表
+                child.PropInfo.SetValue(parent, result);
+            }
+            return parent;
         }
 
         /// <summary>
@@ -331,7 +372,7 @@ namespace Dt.Core
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
             sql += $" where {p_keyName}=@{p_keyName}";
-            return Kit.ContextEa.First<TEntity>(sql, dt);
+            return Kit.DataAccess.First<TEntity>(sql, dt);
 #else
             var res = GetSelectSql(typeof(TEntity));
             res.Item2 += $" where {p_keyName}=@{p_keyName}";
@@ -349,16 +390,16 @@ namespace Dt.Core
             return EntitySchema.Get(p_type).Schema.GetSelectAllSql();
         }
 #else
-        static (IEntityAccess, string) GetSelectSql(Type p_type)
+        static (IDataAccess, string) GetSelectSql(Type p_type)
         {
             if (IsVirEntity(p_type))
             {
                 var vm = VirEntitySchema.Get(p_type);
-                return (vm.AccessInfo.GetEntityAccess(), vm.GetSelectAllSql());
+                return (vm.AccessInfo.GetDataAccess(), vm.GetSelectAllSql());
             }
 
             var model = EntitySchema.Get(p_type);
-            return (model.AccessInfo.GetEntityAccess(), model.Schema.GetSelectAllSql());
+            return (model.AccessInfo.GetDataAccess(), model.Schema.GetSelectAllSql());
         }
 #endif
         #endregion
@@ -410,7 +451,7 @@ namespace Dt.Core
             var seqName = model.Schema.Name + "+" + p_colName.ToLower();
             int seq = 0;
 #if SERVER
-            seq = await Kit.ContextEa.GetScalar<int>($"select nextval('{seqName}')");
+            seq = await Kit.DataAccess.GetScalar<int>($"select nextval('{seqName}')");
 #else
             Throw.If(model.AccessInfo.Type == AccessType.Local, "暂不支持sqlite本地库的序列功能！");
             seq = await Kit.Rpc<int>(

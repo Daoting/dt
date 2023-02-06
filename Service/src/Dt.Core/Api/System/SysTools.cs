@@ -734,7 +734,7 @@ namespace Dt.Core
         {
             // 如 lob_sql
             var sqlTbl = GetSqlTblName(p_tblName);
-            int cnt = await _ea.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
+            int cnt = await _da.GetScalar<int>($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{DbSchema.Database}' and table_name='{sqlTbl}'");
             if (cnt == 0)
                 return sqlTbl + "表不存在，无法生成框架sql";
 
@@ -765,10 +765,10 @@ namespace Dt.Core
         async Task<string> CreateSql(string p_key, string p_sql, string p_tblName)
         {
             string msg;
-            int cnt = await _ea.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
+            int cnt = await _da.GetScalar<int>($"select count(*) from {p_tblName} where id=@id", new { id = p_key });
             if (cnt == 0)
             {
-                cnt = await _ea.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
+                cnt = await _da.Exec($"insert into {p_tblName} (id, `sql`) values (@id, @sql)", new { id = p_key, sql = p_sql });
                 msg = cnt > 0 ? $"[{p_key}] sql生成成功\r\n" : $"[{p_key}] sql生成失败\r\n";
             }
             else

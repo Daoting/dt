@@ -26,7 +26,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取领域层数据访问对象
         /// </summary>
-        protected IEntityAccess _ea => _bag.Ea;
+        protected IDataAccess _da => _bag.DataAccess;
 
         /// <summary>
         /// 获取当前用户标识，UI客户端rpc为实际登录用户ID
@@ -180,7 +180,7 @@ namespace Dt.Core
         /// <returns></returns>
         internal Task Close(bool p_suc)
         {
-            return _bag.Ea.Close(p_suc);
+            return _bag.DataAccess.Close(p_suc);
         }
         #endregion
     }

@@ -14,7 +14,7 @@ namespace Dt.Core
     /// <summary>
     /// 领域层数据访问接口
     /// </summary>
-    public partial interface IEntityAccess
+    public partial interface IDataAccess
     {
         #region 查询
         /// <summary>

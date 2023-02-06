@@ -70,7 +70,7 @@ namespace Dt.Fsm
 
             Log.Information("下载：{0}", path);
             if (!isThumb)
-                await Kit.GetService<IEntityAccess>().Exec("增加下载次数", new { path = path });
+                await Kit.GetService<IDataAccess>().Exec("增加下载次数", new { path = path });
 
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";

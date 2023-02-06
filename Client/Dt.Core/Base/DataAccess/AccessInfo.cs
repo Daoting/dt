@@ -35,26 +35,26 @@ namespace Dt.Core
         /// </summary>
         public virtual string Name { get; }
 
-        public IEntityAccess GetEntityAccess()
+        public IDataAccess GetDataAccess()
         {
             return Type == AccessType.Remote ? GetRemoteAccess(Name) : GetSqliteAccess(Name);
         }
 
         #region 静态内容
-        static readonly Dictionary<string, IEntityAccess> _remotes = new Dictionary<string, IEntityAccess>(StringComparer.OrdinalIgnoreCase);
-        static readonly Dictionary<string, IEntityAccess> _sqlites = new Dictionary<string, IEntityAccess>(StringComparer.OrdinalIgnoreCase);
+        static readonly Dictionary<string, IDataAccess> _remotes = new Dictionary<string, IDataAccess>(StringComparer.OrdinalIgnoreCase);
+        static readonly Dictionary<string, IDataAccess> _sqlites = new Dictionary<string, IDataAccess>(StringComparer.OrdinalIgnoreCase);
 
-        static IEntityAccess GetRemoteAccess(string p_name)
+        static IDataAccess GetRemoteAccess(string p_name)
         {
             if (_remotes.TryGetValue(p_name, out var m))
                 return m;
 
-            var ea = new RemoteAccess(p_name);
-            _remotes[p_name] = ea;
-            return ea;
+            var da = new RemoteAccess(p_name);
+            _remotes[p_name] = da;
+            return da;
         }
 
-        internal static IEntityAccess GetSqliteAccess(string p_name)
+        internal static IDataAccess GetSqliteAccess(string p_name)
         {
             if (_sqlites.TryGetValue(p_name, out var m))
                 return m;

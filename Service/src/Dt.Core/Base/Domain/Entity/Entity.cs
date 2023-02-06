@@ -30,21 +30,6 @@ namespace Dt.Core
         { }
         #endregion
 
-        public List<IList<Entity>> GetChildren()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// 是否为虚拟实体
-        /// </summary>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        public static bool IsVirEntity(Type p_type)
-        {
-            return p_type.GetInterface("IVirEntity") == typeof(IVirEntity);
-        }
-
         #region 领域事件
         List<IEvent> _events;
 
@@ -183,6 +168,19 @@ namespace Dt.Core
                 _cellHooks[p_id] = new Action<object>((o) => p_callback((T)o));
             }
         }
+        #endregion
+
+        #region 工具方法
+        /// <summary>
+        /// 是否为虚拟实体
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public static bool IsVirEntity(Type p_type)
+        {
+            return p_type.GetInterface("IVirEntity") == typeof(IVirEntity);
+        }
+
         #endregion
 
         #region 判断相同

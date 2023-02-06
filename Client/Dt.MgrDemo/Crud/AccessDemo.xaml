@@ -41,6 +41,13 @@
             <Button Content="根据ID通过实体系统删除" Click="OnDelByIDVir" />
         </StackPanel>
         
+        <a:CBar Title="父子实体" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新父子" Click="OnInsertWithChild" />
+            <Button Content="更新父子" Click="OnUpdateWithChild" />
+            <Button Content="查询父子" Click="OnQueryWithChild" />
+        </StackPanel>
+        
         <a:CFree RowSpan="5" ShowTitle="False">
             <TextBox x:Name="_tbInfo"
                      AcceptsReturn="True"

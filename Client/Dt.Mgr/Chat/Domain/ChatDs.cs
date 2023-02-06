@@ -99,7 +99,7 @@ namespace Dt.Mgr.Chat
         {
             Kit.RunAsync(async () =>
             {
-                int cnt = await _ea.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
+                int cnt = await _da.Exec("update Letter set unread=0 where otherid=@otherid and loginid=@loginid and unread=1",
                     new Dict
                     {
                         { "otherid", p_otherid },
@@ -256,7 +256,7 @@ namespace Dt.Mgr.Chat
             var tbl = await AtCm.Query<ChatMemberX>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
 
             // 将新列表缓存到本地库
-            await _ea.Exec("delete from ChatMember");
+            await _da.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
             {
                 foreach (var r in tbl)

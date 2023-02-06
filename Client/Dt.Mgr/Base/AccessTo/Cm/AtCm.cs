@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// cm服务的数据访问
     /// </summary>
-    public partial class AtCm : EntityAccess<AtCm.Info>
+    public partial class AtCm : DataAccess<AtCm.Info>
     {
         public class Info : AccessInfo
         {

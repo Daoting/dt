@@ -29,7 +29,7 @@ namespace Dt.Core
     /// 基于开源项目 MySqlConnector 和 Dapper
     /// Dapper涉及dynamic的速度非常慢！
     /// </summary>
-    class MySqlAccess : IEntityAccess
+    class MySqlAccess : IDataAccess
     {
         #region 成员变量
         // 默认连接串

@@ -56,7 +56,7 @@ namespace Dt.Core
                 CacheHandler = new CacheHandler(this, cfg);
         }
 
-        static TableSchema GetTableSchema(string p_tblName)
+        internal static TableSchema GetTableSchema(string p_tblName)
         {
             return DbSchema.GetTableSchema(p_tblName);
         }
@@ -74,7 +74,7 @@ namespace Dt.Core
             var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
             if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
             {
-                Schema = GetTableSchema(tbl.Name).Result;
+                Schema = GetTableSchema(tbl.Name);
                 int index = tbl.Name.IndexOf("_");
                 var svc = index == -1 ? "cm" : tbl.Name.Substring(0, index).ToLower();
                 ai = new AccessInfo(AccessType.Remote, svc);
@@ -104,14 +104,14 @@ namespace Dt.Core
             }
         }
 
-        static async Task<TableSchema> GetTableSchema(string p_tblName)
+        internal static TableSchema GetTableSchema(string p_tblName)
         {
             var svc = Kit.GetRequiredService<IModelCallback>();
             if (svc == null)
                 return null;
 
             var tblName = p_tblName.ToLower();
-            var cols = await svc.GetTableColumns(tblName);
+            var cols = svc.GetTableColumns(tblName).Result;
             TableSchema schema = new TableSchema(tblName);
             foreach (var oc in cols)
             {
@@ -155,6 +155,45 @@ namespace Dt.Core
             return schema;
         }
 #endif
+
+        #region 子实体
+        List<ChildEntitySchema> _children = null;
+
+        /// <summary>
+        /// 子实体列表
+        /// </summary>
+        public List<ChildEntitySchema> Children
+        {
+            get
+            {
+                if (_children == null)
+                {
+                    _children = ExtractChild();
+                }
+                return _children;
+            }
+        }
+
+        /// <summary>
+        /// 提取子实体
+        /// </summary>
+        List<ChildEntitySchema> ExtractChild()
+        {
+            List<ChildEntitySchema> ls = new List<ChildEntitySchema>();
+            PropertyInfo[] pis = EntityType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            foreach (var pi in pis)
+            {
+                // 子实体集合为泛型
+                var attr = pi.GetCustomAttribute<ChildXAttribute>(false);
+                if (attr == null || !pi.PropertyType.IsGenericType)
+                    continue;
+
+                Type tpChild = pi.PropertyType.GetGenericArguments()[0];
+                ls.Add(new ChildEntitySchema(tpChild, pi, attr.ParentID));
+            }
+            return ls;
+        }
+        #endregion
 
         #region 静态内容
         static readonly ConcurrentDictionary<Type, EntitySchema> _models = new ConcurrentDictionary<Type, EntitySchema>();

@@ -187,10 +187,10 @@ namespace Dt.Cm
                 return 0;
 
             // 连接不同的库
-            var ea = Kit.GetService<IEntityAccess>();
-            ea.DbKey = dbConn;
+            var da = Kit.GetService<IDataAccess>();
+            da.DbKey = dbConn;
 
-            Table tbl = await ea.Query(select);
+            Table tbl = await da.Query(select);
             if (tbl.Count == 0)
                 return 0;
 

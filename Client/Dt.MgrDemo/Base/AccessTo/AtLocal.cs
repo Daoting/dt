@@ -14,7 +14,7 @@ namespace Dt.MgrDemo
     /// <summary>
     /// 本地sqlite库，文件名 local.db
     /// </summary>
-    public class AtLocal : EntityAccess<AtLocal.Info>
+    public class AtLocal : DataAccess<AtLocal.Info>
     {
         public class Info : AccessInfo
         {

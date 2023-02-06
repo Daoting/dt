@@ -25,7 +25,7 @@ namespace Dt.Core
         /// <returns>返回Table数据</returns>
         public Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
-            return _ea.Query(p_keyOrSql, p_params);
+            return _da.Query(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Dt.Core
         /// <returns>返回Table数据</returns>
         public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
-            return _ea.Page(p_starRow, p_pageSize, p_keyOrSql, p_params);
+            return _da.Page(p_starRow, p_pageSize, p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Dt.Core
         /// <returns>返回第一行Row或null</returns>
         public Task<Row> First(string p_keyOrSql, object p_params = null)
         {
-            return _ea.First(p_keyOrSql, p_params);
+            return _da.First(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Dt.Core
         /// <returns>返回第一列数据的泛型列表</returns>
         public Task<object> FirstCol(string p_type, string p_keyOrSql, object p_params = null)
         {
-            return _ea.FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
+            return _da.FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Dt.Core
 ")]
         public Task<object> GetScalar(string p_keyOrSql, object p_params = null)
         {
-            return _ea.GetScalar<object>(p_keyOrSql, p_params);
+            return _da.GetScalar<object>(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
-            return _ea.Exec(p_keyOrSql, p_params);
+            return _da.Exec(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public Task<int> BatchExec(List<Dict> p_dts)
         {
-            return _ea.BatchExec(p_dts);
+            return _da.BatchExec(p_dts);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Dt.Core
         public Task<int> NewSeq(string p_seqName)
         {
             if (!string.IsNullOrEmpty(p_seqName))
-                return _ea.GetScalar<int>($"select nextval('{p_seqName}')");
+                return _da.GetScalar<int>($"select nextval('{p_seqName}')");
             return Task.FromResult(0);
         }
     }

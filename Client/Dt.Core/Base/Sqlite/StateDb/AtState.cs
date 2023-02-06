@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 本地sqlite状态库，At = Access To
     /// </summary>
-    public class AtState : EntityAccess<AtState.Info>
+    public class AtState : DataAccess<AtState.Info>
     {
         public class Info : AccessInfo
         {

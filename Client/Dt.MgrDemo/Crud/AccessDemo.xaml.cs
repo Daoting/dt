@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.MgrDemo.Crud;
 using Microsoft.UI.Xaml;
+using System.Reflection;
 using System.Text;
 #endregion
 
@@ -224,6 +225,91 @@ namespace Dt.MgrDemo
             var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.First(null);
             if (x != null)
                 await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.DelByID(x.ID, false);
+        }
+        #endregion
+
+        #region 父子实体
+        async void OnInsertWithChild(object sender, RoutedEventArgs e)
+        {
+            var x = await ParTblX.New("新增");
+            for (int i = 0; i < 2; i++)
+            {
+                x.Tbl1.Add(await ChildTbl1X.New(x.ID, "新增" + i));
+                x.Tbl2.Add(await ChildTbl2X.New(x.ID, "新增" + i));
+            }
+            await x.SaveWithChild();
+        }
+
+        async void OnUpdateWithChild(object sender, RoutedEventArgs e)
+        {
+            var x = await ParTblX.First(null);
+            if (x != null)
+            {
+                x = await ParTblX.GetByIDWithChild(x.ID);
+                var name = "修改" + _rnd.Next(1000);
+                x.Name = name;
+
+                if (x.Tbl1 != null)
+                {
+                    foreach (var item in x.Tbl1)
+                    {
+                        item.ItemName = name;
+                    }
+                }
+
+                if (x.Tbl2 != null && x.Tbl2.Count > 1)
+                {
+                    x.Tbl2.RecordDeleted();
+                    x.Tbl2.RemoveAt(0);
+                    foreach (var item in x.Tbl2)
+                    {
+                        item.ItemName = name;
+                    }
+                }
+                await x.SaveWithChild();
+            }
+        }
+
+        async void OnQueryWithChild(object sender, RoutedEventArgs e)
+        {
+            var x = await ParTblX.First(null);
+            string msg = "";
+            if (x != null)
+            {
+                x = await ParTblX.GetByIDWithChild(x.ID);
+                if (x.Tbl1 != null)
+                    msg = $"子表1：{x.Tbl1.Count}行";
+                else
+                    msg = "子表1无数据";
+
+                if (x.Tbl2 != null)
+                    msg += $"\r\n子表2：{x.Tbl2.Count}行";
+                else
+                    msg += $"\r\n子表2无数据";
+            }
+            else
+            {
+                msg = "无数据！";
+            }
+            Kit.Msg(msg);
+        }
+
+        /// <summary>
+        /// 添加Table中新增、修改、删除的待保存实体，最后由Commit统一提交
+        /// <para>删除行通过Table的ExistDeleted DeletedRows判断获取</para>
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_tbl">实体表</param>
+        /// <returns></returns>
+        public async Task Save<TEntity>(Table<TEntity> p_tbl)
+            where TEntity : Entity
+        {
+        }
+
+        public async Task Save<TEntity>(TEntity p_entity)
+            where TEntity : Entity
+        {
+
         }
         #endregion
     }

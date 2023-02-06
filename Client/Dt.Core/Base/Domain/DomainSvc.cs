@@ -16,9 +16,9 @@ namespace Dt.Core
     /// <summary>
     /// 领域服务的抽象基类
     /// </summary>
-    public abstract class DomainSvc<TDomainSvc, TEntityAccess>
+    public abstract class DomainSvc<TDomainSvc, TDataAccess>
         where TDomainSvc : class
-        where TEntityAccess : class
+        where TDataAccess : class
     {
         #region 成员变量
         /// <summary>
@@ -29,18 +29,18 @@ namespace Dt.Core
         /// <summary>
         /// 获取领域层数据访问对象
         /// </summary>
-        protected readonly IEntityAccess _ea;
+        protected readonly IDataAccess _da;
         readonly EntityWriter _writer;
         #endregion
 
         #region 构造方法
         public DomainSvc()
         {
-            if (!typeof(TEntityAccess).IsSubclassOf(typeof(EntityAccess<>)))
-                throw new Exception("TEntityAccess参数需继承自EntityAccess<>");
+            if (!typeof(TDataAccess).IsSubclassOf(typeof(DataAccess<>)))
+                throw new Exception("TDataAccess参数需继承自DataAccess<>");
 
-            var prop = typeof(TEntityAccess).GetProperty("Ea", BindingFlags.Public | BindingFlags.Static);
-            _ea = (IEntityAccess)prop.GetValue(null);
+            var prop = typeof(TDataAccess).GetProperty("Da", BindingFlags.Public | BindingFlags.Static);
+            _da = (IDataAccess)prop.GetValue(null);
             _writer = new EntityWriter();
         }
         #endregion

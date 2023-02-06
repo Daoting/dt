@@ -30,7 +30,7 @@ namespace Dt.Cm
         {
             List<long> ls = new List<long>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _ea.Each("用户-可访问的菜单", new { userid = p_userID });
+            var rows = await _da.Each("用户-可访问的菜单", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -60,7 +60,7 @@ namespace Dt.Cm
         {
             List<string> ls = new List<string>();
             StringBuilder sb = new StringBuilder();
-            var rows = await _ea.Each("用户-具有的权限", new { userid = p_userID });
+            var rows = await _da.Each("用户-具有的权限", new { userid = p_userID });
             foreach (var row in rows)
             {
                 if (sb.Length > 0)
@@ -83,8 +83,8 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<Dict> GetParams(long p_userID)
         {
-            var tblAll = await _ea.Query("SELECT id,value FROM cm_params");
-            var tblMy = await _ea.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
+            var tblAll = await _da.Query("SELECT id,value FROM cm_params");
+            var tblMy = await _da.Query("SELECT paramid,value FROM cm_user_params where userid=@userid", new { userid = p_userID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in tblAll)
             {
@@ -129,7 +129,7 @@ namespace Dt.Cm
                 ParamID: p_paramID);
             await Delete(old);
 
-            var defVal = await _ea.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
+            var defVal = await _da.GetScalar<string>("SELECT value FROM cm_params where id=@id", new { id = p_paramID });
             if (defVal != p_value)
             {
                 // 和默认值不同
@@ -166,11 +166,11 @@ namespace Dt.Cm
             if (p_roleIDs.Contains(1))
             {
                 // 包含任何人
-                ls = await _ea.EachFirstCol<long>("select id from cm_user");
+                ls = await _da.EachFirstCol<long>("select id from cm_user");
             }
             else
             {
-                ls = await _ea.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await _da.EachFirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
             }
 
             var db = GetVerCache();
@@ -294,7 +294,7 @@ namespace Dt.Cm
         {
             if (await new RoleX(p_roleID).Delete())
             {
-                var ls = await _ea.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
+                var ls = await _da.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
                 await GetVerCache().BatchDelete(ls);
                 return true;
             }

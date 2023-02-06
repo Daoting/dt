@@ -2,20 +2,21 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-11-20 创建
+* 日志: 2023-01-28 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.Agent
+namespace Dt.Core
 {
     /// <summary>
-    /// 当前微服务作为客户端，调用其他微服务的 DataAccess Api，和客户端DataProvider'TSvc'不同，单体时直接本地调用
+    /// 数据访问基类，为方便使用所有方法为静态，通过 TAccessInfo 提供实际的数据查询对象
     /// </summary>
-    /// <typeparam name="TSvc">类型名称当服务名用</typeparam>
-    public abstract class DataProvider<TSvc>
+    /// <typeparam name="TAccessInfo">数据访问的描述信息</typeparam>
+    public abstract class DataAccess<TAccessInfo>
+        where TAccessInfo : AccessInfo, new()
     {
         #region 查询
         /// <summary>
@@ -26,12 +27,7 @@ namespace Dt.Agent
         /// <returns>返回Table数据</returns>
         public static Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
-            return Kit.Rpc<Table>(
-                typeof(TSvc).Name,
-                "Da.Query",
-                p_keyOrSql,
-                p_params
-            );
+            return _da.Query(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -44,28 +40,7 @@ namespace Dt.Agent
         public static Task<Table<TEntity>> Query<TEntity>(string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
-            return Kit.Rpc<Table<TEntity>>(
-                typeof(TSvc).Name,
-                "Da.Query",
-                p_keyOrSql,
-                p_params
-            );
-        }
-
-        /// <summary>
-        /// 返回所有实体列表
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public static Task<Table<TEntity>> GetAll<TEntity>()
-            where TEntity : Entity
-        {
-            return Kit.Rpc<Table<TEntity>>(
-                typeof(TSvc).Name,
-                "Da.Query",
-                EntitySchema.Get(typeof(TEntity)).Schema.GetSelectAllSql(),
-                null
-            );
+            return _da.Query<TEntity>(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -76,11 +51,9 @@ namespace Dt.Agent
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public static Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
-            return Kit.Rpc<Table>(
-                typeof(TSvc).Name,
-                "Da.GetPage",
+            return _da.Page(
                 p_starRow,
                 p_pageSize,
                 p_keyOrSql,
@@ -97,30 +70,12 @@ namespace Dt.Agent
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public static Task<Table<TEntity>> GetPage<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
-            return Kit.Rpc<Table<TEntity>>(
-                typeof(TSvc).Name,
-                "Da.GetPage",
+            return _da.Page<TEntity>(
                 p_starRow,
                 p_pageSize,
-                p_keyOrSql,
-                p_params
-            );
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一个单元格数据
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一个单元格数据</returns>
-        public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
-        {
-            return Kit.Rpc<T>(
-                typeof(TSvc).Name,
-                "Da.GetScalar",
                 p_keyOrSql,
                 p_params
             );
@@ -134,12 +89,7 @@ namespace Dt.Agent
         /// <returns>返回第一行Row或null</returns>
         public static Task<Row> First(string p_keyOrSql, object p_params = null)
         {
-            return Kit.Rpc<Row>(
-                typeof(TSvc).Name,
-                "Da.First",
-                p_keyOrSql,
-                p_params
-            );
+            return _da.First(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -152,12 +102,7 @@ namespace Dt.Agent
         public static Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
-            return Kit.Rpc<TEntity>(
-                typeof(TSvc).Name,
-                "Da.First",
-                p_keyOrSql,
-                p_params
-            );
+            return _da.First<TEntity>(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -169,70 +114,85 @@ namespace Dt.Agent
         /// <returns>返回第一列数据的泛型列表</returns>
         public static Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
         {
-            return Kit.Rpc<List<T>>(
-                typeof(TSvc).Name,
-                "Da.FirstCol",
-                typeof(T).FullName,
-                p_keyOrSql,
-                p_params
-            );
+            return _da.FirstCol<T>(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键id，不存在时返回null
+        /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByID<TEntity>(string p_id)
-            where TEntity : Entity
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一个单元格数据</returns>
+        public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectByIDSql(), new { id = p_id });
+            return _da.GetScalar<T>(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，仅支持单主键id，不存在时返回null
+        /// 以参数值方式执行Sql语句，返回Row枚举，高性能，客户端代理不支持！
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回Row枚举</returns>
+        public static Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
+        {
+            return _da.Each(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回实体枚举，高性能，客户端代理不支持！
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByID<TEntity>(long p_id)
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回实体枚举</returns>
+        public static Task<IEnumerable<TEntity>> Each<TEntity>(string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
-            return First<TEntity>(EntitySchema.Get(typeof(TEntity)).Schema.GetSelectByIDSql(), new { id = p_id });
+            return _da.Each<TEntity>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回第一列枚举，高性能，客户端代理不支持！
+        /// </summary>
+        /// <typeparam name="T">第一列数据类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一列数据的泛型枚举</returns>
+        public static Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
+        {
+            return _da.EachFirstCol<T>(p_keyOrSql, p_params);
         }
         #endregion
 
-        #region Exec
+        #region 增删改
         /// <summary>
-        /// 一个事务内执行Sql语句，返回影响的行数，p_params为IEnumerable时执行批量操作
+        /// 以参数值方式执行Sql语句，返回影响的行数，底层方法万不得已慎用！
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，为IEnumerable时执行批量操作</param>
-        /// <returns>返回执行后影响的行数</returns>
+        /// <param name="p_params">参数值，支持Dict或匿名对象</param>
+        /// <returns>执行后影响的行数</returns>
         public static Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
-            return Kit.Rpc<int>(
-                typeof(TSvc).Name,
-                "Da.Exec",
-                p_keyOrSql,
-                p_params
-            );
+            return _da.Exec(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 一个事务内执行多个Sql
+        /// 一个事务内执行多个Sql，底层方法万不得已慎用！
         /// </summary>
         /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}</param>
         /// <returns>返回执行后影响的行数</returns>
         public static Task<int> BatchExec(List<Dict> p_dts)
         {
-            return Kit.Rpc<int>(
-                typeof(TSvc).Name,
-                "Da.BatchExec",
-                p_dts
-            );
+            return _da.BatchExec(p_dts);
         }
         #endregion
+
+        /// <summary>
+        /// 数据访问对象
+        /// </summary>
+        public static IDataAccess Da => _da;
+
+        static IDataAccess _da = new TAccessInfo().GetDataAccess();
     }
 }

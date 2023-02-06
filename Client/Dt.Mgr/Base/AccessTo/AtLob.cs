@@ -14,7 +14,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 本地业务库，At = Access To
     /// </summary>
-    public class AtLob : EntityAccess<AtLob.Info>
+    public class AtLob : DataAccess<AtLob.Info>
     {
         public class Info : AccessInfo
         {

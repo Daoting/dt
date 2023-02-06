@@ -17,7 +17,7 @@ namespace Dt.Core
     /// <summary>
     /// Sqlite库本地数据访问
     /// </summary>
-    class SqliteAccess : IEntityAccess
+    class SqliteAccess : IDataAccess
     {
         #region 构造方法
         readonly SqliteConnectionEx _db;

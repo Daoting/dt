@@ -67,7 +67,7 @@ namespace Dt.Fsm
             }
 
             if (!isThumb)
-                await Kit.GetService<IEntityAccess>().Exec("增加下载次数", new { path = path });
+                await Kit.GetService<IDataAccess>().Exec("增加下载次数", new { path = path });
             await _next(p_context);
         }
     }
