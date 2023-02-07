@@ -20,7 +20,7 @@ namespace Dt.Mgr.Chat
     public partial class VideoRecver : Dlg
     {
         #region 成员变量
-        ChatMemberObj _other;
+        ChatMemberX _other;
         Timer _timer;
         DateTime _startTime;
         #endregion
@@ -48,7 +48,7 @@ namespace Dt.Mgr.Chat
                 SetSize(600, -60);
             }
 
-            _other = await ChatMemberObj.GetByID(p_fromUserID);
+            _other = await ChatMemberX.GetByID(p_fromUserID);
             _tbInfo.Text = $"[{_other.Name}] 邀请您视频通话...";
             await ShowAsync();
         }

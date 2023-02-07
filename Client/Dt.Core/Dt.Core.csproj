@@ -23,7 +23,8 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirX.cs" Link="Base\Domain\Entity\VirX.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirEntitySchema.cs" Link="Base\Domain\Entity\VirEntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\CacheAttribute.cs" Link="Base\Domain\Entity\CacheAttribute.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Cache\CacheAttribute.cs" Link="Base\Domain\Cache\CacheAttribute.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Cache\EntityCacher.cs" Link="Base\Domain\Cache\EntityCacher.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\ChildEntitySchema.cs" Link="Base\Domain\Entity\ChildEntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\ChildXAttribute.cs" Link="Base\Domain\Entity\ChildXAttribute.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEvent.cs" Link="Base\Domain\Event\IEvent.cs" />

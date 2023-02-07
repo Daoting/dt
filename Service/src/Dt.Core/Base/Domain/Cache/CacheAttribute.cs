@@ -19,18 +19,17 @@ namespace Dt.Core
     public class CacheAttribute : Attribute
     {
         /// <summary>
-        /// 缓存键前缀，不可为空
+        /// 构造方法
         /// </summary>
-        public string PrefixKey { get; set; }
+        /// <param name="p_keys">除主键以外其它作为缓存键的属性名(字段名)，该列通常为唯一索引</param>
+        public CacheAttribute(params string[] p_keys)
+        {
+            Keys = p_keys;
+        }
 
         /// <summary>
-        /// 除主键以外其它作为缓存键的属性名，缓存多个时属性名之间逗号隔开，确保该列数据不重复
+        /// 除主键以外其它作为缓存键的属性名，该列通常为唯一索引，确保该列数据不重复
         /// </summary>
-        public string OtherKey { get; set; }
-
-        /// <summary>
-        /// 缓存有效小时数，0表示始终有效
-        /// </summary>
-        public double ExpiryHour { get; set; }
+        public string[] Keys { get; }
     }
 }

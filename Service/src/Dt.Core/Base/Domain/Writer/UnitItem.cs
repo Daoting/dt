@@ -66,9 +66,9 @@ namespace Dt.Core
                 }
 
                 // 删除服务端缓存
-                if (Schema.CacheHandler != null)
+                if (Schema.Cacher != null)
                 {
-                    await Schema.CacheHandler.Remove(en);
+                    await Schema.Cacher.Remove(en);
                 }
             }
         }

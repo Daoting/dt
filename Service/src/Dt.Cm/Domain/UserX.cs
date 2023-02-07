@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm.Domain
 {
-    [Cache(PrefixKey = "user", OtherKey = "Phone")]
+    [Cache("Phone")]
     public partial class UserX
     {
         public static UserX CreateByPhone(string p_phone)

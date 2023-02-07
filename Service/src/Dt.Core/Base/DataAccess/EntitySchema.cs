@@ -37,7 +37,7 @@ namespace Dt.Core
         /// <summary>
         /// 缓存处理对象，无缓存时null
         /// </summary>
-        internal CacheHandler CacheHandler { get; private set; }
+        internal EntityCacher Cacher { get; private set; }
 
 #if SERVER
         void Init(Type p_type)
@@ -52,8 +52,8 @@ namespace Dt.Core
 
             // 缓存设置
             var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
-            if (cfg != null && !string.IsNullOrEmpty(cfg.PrefixKey))
-                CacheHandler = new CacheHandler(this, cfg);
+            if (cfg != null)
+                Cacher = new EntityCacher(this, cfg);
         }
 
         internal static TableSchema GetTableSchema(string p_tblName)
@@ -99,8 +99,8 @@ namespace Dt.Core
             if (ai.Type == AccessType.Remote)
             {
                 var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
-                if (cfg != null && !string.IsNullOrEmpty(cfg.PrefixKey))
-                    CacheHandler = new CacheHandler(this, cfg);
+                if (cfg != null)
+                    Cacher = new EntityCacher(this, cfg);
             }
         }
 

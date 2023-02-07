@@ -120,23 +120,27 @@ namespace Dt.Core
                 db = new SqliteConnectionEx("Data Source=" + path);
                 db.Open();
 
-                // 初次运行、库表结构版本变化或文件被删除时创建库表结构
-                var dbInfo = Stub.Inst.GetSqliteDbInfo(p_dbName);
-                if (dbInfo != null)
+                // 后台任务独立启动时为null
+                if (Stub.Inst != null)
                 {
-                    path = Path.Combine(Kit.DataPath, $"{p_dbName}-{dbInfo.Version}.ver");
-                    if (!exists || !File.Exists(path))
+                    // 初次运行、库表结构版本变化或文件被删除时创建库表结构
+                    var dbInfo = Stub.Inst.GetSqliteDbInfo(p_dbName);
+                    if (dbInfo != null)
                     {
-                        db.InitDb(dbInfo.Tables);
-
-                        // 删除旧版本号文件
-                        foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"{p_dbName}-*.ver"))
+                        path = Path.Combine(Kit.DataPath, $"{p_dbName}-{dbInfo.Version}.ver");
+                        if (!exists || !File.Exists(path))
                         {
-                            try { file.Delete(); } catch { }
-                        }
+                            db.InitDb(dbInfo.Tables);
 
-                        // 创建空文件，文件名是库表结构的版本号
-                        File.Create(path);
+                            // 删除旧版本号文件
+                            foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"{p_dbName}-*.ver"))
+                            {
+                                try { file.Delete(); } catch { }
+                            }
+
+                            // 创建空文件，文件名是库表结构的版本号
+                            File.Create(path);
+                        }
                     }
                 }
             }

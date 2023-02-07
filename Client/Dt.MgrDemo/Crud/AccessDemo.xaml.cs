@@ -294,22 +294,50 @@ namespace Dt.MgrDemo
             Kit.Msg(msg);
         }
 
-        /// <summary>
-        /// 添加Table中新增、修改、删除的待保存实体，最后由Commit统一提交
-        /// <para>删除行通过Table的ExistDeleted DeletedRows判断获取</para>
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_tbl">实体表</param>
-        /// <returns></returns>
-        public async Task Save<TEntity>(Table<TEntity> p_tbl)
-            where TEntity : Entity
+        #endregion
+
+        #region 缓存
+        async void OnInsertCache(object sender, RoutedEventArgs e)
         {
+            var x = await CacheTbl1X.New(Kit.NewGuid, _rnd.Next(10000).ToString());
+            await x.Save();
         }
 
-        public async Task Save<TEntity>(TEntity p_entity)
-            where TEntity : Entity
+        async void OnUpdateCache(object sender, RoutedEventArgs e)
         {
+            var x = await CacheTbl1X.First(null);
+            if (x != null)
+            {
+                x.Name = _rnd.Next(1000).ToString();
+                await x.Save();
+            }
+        }
 
+        async void OnDelCache(object sender, RoutedEventArgs e)
+        {
+            var x = await CacheTbl1X.First(null);
+            if (x != null)
+            {
+                await x.Delete();
+            }
+        }
+
+        async void OnCacheByID(object sender, RoutedEventArgs e)
+        {
+            var x = await CacheTbl1X.First(null);
+            if (x != null)
+            {
+                x = await CacheTbl1X.GetByID(x.ID);
+            }
+        }
+
+        async void OnCacheByKey(object sender, RoutedEventArgs e)
+        {
+            var x = await CacheTbl1X.First(null);
+            if (x != null)
+            {
+                x = await CacheTbl1X.GetByKey("phone", x.Phone);
+            }
         }
         #endregion
     }

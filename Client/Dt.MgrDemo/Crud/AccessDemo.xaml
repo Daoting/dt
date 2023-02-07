@@ -47,13 +47,16 @@
             <Button Content="更新父子" Click="OnUpdateWithChild" />
             <Button Content="查询父子" Click="OnQueryWithChild" />
         </StackPanel>
-        
-        <a:CFree RowSpan="5" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
-        </a:CFree>
+
+        <a:CBar Title="缓存实体：增删改时删除缓存，ID或Key查询时缓存" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加实体" Click="OnInsertCache" />
+            <Button Content="更新实体" Click="OnUpdateCache" />
+            <Button Content="删除实体" Click="OnDelCache" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="根据ID查询" Click="OnCacheByID" />
+            <Button Content="根据Key查询" Click="OnCacheByKey" />
+        </StackPanel>
     </a:Fv>
 </a:Win>
