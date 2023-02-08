@@ -59,16 +59,16 @@ namespace Dt.Core
     }
 
     /// <summary>
-    /// 服务标志
+    /// 服务类标志
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class SvcAttribute : Attribute
+    public class ServiceAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="p_lifetime">服务的生命周期，默认Transient</param>
-        public SvcAttribute(ServiceLifetime p_lifetime = ServiceLifetime.Transient)
+        public ServiceAttribute(ServiceLifetime p_lifetime = ServiceLifetime.Transient)
         {
             Lifetime = p_lifetime;
         }

@@ -328,8 +328,8 @@ namespace Dt.Core
                 if (IsEventHandler(type, p_builder))
                     continue;
 
-                // 注册服务，支持继承的SvcAttribute
-                SvcAttribute svcAttr = type.GetCustomAttribute<SvcAttribute>(true);
+                // 注册服务，支持继承的 ServiceAttribute
+                ServiceAttribute svcAttr = type.GetCustomAttribute<ServiceAttribute>(true);
                 if (svcAttr != null)
                 {
                     var itps = type.GetInterfaces();

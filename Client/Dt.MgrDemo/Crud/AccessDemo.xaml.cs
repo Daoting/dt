@@ -11,6 +11,7 @@ using Dt.MgrDemo.Crud;
 using Microsoft.UI.Xaml;
 using System.Reflection;
 using System.Text;
+using Windows.UI.Core;
 #endregion
 
 namespace Dt.MgrDemo

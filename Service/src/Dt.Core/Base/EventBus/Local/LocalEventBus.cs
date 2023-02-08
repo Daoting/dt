@@ -19,7 +19,7 @@ namespace Dt.Core.EventBus
     /// <summary>
     /// 本地事件总线
     /// </summary>
-    [Svc(ServiceLifetime.Singleton)]
+    [Service(ServiceLifetime.Singleton)]
     public sealed class LocalEventBus
     {
         readonly ILogger<LocalEventBus> _log;

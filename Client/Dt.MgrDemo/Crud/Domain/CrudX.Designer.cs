@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-02 创建
+* 日志: 2023-02-08 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,10 @@ using System.Threading.Tasks;
 
 namespace Dt.MgrDemo.Crud
 {
-    [Tbl("demo_crud")]
+    /// <summary>
+    /// 基础增删改
+    /// </summary>
+    [Tbl("demo_crud", "cm")]
     public partial class CrudX : EntityX<CrudX>
     {
         #region 构造方法

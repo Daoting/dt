@@ -20,7 +20,7 @@ namespace Dt.Core.RabbitMQ
     /// <summary>
     /// RabbitMQ 信道、队列、发布消息管理
     /// </summary>
-    [Svc(ServiceLifetime.Singleton)]
+    [Service(ServiceLifetime.Singleton)]
     public sealed class RabbitMQCenter
     {
         #region 成员变量

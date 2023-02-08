@@ -75,9 +75,7 @@ namespace Dt.Core
             if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
             {
                 Schema = GetTableSchema(tbl.Name);
-                int index = tbl.Name.IndexOf("_");
-                var svc = index == -1 ? "cm" : tbl.Name.Substring(0, index).ToLower();
-                ai = new AccessInfo(AccessType.Remote, svc);
+                ai = new AccessInfo(AccessType.Remote, tbl.Svc);
             }
             else
             {

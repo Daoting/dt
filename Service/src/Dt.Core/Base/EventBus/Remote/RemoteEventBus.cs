@@ -18,7 +18,7 @@ namespace Dt.Core.EventBus
     /// <summary>
     /// 基于RabbitMQ的事件总线
     /// </summary>
-    [Svc(ServiceLifetime.Singleton)]
+    [Service(ServiceLifetime.Singleton)]
     public sealed class RemoteEventBus
     {
         #region 成员变量

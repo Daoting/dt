@@ -48,6 +48,11 @@ namespace Dt.Core
         public List<TableCol> Columns { get; } = new List<TableCol>();
 
         /// <summary>
+        /// 表注释
+        /// </summary>
+        public string Comment { get; set; }
+
+        /// <summary>
         /// 根据主键查询实体的sql，只支持单主键
         /// </summary>
         public string GetSelectByIDSql()

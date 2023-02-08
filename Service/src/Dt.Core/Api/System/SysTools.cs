@@ -45,9 +45,38 @@ namespace Dt.Core
 
             StringBuilder sb = new StringBuilder();
 
-            // Tbl标签
-            AppendTabSpace(sb, 1);
-            sb.Append($"[Tbl(\"{tblName}\")]");
+            if (!string.IsNullOrEmpty(schema.Comment))
+            {
+                // 取注释中的服务名，和字段注释中的枚举类型相同
+                string svc = null;
+                var match = Regex.Match(schema.Comment, @"^#[^\s#]+");
+                if (match.Success)
+                    svc = match.Value.Trim('#');
+
+                AppendTabSpace(sb, 1);
+                sb.AppendLine("/// <summary>");
+                AppendTabSpace(sb, 1);
+                sb.Append("/// ");
+                if (svc != null)
+                    sb.AppendLine(schema.Comment.Substring(svc.Length + 2));
+                else
+                    sb.AppendLine(schema.Comment);
+                AppendTabSpace(sb, 1);
+                sb.AppendLine("/// </summary>");
+
+                // Tbl标签
+                AppendTabSpace(sb, 1);
+                if (svc != null)
+                    sb.Append($"[Tbl(\"{tblName}\", \"{svc}\")]");
+                else
+                    sb.Append($"[Tbl(\"{tblName}\")]");
+            }
+            else
+            {
+                // Tbl标签
+                AppendTabSpace(sb, 1);
+                sb.Append($"[Tbl(\"{tblName}\")]");
+            }
 
             sb.AppendLine();
             AppendTabSpace(sb, 1);
@@ -677,8 +706,15 @@ namespace Dt.Core
                 {
                     MySqlDataReader reader;
                     ReadOnlyCollection<DbColumn> cols;
-
                     TableSchema tblCols = new TableSchema(tbl);
+
+                    // 表注释
+                    cmd.CommandText = $"SELECT table_comment FROM information_schema.tables WHERE table_schema='{conn.Database}' and table_name='{tbl}'";
+                    var comment = cmd.ExecuteScalar();
+                    if (comment != null)
+                        tblCols.Comment = comment.ToString();
+
+                    // 表结构
                     cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
                     using (reader = cmd.ExecuteReader())
                     {
@@ -845,7 +881,7 @@ namespace Dt.Core
             {
                 clsName = SetFirstToUpper(p_tblName);
             }
-            return clsName + "Obj";
+            return clsName + "X";
         }
 
         string GetEnumName(TableCol p_col)
