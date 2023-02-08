@@ -20,16 +20,27 @@ namespace Dt.Core
     {
         public ChildEntitySchema(Type p_type, PropertyInfo p_propInfo, string p_parentID)
         {
-            var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
-            if (tbl == null || string.IsNullOrEmpty(tbl.Name))
-                throw new Exception($"实体{p_type.Name}缺少映射表设置！");
-
             Type = p_type;
             PropInfo = p_propInfo;
             ParentID = p_parentID;
-            Schema = EntitySchema.GetTableSchema(tbl.Name);
-            if (Schema.PrimaryKey.Count == 0)
-                throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
+
+            var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
+            if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
+            {
+                Schema = EntitySchema.GetTableSchema(tbl.Name);
+            }
+#if !SERVER
+            else
+            {
+                var sqlite = p_type.GetCustomAttribute<SqliteAttribute>(false);
+                if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
+                {
+                    Schema = EntitySchema.GetSqliteSchema(p_type);
+                }
+            }
+#endif
+            if (Schema == null)
+                throw new Exception($"实体{p_type.Name}缺少映射表设置！");
 
             // sql变量名parentid固定
             SqlSelect = $"select * from `{Schema.Name}` where {ParentID}=@parentid";

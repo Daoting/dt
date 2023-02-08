@@ -33,8 +33,8 @@ namespace Dt.MgrDemo
 
             var group = new GroupData<DemoItem>
             {
-                new DemoItem("实体基础", typeof(AccessDemo), ""),
-                
+                new DemoItem("实体基础", typeof(AccessDemo), "客户端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存等"),
+                new DemoItem("Sqlite实体", typeof(SqliteAccessDemo), "Sqlite实体除了无缓存和无序列外，其余功能都包括"),
             };
             group.Title = "基础";
             ds.Add(group);

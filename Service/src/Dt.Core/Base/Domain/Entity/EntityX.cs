@@ -64,7 +64,7 @@ namespace Dt.Core
                 return await ew.Commit(p_isNotify);
             }
 
-            if (IsVirEntity(typeof(TEntity)))
+            if (_isVirEntity)
                 return await DelVirEntityDirect(new List<object> { p_id }, p_isNotify);
             return await DelDirect(new List<object> { p_id }, p_isNotify);
         }
@@ -98,7 +98,7 @@ namespace Dt.Core
                 return await ew.Commit(p_isNotify);
             }
 
-            if (IsVirEntity(typeof(TEntity)))
+            if (_isVirEntity)
                 return await DelVirEntityDirect(p_ids, p_isNotify);
             return await DelDirect(p_ids, p_isNotify);
         }
@@ -280,6 +280,13 @@ namespace Dt.Core
             if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
                 return Task.FromResult(default(TEntity));
 
+            if (_isVirEntity)
+            {
+                // 虚拟实体不涉及缓存
+                var vm = VirEntitySchema.Get(typeof(TEntity));
+                return GetByKeyInternal(vm.PrimaryKeyName, p_id.ToString());
+            }
+
             var model = EntitySchema.Get(typeof(TEntity));
             if (model.Schema.PrimaryKey.Count != 1)
                 Throw.Msg("根据主键获得实体对象时仅支持单主键！");
@@ -299,6 +306,12 @@ namespace Dt.Core
         {
             if (string.IsNullOrWhiteSpace(p_keyName) || string.IsNullOrWhiteSpace(p_keyVal))
                 Throw.Msg("GetByKey查询时主键或唯一索引不可为空！");
+
+            if (_isVirEntity)
+            {
+                // 虚拟实体不涉及缓存
+                return await GetByKeyInternal(p_keyName, p_keyVal);
+            }
 
             TEntity entity = null;
             var model = EntitySchema.Get(typeof(TEntity));
@@ -326,7 +339,7 @@ namespace Dt.Core
         /// <returns>返回实体对象或null</returns>
         public static async Task<TEntity> GetByIDWithChild(object p_id)
         {
-            if (IsVirEntity(typeof(TEntity)))
+            if (_isVirEntity)
                 Throw.Msg("虚拟实体不支持子实体列表！");
 
             if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
@@ -375,11 +388,12 @@ namespace Dt.Core
 
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
-            sql += $" where {p_keyName}=@{p_keyName}";
+            sql += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
             return Kit.DataAccess.First<TEntity>(sql, dt);
 #else
             var res = GetSelectSql(typeof(TEntity));
-            res.Item2 += $" where {p_keyName}=@{p_keyName}";
+            // 虚拟实体需要a.前缀
+            res.Item2 += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
             return res.Item1.First<TEntity>(res.Item2, dt);
 #endif
         }
@@ -387,7 +401,7 @@ namespace Dt.Core
 #if SERVER
         static string GetSelectSql(Type p_type)
         {
-            if (IsVirEntity(p_type))
+            if (_isVirEntity)
             {
                 return VirEntitySchema.Get(p_type).GetSelectAllSql();
             }
@@ -396,7 +410,7 @@ namespace Dt.Core
 #else
         static (IDataAccess, string) GetSelectSql(Type p_type)
         {
-            if (IsVirEntity(p_type))
+            if (_isVirEntity)
             {
                 var vm = VirEntitySchema.Get(p_type);
                 return (vm.AccessInfo.GetDataAccess(), vm.GetSelectAllSql());
@@ -409,6 +423,10 @@ namespace Dt.Core
         #endregion
 
         #region 新ID和序列
+#if !SERVER
+        static readonly SnowflakeId _snowflake = new SnowflakeId();
+#endif
+
         /// <summary>
         /// 获取新ID，统一服务端和客户端写法
         /// </summary>
@@ -419,7 +437,7 @@ namespace Dt.Core
             return Task.FromResult(Kit.NewID);
 #else
             AccessInfo ai;
-            if (IsVirEntity(typeof(TEntity)))
+            if (_isVirEntity)
             {
                 ai = VirEntitySchema.Get(typeof(TEntity)).AccessInfo;
             }
@@ -433,8 +451,8 @@ namespace Dt.Core
                 return Kit.Rpc<long>(ai.Name, "Da.NewID");
             }
 
-            // 本地库采用自增
-            return Task.FromResult(0L);
+            // 本地库，和服务端算法的_workerId不同
+            return Task.FromResult(_snowflake.NextId());
 #endif
         }
 
@@ -446,7 +464,7 @@ namespace Dt.Core
         public static async Task<int> NewSeq(string p_colName)
         {
             Throw.IfEmpty(p_colName, "获取新序列值时，需要提供字段名称！");
-            if (IsVirEntity(typeof(TEntity)))
+            if (_isVirEntity)
                 Throw.Msg("无法通过虚拟实体获取新序列值时！");
 
             var model = EntitySchema.Get(typeof(TEntity));
@@ -457,7 +475,7 @@ namespace Dt.Core
 #if SERVER
             seq = await Kit.DataAccess.GetScalar<int>($"select nextval('{seqName}')");
 #else
-            Throw.If(model.AccessInfo.Type == AccessType.Local, "暂不支持sqlite本地库的序列功能！");
+            Throw.If(model.AccessInfo.Type == AccessType.Local, "sqlite本地库不支持序列功能！");
             seq = await Kit.Rpc<int>(
                 model.AccessInfo.Name,
                 "Da.NewSeq",
@@ -481,6 +499,9 @@ namespace Dt.Core
                 }
             }
         }
+
+        // 是否为虚拟实体
+        static bool _isVirEntity = typeof(TEntity).GetInterface("IVirEntity") == typeof(IVirEntity);
         #endregion
     }
 }

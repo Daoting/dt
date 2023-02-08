@@ -54,6 +54,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 父子实体的增删改查样例
 * 实体缓存样例
 * 生成的实体类增加自定义服务名
+* sqlite的增删改查样例
 
 未测
 SqliteCommandEx SqliteConnectionEx改动
@@ -67,6 +68,7 @@ Launch.cs 51行
 ShowRoot
 整个Chat
 
+* sqlite的增删改查记录系统日志
 * 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存
 * 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的类型标签
 

@@ -127,7 +127,7 @@ namespace Dt.Core
             return schema;
         }
 
-        static TableSchema GetSqliteSchema(Type p_type)
+        internal static TableSchema GetSqliteSchema(Type p_type)
         {
             // 不包括继承的属性
             var props = p_type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
