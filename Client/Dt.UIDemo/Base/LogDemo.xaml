@@ -15,8 +15,9 @@
             <Button Content="出错信息" Click="OnError" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Http请求" Click="OnRequest" />
-            <Button Content="Http响应" Click="OnResponse" />
+            <Button Content="Http请求响应" Click="OnRequest" />
+            <Button Content="Sqlite访问" Click="OnResponse" />
+            <Button Content="Push推送" Click="OnPush" />
         </StackPanel>
         
         <StackPanel Orientation="Horizontal">

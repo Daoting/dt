@@ -344,8 +344,14 @@ namespace Dt.Base.Tools
                 }
                 else if (item.Log.Properties.TryGetValue("Kind", out var val))
                 {
-                    tbLevel.Foreground = Res.湖蓝;
-                    tbLevel.Text = val.ToString("l", null);
+                    var txt = val.ToString("l", null);
+                    tbLevel.Text = txt;
+                    if (txt == "Rpc")
+                        tbLevel.Foreground = Res.湖蓝;
+                    else if (txt == "Sqlite")
+                        tbLevel.Foreground = Res.GreenBrush;
+                    else if (txt == "Push")
+                        tbLevel.Foreground = Res.亮红;
                 }
                 else if (item.Log.Level == LogEventLevel.Information)
                 {

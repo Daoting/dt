@@ -67,13 +67,9 @@ namespace Dt.Core
                         if (Log.Properties.TryGetValue("Kind", out var vkind))
                         {
                             var kind = vkind.ToString("l", null);
-                            if (kind == "Call" || kind == "Recv")
+                            if (kind == "Rpc" || kind == "Sqlite" || kind == "Push")
                             {
-                                _detial = TraceLogs.GetRpcJson(val.ToString("l", null));
-                            }
-                            else if (kind == "Sqlite")
-                            {
-                                _detial = "Sqlite";
+                                _detial = TraceLogs.GetDetail(val.ToString("l", null));
                             }
                         }
 

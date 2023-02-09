@@ -171,10 +171,13 @@ namespace Dt.Mgr
                 }
 
                 // 输出日志信息
-                string id = TraceLogs.AddRpcJson(data);
-                Log.ForContext("Kind", "Recv")
-                    .ForContext("Detail", id)
-                    .Debug($"msg推送—> {method}");
+                if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+                {
+                    string id = TraceLogs.AddDetail(data);
+                    Log.ForContext("Kind", "Push")
+                        .ForContext("Detail", id)
+                        .Debug($"msg推送—> {method}");
+                }
             }
             catch (Exception ex)
             {

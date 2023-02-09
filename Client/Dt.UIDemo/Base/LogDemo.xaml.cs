@@ -44,14 +44,14 @@ namespace Dt.UIDemo
 
         void OnRequest(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("Kind", "Call")
-                .Debug("Http请求信息");
+            Log.ForContext("Kind", "Rpc")
+                .Debug("Http请求响应信息");
         }
 
         void OnResponse(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("Kind", "Recv")
-                .Debug("Http响应信息");
+            Log.ForContext("Kind", "Sqlite")
+                .Debug("Sqlite访问信息");
         }
 
         void OnFormat(object sender, RoutedEventArgs e)
@@ -88,6 +88,12 @@ namespace Dt.UIDemo
             // SourceContext：Dt.UIDemo.LogDemo
             Log.ForContext<LogDemo>()
                 .Debug("附加SourceContext属性");
+        }
+
+        void OnPush(object sender, RoutedEventArgs e)
+        {
+            Log.ForContext("Kind", "Push")
+                .Debug("Push推送信息");
         }
     }
 }

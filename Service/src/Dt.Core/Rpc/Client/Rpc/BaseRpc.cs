@@ -29,6 +29,7 @@ namespace Dt.Core.Rpc
     {
         #region 成员变量
         protected readonly static HttpClient _client;
+        protected static ILogger _log;
         protected readonly string _svcName;
         protected readonly string _methodName;
         protected readonly byte[] _data;
@@ -63,6 +64,11 @@ namespace Dt.Core.Rpc
 
             // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1
             _client.DefaultRequestVersion = new Version(2, 0);
+
+#if !SERVER
+            if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
+                _log = Log.ForContext("Kind", "Rpc");
+#endif
         }
 
         /// <summary>
@@ -113,10 +119,13 @@ namespace Dt.Core.Rpc
             byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
 
 #if !SERVER
-            // 输出日志信息
-            string id = TraceLogs.AddRpcJson(data);
-            _logCall.ForContext("Detail", id)
+            // 级别允许输出日志
+            if (_log != null)
+            {
+                string id = TraceLogs.AddDetail(data);
+                _log.ForContext("Detail", id)
                     .Debug($"{_svcName}.{p_methodName}");
+            }
 #endif
 
             // 超过长度限制时执行压缩
@@ -133,6 +142,5 @@ namespace Dt.Core.Rpc
             return data;
         }
 
-        static ILogger _logCall = Log.ForContext("Kind", "Call");
     }
 }
