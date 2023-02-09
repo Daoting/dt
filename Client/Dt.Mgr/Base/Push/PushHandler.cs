@@ -172,8 +172,8 @@ namespace Dt.Mgr
 
                 // 输出日志信息
                 string id = TraceLogs.AddRpcJson(data);
-                Log.ForContext("Rpc", "Recv")
-                    .ForContext("Json", id)
+                Log.ForContext("Kind", "Recv")
+                    .ForContext("Detail", id)
                     .Debug($"msg推送—> {method}");
             }
             catch (Exception ex)

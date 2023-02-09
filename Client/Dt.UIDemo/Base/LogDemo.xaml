@@ -8,6 +8,7 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="调试信息" Click="OnDebug" />
             <Button Content="普通信息" Click="OnNormal" />
+            <Button Content="含详细内容" Click="OnDetail" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Content="警告信息" Click="OnWarn" />

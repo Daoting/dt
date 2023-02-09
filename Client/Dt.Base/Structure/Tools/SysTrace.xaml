@@ -17,13 +17,6 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" AutoScrollBottom="True" Background="Black" SelectionMode="None" ItemHeight="NaN">
-        <a:Ex.Menu>
-            <a:Menu Opening="OnOpenMenu">
-                <a:Mi ID="复制标题" Icon="汉堡" Click="OnCopyTitle" />
-                <a:Mi ID="复制json" Icon="代码" Click="OnCopyJson" />
-                <a:Mi ID="复制异常" Icon="注意" Click="OnCopyExcept" />
-            </a:Menu>
-        </a:Ex.Menu>
         <DataTemplate>
             <StackPanel Padding="10,0,10,10">
                 <a:Dot ID="Title" Call="SysTraceCellUI.FormatTitle" />

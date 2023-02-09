@@ -59,6 +59,27 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 除某项外清空
+        /// </summary>
+        /// <param name="p_item"></param>
+        internal static void ClearExcept(TraceLogItem p_item)
+        {
+            Kit.RunAsync(() =>
+            {
+                using (Data.Defer())
+                {
+                    Data.Clear();
+                    Data.Add(p_item);
+                }
+
+                // 先生成 Detail 内容，避免清空后无法生成，否则算法复杂，巧！！！
+                var str = p_item.Detial;
+                _rpcJsons.Clear();
+                _startIndex = 0;
+            });
+        }
+
+        /// <summary>
         /// 缓存rpc调用或结果的json数据，返回索引，优点：
         /// 1. 避免无用的byte[] -> string 转换
         /// 2. 避免将 json 内容写进日志文件

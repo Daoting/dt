@@ -22,6 +22,7 @@ namespace Dt.Core
         static ITextFormatter _ftMessage = new MessageTemplateTextFormatter("{Message:lj}");
         static ITextFormatter _ftAll = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
         string _msg;
+        string _detial;
 
         /// <summary>
         /// 日志项
@@ -48,17 +49,54 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 消息 + 异常
+        /// 日志项是否存在详细内容
         /// </summary>
-        public string ExceptionMsg
+        public bool ExistDetial => Log.Exception != null || Log.Properties.ContainsKey("Detail");
+
+        /// <summary>
+        /// 日志项的详细内容
+        /// </summary>
+        public string Detial
         {
             get
             {
-                using (var buffer = new StringWriter())
+                if (_detial == null)
                 {
-                    _ftAll.Format(Log, buffer);
-                    return buffer.ToString().Trim();
+                    if (Log.Properties.TryGetValue("Detail", out var val))
+                    {
+                        if (Log.Properties.TryGetValue("Kind", out var vkind))
+                        {
+                            var kind = vkind.ToString("l", null);
+                            if (kind == "Call" || kind == "Recv")
+                            {
+                                _detial = TraceLogs.GetRpcJson(val.ToString("l", null));
+                            }
+                            else if (kind == "Sqlite")
+                            {
+                                _detial = "Sqlite";
+                            }
+                        }
+
+                        if (_detial == null)
+                        {
+                            // 普通项直接输出
+                            _detial = val.ToString("l", null);
+                        }
+                    }
+                    else if (Log.Exception != null)
+                    {
+                        // 消息 + 异常
+                        using (var buffer = new StringWriter())
+                        {
+                            _ftAll.Format(Log, buffer);
+                            _detial = buffer.ToString().Trim();
+                        }
+                    }
                 }
+
+                if (_detial == null)
+                    _detial = "空";
+                return _detial;
             }
         }
     }

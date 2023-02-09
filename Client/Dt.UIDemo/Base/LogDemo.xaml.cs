@@ -26,6 +26,12 @@ namespace Dt.UIDemo
             Log.Information("普通信息内容");
         }
 
+        void OnDetail(object sender, RoutedEventArgs e)
+        {
+            Log.ForContext("Detail", "详细内容描述")
+                .Information("点击右上菜单，可以查看或复制详细内容");
+        }
+
         void OnWarn(object sender, RoutedEventArgs e)
         {
             Log.Warning(new Exception("异常信息内容"), "警告信息内容");
@@ -38,13 +44,13 @@ namespace Dt.UIDemo
 
         void OnRequest(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("Rpc", "Call")
+            Log.ForContext("Kind", "Call")
                 .Debug("Http请求信息");
         }
 
         void OnResponse(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("Rpc", "Recv")
+            Log.ForContext("Kind", "Recv")
                 .Debug("Http响应信息");
         }
 

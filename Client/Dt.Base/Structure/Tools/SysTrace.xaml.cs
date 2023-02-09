@@ -24,7 +24,6 @@ namespace Dt.Base.Tools
     /// </summary>
     public sealed partial class SysTrace : Dlg
     {
-        const string _copyMsg = "已复制到剪切板！";
         static SysTrace _dlg;
 
         public SysTrace()
@@ -35,11 +34,11 @@ namespace Dt.Base.Tools
             IsPinned = true;
             WinPlacement = DlgPlacement.FromRight;
 
-//#if WIN
-//            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
-//            mi.Click += OnStub;
-//            Menu.Items.Insert(1, mi);
-//#endif
+            //#if WIN
+            //            Mi mi = new Mi { ID = "存根", Icon = Icons.链接 };
+            //            mi.Click += OnStub;
+            //            Menu.Items.Insert(1, mi);
+            //#endif
         }
 
         public static void ShowBox()
@@ -126,22 +125,6 @@ namespace Dt.Base.Tools
             Log.Debug(Kit.HostOS.ToString());
         }
 
-        /// <summary>
-        /// 将文本复制到剪贴板
-        /// </summary>
-        /// <param name="p_text"></param>
-        /// <param name="p_showText"></param>
-        void CopyToClipboard(string p_text, bool p_showText)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_text);
-            Clipboard.SetContent(data);
-            if (p_showText)
-                Kit.Msg($"{_copyMsg}\r\n{p_text}");
-            else
-                Kit.Msg(_copyMsg);
-        }
-
         void OnPageType(object sender, Mi e)
         {
             string name;
@@ -170,37 +153,6 @@ namespace Dt.Base.Tools
                 name = UITree.RootContent.GetType().FullName;
             }
             Log.Debug(name);
-        }
-
-        void OnOpenMenu(object sender, AsyncCancelEventArgs e)
-        {
-            Menu m = (Menu)sender;
-            var item = m.TargetData as TraceLogItem;
-            m["复制json"].Visibility = item.Log.Properties.ContainsKey("Json") ? Visibility.Visible : Visibility.Collapsed;
-            m["复制异常"].Visibility = item.Log.Exception != null ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        void OnCopyTitle(object sender, Mi e)
-        {
-            CopyToClipboard(((TraceLogItem)e.Data).Message, false);
-        }
-
-        void OnCopyJson(object sender, Mi e)
-        {
-            var item = (TraceLogItem)e.Data;
-            if (item.Log.Properties.TryGetValue("Json", out var val))
-            {
-                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
-                if (!string.IsNullOrEmpty(txt))
-                    CopyToClipboard(txt, false);
-                else
-                    Kit.Msg("json内容为空");
-            }
-        }
-
-        void OnCopyExcept(object sender, Mi e)
-        {
-            CopyToClipboard(((TraceLogItem)e.Data).ExceptionMsg, false);
         }
 
         #region 生成存根代码
@@ -370,8 +322,8 @@ namespace Dt.Base.Tools
             Grid.SetColumn(tbLevel, 1);
             grid.Children.Add(tbLevel);
 
-            Button btn = new Button { Content = "\uE006", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
-            btn.Click += OnShowDetail;
+            Button btn = new Button { Content = "\uE03F", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
+            btn.Click += ShowMenu;
             Grid.SetColumn(btn, 2);
             grid.Children.Add(btn);
             e.UI = grid;
@@ -390,49 +342,87 @@ namespace Dt.Base.Tools
                 {
                     tbLevel.Foreground = Res.YellowBrush;
                 }
-                else if (item.Log.Properties.TryGetValue("Rpc", out var val))
+                else if (item.Log.Properties.TryGetValue("Kind", out var val))
                 {
                     tbLevel.Foreground = Res.湖蓝;
-                    var tp = val.ToString("l", null);
-                    tbLevel.Text = (tp == "Call") ? "Call" : "Recv";
+                    tbLevel.Text = val.ToString("l", null);
                 }
                 else if (item.Log.Level == LogEventLevel.Information)
                 {
                     tbLevel.Text = "Inf";
                 }
-
-                if (item.Log.Exception != null || item.Log.Properties.ContainsKey("Json"))
-                {
-                    btn.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    btn.Visibility = Visibility.Collapsed;
-                }
             };
         }
 
-        static void OnShowDetail(object sender, RoutedEventArgs e)
+        #region 菜单
+        static Menu _menu;
+        static async void ShowMenu(object sender, RoutedEventArgs e)
         {
-            var item = (TraceLogItem)((LvItem)((Button)sender).DataContext).Data;
+            if (_menu == null)
+            {
+                _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
+                var mi = new Mi { ID = "查看详细", Icon = Icons.眼睛 };
+                mi.Click += ShowDetail;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "复制详细", Icon = Icons.复制 };
+                mi.Click += CopyDetail;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "复制标题", Icon = Icons.复制 };
+                mi.Click += CopyTitle;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "除此清空", Icon = Icons.垃圾箱 };
+                mi.Click += ClearExcept;
+                _menu.Items.Add(mi);
+            }
+
+            var btn = (Button)sender;
+            var item = (TraceLogItem)((LvItem)btn.DataContext).Data;
+            if (item.ExistDetial)
+            {
+                _menu["查看详细"].Visibility = Visibility.Visible;
+                _menu["复制详细"].Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _menu["查看详细"].Visibility = Visibility.Collapsed;
+                _menu["复制详细"].Visibility = Visibility.Collapsed;
+            }
+
+            _menu.Tag = item;
+            await _menu.OpenContextMenu(btn);
+        }
+
+        static void ClearExcept(object sender, Mi e)
+        {
+            TraceLogs.ClearExcept((TraceLogItem)_menu.Tag);
+        }
+
+        static void CopyTitle(object sender, Mi e)
+        {
+            CopyToClipboard(((TraceLogItem)_menu.Tag).Message);
+        }
+
+        static void CopyDetail(object sender, Mi e)
+        {
+            CopyToClipboard(((TraceLogItem)_menu.Tag).Detial);
+        }
+
+        static void ShowDetail(object sender, Mi e)
+        {
+            var item = (TraceLogItem)_menu.Tag;
+
             TextBox tb = new TextBox
             {
                 AcceptsReturn = true,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 BorderThickness = new Thickness(),
+                Text = item.Detial,
             };
             ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
             ScrollViewer.SetVerticalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
-            if (item.Log.Properties.TryGetValue("Json", out var val))
-            {
-                var txt = TraceLogs.GetRpcJson(val.ToString("l", null));
-                if (!string.IsNullOrEmpty(txt))
-                    tb.Text = txt;
-            }
-            else
-            {
-                tb.Text = item.ExceptionMsg;
-            }
 
             Dlg dlg = new Dlg
             {
@@ -449,5 +439,18 @@ namespace Dt.Base.Tools
             }
             dlg.Show();
         }
+
+        /// <summary>
+        /// 将文本复制到剪贴板
+        /// </summary>
+        /// <param name="p_text"></param>
+        static void CopyToClipboard(string p_text)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_text);
+            Clipboard.SetContent(data);
+            Kit.Warn("已复制到剪切板！");
+        }
+        #endregion
     }
 }

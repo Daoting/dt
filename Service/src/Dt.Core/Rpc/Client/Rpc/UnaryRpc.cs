@@ -118,9 +118,8 @@ namespace Dt.Core.Rpc
 #if !SERVER
             // 输出日志信息
             string id = TraceLogs.AddRpcJson(p_data);
-            Log.ForContext("Rpc", "Recv")
-                .ForContext("Json", id)
-                .Debug($"{_svcName}.{_methodName} — {result.Elapsed}ms");
+            _logRecv.ForContext("Detail", id)
+                    .Debug($"{_svcName}.{_methodName} — {result.Elapsed}ms");
             
             // ⚡ 为服务器标志
             if (result.ResultType == RpcResultType.Message)
@@ -131,5 +130,7 @@ namespace Dt.Core.Rpc
                 return val;
             throw new ServerException("服务器异常", result.Info);
         }
+
+        static ILogger _logRecv = Log.ForContext("Kind", "Recv");
     }
 }

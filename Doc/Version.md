@@ -55,6 +55,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 实体缓存样例
 * 生成的实体类增加自定义服务名
 * sqlite的增删改查样例
+* 系统日志增加复制和除此清空功能
 
 未测
 SqliteCommandEx SqliteConnectionEx改动

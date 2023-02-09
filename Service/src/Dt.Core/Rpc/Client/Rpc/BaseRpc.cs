@@ -115,9 +115,8 @@ namespace Dt.Core.Rpc
 #if !SERVER
             // 输出日志信息
             string id = TraceLogs.AddRpcJson(data);
-            Log.ForContext("Rpc", "Call")
-                .ForContext("Json", id)
-                .Debug($"{_svcName}.{p_methodName}");
+            _logCall.ForContext("Detail", id)
+                    .Debug($"{_svcName}.{p_methodName}");
 #endif
 
             // 超过长度限制时执行压缩
@@ -133,5 +132,7 @@ namespace Dt.Core.Rpc
             }
             return data;
         }
+
+        static ILogger _logCall = Log.ForContext("Kind", "Call");
     }
 }
