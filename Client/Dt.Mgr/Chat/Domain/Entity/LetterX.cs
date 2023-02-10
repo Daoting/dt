@@ -18,6 +18,32 @@ namespace Dt.Mgr.Chat
     /// </summary>
     public partial class LetterX
     {
-        
+        public static async Task<LetterX> New(
+            long LoginID = default,
+            string MsgID = default,
+            long OtherID = default,
+            string OtherName = default,
+            bool IsReceived = default,
+            bool Unread = default,
+            LetterType LetterType = default,
+            bool OtherIsOnline = default,
+            string Content = default,
+            DateTime STime = default,
+            string Photo = default)
+        {
+            return new LetterX(
+                ID: await NewID(),
+                LoginID: LoginID,
+                MsgID: MsgID,
+                OtherID: OtherID,
+                OtherName: OtherName,
+                IsReceived: IsReceived,
+                Unread: Unread,
+                LetterType: LetterType,
+                OtherIsOnline: OtherIsOnline,
+                Content: Content,
+                STime: STime,
+                Photo: Photo);
+        }
     }
 }

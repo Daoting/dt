@@ -154,7 +154,6 @@ namespace Dt.Core
                 bool exists = File.Exists(path);
                 db = new SqliteConnectionEx("Data Source=" + path);
                 db.Open();
-                var msg = $"打开 {_dbName} 库";
 
                 // 后台任务独立启动时为null
                 if (Stub.Inst != null
@@ -175,11 +174,10 @@ namespace Dt.Core
 
                         // 创建空文件，文件名是库表结构的版本号
                         File.Create(path);
-                        msg += "，初始化库表结构";
                     }
                 }
 
-                Log.Information(msg);
+                _log?.Debug($"打开 {_dbName} 库");
             }
             catch (Exception ex)
             {

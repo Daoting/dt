@@ -16,6 +16,14 @@ namespace Dt.Core
     /// </summary>
     public partial class SearchHistoryX
     {
-        
+        public static async Task<SearchHistoryX> New(
+            string BaseUri = default,
+            string Content = default)
+        {
+            return new SearchHistoryX(
+                ID: await NewID(),
+                BaseUri: BaseUri,
+                Content: Content);
+        }
     }
 }

@@ -21,10 +21,11 @@ namespace Dt.Core
         SearchHistoryX() { }
 
         public SearchHistoryX(
+            long ID,
             string BaseUri = default,
             string Content = default)
         {
-            AddCell("ID", 0);
+            AddCell("ID", ID);
             AddCell("BaseUri", BaseUri);
             AddCell("Content", Content);
             IsAdded = true;
@@ -34,10 +35,10 @@ namespace Dt.Core
         /// <summary>
         /// 主键
         /// </summary>
-        [PrimaryKey, AutoIncrement]
-        new public int ID
+        [PrimaryKey]
+        new public long ID
         {
-            get { return (int)this["ID"]; }
+            get { return (long)this["ID"]; }
             set { this["ID"] = value; }
         }
 

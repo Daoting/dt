@@ -185,10 +185,10 @@ namespace Dt.Base
         async void SaveCookie(string p_text)
         {
             _lastText = p_text;
-            var sh = await SearchHistoryX.First("BaseUri='{_baseUri}' and Content='{p_text}'");
+            var sh = await SearchHistoryX.First($"BaseUri='{_baseUri}' and Content='{p_text}'");
             if (sh == null)
             {
-                SearchHistoryX his = new SearchHistoryX(BaseUri: _baseUri, Content: p_text);
+                SearchHistoryX his = await SearchHistoryX.New(BaseUri: _baseUri, Content: p_text);
                 await his.Save(false);
                 LoadHisItems();
             }

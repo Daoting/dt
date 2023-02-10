@@ -58,17 +58,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 系统日志增加复制和除此清空功能
 * sqlite的增删改查记录系统日志
 * 系统日志增加输出附加属性
+* 测试sqlite本地库涉及的改动，修改bug
 
 未测
-SqliteCommandEx SqliteConnectionEx改动
-FvCell 598行
-TaskbarItem 112行
-SearchMv 188行
-LocalDbView
-LayoutManager
-WinKit 36行
-Launch.cs 51行
-ShowRoot
 整个Chat
 
 

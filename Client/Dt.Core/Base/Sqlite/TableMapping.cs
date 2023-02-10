@@ -347,7 +347,9 @@ namespace Dt.Core.Sqlite
         /// <returns></returns>
         public static bool IsAutoInc(MemberInfo p)
         {
-            return p.GetCustomAttribute<AutoIncrementAttribute>(false) != null;
+            // 为和服务端使用方法相同，sqlite不再支持自增主键
+            return false;
+            //return p.GetCustomAttribute<AutoIncrementAttribute>(false) != null;
         }
 
         /// <summary>

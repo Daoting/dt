@@ -184,7 +184,22 @@ namespace Dt.Base.Tools
             {
                 ls.Add(new Dict { { pk, row[pk] } });
             }
-            if (await db.Exec($"delete from '{tblName}' where {pk}=@{pk}", ls) > 0)
+
+            var sql = $"delete from `{tblName}` where {pk}=@{pk}";
+            int cnt;
+            if (ls.Count == 1)
+            {
+                cnt = await db.Exec(sql, ls[0]);
+            }
+            else
+            {
+                var dt = new Dict();
+                dt["text"] = sql;
+                dt["params"] = ls;
+                cnt = await db.BatchExec(new List<Dict> { dt });
+            }
+
+            if (cnt > 0)
             {
                 _lvData.DeleteSelection();
             }

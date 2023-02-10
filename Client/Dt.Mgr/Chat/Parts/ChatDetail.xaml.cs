@@ -255,16 +255,14 @@ namespace Dt.Mgr.Chat
         /// <param name="p_files"></param>
         public async void SendFiles(List<FileData> p_files)
         {
-            LetterX l = new LetterX
-            {
-                OtherID = OtherID,
-                OtherName = _other.Name,
-                IsReceived = false,
-                Unread = false,
-                LetterType = GetLetterType(p_files),
-                STime = Kit.Now,
-                Photo = Kit.UserPhoto,
-            };
+            LetterX l = await LetterX.New(
+                OtherID: OtherID,
+                OtherName: _other.Name,
+                IsReceived: false,
+                Unread: false,
+                LetterType: GetLetterType(p_files),
+                STime: Kit.Now,
+                Photo: Kit.UserPhoto);
             _lv.Data.Add(l);
 
             FileList fl;

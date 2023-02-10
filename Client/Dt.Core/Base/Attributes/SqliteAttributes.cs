@@ -41,12 +41,13 @@ namespace Dt.Core
     public class PrimaryKeyAttribute : Attribute
     { }
 
-    /// <summary>
-    /// 字段自增标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class AutoIncrementAttribute : Attribute
-    { }
+    // 为和服务端使用方法相同，sqlite不再支持自增主键
+    ///// <summary>
+    ///// 字段自增标签
+    ///// </summary>
+    //[AttributeUsage(AttributeTargets.Property)]
+    //public class AutoIncrementAttribute : Attribute
+    //{ }
 
     /// <summary>
     /// 索引列标签

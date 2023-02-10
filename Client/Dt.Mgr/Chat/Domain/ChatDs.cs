@@ -61,7 +61,7 @@ namespace Dt.Mgr.Chat
             }
 
             // 新消息
-            var l = new LetterX(
+            var l = await LetterX.New(
                 LoginID: Kit.UserID,
                 MsgID: p_letter.ID,
                 OtherID: p_letter.SenderID,
@@ -143,7 +143,7 @@ namespace Dt.Mgr.Chat
             bool isOnline = await SendLetter(p_recvID, li);
 
             // 本地记录
-            LetterX l = new LetterX(
+            LetterX l = await LetterX.New(
                 LoginID: Kit.UserID,
                 MsgID: li.ID,
                 OtherID: p_recvID,

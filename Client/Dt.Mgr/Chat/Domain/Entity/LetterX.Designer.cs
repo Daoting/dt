@@ -23,6 +23,7 @@ namespace Dt.Mgr.Chat
         LetterX() { }
 
         public LetterX(
+            long ID,
             long LoginID = default,
             string MsgID = default,
             long OtherID = default,
@@ -35,7 +36,7 @@ namespace Dt.Mgr.Chat
             DateTime STime = default,
             string Photo = default)
         {
-            AddCell("ID", 0);
+            AddCell("ID", ID);
             AddCell("LoginID", LoginID);
             AddCell("MsgID", MsgID);
             AddCell("OtherID", OtherID);
@@ -54,10 +55,10 @@ namespace Dt.Mgr.Chat
         /// <summary>
         /// 主键
         /// </summary>
-        [PrimaryKey, AutoIncrement]
-        new public int ID
+        [PrimaryKey]
+        new public long ID
         {
-            get { return (int)this["ID"]; }
+            get { return (long)this["ID"]; }
             set { this["ID"] = value; }
         }
 

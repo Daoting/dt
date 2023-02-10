@@ -64,7 +64,7 @@ namespace Dt.Core
             }
             else if (p_enable)
             {
-                await DelByID("DisableBgJob");
+                await DelByID("DisableBgJob", true, false);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Dt.Core
         /// </summary>
         internal static async void DelAutoStart()
         {
-            await DelByID("AutoStart");
+            await DelByID("AutoStart", true, false);
         }
     }
 }
