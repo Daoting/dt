@@ -16,7 +16,7 @@ namespace Dt.Mgr.Chat
     /// <summary>
     /// 
     /// </summary>
-    class ChatDs : DomainSvc<ChatDs, AtLob>
+    class ChatDs : DomainSvc<ChatDs, AtLob.Info>
     {
         ChatDs() { }
 

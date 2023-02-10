@@ -51,19 +51,25 @@ namespace Dt.Core.Rpc
                 }
                 catch (Exception ex)
                 {
-                    throw new ServerException("服务器连接失败", $"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
+                    var msg = $"调用【{_methodName}】时服务器连接失败！";
+#if !SERVER
+                    _log?.Error(msg, ex);
+#endif
+                    throw new ServerException("服务器连接失败", msg + ex.Message);
                 }
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
+                    var msg = $"调用【{_methodName}】时返回状态码：{response.StatusCode}";
 #if !SERVER
                     // 无权限时
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         Kit.GetService<IRpcConfig>()?.OnRpcUnauthorized(_methodName);
                     }
+                    _log?.Error(msg);
 #endif
-                    throw new ServerException($"服务器返回状态码：{response.StatusCode}", $"调用【{_methodName}】时返回状态码：{response.StatusCode}");
+                    throw new ServerException("服务器返回错误状态码", msg);
                 }
 
                 var stream = await response.Content.ReadAsStreamAsync();
@@ -131,6 +137,10 @@ namespace Dt.Core.Rpc
 
             if (result.ResultType == RpcResultType.Value)
                 return val;
+
+#if !SERVER
+            _log?.Error(result.Info);
+#endif
             throw new ServerException("服务器异常", result.Info);
         }
     }

@@ -8,9 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Sqlite;
-using Microsoft.Data.Sqlite;
 using Serilog.Events;
-using System.Collections;
 #endregion
 
 namespace Dt.Core
@@ -30,7 +28,7 @@ namespace Dt.Core
         static SqliteAccess()
         {
             if (Log.IsEnabled(LogEventLevel.Debug))
-                _log = Log.ForContext("Kind", "Sqlite");
+                _log = Log.ForContext("SourceContext", "Sqlite");
         }
 
         public SqliteAccess(string p_dbName)
@@ -39,13 +37,6 @@ namespace Dt.Core
             _db = OpenDb();
         }
         #endregion
-
-        void Trace(string p_method, params object[] p_params)
-        {
-            var id = TraceLogs.AddDetail(p_params);
-            _log.ForContext("Detail", id)
-                .Debug($"{_dbName}.{p_method}");
-        }
 
         #region 查询
         public Task<Table> Query(string p_sql, object p_params = null)
@@ -195,6 +186,13 @@ namespace Dt.Core
                 throw new Exception($"打开sqlite库[{_dbName}]异常，请重新启动应用！{ex.Message}");
             }
             return db;
+        }
+
+        void Trace(string p_method, params object[] p_params)
+        {
+            var id = TraceLogs.AddDetail(p_params);
+            _log.ForContext("Detail", id)
+                .Debug($"{_dbName}.{p_method}");
         }
         #endregion
     }

@@ -28,8 +28,10 @@ namespace Dt.Core.Rpc
     abstract class BaseRpc
     {
         #region 成员变量
-        protected readonly static HttpClient _client;
+#if !SERVER
         protected static ILogger _log;
+#endif
+        protected readonly static HttpClient _client;
         protected readonly string _svcName;
         protected readonly string _methodName;
         protected readonly byte[] _data;
@@ -67,7 +69,7 @@ namespace Dt.Core.Rpc
 
 #if !SERVER
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-                _log = Log.ForContext("Kind", "Rpc");
+                _log = Log.ForContext("SourceContext", "Rpc");
 #endif
         }
 

@@ -19,7 +19,7 @@ namespace Dt.Core
     /// </summary>
     public static class TraceLogs
     {
-        const int _maxTrace = 50;
+        const int _maxTrace = 30;
         static readonly List<object> _details = new List<object>();
         static int _startIndex = 0;
 

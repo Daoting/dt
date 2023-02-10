@@ -318,7 +318,7 @@ namespace Dt.Base.Tools
             var tbTime = new TextBlock { Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center };
             grid.Children.Add(tbTime);
 
-            var tbLevel = new TextBlock { Foreground = Res.WhiteBrush, Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+            var tbLevel = new TextBlock { Foreground = Res.深灰1, Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(tbLevel, 1);
             grid.Children.Add(tbLevel);
 
@@ -333,7 +333,32 @@ namespace Dt.Base.Tools
                 var item = (TraceLogItem)c.Data;
                 tbTime.Text = item.Log.Timestamp.ToString("HH:mm:ss");
 
-                tbLevel.Text = item.Log.Level.ToString();
+                if (item.Log.Properties.TryGetValue("SourceContext", out var val))
+                {
+                    // 含日志来源，不显示命名空间，后缀为级别
+                    var txt = val.ToString("l", null);
+                    int index = txt.LastIndexOf('.');
+                    if (index > -1)
+                        txt = txt.Substring(index + 1);
+
+                    if (item.Log.Level == LogEventLevel.Warning
+                        || item.Log.Level == LogEventLevel.Error
+                        || item.Log.Level == LogEventLevel.Fatal)
+                    {
+                        txt = $"{txt} — {item.Log.Level}";
+                    }
+                    tbLevel.Text = txt;
+                }
+                else if (item.Log.Level == LogEventLevel.Information)
+                {
+                    tbLevel.Text = "Inf";
+                }
+                else
+                {
+                    tbLevel.Text = item.Log.Level.ToString();
+                }
+
+                // 级别控制颜色
                 if (item.Log.Level == LogEventLevel.Error || item.Log.Level == LogEventLevel.Fatal)
                 {
                     tbLevel.Foreground = Res.RedBrush;
@@ -341,21 +366,6 @@ namespace Dt.Base.Tools
                 else if (item.Log.Level == LogEventLevel.Warning)
                 {
                     tbLevel.Foreground = Res.YellowBrush;
-                }
-                else if (item.Log.Properties.TryGetValue("Kind", out var val))
-                {
-                    var txt = val.ToString("l", null);
-                    tbLevel.Text = txt;
-                    if (txt == "Rpc")
-                        tbLevel.Foreground = Res.湖蓝;
-                    else if (txt == "Sqlite")
-                        tbLevel.Foreground = Res.GreenBrush;
-                    else if (txt == "Push")
-                        tbLevel.Foreground = Res.亮红;
-                }
-                else if (item.Log.Level == LogEventLevel.Information)
-                {
-                    tbLevel.Text = "Inf";
                 }
             };
         }

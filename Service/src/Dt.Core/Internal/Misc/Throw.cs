@@ -90,6 +90,9 @@ namespace Dt.Core
                 {
                     p_msg = "异常位置未知";
                 }
+
+                // 未指定异常消息时按错误输出到日志
+                Log.Error(p_msg);
             }
 
 #if !SERVER

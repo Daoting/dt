@@ -57,6 +57,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * sqlite的增删改查样例
 * 系统日志增加复制和除此清空功能
 * sqlite的增删改查记录系统日志
+* 系统日志增加输出附加属性
 
 未测
 SqliteCommandEx SqliteConnectionEx改动
@@ -72,7 +73,6 @@ ShowRoot
 
 
 * 增加业务样例，涉及单表框架模板、业务校验、序列字段、New方法、GetByID有缓存
-* 领域层支持本地sqlite库的处理，区别仅为*.Designer.cs的类型标签
 
 
 ### Bug修改

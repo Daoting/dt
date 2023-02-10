@@ -5,28 +5,42 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
+        <a:CBar Title="基础日志" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="调试信息" Click="OnDebug" />
-            <Button Content="普通信息" Click="OnNormal" />
-            <Button Content="含详细内容" Click="OnDetail" />
+            <Button Content="调试" Click="OnDebug" />
+            <Button Content="普通" Click="OnNormal" />
+            <Button Content="警告" Click="OnWarn" />
+            <Button Content="出错" Click="OnError" />
         </StackPanel>
+
+        <a:CBar Title="内部日志" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="警告信息" Click="OnWarn" />
-            <Button Content="出错信息" Click="OnError" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Http请求响应" Click="OnRequest" />
-            <Button Content="Sqlite访问" Click="OnResponse" />
+            <Button Content="Rpc调用" Click="OnRpc" />
+            <Button Content="Sqlite访问" Click="OnSqlite" />
             <Button Content="Push推送" Click="OnPush" />
         </StackPanel>
-        
+
+        <a:CBar Title="包含来源的日志" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="消息模板" Click="OnFormat" />
-            <Button Content="附加属性" Click="OnAddContext" />
+            <Button Content="调试" Click="OnSrcDebug" />
+            <Button Content="普通" Click="OnSrcNormal" />
+            <Button Content="警告" Click="OnSrcWarn" />
+            <Button Content="出错" Click="OnSrcError" />
         </StackPanel>
+
+        <a:CBar Title="在系统日志中可查看详细" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="多个附加属性" Click="OnMultiContext" />
-            <Button Content="SourceContext附加属性" Click="OnSourceContext" />
+            <Button Content="含详细内容" Click="OnDetail" />
+            <Button Content="多附加属性" Click="OnAddContext" />
+            <Button Content="消息模板" Click="OnFormat" />
+        </StackPanel>
+
+        <a:CBar Title="领域服务中的日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnDsDebug" />
+            <Button Content="普通" Click="OnDsNormal" />
+            <Button Content="警告" Click="OnDsWarn" />
+            <Button Content="出错" Click="OnDsError" />
         </StackPanel>
     </a:Fv>
 </a:Win>

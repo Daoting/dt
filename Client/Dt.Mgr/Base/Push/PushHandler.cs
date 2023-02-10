@@ -174,7 +174,7 @@ namespace Dt.Mgr
                 if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
                     string id = TraceLogs.AddDetail(data);
-                    Log.ForContext("Kind", "Push")
+                    Log.ForContext("SourceContext", "Push")
                         .ForContext("Detail", id)
                         .Debug($"msg推送—> {method}");
                 }

@@ -16,7 +16,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 
     /// </summary>
-    class WfdDs : DomainSvc<WfdDs, AtCm>
+    class WfdDs : DomainSvc<WfdDs, AtCm.Info>
     {
         WfdDs() { }
 

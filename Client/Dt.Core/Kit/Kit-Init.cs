@@ -232,7 +232,10 @@ namespace Dt.Core
                         notify.Close();
                     };
                     Notify(notify);
-                    Log.Error(p_ex, title);
+
+                    // ServerException日志已输出
+                    if (p_ex is not ServerException)
+                        Log.Error(p_ex, title);
                 }
             }
             catch { }

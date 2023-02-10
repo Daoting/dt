@@ -51,7 +51,10 @@ namespace Dt.Core
         /// <summary>
         /// 日志项是否存在详细内容
         /// </summary>
-        public bool ExistDetial => Log.Exception != null || Log.Properties.ContainsKey("Detail");
+        public bool ExistDetial =>
+            Log.Exception != null
+            || Log.Properties.Count > 1
+            || (Log.Properties.Count == 1 && !Log.Properties.ContainsKey("SourceContext"));
 
         /// <summary>
         /// 日志项的详细内容
@@ -62,30 +65,52 @@ namespace Dt.Core
             {
                 if (_detial == null)
                 {
-                    if (Log.Properties.TryGetValue("Detail", out var val))
+                    // 输出所有属性
+                    if (Log.Properties.Count > 0)
                     {
-                        if (Log.Properties.TryGetValue("Kind", out var vkind))
+                        foreach (var item in Log.Properties)
                         {
-                            var kind = vkind.ToString("l", null);
-                            if (kind == "Rpc" || kind == "Sqlite" || kind == "Push")
+                            string txt;
+
+                            if (item.Key == "Detail"
+                                && Log.Properties.TryGetValue("SourceContext", out var vkind)
+                                && vkind.ToString("l", null) is string kind
+                                && (kind == "Rpc" || kind == "Sqlite" || kind == "Push"))
                             {
-                                _detial = TraceLogs.GetDetail(val.ToString("l", null));
+                                // 内置日志项的Detail是详细内容的索引
+                                txt = TraceLogs.GetDetail(item.Value.ToString("l", null));
+                            }
+                            else if (item.Key != "SourceContext")
+                            {
+                                // 普通项直接输出
+                                txt = item.Key + "：" + item.Value.ToString();
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            if (!string.IsNullOrEmpty(txt))
+                            {
+                                if (_detial == null)
+                                    _detial = txt;
+                                else
+                                    _detial += "\r\n\r\n" + txt;
                             }
                         }
-
-                        if (_detial == null)
-                        {
-                            // 普通项直接输出
-                            _detial = val.ToString("l", null);
-                        }
                     }
-                    else if (Log.Exception != null)
+
+                    if (Log.Exception != null)
                     {
                         // 消息 + 异常
                         using (var buffer = new StringWriter())
                         {
                             _ftAll.Format(Log, buffer);
-                            _detial = buffer.ToString().Trim();
+
+                            if (_detial == null)
+                                _detial = buffer.ToString().Trim();
+                            else
+                                _detial += "\r\n\r\n" + buffer.ToString().Trim();
                         }
                     }
                 }
