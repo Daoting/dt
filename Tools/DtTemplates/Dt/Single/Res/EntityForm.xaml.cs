@@ -33,7 +33,7 @@ namespace $rootnamespace$
             if (p_id > 0)
             {
                 _fv.Data = await $entity$.GetByID(p_id);
-    }
+            }
             else
             {
                 Create();
@@ -62,7 +62,7 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$entity$> ();
+            var d = _fv.Data.To<$entity$>();
             if (await d.Save())
             {
                 _win.List.Update();
@@ -71,7 +71,7 @@ namespace $rootnamespace$
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$entity$> ();
+            var d = _fv.Data.To<$entity$>();
             if (d == null)
                 return;
 
