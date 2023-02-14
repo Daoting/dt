@@ -2,32 +2,36 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2018-08-23 创建
+* 日志: 2021/5/22 13:18:36 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Dt.Base;
 using Dt.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+
 #endregion
 
 namespace Dt.UIDemo
 {
-    public sealed partial class TabNav1 : Tab
+    public partial class MinWinXaml : Win
     {
-        public TabNav1()
+        public MinWinXaml()
         {
             InitializeComponent();
+
         }
 
-        void OnNextPage(object sender, RoutedEventArgs e)
+        void OnGoto(object sender, RoutedEventArgs e)
         {
-            Forward(new TabNav2(1));
+            NaviTo("主区,右区");
         }
     }
 }

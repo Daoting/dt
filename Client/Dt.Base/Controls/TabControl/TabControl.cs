@@ -259,6 +259,47 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 外部方法
+        /// <summary>
+        /// 用新标签替换旧标签，注意新标签不属于当前TabControl，未加载到可视树！！！
+        /// <para>主要用于Tab前后导航</para>
+        /// </summary>
+        /// <param name="p_oldTab">旧标签</param>
+        /// <param name="p_newTab">新标签</param>
+        public void ReplaceItem(TabItem p_oldTab, TabItem p_newTab)
+        {
+            int index;
+
+            if (p_oldTab == null
+                || p_newTab == null
+                || (index = Items.IndexOf(p_oldTab)) == -1)
+            {
+                Log.Warning("TabControl中新标签替换旧标签失败！");
+                return;
+            }
+
+            Items.ItemsChanged -= OnItemsChanged;
+
+            Items.RemoveAt(index);
+            _itemsPanel.Children.RemoveAt(index);
+
+            InitItem(p_newTab);
+            Items.Insert(index, p_newTab);
+            _itemsPanel.Children.Insert(index, p_newTab);
+
+            Items.ItemsChanged += OnItemsChanged;
+
+            if (p_oldTab.IsSelected)
+            {
+                // 内容切换动画
+                if (ContentTransitions == null)
+                    ContentTransitions = new TransitionCollection { new ContentThemeTransition { VerticalOffset = 60 } };
+
+                SelectedItem = p_newTab;
+            }
+        }
+        #endregion
+
         #region 加载过程
         protected override void OnLoadTemplate()
         {

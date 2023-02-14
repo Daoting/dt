@@ -12,6 +12,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
+using Dt.Base.Docking;
 #endregion
 
 namespace Dt.Base
@@ -202,6 +203,31 @@ namespace Dt.Base
                 name = name + str.Substring(str.IndexOf(','));
             }
             return Type.GetType(name, false);
+        }
+        #endregion
+
+        #region 元素在Win内停靠位置
+        internal static readonly DependencyProperty DockProperty =
+            DependencyProperty.RegisterAttached(
+                "Dock",
+                typeof(PanePosition),
+                typeof(Ex),
+                new PropertyMetadata(PanePosition.Floating));
+
+        /// <summary>
+        /// 获取元素在Win内停靠位置
+        /// </summary>
+        public static PanePosition GetDock(this UIElement d)
+        {
+            return (PanePosition)d.GetValue(DockProperty);
+        }
+
+        /// <summary>
+        /// 设置元素在Win内停靠位置
+        /// </summary>
+        public static void SetDock(this UIElement d, PanePosition value)
+        {
+            d.SetValue(DockProperty, value);
         }
         #endregion
 

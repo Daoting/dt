@@ -10,7 +10,11 @@
             <ColumnDefinition Width="450" />
         </Grid.ColumnDefinitions>
         <a:TabControl x:Name="_tab" Margin="0,0,10,0">
-            <a:TabItem Title="首页" />
+            <a:TabItem Title="首页">
+                <Grid>
+                    <TextBlock Text="首页内容" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </a:TabItem>
             <a:TabItem Title="第二页" />
             <a:TabItem Title="第三页" />
         </a:TabControl>
@@ -23,6 +27,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Content="添加标签" Click="OnAddTabItem" />
                 <Button Content="移除标签" Click="OnRemoveTabItem" />
+                <Button Content="替换当前标签" Click="OnReplaceItem" />
             </StackPanel>
         </a:Fv>
     </Grid>

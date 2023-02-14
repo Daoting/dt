@@ -59,7 +59,7 @@ namespace Dt.Base.Docking
         public async void LoadDefaultLayout()
         {
             if (AllowSaveLayout())
-                await DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath);
+                await DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath, true, false);
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -206,10 +206,13 @@ namespace Dt.Base.Docking
             List<Tab> rightHide = new List<Tab>();
             List<Tab> topHide = new List<Tab>();
             List<Tab> bottomHide = new List<Tab>();
+            int cnt = _owner.Items.Count;
             while (_owner.Items.Count > 0)
             {
                 object obj = _owner.Items[0];
                 _owner.Items.RemoveAt(0);
+                if (obj is not UIElement elem)
+                    continue;
 
                 if (obj is Pane di)
                 {
@@ -253,18 +256,77 @@ namespace Dt.Base.Docking
                 }
                 else
                 {
-                    // 包含普通界面元素时：
-                    // 1. 将其放于主区
-                    // 2. 不显示标题栏
-                    // 3. 不自动保存布局状态
-                    // 4. 不显示恢复默认布局按钮
-                    // 5. 一般为单视图窗口
-                    _owner.AutoSaveLayout = false;
-                    Main wc = new Main();
-                    Tabs tabs = new Tabs { ShowHeader = false };
-                    tabs.Items.Add(new Tab { Content = obj });
-                    wc.Items.Add(tabs);
-                    centers.Add(wc);
+                    // xaml精简写法
+                    var dock = elem.GetDock();
+                    if (dock == PanePosition.Floating)
+                    {
+                        // 界面元素未指定停靠位置时将其放于主区
+                        Main wc = new Main();
+                        if (obj is Tab ct)
+                        {
+                            Tabs cts = new Tabs();
+                            cts.Items.Add(ct);
+                            wc.Items.Add(cts);
+                        }
+                        else if (obj is Tabs cts)
+                        {
+                            wc.Items.Add(cts);
+                        }
+                        else
+                        {
+                            Tabs ts = new Tabs();
+                            ts.Items.Add(new Tab { Content = obj });
+                            wc.Items.Add(ts);
+
+                            // win.Items只有一个普通元素(单视图窗口)时：
+                            // 1. 不显示标题栏
+                            // 2. 不自动保存布局状态
+                            if (cnt == 1)
+                            {
+                                _owner.AutoSaveLayout = false;
+                                ts.ShowHeader = false;
+                            }
+                        }
+                        centers.Add(wc);
+                        ExtractItems(wc);
+                        continue;
+                    }
+
+                    // 停靠在四周
+                    Pane p = new Pane();
+                    if (dock == PanePosition.Left)
+                    {
+                        p.Pos = PanePosition.Left;
+                        lefts.Add(p);
+                    }
+                    else if (dock == PanePosition.Right)
+                    {
+                        p.Pos = PanePosition.Right;
+                        rights.Add(p);
+                    }
+                    else
+                    {
+                        p.Pos = dock;
+                        topBottom.Add(p);
+                    }
+
+                    if (obj is Tab tab)
+                    {
+                        Tabs tabs = new Tabs();
+                        tabs.Items.Add(tab);
+                        p.Items.Add(tabs);
+                    }
+                    else if (obj is Tabs tabs)
+                    {
+                        p.Items.Add(tabs);
+                    }
+                    else
+                    {
+                        Tabs ts = new Tabs();
+                        ts.Items.Add(new Tab { Content = obj });
+                        p.Items.Add(ts);
+                    }
+                    ExtractItems(p);
                 }
             }
 
@@ -526,7 +588,7 @@ namespace Dt.Base.Docking
             {
                 succ = false;
                 if (AllowSaveLayout())
-                    _ = DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath, false);
+                    _ = DockLayoutX.DelByID(_owner.BaseUri.AbsolutePath, true, false);
             }
             finally
             {
@@ -1011,7 +1073,8 @@ namespace Dt.Base.Docking
         void WriteTab(Tab p_item, XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Tab");
-            p_writer.WriteAttributeString("Title", p_item.Title);
+            // Tab内部导航时，获取首个Tab的标题
+            p_writer.WriteAttributeString("Title", p_item.GetOriginalTitle());
 
             if (!string.IsNullOrEmpty(p_item.Name))
                 p_writer.WriteAttributeString("Name", p_item.Name);

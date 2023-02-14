@@ -45,8 +45,10 @@ namespace Dt.UIDemo
                 new Nav("主区窗口", typeof(SingleViewWin)) { Desc = "有标题栏的空白窗口" },
                 new Nav("动态主区窗口", typeof(ToggleWinCenter)) { Desc = "左区联动切换主区内容" },
                 new Nav("三区窗口", typeof(ThreePanelWin)) { Desc = "左区、主区、右区" },
-                new Nav("窗口布局", typeof(WinLayout)) { Desc = "Windows模式：所有Tab可拖动并自动停靠" },
-                new Nav("窗口内导航", typeof(WinNavi)) { Desc = "Phone模式：所有Tab可互相导航" },
+                new Nav("xaml精简写法", typeof(MinWinXaml)) { Desc = "窗口xaml的精简写法，适用于简单布局" },
+                new Nav("窗口布局", typeof(WinLayout)) { Desc = "只Win模式：窗口内的所有Tab可拖动并自动停靠" },
+                new Nav("窗口内导航", typeof(WinNavi)) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
+                new Nav("Tab内导航", typeof(TabNavi)) { Desc = "Tab区域内导航，两模式都支持" },
                 new Nav("对话框", typeof(DlgDemo)) { To = NavTarget.WinMain, Desc = "模拟传统对话框" },
                 new Nav("提示信息", typeof(NotifyDemo)) { To = NavTarget.WinMain, Desc = "普通信息、警告信息、Toast通知、后台任务" },
             };

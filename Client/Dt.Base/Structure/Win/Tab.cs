@@ -8,10 +8,6 @@
 
 #region 引用命名
 using Dt.Base.Docking;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -22,9 +18,11 @@ using Microsoft.UI.Xaml.Media.Animation;
 namespace Dt.Base
 {
     /// <summary>
-    /// 增加属性控制的TabItem
+    /// 内容承载者，业务模块视图的容器
+    /// <para>PhoneUI模式时作为页面内容Page.Content</para>
+    /// <para>WinUI模式时作为浮动、停靠、拖拽组合时的最小单位</para>
     /// </summary>
-    public sealed partial class Tab : TabItem, IPhonePage
+    public partial class Tab : TabItem, IPhonePage
     {
         #region 静态内容
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
@@ -293,47 +291,47 @@ namespace Dt.Base
             Content = p_content;
         }
 
-        /// <summary>
-        /// 向后导航到上一内容
-        /// </summary>
-        internal async void Backward()
-        {
-            var mv = Content as Mv;
-            if (mv == null)
-            {
-                // 普通内容
-                if (Kit.IsPhoneUI)
-                    InputKit.GoBack();
-                return;
-            }
+        ///// <summary>
+        ///// 向后导航到上一内容
+        ///// </summary>
+        //internal async void Backward()
+        //{
+        //    var mv = Content as Mv;
+        //    if (mv == null)
+        //    {
+        //        // 普通内容
+        //        if (Kit.IsPhoneUI)
+        //            InputKit.GoBack();
+        //        return;
+        //    }
 
-            if (Kit.IsPhoneUI && mv.OwnDlg == null)
-            {
-                // 允许返回
-                if (await mv.BeforeClose())
-                {
-                    InputKit.GoBack();
-                    mv.AfterClosed();
-                }
-            }
-            else if (_navCache != null && _navCache.Count > 0)
-            {
-                if (await mv.BeforeClose())
-                {
-                    Content = _navCache.Pop();
-                    mv.AfterClosed();
-                }
-            }
-            else if (mv.OwnDlg != null)
-            {
-                // 带遮罩的Mv
-                if (await mv.BeforeClose())
-                {
-                    mv.OwnDlg.Close();
-                    mv.AfterClosed();
-                }
-            }
-        }
+        //    if (Kit.IsPhoneUI && mv.OwnDlg == null)
+        //    {
+        //        // 允许返回
+        //        if (await mv.BeforeClose())
+        //        {
+        //            InputKit.GoBack();
+        //            mv.AfterClosed();
+        //        }
+        //    }
+        //    else if (_navCache != null && _navCache.Count > 0)
+        //    {
+        //        if (await mv.BeforeClose())
+        //        {
+        //            Content = _navCache.Pop();
+        //            mv.AfterClosed();
+        //        }
+        //    }
+        //    else if (mv.OwnDlg != null)
+        //    {
+        //        // 带遮罩的Mv
+        //        if (await mv.BeforeClose())
+        //        {
+        //            mv.OwnDlg.Close();
+        //            mv.AfterClosed();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 切换内容

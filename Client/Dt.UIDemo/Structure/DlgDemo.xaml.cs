@@ -132,14 +132,14 @@ namespace Dt.UIDemo
 
         void OnNaviClick(object sender, RoutedEventArgs e)
         {
-            Dlg dlg = new Dlg { Title = "内部导航" };
-            dlg.LoadMv(new TabNav1());
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.Width = 400;
-                dlg.Height = 600;
-            }
-            dlg.Show();
+            //Dlg dlg = new Dlg { Title = "内部导航" };
+            //dlg.LoadMv(new TabNav1());
+            //if (!Kit.IsPhoneUI)
+            //{
+            //    dlg.Width = 400;
+            //    dlg.Height = 600;
+            //}
+            //dlg.Show();
         }
 
         void OnClosed(object sender, EventArgs e)

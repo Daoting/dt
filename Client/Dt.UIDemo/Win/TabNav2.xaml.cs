@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.UIDemo
 {
-    public sealed partial class TabNav2 : Mv
+    public sealed partial class TabNav2 : Tab
     {
         public TabNav2(int p_index)
         {

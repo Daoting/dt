@@ -492,6 +492,26 @@ namespace Dt.Base
                 Content = tabs;
             }
         }
+
+        /// <summary>
+        /// 加载Tab，PhoneUI直接显示，WinUI外套Tabs
+        /// </summary>
+        /// <param name="p_tab"></param>
+        public void LoadTab(Tab p_tab)
+        {
+            p_tab.OwnDlg = this;
+            if (Kit.IsPhoneUI)
+            {
+                HideTitleBar = true;
+                Content = p_tab;
+            }
+            else
+            {
+                Tabs tabs = new Tabs();
+                tabs.Items.Add(p_tab);
+                Content = tabs;
+            }
+        }
         #endregion
 
         #region 重写方法

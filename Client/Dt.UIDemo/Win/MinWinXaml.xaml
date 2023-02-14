@@ -1,0 +1,25 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.MinWinXaml"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Tab Title="左区" a:Ex.Dock="Left">
+        <Button Content="导航到【主区/右区】" Click="OnGoto" Margin="40" />
+    </a:Tab>
+    
+    <a:Tab Title="主区">
+        <TextBlock Text="采用精简的xaml写法时，Win的xaml子元素可以为任意可视元素，但通常为Tab或Tabs；当为其它普通元素时，因无Tab.Title，所以无法在PhoneUI模式导航，也无法自动保存历史布局！" Margin="10" TextWrapping="Wrap" />
+    </a:Tab>
+    
+    <a:Tabs a:Ex.Dock="Right">
+        <a:Tab Title="右区">
+            <TextBlock Text="精简写法使用 a:Ex.Dock 设置停靠位置，不指定时布局在主区" TextWrapping="Wrap" Margin="10" />
+        </a:Tab>
+        <a:Tab Title="右二">
+            <TextBlock Text="右二" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </a:Tab>
+    </a:Tabs>
+    
+    <TextBlock Text="底部内容" a:Ex.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center" />
+</a:Win>
