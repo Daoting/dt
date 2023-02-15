@@ -38,9 +38,7 @@ namespace Dt.Base.Report
             // 主区RptView
             Main wc = new Main();
             var tabs = new Tabs();
-            var tab = new Tab();
-            tab.Content = view;
-            tabs.Items.Add(tab);
+            tabs.Items.Add(view);
             wc.Items.Add(tabs);
             Items.Add(wc);
 
@@ -51,15 +49,13 @@ namespace Dt.Base.Report
             {
                 Pane wi = new Pane();
                 tabs = new Tabs();
-                tab = new Tab();
 
                 // 加载查询面板内容
                 if (mvSearch == null)
                     mvSearch = new DefaultRptSearch(p_info);
                 mvSearch.Query += (s, e) => view.LoadReport(e);
-                tab.Content = mvSearch;
 
-                tabs.Items.Add(tab);
+                tabs.Items.Add(mvSearch);
                 wi.Items.Add(tabs);
                 Items.Add(wi);
             }

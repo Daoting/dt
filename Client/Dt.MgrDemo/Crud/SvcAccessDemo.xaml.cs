@@ -26,47 +26,47 @@ namespace Dt.MgrDemo
         #region 增删改
         async void OnInsert(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.Insert(), "Insert");
+            Msg(await AtSvc.Insert(), "Insert");
         }
 
         async void OnUpdate(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.Update(), "Update");
+            Msg(await AtSvc.Update(), "Update");
         }
 
         async void OnDelete(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.Delete(), "Delete");
+            Msg(await AtSvc.Delete(), "Delete");
         }
 
         async void OnBatchInsert(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.BatchInsert(), "BatchInsert");
+            Msg(await AtSvc.BatchInsert(), "BatchInsert");
         }
 
         async void OnBatch(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.Batch(), "Batch");
+            Msg(await AtSvc.Batch(), "Batch");
         }
 
         async void OnSaveTable(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.SaveTable(), "SaveTable");
+            Msg(await AtSvc.SaveTable(), "SaveTable");
         }
 
         async void OnBatchDel(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.BatchDel(), "BatchDel");
+            Msg(await AtSvc.BatchDel(), "BatchDel");
         }
 
         async void OnDirectDel(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DirectDel(), "DirectDel");
+            Msg(await AtSvc.DirectDel(), "DirectDel");
         }
 
         async void OnDelByID(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DelByID(), "DelByID");
+            Msg(await AtSvc.DelByID(), "DelByID");
         }
 
         void Msg(bool p_suc, string p_method)
@@ -81,66 +81,66 @@ namespace Dt.MgrDemo
         #region 领域事件
         async void OnInsertEvent(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.InsertEvent(), "InsertEvent");
+            Msg(await AtSvc.InsertEvent(), "InsertEvent");
         }
 
         async void OnUpdateEvent(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.UpdateEvent(), "UpdateEvent");
+            Msg(await AtSvc.UpdateEvent(), "UpdateEvent");
         }
 
         async void OnDelEvent(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DelEvent(), "DelEvent");
+            Msg(await AtSvc.DelEvent(), "DelEvent");
         }
         #endregion
 
         #region 虚拟实体
         async void OnInsertVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.InsertVir(), "InsertVir");
+            Msg(await AtSvc.InsertVir(), "InsertVir");
         }
 
         async void OnUpdateVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.UpdateVir(), "UpdateVir");
+            Msg(await AtSvc.UpdateVir(), "UpdateVir");
         }
 
         async void OnDelVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DelVir(), "DelVir");
+            Msg(await AtSvc.DelVir(), "DelVir");
         }
 
         async void OnSaveVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.SaveVir(), "SaveVir");
+            Msg(await AtSvc.SaveVir(), "SaveVir");
         }
 
         async void OnDirectDelVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DirectDelVir(), "DirectDelVir");
+            Msg(await AtSvc.DirectDelVir(), "DirectDelVir");
         }
 
         async void OnDelByIDVir(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DelByIDVir(), "DelByIDVir");
+            Msg(await AtSvc.DelByIDVir(), "DelByIDVir");
         }
         #endregion
 
         #region 父子实体
         async void OnInsertWithChild(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.InsertWithChild(), "InsertWithChild");
+            Msg(await AtSvc.InsertWithChild(), "InsertWithChild");
         }
 
         async void OnUpdateWithChild(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.UpdateWithChild(), "UpdateWithChild");
+            Msg(await AtSvc.UpdateWithChild(), "UpdateWithChild");
         }
 
         async void OnQueryWithChild(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await AtDemo.QueryWithChild());
+            Kit.Msg(await AtSvc.QueryWithChild());
         }
 
         #endregion
@@ -148,27 +148,27 @@ namespace Dt.MgrDemo
         #region 缓存
         async void OnInsertCache(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.InsertCache(), "InsertCache");
+            Msg(await AtSvc.InsertCache(), "InsertCache");
         }
 
         async void OnUpdateCache(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.UpdateCache(), "UpdateCache");
+            Msg(await AtSvc.UpdateCache(), "UpdateCache");
         }
 
         async void OnDelCache(object sender, RoutedEventArgs e)
         {
-            Msg(await AtDemo.DelCache(), "DelCache");
+            Msg(await AtSvc.DelCache(), "DelCache");
         }
 
         async void OnCacheByID(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await AtDemo.CacheByID());
+            Kit.Msg(await AtSvc.CacheByID());
         }
 
         async void OnCacheByKey(object sender, RoutedEventArgs e)
         {
-            Kit.Msg(await AtDemo.CacheByKey());
+            Kit.Msg(await AtSvc.CacheByKey());
         }
         #endregion
     }

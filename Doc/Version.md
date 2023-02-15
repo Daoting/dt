@@ -31,7 +31,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 实体类后缀 Obj -> X
 * EntityEx.DelByID支持直接删除，不经过校验领域事件等
 * CellUI -> LvCall, MidVal -> FvCall, IMidVal -> IFvCall
-* 因Mv内菜单无法绑定，将Mv合并到Tab，修养改动两处：Mv -> Tab, Win中xaml删除自定义Mv的外套Tab
+* 因Mv内菜单无法绑定，将Mv合并到Tab，对于自定义Mv需要修改两处：Mv -> Tab, Win中xaml删除自定义Mv的外套Tab
 
 * VS扩展工具单实体框架支持多表的虚拟实体
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
@@ -62,6 +62,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 测试sqlite本地库涉及的改动，修改bug
 * 服务端实体的增删改查样例
 * 增加支持窗口xaml的精简写法
+* 升级uno4.7.37，完善Tab相关的文档
 
 未测
 整个Chat

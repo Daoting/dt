@@ -18,9 +18,12 @@ using Microsoft.UI.Xaml.Media.Animation;
 namespace Dt.Base
 {
     /// <summary>
-    /// 内容承载者，业务模块视图的容器
-    /// <para>PhoneUI模式时作为页面内容Page.Content</para>
-    /// <para>WinUI模式时作为浮动、停靠、拖拽组合时的最小单位</para>
+    /// 模块视图的基类，功能模块的容器
+    /// <para>1. Phone模式时是页面内容Page.Content</para>
+    /// <para>2. Win模式时是浮动、停靠、拖拽组合时的最小单位</para>
+    /// <para>3. Phone模式时窗口内的所有Tab可互相导航</para>
+    /// <para>4. 同一Tab区域可通过切换Tab实现区域内导航效果</para>
+    /// <para>5. 区域内导航支持带遮罩的模式视图、导航参数、导航结果</para>
     /// </summary>
     public partial class Tab : TabItem, IPhonePage
     {

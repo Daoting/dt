@@ -14,7 +14,7 @@ namespace Dt.MgrDemo
     /// <summary>
     /// 
     /// </summary>
-    public partial class AtDemo
+    public partial class AtSvc
     {
         public static Task<bool> Insert()
         {

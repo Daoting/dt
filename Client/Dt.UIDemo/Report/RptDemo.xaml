@@ -74,11 +74,5 @@
         </a:Tabs>
     </a:Pane>
 
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Order="2">
-                <a:RptView x:Name="_rptView" Title="RptView" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
+    <a:RptView x:Name="_rptView" Title="RptView" Order="2" />
 </a:Win>
