@@ -43,11 +43,10 @@ namespace $ext_safeprojectname$
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议和隐私政策对话框
-            AtLocal.OpenDb();
-            if (AtLocal.GetDict("FirstRun") == "")
+            if (await CookieX.Get("FirstRun") != "0")
             {
                 await new PolicyDlg().ShowAsync();
-                AtLocal.SaveDict("FirstRun", "0");
+                await CookieX.Save("FirstRun", "0");
             }
 
             Kit.ShowRoot("主窗");

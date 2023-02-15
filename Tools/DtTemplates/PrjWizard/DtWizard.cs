@@ -83,7 +83,7 @@ namespace Dt.PrjWizard
                 else
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Single.cs"), stubFile);
-                    File.Delete(Path.Combine(_targetPath, _projectName + ".Client", "Agent", "AtSvc.cs"));
+                    File.Delete(Path.Combine(_targetPath, _projectName + ".Client", "Base", "AccessTo", "AtSvc.cs"));
                     File.Delete(Path.Combine(stubPath, "PushApi.cs"));
                     File.Delete(Path.Combine(stubPath, "RpcConfig.cs"));
                 }

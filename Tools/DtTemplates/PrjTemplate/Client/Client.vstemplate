@@ -9,12 +9,11 @@
 	</TemplateData>
 	<TemplateContent>
 		<Project File="Client.csproj" ReplaceParameters="true">
-			<ProjectItem ReplaceParameters="true">Agent\AtSvc.cs</ProjectItem>
-			<ProjectItem ReplaceParameters="true">Agent\AtLocal.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Base\AccessTo\AtSvc.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Base\AccessTo\AtLocal.cs</ProjectItem>
 
 			<ProjectItem ReplaceParameters="true">Stub\BackgroundJob.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\CustomTheme.cs</ProjectItem>
-			<ProjectItem ReplaceParameters="true">Stub\LocalDict.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\LogSetting.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\PushApi.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\Readme.txt</ProjectItem>

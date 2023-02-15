@@ -11,7 +11,7 @@
 
 	<ItemGroup>
 		<!-- 调试包源码可引用 Dt.Client.Debug 包 -->
-		<PackageReference Include="Dt.Client" Version="3.3.1" />
+		<PackageReference Include="Dt.Client" Version="4.0.0" />
 	</ItemGroup>
 
 	<!-- 定义平台常量 -->
@@ -38,8 +38,6 @@
 		<Using Include="Dt.Core" />
 		<Using Include="Dt.Base" />
 		<Using Include="Dt.Mgr" />
-		<Using Include="Dt.Mgr.Domain" />
-		<Using Include="Dt.Agent" />
 		<Using Include="System" />
 		<Using Include="Serilog" />
 	</ItemGroup>

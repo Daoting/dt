@@ -5,8 +5,4 @@
 	</PropertyGroup>
 
 	<Import Project="..\Common.props" />
-
-	<ItemGroup>
-		<Using Include="$ext_safeprojectname$.Domain" />
-	</ItemGroup>
 </Project>

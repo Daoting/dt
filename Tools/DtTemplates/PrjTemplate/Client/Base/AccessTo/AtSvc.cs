@@ -9,13 +9,13 @@
 namespace $ext_safeprojectname$
 {
     /// <summary>
-    /// lob服务Api
+    /// lob服务的数据访问
     /// </summary>
-    public partial class AtSvc : DataProvider<AtSvc.LOB>
+    public partial class AtSvc : DataAccess<AtSvc.Info>
     {
-        /// <summary>
-        /// 只为提供服务名称
-        /// </summary>
-        public class LOB { }
+        public class Info : AccessInfo
+        {
+            public override string Name => "lob";
+        }
     }
 }

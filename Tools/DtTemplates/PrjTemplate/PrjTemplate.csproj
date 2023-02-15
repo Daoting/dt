@@ -94,10 +94,9 @@
     <None Include="Svc\SvcStub.cs" />
     <None Include="Client\Stub\BackgroundJob.cs" />
     <None Include="Client\Stub\ReceiveShare.cs" />
-    <None Include="Client\Agent\AtSvc.cs" />
-    <None Include="Client\Agent\AtLocal.cs" />
+    <None Include="Client\Base\AccessTo\AtSvc.cs" />
+    <None Include="Client\Base\AccessTo\AtLocal.cs" />
     <None Include="Client\Stub\LogSetting.cs" />
-    <None Include="Client\Stub\LocalDict.cs" />
     <None Include="Client\Stub\PushApi.cs" />
     <None Include="Client\Stub\CustomTheme.cs" />
     <None Include="Client\Stub\Options\AppStub-Custom.cs" />
