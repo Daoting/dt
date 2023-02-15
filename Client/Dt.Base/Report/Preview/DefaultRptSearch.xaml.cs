@@ -11,7 +11,7 @@
 
 namespace Dt.Base.Report
 {
-    public sealed partial class DefaultRptSearch : RptSearchMv
+    public sealed partial class DefaultRptSearch : RptSearchTab
     {
         public DefaultRptSearch(RptInfo p_info) : base(p_info)
         {

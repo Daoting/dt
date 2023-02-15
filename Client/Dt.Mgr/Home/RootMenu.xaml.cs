@@ -17,7 +17,7 @@ namespace Dt.Mgr.Home
     /// <summary>
     /// 根级菜单项页面(带分组)
     /// </summary>
-    public sealed partial class RootMenu : Mv
+    public sealed partial class RootMenu : Tab
     {
         DateTime _dtLast;
 

@@ -9,12 +9,20 @@
     </a:Tab>
     
     <a:Tab Title="主区">
-        <TextBlock Text="采用精简的xaml写法时，Win的xaml子元素可以为任意可视元素，但通常为Tab或Tabs；当为其它普通元素时，因无Tab.Title，所以无法在PhoneUI模式导航，也无法自动保存历史布局！" Margin="10" TextWrapping="Wrap" />
+        <TextBlock Margin="10">
+            <LineBreak />
+            <Run Text="1. 采用精简xaml写法时，Win的子元素可以为任意可视元素；" /><LineBreak />
+            <Run Text="2. 使用 a:Ex.Dock 设置停靠位置，不指定时布局在主区；" /><LineBreak />
+            <Run Text="3. 子元素通常为Tab或Tabs；" /><LineBreak />
+            <Run Text="4. 当子元素为普通元素时，一般只一个元素放在主区，" /><LineBreak />
+            <Run Text="   若多个时因无Tab.Title，所以无法在PhoneUI模式导航，" /><LineBreak />
+            <Run Text="   也无法自动保存历史布局！" /><LineBreak />
+        </TextBlock>
     </a:Tab>
     
     <a:Tabs a:Ex.Dock="Right">
         <a:Tab Title="右区">
-            <TextBlock Text="精简写法使用 a:Ex.Dock 设置停靠位置，不指定时布局在主区" TextWrapping="Wrap" Margin="10" />
+            <TextBlock Text="右区" TextWrapping="Wrap" Margin="10" />
         </a:Tab>
         <a:Tab Title="右二">
             <TextBlock Text="右二" HorizontalAlignment="Center" VerticalAlignment="Center" />

@@ -17,14 +17,14 @@ using Windows.System;
 namespace Dt.Base
 {
     /// <summary>
-    /// 搜索面板
+    /// 模糊搜索面板
     /// 固定搜索项：由外部设置，事件参数格式为 "#按钮名称"，#前缀用于区别普通搜索
     /// 历史搜索项：自动记录历史搜索，可删，事件参数内容为普通文本
     /// 搜索事件：所有固定搜索项、搜索框、历史搜索项统一触发Search事件
     /// 历史搜索项通过所在的Win路径识别，当同一Win中多个搜索时，请确保每个搜索的Title不同，以便正确识别搜索历史！！！
     /// </summary>
     [ContentProperty(Name = nameof(Fixed))]
-    public partial class SearchMv : Mv
+    public partial class FuzzySearch : Tab
     {
         #region 成员变量
         string _lastText;
@@ -33,7 +33,7 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        public SearchMv()
+        public FuzzySearch()
         {
             InitializeComponent();
 
@@ -65,15 +65,15 @@ namespace Dt.Base
         protected override void OnInit(object p_params)
         {
 #if WIN
-            if (_tab.BaseUri != null)
-                _baseUri = _tab.BaseUri.AbsolutePath;
-            else if (_tab.OwnWin != null)
-                _baseUri = _tab.OwnWin.BaseUri.AbsolutePath;
+            if (BaseUri != null)
+                _baseUri = BaseUri.AbsolutePath;
+            else if (OwnWin != null)
+                _baseUri = OwnWin.BaseUri.AbsolutePath;
 #else
             // 识别不同的查询面板，因uno中BaseUri为空！
-            if (_tab.OwnWin != null)
-                _baseUri = _tab.OwnWin.GetType().FullName;
-            else if (!BaseUri.AbsolutePath.EndsWith("/SearchMv.xaml"))
+            if (OwnWin != null)
+                _baseUri = OwnWin.GetType().FullName;
+            else if (!BaseUri.AbsolutePath.EndsWith("/FuzzySearch.xaml"))
                 _baseUri = BaseUri.AbsolutePath;
 #endif
 

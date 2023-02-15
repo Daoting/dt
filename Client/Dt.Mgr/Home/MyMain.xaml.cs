@@ -21,7 +21,7 @@ namespace Dt.Mgr.Home
     /// <summary>
     /// 我的
     /// </summary>
-    public sealed partial class MyMain : Mv
+    public sealed partial class MyMain : Tab
     {
         public MyMain()
         {

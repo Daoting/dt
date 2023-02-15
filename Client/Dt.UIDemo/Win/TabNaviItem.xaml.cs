@@ -21,9 +21,9 @@ using Microsoft.UI.Xaml.Markup;
 
 namespace Dt.UIDemo
 {
-    public partial class MvItem : Mv
+    public partial class TabNaviItem : Tab
     {
-        public MvItem()
+        public TabNaviItem()
         {
             InitializeComponent();
         }
@@ -35,25 +35,24 @@ namespace Dt.UIDemo
 
             Result = new Random().Next(100);
             Title = (OwnDlg != null ? "对话框" : "标题") + Result.ToString();
-            _mi.ID = "菜单" + Result.ToString();
         }
 
         async void OnForward(object sender, RoutedEventArgs e)
         {
             var rand = new Random();
             object input = (bool)_cbInput.IsChecked ? (object)rand.Next(1000) : null;
-            var mv = new MvItem();
+            var tab = new TabNaviItem();
             if ((bool)_cbHideTitle.IsChecked)
-                mv.HideTitleBar = true;
+                tab.HideTitleBar = true;
 
             if ((bool)_cbResult.IsChecked)
             {
-                var ret = await Forward<string>(mv, input, (bool)_cbModal.IsChecked);
+                var ret = await Forward<string>(tab, input, (bool)_cbModal.IsChecked);
                 Kit.Msg($"返回参数：{ret}");
             }
             else
             {
-                Forward(mv, input, (bool)_cbModal.IsChecked);
+                Forward(tab, input, (bool)_cbModal.IsChecked);
             }
         }
 
@@ -64,10 +63,10 @@ namespace Dt.UIDemo
 
         void OnShowDlg(object sender, RoutedEventArgs e)
         {
-            var dlg = new Dlg { IsPinned = true, Title = "内嵌Mv" };
+            var dlg = new Dlg { IsPinned = true, Title = "内嵌Tab" };
             if ((bool)_cbDlgTitle.IsChecked)
                 dlg.HideTitleBar = true;
-            dlg.LoadMv(new MvItem { Title = "对话框" });
+            dlg.LoadTab(new TabNaviItem { Title = "对话框" });
             dlg.Show();
         }
     }

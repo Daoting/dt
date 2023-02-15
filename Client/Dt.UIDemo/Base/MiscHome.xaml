@@ -4,11 +4,5 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab>
-                <a:NavList x:Name="_nav" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <a:NavList x:Name="_nav" a:Ex.Dock="Left" />
 </a:Win>

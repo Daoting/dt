@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public partial class PostxList : Mv
+    public partial class PostxList : Tab
     {
         public PostxList()
         {
@@ -53,7 +53,7 @@ namespace Dt.Mgr.Publish
 
         void NaviToChildren()
         {
-            NaviTo(new List<Mv> { _win.Form,  _win.KeywordList, _win.AlbumList, });
+            NaviTo(new List<Tab> { _win.Form,  _win.KeywordList, _win.AlbumList, });
         }
 
         #region 搜索
@@ -78,6 +78,6 @@ namespace Dt.Mgr.Publish
         }
         #endregion
 
-        PostWin _win => (PostWin)_tab.OwnWin;
+        PostWin _win => (PostWin)OwnWin;
     }
 }

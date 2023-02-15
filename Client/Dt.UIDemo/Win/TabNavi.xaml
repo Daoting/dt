@@ -5,67 +5,9 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.UIDemo">
 
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Order="1" Title="主区">
-                <StackPanel Margin="10">
-                    <Button Content="左上" Click="OnNavi" />
-                    <Button Content="左下,右停靠" Click="OnNavi" />
-                    <Button Content="Tab内部导航" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane InitWidth="500">
-        <a:Tabs InitHeight="600">
-            <l:TabNav1 x:Name="_nav1" Title="Tab内部导航" />
-            <a:Tab Title="左上">
-                <StackPanel Margin="10">
-                    <Button Content="左停靠" Click="OnNavi" />
-                    <Button Content="右侧" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-            <a:Tab Title="左停靠" IsPinned="False" PopWidth="300">
-                <StackPanel Margin="10">
-                    <Button Content="主区" Click="OnNavi" />
-                    <Button Content="左下,右停靠" Click="OnNavi" />
-                    <Button Content="关闭窗口" Click="OnClosWin" />
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-        <a:Tabs InitHeight="300">
-            <a:Tab Title="左下">
-                <StackPanel Margin="10">
-                    <Button Content="底部" Click="OnNavi" />
-                    <Button Content="左下,右停靠" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Pane InitWidth="300" Pos="Right">
-        <a:Tabs>
-            <a:Tab Title="右侧">
-                <StackPanel Margin="10">
-                    <Button Content="左上" Click="OnNavi" />
-                    <Button Content="右侧" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-            <a:Tab Title="右停靠" IsPinned="False">
-                <StackPanel Margin="10">
-                    <Button Content="底部" Click="OnNavi" />
-                    <Button Content="左下" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Pane InitHeight="200" Pos="Bottom">
-        <a:Tabs>
-            <a:Tab Title="底部">
-                <StackPanel Margin="10">
-                    <Button Content="主区" Click="OnNavi" />
-                    <Button Content="右侧" Click="OnNavi" />
-                </StackPanel>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <!-- 控件内部用ElementName设置数据源绑定时，在win范围若多个相同名称，会绑到最后加载的元素上 -->
+    <!-- 如：控件内部菜单项用ElementName绑定到内部另一元素上，但实际会绑到主区内部的元素上，诡异 -->
+    <l:TabNaviItem Title="左区" Order="1" a:Ex.Dock="Left" />
+    <l:TabNaviItem Title="主区" Order="2" />
+    <l:TabNaviItem Title="右区" Order="3" a:Ex.Dock="Right" />
 </a:Win>

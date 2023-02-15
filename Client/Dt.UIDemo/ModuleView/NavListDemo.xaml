@@ -26,41 +26,32 @@
             </Grid>
         </DataTemplate>
     </a:Win.Resources>
-    
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1">
-                <a:NavList x:Name="_nav" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab Order="2" Title="属性">
-                <a:Fv Data="{Binding ElementName=_nav}">
-                    <a:CList Title="目标位置" ID="To" />
-                    <a:CList Title="视图类型" ID="ViewMode" />
-                    <a:CBar Title="数据源" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="标题图标描述" Click="OnTitleIconDesc" />
-                        <Button Content="标题图标" Click="OnTitleIcon" />
-                        <Button Content="标题描述" Click="OnTitleDesc" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="只标题" Click="OnTitle" />
-                        <Button Content="混合显示项" Click="OnMisc" />
-                        <Button Content="修改醒目数字" Click="OnWarning" />
-                    </StackPanel>
-                    <a:CBar Title="项模板" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="自定义项模板" Click="OnCustomTemp" />
-                        <Button Content="默认模板" Click="OnDefaultTemp" />
-                    </StackPanel>
-                    <a:CBar Title="项高" />
-                    <a:CNum Title="项高" ID="ItemHeight" />
-                    <Button Content="自动项高" Click="OnAutoHeight" />
-                </a:Fv>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+
+    <a:NavList x:Name="_nav" Order="1" a:Ex.Dock="Left" />
+
+    <a:Tab Order="2" Title="属性" a:Ex.Dock="Right">
+        <a:Fv Data="{Binding ElementName=_nav}">
+            <a:CList Title="目标位置" ID="To" />
+            <a:CList Title="视图类型" ID="ViewMode" />
+            <a:CBar Title="数据源" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="标题图标描述" Click="OnTitleIconDesc" />
+                <Button Content="标题图标" Click="OnTitleIcon" />
+                <Button Content="标题描述" Click="OnTitleDesc" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="只标题" Click="OnTitle" />
+                <Button Content="混合显示项" Click="OnMisc" />
+                <Button Content="修改醒目数字" Click="OnWarning" />
+            </StackPanel>
+            <a:CBar Title="项模板" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="自定义项模板" Click="OnCustomTemp" />
+                <Button Content="默认模板" Click="OnDefaultTemp" />
+            </StackPanel>
+            <a:CBar Title="项高" />
+            <a:CNum Title="项高" ID="ItemHeight" />
+            <Button Content="自动项高" Click="OnAutoHeight" />
+        </a:Fv>
+    </a:Tab>
 </a:Win>

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class PrvUserList : Mv
+    public sealed partial class PrvUserList : Tab
     {
         public PrvUserList()
         {
@@ -31,6 +31,6 @@ namespace Dt.Mgr.Model
             _lv.Data = null;
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        UserAccountWin _win => (UserAccountWin)OwnWin;
     }
 }

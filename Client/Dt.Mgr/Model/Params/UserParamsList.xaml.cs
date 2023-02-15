@@ -12,7 +12,7 @@ using Dt.Base;
 
 namespace Dt.Mgr.Model
 {
-    public partial class UserParamsList : Mv
+    public partial class UserParamsList : Tab
     {
         string _query;
 
@@ -72,6 +72,6 @@ namespace Dt.Mgr.Model
             NaviTo(_win.Form);
         }
 
-        UserParamsWin _win => (UserParamsWin)_tab.OwnWin;
+        UserParamsWin _win => (UserParamsWin)OwnWin;
     }
 }

@@ -24,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 报表预览控件
     /// </summary>
-    public sealed partial class RptView : Mv
+    public sealed partial class RptView : Tab
     {
         #region 成员变量
         RptInfo _info;
@@ -346,7 +346,7 @@ namespace Dt.Base
                     dlg.MinHeight = 300;
                     dlg.ShowVeil = true;
                 }
-                dlg.LoadMv(mvSearch);
+                dlg.LoadTab(mvSearch);
                 dlg.Show();
 
                 mvSearch.Query += (s, e) =>

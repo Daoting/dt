@@ -16,12 +16,11 @@ using Microsoft.UI.Xaml;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class RoleForm : Mv
+    public sealed partial class RoleForm : Tab
     {
         public RoleForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -126,6 +125,6 @@ namespace Dt.Mgr.Model
             }
         }
 
-        RoleWin _win => (RoleWin)_tab.OwnWin;
+        RoleWin _win => (RoleWin)OwnWin;
     }
 }

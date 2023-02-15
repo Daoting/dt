@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public partial class RptList : Mv
+    public partial class RptList : Tab
     {
         string _query;
 
@@ -81,6 +81,6 @@ namespace Dt.Mgr.Model
             NaviTo(_win.Form);
         }
 
-        RptWin _win => (RptWin)_tab.OwnWin;
+        RptWin _win => (RptWin)OwnWin;
     }
 }

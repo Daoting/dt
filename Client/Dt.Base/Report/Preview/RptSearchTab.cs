@@ -14,12 +14,12 @@ namespace Dt.Base
     /// <summary>
     /// 报表查询基类
     /// </summary>
-    public abstract partial class RptSearchMv : Mv
+    public abstract partial class RptSearchTab : Tab
     {
         protected readonly RptInfo _info;
         protected readonly Row _row;
 
-        public RptSearchMv(RptInfo p_info)
+        public RptSearchTab(RptInfo p_info)
         {
             Title = "查询";
             _info = p_info;

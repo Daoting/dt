@@ -5,18 +5,6 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Publish">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1">
-                <l:KeywordList x:Name="_list" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab>
-                <l:KeywordForm x:Name="_form" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
+    <l:KeywordList x:Name="_list" Order="1" a:Ex.Dock="Left" />
+    <l:KeywordForm x:Name="_form" />
 </a:Win>

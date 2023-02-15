@@ -1,4 +1,4 @@
-﻿<a:Mv
+﻿<a:Tab
     x:Class="Dt.Mgr.Model.PrvUserList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,4 +10,4 @@
             <a:Dot ID="name" Margin="10,0,10,0" />
         </DataTemplate>
     </a:Lv>
-</a:Mv>
+</a:Tab>

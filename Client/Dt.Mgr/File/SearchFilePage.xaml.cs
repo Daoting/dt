@@ -15,7 +15,7 @@ namespace Dt.Mgr.Files
     /// <summary>
     /// 搜索文件
     /// </summary>
-    public sealed partial class SearchFilePage : Mv
+    public sealed partial class SearchFilePage : Tab
     {
         readonly IFileMgr _fileMgr;
 

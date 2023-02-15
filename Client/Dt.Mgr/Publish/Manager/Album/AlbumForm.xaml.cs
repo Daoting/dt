@@ -21,12 +21,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public sealed partial class AlbumForm : Mv
+    public sealed partial class AlbumForm : Tab
     {
         public AlbumForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -129,6 +128,6 @@ namespace Dt.Mgr.Publish
             return _fv.DiscardChanges();
         }
 
-        AlbumWin _win => (AlbumWin)_tab.OwnWin;
+        AlbumWin _win => (AlbumWin)OwnWin;
     }
 }

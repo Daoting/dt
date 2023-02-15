@@ -16,12 +16,11 @@ using Microsoft.UI.Xaml;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class UserAccountForm : Mv
+    public sealed partial class UserAccountForm : Tab
     {
         public UserAccountForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_userID, bool p_enableAdd = true)
@@ -89,6 +88,6 @@ namespace Dt.Mgr.Model
             //}
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        UserAccountWin _win => (UserAccountWin)OwnWin;
     }
 }

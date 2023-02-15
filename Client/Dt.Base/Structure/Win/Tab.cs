@@ -255,127 +255,6 @@ namespace Dt.Base
         public Win OwnWin { get; internal set; }
         #endregion
 
-        #region Mv
-        Stack<Mv> _navCache;
-
-        /// <summary>
-        /// 向前导航到新内容
-        /// </summary>
-        /// <param name="p_content"></param>
-        internal void Forward(Mv p_content)
-        {
-            Mv current;
-            if (p_content == null || (current = Content as Mv) == null)
-                return;
-
-            if (Kit.IsPhoneUI && p_content.OwnDlg == null)
-            {
-                Tab tab = new Tab { OwnWin = OwnWin, Content = p_content };
-                PhonePage.Show(tab);
-                return;
-            }
-
-            if (_navCache == null)
-            {
-                _navCache = new Stack<Mv>();
-
-                // 内容切换动画
-                var ls = new TransitionCollection();
-                ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
-                if (OwnTabs != null)
-                    OwnTabs.ContentTransitions = ls;
-                else if (Kit.IsPhoneUI)
-                    ContentTransitions = ls;
-            }
-            _navCache.Push(current);
-            Content = p_content;
-        }
-
-        ///// <summary>
-        ///// 向后导航到上一内容
-        ///// </summary>
-        //internal async void Backward()
-        //{
-        //    var mv = Content as Mv;
-        //    if (mv == null)
-        //    {
-        //        // 普通内容
-        //        if (Kit.IsPhoneUI)
-        //            InputKit.GoBack();
-        //        return;
-        //    }
-
-        //    if (Kit.IsPhoneUI && mv.OwnDlg == null)
-        //    {
-        //        // 允许返回
-        //        if (await mv.BeforeClose())
-        //        {
-        //            InputKit.GoBack();
-        //            mv.AfterClosed();
-        //        }
-        //    }
-        //    else if (_navCache != null && _navCache.Count > 0)
-        //    {
-        //        if (await mv.BeforeClose())
-        //        {
-        //            Content = _navCache.Pop();
-        //            mv.AfterClosed();
-        //        }
-        //    }
-        //    else if (mv.OwnDlg != null)
-        //    {
-        //        // 带遮罩的Mv
-        //        if (await mv.BeforeClose())
-        //        {
-        //            mv.OwnDlg.Close();
-        //            mv.AfterClosed();
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        /// 切换内容
-        /// </summary>
-        protected override void OnContentChanged()
-        {
-            if (!Kit.IsPhoneUI)
-                base.OnContentChanged();
-
-            var mv = Content as Mv;
-            if (mv == null)
-            {
-                if (!Kit.IsPhoneUI)
-                    BackButtonVisibility = Visibility.Collapsed;
-                return;
-            }
-
-            if (mv.OwnDlg != null)
-            {
-                if (mv.OwnDlg.HideTitleBar
-                    || (_navCache != null && _navCache.Count > 0))
-                {
-                    BackButtonVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    BackButtonVisibility = Visibility.Collapsed;
-                }
-            }
-            else if (!Kit.IsPhoneUI)
-            {
-                BackButtonVisibility = (_navCache != null && _navCache.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
-            }
-
-            // 绑定Mv的依赖属性
-            SetBinding(TitleProperty, new Binding { Path = new PropertyPath("Title"), Source = mv });
-            SetBinding(MenuProperty, new Binding { Path = new PropertyPath("Menu"), Source = mv });
-            if (Kit.IsPhoneUI)
-                SetBinding(HideTitleBarProperty, new Binding { Path = new PropertyPath("HideTitleBar"), Source = mv });
-
-            mv.AddToHost(this);
-        }
-        #endregion
-
         #region IPhonePage
         /// <summary>
         /// 关闭或后退之前，返回false表示禁止关闭
@@ -443,6 +322,15 @@ namespace Dt.Base
         {
             if (IsPinned && CanFloat)
                 OwnWin.OnDragStarted(this, e);
+        }
+
+        /// <summary>
+        /// 切换内容
+        /// </summary>
+        protected override void OnContentChanged()
+        {
+            if (!Kit.IsPhoneUI)
+                base.OnContentChanged();
         }
         #endregion
 

@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo.单实体
 {
-    public sealed partial class 实体Query : Mv
+    public sealed partial class 实体Query : Tab
     {
         public 实体Query()
         {
@@ -50,6 +50,6 @@ namespace Dt.MgrDemo.单实体
             _fv.Data = row;
         }
 
-        实体Win _win => (实体Win)_tab.OwnWin;
+        实体Win _win => (实体Win)OwnWin;
     }
 }

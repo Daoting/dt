@@ -29,7 +29,7 @@ namespace Dt.MgrDemo.单实体
 
         public 实体Form Form => _form;
 
-        public SearchMv Search => _search;
+        public FuzzySearch Search => _search;
 
         public 实体Query Query => _query;
 

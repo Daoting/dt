@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public sealed partial class PostKeywordList : Mv
+    public sealed partial class PostKeywordList : Tab
     {
         long _id;
 
@@ -62,6 +62,6 @@ namespace Dt.Mgr.Publish
                 Refresh();
         }
 
-        PostWin _win => (PostWin)_tab.OwnWin;
+        PostWin _win => (PostWin)OwnWin;
     }
 }

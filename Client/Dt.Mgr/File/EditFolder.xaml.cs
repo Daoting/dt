@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Mgr.Files
 {
-    public sealed partial class EditFolder : Mv
+    public sealed partial class EditFolder : Tab
     {
         IFileMgr _fileMgr;
 

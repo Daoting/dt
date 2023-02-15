@@ -47,7 +47,7 @@ namespace Dt.Mgr.Files
                 Height = 600;
             }
 
-            LoadMv(new SelectLibPage(this));
+            LoadTab(new SelectLibPage(this));
             return await ShowAsync();
         }
     }

@@ -15,7 +15,7 @@ namespace Dt.Mgr.Files
     /// <summary>
     /// 搜索文件
     /// </summary>
-    public sealed partial class SelectSearchPage : Mv
+    public sealed partial class SelectSearchPage : Tab
     {
         readonly SelectFileDlg _owner;
 

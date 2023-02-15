@@ -15,14 +15,13 @@ using System.Linq;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class RolePrvList : Mv
+    public sealed partial class RolePrvList : Tab
     {
         long _roleID;
 
         public RolePrvList()
         {
             InitializeComponent();
-            Menu["移除"].Bind(IsEnabledProperty, _lv, "HasSelected");
         }
 
         public void Update(long p_userID)
@@ -108,6 +107,6 @@ namespace Dt.Mgr.Model
             Menu.Hide("移除", "全选", "取消");
         }
 
-        RoleWin _win => (RoleWin)_tab.OwnWin;
+        RoleWin _win => (RoleWin)OwnWin;
     }
 }

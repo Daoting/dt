@@ -474,26 +474,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 加载Mv，PhoneUI外套Tab，WinUI外套Tabs\Tab
-        /// </summary>
-        /// <param name="p_mv"></param>
-        public void LoadMv(Mv p_mv)
-        {
-            p_mv.OwnDlg = this;
-            if (Kit.IsPhoneUI)
-            {
-                HideTitleBar = true;
-                Content = new Tab { Content = p_mv };
-            }
-            else
-            {
-                Tabs tabs = new Tabs();
-                tabs.Items.Add(new Tab { Content = p_mv });
-                Content = tabs;
-            }
-        }
-
-        /// <summary>
         /// 加载Tab，PhoneUI直接显示，WinUI外套Tabs
         /// </summary>
         /// <param name="p_tab"></param>

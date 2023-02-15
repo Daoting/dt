@@ -1,11 +1,11 @@
-﻿<a:Mv
+﻿<a:Tab
     x:Class="Dt.MgrDemo.单实体.实体List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="列表">
 
-    <a:Mv.Resources>
+    <a:Tab.Resources>
         <a:Cols x:Key="TableView">
             <a:Col ID="序列" />
             <a:Col ID="限长4" />
@@ -48,9 +48,9 @@
                 <a:Dot ID="修改时间" />
             </StackPanel>
         </DataTemplate>
-    </a:Mv.Resources>
+    </a:Tab.Resources>
 
-    <a:Mv.Menu>
+    <a:Tab.Menu>
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Scope="Phone" Click="OnToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
@@ -60,7 +60,7 @@
                 <a:Mi ID="平铺" IsCheckable="True" Checked="OnTileSelected" GroupName="View" />
             </a:Mi>
         </a:Menu>
-    </a:Mv.Menu>
+    </a:Tab.Menu>
 
     <a:Lv x:Name="_lv" View="{StaticResource TableView}" ViewMode="Table" ItemClick="OnItemClick" />
-</a:Mv>
+</a:Tab>

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Mgr.Model
 {
-    public partial class UserAccountList : Mv
+    public partial class UserAccountList : Tab
     {
         string _query;
 
@@ -67,7 +67,7 @@ namespace Dt.Mgr.Model
             }
         }
 
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        Lazy<FuzzySearch> _lzSm = new Lazy<FuzzySearch>(() => new FuzzySearch
         {
             Placeholder = "姓名或手机号",
             Fixed = { "全部", "最近修改", },
@@ -76,14 +76,14 @@ namespace Dt.Mgr.Model
         void OnAdd(object sender, Mi e)
         {
             _win.Form.Update(-1);
-            NaviTo(new List<Mv> { _win.Form, _win.RoleList });
+            NaviTo(new List<Tab> { _win.Form, _win.RoleList });
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
                 _win.Form.Update(e.Row.ID);
-            NaviTo(new List<Mv> { _win.Form, _win.RoleList });
+            NaviTo(new List<Tab> { _win.Form, _win.RoleList });
         }
 
         async void OnResetPwd(object sender, Mi e)
@@ -130,7 +130,7 @@ namespace Dt.Mgr.Model
 
             //if (await AtCm.DeleteBySvc(user))
             //{
-            //    // 删除的为选择行时，清空关联Mv
+            //    // 删除的为选择行时，清空关联
             //    if (isSelected)
             //        _win.Form.Clear();
             //    Update();
@@ -147,6 +147,6 @@ namespace Dt.Mgr.Model
             Forward(new UserPrvList(), e.Row.ID);
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        UserAccountWin _win => (UserAccountWin)OwnWin;
     }
 }

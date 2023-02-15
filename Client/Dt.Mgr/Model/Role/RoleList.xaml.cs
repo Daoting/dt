@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Mgr.Model
 {
-    public partial class RoleList : Mv
+    public partial class RoleList : Tab
     {
         string _query;
 
@@ -58,7 +58,7 @@ namespace Dt.Mgr.Model
             }
         }
 
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        Lazy<FuzzySearch> _lzSm = new Lazy<FuzzySearch>(() => new FuzzySearch
         {
             Placeholder = "角色名称",
             Fixed = { "全部", "系统角色", },
@@ -79,9 +79,9 @@ namespace Dt.Mgr.Model
 
         void NaviToChildren()
         {
-            NaviTo(new List<Mv> { _win.Form, _win.UserList, _win.MenuList, _win.PrvList });
+            NaviTo(new List<Tab> { _win.Form, _win.UserList, _win.MenuList, _win.PrvList });
         }
 
-        RoleWin _win => (RoleWin)_tab.OwnWin;
+        RoleWin _win => (RoleWin)OwnWin;
     }
 }

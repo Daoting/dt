@@ -21,12 +21,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public sealed partial class KeywordForm : Mv
+    public sealed partial class KeywordForm : Tab
     {
         public KeywordForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(string p_id)
@@ -129,6 +128,6 @@ namespace Dt.Mgr.Publish
             return _fv.DiscardChanges();
         }
 
-        KeywordWin _win => (KeywordWin)_tab.OwnWin;
+        KeywordWin _win => (KeywordWin)OwnWin;
     }
 }

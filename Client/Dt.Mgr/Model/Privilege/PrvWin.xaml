@@ -5,28 +5,10 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Model">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1">
-                <l:PrvList x:Name="_list" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab>
-                <l:PrvForm x:Name="_form" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab>
-                <l:PrvRoleList x:Name="_roleList" />
-            </a:Tab>
-            <a:Tab>
-                <l:PrvUserList x:Name="_userList" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <l:PrvList x:Name="_list" Order="1" a:Ex.Dock="Left" />
+    <l:PrvForm x:Name="_form" />
+    <a:Tabs a:Ex.Dock="Right">
+        <l:PrvRoleList x:Name="_roleList" />
+        <l:PrvUserList x:Name="_userList" />
+    </a:Tabs>
 </a:Win>

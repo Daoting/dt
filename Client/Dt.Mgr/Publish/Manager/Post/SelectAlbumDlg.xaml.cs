@@ -71,7 +71,7 @@ namespace Dt.Mgr.Publish
             }
             var kf = new AlbumForm();
             kf.Update(-1);
-            dlg.LoadMv(kf);
+            dlg.LoadTab(kf);
 
             await dlg.ShowAsync();
             LoadData();

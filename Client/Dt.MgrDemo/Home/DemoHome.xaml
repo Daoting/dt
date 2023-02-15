@@ -7,25 +7,7 @@
     xmlns:l="using:Dt.MgrDemo"
     AutoSaveLayout="False">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="2" Icon="主页">
-                <home:RootMenu x:Name="_menu" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Order="1" Icon="搬运工">
-                <l:DemoMain x:Name="_demo" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab Order="3">
-                <home:MyMain x:Name="_my" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <home:RootMenu x:Name="_menu" Order="2" Icon="主页" a:Ex.Dock="Left" />
+    <l:DemoMain x:Name="_demo" Order="1" Icon="搬运工" />
+    <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

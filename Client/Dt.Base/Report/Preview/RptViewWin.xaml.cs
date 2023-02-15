@@ -28,7 +28,7 @@ namespace Dt.Base.Report
         {
             RptView view = new RptView { Title = p_info.Name };
 
-            RptSearchMv mvSearch = null;
+            RptSearchTab mvSearch = null;
             if (p_info.ScriptObj != null)
             {
                 p_info.ScriptObj.View = view;

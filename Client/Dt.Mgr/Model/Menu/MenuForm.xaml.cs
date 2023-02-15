@@ -12,14 +12,13 @@ using Dt.Base;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class MenuForm : Mv
+    public sealed partial class MenuForm : Tab
     {
         MenuX _curItem;
 
         public MenuForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -166,6 +165,6 @@ namespace Dt.Mgr.Model
             _win.RoleList.Clear();
         }
 
-        MenuWin _win => (MenuWin)_tab.OwnWin;
+        MenuWin _win => (MenuWin)OwnWin;
     }
 }

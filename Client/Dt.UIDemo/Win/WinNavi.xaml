@@ -18,7 +18,6 @@
     </a:Main>
     <a:Pane InitWidth="500">
         <a:Tabs InitHeight="600">
-            <l:TabNav1 x:Name="_nav1" Title="Tab内部导航" />
             <a:Tab Title="左上">
                 <StackPanel Margin="10">
                     <Button Content="左停靠" Click="OnNavi" />

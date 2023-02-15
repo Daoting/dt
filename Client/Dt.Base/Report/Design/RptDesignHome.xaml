@@ -6,9 +6,7 @@
 
     <a:Pane InitWidth="240">
         <a:Tabs>
-            <a:Tab>
-                <a:NavList x:Name="_nav" Title="功能列表" />
-            </a:Tab>
+            <a:NavList x:Name="_nav" Title="功能列表" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

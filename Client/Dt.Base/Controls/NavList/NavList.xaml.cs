@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 功能列表
     /// </summary>
-    public partial class NavList : Mv
+    public partial class NavList : Tab
     {
         #region 静态内容
         public readonly static DependencyProperty ToProperty = DependencyProperty.Register(
@@ -179,7 +179,7 @@ namespace Dt.Base
             if (p_nav == null)
                 return;
             
-            if (_tab.OwnWin == null && !IsLoaded)
+            if (OwnWin == null && !IsLoaded)
             {
                 // OnInit中重新选择
                 _initNav = p_nav;
@@ -188,7 +188,7 @@ namespace Dt.Base
 
             if (p_nav.Callback != null)
             {
-                p_nav.Callback.Invoke(_tab.OwnWin, p_nav);
+                p_nav.Callback.Invoke(OwnWin, p_nav);
             }
             else if (p_nav.Type != null)
             {
@@ -202,7 +202,7 @@ namespace Dt.Base
                         if (p_nav.Icon != Icons.None)
                             win.Icon = p_nav.Icon;
                     }
-                    _tab.OwnWin?.LoadMain(center);
+                    OwnWin?.LoadMain(center);
                 }
                 else
                 {
@@ -221,7 +221,7 @@ namespace Dt.Base
         protected override void OnInit(object p_params)
         {
             // 递归触发嵌套子窗口Closing事件，PhoneUI模式页面返回时已处理
-            if (_tab.OwnWin != null)
+            if (OwnWin != null)
             {
                 if (_initNav != null)
                 {
@@ -231,7 +231,7 @@ namespace Dt.Base
 
                 if (!Kit.IsPhoneUI)
                 {
-                    _tab.OwnWin.Closing += OwnWin_Closing;
+                    OwnWin.Closing += OwnWin_Closing;
                 }
             }
         }

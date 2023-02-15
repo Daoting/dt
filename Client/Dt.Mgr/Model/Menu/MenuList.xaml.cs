@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public partial class MenuList : Mv
+    public partial class MenuList : Tab
     {
         public MenuList()
         {
@@ -57,7 +57,7 @@ namespace Dt.Mgr.Model
         void OnItemClick(object sender, ItemClickArgs e)
         {
             _win.Form.Update(e.Row.ID);
-            NaviTo(new List<Mv> { _win.Form, _win.RoleList, });
+            NaviTo(new List<Tab> { _win.Form, _win.RoleList, });
         }
 
         void OnMoveUp(object sender, Mi e)
@@ -114,6 +114,6 @@ namespace Dt.Mgr.Model
             return tbl.Save(false);
         }
 
-        MenuWin _win => (MenuWin)_tab.OwnWin;
+        MenuWin _win => (MenuWin)OwnWin;
     }
 }

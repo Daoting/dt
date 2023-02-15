@@ -42,7 +42,7 @@ namespace Dt.Mgr.Files
             }
 
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
-            LoadMv(new MoveFilePage(mgr, this));
+            LoadTab(new MoveFilePage(mgr, this));
             return await ShowAsync();
         }
 

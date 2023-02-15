@@ -1,5 +1,5 @@
-﻿<a:Mv
-    x:Class="Dt.Base.SearchMv"
+﻿<a:Tab
+    x:Class="Dt.Base.FuzzySearch"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
@@ -54,4 +54,4 @@
             </StackPanel>
         </ScrollViewer>
     </Grid>
-</a:Mv>
+</a:Tab>

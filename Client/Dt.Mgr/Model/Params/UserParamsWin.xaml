@@ -5,28 +5,10 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Model">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab>
-                <a:SearchMv x:Name="_search" Placeholder="参数名" Search="OnSearch">
-                    <x:String>全部</x:String>
-                    <x:String>最近修改</x:String>
-                </a:SearchMv>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Order="1">
-                <l:UserParamsList x:Name="_list" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab>
-                <l:UserParamsForm x:Name="_form" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <a:FuzzySearch x:Name="_search" Placeholder="参数名" Search="OnSearch" a:Ex.Dock="Left">
+        <x:String>全部</x:String>
+        <x:String>最近修改</x:String>
+    </a:FuzzySearch>
+    <l:UserParamsList x:Name="_list" Order="1" />
+    <l:UserParamsForm x:Name="_form" a:Ex.Dock="Right" />
 </a:Win>

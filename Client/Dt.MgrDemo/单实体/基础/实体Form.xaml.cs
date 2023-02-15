@@ -17,12 +17,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo.单实体
 {
-    public sealed partial class 实体Form : Mv
+    public sealed partial class 实体Form : Tab
     {
         public 实体Form()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -99,6 +98,6 @@ namespace Dt.MgrDemo.单实体
             return _fv.DiscardChanges();
         }
 
-        实体Win _win => (实体Win)_tab.OwnWin;
+        实体Win _win => (实体Win)OwnWin;
     }
 }

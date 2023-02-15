@@ -44,9 +44,9 @@ namespace Dt.UIDemo
     [RptScript]
     public class RptSearchFormScript : DataRptScript
     {
-        public override RptSearchMv GetSearchForm(RptInfo p_info)
+        public override RptSearchTab GetSearchForm(RptInfo p_info)
         {
-            return new CustomSearchMv(p_info);
+            return new CustomRptSearch(p_info);
         }
     }
 

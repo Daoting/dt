@@ -5,28 +5,14 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Publish">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1">
-                <l:PostxList x:Name="_list" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab>
-                <l:PostForm x:Name="_form" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab>
-                <l:PostKeywordList x:Name="_keywordList" />
-            </a:Tab>
-            <a:Tab>
-                <l:PostAlbumList x:Name="_albumList" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <l:PostxList x:Name="_list" Order="1" a:Ex.Dock="Left" />
+    <l:PostForm x:Name="_form" />
+    <a:Tabs a:Ex.Dock="Right">
+        <a:Tab>
+            <l:PostKeywordList x:Name="_keywordList" />
+        </a:Tab>
+        <a:Tab>
+            <l:PostAlbumList x:Name="_albumList" />
+        </a:Tab>
+    </a:Tabs>
 </a:Win>

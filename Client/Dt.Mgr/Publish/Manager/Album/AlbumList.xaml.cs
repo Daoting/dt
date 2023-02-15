@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public partial class AlbumList : Mv
+    public partial class AlbumList : Tab
     {
         public AlbumList()
         {
@@ -65,7 +65,7 @@ namespace Dt.Mgr.Publish
             }
         }
 
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        Lazy<FuzzySearch> _lzSm = new Lazy<FuzzySearch>(() => new FuzzySearch
         {
             Placeholder = "文章专辑名称",
             Fixed = { "全部", },
@@ -85,6 +85,6 @@ namespace Dt.Mgr.Publish
         }
         #endregion
 
-        AlbumWin _win => (AlbumWin)_tab.OwnWin;
+        AlbumWin _win => (AlbumWin)OwnWin;
     }
 }

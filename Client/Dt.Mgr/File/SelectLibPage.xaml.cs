@@ -18,7 +18,7 @@ namespace Dt.Mgr.Files
     /// <summary>
     /// 选择库
     /// </summary>
-    public sealed partial class SelectLibPage : Mv
+    public sealed partial class SelectLibPage : Tab
     {
         readonly SelectFileDlg _owner;
 

@@ -32,7 +32,7 @@ namespace Dt.Mgr.Model
 
         public RptForm Form => _form;
 
-        public SearchMv Search => _search;
+        public FuzzySearch Search => _search;
 
         void OnSearch(object sender, string e)
         {

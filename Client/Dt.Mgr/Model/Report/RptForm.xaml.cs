@@ -21,12 +21,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class RptForm : Mv
+    public sealed partial class RptForm : Tab
     {
         public RptForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -107,6 +106,6 @@ namespace Dt.Mgr.Model
             return _fv.DiscardChanges();
         }
 
-        RptWin _win => (RptWin)_tab.OwnWin;
+        RptWin _win => (RptWin)OwnWin;
     }
 }

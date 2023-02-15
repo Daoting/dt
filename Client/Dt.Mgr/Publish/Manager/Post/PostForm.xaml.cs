@@ -22,12 +22,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public sealed partial class PostForm : Mv, IHtmlEditHost
+    public sealed partial class PostForm : Tab, IHtmlEditHost
     {
         public PostForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -158,6 +157,6 @@ namespace Dt.Mgr.Publish
             return _fv.DiscardChanges();
         }
 
-        PostWin _win => (PostWin)_tab.OwnWin;
+        PostWin _win => (PostWin)OwnWin;
     }
 }

@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo
 {
-    public partial class DemoMain : Mv
+    public partial class DemoMain : Tab
     {
         public DemoMain()
         {

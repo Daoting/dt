@@ -21,12 +21,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class PrvForm : Mv
+    public sealed partial class PrvForm : Tab
     {
         public PrvForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(string p_id)
@@ -123,6 +122,6 @@ namespace Dt.Mgr.Model
             _win.UserList.Clear();
         }
 
-        PrvWin _win => (PrvWin)_tab.OwnWin;
+        PrvWin _win => (PrvWin)OwnWin;
     }
 }

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class UserPrvList : Mv
+    public sealed partial class UserPrvList : Tab
     {
         public UserPrvList()
         {
@@ -26,6 +26,6 @@ namespace Dt.Mgr.Model
             _lv.Data = await AtCm.Query("用户-具有的权限", new { userid = p_params });
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        UserAccountWin _win => (UserAccountWin)OwnWin;
     }
 }

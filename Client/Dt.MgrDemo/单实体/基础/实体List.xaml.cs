@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo.单实体
 {
-    public partial class 实体List : Mv
+    public partial class 实体List : Tab
     {
         public 实体List()
         {
@@ -62,7 +62,7 @@ namespace Dt.MgrDemo.单实体
 
         void OnToSearch(object sender, Mi e)
         {
-            NaviTo(new List<Mv> { _win.Search, _win.Query });
+            NaviTo(new List<Tab> { _win.Search, _win.Query });
         }
 
         async void Query()
@@ -95,6 +95,6 @@ namespace Dt.MgrDemo.单实体
         }
         #endregion
 
-        实体Win _win => (实体Win)_tab.OwnWin;
+        实体Win _win => (实体Win)OwnWin;
     }
 }

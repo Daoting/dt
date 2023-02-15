@@ -71,7 +71,7 @@ namespace Dt.Mgr.Publish
             }
             var kf = new KeywordForm();
             kf.Update(null);
-            dlg.LoadMv(kf);
+            dlg.LoadTab(kf);
 
             await dlg.ShowAsync();
             LoadData();

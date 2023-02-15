@@ -31,6 +31,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 实体类后缀 Obj -> X
 * EntityEx.DelByID支持直接删除，不经过校验领域事件等
 * CellUI -> LvCall, MidVal -> FvCall, IMidVal -> IFvCall
+* 因Mv内菜单无法绑定，将Mv合并到Tab，修养改动两处：Mv -> Tab, Win中xaml删除自定义Mv的外套Tab
 
 * VS扩展工具单实体框架支持多表的虚拟实体
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端

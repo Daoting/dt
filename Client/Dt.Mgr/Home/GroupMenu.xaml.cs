@@ -15,7 +15,7 @@ namespace Dt.Mgr.Home
     /// <summary>
     /// 分组菜单项页面
     /// </summary>
-    public sealed partial class GroupMenu : Mv
+    public sealed partial class GroupMenu : Tab
     {
         OmMenu _parent;
 

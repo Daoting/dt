@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class UserMenuList : Mv
+    public sealed partial class UserMenuList : Tab
     {
         public UserMenuList()
         {
@@ -26,6 +26,6 @@ namespace Dt.Mgr.Model
             _lv.Data = await AtCm.Query("用户-可访问的菜单", new { userid = p_params });
         }
 
-        UserAccountWin _win => (UserAccountWin)_tab.OwnWin;
+        UserAccountWin _win => (UserAccountWin)OwnWin;
     }
 }

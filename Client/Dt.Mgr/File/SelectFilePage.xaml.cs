@@ -16,7 +16,7 @@ namespace Dt.Mgr.Files
     /// <summary>
     /// 选择移动到的目标文件夹
     /// </summary>
-    public sealed partial class SelectFilePage : Mv
+    public sealed partial class SelectFilePage : Tab
     {
         readonly IFileMgr _fileMgr;
         readonly SelectFileDlg _owner;

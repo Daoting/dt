@@ -4,16 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Title="搜索">
-                <a:SearchMv Placeholder="流程模板名称" Search="OnSearch">
-                    <x:String>全部</x:String>
-                    <x:String>最近修改</x:String>
-                </a:SearchMv>
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <a:FuzzySearch Placeholder="流程模板名称" Search="OnSearch" a:Ex.Dock="Left">
+        <x:String>全部</x:String>
+        <x:String>最近修改</x:String>
+    </a:FuzzySearch>
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="列表">

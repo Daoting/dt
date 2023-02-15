@@ -6,25 +6,7 @@
     xmlns:home="using:Dt.Mgr.Home"
     AutoSaveLayout="False">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1" Icon="主页">
-                <home:RootMenu x:Name="_menu" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Order="2" Title="动态" Icon="心电">
-                
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab Order="3">
-                <home:MyMain x:Name="_my" />
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
+    <home:RootMenu x:Name="_menu" Order="1" Icon="主页" a:Ex.Dock="Left" />
+    <a:Tab Order="2" Title="动态" Icon="心电" />
+    <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

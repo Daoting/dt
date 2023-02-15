@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public partial class PrvList : Mv
+    public partial class PrvList : Tab
     {
         string _query;
 
@@ -58,7 +58,7 @@ namespace Dt.Mgr.Model
             }
         }
 
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        Lazy<FuzzySearch> _lzSm = new Lazy<FuzzySearch>(() => new FuzzySearch
         {
             Placeholder = "权限名称",
             Fixed = { "全部",  },
@@ -84,9 +84,9 @@ namespace Dt.Mgr.Model
 
         void NaviToChildren()
         {
-            NaviTo(new List<Mv> { _win.Form,  _win.RoleList, _win.UserList });
+            NaviTo(new List<Tab> { _win.Form,  _win.RoleList, _win.UserList });
         }
 
-        PrvWin _win => (PrvWin)_tab.OwnWin;
+        PrvWin _win => (PrvWin)OwnWin;
     }
 }

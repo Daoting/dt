@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Publish
 {
-    public partial class KeywordList : Mv
+    public partial class KeywordList : Tab
     {
         public KeywordList()
         {
@@ -65,7 +65,7 @@ namespace Dt.Mgr.Publish
             }
         }
 
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
+        Lazy<FuzzySearch> _lzSm = new Lazy<FuzzySearch>(() => new FuzzySearch
         {
             Placeholder = "关键字名称",
             Fixed = { "全部", },
@@ -85,6 +85,6 @@ namespace Dt.Mgr.Publish
         }
         #endregion
 
-        KeywordWin _win => (KeywordWin)_tab.OwnWin;
+        KeywordWin _win => (KeywordWin)OwnWin;
     }
 }

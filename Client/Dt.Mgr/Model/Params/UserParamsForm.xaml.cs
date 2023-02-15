@@ -15,12 +15,11 @@ using System.Threading.Tasks;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class UserParamsForm : Mv
+    public sealed partial class UserParamsForm : Tab
     {
         public UserParamsForm()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(string p_id)
@@ -105,6 +104,6 @@ namespace Dt.Mgr.Model
                 new UserParamsDlg().Show(par.ID);
         }
 
-        UserParamsWin _win => (UserParamsWin)_tab.OwnWin;
+        UserParamsWin _win => (UserParamsWin)OwnWin;
     }
 }

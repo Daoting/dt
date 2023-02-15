@@ -48,7 +48,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        public virtual RptSearchMv GetSearchForm(RptInfo p_info)
+        public virtual RptSearchTab GetSearchForm(RptInfo p_info)
         {
             return null;
         }

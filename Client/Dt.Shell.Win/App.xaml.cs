@@ -28,8 +28,8 @@ namespace Dt.Sample
         public App()
         {
             InitializeComponent();
-            //_stub = new Dt.UIDemo.AppStub();
-            _stub = new Dt.MgrDemo.AppStub();
+            _stub = new Dt.UIDemo.AppStub();
+            //_stub = new Dt.MgrDemo.AppStub();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)

@@ -19,9 +19,9 @@ using Microsoft.UI.Xaml.Markup;
 
 namespace Dt.UIDemo
 {
-    public sealed partial class CustomSearchMv : RptSearchMv
+    public sealed partial class CustomRptSearch : RptSearchTab
     {
-        public CustomSearchMv(RptInfo p_info) : base(p_info)
+        public CustomRptSearch(RptInfo p_info) : base(p_info)
         {
             InitializeComponent();
             _row.AddCell("unuse", "选项二");

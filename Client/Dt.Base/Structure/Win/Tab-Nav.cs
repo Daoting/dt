@@ -42,6 +42,12 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty NaviParamsProperty = DependencyProperty.Register(
+            "NaviParams",
+            typeof(object),
+            typeof(Tab),
+            new PropertyMetadata(null));
+
         static void OnPreTabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var tab = (Tab)d;
@@ -65,9 +71,9 @@ namespace Dt.Base
 
         #region 成员变量
         TaskCompletionSource<bool> _taskSrc;
-        object _params;
         #endregion
 
+        #region 属性
         /// <summary>
         /// 带遮罩时的Dlg容器
         /// </summary>
@@ -76,6 +82,11 @@ namespace Dt.Base
             get { return (Dlg)GetValue(OwnDlgProperty); }
             internal set { SetValue(OwnDlgProperty, value); }
         }
+
+        /// <summary>
+        /// 是否为Tab区域内导航的首页
+        /// </summary>
+        public bool IsHome => PreTab == null;
 
         /// <summary>
         /// Tab内部导航时的前一标签Tab
@@ -92,10 +103,20 @@ namespace Dt.Base
         protected object Result
         {
             get { return GetValue(ResultProperty); }
-            private set { SetValue(ResultProperty, value); }
+            set { SetValue(ResultProperty, value); }
         }
 
-        #region Tab内导航
+        /// <summary>
+        /// 导航时的入参
+        /// </summary>
+        object NaviParams
+        {
+            get { return GetValue(NaviParamsProperty); }
+            set { SetValue(NaviParamsProperty, value); }
+        }
+        #endregion
+
+        #region Tab区域内导航
         /// <summary>
         /// 向前导航到新Tab，可异步等待返回值
         /// </summary>
@@ -118,7 +139,9 @@ namespace Dt.Base
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         public void Forward(Tab p_tab, object p_params = null, bool p_isModal = false)
         {
-            p_tab._params = p_params;
+            if (p_params != null)
+                p_tab.NaviParams = p_params;
+
             if (p_isModal)
             {
                 ShowDlg(p_tab);
@@ -261,11 +284,11 @@ namespace Dt.Base
         protected override void OnControlLoaded()
         {
             // 初始化
-            OnInit(_params);
+            OnInit(NaviParams);
         }
 
         /// <summary>
-        /// Tab内部导航时，获取首个Tab的标题
+        /// Tab区域内导航时，获取首个Tab的标题
         /// </summary>
         /// <returns></returns>
         internal string GetOriginalTitle()
@@ -298,7 +321,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 等待当前Mv返回
+        /// 等待当前Tab返回
         /// </summary>
         /// <typeparam name="T">返回值的类型</typeparam>
         /// <returns>返回值</returns>
@@ -312,7 +335,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 结束等待当前Mv
+        /// 结束等待当前Tab
         /// </summary>
         void StopWait()
         {
@@ -343,7 +366,7 @@ namespace Dt.Base
             {
                 dlg = new Dlg()
                 {
-                    PlacementTarget = p_tab.OwnTabs,
+                    PlacementTarget = OwnTabs,
                     WinPlacement = DlgPlacement.TargetOverlap,
                     Resizeable = false,
                     HideTitleBar = true,

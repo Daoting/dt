@@ -21,7 +21,7 @@ namespace Dt.UIDemo
 
         void OnSearch(object sender, string e)
         {
-            _si.DoSearch(e);
+            
         }
     }
 }

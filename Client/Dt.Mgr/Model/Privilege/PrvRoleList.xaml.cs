@@ -20,14 +20,13 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Model
 {
-    public sealed partial class PrvRoleList : Mv
+    public sealed partial class PrvRoleList : Tab
     {
         string _id;
 
         public PrvRoleList()
         {
             InitializeComponent();
-            Menu["移除"].Bind(IsEnabledProperty, _lv, "HasSelected");
         }
 
         public void Update(string p_id)
@@ -113,6 +112,6 @@ namespace Dt.Mgr.Model
             Menu.Hide("移除", "全选", "取消");
         }
 
-        PrvWin _win => (PrvWin)_tab.OwnWin;
+        PrvWin _win => (PrvWin)OwnWin;
     }
 }
