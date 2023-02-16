@@ -44,27 +44,9 @@ namespace Dt.Core
             return Type == AccessType.Remote ? GetRemoteAccess(Name) : GetSqliteAccess(Name);
         }
 
-        /// <summary>
-        /// 根据描述信息获取缓存管理者
-        /// </summary>
-        /// <returns></returns>
-        public CacheAccess GetCacheAccess()
-        {
-            if (Type != AccessType.Remote)
-                Throw.Msg("sqlite库无缓存访问对象！");
-
-            if(_caches.TryGetValue(Name, out var m))
-                return m;
-
-            var ca = new CacheAccess(Name);
-            _caches[Name] = ca;
-            return ca;
-        }
-
         #region 静态内容
         static readonly Dictionary<string, IDataAccess> _remotes = new Dictionary<string, IDataAccess>(StringComparer.OrdinalIgnoreCase);
         static readonly Dictionary<string, IDataAccess> _sqlites = new Dictionary<string, IDataAccess>(StringComparer.OrdinalIgnoreCase);
-        static readonly Dictionary<string, CacheAccess> _caches = new Dictionary<string, CacheAccess>(StringComparer.OrdinalIgnoreCase);
 
         static IDataAccess GetRemoteAccess(string p_name)
         {

@@ -34,9 +34,14 @@ namespace Dt.Mgr.Home
             else
             {
                 var btn = new Button { Content = "点击登录", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-                btn.Click += (s, e) => Kit.ShowRoot(LobViews.登录页); ;
+                btn.Click += (s, e) => Kit.ShowRoot(LobViews.登录页);
                 Content = btn;
-                LobKit.LoginSuc += () => { Content = _fv; LoadInfo(); };
+
+                LoginDs.Me.LoginSuc += () =>
+                {
+                    Content = _fv;
+                    LoadInfo();
+                };
             }
         }
 
@@ -50,7 +55,7 @@ namespace Dt.Mgr.Home
 
         void OnExit(object sender, RoutedEventArgs e)
         {
-            LobKit.Logout();
+            LoginDs.Me.Logout();
         }
 
         async void OnClearLocalFile(object sender, RoutedEventArgs e)

@@ -53,19 +53,8 @@ namespace Dt.MgrDemo
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            string phone = await CookieX.Get("LoginPhone");
-            string pwd = await CookieX.Get("LoginPwd");
-            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-            {
-                var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
-                if (result.IsSuc)
-                {
-                    await LobKit.AfterLogin(result);
-                    Kit.ShowRoot(LobViews.主页);
-                    return;
-                }
-            }
-            Kit.ShowRoot(LobViews.登录页);
+            var suc = await LoginDs.Me.LoginByCookie();
+            Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
         }
 
         /// <summary>

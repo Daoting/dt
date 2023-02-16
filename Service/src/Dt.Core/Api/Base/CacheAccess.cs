@@ -37,11 +37,16 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_key">完整缓存键，形如"prefix:key"，非空</param>
         /// <param name="p_value">待缓存内容</param>
+        /// <param name="p_seconds">过期秒数，0表始终不过期</param>
         /// <returns></returns>
-        public Task<bool> StringSet(string p_key, string p_value)
+        public Task<bool> StringSet(string p_key, string p_value, double p_seconds)
         {
             if (!string.IsNullOrEmpty(p_key))
-                return Redis.Db.StringSetAsync(p_key, p_value);
+            {
+                return p_seconds > 0 ?
+                    Redis.Db.StringSetAsync(p_key, p_value, TimeSpan.FromSeconds(p_seconds))
+                    : Redis.Db.StringSetAsync(p_key, p_value);
+            }
             return Task.FromResult(false);
         }
 
@@ -54,6 +59,48 @@ namespace Dt.Core
         public Task<string> GetEntityJson(string p_key, string p_priKeyPrefix)
         {
             return Redis.GetEntityJson(p_key, p_priKeyPrefix);
+        }
+
+        /// <summary>
+        /// 根据键查询所有field-value数组
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <returns></returns>
+        public async Task<Dict> HashGetAll(string p_key)
+        {
+            if (string.IsNullOrEmpty(p_key))
+                return null;
+
+            var arr = await Redis.Db.HashGetAllAsync(p_key);
+            if (arr != null && arr.Length > 0)
+            {
+                Dict dt = new Dict();
+                foreach (var en in arr)
+                {
+                    dt[(string)en.Name] = (string)en.Value;
+                }
+                return dt;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取指定键名的hash中field对应的value
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <param name="p_field">hash中的field，大小写敏感</param>
+        /// <returns>field对应的value</returns>
+        public async Task<string> HashGet(string p_key, string p_field)
+        {
+            if (string.IsNullOrEmpty(p_key) || string.IsNullOrEmpty(p_field))
+                return null;
+
+            var val = await Redis.Db.HashGetAsync(p_key, p_field);
+            if (val.HasValue)
+            {
+                return (string)val;
+            }
+            return null;
         }
 
         /// <summary>

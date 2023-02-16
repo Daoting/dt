@@ -152,5 +152,74 @@ namespace Dt.Core
             ).Call<int>();
         }
         #endregion
+
+        #region 缓存
+        public Task<string> StringGet(string p_key)
+        {
+            return Kit.Rpc<string>(
+                _svc,
+                "CacheAccess.StringGet",
+                p_key
+            );
+        }
+
+        public Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+        {
+            return Kit.Rpc<bool>(
+                _svc,
+                "CacheAccess.StringSet",
+                p_key,
+                p_value,
+                p_seconds
+            );
+        }
+
+        public Task<string> GetEntityJson(string p_key, string p_priKeyPrefix)
+        {
+            return Kit.Rpc<string>(
+                _svc,
+                "CacheAccess.GetEntityJson",
+                p_key,
+                p_priKeyPrefix
+            );
+        }
+
+        public Task<Dict> HashGetAll(string p_key)
+        {
+            return Kit.Rpc<Dict>(
+                _svc,
+                "CacheAccess.HashGetAll",
+                p_key
+            );
+        }
+
+        public Task<string> HashGet(string p_key, string p_field)
+        {
+            return Kit.Rpc<string>(
+                _svc,
+                "CacheAccess.HashGet",
+                p_key,
+                p_field
+            );
+        }
+
+        public Task<bool> KeyDelete(string p_key)
+        {
+            return Kit.Rpc<bool>(
+                _svc,
+                "CacheAccess.KeyDelete",
+                p_key
+            );
+        }
+
+        public Task BatchKeyDelete(List<string> p_keys)
+        {
+            return Kit.Rpc<object>(
+                _svc,
+                "CacheAccess.BatchKeyDelete",
+                p_keys
+            );
+        }
+        #endregion
     }
 }

@@ -266,7 +266,7 @@ namespace Dt.Core
             }
             else if (attr.AgentMode == AgentMode.Generic)
             {
-                serviceName = "typeof(TSvc).Name";
+                serviceName = "_svc";
             }
             else
             {

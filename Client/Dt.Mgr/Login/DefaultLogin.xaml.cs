@@ -54,51 +54,39 @@ namespace Dt.Mgr
             if (string.IsNullOrEmpty(phone))
             {
                 _tbPhone.Focus(FocusState.Programmatic);
+                return;
             }
-            else if (IsPhoneError())
-            {
-            }
-            else if (string.IsNullOrEmpty(txt))
+
+            if (IsPhoneError())
+                return;
+
+            if (string.IsNullOrEmpty(txt))
             {
                 if (isCode)
                     _tbCode.Focus(FocusState.Programmatic);
                 else
                     _tbPwd.Focus(FocusState.Programmatic);
+                return;
             }
-            else
+
+            LoginPanel.Visibility = Visibility.Collapsed;
+            InfoPanel.Visibility = Visibility.Visible;
+            try
             {
-                LoginPanel.Visibility = Visibility.Collapsed;
-                InfoPanel.Visibility = Visibility.Visible;
-                try
+                bool suc;
+                if (isCode)
                 {
-                    string pwd = null;
-                    LoginResult result;
-                    if (isCode)
-                    {
-                        // 验证码登录
-                        result = await AtCm.LoginByCode<LoginResult>(phone, txt);
-                        if (result.IsSuc)
-                            pwd = result.Pwd;
-                    }
-                    else
-                    {
-                        // 密码登录
-                        pwd = Kit.GetMD5(txt);
-                        result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
-                    }
+                    // 验证码登录
+                    suc = await LoginDs.Me.LoginByCode(phone, txt, true);
+                }
+                else
+                {
+                    // 密码登录
+                    suc = await LoginDs.Me.LoginByPwd(phone, Kit.GetMD5(txt), true);
+                }
 
-                    if (!result.IsSuc)
-                    {
-                        LoginFailed(result.Error);
-                        return;
-                    }
-
-                    // 保存以备自动登录
-                    await CookieX.Save("LoginPhone", phone);
-                    await CookieX.Save("LoginPwd", pwd);
-                    await CookieX.Save("LoginID", result.UserID.ToString());
-
-                    await LobKit.AfterLogin(result);
+                if (suc)
+                {
                     var dlg = this.FindParentByType<Dlg>();
                     if (dlg != null)
                     {
@@ -111,18 +99,22 @@ namespace Dt.Mgr
                         Kit.ShowRoot(LobViews.主页);
                     }
                 }
-                catch
+                else
                 {
-                    LoginFailed("登录失败！");
+                    LoginFailed();
                 }
+            }
+            catch
+            {
+                LoginFailed();
+                Kit.Warn("登录失败！");
             }
         }
 
-        void LoginFailed(string p_error)
+        void LoginFailed()
         {
             LoginPanel.Visibility = Visibility.Visible;
             InfoPanel.Visibility = Visibility.Collapsed;
-            Kit.Warn(p_error);
             _tbPhone.Focus(FocusState.Programmatic);
         }
 
@@ -144,7 +136,7 @@ namespace Dt.Mgr
                 return;
 
             _btnCode.IsEnabled = false;
-            string code = await AtCm.CreateVerificationCode(phone);
+            string code = await LoginDs.Me.CreateVerificationCode(phone);
             _tbCode.Focus(FocusState.Programmatic);
 
             int sec = 60;

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace $rootnamespace$
 {
-    class $clsname$ : DomainSvc<$clsname$, AtSvc>
+    class $clsname$ : DomainSvc<$clsname$, AtSvc.Info>
     {
         $clsname$() { }
 

@@ -148,6 +148,63 @@ namespace Dt.Core
         Task<int> BatchExec(List<Dict> p_dts);
         #endregion
 
+        #region 缓存
+#if !SERVER
+        /// <summary>
+        /// 根据键查询字符串类型的缓存值
+        /// </summary>
+        /// <param name="p_key">完整缓存键，形如"prefix:key"</param>
+        /// <returns>缓存字符串</returns>
+        Task<string> StringGet(string p_key);
+
+        /// <summary>
+        /// 将键值添加到缓存
+        /// </summary>
+        /// <param name="p_key">完整缓存键，形如"prefix:key"，非空</param>
+        /// <param name="p_value">待缓存内容</param>
+        /// <param name="p_seconds">过期秒数，0表始终不过期</param>
+        /// <returns></returns>
+        Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0);
+
+        /// <summary>
+        /// 先根据 p_key 查到实体的主键值，再根据主键前缀 p_priKeyPrefix 和主键值查询实体json
+        /// </summary>
+        /// <param name="p_key">实体非主键列键名：“表名:列名:列值”</param>
+        /// <param name="p_priKeyPrefix">查询实体json的键名：“表名:主键列名”</param>
+        /// <returns></returns>
+        Task<string> GetEntityJson(string p_key, string p_priKeyPrefix);
+
+        /// <summary>
+        /// 根据键查询所有field-value数组
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <returns></returns>
+        Task<Dict> HashGetAll(string p_key);
+
+        /// <summary>
+        /// 获取指定键名的hash中field对应的value
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <param name="p_field">hash中的field，大小写敏感</param>
+        /// <returns>field对应的value</returns>
+        Task<string> HashGet(string p_key, string p_field);
+
+        /// <summary>
+        /// 根据键名删除缓存内容
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <returns></returns>
+        Task<bool> KeyDelete(string p_key);
+
+        /// <summary>
+        /// 根据键名列表批量删除缓存
+        /// </summary>
+        /// <param name="p_keys">键名列表</param>
+        /// <returns></returns>
+        Task BatchKeyDelete(List<string> p_keys);
+#endif
+        #endregion
+
         #region 其他
 #if SERVER
         /// <summary>

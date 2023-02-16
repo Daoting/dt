@@ -86,7 +86,7 @@ namespace Dt.Core
             }
 
 #else
-            var ca = _model.AccessInfo.GetCacheAccess();
+            var ca = _model.AccessInfo.GetDataAccess();
             await ca.StringSet(idKey, val);
             if (_otherKeys != null)
             {
@@ -115,7 +115,7 @@ namespace Dt.Core
                 if (val.HasValue)
                     return RpcKit.ParseString<TEntity>(val);
 #else
-                var val = await _model.AccessInfo.GetCacheAccess().StringGet(key);
+                var val = await _model.AccessInfo.GetDataAccess().StringGet(key);
                 if (!string.IsNullOrEmpty(val))
                     return RpcKit.ParseString<TEntity>(val);
 #endif
@@ -127,7 +127,7 @@ namespace Dt.Core
 #if SERVER
                 val = await Redis.GetEntityJson(key, priKeyPrefix);
 #else
-                val = await _model.AccessInfo.GetCacheAccess().GetEntityJson(key, priKeyPrefix);
+                val = await _model.AccessInfo.GetDataAccess().GetEntityJson(key, priKeyPrefix);
 #endif
                 if (!string.IsNullOrEmpty(val))
                     return RpcKit.ParseString<TEntity>(val);
@@ -154,7 +154,7 @@ namespace Dt.Core
 #if SERVER
                 await Redis.Db.KeyDeleteAsync(priKey);
 #else
-                await _model.AccessInfo.GetCacheAccess().KeyDelete(priKey);
+                await _model.AccessInfo.GetDataAccess().KeyDelete(priKey);
 #endif
                 return;
             }
@@ -177,7 +177,7 @@ namespace Dt.Core
             // lua脚本：批量删除
             await Redis.BatchKeyDelete(ls);
 #else
-            var ca = _model.AccessInfo.GetCacheAccess();
+            var ca = _model.AccessInfo.GetDataAccess();
             var val = await ca.StringGet(priKey);
             if (string.IsNullOrEmpty(val))
                 return;

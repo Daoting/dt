@@ -139,6 +139,43 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 缓存
+        public Task<string> StringGet(string p_key)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<string> GetEntityJson(string p_key, string p_priKeyPrefix)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<Dict> HashGetAll(string p_key)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<string> HashGet(string p_key, string p_field)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<bool> KeyDelete(string p_key)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task BatchKeyDelete(List<string> p_keys)
+        {
+            throw new NotSupportedException();
+        }
+        #endregion
+
         #region 库管理
         /// <summary>
         /// 打开Sqlite库，自动创建、同步库表结构
