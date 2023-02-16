@@ -27,7 +27,7 @@ namespace Dt
         const int ManyToManyCmdId = 0x3002;
         const int LocalSingleTblCmdId = 0x3003;
 
-        const int InsertMvCmdId = 0x4000;
+        const int InsertTabCmdId = 0x4000;
         const int InsertWinCmdId = 0x4001;
         const int InsertDlgCmdId = 0x4002;
 
@@ -67,7 +67,7 @@ namespace Dt
             cs.AddCommand(CmdClient(ManyToManyCmdId, typeof(ManyToManyForm)));
             cs.AddCommand(CmdClient(LocalSingleTblCmdId, typeof(LocalTblForm)));
 
-            cs.AddCommand(CmdClient(InsertMvCmdId, typeof(InsertMvForm)));
+            cs.AddCommand(CmdClient(InsertTabCmdId, typeof(InsertTabForm)));
             cs.AddCommand(CmdClient(InsertWinCmdId, typeof(InsertWinForm)));
             cs.AddCommand(CmdClient(InsertDlgCmdId, typeof(InsertDlgForm)));
 

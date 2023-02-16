@@ -168,7 +168,7 @@
 				</Strings>
 			</Button>
 			
-			<Button guid="guidDtPackageCmdSet" id="InsertMvCmdId" priority="0x0101" type="Button">
+			<Button guid="guidDtPackageCmdSet" id="InsertTabCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
 				<Strings>
 					<ButtonText>模块视图</ButtonText>
@@ -276,7 +276,7 @@
 			<IDSymbol name="ManyToManyCmdId" value="0x3002" />
 			<IDSymbol name="LocalSingleTblCmdId" value="0x3003" />
 
-			<IDSymbol name="InsertMvCmdId" value="0x4000" />
+			<IDSymbol name="InsertTabCmdId" value="0x4000" />
 			<IDSymbol name="InsertWinCmdId" value="0x4001" />
 			<IDSymbol name="InsertDlgCmdId" value="0x4002" />
 

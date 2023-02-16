@@ -9,12 +9,11 @@
 
 	<ItemGroup>
 		<!-- 调试包源码可引用 Dt.Service.Debug 包 -->
-		<PackageReference Include="Dt.Service" Version="3.1.1" />
+		<PackageReference Include="Dt.Service" Version="4.0.0-beta1" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<Using Include="Dt.Core" />
-		<Using Include="Dt.Agent" />
 		<Using Include="Serilog" />
 	</ItemGroup>
 </Project>

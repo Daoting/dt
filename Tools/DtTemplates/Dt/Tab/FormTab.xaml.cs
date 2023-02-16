@@ -17,12 +17,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $safeitemname$ : Mv
+    public sealed partial class $safeitemname$ : Tab
     {
         public $safeitemname$()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -32,7 +31,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                //_fv.Data = await AtSvc.First<>("$title$-编辑", new { id = p_id });
+                //Data = await MyEntityX.GetByID(p_id);
             }
             else
             {
@@ -42,13 +41,12 @@ namespace $rootnamespace$
 
         public void Clear()
         {
-            _fv.Data = null;
+            //Data = null;
         }
 
         void Create()
         {
-            //_fv.Data = new xxx(
-            //    ID: await AtSvc.NewID());
+            //Data = await MyEntityX.New();
         }
 
         void OnSave(object sender, Mi e)
@@ -68,24 +66,23 @@ namespace $rootnamespace$
 
         void Save()
         {
-            //var d = _fv.Data.To<>();
-            //if (await AtSvc.Save(d))
+            //if (await Data.Save())
             //{
             //    _win.List.Update();
             //}
         }
 
-        async void OnDel(object sender, Mi e)
+        void OnDel(object sender, Mi e)
         {
-            //var d = _fv.Data.To<>();
+            //var d = Data;
             //if (d == null)
             //    return;
 
-            if (!await Kit.Confirm("确认要删除吗？"))
-            {
-                Kit.Msg("已取消删除！");
-                return;
-            }
+            //if (!await Kit.Confirm("确认要删除吗？"))
+            //{
+            //    Kit.Msg("已取消删除！");
+            //    return;
+            //}
 
             //if (d.IsAdded)
             //{
@@ -94,5 +91,11 @@ namespace $rootnamespace$
             //}
 
         }
+
+        //MyEntityX Data
+        //{
+        //    get { return _fv.Data.To<MyEntityX>(); }
+        //    set { _fv.Data = value; }
+        //}
     }
 }

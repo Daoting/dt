@@ -9,7 +9,7 @@
 namespace $ext_safeprojectname$
 {
     [Api]
-    public class TestApi : BaseApi
+    public class TestApi : DomainSvc
     {
         public string Hello(string p_str)
         {

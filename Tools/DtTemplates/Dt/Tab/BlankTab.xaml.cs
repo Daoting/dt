@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $safeitemname$ : Mv
+    public partial class $safeitemname$ : Tab
     {
         public $safeitemname$()
         {

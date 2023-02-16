@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 namespace Dt
 {
-    public partial class InsertMvForm : Form
+    public partial class InsertTabForm : Form
     {
-        public InsertMvForm()
+        public InsertTabForm()
         {
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
@@ -42,13 +42,13 @@ namespace Dt
             switch (_cb.SelectedIndex)
             {
                 case 0:
-                    res = "Dt.Mv.BlankMv.xaml";
+                    res = "Dt.Tab.BlankTab.xaml";
                     break;
                 case 1:
-                    res = "Dt.Mv.FormMv.xaml";
+                    res = "Dt.Tab.FormTab.xaml";
                     break;
                 default:
-                    res = "Dt.Mv.ListMv.xaml";
+                    res = "Dt.Tab.ListTab.xaml";
                     break;
             }
 

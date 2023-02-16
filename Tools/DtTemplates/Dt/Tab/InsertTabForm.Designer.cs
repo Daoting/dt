@@ -1,7 +1,7 @@
 ﻿
 namespace Dt
 {
-    partial class InsertMvForm
+    partial class InsertTabForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertMvForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InsertTabForm));
             this.label2 = new System.Windows.Forms.Label();
             this._ns = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -66,7 +66,7 @@ namespace Dt
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
-            this.label1.Text = "类名(建议后缀 Mv)";
+            this.label1.Text = "类名";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _cls
@@ -93,7 +93,7 @@ namespace Dt
             this._lbl.Name = "_lbl";
             this._lbl.Size = new System.Drawing.Size(444, 38);
             this._lbl.TabIndex = 26;
-            this._lbl.Text = "Mv是最常用的业务模块视图，放在Tab中，支持内部导航时输入输出参数、带遮罩的模式视图等";
+            this._lbl.Text = "模块视图是业务功能模块的最小单位，继承自Tab，支持Win内Tab之间导航和Tab区域内导航，导航时支持输入输出参数、带遮罩的模式视图等";
             // 
             // _cb
             // 
@@ -115,7 +115,7 @@ namespace Dt
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(176, 21);
             this.label3.TabIndex = 28;
-            this.label3.Text = "Mv内容类型";
+            this.label3.Text = "内容类型";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _title
@@ -157,7 +157,7 @@ namespace Dt
             this.Name = "InsertMvForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "添加Mv";
+            this.Text = "添加模块视图";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -17,10 +17,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $safeitemname$ : Mv
+    public partial class $safeitemname$ : Tab
     {
-        string _query;
-
         public $safeitemname$()
         {
             InitializeComponent();
@@ -28,37 +26,13 @@ namespace $rootnamespace$
 
         public void Update()
         {
-            //if (string.IsNullOrEmpty(_query) || _query == "#全部")
-            //{
-            //    _lv.Data = await AtSvc.Query<>("$title$-所有");
-            //}
-            //else
-            //{
-            //    _lv.Data = await AtSvc.Query<>("$title$-模糊查询", new { name = $"%{_query}%" });
-            //}
+            Query();
         }
 
         protected override void OnInit(object p_params)
         {
-            Update();
+            Query();
         }
-
-        async void OnToSearch(object sender, Mi e)
-        {
-            var txt = await Forward<string>(_lzSm.Value);
-            if (!string.IsNullOrEmpty(txt))
-            {
-                _query = txt;
-                Title = "$title$ - " + txt;
-                Update();
-            }
-        }
-
-        Lazy<SearchMv> _lzSm = new Lazy<SearchMv>(() => new SearchMv
-        {
-            Placeholder = "名称",
-            Fixed = { "全部", },
-        });
 
         void OnAdd(object sender, Mi e)
         {
@@ -73,6 +47,37 @@ namespace $rootnamespace$
             //NaviTo(_win.Form);
         }
 
-        //$safeitemname$Win _win => ($safeitemname$Win)_tab.OwnWin;
+        #region 搜索
+        /// <summary>
+        /// 获取设置查询内容
+        /// </summary>
+        public QueryClause Clause { get; set; }
+
+        public void OnSearch(QueryClause p_clause)
+        {
+            Clause = p_clause;
+            Query();
+            NaviTo(this);
+        }
+
+        void OnToSearch(object sender, Mi e)
+        {
+            //NaviTo(new List<Tab> { _win.Search, _win.Query });
+        }
+
+        void Query()
+        {
+            //if (Clause == null)
+            //{
+            //    _lv.Data = await MyEntityX.Query();
+            //}
+            //else
+            //{
+            //    _lv.Data = await MyEntityX.Query(Clause.Where, Clause.Params);
+            //}
+        }
+        #endregion
+
+        //$safeitemname$Win _win => ($safeitemname$Win)OwnWin;
     }
 }

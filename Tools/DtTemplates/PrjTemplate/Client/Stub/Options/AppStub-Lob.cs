@@ -46,27 +46,15 @@ namespace $ext_safeprojectname$
         protected override async Task OnStartup()
         {
             // 初次运行，显示用户协议和隐私政策对话框
-            AtLocal.OpenDb();
-            if (AtLocal.GetDict("FirstRun") == "")
+            if (await CookieX.Get("FirstRun") != "0")
             {
                 await new PolicyDlg().ShowAsync();
-                AtLocal.SaveDict("FirstRun", "0");
+                await CookieX.Save("FirstRun", "0");
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            string phone = AtState.GetCookie("LoginPhone");
-            string pwd = AtState.GetCookie("LoginPwd");
-            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-            {
-                var result = await AtCm.LoginByPwd<LoginResult>(phone, pwd);
-                if (result.IsSuc)
-                {
-                    await LobKit.AfterLogin(result);
-                    Kit.ShowRoot(LobViews.主页);
-                    return;
-                }
-            }
-            Kit.ShowRoot(LobViews.登录页);
+            var suc = await LoginDs.Me.LoginByCookie();
+            Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
         }
 
         /// <summary>

@@ -316,22 +316,22 @@
     <Compile Include="ManyToMany\ManyToManyForm.Designer.cs">
       <DependentUpon>ManyToManyForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Mv\BlankMv.xaml.cs">
-      <DependentUpon>BlankMv.xaml</DependentUpon>
+    <EmbeddedResource Include="Tab\BlankTab.xaml.cs">
+      <DependentUpon>BlankTab.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mv\FormMv.xaml.cs">
-      <DependentUpon>FormMv.xaml</DependentUpon>
+    <EmbeddedResource Include="Tab\FormTab.xaml.cs">
+      <DependentUpon>FormTab.xaml</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mv\ListMv.xaml.cs">
-      <DependentUpon>ListMv.xaml</DependentUpon>
+    <EmbeddedResource Include="Tab\ListTab.xaml.cs">
+      <DependentUpon>ListTab.xaml</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ManyToMany\Res\CustomSearch.cs" />
     <EmbeddedResource Include="ManyToMany\Res\DefaultSearch.cs" />
-    <Compile Include="Mv\InsertMvForm.cs">
+    <Compile Include="Tab\InsertTabForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Mv\InsertMvForm.Designer.cs">
-      <DependentUpon>InsertMvForm.cs</DependentUpon>
+    <Compile Include="Tab\InsertTabForm.Designer.cs">
+      <DependentUpon>InsertTabForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="OnToMany\SelectChildTbls.resx">
       <DependentUpon>SelectChildTbls.cs</DependentUpon>
@@ -376,8 +376,8 @@
     <EmbeddedResource Include="Dialog\InsertDlgForm.resx">
       <DependentUpon>InsertDlgForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mv\InsertMvForm.resx">
-      <DependentUpon>InsertMvForm.cs</DependentUpon>
+    <EmbeddedResource Include="Tab\InsertTabForm.resx">
+      <DependentUpon>InsertTabForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Single\SingleForm.resx">
       <DependentUpon>SingleForm.cs</DependentUpon>
@@ -654,18 +654,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Mv\BlankMv.xaml">
+    <EmbeddedResource Include="Tab\BlankTab.xaml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Mv\FormMv.xaml">
+    <EmbeddedResource Include="Tab\FormTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Mv\ListMv.xaml">
+    <EmbeddedResource Include="Tab\ListTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
