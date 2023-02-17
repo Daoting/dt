@@ -86,6 +86,19 @@ namespace Dt.Core
             }
         }
 
+        /// <summary>
+        /// 获取Cell.Val值变化前的回调方法，查找内部实体
+        /// </summary>
+        /// <param name="p_id">Cell.ID</param>
+        /// <returns></returns>
+        public override Action<object> GetCellHook(string p_id)
+        {
+            var hook = E1.GetCellHook(p_id);
+            if (hook == null)
+                hook = E2.GetCellHook(p_id);
+            return hook;
+        }
+
         public List<Entity> GetEntities()
         {
             return new List<Entity> { E1, E2 };
@@ -184,6 +197,21 @@ namespace Dt.Core
                 E2.IsAdded = value;
                 E3.IsAdded = value;
             }
+        }
+
+        /// <summary>
+        /// 获取Cell.Val值变化前的回调方法，查找内部实体
+        /// </summary>
+        /// <param name="p_id">Cell.ID</param>
+        /// <returns></returns>
+        public override Action<object> GetCellHook(string p_id)
+        {
+            var hook = E1.GetCellHook(p_id);
+            if (hook == null)
+                hook = E2.GetCellHook(p_id);
+            if (hook == null)
+                hook = E3.GetCellHook(p_id);
+            return hook;
         }
 
         public List<Entity> GetEntities()

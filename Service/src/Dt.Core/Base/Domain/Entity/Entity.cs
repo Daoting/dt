@@ -110,7 +110,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public Action<object> GetCellHook(string p_id)
+        public virtual Action<object> GetCellHook(string p_id)
         {
             return GetHooks().GetCellHook(p_id);
         }
