@@ -30,6 +30,8 @@ namespace Dt.Core
 
             // 和内部实体同步IsChanged状态
             PropertyChanged += VirObj_PropertyChanged;
+            E1.PropertyChanged += E1_PropertyChanged;
+            E2.PropertyChanged += E2_PropertyChanged;
         }
 
         /// <summary>
@@ -113,6 +115,24 @@ namespace Dt.Core
                 E2.IsChanged = IsChanged;
             }
         }
+
+        void E1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // 当内部实体保存后AcceptChanges时，需要重新检查虚拟实体的IsChanged状态
+            if (e.PropertyName == "IsChanged" && !E1.IsChanged)
+            {
+                CheckChanges();
+            }
+        }
+
+        void E2_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsChanged" && !E2.IsChanged)
+            {
+                CheckChanges();
+            }
+        }
+
     }
 
     /// <summary>
@@ -136,6 +156,9 @@ namespace Dt.Core
 
             // 和内部实体同步IsChanged状态
             PropertyChanged += VirObj_PropertyChanged;
+            E1.PropertyChanged += E1_PropertyChanged;
+            E2.PropertyChanged += E2_PropertyChanged;
+            E3.PropertyChanged += E3_PropertyChanged;
         }
 
         /// <summary>
@@ -224,9 +247,36 @@ namespace Dt.Core
             if (e.PropertyName == "IsChanged")
             {
                 // 和内部实体同步IsChanged状态
+                // 会造成有的实体未变化IsChanged可能为true，保存时多检查一遍
+                // 否则会造成实体漏保存的情况，虽然Cell值变化但内部实体IsChanged为false！！！
                 E1.IsChanged = IsChanged;
                 E2.IsChanged = IsChanged;
                 E3.IsChanged = IsChanged;
+            }
+        }
+
+        void E1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // 当内部实体保存后AcceptChanges时，需要重新检查虚拟实体的IsChanged状态
+            if (e.PropertyName == "IsChanged" && !E1.IsChanged)
+            {
+                CheckChanges();
+            }
+        }
+
+        void E2_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsChanged" && !E2.IsChanged)
+            {
+                CheckChanges();
+            }
+        }
+
+        void E3_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsChanged" && !E3.IsChanged)
+            {
+                CheckChanges();
             }
         }
     }
