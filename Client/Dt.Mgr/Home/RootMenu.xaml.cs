@@ -28,7 +28,7 @@ namespace Dt.Mgr.Home
             if (Kit.IsLogon)
                 LoadMenus();
             else
-                LoginDs.Me.LoginSuc += LoadMenus;
+                LoginDs.LoginSuc += LoadMenus;
         }
 
         async void LoadMenus()

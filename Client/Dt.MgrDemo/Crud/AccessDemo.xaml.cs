@@ -340,5 +340,12 @@ namespace Dt.MgrDemo
             }
         }
         #endregion
+
+        #region 领域服务
+        async void OnSaveDs(object sender, RoutedEventArgs e)
+        {
+            await UsageDs.BatchSave();
+        }
+        #endregion
     }
 }

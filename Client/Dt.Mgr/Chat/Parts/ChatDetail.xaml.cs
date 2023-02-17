@@ -117,15 +117,15 @@ namespace Dt.Mgr.Chat
         #region 加载消息
         void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ChatDs.Me.NewLetter += OnNewLetter;
-            ChatDs.Me.UndoLetter += OnRecvUndoLetter;
+            ChatDs.NewLetter += OnNewLetter;
+            ChatDs.UndoLetter += OnRecvUndoLetter;
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             // 页面卸载停止接收新信息
-            ChatDs.Me.NewLetter -= OnNewLetter;
-            ChatDs.Me.UndoLetter -= OnRecvUndoLetter;
+            ChatDs.NewLetter -= OnNewLetter;
+            ChatDs.UndoLetter -= OnRecvUndoLetter;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Dt.Mgr.Chat
             if (_other == null)
             {
                 // 初次打开，还未下载好友列表
-                await ChatDs.Me.Refresh();
+                await ChatDs.Refresh();
                 _other = await ChatMemberX.GetByID(OtherID);
 
                 // 不在好友列表时，创建虚拟
@@ -156,7 +156,7 @@ namespace Dt.Mgr.Chat
             // 不是好友时无法发送
             //_inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 
-            ChatDs.Me.ClearUnreadFlag(OtherID);
+            ChatDs.ClearUnreadFlag(OtherID);
             _lv.PageData = new PageData { NextPage = OnNextPage, InsertTop = true };
         }
 
@@ -246,7 +246,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_msg"></param>
         public async void SendMsg(string p_msg)
         {
-            await ChatDs.Me.SendLetter(OtherID, _other.Name, p_msg, LetterType.Text);
+            await ChatDs.SendLetter(OtherID, _other.Name, p_msg, LetterType.Text);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace Dt.Mgr.Chat
             bool suc = await fl.UploadFiles(p_files);
             if (suc)
             {
-                var nl = await ChatDs.Me.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
+                var nl = await ChatDs.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
                 l.ID = nl.ID;
                 l.MsgID = nl.MsgID;
                 l.Content = nl.Content;
@@ -376,7 +376,7 @@ namespace Dt.Mgr.Chat
             {
                 Kit.Warn("超过2分钟无法撤回");
             }
-            else if (await ChatDs.Me.SendUndoLetter(l))
+            else if (await ChatDs.SendUndoLetter(l))
             {
                 _lv.Data.Remove(l);
             }

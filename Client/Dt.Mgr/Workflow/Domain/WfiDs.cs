@@ -18,10 +18,8 @@ namespace Dt.Mgr.Workflow
     /// </summary>
     class WfiDs : DomainSvc<WfiDs, AtCm.Info>
     {
-        WfiDs() { }
-
         #region 签收
-        public async Task ToggleAccept(WfFormInfo p_info)
+        public static async Task ToggleAccept(WfFormInfo p_info)
         {
             if (p_info.WorkItem.IsAccept)
             {
@@ -41,7 +39,7 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 回退
-        public async Task Rollback(WfFormInfo p_info)
+        public static async Task Rollback(WfFormInfo p_info)
         {
             // 活动执行者多于一人时，不允许进行回退
             if (p_info.AtvInst.InstCount > 1)
@@ -109,7 +107,7 @@ namespace Dt.Mgr.Workflow
             }
         }
 
-        async Task<string> GetSender(WfFormInfo p_info)
+        static async Task<string> GetSender(WfFormInfo p_info)
         {
             string sender = p_info.WorkItem.Sender;
             if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
@@ -130,7 +128,7 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 保存表单
-        public async Task<bool> SaveForm(WfFormInfo p_info)
+        public static async Task<bool> SaveForm(WfFormInfo p_info)
         {
             // 先保存表单数据
             if (!await p_info.FormWin.Save())
@@ -173,7 +171,7 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 追回
-        public async Task<bool> Retrieve(Row row)
+        public static async Task<bool> Retrieve(Row row)
         {
             var status = (WfiPrcStatus)row.Int("status");
             if (status != WfiPrcStatus.活动)
@@ -253,7 +251,7 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 发送
-        public async Task Send(WfFormInfo p_info)
+        public static async Task Send(WfFormInfo p_info)
         {
             // 先保存
             if (!await SaveForm(p_info))
@@ -365,7 +363,7 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         /// <param name="p_manualSend">是否手动选择接收者</param>
         /// <param name="p_info"></param>
-        async void DoSend(bool p_manualSend, WfFormInfo p_info)
+        static async void DoSend(bool p_manualSend, WfFormInfo p_info)
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
@@ -612,7 +610,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_isFinished"></param>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        async Task SaveWorkItem(bool p_isFinished, WfFormInfo p_info)
+        static async Task SaveWorkItem(bool p_isFinished, WfFormInfo p_info)
         {
             if (p_isFinished)
                 p_info.AtvInst.Finished();
@@ -639,7 +637,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_atv"></param>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        async Task<RecvDef> LoadRecvs(WfdAtvX p_atv, WfFormInfo p_info)
+        static async Task<RecvDef> LoadRecvs(WfdAtvX p_atv, WfFormInfo p_info)
         {
             RecvDef recv = new RecvDef();
             if (p_atv.ExecLimit == WfdAtvExecLimit.无限制)
@@ -704,7 +702,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_atvSync">同步活动</param>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        async Task<bool> IsActive(WfdAtvX p_atvSync, WfFormInfo p_info)
+        static async Task<bool> IsActive(WfdAtvX p_atvSync, WfFormInfo p_info)
         {
             Dict dt = new Dict();
             dt["prciid"] = p_info.PrcInst.ID;
@@ -739,7 +737,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_trss"></param>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        async Task<bool> GetAllFinish(Table<WfdTrsX> p_trss, WfFormInfo p_info)
+        static async Task<bool> GetAllFinish(Table<WfdTrsX> p_trss, WfFormInfo p_info)
         {
             bool finish = true;
             foreach (var trs in p_trss)
@@ -766,7 +764,7 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_trss"></param>
         /// <param name="p_info"></param>
         /// <returns></returns>
-        async Task<bool> GetExistFinish(Table<WfdTrsX> p_trss, WfFormInfo p_info)
+        static async Task<bool> GetExistFinish(Table<WfdTrsX> p_trss, WfFormInfo p_info)
         {
             bool finish = true;
             foreach (var trs in p_trss)
@@ -792,7 +790,7 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         /// <param name="p_atvid"></param>
         /// <returns></returns>
-        async Task<Table> GetAtvUsers(long p_atvid)
+        static async Task<Table> GetAtvUsers(long p_atvid)
         {
             Dict dt = new Dict { { "atvid", p_atvid } };
             if (await AtCm.GetScalar<int>("流程-是否活动授权任何人", dt) == 0)
@@ -800,7 +798,7 @@ namespace Dt.Mgr.Workflow
             return await AtCm.Query("流程-所有未过期用户");
         }
 
-        Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)
+        static Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)
         {
             string key;
             switch (p_execLimit)
@@ -836,7 +834,7 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 删除
-        public async Task Delete(WfFormInfo p_info)
+        public static async Task Delete(WfFormInfo p_info)
         {
             if (p_info.Usage == WfFormUsage.Read)
             {

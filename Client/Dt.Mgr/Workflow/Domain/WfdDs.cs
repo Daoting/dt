@@ -18,9 +18,7 @@ namespace Dt.Mgr.Workflow
     /// </summary>
     class WfdDs : DomainSvc<WfdDs, AtCm.Info>
     {
-        WfdDs() { }
-
-        public async Task<bool> SavePrc(WfdPrcX p_prc)
+        public static async Task<bool> SavePrc(WfdPrcX p_prc)
         {
             await Save(p_prc);
             await Save(p_prc.Atvs);
@@ -28,6 +26,5 @@ namespace Dt.Mgr.Workflow
             await Save(p_prc.AtvRoles);
             return await Commit();
         }
-
     }
 }

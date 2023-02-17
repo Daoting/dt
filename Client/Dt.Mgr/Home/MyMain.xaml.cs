@@ -37,7 +37,7 @@ namespace Dt.Mgr.Home
                 btn.Click += (s, e) => Kit.ShowRoot(LobViews.登录页);
                 Content = btn;
 
-                LoginDs.Me.LoginSuc += () =>
+                LoginDs.LoginSuc += () =>
                 {
                     Content = _fv;
                     LoadInfo();
@@ -55,7 +55,7 @@ namespace Dt.Mgr.Home
 
         void OnExit(object sender, RoutedEventArgs e)
         {
-            LoginDs.Me.Logout();
+            LoginDs.Logout();
         }
 
         async void OnClearLocalFile(object sender, RoutedEventArgs e)

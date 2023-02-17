@@ -18,23 +18,21 @@ namespace Dt.Mgr.Chat
     /// </summary>
     class ChatDs : DomainSvc<ChatDs, AtLob.Info>
     {
-        ChatDs() { }
-
         #region 事件
         /// <summary>
         /// 增加一条聊天信息事件
         /// </summary>
-        public event Action<LetterX> NewLetter;
+        public static event Action<LetterX> NewLetter;
 
         /// <summary>
         /// 收到撤回消息事件
         /// </summary>
-        public event Action<LetterX> UndoLetter;
+        public static event Action<LetterX> UndoLetter;
 
         /// <summary>
         /// 未读消息状态变化事件，参数为对方的userid
         /// </summary>
-        public event Action<long> StateChanged;
+        public static event Action<long> StateChanged;
         #endregion
 
         #region 接收信息
@@ -42,7 +40,7 @@ namespace Dt.Mgr.Chat
         /// 接收服务器推送的聊天信息
         /// </summary>
         /// <param name="p_letter"></param>
-        public async void ReceiveLetter(LetterInfo p_letter)
+        public static async void ReceiveLetter(LetterInfo p_letter)
         {
             if (p_letter == null || string.IsNullOrEmpty(p_letter.ID))
                 return;
@@ -95,7 +93,7 @@ namespace Dt.Mgr.Chat
         /// 清除和某人的未读消息状态
         /// </summary>
         /// <param name="p_otherid">对方标识</param>
-        public void ClearUnreadFlag(long p_otherid)
+        public static void ClearUnreadFlag(long p_otherid)
         {
             Kit.RunAsync(async () =>
             {
@@ -123,7 +121,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_content"></param>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        public async Task<LetterX> SendLetter(
+        public static async Task<LetterX> SendLetter(
             long p_recvID,
             string p_recvName,
             string p_content,
@@ -173,7 +171,7 @@ namespace Dt.Mgr.Chat
         /// <param name="p_action"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        public Task<LetterX> SendLink(
+        public static Task<LetterX> SendLink(
             long p_recvID,
             string p_recvName,
             string p_title,
@@ -205,7 +203,7 @@ namespace Dt.Mgr.Chat
         /// </summary>
         /// <param name="p_letter">待撤消息</param>
         /// <returns></returns>
-        public async Task<bool> SendUndoLetter(LetterX p_letter)
+        public static async Task<bool> SendUndoLetter(LetterX p_letter)
         {
             if (p_letter == null)
                 return false;
@@ -247,7 +245,7 @@ namespace Dt.Mgr.Chat
         /// 更新好友列表，默认超过10小时需要刷新
         /// </summary>
         /// <returns></returns>
-        public async Task Refresh()
+        public static async Task Refresh()
         {
             if (!await NeedRefresh())
                 return;
@@ -270,7 +268,7 @@ namespace Dt.Mgr.Chat
             await CookieX.Save(_refreshKey, Kit.Now.ToString());
         }
 
-        async Task<bool> NeedRefresh()
+        static async Task<bool> NeedRefresh()
         {
             // 超过10小时需要刷新
             bool refresh = true;

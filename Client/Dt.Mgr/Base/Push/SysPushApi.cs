@@ -24,7 +24,7 @@ namespace Dt.Mgr
         /// <param name="p_letter"></param>
         public void ReceiveLetter(LetterInfo p_letter)
         {
-            ChatDs.Me.ReceiveLetter(p_letter);
+            ChatDs.ReceiveLetter(p_letter);
         }
 
         /// <summary>

@@ -77,12 +77,12 @@ namespace Dt.Mgr
                 if (isCode)
                 {
                     // 验证码登录
-                    suc = await LoginDs.Me.LoginByCode(phone, txt, true);
+                    suc = await LoginDs.LoginByCode(phone, txt, true);
                 }
                 else
                 {
                     // 密码登录
-                    suc = await LoginDs.Me.LoginByPwd(phone, Kit.GetMD5(txt), true);
+                    suc = await LoginDs.LoginByPwd(phone, Kit.GetMD5(txt), true);
                 }
 
                 if (suc)
@@ -136,7 +136,7 @@ namespace Dt.Mgr
                 return;
 
             _btnCode.IsEnabled = false;
-            string code = await LoginDs.Me.CreateVerificationCode(phone);
+            string code = await LoginDs.CreateVerificationCode(phone);
             _tbCode.Focus(FocusState.Programmatic);
 
             int sec = 60;

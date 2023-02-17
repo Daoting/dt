@@ -30,7 +30,7 @@ namespace Dt.Mgr.Workflow
 
         protected override void DoExecute(object p_parameter)
         {
-            _info.RunCmd(WfiDs.Me.Rollback);
+            _info.RunCmd(WfiDs.Rollback);
         }
     }
 }

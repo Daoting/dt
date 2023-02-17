@@ -24,7 +24,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 成功登录后事件
         /// </summary>
-        public event Action LoginSuc;
+        public static event Action LoginSuc;
 
         /// <summary>
         /// 密码登录
@@ -33,7 +33,7 @@ namespace Dt.Mgr
         /// <param name="p_pwd">密码</param>
         /// <param name="p_showWarning">是否显示警告信息</param>
         /// <returns></returns>
-        public Task<bool> LoginByPwd(string p_phone, string p_pwd, bool p_showWarning)
+        public static Task<bool> LoginByPwd(string p_phone, string p_pwd, bool p_showWarning)
         {
             return LoginInternal(p_phone, p_pwd, true, p_showWarning);
         }
@@ -45,7 +45,7 @@ namespace Dt.Mgr
         /// <param name="p_code">验证码</param>
         /// <param name="p_showWarning">是否显示警告信息</param>
         /// <returns></returns>
-        public async Task<bool> LoginByCode(string p_phone, string p_code, bool p_showWarning)
+        public static async Task<bool> LoginByCode(string p_phone, string p_code, bool p_showWarning)
         {
             if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_code))
             {
@@ -70,7 +70,7 @@ namespace Dt.Mgr
         /// </summary>
         /// <param name="p_showWarning">是否显示警告信息</param>
         /// <returns></returns>
-        public async Task<bool> LoginByCookie(bool p_showWarning = false)
+        public static async Task<bool> LoginByCookie(bool p_showWarning = false)
         {
             string phone = await CookieX.Get("LoginPhone");
             string pwd = await CookieX.Get("LoginPwd");
@@ -84,7 +84,7 @@ namespace Dt.Mgr
         /// </summary>
         /// <param name="p_phone"></param>
         /// <returns></returns>
-        public async Task<string> CreateVerificationCode(string p_phone)
+        public static async Task<string> CreateVerificationCode(string p_phone)
         {
             if (string.IsNullOrWhiteSpace(p_phone) || !Regex.IsMatch(p_phone, "^1[34578]\\d{9}$"))
                 return string.Empty;
@@ -98,7 +98,7 @@ namespace Dt.Mgr
             return code;
         }
 
-        async Task<bool> LoginInternal(string p_phone, string p_pwd, bool p_saveCookie, bool p_showWarning)
+        static async Task<bool> LoginInternal(string p_phone, string p_pwd, bool p_saveCookie, bool p_showWarning)
         {
             if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_pwd))
             {
@@ -145,7 +145,7 @@ namespace Dt.Mgr
         /// 更新数据版本号
         /// </summary>
         /// <returns></returns>
-        async Task UpdateDataVersion()
+        static async Task UpdateDataVersion()
         {
             Dict dt = await _da.HashGetAll("ver:" + Kit.UserID);
             if (dt == null)
@@ -189,12 +189,12 @@ namespace Dt.Mgr
         /// <summary>
         /// 注销后事件
         /// </summary>
-        public event Action AfterLogout;
+        public static event Action AfterLogout;
 
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        public async void Logout()
+        public static async void Logout()
         {
             // 先停止接收，再清空用户信息
             PushHandler.StopRecvPush();
@@ -221,8 +221,6 @@ namespace Dt.Mgr
         #endregion
 
         #region 内部
-        LoginDs() { }
-
         const string _prefixCode = "vercode";
         const string _freePwd = "*#06#";
         #endregion

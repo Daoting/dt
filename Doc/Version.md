@@ -33,6 +33,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * CellUI -> LvCall, MidVal -> FvCall, IMidVal -> IFvCall
 * 因Mv内菜单无法绑定，将Mv合并到Tab，对于自定义Mv需要修改两处：Mv -> Tab, Win中xaml删除自定义Mv的外套Tab
 * 登录过程移至客户端
+* 领域服务用静态方式替换单例模式，增加样例
 
 
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端

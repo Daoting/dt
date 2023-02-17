@@ -28,7 +28,7 @@ namespace Dt.Mgr.Workflow
 
         protected override void DoExecute(object p_parameter)
         {
-            _info.RunCmd(WfiDs.Me.Delete);
+            _info.RunCmd(WfiDs.Delete);
         }
     }
 }

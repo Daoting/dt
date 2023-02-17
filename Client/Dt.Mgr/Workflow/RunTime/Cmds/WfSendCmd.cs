@@ -26,7 +26,7 @@ namespace Dt.Mgr.Workflow
 
         protected override void DoExecute(object p_parameter)
         {
-            _info.RunCmd(WfiDs.Me.Send);
+            _info.RunCmd(WfiDs.Send);
         }
     }
 }

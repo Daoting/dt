@@ -37,13 +37,13 @@ namespace Dt.Mgr.Chat
         async void OnLoaded(object sender, RoutedEventArgs e)
         {
             await LoadData();
-            ChatDs.Me.StateChanged += OnStateChanged;
+            ChatDs.StateChanged += OnStateChanged;
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             // 页面卸载停止接收新信息
-            ChatDs.Me.StateChanged -= OnStateChanged;
+            ChatDs.StateChanged -= OnStateChanged;
         }
 
         void OnStateChanged(long obj)

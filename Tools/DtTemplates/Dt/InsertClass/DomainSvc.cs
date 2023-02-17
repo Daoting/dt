@@ -17,8 +17,6 @@ namespace $rootnamespace$
 {
     class $clsname$ : DomainSvc<$clsname$, AtSvc.Info>
     {
-        $clsname$() { }
-
-
+        
     }
 }

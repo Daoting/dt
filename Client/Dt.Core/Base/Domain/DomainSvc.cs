@@ -8,7 +8,6 @@
 
 #region 引用命名
 using System.Collections;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -16,16 +15,21 @@ namespace Dt.Core
     /// <summary>
     /// 领域服务的抽象基类
     /// </summary>
+    /// <typeparam name="TDomainSvc">当前领域服务的类型，保证静态变量属于各自的领域服务类型</typeparam>
+    /// <typeparam name="TAccessInfo">用于获取IDataAccess对象</typeparam>
     public abstract class DomainSvc<TDomainSvc, TAccessInfo>
         where TDomainSvc : class
         where TAccessInfo : AccessInfo, new()
     {
-        #region 成员变量
-        /// <summary>
-        /// 单例对象
-        /// </summary>
-        public static readonly TDomainSvc Me = (TDomainSvc)Activator.CreateInstance(typeof(TDomainSvc), true);
+        /**********************************************************************************************************************************************************/
+        // 泛型类型：
+        // 对象是类的实例，提供具体类型参数的泛型类是泛型类型的实例
+        // 若将当前类型作为泛型类的类型参数，如 AbcDs : DomainSvc<AbcDs, Info>
+        // 则AbcDs是该泛型基类的实例类，泛型基类中保证有一套只属于AbcDs类的静态变量实例！
+        // 因此类型参数相同的泛型类的静态成员相同
+        /***********************************************************************************************************************************************************/
 
+        #region 成员变量
         /// <summary>
         /// 日志对象，日志属性中包含来源
         /// </summary>
@@ -36,7 +40,7 @@ namespace Dt.Core
         /// </summary>
         protected static readonly IDataAccess _da = new TAccessInfo().GetDataAccess();
 
-        readonly EntityWriter _writer = new EntityWriter();
+        static readonly EntityWriter _writer = new EntityWriter();
         #endregion
 
         #region 保存
@@ -46,7 +50,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_entity">待保存的实体</param>
         /// <returns></returns>
-        protected Task Save<TEntity>(TEntity p_entity)
+        protected static Task Save<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
             return _writer.Save(p_entity);
@@ -59,7 +63,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_tbl">实体表</param>
         /// <returns></returns>
-        protected Task Save<TEntity>(Table<TEntity> p_tbl)
+        protected static Task Save<TEntity>(Table<TEntity> p_tbl)
             where TEntity : Entity
         {
             return _writer.Save<TEntity>(p_tbl);
@@ -71,7 +75,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="p_entity"></param>
         /// <returns></returns>
-        protected Task SaveWithChild<TEntity>(TEntity p_entity)
+        protected static Task SaveWithChild<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
             return _writer.SaveWithChild(p_entity);
@@ -83,7 +87,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_list">实体列表</param>
         /// <returns></returns>
-        protected Task Save<TEntity>(IEnumerable<TEntity> p_list)
+        protected static Task Save<TEntity>(IEnumerable<TEntity> p_list)
             where TEntity : Entity
         {
             return _writer.Save(p_list);
@@ -97,7 +101,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_entity">待删除的实体</param>
         /// <returns></returns>
-        protected Task Delete<TEntity>(TEntity p_entity)
+        protected static Task Delete<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
             return _writer.Delete(p_entity);
@@ -109,7 +113,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_list">待删除实体列表</param>
         /// <returns></returns>
-        protected Task Delete<TEntity>(IList<TEntity> p_list)
+        protected static Task Delete<TEntity>(IList<TEntity> p_list)
             where TEntity : Entity
         {
             return _writer.Delete(p_list);
@@ -121,7 +125,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_id">主键</param>
         /// <returns></returns>
-        protected Task DelByID<TEntity>(object p_id)
+        protected static Task DelByID<TEntity>(object p_id)
             where TEntity : Entity
         {
             return _writer.DelByID<TEntity>(p_id);
@@ -133,7 +137,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_ids">主键列表</param>
         /// <returns></returns>
-        protected Task DelByIDs<TEntity>(IList p_ids)
+        protected static Task DelByIDs<TEntity>(IList p_ids)
             where TEntity : Entity
         {
             return _writer.DelByID<TEntity>(p_ids);
@@ -151,7 +155,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_isNotify">是否提示保存结果，客户端有效</param>
         /// <returns>是否成功</returns>
-        protected Task<bool> Commit(bool p_isNotify = true)
+        protected static Task<bool> Commit(bool p_isNotify = true)
         {
             return _writer.Commit(p_isNotify);
         }

@@ -58,5 +58,10 @@
             <Button Content="根据ID查询" Click="OnCacheByID" />
             <Button Content="根据Key查询" Click="OnCacheByKey" />
         </StackPanel>
+
+        <a:CBar Title="领域服务" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="自由批量增删改" Click="OnSaveDs" />
+        </StackPanel>
     </a:Fv>
 </a:Win>

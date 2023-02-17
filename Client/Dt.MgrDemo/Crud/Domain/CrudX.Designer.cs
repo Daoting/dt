@@ -17,7 +17,7 @@ namespace Dt.MgrDemo.Crud
     /// <summary>
     /// 基础增删改
     /// </summary>
-    [Tbl("demo_crud", "cm")]
+    [Tbl("demo_crud")]
     public partial class CrudX : EntityX<CrudX>
     {
         #region 构造方法

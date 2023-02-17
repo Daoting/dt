@@ -37,7 +37,7 @@ namespace Dt.Mgr.Chat
         {
             Loaded -= OnLoaded;
 
-            await ChatDs.Me.Refresh();
+            await ChatDs.Refresh();
             _lv.Data = await ChatMemberX.Query();
         }
 

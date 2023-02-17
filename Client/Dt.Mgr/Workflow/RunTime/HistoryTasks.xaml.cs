@@ -90,7 +90,7 @@ namespace Dt.Mgr.Workflow
 
         async void OnRetrieve(object sender, Mi e)
         {
-            bool suc = await WfiDs.Me.Retrieve(e.Row);
+            bool suc = await WfiDs.Retrieve(e.Row);
             if (suc)
             {
                 Kit.Msg("追回成功");

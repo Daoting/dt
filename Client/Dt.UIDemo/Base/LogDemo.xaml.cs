@@ -110,46 +110,44 @@ namespace Dt.UIDemo
 
         void OnDsDebug(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.Me.LogDebug();
+            LogDemoDs.LogDebug();
         }
 
         void OnDsNormal(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.Me.LogInfo();
+            LogDemoDs.LogInfo();
         }
 
         void OnDsWarn(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.Me.LogWarn();
+            LogDemoDs.LogWarn();
         }
 
         void OnDsError(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.Me.LogError();
+            LogDemoDs.LogError();
         }
     }
 
     class LogDemoDs : DomainSvc<LogDemoDs, AtState.Info>
     {
-        LogDemoDs() { }
-
-        public void LogDebug()
+        public static void LogDebug()
         {
             _log.ForContext("Detail", "详细内容")
                 .Debug("内部调试级信息，含详细内容");
         }
 
-        public void LogInfo()
+        public static void LogInfo()
         {
             _log.Information("普通信息内容");
         }
 
-        public void LogWarn()
+        public static void LogWarn()
         {
             _log.Warning(new Exception("异常信息内容"), "警告信息内容");
         }
 
-        public void LogError()
+        public static void LogError()
         {
             _log.Error(new Exception("异常信息内容"), "出错信息内容");
         }

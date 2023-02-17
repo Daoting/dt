@@ -120,7 +120,7 @@ namespace Dt.Mgr.Workflow
                 }
             }
 
-            if (await WfdDs.Me.SavePrc(_prc))
+            if (await WfdDs.SavePrc(_prc))
             {
                 _sketch.His.Clear();
                 UpdateSaveState();
