@@ -162,8 +162,7 @@ namespace Dt.MgrDemo
         #region 虚拟实体
         async void OnInsertVir(object sender, RoutedEventArgs e)
         {
-            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
-            x.E1.ID = await Virtbl1X.NewID();
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.New();
             x.E1.Name1 = "新1";
             x.E2.Name2 = "新2";
             x.E3.Name3 = "新3";

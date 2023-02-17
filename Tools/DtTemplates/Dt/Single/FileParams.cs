@@ -34,7 +34,7 @@ namespace Dt
 
                     if (Entities.Count > 1)
                     {
-                        StringBuilder sb = new StringBuilder("VirObj<");
+                        StringBuilder sb = new StringBuilder("VirX<");
                         for (int i = 0; i < Entities.Count; i++)
                         {
                             if (i > 0)

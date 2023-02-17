@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $clsroot$Query : Mv
+    public sealed partial class $clsroot$Query : Tab
     {
         public $clsroot$Query()
         {
@@ -40,6 +40,6 @@ $querydata$
             _fv.Data = row;
         }
 
-        $clsroot$Win _win => ($clsroot$Win)_tab.OwnWin;
+        $clsroot$Win _win => ($clsroot$Win)OwnWin;
     }
 }

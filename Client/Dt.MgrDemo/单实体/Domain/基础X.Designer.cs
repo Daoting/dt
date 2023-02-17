@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-30 创建
+* 日志: 2023-02-17 创建
 ******************************************************************************/
 #endregion
 
@@ -28,7 +28,6 @@ namespace Dt.MgrDemo.单实体
             string 限长4 = default,
             string 不重复 = default,
             bool 禁止选中 = default,
-            int 校验后台列 = default,
             bool 禁止保存 = default,
             bool 禁止删除 = default,
             string 值变事件 = default,
@@ -40,7 +39,6 @@ namespace Dt.MgrDemo.单实体
             AddCell("限长4", 限长4);
             AddCell("不重复", 不重复);
             AddCell("禁止选中", 禁止选中);
-            AddCell("校验后台列", 校验后台列);
             AddCell("禁止保存", 禁止保存);
             AddCell("禁止删除", 禁止删除);
             AddCell("值变事件", 值变事件);
@@ -84,15 +82,6 @@ namespace Dt.MgrDemo.单实体
         {
             get { return (bool)this["禁止选中"]; }
             set { this["禁止选中"] = value; }
-        }
-
-        /// <summary>
-        /// 未和UI绑定，但校验
-        /// </summary>
-        public int 校验后台列
-        {
-            get { return (int)this["校验后台列"]; }
-            set { this["校验后台列"] = value; }
         }
 
         /// <summary>

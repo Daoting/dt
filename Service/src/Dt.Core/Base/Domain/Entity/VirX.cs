@@ -47,6 +47,23 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 创建虚拟实体，包括内部实体的Cell并设置默认值，主键为long类型时自动赋值
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<VirX<TEntity1, TEntity2>> New()
+        {
+            var x = new VirX<TEntity1, TEntity2>(false);
+
+            var col = EntitySchema.Get(typeof(TEntity1)).Schema.PrimaryKey[0];
+            if (col.Type == typeof(long))
+            {
+                // 设置主键值
+                x.E1.Cells[col.Name].InitVal(await NewID());
+            }
+            return x;
+        }
+
+        /// <summary>
         /// 第一个实体对象
         /// </summary>
         public TEntity1 E1 { get; }
@@ -121,6 +138,23 @@ namespace Dt.Core
                 AddEntityCells(this, typeof(TEntity3));
                 IsAdded = true;
             }
+        }
+
+        /// <summary>
+        /// 创建虚拟实体，包括内部实体的Cell并设置默认值，主键为long类型时自动赋值
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<VirX<TEntity1, TEntity2, TEntity3>> New()
+        {
+            var x = new VirX<TEntity1, TEntity2, TEntity3>(false);
+
+            var col = EntitySchema.Get(typeof(TEntity1)).Schema.PrimaryKey[0];
+            if (col.Type == typeof(long))
+            {
+                // 设置主键值
+                x.E1.Cells[col.Name].InitVal(await NewID());
+            }
+            return x;
         }
 
         /// <summary>

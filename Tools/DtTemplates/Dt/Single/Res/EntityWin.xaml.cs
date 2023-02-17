@@ -29,7 +29,7 @@ namespace $rootnamespace$
 
         public $clsroot$Form Form => _form;
 
-        public SearchMv Search => _search;
+        public FuzzySearch Search => _search;
 
         public $clsroot$Query Query => _query;
 

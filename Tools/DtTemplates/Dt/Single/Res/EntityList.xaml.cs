@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $clsroot$List : Mv
+    public partial class $clsroot$List : Tab
     {
         public $clsroot$List()
         {
@@ -62,7 +62,7 @@ namespace $rootnamespace$
 
         void OnToSearch(object sender, Mi e)
         {
-            NaviTo(new List<Mv> { _win.Search, _win.Query });
+            NaviTo(new List<Tab> { _win.Search, _win.Query });
         }
 
         async void Query()
@@ -95,6 +95,6 @@ namespace $rootnamespace$
         }
         #endregion
 
-        $clsroot$Win _win => ($clsroot$Win)_tab.OwnWin;
+        $clsroot$Win _win => ($clsroot$Win)OwnWin;
     }
 }

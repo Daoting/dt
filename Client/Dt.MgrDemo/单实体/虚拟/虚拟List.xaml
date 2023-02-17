@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.MgrDemo.单实体.实体List"
+    x:Class="Dt.MgrDemo.单实体.虚拟List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
@@ -7,42 +7,42 @@
 
     <a:Tab.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="序列" />
+            <a:Col ID="主表名称" />
             <a:Col ID="限长4" />
             <a:Col ID="不重复" />
+            <a:Col ID="扩展1名称" />
             <a:Col ID="禁止选中" />
             <a:Col ID="禁止保存" />
+            <a:Col ID="扩展2名称" />
             <a:Col ID="禁止删除" />
             <a:Col ID="值变事件" />
-            <a:Col ID="创建时间" />
-            <a:Col ID="修改时间" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
             <StackPanel Padding="10">
-                <a:Dot ID="序列" />
+                <a:Dot ID="主表名称" />
                 <a:Dot ID="限长4" />
                 <a:Dot ID="不重复" />
+                <a:Dot ID="扩展1名称" />
                 <a:Dot ID="禁止选中" />
                 <a:Dot ID="禁止保存" />
+                <a:Dot ID="扩展2名称" />
                 <a:Dot ID="禁止删除" />
                 <a:Dot ID="值变事件" />
-                <a:Dot ID="创建时间" />
-                <a:Dot ID="修改时间" />
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="TileView">
             <StackPanel Padding="10">
-                <a:Dot ID="序列" />
+                <a:Dot ID="主表名称" />
                 <a:Dot ID="限长4" />
                 <a:Dot ID="不重复" />
+                <a:Dot ID="扩展1名称" />
                 <a:Dot ID="禁止选中" />
                 <a:Dot ID="禁止保存" />
+                <a:Dot ID="扩展2名称" />
                 <a:Dot ID="禁止删除" />
                 <a:Dot ID="值变事件" />
-                <a:Dot ID="创建时间" />
-                <a:Dot ID="修改时间" />
             </StackPanel>
         </DataTemplate>
     </a:Tab.Resources>

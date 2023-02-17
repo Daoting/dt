@@ -17,9 +17,9 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo.单实体
 {
-    public partial class 实体List : Tab
+    public partial class 虚拟List : Tab
     {
-        public 实体List()
+        public 虚拟List()
         {
             InitializeComponent();
         }
@@ -69,11 +69,11 @@ namespace Dt.MgrDemo.单实体
         {
             if (Clause == null)
             {
-                _lv.Data = await 基础X.Query();
+                _lv.Data = await VirX<主表X, 扩展1X, 扩展2X>.Query();
             }
             else
             {
-                _lv.Data = await 基础X.Query(Clause.Where, Clause.Params);
+                _lv.Data = await VirX<主表X, 扩展1X, 扩展2X>.Query(Clause.Where, Clause.Params);
             }
         }
         #endregion
@@ -95,6 +95,6 @@ namespace Dt.MgrDemo.单实体
         }
         #endregion
 
-        实体Win _win => (实体Win)OwnWin;
+        虚拟Win _win => (虚拟Win)OwnWin;
     }
 }

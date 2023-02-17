@@ -17,12 +17,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $clsroot$Form : Mv
+    public sealed partial class $clsroot$Form : Tab
     {
         public $clsroot$Form()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -32,7 +31,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await $entity$.GetByID(p_id);
+                Data = await $entity$.GetByID(p_id);
             }
             else
             {
@@ -42,13 +41,13 @@ namespace $rootnamespace$
 
         public void Clear()
         {
-            _fv.Data = null;
+            Data = null;
         }
 
         async void Create()
         {
-            _fv.Data = await $entity$.New();
-}
+            Data = await $entity$.New();
+        }
 
         void OnSave(object sender, Mi e)
         {
@@ -62,8 +61,7 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$entity$>();
-            if (await d.Save())
+            if (await Data.Save())
             {
                 _win.List.Update();
             }
@@ -71,7 +69,7 @@ namespace $rootnamespace$
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$entity$>();
+            var d = Data;
             if (d == null)
                 return;
 
@@ -99,6 +97,12 @@ namespace $rootnamespace$
             return _fv.DiscardChanges();
         }
 
-        $clsroot$Win _win => ($clsroot$Win)_tab.OwnWin;
+        $entity$ Data
+        {
+            get { return _fv.Data.To<$entity$>(); }
+            set { _fv.Data = value; }
+        }
+
+        $clsroot$Win _win => ($clsroot$Win)OwnWin;
     }
 }

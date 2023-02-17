@@ -10,12 +10,12 @@
         <a:CText ID="限长4" Query="Editable" />
         <a:CText ID="不重复" Query="Editable" />
         <a:CBool ID="禁止选中" Query="Editable" />
-        <a:CNum ID="校验后台列" IsInteger="True" Query="Editable" />
         <a:CBool ID="禁止保存" Query="Editable" />
         <a:CBool ID="禁止删除" Query="Editable" />
         <a:CText ID="值变事件" Query="Editable" />
         <a:CDate ID="创建时间" Query="Editable" />
         <a:CDate ID="修改时间" Query="Editable" />
+        <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
         <a:CBar />
         <a:CBar>
             <Grid ColumnDefinitions="*,*">

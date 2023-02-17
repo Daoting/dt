@@ -294,12 +294,7 @@ namespace Dt.Core
                 sb.AppendLine("");
             }
 
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("protected override void InitHook()");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("{");
-            AppendTabSpace(sb, 2);
-            sb.AppendLine("}");
+            sb.Append(_initHook);
 
             AppendTabSpace(sb, 1);
             sb.Append("}");
@@ -948,6 +943,28 @@ namespace Dt.Core
             }
             return false;
         }
+
+        const string _initHook =
+@"        protected override void InitHook()
+        {
+            //OnSaving(() =>
+            //{
+                
+            //    return Task.CompletedTask;
+            //});
+
+            //OnDeleting(() =>
+            //{
+                
+            //    return Task.CompletedTask;
+            //});
+
+            //OnChanging<string>(nameof(Name), v =>
+            //{
+                
+            //});
+        }
+";
         #endregion
     }
 }

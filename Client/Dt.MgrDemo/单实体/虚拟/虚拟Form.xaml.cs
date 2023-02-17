@@ -17,9 +17,9 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo.单实体
 {
-    public sealed partial class 实体Form : Tab
+    public sealed partial class 虚拟Form : Tab
     {
-        public 实体Form()
+        public 虚拟Form()
         {
             InitializeComponent();
         }
@@ -31,7 +31,7 @@ namespace Dt.MgrDemo.单实体
 
             if (p_id > 0)
             {
-                Data = await 基础X.GetByID(p_id);
+                Data = await VirX<主表X, 扩展1X, 扩展2X>.GetByID(p_id);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace Dt.MgrDemo.单实体
 
         async void Create()
         {
-            Data = await 基础X.New();
+            Data = await VirX<主表X, 扩展1X, 扩展2X>.New();
         }
 
         void OnSave(object sender, Mi e)
@@ -97,12 +97,12 @@ namespace Dt.MgrDemo.单实体
             return _fv.DiscardChanges();
         }
 
-        基础X Data
+        VirX<主表X, 扩展1X, 扩展2X> Data
         {
-            get { return _fv.Data.To<基础X>(); }
+            get { return _fv.Data.To<VirX<主表X, 扩展1X, 扩展2X>>(); }
             set { _fv.Data = value; }
         }
 
-        实体Win _win => (实体Win)OwnWin;
+        虚拟Win _win => (虚拟Win)OwnWin;
     }
 }
