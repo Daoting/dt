@@ -161,12 +161,6 @@
 					<ButtonText>多对多框架</ButtonText>
 				</Strings>
 			</Button>
-			<Button guid="guidDtPackageCmdSet" id="LocalSingleTblCmdId" priority="0x0104" type="Button">
-				<Parent guid="guidDtPackageCmdSet" id="MyFolderFrameworkGroup" />
-				<Strings>
-					<ButtonText>本地库单表框架</ButtonText>
-				</Strings>
-			</Button>
 			
 			<Button guid="guidDtPackageCmdSet" id="InsertTabCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
@@ -274,7 +268,6 @@
 			<IDSymbol name="SingleTblCmdId" value="0x3000" />
 			<IDSymbol name="OnToManyCmdId" value="0x3001" />
 			<IDSymbol name="ManyToManyCmdId" value="0x3002" />
-			<IDSymbol name="LocalSingleTblCmdId" value="0x3003" />
 
 			<IDSymbol name="InsertTabCmdId" value="0x4000" />
 			<IDSymbol name="InsertWinCmdId" value="0x4001" />

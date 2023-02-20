@@ -1,8 +1,4 @@
 ﻿using Dt.Editor;
-using Dt.LocalTbl;
-using Dt.ManyToMany;
-using Dt.OnToMany;
-using Dt.SingleTbl;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
@@ -25,7 +21,6 @@ namespace Dt
         const int SingleTblCmdId = 0x3000;
         const int OnToManyCmdId = 0x3001;
         const int ManyToManyCmdId = 0x3002;
-        const int LocalSingleTblCmdId = 0x3003;
 
         const int InsertTabCmdId = 0x4000;
         const int InsertWinCmdId = 0x4001;
@@ -65,7 +60,6 @@ namespace Dt
             cs.AddCommand(CmdClient(SingleTblCmdId, typeof(SingleForm)));
             cs.AddCommand(CmdClient(OnToManyCmdId, typeof(OnToManyForm)));
             cs.AddCommand(CmdClient(ManyToManyCmdId, typeof(ManyToManyForm)));
-            cs.AddCommand(CmdClient(LocalSingleTblCmdId, typeof(LocalTblForm)));
 
             cs.AddCommand(CmdClient(InsertTabCmdId, typeof(InsertTabForm)));
             cs.AddCommand(CmdClient(InsertWinCmdId, typeof(InsertWinForm)));

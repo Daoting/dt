@@ -1,5 +1,5 @@
 ﻿
-namespace Dt.OnToMany
+namespace Dt
 {
     partial class OnToManyForm
     {
@@ -31,41 +31,27 @@ namespace Dt.OnToMany
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OnToManyForm));
             this.label2 = new System.Windows.Forms.Label();
-            this._nameSpace = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this._clsa = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this._clsaTitle = new System.Windows.Forms.TextBox();
+            this._ns = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
-            this._info = new System.Windows.Forms.Label();
-            this._cbSearch = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this._clsbTitle = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this._clsb = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this._cbWin = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this._agentName = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this._cbTbls = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
             this._svcUrl = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
-            this._childTbls = new System.Windows.Forms.TextBox();
-            this.linkLabel6 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel7 = new System.Windows.Forms.LinkLabel();
-            this.label13 = new System.Windows.Forms.Label();
-            this._cbSql = new System.Windows.Forms.CheckBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnAdd = new System.Windows.Forms.Button();
+            this._dgChild = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
+            this._dgParent = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.prefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._btnParent = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -78,372 +64,194 @@ namespace Dt.OnToMany
             this.label2.Text = "命名空间";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // _nameSpace
+            // _ns
             // 
-            this._nameSpace.Location = new System.Drawing.Point(187, 7);
-            this._nameSpace.Name = "_nameSpace";
-            this._nameSpace.Size = new System.Drawing.Size(269, 21);
-            this._nameSpace.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(12, 127);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(176, 21);
-            this.label1.TabIndex = 18;
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _clsa
-            // 
-            this._clsa.Location = new System.Drawing.Point(187, 127);
-            this._clsa.Name = "_clsa";
-            this._clsa.Size = new System.Drawing.Size(269, 21);
-            this._clsa.TabIndex = 12;
-            // 
-            // label3
-            // 
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(12, 147);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(176, 21);
-            this.label3.TabIndex = 20;
-            this.label3.Text = "父实体标题";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _clsaTitle
-            // 
-            this._clsaTitle.Location = new System.Drawing.Point(187, 147);
-            this._clsaTitle.Name = "_clsaTitle";
-            this._clsaTitle.Size = new System.Drawing.Size(269, 21);
-            this._clsaTitle.TabIndex = 13;
+            this._ns.Location = new System.Drawing.Point(187, 7);
+            this._ns.Name = "_ns";
+            this._ns.Size = new System.Drawing.Size(269, 21);
+            this._ns.TabIndex = 10;
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 348);
+            this._btnOK.Location = new System.Drawing.Point(381, 403);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
-            this._btnOK.TabIndex = 22;
+            this._btnOK.TabIndex = 100;
             this._btnOK.Text = "确认";
             this._btnOK.UseVisualStyleBackColor = true;
             this._btnOK.Click += new System.EventHandler(this._btnOK_Click);
             // 
-            // _info
+            // _svcUrl
             // 
-            this._info.AutoSize = true;
-            this._info.ForeColor = System.Drawing.Color.Black;
-            this._info.Location = new System.Drawing.Point(12, 327);
-            this._info.Name = "_info";
-            this._info.Size = new System.Drawing.Size(137, 12);
-            this._info.TabIndex = 23;
-            this._info.Text = "自动生成所有父子类实体";
-            // 
-            // _cbSearch
-            // 
-            this._cbSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbSearch.FormattingEnabled = true;
-            this._cbSearch.Items.AddRange(new object[] {
-            "通用搜索面板",
-            "自定义搜索面板"});
-            this._cbSearch.Location = new System.Drawing.Point(187, 269);
-            this._cbSearch.Name = "_cbSearch";
-            this._cbSearch.Size = new System.Drawing.Size(269, 20);
-            this._cbSearch.TabIndex = 16;
-            // 
-            // label6
-            // 
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(12, 269);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(176, 21);
-            this.label6.TabIndex = 39;
-            this.label6.Text = "父实体列表搜索面板";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _clsbTitle
-            // 
-            this._clsbTitle.Location = new System.Drawing.Point(187, 207);
-            this._clsbTitle.Name = "_clsbTitle";
-            this._clsbTitle.Size = new System.Drawing.Size(269, 21);
-            this._clsbTitle.TabIndex = 15;
-            // 
-            // label5
-            // 
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(12, 207);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(176, 21);
-            this.label5.TabIndex = 38;
-            this.label5.Text = "子实体标题(逗号隔开多个)";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _clsb
-            // 
-            this._clsb.Location = new System.Drawing.Point(187, 187);
-            this._clsb.Name = "_clsb";
-            this._clsb.Size = new System.Drawing.Size(269, 21);
-            this._clsb.TabIndex = 14;
-            // 
-            // label4
-            // 
-            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(12, 187);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(176, 21);
-            this.label4.TabIndex = 37;
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _cbWin
-            // 
-            this._cbWin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbWin.FormattingEnabled = true;
-            this._cbWin.Items.AddRange(new object[] {
-            "窗口三栏，左侧父列表，主区父表单，右侧子列表",
-            "窗口两栏，左侧父列表，右侧子列表"});
-            this._cbWin.Location = new System.Drawing.Point(187, 288);
-            this._cbWin.Name = "_cbWin";
-            this._cbWin.Size = new System.Drawing.Size(269, 20);
-            this._cbWin.TabIndex = 17;
+            this._svcUrl.Location = new System.Drawing.Point(187, 27);
+            this._svcUrl.Name = "_svcUrl";
+            this._svcUrl.Size = new System.Drawing.Size(269, 21);
+            this._svcUrl.TabIndex = 105;
             // 
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Location = new System.Drawing.Point(12, 288);
+            this.label7.Location = new System.Drawing.Point(12, 27);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(176, 21);
-            this.label7.TabIndex = 41;
-            this.label7.Text = "窗口布局";
+            this.label7.TabIndex = 106;
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _agentName
-            // 
-            this._agentName.Location = new System.Drawing.Point(187, 27);
-            this._agentName.Name = "_agentName";
-            this._agentName.Size = new System.Drawing.Size(269, 21);
-            this._agentName.TabIndex = 11;
-            this._agentName.Text = "AtSvc";
-            // 
-            // label8
-            // 
-            this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label8.Location = new System.Drawing.Point(12, 27);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(176, 21);
-            this.label8.TabIndex = 43;
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(15, 31);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(65, 12);
-            this.linkLabel1.TabIndex = 103;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "服务代理类";
-            // 
-            // linkLabel4
-            // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(14, 112);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(29, 12);
-            this.linkLabel4.TabIndex = 118;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "父表";
             // 
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(14, 92);
+            this.linkLabel3.Location = new System.Drawing.Point(14, 31);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(53, 12);
-            this.linkLabel3.TabIndex = 117;
+            this.linkLabel3.TabIndex = 110;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "服务地址";
             // 
-            // _cbTbls
+            // label4
             // 
-            this._cbTbls.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbTbls.FormattingEnabled = true;
-            this._cbTbls.Location = new System.Drawing.Point(187, 107);
-            this._cbTbls.Name = "_cbTbls";
-            this._cbTbls.Size = new System.Drawing.Size(269, 20);
-            this._cbTbls.TabIndex = 115;
-            this._cbTbls.DropDown += new System.EventHandler(this._cbTbls_DropDown);
-            this._cbTbls.SelectionChangeCommitted += new System.EventHandler(this._cbTbls_SelectionChangeCommitted);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 306);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(221, 120);
+            this.label4.TabIndex = 143;
+            this.label4.Text = "* 生成框架前确保实体类已存在\r\n\r\n* 单元格按F2或双击可编辑\r\n\r\n* 类的词根指生成的窗口、列表、表单、\r\n  查询等类的词根，命名规范如：\r\n  查询：" +
+    "词根 + Query\r\n  窗口：词根 + Win\r\n  列表：词根 + List\r\n  表单：词根 + Form";
             // 
-            // label9
+            // btnAdd
             // 
-            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label9.Location = new System.Drawing.Point(12, 107);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(176, 21);
-            this.label9.TabIndex = 116;
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAdd.Location = new System.Drawing.Point(381, 153);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.TabIndex = 141;
+            this.btnAdd.Text = "选择";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnChild_Click);
             // 
-            // label10
+            // _dgChild
             // 
-            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label10.Location = new System.Drawing.Point(12, 67);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(444, 21);
-            this.label10.TabIndex = 114;
-            this.label10.Text = "表与实体映射";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._dgChild.AllowUserToAddRows = false;
+            this._dgChild.AllowUserToDeleteRows = false;
+            this._dgChild.AllowUserToResizeRows = false;
+            this._dgChild.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._dgChild.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Tbl,
+            this.Cls,
+            this.Alias,
+            this.Column1});
+            this._dgChild.Location = new System.Drawing.Point(12, 179);
+            this._dgChild.Name = "_dgChild";
+            this._dgChild.RowHeadersVisible = false;
+            this._dgChild.RowTemplate.Height = 23;
+            this._dgChild.Size = new System.Drawing.Size(444, 112);
+            this._dgChild.TabIndex = 140;
             // 
-            // _svcUrl
+            // label3
             // 
-            this._svcUrl.Location = new System.Drawing.Point(187, 87);
-            this._svcUrl.Name = "_svcUrl";
-            this._svcUrl.Size = new System.Drawing.Size(269, 21);
-            this._svcUrl.TabIndex = 112;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 72);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 144;
+            this.label3.Text = "父实体";
             // 
-            // label11
+            // _dgParent
             // 
-            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label11.Location = new System.Drawing.Point(12, 87);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(176, 21);
-            this.label11.TabIndex = 113;
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._dgParent.AllowUserToAddRows = false;
+            this._dgParent.AllowUserToDeleteRows = false;
+            this._dgParent.AllowUserToResizeRows = false;
+            this._dgParent.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._dgParent.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.prefix});
+            this._dgParent.Location = new System.Drawing.Point(12, 87);
+            this._dgParent.Name = "_dgParent";
+            this._dgParent.RowHeadersVisible = false;
+            this._dgParent.RowTemplate.Height = 23;
+            this._dgParent.Size = new System.Drawing.Size(444, 50);
+            this._dgParent.TabIndex = 145;
             // 
-            // linkLabel2
+            // dataGridViewTextBoxColumn1
             // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(14, 131);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(65, 12);
-            this.linkLabel2.TabIndex = 119;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "父实体名称";
+            this.dataGridViewTextBoxColumn1.HeaderText = "表名";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 150;
             // 
-            // label12
+            // dataGridViewTextBoxColumn2
             // 
-            this.label12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label12.Location = new System.Drawing.Point(12, 167);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(176, 21);
-            this.label12.TabIndex = 120;
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.dataGridViewTextBoxColumn2.HeaderText = "实体类名";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Width = 140;
             // 
-            // linkLabel5
+            // prefix
             // 
-            this.linkLabel5.AutoSize = true;
-            this.linkLabel5.Location = new System.Drawing.Point(14, 172);
-            this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(29, 12);
-            this.linkLabel5.TabIndex = 121;
-            this.linkLabel5.TabStop = true;
-            this.linkLabel5.Text = "子表";
+            this.prefix.HeaderText = "类的词根";
+            this.prefix.Name = "prefix";
+            this.prefix.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.prefix.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.prefix.Width = 140;
             // 
-            // _childTbls
+            // _btnParent
             // 
-            this._childTbls.Location = new System.Drawing.Point(187, 167);
-            this._childTbls.Name = "_childTbls";
-            this._childTbls.ReadOnly = true;
-            this._childTbls.Size = new System.Drawing.Size(269, 21);
-            this._childTbls.TabIndex = 122;
+            this._btnParent.Location = new System.Drawing.Point(381, 61);
+            this._btnParent.Name = "_btnParent";
+            this._btnParent.Size = new System.Drawing.Size(75, 23);
+            this._btnParent.TabIndex = 146;
+            this._btnParent.Text = "选择";
+            this._btnParent.UseVisualStyleBackColor = true;
+            this._btnParent.Click += new System.EventHandler(this._btnParent_Click);
             // 
-            // linkLabel6
+            // label5
             // 
-            this.linkLabel6.AutoSize = true;
-            this.linkLabel6.Location = new System.Drawing.Point(14, 191);
-            this.linkLabel6.Name = "linkLabel6";
-            this.linkLabel6.Size = new System.Drawing.Size(149, 12);
-            this.linkLabel6.TabIndex = 123;
-            this.linkLabel6.TabStop = true;
-            this.linkLabel6.Text = "子实体名称(逗号隔开多个)";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(10, 164);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.TabIndex = 147;
+            this.label5.Text = "子实体";
             // 
-            // linkLabel7
+            // Tbl
             // 
-            this.linkLabel7.AutoSize = true;
-            this.linkLabel7.Location = new System.Drawing.Point(14, 232);
-            this.linkLabel7.Name = "linkLabel7";
-            this.linkLabel7.Size = new System.Drawing.Size(71, 12);
-            this.linkLabel7.TabIndex = 127;
-            this.linkLabel7.TabStop = true;
-            this.linkLabel7.Text = "自动生成sql";
+            this.Tbl.HeaderText = "表名";
+            this.Tbl.Name = "Tbl";
+            this.Tbl.ReadOnly = true;
+            this.Tbl.Width = 120;
             // 
-            // label13
+            // Cls
             // 
-            this.label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label13.Location = new System.Drawing.Point(12, 227);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(176, 21);
-            this.label13.TabIndex = 125;
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Cls.HeaderText = "实体类名";
+            this.Cls.Name = "Cls";
             // 
-            // _cbSql
+            // Alias
             // 
-            this._cbSql.AutoSize = true;
-            this._cbSql.Checked = true;
-            this._cbSql.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._cbSql.Location = new System.Drawing.Point(257, 230);
-            this._cbSql.Name = "_cbSql";
-            this._cbSql.Size = new System.Drawing.Size(15, 14);
-            this._cbSql.TabIndex = 124;
-            this._cbSql.UseVisualStyleBackColor = true;
+            this.Alias.HeaderText = "类的词根";
+            this.Alias.Name = "Alias";
+            this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // label14
+            // Column1
             // 
-            this.label14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label14.Location = new System.Drawing.Point(187, 227);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(269, 21);
-            this.label14.TabIndex = 126;
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(424, 165);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(31, 23);
-            this.button1.TabIndex = 128;
-            this.button1.Text = "...";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Column1.HeaderText = "父主键名称";
+            this.Column1.Name = "Column1";
             // 
             // OnToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(472, 384);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.linkLabel7);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this._cbSql);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.linkLabel6);
-            this.Controls.Add(this._childTbls);
-            this.Controls.Add(this.linkLabel5);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.linkLabel2);
-            this.Controls.Add(this.linkLabel4);
-            this.Controls.Add(this.linkLabel3);
-            this.Controls.Add(this._cbTbls);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this._svcUrl);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this._agentName);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this._cbWin);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this._cbSearch);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this._clsbTitle);
+            this.ClientSize = new System.Drawing.Size(473, 442);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this._clsb);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this._info);
-            this.Controls.Add(this._btnOK);
-            this.Controls.Add(this._clsaTitle);
+            this.Controls.Add(this._btnParent);
+            this.Controls.Add(this._dgParent);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this._clsa);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this._nameSpace);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.btnAdd);
+            this.Controls.Add(this._dgChild);
+            this.Controls.Add(this.linkLabel3);
+            this.Controls.Add(this._svcUrl);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this._btnOK);
+            this.Controls.Add(this._ns);
             this.Controls.Add(this.label2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -453,6 +261,8 @@ namespace Dt.OnToMany
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "添加一对多框架文件";
+            ((System.ComponentModel.ISupportInitialize)(this._dgChild)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dgParent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -460,40 +270,24 @@ namespace Dt.OnToMany
 
         #endregion
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox _nameSpace;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox _clsa;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox _clsaTitle;
+        private System.Windows.Forms.TextBox _ns;
         private System.Windows.Forms.Button _btnOK;
-        private System.Windows.Forms.Label _info;
-        private System.Windows.Forms.ComboBox _cbSearch;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox _clsbTitle;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox _clsb;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox _cbWin;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox _agentName;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.LinkLabel linkLabel4;
-        private System.Windows.Forms.LinkLabel linkLabel3;
-        private System.Windows.Forms.ComboBox _cbTbls;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox _svcUrl;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.LinkLabel linkLabel5;
-        private System.Windows.Forms.TextBox _childTbls;
-        private System.Windows.Forms.LinkLabel linkLabel6;
-        private System.Windows.Forms.LinkLabel linkLabel7;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.CheckBox _cbSql;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.DataGridView _dgChild;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridView _dgParent;
+        private System.Windows.Forms.Button _btnParent;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn prefix;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Tbl;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Cls;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Alias;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
     }
 }

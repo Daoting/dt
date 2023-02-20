@@ -10,32 +10,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace $rootnamespace$
 {
-	public partial class $entityname$Obj
-	{
-		//async Task OnSaving()
-		//{
-		//}
-
-		//async Task OnDeleting()
-		//{
-		//}
-	}
-
-    #region 自动生成
-    [Tbl("cm_$entityname$")]
-    public partial class $entityname$Obj: Entity
+    [View("$parentroot$Win")]
+    public partial class $parentroot$Win : Win
     {
-        $entityname$Obj() { }
-
-        public $entityname$Obj(long ID)
+        public $parentroot$Win()
         {
-            AddCell("ID", ID);
-            AttachHook();
+            InitializeComponent();
         }
+
+        public $parentroot$List ParentList => _parentList;
+
+        public $parentroot$Form ParentForm => _parentForm;
+$childlistcs$
+        public Tab ChildForm => _childForm;
     }
-    #endregion
 }

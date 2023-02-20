@@ -17,68 +17,79 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $maincls$$childcls$List : Mv
+    public partial class $childroot$List : Tab
     {
-        long _id;
-
-        public $maincls$$childcls$List()
+        public $childroot$List()
         {
             InitializeComponent();
         }
 
-        public void Update(long p_id)
+        public void Update()
         {
-            _id = p_id;
-            Menu["添加"].IsEnabled = true;
             Query();
         }
 
-        public void Clear()
+        protected override void OnInit(object p_params)
         {
-            _id = -1;
-            Menu["添加"].IsEnabled = false;
-            _lv.Data = null;
-        }
-
-        async void Query()
-        {
-            _lv.Data = await $agent$.Query<$childcls$Obj>("$maintitle$-关联$childtitle$", new { ParentID = _id });
+            Query();
         }
 
         void OnAdd(object sender, Mi e)
         {
-            ShowForm(-1);
+            _win.$childroot$Form.Update(-1);
+            NaviTo(_win.$childroot$Form);
         }
 
-        void OnEdit(object sender, Mi e)
+        void OnItemClick(object sender, ItemClickArgs e)
         {
-            ShowForm(e.Data.To<$childcls$Obj>().ID);
+            if (e.IsChanged)
+                _win.$childroot$Form.Update(e.Row.ID);
+            NaviTo(_win.$childroot$Form);
         }
 
-        async void ShowForm(long p_id)
+        #region 搜索
+        /// <summary>
+        /// 获取设置查询内容
+        /// </summary>
+        public QueryClause Clause { get; set; }
+
+        public void OnSearch(QueryClause p_clause)
         {
-            var form = new $maincls$$childcls$Form();
-            form.Update(p_id, _id);
-            if (await Forward<bool>(form, null, true))
-                Query();
+            Clause = p_clause;
+            Query();
+            NaviTo(this);
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Query()
         {
-            var d = e.Data.To<$childcls$Obj>();
-            if (d == null)
-                return;
-
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (Clause == null)
             {
-                Kit.Msg("已取消删除！");
-                return;
+                _lv.Data = await $entity$.Query();
             }
+            else
+            {
+                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
+            }
+        }
+        #endregion
 
-            if (await $agent$.Delete(d))
-                Query();
+        #region 视图
+        private void OnListSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
+        private void OnTableSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["TableView"], ViewMode.Table);
+        }
+
+        private void OnTileSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["TileView"], ViewMode.Tile);
+        }
+        #endregion
+
+        $parentroot$Win _win => ($parentroot$Win)OwnWin;
     }
 }

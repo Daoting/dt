@@ -17,12 +17,11 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $maincls$Form : Mv
+    public sealed partial class $parentroot$Form : Tab
     {
-        public $maincls$Form()
+        public $parentroot$Form()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
         public async void Update(long p_id)
@@ -32,8 +31,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                _fv.Data = await $agent$.First<$maincls$Obj>("$maintitle$-编辑", new { id = p_id });
-                UpdateRelated(p_id);
+                Data = await $entity$.GetByID(p_id);
             }
             else
             {
@@ -43,16 +41,12 @@ namespace $rootnamespace$
 
         public void Clear()
         {
-            _fv.Data = null;
-            ClearRelated();
+            Data = null;
         }
 
         async void Create()
         {
-            _fv.Data = new $maincls$Obj(
-                ID: await $agent$.NewID());
-
-            ClearRelated();
+            Data = await $entity$.New();
         }
 
         void OnSave(object sender, Mi e)
@@ -67,22 +61,15 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = _fv.Data.To<$maincls$Obj>();
-            bool isNew = d.IsAdded;
-            if (await $agent$.Save(d))
+            if (await Data.Save())
             {
-                _win?.List.Update();
-                Result = true;
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
+                _win.ParentList.Update();
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$maincls$Obj>();
+            var d = Data;
             if (d == null)
                 return;
 
@@ -98,21 +85,11 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (await $agent$.Delete(d))
+            if (await d.Delete())
             {
-                Result = true;
                 Clear();
+                _win.ParentList.Update();
             }
-        }
-
-        void UpdateRelated(long p_id)
-        {
-$relatedupdate$
-        }
-
-        void ClearRelated()
-        {
-$relatedclear$
         }
 
         protected override Task<bool> OnClosing()
@@ -120,6 +97,12 @@ $relatedclear$
             return _fv.DiscardChanges();
         }
 
-        $maincls$Win _win => ($maincls$Win)_tab.OwnWin;
+        $entity$ Data
+        {
+            get { return _fv.Data.To<$entity$>(); }
+            set { _fv.Data = value; }
+        }
+
+        $parentroot$Win _win => ($parentroot$Win)OwnWin;
     }
 }

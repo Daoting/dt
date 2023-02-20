@@ -17,16 +17,29 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    [View("$maincls$Win")]
-    public partial class $maincls$Win : Win
+    public sealed partial class $parentroot$Query : Tab
     {
-        public $maincls$Win()
+        public $parentroot$Query()
         {
             InitializeComponent();
         }
 
-        public $maincls$List List => _list;
+         /// <summary>
+        /// 查询事件
+        /// </summary>
+        public event EventHandler<QueryClause> Query
+        {
+            add { _fv.Query += value; }
+            remove { _fv.Query -= value; }
+        }
 
-$relatedlist$
+        protected override void OnInit(object p_params)
+        {
+            var row = new Row();
+$querydata$
+            _fv.Data = row;
+        }
+
+        $parentroot$Win _win => ($parentroot$Win)OwnWin;
     }
 }

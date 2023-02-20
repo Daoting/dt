@@ -17,25 +17,21 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $maincls$$childcls$Form : Mv
+    public sealed partial class $childroot$Form : Tab
     {
-        long _parentID;
-
-        public $maincls$$childcls$Form()
+        public $childroot$Form()
         {
             InitializeComponent();
-            Menu["保存"].Bind(IsEnabledProperty, _fv, "IsDirty");
         }
 
-        public async void Update(long p_id, long p_parentID)
+        public async void Update(long p_id)
         {
             if (!await _fv.DiscardChanges())
                 return;
 
-            _parentID = p_parentID;
             if (p_id > 0)
             {
-                _fv.Data = await $agent$.First<$childcls$Obj>("$childtitle$-编辑", new { id = p_id });
+                Data = await $entity$.GetByID(p_id);
             }
             else
             {
@@ -43,11 +39,19 @@ namespace $rootnamespace$
             }
         }
 
+        public void Clear()
+        {
+            Data = null;
+        }
+
         async void Create()
         {
-            _fv.Data = new $childcls$Obj(
-                ID: await $agent$.NewID(),
-                ParentID: _parentID);
+            Data = await $entity$.New();
+        }
+
+        void OnSave(object sender, Mi e)
+        {
+            Save();
         }
 
         void OnAdd(object sender, Mi e)
@@ -55,18 +59,17 @@ namespace $rootnamespace$
             Create();
         }
 
-        async void OnSave(object sender, Mi e)
+        async void Save()
         {
-            var d = _fv.Data.To<$childcls$Obj>();
-            if (await $agent$.Save(d))
+            if (await Data.Save())
             {
-                Result = true;
+                _win.$childroot$List.Update();
             }
         }
 
         async void OnDel(object sender, Mi e)
         {
-            var d = _fv.Data.To<$childcls$Obj>();
+            var d = Data;
             if (d == null)
                 return;
 
@@ -78,14 +81,14 @@ namespace $rootnamespace$
 
             if (d.IsAdded)
             {
-                _fv.Data = null;
+                Clear();
                 return;
             }
 
-            if (await $agent$.Delete(d))
+            if (await d.Delete())
             {
-                Result = true;
-                _fv.Data = null;
+                Clear();
+                _win.$childroot$List.Update();
             }
         }
 
@@ -93,5 +96,13 @@ namespace $rootnamespace$
         {
             return _fv.DiscardChanges();
         }
+
+        $entity$ Data
+        {
+            get { return _fv.Data.To<$entity$>(); }
+            set { _fv.Data = value; }
+        }
+
+        $parentroot$Win _win => ($parentroot$Win)OwnWin;
     }
 }
