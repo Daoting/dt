@@ -32,6 +32,7 @@ namespace $rootnamespace$
             if (p_id > 0)
             {
                 Data = await $entity$.GetByID(p_id);
+                UpdateRelated(p_id);
             }
             else
             {
@@ -42,11 +43,13 @@ namespace $rootnamespace$
         public void Clear()
         {
             Data = null;
+            UpdateRelated(-1);
         }
 
         async void Create()
         {
             Data = await $entity$.New();
+            UpdateRelated(-1);
         }
 
         void OnSave(object sender, Mi e)
@@ -61,9 +64,15 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            if (await Data.Save())
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
             {
                 _win.ParentList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
             }
         }
 
@@ -90,6 +99,11 @@ namespace $rootnamespace$
                 Clear();
                 _win.ParentList.Update();
             }
+        }
+
+        void UpdateRelated(long p_id)
+        {
+$relatedupdate$
         }
 
         protected override Task<bool> OnClosing()

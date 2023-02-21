@@ -161,6 +161,23 @@ namespace Dt.Base
             }
             return false;
         }
+
+        /// <summary>
+        /// 是否包含指定Tab
+        /// </summary>
+        /// <param name="p_tab"></param>
+        /// <returns></returns>
+        public bool Contains(Tab p_tab)
+        {
+            foreach (var btn in _grid.Children.OfType<Button>())
+            {
+                if ((Tab)btn.DataContext == p_tab)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region 实现接口

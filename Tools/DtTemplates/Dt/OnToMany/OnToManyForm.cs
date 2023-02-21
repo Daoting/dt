@@ -102,11 +102,11 @@ namespace Dt
         async Task WriteChild(ChildInfo p_ci)
         {
             var dt = await _params.GetChildParams(p_ci);
-            Kit.WritePrjFile(Path.Combine(_path, $"{p_ci.Root}List.xaml"), "Dt.OnToMany.Res.ChildList.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(_path, $"{p_ci.Root}List.xaml.cs"), "Dt.OnToMany.Res.ChildList.xaml.cs", dt);
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ParentRoot}{p_ci.Root}List.xaml"), "Dt.OnToMany.Res.ChildList.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ParentRoot}{p_ci.Root}List.xaml.cs"), "Dt.OnToMany.Res.ChildList.xaml.cs", dt);
 
-            Kit.WritePrjFile(Path.Combine(_path, $"{p_ci.Root}Form.xaml"), "Dt.OnToMany.Res.ChildForm.xaml", dt);
-            Kit.WritePrjFile(Path.Combine(_path, $"{p_ci.Root}Form.xaml.cs"), "Dt.OnToMany.Res.ChildForm.xaml.cs", dt);
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ParentRoot}{p_ci.Root}Form.xaml"), "Dt.OnToMany.Res.ChildForm.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ParentRoot}{p_ci.Root}Form.xaml.cs"), "Dt.OnToMany.Res.ChildForm.xaml.cs", dt);
         }
 
         private void btnChild_Click(object sender, EventArgs e)

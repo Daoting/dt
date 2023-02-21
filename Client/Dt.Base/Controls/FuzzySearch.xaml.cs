@@ -38,6 +38,8 @@ namespace Dt.Base
             InitializeComponent();
 
             Title = "搜索";
+            Icon = Icons.搜索;
+
             _lvFix.Data = Fixed;
             LoadTopBar();
         }

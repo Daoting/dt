@@ -17,61 +17,51 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public partial class $childroot$List : Tab
+    public partial class $parentroot$$childroot$List : Tab
     {
-        public $childroot$List()
+        long _parentID;
+
+        public $parentroot$$childroot$List()
         {
             InitializeComponent();
         }
 
-        public void Update()
+        public void Update(long p_parentID)
         {
-            Query();
+            _parentID = p_parentID;
+            Menu["增加"].IsEnabled = _parentID > 0;
+            Refresh();
         }
 
-        protected override void OnInit(object p_params)
+        public async void Refresh()
         {
-            Query();
+            if (_parentID > 0)
+            {
+                _lv.Data = await $entity$.Query("$parentidname$=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
+            }
+            else
+            {
+                _lv.Data = null;
+            }
         }
 
         void OnAdd(object sender, Mi e)
         {
-            _win.$childroot$Form.Update(-1);
-            NaviTo(_win.$childroot$Form);
+            ShowForm(-1);
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (e.IsChanged)
-                _win.$childroot$Form.Update(e.Row.ID);
-            NaviTo(_win.$childroot$Form);
+            ShowForm(e.Row.ID);
         }
 
-        #region 搜索
-        /// <summary>
-        /// 获取设置查询内容
-        /// </summary>
-        public QueryClause Clause { get; set; }
-
-        public void OnSearch(QueryClause p_clause)
+        async void ShowForm(long p_id)
         {
-            Clause = p_clause;
-            Query();
-            NaviTo(this);
+            //var form = new $maincls$$childcls$Form();
+            //form.Update(p_id, _id);
+            //if (await Forward<bool>(form, null, true))
+            //    Query();
         }
-
-        async void Query()
-        {
-            if (Clause == null)
-            {
-                _lv.Data = await $entity$.Query();
-            }
-            else
-            {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
-            }
-        }
-        #endregion
 
         #region 视图
         private void OnListSelected(object sender, EventArgs e)

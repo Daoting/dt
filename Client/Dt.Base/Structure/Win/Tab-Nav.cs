@@ -34,7 +34,13 @@ namespace Dt.Base
             "PreTab",
             typeof(Tab),
             typeof(Tab),
-            new PropertyMetadata(null, OnPreTabChanged));
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty NextTabProperty = DependencyProperty.Register(
+            "NextTab",
+            typeof(Tab),
+            typeof(Tab),
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty ResultProperty = DependencyProperty.Register(
             "Result",
@@ -47,26 +53,6 @@ namespace Dt.Base
             typeof(object),
             typeof(Tab),
             new PropertyMetadata(null));
-
-        static void OnPreTabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var tab = (Tab)d;
-            if (e.NewValue != null)
-            {
-                if (tab.OwnDlg != null)
-                {
-                    tab.BackButtonVisibility = tab.OwnDlg.HideTitleBar ? Visibility.Visible : Visibility.Collapsed;
-                }
-                else if (!Kit.IsPhoneUI)
-                {
-                    tab.BackButtonVisibility = Visibility.Visible;
-                }
-            }
-            else
-            {
-                tab.BackButtonVisibility = Visibility.Collapsed;
-            }
-        }
         #endregion
 
         #region 成员变量
@@ -95,6 +81,15 @@ namespace Dt.Base
         {
             get { return (Tab)GetValue(PreTabProperty); }
             private set { SetValue(PreTabProperty, value); }
+        }
+
+        /// <summary>
+        /// Tab内部导航时的下一标签Tab
+        /// </summary>
+        internal Tab NextTab
+        {
+            get { return (Tab)GetValue(NextTabProperty); }
+            private set { SetValue(NextTabProperty, value); }
         }
 
         /// <summary>
@@ -127,6 +122,9 @@ namespace Dt.Base
         /// <returns>返回时的输出参数</returns>
         public Task<T> Forward<T>(Tab p_tab, object p_params = null, bool p_isModal = false)
         {
+            if (p_tab == null)
+                Throw.Msg("向前导航到的新Tab不可为空！");
+
             Forward(p_tab, p_params, p_isModal);
             return p_tab.StartWait<T>();
         }
@@ -139,6 +137,9 @@ namespace Dt.Base
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         public void Forward(Tab p_tab, object p_params = null, bool p_isModal = false)
         {
+            if (p_tab == null)
+                Throw.Msg("向前导航到的新Tab不可为空！");
+
             if (p_params != null)
                 p_tab.NaviParams = p_params;
 
@@ -148,20 +149,31 @@ namespace Dt.Base
                 return;
             }
 
+            // 建立导航关系
+            p_tab.OwnWin = OwnWin;
+            p_tab.OwnDlg = OwnDlg;
+            p_tab.PreTab = this;
+            NextTab = p_tab;
+
             if (Kit.IsPhoneUI)
             {
                 PhonePage.Show(p_tab);
                 return;
             }
 
-            p_tab.OwnWin = OwnWin;
-            p_tab.OwnDlg = OwnDlg;
-            p_tab.PreTab = this;
+            if (p_tab.OwnDlg != null)
+            {
+                p_tab.BackButtonVisibility = p_tab.OwnDlg.HideTitleBar ? Visibility.Visible : Visibility.Collapsed;
+            }
+            else
+            {
+                p_tab.BackButtonVisibility = Visibility.Visible;
+            }
             Owner.ReplaceItem(this, p_tab);
         }
 
         /// <summary>
-        /// 向后导航到上一内容
+        /// 向后导航到上一Tab
         /// </summary>
         public async void Backward()
         {
@@ -179,7 +191,7 @@ namespace Dt.Base
                         // 带遮罩
                         OwnDlg.Close();
                     }
-                    AfterClosed();
+                    AfterBackward();
                 }
                 return;
             }
@@ -191,7 +203,7 @@ namespace Dt.Base
                 if (await BeforeClose())
                 {
                     Owner.ReplaceItem(this, PreTab);
-                    AfterClosed();
+                    AfterBackward();
                 }
             }
             else if (OwnDlg != null)
@@ -200,7 +212,151 @@ namespace Dt.Base
                 if (await BeforeClose())
                 {
                     OwnDlg.Close();
-                    AfterClosed();
+                    AfterBackward();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 切换到指定Tab，切换后新Tab的上一Tab为首页
+        /// </summary>
+        /// <param name="p_tab"></param>
+        /// <param name="p_showBackBtn">是否显示返回按钮</param>
+        public void Toggle(Tab p_tab, bool p_showBackBtn = false)
+        {
+            if (p_tab == null)
+                Throw.Msg("待切换的Tab不可为空！");
+
+            // 查找当前正在显示的Tab
+            Tab current = this;
+            while (current.NextTab != null)
+            {
+                current = current.NextTab;
+            }
+
+            // 正在显示
+            if (p_tab == current)
+                return;
+
+            // 查找首页
+            int cnt = 1;
+            Tab home = current;
+            while (home.PreTab != null)
+            {
+                var tab = home;
+                home = home.PreTab;
+                tab.PreTab = null;
+                tab.NextTab = null;
+                cnt++;
+            }
+
+            // 建立导航关系
+            p_tab.OwnWin = OwnWin;
+            p_tab.OwnDlg = OwnDlg;
+            p_tab.PreTab = home;
+            home.NextTab = p_tab;
+
+            if (Kit.IsPhoneUI)
+            {
+                // 向后导航到首页
+                if (cnt > 1)
+                {
+                    var frame = UITree.RootFrame;
+                    for (int i = 0; i < cnt - 1; i++)
+                    {
+                        if (frame.CanGoBack)
+                            frame.GoBack();
+                    }
+                }
+
+                PhonePage.Show(p_tab);
+                return;
+            }
+
+            if (p_showBackBtn)
+            {
+                if (p_tab.OwnDlg != null)
+                {
+                    p_tab.BackButtonVisibility = p_tab.OwnDlg.HideTitleBar ? Visibility.Visible : Visibility.Collapsed;
+                }
+                else
+                {
+                    p_tab.BackButtonVisibility = Visibility.Visible;
+                }
+            }
+            else if (p_tab.BackButtonVisibility == Visibility.Visible)
+            {
+                p_tab.BackButtonVisibility = Visibility.Collapsed;
+            }
+            Owner.ReplaceItem(current, p_tab);
+        }
+
+        /// <summary>
+        /// Tab区域内导航时返回到首页
+        /// </summary>
+        public void BackToHome()
+        {
+            if (Kit.IsPhoneUI)
+            {
+                BackToPhoneHome();
+                return;
+            }
+
+            // 查找当前正在显示的Tab
+            Tab current = this;
+            while (current.NextTab != null)
+            {
+                current = current.NextTab;
+            }
+
+            // 查找首页
+            Tab home = current;
+            while (home.PreTab != null)
+            {
+                var tab = home;
+                home = home.PreTab;
+                tab.NextTab = null;
+                tab.PreTab = null;
+            }
+            home.NextTab = null;
+
+            // 切换首页
+            if (home != current)
+                Owner.ReplaceItem(current, home);
+        }
+
+        void BackToPhoneHome()
+        {
+            // 查找当前正在显示的Tab
+            Tab current = this;
+            while (current.NextTab != null)
+            {
+                current = current.NextTab;
+            }
+            // 当前是首页
+            if (current.PreTab == null)
+                return;
+
+            // 查找首页
+            int cnt = 1;
+            Tab home = current;
+            while (home.PreTab != null)
+            {
+                var tab = home;
+                home = home.PreTab;
+                tab.PreTab = null;
+                tab.NextTab = null;
+                cnt++;
+            }
+
+            // 向后导航到首页
+            if (cnt > 1)
+            {
+                var frame = UITree.RootFrame;
+                for (int i = 0; i < cnt - 1; i++)
+                {
+                    if (frame.CanGoBack)
+                        frame.GoBack();
                 }
             }
         }
@@ -315,9 +471,17 @@ namespace Dt.Base
             return false;
         }
 
-        void AfterClosed()
+        void AfterBackward()
         {
             OnClosed();
+
+            // 清除导航关系
+            if (PreTab != null)
+            {
+                PreTab.NextTab = null;
+                PreTab = null;
+            }
+            NextTab = null;
         }
 
         /// <summary>

@@ -21,6 +21,8 @@
         <CheckBox x:Name="_cbDlgTitle" Content="隐藏对话框标题" />
         <CheckBox x:Name="_cbSave" Content="保存菜单可用，都被绑定到主区的元素，诡异" />
         <Button Content="在对话框加载" Click="OnShowDlg" />
-        <Button Content="返回" Click="OnBackward" />
+        <Button Content="返回上一Tab" Click="OnBackward" />
+        <Button Content="切换到新Tab" Click="OnToggle" />
+        <Button Content="返回首页Tab" Click="OnBackToHome" />
     </StackPanel>
 </a:Tab>

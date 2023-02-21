@@ -24,14 +24,6 @@ namespace Dt.UIDemo
             InitializeComponent();
         }
 
-        void OnNavi(object sender, RoutedEventArgs e)
-        {
-            NaviTo((string)((Button)sender).Content);
-        }
-
-        void OnClosWin(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+        public TabNaviItem LeftTab => _leftTab;
     }
 }

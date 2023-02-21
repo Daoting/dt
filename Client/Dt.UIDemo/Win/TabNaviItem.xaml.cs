@@ -61,6 +61,11 @@ namespace Dt.UIDemo
             Backward();
         }
 
+        void OnBackToHome(object sender, RoutedEventArgs e)
+        {
+            BackToHome();
+        }
+
         void OnShowDlg(object sender, RoutedEventArgs e)
         {
             var dlg = new Dlg { IsPinned = true, Title = "内嵌Tab" };
@@ -68,6 +73,11 @@ namespace Dt.UIDemo
                 dlg.HideTitleBar = true;
             dlg.LoadTab(new TabNaviItem { Title = "对话框" });
             dlg.Show();
+        }
+
+        void OnToggle(object sender, RoutedEventArgs e)
+        {
+            Toggle(new TabNaviItem());
         }
     }
 }

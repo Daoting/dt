@@ -17,18 +17,21 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace $rootnamespace$
 {
-    public sealed partial class $childroot$Form : Tab
+    public sealed partial class $parentroot$$childroot$Form : Tab
     {
-        public $childroot$Form()
+        long _parentID;
+
+        public $parentroot$$childroot$Form()
         {
             InitializeComponent();
         }
 
-        public async void Update(long p_id)
+        public async void Update(long p_id, long p_parentID)
         {
             if (!await _fv.DiscardChanges())
                 return;
 
+            _parentID = p_parentID;
             if (p_id > 0)
             {
                 Data = await $entity$.GetByID(p_id);
@@ -46,7 +49,7 @@ namespace $rootnamespace$
 
         async void Create()
         {
-            Data = await $entity$.New();
+            Data = await $entity$.New($parentidname$: _parentID);
         }
 
         void OnSave(object sender, Mi e)
@@ -63,7 +66,7 @@ namespace $rootnamespace$
         {
             if (await Data.Save())
             {
-                _win.$childroot$List.Update();
+                _win.$childroot$List.Refresh();
             }
         }
 
@@ -88,7 +91,7 @@ namespace $rootnamespace$
             if (await d.Delete())
             {
                 Clear();
-                _win.$childroot$List.Update();
+                _win.$childroot$List.Refresh();
             }
         }
 

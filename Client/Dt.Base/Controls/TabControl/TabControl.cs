@@ -272,9 +272,10 @@ namespace Dt.Base
 
             if (p_oldTab == null
                 || p_newTab == null
-                || (index = Items.IndexOf(p_oldTab)) == -1)
+                || (index = Items.IndexOf(p_oldTab)) == -1
+                || Items.IndexOf(p_newTab) != -1)
             {
-                Log.Warning("TabControl中新标签替换旧标签失败！");
+                Throw.Msg("TabControl中新标签替换旧标签失败！");
                 return;
             }
 

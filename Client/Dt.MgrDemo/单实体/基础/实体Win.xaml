@@ -6,7 +6,7 @@
     xmlns:l="using:Dt.MgrDemo.单实体">
 
     <a:Tabs a:Ex.Dock="Left">
-        <a:FuzzySearch x:Name="_search" Search="OnSearch" Icon="搜索">
+        <a:FuzzySearch x:Name="_search" Search="OnSearch">
             <x:String>全部</x:String>
         </a:FuzzySearch>
         <l:实体Query x:Name="_query" Query="OnQuery" Icon="漏斗" />

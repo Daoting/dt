@@ -34,8 +34,8 @@ namespace Dt
                     for (int i = 0; i < Children.Count; i++)
                     {
                         var name = "_" + SetFirstToLower(Children[i].Root) + "List";
-                        sb.AppendLine($"        <l:{Children[i].Root}List x:Name=\"{name}\" />");
-                        cs += $"\r\n        public {Children[i].Root}List {Children[i].Root}List => {name};\r\n";
+                        sb.AppendLine($"        <l:{ParentRoot}{Children[i].Root}List x:Name=\"{name}\" />");
+                        cs += $"\r\n        public {ParentRoot}{Children[i].Root}List {Children[i].Root}List => {name};\r\n";
                     }
                     sb.Append("    </a:Tabs>");
                     dt["$childlistxaml$"] = sb.ToString();
@@ -44,8 +44,8 @@ namespace Dt
                 else
                 {
                     var name = "_" + SetFirstToLower(Children[0].Root) + "List";
-                    dt["$childlistxaml$"] = $"    <l:{Children[0].Root}List x:Name=\"{name}\" a:Ex.Dock=\"Bottom\" />";
-                    dt["$childlistcs$"] = $"\r\n        public {Children[0].Root}List {Children[0].Root}List => {name};\r\n";
+                    dt["$childlistxaml$"] = $"    <l:{ParentRoot}{Children[0].Root}List x:Name=\"{name}\" a:Ex.Dock=\"Bottom\" />";
+                    dt["$childlistcs$"] = $"\r\n        public {ParentRoot}{Children[0].Root}List {Children[0].Root}List => {name};\r\n";
                 }
 
                 return dt;
@@ -78,6 +78,14 @@ namespace Dt
             // 可能包含命名空间
             dt["$fvbody$"] = body.Replace("$namespace$", NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
 
+            string update = "";
+            foreach (var item in Children)
+            {
+                if (update != "")
+                    update += "\r\n";
+                update += $"            _win.{item.Root}List.Update(p_id);";
+            }
+            dt["$relatedupdate$"] = update;
             return dt;
         }
 
@@ -99,7 +107,7 @@ namespace Dt
             var body = await AtSvc.GetFvCells(new List<string> { p_ci.Tbl });
             // 可能包含命名空间
             dt["$fvbody$"] = body.Replace("$namespace$", NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
-
+            dt["$parentidname$"] = p_ci.ParentIDName;
             return dt;
         }
 
