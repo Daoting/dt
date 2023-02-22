@@ -116,6 +116,7 @@ namespace Dt
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _dgChild.Rows.Clear();
+                int index = 0;
                 foreach (var item in dlg.GetSelection())
                 {
                     int i = _dgChild.Rows.Add();
@@ -123,6 +124,7 @@ namespace Dt
                     _dgChild.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
                     _dgChild.Rows[i].Cells[2].Value = Kit.GetClsName(item);
                     _dgChild.Rows[i].Cells[3].Value = "ParentID";
+                    _dgChild.Rows[i].Cells[4].Value = (index++).ToString();
                 }
             }
         }

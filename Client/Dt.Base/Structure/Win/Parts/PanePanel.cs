@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 #endregion
 
 namespace Dt.Base.Docking
@@ -73,7 +74,7 @@ namespace Dt.Base.Docking
                         if (double.IsNaN(item.Height))
                         {
                             // 未设置初始高度时自动占一半
-                            if (double.IsNaN(item.InitHeight) && !double.IsInfinity(height))
+                            if (!double.IsInfinity(height) && item.ReadLocalValue(Pane.InitHeightProperty) == DependencyProperty.UnsetValue)
                                 item.Height = height / 2;
                             else
                                 item.Height = item.InitHeight;

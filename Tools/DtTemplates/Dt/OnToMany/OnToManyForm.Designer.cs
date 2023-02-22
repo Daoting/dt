@@ -50,6 +50,7 @@ namespace Dt
             this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             this.SuspendLayout();
@@ -73,7 +74,7 @@ namespace Dt
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 403);
+            this._btnOK.Location = new System.Drawing.Point(381, 439);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -112,10 +113,11 @@ namespace Dt
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 306);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(221, 120);
+            this.label4.Size = new System.Drawing.Size(245, 156);
             this.label4.TabIndex = 143;
             this.label4.Text = "* 生成框架前确保实体类已存在\r\n\r\n* 单元格按F2或双击可编辑\r\n\r\n* 类的词根指生成的窗口、列表、表单、\r\n  查询等类的词根，命名规范如：\r\n  查询：" +
-    "词根 + Query\r\n  窗口：词根 + Win\r\n  列表：词根 + List\r\n  表单：词根 + Form";
+    "词根 + Query\r\n  窗口：词根 + Win\r\n  列表：词根 + List\r\n  表单：词根 + Form\r\n\r\n* 可通过修改[序号]列并点击列头进行" +
+    "排序，\r\n  控制子实体的显示顺序";
             // 
             // btnAdd
             // 
@@ -137,7 +139,8 @@ namespace Dt
             this.Tbl,
             this.Cls,
             this.Alias,
-            this.Column1});
+            this.Column1,
+            this.序号});
             this._dgChild.Location = new System.Drawing.Point(12, 179);
             this._dgChild.Name = "_dgChild";
             this._dgChild.RowHeadersVisible = false;
@@ -216,12 +219,15 @@ namespace Dt
             this.Tbl.HeaderText = "表名";
             this.Tbl.Name = "Tbl";
             this.Tbl.ReadOnly = true;
-            this.Tbl.Width = 120;
+            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Tbl.Width = 90;
             // 
             // Cls
             // 
             this.Cls.HeaderText = "实体类名";
             this.Cls.Name = "Cls";
+            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Cls.Width = 90;
             // 
             // Alias
             // 
@@ -229,17 +235,26 @@ namespace Dt
             this.Alias.Name = "Alias";
             this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Alias.Width = 90;
             // 
             // Column1
             // 
             this.Column1.HeaderText = "父主键名称";
             this.Column1.Name = "Column1";
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Column1.Width = 90;
+            // 
+            // 序号
+            // 
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.Width = 60;
             // 
             // OnToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 442);
+            this.ClientSize = new System.Drawing.Size(473, 476);
             this.Controls.Add(this.label5);
             this.Controls.Add(this._btnParent);
             this.Controls.Add(this._dgParent);
@@ -289,5 +304,6 @@ namespace Dt
         private System.Windows.Forms.DataGridViewTextBoxColumn Cls;
         private System.Windows.Forms.DataGridViewTextBoxColumn Alias;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
     }
 }

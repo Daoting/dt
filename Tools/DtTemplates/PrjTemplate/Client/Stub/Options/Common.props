@@ -40,6 +40,8 @@
 		<Using Include="Dt.Mgr" />
 		<Using Include="System" />
 		<Using Include="Serilog" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Threading.Tasks" />
 	</ItemGroup>
 
 	<!-- 确保各平台的GlobalUsing相同，不然造成歧义 -->

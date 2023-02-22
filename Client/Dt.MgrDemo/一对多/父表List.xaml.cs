@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,11 +11,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    public partial class $parentroot$List : Tab
+    public partial class 父表List : Tab
     {
-        public $parentroot$List()
+        public 父表List()
         {
             InitializeComponent();
         }
@@ -46,7 +46,7 @@ namespace $rootnamespace$
         void NaviToChild()
         {
             if (Kit.IsPhoneUI)
-                NaviTo(new List<Tab> { _win.ParentForm$childtabs$ });
+                NaviTo(new List<Tab> { _win.ParentForm, _win.大儿List, _win.小儿List });
         }
 
         #region 搜索
@@ -66,11 +66,11 @@ namespace $rootnamespace$
         {
             if (Clause == null)
             {
-                _lv.Data = await $entity$.Query();
+                _lv.Data = await 父表X.Query();
             }
             else
             {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
+                _lv.Data = await 父表X.Query(Clause.Where, Clause.Params);
             }
         }
 
@@ -89,14 +89,14 @@ namespace $rootnamespace$
                 {
                     var clause = new QueryClause();
                     clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"$blurclause$";
+                    clause.Where = @"Name LIKE @input";
                     Clause = clause;
                 }
                 Query();
                 _dlgQuery.Close();
             };
 
-            var qs = new $parentroot$Query();
+            var qs = new 父表Query();
             qs.Query += (s, e) =>
             {
                 Clause = e;
@@ -142,6 +142,6 @@ namespace $rootnamespace$
         }
         #endregion
 
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        父表Win _win => (父表Win)OwnWin;
     }
 }

@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,20 +11,24 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    [View("$parentroot$Win")]
-    public partial class $parentroot$Win : Win
+    [View("父表Win")]
+    public partial class 父表Win : Win
     {
-        public $parentroot$Win()
+        public 父表Win()
         {
             InitializeComponent();
         }
 
-        public $parentroot$List ParentList => _parentList;
+        public 父表List ParentList => _parentList;
 
-        public $parentroot$Form ParentForm => _parentForm;
-$childlistcs$
+        public 父表Form ParentForm => _parentForm;
+
+        public 父表大儿List 大儿List => _大儿List;
+
+        public 父表小儿List 小儿List => _小儿List;
+
         public Tab ChildForm => _childForm;
     }
 }

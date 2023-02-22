@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,14 +11,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    public partial class $parentroot$$childroot$List : Tab
+    public partial class 父表小儿List : Tab
     {
         long _parentID;
-        $parentroot$$childroot$Form _form;
+        父表小儿Form _form;
 
-        public $parentroot$$childroot$List()
+        public 父表小儿List()
         {
             InitializeComponent();
         }
@@ -35,7 +35,7 @@ namespace $rootnamespace$
         {
             if (_parentID > 0)
             {
-                _lv.Data = await $entity$.Query("$parentidname$=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
+                _lv.Data = await 小儿X.Query("GroupID=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
             }
             else
             {
@@ -57,7 +57,7 @@ namespace $rootnamespace$
         async void ShowForm(long p_id)
         {
             if (_form == null)
-                _form = new $parentroot$$childroot$Form();
+                _form = new 父表小儿Form();
             _win.ChildForm.Toggle(_form);
             await _form.Update(p_id, _parentID);
         }
@@ -73,11 +73,11 @@ namespace $rootnamespace$
 
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
-                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
+                var ls = _lv.SelectedItems.Cast<小儿X> ().ToList();
                 if (await ls.Delete())
                     Refresh();
             }
-            else if (await e.Data.To<$entity$> ().Delete())
+            else if (await e.Data.To<小儿X> ().Delete())
             {
                 Refresh();
             }
@@ -104,6 +104,6 @@ namespace $rootnamespace$
         }
         #endregion
 
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        父表Win _win => (父表Win)OwnWin;
     }
 }

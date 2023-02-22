@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,11 +11,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    public sealed partial class $parentroot$Query : Tab
+    public sealed partial class 父表Query : Tab
     {
-        public $parentroot$Query()
+        public 父表Query()
         {
             InitializeComponent();
         }
@@ -32,10 +32,11 @@ namespace $rootnamespace$
         protected override void OnInit(object p_params)
         {
             var row = new Row();
-$querydata$
+            row.AddCell<string>("Name");
+
             _fv.Data = row;
         }
 
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        父表Win _win => (父表Win)OwnWin;
     }
 }

@@ -102,7 +102,6 @@ namespace Dt
             var dt = BaseParams;
             dt["$childroot$"] = p_ci.Root;
             dt["$entity$"] = p_ci.Entity;
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { p_ci.Tbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { p_ci.Tbl });
             var body = await AtSvc.GetFvCells(new List<string> { p_ci.Tbl });
             // 可能包含命名空间

@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,16 +11,18 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    public sealed partial class $parentroot$Form : Tab
+    public sealed partial class 父表小儿Form : Tab
     {
-        public $parentroot$Form()
+        long _parentID;
+
+        public 父表小儿Form()
         {
             InitializeComponent();
         }
 
-        public async Task Update(long p_id)
+        public async Task Update(long p_id, long p_parentID)
         {
             var d = Data;
             if (d != null && d.ID == p_id)
@@ -29,10 +31,10 @@ namespace $rootnamespace$
             if (!await _fv.DiscardChanges())
                 return;
 
+            _parentID = p_parentID;
             if (p_id > 0)
             {
-                Data = await $entity$.GetByID(p_id);
-                UpdateRelated(p_id);
+                Data = await 小儿X.GetByID(p_id);
             }
             else
             {
@@ -43,13 +45,11 @@ namespace $rootnamespace$
         public void Clear()
         {
             Data = null;
-            UpdateRelated(-1);
         }
 
         async void Create()
         {
-            Data = await $entity$.New();
-            UpdateRelated(-1);
+            Data = await 小儿X.New(GroupID: _parentID);
         }
 
         void OnSave(object sender, Mi e)
@@ -64,15 +64,9 @@ namespace $rootnamespace$
 
         async void Save()
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
+            if (await Data.Save())
             {
-                _win.ParentList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
+                _win.小儿List.Refresh();
             }
         }
 
@@ -97,13 +91,8 @@ namespace $rootnamespace$
             if (await d.Delete())
             {
                 Clear();
-                _win.ParentList.Update();
+                _win.小儿List.Refresh();
             }
-        }
-
-        void UpdateRelated(long p_id)
-        {
-$relatedupdate$
         }
 
         protected override Task<bool> OnClosing()
@@ -111,12 +100,12 @@ $relatedupdate$
             return _fv.DiscardChanges();
         }
 
-        $entity$ Data
+        小儿X Data
         {
-            get { return _fv.Data.To<$entity$>(); }
+            get { return _fv.Data.To<小儿X>(); }
             set { _fv.Data = value; }
         }
 
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        父表Win _win => (父表Win)OwnWin;
     }
 }

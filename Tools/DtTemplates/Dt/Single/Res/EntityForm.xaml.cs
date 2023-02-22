@@ -7,12 +7,8 @@
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
 namespace $rootnamespace$
@@ -26,6 +22,10 @@ namespace $rootnamespace$
 
         public async void Update(long p_id)
         {
+            var d = Data;
+            if (d != null && d.ID == p_id)
+                return;
+
             if (!await _fv.DiscardChanges())
                 return;
 

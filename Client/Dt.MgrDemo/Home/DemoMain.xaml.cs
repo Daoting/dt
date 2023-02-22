@@ -45,7 +45,7 @@ namespace Dt.MgrDemo
             {
                 new DemoItem("单实体框架", typeof(实体Win), "单表的增删改查操作框架"),
                 new DemoItem("虚拟实体框架", typeof(虚拟Win), "因字段过多将单表拆分成多表时适用于虚拟实体，本质还是单实体框架"),
-                //new DemoItem("一对多框架", typeof(父表Win), "服务端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存等"),
+                new DemoItem("一对多框架", typeof(父表Win), "服务端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存等"),
             };
             group.Title = "框架";
             ds.Add(group);

@@ -15,5 +15,7 @@
 	<ItemGroup>
 		<Using Include="Dt.Core" />
 		<Using Include="Serilog" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Threading.Tasks" />
 	</ItemGroup>
 </Project>

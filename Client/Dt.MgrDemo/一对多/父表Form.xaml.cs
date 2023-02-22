@@ -1,8 +1,8 @@
 ﻿#region 文件描述
 /******************************************************************************
-* 创建: $username$
+* 创建: Daoting
 * 摘要: 
-* 日志: $time$ 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
@@ -11,11 +11,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace $rootnamespace$
+namespace Dt.MgrDemo.一对多
 {
-    public sealed partial class $parentroot$Form : Tab
+    public sealed partial class 父表Form : Tab
     {
-        public $parentroot$Form()
+        public 父表Form()
         {
             InitializeComponent();
         }
@@ -31,7 +31,7 @@ namespace $rootnamespace$
 
             if (p_id > 0)
             {
-                Data = await $entity$.GetByID(p_id);
+                Data = await 父表X.GetByID(p_id);
                 UpdateRelated(p_id);
             }
             else
@@ -48,7 +48,7 @@ namespace $rootnamespace$
 
         async void Create()
         {
-            Data = await $entity$.New();
+            Data = await 父表X.New();
             UpdateRelated(-1);
         }
 
@@ -103,7 +103,8 @@ namespace $rootnamespace$
 
         void UpdateRelated(long p_id)
         {
-$relatedupdate$
+            _win.大儿List.Update(p_id);
+            _win.小儿List.Update(p_id);
         }
 
         protected override Task<bool> OnClosing()
@@ -111,12 +112,12 @@ $relatedupdate$
             return _fv.DiscardChanges();
         }
 
-        $entity$ Data
+        父表X Data
         {
-            get { return _fv.Data.To<$entity$>(); }
+            get { return _fv.Data.To<父表X>(); }
             set { _fv.Data = value; }
         }
 
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        父表Win _win => (父表Win)OwnWin;
     }
 }

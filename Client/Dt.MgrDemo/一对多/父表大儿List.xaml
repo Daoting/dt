@@ -1,9 +1,9 @@
 ﻿<a:Tab
-    x:Class="$rootnamespace$.$parentroot$$childroot$List"
+    x:Class="Dt.MgrDemo.一对多.父表大儿List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="$childroot$列表">
+    Title="大儿列表">
 
     <a:Tab.Menu>
         <a:Menu>
@@ -22,7 +22,8 @@
             </a:Menu>
         </a:Ex.Menu>
         <a:Cols>
-$lvcols$
+            <a:Col ID="ParentID" />
+            <a:Col ID="ItemName" />
         </a:Cols>
     </a:Lv>
 </a:Tab>

@@ -7,7 +7,7 @@
         <!-- wasm不支持Essentials, android编译产生缺androidx.window.extensions.jar androidx.window.sidecar.jar警告 -->
         <UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
         <!-- release不输出pbd调试信息 -->
-		<DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
+        <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
     </PropertyGroup>
 
     <!-- 定义平台常量 -->
@@ -32,7 +32,7 @@
 
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="2.4.0" /> 
+        <PackageReference Include="Dt.Infras" Version="2.4.0" />
         <PackageReference Include="Dt.BuildTools" Version="1.3.3" PrivateAssets="none" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
@@ -89,10 +89,12 @@
                    
     所有选项：contentfiles analyzers build compile runtime buildTransitive native none all
     -->
-    
+
     <ItemGroup>
         <Using Include="Dt.Core" />
         <Using Include="Serilog" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Threading.Tasks" />
     </ItemGroup>
 
     <!-- 确保各平台的GlobalUsing相同，不然造成歧义 -->
@@ -118,7 +120,7 @@
         <Using Remove="Microsoft.Extensions.Hosting" />
         <Using Remove="Microsoft.Extensions.Logging" />
     </ItemGroup>
-    
+
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
         <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
