@@ -2,14 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-17 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.MgrDemo.一对多
@@ -17,11 +14,11 @@ namespace Dt.MgrDemo.一对多
     public partial class 父表X
     {
         public static async Task<父表X> New(
-            string Name = default)
+            string 父名 = default)
         {
             return new 父表X(
                 ID: await NewID(),
-                Name: Name);
+                父名: 父名);
         }
 
         protected override void InitHook()

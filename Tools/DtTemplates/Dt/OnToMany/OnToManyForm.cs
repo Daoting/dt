@@ -47,6 +47,7 @@ namespace Dt
             _params.ParentEntity = _dgParent.Rows[0].Cells[1].Value.ToString();
             _params.ParentRoot = _dgParent.Rows[0].Cells[2].Value.ToString();
 
+            _dgChild.Sort(_dgChild.Columns[4], System.ComponentModel.ListSortDirection.Ascending);
             for (int i = 0; i < _dgChild.Rows.Count; i++)
             {
                 var item = _dgChild.Rows[i];
@@ -111,12 +112,11 @@ namespace Dt
 
         private void btnChild_Click(object sender, EventArgs e)
         {
-            List<string> tbls = null;
-            var dlg = new SelectTbls(tbls);
+            var dlg = new SelectTbls(null);
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _dgChild.Rows.Clear();
-                int index = 0;
+                int index = 1;
                 foreach (var item in dlg.GetSelection())
                 {
                     int i = _dgChild.Rows.Add();
@@ -131,8 +131,7 @@ namespace Dt
 
         private void _btnParent_Click(object sender, EventArgs e)
         {
-            List<string> tbls = null;
-            var dlg = new SelectTbls(tbls);
+            var dlg = new SelectTbls(null);
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _dgParent.Rows.Clear();

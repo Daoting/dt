@@ -15,6 +15,6 @@
 
     <a:Fv x:Name="_fv">
         <a:CNum ID="GroupID" />
-        <a:CText ID="ItemName" />
+        <a:CText ID="小儿名" />
     </a:Fv>
 </a:Tab>

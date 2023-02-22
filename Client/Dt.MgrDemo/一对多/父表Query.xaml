@@ -6,7 +6,7 @@
     Title="查询">
 
     <a:QueryFv x:Name="_fv">
-        <a:CText ID="Name" Query="Editable" />
+        <a:CText ID="父名" Query="Editable" />
         <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
         <a:CBar />
         <a:CBar>

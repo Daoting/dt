@@ -39,6 +39,11 @@ namespace Dt
             this.label4 = new System.Windows.Forms.Label();
             this.btnAdd = new System.Windows.Forms.Button();
             this._dgChild = new System.Windows.Forms.DataGridView();
+            this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
             this._dgParent = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,11 +51,6 @@ namespace Dt
             this.prefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._btnParent = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             this.SuspendLayout();
@@ -74,7 +74,7 @@ namespace Dt
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 439);
+            this._btnOK.Location = new System.Drawing.Point(381, 427);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -113,11 +113,10 @@ namespace Dt
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 306);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(245, 156);
+            this.label4.Size = new System.Drawing.Size(221, 144);
             this.label4.TabIndex = 143;
             this.label4.Text = "* 生成框架前确保实体类已存在\r\n\r\n* 单元格按F2或双击可编辑\r\n\r\n* 类的词根指生成的窗口、列表、表单、\r\n  查询等类的词根，命名规范如：\r\n  查询：" +
-    "词根 + Query\r\n  窗口：词根 + Win\r\n  列表：词根 + List\r\n  表单：词根 + Form\r\n\r\n* 可通过修改[序号]列并点击列头进行" +
-    "排序，\r\n  控制子实体的显示顺序";
+    "词根 + Query\r\n  窗口：词根 + Win\r\n  列表：词根 + List\r\n  表单：词根 + Form\r\n\r\n* 可通过修改[序号]控制子实体顺序";
             // 
             // btnAdd
             // 
@@ -147,6 +146,42 @@ namespace Dt
             this._dgChild.RowTemplate.Height = 23;
             this._dgChild.Size = new System.Drawing.Size(444, 112);
             this._dgChild.TabIndex = 140;
+            // 
+            // Tbl
+            // 
+            this.Tbl.HeaderText = "表名";
+            this.Tbl.Name = "Tbl";
+            this.Tbl.ReadOnly = true;
+            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Tbl.Width = 90;
+            // 
+            // Cls
+            // 
+            this.Cls.HeaderText = "实体类名";
+            this.Cls.Name = "Cls";
+            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Cls.Width = 90;
+            // 
+            // Alias
+            // 
+            this.Alias.HeaderText = "类的词根";
+            this.Alias.Name = "Alias";
+            this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Alias.Width = 90;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "父主键名称";
+            this.Column1.Name = "Column1";
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Column1.Width = 90;
+            // 
+            // 序号
+            // 
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.Width = 60;
             // 
             // label3
             // 
@@ -214,47 +249,11 @@ namespace Dt
             this.label5.TabIndex = 147;
             this.label5.Text = "子实体";
             // 
-            // Tbl
-            // 
-            this.Tbl.HeaderText = "表名";
-            this.Tbl.Name = "Tbl";
-            this.Tbl.ReadOnly = true;
-            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Tbl.Width = 90;
-            // 
-            // Cls
-            // 
-            this.Cls.HeaderText = "实体类名";
-            this.Cls.Name = "Cls";
-            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Cls.Width = 90;
-            // 
-            // Alias
-            // 
-            this.Alias.HeaderText = "类的词根";
-            this.Alias.Name = "Alias";
-            this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Alias.Width = 90;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "父主键名称";
-            this.Column1.Name = "Column1";
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column1.Width = 90;
-            // 
-            // 序号
-            // 
-            this.序号.HeaderText = "序号";
-            this.序号.Name = "序号";
-            this.序号.Width = 60;
-            // 
             // OnToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 476);
+            this.ClientSize = new System.Drawing.Size(473, 467);
             this.Controls.Add(this.label5);
             this.Controls.Add(this._btnParent);
             this.Controls.Add(this._dgParent);

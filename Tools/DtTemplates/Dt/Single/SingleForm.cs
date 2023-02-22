@@ -43,6 +43,7 @@ namespace Dt
                 return;
             }
 
+            _dg.Sort(_dg.Columns[2], System.ComponentModel.ListSortDirection.Ascending);
             for (int i = 0; i < _dg.Rows.Count; i++)
             {
                 _params.Tbls.Add(_dg.Rows[i].Cells[0].Value.ToString());
@@ -112,34 +113,18 @@ namespace Dt
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            List<string> tbls = null;
-            if (_dg.Rows.Count > 0)
-            {
-                tbls = new List<string>();
-                for (int i = 0; i < _dg.Rows.Count; i++)
-                {
-                    tbls.Add(_dg.Rows[i].Cells[0].Value.ToString());
-                }
-            }
-
-            var dlg = new SelectTbls(tbls);
+            var dlg = new SelectTbls(null);
             if (dlg.ShowDialog() == DialogResult.OK)
             {
+                _dg.Rows.Clear();
+                int index = 1;
                 foreach (var item in dlg.GetSelection())
                 {
                     int i = _dg.Rows.Add();
                     _dg.Rows[i].Cells[0].Value = item;
                     _dg.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
+                    _dg.Rows[i].Cells[2].Value = (index++).ToString();
                 }
-            }
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            if (_dg.Rows.Count > 0)
-            {
-                if (MessageBox.Show("确定要清空已选择的表吗？", "确认") == DialogResult.OK)
-                    _dg.Rows.Clear();
             }
         }
 

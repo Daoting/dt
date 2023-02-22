@@ -174,9 +174,13 @@ namespace Dt.Base
             foreach (var mi in Items)
             {
                 if (p_names.Contains(mi.ID))
+                { 
                     mi.Visibility = Visibility.Visible;
+                }
                 else if (mi.Visibility == Visibility.Visible)
+                {
                     mi.Visibility = Visibility.Collapsed;
+                }
             }
             _panel?.UpdateArrange();
         }
@@ -210,9 +214,16 @@ namespace Dt.Base
             foreach (var mi in Items)
             {
                 if (p_names.Contains(mi.ID))
+                { 
                     mi.Visibility = Visibility.Collapsed;
-                else if (mi.Visibility == Visibility.Collapsed)
+                }
+                else if (mi.Visibility == Visibility.Collapsed
+                    && (mi.Scope == MiScope.Both
+                    || (mi.Scope == MiScope.Phone && Kit.IsPhoneUI)
+                    || (mi.Scope == MiScope.Windows && !Kit.IsPhoneUI)))
+                { 
                     mi.Visibility = Visibility.Visible;
+                }
             }
             _panel?.UpdateArrange();
         }

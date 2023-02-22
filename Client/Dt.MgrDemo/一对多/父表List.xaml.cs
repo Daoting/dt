@@ -89,7 +89,7 @@ namespace Dt.MgrDemo.一对多
                 {
                     var clause = new QueryClause();
                     clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"Name LIKE @input";
+                    clause.Where = @"父名 LIKE @input";
                     Clause = clause;
                 }
                 Query();
@@ -123,6 +123,46 @@ namespace Dt.MgrDemo.一对多
         }
 
         Dlg _dlgQuery;
+        #endregion
+
+        #region 删除
+        async void OnDel(object sender, Mi e)
+        {
+            if (!await Kit.Confirm("确认要删除选择的数据吗？"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            {
+                var ls = _lv.SelectedItems.Cast<父表X> ().ToList();
+                if (await ls.Delete())
+                    Query();
+            }
+            else if (await e.Data.To<父表X> ().Delete())
+            {
+                Query();
+            }
+            _win.ChildForm.BackToHome();
+        }
+
+        void OnSelectAll(object sender, Mi e)
+        {
+            _lv.SelectAll();
+        }
+
+        void OnMultiMode(object sender, Mi e)
+        {
+            _lv.SelectionMode = Base.SelectionMode.Multiple;
+            Menu.HideExcept("删除", "全选", "取消");
+        }
+
+        void OnCancelMulti(object sender, Mi e)
+        {
+            _lv.SelectionMode = Base.SelectionMode.Single;
+            Menu.ShowExcept("删除", "全选", "取消");
+        }
         #endregion
 
         #region 视图

@@ -92,15 +92,30 @@ namespace $rootnamespace$
         void OnMultiMode(object sender, Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Multiple;
-            Menu.Hide("增加", "选择");
-            Menu.Show("删除", "全选", "取消");
+            Menu.HideExcept("删除", "全选", "取消");
         }
 
         void OnCancelMulti(object sender, Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Single;
-            Menu.Show("增加", "选择");
-            Menu.Hide("删除", "全选", "取消");
+            Menu.ShowExcept("删除", "全选", "取消");
+        }
+        #endregion
+
+        #region 视图
+        private void OnListSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["ListView"], ViewMode.List);
+        }
+
+        private void OnTableSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["TableView"], ViewMode.Table);
+        }
+
+        private void OnTileSelected(object sender, EventArgs e)
+        {
+            _lv?.ChangeView(Resources["TileView"], ViewMode.Tile);
         }
         #endregion
 

@@ -2,14 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-17 创建
+* 日志: 2023-02-22 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.MgrDemo.一对多
@@ -24,10 +21,10 @@ namespace Dt.MgrDemo.一对多
 
         public 父表X(
             long ID,
-            string Name = default)
+            string 父名 = default)
         {
             AddCell("ID", ID);
-            AddCell("Name", Name);
+            AddCell("父名", 父名);
             IsAdded = true;
         }
         #endregion
@@ -35,10 +32,10 @@ namespace Dt.MgrDemo.一对多
         /// <summary>
         /// 
         /// </summary>
-        public string Name
+        public string 父名
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (string)this["父名"]; }
+            set { this["父名"] = value; }
         }
     }
 }

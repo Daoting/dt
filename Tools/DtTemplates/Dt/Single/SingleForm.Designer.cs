@@ -29,7 +29,6 @@ namespace Dt
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SingleForm));
             this.label2 = new System.Windows.Forms.Label();
             this._ns = new System.Windows.Forms.TextBox();
@@ -41,12 +40,11 @@ namespace Dt
             this.label7 = new System.Windows.Forms.Label();
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnClear = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this._dg = new System.Windows.Forms.DataGridView();
             this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Del = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this._dg)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,7 +68,7 @@ namespace Dt
             // label1
             // 
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(12, 27);
+            this.label1.Location = new System.Drawing.Point(12, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(176, 21);
             this.label1.TabIndex = 18;
@@ -78,14 +76,14 @@ namespace Dt
             // 
             // _clsRoot
             // 
-            this._clsRoot.Location = new System.Drawing.Point(187, 27);
+            this._clsRoot.Location = new System.Drawing.Point(187, 47);
             this._clsRoot.Name = "_clsRoot";
             this._clsRoot.Size = new System.Drawing.Size(269, 21);
             this._clsRoot.TabIndex = 12;
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 265);
+            this._btnOK.Location = new System.Drawing.Point(381, 275);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -96,7 +94,7 @@ namespace Dt
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(14, 32);
+            this.linkLabel2.Location = new System.Drawing.Point(14, 52);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(77, 12);
             this.linkLabel2.TabIndex = 103;
@@ -105,7 +103,7 @@ namespace Dt
             // 
             // _svcUrl
             // 
-            this._svcUrl.Location = new System.Drawing.Point(187, 47);
+            this._svcUrl.Location = new System.Drawing.Point(187, 27);
             this._svcUrl.Name = "_svcUrl";
             this._svcUrl.Size = new System.Drawing.Size(269, 21);
             this._svcUrl.TabIndex = 105;
@@ -113,7 +111,7 @@ namespace Dt
             // label7
             // 
             this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label7.Location = new System.Drawing.Point(12, 47);
+            this.label7.Location = new System.Drawing.Point(12, 27);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(176, 21);
             this.label7.TabIndex = 106;
@@ -122,7 +120,7 @@ namespace Dt
             // linkLabel3
             // 
             this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(14, 51);
+            this.linkLabel3.Location = new System.Drawing.Point(14, 31);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(53, 12);
             this.linkLabel3.TabIndex = 110;
@@ -134,19 +132,10 @@ namespace Dt
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(14, 190);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(209, 84);
+            this.label4.Size = new System.Drawing.Size(209, 108);
             this.label4.TabIndex = 143;
-            this.label4.Text = "* 生成框架前确保实体类已存在\r\n\r\n* 通常只选择一个表，也可增加扩展表\r\n\r\n* 选择多个表时采用虚拟实体方式\r\n\r\n* 按F2或双击【实体类名】可编辑\r\n";
-            // 
-            // btnClear
-            // 
-            this.btnClear.Location = new System.Drawing.Point(263, 185);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
-            this.btnClear.TabIndex = 142;
-            this.btnClear.Text = "清空";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.label4.Text = "* 生成框架前确保实体类已存在\r\n\r\n* 通常只选择一个表，也可增加扩展表\r\n\r\n* 选择多个表时采用虚拟实体方式\r\n\r\n* 按F2或双击【实体类名】可编辑\r\n\r" +
+    "\n* 可通过修改[序号]控制实体顺序\r\n";
             // 
             // btnAdd
             // 
@@ -154,7 +143,7 @@ namespace Dt
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 141;
-            this.btnAdd.Text = "增加";
+            this.btnAdd.Text = "选择";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -167,7 +156,7 @@ namespace Dt
             this._dg.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Tbl,
             this.Cls,
-            this.Del});
+            this.序号});
             this._dg.Location = new System.Drawing.Point(12, 67);
             this._dg.Name = "_dg";
             this._dg.RowHeadersVisible = false;
@@ -180,31 +169,28 @@ namespace Dt
             this.Tbl.HeaderText = "表名";
             this.Tbl.Name = "Tbl";
             this.Tbl.ReadOnly = true;
-            this.Tbl.Width = 174;
+            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Tbl.Width = 140;
             // 
             // Cls
             // 
             this.Cls.HeaderText = "实体类名";
             this.Cls.Name = "Cls";
-            this.Cls.Width = 180;
+            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Cls.Width = 140;
             // 
-            // Del
+            // 序号
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "删除";
-            this.Del.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Del.HeaderText = "操作";
-            this.Del.Name = "Del";
-            this.Del.Text = "";
-            this.Del.Width = 70;
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.Width = 120;
             // 
             // SingleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 305);
+            this.ClientSize = new System.Drawing.Size(473, 315);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this._dg);
             this.Controls.Add(this.linkLabel3);
@@ -241,11 +227,10 @@ namespace Dt
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.DataGridView _dg;
         private System.Windows.Forms.DataGridViewTextBoxColumn Tbl;
         private System.Windows.Forms.DataGridViewTextBoxColumn Cls;
-        private System.Windows.Forms.DataGridViewButtonColumn Del;
+        private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
     }
 }
