@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Dt
 {
     public partial class ManyToManyForm : Form
     {
-        FileParams _params;
+        ManyToManyParams _params;
         string _path;
 
         public ManyToManyForm()
@@ -26,10 +27,9 @@ namespace Dt
         {
             try
             {
-                _params = new FileParams
+                _params = new ManyToManyParams
                 {
                     NameSpace = Kit.GetText(_ns, "命名空间不可为空！"),
-                    ClsRoot = Kit.GetText(_clsRoot, "框架类的词根不可为空！"),
                 };
             }
             catch
@@ -37,109 +37,156 @@ namespace Dt
                 return;
             }
 
-            if (_dg.Rows.Count == 0)
+            if (_dgParent.Rows.Count == 0 || _dgChild.Rows.Count == 0 || _dgMid.Rows.Count == 0)
             {
                 MessageBox.Show("未选择表与实体的映射关系！");
                 return;
             }
 
-            for (int i = 0; i < _dg.Rows.Count; i++)
+            if (_dgChild.Rows.Count != _dgMid.Rows.Count)
             {
-                _params.Tbls.Add(_dg.Rows[i].Cells[0].Value.ToString());
-                _params.Entities.Add(_dg.Rows[i].Cells[1].Value.ToString());
+                MessageBox.Show("关联实体和中间实体的个数不相同！");
+                return;
             }
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("正在生成单实体框架...")
-                .AppendLine($"已选择{_dg.Rows.Count}个实体类型")
-                .AppendLine($"框架类的词根：{_params.ClsRoot}");
+            _params.MainTbl = _dgParent.Rows[0].Cells[0].Value.ToString();
+            _params.MainEntity = _dgParent.Rows[0].Cells[1].Value.ToString();
+            _params.MainRoot = _dgParent.Rows[0].Cells[2].Value.ToString();
+
+            _dgChild.Sort(_dgChild.Columns[3], System.ComponentModel.ListSortDirection.Ascending);
+            for (int i = 0; i < _dgChild.Rows.Count; i++)
+            {
+                var item = _dgChild.Rows[i];
+                var ri = new RelatedInfo();
+                ri.Tbl = item.Cells[0].Value.ToString();
+                ri.Entity = item.Cells[1].Value.ToString();
+                ri.Root = item.Cells[2].Value.ToString();
+                _params.Related.Add(ri);
+            }
+
+            _dgMid.Sort(_dgMid.Columns[4], System.ComponentModel.ListSortDirection.Ascending);
+            for (int i = 0; i < _dgMid.Rows.Count; i++)
+            {
+                var item = _dgMid.Rows[i];
+                if (item.Cells[2].Value == null || item.Cells[3].Value == null)
+                {
+                    MessageBox.Show("中间实体的主实体外键、关联实体外键不可为空！");
+                    return;
+                }
+
+                var ri = _params.Related[i];
+                ri.RelatedTbl = item.Cells[0].Value.ToString();
+                ri.RelatedEntity = item.Cells[1].Value.ToString();
+                ri.MainRelatedID = item.Cells[2].Value.ToString();
+                ri.RelatedID = item.Cells[3].Value.ToString();
+            }
 
             _path = Kit.GetFolderPath();
-            await WriteWin();
-            await WriteForm();
-            await WriteList();
-            await WriteQuery();
+            WriteWin();
+            await WriteMainList();
+            await WriteMainForm();
+            await WriteMainQuery();
 
+            foreach (var item in _params.Related)
+            {
+                await WriteRelatedItem(item);
+            }
             Close();
         }
 
-        async Task WriteWin()
+        void WriteWin()
         {
-            var dt = _params.Params;
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml"), "Dt.Single.Res.EntityWin.xaml", dt);
-
-            dt["$blurclause$"] = await AtSvc.GetBlurClause(_params.Tbls);
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml.cs"), "Dt.Single.Res.EntityWin.xaml.cs", dt);
-            dt.Remove("$blurclause$");
+            var dt = _params.GetWinParams();
+            var file = $"{_params.MainRoot}Win.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.MainWin.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.MainWin.xaml.cs", dt);
         }
 
-        async Task WriteForm()
+        async Task WriteMainList()
         {
-            var dt = _params.Params;
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Form.xaml.cs"), "Dt.Single.Res.EntityForm.xaml.cs", dt);
-
-            var body = await AtSvc.GetFvCells(_params.Tbls);
-            // 可能包含命名空间
-            dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
-
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Form.xaml"), "Dt.Single.Res.EntityForm.xaml", dt);
-            dt.Remove("$fvbody$");
+            var dt = await _params.GetMainListParams();
+            var file = $"{_params.MainRoot}List.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.MainList.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.MainList.xaml.cs", dt);
         }
 
-        async Task WriteList()
+        async Task WriteMainForm()
         {
-            var dt = _params.Params;
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}List.xaml.cs"), "Dt.Single.Res.EntityList.xaml.cs", dt);
-
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(_params.Tbls);
-            dt["$lvcols$"] = await AtSvc.GetLvTableCols(_params.Tbls);
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}List.xaml"), "Dt.Single.Res.EntityList.xaml", dt);
-            dt.Remove("$lvtemp$");
-            dt.Remove("$lvcols$");
+            var dt = await _params.GetMainFormParams();
+            var file = $"{_params.MainRoot}Form.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.MainForm.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.MainForm.xaml.cs", dt);
         }
 
-        async Task WriteQuery()
+        async Task WriteMainQuery()
         {
-            var dt = _params.Params;
-            dt["$queryxaml$"] = await AtSvc.GetQueryFvCells(_params.Tbls);
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Query.xaml"), "Dt.Single.Res.EntityQuery.xaml", dt);
-            dt.Remove("$queryxaml$");
-
-            dt["$querydata$"] = await AtSvc.GetQueryFvData(_params.Tbls);
-            Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Query.xaml.cs"), "Dt.Single.Res.EntityQuery.xaml.cs", dt);
-            dt.Remove("$querydata$");
+            var dt = await _params.GetMainQueryParams();
+            var file = $"{_params.MainRoot}Query.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.MainQuery.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.MainQuery.xaml.cs", dt);
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        async Task WriteRelatedItem(RelatedInfo p_ci)
         {
-            List<string> tbls = null;
-            if (_dg.Rows.Count > 0)
-            {
-                tbls = new List<string>();
-                for (int i = 0; i < _dg.Rows.Count; i++)
-                {
-                    tbls.Add(_dg.Rows[i].Cells[0].Value.ToString());
-                }
-            }
+            var dt = await _params.GetRelatedParams(p_ci);
+            var file = $"{_params.MainRoot}{p_ci.Root}List.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.RelatedList.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.RelatedList.xaml.cs", dt);
 
-            var dlg = new SelectTbls(tbls);
+            file = $"{p_ci.Root}4{_params.MainRoot}Dlg.xaml";
+            Kit.WritePrjFile(Path.Combine(_path, file), "Dt.ManyToMany.Res.SelectDlg.xaml", dt);
+            Kit.WritePrjFile(Path.Combine(_path, file + ".cs"), "Dt.ManyToMany.Res.SelectDlg.xaml.cs", dt);
+        }
+
+        private void btnChild_Click(object sender, EventArgs e)
+        {
+            var dlg = new SelectTbls(null);
             if (dlg.ShowDialog() == DialogResult.OK)
             {
+                _dgChild.Rows.Clear();
+                int index = 1;
                 foreach (var item in dlg.GetSelection())
                 {
-                    int i = _dg.Rows.Add();
-                    _dg.Rows[i].Cells[0].Value = item;
-                    _dg.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
+                    int i = _dgChild.Rows.Add();
+                    _dgChild.Rows[i].Cells[0].Value = item;
+                    _dgChild.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
+                    _dgChild.Rows[i].Cells[2].Value = Kit.GetClsName(item);
+                    _dgChild.Rows[i].Cells[3].Value = (index++).ToString();
                 }
             }
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private void _btnParent_Click(object sender, EventArgs e)
         {
-            if (_dg.Rows.Count > 0)
+            var dlg = new SelectTbls(null);
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
-                if (MessageBox.Show("确定要清空已选择的表吗？", "确认") == DialogResult.OK)
-                    _dg.Rows.Clear();
+                _dgParent.Rows.Clear();
+                var item = dlg.GetSelection().FirstOrDefault();
+                if (item != null)
+                {
+                    int i = _dgParent.Rows.Add();
+                    _dgParent.Rows[i].Cells[0].Value = item;
+                    _dgParent.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
+                    _dgParent.Rows[i].Cells[2].Value = Kit.GetClsName(item);
+                }
+            }
+        }
+
+        private void _btnMid_Click(object sender, EventArgs e)
+        {
+            var dlg = new SelectTbls(null);
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                _dgMid.Rows.Clear();
+                int index = 1;
+                foreach (var item in dlg.GetSelection())
+                {
+                    int i = _dgMid.Rows.Add();
+                    _dgMid.Rows[i].Cells[0].Value = item;
+                    _dgMid.Rows[i].Cells[1].Value = Kit.GetClsName(item) + "X";
+                    _dgMid.Rows[i].Cells[4].Value = (index++).ToString();
+                }
             }
         }
 
@@ -147,7 +194,6 @@ namespace Dt
         {
             var tip = new ToolTip();
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
-            tip.SetToolTip(linkLabel2, Kit.RootNameTip);
         }
     }
 }

@@ -86,6 +86,25 @@
     <Compile Include="ManyToMany\ManyToManyForm.Designer.cs">
       <DependentUpon>ManyToManyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ManyToMany\ManyToManyParams.cs" />
+    <EmbeddedResource Include="ManyToMany\Res\MainWin.xaml.cs">
+      <DependentUpon>MainWin.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\Res\MainList.xaml.cs">
+      <DependentUpon>MainList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\Res\MainForm.xaml.cs">
+      <DependentUpon>MainForm.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\Res\MainQuery.xaml.cs">
+      <DependentUpon>MainQuery.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\Res\RelatedList.xaml.cs">
+      <DependentUpon>RelatedList.xaml</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManyToMany\Res\SelectDlg.xaml.cs">
+      <DependentUpon>SelectDlg.xaml</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="OnToMany\OnToManyParams.cs" />
     <Compile Include="OnToMany\OnToManyForm.cs">
       <SubType>Form</SubType>
@@ -93,6 +112,9 @@
     <Compile Include="OnToMany\OnToManyForm.Designer.cs">
       <DependentUpon>OnToManyForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ManyToMany\ManyToManyForm.resx">
+      <DependentUpon>ManyToManyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OnToMany\Res\ParentWin.xaml.cs">
       <DependentUpon>ParentWin.xaml</DependentUpon>
     </EmbeddedResource>
@@ -112,9 +134,6 @@
       <DependentUpon>ChildForm.xaml</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Single\FileParams.cs" />
-    <EmbeddedResource Include="ManyToMany\ManyToManyForm.resx">
-      <DependentUpon>ManyToManyForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="OnToMany\OnToManyForm.resx">
       <DependentUpon>OnToManyForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -612,6 +631,42 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="OnToMany\Res\ChildForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\MainWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\MainList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\MainForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\MainQuery.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\RelatedList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ManyToMany\Res\SelectDlg.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

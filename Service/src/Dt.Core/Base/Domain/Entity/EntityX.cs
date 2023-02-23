@@ -212,12 +212,12 @@ namespace Dt.Core
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
+                sql += " a where " + p_filter;
             return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " where " + p_filter;
+                res.Item2 += " a where " + p_filter;
             return res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
@@ -235,13 +235,13 @@ namespace Dt.Core
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
+                sql += " a where " + p_filter;
             sql += $" limit {p_starRow},{p_pageSize} ";
             return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " where " + p_filter;
+                res.Item2 += " a where " + p_filter;
             res.Item2 += $" limit {p_starRow},{p_pageSize} ";
             return res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
@@ -258,12 +258,12 @@ namespace Dt.Core
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " where " + p_filter;
+                sql += " a where " + p_filter;
             return Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " where " + p_filter;
+                res.Item2 += " a where " + p_filter;
             return res.Item1.First<TEntity>(res.Item2, p_params);
 #endif
         }

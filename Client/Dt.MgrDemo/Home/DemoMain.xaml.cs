@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Dt.Base;
 using Dt.MgrDemo.一对多;
 using Dt.MgrDemo.单实体;
+using Dt.MgrDemo.多对多;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -43,11 +44,27 @@ namespace Dt.MgrDemo
 
             group = new GroupData<DemoItem>
             {
-                new DemoItem("单实体框架", typeof(实体Win), "单表的增删改查操作框架"),
-                new DemoItem("虚拟实体框架", typeof(虚拟Win), "因字段过多将单表拆分成多表时适用于虚拟实体，本质还是单实体框架"),
-                new DemoItem("一对多框架", typeof(父表Win), "服务端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存等"),
+                new DemoItem("单实体", typeof(实体Win), "单表的增删改查框架"),
+                new DemoItem("虚拟实体", typeof(虚拟Win), "因字段过多将单表拆分成多表时适用于虚拟实体，本质还是单实体框架"),
             };
-            group.Title = "框架";
+            group.Title = "单实体框架";
+            ds.Add(group);
+
+            group = new GroupData<DemoItem>
+            {
+                new DemoItem("父子实体", typeof(父表Win), ""),
+                new DemoItem("树", typeof(父表Win), "单表树形结构的增删改查框架"),
+            };
+            group.Title = "一对多框架";
+            ds.Add(group);
+
+            group = new GroupData<DemoItem>
+            {
+                new DemoItem("角色", typeof(角色Win), "主实体对多个关联实体"),
+                new DemoItem("用户", typeof(用户Win), "用户对角色"),
+                new DemoItem("权限", typeof(权限Win), "权限对角色"),
+            };
+            group.Title = "多对多框架";
             ds.Add(group);
             _lv.Data= ds;
         }
