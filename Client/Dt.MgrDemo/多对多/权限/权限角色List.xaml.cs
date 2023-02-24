@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-23 创建
+* 日志: 2023-02-24 创建
 ******************************************************************************/
 #endregion
 
@@ -33,7 +33,7 @@ namespace Dt.MgrDemo.多对多
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await 角色X.Query("EXISTS ( SELECT RoleID FROM demo_角色权限 b WHERE a.ID = b.RoleID AND PrvID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await 角色X.Query("where exists ( select RoleID from demo_角色权限 b where a.ID = b.RoleID and PrvID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
             }
             else
             {

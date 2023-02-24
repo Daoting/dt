@@ -48,7 +48,7 @@ namespace Dt.Mgr.Chat
             // 撤回消息
             if (p_letter.LetterType == LetterType.Undo)
             {
-                var letter = await LetterX.First("MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", Kit.UserID } });
+                var letter = await LetterX.First("where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", Kit.UserID } });
                 if (letter != null)
                 {
                     // 删除

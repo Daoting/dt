@@ -343,7 +343,7 @@ namespace Dt.Core
         /// <returns></returns>
         internal string GetSelectAllSql()
         {
-            return $"select * from `{Name}`";
+            return $"select * from `{Name}` a";
         }
 
         /// <summary>

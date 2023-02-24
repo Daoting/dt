@@ -66,7 +66,7 @@ namespace $rootnamespace$
         {
             if (Clause == null)
             {
-                _lv.Data = await $entity$.Query();
+                _lv.Data = await $entity$.Query(null);
             }
             else
             {
@@ -78,10 +78,12 @@ namespace $rootnamespace$
         {
             Tabs tbs = new Tabs();
             var fs = new FuzzySearch();
+            fs.Fixed.Add("全部");
+            fs.CookieID = _win.GetType().FullName;
             tbs.Items.Add(fs);
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e))
+                if (string.IsNullOrEmpty(e) || e == "#全部")
                 {
                     Clause = null;
                 }

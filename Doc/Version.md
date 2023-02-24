@@ -75,9 +75,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Tab区域内导航增加切换Tab和返回首页的功能
 * VS扩展工具一对多模板
 * 多对多模板及样例
-
-
-* EntityX的Query Page 支持完整sql查询？
+* EntityX的Query Page First支持完整sql查询
 
 未测
 整个Chat

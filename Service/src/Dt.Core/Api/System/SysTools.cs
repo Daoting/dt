@@ -478,7 +478,7 @@ namespace Dt.Core
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder("where false");
             foreach (var tbl in p_tblNames)
             {
                 if (string.IsNullOrEmpty(tbl))
@@ -489,10 +489,9 @@ namespace Dt.Core
                 {
                     if (col.Type == typeof(string))
                     {
-                        if (sb.Length > 0)
-                            sb.Append(" OR ");
+                        sb.Append(" or ");
                         sb.Append(col.Name);
-                        sb.Append(" LIKE @input");
+                        sb.Append(" like @input");
                     }
                 }
             }

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-23 创建
+* 日志: 2023-02-24 创建
 ******************************************************************************/
 #endregion
 
@@ -24,7 +24,7 @@ namespace Dt.MgrDemo.多对多
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await 用户X.Query("NOT EXISTS ( SELECT UserID FROM demo_用户角色 b WHERE a.ID = b.UserID AND RoleID=@ReleatedID )", new { ReleatedID = p_releatedID });
+            _lv.Data = await 用户X.Query("where not exists ( select UserID from demo_用户角色 b where a.ID = b.UserID and RoleID=@ReleatedID )", new { ReleatedID = p_releatedID });
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

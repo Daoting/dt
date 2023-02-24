@@ -26,6 +26,14 @@ namespace Dt.Base
     [ContentProperty(Name = nameof(Fixed))]
     public partial class FuzzySearch : Tab
     {
+        #region 静态内容
+        public readonly static DependencyProperty CookieIDProperty = DependencyProperty.Register(
+            "CookieID",
+            typeof(string),
+            typeof(FuzzySearch),
+            null);
+        #endregion
+
         #region 成员变量
         string _lastText;
         string _baseUri;
@@ -64,19 +72,45 @@ namespace Dt.Base
         /// </summary>
         public Nl<string> Fixed { get; } = new Nl<string>();
 
+        /// <summary>
+        /// 保存搜索历史时的标识，当放在对话框中无法识别时需要设置
+        /// </summary>
+        public string CookieID
+        {
+            get { return (string)GetValue(CookieIDProperty); }
+            set { SetValue(CookieIDProperty, value); }
+        }
+
         protected override void OnInit(object p_params)
         {
 #if WIN
-            if (BaseUri != null)
+            // 在对话框中时为 xxx/FuzzySearch.xaml
+            if (!string.IsNullOrEmpty(CookieID))
+            {
+                _baseUri = CookieID;
+            }
+            else if (BaseUri != null && !BaseUri.AbsolutePath.EndsWith("/FuzzySearch.xaml"))
+            {
                 _baseUri = BaseUri.AbsolutePath;
+            }
             else if (OwnWin != null)
+            {
                 _baseUri = OwnWin.BaseUri.AbsolutePath;
+            }
 #else
             // 识别不同的查询面板，因uno中BaseUri为空！
-            if (OwnWin != null)
+            if (!string.IsNullOrEmpty(CookieID))
+            {
+                _baseUri = CookieID;
+            }
+            else if (OwnWin != null)
+            {
                 _baseUri = OwnWin.GetType().FullName;
+            }
             else if (!BaseUri.AbsolutePath.EndsWith("/FuzzySearch.xaml"))
+            {
                 _baseUri = BaseUri.AbsolutePath;
+            }
 #endif
 
             _tb.Text = "";
@@ -187,7 +221,7 @@ namespace Dt.Base
         async void SaveCookie(string p_text)
         {
             _lastText = p_text;
-            var sh = await SearchHistoryX.First($"BaseUri='{_baseUri}' and Content='{p_text}'");
+            var sh = await SearchHistoryX.First($"where BaseUri='{_baseUri}' and Content='{p_text}'");
             if (sh == null)
             {
                 SearchHistoryX his = await SearchHistoryX.New(BaseUri: _baseUri, Content: p_text);

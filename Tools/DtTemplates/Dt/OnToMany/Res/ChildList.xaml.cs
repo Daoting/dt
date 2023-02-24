@@ -35,7 +35,7 @@ namespace $rootnamespace$
         {
             if (_parentID > 0)
             {
-                _lv.Data = await $entity$.Query("$parentidname$=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
+                _lv.Data = await $entity$.Query("where $parentidname$=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
             }
             else
             {

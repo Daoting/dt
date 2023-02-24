@@ -26,7 +26,7 @@ namespace Dt.MgrDemo
 
         async void OnSearch(object sender, Mi e)
         {
-            _lv.Data = await 收文X.Query();
+            _lv.Data = await 收文X.Query(null);
             NaviTo("结果");
         }
 

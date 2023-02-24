@@ -31,7 +31,7 @@ namespace $rootnamespace$
 
         void OnSearch(object sender, string e)
         {
-            if (string.IsNullOrEmpty(e))
+            if (string.IsNullOrEmpty(e) || e == "#全部")
             {
                 _list.OnSearch(null);
             }

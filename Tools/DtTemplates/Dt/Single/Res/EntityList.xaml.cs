@@ -65,7 +65,7 @@ namespace $rootnamespace$
         {
             if (Clause == null)
             {
-                _lv.Data = await $entity$.Query();
+                _lv.Data = await $entity$.Query(null);
             }
             else
             {

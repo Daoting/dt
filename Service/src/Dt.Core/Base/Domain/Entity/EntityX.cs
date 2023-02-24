@@ -202,68 +202,149 @@ namespace Dt.Core
 
         #region 查询
         /// <summary>
-        /// 查询实体列表，每个实体包含所有列值
+        /// 查询实体列表，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
         /// </summary>
-        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有，可能被注入</param>
+        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
+        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>3. null时返回所有实体</para>
+        /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Query(string p_filter = null, object p_params = null)
+        public static Task<Table<TEntity>> Query(string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    sql = txt;
+                }
+            }
             return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    res.Item2 += " " + txt;
+                }
+                else
+                {
+                    res.Item2 = txt;
+                }
+            }
             return res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
 
         /// <summary>
-        /// 按页查询实体列表，每个实体包含所有列值
+        /// 按页查询实体列表，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
         /// </summary>
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有</param>
+        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
+        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>3. null时返回所有实体</para>
+        /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_filter = null, object p_params = null)
+        public static Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    // Sql键名或Sql语句，自由查询
+                    return Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                }
+            }
             sql += $" limit {p_starRow},{p_pageSize} ";
             return Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    res.Item2 += " " + txt;
+                }
+                else
+                {
+                    // Sql键名或Sql语句，自由查询
+                    return res.Item1.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                }
+            }
+
             res.Item2 += $" limit {p_starRow},{p_pageSize} ";
             return res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
 
         /// <summary>
-        /// 返回第一个实体对象，每个实体包含所有列值，不存在时返回null
+        /// 返回第一个实体对象，不存在时返回null，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
         /// </summary>
-        /// <param name="p_filter">过滤串，where后面的部分，null或空返回所有中的第一行</param>
+        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
+        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>3. null时返回第一个实体</para>
+        /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> First(string p_filter, object p_params = null)
+        public static Task<TEntity> First(string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
             var sql = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                sql += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    sql = txt;
+                }
+            }
             return Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
             var res = GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_filter))
-                res.Item2 += " a where " + p_filter;
+            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            {
+                var txt = p_whereOrKeyOrSql.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    res.Item2 += " " + txt;
+                }
+                else
+                {
+                    res.Item2 = txt;
+                }
+            }
             return res.Item1.First<TEntity>(res.Item2, p_params);
 #endif
         }

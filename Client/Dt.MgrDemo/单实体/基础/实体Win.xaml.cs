@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-22 创建
+* 日志: 2023-02-24 创建
 ******************************************************************************/
 #endregion
 
@@ -31,7 +31,7 @@ namespace Dt.MgrDemo.单实体
 
         void OnSearch(object sender, string e)
         {
-            if (string.IsNullOrEmpty(e))
+            if (string.IsNullOrEmpty(e) || e == "#全部")
             {
                 _list.OnSearch(null);
             }
@@ -39,7 +39,7 @@ namespace Dt.MgrDemo.单实体
             {
                 var clause = new QueryClause();
                 clause.Params = new Dict { { "input", $"%{e}%" } };
-                clause.Where = @"限长4 LIKE @input OR 不重复 LIKE @input OR 值变事件 LIKE @input";
+                clause.Where = @"where false or 限长4 like @input or 不重复 like @input or 值变事件 like @input";
                 _list.OnSearch(clause);
             }
         }

@@ -69,8 +69,6 @@ namespace Dt.Base
 
             // 生成sql查询的where后面的条件子句
             StringBuilder sw = new StringBuilder();
-            // 加无用的条件，方便字符串处理
-            sw.Append(IsAnd ? "true" : "false");
 
             Dict dt = new Dict();
             foreach (var cell in IDCells)
@@ -161,7 +159,17 @@ namespace Dt.Base
                 sw.Append(")");
             }
 
-            Query(this, new QueryClause { Where = sw.ToString(), Params = dt });
+            if (dt.Count == 0)
+            {
+                // 无过滤条件
+                Query(this, new QueryClause());
+            }
+            else
+            {
+                // 加无用的条件，方便字符串处理
+                string where = (IsAnd ? "where true" : "where false") + sw.ToString();
+                Query(this, new QueryClause { Where = where, Params = dt });
+            }
         }
 
         #region 命令对象

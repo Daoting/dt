@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-23 创建
+* 日志: 2023-02-24 创建
 ******************************************************************************/
 #endregion
 
@@ -66,7 +66,7 @@ namespace Dt.MgrDemo.多对多
         {
             if (Clause == null)
             {
-                _lv.Data = await 角色X.Query();
+                _lv.Data = await 角色X.Query(null);
             }
             else
             {
@@ -78,10 +78,12 @@ namespace Dt.MgrDemo.多对多
         {
             Tabs tbs = new Tabs();
             var fs = new FuzzySearch();
+            fs.Fixed.Add("全部");
+            fs.CookieID = _win.GetType().FullName;
             tbs.Items.Add(fs);
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e))
+                if (string.IsNullOrEmpty(e) || e == "#全部")
                 {
                     Clause = null;
                 }
@@ -89,7 +91,7 @@ namespace Dt.MgrDemo.多对多
                 {
                     var clause = new QueryClause();
                     clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"角色名称 LIKE @input OR 角色描述 LIKE @input";
+                    clause.Where = @"where false or 角色名称 like @input or 角色描述 like @input";
                     Clause = clause;
                 }
                 Query();
