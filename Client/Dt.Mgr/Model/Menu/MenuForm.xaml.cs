@@ -115,7 +115,7 @@ namespace Dt.Mgr.Model
                 Icon: row.Icon,
                 ViewName: row.ViewName,
                 Params: row.Params);
-            LobKit.OpenMenu(menu);
+            MenuDs.OpenMenu(menu);
         }
 
         async void OnLoadTreeGroup(object sender, AsyncEventArgs e)

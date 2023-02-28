@@ -62,7 +62,7 @@ namespace Dt.MgrDemo
         /// </summary>
         void InitFixedMenus()
         {
-            LobKit.FixedMenus = new List<OmMenu>
+            MenuDs.FixedMenus = new List<OmMenu>
             {
                 new OmMenu(
                     ID: 1,
