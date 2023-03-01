@@ -323,7 +323,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         protected override void OnStartDrag(PointerRoutedEventArgs e)
         {
-            if (IsPinned && CanFloat)
+            if (IsPinned && CanFloat && OwnWin != null)
                 OwnWin.OnDragStarted(this, e);
         }
 
