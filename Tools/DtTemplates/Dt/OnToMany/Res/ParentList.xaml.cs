@@ -117,9 +117,8 @@ namespace $rootnamespace$
             if (!Kit.IsPhoneUI)
             {
                 _dlgQuery.WinPlacement = DlgPlacement.CenterScreen;
-                _dlgQuery.MinWidth = 300;
-                _dlgQuery.MaxWidth = Kit.ViewWidth / 4;
-                _dlgQuery.MinHeight = 500;
+                _dlgQuery.Width = Kit.ViewWidth / 4;
+                _dlgQuery.Height = Kit.ViewHeight - 100;
                 _dlgQuery.ShowVeil = true;
             }
         }

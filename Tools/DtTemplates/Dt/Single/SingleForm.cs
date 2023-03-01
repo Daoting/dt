@@ -79,9 +79,7 @@ namespace Dt
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Form.xaml.cs"), "Dt.Single.Res.EntityForm.xaml.cs", dt);
 
-            var body = await AtSvc.GetFvCells(_params.Tbls);
-            // 可能包含命名空间
-            dt["$fvbody$"] = body.Replace("$namespace$", _params.NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
+            dt["$fvbody$"] = await AtSvc.GetFvCells(_params.Tbls);
 
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Form.xaml"), "Dt.Single.Res.EntityForm.xaml", dt);
             dt.Remove("$fvbody$");

@@ -371,7 +371,7 @@ namespace Dt.Core
                         string tpName = GetEnumName(col);
                         title = col.Comments.Substring(tpName.Length + 2);
                         title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" />");
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} />");
                     }
                     else if (col.Type == typeof(bool))
                     {
@@ -456,7 +456,15 @@ namespace Dt.Core
                     if (!string.IsNullOrEmpty(col.Comments)
                         && !IsChiness(col.Name))
                     {
-                        title = $" Title=\"{col.Comments}\"";
+                        if (IsEnumCol(col))
+                        {
+                            string tpName = GetEnumName(col);
+                            title = $" Title=\"{col.Comments.Substring(tpName.Length + 2)}\"";
+                        }
+                        else
+                        {
+                            title = $" Title=\"{col.Comments}\"";
+                        }
                     }
 
                     if (sb.Length > 0)
@@ -519,7 +527,7 @@ namespace Dt.Core
                 {
                     if (sb.Length > 0)
                         sb.AppendLine();
-                    AppendTabSpace(sb, 2);
+                    AppendTabSpace(sb, 3);
                     bool isEnum = IsEnumCol(col);
 
                     string title = "";
@@ -537,7 +545,7 @@ namespace Dt.Core
                         string tpName = GetEnumName(col);
                         title = col.Comments.Substring(tpName.Length + 2);
                         title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Enum=\"$namespace$.{tpName},$rootnamespace$.Client\" Query=\"Editable\" />");
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Query=\"Editable\" />");
                     }
                     else if (col.Type == typeof(bool))
                     {

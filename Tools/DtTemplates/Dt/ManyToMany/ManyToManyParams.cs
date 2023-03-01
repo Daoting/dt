@@ -71,9 +71,7 @@ namespace Dt
         {
             var dt = BaseParams;
             dt["$entity$"] = MainEntity;
-            var body = await AtSvc.GetFvCells(new List<string> { MainTbl });
-            // 可能包含命名空间
-            dt["$fvbody$"] = body.Replace("$namespace$", NameSpace).Replace("$rootnamespace$", Kit.GetRootNamespace());
+            dt["$fvbody$"] = await AtSvc.GetFvCells(new List<string> { MainTbl });
 
             string update = "";
             foreach (var item in Related)
