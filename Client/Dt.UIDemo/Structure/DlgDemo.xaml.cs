@@ -130,16 +130,29 @@ namespace Dt.UIDemo
             _dlg.Show();
         }
 
-        void OnNaviClick(object sender, RoutedEventArgs e)
+        void OnSingle(object sender, RoutedEventArgs e)
         {
-            //Dlg dlg = new Dlg { Title = "内部导航" };
-            //dlg.LoadMv(new TabNav1());
-            //if (!Kit.IsPhoneUI)
-            //{
-            //    dlg.Width = 400;
-            //    dlg.Height = 600;
-            //}
-            //dlg.Show();
+            var dlg = new Dlg { IsPinned = true, Title = "内嵌Tab" };
+            dlg.LoadTab(new TabNaviItem());
+            dlg.Show();
+        }
+
+        void OnMulti(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Dlg { Title = "内嵌多个Tab" };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = Kit.ViewWidth / 4;
+                dlg.Height = Kit.ViewHeight - 100;
+            }
+
+            dlg.LoadTabs(new List<Tab>
+            {
+                new TabNaviItem(),
+                new TabNaviItem(),
+                new Tab { Title = "内嵌3", Content = new TextBlock { Text = "标准Tab", Margin = new Thickness(10) }},
+            });
+            dlg.Show();
         }
 
         void OnClosed(object sender, EventArgs e)

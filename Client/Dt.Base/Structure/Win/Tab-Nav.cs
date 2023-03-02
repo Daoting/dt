@@ -143,33 +143,38 @@ namespace Dt.Base
             if (p_params != null)
                 p_tab.NaviParams = p_params;
 
-            if (p_isModal)
-            {
-                ShowDlg(p_tab);
-                return;
-            }
-
             // 建立导航关系
-            p_tab.OwnWin = OwnWin;
-            p_tab.OwnDlg = OwnDlg;
             p_tab.PreTab = this;
             NextTab = p_tab;
 
+            // PhoneUI模式
             if (Kit.IsPhoneUI)
             {
-                PhonePage.Show(p_tab);
+                // 若当前Tab在Dlg中，向前导航的Tab都在各自的新Dlg中
+                if (p_isModal || OwnDlg != null)
+                {
+                    ShowDlg(p_tab);
+                }
+                else
+                {
+                    PhonePage.Show(p_tab);
+                }
                 return;
             }
 
-            if (p_tab.OwnDlg != null)
+            // WinUI模式
+            if (p_isModal)
             {
-                p_tab.BackButtonVisibility = p_tab.OwnDlg.HideTitleBar ? Visibility.Visible : Visibility.Collapsed;
+                // 在新Dlg中显示
+                ShowDlg(p_tab);
             }
             else
             {
+                p_tab.OwnWin = OwnWin;
+                p_tab.OwnDlg = OwnDlg;
                 p_tab.BackButtonVisibility = Visibility.Visible;
+                Owner.ReplaceItem(this, p_tab);
             }
-            Owner.ReplaceItem(this, p_tab);
         }
 
         /// <summary>
@@ -202,7 +207,16 @@ namespace Dt.Base
                 // 有上一Tab
                 if (await BeforeClose())
                 {
-                    Owner.ReplaceItem(this, PreTab);
+                    if (OwnDlg != null && PreTab.OwnDlg != OwnDlg)
+                    {
+                        // 窗口的首页Tab
+                        OwnDlg.Close();
+                    }
+                    else
+                    {
+                        // 就地切换
+                        Owner.ReplaceItem(this, PreTab);
+                    }
                     AfterBackward();
                 }
             }
@@ -238,40 +252,53 @@ namespace Dt.Base
             if (p_tab == current)
                 return;
 
-            // 查找首页
-            int cnt = 1;
+            // PhoneUI模式
             Tab home = current;
+            if (Kit.IsPhoneUI)
+            {
+                // 向后导航到首页
+                while (home.PreTab != null)
+                {
+                    if (home.OwnDlg != null)
+                    {
+                        home.OwnDlg.Close();
+                    }
+                    else if (UITree.RootFrame.CanGoBack)
+                    {
+                        UITree.RootFrame.GoBack();
+                    }
+                    var tab = home;
+                    home = home.PreTab;
+                    tab.PreTab = null;
+                    tab.NextTab = null;
+                }
+
+                // 若首页Tab在Dlg中，切换的Tab也在新Dlg中
+                if (home.OwnDlg != null)
+                {
+                    ShowDlg(p_tab);
+                }
+                else
+                {
+                    PhonePage.Show(p_tab);
+                }
+                return;
+            }
+
+            // WinUI模式，查找首页
             while (home.PreTab != null)
             {
                 var tab = home;
                 home = home.PreTab;
                 tab.PreTab = null;
                 tab.NextTab = null;
-                cnt++;
             }
 
             // 建立导航关系
-            p_tab.OwnWin = OwnWin;
-            p_tab.OwnDlg = OwnDlg;
+            p_tab.OwnWin = home.OwnWin;
+            p_tab.OwnDlg = home.OwnDlg;
             p_tab.PreTab = home;
             home.NextTab = p_tab;
-
-            if (Kit.IsPhoneUI)
-            {
-                // 向后导航到首页
-                if (cnt > 1)
-                {
-                    var frame = UITree.RootFrame;
-                    for (int i = 0; i < cnt - 1; i++)
-                    {
-                        if (frame.CanGoBack)
-                            frame.GoBack();
-                    }
-                }
-
-                PhonePage.Show(p_tab);
-                return;
-            }
 
             if (p_showBackBtn)
             {
@@ -313,6 +340,14 @@ namespace Dt.Base
             Tab home = current;
             while (home.PreTab != null)
             {
+                if (home.OwnDlg != null && home.PreTab.OwnDlg != OwnDlg)
+                {
+                    // 窗口的首页Tab，关闭
+                    home.OwnDlg.Close();
+                    // 关闭窗口后的最上Tab最为被切换的页
+                    current = home.PreTab;
+                }
+
                 var tab = home;
                 home = home.PreTab;
                 tab.NextTab = null;
@@ -322,7 +357,7 @@ namespace Dt.Base
 
             // 切换首页
             if (home != current)
-                Owner.ReplaceItem(current, home);
+                current.Owner.ReplaceItem(current, home);
         }
 
         void BackToPhoneHome()
@@ -337,27 +372,22 @@ namespace Dt.Base
             if (current.PreTab == null)
                 return;
 
-            // 查找首页
-            int cnt = 1;
+            // 向后导航到首页
             Tab home = current;
             while (home.PreTab != null)
             {
+                if (home.OwnDlg != null)
+                {
+                    home.OwnDlg.Close();
+                }
+                else if (UITree.RootFrame.CanGoBack)
+                {
+                    UITree.RootFrame.GoBack();
+                }
                 var tab = home;
                 home = home.PreTab;
                 tab.PreTab = null;
                 tab.NextTab = null;
-                cnt++;
-            }
-
-            // 向后导航到首页
-            if (cnt > 1)
-            {
-                var frame = UITree.RootFrame;
-                for (int i = 0; i < cnt - 1; i++)
-                {
-                    if (frame.CanGoBack)
-                        frame.GoBack();
-                }
             }
         }
         #endregion

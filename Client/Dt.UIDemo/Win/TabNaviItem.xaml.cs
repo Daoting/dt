@@ -34,7 +34,7 @@ namespace Dt.UIDemo
                 Kit.Msg($"输入参数：{p_params}");
 
             Result = new Random().Next(100);
-            Title = (OwnDlg != null ? "对话框" : "标题") + Result.ToString();
+            Title = "Tab " + Result.ToString();
         }
 
         async void OnForward(object sender, RoutedEventArgs e)
@@ -66,18 +66,38 @@ namespace Dt.UIDemo
             BackToHome();
         }
 
-        void OnShowDlg(object sender, RoutedEventArgs e)
+        void OnToggle(object sender, RoutedEventArgs e)
+        {
+            Toggle(new TabNaviItem());
+        }
+
+        void OnSingle(object sender, RoutedEventArgs e)
         {
             var dlg = new Dlg { IsPinned = true, Title = "内嵌Tab" };
             if ((bool)_cbDlgTitle.IsChecked)
                 dlg.HideTitleBar = true;
-            dlg.LoadTab(new TabNaviItem { Title = "对话框" });
+            dlg.LoadTab(new TabNaviItem());
             dlg.Show();
         }
 
-        void OnToggle(object sender, RoutedEventArgs e)
+        void OnMulti(object sender, RoutedEventArgs e)
         {
-            Toggle(new TabNaviItem());
+            var dlg = new Dlg { Title = "内嵌多个Tab" };
+            if ((bool)_cbDlgTitle.IsChecked)
+                dlg.HideTitleBar = true;
+
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = Kit.ViewWidth / 4;
+                dlg.Height = Kit.ViewHeight - 100;
+            }
+            dlg.LoadTabs(new List<Tab>
+            { 
+                new TabNaviItem(),
+                new TabNaviItem(),
+                new Tab { Title = "内嵌3", Content = new TextBlock { Text = "标准Tab", Margin = new Thickness(10) }},
+            });
+            dlg.Show();
         }
     }
 }

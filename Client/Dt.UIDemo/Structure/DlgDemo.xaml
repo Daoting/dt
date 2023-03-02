@@ -18,10 +18,6 @@
             <Button Content="异步等待对话框" Click="OnShowAsync" />
             <Button Content="随机位置显示" Click="OnShowPos" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="椭圆形对话框" Click="OnClicked4" />
-            <Button Content="对话框内部导航" Click="OnNaviClick" />
-        </StackPanel>
         <a:CBar Title="内置对话框" />
         <StackPanel Orientation="Horizontal">
             <Button Content="确认对话框" Click="OnClicked1" />
@@ -30,5 +26,11 @@
         <a:CBar Title="提示信息对话框" />
         <TextBox x:Name="_tb" PlaceholderText="文本框内容含4出警告框" TextChanged="OnTextChanged" />
         <Button x:Name="_btn" Content="显示消息框" Click="OnMsgClick" />
+        <a:CBar Title="其它" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="内嵌单个Tab" Click="OnSingle" />
+            <Button Content="内嵌多个Tab" Click="OnMulti" />
+            <Button Content="椭圆形对话框" Click="OnClicked4" />
+        </StackPanel>
     </a:Fv>
 </a:Win>

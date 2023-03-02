@@ -479,6 +479,9 @@ namespace Dt.Base
         /// <param name="p_tab"></param>
         public void LoadTab(Tab p_tab)
         {
+            if (p_tab == null)
+                Throw.Msg("Dlg中的Tab不可为空！");
+
             p_tab.OwnDlg = this;
             if (Kit.IsPhoneUI)
             {
@@ -489,6 +492,46 @@ namespace Dt.Base
             {
                 Tabs tabs = new Tabs();
                 tabs.Items.Add(p_tab);
+                Content = tabs;
+            }
+        }
+
+        /// <summary>
+        /// 窗口内加载多Tab，PhoneUI外套PhoneTabs，WinUI外套Tabs
+        /// </summary>
+        /// <param name="p_tabs"></param>
+        public void LoadTabs(IList<Tab> p_tabs)
+        {
+            if (p_tabs == null || p_tabs.Count == 0)
+                Throw.Msg("Dlg中的Tab不可为空！");
+
+            if (p_tabs.Count == 1)
+            {
+                LoadTab(p_tabs[0]);
+                return;
+            }
+
+            if (Kit.IsPhoneUI)
+            {
+                HideTitleBar = true;
+                var tabs = new PhoneTabs();
+                foreach (var tab in p_tabs)
+                {
+                    tab.OwnDlg = this;
+                    tabs.AddItem(tab);
+                }
+
+                tabs.Select(0);
+                Content = tabs;
+            }
+            else
+            {
+                Tabs tabs = new Tabs();
+                foreach (var tab in p_tabs)
+                {
+                    tab.OwnDlg = this;
+                    tabs.Items.Add(tab);
+                }
                 Content = tabs;
             }
         }
