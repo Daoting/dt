@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-24 创建
+* 日志: 2023-03-02 创建
 ******************************************************************************/
 #endregion
 
@@ -13,14 +13,16 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.MgrDemo.一对多
 {
-    public sealed partial class 父表Form : Tab
+    public sealed partial class 父表小儿Form : Tab
     {
-        public 父表Form()
+        long _parentID;
+
+        public 父表小儿Form()
         {
             InitializeComponent();
         }
 
-        public async Task Update(long p_id)
+        public async Task Update(long p_id, long p_parentID)
         {
             var d = Data;
             if (d != null && d.ID == p_id)
@@ -29,10 +31,10 @@ namespace Dt.MgrDemo.一对多
             if (!await _fv.DiscardChanges())
                 return;
 
+            _parentID = p_parentID;
             if (p_id > 0)
             {
-                Data = await 父表X.GetByID(p_id);
-                UpdateRelated(p_id);
+                Data = await 小儿X.GetByID(p_id);
             }
             else
             {
@@ -43,13 +45,11 @@ namespace Dt.MgrDemo.一对多
         public void Clear()
         {
             Data = null;
-            UpdateRelated(-1);
         }
 
         async void Create()
         {
-            Data = await 父表X.New();
-            UpdateRelated(-1);
+            Data = await 小儿X.New(GroupID: _parentID);
         }
 
         void OnSave(object sender, Mi e)
@@ -64,15 +64,9 @@ namespace Dt.MgrDemo.一对多
 
         async void Save()
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
+            if (await Data.Save())
             {
-                _win.ParentList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
+                _win.小儿List.Refresh();
             }
         }
 
@@ -97,14 +91,8 @@ namespace Dt.MgrDemo.一对多
             if (await d.Delete())
             {
                 Clear();
-                _win.ParentList.Update();
+                _win.小儿List.Refresh();
             }
-        }
-
-        void UpdateRelated(long p_id)
-        {
-            _win.大儿List.Update(p_id);
-            _win.小儿List.Update(p_id);
         }
 
         protected override Task<bool> OnClosing()
@@ -112,9 +100,9 @@ namespace Dt.MgrDemo.一对多
             return _fv.DiscardChanges();
         }
 
-        父表X Data
+        小儿X Data
         {
-            get { return _fv.Data.To<父表X>(); }
+            get { return _fv.Data.To<小儿X>(); }
             set { _fv.Data = value; }
         }
 

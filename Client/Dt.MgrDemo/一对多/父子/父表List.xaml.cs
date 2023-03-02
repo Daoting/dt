@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-24 创建
+* 日志: 2023-03-02 创建
 ******************************************************************************/
 #endregion
 
@@ -76,11 +76,10 @@ namespace Dt.MgrDemo.一对多
 
         void CreateQueryDlg()
         {
-            Tabs tbs = new Tabs();
+            var tabs = new List<Tab>();
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            tbs.Items.Add(fs);
             fs.Search += (s, e) =>
             {
                 if (string.IsNullOrEmpty(e) || e == "#全部")
@@ -97,6 +96,7 @@ namespace Dt.MgrDemo.一对多
                 Query();
                 _dlgQuery.Close();
             };
+            tabs.Add(fs);
 
             var qs = new 父表Query();
             qs.Query += (s, e) =>
@@ -105,23 +105,22 @@ namespace Dt.MgrDemo.一对多
                 Query();
                 _dlgQuery.Close();
             };
-            tbs.Items.Add(qs);
+            tabs.Add(qs);
 
             _dlgQuery = new Dlg
             {
                 Title = "搜索",
-                Content = tbs,
                 IsPinned = true
             };
 
             if (!Kit.IsPhoneUI)
             {
                 _dlgQuery.WinPlacement = DlgPlacement.CenterScreen;
-                _dlgQuery.MinWidth = 300;
-                _dlgQuery.MaxWidth = Kit.ViewWidth / 4;
-                _dlgQuery.MinHeight = 500;
+                _dlgQuery.Width = Kit.ViewWidth / 4;
+                _dlgQuery.Height = Kit.ViewHeight - 100;
                 _dlgQuery.ShowVeil = true;
             }
+            _dlgQuery.LoadTabs(tabs);
         }
 
         Dlg _dlgQuery;

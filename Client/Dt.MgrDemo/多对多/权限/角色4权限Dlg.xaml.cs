@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-24 创建
+* 日志: 2023-03-02 创建
 ******************************************************************************/
 #endregion
 
@@ -31,7 +31,7 @@ namespace Dt.MgrDemo.多对多
                 PlacementTarget = p_target;
                 ClipElement = p_target;
                 Height = Kit.ViewHeight / 2;
-                MaxWidth = 400;
+                Width = Kit.ViewWidth / 4;
             }
             return await ShowAsync();
         }

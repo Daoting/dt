@@ -5,23 +5,22 @@
     xmlns:a="using:Dt.Base"
     Title="查询">
 
-    <a:QueryFv x:Name="_fv">
-        <a:CText ID="主表名称" Query="Editable" />
-        <a:CText ID="限长4" Query="Editable" />
-        <a:CText ID="不重复" Query="Editable" />
-        <a:CText ID="扩展1名称" Query="Editable" />
-        <a:CBool ID="禁止选中" Query="Editable" />
-        <a:CBool ID="禁止保存" Query="Editable" />
-        <a:CText ID="扩展2名称" Query="Editable" />
-        <a:CBool ID="禁止删除" Query="Editable" />
-        <a:CText ID="值变事件" Query="Editable" />
-        <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
-        <a:CBar />
-        <a:CBar>
-            <Grid ColumnDefinitions="*,*">
-                <Button Content="重置" Command="{Binding CmdReset,ElementName=_fv}" HorizontalAlignment="Stretch" />
-                <Button Content="查询" Command="{Binding CmdQuery,ElementName=_fv}" HorizontalAlignment="Stretch" Grid.Column="1" />
-            </Grid>
-        </a:CBar>
-    </a:QueryFv>
+    <Grid RowDefinitions="*,Auto">
+        <a:QueryFv x:Name="_fv">
+            <a:CText ID="主表名称" Query="Editable" />
+            <a:CText ID="限长4" Query="Editable" />
+            <a:CText ID="不重复" Query="Editable" />
+            <a:CText ID="扩展1名称" Query="Editable" />
+            <a:CBool ID="禁止选中" Query="Editable" />
+            <a:CBool ID="禁止保存" Query="Editable" />
+            <a:CText ID="扩展2名称" Query="Editable" />
+            <a:CBool ID="禁止删除" Query="Editable" />
+            <a:CText ID="值变事件" Query="Editable" />
+            <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
+        </a:QueryFv>
+        <Grid ColumnDefinitions="*,*" Margin="20" Grid.Row="1">
+            <Button Content="重置" Command="{Binding CmdReset,ElementName=_fv}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 深灰2}" HorizontalAlignment="Stretch" />
+            <Button Content="查询" Command="{Binding CmdQuery,ElementName=_fv}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 亮红}" HorizontalAlignment="Stretch" Grid.Column="1" />
+        </Grid>
+    </Grid>
 </a:Tab>
