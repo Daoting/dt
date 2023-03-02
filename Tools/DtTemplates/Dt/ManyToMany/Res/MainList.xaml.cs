@@ -76,11 +76,10 @@ namespace $rootnamespace$
 
         void CreateQueryDlg()
         {
-            Tabs tbs = new Tabs();
+            var tabs = new List<Tab>();
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            tbs.Items.Add(fs);
             fs.Search += (s, e) =>
             {
                 if (string.IsNullOrEmpty(e) || e == "#全部")
@@ -97,6 +96,7 @@ namespace $rootnamespace$
                 Query();
                 _dlgQuery.Close();
             };
+            tabs.Add(fs);
 
             var qs = new $mainroot$Query();
             qs.Query += (s, e) =>
@@ -105,12 +105,11 @@ namespace $rootnamespace$
                 Query();
                 _dlgQuery.Close();
             };
-            tbs.Items.Add(qs);
+            tabs.Add(qs);
 
             _dlgQuery = new Dlg
             {
                 Title = "搜索",
-                Content = tbs,
                 IsPinned = true
             };
 
@@ -121,6 +120,7 @@ namespace $rootnamespace$
                 _dlgQuery.Height = Kit.ViewHeight - 100;
                 _dlgQuery.ShowVeil = true;
             }
+            _dlgQuery.LoadTabs(tabs);
         }
 
         Dlg _dlgQuery;

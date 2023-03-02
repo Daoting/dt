@@ -37,7 +37,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 * cm_prv主键调整为long
-
+* 客户端根据数据版本号缓存数据的调整
 
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
 
@@ -77,6 +77,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 多对多模板及样例
 * EntityX的Query Page First支持完整sql查询
 * 完善文档
+* 多Tab在Dlg中显示
 
 未测
 整个Chat

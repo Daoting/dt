@@ -123,7 +123,7 @@ namespace Dt.Mgr
                 await Save(new CookieX("LoginPhone", p_phone));
                 await Save(new CookieX("LoginPwd", user.Pwd));
                 await Save(new CookieX("LoginID", user.ID.ToString()));
-                await Commit();
+                await Commit(false);
             }
 
             Kit.UserID = user.ID;

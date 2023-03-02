@@ -31,7 +31,7 @@ namespace $rootnamespace$
                 PlacementTarget = p_target;
                 ClipElement = p_target;
                 Height = Kit.ViewHeight / 2;
-                MaxWidth = 400;
+                Width = Kit.ViewWidth / 4;
             }
             return await ShowAsync();
         }
