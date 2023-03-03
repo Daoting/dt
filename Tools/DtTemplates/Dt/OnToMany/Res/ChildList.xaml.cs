@@ -21,6 +21,7 @@ namespace $rootnamespace$
         public $parentroot$$childroot$List()
         {
             InitializeComponent();
+            InitView();
         }
 
         public void Update(long p_parentID)
@@ -103,19 +104,30 @@ namespace $rootnamespace$
         #endregion
 
         #region 视图
-        private void OnListSelected(object sender, EventArgs e)
+        void InitView()
         {
-            _lv?.ChangeView(Resources["ListView"], ViewMode.List);
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
 
-        private void OnTableSelected(object sender, EventArgs e)
+        void OnToggleView(object sender, Mi e)
         {
-            _lv?.ChangeView(Resources["TableView"], ViewMode.Table);
+            ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
         }
 
-        private void OnTileSelected(object sender, EventArgs e)
+        void ToggleView(ViewMode p_mode)
         {
-            _lv?.ChangeView(Resources["TileView"], ViewMode.Tile);
+            if (p_mode == ViewMode.List)
+            {
+                _lv.ChangeView(Resources["ListView"], ViewMode.List);
+                _mi.Icon = Icons.表格;
+                _mi.ID = "表格";
+            }
+            else
+            {
+                _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+                _mi.Icon = Icons.列表;
+                _mi.ID = "列表";
+            }
         }
         #endregion
 
