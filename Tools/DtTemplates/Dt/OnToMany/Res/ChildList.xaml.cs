@@ -23,7 +23,7 @@ namespace $rootnamespace$
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public void Update(long p_parentID)
         {
             _parentID = p_parentID;
@@ -75,11 +75,11 @@ namespace $rootnamespace$
 
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
-                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
+                var ls = _lv.SelectedItems.Cast<$entity$>().ToList();
                 if (await ls.Delete())
                     Refresh();
             }
-            else if (await e.Data.To<$entity$> ().Delete())
+            else if (await e.Data.To<$entity$>().Delete())
             {
                 Refresh();
             }

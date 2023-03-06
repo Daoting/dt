@@ -22,7 +22,7 @@ namespace Dt.MgrDemo.多对多
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async Task Update(long p_id)
         {
             var d = Data;
@@ -47,6 +47,12 @@ namespace Dt.MgrDemo.多对多
         {
             Data = null;
             UpdateRelated(-1);
+        }
+
+        public 用户X Data
+        {
+            get { return _fv.Data.To<用户X>(); }
+            private set { _fv.Data = value; }
         }
         #endregion
 
@@ -116,12 +122,6 @@ namespace Dt.MgrDemo.多对多
         protected override Task<bool> OnClosing()
         {
             return _fv.DiscardChanges();
-        }
-
-        用户X Data
-        {
-            get { return _fv.Data.To<用户X>(); }
-            set { _fv.Data = value; }
         }
 
         用户Win _win => (用户Win)OwnWin;

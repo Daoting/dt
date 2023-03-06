@@ -23,7 +23,7 @@ namespace Dt.MgrDemo.多对多
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public void Update(long p_releatedID)
         {
             _releatedID = p_releatedID;

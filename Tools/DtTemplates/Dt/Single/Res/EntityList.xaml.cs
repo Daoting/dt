@@ -23,7 +23,7 @@ namespace $rootnamespace$
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async void Update()
         {
             if (Clause == null)
@@ -71,18 +71,33 @@ namespace $rootnamespace$
 
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
-                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
+                var ls = _lv.SelectedItems.Cast<$entity$>().ToList();
                 if (await ls.Delete())
                 {
                     Update();
-                    _win.Form.Clear();
+                    var d = _win.Form.Data;
+                    if (d != null)
+                    {
+                        foreach (var item in ls)
+                        {
+                            if (item == d)
+                            {
+                                _win.Form.Clear();
+                                break;
+                            }
+                        }
+                    }
                 }
             }
-            else if (await e.Data.To<$entity$> ().Delete())
+            else
             {
-                Update();
-                if (_lv.SelectedItem == e.Data)
-                    _win.Form.Clear();
+                var d = e.Data.To<$entity$>();
+                if (await d.Delete())
+                {
+                    Update();
+                    if (d == _win.Form.Data)
+                        _win.Form.Clear();
+                }
             }
         }
         #endregion

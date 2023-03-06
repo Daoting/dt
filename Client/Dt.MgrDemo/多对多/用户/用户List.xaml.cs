@@ -23,7 +23,7 @@ namespace Dt.MgrDemo.多对多
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async void Update()
         {
             if (Clause == null)
@@ -75,19 +75,11 @@ namespace Dt.MgrDemo.多对多
                 return;
             }
 
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
-            {
-                var ls = _lv.SelectedItems.Cast<用户X> ().ToList();
-                if (await ls.Delete())
-                {
-                    Update();
-                    _win.MainForm.Clear();
-                }
-            }
-            else if (await e.Data.To<用户X> ().Delete())
+            var d = e.Data.To<用户X>();
+            if (await d.Delete())
             {
                 Update();
-                if (_lv.SelectedItem == e.Data)
+                if (d == _win.MainForm.Data)
                     _win.MainForm.Clear();
             }
         }

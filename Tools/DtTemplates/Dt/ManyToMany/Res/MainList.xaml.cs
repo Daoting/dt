@@ -23,7 +23,7 @@ namespace $rootnamespace$
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async void Update()
         {
             if (Clause == null)
@@ -75,19 +75,11 @@ namespace $rootnamespace$
                 return;
             }
 
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
-            {
-                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
-                if (await ls.Delete())
-                {
-                    Update();
-                    _win.MainForm.Clear();
-                }
-            }
-            else if (await e.Data.To<$entity$> ().Delete())
+            var d = e.Data.To<$entity$>();
+            if (await d.Delete())
             {
                 Update();
-                if (_lv.SelectedItem == e.Data)
+                if (d == _win.MainForm.Data)
                     _win.MainForm.Clear();
             }
         }

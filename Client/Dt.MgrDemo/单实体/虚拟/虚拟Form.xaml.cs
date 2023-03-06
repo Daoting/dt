@@ -22,7 +22,7 @@ namespace Dt.MgrDemo.单实体
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async Task Update(long p_id)
         {
             var d = Data;
@@ -45,6 +45,12 @@ namespace Dt.MgrDemo.单实体
         public void Clear()
         {
             Data = null;
+        }
+
+        public VirX<主表X, 扩展1X, 扩展2X> Data
+        {
+            get { return _fv.Data.To<VirX<主表X, 扩展1X, 扩展2X>>(); }
+            private set { _fv.Data = value; }
         }
         #endregion
 
@@ -102,12 +108,6 @@ namespace Dt.MgrDemo.单实体
         protected override Task<bool> OnClosing()
         {
             return _fv.DiscardChanges();
-        }
-
-        VirX<主表X, 扩展1X, 扩展2X> Data
-        {
-            get { return _fv.Data.To<VirX<主表X, 扩展1X, 扩展2X>>(); }
-            set { _fv.Data = value; }
         }
 
         虚拟Win _win => (虚拟Win)OwnWin;

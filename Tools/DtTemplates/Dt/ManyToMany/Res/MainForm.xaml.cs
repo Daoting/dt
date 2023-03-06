@@ -22,7 +22,7 @@ namespace $rootnamespace$
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async Task Update(long p_id)
         {
             var d = Data;
@@ -47,6 +47,12 @@ namespace $rootnamespace$
         {
             Data = null;
             UpdateRelated(-1);
+        }
+
+        public $entity$ Data
+        {
+            get { return _fv.Data.To<$entity$>(); }
+            private set { _fv.Data = value; }
         }
         #endregion
 
@@ -116,12 +122,6 @@ $relatedupdate$
         protected override Task<bool> OnClosing()
         {
             return _fv.DiscardChanges();
-        }
-
-        $entity$ Data
-        {
-            get { return _fv.Data.To<$entity$>(); }
-            set { _fv.Data = value; }
         }
 
         $mainroot$Win _win => ($mainroot$Win)OwnWin;

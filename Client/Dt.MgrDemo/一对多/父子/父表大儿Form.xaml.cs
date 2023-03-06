@@ -22,7 +22,7 @@ namespace Dt.MgrDemo.一对多
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public async Task Update(long p_id, long p_parentID)
         {
             var d = Data;

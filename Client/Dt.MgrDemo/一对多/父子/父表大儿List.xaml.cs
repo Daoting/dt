@@ -23,7 +23,7 @@ namespace Dt.MgrDemo.一对多
         }
         #endregion
 
-        #region 外部方法
+        #region 公开
         public void Update(long p_parentID)
         {
             _parentID = p_parentID;
@@ -75,11 +75,11 @@ namespace Dt.MgrDemo.一对多
 
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
-                var ls = _lv.SelectedItems.Cast<大儿X> ().ToList();
+                var ls = _lv.SelectedItems.Cast<大儿X>().ToList();
                 if (await ls.Delete())
                     Refresh();
             }
-            else if (await e.Data.To<大儿X> ().Delete())
+            else if (await e.Data.To<大儿X>().Delete())
             {
                 Refresh();
             }

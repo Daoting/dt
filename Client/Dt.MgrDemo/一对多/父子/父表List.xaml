@@ -21,10 +21,6 @@
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
-            <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" Visibility="Collapsed" IsEnabled="{Binding HasSelected,ElementName=_lv}" />
-            <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
-            <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
-            <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
             <a:Mi x:Name="_mi" ID="列表" Icon="列表" ShowInPhone="Icon" Click="OnToggleView" />
         </a:Menu>
     </a:Tab.Menu>
