@@ -460,6 +460,9 @@ namespace Dt.Core
         求和,
         观察,
         棒棒,
-        XBox
+        XBox,
+        表格,
+        列表,
+        磁贴
     }
 }
