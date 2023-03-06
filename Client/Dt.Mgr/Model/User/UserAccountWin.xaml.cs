@@ -12,7 +12,6 @@ using Dt.Base;
 
 namespace Dt.Mgr.Model
 {
-    [View(LobViews.用户账号)]
     public partial class UserAccountWin : Win
     {
         public UserAccountWin()

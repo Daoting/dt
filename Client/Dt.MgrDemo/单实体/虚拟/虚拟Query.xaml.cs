@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -20,7 +20,7 @@ namespace Dt.MgrDemo.单实体
             InitializeComponent();
         }
 
-         /// <summary>
+        /// <summary>
         /// 查询事件
         /// </summary>
         public event EventHandler<QueryClause> Query
@@ -29,7 +29,8 @@ namespace Dt.MgrDemo.单实体
             remove { _fv.Query -= value; }
         }
 
-        protected override void OnInit(object p_params)
+        #region 初始化 
+        protected override void OnFirstLoaded()
         {
             var row = new Row();
             row.AddCell<string>("主表名称");
@@ -44,7 +45,6 @@ namespace Dt.MgrDemo.单实体
 
             _fv.Data = row;
         }
-
-        虚拟Win _win => (虚拟Win)OwnWin;
+        #endregion
     }
 }

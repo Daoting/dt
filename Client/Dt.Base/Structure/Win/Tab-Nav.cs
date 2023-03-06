@@ -104,7 +104,7 @@ namespace Dt.Base
         /// <summary>
         /// 导航时的入参
         /// </summary>
-        object NaviParams
+        protected object NaviParams
         {
             get { return GetValue(NaviParamsProperty); }
             set { SetValue(NaviParamsProperty, value); }
@@ -117,7 +117,7 @@ namespace Dt.Base
         /// </summary>
         /// <typeparam name="T">返回值的类型</typeparam>
         /// <param name="p_tab">导航到新Tab</param>
-        /// <param name="p_params">输入参数</param>
+        /// <param name="p_params">输入参数，值为新Tab的NaviParams属性</param>
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         /// <returns>返回时的输出参数</returns>
         public Task<T> Forward<T>(Tab p_tab, object p_params = null, bool p_isModal = false)
@@ -133,7 +133,7 @@ namespace Dt.Base
         /// 向前导航到新Tab
         /// </summary>
         /// <param name="p_tab">导航到新Tab</param>
-        /// <param name="p_params">输入参数</param>
+        /// <param name="p_params">输入参数，值为新Tab的NaviParams属性</param>
         /// <param name="p_isModal">WinUI模式是否带遮罩，遮罩为了禁止对其他位置编辑(用Dlg实现)</param>
         public void Forward(Tab p_tab, object p_params = null, bool p_isModal = false)
         {
@@ -439,14 +439,6 @@ namespace Dt.Base
 
         #region 虚方法
         /// <summary>
-        /// 初始化，Loaded事件时调用一次
-        /// </summary>
-        /// <param name="p_params">初始化参数</param>
-        protected virtual void OnInit(object p_params)
-        {
-        }
-
-        /// <summary>
         /// 后退之前
         /// </summary>
         /// <returns>true 表允许关闭</returns>
@@ -464,15 +456,6 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
-        /// <summary>
-        /// 只在第一次Loaded事件时调用，始终在OnLoadTemplate后调用
-        /// </summary>
-        protected override void OnControlLoaded()
-        {
-            // 初始化
-            OnInit(NaviParams);
-        }
-
         /// <summary>
         /// Tab区域内导航时，获取首个Tab的标题
         /// </summary>

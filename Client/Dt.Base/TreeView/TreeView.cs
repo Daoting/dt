@@ -740,7 +740,7 @@ namespace Dt.Base
             _isLoaded = true;
         }
 
-        protected override void OnControlLoaded()
+        protected override void OnFirstLoaded()
         {
             Focus(FocusState.Programmatic);
             KeyDown += OnKeyDown;

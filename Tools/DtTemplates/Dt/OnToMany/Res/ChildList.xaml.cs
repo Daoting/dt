@@ -15,15 +15,15 @@ namespace $rootnamespace$
 {
     public partial class $parentroot$$childroot$List : Tab
     {
-        long _parentID;
-        $parentroot$$childroot$Form _form;
-
+        #region 构造方法
         public $parentroot$$childroot$List()
         {
             InitializeComponent();
-            InitView();
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
+        #endregion
 
+        #region 外部方法
         public void Update(long p_parentID)
         {
             _parentID = p_parentID;
@@ -43,7 +43,9 @@ namespace $rootnamespace$
                 _lv.Data = null;
             }
         }
+        #endregion
 
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             ShowForm(-1);
@@ -62,8 +64,7 @@ namespace $rootnamespace$
             _win.ChildForm.Toggle(_form);
             await _form.Update(p_id, _parentID);
         }
-
-        #region 删除
+        
         async void OnDel(object sender, Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
@@ -84,7 +85,9 @@ namespace $rootnamespace$
             }
             _win.ChildForm.BackToHome();
         }
+        #endregion
 
+        #region 选择
         void OnSelectAll(object sender, Mi e)
         {
             _lv.SelectAll();
@@ -104,11 +107,6 @@ namespace $rootnamespace$
         #endregion
 
         #region 视图
-        void InitView()
-        {
-            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
-        }
-
         void OnToggleView(object sender, Mi e)
         {
             ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
@@ -128,9 +126,13 @@ namespace $rootnamespace$
                 _mi.Icon = Icons.列表;
                 _mi.ID = "列表";
             }
-        }
+}
         #endregion
 
+        #region 内部
         $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        long _parentID;
+        $parentroot$$childroot$Form _form;
+        #endregion
     }
 }

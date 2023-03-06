@@ -20,7 +20,7 @@ namespace $rootnamespace$
             InitializeComponent();
         }
 
-         /// <summary>
+        /// <summary>
         /// 查询事件
         /// </summary>
         public event EventHandler<QueryClause> Query
@@ -29,13 +29,13 @@ namespace $rootnamespace$
             remove { _fv.Query -= value; }
         }
 
-        protected override void OnInit(object p_params)
+        #region 初始化 
+        protected override void OnFirstLoaded()
         {
             var row = new Row();
 $querydata$
             _fv.Data = row;
         }
-
-        $mainroot$Win _win => ($mainroot$Win)OwnWin;
+        #endregion
     }
 }

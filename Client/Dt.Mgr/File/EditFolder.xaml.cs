@@ -24,10 +24,10 @@ namespace Dt.Mgr.Files
             _fileMgr = p_fileMgr;
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
             Row row = CreateData();
-            if (p_params is Row r)
+            if (NaviParams is Row r)
             {
                 row.InitVal(0, r.ID);
                 row.InitVal(1, r["name"]);

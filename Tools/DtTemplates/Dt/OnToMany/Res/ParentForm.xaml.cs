@@ -15,11 +15,14 @@ namespace $rootnamespace$
 {
     public sealed partial class $parentroot$Form : Tab
     {
+        #region 构造方法
         public $parentroot$Form()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 外部方法
         public async Task Update(long p_id)
         {
             var d = Data;
@@ -45,35 +48,17 @@ namespace $rootnamespace$
             Data = null;
             UpdateRelated(-1);
         }
+        #endregion
 
-        async void Create()
-        {
-            Data = await $entity$.New();
-            UpdateRelated(-1);
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             Create();
         }
 
-        async void Save()
+        void OnSave(object sender, Mi e)
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
-            {
-                _win.ParentList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
-            }
+            Save();
         }
 
         async void OnDel(object sender, Mi e)
@@ -100,10 +85,33 @@ namespace $rootnamespace$
                 _win.ParentList.Update();
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await $entity$.New();
+            UpdateRelated(-1);
+        }
+
+        async void Save()
+        {
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
+            {
+                _win.ParentList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+            }
+        }
 
         void UpdateRelated(long p_id)
         {
 $relatedupdate$
+            _win.ChildForm.BackToHome();
         }
 
         protected override Task<bool> OnClosing()
@@ -118,5 +126,6 @@ $relatedupdate$
         }
 
         $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        #endregion
     }
 }

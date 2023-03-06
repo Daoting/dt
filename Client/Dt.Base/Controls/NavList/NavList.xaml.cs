@@ -218,7 +218,7 @@ namespace Dt.Base
             Select(e.Data as Nav);
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
             // 递归触发嵌套子窗口Closing事件，PhoneUI模式页面返回时已处理
             if (OwnWin != null)

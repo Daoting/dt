@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -15,12 +15,15 @@ namespace Dt.MgrDemo.单实体
 {
     public sealed partial class 实体Form : Tab
     {
+        #region 构造方法
         public 实体Form()
         {
             InitializeComponent();
         }
+        #endregion
 
-        public async void Update(long p_id)
+        #region 外部方法
+        public async Task Update(long p_id)
         {
             var d = Data;
             if (d != null && d.ID == p_id)
@@ -43,28 +46,17 @@ namespace Dt.MgrDemo.单实体
         {
             Data = null;
         }
+        #endregion
 
-        async void Create()
-        {
-            Data = await 基础X.New();
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             Create();
         }
 
-        async void Save()
+        void OnSave(object sender, Mi e)
         {
-            if (await Data.Save())
-            {
-                _win.List.Update();
-            }
+            Save();
         }
 
         async void OnDel(object sender, Mi e)
@@ -91,6 +83,21 @@ namespace Dt.MgrDemo.单实体
                 _win.List.Update();
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await 基础X.New();
+        }
+
+        async void Save()
+        {
+            if (await Data.Save())
+            {
+                _win.List.Update();
+            }
+        }
 
         protected override Task<bool> OnClosing()
         {
@@ -104,5 +111,6 @@ namespace Dt.MgrDemo.单实体
         }
 
         实体Win _win => (实体Win)OwnWin;
+        #endregion
     }
 }

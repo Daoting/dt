@@ -19,6 +19,7 @@
             <Visible>false</Visible>
 		</None>
 		<None Include="Chat\WebRTC\WebRTC通信流程.png" />
+		<None Include="Rbac\Domain\rbac.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,5 +51,19 @@
 
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Rbac\User\UserMenuListDlg.xaml" />
+      <None Remove="Rbac\User\UserPerListDlg.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Rbac\User\UserMenuListDlg.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
+      <Page Update="Rbac\User\UserPerListDlg.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
     </ItemGroup>
 </Project>

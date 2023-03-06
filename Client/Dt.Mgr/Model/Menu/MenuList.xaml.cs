@@ -45,7 +45,7 @@ namespace Dt.Mgr.Model
             _tv.SelectedItem = (select == null) ? _tv.FixedRoot : select;
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
             MenuX m = new MenuX(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
             m.AddCell("parentname", "");

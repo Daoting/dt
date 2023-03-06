@@ -15,12 +15,15 @@ namespace $rootnamespace$
 {
     public sealed partial class $clsroot$Form : Tab
     {
+        #region 构造方法
         public $clsroot$Form()
         {
             InitializeComponent();
         }
+        #endregion
 
-        public async void Update(long p_id)
+        #region 外部方法
+        public async Task Update(long p_id)
         {
             var d = Data;
             if (d != null && d.ID == p_id)
@@ -43,28 +46,17 @@ namespace $rootnamespace$
         {
             Data = null;
         }
+        #endregion
 
-        async void Create()
-        {
-            Data = await $entity$.New();
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             Create();
         }
 
-        async void Save()
+        void OnSave(object sender, Mi e)
         {
-            if (await Data.Save())
-            {
-                _win.List.Update();
-            }
+            Save();
         }
 
         async void OnDel(object sender, Mi e)
@@ -91,6 +83,21 @@ namespace $rootnamespace$
                 _win.List.Update();
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await $entity$.New();
+        }
+
+        async void Save()
+        {
+            if (await Data.Save())
+            {
+                _win.List.Update();
+            }
+        }
 
         protected override Task<bool> OnClosing()
         {
@@ -104,5 +111,6 @@ namespace $rootnamespace$
         }
 
         $clsroot$Win _win => ($clsroot$Win)OwnWin;
+        #endregion
     }
 }

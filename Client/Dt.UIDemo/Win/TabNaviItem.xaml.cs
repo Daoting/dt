@@ -28,10 +28,10 @@ namespace Dt.UIDemo
             InitializeComponent();
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
-            if (p_params != null)
-                Kit.Msg($"输入参数：{p_params}");
+            if (NaviParams != null)
+                Kit.Msg($"输入参数：{NaviParams}");
 
             Result = new Random().Next(100);
             Title = "Tab " + Result.ToString();

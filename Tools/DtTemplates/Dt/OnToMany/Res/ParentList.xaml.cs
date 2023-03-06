@@ -15,22 +15,36 @@ namespace $rootnamespace$
 {
     public partial class $parentroot$List : Tab
     {
+        #region 构造方法
         public $parentroot$List()
         {
             InitializeComponent();
-            InitView();
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
+        #endregion
 
-        public void Update()
+        #region 外部方法
+        public async void Update()
         {
-            Query();
+            if (Clause == null)
+            {
+                _lv.Data = await $entity$.Query(null);
+            }
+            else
+            {
+                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
+            }
         }
+        #endregion
 
-        protected override void OnInit(object p_params)
+        #region 初始化 
+        protected override void OnFirstLoaded()
         {
-            Query();
+            Update();
         }
+        #endregion
 
+        #region 交互
         async void OnAdd(object sender, Mi e)
         {
             NaviToChild();
@@ -39,9 +53,12 @@ namespace $rootnamespace$
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            NaviToChild();
-            if (e.IsChanged)
-                await _win.ParentForm.Update(e.Row.ID);
+            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            {
+                NaviToChild();
+                if (e.IsChanged)
+                    await _win.ParentForm.Update(e.Row.ID);
+            }
         }
 
         void NaviToChild()
@@ -49,6 +66,32 @@ namespace $rootnamespace$
             if (Kit.IsPhoneUI)
                 NaviTo(new List<Tab> { _win.ParentForm$childtabs$ });
         }
+
+        async void OnDel(object sender, Mi e)
+        {
+            if (!await Kit.Confirm("确认要删除选择的数据吗？"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            {
+                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
+                if (await ls.Delete())
+                {
+                    Update();
+                    _win.ParentForm.Clear();
+                }
+            }
+            else if (await e.Data.To<$entity$> ().Delete())
+            {
+                Update();
+                if (_lv.SelectedItem == e.Data)
+                    _win.ParentForm.Clear();
+            }
+        }
+        #endregion
 
         #region 搜索
         /// <summary>
@@ -61,18 +104,6 @@ namespace $rootnamespace$
             if (_dlgQuery == null)
                 CreateQueryDlg();
             _dlgQuery.Show();
-        }
-
-        async void Query()
-        {
-            if (Clause == null)
-            {
-                _lv.Data = await $entity$.Query(null);
-            }
-            else
-            {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
-            }
         }
 
         void CreateQueryDlg()
@@ -94,7 +125,7 @@ namespace $rootnamespace$
                     clause.Where = @"$blurclause$";
                     Clause = clause;
                 }
-                Query();
+                Update();
                 _dlgQuery.Close();
             };
             tabs.Add(fs);
@@ -103,7 +134,7 @@ namespace $rootnamespace$
             qs.Query += (s, e) =>
             {
                 Clause = e;
-                Query();
+                Update();
                 _dlgQuery.Close();
             };
             tabs.Add(qs);
@@ -127,28 +158,7 @@ namespace $rootnamespace$
         Dlg _dlgQuery;
         #endregion
 
-        #region 删除
-        async void OnDel(object sender, Mi e)
-        {
-            if (!await Kit.Confirm("确认要删除选择的数据吗？"))
-            {
-                Kit.Msg("已取消删除！");
-                return;
-            }
-
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
-            {
-                var ls = _lv.SelectedItems.Cast<$entity$> ().ToList();
-                if (await ls.Delete())
-                    Query();
-            }
-            else if (await e.Data.To<$entity$> ().Delete())
-            {
-                Query();
-            }
-            _win.ChildForm.BackToHome();
-        }
-
+        #region 选择
         void OnSelectAll(object sender, Mi e)
         {
             _lv.SelectAll();
@@ -168,11 +178,6 @@ namespace $rootnamespace$
         #endregion
 
         #region 视图
-        void InitView()
-        {
-            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
-        }
-
         void OnToggleView(object sender, Mi e)
         {
             ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
@@ -195,6 +200,8 @@ namespace $rootnamespace$
         }
         #endregion
 
+        #region 内部
         $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        #endregion
     }
 }

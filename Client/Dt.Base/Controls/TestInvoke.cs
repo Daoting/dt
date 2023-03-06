@@ -86,7 +86,7 @@ namespace Dt.Base
 #if !WIN
             OnOutput("OnLoadTemplate");
 #endif
-            OnOutput("OnControlLoaded");
+            OnOutput("OnFirstLoaded");
         }
 
         void OnSizeChanged(object sender, SizeChangedEventArgs e)

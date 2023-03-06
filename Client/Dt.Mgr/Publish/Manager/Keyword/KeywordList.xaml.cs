@@ -33,7 +33,7 @@ namespace Dt.Mgr.Publish
             Query();
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
             Query();
         }

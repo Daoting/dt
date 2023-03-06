@@ -27,16 +27,16 @@ namespace Dt.Base
         // 不同平台主事件调用顺序
         // 
         // WIN：
-        // ApplyTemplate(父子) -> OnLoadTemplate(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(父子) -> Loaded(父子) -> OnControlLoaded(父子)
+        // ApplyTemplate(父子) -> OnLoadTemplate(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(父子) -> Loaded(父子) -> OnFirstLoaded(父子)
         // 
         // Android：
-        // ApplyTemplate(子父) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnControlLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
+        // ApplyTemplate(子父) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnFirstLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
         // 
         // iOS：
-        // ApplyTemplate(子父) -> Loaded(子父) -> OnLoadTemplate(子父) -> OnControlLoaded(子父) -> MeasureOverride(父子) -> SizeChanged(父子) -> ArrangeOverride(父子)
+        // ApplyTemplate(子父) -> Loaded(子父) -> OnLoadTemplate(子父) -> OnFirstLoaded(子父) -> MeasureOverride(父子) -> SizeChanged(父子) -> ArrangeOverride(父子)
         //
         // wasm:
-        // ApplyTemplate(父子) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnControlLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
+        // ApplyTemplate(父子) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnFirstLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
         //
         // WIN的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
         /***********************************************************************************************************************************************************/
@@ -64,7 +64,7 @@ namespace Dt.Base
         /// <summary>
         /// 只在第一次Loaded事件时调用，始终在OnLoadTemplate后调用
         /// </summary>
-        protected virtual void OnControlLoaded()
+        protected virtual void OnFirstLoaded()
         {
         }
 
@@ -82,7 +82,7 @@ namespace Dt.Base
 #if !WIN
             OnLoadTemplate();
 #endif
-            OnControlLoaded();
+            OnFirstLoaded();
         }
     }
 }

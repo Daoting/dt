@@ -21,9 +21,9 @@ namespace Dt.Mgr.Model
             InitializeComponent();
         }
 
-        protected override async void OnInit(object p_params)
+        protected override async void OnFirstLoaded()
         {
-            _lv.Data = await AtCm.Query("用户-具有的权限", new { userid = p_params });
+            _lv.Data = await AtCm.Query("用户-具有的权限", new { userid = NaviParams });
         }
 
         UserAccountWin _win => (UserAccountWin)OwnWin;

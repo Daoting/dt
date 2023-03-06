@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -15,13 +15,14 @@ namespace Dt.MgrDemo.一对多
 {
     public sealed partial class 父表小儿Form : Tab
     {
-        long _parentID;
-
+        #region 构造方法
         public 父表小儿Form()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 外部方法
         public async Task Update(long p_id, long p_parentID)
         {
             var d = Data;
@@ -46,28 +47,17 @@ namespace Dt.MgrDemo.一对多
         {
             Data = null;
         }
+        #endregion
 
-        async void Create()
-        {
-            Data = await 小儿X.New(GroupID: _parentID);
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             Create();
         }
 
-        async void Save()
+        void OnSave(object sender, Mi e)
         {
-            if (await Data.Save())
-            {
-                _win.小儿List.Refresh();
-            }
+            Save();
         }
 
         async void OnDel(object sender, Mi e)
@@ -94,6 +84,21 @@ namespace Dt.MgrDemo.一对多
                 _win.小儿List.Refresh();
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await 小儿X.New(GroupID: _parentID);
+        }
+
+        async void Save()
+        {
+            if (await Data.Save())
+            {
+                _win.小儿List.Refresh();
+            }
+        }
 
         protected override Task<bool> OnClosing()
         {
@@ -107,5 +112,7 @@ namespace Dt.MgrDemo.一对多
         }
 
         父表Win _win => (父表Win)OwnWin;
+        long _parentID;
+        #endregion
     }
 }

@@ -81,7 +81,7 @@ namespace Dt.Base
             set { SetValue(CookieIDProperty, value); }
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
 #if WIN
             // 在对话框中时为 xxx/FuzzySearch.xaml

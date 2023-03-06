@@ -42,7 +42,7 @@ namespace Dt.Mgr.Model
             }
         }
 
-        protected override void OnInit(object p_params)
+        protected override void OnFirstLoaded()
         {
             Update();
         }

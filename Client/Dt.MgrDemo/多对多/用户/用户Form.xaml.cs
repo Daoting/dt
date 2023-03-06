@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -15,11 +15,14 @@ namespace Dt.MgrDemo.多对多
 {
     public sealed partial class 用户Form : Tab
     {
+        #region 构造方法
         public 用户Form()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 外部方法
         public async Task Update(long p_id)
         {
             var d = Data;
@@ -45,35 +48,17 @@ namespace Dt.MgrDemo.多对多
             Data = null;
             UpdateRelated(-1);
         }
+        #endregion
 
-        async void Create()
-        {
-            Data = await 用户X.New();
-            UpdateRelated(-1);
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 交互
         void OnAdd(object sender, Mi e)
         {
             Create();
         }
 
-        async void Save()
+        void OnSave(object sender, Mi e)
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
-            {
-                _win.MainList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
-            }
+            Save();
         }
 
         async void OnDel(object sender, Mi e)
@@ -100,6 +85,28 @@ namespace Dt.MgrDemo.多对多
                 _win.MainList.Update();
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await 用户X.New();
+            UpdateRelated(-1);
+        }
+
+        async void Save()
+        {
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
+            {
+                _win.MainList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+            }
+        }
 
         void UpdateRelated(long p_id)
         {
@@ -118,5 +125,6 @@ namespace Dt.MgrDemo.多对多
         }
 
         用户Win _win => (用户Win)OwnWin;
+        #endregion
     }
 }

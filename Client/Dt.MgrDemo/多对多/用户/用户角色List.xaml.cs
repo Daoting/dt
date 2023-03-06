@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -15,13 +15,15 @@ namespace Dt.MgrDemo.多对多
 {
     public partial class 用户角色List : Tab
     {
-        long _releatedID;
-
+        #region 构造方法
         public 用户角色List()
         {
             InitializeComponent();
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
+        #endregion
 
+        #region 外部方法
         public void Update(long p_releatedID)
         {
             _releatedID = p_releatedID;
@@ -40,7 +42,9 @@ namespace Dt.MgrDemo.多对多
                 _lv.Data = null;
             }
         }
+        #endregion
 
+        #region 交互
         async void OnAdd(object sender, Mi e)
         {
             var dlg = new 角色4用户Dlg();
@@ -56,8 +60,7 @@ namespace Dt.MgrDemo.多对多
                     Refresh();
             }
         }
-
-        #region 删除
+        
         async void OnDel(object sender, Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))
@@ -84,7 +87,9 @@ namespace Dt.MgrDemo.多对多
                     Refresh();
             }
         }
+        #endregion
 
+        #region 选择
         void OnSelectAll(object sender, Mi e)
         {
             _lv.SelectAll();
@@ -104,22 +109,31 @@ namespace Dt.MgrDemo.多对多
         #endregion
 
         #region 视图
-        private void OnListSelected(object sender, EventArgs e)
+        void OnToggleView(object sender, Mi e)
         {
-            _lv?.ChangeView(Resources["ListView"], ViewMode.List);
+            ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
         }
 
-        private void OnTableSelected(object sender, EventArgs e)
+        void ToggleView(ViewMode p_mode)
         {
-            _lv?.ChangeView(Resources["TableView"], ViewMode.Table);
-        }
-
-        private void OnTileSelected(object sender, EventArgs e)
-        {
-            _lv?.ChangeView(Resources["TileView"], ViewMode.Tile);
-        }
+            if (p_mode == ViewMode.List)
+            {
+                _lv.ChangeView(Resources["ListView"], ViewMode.List);
+                _mi.Icon = Icons.表格;
+                _mi.ID = "表格";
+            }
+            else
+            {
+                _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+                _mi.Icon = Icons.列表;
+                _mi.ID = "列表";
+            }
+}
         #endregion
 
+        #region 内部
         用户Win _win => (用户Win)OwnWin;
+        long _releatedID;
+        #endregion
     }
 }

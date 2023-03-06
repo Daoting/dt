@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -20,7 +20,7 @@ namespace Dt.MgrDemo.多对多
             InitializeComponent();
         }
 
-         /// <summary>
+        /// <summary>
         /// 查询事件
         /// </summary>
         public event EventHandler<QueryClause> Query
@@ -29,14 +29,14 @@ namespace Dt.MgrDemo.多对多
             remove { _fv.Query -= value; }
         }
 
-        protected override void OnInit(object p_params)
+        #region 初始化 
+        protected override void OnFirstLoaded()
         {
             var row = new Row();
             row.AddCell<string>("权限名称");
 
             _fv.Data = row;
         }
-
-        权限Win _win => (权限Win)OwnWin;
+        #endregion
     }
 }

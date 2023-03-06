@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-02 创建
+* 日志: 2023-03-06 创建
 ******************************************************************************/
 #endregion
 
@@ -15,21 +15,36 @@ namespace Dt.MgrDemo.一对多
 {
     public partial class 父表List : Tab
     {
+        #region 构造方法
         public 父表List()
         {
             InitializeComponent();
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
+        #endregion
 
-        public void Update()
+        #region 外部方法
+        public async void Update()
         {
-            Query();
+            if (Clause == null)
+            {
+                _lv.Data = await 父表X.Query(null);
+            }
+            else
+            {
+                _lv.Data = await 父表X.Query(Clause.Where, Clause.Params);
+            }
         }
+        #endregion
 
-        protected override void OnInit(object p_params)
+        #region 初始化 
+        protected override void OnFirstLoaded()
         {
-            Query();
+            Update();
         }
+        #endregion
 
+        #region 交互
         async void OnAdd(object sender, Mi e)
         {
             NaviToChild();
@@ -38,9 +53,12 @@ namespace Dt.MgrDemo.一对多
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            NaviToChild();
-            if (e.IsChanged)
-                await _win.ParentForm.Update(e.Row.ID);
+            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            {
+                NaviToChild();
+                if (e.IsChanged)
+                    await _win.ParentForm.Update(e.Row.ID);
+            }
         }
 
         void NaviToChild()
@@ -48,6 +66,32 @@ namespace Dt.MgrDemo.一对多
             if (Kit.IsPhoneUI)
                 NaviTo(new List<Tab> { _win.ParentForm, _win.大儿List, _win.小儿List });
         }
+
+        async void OnDel(object sender, Mi e)
+        {
+            if (!await Kit.Confirm("确认要删除选择的数据吗？"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            {
+                var ls = _lv.SelectedItems.Cast<父表X> ().ToList();
+                if (await ls.Delete())
+                {
+                    Update();
+                    _win.ParentForm.Clear();
+                }
+            }
+            else if (await e.Data.To<父表X> ().Delete())
+            {
+                Update();
+                if (_lv.SelectedItem == e.Data)
+                    _win.ParentForm.Clear();
+            }
+        }
+        #endregion
 
         #region 搜索
         /// <summary>
@@ -60,18 +104,6 @@ namespace Dt.MgrDemo.一对多
             if (_dlgQuery == null)
                 CreateQueryDlg();
             _dlgQuery.Show();
-        }
-
-        async void Query()
-        {
-            if (Clause == null)
-            {
-                _lv.Data = await 父表X.Query(null);
-            }
-            else
-            {
-                _lv.Data = await 父表X.Query(Clause.Where, Clause.Params);
-            }
         }
 
         void CreateQueryDlg()
@@ -93,7 +125,7 @@ namespace Dt.MgrDemo.一对多
                     clause.Where = @"where false or 父名 like @input";
                     Clause = clause;
                 }
-                Query();
+                Update();
                 _dlgQuery.Close();
             };
             tabs.Add(fs);
@@ -102,7 +134,7 @@ namespace Dt.MgrDemo.一对多
             qs.Query += (s, e) =>
             {
                 Clause = e;
-                Query();
+                Update();
                 _dlgQuery.Close();
             };
             tabs.Add(qs);
@@ -126,28 +158,7 @@ namespace Dt.MgrDemo.一对多
         Dlg _dlgQuery;
         #endregion
 
-        #region 删除
-        async void OnDel(object sender, Mi e)
-        {
-            if (!await Kit.Confirm("确认要删除选择的数据吗？"))
-            {
-                Kit.Msg("已取消删除！");
-                return;
-            }
-
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
-            {
-                var ls = _lv.SelectedItems.Cast<父表X> ().ToList();
-                if (await ls.Delete())
-                    Query();
-            }
-            else if (await e.Data.To<父表X> ().Delete())
-            {
-                Query();
-            }
-            _win.ChildForm.BackToHome();
-        }
-
+        #region 选择
         void OnSelectAll(object sender, Mi e)
         {
             _lv.SelectAll();
@@ -167,22 +178,30 @@ namespace Dt.MgrDemo.一对多
         #endregion
 
         #region 视图
-        private void OnListSelected(object sender, EventArgs e)
+        void OnToggleView(object sender, Mi e)
         {
-            _lv?.ChangeView(Resources["ListView"], ViewMode.List);
+            ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
         }
 
-        private void OnTableSelected(object sender, EventArgs e)
+        void ToggleView(ViewMode p_mode)
         {
-            _lv?.ChangeView(Resources["TableView"], ViewMode.Table);
-        }
-
-        private void OnTileSelected(object sender, EventArgs e)
-        {
-            _lv?.ChangeView(Resources["TileView"], ViewMode.Tile);
+            if (p_mode == ViewMode.List)
+            {
+                _lv.ChangeView(Resources["ListView"], ViewMode.List);
+                _mi.Icon = Icons.表格;
+                _mi.ID = "表格";
+            }
+            else
+            {
+                _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+                _mi.Icon = Icons.列表;
+                _mi.ID = "列表";
+            }
         }
         #endregion
 
+        #region 内部
         父表Win _win => (父表Win)OwnWin;
+        #endregion
     }
 }

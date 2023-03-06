@@ -15,14 +15,15 @@ namespace $rootnamespace$
 {
     public partial class $mainroot$$childroot$List : Tab
     {
-        long _releatedID;
-
+        #region 构造方法
         public $mainroot$$childroot$List()
         {
             InitializeComponent();
-            InitView();
+            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
+        #endregion
 
+        #region 外部方法
         public void Update(long p_releatedID)
         {
             _releatedID = p_releatedID;
@@ -41,7 +42,9 @@ namespace $rootnamespace$
                 _lv.Data = null;
             }
         }
+        #endregion
 
+        #region 交互
         async void OnAdd(object sender, Mi e)
         {
             var dlg = new $selectdlg$();
@@ -57,8 +60,7 @@ namespace $rootnamespace$
                     Refresh();
             }
         }
-
-        #region 删除
+        
         async void OnDel(object sender, Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))
@@ -85,7 +87,9 @@ namespace $rootnamespace$
                     Refresh();
             }
         }
+        #endregion
 
+        #region 选择
         void OnSelectAll(object sender, Mi e)
         {
             _lv.SelectAll();
@@ -105,11 +109,6 @@ namespace $rootnamespace$
         #endregion
 
         #region 视图
-        void InitView()
-        {
-            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
-        }
-
         void OnToggleView(object sender, Mi e)
         {
             ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
@@ -129,9 +128,12 @@ namespace $rootnamespace$
                 _mi.Icon = Icons.列表;
                 _mi.ID = "列表";
             }
-        }
+}
         #endregion
 
+        #region 内部
         $mainroot$Win _win => ($mainroot$Win)OwnWin;
+        long _releatedID;
+        #endregion
     }
 }
