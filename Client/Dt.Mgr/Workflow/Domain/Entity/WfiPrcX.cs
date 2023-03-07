@@ -2,17 +2,14 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-06 创建
+* 日志: 2023-03-07 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Domain
+namespace Dt.Mgr.Workflow
 {
     public partial class WfiPrcX
     {

@@ -2,18 +2,18 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-30 创建
+* 日志: 2023-03-07 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Domain
+namespace Dt.Mgr.Workflow
 {
+    /// <summary>
+    /// 流程模板
+    /// </summary>
     [Tbl("cm_wfd_prc")]
     public partial class WfdPrcX : EntityX<WfdPrcX>
     {

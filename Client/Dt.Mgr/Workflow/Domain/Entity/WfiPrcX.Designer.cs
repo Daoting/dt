@@ -2,40 +2,40 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-30 创建
+* 日志: 2023-03-07 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Domain
+namespace Dt.Mgr.Workflow
 {
-    [Tbl("cm_wfi_atv")]
-    public partial class WfiAtvX : EntityX<WfiAtvX>
+    /// <summary>
+    /// 流程实例
+    /// </summary>
+    [Tbl("cm_wfi_prc")]
+    public partial class WfiPrcX : EntityX<WfiPrcX>
     {
         #region 构造方法
-        WfiAtvX() { }
+        WfiPrcX() { }
 
-        public WfiAtvX(CellList p_cells) : base(p_cells) { }
+        public WfiPrcX(CellList p_cells) : base(p_cells) { }
 
-        public WfiAtvX(
+        public WfiPrcX(
             long ID,
-            long PrciID = default,
-            long AtvdID = default,
-            WfiAtvStatus Status = default,
-            int InstCount = default,
+            long PrcdID = default,
+            string Name = default,
+            WfiPrcStatus Status = default,
+            int Dispidx = default,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
             AddCell("ID", ID);
-            AddCell("PrciID", PrciID);
-            AddCell("AtvdID", AtvdID);
+            AddCell("PrcdID", PrcdID);
+            AddCell("Name", Name);
             AddCell("Status", Status);
-            AddCell("InstCount", InstCount);
+            AddCell("Dispidx", Dispidx);
             AddCell("Ctime", Ctime);
             AddCell("Mtime", Mtime);
             IsAdded = true;
@@ -43,39 +43,39 @@ namespace Dt.Mgr.Domain
         #endregion
 
         /// <summary>
-        /// 流程实例标识
+        /// 流程模板标识
         /// </summary>
-        public long PrciID
+        public long PrcdID
         {
-            get { return (long)this["PrciID"]; }
-            set { this["PrciID"] = value; }
+            get { return (long)this["PrcdID"]; }
+            set { this["PrcdID"] = value; }
         }
 
         /// <summary>
-        /// 活动模板标识
+        /// 流转单名称
         /// </summary>
-        public long AtvdID
+        public string Name
         {
-            get { return (long)this["AtvdID"]; }
-            set { this["AtvdID"] = value; }
+            get { return (string)this["Name"]; }
+            set { this["Name"] = value; }
         }
 
         /// <summary>
-        /// 活动实例的状态 0活动 1结束 2终止 3同步活动
+        /// 流程实例状态 0活动 1结束 2终止
         /// </summary>
-        public WfiAtvStatus Status
+        public WfiPrcStatus Status
         {
-            get { return (WfiAtvStatus)this["Status"]; }
+            get { return (WfiPrcStatus)this["Status"]; }
             set { this["Status"] = value; }
         }
 
         /// <summary>
-        /// 活动实例在流程实例被实例化的次数
+        /// 显示顺序
         /// </summary>
-        public int InstCount
+        public int Dispidx
         {
-            get { return (int)this["InstCount"]; }
-            set { this["InstCount"] = value; }
+            get { return (int)this["Dispidx"]; }
+            set { this["Dispidx"] = value; }
         }
 
         /// <summary>

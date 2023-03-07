@@ -10,7 +10,7 @@
 
 #endregion
 
-namespace Dt.Mgr.Domain
+namespace Dt.Mgr.Workflow
 {
     /// <summary>
     /// 活动类别
