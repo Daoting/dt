@@ -34,6 +34,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 因Mv内菜单无法绑定，将Mv合并到Tab，对于自定义Mv需要修改两处：Mv -> Tab, Win中xaml删除自定义Mv的外套Tab
 * 登录过程移至客户端
 * 领域服务用静态方式替换单例模式，增加样例
+* DtControl的虚方法OnControlLoaded修改为OnFirstLoaded，方便理解
 
 
 * cm_prv主键调整为long

@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Dt.Mgr.Rbac.UserWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Mgr.Rbac">
+
+    <l:UserList x:Name="_mainList" Order="1" a:Ex.Dock="Left" />
+    <l:UserForm x:Name="_mainForm" />
+    <l:UserGroupList x:Name="_groupList" a:Ex.Dock="Right" />
+    <l:UserRoleList x:Name="_roleList" a:Ex.Dock="Right" />
+</a:Win>

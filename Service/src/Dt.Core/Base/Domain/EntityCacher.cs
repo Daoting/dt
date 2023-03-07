@@ -135,17 +135,15 @@ namespace Dt.Core
             return default;
         }
 
-        public Task Remove<TEntity>(TEntity p_entity)
-            where TEntity : Entity
+        public Task Remove(Row p_entity)
         {
             Throw.IfNull(p_entity);
             // 实体信息可能不全，多键时根据缓存实体执行删除！
             string id = p_entity.Str(_primaryKey);
-            return RemoveByID<TEntity>(id);
+            return RemoveByID(id);
         }
 
-        public async Task RemoveByID<TEntity>(string p_id)
-            where TEntity : Entity
+        public async Task RemoveByID(string p_id)
         {
             // 只删除主键
             string priKey = $"{_prefix}:{_primaryKey}:{p_id}";
@@ -165,7 +163,7 @@ namespace Dt.Core
             if (!val.HasValue)
                 return;
 
-            var entity = RpcKit.ParseString<TEntity>(val);
+            var entity = RpcKit.ParseString<Row>(val);
             var ls = new List<string> { priKey };
             foreach (var item in _otherKeys)
             {
@@ -182,7 +180,7 @@ namespace Dt.Core
             if (string.IsNullOrEmpty(val))
                 return;
 
-            var entity = RpcKit.ParseString<TEntity>(val);
+            var entity = RpcKit.ParseString<Row>(val);
             var ls = new List<string> { priKey };
             foreach (var item in _otherKeys)
             {

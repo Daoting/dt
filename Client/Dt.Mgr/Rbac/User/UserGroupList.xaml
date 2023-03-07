@@ -1,19 +1,9 @@
 ﻿<a:Tab
-    x:Class="$rootnamespace$.$mainroot$$childroot$List"
+    x:Class="Dt.Mgr.Rbac.UserGroupList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="关联$childroot$">
-
-    <a:Tab.Resources>
-        <a:Cols x:Key="TableView">
-$lvcols$
-        </a:Cols>
-
-        <DataTemplate x:Key="ListView">
-$lvtemp$
-        </DataTemplate>
-    </a:Tab.Resources>
+    Title="关联分组">
     
     <a:Tab.Menu>
         <a:Menu>
@@ -22,7 +12,6 @@ $lvtemp$
             <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
             <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
             <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
-            <a:Mi x:Name="_mi" ID="列表" Icon="列表" ShowInPhone="Icon" Click="OnToggleView" />
         </a:Menu>
     </a:Tab.Menu>
 
@@ -32,5 +21,8 @@ $lvtemp$
                 <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" />
             </a:Menu>
         </a:Ex.Menu>
+        <DataTemplate>
+            <a:Dot ID="Name" Margin="10,0,10,0" />
+        </DataTemplate>
     </a:Lv>
 </a:Tab>
