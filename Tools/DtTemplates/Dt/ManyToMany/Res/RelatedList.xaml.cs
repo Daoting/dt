@@ -128,7 +128,7 @@ namespace $rootnamespace$
                 _mi.Icon = Icons.列表;
                 _mi.ID = "列表";
             }
-}
+        }
         #endregion
 
         #region 内部

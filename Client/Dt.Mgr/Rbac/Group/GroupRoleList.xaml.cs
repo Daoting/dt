@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2023-03-08 创建
 ******************************************************************************/
 #endregion
 
@@ -13,13 +13,12 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class UserRoleList : Tab
+    public partial class GroupRoleList : Tab
     {
         #region 构造方法
-        public UserRoleList()
+        public GroupRoleList()
         {
             InitializeComponent();
-            // 同一Win中的多Tab的xaml的Mi通过ElementName绑定时，若名称相同，都绑定到最后加载的元素，WinUI的bug!
             Menu["删除"].DataContext = _lv;
         }
         #endregion
@@ -36,7 +35,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await RoleX.Query("where exists ( select RoleID from cm_user_role b where a.ID = b.RoleID and UserID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await RoleX.Query("where exists ( select RoleID from cm_group_role b where a.ID = b.RoleID and GroupID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
             }
             else
             {
@@ -48,9 +47,9 @@ namespace Dt.Mgr.Rbac
         #region 交互
         async void OnAdd(object sender, Mi e)
         {
-            var dlg = new Role4UserDlg();
+            var dlg = new Role4GroupDlg();
             if (await dlg.Show(_releatedID, e)
-                && await RbacDs.AddUserRole(_releatedID, dlg.SelectedIDs))
+                && await RbacDs.AddGroupRoles(_releatedID, dlg.SelectedIDs))
             {
                 Refresh();
             }
@@ -64,18 +63,18 @@ namespace Dt.Mgr.Rbac
                 return;
             }
 
-            List<long> roleIDs;
+            List<long> ids;
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
-                roleIDs = (from row in _lv.SelectedRows
-                           select row.ID).ToList();
+                ids = (from row in _lv.SelectedRows
+                       select row.ID).ToList();
             }
             else
             {
-                roleIDs = new List<long> { e.Row.ID };
+                ids = new List<long> { e.Row.ID };
             }
 
-            if (await RbacDs.RemoveUserRoles(_releatedID, roleIDs))
+            if (await RbacDs.RemoveGroupRoles(_releatedID, ids))
                 Refresh();
         }
         #endregion
@@ -100,7 +99,7 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 内部
-        UserWin _win => (UserWin)OwnWin;
+        GroupWin _win => (GroupWin)OwnWin;
         long _releatedID;
         #endregion
     }

@@ -48,6 +48,44 @@ namespace Dt.Mgr.Rbac
             }
             return false;
         }
+
+        public static async Task<bool> AddGroupUsers(long p_groupID, List<long> p_userIDs)
+        {
+            if (p_userIDs == null || p_userIDs.Count == 0)
+                return false;
+
+            var ls = new List<UserGroupX>();
+            foreach (var id in p_userIDs)
+            {
+                ls.Add(new UserGroupX(UserID: id, GroupID: p_groupID));
+            }
+            if (ls.Count > 0 && await ls.Save(false))
+            {
+                BatchDelUserDataVer(p_userIDs);
+                Kit.Msg($"增加{ls.Count}个关联用户，已删除这些用户的缓存数据版本号！");
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> RemoveGroupUsers(long p_groupID, List<long> p_userIDs)
+        {
+            if (p_userIDs == null || p_userIDs.Count == 0)
+                return false;
+
+            var ls = new List<UserGroupX>();
+            foreach (var id in p_userIDs)
+            {
+                ls.Add(new UserGroupX(UserID: id, GroupID: p_groupID));
+            }
+            if (await ls.Delete(false))
+            {
+                BatchDelUserDataVer(p_userIDs);
+                Kit.Msg($"移除{ls.Count}个关联用户，已删除这些用户的缓存数据版本号！");
+                return true;
+            }
+            return false;
+        }
         #endregion
 
         #region 用户角色
@@ -100,24 +138,6 @@ namespace Dt.Mgr.Rbac
                 return true;
             }
             return false;
-        }
-
-        static void DelUserDataVer(long p_userID)
-        {
-            _da.KeyDelete("ver:" + p_userID);
-        }
-
-        static void BatchDelUserDataVer(List<long> p_userIDs)
-        {
-            if (p_userIDs == null || p_userIDs.Count == 0)
-                return;
-
-            var ls = new List<string>();
-            foreach (var id in p_userIDs)
-            {
-                ls.Add("ver:" + id);
-            }
-            _da.BatchKeyDelete(ls);
         }
 
         ///// <summary>
@@ -182,6 +202,65 @@ namespace Dt.Mgr.Rbac
         //    }
         //    return false;
         //}
+        #endregion
+
+        #region 分组角色
+        public static async Task<bool> AddGroupRoles(long p_groupID, List<long> p_roleIDs)
+        {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return false;
+
+            var ls = new List<GroupRoleX>();
+            foreach (var rid in p_roleIDs)
+            {
+                ls.Add(new GroupRoleX(GroupID: p_groupID, RoleID: rid));
+            }
+            if (ls.Count > 0 && await ls.Save(false))
+            {
+                var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
+                BatchDelUserDataVer(users);
+                Kit.Msg($"增加{ls.Count}个关联角色，已删除{users.Count}个用户的缓存数据版本号！");
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> RemoveGroupRoles(long p_groupID, List<long> p_roleIDs)
+        {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return false;
+
+            var ls = (from id in p_roleIDs
+                      select new GroupRoleX(p_groupID, id)).ToList();
+            if (await ls.Delete(false))
+            {
+                var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
+                BatchDelUserDataVer(users);
+                Kit.Msg($"移除{ls.Count}个关联角色，已删除{users.Count}个用户的缓存数据版本号！");
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region 数据版本
+        public static void DelUserDataVer(long p_userID)
+        {
+            _da.KeyDelete("ver:" + p_userID);
+        }
+
+        public static void BatchDelUserDataVer(List<long> p_userIDs)
+        {
+            if (p_userIDs == null || p_userIDs.Count == 0)
+                return;
+
+            var ls = new List<string>();
+            foreach (var id in p_userIDs)
+            {
+                ls.Add("ver:" + id);
+            }
+            _da.BatchKeyDelete(ls);
+        }
         #endregion
     }
 }

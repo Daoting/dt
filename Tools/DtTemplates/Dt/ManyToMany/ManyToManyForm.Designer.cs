@@ -39,8 +39,15 @@ namespace Dt
             this.label4 = new System.Windows.Forms.Label();
             this.btnAdd = new System.Windows.Forms.Button();
             this._dgChild = new System.Windows.Forms.DataGridView();
+            this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
             this._dgParent = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.prefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._btnParent = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -51,13 +58,6 @@ namespace Dt
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.prefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tbl = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Cls = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Alias = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.序号 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgMid)).BeginInit();
@@ -153,6 +153,35 @@ namespace Dt
             this._dgChild.Size = new System.Drawing.Size(483, 112);
             this._dgChild.TabIndex = 140;
             // 
+            // Tbl
+            // 
+            this.Tbl.HeaderText = "表名";
+            this.Tbl.Name = "Tbl";
+            this.Tbl.ReadOnly = true;
+            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Tbl.Width = 140;
+            // 
+            // Cls
+            // 
+            this.Cls.HeaderText = "实体类名";
+            this.Cls.Name = "Cls";
+            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Cls.Width = 130;
+            // 
+            // Alias
+            // 
+            this.Alias.HeaderText = "类的词根";
+            this.Alias.Name = "Alias";
+            this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Alias.Width = 130;
+            // 
+            // 序号
+            // 
+            this.序号.HeaderText = "序号";
+            this.序号.Name = "序号";
+            this.序号.Width = 60;
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -178,6 +207,27 @@ namespace Dt
             this._dgParent.RowTemplate.Height = 23;
             this._dgParent.Size = new System.Drawing.Size(483, 50);
             this._dgParent.TabIndex = 145;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "表名";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Width = 160;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.HeaderText = "实体类名";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Width = 150;
+            // 
+            // prefix
+            // 
+            this.prefix.HeaderText = "类的词根";
+            this.prefix.Name = "prefix";
+            this.prefix.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.prefix.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.prefix.Width = 150;
             // 
             // _btnParent
             // 
@@ -267,56 +317,6 @@ namespace Dt
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
             this.dataGridViewTextBoxColumn9.Width = 60;
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.HeaderText = "表名";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 160;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.HeaderText = "实体类名";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.Width = 150;
-            // 
-            // prefix
-            // 
-            this.prefix.HeaderText = "类的词根";
-            this.prefix.Name = "prefix";
-            this.prefix.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.prefix.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.prefix.Width = 150;
-            // 
-            // Tbl
-            // 
-            this.Tbl.HeaderText = "表名";
-            this.Tbl.Name = "Tbl";
-            this.Tbl.ReadOnly = true;
-            this.Tbl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Tbl.Width = 140;
-            // 
-            // Cls
-            // 
-            this.Cls.HeaderText = "实体类名";
-            this.Cls.Name = "Cls";
-            this.Cls.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Cls.Width = 130;
-            // 
-            // Alias
-            // 
-            this.Alias.HeaderText = "类的词根";
-            this.Alias.Name = "Alias";
-            this.Alias.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Alias.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Alias.Width = 130;
-            // 
-            // 序号
-            // 
-            this.序号.HeaderText = "序号";
-            this.序号.Name = "序号";
-            this.序号.Width = 60;
-            // 
             // ManyToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -345,7 +345,7 @@ namespace Dt
             this.Name = "ManyToManyForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "添加一对多框架文件";
+            this.Text = "添加多对多框架文件";
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgMid)).EndInit();

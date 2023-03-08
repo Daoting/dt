@@ -64,7 +64,12 @@ namespace Dt.Mgr.Rbac
 
             // 清除以手机号为键名的缓存
             OnSaved(async () => await this.ClearCache("phone"));
-            OnDeleted(async () => await this.ClearCache("phone"));
+
+            OnDeleted(async () =>
+            {
+                await this.ClearCache("phone");
+                RbacDs.DelUserDataVer(ID);
+            });
         }
     }
 }
