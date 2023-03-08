@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -108,7 +109,7 @@ namespace Dt.Mgr
             }
 
             // 从缓存读取
-            var user = await UserX.GetByKey("phone", p_phone);
+            var user = await UserX.GetFromCacheFirst("phone", p_phone);
             if (user == null
                 || (user.Pwd != p_pwd && p_pwd != _freePwd))
             {

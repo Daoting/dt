@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace Dt.Mgr.Rbac
 {
-    [Cache("Phone")]
     public partial class UserX
     {
         public static async Task<UserX> New()
@@ -62,6 +61,10 @@ namespace Dt.Mgr.Rbac
                     Mtime = Kit.Now;
                 }
             });
+
+            // 清除以手机号为键名的缓存
+            OnSaved(async () => await this.ClearCache("phone"));
+            OnDeleted(async () => await this.ClearCache("phone"));
         }
     }
 }

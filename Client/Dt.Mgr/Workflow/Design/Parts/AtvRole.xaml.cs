@@ -7,11 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr.Model;
-using Dt.Base;
-using Dt.Core;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
@@ -51,7 +46,7 @@ namespace Dt.Mgr.Workflow
         async void OnAddRole(object sender, RoutedEventArgs e)
         {
             var dlg = new SelectRolesDlg();
-            if (await dlg.Show(RoleRelations.WfAtv, _atvID.ToString(), (Button)sender))
+            if (await dlg.Show(_atvID.ToString(), (Button)sender))
             {
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {

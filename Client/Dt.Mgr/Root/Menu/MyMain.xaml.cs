@@ -7,13 +7,13 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr.Model;
 using Dt.Base;
 using Dt.Core;
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Dt.Mgr.Rbac;
 #endregion
 
 namespace Dt.Mgr.Home
@@ -69,11 +69,11 @@ namespace Dt.Mgr.Home
 
         async void OnEditInfo(object sender, TappedRoutedEventArgs e)
         {
-            var edit = new UserAccountForm();
-            edit.Update(Kit.UserID, false);
+            var edit = new UserForm();
+            await edit.Update(Kit.UserID, false);
             if (await Forward<bool>(edit))
             {
-                var user = edit.User;
+                var user = edit.Data;
                 Kit.UserName = user.Name;
                 Kit.UserPhone = user.Phone;
                 Kit.UserPhoto = user.Photo;

@@ -29,7 +29,6 @@
 
     <ItemGroup>
         <Using Include="Dt.Base" />
-        <Using Include="Dt.Mgr.Domain" />
     </ItemGroup>
     
     <ItemGroup Condition="$(TargetFramework.Contains('-'))">
@@ -52,5 +51,4 @@
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
     </ItemGroup>
-
 </Project>

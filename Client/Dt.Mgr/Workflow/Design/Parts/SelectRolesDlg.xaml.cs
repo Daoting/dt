@@ -17,11 +17,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Model
+namespace Dt.Mgr.Workflow
 {
-    public sealed partial class SelectUserDlg : Dlg
+    public sealed partial class SelectRolesDlg : Dlg
     {
-        public SelectUserDlg()
+        public SelectRolesDlg()
         {
             InitializeComponent();
         }
@@ -31,9 +31,9 @@ namespace Dt.Mgr.Model
             get { return _lv.SelectedItems; }
         }
 
-        public async Task<bool> Show(long p_id, FrameworkElement p_target)
+        public async Task<bool> Show(string p_tgtID, FrameworkElement p_target)
         {
-            _lv.Data = await AtCm.Query("角色-未关联的用户", new { roleid = p_id });
+            _lv.Data = await AtCm.Query("流程-活动未关联的角色", new { atvid = p_tgtID });
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;
