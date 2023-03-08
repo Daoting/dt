@@ -161,11 +161,6 @@ namespace Dt.MgrDemo
             Msg(await AtSvc.DelCache(), "DelCache");
         }
 
-        async void OnCacheByID(object sender, RoutedEventArgs e)
-        {
-            Kit.Msg(await AtSvc.CacheByID());
-        }
-
         async void OnCacheByKey(object sender, RoutedEventArgs e)
         {
             Kit.Msg(await AtSvc.CacheByKey());

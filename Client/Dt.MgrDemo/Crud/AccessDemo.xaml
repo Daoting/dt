@@ -48,16 +48,11 @@
             <Button Content="查询父子" Click="OnQueryWithChild" />
         </StackPanel>
 
-        <a:CBar Title="缓存实体：增删改时删除缓存，ID或Key查询时缓存" />
-        <StackPanel Orientation="Horizontal">
-            <Button Content="增加实体" Click="OnInsertCache" />
-            <Button Content="更新实体" Click="OnUpdateCache" />
-            <Button Content="删除实体" Click="OnDelCache" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="根据ID查询" Click="OnCacheByID" />
-            <Button Content="根据Key查询" Click="OnCacheByKey" />
-        </StackPanel>
+        <a:CBar Title="缓存实体：修改或删除后清除缓存，查询时缓存" />
+        <Button Content="增加实体" Click="OnInsertCache" />
+        <Button Content="更新实体，同步清除缓存" Click="OnUpdateCache" />
+        <Button Content="删除实体，同步清除缓存" Click="OnDelCache" />
+        <Button Content="GetFromCacheFirst查询" Click="OnCacheByKey" />
 
         <a:CBar Title="领域服务" />
         <StackPanel Orientation="Horizontal">

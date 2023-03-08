@@ -345,9 +345,9 @@ namespace Dt.Core
         /// 一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚
         /// <para>无论提交成功失败都清空状态，准备下次提交！</para>
         /// <para>处理成功后，对于每个实体：</para>
-        /// <para>1. 对于新增、修改的实体进行状态复位</para>
-        /// <para>2. 若存在领域事件，则发布事件</para>
-        /// <para>3. 若已设置服务端缓存，则删除缓存</para>
+        /// <para>1. 调用保存后或删除后回调</para>
+        /// <para>2. 对于新增或修改的实体进行状态复位</para>
+        /// <para>3. 若存在领域事件，则发布事件</para>
         /// </summary>
         /// <param name="p_isNotify">是否提示保存结果，客户端有效</param>
         /// <returns>是否成功</returns>
@@ -390,19 +390,11 @@ namespace Dt.Core
                 return false;
             }
 
-            // 成功后实体状态复位，因后续的发布领域事件、删除服务端缓存为异步，故单独处理
-            _items.ForEach(item => item.AcceptChanges());
-
-            // 复制到新列表
-            var items = new List<UnitItem>(_items);
-            _ = Task.Run(async () =>
+            // 成功后：调用回调、状态复位、发布事件
+            foreach (var item in _items)
             {
-                // 数据存储成功的后续处理：发布领域事件、删除服务端缓存
-                foreach (var item in items)
-                {
-                    await item.OnCommited();
-                }
-            });
+                await item.OnCommited();
+            }
 
             // 清空后可复用
             _items.Clear();

@@ -35,6 +35,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 登录过程移至客户端
 * 领域服务用静态方式替换单例模式，增加样例
 * DtControl的虚方法OnControlLoaded修改为OnFirstLoaded，方便理解
+* Entity增加OnSaved OnDeleted回调
+* Entity的GetByID GetByKey不再涉及缓存，GetFromCacheFirst专门用于优先从缓存读取
 
 
 * cm_prv主键调整为long

@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace Dt.MgrDemo.Crud
 {
-    [Cache("Phone")]
     public partial class CacheTbl1X
     {
         public static async Task<CacheTbl1X> New(
@@ -29,6 +28,9 @@ namespace Dt.MgrDemo.Crud
 
         protected override void InitHook()
         {
+            OnSaved(async () => await this.ClearCache(nameof(Phone)));
+
+            OnDeleted(async () => await this.ClearCache(nameof(Phone)));
         }
     }
 }

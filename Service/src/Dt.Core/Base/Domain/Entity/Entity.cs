@@ -66,9 +66,9 @@ namespace Dt.Core
         /// <summary>
         /// 重写该方法用来统一添加当前实体的所有回调方法，回调方法中通过抛出异常使操作失败、阻止继续执行！
         /// <para>主要包括三类回调：</para>
-        /// <para>Cell.Val值变化前的回调</para>
-        /// <para>Entity保存前回调</para>
-        /// <para>Entity删除前回调</para>
+        /// <para>1. Cell.Val值变化前的回调</para>
+        /// <para>2. Entity保存前回调、保存成功后的回调</para>
+        /// <para>3. Entity删除前回调、删除成功后的回调</para>
         /// <para>只在初次值变化前、保存前、删除前时调用InitHook，否则始终不调用 InitHook</para>
         /// </summary>
         protected virtual void InitHook()
@@ -85,12 +85,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 注册Entity保存成功后的回调
+        /// </summary>
+        /// <param name="p_callback"></param>
+        protected void OnSaved(Func<Task> p_callback)
+        {
+            GetHooks().SavedHook = p_callback;
+        }
+
+        /// <summary>
         /// 注册Entity删除前的回调，回调方法中通过抛出异常使删除失败，并且阻止继续执行！
         /// </summary>
         /// <param name="p_callback"></param>
         protected void OnDeleting(Func<Task> p_callback)
         {
             GetHooks().DeletingHook = p_callback;
+        }
+
+        /// <summary>
+        /// 注册Entity删除成功后的回调
+        /// </summary>
+        /// <param name="p_callback"></param>
+        protected void OnDeleted(Func<Task> p_callback)
+        {
+            GetHooks().DeletedHook = p_callback;
         }
 
         /// <summary>
@@ -125,12 +143,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取Entity成功保存后的回调方法
+        /// </summary>
+        /// <returns></returns>
+        public Func<Task> GetSavedHook()
+        {
+            return GetHooks().SavedHook;
+        }
+
+        /// <summary>
         /// 获取Entity删除前的回调方法
         /// </summary>
         /// <returns></returns>
         public Func<Task> GetDeletingHook()
         {
             return GetHooks().DeletingHook;
+        }
+
+        /// <summary>
+        /// 获取Entity成功删除后的回调方法
+        /// </summary>
+        /// <returns></returns>
+        public Func<Task> GetDeletedHook()
+        {
+            return GetHooks().DeletedHook;
         }
 
         EntityHooks GetHooks()
@@ -151,9 +187,13 @@ namespace Dt.Core
         {
             readonly Dictionary<string, Action<object>> _cellHooks = new Dictionary<string, Action<object>>(StringComparer.OrdinalIgnoreCase);
 
+            public Func<Task> SavingHook { get; set; }
+
+            public Func<Task> SavedHook { get; set; }
+
             public Func<Task> DeletingHook { get; set; }
 
-            public Func<Task> SavingHook { get; set; }
+            public Func<Task> DeletedHook { get; set; }
 
             public Action<object> GetCellHook(string p_id)
             {

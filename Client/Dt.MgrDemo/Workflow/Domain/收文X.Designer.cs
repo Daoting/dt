@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.MgrDemo.Domain
+namespace Dt.MgrDemo
 {
     [Tbl("demo_收文")]
     public partial class 收文X : EntityX<收文X>

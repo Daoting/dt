@@ -34,11 +34,6 @@ namespace Dt.Core
         /// </summary>
         public TableSchema Schema { get; private set; }
 
-        /// <summary>
-        /// 缓存处理对象，无缓存时null
-        /// </summary>
-        internal EntityCacher Cacher { get; private set; }
-
 #if SERVER
         void Init(Type p_type)
         {
@@ -49,11 +44,6 @@ namespace Dt.Core
             Schema = GetTableSchema(tbl.Name);
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
-
-            // 缓存设置
-            var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
-            if (cfg != null)
-                Cacher = new EntityCacher(this, cfg);
         }
 
         internal static TableSchema GetTableSchema(string p_tblName)
@@ -92,14 +82,6 @@ namespace Dt.Core
 
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
-
-            // redis缓存设置，本地sqlite库访问无缓存
-            if (ai.Type == AccessType.Remote)
-            {
-                var cfg = p_type.GetCustomAttribute<CacheAttribute>(false);
-                if (cfg != null)
-                    Cacher = new EntityCacher(this, cfg);
-            }
         }
 
         internal static TableSchema GetTableSchema(string p_tblName)

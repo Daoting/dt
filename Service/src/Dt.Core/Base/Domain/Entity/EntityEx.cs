@@ -147,5 +147,31 @@ namespace Dt.Core
             return await ew.Commit(p_isNotify);
         }
         #endregion
+
+        #region 缓存
+        /// <summary>
+        /// 清除以某列为键名的实体缓存，键名组成：
+        /// <para>表名:列名:列值</para>
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">实体</param>
+        /// <param name="p_colName">主键或唯一索引列名</param>
+        /// <returns></returns>
+        public static Task ClearCache<TEntity>(this TEntity p_entity, string p_colName)
+            where TEntity : Entity
+        {
+            if (p_entity == null || string.IsNullOrEmpty(p_colName))
+                Throw.Msg("清除实体缓存时列名不可为空！");
+
+            var model = EntitySchema.Get(typeof(TEntity));
+#if !SERVER
+            if (model.AccessInfo.Type == AccessType.Local)
+                Throw.Msg("本地Sqlite库实体不支持缓存！");
+#endif
+
+            var cacher = new EntityCacher(model);
+            return cacher.Remove(p_colName, p_entity.Str(p_colName));
+        }
+        #endregion
     }
 }

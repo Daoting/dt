@@ -15,7 +15,5 @@
     <ItemGroup>
         <Using Include="Dt.Base" />
         <Using Include="Dt.Mgr" />
-        <Using Include="Dt.Mgr.Domain" />
-        <Using Include="Dt.MgrDemo.Domain" />
     </ItemGroup>
 </Project>

@@ -28,76 +28,27 @@ namespace Dt.Core
     {
         #region 成员变量
         readonly EntitySchema _model;
-        readonly List<string> _otherKeys;
         #endregion
 
-        public EntityCacher(EntitySchema p_model, CacheAttribute p_cfg)
+        public EntityCacher(EntitySchema p_model)
         {
-            // 只支持单主键的缓存
-            if (p_model.Schema.PrimaryKey.Count == 0 || p_model.Schema.PrimaryKey.Count > 1)
-                throw new Exception($"表{p_model.Schema.Name}不是单个主键，不支持缓存！");
-
             _model = p_model;
-
-            // 其它唯一键缓存项
-            if (p_cfg.Keys != null && p_cfg.Keys.Length > 0)
-            {
-                var ls = new List<string>();
-                foreach (var key in p_cfg.Keys)
-                {
-                    if (!string.IsNullOrEmpty(key))
-                        ls.Add(key.ToLower());
-                }
-
-                if (ls.Count > 0)
-                    _otherKeys = ls;
-            }
         }
 
-        public async Task Cache<TEntity>(TEntity p_entity)
+        public async Task Cache<TEntity>(TEntity p_entity, string p_keyName, string p_keyVal)
             where TEntity : Entity
         {
             Throw.IfNull(p_entity);
+            Throw.If(string.IsNullOrEmpty(p_keyName) || string.IsNullOrEmpty(p_keyVal), "实体缓存时键值不可为空！");
+
             string val = RpcKit.GetObjectString(p_entity);
-            string id = p_entity.Str(_primaryKey);
-            var idKey = $"{_prefix}:{_primaryKey}:{id}";
+            var idKey = $"{_prefix}:{p_keyName.ToLower()}:{p_keyVal}";
 
 #if SERVER
-            if (_otherKeys == null)
-            {
-                // 只主键
-                await Redis.Db.StringSetAsync(idKey, val);
-            }
-            else
-            {
-                // 多个缓存键
-                var batch = Redis.Db.CreateBatch();
-                var tasks = new List<Task>();
-                tasks.Add(batch.StringSetAsync(idKey, val));
-                foreach (var item in _otherKeys)
-                {
-                    // 缓存的值为主键值，不是实体的json！
-                    var itemVal = p_entity.Str(item);
-                    if (itemVal != string.Empty)
-                        tasks.Add(batch.StringSetAsync($"{_prefix}:{item}:{itemVal}", id));
-                }
-                batch.Execute();
-                await Task.WhenAll(tasks);
-            }
-
+            await Redis.Db.StringSetAsync(idKey, val);
 #else
             var ca = _model.AccessInfo.GetDataAccess();
             await ca.StringSet(idKey, val);
-            if (_otherKeys != null)
-            {
-                foreach (var item in _otherKeys)
-                {
-                    // 缓存的值为主键值，不是实体的json！
-                    var itemVal = p_entity.Str(item);
-                    if (itemVal != string.Empty)
-                        await ca.StringSet($"{_prefix}:{item}:{itemVal}", id);
-                }
-            }
 #endif
         }
 
@@ -108,87 +59,28 @@ namespace Dt.Core
                 return default;
 
             var key = $"{_prefix}:{p_keyName.ToLower()}:{p_keyVal}";
-            if (_primaryKey.Equals(p_keyName, StringComparison.OrdinalIgnoreCase))
-            {
 #if SERVER
-                var val = await Redis.Db.StringGetAsync(key);
-                if (val.HasValue)
-                    return RpcKit.ParseString<TEntity>(val);
+            var val = await Redis.Db.StringGetAsync(key);
+            if (val.HasValue)
+                return RpcKit.ParseString<TEntity>(val);
 #else
-                var val = await _model.AccessInfo.GetDataAccess().StringGet(key);
-                if (!string.IsNullOrEmpty(val))
-                    return RpcKit.ParseString<TEntity>(val);
+            var val = await _model.AccessInfo.GetDataAccess().StringGet(key);
+            if (!string.IsNullOrEmpty(val))
+                return RpcKit.ParseString<TEntity>(val);
 #endif
-            }
-            else if (_otherKeys != null && _otherKeys.Contains(p_keyName.ToLower()))
-            {
-                string val;
-                var priKeyPrefix = $"{_prefix}:{_primaryKey}";
-#if SERVER
-                val = await Redis.GetEntityJson(key, priKeyPrefix);
-#else
-                val = await _model.AccessInfo.GetDataAccess().GetEntityJson(key, priKeyPrefix);
-#endif
-                if (!string.IsNullOrEmpty(val))
-                    return RpcKit.ParseString<TEntity>(val);
-            }
             return default;
         }
 
-        public Task Remove(Row p_entity)
+        public async Task Remove(string p_keyName, string p_keyVal)
         {
-            Throw.IfNull(p_entity);
-            // 实体信息可能不全，多键时根据缓存实体执行删除！
-            string id = p_entity.Str(_primaryKey);
-            return RemoveByID(id);
-        }
+            if (string.IsNullOrEmpty(p_keyName) || string.IsNullOrEmpty(p_keyVal))
+                return;
 
-        public async Task RemoveByID(string p_id)
-        {
-            // 只删除主键
-            string priKey = $"{_prefix}:{_primaryKey}:{p_id}";
-            if (_otherKeys == null)
-            {
+            var key = $"{_prefix}:{p_keyName.ToLower()}:{p_keyVal}";
 #if SERVER
-                await Redis.Db.KeyDeleteAsync(priKey);
+            await Redis.Db.KeyDeleteAsync(key);
 #else
-                await _model.AccessInfo.GetDataAccess().KeyDelete(priKey);
-#endif
-                return;
-            }
-
-#if SERVER
-            // 删除多键
-            var val = await Redis.Db.StringGetAsync(priKey);
-            if (!val.HasValue)
-                return;
-
-            var entity = RpcKit.ParseString<Row>(val);
-            var ls = new List<string> { priKey };
-            foreach (var item in _otherKeys)
-            {
-                var itemVal = entity.Str(item);
-                if (itemVal != string.Empty)
-                    ls.Add($"{_prefix}:{item}:{itemVal}");
-            }
-
-            // lua脚本：批量删除
-            await Redis.BatchKeyDelete(ls);
-#else
-            var ca = _model.AccessInfo.GetDataAccess();
-            var val = await ca.StringGet(priKey);
-            if (string.IsNullOrEmpty(val))
-                return;
-
-            var entity = RpcKit.ParseString<Row>(val);
-            var ls = new List<string> { priKey };
-            foreach (var item in _otherKeys)
-            {
-                var itemVal = entity.Str(item);
-                if (itemVal != string.Empty)
-                    ls.Add($"{_prefix}:{item}:{itemVal}");
-            }
-            await ca.BatchKeyDelete(ls);
+            await _model.AccessInfo.GetDataAccess().KeyDelete(key);
 #endif
         }
 
@@ -196,10 +88,5 @@ namespace Dt.Core
         /// 表名作为缓存键前缀
         /// </summary>
         string _prefix => _model.Schema.Name.ToLower();
-
-        /// <summary>
-        /// 主键缓存项
-        /// </summary>
-        string _primaryKey => _model.Schema.PrimaryKey[0].Name.ToLower();
     }
 }

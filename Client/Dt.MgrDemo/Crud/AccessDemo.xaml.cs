@@ -322,21 +322,12 @@ namespace Dt.MgrDemo
             }
         }
 
-        async void OnCacheByID(object sender, RoutedEventArgs e)
-        {
-            var x = await CacheTbl1X.First(null);
-            if (x != null)
-            {
-                x = await CacheTbl1X.GetByID(x.ID);
-            }
-        }
-
         async void OnCacheByKey(object sender, RoutedEventArgs e)
         {
             var x = await CacheTbl1X.First(null);
             if (x != null)
             {
-                x = await CacheTbl1X.GetByKey("phone", x.Phone);
+                x = await CacheTbl1X.GetFromCacheFirst("phone", x.Phone);
             }
         }
         #endregion

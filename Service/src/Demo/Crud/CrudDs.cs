@@ -325,22 +325,6 @@ namespace Demo.Crud
             return false;
         }
 
-        public async Task<string> CacheByID()
-        {
-            var x = await CacheTbl1X.First(null);
-            if (x != null)
-            {
-                var model = EntitySchema.Get(typeof(CacheTbl1X));
-                var key = $"{model.Schema.Name}:id:{x.ID}";
-                await Kit.DeleteCache(key);
-
-                await CacheTbl1X.GetByID(x.ID);
-                var val = await Kit.StringGet<string>(key);
-                return $"缓存键：{key}\r\n缓存值：{val}";
-            }
-            return "无数据";
-        }
-
         public async Task<string> CacheByKey()
         {
             var x = await CacheTbl1X.First(null);
@@ -350,7 +334,7 @@ namespace Demo.Crud
                 var key = $"{model.Schema.Name}:phone:{x.Phone}";
                 await Kit.DeleteCache(key);
 
-                await CacheTbl1X.GetByKey("phone", x.Phone);
+                await CacheTbl1X.GetFromCacheFirst("phone", x.Phone);
                 var val = await Kit.StringGet<string>(key);
                 return $"缓存键：{key}\r\n缓存值：{val}";
             }
