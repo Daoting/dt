@@ -243,6 +243,46 @@ namespace Dt.Mgr.Rbac
         }
         #endregion
 
+        #region 角色权限
+        public static async Task<bool> AddPerRoles(long p_perID, List<long> p_roleIDs)
+        {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return false;
+
+            var ls = new List<RolePerX>();
+            foreach (var rid in p_roleIDs)
+            {
+                ls.Add(new RolePerX(PerID: p_perID, RoleID: rid));
+            }
+            if (ls.Count > 0 && await ls.Save(false))
+            {
+                await AtCm.DeleteDataVer(p_roleIDs, "permission");
+                Kit.Msg($"增加{ls.Count}个关联角色，已删除角色中所有用户的permission缓存版本号！");
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> RemovePerRoles(long p_perID, List<long> p_roleIDs)
+        {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return false;
+
+            var ls = new List<RolePerX>();
+            foreach (var rid in p_roleIDs)
+            {
+                ls.Add(new RolePerX(PerID: p_perID, RoleID: rid));
+            }
+            if (await ls.Delete(false))
+            {
+                await AtCm.DeleteDataVer(p_roleIDs, "permission");
+                Kit.Msg($"移除{ls.Count}个关联角色，已删除角色中所有用户的permission缓存版本号！");
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         #region 数据版本
         public static void DelUserDataVer(long p_userID)
         {
