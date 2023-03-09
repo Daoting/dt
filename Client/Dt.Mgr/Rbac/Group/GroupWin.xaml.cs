@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    [View(LobViews.系统角色)]
+    [View("分组")]
     public partial class GroupWin : Win
     {
         public GroupWin()

@@ -1,0 +1,16 @@
+﻿<a:Win
+    x:Class="Dt.Mgr.Rbac.RoleWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Mgr.Rbac">
+
+    <l:RoleList x:Name="_mainList" Order="1" a:Ex.Dock="Left" />
+    <l:RoleForm x:Name="_mainForm" />
+    <a:Tabs a:Ex.Dock="Right">
+        <l:RoleUserList x:Name="_userList" />
+        <l:RoleMenuList x:Name="_menuList" />
+        <l:RolePermissionList x:Name="_permissionList" />
+        <l:RoleGroupList x:Name="_groupList" />
+    </a:Tabs>
+</a:Win>

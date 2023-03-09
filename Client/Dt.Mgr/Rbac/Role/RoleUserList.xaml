@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.Mgr.Rbac.GroupUserList"
+    x:Class="Dt.Mgr.Rbac.RoleUserList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

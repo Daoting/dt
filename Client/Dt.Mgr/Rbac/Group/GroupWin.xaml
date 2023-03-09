@@ -7,6 +7,8 @@
 
     <l:GroupList x:Name="_mainList" Order="1" a:Ex.Dock="Left" />
     <l:GroupForm x:Name="_mainForm" />
-    <l:GroupRoleList x:Name="_roleList" a:Ex.Dock="Right" />
-    <l:GroupUserList x:Name="_userList" a:Ex.Dock="Right" />
+    <a:Tabs a:Ex.Dock="Right">
+        <l:GroupRoleList x:Name="_roleList" />
+        <l:GroupUserList x:Name="_userList" />
+    </a:Tabs>
 </a:Win>

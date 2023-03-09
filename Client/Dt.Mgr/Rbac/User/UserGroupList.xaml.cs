@@ -19,8 +19,6 @@ namespace Dt.Mgr.Rbac
         public UserGroupList()
         {
             InitializeComponent();
-            // 同一Win中的多Tab的xaml的Mi通过ElementName绑定时，若名称相同，都绑定到最后加载的元素，WinUI的bug!
-            Menu["删除"].DataContext = _lv;
         }
         #endregion
 

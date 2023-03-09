@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-08 创建
+* 日志: 2023-03-09 创建
 ******************************************************************************/
 #endregion
 
@@ -13,10 +13,10 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class GroupUserList : Tab
+    public partial class RoleGroupList : Tab
     {
         #region 构造方法
-        public GroupUserList()
+        public RoleGroupList()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await UserX.Query("where exists ( select UserID from cm_user_group b where a.ID = b.UserID and GroupID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await GroupX.Query("where exists ( select GroupID from cm_group_role b where a.ID = b.GroupID and RoleID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
             }
             else
             {
@@ -46,9 +46,9 @@ namespace Dt.Mgr.Rbac
         #region 交互
         async void OnAdd(object sender, Mi e)
         {
-            var dlg = new User4GroupDlg();
+            var dlg = new Group4RoleDlg();
             if (await dlg.Show(_releatedID, e)
-                && await RbacDs.AddGroupUsers(_releatedID, dlg.SelectedIDs))
+                && await RbacDs.AddRoleGroups(_releatedID, dlg.SelectedIDs))
             {
                 Refresh();
             }
@@ -73,7 +73,7 @@ namespace Dt.Mgr.Rbac
                 ids = new List<long> { e.Row.ID };
             }
 
-            if (await RbacDs.RemoveGroupUsers(_releatedID, ids))
+            if (await RbacDs.RemoveRoleGroups(_releatedID, ids))
                 Refresh();
         }
         #endregion
@@ -98,7 +98,7 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 内部
-        GroupWin _win => (GroupWin)OwnWin;
+        RoleWin _win => (RoleWin)OwnWin;
         long _releatedID;
         #endregion
     }

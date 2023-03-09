@@ -19,8 +19,6 @@ namespace Dt.Mgr.Rbac
         public UserRoleList()
         {
             InitializeComponent();
-            // 同一Win中的多Tab的xaml的Mi通过ElementName绑定时，若名称相同，都绑定到最后加载的元素，WinUI的bug!
-            Menu["删除"].DataContext = _lv;
         }
         #endregion
 
@@ -50,7 +48,7 @@ namespace Dt.Mgr.Rbac
         {
             var dlg = new Role4UserDlg();
             if (await dlg.Show(_releatedID, e)
-                && await RbacDs.AddUserRole(_releatedID, dlg.SelectedIDs))
+                && await RbacDs.AddUserRoles(_releatedID, dlg.SelectedIDs))
             {
                 Refresh();
             }

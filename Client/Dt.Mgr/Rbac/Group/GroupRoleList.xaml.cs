@@ -19,7 +19,6 @@ namespace Dt.Mgr.Rbac
         public GroupRoleList()
         {
             InitializeComponent();
-            Menu["删除"].DataContext = _lv;
         }
         #endregion
 

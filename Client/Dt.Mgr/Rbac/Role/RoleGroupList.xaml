@@ -1,9 +1,9 @@
 ﻿<a:Tab
-    x:Class="Dt.Mgr.Rbac.GroupUserList"
+    x:Class="Dt.Mgr.Rbac.RoleGroupList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="关联用户">
+    Title="关联分组">
     
     <a:Tab.Menu>
         <a:Menu>
@@ -22,16 +22,7 @@
             </a:Menu>
         </a:Ex.Menu>
         <DataTemplate>
-            <StackPanel Padding="6">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE060;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="name" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="&#xE0C0;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
-            </StackPanel>
+            <a:Dot ID="Name" Margin="10,0,10,0" />
         </DataTemplate>
     </a:Lv>
 </a:Tab>
