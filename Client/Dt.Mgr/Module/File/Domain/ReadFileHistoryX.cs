@@ -11,7 +11,7 @@ using Dt.Core;
 using System;
 #endregion
 
-namespace Dt.Mgr.Files
+namespace Dt.Mgr.Module
 {
     /// <summary>
     /// 打开过的文件历史
