@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using System.Text;
 #endregion
 
@@ -162,7 +163,7 @@ namespace Dt.Mgr
             var roots = new List<OmMenu>();
 
             // 整理菜单项
-            foreach (var item in await AtModel.Each<OmMenu>("select * from OmMenu"))
+            foreach (var item in await AtModel.Each<OmMenu>("select * from OmMenu order by dispidx"))
             {
                 // 过滤无权限的项，保留所有分组
                 if (!item.IsGroup && !idsAll.Contains(item.ID))
@@ -310,37 +311,53 @@ namespace Dt.Mgr
         /// <returns></returns>
         static async Task<List<long>> GetAllUserMenus()
         {
-            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='menu'");
-            if (cnt == 0)
+            // 查询当前版本号
+            var ver = await _da.StringGet(RbacDs.PrefixMenu + Kit.UserID);
+            if (!string.IsNullOrEmpty(ver))
             {
-                // 查询服务端
-                Dict dt = await AtCm.GetMenus(Kit.UserID);
-
-                // 记录版本号
-                var ver = new DataVerX(ID: "menu", Ver: dt.Str("ver"));
-                await ver.Save(false);
-
-                // 清空旧数据
-                await AtLob.Exec("delete from UserMenu");
-
-                // 插入新数据
-                var ls = (List<long>)dt["result"];
-                if (ls != null && ls.Count > 0)
+                int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='menu' and ver=@ver", new { ver = ver });
+                if (cnt > 0)
                 {
-                    List<Dict> dts = new List<Dict>();
-                    foreach (var id in ls)
-                    {
-                        dts.Add(new Dict { { "id", id } });
-                    }
-                    var d = new Dict();
-                    d["text"] = "insert into UserMenu (id) values (@id)";
-                    d["params"] = dts;
-                    await AtLob.BatchExec(new List<Dict> { d });
+                    // 版本号相同，直接取本地数据
+                    return await AtLob.FirstCol<long>("select id from UserMenu");
                 }
-                return ls;
             }
 
-            return await AtLob.FirstCol<long>("select id from UserMenu");
+            // 更新用户菜单，缓存新版本号
+            List<long> ls = new List<long>();
+            ls = await _da.FirstCol<long>("用户-可访问的菜单", new { userid = Kit.UserID });
+
+            // 清空旧数据
+            await AtLob.Exec("delete from UserMenu");
+
+            long sum = 0;
+            if (ls != null && ls.Count > 0)
+            {
+                List<Dict> dts = new List<Dict>();
+                foreach (var id in ls)
+                {
+                    dts.Add(new Dict { { "id", id } });
+                    sum += id;
+                }
+                var d = new Dict();
+                d["text"] = "insert into UserMenu (id) values (@id)";
+                d["params"] = dts;
+                await AtLob.BatchExec(new List<Dict> { d });
+            }
+
+            // redis和本地sqlite都记录版本号
+            // 版本号是所有可访问菜单id的和！
+            string newVer = sum.ToString();
+            await _da.StringSet(RbacDs.PrefixMenu + Kit.UserID, newVer);
+
+            var dv = await DataVerX.GetByID("menu");
+            if (dv == null)
+                dv = new DataVerX(ID: "menu", Ver: newVer);
+            else
+                dv.Ver = newVer;
+            await dv.Save(false);
+
+            return ls;
         }
 
         /// <summary>

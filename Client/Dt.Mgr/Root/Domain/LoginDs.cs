@@ -133,43 +133,12 @@ namespace Dt.Mgr
             Kit.UserPhoto = user.Photo;
 
             RefreshHeader();
-            await UpdateDataVersion();
             LoginSuc?.Invoke();
 
             // 接收服务器推送
             _ = Task.Run(() => PushHandler.Register());
 
             return true;
-        }
-
-        /// <summary>
-        /// 更新数据版本号
-        /// </summary>
-        /// <returns></returns>
-        static async Task UpdateDataVersion()
-        {
-            Dict dt = await _da.HashGetAll("ver:" + Kit.UserID);
-            if (dt == null)
-            {
-                // 所有缓存数据失效
-                await AtLob.Exec("delete from DataVer");
-                return;
-            }
-
-            var tbl = await AtLob.Query("select id,ver from DataVer");
-            if (tbl != null && tbl.Count > 0)
-            {
-                foreach (var row in tbl)
-                {
-                    var id = row.Str(0);
-                    var ver = row.Str(1);
-                    if (!dt.ContainsKey(id) || dt.Str(id) != ver)
-                    {
-                        // 删除版本号，未实际删除缓存数据，待下次用到时获取新数据！
-                        await AtLob.Exec($"delete from DataVer where id='{id}'");
-                    }
-                }
-            }
         }
 
         /// <summary>

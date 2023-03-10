@@ -14,42 +14,48 @@ namespace Dt.Mgr.Rbac
     class RbacDs : DomainSvc<RbacDs, AtCm.Info>
     {
         #region 用户分组
-        public static async Task<bool> AddUserGroups(long p_userID, List<long> p_groupIDs)
+        public static Task<bool> AddUserGroups(long p_userID, List<long> p_groupIDs)
+        {
+            return EditUserGroups(p_userID, p_groupIDs, false);
+        }
+
+        public static Task<bool> RemoveUserGroups(long p_userID, List<long> p_groupIDs)
+        {
+            return EditUserGroups(p_userID, p_groupIDs, true);
+        }
+
+        static async Task<bool> EditUserGroups(long p_userID, List<long> p_groupIDs, bool p_isRemove)
         {
             if (p_groupIDs == null || p_groupIDs.Count == 0)
                 return false;
 
             var ls = new List<UserGroupX>();
-            foreach (var rid in p_groupIDs)
+            foreach (var id in p_groupIDs)
             {
-                ls.Add(new UserGroupX(UserID: p_userID, GroupID: rid));
+                ls.Add(new UserGroupX(UserID: p_userID, GroupID: id));
             }
-            if (await ls.Save(false))
+
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
                 DelUserDataVer(p_userID);
-                Kit.Msg($"增加{ls.Count}个关联分组，已删除该用户缓存数据的版本号！");
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联分组");
                 return true;
             }
             return false;
         }
 
-        public static async Task<bool> RemoveUserGroups(long p_userID, List<long> p_groupIDs)
+        public static Task<bool> AddGroupUsers(long p_groupID, List<long> p_userIDs)
         {
-            if (p_groupIDs == null || p_groupIDs.Count == 0)
-                return false;
-
-            var ls = (from id in p_groupIDs
-                      select new UserGroupX(p_userID, id)).ToList();
-            if (await ls.Delete(false))
-            {
-                DelUserDataVer(p_userID);
-                Kit.Msg($"移除{ls.Count}个关联分组，已删除该用户缓存数据的版本号！");
-                return true;
-            }
-            return false;
+            return EditGroupUsers(p_groupID, p_userIDs, false);
         }
 
-        public static async Task<bool> AddGroupUsers(long p_groupID, List<long> p_userIDs)
+        public static Task<bool> RemoveGroupUsers(long p_groupID, List<long> p_userIDs)
+        {
+            return EditGroupUsers(p_groupID, p_userIDs, true);
+        }
+
+        static async Task<bool> EditGroupUsers(long p_groupID, List<long> p_userIDs, bool p_isRemove)
         {
             if (p_userIDs == null || p_userIDs.Count == 0)
                 return false;
@@ -59,29 +65,12 @@ namespace Dt.Mgr.Rbac
             {
                 ls.Add(new UserGroupX(UserID: id, GroupID: p_groupID));
             }
-            if (await ls.Save(false))
-            {
-                BatchDelUserDataVer(p_userIDs);
-                Kit.Msg($"增加{ls.Count}个关联用户，已删除这些用户的缓存数据版本号！");
-                return true;
-            }
-            return false;
-        }
 
-        public static async Task<bool> RemoveGroupUsers(long p_groupID, List<long> p_userIDs)
-        {
-            if (p_userIDs == null || p_userIDs.Count == 0)
-                return false;
-
-            var ls = new List<UserGroupX>();
-            foreach (var id in p_userIDs)
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
-                ls.Add(new UserGroupX(UserID: id, GroupID: p_groupID));
-            }
-            if (await ls.Delete(false))
-            {
-                BatchDelUserDataVer(p_userIDs);
-                Kit.Msg($"移除{ls.Count}个关联用户，已删除这些用户的缓存数据版本号！");
+                DelUserDataVer(p_userIDs);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联用户");
                 return true;
             }
             return false;
@@ -89,13 +78,17 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 用户角色
-        /// <summary>
-        /// 批量增加用户关联的角色
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <param name="p_roleIDs"></param>
-        /// <returns></returns>
-        public static async Task<bool> AddUserRoles(long p_userID, List<long> p_roleIDs)
+        public static Task<bool> AddUserRoles(long p_userID, List<long> p_roleIDs)
+        {
+            return EditUserRoles(p_userID, p_roleIDs, false);
+        }
+
+        public static Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
+        {
+            return EditUserRoles(p_userID, p_roleIDs, true);
+        }
+
+        static async Task<bool> EditUserRoles(long p_userID, List<long> p_roleIDs, bool p_isRemove)
         {
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
@@ -109,44 +102,30 @@ namespace Dt.Mgr.Rbac
                     ls.Add(new UserRoleX(UserID: p_userID, RoleID: rid));
                 }
             }
-            if (ls.Count > 0 && await ls.Save(false))
-            {
-                DelUserDataVer(p_userID);
-                Kit.Msg($"增加{ls.Count}个关联角色，已删除该用户缓存数据的版本号！");
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 删除用户关联的多个角色
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <param name="p_roleIDs"></param>
-        /// <returns></returns>
-        public static async Task<bool> RemoveUserRoles(long p_userID, List<long> p_roleIDs)
-        {
-            if (p_roleIDs == null || p_roleIDs.Count == 0)
+            if (ls.Count == 0)
                 return false;
 
-            List<UserRoleX> ls = (from id in p_roleIDs
-                                  select new UserRoleX(p_userID, id)).ToList();
-            if (await ls.Delete(false))
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
                 DelUserDataVer(p_userID);
-                Kit.Msg($"移除{ls.Count}个关联角色，已删除该用户缓存数据的版本号！");
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;
             }
             return false;
         }
 
-        /// <summary>
-        /// 批量增加角色关联的用户
-        /// </summary>
-        /// <param name="p_roleID"></param>
-        /// <param name="p_userIDs"></param>
-        /// <returns></returns>
-        public static async Task<bool> AddRoleUsers(long p_roleID, List<long> p_userIDs)
+        public static Task<bool> AddRoleUsers(long p_roleID, List<long> p_userIDs)
+        {
+            return EditRoleUsers(p_roleID, p_userIDs, false);
+        }
+
+        public static Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
+        {
+            return EditRoleUsers(p_roleID, p_userIDs, true);
+        }
+
+        static async Task<bool> EditRoleUsers(long p_roleID, List<long> p_userIDs, bool p_isRemove)
         {
             // 任何人 roleid = 1 
             if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
@@ -155,64 +134,32 @@ namespace Dt.Mgr.Rbac
             var ls = new List<UserRoleX>();
             foreach (var uid in p_userIDs)
             {
-                ls.Add(new UserRoleX(uid, p_roleID));
+                ls.Add(new UserRoleX(UserID:uid, RoleID: p_roleID));
             }
 
-            if (await ls.Save(false))
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
-                BatchDelUserDataVer(p_userIDs);
-                Kit.Msg($"增加{ls.Count}个关联用户，已删除这些用户缓存数据的版本号！");
+                DelUserDataVer(p_userIDs);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联用户");
                 return true;
             }
             return false;
         }
-
-        /// <summary>
-        /// 删除角色关联的多个用户
-        /// </summary>
-        /// <param name="p_roleID"></param>
-        /// <param name="p_userIDs"></param>
-        /// <returns></returns>
-        public static async Task<bool> RemoveRoleUsers(long p_roleID, List<long> p_userIDs)
-        {
-            // 任何人 roleid = 1 
-            if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
-                return false;
-
-            var ls = new List<UserRoleX>();
-            foreach (var uid in p_userIDs)
-            {
-                ls.Add(new UserRoleX(uid, p_roleID));
-            }
-
-            if (await ls.Delete(false))
-            {
-                BatchDelUserDataVer(p_userIDs);
-                Kit.Msg($"移除{ls.Count}个关联用户，已删除这些用户缓存数据的版本号！");
-                return true;
-            }
-            return false;
-        }
-
-        ///// <summary>
-        ///// 删除角色，同步缓存
-        ///// </summary>
-        ///// <param name="p_roleID"></param>
-        ///// <returns></returns>
-        //public static async Task<bool> DeleteRole(long p_roleID)
-        //{
-        //    if (await new RoleX(p_roleID).Delete())
-        //    {
-        //        var ls = await _da.FirstCol<long>("select userid from cm_user_role where roleid=@roleid", new { roleid = p_roleID });
-        //        await GetVerCache().BatchDelete(ls);
-        //        return true;
-        //    }
-        //    return false;
-        //}
         #endregion
 
         #region 分组角色
-        public static async Task<bool> AddGroupRoles(long p_groupID, List<long> p_roleIDs)
+        public static Task<bool> AddGroupRoles(long p_groupID, List<long> p_roleIDs)
+        {
+            return EditGroupRoles(p_groupID, p_roleIDs, false);
+        }
+
+        public static Task<bool> RemoveGroupRoles(long p_groupID, List<long> p_roleIDs)
+        {
+            return EditGroupRoles(p_groupID, p_roleIDs, true);
+        }
+
+        static async Task<bool> EditGroupRoles(long p_groupID, List<long> p_roleIDs, bool p_isRemove)
         {
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
@@ -224,28 +171,15 @@ namespace Dt.Mgr.Rbac
                 if (rid != 1)
                     ls.Add(new GroupRoleX(GroupID: p_groupID, RoleID: rid));
             }
-            if (ls.Count > 0 && await ls.Save(false))
-            {
-                var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
-                BatchDelUserDataVer(users);
-                Kit.Msg($"增加{ls.Count}个关联角色，已删除{users.Count}个用户的缓存数据版本号！");
-                return true;
-            }
-            return false;
-        }
-
-        public static async Task<bool> RemoveGroupRoles(long p_groupID, List<long> p_roleIDs)
-        {
-            if (p_roleIDs == null || p_roleIDs.Count == 0)
+            if (ls.Count == 0)
                 return false;
 
-            var ls = (from id in p_roleIDs
-                      select new GroupRoleX(p_groupID, id)).ToList();
-            if (await ls.Delete(false))
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
                 var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
-                BatchDelUserDataVer(users);
-                Kit.Msg($"移除{ls.Count}个关联角色，已删除{users.Count}个用户的缓存数据版本号！");
+                DelUserDataVer(users);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;
             }
             return false;
@@ -275,9 +209,9 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                //var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
-                //BatchDelUserDataVer(users);
-                //Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个分组，已删除角色中所有用户的permission缓存版本号！");
+                var users = await _da.FirstCol<long>("分组-分组列表的用户", new { groupid = string.Join(',', p_groupIDs) });
+                DelUserDataVer(users);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个分组");
                 return true;
             }
             return false;
@@ -285,26 +219,17 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 角色权限
-        public static async Task<bool> AddPerRoles(long p_perID, List<long> p_roleIDs)
+        public static Task<bool> AddPerRoles(long p_perID, List<long> p_roleIDs)
         {
-            if (p_roleIDs == null || p_roleIDs.Count == 0)
-                return false;
-
-            var ls = new List<RolePerX>();
-            foreach (var rid in p_roleIDs)
-            {
-                ls.Add(new RolePerX(PerID: p_perID, RoleID: rid));
-            }
-            if (await ls.Save(false))
-            {
-                await AtCm.DeleteDataVer(p_roleIDs, "permission");
-                Kit.Msg($"增加{ls.Count}个关联角色，已删除角色中所有用户的permission缓存版本号！");
-                return true;
-            }
-            return false;
+            return EditPerRoles(p_perID, p_roleIDs, false);
         }
 
-        public static async Task<bool> RemovePerRoles(long p_perID, List<long> p_roleIDs)
+        public static Task<bool> RemovePerRoles(long p_perID, List<long> p_roleIDs)
+        {
+            return EditPerRoles(p_perID, p_roleIDs, true);
+        }
+
+        static async Task<bool> EditPerRoles(long p_perID, List<long> p_roleIDs, bool p_isRemove)
         {
             if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
@@ -314,10 +239,12 @@ namespace Dt.Mgr.Rbac
             {
                 ls.Add(new RolePerX(PerID: p_perID, RoleID: rid));
             }
-            if (await ls.Delete(false))
+
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
-                await AtCm.DeleteDataVer(p_roleIDs, "permission");
-                Kit.Msg($"移除{ls.Count}个关联角色，已删除角色中所有用户的permission缓存版本号！");
+                DelRoleDataVer(p_roleIDs, PrefixPer);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;
             }
             return false;
@@ -347,8 +274,8 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                await AtCm.DeleteDataVer(new List<long> { p_roleID }, "permission");
-                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个权限，已删除角色中所有用户的permission缓存版本号！");
+                DelRoleDataVer(new List<long> { p_roleID }, PrefixPer);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个权限");
                 return true;
             }
             return false;
@@ -356,7 +283,17 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 角色菜单
-        public static async Task<bool> AddRoleMenus(long p_roleID, List<long> p_menuIDs)
+        public static Task<bool> AddRoleMenus(long p_roleID, List<long> p_menuIDs)
+        {
+            return EditRoleMenus(p_roleID, p_menuIDs, false);
+        }
+
+        public static Task<bool> RemoveRoleMenus(long p_roleID, List<long> p_menuIDs)
+        {
+            return EditRoleMenus(p_roleID, p_menuIDs, true);
+        }
+
+        static async Task<bool> EditRoleMenus(long p_roleID, List<long> p_menuIDs, bool p_isRemove)
         {
             if (p_menuIDs == null || p_menuIDs.Count == 0)
                 return false;
@@ -366,42 +303,69 @@ namespace Dt.Mgr.Rbac
             {
                 ls.Add(new RoleMenuX(RoleID: p_roleID, MenuID: id));
             }
-            if (await ls.Save(false))
+
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
-                await AtCm.DeleteDataVer(new List<long> { p_roleID }, "menu");
-                Kit.Msg($"增加{ls.Count}个关联菜单，已删除涉及用户的Menu缓存数据的版本号！");
+                DelRoleDataVer(new List<long> { p_roleID }, PrefixMenu);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联菜单");
                 return true;
             }
             return false;
         }
 
-        public static async Task<bool> RemoveRoleMenus(long p_roleID, List<long> p_menuIDs)
+        public static Task<bool> AddMenuRoles(long p_menuID, List<long> p_roleIDs)
         {
-            if (p_menuIDs == null || p_menuIDs.Count == 0)
+            return EditMenuRoles(p_menuID, p_roleIDs, false);
+        }
+
+        public static Task<bool> RemoveMenuRoles(long p_menuID, List<long> p_roleIDs)
+        {
+            return EditMenuRoles(p_menuID, p_roleIDs, true);
+        }
+
+        static async Task<bool> EditMenuRoles(long p_menuID, List<long> p_roleIDs, bool p_isRemove)
+        {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
                 return false;
 
             var ls = new List<RoleMenuX>();
-            foreach (var id in p_menuIDs)
+            foreach (var id in p_roleIDs)
             {
-                ls.Add(new RoleMenuX(RoleID: p_roleID, MenuID: id));
+                ls.Add(new RoleMenuX(RoleID: id, MenuID: p_menuID));
             }
-            if (await ls.Delete(false))
+
+            var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
+            if (suc)
             {
-                await AtCm.DeleteDataVer(new List<long> { p_roleID }, "menu");
-                Kit.Msg($"移除{ls.Count}个关联菜单，已删除涉及用户的Menu缓存数据的版本号！");
+                DelRoleDataVer(p_roleIDs, PrefixMenu);
+                Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;
             }
             return false;
         }
         #endregion
 
-        #region 数据版本
+        #region 缓存版本
+        /// <summary>
+        /// 删除用户的所有缓存版本号
+        /// </summary>
+        /// <param name="p_userID"></param>
         public static void DelUserDataVer(long p_userID)
         {
-            _da.KeyDelete("ver:" + p_userID);
+            var ls = new List<string>
+            {
+                PrefixMenu + p_userID,
+                PrefixPer + p_userID,
+            };
+            _da.BatchKeyDelete(ls);
         }
 
-        public static void BatchDelUserDataVer(List<long> p_userIDs)
+        /// <summary>
+        /// 删除用户的所有缓存版本号
+        /// </summary>
+        /// <param name="p_userIDs"></param>
+        public static void DelUserDataVer(List<long> p_userIDs)
         {
             if (p_userIDs == null || p_userIDs.Count == 0)
                 return;
@@ -409,10 +373,40 @@ namespace Dt.Mgr.Rbac
             var ls = new List<string>();
             foreach (var id in p_userIDs)
             {
-                ls.Add("ver:" + id);
+                ls.Add(PrefixMenu + id);
+                ls.Add(PrefixPer + id);
             }
             _da.BatchKeyDelete(ls);
         }
+
+        /// <summary>
+        /// 删除角色列表中所有用户的指定数据类型的版本号
+        /// </summary>
+        /// <param name="p_roleIDs"></param>
+        /// <param name="p_key"></param>
+        public static async void DelRoleDataVer(List<long> p_roleIDs, string p_key)
+        {
+            List<long> ls;
+            if (p_roleIDs.Contains(1))
+            {
+                // 包含任何人
+                ls = await _da.FirstCol<long>("select id from cm_user");
+            }
+            else
+            {
+                ls = await _da.FirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+            }
+
+            var keys = new List<string>();
+            foreach (var id in ls)
+            {
+                keys.Add(p_key + id);
+            }
+            await _da.BatchKeyDelete(keys);
+        }
+
+        public const string PrefixMenu = "ver:menu:";
+        public const string PrefixPer = "ver:per:";
         #endregion
     }
 }

@@ -24,7 +24,6 @@ namespace Dt.Mgr.Rbac
             string Params = default,
             string Icon = default,
             string Note = default,
-            int Dispidx = default,
             bool IsLocked = false,
             DateTime Ctime = default,
             DateTime Mtime = default)
@@ -38,7 +37,7 @@ namespace Dt.Mgr.Rbac
                 Params: Params,
                 Icon: Icon,
                 Note: Note,
-                Dispidx: Dispidx,
+                Dispidx: await NewSeq("Dispidx"),
                 IsLocked: IsLocked,
                 Ctime: Ctime,
                 Mtime: Mtime);
@@ -46,22 +45,22 @@ namespace Dt.Mgr.Rbac
 
         protected override void InitHook()
         {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+            OnSaving(() =>
+            {
+                // 调序时无name列
+                if (Contains("Name"))
+                    Throw.IfEmpty(Name, "菜单名称不可为空！");
+                return Task.CompletedTask;
+            });
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
+            OnDeleting(async () =>
+            {
+                if (IsGroup)
+                {
+                    int count = await AtCm.GetScalar<int>("菜单-是否有子菜单", new { parentid = ID });
+                    Throw.If(count > 0, "含子菜单无法删除！");
+                }
+            });
         }
     }
 }

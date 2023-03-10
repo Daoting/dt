@@ -48,7 +48,7 @@ namespace Dt.Core
         #endregion
 
         /// <summary>
-        /// 父菜单项ID
+        /// 标识ID
         /// </summary>
         new public long ID
         {

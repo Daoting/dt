@@ -40,7 +40,7 @@
     "OmMenu": {
       "Create": [
         "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,Note text,DispIdx integer,primary key (ID))",
-        "create index if not exists \"OmMenu_ParentID\" on \"OmMenu\"(\"ParentID\")"
+        "create index if not exists \"OmMenu_DispIdx\" on \"OmMenu\"(\"DispIdx\")"
       ],
       "Data": "select * from cm_menu where islocked=0 order by dispidx"
     }
