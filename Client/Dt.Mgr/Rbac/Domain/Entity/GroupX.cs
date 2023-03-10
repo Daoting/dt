@@ -22,28 +22,26 @@ namespace Dt.Mgr.Rbac
         {
             return new GroupX(
                 ID: await NewID(),
-                Name: Name,
+                Name: "新分组",
                 Note: Note);
         }
 
         protected override void InitHook()
         {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+            OnSaving(() =>
+            {
+                Throw.IfEmpty(Name, "分组名称不可为空！");
+                return Task.CompletedTask;
+            });
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+            OnDeleting(async () =>
+            {
+                Throw.If(ID < 1000, "系统分组无法删除！");
 
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
+                // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_group有级联删除
+                var users = await AtCm.FirstCol<long>("分组-关联用户", new { groupid = ID });
+                RbacDs.DelUserDataVer(users);
+            });
         }
     }
 }

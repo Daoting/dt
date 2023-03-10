@@ -55,11 +55,16 @@ namespace Dt.Mgr.Rbac
 
             OnDeleting(async () =>
             {
+                Throw.If(ID < 1000, "系统菜单无法删除！");
                 if (IsGroup)
                 {
                     int count = await AtCm.GetScalar<int>("菜单-是否有子菜单", new { parentid = ID });
                     Throw.If(count > 0, "含子菜单无法删除！");
                 }
+
+                // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_menu有级联删除
+                var ls = await AtCm.FirstCol<long>("菜单-关联的角色", new { menuid = ID });
+                RbacDs.DelRoleDataVer(ls, RbacDs.PrefixMenu);
             });
         }
     }

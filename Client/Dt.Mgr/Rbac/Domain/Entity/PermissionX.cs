@@ -22,28 +22,31 @@ namespace Dt.Mgr.Rbac
         {
             return new PermissionX(
                 ID: await NewID(),
-                Name: Name,
+                Name: "新权限",
                 Note: Note);
         }
 
         protected override void InitHook()
         {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+            OnSaving(async () =>
+            {
+                Throw.IfEmpty(Name, "权限名称不可为空！");
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+                if ((IsAdded || Cells["Name"].IsChanged)
+                    && await AtCm.GetScalar<int>("权限-名称重复", new { name = Name }) > 0)
+                {
+                    Throw.Msg("权限名称重复！");
+                }
+            });
 
-            //OnChanging<string>(nameof(Name), v =>
-            //{
+            OnDeleting(async () =>
+            {
+                Throw.If(ID < 1000, "系统权限无法删除！");
                 
-            //});
+                // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_per有级联删除
+                var ls = await AtCm.FirstCol<long>("权限-关联角色", new { perid = ID });
+                RbacDs.DelRoleDataVer(ls, RbacDs.PrefixPer);
+            });
         }
     }
 }

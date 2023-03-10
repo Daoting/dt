@@ -170,7 +170,8 @@ namespace Dt.Core
 #endif
 
             var cacher = new EntityCacher(model);
-            return cacher.Remove(p_colName, p_entity.Str(p_colName));
+            // 可能当前列值已修改，取原始值
+            return cacher.Remove(p_colName, p_entity.Cells[p_colName].GetOriginalVal<string>());
         }
         #endregion
     }

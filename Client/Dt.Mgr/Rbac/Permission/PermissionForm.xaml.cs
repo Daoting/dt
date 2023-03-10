@@ -73,7 +73,7 @@ namespace Dt.Mgr.Rbac
             if (d == null)
                 return;
 
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？\r\n权限在代码中用到，删除后不可恢复，请谨慎删除！"))
             {
                 Kit.Msg("已取消删除！");
                 return;

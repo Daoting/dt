@@ -62,12 +62,19 @@ namespace Dt.Mgr.Rbac
                 }
             });
 
+            OnDeleting(() =>
+            {
+                Throw.If(ID < 1000, "系统用户无法删除！");
+                return Task.CompletedTask;
+            });
+
             // 清除以手机号为键名的缓存
             OnSaved(async () => await this.ClearCache("phone"));
 
             OnDeleted(async () =>
             {
                 await this.ClearCache("phone");
+                // 清除用户的数据版本号
                 RbacDs.DelUserDataVer(ID);
             });
         }

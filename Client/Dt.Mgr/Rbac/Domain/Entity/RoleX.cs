@@ -35,16 +35,14 @@ namespace Dt.Mgr.Rbac
                 }
             });
 
-            OnDeleting(() =>
+            OnDeleting(async () =>
             {
                 Throw.If(ID < 1000, "系统角色无法删除！");
-                return Task.CompletedTask;
+
+                // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_role有级联删除
+                var ls = await AtCm.FirstCol<long>("角色-关联用户", new { roleid = ID });
+                RbacDs.DelUserDataVer(ls);
             });
-
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-
-            //});
         }
     }
 }
