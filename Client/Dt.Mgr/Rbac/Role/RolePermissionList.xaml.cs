@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await PermissionX.Query("where exists ( select PerID from cm_role_per b where a.ID = b.PerID and RoleID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await PermissionX.Query("角色-关联的权限", new { ReleatedID = _releatedID });
             }
             else
             {

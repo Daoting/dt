@@ -221,7 +221,7 @@ namespace Dt.Base
         async void SaveCookie(string p_text)
         {
             _lastText = p_text;
-            var sh = await SearchHistoryX.First($"where BaseUri='{_baseUri}' and Content='{p_text}'");
+            var sh = await SearchHistoryX.First($"where BaseUri='{_baseUri}' and Content=@Content", new { Content = p_text });
             if (sh == null)
             {
                 SearchHistoryX his = await SearchHistoryX.New(BaseUri: _baseUri, Content: p_text);

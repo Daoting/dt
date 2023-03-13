@@ -25,7 +25,7 @@ namespace Dt.Mgr.Rbac
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await UserX.Query("where not exists ( select UserID from cm_user_role b where a.ID = b.UserID and RoleID=@ReleatedID )", new { ReleatedID = p_releatedID });
+            _lv.Data = await UserX.Query("角色-未关联的用户", new { ReleatedID = p_releatedID });
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

@@ -177,7 +177,7 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                var users = await _da.FirstCol<long>("分组-关联用户", new { groupid = p_groupID });
+                var users = await _da.FirstCol<long>("分组-关联用户", new { ReleatedID = p_groupID });
                 DelUserDataVer(users);
                 Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;

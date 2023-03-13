@@ -22,7 +22,7 @@
             </a:Menu>
         </a:Ex.Menu>
         <DataTemplate>
-            <a:Dot ID="rolename" Margin="10,0,10,0" />
+            <a:Dot ID="Name" Margin="10,0,10,0" />
         </DataTemplate>
     </a:Lv>
 </a:Tab>

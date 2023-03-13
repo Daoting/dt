@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await UserX.Query("where exists ( select UserID from cm_user_group b where a.ID = b.UserID and GroupID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await UserX.Query("分组-关联用户", new { ReleatedID = _releatedID });
             }
             else
             {

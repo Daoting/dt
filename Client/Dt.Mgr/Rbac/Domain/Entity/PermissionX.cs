@@ -50,7 +50,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统权限无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_per有级联删除
-                var ls = await AtCm.FirstCol<long>("权限-关联角色", new { perid = ID });
+                var ls = await AtCm.FirstCol<long>("权限-关联角色", new { ReleatedID = ID });
                 RbacDs.DelRoleDataVer(ls, RbacDs.PrefixPer);
             });
         }

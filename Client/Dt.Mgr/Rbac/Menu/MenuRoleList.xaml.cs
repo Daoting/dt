@@ -46,7 +46,7 @@ namespace Dt.Mgr.Rbac
 
         public async void Refresh()
         {
-            _lv.Data = await AtCm.Query<RoleMenuX>("菜单-关联的角色", new { menuid = _id });
+            _lv.Data = await AtCm.Query<RoleMenuX>("菜单-关联的角色", new { ReleatedID = _id });
         }
         #endregion
 
@@ -73,11 +73,11 @@ namespace Dt.Mgr.Rbac
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
                 roleIDs = (from row in _lv.SelectedRows
-                           select row.Long("roleid")).ToList();
+                           select row.ID).ToList();
             }
             else
             {
-                roleIDs = new List<long> { e.Row.Long("roleid") };
+                roleIDs = new List<long> { e.Row.ID };
             }
 
             if (await RbacDs.RemoveMenuRoles(_id, roleIDs))

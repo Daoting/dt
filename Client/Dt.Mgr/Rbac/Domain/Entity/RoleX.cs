@@ -40,7 +40,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统角色无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_role有级联删除
-                var ls = await AtCm.FirstCol<long>("角色-关联用户", new { roleid = ID });
+                var ls = await AtCm.FirstCol<long>("角色-关联用户", new { ReleatedID = ID });
                 RbacDs.DelUserDataVer(ls);
             });
         }
