@@ -46,7 +46,7 @@ namespace Dt.Mgr.Module
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<RptX>("报表-所有");
+                _lv.Data = await RptX.Query(null);
             }
             else if (_query == "#最近修改")
             {

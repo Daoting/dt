@@ -24,15 +24,31 @@ namespace Dt.Mgr.Module
 {
     public sealed partial class RptForm : Tab
     {
+        #region 构造方法
         public RptForm()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 公开
         public async void Update(long p_id)
         {
-            if (await _fv.DiscardChanges())
-                _fv.Data = await AtCm.First<RptX>("报表-ID", new { id = p_id });
+            var d = Data;
+            if (d != null && d.ID == p_id)
+                return;
+
+            if (!await _fv.DiscardChanges())
+                return;
+
+            if (p_id > 0)
+            {
+                Data = await RptX.GetByID(p_id);
+            }
+            else
+            {
+                Create();
+            }
         }
 
         public void Clear()
@@ -40,6 +56,14 @@ namespace Dt.Mgr.Module
             _fv.Data = null;
         }
 
+        public RptX Data
+        {
+            get { return _fv.Data.To<RptX>(); }
+            private set { _fv.Data = value; }
+        }
+        #endregion
+
+        #region 交互
         async void OnSave(object sender, Mi e)
         {
             if (await _fv.Data.To<RptX>().Save())
@@ -49,10 +73,9 @@ namespace Dt.Mgr.Module
             }
         }
 
-        async void OnAdd(object sender, Mi e)
+        void OnAdd(object sender, Mi e)
         {
-            _fv.Data = await RptX.New(
-                Name: "新报表");
+            Create();
         }
 
         async void OnDel(object sender, Mi e)
@@ -61,7 +84,7 @@ namespace Dt.Mgr.Module
             if (d == null)
                 return;
 
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？\r\n做个报表不容易，请慎重删除！"))
             {
                 Kit.Msg("已取消删除！");
                 return;
@@ -101,6 +124,14 @@ namespace Dt.Mgr.Module
                 _ = Rpt.ShowDesign(new AppRptDesignInfo(rpt));
             }
         }
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            _fv.Data = await RptX.New(
+                Name: "新报表");
+        }
 
         protected override Task<bool> OnClosing()
         {
@@ -108,5 +139,6 @@ namespace Dt.Mgr.Module
         }
 
         RptWin _win => (RptWin)OwnWin;
+        #endregion
     }
 }
