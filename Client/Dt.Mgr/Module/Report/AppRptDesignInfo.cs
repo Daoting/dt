@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Mgr.Rbac;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -46,7 +47,7 @@ namespace Dt.Mgr.Module
             }
 
             if (await _rpt.Save())
-                LobKit.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel();
         }
     }
 }

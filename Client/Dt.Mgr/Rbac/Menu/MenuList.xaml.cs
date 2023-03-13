@@ -117,7 +117,7 @@ namespace Dt.Mgr.Rbac
             if (await ExchangeDispidx(src, tgt))
             {
                 Update();
-                LobKit.PromptForUpdateModel("菜单调序成功");
+                RbacDs.PromptForUpdateModel("菜单调序成功");
             }
         }
         #endregion

@@ -53,7 +53,7 @@ namespace Dt.MgrDemo
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            var suc = await LoginDs.LoginByCookie();
+            var suc = await LobKit.LoginByCookie();
             Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
         }
 
@@ -62,7 +62,7 @@ namespace Dt.MgrDemo
         /// </summary>
         void InitFixedMenus()
         {
-            MenuDs.FixedMenus = new List<OmMenu>
+            LobKit.FixedMenus = new List<OmMenu>
             {
                 new OmMenu(
                     ID: 1,

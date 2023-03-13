@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Dt.Mgr.Rbac;
 #endregion
 
 namespace Dt.Mgr.Module
@@ -44,7 +45,7 @@ namespace Dt.Mgr.Module
             if (await _fv.Data.To<RptX>().Save())
             {
                 _win.List.Update();
-                LobKit.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel();
             }
         }
 
@@ -76,7 +77,7 @@ namespace Dt.Mgr.Module
             {
                 Clear();
                 _win.List.Update();
-                LobKit.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel();
             }
         }
 

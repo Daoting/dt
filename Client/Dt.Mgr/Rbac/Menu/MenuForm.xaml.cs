@@ -89,7 +89,7 @@ namespace Dt.Mgr.Rbac
             {
                 _win.List.Update();
                 UpdateRelated(d);
-                LobKit.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel();
             }
         }
 
@@ -115,7 +115,7 @@ namespace Dt.Mgr.Rbac
             {
                 Clear();
                 _win.List.Update();
-                LobKit.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel();
             }
         }
 

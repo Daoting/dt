@@ -13,10 +13,31 @@ using Dt.Mgr.Rbac;
 namespace Dt.Mgr
 {
     /// <summary>
-    /// 当前登录用户相关信息
+    /// 公开的工具方法
     /// </summary>
     public partial class LobKit
     {
+        #region 登录及菜单
+        /// <summary>
+        /// cookie自动登录
+        /// </summary>
+        /// <param name="p_showWarning">是否显示警告信息</param>
+        /// <returns></returns>
+        public static Task<bool> LoginByCookie(bool p_showWarning = false)
+        {
+            return LoginDs.LoginByCookie(p_showWarning);
+        }
+
+        /// <summary>
+        /// 获取设置固定菜单项，通常在 LoadMenus 前由外部设置
+        /// </summary>
+        public static IList<OmMenu> FixedMenus
+        {
+            get { return MenuDs.FixedMenus; }
+            set { MenuDs.FixedMenus = value; }
+        }
+        #endregion
+
         #region 权限
         const string _perVerKey = "PermissionVersion";
         static bool _initPer = false;
@@ -162,28 +183,5 @@ namespace Dt.Mgr
             }
         }
         #endregion
-
-        /// <summary>
-        /// 提示需要更新模型
-        /// </summary>
-        /// <param name="p_msg">提示消息</param>
-        public static void PromptForUpdateModel(string p_msg = null)
-        {
-            var notify = new NotifyInfo();
-            notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
-            notify.Delay = 5;
-            notify.Link = "更新模型";
-            notify.LinkCallback = async (e) =>
-            {
-                if (await Kit.Confirm("确认要更新模型吗？"))
-                {
-                    if (await AtCm.UpdateModel())
-                        Kit.Msg("更新模型成功，请重启应用！");
-                    else
-                        Kit.Warn("更新模型失败！");
-                }
-            };
-            Kit.Notify(notify);
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 当前登录用户相关的菜单
     /// </summary>
-    public class MenuDs : DomainSvc<MenuDs, AtCm.Info>
+    class MenuDs : DomainSvc<MenuDs, AtCm.Info>
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
