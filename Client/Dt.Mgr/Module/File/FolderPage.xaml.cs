@@ -23,17 +23,20 @@ namespace Dt.Mgr.Module
     /// </summary>
     public sealed partial class FolderPage : Tab
     {
-        readonly IFileMgr _fileMgr;
+        IFileMgr _fileMgr;
 
-        public FolderPage(IFileMgr p_fileMgr)
+        public FolderPage()
         {
             InitializeComponent();
-            _fileMgr = p_fileMgr;
             _lv.View = new FileItemSelector((DataTemplate)Resources["FolderTemplate"], (DataTemplate)Resources["FileTemplate"]);
-            this.FirstLoaded(LoadData);
+        }
 
+        protected override void OnFirstLoaded()
+        {
+            _fileMgr = (IFileMgr)NaviParams;
             Title = _fileMgr.FolderName;
             LoadMenu();
+            LoadData();
         }
 
         async void LoadData()
@@ -50,7 +53,7 @@ namespace Dt.Mgr.Module
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
             mgr.Setting = _fileMgr.Setting;
-            Forward(new FolderPage(mgr));
+            Forward(new FolderPage(), mgr);
         }
 
         void OnOpenedFile(object sender, FileItem e)
@@ -160,7 +163,7 @@ namespace Dt.Mgr.Module
                 mgr.FolderID = dlg.Target.FolderID;
                 mgr.FolderName = dlg.Target.FolderName;
                 mgr.Setting = _fileMgr.Setting;
-                Forward(new FolderPage(mgr));
+                Forward(new FolderPage(), mgr);
                 LoadData();
                 OnCancelMulti(null, null);
             }

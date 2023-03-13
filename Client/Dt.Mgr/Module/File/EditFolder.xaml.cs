@@ -58,8 +58,8 @@ namespace Dt.Mgr.Module
             Row row = _fv.Row;
             if (await _fileMgr.SaveFolder(row.ID, row.Str("name")))
             {
+                row.AcceptChanges();
                 Result = true;
-                _fv.Data = CreateData();
             }
         }
 

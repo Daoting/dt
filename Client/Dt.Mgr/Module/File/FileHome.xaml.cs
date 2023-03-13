@@ -32,17 +32,17 @@ namespace Dt.Mgr.Module
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await LobKit.HasPrv("公共文件管理"),
+                AllowEdit = await LobKit.HasPermission("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
-            _tabPub.Content = new FolderPage(new PubFileMgr { Setting = setting });
+            _tabPub.NaviParams = new PubFileMgr { Setting = setting };
 
             setting = new FileMgrSetting
             {
                 AllowEdit = true,
                 OnOpenedFile = LoadHistory,
             };
-            _tabMy.Content = new FolderPage(new MyFileMgr { Setting = setting });
+            _tabMy.NaviParams = new MyFileMgr { Setting = setting };
 
             LoadHistory();
         }

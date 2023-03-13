@@ -32,6 +32,12 @@ namespace Dt.Mgr.Rbac
             {
                 Throw.IfEmpty(Name, "权限名称不可为空！");
 
+                if (!IsAdded && Cells["Name"].IsChanged)
+                {
+                    if (!await Kit.Confirm("权限名称会被硬编码在程序中，确认要修改吗？"))
+                        Throw.Msg("已取消保存");
+                }
+
                 if ((IsAdded || Cells["Name"].IsChanged)
                     && await AtCm.GetScalar<int>("权限-名称重复", new { name = Name }) > 0)
                 {
@@ -42,7 +48,7 @@ namespace Dt.Mgr.Rbac
             OnDeleting(async () =>
             {
                 Throw.If(ID < 1000, "系统权限无法删除！");
-                
+
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_per有级联删除
                 var ls = await AtCm.FirstCol<long>("权限-关联角色", new { perid = ID });
                 RbacDs.DelRoleDataVer(ls, RbacDs.PrefixPer);

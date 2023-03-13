@@ -315,8 +315,8 @@ namespace Dt.Mgr
             var ver = await _da.StringGet(RbacDs.PrefixMenu + Kit.UserID);
             if (!string.IsNullOrEmpty(ver))
             {
-                int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='menu' and ver=@ver", new { ver = ver });
-                if (cnt > 0)
+                var localVer = await CookieX.Get(_menuVerKey);
+                if (localVer == ver)
                 {
                     // 版本号相同，直接取本地数据
                     return await AtLob.FirstCol<long>("select id from UserMenu");
@@ -324,8 +324,7 @@ namespace Dt.Mgr
             }
 
             // 更新用户菜单，缓存新版本号
-            List<long> ls = new List<long>();
-            ls = await _da.FirstCol<long>("用户-可访问的菜单", new { userid = Kit.UserID });
+            var ls = await _da.FirstCol<long>("用户-可访问的菜单", new { userid = Kit.UserID });
 
             // 清空旧数据
             await AtLob.Exec("delete from UserMenu");
@@ -350,13 +349,9 @@ namespace Dt.Mgr
             string newVer = sum.ToString();
             await _da.StringSet(RbacDs.PrefixMenu + Kit.UserID, newVer);
 
-            var dv = await DataVerX.GetByID("menu");
-            if (dv == null)
-                dv = new DataVerX(ID: "menu", Ver: newVer);
-            else
-                dv.Ver = newVer;
-            await dv.Save(false);
-
+            await CookieX.DelByID(_menuVerKey, true, false);
+            await CookieX.Save(_menuVerKey, newVer);
+            
             return ls;
         }
 
@@ -378,6 +373,8 @@ namespace Dt.Mgr
             }
             return false;
         }
+
+        const string _menuVerKey = "MenuVersion";
         #endregion
     }
 }

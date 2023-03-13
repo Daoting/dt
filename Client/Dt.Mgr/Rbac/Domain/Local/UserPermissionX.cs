@@ -15,26 +15,26 @@ namespace Dt.Mgr
     /// 用户具有的权限
     /// </summary>
     [Sqlite("lob")]
-    public class UserPrivilegeX : EntityX<UserPrivilegeX>
+    public class UserPermissionX : EntityX<UserPermissionX>
     {
         #region 构造方法
-        UserPrivilegeX() { }
+        UserPermissionX() { }
 
-        public UserPrivilegeX(string Prv)
+        public UserPermissionX(string Name)
         {
-            AddCell("Prv", Prv);
+            AddCell("Name", Name);
             IsAdded = true;
         }
         #endregion
 
         /// <summary>
-        /// 权限
+        /// 权限名称
         /// </summary>
         [PrimaryKey]
-        public string Prv
+        public string Name
         {
-            get { return (string)this["Prv"]; }
-            set { this["Prv"] = value; }
+            get { return (string)this["Name"]; }
+            set { this["Name"] = value; }
         }
     }
 }

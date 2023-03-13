@@ -70,6 +70,24 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 导航时的入参，一般在 OnFirstLoaded 时使用
+        /// </summary>
+        public object NaviParams
+        {
+            get { return GetValue(NaviParamsProperty); }
+            set { SetValue(NaviParamsProperty, value); }
+        }
+
+        /// <summary>
+        /// 导航返回值
+        /// </summary>
+        public object Result
+        {
+            get { return GetValue(ResultProperty); }
+            set { SetValue(ResultProperty, value); }
+        }
+
+        /// <summary>
         /// 是否为Tab区域内导航的首页
         /// </summary>
         public bool IsHome => PreTab == null;
@@ -90,24 +108,6 @@ namespace Dt.Base
         {
             get { return (Tab)GetValue(NextTabProperty); }
             private set { SetValue(NextTabProperty, value); }
-        }
-
-        /// <summary>
-        /// 导航返回值
-        /// </summary>
-        protected object Result
-        {
-            get { return GetValue(ResultProperty); }
-            set { SetValue(ResultProperty, value); }
-        }
-
-        /// <summary>
-        /// 导航时的入参
-        /// </summary>
-        protected object NaviParams
-        {
-            get { return GetValue(NaviParamsProperty); }
-            set { SetValue(NaviParamsProperty, value); }
         }
         #endregion
 

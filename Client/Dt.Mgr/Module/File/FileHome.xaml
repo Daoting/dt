@@ -2,13 +2,10 @@
     x:Class="Dt.Mgr.Module.FileHome"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Mgr.Module">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab x:Name="_tabPub" Order="2" Title="公共文件" />
-        </a:Tabs>
-    </a:Pane>
+    <l:FolderPage x:Name="_tabPub" Order="2" a:Ex.Dock="Left" />
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="最近使用">
@@ -29,9 +26,5 @@
             </a:Tab>
         </a:Tabs>
     </a:Main>
-    <a:Pane Pos="Right">
-        <a:Tabs>
-            <a:Tab x:Name="_tabMy" Order="3" Title="我的文件" />
-        </a:Tabs>
-    </a:Pane>
+    <l:FolderPage x:Name="_tabMy" Order="3" a:Ex.Dock="Right" />
 </a:Win>

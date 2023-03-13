@@ -34,6 +34,8 @@ namespace Dt.Mgr.Module
 
         public Task<Table> GetChildFolders()
         {
+            if (FolderID == -1)
+                return AtCm.Query("个人文件-根文件夹", new { userid = Kit.UserID });
             return AtCm.Query("个人文件-子级文件夹", new { parentid = FolderID });
         }
         

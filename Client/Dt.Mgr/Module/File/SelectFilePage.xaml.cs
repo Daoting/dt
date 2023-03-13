@@ -87,7 +87,7 @@ namespace Dt.Mgr.Module
                 dlg.Width = 600;
                 dlg.Height = 600;
             }
-            FolderPage page = new FolderPage(_fileMgr);
+            FolderPage page = new FolderPage { NaviParams = _fileMgr };
             dlg.Content = page;
             await dlg.ShowAsync();
             LoadData();

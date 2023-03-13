@@ -25,10 +25,10 @@ namespace Dt.Mgr.Module
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await LobKit.HasPrv("素材库管理"),
+                AllowEdit = await LobKit.HasPermission("素材库管理"),
                 SaveHistory = false,
             };
-            _tab.Content = new FolderPage(new ResFileMgr { Setting = setting });
+            _tab.NaviParams = new ResFileMgr { Setting = setting };
         }
     }
 }
