@@ -100,10 +100,8 @@ namespace Dt.Mgr.Home
             dlg.Show();
         }
 
-        async void OnAbout(object sender, TappedRoutedEventArgs e)
+        void OnAbout(object sender, TappedRoutedEventArgs e)
         {
-            var b = await LobKit.GetParam<string>("接收新任务");
-            var c = await LobKit.GetParam<bool>("接收新发布通知");
         }
     }
 }

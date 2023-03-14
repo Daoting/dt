@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Module;
 using Dt.Mgr.Rbac;
 #endregion
 
@@ -115,72 +116,36 @@ namespace Dt.Mgr
 
         #region 用户参数
         /// <summary>
-        /// 获取参数值
+        /// 根据参数id获取用户参数值
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p_paramID"></param>
         /// <returns></returns>
-        public static async Task<T> GetParam<T>(string p_paramID)
+        public static Task<T> GetParamByID<T>(long p_paramID)
         {
-            await InitParams();
-
-            var row = await AtLob.First($"select val from UserParams where id='{p_paramID}'");
-            Throw.IfNull(row, $"无参数【{p_paramID}】");
-
-            string val = row.Str(0);
-            if (string.IsNullOrEmpty(val))
-                return default;
-
-            Type type = typeof(T);
-            if (type == typeof(string))
-                return (T)(object)val;
-
-            object result;
-            try
-            {
-                result = Convert.ChangeType(val, type);
-            }
-            catch
-            {
-                throw new Exception(string.Format("参数【{0}】的值转换异常：无法将【{1}】转换到【{2}】类型！", p_paramID, val, type));
-            }
-            return (T)result;
+            return ParamsDs.GetParamByID<T>(p_paramID);
         }
 
-        static async Task InitParams()
+        /// <summary>
+        /// 根据参数名称获取用户参数值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_paramName"></param>
+        /// <returns></returns>
+        public static Task<T> GetParamByName<T>(string p_paramName)
         {
-            int cnt = await AtLob.GetScalar<int>("select count(*) from DataVer where id='params'");
-            if (cnt > 0)
-                return;
+            return ParamsDs.GetParamByName<T>(p_paramName);
+        }
 
-            // 查询服务端
-            Dict dt = await Kit.Rpc<Dict>(
-                    "cm",
-                    "UserRelated.GetParams",
-                    Kit.UserID
-                );
-
-            // 记录版本号
-            //var ver = new DataVerX(ID: "params", Ver: dt.Str("ver"));
-            //await ver.Save(false);
-
-            // 清空旧数据
-            await AtLob.Exec("delete from UserParams");
-
-            // 插入新数据
-            var tbl = (Table)dt["result"];
-            if (tbl != null && tbl.Count > 0)
-            {
-                List<Dict> dts = new List<Dict>();
-                foreach (var row in tbl)
-                {
-                    dts.Add(new Dict { { "id", row.Str(0) }, { "val", row.Str(1) } });
-                }
-                var d = new Dict();
-                d["text"] = "insert into UserParams (id,val) values (@id, @val)";
-                d["params"] = dts;
-                await AtLob.BatchExec(new List<Dict> { d });
-            }
+        /// <summary>
+        /// 保存用户参数值
+        /// </summary>
+        /// <param name="p_paramID"></param>
+        /// <param name="p_value"></param>
+        /// <returns></returns>
+        public static Task<bool> SaveParams(string p_paramID, string p_value)
+        {
+            return ParamsDs.SaveParams(p_paramID, p_value);
         }
         #endregion
     }
