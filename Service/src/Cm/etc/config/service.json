@@ -26,10 +26,10 @@
   "SqliteModel": {
     "OmOption": {
       "Create": [
-        "create table if not exists OmOption (Name text not null,Category text not null,primary key (Name,Category))",
+        "create table if not exists OmOption (Name text not null,Category text not null)",
         "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
       ],
-      "Data": "select Name,Category from cm_option order by Category,Dispidx"
+      "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx"
     },
     "OmReport": {
       "Create": [

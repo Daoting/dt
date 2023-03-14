@@ -39,7 +39,7 @@ namespace Dt.Mgr.Rbac
                 if (IsAdded || Cells["Name"].IsChanged)
                     Throw.IfEmpty(Name, "名称不可为空！");
 
-                if (IsAdded || Cells["Name"].IsChanged)
+                if (IsAdded || Cells["Phone"].IsChanged)
                     Throw.IfEmpty(Phone, "手机号不可为空！");
 
                 Throw.If(!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"), "手机号码错误！");
