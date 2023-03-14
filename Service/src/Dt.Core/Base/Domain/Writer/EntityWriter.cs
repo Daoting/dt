@@ -378,10 +378,17 @@ namespace Dt.Core
 #if !SERVER
             if (p_isNotify)
             {
+                bool isSave = (from item in _items
+                              where !item.IsDelete
+                              select item).Any();
                 if (suc)
-                    Kit.Msg("保存成功！");
+                {
+                    Kit.Msg(isSave ? "保存成功！" : "删除成功！");
+                }
                 else
-                    Kit.Warn("保存失败！");
+                {
+                    Kit.Warn(isSave ? "保存失败！" : "删除失败！");
+                }
             }
 #endif
             if (!suc)
