@@ -110,7 +110,7 @@ namespace $rootnamespace$
             return _fv.DiscardChanges();
         }
 
-        $clsroot$Win _win => ($clsroot$Win)OwnWin;
+        $clsroot$Win _win => OwnWin as $clsroot$Win;
         #endregion
     }
 }

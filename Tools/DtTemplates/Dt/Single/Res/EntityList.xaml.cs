@@ -164,7 +164,7 @@ namespace $rootnamespace$
         #endregion
 
         #region 内部
-        $clsroot$Win _win => ($clsroot$Win)OwnWin;
+        $clsroot$Win _win => OwnWin as $clsroot$Win;
         #endregion
     }
 }

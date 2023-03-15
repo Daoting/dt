@@ -132,7 +132,7 @@ namespace $rootnamespace$
         #endregion
 
         #region 内部
-        $mainroot$Win _win => ($mainroot$Win)OwnWin;
+        $mainroot$Win _win => OwnWin as $mainroot$Win;
         long _releatedID;
         #endregion
     }

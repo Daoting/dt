@@ -174,7 +174,7 @@ namespace $rootnamespace$
         #endregion
 
         #region 内部
-        $parentroot$Win _win => ($parentroot$Win)OwnWin;
+        $parentroot$Win _win => OwnWin as $parentroot$Win;
         #endregion
     }
 }

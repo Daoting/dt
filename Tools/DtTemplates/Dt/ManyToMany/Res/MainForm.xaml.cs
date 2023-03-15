@@ -124,7 +124,7 @@ $relatedupdate$
             return _fv.DiscardChanges();
         }
 
-        $mainroot$Win _win => ($mainroot$Win)OwnWin;
+        $mainroot$Win _win => OwnWin as $mainroot$Win;
         #endregion
     }
 }

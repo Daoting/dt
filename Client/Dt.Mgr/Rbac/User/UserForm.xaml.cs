@@ -98,8 +98,8 @@ namespace Dt.Mgr.Rbac
 
         void UpdateRelated(long p_id)
         {
-            _win.GroupList.Update(p_id);
-            _win.RoleList.Update(p_id);
+            _win?.GroupList.Update(p_id);
+            _win?.RoleList.Update(p_id);
         }
 
         protected override Task<bool> OnClosing()
@@ -107,7 +107,7 @@ namespace Dt.Mgr.Rbac
             return _fv.DiscardChanges();
         }
 
-        UserWin _win => (UserWin)OwnWin;
+        UserWin _win => OwnWin as UserWin;
         #endregion
     }
 }
