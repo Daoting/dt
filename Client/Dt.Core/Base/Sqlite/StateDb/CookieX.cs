@@ -34,9 +34,22 @@ namespace Dt.Core
         /// <param name="p_key">键</param>
         /// <param name="p_val">值</param>
         /// <returns></returns>
-        public static Task<bool> Save(string p_key, string p_val)
+        public static async Task<bool> Save(string p_key, string p_val)
         {
-            return new CookieX(p_key, p_val).Save(false);
+            var c = await GetByID(p_key);
+            if (c == null)
+            {
+                c = new CookieX(p_key, p_val);
+            }
+            else
+            {
+                c.Val = p_val;
+            }
+            if (c.IsAdded || c.IsChanged)
+            {
+                return await c.Save(false);
+            }
+            return true;
         }
 
         /// <summary>

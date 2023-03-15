@@ -9,7 +9,7 @@
         <a:FuzzySearch x:Name="_search" Search="OnSearch">
             <x:String>全部</x:String>
         </a:FuzzySearch>
-        <l:$clsroot$Query x:Name="_query" Query="OnQuery" Icon="漏斗" />
+        <l:$clsroot$Query x:Name="_query" Query="OnQuery" />
     </a:Tabs>
     <l:$clsroot$List x:Name="_list" Order="1" />
     <l:$clsroot$Form x:Name="_form" a:Ex.Dock="Right" />

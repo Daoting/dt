@@ -693,7 +693,7 @@ namespace Dt.Base
             }
             else if (Kit.IsPhoneUI)
             {
-                if (ParentMi != null || Owner.IsContextMenu)
+                if (ParentMi != null || (Owner != null && Owner.IsContextMenu))
                     VisualStateManager.GoToState(this, p_state.ToString(), true);
                 else if (p_state == MenuItemState.Pressed)
                     VisualStateManager.GoToState(this, "LightPressed", true);

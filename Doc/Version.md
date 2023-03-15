@@ -37,12 +37,11 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * DtControl的虚方法OnControlLoaded修改为OnFirstLoaded，方便理解
 * Entity增加OnSaved OnDeleted回调
 * Entity的GetByID GetByKey不再涉及缓存，GetFromCacheFirst专门用于优先从缓存读取
-
-
-* cm_prv主键调整为long
-* 客户端根据数据版本号缓存数据的调整
-
 * 原通过DeleteBySvc SaveBySvc处理UserObj的缓存和领域事件移植客户端
+* Rbac基于角色的访问控制
+* 客户端缓存数据：可访问的菜单，具有的权限，数据版本号用到时比较、更新
+* 文件 发布 报表管理 参数定义 用户设置 选项管理功能
+
 
 ### 功能
 * VS扩展增加批量生成实体类功能
