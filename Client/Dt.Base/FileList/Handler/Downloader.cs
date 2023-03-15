@@ -63,11 +63,13 @@ namespace Dt.Base
                 catch (TaskCanceledException)
                 {
                     p_info.Error = "已取消下载！";
+                    response?.Dispose();
                     return false;
                 }
                 catch (Exception ex)
                 {
                     p_info.Error = "😢下载过程中出错！" + ex.Message;
+                    response?.Dispose();
                     return false;
                 }
             }
@@ -75,7 +77,12 @@ namespace Dt.Base
             // 下载失败
             if (response.Headers.TryGetValues("error", out var vals))
             {
-                p_info.Error = WebUtility.UrlDecode(vals.First());
+                try
+                {
+                    p_info.Error = WebUtility.UrlDecode(vals.First());
+                }
+                catch { }
+                response.Dispose();
                 return false;
             }
 
@@ -84,6 +91,7 @@ namespace Dt.Base
             if (!response.Content.Headers.TryGetValues("Content-Length", out var lgh) || !long.TryParse(lgh.First(), out total))
             {
                 p_info.Error = "😢待下载的文件长度未知，下载失败！";
+                response.Dispose();
                 return false;
             }
 
@@ -112,6 +120,10 @@ namespace Dt.Base
             {
                 p_info.Error = "😢下载过程中出错！" + ex.Message;
                 return false;
+            }
+            finally
+            {
+                response.Dispose();
             }
             return true;
         }
