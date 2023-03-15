@@ -8,11 +8,7 @@
     <l:PostxList x:Name="_list" Order="1" a:Ex.Dock="Left" />
     <l:PostForm x:Name="_form" />
     <a:Tabs a:Ex.Dock="Right">
-        <a:Tab>
-            <l:PostKeywordList x:Name="_keywordList" />
-        </a:Tab>
-        <a:Tab>
-            <l:PostAlbumList x:Name="_albumList" />
-        </a:Tab>
+        <l:PostKeywordList x:Name="_keywordList" />
+        <l:PostAlbumList x:Name="_albumList" />
     </a:Tabs>
 </a:Win>

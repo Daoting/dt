@@ -28,24 +28,28 @@ namespace Dt.Mgr.Module
                 Ctime: Kit.Now);
         }
 
-        public bool IsValid()
-        {
-            Throw.IfEmpty(Title, "标题不可为空！");
-            Throw.If(IsPublish && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
-            return true;
-        }
-
         protected override void InitHook()
         {
-            OnChanging<bool>(nameof(IsPublish), v =>
+            OnSaving(() =>
             {
-                Throw.If(v && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
+                Throw.IfEmpty(Title, "标题不可为空！");
+                Throw.If(IsPublish && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
+                return Task.CompletedTask;
             });
 
             OnDeleting(() =>
             {
                 Throw.If(IsPublish, "已发布的文章不可删除");
                 return Task.CompletedTask;
+            });
+
+            OnDeleted(async () =>
+            {
+                if (!string.IsNullOrEmpty(Url))
+                {
+                    // 删除html文件
+                    await AtFsm.DeleteFile($"g/{Url}");
+                }
             });
         }
     }

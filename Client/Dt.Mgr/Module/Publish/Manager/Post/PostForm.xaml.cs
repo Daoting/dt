@@ -31,12 +31,16 @@ namespace Dt.Mgr.Module
 
         public async void Update(long p_id)
         {
+            var d = Data;
+            if (d != null && d.ID == p_id)
+                return;
+
             if (!await _fv.DiscardChanges())
                 return;
 
             if (p_id > 0)
             {
-                _fv.Data = await AtCm.First<PubPostX>("文章-编辑", new { id = p_id });
+                Data = await AtCm.First<PubPostX>("文章-编辑", new { id = p_id });
                 UpdateRelated(p_id);
             }
             else
@@ -49,6 +53,12 @@ namespace Dt.Mgr.Module
         {
             _fv.Data = null;
             ClearRelated();
+        }
+
+        public PubPostX Data
+        {
+            get { return _fv.Data.To<PubPostX>(); }
+            private set { _fv.Data = value; }
         }
 
         async void Create()
@@ -70,20 +80,21 @@ namespace Dt.Mgr.Module
 
         async Task<bool> Save()
         {
-            var d = _fv.Data.To<PubPostX>();
-            if (d == null || !d.IsValid())
+            var d = Data;
+            if (d == null)
                 return false;
 
             bool isNew = d.IsAdded;
-            d.Url = await AtCm.SavePost(d);
-            _fv.Row.AcceptChanges();
-            _win.List.Update();
-            if (isNew)
+            if (await PublishDs.SavePost(d))
             {
-                UpdateRelated(d.ID);
+                _win.List.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+                return true;
             }
-            Kit.Msg("保存成功");
-            return true;
+            return false;
         }
 
         async void OnDel(object sender, Mi e)
@@ -92,7 +103,7 @@ namespace Dt.Mgr.Module
             if (d == null)
                 return;
 
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (!await Kit.Confirm("确认要删除吗？\r\n删除后文章内容不可恢复，请谨慎删除！"))
             {
                 Kit.Msg("已取消删除！");
                 return;

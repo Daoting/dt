@@ -76,7 +76,7 @@ namespace Dt.Mgr.Module
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<PubKeywordX>("发布-所有关键字");
+                _lv.Data = await PubKeywordX.Query(null);
             }
             else
             {

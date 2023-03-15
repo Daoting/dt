@@ -76,7 +76,7 @@ namespace Dt.Mgr.Module
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await AtCm.Query<PubAlbumX>("发布-所有专辑");
+                _lv.Data = await PubAlbumX.Query(null);
             }
             else
             {

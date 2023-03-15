@@ -30,12 +30,16 @@ namespace Dt.Mgr.Module
 
         public async void Update(string p_id)
         {
+            var d = Data;
+            if (d != null && d.ID == p_id)
+                return;
+
             if (!await _fv.DiscardChanges())
                 return;
 
             if (p_id != null)
             {
-                _fv.Data = await PubKeywordX.GetByID(p_id);
+                Data = await PubKeywordX.GetByID(p_id);
             }
             else
             {
@@ -46,6 +50,12 @@ namespace Dt.Mgr.Module
         public void Clear()
         {
             _fv.Data = null;
+        }
+
+        public PubKeywordX Data
+        {
+            get { return _fv.Data.To<PubKeywordX>(); }
+            private set { _fv.Data = value; }
         }
 
         void Create()

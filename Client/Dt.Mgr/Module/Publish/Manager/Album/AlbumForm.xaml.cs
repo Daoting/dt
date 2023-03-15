@@ -30,12 +30,16 @@ namespace Dt.Mgr.Module
 
         public async void Update(long p_id)
         {
+            var d = Data;
+            if (d != null && d.ID == p_id)
+                return;
+
             if (!await _fv.DiscardChanges())
                 return;
 
             if (p_id > 0)
             {
-                _fv.Data = await PubAlbumX.GetByID(p_id);
+                Data = await PubAlbumX.GetByID(p_id);
             }
             else
             {
@@ -46,6 +50,12 @@ namespace Dt.Mgr.Module
         public void Clear()
         {
             _fv.Data = null;
+        }
+
+        public PubAlbumX Data
+        {
+            get { return _fv.Data.To<PubAlbumX>(); }
+            private set { _fv.Data = value; }
         }
 
         async void Create()

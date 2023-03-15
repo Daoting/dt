@@ -7,11 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Cm.Domain;
-using Dt.Core;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
