@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="角色列表">
+    Title="关联角色">
 
     <a:Tab.Resources>
         <a:Cols x:Key="TableView">

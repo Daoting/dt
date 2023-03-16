@@ -22,9 +22,9 @@ namespace Dt.MgrDemo
         public AppStub()
         {
             Title = "搬运工";
-            SvcUrl = "http://10.10.1.16/dt-cm";
+            //SvcUrl = "http://10.10.1.16/dt-cm";
             //SvcUrl = "http://10.10.1.2/sample";
-            //SvcUrl = "https://x13382a571.oicp.vip/sample";
+            SvcUrl = "https://x13382a571.oicp.vip/demo";
             InitFixedMenus();
         }
 

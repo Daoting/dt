@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2023-03-16 创建
 ******************************************************************************/
 #endregion
 
@@ -36,7 +36,7 @@ namespace Dt.MgrDemo.一对多
         {
             if (_parentID > 0)
             {
-                _lv.Data = await 大儿X.Query("where ParentID=@ParentID", new Dict { { "ParentID", _parentID.ToString() } });
+                _lv.Data = await 大儿X.Query("where ParentID=@ParentID", new { ParentID = _parentID });
             }
             else
             {
@@ -130,7 +130,7 @@ namespace Dt.MgrDemo.一对多
         #endregion
 
         #region 内部
-        父表Win _win => (父表Win)OwnWin;
+        父表Win _win => OwnWin as 父表Win;
         long _parentID;
         父表大儿Form _form;
         #endregion

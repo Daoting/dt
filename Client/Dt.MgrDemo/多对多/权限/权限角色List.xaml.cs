@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2023-03-16 创建
 ******************************************************************************/
 #endregion
 
@@ -35,7 +35,7 @@ namespace Dt.MgrDemo.多对多
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await 角色X.Query("where exists ( select RoleID from demo_角色权限 b where a.ID = b.RoleID and PrvID=@ReleatedID )", new Dict { { "ReleatedID", _releatedID.ToString() } });
+                _lv.Data = await 角色X.Query("where exists ( select RoleID from demo_角色权限 b where a.ID = b.RoleID and PrvID=@ReleatedID )", new { ReleatedID = _releatedID });
             }
             else
             {
@@ -128,11 +128,11 @@ namespace Dt.MgrDemo.多对多
                 _mi.Icon = Icons.列表;
                 _mi.ID = "列表";
             }
-}
+        }
         #endregion
 
         #region 内部
-        权限Win _win => (权限Win)OwnWin;
+        权限Win _win => OwnWin as 权限Win;
         long _releatedID;
         #endregion
     }

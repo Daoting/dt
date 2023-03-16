@@ -2,12 +2,12 @@
 	<Import Project="..\Common.props" />
 
 	<ItemGroup>
-		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dt.Service" Version="4.0.0" />
 	</ItemGroup>
 </Project>

@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="查询">
+    Title="查询"
+    Icon="漏斗">
 
     <Grid RowDefinitions="*,Auto">
         <a:QueryFv x:Name="_fv">

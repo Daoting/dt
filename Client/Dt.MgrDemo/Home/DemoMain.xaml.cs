@@ -53,7 +53,7 @@ namespace Dt.MgrDemo
             group = new GroupData<DemoItem>
             {
                 new DemoItem("父子实体", typeof(父表Win), ""),
-                new DemoItem("树", typeof(父表Win), "单表树形结构的增删改查框架"),
+                //new DemoItem("树", typeof(父表Win), "单表树形结构的增删改查框架"),
             };
             group.Title = "一对多框架";
             ds.Add(group);

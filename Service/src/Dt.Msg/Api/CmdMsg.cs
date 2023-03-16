@@ -104,9 +104,9 @@ namespace Dt.Msg
                     await lc.RightPush(id, onlineMsg);
                 }
 
-                // 推送离线提醒
-                if (!string.IsNullOrEmpty(p_msg.Title))
-                    Offline.Add(offlines, p_msg);
+                // 推送离线提醒，暂未实现
+                //if (!string.IsNullOrEmpty(p_msg.Title))
+                //    Offline.Add(offlines, p_msg);
             }
 
             return onlines;
