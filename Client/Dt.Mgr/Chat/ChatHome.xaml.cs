@@ -36,9 +36,27 @@ namespace Dt.Mgr.Chat
             NaviTo("聊天内容");
         }
 
-        public static Task<int> GetMenuTip()
+        #region 菜单提示信息
+        public static void AttachMenuTip(OmMenu p_om)
         {
-            return AtLob.GetScalar<int>("select count(*) from letter where loginid = @loginid and IsReceived=1 and Unread=1", new { loginid = Kit.UserID });
+            _om = p_om;
+            // 菜单重置时会重复调用AttachMenuTip，故先移除
+            ChatDs.StateChanged -= OnStateChanged;
+            ChatDs.StateChanged += OnStateChanged;
+            UpdateMenuTip();
         }
+
+        static void OnStateChanged(long p_otherID)
+        {
+            UpdateMenuTip();
+        }
+
+        static async void UpdateMenuTip()
+        {
+            int cnt = await AtLob.GetScalar<int>("select count(*) from letter where loginid = @loginid and IsReceived=1 and Unread=1", new { loginid = Kit.UserID });
+            _om.SetWarningNum(cnt);
+        }
+        static OmMenu _om;
+        #endregion
     }
 }

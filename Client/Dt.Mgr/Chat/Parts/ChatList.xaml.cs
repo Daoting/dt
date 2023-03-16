@@ -46,7 +46,7 @@ namespace Dt.Mgr.Chat
             ChatDs.StateChanged -= OnStateChanged;
         }
 
-        void OnStateChanged(long obj)
+        void OnStateChanged(long p_otherID)
         {
             _ = LoadData();
         }

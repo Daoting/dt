@@ -92,20 +92,21 @@ namespace Dt.Msg
                     }
                 }
 
-                // 离线
-                if (offlines.Count > 0)
-                {
-                    // 将消息保存到用户的未推送列表
-                    var lc = new ListCache<string>(ClientInfo.MsgQueueKey);
-                    foreach (long id in offlines)
-                    {
-                        await lc.RightPush(id, onlineMsg);
-                    }
+            }
 
-                    // 推送离线提醒
-                    if (!string.IsNullOrEmpty(p_msg.Title))
-                        Offline.Add(offlines, p_msg);
+            // 离线
+            if (offlines.Count > 0)
+            {
+                // 将消息保存到用户的未推送列表
+                var lc = new ListCache<string>(ClientInfo.MsgQueueKey);
+                foreach (long id in offlines)
+                {
+                    await lc.RightPush(id, onlineMsg);
                 }
+
+                // 推送离线提醒
+                if (!string.IsNullOrEmpty(p_msg.Title))
+                    Offline.Add(offlines, p_msg);
             }
 
             return onlines;

@@ -251,6 +251,11 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 发送
+        /// <summary>
+        /// 发送成功事件
+        /// </summary>
+        public static event Action<WfFormInfo> Sended;
+
         public static async Task Send(WfFormInfo p_info)
         {
             // 先保存
@@ -591,8 +596,12 @@ namespace Dt.Mgr.Workflow
             {
                 Kit.Msg("发送成功！");
                 p_info.CloseWin();
-                // 推送客户端提醒
 
+                // 触发事件
+                Sended?.Invoke(p_info);
+
+                // 推送客户端提醒
+                PushNotify(tblItems);
             }
             else
             {
@@ -628,6 +637,42 @@ namespace Dt.Mgr.Workflow
             else
             {
                 Kit.Warn("工作项保存失败");
+            }
+        }
+
+        /// <summary>
+        /// 推送接收者客户端提醒
+        /// </summary>
+        /// <param name="p_items"></param>
+        static async void PushNotify(Table<WfiItemX> p_items)
+        {
+            HashSet<long> users = new HashSet<long>();
+            List<long> roles = new List<long>();
+            foreach (var item in p_items)
+            {
+                if (item.UserID != null)
+                    users.Add(item.UserID.Value);
+                else if (item.RoleID != null)
+                    roles.Add(item.RoleID.Value);
+            }
+
+            if (roles.Count > 0)
+            {
+                var ls = await _da.FirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', roles) });
+                if (ls.Count > 0)
+                {
+                    users.UnionWith(ls);
+                }
+            }
+
+            if (users.Count > 0)
+            {
+                var mi = new MsgInfo
+                {
+                    MethodName = "SysPushApi.WfNotify",
+                    Title = "您有新的待办任务",
+                };
+                await AtMsg.BatchSendCmd(users.ToList(), mi);
             }
         }
 
@@ -862,6 +907,42 @@ namespace Dt.Mgr.Workflow
                 }
                 p_info.CloseWin();
             }
+        }
+        #endregion
+
+        #region 删除
+        /// <summary>
+        /// 新任务事件
+        /// </summary>
+        public static event Action NewTask;
+
+        public static void ReceiveNewTask()
+        {
+            NewTask?.Invoke();
+
+            // 避免过多
+            if (Kit.NotifyList.Count > 5)
+                return;
+
+            var notify = new NotifyInfo();
+            notify.Delay = 0;
+            notify.Link = "查看";
+            notify.LinkCallback = (e) =>
+            {
+                Kit.OpenWin(typeof(CurrentTasks), "待办任务", Icons.信件);
+                // 关闭所有待办提醒的提示
+                var list = new List<NotifyInfo>();
+                foreach (var ni in Kit.NotifyList)
+                {
+                    if (ni.Tag is string msg && msg == "待办提醒")
+                        list.Add(ni);
+                }
+                if (list.Count > 0)
+                    list.ForEach((ni) => Kit.CloseNotify(ni));
+            };
+            notify.Message = "您有新的待办任务";
+            notify.Tag = "待办提醒";
+            Kit.Notify(notify);
         }
         #endregion
     }

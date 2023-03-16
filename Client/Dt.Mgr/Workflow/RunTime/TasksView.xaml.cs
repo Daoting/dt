@@ -42,9 +42,34 @@ namespace Dt.Mgr.Workflow
             _dlgStart.Show();
         }
 
-        public static Task<int> GetMenuTip()
+        #region 菜单提示信息
+        public static void AttachMenuTip(OmMenu p_om)
         {
-            return AtCm.GetScalar<int>("流程-待办任务总数", new { userid = Kit.UserID });
+            _om = p_om;
+            WfiDs.Sended -= OnSended;
+            WfiDs.NewTask -= OnNewTask;
+
+            WfiDs.Sended += OnSended;
+            WfiDs.NewTask += OnNewTask;
+            UpdateMenuTip();
         }
+
+        static void OnNewTask()
+        {
+            UpdateMenuTip();
+        }
+
+        static void OnSended(WfFormInfo obj)
+        {
+            UpdateMenuTip();
+        }
+
+        static async void UpdateMenuTip()
+        {
+            int cnt = await AtCm.GetScalar<int>("流程-待办任务总数", new { userid = Kit.UserID });
+            _om.SetWarningNum(cnt);
+        }
+        static OmMenu _om;
+        #endregion
     }
 }

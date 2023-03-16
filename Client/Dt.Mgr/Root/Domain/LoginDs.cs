@@ -121,10 +121,9 @@ namespace Dt.Mgr
             // 保存以备自动登录
             if (p_saveCookie)
             {
-                await Save(new CookieX("LoginPhone", p_phone));
-                await Save(new CookieX("LoginPwd", user.Pwd));
-                await Save(new CookieX("LoginID", user.ID.ToString()));
-                await Commit(false);
+                await CookieX.Save("LoginPhone", p_phone);
+                await CookieX.Save("LoginPwd", user.Pwd);
+                await CookieX.Save("LoginID", user.ID.ToString());
             }
 
             Kit.UserID = user.ID;

@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Mgr.Chat;
+using Dt.Mgr.Workflow;
 #endregion
 
 namespace Dt.Mgr
@@ -34,6 +35,14 @@ namespace Dt.Mgr
         public void ShowSysWarning(string p_msg)
         {
             Kit.Warn($"【系统通知】\r\n{p_msg}");
+        }
+
+        /// <summary>
+        /// 新任务提醒
+        /// </summary>
+        public void WfNotify()
+        {
+            WfiDs.ReceiveNewTask();
         }
     }
 }

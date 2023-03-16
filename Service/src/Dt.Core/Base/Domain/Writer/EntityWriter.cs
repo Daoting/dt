@@ -359,7 +359,7 @@ namespace Dt.Core
                 if (p_isNotify)
                     Kit.Warn("没有需要保存的数据！");
 #endif
-                return false;
+                return true;
             }
 
             var dts = new List<Dict>();
