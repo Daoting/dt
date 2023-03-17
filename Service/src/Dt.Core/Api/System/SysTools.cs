@@ -960,7 +960,19 @@ namespace Dt.Core
             //    return Task.CompletedTask;
             //});
 
+            //OnSaved(() =>
+            //{
+                
+            //    return Task.CompletedTask;
+            //});
+
             //OnDeleting(() =>
+            //{
+                
+            //    return Task.CompletedTask;
+            //});
+
+            //OnDeleted(() =>
             //{
                 
             //    return Task.CompletedTask;
