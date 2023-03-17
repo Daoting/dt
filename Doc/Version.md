@@ -4,7 +4,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
-## Release 4.0.0
+## Release 4.0.1
 ### 变更
 * 流程定义中删除FormType ListType字段，使用类型别名
 * 优化Entity的Hook
