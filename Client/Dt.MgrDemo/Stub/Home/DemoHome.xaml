@@ -7,7 +7,7 @@
     xmlns:l="using:Dt.MgrDemo"
     AutoSaveLayout="False">
 
-    <home:RootMenu x:Name="_menu" Order="2" Icon="主页" a:Ex.Dock="Left" />
+    <home:RootMenu x:Name="_menu" Order="2" a:Ex.Dock="Left" />
     <l:DemoMain x:Name="_demo" Order="1" Icon="搬运工" />
     <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

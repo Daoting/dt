@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="开始">
+    Title="所有"
+    Icon="主页">
 
     <a:Tab.Menu>
         <a:Menu>

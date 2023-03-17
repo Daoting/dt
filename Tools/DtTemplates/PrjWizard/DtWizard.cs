@@ -65,6 +65,8 @@ namespace Dt.PrjWizard
             {
                 // Client\Stub下的文件
                 var stubPath = Path.Combine(_targetPath, _projectName + ".Client", "Stub");
+                var injectPath = Path.Combine(stubPath, "Inject");
+                var homePath = Path.Combine(stubPath, "Home");
                 var optionsPath = Path.Combine(stubPath, "Options");
                 var stubFile = Path.Combine(stubPath, "AppStub.cs");
 
@@ -73,19 +75,32 @@ namespace Dt.PrjWizard
                 if (_useSvcType == SvcType.DtSvc)
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Lob.cs"), stubFile);
-                    File.Delete(Path.Combine(stubPath, "RpcConfig.cs"));
+                    File.Delete(Path.Combine(injectPath, "RpcConfig.cs"));
+
+                    File.Delete(Path.Combine(homePath, "MainWin.xaml"));
+                    File.Delete(Path.Combine(homePath, "MainWin.xaml.cs"));
                 }
                 else if (_useSvcType == SvcType.CustomSvc)
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Custom.cs"), stubFile);
-                    File.Delete(Path.Combine(stubPath, "PushApi.cs"));
+                    File.Delete(Path.Combine(injectPath, "PushApi.cs"));
+
+                    File.Delete(Path.Combine(homePath, "HomeWin.xaml"));
+                    File.Delete(Path.Combine(homePath, "HomeWin.xaml.cs"));
+                    File.Delete(Path.Combine(homePath, "HomeMain.xaml"));
+                    File.Delete(Path.Combine(homePath, "HomeMain.xaml.cs"));
                 }
                 else
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Single.cs"), stubFile);
                     File.Delete(Path.Combine(_targetPath, _projectName + ".Client", "Base", "AccessTo", "AtSvc.cs"));
-                    File.Delete(Path.Combine(stubPath, "PushApi.cs"));
-                    File.Delete(Path.Combine(stubPath, "RpcConfig.cs"));
+                    File.Delete(Path.Combine(injectPath, "PushApi.cs"));
+                    File.Delete(Path.Combine(injectPath, "RpcConfig.cs"));
+
+                    File.Delete(Path.Combine(homePath, "HomeWin.xaml"));
+                    File.Delete(Path.Combine(homePath, "HomeWin.xaml.cs"));
+                    File.Delete(Path.Combine(homePath, "HomeMain.xaml"));
+                    File.Delete(Path.Combine(homePath, "HomeMain.xaml.cs"));
                 }
                 Directory.Delete(optionsPath, true);
             }

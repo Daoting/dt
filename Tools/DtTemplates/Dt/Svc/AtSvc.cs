@@ -10,8 +10,8 @@ namespace Dt
     /// </summary>
     public class AtSvc
     {
-        //static string _svcUrl = "https://localhost:1234";
-        static string _svcUrl = "http://localhost/dt-cm";
+        static string _svcUrl = "https://localhost:1234";
+        //static string _svcUrl = "http://localhost/dt-cm";
 
         public static void BindSvcUrl(TextBox p_tb)
         {

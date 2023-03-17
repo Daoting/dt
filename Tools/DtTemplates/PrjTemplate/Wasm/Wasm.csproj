@@ -18,8 +18,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
-		<PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.8" />
-		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.8" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.19" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.19" />
 		<!-- 不引用link出错 -->
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
 

@@ -21,7 +21,7 @@ namespace $ext_safeprojectname$
         /// <returns></returns>
         public string GetSvcUrl(string p_svcName)
         {
-            // 先启动$ext_safeprojectname$.Svc服务，localhost只能win wasm访问，若确保android ios虚拟机能够访问请使用IP
+            // 先启动$ext_safeprojectname$.Svc服务，localhost只能win wasm访问，请将localhost换成android ios虚拟机能够访问的IP
             return "https://localhost:1234";
         }
 

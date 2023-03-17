@@ -22,9 +22,9 @@
 # 客户端
 客户端样例已升级到.NET7.0 + WinAppSdk1.2(WinUI3.0) + Uno.WinUI 4.6.x，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
 * [微软商店](https://www.microsoft.com/store/productId/9PBFQ5NHPH14)
-* [苹果商店](https://apps.apple.com/cn/app/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%A0%B7%E4%BE%8B/id1591859126)
+* [WebAssembly 样例](https://x13382a571.oicp.vip/demoui/)
 * [Android 安装包](https://x13382a571.oicp.vip/packages/com.dt.samples-3.3.0.apk)
-* [WebAssembly 样例](https://x13382a571.oicp.vip/sampleui/)
+* [苹果商店](https://apps.apple.com/cn/app/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%A0%B7%E4%BE%8B/id1591859126)
 
 客户端在界面布局上有个创新，内置两种界面模式：windows模式和phone模式，iOS和Android上是Phone模式；windows和wasm上支持两种模式的自动切换，当应用界面的实际宽度足够时按照windows模式显示，宽度较小时自动切换到Phone模式，两种模式的可视树根节点完全不同。
 

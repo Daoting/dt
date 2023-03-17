@@ -85,23 +85,29 @@
     <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
-    <None Include="Client\MainWin.xaml.cs">
+    <None Include="Client\Stub\Home\MainWin.xaml.cs">
       <DependentUpon>MainWin.xaml</DependentUpon>
     </None>
     <None Include="Droid\MainActivity.cs" />
     <None Include="iOS\Main.cs" />
     <None Include="Svc\Program.cs" />
     <None Include="Svc\SvcStub.cs" />
-    <None Include="Client\Stub\BackgroundJob.cs" />
-    <None Include="Client\Stub\ReceiveShare.cs" />
+    <None Include="Client\Stub\Inject\BackgroundJob.cs" />
+    <None Include="Client\Stub\Inject\ReceiveShare.cs" />
     <None Include="Client\Base\AccessTo\AtSvc.cs" />
     <None Include="Client\Base\AccessTo\AtLocal.cs" />
-    <None Include="Client\Stub\LogSetting.cs" />
-    <None Include="Client\Stub\PushApi.cs" />
-    <None Include="Client\Stub\CustomTheme.cs" />
+    <None Include="Client\Stub\Inject\LogSetting.cs" />
+    <None Include="Client\Stub\Inject\PushApi.cs" />
+    <None Include="Client\Stub\Inject\CustomTheme.cs" />
     <None Include="Client\Stub\Options\AppStub-Custom.cs" />
     <None Include="Client\Stub\Options\AppStub-Single.cs" />
-    <None Include="Client\Stub\RpcConfig.cs" />
+    <None Include="Client\Stub\Inject\RpcConfig.cs" />
+    <None Include="Client\Stub\Home\HomeWin.xaml.cs">
+      <DependentUpon>HomeWin.xaml</DependentUpon>
+    </None>
+    <None Include="Client\Stub\Home\HomeMain.xaml.cs">
+      <DependentUpon>HomeMain.xaml</DependentUpon>
+    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Win\WinRT.Host.runtimeconfig.json" />
   </ItemGroup>
@@ -173,7 +179,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\MainWin.xaml">
+    <None Include="Client\Stub\Home\MainWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
@@ -235,7 +241,18 @@
     <Content Include="Wasm\pwa\windows11\Wide310x150Logo.scale-200.png" />
     <Content Include="Wasm\WasmScripts\AppManifest.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Client\Stub\Home\HomeWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Client\Stub\Home\HomeMain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

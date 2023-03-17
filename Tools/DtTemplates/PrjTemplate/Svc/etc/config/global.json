@@ -1,7 +1,7 @@
 ﻿{
   "App": "$ext_safeprojectname$",
   "MySql": {
-    "bs0": "Server=10.10.1.2;Database=bs0;Uid=dt;Pwd=dt;"
+    "demodb": "Server=10.10.1.2;Database=demo;Uid=dt;Pwd=dt;"
   },
   "RabbitMq": {
     "HostName": "10.10.1.2",
