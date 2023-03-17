@@ -41,16 +41,6 @@ namespace Dt.Mgr
         {
             get { return _favMenus; }
         }
-
-        /// <summary>
-        /// 获取设置固定菜单项，通常在 LoadMenus 前由外部设置
-        /// </summary>
-        public static IList<OmMenu> FixedMenus { get; set; }
-
-        /// <summary>
-        /// 获取固定菜单项数
-        /// </summary>
-        public static int FixedMenusCount => FixedMenus == null ? 0 : FixedMenus.Count;
         #endregion
 
         #region 菜单相关
@@ -83,6 +73,7 @@ namespace Dt.Mgr
             {
                 Task.Run(async () =>
                 {
+                    // 非固定菜单项
                     if (await AtModel.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
                     {
                         // 点击次数保存在客户端
@@ -121,37 +112,34 @@ namespace Dt.Mgr
         /// <summary>
         /// 加载当前登录用户的菜单，性能已调优
         /// </summary>
-        public static async Task LoadMenus()
+        /// <param name="p_fixedMenus">固定菜单项，通常在加载菜单前由外部设置</param>
+        /// <returns></returns>
+        public static async Task LoadMenus(IList<OmMenu> p_fixedMenus)
         {
             // 所有可访问项
             List<long> idsAll = await GetAllUserMenus();
 
-            // 常用组菜单项：固定项 + 点击次数最多的前n项，总项数 <= 8
+            // 常用组菜单项：固定项 + 点击次数最多的前n项
             _favMenus.Clear();
 
             // 外部注入的固定项
-            if (FixedMenus != null && FixedMenus.Count > 0)
+            if (p_fixedMenus != null && p_fixedMenus.Count > 0)
             {
-                _favMenus.AddRange(FixedMenus);
+                _favMenus.AddRange(p_fixedMenus);
             }
 
             // 点击次数最多的前n项
-            int maxFav = 8;
-            if (_favMenus.Count < maxFav)
+            int maxFav = (_favMenus.Count % 2 == 0) ? 6 : 5;
+            var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
+            foreach (var fav in favMenu)
             {
-                var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
-                foreach (var fav in favMenu)
+                // 过滤无权限的项
+                if (idsAll.Contains(fav.MenuID))
                 {
-                    // 过滤无权限的项
-                    if (idsAll.Contains(fav.MenuID))
-                    {
-                        var om = await AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
-                        _favMenus.Add(om);
-                        // 原位置仍存在
-                        //idsAll.Remove(fav.MenuID);
-                        if (_favMenus.Count >= maxFav)
-                            break;
-                    }
+                    var om = await AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                    _favMenus.Add(om);
+                    // 原位置仍存在
+                    //idsAll.Remove(fav.MenuID);
                 }
             }
 
@@ -351,7 +339,7 @@ namespace Dt.Mgr
 
             await CookieX.DelByID(_menuVerKey, true, false);
             await CookieX.Save(_menuVerKey, newVer);
-            
+
             return ls;
         }
 

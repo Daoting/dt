@@ -18,21 +18,55 @@ namespace Dt.Mgr.Home
     /// </summary>
     public sealed partial class RootMenu : Tab
     {
+        #region 静态内容
+        public readonly static DependencyProperty FixedMenusProperty = DependencyProperty.Register(
+            "FixedMenus",
+            typeof(IList<OmMenu>),
+            typeof(RootMenu),
+            new PropertyMetadata(null, OnFixedMenusChanged));
+
+        static void OnFixedMenusChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
+        {
+            var rm = (RootMenu)d;
+            if (rm.IsLoaded)
+                rm.LoadMenus();
+        }
+        #endregion
+
+        #region 构造方法
         public RootMenu()
         {
             InitializeComponent();
 
-            if (Kit.IsLogon)
-                LoadMenus();
-            else
+            if (!Kit.IsLogon)
                 LoginDs.LoginSuc += LoadMenus;
+        }
+        #endregion
+
+        /// <summary>
+        /// 获取设置固定菜单项，通常在加载菜单前由外部设置
+        /// </summary>
+        public IList<OmMenu> FixedMenus
+        {
+            get { return (IList<OmMenu>)GetValue(FixedMenusProperty); }
+            set { SetValue(FixedMenusProperty, value); }
+        }
+
+        /// <summary>
+        /// 固定菜单项数
+        /// </summary>
+        int FixedMenusCount => FixedMenus == null ? 0 : FixedMenus.Count;
+
+        protected override void OnFirstLoaded()
+        {
+            LoadMenus();
         }
 
         async void LoadMenus()
         {
-            await MenuDs.LoadMenus();
+            await MenuDs.LoadMenus(FixedMenus);
             _lv.Data = MenuDs.RootPageMenus;
-            _miReset.Visibility = (MenuDs.FavMenus.Count > MenuDs.FixedMenusCount) ? Visibility.Visible : Visibility.Collapsed;
+            _miReset.Visibility = (MenuDs.FavMenus.Count > FixedMenusCount) ? Visibility.Visible : Visibility.Collapsed;
 
             // 只有【常用】组菜单项的显示提示信息
             // 原来采用每个服务批量获取的方式，现改为每个视图独自提供方式，互不影响！
@@ -77,7 +111,7 @@ namespace Dt.Mgr.Home
 
         async void OnReset(object sender, Mi e)
         {
-            if (MenuDs.FavMenus.Count > MenuDs.FixedMenusCount)
+            if (MenuDs.FavMenus.Count > FixedMenusCount)
             {
                 var cnt = await AtLob.Exec($"delete from menufav where userid={Kit.UserID}");
                 if (cnt > 0)

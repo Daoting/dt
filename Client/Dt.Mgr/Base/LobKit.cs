@@ -18,7 +18,7 @@ namespace Dt.Mgr
     /// </summary>
     public partial class LobKit
     {
-        #region 登录及菜单
+        #region 登录
         /// <summary>
         /// cookie自动登录
         /// </summary>
@@ -27,15 +27,6 @@ namespace Dt.Mgr
         public static Task<bool> LoginByCookie(bool p_showWarning = false)
         {
             return LoginDs.LoginByCookie(p_showWarning);
-        }
-
-        /// <summary>
-        /// 获取设置固定菜单项，通常在 LoadMenus 前由外部设置
-        /// </summary>
-        public static IList<OmMenu> FixedMenus
-        {
-            get { return MenuDs.FixedMenus; }
-            set { MenuDs.FixedMenus = value; }
         }
         #endregion
 

@@ -78,4 +78,29 @@ namespace Dt.MgrDemo
             });
         }
     }
+
+    public class DemoItem
+    {
+        public DemoItem(string p_title, Type p_type, string p_desc)
+        {
+            Title = p_title;
+            Type = p_type;
+            Desc = p_desc;
+        }
+
+        /// <summary>
+        /// 获取设置标题
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 获取设置描述信息
+        /// </summary>
+        public string Desc { get; set; }
+
+        /// <summary>
+        /// 获取设置窗口类型
+        /// </summary>
+        public Type Type { get; set; }
+    }
 }
