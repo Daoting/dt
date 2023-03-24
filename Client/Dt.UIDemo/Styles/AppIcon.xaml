@@ -11,6 +11,7 @@
             <Button Content="生成iOS图片" Click="OnIOS" />
             <Button Content="生成android图片" Click="OnDroid" />
             <Button Content="生成uwp图片" Click="OnUwp" />
+            <Button Content="生成网站图标" Click="OnSite" />
             <Button Content="生成logo图片" Click="OnLogo" />
         </a:Fv>
         <Border x:Name="_bd">

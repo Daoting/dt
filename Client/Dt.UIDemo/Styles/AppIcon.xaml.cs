@@ -158,6 +158,32 @@ namespace Dt.UIDemo
             Kit.Msg("生成成功，路径: " + folder.Path);
         }
 
+        async void OnSite(object sender, RoutedEventArgs e)
+        {
+            Icons icon = (Icons)_fv.Row["icon"];
+            if (icon == Icons.None)
+            {
+                Kit.Msg("请选择图标");
+                return;
+            }
+
+            var folder = await OpenFolder($"{icon}_site");
+
+            _bd.Background = null;
+            _tb.Foreground = Res.主蓝;
+            await SaveIcon(192, 192, 190, icon, "android-chrome-192x192.png", folder);
+            await SaveIcon(512, 512, 510, icon, "android-chrome-512x512.png", folder);
+            await SaveIcon(32, 32, 30, icon, "favicon-32x32.png", folder);
+            await SaveIcon(16, 16, 14, icon, "favicon-16x16.png", folder);
+            await SaveIcon(150, 150, 146, icon, "mstile-150x150.png", folder);
+
+            _bd.Background = Res.主蓝;
+            _tb.Foreground = Res.WhiteBrush;
+            await SaveIcon(180, 180, 160, icon, "apple-touch-icon.png", folder);
+
+            Kit.Msg("生成成功，路径: " + folder.Path);
+        }
+
         async void OnLogo(object sender, RoutedEventArgs e)
         {
             Icons icon = (Icons)_fv.Row["icon"];
