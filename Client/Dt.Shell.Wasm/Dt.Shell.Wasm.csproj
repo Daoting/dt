@@ -17,8 +17,8 @@
     <Import Project="..\Common.props" />
 
     <ItemGroup>
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.19" />
-        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.19" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.20" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.20" />
         <!-- 不引用link出错 -->
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
         
