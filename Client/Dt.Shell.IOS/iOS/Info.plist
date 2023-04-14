@@ -39,8 +39,8 @@
 	<string>Picture Picker uses photo library</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/icon.ttf</string>
-		<string>Fonts/uno-fluentui-assets.ttf</string>
+		<string>Assets/Fonts/icon.ttf</string>
+		<string>Assets/Fonts/uno-fluentui-assets.ttf</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
