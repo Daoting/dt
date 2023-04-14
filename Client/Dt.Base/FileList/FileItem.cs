@@ -140,8 +140,8 @@ namespace Dt.Base
         public const string VideoExt = "mp4,wmv,mov";
 
         // WinUI3.0未实现
-        //static MediaPlayerElement _mediaPlayer;
-        //static FileItem _playerHost;
+        static MediaPlayerElement _mediaPlayer;
+        static FileItem _playerHost;
 
         readonly FileList _owner;
         readonly FileItemInfo _itemInfo = new FileItemInfo();
@@ -1227,91 +1227,89 @@ namespace Dt.Base
         void Play(string p_file)
         {
             // WinUI3.0未实现
-            //if (_playerHost == this)
-            //{
-            //    if (FileType == FileItemType.Video)
-            //    {
-            //        var player = _mediaPlayer.MediaPlayer;
-            //        if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
-            //        {
-            //            _mediaPlayer.AreTransportControlsEnabled = true;
-            //            player.Pause();
-            //        }
-            //        else if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
-            //        {
-            //            _mediaPlayer.AreTransportControlsEnabled = false;
-            //            player.Play();
-            //        }
-            //    }
-            //    return;
-            //}
+            if (_playerHost == this)
+            {
+                if (FileType == FileItemType.Video)
+                {
+                    var player = _mediaPlayer.MediaPlayer;
+                    if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+                    {
+                        _mediaPlayer.AreTransportControlsEnabled = true;
+                        player.Pause();
+                    }
+                    else if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
+                    {
+                        _mediaPlayer.AreTransportControlsEnabled = false;
+                        player.Play();
+                    }
+                }
+                return;
+            }
 
-            //if (_mediaPlayer == null)
-            //{
-            //    // 初始化播放器
-            //    _mediaPlayer = new MediaPlayerElement();
-            //    _mediaPlayer.AutoPlay = true;
+            if (_mediaPlayer == null)
+            {
+                // 初始化播放器
+                _mediaPlayer = new MediaPlayerElement();
+                _mediaPlayer.AutoPlay = true;
 
-            //    var player = _mediaPlayer.MediaPlayer;
-            //    if (player == null)
-            //    {
-            //        player = new Windows.Media.Playback.MediaPlayer();
-            //        _mediaPlayer.SetMediaPlayer(player);
-            //    }
-            //    player.MediaEnded += (sender, e) => StopPlayer();
-            //    player.MediaFailed += (sender, e) => StopPlayer();
+                var player = _mediaPlayer.MediaPlayer;
+                if (player == null)
+                {
+                    player = new Windows.Media.Playback.MediaPlayer();
+                    _mediaPlayer.SetMediaPlayer(player);
+                }
+                player.MediaEnded += (sender, e) => StopPlayer();
+                player.MediaFailed += (sender, e) => StopPlayer();
 
-            //    // 自定义播放器内容
-            //    //_mediaPlayer.AreTransportControlsEnabled = true;
-            //    //var con = _mediaPlayer.TransportControls;
-            //    //con.IsCompact = true;
-            //    //con.IsVolumeButtonVisible = false;
-            //    //con.IsVolumeEnabled = false;
-            //    //con.IsZoomButtonVisible = false;
-            //    //con.IsZoomEnabled = false;
-            //}
-            //else
-            //{
-            //    await StopPlayer();
-            //}
+                // 自定义播放器内容
+                //_mediaPlayer.AreTransportControlsEnabled = true;
+                //var con = _mediaPlayer.TransportControls;
+                //con.IsCompact = true;
+                //con.IsVolumeButtonVisible = false;
+                //con.IsVolumeEnabled = false;
+                //con.IsZoomButtonVisible = false;
+                //con.IsZoomEnabled = false;
+            }
+            else
+            {
+                StopPlayer();
+            }
 
-            //_mediaPlayer.AreTransportControlsEnabled = (FileType == FileItemType.Sound);
-            //LoadPlayer();
-            //_mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(p_file));
+            _mediaPlayer.AreTransportControlsEnabled = (FileType == FileItemType.Sound);
+            LoadPlayer();
+            _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(p_file));
         }
 
         void LoadPlayer()
         {
-            //Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
-            //if (grid != null
-            //    && grid.Children[grid.Children.Count - 1] != _mediaPlayer)
-            //{
-            //    _mediaPlayer.Height = ActualHeight;
-            //    grid.Children.Add(_mediaPlayer);
-            //    _playerHost = this;
-            //}
+            Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
+            if (grid != null
+                && grid.Children[grid.Children.Count - 1] != _mediaPlayer)
+            {
+                _mediaPlayer.Height = ActualHeight;
+                grid.Children.Add(_mediaPlayer);
+                _playerHost = this;
+            }
         }
 
-        Task UnloadPlayer()
+        void UnloadPlayer()
         {
-            return Task.CompletedTask;
-            //return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
-            //{
-            //    Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
-            //    if (grid != null
-            //        && grid.Children[grid.Children.Count - 1] == _mediaPlayer)
-            //    {
-            //        grid.Children.RemoveAt(grid.Children.Count - 1);
-            //    }
-            //    _playerHost = null;
-            //})).AsTask();
+            Kit.RunSync(() =>
+            {
+                Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
+                if (grid != null
+                    && grid.Children[grid.Children.Count - 1] == _mediaPlayer)
+                {
+                    grid.Children.RemoveAt(grid.Children.Count - 1);
+                }
+                _playerHost = null;
+            });
         }
 
-        static Task StopPlayer()
+        static void StopPlayer()
         {
-            //if (_playerHost != null)
-            //    return _playerHost.UnloadPlayer();
-            return Task.CompletedTask;
+            if (_playerHost != null)
+                _playerHost.UnloadPlayer();
         }
         #endregion
 

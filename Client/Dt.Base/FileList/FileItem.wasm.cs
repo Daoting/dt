@@ -54,29 +54,8 @@ namespace Dt.Base
                     break;
 
                 case FileItemType.Video:
-                    //Grid grid = (Grid)GetTemplateChild("ContentGrid");
-                    //if (grid != null
-                    //    && !(grid.Children[grid.Children.Count - 1] is MediaPlayerElement))
-                    //{
-                    //    var mediaPlayer = new MediaPlayerElement();
-                    //    mediaPlayer.AutoPlay = true;
-
-                    //    var player = mediaPlayer.MediaPlayer;
-                    //    if (player == null)
-                    //    {
-                    //        player = new Windows.Media.Playback.MediaPlayer();
-                    //        mediaPlayer.SetMediaPlayer(player);
-                    //    }
-
-                    //    mediaPlayer.Height = ActualHeight;
-                    //    grid.Children.Add(mediaPlayer);
-                    //    mediaPlayer.Source = MediaSource.CreateFromUri(new Uri($"{Kit.Stub.ServerUrl}/fsm/{ID}"));
-                    //}
-                    Kit.Warn("wasm版未实现MediaPlayerElement");
-                    break;
-
                 case FileItemType.Sound:
-                    Kit.Warn("wasm版未实现MediaPlayerElement");
+                    Kit.Warn("wasm版不支持播放音视频，下载文件的原因，已实现MediaPlayerElement");
                     break;
 
                 default:
