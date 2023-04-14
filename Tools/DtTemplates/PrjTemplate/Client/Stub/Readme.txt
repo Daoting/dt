@@ -6,5 +6,8 @@ App\$ext_safeprojectname$.Win      win app项目
 $ext_safeprojectname$.Client       客户端类库项目
 $ext_safeprojectname$.Svc          服务项目
 
-
+搬运工
 https://github.com/daoting/dt
+
+教程
+https://daotingh.gitee.io/dt-site/docs/

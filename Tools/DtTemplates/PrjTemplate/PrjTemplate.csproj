@@ -199,6 +199,7 @@
   <ItemGroup>
     <Content Include="Client\Stub\Readme.txt" />
     <Content Include="Note.txt" />
+    <None Include="Svc\Properties\mysql-init.sql" />
     <Content Include="Wasm\assets\SplashScreen.png" />
     <Content Include="Wasm\LinkerConfig.xml" />
     <Content Include="Wasm\Note.txt" />
