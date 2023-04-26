@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Dt.Mgr.Rbac;
 #endregion
 
 namespace Dt.Mgr.Module
@@ -79,6 +80,11 @@ namespace Dt.Mgr.Module
             if (e.IsChanged)
                 _win.Form.Update(e.Row.ID);
             NaviTo(_win.Form);
+        }
+
+        void OnRefresh(object sender, Mi e)
+        {
+            RbacDs.UpdateModel();
         }
 
         RptWin _win => (RptWin)OwnWin;

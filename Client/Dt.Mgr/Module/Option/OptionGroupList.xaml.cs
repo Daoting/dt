@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
@@ -81,6 +82,11 @@ namespace Dt.Mgr.Module
                 if (d == _win.ParentForm.Data)
                     _win.ParentForm.Clear();
             }
+        }
+
+        void OnRefresh(object sender, Mi e)
+        {
+            RbacDs.UpdateModel();
         }
         #endregion
 

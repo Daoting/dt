@@ -9,6 +9,7 @@
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Scope="Phone" Click="OnNaviToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
+            <a:Mi ID="更新模型" Icon="刷新" Click="OnRefresh" />
         </a:Menu>
     </a:Tab.Menu>
 

@@ -120,6 +120,11 @@ namespace Dt.Mgr.Rbac
                 RbacDs.PromptForUpdateModel("菜单调序成功");
             }
         }
+
+        void OnRefresh(object sender, Mi e)
+        {
+            RbacDs.UpdateModel();
+        }
         #endregion
 
         #region 内部
