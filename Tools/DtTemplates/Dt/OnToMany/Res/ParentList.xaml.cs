@@ -53,7 +53,7 @@ namespace $rootnamespace$
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple)
             {
                 NaviToChild();
                 if (e.IsChanged)

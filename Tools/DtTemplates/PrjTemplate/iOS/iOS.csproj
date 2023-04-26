@@ -19,7 +19,7 @@
 		<Compile Include="..\$ext_safeprojectname$.Win\App.xaml.cs" Link="App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 		</Compile>
-		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="iOS\Resources\Fonts\%(Filename).ttf" />
+		<BundleResource Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="iOS\Resources\Assets\Fonts\%(Filename).ttf" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png" />
 		<ImageAsset Include="iOS\Assets.xcassets\AppIcons.appiconset\Icon-120.png" />

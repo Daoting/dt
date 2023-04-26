@@ -42,6 +42,7 @@
 		<Using Include="Serilog" />
 		<Using Include="System.Linq" />
 		<Using Include="System.Threading.Tasks" />
+		<Using Include="Dt.Base.SelectionMode" Alias="SelectionMode" />
 	</ItemGroup>
 
 	<!-- 确保各平台的GlobalUsing相同，不然造成歧义 -->
