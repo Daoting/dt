@@ -26,13 +26,13 @@ namespace Dt.Base.ListView
     {
         #region 成员变量
         internal static Thickness TextMargin = new Thickness(10, 4, 10, 4);
-        readonly Dictionary<string, UIElement> _cells;
+        readonly Dictionary<Col, UIElement> _cells;
         #endregion
 
         #region 构造方法
         public TableRow(Lv p_owner) : base(p_owner)
         {
-            _cells = new Dictionary<string, UIElement>();
+            _cells = new Dictionary<Col, UIElement>();
             LoadCells();
             AttachEvent();
         }
@@ -51,7 +51,7 @@ namespace Dt.Base.ListView
                 for (int i = 0; i < cols.Count; i++)
                 {
                     Col col = cols[i];
-                    var elem = _cells[col.ID];
+                    var elem = _cells[col];
                     elem.Measure(new Size(cols[i].Width, availableSize.Height));
                     if (elem.DesiredSize.Height > height)
                         height = elem.DesiredSize.Height;
@@ -65,7 +65,7 @@ namespace Dt.Base.ListView
                 for (int i = 0; i < cols.Count; i++)
                 {
                     Col col = cols[i];
-                    _cells[col.ID].Measure(new Size(cols[i].Width, height));
+                    _cells[col].Measure(new Size(cols[i].Width, height));
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Dt.Base.ListView
             for (int i = 0; i < cols.Count; i++)
             {
                 Col col = cols[i];
-                _cells[col.ID].Arrange(new Rect(col.Left + headerWidth, 0, col.Width, finalSize.Height));
+                _cells[col].Arrange(new Rect(col.Left + headerWidth, 0, col.Width, finalSize.Height));
             }
 
             // 选择背景
@@ -128,7 +128,7 @@ namespace Dt.Base.ListView
                 Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 CopyColToDot(col, dot);
                 Children.Add(dot);
-                _cells[col.ID] = dot;
+                _cells[col] = dot;
             }
 
             // 行头
