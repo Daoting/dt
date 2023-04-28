@@ -216,12 +216,12 @@ namespace Dt.Mgr.Module
             return fl.Items.FirstOrDefault();
         }
 
-        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        async void OnMenuOpening(object sender, AsyncCancelEventArgs e)
         {
             Row row = (Row)_m.TargetData;
             if (row.Bool("isfolder"))
             {
-                if (_fileMgr.Setting.AllowEdit)
+                if (await _fileMgr.Setting.AllowEdit())
                 {
                     _m["保存"].Visibility = Visibility.Collapsed;
                     _m["分享"].Visibility = Visibility.Collapsed;
@@ -235,7 +235,7 @@ namespace Dt.Mgr.Module
                     e.Cancel = true;
                 }
             }
-            else if (_fileMgr.Setting.AllowEdit)
+            else if (await _fileMgr.Setting.AllowEdit())
             {
                 _m["保存"].Visibility = Visibility.Visible;
                 _m["分享"].Visibility = Visibility.Visible;
@@ -291,14 +291,14 @@ namespace Dt.Mgr.Module
             _lv.SelectionMode = Base.SelectionMode.Single;
         }
 
-        void LoadMenu()
+        async void LoadMenu()
         {
             _menu = new Menu();
             Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
             mi.Click += OnSearch;
             _menu.Items.Add(mi);
 
-            if (_fileMgr.Setting.AllowEdit)
+            if (await _fileMgr.Setting.AllowEdit())
             {
                 mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
                 mi.Click += OnUpload;

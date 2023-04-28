@@ -18,9 +18,9 @@ namespace Dt.Mgr.Module
     public class FileMgrSetting
     {
         /// <summary>
-        /// 允许编辑
+        /// 是否允许编辑的回调方法
         /// </summary>
-        public bool AllowEdit { get; set; }
+        public Func<Task<bool>> AllowEdit { get; set; }
 
         /// <summary>
         /// 是否记录已读文件

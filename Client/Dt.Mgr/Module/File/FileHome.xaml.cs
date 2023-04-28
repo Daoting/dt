@@ -28,18 +28,18 @@ namespace Dt.Mgr.Module
             LoadContent();
         }
 
-        async void LoadContent()
+        void LoadContent()
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await LobKit.HasPermission("公共文件管理"),
+                AllowEdit = async () => await LobKit.HasPermission("公共文件管理"),
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.NaviParams = new PubFileMgr { Setting = setting };
 
             setting = new FileMgrSetting
             {
-                AllowEdit = true,
+                AllowEdit = () => Task.FromResult(true),
                 OnOpenedFile = LoadHistory,
             };
             _tabMy.NaviParams = new MyFileMgr { Setting = setting };

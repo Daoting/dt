@@ -93,7 +93,7 @@ namespace Dt.Mgr.Module
             LoadData();
         }
 
-        void LoadMenu()
+        async void LoadMenu()
         {
             var menu = new Menu();
             Mi mi = new Mi { ID = "确认", Icon = Icons.正确 };
@@ -104,7 +104,7 @@ namespace Dt.Mgr.Module
             mi.Click += OnSearch;
             menu.Items.Add(mi);
 
-            if (_fileMgr.Setting.AllowEdit)
+            if (await _fileMgr.Setting.AllowEdit())
             {
                 mi = new Mi { ID = "增加", Icon = Icons.加号 };
                 mi.Click += OnAdd;

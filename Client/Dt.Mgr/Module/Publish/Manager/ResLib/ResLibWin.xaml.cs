@@ -21,11 +21,11 @@ namespace Dt.Mgr.Module
             LoadContent();
         }
 
-        async void LoadContent()
+        void LoadContent()
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = await LobKit.HasPermission("素材库管理"),
+                AllowEdit = async () => await LobKit.HasPermission("素材库管理"),
                 SaveHistory = false,
             };
             _tab.NaviParams = new ResFileMgr { Setting = setting };

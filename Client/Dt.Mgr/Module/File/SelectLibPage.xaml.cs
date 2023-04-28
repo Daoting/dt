@@ -28,20 +28,20 @@ namespace Dt.Mgr.Module
             _owner = p_owner;
         }
 
-        async void OnPublicFile(object sender, RoutedEventArgs e)
+        void OnPublicFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = await LobKit.HasPermission("公共文件管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await LobKit.HasPermission("公共文件管理") };
             Forward(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
         void OnMyFile(object sender, RoutedEventArgs e)
         {
-            Forward(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = true } }, _owner));
+            Forward(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = () => Task.FromResult(true) } }, _owner));
         }
 
-        async void OnResFile(object sender, RoutedEventArgs e)
+        void OnResFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = await LobKit.HasPermission("素材库管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await LobKit.HasPermission("素材库管理") };
             Forward(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         

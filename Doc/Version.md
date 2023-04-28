@@ -4,6 +4,16 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
+
+## Release 4.0.x
+### 变更
+* Cols不再继承KeyedCollection，支持重复列id
+
+### 功能
+
+### Bug修改
+* 文件管理中的FolderPage因获取权限异步，造成初次加载时空引用
+
 ## Release 4.0.1
 ### 变更
 * 流程定义中删除FormType ListType字段，使用类型别名
