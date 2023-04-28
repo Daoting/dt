@@ -10,6 +10,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Cols不再继承KeyedCollection，支持重复列id
 
 ### 功能
+* 增加更新模型菜单项
+* 增加全局Dt.Base.SelectionMode别名
 
 ### Bug修改
 * 文件管理中的FolderPage因获取权限异步，造成初次加载时空引用
