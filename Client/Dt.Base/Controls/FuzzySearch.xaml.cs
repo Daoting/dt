@@ -81,7 +81,7 @@ namespace Dt.Base
             set { SetValue(CookieIDProperty, value); }
         }
 
-        protected override void OnFirstLoaded()
+        protected override async void OnFirstLoaded()
         {
 #if WIN
             // 在对话框中时为 xxx/FuzzySearch.xaml
@@ -127,7 +127,7 @@ namespace Dt.Base
             {
                 // 同一Win中多个搜索时，使用Title识别搜索历史
                 _baseUri = $"{_baseUri}+{Title}";
-                LoadHisItems();
+                await LoadHisItems();
             }
         }
 
@@ -213,7 +213,7 @@ namespace Dt.Base
         }
 
         #region 搜索历史
-        async void LoadHisItems()
+        async Task LoadHisItems()
         {
             _lvHis.Data = await AtState.Query<SearchHistoryX>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
         }
@@ -226,7 +226,7 @@ namespace Dt.Base
             {
                 SearchHistoryX his = await SearchHistoryX.New(BaseUri: _baseUri, Content: p_text);
                 await his.Save(false);
-                LoadHisItems();
+                await LoadHisItems();
             }
         }
 
@@ -245,7 +245,7 @@ namespace Dt.Base
         {
             var his = ((LvItem)((Button)sender).DataContext).Data.To<SearchHistoryX>();
             await his.Delete(false);
-            LoadHisItems();
+            await LoadHisItems();
         }
         #endregion
     }

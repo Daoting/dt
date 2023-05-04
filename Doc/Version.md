@@ -13,8 +13,11 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加更新模型菜单项
 * 增加全局Dt.Base.SelectionMode别名
 
+* 参考MVVM [工具包](https://learn.microsoft.com/zh-cn/dotnet/communitytoolkit/mvvm/)，简化命令等绑定写法
+
 ### Bug修改
 * 文件管理中的FolderPage因获取权限异步，造成初次加载时空引用
+* Excel的表格的标题下拉箭头点击后报错，无法弹出过滤、排序对话框
 
 ## Release 4.0.1
 ### 变更

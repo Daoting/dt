@@ -43,6 +43,9 @@ namespace Dt.Cells.UI
             _popupContentHost.SizeChanged += OnPopupContentHostSizeChanged;
             _popupChildGrid.Children.Add(_popupContentHost);
 
+            // 升级WinUI3后需要设置XamlRoot，否则灾难性故障
+            // 参见https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/winui3
+            _popup.XamlRoot = p_excel.XamlRoot;
             _popup.Child = _popupChildGrid;
         }
 

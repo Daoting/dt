@@ -35,6 +35,10 @@ namespace Dt.Cells.UI
             new LinearGradientBrush().StartPoint = new Point();
             _toolTipBlock = new TooltipControl();
             _toolTipBlock.Margin = new Thickness(0.0, 0.0, 5.0, 5.0);
+
+            // 升级WinUI3后需要设置XamlRoot，否则灾难性故障
+            // 参见https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/winui3
+            _popup.XamlRoot = p_excel.XamlRoot;
             _popup.Child = _tooltipFocusableElement;
             _tooltipFocusableElement.Children.Add(_toolTipBlock);
             _minWidth = minWidth;
