@@ -78,7 +78,7 @@ namespace Dt.UIDemo
             //sheet.Columns[3].Width = 100;
             //sheet.Columns[4].Width = 300;
 
-            sheet.DataSource = SampleData.CreatePersonsList(5000);
+            sheet.DataSource = SampleData.CreatePersonsList(100);
             sheet.Columns[0].Width = 150;
             sheet.Columns[1].Width = 100;
             sheet.Columns[2].Width = 60;
@@ -217,6 +217,11 @@ namespace Dt.UIDemo
                 stream.Dispose();
                 Kit.Msg("导出成功！");
             }
+        }
+
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
         }
     }
 }

@@ -148,6 +148,9 @@ namespace Dt.Core
             MainWin.Content = RootGrid;
             MainWin.Activate();
             Kit.Debug("创建可视树");
+
+            // Excel控件中用到窗口句柄、UI线程同步异步调用等，如 Excel打印
+            Dt.Base.ExcelKit.MainWin = MainWin;
         }
 
         /// <summary>

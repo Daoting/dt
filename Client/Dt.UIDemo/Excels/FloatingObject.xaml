@@ -43,6 +43,7 @@
                         <Button Content="保存为PDF" Click="SavePDFFile" />
                         <Button Content="保存为CSV" Click="SaveCsvFile" />
                     </StackPanel>
+                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

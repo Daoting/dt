@@ -8,6 +8,7 @@
 
 #region าýำรรüร๛
 using System;
+using Dt.Base;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
@@ -45,6 +46,7 @@ namespace Dt.Shell
                 rootFrame.Navigate(typeof(HomePage));
             }
             win.Activate();
+            ExcelKit.MainWin = win;
         }
     }
 }

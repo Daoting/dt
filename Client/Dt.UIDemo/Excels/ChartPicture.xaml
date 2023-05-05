@@ -43,6 +43,7 @@
                         </ComboBox>
                     </a:CFree>
                     <Button Content="保存" Click="SaveExcelFile" />
+                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

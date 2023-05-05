@@ -48,6 +48,7 @@
                         <Button Content="CSV" Click="SaveCsvFile" />
                     </StackPanel>
                     <Button Content="打开" Click="OpenFile" />
+                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

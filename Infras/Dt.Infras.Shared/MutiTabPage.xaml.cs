@@ -9,6 +9,7 @@ namespace Dt.Shell
 {
     public sealed partial class MutiTabPage : Page
     {
+
         public MutiTabPage()
         {
             this.InitializeComponent();
@@ -115,6 +116,11 @@ namespace Dt.Shell
             sheet.RowRangeGroup.Group(23, 4);
             sheet.RowRangeGroup.Group(28, 4);
             // sheet.RowRangeGroup.Expand(1, false);
+        }
+
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
         }
     }
 }

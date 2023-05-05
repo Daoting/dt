@@ -2633,6 +2633,7 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         public void Print(PrintInfo p_printInfo = null, int p_sheetIndex = -1, string p_title = null)
         {
+#if WIN
             // 超出打印范围
             if (p_sheetIndex >= SheetCount)
                 return;
@@ -2644,6 +2645,9 @@ namespace Dt.Base
             ExcelPrinter printer = new ExcelPrinter(this, p_printInfo == null ? new PrintInfo() : p_printInfo, index);
             string jobName = string.IsNullOrEmpty(p_title) ? Sheets[index].Name : p_title;
             printer.Print(jobName);
+#else
+            ExcelKit.Warn("打印功能暂时只支持Windows！");
+#endif
         }
         #endregion
     }

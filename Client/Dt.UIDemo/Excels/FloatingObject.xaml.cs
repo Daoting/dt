@@ -372,5 +372,10 @@ namespace Dt.UIDemo
             Enum.TryParse<ExcelSaveFlags>(flagText, true, out result);
             return result;
         }
+
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
+        }
     }
 }

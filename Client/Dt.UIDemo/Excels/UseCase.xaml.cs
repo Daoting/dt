@@ -367,5 +367,9 @@ namespace Dt.UIDemo
                 sheet[e.Row, e.Column].Text = "☐";
         }
 
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
+        }
     }
 }

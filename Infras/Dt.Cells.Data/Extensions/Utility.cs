@@ -142,29 +142,31 @@ namespace Dt.Cells.Data
         /// <returns></returns>
         public static Stream GetBmpStream(RenderTargetBitmap p_bmp)
         {
-            Task<IBuffer> taskBuf = taskBuf = p_bmp.GetPixelsAsync().AsTask();
-            taskBuf.Wait();
-            byte[] data = taskBuf.Result.ToArray();
+            // 升级WinUI后 Wait 死等
+            return null;
+            //Task<IBuffer> taskBuf = taskBuf = p_bmp.GetPixelsAsync().AsTask();
+            //taskBuf.Wait();
+            //byte[] data = taskBuf.Result.ToArray();
 
-            InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
-            Task<BitmapEncoder> taskEncoder = BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ms).AsTask();
-            taskEncoder.Wait();
+            //InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream();
+            //Task<BitmapEncoder> taskEncoder = BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ms).AsTask();
+            //taskEncoder.Wait();
 
-            BitmapEncoder encoder = taskEncoder.Result;
-            // WinUI
-            float dpi = 96;
-            //float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
-            encoder.SetPixelData(
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Ignore,
-                    (uint)p_bmp.PixelWidth,
-                    (uint)p_bmp.PixelHeight,
-                    dpi,
-                    dpi,
-                    data);
-            encoder.FlushAsync().AsTask().Wait();
+            //BitmapEncoder encoder = taskEncoder.Result;
+            //// WinUI
+            //float dpi = 96;
+            ////float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
+            //encoder.SetPixelData(
+            //        BitmapPixelFormat.Bgra8,
+            //        BitmapAlphaMode.Ignore,
+            //        (uint)p_bmp.PixelWidth,
+            //        (uint)p_bmp.PixelHeight,
+            //        dpi,
+            //        dpi,
+            //        data);
+            //encoder.FlushAsync().AsTask().Wait();
 
-            return WindowsRuntimeStreamExtensions.AsStream(ms);
+            //return WindowsRuntimeStreamExtensions.AsStream(ms);
         }
 
         public static async void InitImageSource(BitmapImage image, Stream imageStream)

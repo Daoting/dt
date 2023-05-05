@@ -349,5 +349,10 @@ namespace Dt.UIDemo
                 Kit.Msg("导出成功！");
             }
         }
+
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
+        }
     }
 }

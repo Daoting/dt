@@ -11,6 +11,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Padding="10" Spacing="20">
             <Button Content="返回" Click="OnBack" />
+            <Button Content="打印" Click="OnPrintExcel" />
         </StackPanel>
         <a:Excel x:Name="_excel" Grid.Row="1" />
     </Grid>

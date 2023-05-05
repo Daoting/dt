@@ -35,6 +35,7 @@
                         <Button Content="导出Xml" Click="SaveXmlFile" />
                         <Button Content="另存为PDF" Click="SavePDFFile" />
                     </StackPanel>
+                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

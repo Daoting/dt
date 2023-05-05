@@ -113,7 +113,10 @@ namespace Dt.Cells.UI
             if (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1))
             {
                 Rect rcFrame = IsAnchorCellInSelection ? _owner._cachedSelectionFrameLayout : _owner._cachedFocusCellLayout;
-                FocusIndicator.Measure(new Size(rcFrame.Width, rcFrame.Height));
+                if (!rcFrame.IsEmpty)
+                    FocusIndicator.Measure(new Size(rcFrame.Width, rcFrame.Height));
+                else
+                    FocusIndicator.Measure(_szEmpty);
             }
             else
             {
@@ -154,7 +157,10 @@ namespace Dt.Cells.UI
             if (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1))
             {
                 Rect rcFrame = IsAnchorCellInSelection ? _owner._cachedSelectionFrameLayout : _owner._cachedFocusCellLayout;
-                FocusIndicator.Arrange(rcFrame);
+                if (!rcFrame.IsEmpty)
+                    FocusIndicator.Arrange(rcFrame);
+                else
+                    FocusIndicator.Arrange(_rcEmpty);
             }
             else
             {

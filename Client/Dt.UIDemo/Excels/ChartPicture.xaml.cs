@@ -117,5 +117,10 @@ namespace Dt.UIDemo
             await bmp.RenderAsync(_chart);
             sheet.AddPicture("pic" + sheet.Pictures.Count.ToString(), bmp, rc.Left, rc.Top, rc.Width, rc.Height);
         }
+
+        void OnPrintExcel(object sender, RoutedEventArgs e)
+        {
+            _excel.Print();
+        }
     }
 }
