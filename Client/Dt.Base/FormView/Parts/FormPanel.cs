@@ -100,7 +100,7 @@ namespace Dt.Base.FormView
             {
                 // 可视高度的80%
                 double maxHeight = Math.Floor(_maxSize.Height * 0.8);
-                if (maxHeight >= GetTotalHeight(1, CellMaxWidth, false))
+                if (maxHeight >= GetSingleColomnHeight(CellMaxWidth, false))
                 {
                     // 一列在可视高度的80%以内，仍一列
                     colWidth = CellMaxWidth;
@@ -108,7 +108,7 @@ namespace Dt.Base.FormView
                 }
                 else if (_owner.MaxColCount == 2
                     || maxWidth < CellMinWidth * 3
-                    || maxHeight >= GetTotalHeight(2, (maxWidth / 2) > CellMaxWidth ? CellMaxWidth : (maxWidth / 2), false))
+                    || maxHeight >= GetMultiColomnHeight(2, (maxWidth / 2) > CellMaxWidth ? CellMaxWidth : (maxWidth / 2), false))
                 {
                     // 采用两列：
                     // 外部设置最多两列；
@@ -120,7 +120,7 @@ namespace Dt.Base.FormView
                 }
                 else if (_owner.MaxColCount == 3
                     || maxWidth < CellMinWidth * 4
-                    || maxHeight >= GetTotalHeight(3, (maxWidth / 3) > CellMaxWidth ? CellMaxWidth : (maxWidth / 3), false))
+                    || maxHeight >= GetMultiColomnHeight(3, (maxWidth / 3) > CellMaxWidth ? CellMaxWidth : (maxWidth / 3), false))
                 {
                     // 采用三列：
                     // 外部设置最多三列；
@@ -139,7 +139,9 @@ namespace Dt.Base.FormView
                 }
             }
 
-            double height = GetTotalHeight(colCount, colWidth, true);
+            double height = colCount == 1 ?
+                GetSingleColomnHeight(colWidth, true)
+                : GetMultiColomnHeight(colCount, colWidth, true);
             width = colCount * colWidth;
             Size size = new Size(width, height);
             _border.Measure(size);
@@ -160,30 +162,41 @@ namespace Dt.Base.FormView
         }
 
         /// <summary>
-        /// 分成n列时需要的高度
+        /// 计算只一列时需要的高度
         /// </summary>
-        /// <param name="p_colCount">列数</param>
         /// <param name="p_colWidth">列宽</param>
         /// <param name="p_measure">是否测量</param>
         /// <returns></returns>
-        double GetTotalHeight(int p_colCount, double p_colWidth, bool p_measure)
+        double GetSingleColomnHeight(double p_colWidth, bool p_measure)
         {
             int rowIndex = 0;
             Size szCollapsed = new Size(p_colWidth, Res.RowOuterHeight);
+            // 一列未占满时，已布局单元格占的比例
+            double totalColSpan = 0;
+            // 一列未占满时，已布局单元格占用的最大行数
+            int lastRowSpan = 0;
 
-            // 只一列
-            if (p_colCount == 1)
+            foreach (var cell in Children.OfType<IFvCell>())
             {
-                foreach (var cell in Children.OfType<IFvCell>())
+                if (cell.Visibility == Visibility.Collapsed)
                 {
-                    if (cell.Visibility == Visibility.Collapsed)
-                    {
-                        cell.Measure(szCollapsed);
-                        continue;
-                    }
+                    cell.Measure(szCollapsed);
+                    continue;
+                }
+
+                // 当前格占用的行数、列比例
+                int rowSpan = 0;
+                double colSpan = (cell.ColSpan <= 0 || cell.ColSpan >= 1) ? 1 : cell.ColSpan;
+
+                #region 放在新行，占用整列
+                if (colSpan == 1)
+                {
+                    // 清除以前未占满的状态
+                    totalColSpan = 0;
+                    rowIndex += lastRowSpan;
+                    lastRowSpan = 0;
 
                     // 确定行数
-                    int rowSpan;
                     if (cell.RowSpan > 0)
                     {
                         rowSpan = cell.RowSpan;
@@ -208,13 +221,100 @@ namespace Dt.Base.FormView
                             cell.Measure(size);
                     }
                     rowIndex += rowSpan;
+                    continue;
                 }
-                return rowIndex * Res.RowOuterHeight;
-            }
+                #endregion
 
-            // 多列情况
-            List<bool[]> map = new List<bool[]>();
+                #region 放在新行，占用部分列
+                if (totalColSpan == 0 || totalColSpan + colSpan > 1)
+                {
+                    // 清除以前未占满的状态
+                    totalColSpan = colSpan;
+                    rowIndex += lastRowSpan;
+
+                    // 确定行数
+                    if (cell.RowSpan > 0)
+                    {
+                        lastRowSpan = cell.RowSpan;
+                    }
+                    else
+                    {
+                        // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
+                        cell.Measure(new Size(p_colWidth * colSpan, Kit.ViewHeight));
+                        // uno中高度莫名多出小数点后的
+                        lastRowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / Res.RowOuterHeight);
+                    }
+
+                    // 测量
+                    if (p_measure)
+                    {
+                        Size size = new Size(p_colWidth * colSpan, Res.RowOuterHeight * lastRowSpan);
+                        cell.Bounds = new Rect(
+                            new Point(0, rowIndex * Res.RowOuterHeight),
+                            size);
+                        // 自动行高不再测量
+                        if (cell.RowSpan > 0)
+                            cell.Measure(size);
+                    }
+                    continue;
+                }
+                #endregion
+
+                #region 放在当前行，占用部分列
+                // 确定行数
+                if (cell.RowSpan > 0)
+                {
+                    rowSpan = cell.RowSpan;
+                }
+                else
+                {
+                    // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
+                    cell.Measure(new Size(p_colWidth * colSpan, Kit.ViewHeight));
+                    // uno中高度莫名多出小数点后的
+                    rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / Res.RowOuterHeight);
+                }
+
+                // 取一行中最大占用行数
+                if (rowSpan > lastRowSpan)
+                    lastRowSpan = rowSpan;
+
+                // 测量
+                if (p_measure)
+                {
+                    Size size = new Size(p_colWidth * colSpan, Res.RowOuterHeight * rowSpan);
+                    cell.Bounds = new Rect(
+                        new Point(p_colWidth * totalColSpan, rowIndex * Res.RowOuterHeight),
+                        size);
+                    // 自动行高不再测量
+                    if (cell.RowSpan > 0)
+                        cell.Measure(size);
+                }
+
+                // 累计已布局单元格占的比例
+                totalColSpan += colSpan;
+                #endregion
+            }
+            return (rowIndex + lastRowSpan) * Res.RowOuterHeight;
+        }
+
+        /// <summary>
+        /// 计算多列时需要的高度
+        /// </summary>
+        /// <param name="p_colCount">列数</param>
+        /// <param name="p_colWidth">列宽</param>
+        /// <param name="p_measure">是否测量</param>
+        /// <returns></returns>
+        double GetMultiColomnHeight(int p_colCount, double p_colWidth, bool p_measure)
+        {
+            // 当前布局的行序号
+            int rowIndex = 0;
+            // 当前布局的列序号
             int colIndex = 0;
+            // 一列未占满时，已布局单元格占的比例
+            double totalColSpan = 0;
+            Size szCollapsed = new Size(p_colWidth, Res.RowOuterHeight);
+            // 单元格占用情况
+            List<bool[]> map = new List<bool[]>();
 
             // 地图记录单元格占用情况
             foreach (var cell in Children.OfType<IFvCell>())
@@ -225,12 +325,16 @@ namespace Dt.Base.FormView
                     continue;
                 }
 
-                if (cell.IsHorStretch)
+                #region 水平填充
+                // 水平填充，放在新行，占用整行所有列
+                int rowSpan = 0;
+
+                if (cell.ColSpan <= 0)
                 {
-                    // 从列头开始
+                    totalColSpan = 0;
                     if (colIndex != 0)
                     {
-                        // 新行
+                        // 新行开头
                         colIndex = 0;
                         if (++rowIndex >= map.Count)
                             map.Add(new bool[p_colCount]);
@@ -257,7 +361,6 @@ namespace Dt.Base.FormView
                     }
 
                     // 确定行数
-                    int rowSpan;
                     if (cell.RowSpan > 0)
                     {
                         rowSpan = cell.RowSpan;
@@ -294,10 +397,21 @@ namespace Dt.Base.FormView
                     }
 
                     // 下一位置
-                    rowIndex += cell.RowSpan;
+                    rowIndex += rowSpan;
+                    continue;
                 }
-                else
+                #endregion
+
+                #region 放在新列
+                // 从新列的开头布局，可能是当前行或新行
+                double colSpan = (cell.ColSpan >= 1) ? 1 : cell.ColSpan;
+
+                if (totalColSpan == 0
+                    || totalColSpan + colSpan > 1
+                    || colSpan == 1)
                 {
+                    totalColSpan = colSpan == 1 ? 0 : colSpan;
+
                     // 查找放置位置
                     while (true)
                     {
@@ -318,7 +432,6 @@ namespace Dt.Base.FormView
                     }
 
                     // 确定行数
-                    int rowSpan;
                     if (cell.RowSpan > 0)
                     {
                         rowSpan = cell.RowSpan;
@@ -326,7 +439,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数
-                        cell.Measure(new Size(p_colWidth, Kit.ViewHeight));
+                        cell.Measure(new Size(p_colWidth * colSpan, Kit.ViewHeight));
                         rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / Res.RowOuterHeight);
                     }
 
@@ -341,7 +454,7 @@ namespace Dt.Base.FormView
                     // 测量
                     if (p_measure)
                     {
-                        Size size = new Size(p_colWidth, Res.RowOuterHeight * rowSpan);
+                        Size size = new Size(p_colWidth * colSpan, Res.RowOuterHeight * rowSpan);
                         cell.Bounds = new Rect(
                             new Point(colIndex * p_colWidth, rowIndex * Res.RowOuterHeight),
                             size);
@@ -351,14 +464,57 @@ namespace Dt.Base.FormView
                     }
 
                     // 下一位置
-                    colIndex++;
-                    if (colIndex >= p_colCount)
+                    if (colSpan == 1)
                     {
-                        // 从下一行开始
-                        colIndex = 0;
-                        rowIndex++;
+                        colIndex++;
+                        if (colIndex >= p_colCount)
+                        {
+                            // 从下一行开始
+                            colIndex = 0;
+                            rowIndex++;
+                        }
                     }
+                    continue;
                 }
+                #endregion
+
+                #region 放在当前列
+                // 确定行数
+                if (cell.RowSpan > 0)
+                {
+                    rowSpan = cell.RowSpan;
+                }
+                else
+                {
+                    // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
+                    cell.Measure(new Size(p_colWidth * colSpan, Kit.ViewHeight));
+                    // uno中高度莫名多出小数点后的
+                    rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / Res.RowOuterHeight);
+                }
+
+                // 标志占用
+                for (int i = 0; i < rowSpan; i++)
+                {
+                    if (rowIndex + i >= map.Count)
+                        map.Add(new bool[p_colCount]);
+                    map[rowIndex + i][colIndex] = true;
+                }
+
+                // 测量
+                if (p_measure)
+                {
+                    Size size = new Size(p_colWidth * colSpan, Res.RowOuterHeight * rowSpan);
+                    cell.Bounds = new Rect(
+                        new Point(colIndex * p_colWidth + p_colWidth * totalColSpan, rowIndex * Res.RowOuterHeight),
+                        size);
+                    // 自动行高不再测量
+                    if (cell.RowSpan > 0)
+                        cell.Measure(size);
+                }
+
+                // 累计已布局单元格占的比例
+                totalColSpan += colSpan;
+                #endregion
             }
             return map.Count * Res.RowOuterHeight;
         }

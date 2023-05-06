@@ -23,14 +23,14 @@ namespace Dt.Base
         Size DesiredSize { get; }
 
         /// <summary>
-        /// 是否水平填充
-        /// </summary>
-        bool IsHorStretch { get; set; }
-
-        /// <summary>
         /// 占用的行数
         /// </summary>
         int RowSpan { get; set; }
+
+        /// <summary>
+        /// 占用列的比例，取值范围 0~1，0表示水平填充，1表示占满整列，默认1
+        /// </summary>
+        double ColSpan { get; set; }
 
         /// <summary>
         /// 在面板上的布局区域

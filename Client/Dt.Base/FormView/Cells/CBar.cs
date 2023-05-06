@@ -22,27 +22,18 @@ namespace Dt.Base
     public partial class CBar : DtControl, IFvCell
     {
         #region 静态成员
-        /// <summary>
-        /// 分隔行是否水平填充
-        /// </summary>
-        public static readonly DependencyProperty IsHorStretchProperty = DependencyProperty.Register(
-            "IsHorStretch",
-            typeof(bool),
+        public static readonly DependencyProperty ColSpanProperty = DependencyProperty.Register(
+            "ColSpan",
+            typeof(double),
             typeof(CBar),
-            new PropertyMetadata(true, OnUpdateLayout));
+            new PropertyMetadata(0.0d, OnColSpanChanged));
 
-        /// <summary>
-        /// 占用的行数
-        /// </summary>
         public static readonly DependencyProperty RowSpanProperty = DependencyProperty.Register(
             "RowSpan",
             typeof(int),
             typeof(CBar),
             new PropertyMetadata(1, OnUpdateLayout));
 
-        /// <summary>
-        /// 分隔行内容
-        /// </summary>
         public readonly static DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
@@ -54,6 +45,24 @@ namespace Dt.Base
             var pnl = ((CBar)d).GetParent();
             if (pnl != null)
                 pnl.InvalidateMeasure();
+        }
+
+        static void OnColSpanChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var cell = (CBar)d;
+            double span = (double)e.NewValue;
+            if (span > 1)
+            {
+                cell.ColSpan = 1;
+            }
+            else if (span < 0)
+            {
+                cell.ColSpan = 0;
+            }
+            else
+            {
+                OnUpdateLayout(d, e);
+            }
         }
 
         static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -77,21 +86,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否水平填充，默认true
-        /// </summary>
-        public bool IsHorStretch
-        {
-            get { return (bool)GetValue(IsHorStretchProperty); }
-            set { SetValue(IsHorStretchProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置占用的行数，默认1行，-1时自动行高
         /// </summary>
         public int RowSpan
         {
             get { return (int)GetValue(RowSpanProperty); }
             set { SetValue(RowSpanProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置单元格占用列的比例，取值范围 0~1，0表示水平填充，1表示占满整列，默认0水平填充
+        /// </summary>
+        public double ColSpan
+        {
+            get { return (double)GetValue(ColSpanProperty); }
+            set { SetValue(ColSpanProperty, value); }
         }
 
         /// <summary>

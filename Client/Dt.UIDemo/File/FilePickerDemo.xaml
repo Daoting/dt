@@ -22,7 +22,7 @@
             <Button Content="选择单个文件" Click="OnPickFile" />
             <Button Content="选择多个文件" Click="OnPickFiles" />
         </StackPanel>
-        <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
+        <a:CFree RowSpan="5" ColSpan="0" ShowTitle="False">
             <TextBox x:Name="_tbInfo"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"

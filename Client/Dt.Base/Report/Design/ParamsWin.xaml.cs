@@ -158,7 +158,7 @@ namespace Dt.Base.Report
             "TitleWidth=\"20\"\n" +
             "Placeholder=\"占位符文本\"\n" +
             "IsVerticalTitle=\"True\"\n" +
-            "IsHorStretch=\"True\"\n" +
+            "ColSpan=\"0\"\n" +
             "IsReadOnly=\"True\"";
         #endregion
     }

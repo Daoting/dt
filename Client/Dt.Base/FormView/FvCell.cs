@@ -64,11 +64,11 @@ namespace Dt.Base
             typeof(FvCell),
             new PropertyMetadata(false, OnIsVerticalTitleChanged));
 
-        public static readonly DependencyProperty IsHorStretchProperty = DependencyProperty.Register(
-            "IsHorStretch",
-            typeof(bool),
+        public static readonly DependencyProperty ColSpanProperty = DependencyProperty.Register(
+            "ColSpan",
+            typeof(double),
             typeof(FvCell),
-            new PropertyMetadata(false, OnUpdateLayout));
+            new PropertyMetadata(1.0d, OnColSpanChanged));
 
         public static readonly DependencyProperty RowSpanProperty = DependencyProperty.Register(
             "RowSpan",
@@ -123,6 +123,24 @@ namespace Dt.Base
             var pnl = ((FvCell)d).GetParent();
             if (pnl != null)
                 pnl.InvalidateMeasure();
+        }
+
+        static void OnColSpanChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            FvCell cell = (FvCell)d;
+            double span = (double)e.NewValue;
+            if (span > 1)
+            {
+                cell.ColSpan = 1;
+            }
+            else if (span < 0)
+            {
+                cell.ColSpan = 0;
+            }
+            else
+            {
+                OnUpdateLayout(d, e);
+            }
         }
 
         static void OnInvalidatePanel(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -268,21 +286,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置单元格是否水平填充，默认false
-        /// </summary>
-        public bool IsHorStretch
-        {
-            get { return (bool)GetValue(IsHorStretchProperty); }
-            set { SetValue(IsHorStretchProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置占用的行数，默认1行，-1时自动行高
         /// </summary>
         public int RowSpan
         {
             get { return (int)GetValue(RowSpanProperty); }
             set { SetValue(RowSpanProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置单元格占用列的比例，取值范围 0~1，0表示水平填充，1表示占满整列，默认1
+        /// </summary>
+        public double ColSpan
+        {
+            get { return (double)GetValue(ColSpanProperty); }
+            set { SetValue(ColSpanProperty, value); }
         }
 
         /// <summary>

@@ -58,6 +58,7 @@ namespace Dt.Base.FormView
         #endregion
 
         #region 成员变量
+        static Rect _rcEmpty = new Rect();
         Rectangle _rcTitle;
         TextBlock _tbTitle;
         Rectangle _rcQuery;
@@ -141,7 +142,7 @@ namespace Dt.Base.FormView
             {
                 Size size = new Size(_owner.TitleWidth, height);
                 _rcTitle.Measure(size);
-                _tbTitle.Measure(new Size(size.Width - 20, height));
+                _tbTitle.Measure(new Size(size.Width > 20 ? size.Width - 20 : 0, height));
             }
 
             // 查询比较符
@@ -162,14 +163,14 @@ namespace Dt.Base.FormView
             if (child != null)
             {
                 // 左上空出边线
-                child.Measure(new Size(conWidth - 1, height - 1));
+                child.Measure(new Size(conWidth > 1 ? conWidth - 1 : 0, height - 1));
                 // 自动行高
                 if (_owner.RowSpan == -1)
                     height = child.DesiredSize.Height > 0 ? child.DesiredSize.Height : Res.RowOuterHeight;
             }
 
             // 内容外框
-            _rcChild.Measure(new Size(conWidth, height));
+            _rcChild.Measure(new Size(conWidth > 0 ? conWidth : 0, height));
             return new Size(width, height);
         }
 
@@ -206,10 +207,10 @@ namespace Dt.Base.FormView
             // 内容，空出左上边线
             var child = Child;
             if (child != null)
-                child.Arrange(new Rect(left + 1, 1, conWidth - 1, height - 1));
+                child.Arrange(conWidth > 1 ? new Rect(left + 1, 1, conWidth - 1, height - 1) : _rcEmpty);
 
             // 内容外框
-            _rcChild.Arrange(new Rect(left, 0, conWidth, height));
+            _rcChild.Arrange(conWidth > 0 ? new Rect(left, 0, conWidth, height) : _rcEmpty);
             return finalSize;
         }
 

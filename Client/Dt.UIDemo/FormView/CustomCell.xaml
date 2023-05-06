@@ -52,8 +52,9 @@
                     <a:CBool Title="列名垂直显示" ID="IsVerticalTitle" />
                     <a:CBool Title="显示标题列" ID="ShowTitle" />
                     <a:CNum Title="列名宽度" ID="TitleWidth" />
-                    <a:CBool Title="水平填充" ID="IsHorStretch" />
                     <a:CNum Title="行数(-1自动)" ID="RowSpan" />
+                    <a:CBar Title="占用列比例0~1，0表水平填充，1表占满整列" />
+                    <a:CNum ID="ColSpan" ShowTitle="False" />
                     <a:CList Title="可见" ID="Visibility" />
                     <a:CBar>
                         <StackPanel Orientation="Horizontal">

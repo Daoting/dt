@@ -112,7 +112,7 @@
         <Button Content="返回复杂嵌套对象" Click="GetContainCustom" />
         <Button Content="发送复杂嵌套对象" Click="SetContainCustom" />
 
-        <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
+        <a:CFree RowSpan="5" ColSpan="0" ShowTitle="False">
             <TextBox x:Name="_tbInfo"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"

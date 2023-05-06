@@ -8,7 +8,7 @@
         <a:Tabs>
             <a:Tab Order="1" Title="表单">
                 <a:Fv x:Name="_fv">
-                    <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
+                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
                                   Background="{StaticResource 浅灰1}"
@@ -36,7 +36,7 @@
                             </a:Lv>
                         </StackPanel>
                     </a:CBar>
-                    <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
+                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
                                   Background="{StaticResource 浅灰1}"
@@ -95,7 +95,7 @@
                             </a:Lv>
                         </StackPanel>
                     </a:CBar>
-                    <a:CBar RowSpan="-1" Background="White" IsHorStretch="False">
+                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
                         <StackPanel>
                             <Grid Padding="10,0,0,0"
                                   Background="{StaticResource 浅灰1}"

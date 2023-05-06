@@ -32,9 +32,9 @@
                     <a:CText ID="name" Title="数据名称" />
                     <a:CText ID="srv" Title="服务名称" AutoCookie="True" />
                     <a:CBar Title="Sql查询" />
-                    <a:CText ID="sql" ShowTitle="False" AcceptsReturn="True" IsHorStretch="True" RowSpan="17" />
+                    <a:CText ID="sql" ShowTitle="False" AcceptsReturn="True" ColSpan="0" RowSpan="17" />
                     <a:CBar Title="列名，逗号隔开" />
-                    <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" IsHorStretch="True" RowSpan="2" />
+                    <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" ColSpan="0" RowSpan="2" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
