@@ -59,6 +59,11 @@ namespace Dt.Base
             {
                 cell.ColSpan = 0;
             }
+            else if (Math.Round(span, 2) != span)
+            {
+                // xaml中的double有17位小数，精度有误差
+                cell.ColSpan = Math.Round(span, 2);
+            }
             else
             {
                 OnUpdateLayout(d, e);
