@@ -155,7 +155,6 @@ CREATE TABLE `cm_menu` (
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_menu_dispidx` (`Dispidx`) USING BTREE COMMENT '确保唯一',
   KEY `fk_menu_parentid` (`ParentID`),
   CONSTRAINT `fk_menu_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_menu` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='业务菜单';
@@ -1676,23 +1675,40 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`dt`@`%` FUNCTION `nextval`( v_seq_name VARCHAR ( 200 ) ) RETURNS int(11)
-BEGIN
-DECLARE
-	res INTEGER;
-UPDATE sequence 
-SET val = val + 1 
-WHERE
-	id = v_seq_name;
-
-SET res = 0;
-SELECT
-	val INTO res 
-FROM
-	sequence 
-WHERE
-	id = v_seq_name;
-RETURN res;
-
+BEGIN
+
+DECLARE
+
+	res INTEGER;
+
+UPDATE sequence 
+
+SET val = val + 1 
+
+WHERE
+
+	id = v_seq_name;
+
+
+
+SET res = 0;
+
+SELECT
+
+	val INTO res 
+
+FROM
+
+	sequence 
+
+WHERE
+
+	id = v_seq_name;
+
+RETURN res;
+
+
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

@@ -79,11 +79,15 @@ namespace Dt.Mgr.Module
                 return;
             }
 
-            if (await d.Delete())
+            if (await d.Delete(false))
             {
                 Clear();
                 _win.OptionList.Refresh();
-                RbacDs.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel("基础选项删除成功");
+            }
+            else
+            {
+                Kit.Warn("基础选项删除失败！");
             }
         }
         #endregion
@@ -96,10 +100,14 @@ namespace Dt.Mgr.Module
 
         async void Save()
         {
-            if (await Data.Save())
+            if (await Data.Save(false))
             {
                 _win.OptionList.Refresh();
-                RbacDs.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel("基础选项保存成功");
+            }
+            else
+            {
+                Kit.Warn("基础选项保存失败！");
             }
         }
 

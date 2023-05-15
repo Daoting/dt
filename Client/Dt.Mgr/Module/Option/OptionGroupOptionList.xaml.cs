@@ -76,15 +76,29 @@ namespace Dt.Mgr.Module
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
                 var ls = _lv.SelectedItems.Cast<OptionX>().ToList();
-                if (await ls.Delete())
+                if (await ls.Delete(false))
+                {
                     Refresh();
+                    RbacDs.PromptForUpdateModel("基础选项删除成功");
+                }
+                else
+                {
+                    Kit.Warn("基础选项删除失败！");
+                }
             }
-            else if (await e.Data.To<OptionX>().Delete())
+            else
             {
-                Refresh();
+                if (await e.Data.To<OptionX>().Delete(false))
+                {
+                    Refresh();
+                    RbacDs.PromptForUpdateModel("基础选项删除成功");
+                }
+                else
+                {
+                    Kit.Warn("基础选项删除失败！");
+                }
             }
             _win.ChildForm.BackToHome();
-            RbacDs.PromptForUpdateModel();
         }
 
         void OnMoveUp(object sender, Mi e)
@@ -115,10 +129,14 @@ namespace Dt.Mgr.Module
             save.AcceptChanges();
             save.Dispidx = p_src.Dispidx;
 
-            if (await tbl.Save())
+            if (await tbl.Save(false))
             {
                 Refresh();
-                RbacDs.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel("调序成功");
+            }
+            else
+            {
+                Kit.Warn("调序失败！");
             }
         }
         #endregion

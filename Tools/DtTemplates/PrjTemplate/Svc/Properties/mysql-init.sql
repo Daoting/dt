@@ -152,7 +152,6 @@ CREATE TABLE `cm_menu` (
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_menu_dispidx` (`Dispidx`) USING BTREE COMMENT '确保唯一',
   KEY `fk_menu_parentid` (`ParentID`),
   CONSTRAINT `fk_menu_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_menu` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='业务菜单';

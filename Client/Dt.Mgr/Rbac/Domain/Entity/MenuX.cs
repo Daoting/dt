@@ -63,7 +63,7 @@ namespace Dt.Mgr.Rbac
                 }
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_menu有级联删除
-                var ls = await AtCm.FirstCol<long>("菜单-关联的角色", new { menuid = ID });
+                var ls = await AtCm.FirstCol<long>("菜单-关联的角色", new { ReleatedID = ID });
                 RbacDs.DelRoleDataVer(ls, RbacDs.PrefixMenu);
             });
         }

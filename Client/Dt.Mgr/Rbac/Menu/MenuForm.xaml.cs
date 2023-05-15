@@ -85,11 +85,15 @@ namespace Dt.Mgr.Rbac
         async void OnSave(object sender, Mi e)
         {
             var d = Data;
-            if (await d.Save())
+            if (await d.Save(false))
             {
                 _win.List.Update();
                 UpdateRelated(d);
-                RbacDs.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel("菜单保存成功");
+            }
+            else
+            {
+                Kit.Warn("菜单保存失败！");
             }
         }
 
@@ -111,11 +115,15 @@ namespace Dt.Mgr.Rbac
                 return;
             }
 
-            if (await d.Delete())
+            if (await d.Delete(false))
             {
                 Clear();
                 _win.List.Update();
-                RbacDs.PromptForUpdateModel();
+                RbacDs.PromptForUpdateModel("菜单删除成功");
+            }
+            else
+            {
+                Kit.Warn("菜单删除失败！");
             }
         }
 

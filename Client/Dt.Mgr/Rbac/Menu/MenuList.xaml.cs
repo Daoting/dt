@@ -119,6 +119,10 @@ namespace Dt.Mgr.Rbac
                 Update();
                 RbacDs.PromptForUpdateModel("菜单调序成功");
             }
+            else
+            {
+                Kit.Warn("菜单调序失败！");
+            }
         }
 
         void OnRefresh(object sender, Mi e)
