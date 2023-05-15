@@ -174,5 +174,60 @@ namespace Dt.Core
         /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
         internal abstract Task LoadImage(string p_path, Image p_img);
+
+        #region 用户相关回调，默认不支持，Dt.Mgr支持
+        /// <summary>
+        /// cookie自动登录
+        /// </summary>
+        /// <param name="p_showWarning">是否显示警告信息</param>
+        /// <returns></returns>
+        internal protected virtual Task<bool> LoginByCookie(bool p_showWarning)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 判断当前登录用户是否具有指定权限
+        /// </summary>
+        /// <param name="p_permission">权限名称</param>
+        /// <returns>true 表示有权限</returns>
+        internal protected virtual Task<bool> HasPermission(string p_permission)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 根据参数id获取用户参数值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_paramID"></param>
+        /// <returns></returns>
+        internal protected virtual Task<T> GetParamByID<T>(long p_paramID)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 根据参数名称获取用户参数值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_paramName"></param>
+        /// <returns></returns>
+        internal protected virtual Task<T> GetParamByName<T>(string p_paramName)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 保存用户参数值
+        /// </summary>
+        /// <param name="p_paramID"></param>
+        /// <param name="p_value"></param>
+        /// <returns></returns>
+        internal protected virtual Task<bool> SaveParams(string p_paramID, string p_value)
+        {
+            throw new NotSupportedException();
+        }
+        #endregion
     }
 }

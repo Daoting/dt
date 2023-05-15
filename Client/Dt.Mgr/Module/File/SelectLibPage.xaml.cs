@@ -30,7 +30,7 @@ namespace Dt.Mgr.Module
 
         void OnPublicFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = async () => await LobKit.HasPermission("公共文件管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await Kit.HasPermission("公共文件管理") };
             Forward(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
@@ -41,7 +41,7 @@ namespace Dt.Mgr.Module
 
         void OnResFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting { AllowEdit = async () => await LobKit.HasPermission("素材库管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await Kit.HasPermission("素材库管理") };
             Forward(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         

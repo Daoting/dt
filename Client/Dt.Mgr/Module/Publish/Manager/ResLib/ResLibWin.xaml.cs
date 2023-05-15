@@ -25,7 +25,7 @@ namespace Dt.Mgr.Module
         {
             var setting = new FileMgrSetting
             {
-                AllowEdit = async () => await LobKit.HasPermission("素材库管理"),
+                AllowEdit = async () => await Kit.HasPermission("素材库管理"),
                 SaveHistory = false,
             };
             _tab.NaviParams = new ResFileMgr { Setting = setting };

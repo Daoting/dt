@@ -50,7 +50,7 @@ namespace Dt.MgrDemo
             }
 
             // 已登录过先自动登录，未登录或登录失败时显示登录页
-            var suc = await LobKit.LoginByCookie();
+            var suc = await Kit.LoginByCookie();
             Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
         }
     }

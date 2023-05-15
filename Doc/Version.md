@@ -9,6 +9,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ### 变更
 * Cols不再继承KeyedCollection，支持重复列id
 * IFvCell移除IsHorStretch、添加ColSpan，FormPanel重写布局算法
+* 将LobKit登录用户相关回调放在Kit中
 
 ### 功能
 * 增加更新模型菜单项
