@@ -3,6 +3,9 @@
   "MySql": {
     "dt": "Server=10.10.1.2;Database=dt;Uid=dt;Pwd=dt;"
   },
+  "Oracle": {
+    "orcldt": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))"
+  },
   "RabbitMq": {
     "HostName": "10.10.1.2",
     "UserName": "dt",

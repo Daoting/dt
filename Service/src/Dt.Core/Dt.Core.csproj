@@ -9,11 +9,12 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="MySqlConnector" Version="2.2.1" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.100" />
 		<PackageReference Include="Autofac" Version="6.5.0" />
 		<PackageReference Include="Castle.Core" Version="5.1.0" />
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
-		<PackageReference Include="MySqlConnector" Version="2.2.1" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="Polly" Version="7.2.3" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
