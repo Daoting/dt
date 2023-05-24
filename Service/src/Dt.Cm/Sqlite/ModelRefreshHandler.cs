@@ -60,7 +60,8 @@ namespace Dt.Cm
             // 刷新表结构缓存
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            sb.AppendLine(DbSchema.LoadSchema());
+            DbSchema.RefreshSchema();
+            sb.AppendLine($"刷新表结构缓存 {watch.ElapsedMilliseconds} 毫秒");
 
             // 创建Data目录
             string path = SqliteModelHandler.ModelPath;
@@ -71,6 +72,10 @@ namespace Dt.Cm
 
             bool trace = Kit.TraceSql;
             Kit.TraceSql = false;
+
+            // 重复的表名
+            string repeat = "";
+
             try
             {
                 using (var conn = new SqliteConnection($"Data Source={dbFile}"))
@@ -80,20 +85,55 @@ namespace Dt.Cm
 
                     using var tran = conn.BeginTransaction();
 
-                    // 加载global.json中MySql配置节的所有库的表结构
+                    #region OmColumn
+                    // 加载global.json中配置的所有库的表结构
+
                     // 创建OmColumn表结构
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = _createOmColumn;
                         cmd.ExecuteNonQuery();
                     }
+
                     List<OmColumn> cols = new List<OmColumn>();
+                    // 加载默认库表结构
+                    LoadSchema(DbSchema.Schema.Values.ToList(), cols);
+
+                    // 存储所有库的表名，避免不同库表名重复
+                    HashSet<string> tbls = new HashSet<string>(DbSchema.Schema.Keys);
+
+                    // 默认库键名
+                    var dbConn = Kit.Config["DbConn"];
+
                     foreach (var item in Kit.Config.GetSection("MySql").GetChildren())
+                        //.Concat(Kit.Config.GetSection("Oracle").GetChildren())
+                        //.Concat(Kit.Config.GetSection("SqlServer").GetChildren()))
                     {
-                        LoadSchema(item.Value, cols);
+                        // 不再加载默认库表结构
+                        if (dbConn.Equals(item.Key, StringComparison.OrdinalIgnoreCase))
+                            continue;
+
+                        var schema = Kit.NewDataAccess(item.Key).GetDbSchema();
+                        List<TableSchema> ls = new List<TableSchema>();
+                        foreach (var si in schema)
+                        {
+                            if (!tbls.Contains(si.Key))
+                            {
+                                tbls.Add(si.Key);
+                                ls.Add(si.Value);
+                            }
+                            else
+                            {
+                                // 记录重复表名
+                                repeat += " " + si.Key;
+                            }
+                        }
+                        LoadSchema(ls, cols);
                     }
+
                     InsertSchema(conn, cols);
                     sb.AppendFormat("创建表OmColumn成功，导出{0}行\r\n", cols.Count);
+                    #endregion
 
                     // 加载service.json配置节 SqliteModel 的缓存数据
                     foreach (var item in Kit.Config.GetSection("SqliteModel").GetChildren())
@@ -150,6 +190,11 @@ namespace Dt.Cm
                 sb.AppendLine($"创建结束！用时{watch.ElapsedMilliseconds}毫秒");
 
                 Log.Information(sb.ToString());
+
+                if (repeat != "")
+                {
+                    Log.Error("以上更新模型时出现不同库的表名重复：\r\n" + repeat);
+                }
             }
             catch
             {
@@ -187,8 +232,7 @@ namespace Dt.Cm
                 return 0;
 
             // 连接不同的库
-            var da = Kit.GetService<IDataAccess>();
-            da.DbKey = dbConn;
+            var da = Kit.NewDataAccess(dbConn);
 
             Table tbl = await da.Query(select);
             if (tbl.Count == 0)
@@ -262,70 +306,39 @@ namespace Dt.Cm
         /// <summary>
         /// 构造表结构信息
         /// </summary>
-        /// <param name="p_connStr"></param>
+        /// <param name="p_schema"></param>
         /// <param name="p_cols"></param>
-        static void LoadSchema(string p_connStr, List<OmColumn> p_cols)
+        static void LoadSchema(List<TableSchema> p_schema, List<OmColumn> p_cols)
         {
-            using (MySqlConnection conn = new MySqlConnection(p_connStr))
+            OmColumn col;
+            foreach (var item in p_schema)
             {
-                conn.Open();
-                using (MySqlCommand cmd = conn.CreateCommand())
+                foreach (var cs in item.PrimaryKey)
                 {
-                    // 所有表名
-                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
-                    List<string> tbls = new List<string>();
-                    MySqlDataReader reader;
-                    using (reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                tbls.Add(reader.GetString(0).ToLower());
-                            }
-                        }
-                    }
+                    col = new OmColumn();
+                    col.TabName = item.Name;
+                    col.ColName = cs.Name;
+                    col.DbType = Table.GetColTypeAlias(cs.Type);
+                    col.IsPrimary = true;
+                    col.Length = cs.Length;
+                    col.Nullable = cs.Nullable;
+                    col.Comments = cs.Comments;
 
-                    // 表结构
-                    foreach (var tbl in tbls)
-                    {
-                        cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
-                        ReadOnlyCollection<DbColumn> cols;
-                        using (reader = cmd.ExecuteReader())
-                        {
-                            cols = reader.GetColumnSchema();
-                        }
+                    p_cols.Add(col);
+                }
 
-                        foreach (var colSchema in cols)
-                        {
-                            OmColumn col = new OmColumn();
-                            col.TabName = tbl;
-                            col.ColName = colSchema.ColumnName;
+                foreach (var cs in item.Columns)
+                {
+                    col = new OmColumn();
+                    col.TabName = item.Name;
+                    col.ColName = cs.Name;
+                    col.DbType = Table.GetColTypeAlias(cs.Type);
+                    col.IsPrimary = false;
+                    col.Length = cs.Length;
+                    col.Nullable = cs.Nullable;
+                    col.Comments = cs.Comments;
 
-                            // 可为null的值类型
-                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                                col.DbType = Table.GetColTypeAlias(typeof(Nullable<>).MakeGenericType(colSchema.DataType));
-                            else
-                                col.DbType = Table.GetColTypeAlias(colSchema.DataType);
-
-                            // 是否为主键
-                            if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
-                                col.IsPrimary = true;
-
-                            // character_maximum_length
-                            if (colSchema.ColumnSize.HasValue)
-                                col.Length = colSchema.ColumnSize.Value;
-
-                            if (colSchema.AllowDBNull.HasValue)
-                                col.Nullable = colSchema.AllowDBNull.Value;
-
-                            // 字段注释
-                            cmd.CommandText = $"SELECT column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
-                            col.Comments = (string)cmd.ExecuteScalar();
-
-                            p_cols.Add(col);
-                        }
-                    }
+                    p_cols.Add(col);
                 }
             }
         }

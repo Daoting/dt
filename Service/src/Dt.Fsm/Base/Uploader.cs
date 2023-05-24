@@ -84,7 +84,7 @@ namespace Dt.Fsm
             }
 
             SortedSetCache cache = null;
-            _da = Kit.GetService<IDataAccess>();
+            _da = Kit.NewDataAccess();
             _da.AutoClose = false;
 
             // 记录已成功接收的文件，以备后续异常时删除这些文件

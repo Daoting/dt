@@ -22,7 +22,7 @@ namespace Dt.Core
             UserID = p_invoker.UserID;
             Log = p_invoker.Log;
 
-            DataAccess = Kit.GetService<IDataAccess>();
+            DataAccess = Kit.NewDataAccess();
             DataAccess.AutoClose = false;
 
             // RabbitMQ或本地调用时，无法通过HttpContext获取Bag
@@ -38,7 +38,7 @@ namespace Dt.Core
             UserID = p_userID;
             Log = p_log;
 
-            DataAccess = Kit.GetService<IDataAccess>();
+            DataAccess = Kit.NewDataAccess();
             DataAccess.AutoClose = false;
         }
 

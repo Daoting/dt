@@ -6,6 +6,9 @@
   "Oracle": {
     "orcldt": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))"
   },
+  "SqlServer": {
+    "sqldt": ""
+  },
   "RabbitMq": {
     "HostName": "10.10.1.2",
     "UserName": "dt",

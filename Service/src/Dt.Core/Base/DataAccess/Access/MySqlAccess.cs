@@ -9,17 +9,13 @@
 #region 引用命名
 using Dapper;
 using MySqlConnector;
-using Serilog;
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
-using System.Linq;
+using System.Data.Common;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -33,11 +29,17 @@ namespace Dt.Core
     {
         #region 成员变量
         // 默认连接串
-        internal static string DefaultConnStr;
         static readonly Regex _sqlPattern = new Regex("[0-9a-zA-Z_$]");
 
         MySqlConnection _conn;
         MySqlTransaction _tran;
+        #endregion
+
+        #region 构造方法
+        public MySqlAccess(DbInfo p_info)
+        {
+            DbInfo = p_info;
+        }
         #endregion
 
         #region 属性
@@ -47,11 +49,11 @@ namespace Dt.Core
         public bool AutoClose { get; set; } = true;
 
         /// <summary>
-        /// 数据源键名，可根据键名获取连接串，在global.json的MySql节，null时使用默认数据源，打开数据库连接前设置有效
+        /// 数据库描述信息
         /// </summary>
-        public string DbKey { get; set; }
+        public DbInfo DbInfo { get; }
         #endregion
-        
+
         #region Table查询
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
@@ -969,7 +971,7 @@ namespace Dt.Core
             if (_conn == null)
             {
                 // 数据源键名在json配置中
-                _conn = new MySqlConnection(string.IsNullOrEmpty(DbKey) ? DefaultConnStr : Kit.Config["MySql:" + DbKey]);
+                _conn = new MySqlConnection(DbInfo.ConnStr);
                 await _conn.OpenAsync();
             }
         }
@@ -983,6 +985,200 @@ namespace Dt.Core
             {
                 _conn.Close();
                 _conn = null;
+            }
+        }
+        #endregion
+
+        #region 表结构
+        /// <summary>
+        /// 获取数据库所有表结构信息（已调整到最优）
+        /// </summary>
+        /// <returns>返回加载结果信息</returns>
+        public IReadOnlyDictionary<string, TableSchema> GetDbSchema()
+        {
+            var schema = new Dictionary<string, TableSchema>();
+            using (MySqlConnection conn = new MySqlConnection(DbInfo.ConnStr))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    // 原来通过系统表information_schema.columns获取结构，为准确获取与c#的映射类型采用当前方式
+
+                    // 所有表名
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                    List<string> tbls = new List<string>();
+                    MySqlDataReader reader;
+                    using (reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // 表名小写
+                                tbls.Add(reader.GetString(0).ToLower());
+                            }
+                        }
+                    }
+
+                    // 表结构
+                    foreach (var tbl in tbls)
+                    {
+                        TableSchema tblCols = new TableSchema(tbl);
+                        cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
+                        ReadOnlyCollection<DbColumn> cols;
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            cols = reader.GetColumnSchema();
+                        }
+
+                        foreach (var colSchema in cols)
+                        {
+                            TableCol col = new TableCol();
+                            col.Name = colSchema.ColumnName;
+
+                            // 可为null的值类型
+                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
+                                col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
+                            else
+                                col.Type = colSchema.DataType;
+
+                            // character_maximum_length
+                            if (colSchema.ColumnSize.HasValue)
+                                col.Length = colSchema.ColumnSize.Value;
+
+                            if (colSchema.AllowDBNull.HasValue)
+                                col.Nullable = colSchema.AllowDBNull.Value;
+
+                            // 读取列结构
+                            cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                            using (reader = cmd.ExecuteReader())
+                            {
+                                if (reader.HasRows && reader.Read())
+                                {
+                                    // 默认值
+                                    if (!reader.IsDBNull(0))
+                                        col.Default = reader.GetString(0);
+                                    // 字段注释
+                                    col.Comments = reader.GetString(1);
+                                }
+                            }
+
+                            // 是否为主键
+                            if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
+                                tblCols.PrimaryKey.Add(col);
+                            else
+                                tblCols.Columns.Add(col);
+                        }
+                        schema[tbl] = tblCols;
+                    }
+
+                    // 取Db时间
+                    cmd.CommandText = "select now()";
+                    Kit.Now = (DateTime)cmd.ExecuteScalar();
+                }
+            }
+            return schema;
+        }
+
+        /// <summary>
+        /// 获取数据库的所有表名
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllTableNames()
+        {
+            using (MySqlConnection conn = new MySqlConnection(DbInfo.ConnStr))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    // 所有表名
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                    List<string> tbls = new List<string>();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                // 表名小写
+                                tbls.Add(reader.GetString(0).ToLower());
+                            }
+                        }
+                    }
+                    return tbls;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取单个表结构信息
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public TableSchema GetTableSchema(string p_tblName)
+        {
+            using (MySqlConnection conn = new MySqlConnection(DbInfo.ConnStr))
+            {
+                conn.Open();
+                using (MySqlCommand cmd = conn.CreateCommand())
+                {
+                    MySqlDataReader reader;
+                    ReadOnlyCollection<DbColumn> cols;
+                    TableSchema tblCols = new TableSchema(p_tblName);
+
+                    // 表注释
+                    cmd.CommandText = $"SELECT table_comment FROM information_schema.tables WHERE table_schema='{conn.Database}' and table_name='{p_tblName}'";
+                    var comment = cmd.ExecuteScalar();
+                    if (comment != null)
+                        tblCols.Comment = comment.ToString();
+
+                    // 表结构
+                    cmd.CommandText = $"SELECT * FROM {p_tblName} WHERE false";
+                    using (reader = cmd.ExecuteReader())
+                    {
+                        cols = reader.GetColumnSchema();
+                    }
+
+                    foreach (var colSchema in cols)
+                    {
+                        TableCol col = new TableCol();
+                        col.Name = colSchema.ColumnName;
+
+                        // 可为null的值类型
+                        if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
+                            col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
+                        else
+                            col.Type = colSchema.DataType;
+
+                        // character_maximum_length
+                        if (colSchema.ColumnSize.HasValue)
+                            col.Length = colSchema.ColumnSize.Value;
+
+                        if (colSchema.AllowDBNull.HasValue)
+                            col.Nullable = colSchema.AllowDBNull.Value;
+
+                        // 读取列结构
+                        cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{p_tblName}' and column_name='{colSchema.ColumnName}'";
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows && reader.Read())
+                            {
+                                // 默认值
+                                if (!reader.IsDBNull(0))
+                                    col.Default = reader.GetString(0);
+                                // 字段注释
+                                col.Comments = reader.GetString(1);
+                            }
+                        }
+
+                        // 是否为主键
+                        if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
+                            tblCols.PrimaryKey.Add(col);
+                        else
+                            tblCols.Columns.Add(col);
+                    }
+                    return tblCols;
+                }
             }
         }
         #endregion

@@ -169,7 +169,7 @@ namespace Dt.Core
                         sb.Append(" union ");
                     sb.Append($"select id,`sql` from {name}_sql");
                 }
-                var ls = new MySqlAccess().Each(sb.ToString()).Result;
+                var ls = Kit.NewDataAccess().Each(sb.ToString()).Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");
@@ -217,6 +217,9 @@ namespace Dt.Core
                 {
                     _debugSql = $"select `sql` from {Kit.Stubs[0].SvcName}_sql where id=@id";
                 }
+
+                _debugDa = Kit.NewDataAccess();
+                _debugDa.AutoClose = false;
                 Log.Information("未缓存Sql, 调试状态");
             }
         }
@@ -264,6 +267,7 @@ namespace Dt.Core
         }
 
         static string _debugSql;
+        static IDataAccess _debugDa;
         /// <summary>
         /// 直接从库中查询Sql语句，只在调试时单机用！
         /// </summary>
@@ -278,7 +282,7 @@ namespace Dt.Core
             if (p_keyOrSql.IndexOf(' ') != -1)
                 return p_keyOrSql;
 
-            return new MySqlAccess().GetScalar<string>(_debugSql, new { id = p_keyOrSql }).Result;
+            return _debugDa.GetScalar<string>(_debugSql, new { id = p_keyOrSql }).Result;
         }
 
         #endregion

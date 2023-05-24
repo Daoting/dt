@@ -117,36 +117,12 @@ namespace Dt
             );
         }
 
-        public static Task<string> GetOneToManySql(string p_parentTbl, string p_parentTitle, List<string> p_childTbls, List<string> p_childTitles, bool p_blurQuery)
-        {
-            return new Rpc().Call<string>(
-                _svcUrl,
-                "SysTools.GetOneToManySql",
-                p_parentTbl,
-                p_parentTitle,
-                p_childTbls,
-                p_childTitles,
-                p_blurQuery
-            );
-        }
-
         public static Task<bool> ExistParentID(string p_tblName)
         {
             return new Rpc().Call<bool>(
                 _svcUrl,
                 "SysTools.ExistParentID",
                 p_tblName
-            );
-        }
-
-        public static Task<string> GetManyToManySql(string p_mainTbl, string p_mainTitle, bool p_blurQuery)
-        {
-            return new Rpc().Call<string>(
-                _svcUrl,
-                "SysTools.GetManyToManySql",
-                p_mainTbl,
-                p_mainTitle,
-                p_blurQuery
             );
         }
     }

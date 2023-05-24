@@ -12,15 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -170,7 +162,7 @@ namespace Dt.Core
 
         static void ApplyConfig()
         {
-            MySqlAccess.DefaultConnStr = _config["MySql:" + _config["DbConn"]];
+            InitDbInfo();
             TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
         }

@@ -205,17 +205,38 @@ namespace Dt.Core
 #endif
         #endregion
 
-        #region 其他
 #if SERVER
+        #region 表结构
+        /// <summary>
+        /// 获取数据库所有表结构信息
+        /// </summary>
+        /// <returns></returns>
+        IReadOnlyDictionary<string, TableSchema> GetDbSchema();
+
+        /// <summary>
+        /// 获取数据库的所有表名
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetAllTableNames();
+
+        /// <summary>
+        /// 获取单个表结构信息
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        TableSchema GetTableSchema(string p_tblName);
+        #endregion
+
+        #region 其他
         /// <summary>
         /// 调用每个公共方法后是否自动关闭连接，默认true，false时切记最后手动关闭！
         /// </summary>
         bool AutoClose { get; set; }
 
         /// <summary>
-        /// 数据源键名，可根据键名获取连接串，在global.json的MySql节，null时使用默认数据源，打开数据库连接前设置有效
+        /// 数据库描述信息
         /// </summary>
-        string DbKey { get; set; }
+        DbInfo DbInfo { get; }
 
         /// <summary>
         /// AutoClose为false时需要手动关闭连接，
@@ -223,7 +244,7 @@ namespace Dt.Core
         /// <param name="p_commitTrans">若有事务，true表提交，false表回滚</param>
         /// <returns></returns>
         Task Close(bool p_commitTrans);
-#endif
         #endregion
+#endif
     }
 }

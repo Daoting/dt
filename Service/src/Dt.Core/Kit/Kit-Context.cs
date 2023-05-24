@@ -20,20 +20,6 @@ namespace Dt.Core
         internal const string ContextItemName = "bag";
 
         /// <summary>
-        /// 获取当前http请求上下文的数据访问对象，无http请求上下文时返回新对象！AutoClose为true
-        /// <para>如：本地定时器调用或RabbitMQ消息产生的调用无http请求上下文</para>
-        /// </summary>
-        public static IDataAccess DataAccess
-        {
-            get
-            {
-                if (HttpContext != null)
-                    return ((Bag)HttpContext.Items[ContextItemName]).DataAccess;
-                return GetService<IDataAccess>();
-            }
-        }
-
-        /// <summary>
         /// 获取当前http请求上下文的用户标识，UI客户端rpc为实际登录用户ID
         /// <para>特殊标识：110为admin页面，111为RabbitMQ rpc，112为本地调用，113无http请求上下文</para>
         /// </summary>
