@@ -13,7 +13,7 @@ using Serilog;
 namespace Dt.Core
 {
     /// <summary>
-    /// 当前整个http请求期间的上下文
+    /// 数据访问对象
     /// </summary>
     public partial class Kit
     {

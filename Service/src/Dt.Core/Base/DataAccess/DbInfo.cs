@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Text.RegularExpressions;
 #endregion
 
 namespace Dt.Core
@@ -21,6 +22,13 @@ namespace Dt.Core
             Key = p_key;
             ConnStr = p_connStr;
             Type = p_type;
+
+            if (p_type == DatabaseType.MySql)
+                ParseMySql();
+            else if (p_type == DatabaseType.Oracle)
+                ParseOracle();
+            else
+                ParseSqlServer();
         }
 
         /// <summary>
@@ -37,6 +45,21 @@ namespace Dt.Core
         /// 数据库类型
         /// </summary>
         public DatabaseType Type { get; }
+
+        /// <summary>
+        /// 当前数据库连接用户名
+        /// </summary>
+        public string UserName { get; private set; }
+
+        /// <summary>
+        /// 数据库主机
+        /// </summary>
+        public string Host { get; private set; }
+
+        /// <summary>
+        /// 数据库名
+        /// </summary>
+        public string DbName { get; private set; }
 
         /// <summary>
         /// 根据数据源键名获取数据库描述信息
@@ -77,6 +100,67 @@ namespace Dt.Core
                 return new MySqlAccess(this);
 
             return new MySqlAccess(this);
+        }
+
+        void ParseOracle()
+        {
+            string[] parts = ConnStr.Split(';');
+            foreach (string part in parts)
+            {
+                int index = part.IndexOf('=');
+                if (index == -1)
+                    continue;
+
+                string key = part.Substring(0, index).Trim().ToLower();
+                if (key == "data source")
+                {
+                    string temp = part.Substring(index + 1).Trim();
+                    Match match = Regex.Match(temp, @"\([\s]*HOST[\s]*=[\s]*([^\)^\s)]+)");
+                    if (match != null && match.Groups.Count == 2)
+                        Host = match.Groups[1].Value;
+                    match = Regex.Match(temp, @"\([\s]*SERVICE_NAME[\s]*=[\s]*([^\)^\s)]+)");
+                    if (match != null && match.Groups.Count == 2)
+                        DbName = match.Groups[1].Value;
+                }
+                else if (key == "user id")
+                {
+                    UserName = part.Substring(index + 1).Trim().ToUpper();
+                }
+
+                if (DbName != null && UserName != null)
+                    break;
+            }
+        }
+
+        void ParseMySql()
+        {
+            string[] parts = ConnStr.Split(';');
+            foreach (string part in parts)
+            {
+                int index = part.IndexOf('=');
+                if (index == -1)
+                    continue;
+
+                string key = part.Substring(0, index).Trim().ToLower();
+                string val = part.Substring(index + 1).Trim();
+                if (key == "server")
+                {
+                    Host = val;
+                }
+                else if (key == "uid")
+                {
+                    UserName = val;
+                }
+                else if (key == "database")
+                {
+                    DbName = val;
+                }
+            }
+        }
+
+        void ParseSqlServer()
+        {
+
         }
     }
 
