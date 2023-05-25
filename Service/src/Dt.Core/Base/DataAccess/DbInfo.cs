@@ -97,7 +97,7 @@ namespace Dt.Core
                 return new MySqlAccess(this);
 
             if (Type == DatabaseType.Oracle)
-                return new MySqlAccess(this);
+                return new OracleAccess(this);
 
             return new MySqlAccess(this);
         }

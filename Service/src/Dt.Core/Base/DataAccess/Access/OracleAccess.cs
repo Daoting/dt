@@ -10,7 +10,6 @@
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.ObjectModel;
 using System.Data.Common;
-
 #endregion
 
 namespace Dt.Core
@@ -18,34 +17,26 @@ namespace Dt.Core
     /// <summary>
     /// Oracle数据库访问类，基于ODP.Net core，不用安装Oracle客户端
     /// </summary>
-    class OracleAccess //: IDataAccess
+    class OracleAccess : DataAccess
     {
         #region 构造方法
         public OracleAccess(DbInfo p_info)
+            : base(p_info)
         {
-            DbInfo = p_info;
         }
         #endregion
 
-        #region 属性
-        /// <summary>
-        /// 调用每个公共方法后是否自动关闭连接，默认true，false时切记最后手动关闭！
-        /// </summary>
-        public bool AutoClose { get; set; } = true;
-
-        /// <summary>
-        /// 数据库描述信息
-        /// </summary>
-        public DbInfo DbInfo { get; }
+        #region 创建连接
+        protected override DbConnection CreateConnection()
+            => new OracleConnection(DbInfo.ConnStr);
         #endregion
-
 
         #region 表结构
         /// <summary>
         /// 获取数据库所有表结构信息
         /// </summary>
         /// <returns>返回加载结果信息</returns>
-        public IReadOnlyDictionary<string, TableSchema> GetDbSchema()
+        public override IReadOnlyDictionary<string, TableSchema> GetDbSchema()
         {
             var schema = new Dictionary<string, TableSchema>();
             using (OracleConnection conn = new OracleConnection(DbInfo.ConnStr))
@@ -162,7 +153,7 @@ namespace Dt.Core
         /// 获取数据库的所有表名
         /// </summary>
         /// <returns></returns>
-        public List<string> GetAllTableNames()
+        public override List<string> GetAllTableNames()
         {
             using (OracleConnection conn = new OracleConnection(DbInfo.ConnStr))
             using (OracleCommand cmd = conn.CreateCommand())
@@ -190,7 +181,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        public TableSchema GetTableSchema(string p_tblName)
+        public override TableSchema GetTableSchema(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
