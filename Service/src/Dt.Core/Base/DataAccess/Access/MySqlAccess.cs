@@ -33,6 +33,10 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
+        const string _sqlAllTbls = "SELECT table_name FROM information_schema.tables WHERE table_schema='{0}'";
+        const string _sqlCols = "select * from {0} where 1!=1";
+        const string _sqlComment = "SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{0}' and table_name='{1}' and column_name='{2}'";
+
         /// <summary>
         /// 获取数据库所有表结构信息（已调整到最优）
         /// </summary>
@@ -47,7 +51,7 @@ namespace Dt.Core
                 // 原来通过系统表information_schema.columns获取结构，为准确获取与c#的映射类型采用当前方式
 
                 // 所有表名
-                cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                cmd.CommandText = string.Format(_sqlAllTbls, conn.Database);
                 List<string> tbls = new List<string>();
                 MySqlDataReader reader;
                 using (reader = cmd.ExecuteReader())
@@ -66,7 +70,7 @@ namespace Dt.Core
                 foreach (var tbl in tbls)
                 {
                     TableSchema tblCols = new TableSchema(tbl);
-                    cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
+                    cmd.CommandText = string.Format(_sqlCols, tbl);
                     ReadOnlyCollection<DbColumn> cols;
                     using (reader = cmd.ExecuteReader())
                     {
@@ -92,7 +96,7 @@ namespace Dt.Core
                             col.Nullable = colSchema.AllowDBNull.Value;
 
                         // 读取列结构
-                        cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                        cmd.CommandText = string.Format(_sqlComment, conn.Database, tbl, colSchema.ColumnName);
                         using (reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows && reader.Read())
@@ -101,7 +105,8 @@ namespace Dt.Core
                                 if (!reader.IsDBNull(0))
                                     col.Default = reader.GetString(0);
                                 // 字段注释
-                                col.Comments = reader.GetString(1);
+                                if (!reader.IsDBNull(1))
+                                    col.Comments = reader.GetString(1);
                             }
                         }
 
@@ -133,7 +138,7 @@ namespace Dt.Core
                 conn.Open();
 
                 // 所有表名
-                cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                cmd.CommandText = string.Format(_sqlAllTbls, conn.Database);
                 List<string> tbls = new List<string>();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -176,7 +181,7 @@ namespace Dt.Core
                     tblCols.Comment = comment.ToString();
 
                 // 表结构
-                cmd.CommandText = $"SELECT * FROM {p_tblName} WHERE false";
+                cmd.CommandText = string.Format(_sqlCols, p_tblName);
                 using (reader = cmd.ExecuteReader())
                 {
                     cols = reader.GetColumnSchema();
@@ -201,7 +206,7 @@ namespace Dt.Core
                         col.Nullable = colSchema.AllowDBNull.Value;
 
                     // 读取列结构
-                    cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{p_tblName}' and column_name='{colSchema.ColumnName}'";
+                    cmd.CommandText = string.Format(_sqlComment, conn.Database, p_tblName, colSchema.ColumnName); 
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows && reader.Read())

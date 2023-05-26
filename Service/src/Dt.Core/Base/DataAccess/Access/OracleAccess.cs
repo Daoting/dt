@@ -32,6 +32,11 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
+        const string _sqlAllTbls = "SELECT table_name FROM user_tables";
+        const string _sqlCols = "select * from {0} where 1!=1";
+        const string _sqlComment = "SELECT a.data_default, b.comments FROM user_tab_columns a, user_col_comments b WHERE a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
+        const string _sqlPk = "select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{0}'";
+        
         /// <summary>
         /// 获取数据库所有表结构信息
         /// </summary>
@@ -45,31 +50,8 @@ namespace Dt.Core
                 conn.Open();
                 OracleDataReader reader = null;
 
-                // 所有主键信息
-                cmd.CommandText = "select cu.table_name,cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P'";
-                Dictionary<string, string> primaryKeys = new Dictionary<string, string>();
-                using (reader = cmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            string tblKey = reader.GetString(reader.GetOrdinal("table_name")).ToLower();
-                            string col = reader.GetString(reader.GetOrdinal("column_name"));
-                            if (primaryKeys.ContainsKey(tblKey))
-                            {
-                                primaryKeys[tblKey] += "+" + col;
-                            }
-                            else
-                            {
-                                primaryKeys[tblKey] = col;
-                            }
-                        }
-                    }
-                }
-
                 // 所有表名
-                cmd.CommandText = "SELECT table_name FROM user_tables";
+                cmd.CommandText = _sqlAllTbls;
                 List<string> tbls = new List<string>();
                 using (reader = cmd.ExecuteReader())
                 {
@@ -87,7 +69,7 @@ namespace Dt.Core
                 foreach (var tbl in tbls)
                 {
                     // 建表时的SQL中表名用引号括起来了，则此处报 Oracle ORA-00942: table or view does not exist
-                    cmd.CommandText = $"SELECT * FROM {tbl} WHERE 1!=1";
+                    cmd.CommandText = string.Format(_sqlCols, tbl);
 
                     TableSchema tblCols = new TableSchema(tbl);
                     ReadOnlyCollection<DbColumn> cols;
@@ -96,8 +78,19 @@ namespace Dt.Core
                         cols = reader.GetColumnSchema();
                     }
 
-                    // 取表主键串
-                    primaryKeys.TryGetValue(tbl, out var priKey);
+                    // 表的主键
+                    cmd.CommandText = string.Format(_sqlPk, tbl.ToUpper());
+                    List<string> pk = new List<string>();
+                    using (reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                pk.Add(reader.GetString(0));
+                            }
+                        }
+                    }
 
                     foreach (var colSchema in cols)
                     {
@@ -118,7 +111,7 @@ namespace Dt.Core
                             col.Nullable = colSchema.AllowDBNull.Value;
 
                         // 读取列结构
-                        cmd.CommandText = $"SELECT a.data_default, b.comments FROM user_tab_columns a, user_col_comments b WHERE a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{tbl.ToUpper()}' AND a.column_name='{colSchema.ColumnName}'";
+                        cmd.CommandText = string.Format(_sqlComment, tbl.ToUpper(), colSchema.ColumnName);
                         using (reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows && reader.Read())
@@ -134,7 +127,7 @@ namespace Dt.Core
                         }
 
                         // 是否为主键
-                        if (!string.IsNullOrEmpty(priKey) && priKey.Contains(colSchema.ColumnName))
+                        if (pk.Contains(colSchema.ColumnName))
                             tblCols.PrimaryKey.Add(col);
                         else
                             tblCols.Columns.Add(col);
@@ -159,7 +152,7 @@ namespace Dt.Core
             using (OracleCommand cmd = conn.CreateCommand())
             {
                 conn.Open();
-                cmd.CommandText = "SELECT table_name FROM user_tables";
+                cmd.CommandText = _sqlAllTbls;
                 List<string> tbls = new List<string>();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -191,36 +184,34 @@ namespace Dt.Core
             {
                 conn.Open();
                 OracleDataReader reader = null;
+                TableSchema tblCols = new TableSchema(p_tblName);
 
-                // 主键
-                cmd.CommandText = $"select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{p_tblName.ToUpper()}'";
-                string primaryKey = null;
+                // 表注释
+                cmd.CommandText = $"select comments from user_tab_comments where table_name='{p_tblName.ToUpper()}'";
+                var comment = cmd.ExecuteScalar();
+                if (comment != null)
+                    tblCols.Comment = comment.ToString();
+
+                // 所有列
+                ReadOnlyCollection<DbColumn> cols;
+                cmd.CommandText = string.Format(_sqlCols, p_tblName);
+                using (reader = cmd.ExecuteReader())
+                {
+                    cols = reader.GetColumnSchema();
+                }
+
+                // 表的主键
+                cmd.CommandText = string.Format(_sqlPk, p_tblName.ToUpper());
+                List<string> pk = new List<string>();
                 using (reader = cmd.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            string col = reader.GetString(0);
-                            if (primaryKey == null)
-                            {
-                                primaryKey = col;
-                            }
-                            else
-                            {
-                                primaryKey += "+" + col;
-                            }
+                            pk.Add(reader.GetString(0));
                         }
                     }
-                }
-
-                // 所有列
-                TableSchema tblCols = new TableSchema(p_tblName);
-                ReadOnlyCollection<DbColumn> cols;
-                cmd.CommandText = $"SELECT * FROM {p_tblName} WHERE 1!=1";
-                using (reader = cmd.ExecuteReader())
-                {
-                    cols = reader.GetColumnSchema();
                 }
 
                 foreach (var colSchema in cols)
@@ -242,7 +233,7 @@ namespace Dt.Core
                         col.Nullable = colSchema.AllowDBNull.Value;
 
                     // 读取列结构
-                    cmd.CommandText = $"SELECT a.data_default, b.comments FROM user_tab_columns a, user_col_comments b WHERE a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{p_tblName.ToUpper()}' AND a.column_name='{colSchema.ColumnName}'";
+                    cmd.CommandText = string.Format(_sqlComment, p_tblName.ToUpper(), colSchema.ColumnName);
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows && reader.Read())
@@ -258,7 +249,7 @@ namespace Dt.Core
                     }
 
                     // 是否为主键
-                    if (!string.IsNullOrEmpty(primaryKey) && primaryKey.Contains(colSchema.ColumnName))
+                    if (pk.Contains(colSchema.ColumnName))
                         tblCols.PrimaryKey.Add(col);
                     else
                         tblCols.Columns.Add(col);

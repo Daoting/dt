@@ -7,7 +7,7 @@
     "orcldt": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))"
   },
   "SqlServer": {
-    "sqldt": ""
+    "sqldt": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=sa;Password=dt;Encrypt=True;TrustServerCertificate=True;"
   },
   "RabbitMq": {
     "HostName": "10.10.1.2",
