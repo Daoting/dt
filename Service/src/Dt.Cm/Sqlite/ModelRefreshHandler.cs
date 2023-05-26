@@ -103,7 +103,7 @@ namespace Dt.Cm
                     HashSet<string> tbls = new HashSet<string>(DbSchema.Schema.Keys);
 
                     // 默认库键名
-                    var dbConn = Kit.Config["DbConn"];
+                    var dbConn = Kit.Config["DbKey"];
 
                     foreach (var item in Kit.Config.GetSection("MySql").GetChildren())
                         //.Concat(Kit.Config.GetSection("Oracle").GetChildren())
@@ -226,7 +226,7 @@ namespace Dt.Cm
 
         async Task<int> ImportData(string p_tblName, SqliteConnection p_conn)
         {
-            var dbConn = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbConn");
+            var dbConn = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbKey");
             var select = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:Data");
             if (string.IsNullOrEmpty(select))
                 return 0;

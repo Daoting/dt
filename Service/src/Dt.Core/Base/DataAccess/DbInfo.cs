@@ -17,18 +17,19 @@ namespace Dt.Core
     /// </summary>
     public class DbInfo
     {
-        public DbInfo(string p_key, string p_connStr, DatabaseType p_type)
+        public DbInfo(string p_key, string p_connStr, DatabaseType p_type, bool p_export)
         {
             Key = p_key;
             ConnStr = p_connStr;
             Type = p_type;
+            ExportToModel = p_export;
 
-            if (p_type == DatabaseType.MySql)
-                ParseMySql();
-            else if (p_type == DatabaseType.Oracle)
-                ParseOracle();
-            else
-                ParseSqlServer();
+            //if (p_type == DatabaseType.MySql)
+            //    ParseMySql();
+            //else if (p_type == DatabaseType.Oracle)
+            //    ParseOracle();
+            //else
+            //    ParseSqlServer();
         }
 
         /// <summary>
@@ -47,45 +48,9 @@ namespace Dt.Core
         public DatabaseType Type { get; }
 
         /// <summary>
-        /// 当前数据库连接用户名
+        /// 是否将表结构导出到模型库
         /// </summary>
-        public string UserName { get; private set; }
-
-        /// <summary>
-        /// 数据库主机
-        /// </summary>
-        public string Host { get; private set; }
-
-        /// <summary>
-        /// 数据库名
-        /// </summary>
-        public string DbName { get; private set; }
-
-        /// <summary>
-        /// 根据数据源键名获取数据库描述信息
-        /// </summary>
-        /// <param name="p_dbKey">数据源键名</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public static DbInfo ReadConfig(string p_dbKey)
-        {
-            if (string.IsNullOrWhiteSpace(p_dbKey))
-                throw new Exception("数据源键名不可为空！");
-
-            var info = Kit.Config["MySql:" + p_dbKey];
-            if (!string.IsNullOrEmpty(info))
-                return new DbInfo(p_dbKey, info, DatabaseType.MySql);
-
-            info = Kit.Config["Oracle:" + p_dbKey];
-            if (!string.IsNullOrEmpty(info))
-                return new DbInfo(p_dbKey, info, DatabaseType.Oracle);
-
-            info = Kit.Config["SqlServer:" + p_dbKey];
-            if (!string.IsNullOrEmpty(info))
-                return new DbInfo(p_dbKey, info, DatabaseType.SqlServer);
-
-            throw new Exception($"数据源键名[{p_dbKey}]在global.json无配置！");
-        }
+        public bool ExportToModel { get; }
 
         /// <summary>
         /// 创建数据访问对象
@@ -99,8 +64,24 @@ namespace Dt.Core
             if (Type == DatabaseType.Oracle)
                 return new OracleAccess(this);
 
-            return new MySqlAccess(this);
+            return new SqlServerAccess(this);
         }
+
+        /*
+        /// <summary>
+        /// 当前数据库连接用户名
+        /// </summary>
+        public string UserName { get; private set; }
+
+        /// <summary>
+        /// 数据库主机
+        /// </summary>
+        public string Host { get; private set; }
+
+        /// <summary>
+        /// 数据库名
+        /// </summary>
+        public string DbName { get; private set; }
 
         void ParseOracle()
         {
@@ -162,6 +143,7 @@ namespace Dt.Core
         {
 
         }
+        */
     }
 
     /// <summary>

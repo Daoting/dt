@@ -1,13 +1,21 @@
 ﻿{
   "App": "dt",
-  "MySql": {
-    "dt": "Server=10.10.1.2;Database=dt;Uid=dt;Pwd=dt;"
-  },
-  "Oracle": {
-    "orcldt": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))"
-  },
-  "SqlServer": {
-    "sqldt": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=sa;Password=dt;Encrypt=True;TrustServerCertificate=True;"
+  "Database": {
+    "mydt": {
+      "ConnStr": "Server=10.10.1.2;Database=dt;Uid=dt;Pwd=dt;",
+      "DbType": "mysql",
+      "ExportToModel": true
+    },
+    "orcldt": {
+      "ConnStr": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))",
+      "DbType": "oracle",
+      "ExportToModel": true
+    },
+    "sqldt": {
+      "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=sa;Password=dt;Encrypt=True;TrustServerCertificate=True;",
+      "DbType": "sqlserver",
+      "ExportToModel": true
+    }
   },
   "RabbitMq": {
     "HostName": "10.10.1.2",

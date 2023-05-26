@@ -1,5 +1,5 @@
 ﻿{
-  "DbConn": "dt",
+  "DbKey": "mydt",
   "CacheSql": false,
   "TraceSql": false,
   "TraceRpc": false,
