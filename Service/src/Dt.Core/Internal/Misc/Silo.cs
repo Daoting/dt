@@ -162,14 +162,26 @@ namespace Dt.Core
         {
             try
             {
+                var da = Kit.NewDataAccess();
                 StringBuilder sb = new StringBuilder();
                 foreach (var name in Kit.SvcNames)
                 {
-                    if (sb.Length > 0)
-                        sb.Append(" union ");
-                    sb.Append($"select id,`sql` from {name}_sql");
+                    var tbl = name + "_sql";
+                    if (DbSchema.Schema.ContainsKey(tbl))
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(" union ");
+
+                        if (da.DbInfo.Type == DatabaseType.MySql)
+                            sb.Append($"select id,`sql` from {tbl}");
+                        else if (da.DbInfo.Type == DatabaseType.Oracle)
+                            sb.Append($"select id,\"sql\" from {tbl}");
+                        else
+                            sb.Append($"select id,[sql] from {tbl}");
+                    }
                 }
-                var ls = Kit.NewDataAccess().Each(sb.ToString()).Result;
+
+                var ls = da.Each(sb.ToString()).Result;
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");
@@ -196,6 +208,8 @@ namespace Dt.Core
             else
             {
                 Kit.Sql = GetDebugSql;
+                _debugDa = Kit.NewDataAccess();
+                _debugDa.AutoClose = false;
 
                 // 生成查询sql
                 if (Kit.Stubs.Length > 1)
@@ -203,24 +217,35 @@ namespace Dt.Core
                     StringBuilder sb = new StringBuilder();
                     foreach (var name in Kit.SvcNames)
                     {
-                        string tbl = name + "_sql";
-                        if (DbSchema.Schema.ContainsKey(tbl))
+                        if (DbSchema.Schema.ContainsKey(name + "_sql"))
                         {
                             if (sb.Length > 0)
                                 sb.Append(" union ");
-                            sb.Append($"select `sql` from {tbl} where id=@id");
+                            sb.Append(GetSelectStr(name, _debugDa.DbInfo.Type));
                         }
                     }
-                    _debugSql = $"select * from ({sb}) a LIMIT 1";
+                    _debugSql = sb.ToString();
                 }
                 else
                 {
-                    _debugSql = $"select `sql` from {Kit.Stubs[0].SvcName}_sql where id=@id";
+                    _debugSql = GetSelectStr(Kit.Stubs[0].SvcName, _debugDa.DbInfo.Type);
                 }
-
-                _debugDa = Kit.NewDataAccess();
-                _debugDa.AutoClose = false;
                 Log.Information("未缓存Sql, 调试状态");
+            }
+
+            string GetSelectStr(string p_svc, DatabaseType p_type)
+            {
+                switch (p_type)
+                {
+                    case DatabaseType.MySql:
+                        return $"select `sql` from {p_svc}_sql where id=@id";
+
+                    case DatabaseType.Oracle:
+                        return $"select \"sql\" from {p_svc}_sql where id=:id";
+
+                    default:
+                        return $"select [sql] from {p_svc}_sql where id=@id";
+                }
             }
         }
 
@@ -284,7 +309,6 @@ namespace Dt.Core
 
             return _debugDa.GetScalar<string>(_debugSql, new { id = p_keyOrSql }).Result;
         }
-
         #endregion
 
         #region Startup
@@ -327,7 +351,7 @@ namespace Dt.Core
                         continue;
                     }
                 }
-                
+
                 // 注册事件处理
                 if (IsEventHandler(type, p_builder))
                     continue;
