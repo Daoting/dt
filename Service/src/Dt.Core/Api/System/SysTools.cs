@@ -45,11 +45,11 @@ namespace Dt.Core
 
             StringBuilder sb = new StringBuilder();
 
-            if (!string.IsNullOrEmpty(schema.Comment))
+            if (!string.IsNullOrEmpty(schema.Comments))
             {
                 // 取注释中的服务名，和字段注释中的枚举类型相同
                 string svc = null;
-                var match = Regex.Match(schema.Comment, @"^#[^\s#]+");
+                var match = Regex.Match(schema.Comments, @"^#[^\s#]+");
                 if (match.Success)
                     svc = match.Value.Trim('#');
 
@@ -58,9 +58,9 @@ namespace Dt.Core
                 AppendTabSpace(sb, 1);
                 sb.Append("/// ");
                 if (svc != null)
-                    sb.AppendLine(schema.Comment.Substring(svc.Length + 2));
+                    sb.AppendLine(schema.Comments.Substring(svc.Length + 2));
                 else
-                    sb.AppendLine(schema.Comment);
+                    sb.AppendLine(schema.Comments);
                 AppendTabSpace(sb, 1);
                 sb.AppendLine("/// </summary>");
 

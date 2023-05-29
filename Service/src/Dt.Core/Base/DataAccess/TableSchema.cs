@@ -50,7 +50,7 @@ namespace Dt.Core
         /// <summary>
         /// 表注释
         /// </summary>
-        public string Comment { get; set; }
+        public string Comments { get; set; }
 
         /// <summary>
         /// 根据主键查询实体的sql，只支持单主键

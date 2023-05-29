@@ -199,7 +199,7 @@ namespace Dt.Core
                 cmd.CommandText = $"select g.[value] from sys.tables a left join sys.extended_properties g on (a.object_id = g.major_id AND g.minor_id = 0) where a.name='{p_tblName}'";
                 var comment = cmd.ExecuteScalar();
                 if (comment != null)
-                    tblCols.Comment = comment.ToString();
+                    tblCols.Comments = comment.ToString();
 
                 // 表结构
                 cmd.CommandText = string.Format(_sqlCols, p_tblName);

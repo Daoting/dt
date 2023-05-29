@@ -178,7 +178,7 @@ namespace Dt.Core
                 cmd.CommandText = $"SELECT table_comment FROM information_schema.tables WHERE table_schema='{conn.Database}' and table_name='{p_tblName}'";
                 var comment = cmd.ExecuteScalar();
                 if (comment != null)
-                    tblCols.Comment = comment.ToString();
+                    tblCols.Comments = comment.ToString();
 
                 // 表结构
                 cmd.CommandText = string.Format(_sqlCols, p_tblName);

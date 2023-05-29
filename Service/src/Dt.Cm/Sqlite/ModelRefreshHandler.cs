@@ -31,16 +31,23 @@ namespace Dt.Cm
     public class ModelRefreshHandler : IRemoteEventHandler<ModelRefreshEvent>
     {
         #region 成员变量
+        // 表名及列的数据少，不需要索引！！！
+        const string _createOmTable = "CREATE TABLE OmTable (\n" +
+                                            "ID integer primary key not null,\n" +
+                                            "Name text,\n" +
+                                            "Type integer,\n" +
+                                            "DbKey text)";
+        const string _insertOmTable = "insert into OmTable (ID,Name,Type,DbKey) values (:ID,:Name,:Type,:DbKey)";
+
         const string _createOmColumn = "CREATE TABLE OmColumn (\n" +
                                             "ID integer primary key autoincrement not null,\n" +
-                                            "TabName text,\n" +
+                                            "TableID integer,\n" +
                                             "ColName text,\n" +
                                             "DbType text,\n" +
                                             "IsPrimary integer,\n" +
                                             "Length integer,\n" +
-                                            "Nullable integer,\n" +
-                                            "Comments text)";
-        const string _insertOmColumn = "insert into OmColumn (TabName,ColName,DbType,IsPrimary,Length,Nullable,Comments) values (:TabName,:ColName,:DbType,:IsPrimary,:Length,:Nullable,:Comments)";
+                                            "Nullable integer)";
+        const string _insertOmColumn = "insert into OmColumn (TableID,ColName,DbType,IsPrimary,Length,Nullable) values (:TableID,:ColName,:DbType,:IsPrimary,:Length,:Nullable)";
         #endregion
 
         public async Task Handle(ModelRefreshEvent p_event)
@@ -73,9 +80,6 @@ namespace Dt.Cm
             bool trace = Kit.TraceSql;
             Kit.TraceSql = false;
 
-            // 重复的表名
-            string repeat = "";
-
             try
             {
                 using (var conn = new SqliteConnection($"Data Source={dbFile}"))
@@ -85,54 +89,40 @@ namespace Dt.Cm
 
                     using var tran = conn.BeginTransaction();
 
-                    #region OmColumn
-                    // 加载global.json中配置的所有库的表结构
+                    #region 表结构模型
+                    // 加载global.json配置中 ExportToModel=true 的所有库的表结构
 
-                    // 创建OmColumn表结构
+                    // 创建 OmTable OmColumn 表结构
                     using (var cmd = conn.CreateCommand())
                     {
+                        cmd.CommandText = _createOmTable;
+                        cmd.ExecuteNonQuery();
+
                         cmd.CommandText = _createOmColumn;
                         cmd.ExecuteNonQuery();
                     }
 
+                    List<OmTable> tbls = new List<OmTable>();
                     List<OmColumn> cols = new List<OmColumn>();
-                    // 加载默认库表结构
-                    LoadSchema(DbSchema.Schema.Values.ToList(), cols);
 
-                    // 存储所有库的表名，避免不同库表名重复
-                    HashSet<string> tbls = new HashSet<string>(DbSchema.Schema.Keys);
+                    // 加载默认库表结构
+                    LoadSchema(DbSchema.Schema, tbls, cols, Kit.DefaultDbInfo);
 
                     // 默认库键名
                     var dbConn = Kit.Config["DbKey"];
-
-                    foreach (var item in Kit.Config.GetSection("MySql").GetChildren())
-                        //.Concat(Kit.Config.GetSection("Oracle").GetChildren())
-                        //.Concat(Kit.Config.GetSection("SqlServer").GetChildren()))
+                    foreach (var item in Kit.AllDbInfo)
                     {
-                        // 不再加载默认库表结构
-                        if (dbConn.Equals(item.Key, StringComparison.OrdinalIgnoreCase))
+                        // 排除默认库表结构 和 不需要导出的库
+                        if (dbConn.Equals(item.Key, StringComparison.OrdinalIgnoreCase)
+                            || !item.Value.ExportToModel)
                             continue;
 
                         var schema = Kit.NewDataAccess(item.Key).GetDbSchema();
-                        List<TableSchema> ls = new List<TableSchema>();
-                        foreach (var si in schema)
-                        {
-                            if (!tbls.Contains(si.Key))
-                            {
-                                tbls.Add(si.Key);
-                                ls.Add(si.Value);
-                            }
-                            else
-                            {
-                                // 记录重复表名
-                                repeat += " " + si.Key;
-                            }
-                        }
-                        LoadSchema(ls, cols);
+                        LoadSchema(schema, tbls, cols, item.Value);
                     }
 
-                    InsertSchema(conn, cols);
-                    sb.AppendFormat("创建表OmColumn成功，导出{0}行\r\n", cols.Count);
+                    InsertSchema(conn, tbls, cols);
+                    sb.AppendFormat("导出表结构：{0}张表，{1}个字段\r\n", tbls.Count, cols.Count);
                     #endregion
 
                     // 加载service.json配置节 SqliteModel 的缓存数据
@@ -190,11 +180,6 @@ namespace Dt.Cm
                 sb.AppendLine($"创建结束！用时{watch.ElapsedMilliseconds}毫秒");
 
                 Log.Information(sb.ToString());
-
-                if (repeat != "")
-                {
-                    Log.Error("以上更新模型时出现不同库的表名重复：\r\n" + repeat);
-                }
             }
             catch
             {
@@ -307,22 +292,31 @@ namespace Dt.Cm
         /// 构造表结构信息
         /// </summary>
         /// <param name="p_schema"></param>
+        /// <param name="p_tbls"></param>
         /// <param name="p_cols"></param>
-        static void LoadSchema(List<TableSchema> p_schema, List<OmColumn> p_cols)
+        /// <param name="p_dbInfo"></param>
+        static void LoadSchema(IReadOnlyDictionary<string, TableSchema> p_schema, List<OmTable> p_tbls, List<OmColumn> p_cols, DbInfo p_dbInfo)
         {
             OmColumn col;
-            foreach (var item in p_schema)
+            foreach (var item in p_schema.Values)
             {
+                var tbl = new OmTable();
+                tbl.ID = p_tbls.Count + 1;
+                tbl.Name = item.Name;
+                tbl.Type = (int)p_dbInfo.Type;
+                tbl.DbKey = p_dbInfo.Key;
+
+                p_tbls.Add(tbl);
+
                 foreach (var cs in item.PrimaryKey)
                 {
                     col = new OmColumn();
-                    col.TabName = item.Name;
+                    col.TableID = tbl.ID;
                     col.ColName = cs.Name;
                     col.DbType = Table.GetColTypeAlias(cs.Type);
                     col.IsPrimary = true;
                     col.Length = cs.Length;
                     col.Nullable = cs.Nullable;
-                    col.Comments = cs.Comments;
 
                     p_cols.Add(col);
                 }
@@ -330,13 +324,12 @@ namespace Dt.Cm
                 foreach (var cs in item.Columns)
                 {
                     col = new OmColumn();
-                    col.TabName = item.Name;
+                    col.TableID = tbl.ID;
                     col.ColName = cs.Name;
                     col.DbType = Table.GetColTypeAlias(cs.Type);
                     col.IsPrimary = false;
                     col.Length = cs.Length;
                     col.Nullable = cs.Nullable;
-                    col.Comments = cs.Comments;
 
                     p_cols.Add(col);
                 }
@@ -347,32 +340,72 @@ namespace Dt.Cm
         /// 批量插入表结构信息
         /// </summary>
         /// <param name="p_conn"></param>
+        /// <param name="p_tbls"></param>
         /// <param name="p_cols"></param>
-        static void InsertSchema(SqliteConnection p_conn, List<OmColumn> p_cols)
+        static void InsertSchema(SqliteConnection p_conn, List<OmTable> p_tbls, List<OmColumn> p_cols)
         {
             using (var cmd = p_conn.CreateCommand())
             {
-                cmd.Parameters.Add("TabName", SqliteType.Text);
+                cmd.Parameters.Add("ID", SqliteType.Integer);
+                cmd.Parameters.Add("Name", SqliteType.Text);
+                cmd.Parameters.Add("Type", SqliteType.Integer);
+                cmd.Parameters.Add("DbKey", SqliteType.Text);
+
+                cmd.CommandText = _insertOmTable;
+                foreach (var tbl in p_tbls)
+                {
+                    cmd.Parameters["ID"].Value = tbl.ID;
+                    cmd.Parameters["Name"].Value = tbl.Name;
+                    cmd.Parameters["Type"].Value = tbl.Type;
+                    cmd.Parameters["DbKey"].Value = tbl.DbKey;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            using (var cmd = p_conn.CreateCommand())
+            {
+                cmd.Parameters.Add("TableID", SqliteType.Integer);
                 cmd.Parameters.Add("ColName", SqliteType.Text);
                 cmd.Parameters.Add("DbType", SqliteType.Text);
                 cmd.Parameters.Add("IsPrimary", SqliteType.Integer);
                 cmd.Parameters.Add("Length", SqliteType.Integer);
                 cmd.Parameters.Add("Nullable", SqliteType.Integer);
-                cmd.Parameters.Add("Comments", SqliteType.Text);
 
                 cmd.CommandText = _insertOmColumn;
                 foreach (var col in p_cols)
                 {
-                    cmd.Parameters["TabName"].Value = col.TabName;
+                    cmd.Parameters["TableID"].Value = col.TableID;
                     cmd.Parameters["ColName"].Value = col.ColName;
                     cmd.Parameters["DbType"].Value = col.DbType;
                     cmd.Parameters["IsPrimary"].Value = col.IsPrimary;
                     cmd.Parameters["Length"].Value = col.Length;
                     cmd.Parameters["Nullable"].Value = col.Nullable;
-                    cmd.Parameters["Comments"].Value = col.Comments;
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        class OmTable
+        {
+            /// <summary>
+            /// 主键
+            /// </summary>
+            public int ID { get; set; }
+
+            /// <summary>
+            /// 表名
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// 数据库类型
+            /// </summary>
+            public int Type { get; set; }
+
+            /// <summary>
+            /// 数据源键名
+            /// </summary>
+            public string DbKey { get; set; }
         }
 
         class OmColumn
@@ -383,9 +416,9 @@ namespace Dt.Cm
             public int ID { get; set; }
 
             /// <summary>
-            /// 所属表名
+            /// 所属表ID
             /// </summary>
-            public string TabName { get; set; }
+            public int TableID { get; set; }
 
             /// <summary>
             /// 列名
@@ -411,11 +444,6 @@ namespace Dt.Cm
             /// 列是否允许为空
             /// </summary>
             public bool Nullable { get; set; }
-
-            /// <summary>
-            /// 列注释
-            /// </summary>
-            public string Comments { get; set; }
         }
     }
 }

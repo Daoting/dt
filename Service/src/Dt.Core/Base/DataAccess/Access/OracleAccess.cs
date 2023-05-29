@@ -190,7 +190,7 @@ namespace Dt.Core
                 cmd.CommandText = $"select comments from user_tab_comments where table_name='{p_tblName.ToUpper()}'";
                 var comment = cmd.ExecuteScalar();
                 if (comment != null)
-                    tblCols.Comment = comment.ToString();
+                    tblCols.Comments = comment.ToString();
 
                 // 所有列
                 ReadOnlyCollection<DbColumn> cols;
