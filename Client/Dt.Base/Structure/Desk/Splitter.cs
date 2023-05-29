@@ -73,7 +73,7 @@ namespace Dt.Base
         #region 拖拽过程
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+            ResetCursor(InputSystemCursorShape.SizeWestEast);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -133,7 +133,12 @@ namespace Dt.Base
                 e.Handled = true;
                 VisualStateManager.GoToState(this, "Normal", true);
             }
-            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+            ResetCursor(InputSystemCursorShape.Arrow);
+        }
+
+        void ResetCursor(InputSystemCursorShape p_cursor)
+        {
+            //ProtectedCursor = InputSystemCursor.Create(p_cursor);
         }
         #endregion
     }

@@ -15,6 +15,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ### 功能
 * 增加更新模型菜单项
 * 增加全局Dt.Base.SelectionMode别名
+* Sqlite模型文件支持：多个数据库、多种数据库
 
 * Win上支持打印可视元素功能
 * 参考MVVM [工具包](https://learn.microsoft.com/zh-cn/dotnet/communitytoolkit/mvvm/)，简化命令等绑定写法

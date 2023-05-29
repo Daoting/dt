@@ -418,17 +418,17 @@ namespace Dt.Base.Docking
 
         void ResetCursor()
         {
-            if (!Placement.HasValue)
-                return;
+            //if (!Placement.HasValue)
+            //    return;
 
-            if (Placement == ItemPlacement.Left || Placement == ItemPlacement.Right)
-            {
-                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
-            }
-            else
-            {
-                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
-            }
+            //if (Placement == ItemPlacement.Left || Placement == ItemPlacement.Right)
+            //{
+            //    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+            //}
+            //else
+            //{
+            //    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
+            //}
         }
 
         void OnLayoutChangeEnded()

@@ -111,7 +111,7 @@ namespace Dt.Base.ListView
                 if (_resizingCol == null)
                 {
                     _isDragging = true;
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                    ResetCursor(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "Pressed", true);
                 }
                 else
@@ -148,12 +148,12 @@ namespace Dt.Base.ListView
                 Point pt = e.GetCurrentPoint(this).Position;
                 if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
                 {
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                    ResetCursor(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);
                 }
                 else
                 {
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+                    ResetCursor(InputSystemCursorShape.SizeWestEast);
                     VisualStateManager.GoToState(this, "Normal", true);
                 }
                 return;
@@ -211,12 +211,12 @@ namespace Dt.Base.ListView
                 Point pt = e.GetCurrentPoint(this).Position;
                 if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
                 {
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                    ResetCursor(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);
                 }
                 else
                 {
-                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+                    ResetCursor(InputSystemCursorShape.SizeWestEast);
                     VisualStateManager.GoToState(this, "Normal", true);
                 }
             }
@@ -226,7 +226,7 @@ namespace Dt.Base.ListView
         {
             if (e.IsMouse() && !_isDragging && _resizingCol == null)
             {
-                ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                ResetCursor(InputSystemCursorShape.Arrow);
                 VisualStateManager.GoToState(this, "Normal", true);
             }
         }
@@ -297,8 +297,13 @@ namespace Dt.Base.ListView
                 _dragTgtCol = null;
                 _resizingCol = null;
             }
-            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+            ResetCursor(InputSystemCursorShape.Arrow);
             VisualStateManager.GoToState(this, "Normal", true);
+        }
+
+        void ResetCursor(InputSystemCursorShape p_cursor)
+        {
+            //ProtectedCursor = InputSystemCursor.Create(p_cursor);
         }
     }
 }
