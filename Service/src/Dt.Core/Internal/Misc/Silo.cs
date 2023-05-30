@@ -158,7 +158,7 @@ namespace Dt.Core
         /// <summary>
         /// 缓存当前所有服务的所有Sql语句，表名xxx_sql
         /// </summary>
-        public static void LoadCacheSql()
+        public static async void LoadCacheSql()
         {
             try
             {
@@ -181,7 +181,7 @@ namespace Dt.Core
                     }
                 }
 
-                var ls = da.Each(sb.ToString()).Result;
+                var ls = await da.Each(sb.ToString());
                 foreach (Row item in ls)
                 {
                     _sqlDict[item.Str("id")] = item.Str("sql");

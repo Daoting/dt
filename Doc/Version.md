@@ -11,7 +11,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * IFvCell移除IsHorStretch、添加ColSpan，FormPanel重写布局算法
 * 将LobKit登录用户相关回调放在Kit中
 * 修改global.json中数据源配置，控制是否可导出到模型
-
+* 初始Sqlite库、Execute、BatchExec调为异步
+* 
 ### 功能
 * 增加更新模型菜单项
 * 增加全局Dt.Base.SelectionMode别名
@@ -25,7 +26,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Excel的表格的标题下拉箭头点击后报错，无法弹出过滤、排序对话框
 * Excel打印功能升级WinUI后报错
 
-* 涉及元素光标的ProtectedCursor通过InputSystemCursor.Create赋值时锁死，比如：ColHeaderCell
+* 涉及元素光标的ProtectedCursor通过InputSystemCursor.Create赋值时锁死，比如：ColHeaderCell，暂时注释，观察
 
 ## Release 4.0.1
 ### 变更

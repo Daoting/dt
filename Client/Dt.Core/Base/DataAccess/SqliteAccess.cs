@@ -21,7 +21,7 @@ namespace Dt.Core
         #region 成员变量
         static ILogger _log;
         readonly string _dbName;
-        readonly SqliteConnectionEx _db;
+        SqliteConnectionEx _db;
         #endregion
 
         #region 构造方法
@@ -34,24 +34,27 @@ namespace Dt.Core
         public SqliteAccess(string p_dbName)
         {
             _dbName = p_dbName;
-            _db = OpenDb();
         }
         #endregion
 
         #region 查询
-        public Task<Table> Query(string p_sql, object p_params = null)
+        public async Task<Table> Query(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("Query", p_sql, p_params);
-            return _db.Query(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.Query(p_sql, p_params);
         }
 
-        public Task<Table<TEntity>> Query<TEntity>(string p_sql, object p_params = null)
+        public async Task<Table<TEntity>> Query<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
             if (_log != null)
                 Trace("Query", p_sql, p_params);
-            return _db.Query<TEntity>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.Query<TEntity>(p_sql, p_params);
         }
 
         public Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
@@ -75,7 +78,9 @@ namespace Dt.Core
         {
             if (_log != null)
                 Trace("First", p_sql, p_params);
-            return (await _db.ForEach<Row>(p_sql, p_params)).FirstOrDefault();
+
+            var db = await GetDb();
+            return (await db.ForEach<Row>(p_sql, p_params)).FirstOrDefault();
         }
 
         public async Task<TEntity> First<TEntity>(string p_sql, object p_params = null)
@@ -83,59 +88,75 @@ namespace Dt.Core
         {
             if (_log != null)
                 Trace("First", p_sql, p_params);
-            return (await _db.ForEach<TEntity>(p_sql, p_params)).FirstOrDefault();
+
+            var db = await GetDb();
+            return (await db.ForEach<TEntity>(p_sql, p_params)).FirstOrDefault();
         }
 
-        public Task<List<T>> FirstCol<T>(string p_sql, object p_params = null)
+        public async Task<List<T>> FirstCol<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("FirstCol", p_sql, p_params);
-            return _db.GetFirstCol<T>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.GetFirstCol<T>(p_sql, p_params);
         }
 
-        public Task<T> GetScalar<T>(string p_sql, object p_params = null)
+        public async Task<T> GetScalar<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("GetScalar", p_sql, p_params);
-            return _db.GetScalar<T>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.GetScalar<T>(p_sql, p_params);
         }
 
-        public Task<IEnumerable<Row>> Each(string p_sql, object p_params = null)
+        public async Task<IEnumerable<Row>> Each(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("Each", p_sql, p_params);
-            return _db.ForEach<Row>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.ForEach<Row>(p_sql, p_params);
         }
 
-        public Task<IEnumerable<TEntity>> Each<TEntity>(string p_sql, object p_params = null)
+        public async Task<IEnumerable<TEntity>> Each<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
             if (_log != null)
                 Trace("Each", p_sql, p_params);
-            return _db.ForEach<TEntity>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.ForEach<TEntity>(p_sql, p_params);
         }
 
-        public Task<IEnumerable<T>> EachFirstCol<T>(string p_sql, object p_params = null)
+        public async Task<IEnumerable<T>> EachFirstCol<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("EachFirstCol", p_sql, p_params);
-            return _db.EachFirstCol<T>(p_sql, p_params);
+
+            var db = await GetDb();
+            return await db.EachFirstCol<T>(p_sql, p_params);
         }
         #endregion
 
         #region 增删改
-        public Task<int> Exec(string p_sql, object p_params = null)
+        public async Task<int> Exec(string p_sql, object p_params = null)
         {
             if (_log != null)
                 Trace("Exec", p_sql, p_params);
-            return Task.FromResult(_db.Execute(p_sql, p_params));
+
+            var db = await GetDb();
+            return await db.Execute(p_sql, p_params);
         }
 
-        public Task<int> BatchExec(List<Dict> p_dts)
+        public async Task<int> BatchExec(List<Dict> p_dts)
         {
             if (_log != null)
                 Trace("BatchExec", p_dts);
-            return Task.FromResult(_db.BatchExec(p_dts));
+
+            var db = await GetDb();
+            return await db.BatchExec(p_dts);
         }
         #endregion
 
@@ -182,7 +203,7 @@ namespace Dt.Core
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        SqliteConnectionEx OpenDb()
+        async Task<SqliteConnectionEx> OpenDb()
         {
             SqliteConnectionEx db;
             try
@@ -201,7 +222,7 @@ namespace Dt.Core
                     path = Path.Combine(Kit.DataPath, $"{_dbName}-{dbInfo.Version}.ver");
                     if (!exists || !File.Exists(path))
                     {
-                        db.InitDb(dbInfo.Tables);
+                        await db.InitDb(dbInfo.Tables);
 
                         // 删除旧版本号文件
                         foreach (var file in new DirectoryInfo(Kit.DataPath).GetFiles($"{_dbName}-*.ver"))
@@ -221,6 +242,13 @@ namespace Dt.Core
                 throw new Exception($"打开sqlite库[{_dbName}]异常，请重新启动应用！{ex.Message}");
             }
             return db;
+        }
+
+        async Task<SqliteConnectionEx> GetDb()
+        {
+            if (_db == null)
+                _db = await OpenDb();
+            return _db;
         }
 
         void Trace(string p_method, params object[] p_params)
