@@ -38,7 +38,7 @@ namespace Dt.Core
         /// <para>Tbl标签时，按照Entity属性创建列</para>
         /// </summary>
         /// <returns>空表</returns>
-        public static Table<TEntity> Create()
+        public static async Task<Table<TEntity>> Create()
         {
             var tbl = new Table<TEntity>();
 
@@ -56,7 +56,7 @@ namespace Dt.Core
             else
             {
                 PropertyInfo prop;
-                var model = EntitySchema.Get(tp);
+                var model = await EntitySchema.Get(tp);
                 foreach (var col in model.Schema.PrimaryKey.Concat(model.Schema.Columns))
                 {
                     var colType = col.Type;

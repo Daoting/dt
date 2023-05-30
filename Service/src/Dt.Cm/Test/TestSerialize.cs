@@ -356,7 +356,7 @@ namespace Dt.Cm
             return p_row;
         }
 
-        public Table<CustomEntityObj> GetEntityTable()
+        public Task<Table<CustomEntityObj>> GetEntityTable()
         {
             return CreateEntityTable();
         }
@@ -366,9 +366,9 @@ namespace Dt.Cm
             return p_tbl != null;
         }
 
-        public CustomEntityObj GetEntity()
+        public async Task<CustomEntityObj> GetEntity()
         {
-            return CreateEntityTable()[0];
+            return (await CreateEntityTable())[0];
         }
 
         public bool SetEntity(CustomEntityObj p_entity)
@@ -446,9 +446,9 @@ namespace Dt.Cm
             return tbl;
         }
 
-        Table<CustomEntityObj> CreateEntityTable()
+        async Task<Table<CustomEntityObj>> CreateEntityTable()
         {
-            var tbl = Table<CustomEntityObj>.Create();
+            var tbl = await Table<CustomEntityObj>.Create();
             tbl.Add(new CustomEntityObj(
                 Col1: "原始值",
                 Col2: true,

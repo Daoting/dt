@@ -23,27 +23,6 @@ namespace Dt.Core
             Type = p_type;
             PropInfo = p_propInfo;
             ParentID = p_parentID;
-
-            var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
-            if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
-            {
-                Schema = EntitySchema.GetTableSchema(tbl.Name);
-            }
-#if !SERVER
-            else
-            {
-                var sqlite = p_type.GetCustomAttribute<SqliteAttribute>(false);
-                if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
-                {
-                    Schema = EntitySchema.GetSqliteSchema(p_type);
-                }
-            }
-#endif
-            if (Schema == null)
-                throw new Exception($"实体{p_type.Name}缺少映射表设置！");
-
-            // sql变量名parentid固定
-            SqlSelect = $"select * from `{Schema.Name}` where {ParentID}=@parentid";
         }
 
         /// <summary>
@@ -64,11 +43,35 @@ namespace Dt.Core
         /// <summary>
         /// 表结构
         /// </summary>
-        public TableSchema Schema { get; }
+        public TableSchema Schema { get; private set; }
 
         /// <summary>
         /// 查询所有子实体的sql
         /// </summary>
-        public string SqlSelect { get; }
+        public string SqlSelect { get; private set; }
+
+        internal async Task Init()
+        {
+            var tbl = Type.GetCustomAttribute<TblAttribute>(false);
+            if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
+            {
+                Schema = await EntitySchema.GetTableSchema(tbl);
+            }
+#if !SERVER
+            else
+            {
+                var sqlite = Type.GetCustomAttribute<SqliteAttribute>(false);
+                if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
+                {
+                    Schema = EntitySchema.GetSqliteSchema(Type);
+                }
+            }
+#endif
+            if (Schema == null)
+                throw new Exception($"实体{Type.Name}缺少映射表设置！");
+
+            // sql变量名parentid固定
+            SqlSelect = $"select * from `{Schema.Name}` where {ParentID}=@parentid";
+        }
     }
 }

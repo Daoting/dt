@@ -41,15 +41,15 @@ namespace Dt.UIDemo
             WriteColumns(CreateTable());
         }
 
-        void OnCreateTableByName(object sender, RoutedEventArgs e)
+        async void OnCreateTableByName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create("cm_menu");
+            var tbl = await Table<CookieX>.Create();
             WriteColumns(tbl);
         }
 
-        void OnCreateTableByLocalName(object sender, RoutedEventArgs e)
+        async void OnCreateTableByLocalName(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(new CookieX("test"));
+            var tbl = await Table<CookieX>.Create();
             WriteColumns(tbl);
         }
 

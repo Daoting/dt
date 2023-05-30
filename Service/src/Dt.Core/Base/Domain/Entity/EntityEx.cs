@@ -157,13 +157,13 @@ namespace Dt.Core
         /// <param name="p_entity">实体</param>
         /// <param name="p_colName">主键或唯一索引列名</param>
         /// <returns></returns>
-        public static Task ClearCache<TEntity>(this TEntity p_entity, string p_colName)
+        public static async Task ClearCache<TEntity>(this TEntity p_entity, string p_colName)
             where TEntity : Entity
         {
             if (p_entity == null || string.IsNullOrEmpty(p_colName))
                 Throw.Msg("清除实体缓存时列名不可为空！");
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
 #if !SERVER
             if (model.AccessInfo.Type == AccessType.Local)
                 Throw.Msg("本地Sqlite库实体不支持缓存！");
@@ -171,7 +171,7 @@ namespace Dt.Core
 
             var cacher = new EntityCacher(model);
             // 可能当前列值已修改，取原始值
-            return cacher.Remove(p_colName, p_entity.Cells[p_colName].GetOriginalVal<string>());
+            await cacher.Remove(p_colName, p_entity.Cells[p_colName].GetOriginalVal<string>());
         }
         #endregion
     }

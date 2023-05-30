@@ -81,8 +81,9 @@ namespace Dt.Core
             if (p_entity.IsAdded || p_entity.IsChanged)
                 await Save(new List<TEntity> { p_entity });
 
-            var model = EntitySchema.Get(typeof(TEntity));
-            if (model.Children.Count == 0)
+            var model = await EntitySchema.Get(typeof(TEntity));
+            var children = await model.GetChildren();
+            if (children.Count == 0)
                 return;
 
             // 构造方法里的泛型参数 TEntity
@@ -92,7 +93,7 @@ namespace Dt.Core
             // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
             var save = GetType().GetMethod("Save", 1, new Type[1] { tpTbl });
 
-            foreach (var child in model.Children)
+            foreach (var child in children)
             {
                 // 获取子实体列表
                 var tbl = child.PropInfo.GetValue(p_entity);
@@ -142,7 +143,7 @@ namespace Dt.Core
             if (ls.Count == 0)
                 return;
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
             if (IsValidSvc(model))
             {
                 var dts = model.Schema.GetSaveSql(ls);
@@ -180,7 +181,7 @@ namespace Dt.Core
                         await hook();
                     }
 
-                    var model = EntitySchema.Get(obj.GetType());
+                    var model = await EntitySchema.Get(obj.GetType());
                     if (IsValidSvc(model))
                     {
                         // 单个处理
@@ -246,7 +247,7 @@ namespace Dt.Core
                 }
             }
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
             if (IsValidSvc(model))
             {
                 Dict dt = model.Schema.GetDeleteSql(p_list);
@@ -325,7 +326,7 @@ namespace Dt.Core
                         await hook();
                     }
 
-                    var model = EntitySchema.Get(obj.GetType());
+                    var model = await EntitySchema.Get(obj.GetType());
                     if (IsValidSvc(model))
                     {
                         // 单个处理

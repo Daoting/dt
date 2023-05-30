@@ -69,7 +69,7 @@ namespace Dt.Core
                 // 表结构
                 foreach (var tbl in tbls)
                 {
-                    TableSchema tblCols = new TableSchema(tbl);
+                    TableSchema tblCols = new TableSchema(tbl, DatabaseType.MySql);
                     cmd.CommandText = string.Format(_sqlCols, tbl);
                     ReadOnlyCollection<DbColumn> cols;
                     using (reader = cmd.ExecuteReader())
@@ -172,7 +172,7 @@ namespace Dt.Core
 
                 MySqlDataReader reader;
                 ReadOnlyCollection<DbColumn> cols;
-                TableSchema tblCols = new TableSchema(p_tblName);
+                TableSchema tblCols = new TableSchema(p_tblName, DatabaseType.MySql);
 
                 // 表注释
                 cmd.CommandText = $"SELECT table_comment FROM information_schema.tables WHERE table_schema='{conn.Database}' and table_name='{p_tblName}'";

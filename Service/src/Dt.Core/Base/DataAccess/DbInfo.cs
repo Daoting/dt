@@ -145,14 +145,4 @@ namespace Dt.Core
         }
         */
     }
-
-    /// <summary>
-    /// 数据库类型
-    /// </summary>
-    public enum DatabaseType
-    {
-        MySql,
-        Oracle,
-        SqlServer
-    }
 }

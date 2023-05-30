@@ -80,7 +80,7 @@ namespace Dt.Core
                 // 表结构
                 foreach (var tbl in tbls)
                 {
-                    TableSchema tblCols = new TableSchema(tbl);
+                    TableSchema tblCols = new TableSchema(tbl, DatabaseType.SqlServer);
                     cmd.CommandText = string.Format(_sqlCols, tbl);
                     ReadOnlyCollection<DbColumn> cols;
                     using (reader = cmd.ExecuteReader())
@@ -193,7 +193,7 @@ namespace Dt.Core
             {
                 conn.Open();
                 SqlDataReader reader;
-                TableSchema tblCols = new TableSchema(p_tblName);
+                TableSchema tblCols = new TableSchema(p_tblName, DatabaseType.SqlServer);
 
                 // 表注释
                 cmd.CommandText = $"select g.[value] from sys.tables a left join sys.extended_properties g on (a.object_id = g.major_id AND g.minor_id = 0) where a.name='{p_tblName}'";

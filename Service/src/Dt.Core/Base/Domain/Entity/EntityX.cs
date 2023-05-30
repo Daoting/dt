@@ -105,7 +105,7 @@ namespace Dt.Core
 
         static async Task<bool> DelDirect(IList p_ids, bool p_isNotify = true)
         {
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
             Dict dt = model.Schema.GetDelSqlByIDs(p_ids);
 #if SERVER
             if (dt == null)
@@ -165,7 +165,7 @@ namespace Dt.Core
             // 虚拟实体内部包含的实体对象
             foreach (var tp in entities)
             {
-                var model = EntitySchema.Get(tp);
+                var model = await EntitySchema.Get(tp);
                 Dict dt = model.Schema.GetDelSqlByIDs(p_ids);
                 if (dt != null)
                     ls.Add(dt);
@@ -184,7 +184,7 @@ namespace Dt.Core
                 return false;
             }
 
-            var m = EntitySchema.Get(entities[0]);
+            var m = await EntitySchema.Get(entities[0]);
             var ac = m.AccessInfo.GetDataAccess();
             bool suc = await ac.BatchExec(ls) > 0;
 
@@ -211,10 +211,10 @@ namespace Dt.Core
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Query(string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<Table<TEntity>> Query(string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
-            var sql = GetSelectSql(typeof(TEntity));
+            var sql = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -228,9 +228,9 @@ namespace Dt.Core
                     sql = txt;
                 }
             }
-            return Kit.DataAccess.Query<TEntity>(sql, p_params);
+            return await Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
-            var res = GetSelectSql(typeof(TEntity));
+            var res = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -244,7 +244,7 @@ namespace Dt.Core
                     res.Item2 = txt;
                 }
             }
-            return res.Item1.Query<TEntity>(res.Item2, p_params);
+            return await res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
 
@@ -260,10 +260,10 @@ namespace Dt.Core
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
-            var sql = GetSelectSql(typeof(TEntity));
+            var sql = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -275,13 +275,13 @@ namespace Dt.Core
                 else
                 {
                     // Sql键名或Sql语句，自由查询
-                    return Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                    return await Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
                 }
             }
             sql += $" limit {p_starRow},{p_pageSize} ";
-            return Kit.DataAccess.Query<TEntity>(sql, p_params);
+            return await Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
-            var res = GetSelectSql(typeof(TEntity));
+            var res = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -293,12 +293,12 @@ namespace Dt.Core
                 else
                 {
                     // Sql键名或Sql语句，自由查询
-                    return res.Item1.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                    return await res.Item1.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
                 }
             }
 
             res.Item2 += $" limit {p_starRow},{p_pageSize} ";
-            return res.Item1.Query<TEntity>(res.Item2, p_params);
+            return await res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
 
@@ -312,10 +312,10 @@ namespace Dt.Core
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> First(string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<TEntity> First(string p_whereOrKeyOrSql, object p_params = null)
         {
 #if SERVER
-            var sql = GetSelectSql(typeof(TEntity));
+            var sql = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -329,9 +329,9 @@ namespace Dt.Core
                     sql = txt;
                 }
             }
-            return Kit.DataAccess.First<TEntity>(sql, p_params);
+            return await Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
-            var res = GetSelectSql(typeof(TEntity));
+            var res = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
                 var txt = p_whereOrKeyOrSql.Trim();
@@ -345,7 +345,7 @@ namespace Dt.Core
                     res.Item2 = txt;
                 }
             }
-            return res.Item1.First<TEntity>(res.Item2, p_params);
+            return await res.Item1.First<TEntity>(res.Item2, p_params);
 #endif
         }
 
@@ -354,23 +354,23 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">主键值</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByID(object p_id)
+        public static async Task<TEntity> GetByID(object p_id)
         {
             if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
-                return Task.FromResult(default(TEntity));
+                return default(TEntity);
 
             if (_isVirEntity)
             {
                 // 虚拟实体不涉及缓存
-                var vm = VirEntitySchema.Get(typeof(TEntity));
-                return GetByKeyInternal(vm.PrimaryKeyName, p_id.ToString());
+                var vm = await VirEntitySchema.Get(typeof(TEntity));
+                return await GetByKeyInternal(vm.PrimaryKeyName, p_id.ToString());
             }
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
             if (model.Schema.PrimaryKey.Count != 1)
                 Throw.Msg("根据主键获得实体对象时仅支持单主键！");
 
-            return GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id.ToString());
+            return await GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id.ToString());
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Dt.Core
             if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
                 return default;
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
             if (model.Schema.PrimaryKey.Count != 1)
                 Throw.Msg("根据主键获得实体对象时仅支持单主键！");
 
@@ -408,7 +408,8 @@ namespace Dt.Core
             if (parent == null)
                 return default;
 
-            if (model.Children.Count == 0)
+            var children = await model.GetChildren();
+            if (children.Count == 0)
                 return parent;
 
 #if SERVER
@@ -417,7 +418,7 @@ namespace Dt.Core
             var da = model.AccessInfo.GetDataAccess();
 #endif
             var query = typeof(IDataAccess).GetMethod("Query", 1, new Type[2] { typeof(string), typeof(object) });
-            foreach (var child in model.Children)
+            foreach (var child in children)
             {
                 // 构造泛型方法
                 var mi = query.MakeGenericMethod(child.Type);
@@ -449,7 +450,7 @@ namespace Dt.Core
             if (_isVirEntity)
                 Throw.Msg("虚拟实体不支持缓存！");
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
 #if !SERVER
             if (model.AccessInfo.Type == AccessType.Local)
                 Throw.Msg("本地Sqlite库实体不支持缓存！");
@@ -470,7 +471,7 @@ namespace Dt.Core
             return entity;
         }
 
-        static Task<TEntity> GetByKeyInternal(string p_keyName, string p_keyVal)
+        static async Task<TEntity> GetByKeyInternal(string p_keyName, string p_keyVal)
         {
             // 不再校验
             // if (string.IsNullOrWhiteSpace(p_keyName) || string.IsNullOrWhiteSpace(p_keyVal))
@@ -479,36 +480,36 @@ namespace Dt.Core
             var dt = new Dict { { p_keyName, p_keyVal } };
 
 #if SERVER
-            var sql = GetSelectSql(typeof(TEntity));
+            var sql = await GetSelectSql(typeof(TEntity));
             sql += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
-            return Kit.DataAccess.First<TEntity>(sql, dt);
+            return await Kit.DataAccess.First<TEntity>(sql, dt);
 #else
-            var res = GetSelectSql(typeof(TEntity));
+            var res = await GetSelectSql(typeof(TEntity));
             // 虚拟实体需要a.前缀
             res.Item2 += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
-            return res.Item1.First<TEntity>(res.Item2, dt);
+            return await res.Item1.First<TEntity>(res.Item2, dt);
 #endif
         }
 
 #if SERVER
-        static string GetSelectSql(Type p_type)
+        static async Task<string> GetSelectSql(Type p_type)
         {
             if (_isVirEntity)
             {
-                return VirEntitySchema.Get(p_type).GetSelectAllSql();
+                return (await VirEntitySchema.Get(p_type)).GetSelectAllSql();
             }
-            return EntitySchema.Get(p_type).Schema.GetSelectAllSql();
+            return (await EntitySchema.Get(p_type)).Schema.GetSelectAllSql();
         }
 #else
-        static (IDataAccess, string) GetSelectSql(Type p_type)
+        static async Task<(IDataAccess, string)> GetSelectSql(Type p_type)
         {
             if (_isVirEntity)
             {
-                var vm = VirEntitySchema.Get(p_type);
+                var vm = await VirEntitySchema.Get(p_type);
                 return (vm.AccessInfo.GetDataAccess(), vm.GetSelectAllSql());
             }
 
-            var model = EntitySchema.Get(p_type);
+            var model = await EntitySchema.Get(p_type);
             return (model.AccessInfo.GetDataAccess(), model.Schema.GetSelectAllSql());
         }
 #endif
@@ -523,30 +524,33 @@ namespace Dt.Core
         /// 获取新ID，统一服务端和客户端写法
         /// </summary>
         /// <returns></returns>
+#if SERVER
         public static Task<long> NewID()
         {
-#if SERVER
             return Task.FromResult(Kit.NewID);
+        }
 #else
+        public static async Task<long> NewID()
+        {
             AccessInfo ai;
             if (_isVirEntity)
             {
-                ai = VirEntitySchema.Get(typeof(TEntity)).AccessInfo;
+                ai = (await VirEntitySchema.Get(typeof(TEntity))).AccessInfo;
             }
             else
             {
-                ai = EntitySchema.Get(typeof(TEntity)).AccessInfo;
+                ai = (await EntitySchema.Get(typeof(TEntity))).AccessInfo;
             }
 
             if (ai.Type == AccessType.Remote)
             {
-                return Kit.Rpc<long>(ai.Name, "Da.NewID");
+                return await Kit.Rpc<long>(ai.Name, "Da.NewID");
             }
 
             // 本地库，和服务端算法的_workerId不同
-            return Task.FromResult(_snowflake.NextId());
-#endif
+            return _snowflake.NextId();
         }
+#endif
 
         /// <summary>
         /// 获取新序列值，序列名称全小写：表名+字段名，需要在sequence表中手动添加序列名称行
@@ -559,7 +563,7 @@ namespace Dt.Core
             if (_isVirEntity)
                 Throw.Msg("无法通过虚拟实体获取新序列值时！");
 
-            var model = EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(typeof(TEntity));
 
             // 序列名称：表名+字段名，全小写
             var seqName = model.Schema.Name + "+" + p_colName.ToLower();
@@ -580,9 +584,9 @@ namespace Dt.Core
         #endregion
 
         #region 工具方法
-        protected static void AddEntityCells(Entity p_entity, Type p_type)
+        protected static async Task AddEntityCells(Entity p_entity, Type p_type)
         {
-            var schema = EntitySchema.Get(p_type).Schema;
+            var schema = (await EntitySchema.Get(p_type)).Schema;
             foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
             {
                 if (!p_entity.Contains(col.Name))

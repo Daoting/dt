@@ -35,32 +35,25 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="p_isEmpty">是否为空结构，false时创建所有内部实体的Cell并设置默认值</param>
-        public VirX(bool p_isEmpty) : this()
-        {
-            if (!p_isEmpty)
-            {
-                AddEntityCells(this, typeof(TEntity1));
-                AddEntityCells(this, typeof(TEntity2));
-                IsAdded = true;
-            }
-        }
-
-        /// <summary>
         /// 创建虚拟实体，包括内部实体的Cell并设置默认值，主键为long类型时自动赋值
         /// </summary>
+        /// <param name="p_isEmpty">是否为空结构，false时创建所有内部实体的Cell并设置默认值</param>
         /// <returns></returns>
-        public static async Task<VirX<TEntity1, TEntity2>> New()
+        public static async Task<VirX<TEntity1, TEntity2>> New(bool p_isEmpty = false)
         {
-            var x = new VirX<TEntity1, TEntity2>(false);
-
-            var col = EntitySchema.Get(typeof(TEntity1)).Schema.PrimaryKey[0];
-            if (col.Type == typeof(long))
+            var x = new VirX<TEntity1, TEntity2>();
+            if (!p_isEmpty)
             {
-                // 设置主键值
-                x.E1.Cells[col.Name].InitVal(await NewID());
+                await AddEntityCells(x, typeof(TEntity1));
+                await AddEntityCells(x, typeof(TEntity2));
+
+                var col = (await EntitySchema.Get(typeof(TEntity1))).Schema.PrimaryKey[0];
+                if (col.Type == typeof(long))
+                {
+                    // 设置主键值
+                    x.E1.Cells[col.Name].InitVal(await NewID());
+                }
+                x.IsAdded = true;
             }
             return x;
         }
@@ -162,33 +155,26 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="p_isEmpty">是否为空结构，默认false，false时创建所有内部实体的Cell并设置默认值</param>
-        public VirX(bool p_isEmpty = false) : this()
-        {
-            if (!p_isEmpty)
-            {
-                AddEntityCells(this, typeof(TEntity1));
-                AddEntityCells(this, typeof(TEntity2));
-                AddEntityCells(this, typeof(TEntity3));
-                IsAdded = true;
-            }
-        }
-
-        /// <summary>
         /// 创建虚拟实体，包括内部实体的Cell并设置默认值，主键为long类型时自动赋值
         /// </summary>
+        /// <param name="p_isEmpty">是否为空结构，默认false，false时创建所有内部实体的Cell并设置默认值</param>
         /// <returns></returns>
-        public static async Task<VirX<TEntity1, TEntity2, TEntity3>> New()
+        public static async Task<VirX<TEntity1, TEntity2, TEntity3>> New(bool p_isEmpty = false)
         {
-            var x = new VirX<TEntity1, TEntity2, TEntity3>(false);
-
-            var col = EntitySchema.Get(typeof(TEntity1)).Schema.PrimaryKey[0];
-            if (col.Type == typeof(long))
+            var x = new VirX<TEntity1, TEntity2, TEntity3>();
+            if (!p_isEmpty)
             {
-                // 设置主键值
-                x.E1.Cells[col.Name].InitVal(await NewID());
+                await AddEntityCells(x, typeof(TEntity1));
+                await AddEntityCells(x, typeof(TEntity2));
+                await AddEntityCells(x, typeof(TEntity3));
+
+                var col = (await EntitySchema.Get(typeof(TEntity1))).Schema.PrimaryKey[0];
+                if (col.Type == typeof(long))
+                {
+                    // 设置主键值
+                    x.E1.Cells[col.Name].InitVal(await NewID());
+                }
+                x.IsAdded = true;
             }
             return x;
         }

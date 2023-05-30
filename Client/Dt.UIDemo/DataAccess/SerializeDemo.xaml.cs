@@ -320,7 +320,7 @@ namespace Dt.UIDemo
 
         async void SetEntityTable(object sender, RoutedEventArgs e)
         {
-            var suc = await AtTestCm.SetEntityTable(CreateEntityTable());
+            var suc = await AtTestCm.SetEntityTable(await CreateEntityTable());
             _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
         }
 
@@ -332,7 +332,7 @@ namespace Dt.UIDemo
 
         async void SetEntityRow(object sender, RoutedEventArgs e)
         {
-            var suc = await AtTestCm.SetEntity(CreateEntityTable()[0]);
+            var suc = await AtTestCm.SetEntity((await CreateEntityTable())[0]);
             _tbInfo.Text = suc ? "调用成功！" : "调用不成功！";
         }
 
@@ -721,9 +721,9 @@ namespace Dt.UIDemo
             return tbl;
         }
 
-        public static Table<CustomEntityObj> CreateEntityTable()
+        public static async Task<Table<CustomEntityObj>> CreateEntityTable()
         {
-            var tbl = Table<CustomEntityObj>.Create();
+            var tbl = await Table<CustomEntityObj>.Create();
             tbl.Add(new CustomEntityObj(
                 Col1: "原始值",
                 Col2: true,

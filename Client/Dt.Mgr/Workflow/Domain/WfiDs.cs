@@ -372,9 +372,9 @@ namespace Dt.Mgr.Workflow
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
-            var tblAtvs = Table<WfiAtvX>.Create();
-            var tblItems = Table<WfiItemX>.Create();
-            var tblTrs = Table<WfiTrsX>.Create();
+            var tblAtvs = await Table<WfiAtvX>.Create();
+            var tblItems = await Table<WfiItemX>.Create();
+            var tblTrs = await Table<WfiTrsX>.Create();
             DateTime time = Kit.Now;
 
             if (p_info.NextRecvs.FinishedAtv != null

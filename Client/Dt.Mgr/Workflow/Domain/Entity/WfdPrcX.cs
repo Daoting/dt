@@ -22,9 +22,9 @@ namespace Dt.Mgr.Workflow
                 Dispidx: await NewSeq("Dispidx"),
                 Ctime: Kit.Now);
 
-            prc.Atvs = Table<WfdAtvX>.Create();
-            prc.Trss = Table<WfdTrsX>.Create();
-            prc.AtvRoles = Table<WfdAtvRoleX>.Create();
+            prc.Atvs = await Table<WfdAtvX>.Create();
+            prc.Trss = await Table<WfdTrsX>.Create();
+            prc.AtvRoles = await Table<WfdAtvRoleX>.Create();
             prc.AttachEvent();
             return prc;
         }

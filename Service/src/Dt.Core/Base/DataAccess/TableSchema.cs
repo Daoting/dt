@@ -27,15 +27,21 @@ namespace Dt.Core
         string _sqlDelete;
         #endregion
 
-        public TableSchema(string p_name)
+        public TableSchema(string p_name, DatabaseType p_dbType)
         {
             Name = p_name;
+            DbType = p_dbType;
         }
 
         /// <summary>
         /// 表名，小写
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// 数据库类型
+        /// </summary>
+        public DatabaseType DbType { get; }
 
         /// <summary>
         /// 主键列列表
@@ -405,5 +411,16 @@ namespace Dt.Core
         /// 列注释
         /// </summary>
         public string Comments { get; set; }
+    }
+
+    /// <summary>
+    /// 数据库类型
+    /// </summary>
+    public enum DatabaseType
+    {
+        MySql,
+        Oracle,
+        SqlServer,
+        Sqlite
     }
 }

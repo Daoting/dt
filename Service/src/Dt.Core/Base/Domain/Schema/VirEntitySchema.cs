@@ -22,38 +22,6 @@ namespace Dt.Core
         string _selectAll;
         string _selectByID;
 
-        public VirEntitySchema(Type p_type)
-        {
-            if (!p_type.IsGenericType || !Entity.IsVirEntity(p_type))
-                throw new Exception($"{p_type.Name}不是虚拟实体类型！");
-
-#if !SERVER
-            AccessInfo ai = null;
-#endif
-            var tps = p_type.GetGenericArguments();
-            foreach (var tp in tps)
-            {
-                var schema = EntitySchema.Get(tp);
-
-                if (schema.Schema.PrimaryKey.Count != 1)
-                {
-                    throw new Exception("虚拟实体中的各实体只支持单主键！");
-                }
-
-#if !SERVER
-                if (ai == null)
-                {
-                    ai = schema.AccessInfo;
-                }
-                else if (ai != schema.AccessInfo)
-                {
-                    throw new Exception("虚拟实体中的各实体无法跨服务进行数据存储！");
-                }
-#endif
-                _schemas.Add(schema);
-            }
-        }
-
         /// <summary>
         /// 获取选择所有数据的sql
         /// </summary>
@@ -143,6 +111,38 @@ namespace Dt.Core
             _selectByID = _selectAll + $" where a.{_schemas[0].Schema.PrimaryKey[0].Name}=@id";
         }
 
+        async Task Init(Type p_type)
+        {
+            if (!p_type.IsGenericType || !Entity.IsVirEntity(p_type))
+                throw new Exception($"{p_type.Name}不是虚拟实体类型！");
+
+#if !SERVER
+            AccessInfo ai = null;
+#endif
+            var tps = p_type.GetGenericArguments();
+            foreach (var tp in tps)
+            {
+                var schema = await EntitySchema.Get(tp);
+
+                if (schema.Schema.PrimaryKey.Count != 1)
+                {
+                    throw new Exception("虚拟实体中的各实体只支持单主键！");
+                }
+
+#if !SERVER
+                if (ai == null)
+                {
+                    ai = schema.AccessInfo;
+                }
+                else if (ai != schema.AccessInfo)
+                {
+                    throw new Exception("虚拟实体中的各实体无法跨服务进行数据存储！");
+                }
+#endif
+                _schemas.Add(schema);
+            }
+        }
+
         #region 静态内容
         static readonly ConcurrentDictionary<Type, VirEntitySchema> _models = new ConcurrentDictionary<Type, VirEntitySchema>();
 
@@ -151,12 +151,13 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_type">实体类型</param>
         /// <returns></returns>
-        public static VirEntitySchema Get(Type p_type)
+        public static async Task<VirEntitySchema> Get(Type p_type)
         {
             if (_models.TryGetValue(p_type, out var m))
                 return m;
 
-            var model = new VirEntitySchema(p_type);
+            var model = new VirEntitySchema();
+            await model.Init(p_type);
             _models[p_type] = model;
             return model;
         }

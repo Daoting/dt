@@ -204,8 +204,7 @@ namespace Dt.MgrDemo
                 tbl[0].E3.Name3 = name;
             }
             // 增
-            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
-            x.E1.ID = await Virtbl1X.NewID();
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.New();
             x.E1.Name1 = "批增1";
             x.E2.Name2 = "批增2";
             x.E3.Name3 = "批增3";

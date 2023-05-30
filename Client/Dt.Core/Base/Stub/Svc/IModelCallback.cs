@@ -18,11 +18,11 @@ namespace Dt.Core
     public interface IModelCallback
     {
         /// <summary>
-        /// 查询指定表的所有列，默认取模型库的 OmColumn
+        /// 查询表结构信息
         /// </summary>
-        /// <param name="p_tblName">表名</param>
+        /// <param name="p_tblAttr">实体类属性标签</param>
         /// <returns></returns>
-        Task<IEnumerable<OmColumn>> GetTableColumns(string p_tblName);
+        Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr);
 
         /// <summary>
         /// 读取模板内容，默认取模型库的 OmReport

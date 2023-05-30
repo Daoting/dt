@@ -71,7 +71,7 @@ namespace Dt.Core
                     // 建表时的SQL中表名用引号括起来了，则此处报 Oracle ORA-00942: table or view does not exist
                     cmd.CommandText = string.Format(_sqlCols, tbl);
 
-                    TableSchema tblCols = new TableSchema(tbl);
+                    TableSchema tblCols = new TableSchema(tbl, DatabaseType.Oracle);
                     ReadOnlyCollection<DbColumn> cols;
                     using (reader = cmd.ExecuteReader())
                     {
@@ -184,7 +184,7 @@ namespace Dt.Core
             {
                 conn.Open();
                 OracleDataReader reader = null;
-                TableSchema tblCols = new TableSchema(p_tblName);
+                TableSchema tblCols = new TableSchema(p_tblName, DatabaseType.Oracle);
 
                 // 表注释
                 cmd.CommandText = $"select comments from user_tab_comments where table_name='{p_tblName.ToUpper()}'";

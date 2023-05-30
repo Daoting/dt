@@ -119,7 +119,7 @@ namespace Dt.Mgr.Module
 
         async void Exchange(OptionX p_src, OptionX p_tgt)
         {
-            var tbl = Table<OptionX>.Create();
+            var tbl = await Table<OptionX>.Create();
 
             var save = (OptionX)tbl.AddRow(new { ID = p_src.ID });
             save.AcceptChanges();

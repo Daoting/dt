@@ -8,8 +8,8 @@
         <a:CBar Title="创建表" />
         <StackPanel Orientation="Horizontal">
             <Button Content="手动创建" Click="OnCreateTable" />
-            <Button Content="由表名创建" Click="OnCreateTableByName" />
-            <Button Content="由本地库表名创建" Click="OnCreateTableByLocalName" />
+            <Button Content="由实体类型创建" Click="OnCreateTableByName" />
+            <Button Content="由本地库实体类型创建" Click="OnCreateTableByLocalName" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Content="复制表结构" Click="OnCreateTableByTable" />
