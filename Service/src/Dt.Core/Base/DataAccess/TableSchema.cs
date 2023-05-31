@@ -23,7 +23,6 @@ namespace Dt.Core
     {
         #region 成员变量
         const string _primaryError = "实体【{0}】中不包含主键列【{1}】！";
-        string _sqlSelect;
         string _sqlDelete;
         #endregion
 
@@ -31,6 +30,26 @@ namespace Dt.Core
         {
             Name = p_name;
             DbType = p_dbType;
+
+            switch (p_dbType)
+            {
+                case DatabaseType.MySql:
+                case DatabaseType.Sqlite:
+                    Prefix = Postfix = "`";
+                    VarPrefix = "@";
+                    break;
+
+                case DatabaseType.Oracle:
+                    Prefix = Postfix = string.Empty;
+                    VarPrefix = ":";
+                    break;
+
+                case DatabaseType.SqlServer:
+                    Prefix = "[";
+                    Postfix = "]";
+                    VarPrefix = "@";
+                    break;
+            }
         }
 
         /// <summary>
@@ -59,24 +78,19 @@ namespace Dt.Core
         public string Comments { get; set; }
 
         /// <summary>
-        /// 根据主键查询实体的sql，只支持单主键
+        /// sql语句中表名或列名的前缀
         /// </summary>
-        public string GetSelectByIDSql()
-        {
-            if (_sqlSelect == null)
-            {
-                if (PrimaryKey.Count == 1)
-                {
-                    // 主键变量名固定为id
-                    _sqlSelect = $"select * from `{Name}` where {PrimaryKey[0].Name}=@id";
-                }
-                else
-                {
-                    throw new Exception("根据主键查询实体的sql，只支持单主键！");
-                }
-            }
-            return _sqlSelect;
-        }
+        public string Prefix { get; }
+
+        /// <summary>
+        /// sql语句中表名或列名的后缀
+        /// </summary>
+        public string Postfix { get; }
+
+        /// <summary>
+        /// sql语句中参数前缀
+        /// </summary>
+        public string VarPrefix { get; }
 
         /// <summary>
         /// 根据主键删除实体的sql，只支持单主键
@@ -88,7 +102,7 @@ namespace Dt.Core
                 if (PrimaryKey.Count == 1)
                 {
                     // 主键变量名固定为id
-                    _sqlDelete = $"delete from `{Name}` where {PrimaryKey[0].Name}=@id";
+                    _sqlDelete = $"delete from {Prefix}{Name}{Postfix} where {PrimaryKey[0].Name}={VarPrefix}id";
                 }
                 else
                 {
@@ -184,11 +198,13 @@ namespace Dt.Core
                 {
                     if (insertCol.Length > 0)
                         insertCol.Append(",");
+                    insertCol.Append(Prefix);
                     insertCol.Append(col.Name);
+                    insertCol.Append(Postfix);
 
                     if (insertVal.Length > 0)
                         insertVal.Append(",");
-                    insertVal.Append("@");
+                    insertVal.Append(VarPrefix);
                     insertVal.Append(col.Name);
 
                     dtInsert[col.Name] = (from row in insertRows
@@ -199,8 +215,11 @@ namespace Dt.Core
                 {
                     if (updateVal.Length > 0)
                         updateVal.Append(", ");
+                    updateVal.Append(Prefix);
                     updateVal.Append(col.Name);
-                    updateVal.Append("=@");
+                    updateVal.Append(Postfix);
+                    updateVal.Append("=");
+                    updateVal.Append(VarPrefix);
                     updateVal.Append(updateIndex);
 
                     // 更新主键时避免重复
@@ -217,8 +236,11 @@ namespace Dt.Core
                 {
                     if (whereVal.Length > 0)
                         whereVal.Append(" and ");
+                    whereVal.Append(Prefix);
                     whereVal.Append(col.Name);
-                    whereVal.Append("=@");
+                    whereVal.Append(Postfix);
+                    whereVal.Append("=");
+                    whereVal.Append(VarPrefix);
                     whereVal.Append(col.Name);
 
                     // 主键可能被更新
@@ -233,9 +255,11 @@ namespace Dt.Core
 
             if (insert)
             {
-                sql.Append("insert into `");
+                sql.Append("insert into ");
+                sql.Append(Prefix);
                 sql.Append(Name);
-                sql.Append("`(");
+                sql.Append(Postfix);
+                sql.Append("(");
                 sql.Append(insertCol.ToString());
                 sql.Append(") values (");
                 sql.Append(insertVal.ToString());
@@ -257,9 +281,11 @@ namespace Dt.Core
                 if (!string.IsNullOrEmpty(upVals))
                 {
                     sql = new StringBuilder();
-                    sql.Append("update `");
+                    sql.Append("update ");
+                    sql.Append(Prefix);
                     sql.Append(Name);
-                    sql.Append("` set ");
+                    sql.Append(Postfix);
+                    sql.Append(" set ");
                     sql.Append(upVals);
                     sql.Append(" where ");
                     sql.Append(whereVal.ToString());
@@ -297,8 +323,11 @@ namespace Dt.Core
 
                 if (whereVal.Length > 0)
                     whereVal.Append(" and ");
+                whereVal.Append(Prefix);
                 whereVal.Append(col.Name);
-                whereVal.Append("=@");
+                whereVal.Append(Postfix);
+                whereVal.Append("=");
+                whereVal.Append(VarPrefix);
                 whereVal.Append(col.Name);
 
                 // 主键可能已修改
@@ -307,9 +336,11 @@ namespace Dt.Core
             }
 
             StringBuilder sql = new StringBuilder();
-            sql.Append("delete from `");
+            sql.Append("delete from ");
+            sql.Append(Prefix);
             sql.Append(Name);
-            sql.Append("` where ");
+            sql.Append(Postfix);
+            sql.Append(" where ");
             sql.Append(whereVal.ToString());
 
             Dict result = new Dict();
@@ -349,7 +380,17 @@ namespace Dt.Core
         /// <returns></returns>
         internal string GetSelectAllSql()
         {
-            return $"select * from `{Name}` a";
+            return $"select * from {Prefix}{Name}{Postfix} a";
+        }
+
+        /// <summary>
+        /// 获取按列过滤的sql
+        /// </summary>
+        /// <param name="p_keyName"></param>
+        /// <returns></returns>
+        internal string GetSelectByKeySql(string p_keyName)
+        {
+            return $"select * from {Prefix}{Name}{Postfix} where {Prefix}{p_keyName}{Postfix}={VarPrefix}{p_keyName}";
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace Dt.Core
         /// 获取选择所有数据的sql
         /// </summary>
         /// <returns></returns>
-        public string GetSelectAllSql()
+        internal string GetSelectAllSql()
         {
             if (_selectAll == null)
                 CreateSql();
@@ -37,11 +37,22 @@ namespace Dt.Core
         /// 获取选择所有数据的sql
         /// </summary>
         /// <returns></returns>
-        public string GetSelectByIDSql()
+        internal string GetSelectByIDSql()
         {
             if (_selectByID == null)
                 CreateSql();
             return _selectByID;
+        }
+
+        /// <summary>
+        /// 获取按主键列过滤的sql
+        /// </summary>
+        /// <param name="p_keyName"></param>
+        /// <returns></returns>
+        internal string GetSelectByKeySql(string p_keyName)
+        {
+            var sql = GetSelectAllSql();
+            return $"{sql} where a.{p_keyName}={_schemas[0].Schema.VarPrefix}{p_keyName}";
         }
 
         /// <summary>
@@ -70,11 +81,11 @@ namespace Dt.Core
                     sb.Append(prefix);
                     sb.Append(".");
                     sb.Append(schema.PrimaryKey[0].Name);
-                    tbls = $"`{schema.Name}` {prefix}";
+                    tbls = $"{schema.Prefix}{schema.Name}{schema.Postfix} {prefix}";
                 }
                 else
                 {
-                    tbls += $" JOIN `{schema.Name}` {prefix} on a.{schema.PrimaryKey[0].Name}={prefix}.{schema.PrimaryKey[0].Name}";
+                    tbls += $" JOIN {schema.Prefix}{schema.Name}{schema.Postfix} {prefix} on a.{schema.PrimaryKey[0].Name}={prefix}.{schema.PrimaryKey[0].Name}";
                 }
 
                 foreach (var col in schema.Columns)
@@ -108,7 +119,7 @@ namespace Dt.Core
                 }
             }
             _selectAll = $"select {sb} from {tbls}";
-            _selectByID = _selectAll + $" where a.{_schemas[0].Schema.PrimaryKey[0].Name}=@id";
+            _selectByID = _selectAll + $" where a.{_schemas[0].Schema.PrimaryKey[0].Name}={_schemas[0].Schema.VarPrefix}id";
         }
 
         async Task Init(Type p_type)

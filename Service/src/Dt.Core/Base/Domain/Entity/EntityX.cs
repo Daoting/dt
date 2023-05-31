@@ -480,14 +480,34 @@ namespace Dt.Core
             var dt = new Dict { { p_keyName, p_keyVal } };
 
 #if SERVER
-            var sql = await GetSelectSql(typeof(TEntity));
-            sql += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
+            string sql;
+            if (_isVirEntity)
+            {
+                var vm = await VirEntitySchema.Get(typeof(TEntity));
+                sql = vm.GetSelectByKeySql(p_keyName);
+            }
+            else
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                sql = model.Schema.GetSelectByKeySql(p_keyName);
+            }
             return await Kit.DataAccess.First<TEntity>(sql, dt);
 #else
-            var res = await GetSelectSql(typeof(TEntity));
-            // 虚拟实体需要a.前缀
-            res.Item2 += $" where {(_isVirEntity ? "a." : "")}{p_keyName}=@{p_keyName}";
-            return await res.Item1.First<TEntity>(res.Item2, dt);
+            IDataAccess da;
+            string sql;
+            if (_isVirEntity)
+            {
+                var vm = await VirEntitySchema.Get(typeof(TEntity));
+                da = vm.AccessInfo.GetDataAccess();
+                sql = vm.GetSelectByKeySql(p_keyName);
+            }
+            else
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                da = model.AccessInfo.GetDataAccess();
+                sql = model.Schema.GetSelectByKeySql(p_keyName);
+            }
+            return await da.First<TEntity>(sql, dt);
 #endif
         }
 

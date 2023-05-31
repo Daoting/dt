@@ -46,9 +46,9 @@ namespace Dt.Core
         public TableSchema Schema { get; private set; }
 
         /// <summary>
-        /// 查询所有子实体的sql
+        /// 查询所有子实体的sql，sql变量名parentid固定
         /// </summary>
-        public string SqlSelect { get; private set; }
+        public string SqlSelect => $"select * from {Schema.Prefix}{Schema.Name}{Schema.Postfix} where {ParentID}={Schema.VarPrefix}parentid";
 
         internal async Task Init()
         {
@@ -69,9 +69,6 @@ namespace Dt.Core
 #endif
             if (Schema == null)
                 throw new Exception($"实体{Type.Name}缺少映射表设置！");
-
-            // sql变量名parentid固定
-            SqlSelect = $"select * from `{Schema.Name}` where {ParentID}=@parentid";
         }
     }
 }
