@@ -193,32 +193,42 @@ namespace Dt.Core.Sqlite
                 return 0;
 
             int cnt = 0;
-            using (var trans = BeginTransaction())
+            Func<Task> exec = async () =>
             {
-                try
+                using (var cmd = CreateCmd())
                 {
-                    using (var cmd = CreateCmd())
+                    foreach (Dict dt in p_dts)
                     {
-                        foreach (Dict dt in p_dts)
+                        cmd.CommandText = (string)dt["text"];
+                        if (dt["params"] is List<Dict> ls)
                         {
-                            cmd.CommandText = (string)dt["text"];
-                            if (dt["params"] is List<Dict> ls)
-                            {
-                                foreach (var par in ls)
-                                {
-                                    cmd.Parameters.Clear();
-                                    WrapParams(cmd.Parameters, par);
-                                    cnt += await cmd.ExecuteNonQueryAsync();
-                                }
-                            }
-                            else if (dt["params"] is Dict par)
+                            foreach (var par in ls)
                             {
                                 cmd.Parameters.Clear();
                                 WrapParams(cmd.Parameters, par);
                                 cnt += await cmd.ExecuteNonQueryAsync();
                             }
                         }
+                        else if (dt["params"] is Dict par)
+                        {
+                            cmd.Parameters.Clear();
+                            WrapParams(cmd.Parameters, par);
+                            cnt += await cmd.ExecuteNonQueryAsync();
+                        }
                     }
+                }
+            };
+
+
+#if WASM
+            // wasm÷– BeginTransaction “Ï≥££°
+            await exec();
+#else
+            using (var trans = BeginTransaction())
+            {
+                try
+                {
+                    await exec();
                     trans.Commit();
                 }
                 catch
@@ -226,6 +236,7 @@ namespace Dt.Core.Sqlite
                     trans.Rollback();
                 }
             }
+#endif
             return cnt;
         }
         #endregion
