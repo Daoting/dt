@@ -26,9 +26,14 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 创建连接
+        #region 重写
         protected override DbConnection CreateConnection()
             => new OracleConnection(DbInfo.ConnStr);
+
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        {
+            return $"select * from (select a.*,rownum rn from ({Kit.Sql(p_keyOrSql)}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
+        }
         #endregion
 
         #region 表结构

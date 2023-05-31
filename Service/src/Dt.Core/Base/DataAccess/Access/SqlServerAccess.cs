@@ -26,9 +26,22 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 创建连接
+        #region 重写
         protected override DbConnection CreateConnection()
             => new SqlConnection(DbInfo.ConnStr);
+
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        {
+            // SQL2012以上的版本才支持，前段sql应有order by，否则出错！
+            var sql = Kit.Sql(p_keyOrSql);
+            if (!sql.Contains(" order ", StringComparison.OrdinalIgnoreCase))
+            {
+                // 添加无用的order by
+                sql += " ORDER BY(SELECT NULL)";
+            }
+
+            return $"{sql} offset {p_starRow} rows fetch next {p_pageSize} rows only";
+        }
         #endregion
 
         #region 表结构

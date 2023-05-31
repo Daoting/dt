@@ -22,7 +22,7 @@ namespace Dt.MgrDemo.Crud
             var x = await CrudX.New("领域服务");
             await Save(x);
 
-            var tbl = await CrudX.Query("where true limit 4");
+            var tbl = await CrudX.Page(0, 4, null);
             if (tbl.Count > 1)
             {
                 tbl.RecordDeleted();

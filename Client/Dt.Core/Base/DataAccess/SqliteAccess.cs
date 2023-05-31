@@ -59,7 +59,7 @@ namespace Dt.Core
 
         public Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
         {
-            string sql = $"select * from ({p_sql}) a limit {p_starRow},{p_pageSize} ";
+            string sql = $"select * from ({p_sql}) a limit {p_starRow},{p_pageSize}";
             if (_log != null)
                 Trace("Page", sql);
             return Query(sql, p_params);

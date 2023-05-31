@@ -38,7 +38,7 @@ namespace Dt.Core
         /// <summary>
         /// 按页查询数据
         /// </summary>
-        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
@@ -49,7 +49,7 @@ namespace Dt.Core
         /// 按页查询数据
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>

@@ -80,22 +80,21 @@ namespace Dt.Core
         /// <summary>
         /// 按页查询数据
         /// </summary>
-        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
         public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
-            string sql = $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
-            return Query(sql, p_params);
+            return Query(GetPageSql(p_starRow, p_pageSize, p_keyOrSql), p_params);
         }
 
         /// <summary>
         /// 按页查询数据
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
@@ -103,9 +102,17 @@ namespace Dt.Core
         public Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
             where TEntity : Entity
         {
-            string sql = $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
-            return Query<TEntity>(sql, p_params);
+            return Query<TEntity>(GetPageSql(p_starRow, p_pageSize, p_keyOrSql), p_params);
         }
+
+        /// <summary>
+        /// 构造按页查询sql
+        /// </summary>
+        /// <param name="p_starRow"></param>
+        /// <param name="p_pageSize"></param>
+        /// <param name="p_keyOrSql"></param>
+        /// <returns></returns>
+        protected abstract string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql);
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回Row枚举，高性能

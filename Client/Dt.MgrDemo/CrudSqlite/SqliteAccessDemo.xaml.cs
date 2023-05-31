@@ -72,7 +72,7 @@ namespace Dt.MgrDemo
 
         async void OnBatch(object sender, RoutedEventArgs e)
         {
-            var tbl = await CrudX.Query("where true limit 2");
+            var tbl = await CrudX.Page(0, 2, null);
             // 更
             if (tbl.Count > 0)
                 tbl[0].Name = "批增更" + _rnd.Next(1000);
@@ -83,7 +83,7 @@ namespace Dt.MgrDemo
 
         async void OnSaveTable(object sender, RoutedEventArgs e)
         {
-            var tbl = await CrudX.Query("where true limit 4");
+            var tbl = await CrudX.Page(0, 4, null);
             if (tbl.Count > 1)
             {
                 tbl.RecordDeleted();
@@ -99,7 +99,7 @@ namespace Dt.MgrDemo
 
         async void OnBatchDel(object sender, RoutedEventArgs e)
         {
-            var tbl = await CrudX.Query("where true limit 2");
+            var tbl = await CrudX.Page(0, 2, null);
             await tbl.Delete();
 
             //var ls = new List<CrudX>();
@@ -191,7 +191,7 @@ namespace Dt.MgrDemo
 
         async void OnSaveVir(object sender, RoutedEventArgs e)
         {
-            var tbl = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.Query("where true limit 4");
+            var tbl = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.Page(0, 4, null);
             if (tbl.Count > 1)
             {
                 tbl.RecordDeleted();

@@ -251,7 +251,7 @@ namespace Dt.Core
         /// <summary>
         /// 按页查询实体列表，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
         /// </summary>
-        /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
+        /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_whereOrKeyOrSql">三种查询：
         /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
@@ -275,12 +275,12 @@ namespace Dt.Core
                 else
                 {
                     // Sql键名或Sql语句，自由查询
-                    return await Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                    sql = p_whereOrKeyOrSql;
                 }
             }
-            sql += $" limit {p_starRow},{p_pageSize} ";
-            return await Kit.DataAccess.Query<TEntity>(sql, p_params);
+            return await Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, sql, p_params);
 #else
+            string sql;
             var res = await GetSelectSql(typeof(TEntity));
             if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
             {
@@ -288,17 +288,19 @@ namespace Dt.Core
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
-                    res.Item2 += " " + txt;
+                    sql = res.Item2 + " " + txt;
                 }
                 else
                 {
                     // Sql键名或Sql语句，自由查询
-                    return await res.Item1.Page<TEntity>(p_starRow, p_pageSize, p_whereOrKeyOrSql, p_params);
+                    sql = p_whereOrKeyOrSql;
                 }
             }
-
-            res.Item2 += $" limit {p_starRow},{p_pageSize} ";
-            return await res.Item1.Query<TEntity>(res.Item2, p_params);
+            else
+            {
+                sql = res.Item2;
+            }
+            return await res.Item1.Page<TEntity>(p_starRow, p_pageSize, sql, p_params);
 #endif
         }
 

@@ -27,9 +27,14 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 创建连接
+        #region 重写
         protected override DbConnection CreateConnection()
             => new MySqlConnection(DbInfo.ConnStr);
+
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        {
+            return $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize}";
+        }
         #endregion
 
         #region 表结构
