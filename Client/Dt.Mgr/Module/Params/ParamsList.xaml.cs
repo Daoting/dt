@@ -31,7 +31,8 @@ namespace Dt.Mgr.Module
             }
             else
             {
-                _lv.Data = await ParamsX.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<ParamsX>();
+                _lv.Data = await ParamsX.Query(par.Sql, par.Params);
             }
         }
         #endregion

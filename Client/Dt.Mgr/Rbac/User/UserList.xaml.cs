@@ -40,7 +40,8 @@ namespace Dt.Mgr.Rbac
             }
             else
             {
-                _lv.Data = await UserX.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<UserX>();
+                _lv.Data = await UserX.Query(par.Sql, par.Params);
             }
         }
         #endregion
@@ -166,27 +167,10 @@ namespace Dt.Mgr.Rbac
             var tabs = new List<Tab>();
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
-            fs.Fixed.Add("最近修改");
             fs.CookieID = _win.GetType().FullName;
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e) || e == "#全部")
-                {
-                    Clause = null;
-                }
-                else if (e == "#最近修改")
-                {
-                    var clause = new QueryClause();
-                    clause.Where = @"where to_days(now()) - to_days(mtime) <= 3";
-                    Clause = clause;
-                }
-                else
-                {
-                    var clause = new QueryClause();
-                    clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"where false or Phone like @input or Name like @input or Pwd like @input or Photo like @input";
-                    Clause = clause;
-                }
+                Clause = new QueryClause(e);
                 Update();
                 _dlgQuery.Close();
             };

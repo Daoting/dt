@@ -32,7 +32,8 @@ namespace Dt.MgrDemo.单实体
             }
             else
             {
-                _lv.Data = await 基础X.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<基础X>();
+                _lv.Data = await 基础X.Query(par.Sql, par.Params);
             }
         }
         #endregion

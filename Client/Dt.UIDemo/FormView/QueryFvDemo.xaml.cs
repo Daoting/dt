@@ -33,13 +33,7 @@ namespace Dt.UIDemo
 
         void OnQuery(object sender, QueryClause e)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine();
-            foreach (var item in e.Params)
-            {
-                sb.AppendLine($"{item.Key}：{item.Value}");
-            }
-            Kit.Msg(e.Where + sb.ToString());
+            Kit.Msg("执行查询");
         }
 
         void LoadData()

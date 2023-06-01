@@ -31,7 +31,8 @@ namespace Dt.Mgr.Rbac
             }
             else
             {
-                _lv.Data = await PermissionX.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<PermissionX>();
+                _lv.Data = await PermissionX.Query(par.Sql, par.Params);
             }
         }
         #endregion
@@ -87,17 +88,7 @@ namespace Dt.Mgr.Rbac
             fs.CookieID = _win.GetType().FullName;
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e) || e == "#全部")
-                {
-                    Clause = null;
-                }
-                else
-                {
-                    var clause = new QueryClause();
-                    clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"where false or Name like @input or Note like @input";
-                    Clause = clause;
-                }
+                Clause = new QueryClause(e);
                 Update();
                 _dlgQuery.Close();
             };

@@ -5,14 +5,19 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
-## Release 4.0.x
+## Release 4.1.0
 ### 变更
 * Cols不再继承KeyedCollection，支持重复列id
 * IFvCell移除IsHorStretch、添加ColSpan，FormPanel重写布局算法
 * 将LobKit登录用户相关回调放在Kit中
 * 修改global.json中数据源配置，控制是否可导出到模型
 * 初始Sqlite库、Execute、BatchExec调为异步
-* 
+* 多数据库sql语句参数前缀不同
+* 不同数据库类型的分页语句
+* QueryFv FuzzySearch 只负责查询内容，查询sql的动态生成放在QueryClause，也可自定义生成sql
+
+* where true 或 where false 除mysql外都不支持
+
 ### 功能
 * 增加更新模型菜单项
 * 增加全局Dt.Base.SelectionMode别名

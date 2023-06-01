@@ -29,17 +29,7 @@ namespace Dt.Mgr.Module
 
         void OnSearch(object sender, string e)
         {
-            if (string.IsNullOrEmpty(e) || e == "#全部")
-            {
-                _list.OnSearch(null);
-            }
-            else
-            {
-                var clause = new QueryClause();
-                clause.Params = new Dict { { "input", $"%{e}%" } };
-                clause.Where = @"where false or Name like @input or Value like @input or Note like @input";
-                _list.OnSearch(clause);
-            }
+            _list.OnSearch(new QueryClause(e));
         }
     }
 }

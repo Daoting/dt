@@ -117,7 +117,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows">实体列表</param>
         /// <returns></returns>
-        internal List<Dict> GetSaveSql<TEntity>(IList<TEntity> p_rows)
+        public List<Dict> GetSaveSql<TEntity>(IList<TEntity> p_rows)
             where TEntity : Entity
         {
             // 不再重复判断
@@ -305,7 +305,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows"></param>
         /// <returns></returns>
-        internal Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
+        public Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
             where TEntity : Entity
         {
             // 不再重复判断
@@ -355,7 +355,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_ids">主键列表</param>
         /// <returns></returns>
-        internal Dict GetDelSqlByIDs(IList p_ids)
+        public Dict GetDelSqlByIDs(IList p_ids)
         {
             List<Dict> ls = new List<Dict>();
             foreach (var id in p_ids)
@@ -378,7 +378,7 @@ namespace Dt.Core
         /// 选择所有数据的sql
         /// </summary>
         /// <returns></returns>
-        internal string GetSelectAllSql()
+        public string GetSelectAllSql()
         {
             return $"select * from {Prefix}{Name}{Postfix} a";
         }
@@ -388,7 +388,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_keyName"></param>
         /// <returns></returns>
-        internal string GetSelectByKeySql(string p_keyName)
+        public string GetSelectByKeySql(string p_keyName)
         {
             return $"select * from {Prefix}{Name}{Postfix} where {Prefix}{p_keyName}{Postfix}={VarPrefix}{p_keyName}";
         }

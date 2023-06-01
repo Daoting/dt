@@ -32,7 +32,8 @@ namespace Dt.MgrDemo.一对多
             }
             else
             {
-                _lv.Data = await 父表X.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<父表X>();
+                _lv.Data = await 父表X.Query(par.Sql, par.Params);
             }
         }
         #endregion
@@ -106,17 +107,7 @@ namespace Dt.MgrDemo.一对多
             fs.CookieID = _win.GetType().FullName;
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e) || e == "#全部")
-                {
-                    Clause = null;
-                }
-                else
-                {
-                    var clause = new QueryClause();
-                    clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"where false or 父名 like @input";
-                    Clause = clause;
-                }
+                Clause = new QueryClause(e);
                 Update();
                 _dlgQuery.Close();
             };

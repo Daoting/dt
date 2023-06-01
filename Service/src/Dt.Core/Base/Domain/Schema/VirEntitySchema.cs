@@ -26,7 +26,7 @@ namespace Dt.Core
         /// 获取选择所有数据的sql
         /// </summary>
         /// <returns></returns>
-        internal string GetSelectAllSql()
+        public string GetSelectAllSql()
         {
             if (_selectAll == null)
                 CreateSql();
@@ -37,7 +37,7 @@ namespace Dt.Core
         /// 获取选择所有数据的sql
         /// </summary>
         /// <returns></returns>
-        internal string GetSelectByIDSql()
+        public string GetSelectByIDSql()
         {
             if (_selectByID == null)
                 CreateSql();
@@ -49,7 +49,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_keyName"></param>
         /// <returns></returns>
-        internal string GetSelectByKeySql(string p_keyName)
+        public string GetSelectByKeySql(string p_keyName)
         {
             var sql = GetSelectAllSql();
             return $"{sql} where a.{p_keyName}={_schemas[0].Schema.VarPrefix}{p_keyName}";
@@ -66,6 +66,10 @@ namespace Dt.Core
         /// </summary>
         public AccessInfo AccessInfo => _schemas[0].AccessInfo;
 #endif
+        /// <summary>
+        /// 所有实体结构
+        /// </summary>
+        public IReadOnlyList<EntitySchema> Schemas => _schemas;
 
         void CreateSql()
         {

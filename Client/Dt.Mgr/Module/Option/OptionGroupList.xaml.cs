@@ -32,7 +32,8 @@ namespace Dt.Mgr.Module
             }
             else
             {
-                _lv.Data = await OptionGroupX.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<OptionGroupX>();
+                _lv.Data = await OptionGroupX.Query(par.Sql, par.Params);
             }
         }
         #endregion
@@ -110,17 +111,7 @@ namespace Dt.Mgr.Module
             fs.CookieID = _win.GetType().FullName;
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e) || e == "#全部")
-                {
-                    Clause = null;
-                }
-                else
-                {
-                    var clause = new QueryClause();
-                    clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"where false or Name like @input";
-                    Clause = clause;
-                }
+                Clause = new QueryClause(e);
                 Update();
                 _dlgQuery.Close();
             };

@@ -37,10 +37,7 @@ namespace Dt.MgrDemo.单实体
             }
             else
             {
-                var clause = new QueryClause();
-                clause.Params = new Dict { { "input", $"%{e}%" } };
-                clause.Where = @"where false or 限长4 like @input or 不重复 like @input or 值变事件 like @input";
-                _list.OnSearch(clause);
+                _list.OnSearch(new QueryClause(e));
             }
         }
 

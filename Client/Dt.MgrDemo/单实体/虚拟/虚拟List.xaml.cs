@@ -32,7 +32,8 @@ namespace Dt.MgrDemo.单实体
             }
             else
             {
-                _lv.Data = await VirX<主表X, 扩展1X, 扩展2X>.Query(Clause.Where, Clause.Params);
+                var par = await Clause.Build<VirX<主表X, 扩展1X, 扩展2X>>();
+                _lv.Data = await VirX<主表X, 扩展1X, 扩展2X>.Query(par.Sql, par.Params);
             }
         }
         #endregion
