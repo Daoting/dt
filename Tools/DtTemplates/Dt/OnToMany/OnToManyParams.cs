@@ -58,7 +58,7 @@ namespace Dt
             dt["$entity$"] = ParentEntity;
             dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { ParentTbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { ParentTbl });
-            dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { ParentTbl });
+            //dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { ParentTbl });
 
             string tabs = "";
             foreach (var item in Children)

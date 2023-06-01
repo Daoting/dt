@@ -32,8 +32,9 @@ namespace $rootnamespace$
             }
             else
             {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
-            }
+                var par = await Clause.Build<$entity$>();
+                _lv.Data = await $entity$.Query(par.Sql, par.Params);
+    }
         }
         #endregion
 
@@ -106,17 +107,7 @@ namespace $rootnamespace$
             fs.CookieID = _win.GetType().FullName;
             fs.Search += (s, e) =>
             {
-                if (string.IsNullOrEmpty(e) || e == "#全部")
-                {
-                    Clause = null;
-                }
-                else
-                {
-                    var clause = new QueryClause();
-                    clause.Params = new Dict { { "input", $"%{e}%" } };
-                    clause.Where = @"$blurclause$";
-                    Clause = clause;
-                }
+                Clause = new QueryClause(e);
                 Update();
                 _dlgQuery.Close();
             };

@@ -31,17 +31,7 @@ namespace $rootnamespace$
 
         void OnSearch(object sender, string e)
         {
-            if (string.IsNullOrEmpty(e) || e == "#全部")
-            {
-                _list.OnSearch(null);
-            }
-            else
-            {
-                var clause = new QueryClause();
-                clause.Params = new Dict { { "input", $"%{e}%" } };
-                clause.Where = @"$blurclause$";
-                _list.OnSearch(clause);
-            }
+            _list.OnSearch(new QueryClause(e));
         }
 
         void OnQuery(object sender, QueryClause e)

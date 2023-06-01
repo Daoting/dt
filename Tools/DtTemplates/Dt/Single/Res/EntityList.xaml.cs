@@ -32,8 +32,9 @@ namespace $rootnamespace$
             }
             else
             {
-                _lv.Data = await $entity$.Query(Clause.Where, Clause.Params);
-            }
+                var par = await Clause.Build<$entity$>();
+                _lv.Data = await $entity$.Query(par.Sql, par.Params);
+    }
         }
         #endregion
 

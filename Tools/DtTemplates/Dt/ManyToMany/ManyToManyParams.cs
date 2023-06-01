@@ -55,7 +55,7 @@ namespace Dt
             dt["$entity$"] = MainEntity;
             dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { MainTbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { MainTbl });
-            dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { MainTbl });
+            //dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { MainTbl });
 
             string tabs = "";
             foreach (var item in Related)

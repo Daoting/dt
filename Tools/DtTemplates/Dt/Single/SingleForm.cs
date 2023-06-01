@@ -56,7 +56,7 @@ namespace Dt
                 .AppendLine($"框架类的词根：{_params.ClsRoot}");
 
             _path = Kit.GetFolderPath();
-            await WriteWin();
+            WriteWin();
             await WriteForm();
             await WriteList();
             await WriteQuery();
@@ -64,14 +64,14 @@ namespace Dt
             Close();
         }
 
-        async Task WriteWin()
+        void WriteWin()
         {
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml"), "Dt.Single.Res.EntityWin.xaml", dt);
 
-            dt["$blurclause$"] = await AtSvc.GetBlurClause(_params.Tbls);
+            //dt["$blurclause$"] = await AtSvc.GetBlurClause(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}Win.xaml.cs"), "Dt.Single.Res.EntityWin.xaml.cs", dt);
-            dt.Remove("$blurclause$");
+            //dt.Remove("$blurclause$");
         }
 
         async Task WriteForm()

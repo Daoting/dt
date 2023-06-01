@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-16 创建
+* 日志: 2023-06-01 创建
 ******************************************************************************/
 #endregion
 
@@ -31,14 +31,7 @@ namespace Dt.MgrDemo.单实体
 
         void OnSearch(object sender, string e)
         {
-            if (string.IsNullOrEmpty(e) || e == "#全部")
-            {
-                _list.OnSearch(null);
-            }
-            else
-            {
-                _list.OnSearch(new QueryClause(e));
-            }
+            _list.OnSearch(new QueryClause(e));
         }
 
         void OnQuery(object sender, QueryClause e)

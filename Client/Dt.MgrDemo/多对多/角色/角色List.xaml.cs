@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-16 创建
+* 日志: 2023-06-01 创建
 ******************************************************************************/
 #endregion
 
@@ -34,7 +34,7 @@ namespace Dt.MgrDemo.多对多
             {
                 var par = await Clause.Build<角色X>();
                 _lv.Data = await 角色X.Query(par.Sql, par.Params);
-            }
+    }
         }
         #endregion
 
@@ -54,7 +54,7 @@ namespace Dt.MgrDemo.多对多
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple)
             {
                 NaviToChild();
                 if (e.IsChanged)

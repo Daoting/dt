@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-16 创建
+* 日志: 2023-06-01 创建
 ******************************************************************************/
 #endregion
 
@@ -34,7 +34,7 @@ namespace Dt.MgrDemo.单实体
             {
                 var par = await Clause.Build<VirX<主表X, 扩展1X, 扩展2X>>();
                 _lv.Data = await VirX<主表X, 扩展1X, 扩展2X>.Query(par.Sql, par.Params);
-            }
+    }
         }
         #endregion
 
@@ -54,7 +54,7 @@ namespace Dt.MgrDemo.单实体
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple)
             {
                 NaviTo(_win.Form);
                 if (e.IsChanged)
@@ -70,7 +70,7 @@ namespace Dt.MgrDemo.单实体
                 return;
             }
 
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode == SelectionMode.Multiple)
             {
                 var ls = _lv.SelectedItems.Cast<VirX<主表X, 扩展1X, 扩展2X>>().ToList();
                 if (await ls.Delete())
@@ -130,13 +130,13 @@ namespace Dt.MgrDemo.单实体
 
         void OnMultiMode(object sender, Mi e)
         {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
+            _lv.SelectionMode = SelectionMode.Multiple;
             Menu.HideExcept("删除", "全选", "取消");
         }
 
         void OnCancelMulti(object sender, Mi e)
         {
-            _lv.SelectionMode = Base.SelectionMode.Single;
+            _lv.SelectionMode = SelectionMode.Single;
             Menu.ShowExcept("删除", "全选", "取消");
         }
         #endregion

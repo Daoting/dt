@@ -15,5 +15,7 @@
     <ItemGroup>
         <Using Include="Dt.Base" />
         <Using Include="Dt.Mgr" />
+        <Using Include="Dt.Base.SelectionMode" Alias="SelectionMode" />
     </ItemGroup>
+    
 </Project>
