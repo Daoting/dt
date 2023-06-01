@@ -16,7 +16,7 @@ namespace Dt
         public static void BindSvcUrl(TextBox p_tb)
         {
             p_tb.Text = _svcUrl;
-            p_tb.TextChanged += (s, e) => _svcUrl = p_tb.Text;
+            p_tb.TextChanged += (s, e) => _svcUrl = p_tb.Text.TrimEnd('/');
         }
 
         /// <summary>

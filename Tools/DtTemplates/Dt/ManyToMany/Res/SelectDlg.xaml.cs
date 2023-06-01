@@ -24,7 +24,7 @@ namespace $rootnamespace$
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await $entity$.Query("$notexistclause$", new { ReleatedID = p_releatedID });
+            _lv.Data = await $entity$.Query($"$notexistclause$");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

@@ -105,9 +105,9 @@ namespace Dt
             dt["$relatedid$"] = p_ci.RelatedID;
             dt["$selectdlg$"] = $"{p_ci.Root}4{MainRoot}Dlg";
 
-            var filter = $"exists ( select {p_ci.RelatedID} from {p_ci.RelatedTbl} b where a.ID = b.{p_ci.RelatedID} and {p_ci.MainRelatedID}=@ReleatedID )";
-            dt["$whereclause$"] = "where " + filter;
-            dt["$notexistclause$"] = "where not " + filter;
+            var filter = $"exists ( select {p_ci.RelatedID} from {p_ci.RelatedTbl} b where a.ID = b.{p_ci.RelatedID} and {p_ci.MainRelatedID}=";
+            dt["$whereclause$"] = "where " + filter + "{_releatedID} )";
+            dt["$notexistclause$"] = "where not " + filter + "{p_releatedID} )";
             return dt;
         }
 

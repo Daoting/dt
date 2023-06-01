@@ -16,7 +16,6 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 不同数据库类型的分页语句
 * QueryFv FuzzySearch 只负责查询内容，查询sql的动态生成放在QueryClause，也可自定义生成sql
 * 同步调整VS扩展中的框架模板
-
 * where true 或 where false 除mysql外都不支持
 
 ### 功能

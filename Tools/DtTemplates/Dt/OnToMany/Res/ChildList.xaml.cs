@@ -36,7 +36,7 @@ namespace $rootnamespace$
         {
             if (_parentID > 0)
             {
-                _lv.Data = await $entity$.Query("where $parentidname$=@ParentID", new { ParentID = _parentID });
+                _lv.Data = await $entity$.Query($"where $parentidname$={_parentID}");
             }
             else
             {

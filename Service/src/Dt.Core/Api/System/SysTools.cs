@@ -465,7 +465,7 @@ namespace Dt.Core
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
 
-            StringBuilder sb = new StringBuilder("where false");
+            StringBuilder sb = new StringBuilder("where 1!=1");
             foreach (var tbl in p_tblNames)
             {
                 if (string.IsNullOrEmpty(tbl))

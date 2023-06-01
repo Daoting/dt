@@ -46,7 +46,7 @@ namespace Dt.Mgr.Module
 
         async void OnLoadTest(object sender, RoutedEventArgs e)
         {
-            _lv.Data = await AtCm.Query("select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from cm_pub_post where id=@id", new { id = _testID });
+            _lv.Data = await AtCm.Query($"select id,Title,Cover,Summary,Url,TempType,AllowCoverClick,AllowComment from cm_pub_post where id={_testID}");
         }
 
         void OnPostClick(object sender, ItemClickArgs e)

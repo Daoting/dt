@@ -35,7 +35,7 @@ namespace $rootnamespace$
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await $entity$.Query("$whereclause$", new { ReleatedID = _releatedID });
+                _lv.Data = await $entity$.Query($"$whereclause$");
             }
             else
             {

@@ -36,7 +36,7 @@ namespace Dt.MgrDemo.一对多
         {
             if (_parentID > 0)
             {
-                _lv.Data = await 大儿X.Query("where ParentID=@ParentID", new { ParentID = _parentID });
+                _lv.Data = await 大儿X.Query($"where ParentID={_parentID}");
             }
             else
             {
