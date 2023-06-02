@@ -26,7 +26,7 @@ namespace Dt.Core
     public static class DbSchema
     {
         /// <summary>
-        /// 默认库的所有表结构，键名为小写表名
+        /// 默认库的所有表结构，键名为表名，库里原始大小写，比较时大小写不敏感
         /// </summary>
         public static IReadOnlyDictionary<string, TableSchema> Schema { get; private set; }
 
@@ -63,7 +63,7 @@ namespace Dt.Core
         public static TableSchema GetTableSchema(string p_tblName)
         {
             TableSchema schema;
-            if (Schema.TryGetValue(p_tblName.ToLower(), out schema))
+            if (Schema.TryGetValue(p_tblName, out schema))
                 return schema;
             throw new Exception($"未找到表{p_tblName}的结构信息！");
         }

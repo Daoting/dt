@@ -67,15 +67,15 @@ namespace Dt.Core
                 // Tbl标签
                 AppendTabSpace(sb, 1);
                 if (svc != null)
-                    sb.Append($"[Tbl(\"{tblName}\", \"{svc}\")]");
+                    sb.Append($"[Tbl(\"{schema.Name}\", \"{svc}\")]");
                 else
-                    sb.Append($"[Tbl(\"{tblName}\")]");
+                    sb.Append($"[Tbl(\"{schema.Name}\")]");
             }
             else
             {
                 // Tbl标签
                 AppendTabSpace(sb, 1);
-                sb.Append($"[Tbl(\"{tblName}\")]");
+                sb.Append($"[Tbl(\"{schema.Name}\")]");
             }
 
             sb.AppendLine();
@@ -327,7 +327,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -396,7 +396,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     sb.AppendLine();
@@ -426,7 +426,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     string title = "";
@@ -471,7 +471,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (col.Type == typeof(string))
@@ -501,7 +501,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -567,7 +567,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl.ToLower());
+                var schema = _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     bool isEnum = IsEnumCol(col);

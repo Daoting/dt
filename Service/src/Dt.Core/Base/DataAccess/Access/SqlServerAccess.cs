@@ -46,7 +46,7 @@ namespace Dt.Core
 
         #region 表结构
         const string _sqlAllTbls = "select name from sysobjects where xtype='u'";
-        const string _sqlCols = "select * from {0} where 1!=1";
+        const string _sqlCols = "select * from [{0}] where 1!=1";
         const string _sqlComment =
 "SELECT d.text def, c.value comment 　　 \n" +
 "FROM\n" +
@@ -68,7 +68,7 @@ namespace Dt.Core
         /// <returns>返回加载结果信息</returns>
         public override IReadOnlyDictionary<string, TableSchema> GetDbSchema()
         {
-            var schema = new Dictionary<string, TableSchema>();
+            var schema = new Dictionary<string, TableSchema>(StringComparer.OrdinalIgnoreCase);
             using (var conn = new SqlConnection(DbInfo.ConnStr))
             using (var cmd = conn.CreateCommand())
             {
@@ -84,8 +84,7 @@ namespace Dt.Core
                     {
                         while (reader.Read())
                         {
-                            // 表名小写
-                            tbls.Add(reader.GetString(0).ToLower());
+                            tbls.Add(reader.GetString(0));
                         }
                     }
                 }
@@ -182,8 +181,7 @@ namespace Dt.Core
                     {
                         while (reader.Read())
                         {
-                            // 表名小写
-                            tbls.Add(reader.GetString(0).ToLower());
+                            tbls.Add(reader.GetString(0));
                         }
                     }
                 }
@@ -206,16 +204,28 @@ namespace Dt.Core
             {
                 conn.Open();
                 SqlDataReader reader;
-                TableSchema tblCols = new TableSchema(p_tblName, DatabaseType.SqlServer);
+                TableSchema tblCols = null;
 
                 // 表注释
-                cmd.CommandText = $"select g.[value] from sys.tables a left join sys.extended_properties g on (a.object_id = g.major_id AND g.minor_id = 0) where a.name='{p_tblName}'";
-                var comment = cmd.ExecuteScalar();
-                if (comment != null)
-                    tblCols.Comments = comment.ToString();
+                cmd.CommandText = $"select a.name,g.[value] from sys.tables a left join sys.extended_properties g on (a.object_id = g.major_id AND g.minor_id = 0) where a.name='{p_tblName}'";
+                using (reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows && reader.Read())
+                    {
+                        // 原始名称
+                        if (!reader.IsDBNull(0))
+                            tblCols = new TableSchema(reader.GetString(0), DatabaseType.SqlServer);
+
+                        // 注释
+                        if (!reader.IsDBNull(1))
+                            tblCols.Comments = reader.GetString(1);
+                    }
+                }
+                if (tblCols == null)
+                    return null;
 
                 // 表结构
-                cmd.CommandText = string.Format(_sqlCols, p_tblName);
+                cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
                 ReadOnlyCollection<DbColumn> cols;
                 using (reader = cmd.ExecuteReader())
                 {
@@ -223,7 +233,7 @@ namespace Dt.Core
                 }
 
                 // 表的主键
-                cmd.CommandText = string.Format(_sqlPk, p_tblName);
+                cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
                 List<string> pk = new List<string>();
                 using (reader = cmd.ExecuteReader())
                 {
@@ -255,7 +265,7 @@ namespace Dt.Core
                         col.Nullable = colSchema.AllowDBNull.Value;
 
                     // 读取列结构
-                    cmd.CommandText = string.Format(_sqlComment, p_tblName, colSchema.ColumnName);
+                    cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows && reader.Read())

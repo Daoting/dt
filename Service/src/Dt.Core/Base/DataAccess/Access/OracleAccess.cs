@@ -38,7 +38,7 @@ namespace Dt.Core
 
         #region 表结构
         const string _sqlAllTbls = "SELECT table_name FROM user_tables";
-        const string _sqlCols = "select * from {0} where 1!=1";
+        const string _sqlCols = "select * from \"{0}\" where 1!=1";
         const string _sqlComment = "SELECT a.data_default, b.comments FROM user_tab_columns a, user_col_comments b WHERE a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
         const string _sqlPk = "select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{0}'";
         
@@ -48,7 +48,7 @@ namespace Dt.Core
         /// <returns>返回加载结果信息</returns>
         public override IReadOnlyDictionary<string, TableSchema> GetDbSchema()
         {
-            var schema = new Dictionary<string, TableSchema>();
+            var schema = new Dictionary<string, TableSchema>(StringComparer.OrdinalIgnoreCase);
             using (OracleConnection conn = new OracleConnection(DbInfo.ConnStr))
             using (OracleCommand cmd = conn.CreateCommand())
             {
@@ -64,8 +64,8 @@ namespace Dt.Core
                     {
                         while (reader.Read())
                         {
-                            // 表名小写
-                            tbls.Add(reader.GetString(0).ToLower());
+                            // 原始表名
+                            tbls.Add(reader.GetString(0));
                         }
                     }
                 }
@@ -84,7 +84,7 @@ namespace Dt.Core
                     }
 
                     // 表的主键
-                    cmd.CommandText = string.Format(_sqlPk, tbl.ToUpper());
+                    cmd.CommandText = string.Format(_sqlPk, tbl);
                     List<string> pk = new List<string>();
                     using (reader = cmd.ExecuteReader())
                     {
@@ -116,7 +116,7 @@ namespace Dt.Core
                             col.Nullable = colSchema.AllowDBNull.Value;
 
                         // 读取列结构
-                        cmd.CommandText = string.Format(_sqlComment, tbl.ToUpper(), colSchema.ColumnName);
+                        cmd.CommandText = string.Format(_sqlComment, tbl, colSchema.ColumnName);
                         using (reader = cmd.ExecuteReader())
                         {
                             if (reader.HasRows && reader.Read())
@@ -165,8 +165,7 @@ namespace Dt.Core
                     {
                         while (reader.Read())
                         {
-                            // 表名小写
-                            tbls.Add(reader.GetString(0).ToLower());
+                            tbls.Add(reader.GetString(0));
                         }
                     }
                 }
@@ -189,24 +188,36 @@ namespace Dt.Core
             {
                 conn.Open();
                 OracleDataReader reader = null;
-                TableSchema tblCols = new TableSchema(p_tblName, DatabaseType.Oracle);
+                TableSchema tblCols = null;
 
                 // 表注释
-                cmd.CommandText = $"select comments from user_tab_comments where table_name='{p_tblName.ToUpper()}'";
-                var comment = cmd.ExecuteScalar();
-                if (comment != null)
-                    tblCols.Comments = comment.ToString();
+                cmd.CommandText = $"select table_name,comments from user_tab_comments where LOWER(table_name)='{p_tblName.ToLower()}'";
+                using (reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows && reader.Read())
+                    {
+                        // 原始名称
+                        if (!reader.IsDBNull(0))
+                            tblCols = new TableSchema(reader.GetString(0), DatabaseType.Oracle);
+
+                        // 注释
+                        if (!reader.IsDBNull(1))
+                            tblCols.Comments = reader.GetString(1);
+                    }
+                }
+                if (tblCols == null)
+                    return null;
 
                 // 所有列
                 ReadOnlyCollection<DbColumn> cols;
-                cmd.CommandText = string.Format(_sqlCols, p_tblName);
+                cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
                 using (reader = cmd.ExecuteReader())
                 {
                     cols = reader.GetColumnSchema();
                 }
 
                 // 表的主键
-                cmd.CommandText = string.Format(_sqlPk, p_tblName.ToUpper());
+                cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
                 List<string> pk = new List<string>();
                 using (reader = cmd.ExecuteReader())
                 {
@@ -238,7 +249,7 @@ namespace Dt.Core
                         col.Nullable = colSchema.AllowDBNull.Value;
 
                     // 读取列结构
-                    cmd.CommandText = string.Format(_sqlComment, p_tblName.ToUpper(), colSchema.ColumnName);
+                    cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows && reader.Read())

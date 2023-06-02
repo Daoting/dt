@@ -34,7 +34,7 @@ namespace Dt.Cm
         // 表名及列的数据少，不需要索引！！！
         const string _createOmTable = "CREATE TABLE OmTable (\n" +
                                             "ID integer primary key not null,\n" +
-                                            "Name text,\n" +
+                                            "Name text COLLATE NOCASE,\n" +
                                             "Type integer,\n" +
                                             "DbKey text)";
         const string _insertOmTable = "insert into OmTable (ID,Name,Type,DbKey) values (:ID,:Name,:Type,:DbKey)";

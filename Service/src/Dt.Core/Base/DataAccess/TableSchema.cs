@@ -40,7 +40,7 @@ namespace Dt.Core
                     break;
 
                 case DatabaseType.Oracle:
-                    Prefix = Postfix = string.Empty;
+                    Prefix = Postfix = "\"";
                     VarPrefix = ":";
                     break;
 
@@ -53,7 +53,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 表名，小写
+        /// 表名，库里原始大小写
         /// </summary>
         public string Name { get; }
 
