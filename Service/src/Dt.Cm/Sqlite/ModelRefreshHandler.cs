@@ -125,10 +125,14 @@ namespace Dt.Cm
                     sb.AppendFormat("导出表结构：{0}张表，{1}个字段\r\n", tbls.Count, cols.Count);
                     #endregion
 
-                    // 加载service.json配置节 SqliteModel 的缓存数据
-                    foreach (var item in Kit.Config.GetSection("SqliteModel").GetChildren())
+                    // 加载 model.json 中配置的缓存数据
+                    var cfg = new ConfigurationBuilder()
+                        .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                        .AddJsonFile("model.json", false, false)
+                        .Build();
+                    foreach (var item in cfg.GetChildren())
                     {
-                        var arr = Kit.Config.GetSection($"SqliteModel:{item.Key}:Create").Get<string[]>();
+                        var arr = cfg.GetSection($"{item.Key}:Create").Get<string[]>();
                         if (arr == null || arr.Length == 0)
                             continue;
 
@@ -147,7 +151,7 @@ namespace Dt.Cm
                         sb.AppendFormat("创建表{0}成功，", item.Key);
 
                         // 导入数据
-                        int cnt = await ImportData(item.Key, conn);
+                        int cnt = await ImportData(cfg, item.Key, conn);
                         if (cnt == 0)
                             sb.AppendLine("无数据");
                         else
@@ -209,10 +213,10 @@ namespace Dt.Cm
             catch { }
         }
 
-        async Task<int> ImportData(string p_tblName, SqliteConnection p_conn)
+        async Task<int> ImportData(IConfigurationRoot p_cfg, string p_tblName, SqliteConnection p_conn)
         {
-            var dbConn = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:DbKey");
-            var select = Kit.Config.GetValue<string>($"SqliteModel:{p_tblName}:Data");
+            var dbConn = p_cfg.GetValue<string>($"{p_tblName}:DbKey");
+            var select = p_cfg.GetValue<string>($"{p_tblName}:Data");
             if (string.IsNullOrEmpty(select))
                 return 0;
 
