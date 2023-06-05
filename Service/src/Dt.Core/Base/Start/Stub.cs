@@ -10,7 +10,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -21,9 +20,14 @@ namespace Dt.Core
     public abstract class Stub
     {
         /// <summary>
-        /// 获取服务名称，小写
+        /// 服务名称，小写
         /// </summary>
-        public abstract string SvcName { get; }
+        public virtual string SvcName { get; set; }
+
+        /// <summary>
+        /// 是否允许单体服务模式
+        /// </summary>
+        public virtual bool AllowSingleton => true;
 
         /// <summary>
         /// 注入全局服务
@@ -38,4 +42,10 @@ namespace Dt.Core
         /// <param name="p_handlers">注册自定义请求处理</param>
         public virtual void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers) { }
     }
+
+    /// <summary>
+    /// 默认服务存根，无Api的空服务使用
+    /// </summary>
+    public class DefaultStub : Stub
+    { }
 }

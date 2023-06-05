@@ -323,7 +323,9 @@ namespace Dt.Core
             LoadAssembly(typeof(Silo).Assembly, p_builder, "公共");
             foreach (var stub in Kit.Stubs)
             {
-                LoadAssembly(stub.GetType().Assembly, p_builder, stub.SvcName);
+                // 过滤默认存根，无Api
+                if (stub is not DefaultStub)
+                    LoadAssembly(stub.GetType().Assembly, p_builder, stub.SvcName);
             }
 
             // 内部服务管理Api

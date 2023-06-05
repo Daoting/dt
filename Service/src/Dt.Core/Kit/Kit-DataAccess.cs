@@ -95,6 +95,11 @@ namespace Dt.Core
                 throw new Exception($"默认数据源键名[{defDbKey}]在global.json无配置！");
         }
 
+        /// <summary>
+        /// 单体服务时所有服务的数据库描述信息，所有服务使用同一库时为null
+        /// </summary>
+        internal static Dictionary<string, DbInfo> SingletonSvcDbs { get; set; }
+
         static readonly Dictionary<string, DbInfo> _dbAll = new Dictionary<string, DbInfo>(StringComparer.OrdinalIgnoreCase);
         static DbInfo _defaultDbInfo;
     }

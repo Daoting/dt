@@ -1,0 +1,29 @@
+﻿{
+  // 默认数据源键名
+  "DbKey": "dt",
+  // 服务名称
+  "SvcName": "cosm",
+
+  // 是否为单体服务
+  "IsSingletonSvc": true,
+  // 单体服务时有效，自定义服务的数据源键名
+  "CustomSvcDbKey": {
+    "lob1": "orcldt",
+    "cm": "sqldt"
+  },
+
+  "CacheSql": false,
+  "TraceSql": true,
+  "TraceRpc": true,
+
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "20203"
+    }
+  ],
+
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
+}

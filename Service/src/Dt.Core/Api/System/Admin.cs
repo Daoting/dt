@@ -33,7 +33,13 @@ namespace Dt.Core
             else
                 ls.Add("API目录");
             ls.Add(GetTopbarHtml());
-            ls.Add(GetGroupApi(Kit.Stubs[0].SvcName));
+
+            // 不显示无Api的服务
+            var stub = (from s in Kit.Stubs
+                        where s is not DefaultStub
+                        select s).FirstOrDefault();
+            if (stub != null)
+                ls.Add(GetGroupApi(stub.SvcName));
             return ls;
         }
 
@@ -206,7 +212,8 @@ namespace Dt.Core
             sb.Append($"<span style=\"font-size:20px;\">API({Silo.Methods.Count})</span>");
             foreach (var stub in Kit.Stubs)
             {
-                sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
+                if (stub is not DefaultStub)
+                    sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
             }
             sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "公共");
             sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "测试");

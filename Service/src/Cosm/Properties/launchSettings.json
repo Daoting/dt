@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Svcs": {
+    "Cosm": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": ".admin",

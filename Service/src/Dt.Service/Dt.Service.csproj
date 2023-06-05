@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>4.0.1</Version>
+		<Version>4.1.0</Version>
 		<PackageId Condition="'$(Configuration)'=='Debug'">Dt.Service.Debug</PackageId>
 		<PackageId Condition="'$(Configuration)'=='Release'">Dt.Service</PackageId>
 		<!-- 将引用项目合并打包 -->
@@ -58,11 +58,13 @@
 
 	<ItemGroup>
 		<!-- 和Dt.Core引用包一致 -->
+		<PackageReference Include="MySqlConnector" Version="2.2.1" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.100" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
 		<PackageReference Include="Autofac" Version="6.5.0" />
 		<PackageReference Include="Castle.Core" Version="5.1.0" />
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.0" />
-		<PackageReference Include="MySqlConnector" Version="2.2.1" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="Polly" Version="7.2.3" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.4.0" />

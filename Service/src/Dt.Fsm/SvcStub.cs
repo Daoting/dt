@@ -26,7 +26,16 @@ namespace Dt.Fsm
         /// <summary>
         /// 获取服务名称，小写
         /// </summary>
-        public override string SvcName => "fsm";
+        public override string SvcName
+        {
+            get => "fsm";
+            set => throw new Exception("fsm服务名称不可修改");
+        }
+
+        /// <summary>
+        /// 是否允许单体服务模式
+        /// </summary>
+        public override bool AllowSingleton => false;
 
         /// <summary>
         /// 定义全局服务

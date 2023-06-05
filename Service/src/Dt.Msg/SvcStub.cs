@@ -26,6 +26,15 @@ namespace Dt.Msg
         /// <summary>
         /// 获取服务名称，小写
         /// </summary>
-        public override string SvcName => "msg";
+        public override string SvcName
+        {
+            get => "msg";
+            set => throw new Exception("msg服务名称不可修改");
+        }
+
+        /// <summary>
+        /// 是否允许单体服务模式
+        /// </summary>
+        public override bool AllowSingleton => false;
     }
 }

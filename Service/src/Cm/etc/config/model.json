@@ -1,10 +1,13 @@
 ﻿{
   "OmOption": {
+    // 创建sqlite表、索引等
     "Create": [
       "create table if not exists OmOption (Name text not null,Category text not null)",
       "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
     ],
+    // 待导出的数据
     "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx",
+    // 数据源键名，省略时使用默认库
     "DbKey": "dt"
   },
   "OmReport": {
