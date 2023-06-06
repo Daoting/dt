@@ -110,7 +110,7 @@ namespace Dt.Core
                 sb.Append(index);
                 // 流模式Api无法调试
                 if (Silo.GetMethod(method).CallMode == ApiCallMode.Unary)
-                    sb.AppendFormat(".&nbsp;<a onclick=\"load('[&quot;Admin.CreateMethodCall&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\">{1}</a></td>", method, info[1]);
+                    sb.AppendFormat(".&nbsp;<a onclick=\"load('[&quot;&quot;,&quot;Admin.CreateMethodCall&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\">{1}</a></td>", method, info[1]);
                 else
                     sb.AppendFormat(".&nbsp;{0}</td>", info[1]);
 
@@ -140,7 +140,7 @@ namespace Dt.Core
             #region 左侧
             sb.Append("<td style=\"width:300px;vertical-align:top;\">");
             sb.Append("<table>");
-            sb.AppendFormat("<tr><td style=\"padding-top: 10px;\"><a onclick=\"load('[&quot;Admin.GetClsApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" style=\"font-size:20px\">{0}目录</a></td></tr>", p_alias.Substring(0, p_alias.IndexOf(".")));
+            sb.AppendFormat("<tr><td style=\"padding-top: 10px;\"><a onclick=\"load('[&quot;&quot;,&quot;Admin.GetClsApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" style=\"font-size:20px\">{0}目录</a></td></tr>", p_alias.Substring(0, p_alias.IndexOf(".")));
 
             sb.Append("<tr><td style=\"padding-top: 10px;font-weight: bold;\">映射方法</td></tr>");
             sb.Append("<tr><td>");
@@ -213,10 +213,10 @@ namespace Dt.Core
             foreach (var stub in Kit.Stubs)
             {
                 if (stub is not DefaultStub)
-                    sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
+                    sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
             }
-            sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "公共");
-            sb.AppendFormat("<a onclick=\"load('[&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "测试");
+            sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "公共");
+            sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "测试");
             return sb.ToString();
         }
         #endregion

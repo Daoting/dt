@@ -40,7 +40,7 @@ namespace Dt.Core
             }
 
             // 单体服务，本地直接调用
-            return new NativeApiInvoker().Call<T>(p_methodName, p_params);
+            return new NativeApiInvoker().Call<T>(p_serviceName, p_methodName, p_params);
         }
 
         /// <summary>

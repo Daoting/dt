@@ -39,7 +39,7 @@ namespace Dt.Core
             LoadConfig();
             BuildStubs(p_stub);
             DbSchema.Init();
-            Silo.CacheSql();
+            DataAccess.CacheSql();
             RunWebHost(p_args);
             Log.CloseAndFlush();
         }
@@ -145,6 +145,7 @@ namespace Dt.Core
                     LogException("缺少Dt.Fsm.dll文件");
                 stubs.Add((Stub)Activator.CreateInstance(tp));
 
+                // 自定义服务的数据源键名
                 var sect = Kit.Config.GetSection("CustomSvcDbKey");
                 Dictionary<string, DbInfo> svcDbs = null;
                 foreach (var svc in sect.GetChildren())

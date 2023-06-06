@@ -53,6 +53,11 @@ namespace Dt.Core
         public bool ExportToModel { get; }
 
         /// <summary>
+        /// 直接从库中xxx_sql表中查询Sql的语句，只在调试时用！多个服务时之间 union
+        /// </summary>
+        internal string DebugSqlStr { get; set; }
+
+        /// <summary>
         /// 创建数据访问对象
         /// </summary>
         /// <returns></returns>

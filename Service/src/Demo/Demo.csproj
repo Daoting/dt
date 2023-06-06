@@ -8,6 +8,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dt.Service" Version="4.0.0" />
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 	</ItemGroup>
 </Project>

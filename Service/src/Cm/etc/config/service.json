@@ -1,6 +1,6 @@
 ﻿{
   "DbKey": "dt",
-  "CacheSql": false,
+  "CacheSql": true,
   "TraceSql": true,
   "TraceRpc": true,
 

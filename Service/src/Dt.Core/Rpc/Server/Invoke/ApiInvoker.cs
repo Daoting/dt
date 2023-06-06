@@ -63,6 +63,11 @@ namespace Dt.Core.Rpc
         /// 获取取消令牌
         /// </summary>
         public virtual CancellationToken RequestAborted { get; }
+
+        /// <summary>
+        /// 服务名称
+        /// </summary>
+        public string SvcName { get; private set; }
         #endregion
 
         /// <summary>
@@ -152,6 +157,7 @@ namespace Dt.Core.Rpc
 
             // [
             reader.Read();
+            SvcName = reader.ReadAsString();
             ApiName = reader.ReadAsString();
             if (string.IsNullOrEmpty(ApiName) || (Api = Silo.GetMethod(ApiName)) == null)
             {

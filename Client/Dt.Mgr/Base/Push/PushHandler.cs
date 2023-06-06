@@ -147,6 +147,8 @@ namespace Dt.Mgr
                 var reader = new Utf8JsonReader(data);
                 // [
                 reader.Read();
+                // msg
+                reader.Read();
                 method = reader.ReadAsString();
 
                 if (string.IsNullOrEmpty(method) || (mi = GetMethod(method)) == null)

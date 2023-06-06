@@ -613,6 +613,13 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
         public abstract TableSchema GetTableSchema(string p_tblName);
+
+        /// <summary>
+        /// 数据库中是否存在指定的表
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public abstract Task<bool> ExistTable(string p_tblName);
         #endregion
 
         #region 内部方法
@@ -625,7 +632,7 @@ namespace Dt.Core
         /// <returns></returns>
         protected CommandDefinition CreateCommand(string p_keyOrSql, object p_params, bool p_deferred)
         {
-            string sql = Kit.Sql(p_keyOrSql);
+            string sql = GetSql(p_keyOrSql);
             if (Kit.TraceSql)
                 Log.Information(BuildSql(sql, p_params));
 
@@ -767,6 +774,195 @@ namespace Dt.Core
         }
 
         static readonly Regex _sqlPattern = new Regex("[0-9a-zA-Z_$]");
+        #endregion
+
+        #region Sql字典
+        /// <summary>
+        /// 获取查询Sql语句，默认从缓存字典中查询，service.json中CacheSql为false时直接从表xxx_sql查询！
+        /// </summary>
+        /// <param name="p_keyOrSql">输入参数为键名(无空格) 或 Sql语句，含空格时不需查询，直接返回Sql语句</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        protected string GetSql(string p_keyOrSql)
+        {
+            if (string.IsNullOrEmpty(p_keyOrSql))
+                throw new Exception("Sql键名不可为空！");
+
+            // Sql语句中包含空格
+            if (p_keyOrSql.IndexOf(' ') != -1)
+                return p_keyOrSql;
+
+            // 键名不包含空格！！！
+
+            // 已缓存
+            if (_sqlDict != null)
+            {
+                if (_sqlDict.TryGetValue(p_keyOrSql, out var sql))
+                    return sql;
+                throw new Exception($"不存在键名为[{p_keyOrSql}]的Sql语句！");
+            }
+
+            // 未缓存，直接查询
+            var task = GetScalar<string>(DbInfo.DebugSqlStr, new { id = p_keyOrSql });
+            task.Wait();
+            return task.Result;
+        }
+
+        /// <summary>
+        /// 缓存Sql串
+        /// </summary>
+        internal static void CacheSql()
+        {
+            if (Kit.GetCfg("CacheSql", true))
+            {
+                LoadCacheSql().Wait();
+            }
+            else
+            {
+                // 生成查询sql
+                if (Kit.SingletonSvcDbs != null)
+                {
+                    Dictionary<DbInfo, IDataAccess> das = new Dictionary<DbInfo, IDataAccess>();
+                    foreach (var item in Kit.SingletonSvcDbs)
+                    {
+                        var di = item.Value;
+                        if (!das.TryGetValue(di, out var da))
+                        {
+                            da = di.NewDataAccess();
+                            da.AutoClose = false;
+                            das.Add(di, da);
+                        }
+
+                        var task = da.ExistTable(item.Key + "_sql");
+                        task.Wait();
+                        if (task.Result)
+                        {
+                            var sql = GetSelectStr(item.Key, di.Type);
+                            if (di.DebugSqlStr != null && di.DebugSqlStr.Length > 0)
+                            {
+                                di.DebugSqlStr += " union ";
+                                di.DebugSqlStr += sql;
+                            }
+                            else
+                            {
+                                di.DebugSqlStr = sql;
+                            }
+                        }
+                    }
+
+                    foreach (var da in das.Values)
+                    {
+                        da.Close(true).Wait();
+                    }
+                }
+                else
+                {
+                    // 只默认库
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var name in Kit.SvcNames)
+                    {
+                        if (DbSchema.Schema.ContainsKey(name + "_sql"))
+                        {
+                            if (sb.Length > 0)
+                                sb.Append(" union ");
+                            sb.Append(GetSelectStr(name, Kit.DefaultDbInfo.Type));
+                        }
+                    }
+                    Kit.DefaultDbInfo.DebugSqlStr = sb.ToString();
+                }
+                Log.Information("未缓存Sql, 调试状态");
+            }
+
+            string GetSelectStr(string p_svc, DatabaseType p_type)
+            {
+                switch (p_type)
+                {
+                    case DatabaseType.MySql:
+                        return $"select `sql` from {p_svc}_sql where id=@id";
+
+                    case DatabaseType.Oracle:
+                        return $"select \"sql\" from {p_svc}_sql where id=:id";
+
+                    default:
+                        return $"select [sql] from {p_svc}_sql where id=@id";
+                }
+            }
+        }
+
+        /// <summary>
+        /// 系统配置(json文件)修改事件
+        /// </summary>
+        internal static void OnConfigChanged()
+        {
+            bool refresh = false;
+            if (Kit.GetCfg("CacheSql", true) && _sqlDict == null)
+            {
+                Log.Information("切换到Sql缓存模式");
+                refresh = true;
+            }
+            else if (!Kit.GetCfg("CacheSql", true) && _sqlDict != null)
+            {
+                Log.Information("切换到Sql调试模式");
+                _sqlDict = null;
+                refresh = true;
+            }
+
+            if (refresh)
+                CacheSql();
+        }
+
+        /// <summary>
+        /// 缓存当前所有服务的所有Sql语句，表名xxx_sql
+        /// </summary>
+        internal static async Task LoadCacheSql()
+        {
+            try
+            {
+                _sqlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                if (Kit.SingletonSvcDbs == null)
+                {
+                    // 同一库
+                    var da = Kit.DefaultDbInfo.NewDataAccess();
+                    foreach (var name in Kit.SvcNames)
+                    {
+                        await LoadSvcCacheSql(da, name);
+                    }
+                }
+                else
+                {
+                    // 多个库
+                    foreach (var item in Kit.SingletonSvcDbs)
+                    {
+                        await LoadSvcCacheSql(item.Value.NewDataAccess(), item.Key);
+                    }
+                }
+                Log.Information("缓存Sql成功");
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "缓存Sql失败！");
+                throw;
+            }
+        }
+
+        static async Task LoadSvcCacheSql(IDataAccess p_da, string p_svcName)
+        {
+            string sql;
+            if (p_da.DbInfo.Type == DatabaseType.MySql)
+                sql = $"select id,`sql` from {p_svcName}_sql";
+            else if (p_da.DbInfo.Type == DatabaseType.Oracle)
+                sql = $"select id,\"sql\" from {p_svcName}_sql";
+            else
+                sql = $"select id,[sql] from {p_svcName}_sql";
+
+            var ls = await p_da.Each(sql);
+            foreach (Row item in ls)
+            {
+                _sqlDict[item.Str("id")] = item.Str("sql");
+            }
+        }
+
+        static Dictionary<string, string> _sqlDict;
         #endregion
     }
 }

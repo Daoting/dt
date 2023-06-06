@@ -225,6 +225,13 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
         TableSchema GetTableSchema(string p_tblName);
+
+        /// <summary>
+        /// 数据库中是否存在指定的表
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        Task<bool> ExistTable(string p_tblName);
         #endregion
 
         #region 其他

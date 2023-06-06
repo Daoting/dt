@@ -12,9 +12,7 @@ using Autofac.Extensions.DependencyInjection;
 using Autofac.Extras.DynamicProxy;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using System.Text;
 #endregion
 
 namespace Dt.Core
@@ -24,18 +22,12 @@ namespace Dt.Core
     /// </summary>
     internal static class Silo
     {
-        #region 成员变量
-        static readonly Dictionary<string, string> _sqlDict;
-        #endregion
-
         #region 构造方法
         static Silo()
         {
             // Api字典
             Methods = new Dictionary<string, ApiMethod>();
             GroupMethods = new Dictionary<string, List<string>>();
-            // Sql缓存字典
-            _sqlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
 
@@ -150,164 +142,7 @@ namespace Dt.Core
             }
 
             // 序列化Json串 RPC 调用请求，含有缩进
-            return RpcKit.GetCallString(p_methodName, funParams, true);
-        }
-        #endregion
-
-        #region Sql字典
-        /// <summary>
-        /// 缓存当前所有服务的所有Sql语句，表名xxx_sql
-        /// </summary>
-        public static async void LoadCacheSql()
-        {
-            try
-            {
-                var da = Kit.NewDataAccess();
-                StringBuilder sb = new StringBuilder();
-                foreach (var name in Kit.SvcNames)
-                {
-                    var tbl = name + "_sql";
-                    if (DbSchema.Schema.ContainsKey(tbl))
-                    {
-                        if (sb.Length > 0)
-                            sb.Append(" union ");
-
-                        if (da.DbInfo.Type == DatabaseType.MySql)
-                            sb.Append($"select id,`sql` from {tbl}");
-                        else if (da.DbInfo.Type == DatabaseType.Oracle)
-                            sb.Append($"select id,\"sql\" from {tbl}");
-                        else
-                            sb.Append($"select id,[sql] from {tbl}");
-                    }
-                }
-
-                var ls = await da.Each(sb.ToString());
-                foreach (Row item in ls)
-                {
-                    _sqlDict[item.Str("id")] = item.Str("sql");
-                }
-                Log.Information("缓存Sql成功");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "缓存Sql失败！");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 缓存Sql串
-        /// </summary>
-        public static void CacheSql()
-        {
-            if (Kit.GetCfg("CacheSql", true))
-            {
-                Kit.Sql = GetDictSql;
-                LoadCacheSql();
-            }
-            else
-            {
-                Kit.Sql = GetDebugSql;
-                _debugDa = Kit.NewDataAccess();
-                _debugDa.AutoClose = false;
-
-                // 生成查询sql
-                if (Kit.Stubs.Length > 1)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    foreach (var name in Kit.SvcNames)
-                    {
-                        if (DbSchema.Schema.ContainsKey(name + "_sql"))
-                        {
-                            if (sb.Length > 0)
-                                sb.Append(" union ");
-                            sb.Append(GetSelectStr(name, _debugDa.DbInfo.Type));
-                        }
-                    }
-                    _debugSql = sb.ToString();
-                }
-                else
-                {
-                    _debugSql = GetSelectStr(Kit.Stubs[0].SvcName, _debugDa.DbInfo.Type);
-                }
-                Log.Information("未缓存Sql, 调试状态");
-            }
-
-            string GetSelectStr(string p_svc, DatabaseType p_type)
-            {
-                switch (p_type)
-                {
-                    case DatabaseType.MySql:
-                        return $"select `sql` from {p_svc}_sql where id=@id";
-
-                    case DatabaseType.Oracle:
-                        return $"select \"sql\" from {p_svc}_sql where id=:id";
-
-                    default:
-                        return $"select [sql] from {p_svc}_sql where id=@id";
-                }
-            }
-        }
-
-        /// <summary>
-        /// 系统配置(json文件)修改事件
-        /// </summary>
-        public static void OnConfigChanged()
-        {
-            if (Kit.GetCfg("CacheSql", true))
-            {
-                Kit.Sql = GetDictSql;
-                LoadCacheSql();
-                Log.Information("切换到Sql缓存模式");
-            }
-            else if (Kit.Sql != GetDictSql)
-            {
-                if (Kit.Sql != GetDebugSql)
-                {
-                    Kit.Sql = GetDebugSql;
-                    Log.Information("切换到Sql调试模式");
-                }
-            }
-        }
-
-        /// <summary>
-        /// 查询缓存中的Sql语句
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <returns>Sql语句</returns>
-        static string GetDictSql(string p_keyOrSql)
-        {
-            if (string.IsNullOrEmpty(p_keyOrSql))
-                throw new Exception("Sql键名不可为空！");
-
-            // Sql语句中包含空格
-            if (p_keyOrSql.IndexOf(' ') != -1)
-                return p_keyOrSql;
-
-            // 键名不包含空格！！！
-            string sql;
-            if (!_sqlDict.TryGetValue(p_keyOrSql, out sql))
-                throw new Exception($"不存在键名为[{p_keyOrSql}]的Sql语句！");
-            return sql;
-        }
-
-        static string _debugSql;
-        static IDataAccess _debugDa;
-        /// <summary>
-        /// 直接从库中查询Sql语句，只在调试时单机用！
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <returns>Sql语句</returns>
-        static string GetDebugSql(string p_keyOrSql)
-        {
-            if (string.IsNullOrEmpty(p_keyOrSql))
-                throw new Exception("Sql键名不可为空！");
-
-            // Sql语句中包含空格
-            if (p_keyOrSql.IndexOf(' ') != -1)
-                return p_keyOrSql;
-
-            return _debugDa.GetScalar<string>(_debugSql, new { id = p_keyOrSql }).Result;
+            return RpcKit.GetCallString(sm.SvcName, p_methodName, funParams, true);
         }
         #endregion
 
@@ -407,6 +242,20 @@ namespace Dt.Core
                 }
             }
 
+            // 服务名
+            string svcName;
+            if (p_apiAttr == null
+                || p_apiAttr.IsTest
+                || string.IsNullOrEmpty(p_groupName)
+                || p_groupName == "公共")
+            {
+                svcName = Kit.Stubs[0].SvcName;
+            }
+            else
+            {
+                svcName = p_groupName;
+            }
+
             ApiCallMode callMode;
             var clsAuth = p_type.GetCustomAttribute<AuthAttribute>(false);
             MethodInfo[] methods = p_type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
@@ -438,7 +287,7 @@ namespace Dt.Core
 
                 var methodAuth = mi.GetCustomAttribute<AuthAttribute>(false);
                 string name = $"{p_type.Name}.{mi.Name}";
-                Methods[name] = new ApiMethod(mi, callMode, methodAuth ?? clsAuth);
+                Methods[name] = new ApiMethod(mi, callMode, methodAuth ?? clsAuth, svcName);
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }

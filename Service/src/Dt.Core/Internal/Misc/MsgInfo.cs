@@ -48,42 +48,7 @@ namespace Dt.Core
         /// <returns></returns>
         public string GetOnlineMsg()
         {
-            return RpcKit.GetCallString(MethodName, Params);
-        }
-
-        /// <summary>
-        /// 获取Toast内容xml
-        /// </summary>
-        /// <returns></returns>
-        public byte[] GetToastMsg()
-        {
-            StringBuilder sb = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(sb))
-            {
-                writer.WriteStartElement("toast");
-
-                // 启动参数
-                if (!string.IsNullOrEmpty(MethodName))
-                    writer.WriteAttributeString("launch", GetOnlineMsg());
-                writer.WriteStartElement("visual");
-                writer.WriteStartElement("binding");
-                writer.WriteAttributeString("template", "ToastText02");
-
-                writer.WriteStartElement("text");
-                writer.WriteAttributeString("id", "1");
-                writer.WriteValue(Title);
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("text");
-                writer.WriteAttributeString("id", "2");
-                writer.WriteValue(Content);
-                writer.WriteEndElement();
-
-                writer.WriteEndElement();
-                writer.WriteEndElement();
-                writer.WriteEndElement();
-            }
-            return Encoding.UTF8.GetBytes(sb.ToString());
+            return RpcKit.GetCallString("msg", MethodName, Params);
         }
 
         #region IRpcJson

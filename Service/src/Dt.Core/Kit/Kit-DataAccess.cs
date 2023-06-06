@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Microsoft.Extensions.Configuration;
-using Serilog;
 #endregion
 
 namespace Dt.Core
@@ -66,6 +65,7 @@ namespace Dt.Core
             if (string.IsNullOrEmpty(defDbKey))
                 throw new Exception("service.json中缺少默认数据源键名的配置！");
 
+            _dbAll = new Dictionary<string, DbInfo>(StringComparer.OrdinalIgnoreCase);
             var sect = _config.GetSection("Database");
             foreach (var item in sect.GetChildren())
             {
@@ -100,7 +100,7 @@ namespace Dt.Core
         /// </summary>
         internal static Dictionary<string, DbInfo> SingletonSvcDbs { get; set; }
 
-        static readonly Dictionary<string, DbInfo> _dbAll = new Dictionary<string, DbInfo>(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, DbInfo> _dbAll;
         static DbInfo _defaultDbInfo;
     }
 }

@@ -597,11 +597,17 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 重新加载Cache.db中的sql语句
+        /// 重新加载缓存的sql语句
         /// </summary>
-        public void UpdateSqlCache()
+        /// <returns></returns>
+        public async Task<string> UpdateSqlCache()
         {
-            Silo.LoadCacheSql();
+            if (Kit.GetCfg("CacheSql", true))
+            {
+                await DataAccess.LoadCacheSql();
+                return "刷新缓存Sql成功";
+            }
+            return "未启用缓存Sql, 调试状态";
         }
 
         /// <summary>

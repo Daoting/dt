@@ -33,7 +33,7 @@ namespace Dt.Core
         protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
         {
             // SQL2012以上的版本才支持，前段sql应有order by，否则出错！
-            var sql = Kit.Sql(p_keyOrSql);
+            var sql = GetSql(p_keyOrSql);
             if (!sql.Contains(" order ", StringComparison.OrdinalIgnoreCase))
             {
                 // 添加无用的order by
@@ -288,6 +288,20 @@ namespace Dt.Core
 
                 return tblCols;
             }
+        }
+
+        /// <summary>
+        /// 数据库中是否存在指定的表
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public override async Task<bool> ExistTable(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return false;
+
+            // 大小写不敏感
+            return await GetScalar<int>($"select count(*) from sysobjects where xtype='u' and name='{p_tblName}'") > 0;
         }
         #endregion
     }

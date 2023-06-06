@@ -118,7 +118,7 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
         {
-            byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
+            byte[] data = RpcKit.GetCallBytes(_svcName, p_methodName, p_params);
 
 #if !SERVER
             // 级别允许输出日志

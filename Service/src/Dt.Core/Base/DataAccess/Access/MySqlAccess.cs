@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dapper;
 using MySqlConnector;
 using System.Collections.ObjectModel;
 using System.Data.Common;
@@ -33,7 +34,7 @@ namespace Dt.Core
 
         protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
         {
-            return $"select * from ({Kit.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize}";
+            return $"select * from ({GetSql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize}";
         }
         #endregion
 
@@ -221,7 +222,7 @@ namespace Dt.Core
                         col.Nullable = colSchema.AllowDBNull.Value;
 
                     // 读取列结构
-                    cmd.CommandText = string.Format(_sqlComment, conn.Database, tblCols.Name, colSchema.ColumnName); 
+                    cmd.CommandText = string.Format(_sqlComment, conn.Database, tblCols.Name, colSchema.ColumnName);
                     using (reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows && reader.Read())
@@ -241,6 +242,34 @@ namespace Dt.Core
                         tblCols.Columns.Add(col);
                 }
                 return tblCols;
+            }
+        }
+
+        /// <summary>
+        /// 数据库中是否存在指定的表
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public override async Task<bool> ExistTable(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return false;
+
+            CommandDefinition cmd;
+            try
+            {
+                await OpenConnection();
+                cmd = CreateCommand($"SELECT count(*) FROM information_schema.tables WHERE table_schema='{_conn.Database}' and lower(table_name)='{p_tblName.ToLower()}'", null, false);
+                var cnt = await _conn.ExecuteScalarAsync<int>(cmd);
+                return cnt > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("MySqlAccess.ExistTable异常：\r\n" + ex.Message);
+            }
+            finally
+            {
+                ReleaseConnection();
             }
         }
         #endregion

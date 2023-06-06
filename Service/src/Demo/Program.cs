@@ -1,1 +1,1 @@
-Launcher.Run(args, new Dt.Demo.SvcStub(), true);
+Launcher.Run(args, new Dt.Demo.SvcStub());

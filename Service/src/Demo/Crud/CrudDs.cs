@@ -157,7 +157,7 @@ namespace Demo.Crud
         #region 虚拟实体
         public async Task<bool> InsertVir()
         {
-            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.New();
             x.E1.ID = await Virtbl1X.NewID();
             x.E1.Name1 = "新1";
             x.E2.Name2 = "新2";
@@ -202,7 +202,7 @@ namespace Demo.Crud
                 tbl[0].E3.Name3 = name;
             }
             // 增
-            var x = new VirX<Virtbl1X, Virtbl2X, Virtbl3X>();
+            var x = await VirX<Virtbl1X, Virtbl2X, Virtbl3X>.New();
             x.E1.ID = await Virtbl1X.NewID();
             x.E1.Name1 = "批增1";
             x.E2.Name2 = "批增2";
@@ -330,7 +330,7 @@ namespace Demo.Crud
             var x = await CacheTbl1X.First(null);
             if (x != null)
             {
-                var model = EntitySchema.Get(typeof(CacheTbl1X));
+                var model = await EntitySchema.Get(typeof(CacheTbl1X));
                 var key = $"{model.Schema.Name}:phone:{x.Phone}";
                 await Kit.DeleteCache(key);
 

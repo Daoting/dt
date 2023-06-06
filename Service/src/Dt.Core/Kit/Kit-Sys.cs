@@ -70,12 +70,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 查询Sql语句，默认从缓存字典中查询，service.json中CacheSql为false时直接从表xxx_sql查询！
-        /// <para>输入参数为键名(无空格) 或 Sql语句，含空格时不需查询，直接返回Sql语句</para>
-        /// </summary>
-        public static Func<string, string> Sql { get; internal set; }
-
-        /// <summary>
         /// 获取当前请求的HttpContext
         /// </summary>
         public static HttpContext HttpContext => _accessor.HttpContext;
@@ -151,8 +145,8 @@ namespace Dt.Core
         /// <param name="p_state"></param>
         static void OnConfigChanged(object p_state)
         {
-            Silo.OnConfigChanged();
             ApplyConfig();
+            Dt.Core.DataAccess.OnConfigChanged();
             ConfigChanged?.Invoke();
 
             // 每次修改后需要重新注册，立即注册又会连续触发两次！

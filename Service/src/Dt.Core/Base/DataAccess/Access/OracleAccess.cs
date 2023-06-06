@@ -32,7 +32,7 @@ namespace Dt.Core
 
         protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
         {
-            return $"select * from (select a.*,rownum rn from ({Kit.Sql(p_keyOrSql)}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
+            return $"select * from (select a.*,rownum rn from ({GetSql(p_keyOrSql)}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
         }
         #endregion
 
@@ -273,6 +273,19 @@ namespace Dt.Core
 
                 return tblCols;
             }
+        }
+
+        /// <summary>
+        /// 数据库中是否存在指定的表
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns></returns>
+        public override async Task<bool> ExistTable(string p_tblName)
+        {
+            if (string.IsNullOrEmpty(p_tblName))
+                return false;
+
+            return await GetScalar<int>($"SELECT count(*) FROM user_tables where LOWER(table_name)='{p_tblName.ToLower()}'") > 0;
         }
         #endregion
     }

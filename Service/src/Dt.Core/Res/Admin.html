@@ -87,7 +87,7 @@
         var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
         window.onload = function ()
         {
-            call('["Admin.GetInitInfo"]').then(function (txt)
+            call('["","Admin.GetInitInfo"]').then(function (txt)
             {
                 var result = JSON.parse(txt);
                 if (result.length == 3)
@@ -182,7 +182,7 @@
 
         function loadAgent(cls)
         {
-            call('["Admin.GetAgentClass", "' + cls + '"]').then(function (txt)
+            call('["","Admin.GetAgentClass", "' + cls + '"]').then(function (txt)
             {
                 var result = JSON.parse(txt);
                 $("content").innerText = (result.length == 3) ? result[2] : txt;
@@ -444,7 +444,7 @@
 
         function historyLog()
         {
-            call('["Admin.GetHistoryLogFile"]').then(function (txt)
+            call('["","Admin.GetHistoryLogFile"]').then(function (txt)
             {
                 var result = JSON.parse(txt);
                 if (result.length == 3)

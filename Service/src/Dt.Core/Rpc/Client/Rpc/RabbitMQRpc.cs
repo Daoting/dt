@@ -46,7 +46,7 @@ namespace Dt.Core.Rpc
                 || (!string.IsNullOrEmpty(p_svcName) && !string.IsNullOrEmpty(p_svcID)))
                 throw new InvalidOperationException("Rpc调用时需要指定服务名称 或 服务实例id！");
 
-            var data = GetRpcData(p_methodName, p_params);
+            var data = GetRpcData(p_svcName, p_methodName, p_params);
 
             var id = Kit.NewGuid;
             var tcs = new TaskCompletionSource<BasicDeliverEventArgs>();
@@ -81,13 +81,14 @@ namespace Dt.Core.Rpc
         /// <summary>
         /// 序列化RPC调用，按需压缩
         /// </summary>
+        /// <param name="p_serviceName">服务名称</param>
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数</param>
         /// <returns></returns>
-        byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
+        byte[] GetRpcData(string p_serviceName, string p_methodName, ICollection<object> p_params)
         {
             bool _isCompressed = false;
-            byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
+            byte[] data = RpcKit.GetCallBytes(p_serviceName, p_methodName, p_params);
 
             // 超过长度限制时执行压缩
             if (data.Length > RpcKit.MinCompressLength)

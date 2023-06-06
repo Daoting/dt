@@ -19,7 +19,7 @@ namespace Dt.Core.Rpc
     {
         object _result;
 
-        public async Task<T> Call<T>(string p_methodName, params object[] p_params)
+        public async Task<T> Call<T>(string p_svcName, string p_methodName, params object[] p_params)
         {
             ApiMethod sm = Silo.GetMethod(p_methodName);
             if (sm == null)
@@ -31,7 +31,7 @@ namespace Dt.Core.Rpc
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
             // 初始化整个调用期间有效的数据包
-            Bag bag = new Bag(112, Log.ForContext(new ApiLogEnricher(p_methodName, 112)));
+            Bag bag = new Bag(p_svcName, 112, Log.ForContext(new ApiLogEnricher(p_methodName, 112)));
             tgt.Init(bag);
 
             bool suc = await CallMethod(mi, tgt, p_params);

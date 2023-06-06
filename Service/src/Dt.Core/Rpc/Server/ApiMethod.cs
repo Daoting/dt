@@ -17,11 +17,12 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class ApiMethod
     {
-        public ApiMethod(MethodInfo p_method, ApiCallMode p_callMode, AuthAttribute p_auth)
+        public ApiMethod(MethodInfo p_method, ApiCallMode p_callMode, AuthAttribute p_auth, string p_svcName)
         {
             Method = p_method;
             CallMode = p_callMode;
             Auth = p_auth;
+            SvcName = p_svcName;
         }
 
         /// <summary>
@@ -38,6 +39,11 @@ namespace Dt.Core.Rpc
         /// 校验Api调用授权
         /// </summary>
         public AuthAttribute Auth { get; }
+
+        /// <summary>
+        /// 服务名称
+        /// </summary>
+        public string SvcName { get; }
     }
 }
 

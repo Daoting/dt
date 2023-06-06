@@ -97,17 +97,19 @@ namespace Dt.Core.Rpc
         /// <summary>
         /// 获取Rpc调用时json格式的字节数组
         /// </summary>
+        /// <param name="p_serviceName">服务名称</param>
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数</param>
         /// <param name="p_indented">序列化json时是否含有缩进</param>
         /// <returns>字节数组</returns>
-        public static byte[] GetCallBytes(string p_methodName, ICollection<object> p_params, bool p_indented = false)
+        public static byte[] GetCallBytes(string p_serviceName, string p_methodName, ICollection<object> p_params, bool p_indented = false)
         {
             using (var stream = new MemoryStream())
             {
                 using (var writer = new Utf8JsonWriter(stream, p_indented ? JsonOptions.IndentedWriter : JsonOptions.UnsafeWriter))
                 {
                     writer.WriteStartArray();
+                    writer.WriteStringValue(p_serviceName);
                     writer.WriteStringValue(p_methodName);
                     if (p_params != null && p_params.Count > 0)
                     {
@@ -125,13 +127,14 @@ namespace Dt.Core.Rpc
         /// <summary>
         /// 获取Rpc调用时json字符串
         /// </summary>
+        /// <param name="p_serviceName">服务名称</param>
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数</param>
         /// <param name="p_indented">序列化json时是否含有缩进</param>
         /// <returns>json串</returns>
-        public static string GetCallString(string p_methodName, ICollection<object> p_params, bool p_indented = false)
+        public static string GetCallString(string p_serviceName, string p_methodName, ICollection<object> p_params, bool p_indented = false)
         {
-            return Encoding.UTF8.GetString(GetCallBytes(p_methodName, p_params, p_indented));
+            return Encoding.UTF8.GetString(GetCallBytes(p_serviceName, p_methodName, p_params, p_indented));
         }
 
         /// <summary>
