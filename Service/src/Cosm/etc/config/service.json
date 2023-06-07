@@ -4,18 +4,22 @@
   // 服务名称
   "SvcName": "cosm",
 
-  // 是否为单体服务
+  // 是否为单体服务，true将所有微服务合并成一个服务运行，且只一个副本
   "IsSingletonSvc": true,
-  // 单体服务时有效，自定义服务的数据源键名
+  // 单体时有效，自定义服务的数据源键名
   "CustomSvcDbKey": {
-    "lob1": "orcldt",
-    "cm": "sqldt"
+    "lob": "orcldt",
+    "ss": "sqldt"
   },
 
+  // 是否缓存sql字典
   "CacheSql": false,
+  // 是否输出所有运行中的Sql语句
   "TraceSql": true,
+  // 是否输出所有调用的Api名称
   "TraceRpc": true,
 
+  // 启动KestrelServer时的监听设置
   "KestrelListen": [
     {
       "Scheme": "https",
@@ -24,6 +28,7 @@
     }
   ],
 
+  // 单体时有效，提供给fsm服务
   "FixedVolume": "photo;editor;g;chat",
   "MaxRequestBodySize": 1073741824
 }

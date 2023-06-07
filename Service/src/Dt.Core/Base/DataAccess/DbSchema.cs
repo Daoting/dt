@@ -37,7 +37,10 @@ namespace Dt.Core
         {
             try
             {
-                Schema = Kit.NewDataAccess().GetDbSchema();
+                var task = Kit.NewDataAccess().GetDbSchema();
+                task.Wait();
+                Schema = task.Result;
+
                 Log.Information("缓存表结构、同步时间成功");
             }
             catch (Exception e)
@@ -50,9 +53,9 @@ namespace Dt.Core
         /// <summary>
         /// 刷新表结构信息
         /// </summary>
-        public static void RefreshSchema()
+        public static async Task RefreshSchema()
         {
-            Schema = Kit.NewDataAccess().GetDbSchema();
+            Schema = await Kit.NewDataAccess().GetDbSchema();
         }
 
         /// <summary>

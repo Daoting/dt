@@ -599,27 +599,20 @@ namespace Dt.Core
         /// 获取数据库所有表结构信息（已调整到最优）
         /// </summary>
         /// <returns>返回加载结果信息</returns>
-        public abstract IReadOnlyDictionary<string, TableSchema> GetDbSchema();
+        public abstract Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema();
 
         /// <summary>
         /// 获取数据库的所有表名
         /// </summary>
         /// <returns></returns>
-        public abstract List<string> GetAllTableNames();
+        public abstract Task<List<string>> GetAllTableNames();
 
         /// <summary>
         /// 获取单个表结构信息
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        public abstract TableSchema GetTableSchema(string p_tblName);
-
-        /// <summary>
-        /// 数据库中是否存在指定的表
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public abstract Task<bool> ExistTable(string p_tblName);
+        public abstract Task<TableSchema> GetTableSchema(string p_tblName);
         #endregion
 
         #region 内部方法
@@ -805,7 +798,10 @@ namespace Dt.Core
             // 未缓存，直接查询
             var task = GetScalar<string>(DbInfo.DebugSqlStr, new { id = p_keyOrSql });
             task.Wait();
-            return task.Result;
+            if (!string.IsNullOrEmpty(task.Result))
+                return task.Result;
+
+            throw new Exception($"不存在键名为[{p_keyOrSql}]的Sql语句！");
         }
 
         /// <summary>
@@ -833,15 +829,18 @@ namespace Dt.Core
                             das.Add(di, da);
                         }
 
-                        var task = da.ExistTable(item.Key + "_sql");
+                        var task = da.GetTableSchema(item.Key + "_sql");
                         task.Wait();
-                        if (task.Result)
+                        var schema = task.Result;
+
+                        if (schema != null)
                         {
-                            var sql = GetSelectStr(item.Key, di.Type);
+                            var sql = GetSelectStr(schema, di.Type);
                             if (di.DebugSqlStr != null && di.DebugSqlStr.Length > 0)
                             {
-                                di.DebugSqlStr += " union ";
+                                di.DebugSqlStr += " union (";
                                 di.DebugSqlStr += sql;
+                                di.DebugSqlStr += ")";
                             }
                             else
                             {
@@ -861,11 +860,19 @@ namespace Dt.Core
                     StringBuilder sb = new StringBuilder();
                     foreach (var name in Kit.SvcNames)
                     {
-                        if (DbSchema.Schema.ContainsKey(name + "_sql"))
+                        if (DbSchema.Schema.TryGetValue(name + "_sql", out var schema))
                         {
+                            var sql = GetSelectStr(schema, Kit.DefaultDbInfo.Type);
                             if (sb.Length > 0)
-                                sb.Append(" union ");
-                            sb.Append(GetSelectStr(name, Kit.DefaultDbInfo.Type));
+                            {
+                                sb.Append(" union (");
+                                sb.Append(sql);
+                                sb.Append(')');
+                            }
+                            else
+                            {
+                                sb.Append(sql);
+                            }
                         }
                     }
                     Kit.DefaultDbInfo.DebugSqlStr = sb.ToString();
@@ -873,18 +880,22 @@ namespace Dt.Core
                 Log.Information("未缓存Sql, 调试状态");
             }
 
-            string GetSelectStr(string p_svc, DatabaseType p_type)
+            string GetSelectStr(TableSchema p_schema, DatabaseType p_type)
             {
                 switch (p_type)
                 {
                     case DatabaseType.MySql:
-                        return $"select `sql` from {p_svc}_sql where id=@id";
+                        return $"select `sql` from `{p_schema.Name}` where id=@id";
 
                     case DatabaseType.Oracle:
-                        return $"select \"sql\" from {p_svc}_sql where id=:id";
+                        // 字段和表名大小写敏感
+                        var sql = (from col in p_schema.Columns
+                                   where col.Name.Equals("sql", StringComparison.OrdinalIgnoreCase)
+                                   select col.Name).FirstOrDefault();
+                        return $"select \"{sql}\" from \"{p_schema.Name}\" where \"{p_schema.PrimaryKey[0].Name}\"=:id";
 
                     default:
-                        return $"select [sql] from {p_svc}_sql where id=@id";
+                        return $"select [sql] from [{p_schema.Name}] where id=@id";
                 }
             }
         }
@@ -923,17 +934,33 @@ namespace Dt.Core
                 {
                     // 同一库
                     var da = Kit.DefaultDbInfo.NewDataAccess();
+                    da.AutoClose = false;
                     foreach (var name in Kit.SvcNames)
                     {
                         await LoadSvcCacheSql(da, name);
                     }
+                    await da.Close(true);
                 }
                 else
                 {
                     // 多个库
+                    Dictionary<DbInfo, IDataAccess> das = new Dictionary<DbInfo, IDataAccess>();
                     foreach (var item in Kit.SingletonSvcDbs)
                     {
-                        await LoadSvcCacheSql(item.Value.NewDataAccess(), item.Key);
+                        var di = item.Value;
+                        if (!das.TryGetValue(di, out var da))
+                        {
+                            da = di.NewDataAccess();
+                            da.AutoClose = false;
+                            das.Add(di, da);
+                        }
+
+                        await LoadSvcCacheSql(da, item.Key);
+                    }
+
+                    foreach (var da in das.Values)
+                    {
+                        await da.Close(true);
                     }
                 }
                 Log.Information("缓存Sql成功");
@@ -947,13 +974,27 @@ namespace Dt.Core
 
         static async Task LoadSvcCacheSql(IDataAccess p_da, string p_svcName)
         {
+            var schema = await p_da.GetTableSchema(p_svcName + "_sql");
+            if (schema == null)
+                return;
+
             string sql;
             if (p_da.DbInfo.Type == DatabaseType.MySql)
-                sql = $"select id,`sql` from {p_svcName}_sql";
+            {
+                sql = $"select id,`sql` from `{schema.Name}`";
+            }
             else if (p_da.DbInfo.Type == DatabaseType.Oracle)
-                sql = $"select id,\"sql\" from {p_svcName}_sql";
+            {
+                // 字段和表名大小写敏感
+                var name = (from col in schema.Columns
+                            where col.Name.Equals("sql", StringComparison.OrdinalIgnoreCase)
+                            select col.Name).FirstOrDefault();
+                sql = $"select \"{schema.PrimaryKey[0].Name}\",\"{name}\" from \"{schema.Name}\"";
+            }
             else
-                sql = $"select id,[sql] from {p_svcName}_sql";
+            {
+                sql = $"select id,[sql] from [{schema.Name}]";
+            }
 
             var ls = await p_da.Each(sql);
             foreach (Row item in ls)

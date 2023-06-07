@@ -34,14 +34,14 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string GetEntityClass(string p_tblName, string p_clsName = null)
+        public async Task<string> GetEntityClass(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
 
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
-            var schema = _da.GetTableSchema(tblName);
+            var schema = await _da.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
 
@@ -215,14 +215,14 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <param name="p_clsName">类名，null时按规则生成：移除前后缀，首字母大写</param>
         /// <returns></returns>
-        public string GetEntityClassEx(string p_tblName, string p_clsName = null)
+        public async Task<string> GetEntityClassEx(string p_tblName, string p_clsName = null)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
 
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
-            var schema = _da.GetTableSchema(tblName);
+            var schema = await _da.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 1);
@@ -306,7 +306,7 @@ namespace Dt.Core
         /// 获取最新的所有表名
         /// </summary>
         /// <returns></returns>
-        public List<string> GetAllTables()
+        public Task<List<string>> GetAllTables()
         {
             return _da.GetAllTableNames();
         }
@@ -316,7 +316,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetFvCells(List<string> p_tblNames)
+        public async Task<string> GetFvCells(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -327,7 +327,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -382,7 +382,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetLvItemTemplate(List<string> p_tblNames)
+        public async Task<string> GetLvItemTemplate(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -396,7 +396,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     sb.AppendLine();
@@ -415,7 +415,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetLvTableCols(List<string> p_tblNames)
+        public async Task<string> GetLvTableCols(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -426,7 +426,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     string title = "";
@@ -460,7 +460,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetBlurClause(List<string> p_tblNames)
+        public async Task<string> GetBlurClause(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -471,7 +471,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (col.Type == typeof(string))
@@ -490,7 +490,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetQueryFvCells(List<string> p_tblNames)
+        public async Task<string> GetQueryFvCells(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -501,7 +501,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -556,7 +556,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblNames"></param>
         /// <returns></returns>
-        public string GetQueryFvData(List<string> p_tblNames)
+        public async Task<string> GetQueryFvData(List<string> p_tblNames)
         {
             if (p_tblNames == null || p_tblNames.Count == 0)
                 return null;
@@ -567,7 +567,7 @@ namespace Dt.Core
                 if (string.IsNullOrEmpty(tbl))
                     continue;
 
-                var schema = _da.GetTableSchema(tbl);
+                var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
                     bool isEnum = IsEnumCol(col);
@@ -585,9 +585,9 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public bool ExistParentID(string p_tblName)
+        public async Task<bool> ExistParentID(string p_tblName)
         {
-            var schema = _da.GetTableSchema(p_tblName);
+            var schema = await _da.GetTableSchema(p_tblName);
             foreach (var col in schema.Columns)
             {
                 if (col.Name == "ParentID")

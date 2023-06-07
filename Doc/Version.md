@@ -17,12 +17,22 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * QueryFv FuzzySearch 只负责查询内容，查询sql的动态生成放在QueryClause，也可自定义生成sql
 * 同步调整VS扩展中的框架模板
 * where true 或 where false 除mysql外都不支持
+* 表名采用库里原始大小写，比较时大小写不敏感，oracle生成的sql在表名字段名加引号
+* cm服务中导出模型的配置放在model.json
+* 单体服务支持每个服务连接不同库
+* rpc调用添加服务名，涉及所有类型rpc
+* 服务端缓存sql、根据key查询sql支持三种库类型
+
+* 多种数据库的序列问题
+
 
 ### 功能
 * 增加更新模型菜单项
 * 增加全局Dt.Base.SelectionMode别名
 * Sqlite模型文件支持：多个数据库、多种数据库
+* 增加可配置的空服务
 
+* 升级uno4.9，MediaPlayerElement WebView2 全平台支持，Wasm支持UIElement.ProtectedCursor
 * Win上支持打印可视元素功能
 * 参考MVVM [工具包](https://learn.microsoft.com/zh-cn/dotnet/communitytoolkit/mvvm/)，简化命令等绑定写法
 

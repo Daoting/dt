@@ -211,27 +211,20 @@ namespace Dt.Core
         /// 获取数据库所有表结构信息
         /// </summary>
         /// <returns></returns>
-        IReadOnlyDictionary<string, TableSchema> GetDbSchema();
+        Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema();
 
         /// <summary>
         /// 获取数据库的所有表名
         /// </summary>
         /// <returns></returns>
-        List<string> GetAllTableNames();
+        Task<List<string>> GetAllTableNames();
 
         /// <summary>
         /// 获取单个表结构信息
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        TableSchema GetTableSchema(string p_tblName);
-
-        /// <summary>
-        /// 数据库中是否存在指定的表
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        Task<bool> ExistTable(string p_tblName);
+        Task<TableSchema> GetTableSchema(string p_tblName);
         #endregion
 
         #region 其他

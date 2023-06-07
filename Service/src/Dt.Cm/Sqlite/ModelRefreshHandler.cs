@@ -67,7 +67,7 @@ namespace Dt.Cm
             // 刷新表结构缓存
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            DbSchema.RefreshSchema();
+            await DbSchema.RefreshSchema();
             sb.AppendLine($"刷新表结构缓存 {watch.ElapsedMilliseconds} 毫秒");
 
             // 创建Data目录
@@ -117,7 +117,7 @@ namespace Dt.Cm
                             || !item.Value.ExportToModel)
                             continue;
 
-                        var schema = Kit.NewDataAccess(item.Key).GetDbSchema();
+                        var schema = await Kit.NewDataAccess(item.Key).GetDbSchema();
                         LoadSchema(schema, tbls, cols, item.Value);
                     }
 
