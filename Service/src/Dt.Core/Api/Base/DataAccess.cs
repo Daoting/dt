@@ -123,9 +123,7 @@ namespace Dt.Core
         /// <returns>新序列值</returns>
         public Task<int> NewSeq(string p_seqName)
         {
-            if (!string.IsNullOrEmpty(p_seqName))
-                return _da.GetScalar<int>($"select nextval('{p_seqName}')");
-            return Task.FromResult(0);
+            return _da.NewSequence(p_seqName);
         }
     }
 }

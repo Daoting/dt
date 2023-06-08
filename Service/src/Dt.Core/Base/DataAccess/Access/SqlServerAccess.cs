@@ -42,6 +42,13 @@ namespace Dt.Core
 
             return $"{sql} offset {p_starRow} rows fetch next {p_pageSize} rows only";
         }
+
+        public override Task<int> NewSequence(string p_seqName)
+        {
+            if (!string.IsNullOrEmpty(p_seqName))
+                return GetScalar<int>($"SELECT NEXT VALUE FOR [{p_seqName}]");
+            return Task.FromResult(0);
+        }
         #endregion
 
         #region 表结构

@@ -34,6 +34,13 @@ namespace Dt.Core
         {
             return $"select * from (select a.*,rownum rn from ({GetSql(p_keyOrSql)}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
         }
+
+        public override Task<int> NewSequence(string p_seqName)
+        {
+            if (!string.IsNullOrEmpty(p_seqName))
+                return GetScalar<int>($"select {p_seqName}.nextval from dual");
+            return Task.FromResult(0);
+        }
         #endregion
 
         #region 表结构

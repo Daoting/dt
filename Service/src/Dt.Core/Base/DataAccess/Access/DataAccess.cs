@@ -264,6 +264,13 @@ namespace Dt.Core
             return ForEachFirstCol<T>(reader);
         }
 
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name="p_seqName">序列名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        public abstract Task<int> NewSequence(string p_seqName);
+
         async Task QueryInternal<TRow>(Table p_tbl, string p_keyOrSql, object p_params = null)
             where TRow : Row
         {

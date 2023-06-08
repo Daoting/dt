@@ -128,6 +128,13 @@ namespace Dt.Core
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
         Task<object> FirstCol(Type p_type, string p_keyOrSql, object p_params = null);
+
+        /// <summary>
+        /// 获取新序列值
+        /// </summary>
+        /// <param name="p_seqName">序列名称，不可为空</param>
+        /// <returns>新序列值</returns>
+        Task<int> NewSequence(string p_seqName);
 #endif
         #endregion
 
