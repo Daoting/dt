@@ -144,7 +144,7 @@ namespace Dt.PrjWizard
         {
             try
             {
-                using (var fs = File.Open(Path.Combine(_targetPath, _projectName + ".Svc", "Program.cs"), FileMode.Open, FileAccess.ReadWrite))
+                using (var fs = File.Open(Path.Combine(_targetPath, _projectName + ".Svc", "etc", "config", "service.json"), FileMode.Open, FileAccess.ReadWrite))
                 using (var sr = new StreamReader(fs))
                 {
                     var str = sr.ReadToEnd().Replace("$issingletonsvc$", (_useSvcType == SvcType.CustomSvc) ? "false" : "true");

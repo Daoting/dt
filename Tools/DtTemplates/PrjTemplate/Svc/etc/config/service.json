@@ -1,45 +1,41 @@
 ﻿{
-  "DbConn": "demodb",
+  // 默认数据源键名
+  "DbKey": "demodb",
+  // 服务名称
+  "SvcName": "lob",
+
+  // 是否缓存sql字典
   "CacheSql": false,
+  // 是否输出所有运行中的Sql语句
   "TraceSql": true,
+  // 是否输出所有调用的Api名称
   "TraceRpc": true,
 
+  // 启动KestrelServer时的监听设置
   "KestrelListen": [
     {
       "Scheme": "https",
       "Address": "0.0.0.0",
       "Port": "1234"
-    },
-    {
-      "Scheme": "http",
-      "Address": "0.0.0.0",
-      "Port": "4321"
     }
   ],
 
-  "SqliteModel": {
-    "OmOption": {
-      "Create": [
-        "create table if not exists OmOption (Name text not null,Category text not null)",
-        "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
-      ],
-      "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx"
-    },
-    "OmReport": {
-      "Create": [
-        "create table if not exists OmReport (ID integer not null,Name text,Define text,primary key (ID))"
-      ],
-      "Data": "select id,name,define from cm_rpt"
-    },
-    "OmMenu": {
-      "Create": [
-        "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,Note text,DispIdx integer,primary key (ID))",
-        "create index if not exists \"OmMenu_DispIdx\" on \"OmMenu\"(\"DispIdx\")"
-      ],
-      "Data": "select * from cm_menu where islocked=0 order by dispidx"
-    }
+  // 是否为单体服务，true时合并所有微服务为一个服务，微服务包括：
+  // 1. cm msg fsm三个标准微服务
+  // 2. 当前服务
+  // 3. CustomSvcDbKey配置的服务
+  "IsSingletonSvc": "$issingletonsvc$",
+
+  /********** 以下配置只在单体时有效 **********/
+
+  // 自定义服务的数据源键名
+  // 1. 可以自定义cm msg fsm服务或当前服务的数据源键名，否则采用默认数据源键名
+  // 2. 定义任意其它服务的数据源键名，实现跨多个数据源操作
+  "CustomSvcDbKey": {
+    //"svcname": "dbkey"
   },
 
+  // 提供给fsm服务
   "FixedVolume": "photo;editor;g;chat",
   "MaxRequestBodySize": 1073741824
 }

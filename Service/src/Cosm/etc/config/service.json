@@ -4,14 +4,6 @@
   // 服务名称
   "SvcName": "cosm",
 
-  // 是否为单体服务，true将所有微服务合并成一个服务运行，且只一个副本
-  "IsSingletonSvc": true,
-  // 单体时有效，自定义服务的数据源键名
-  "CustomSvcDbKey": {
-    "lob": "orcldt",
-    "ss": "sqldt"
-  },
-
   // 是否缓存sql字典
   "CacheSql": false,
   // 是否输出所有运行中的Sql语句
@@ -24,11 +16,26 @@
     {
       "Scheme": "https",
       "Address": "0.0.0.0",
-      "Port": "20203"
+      "Port": "20204"
     }
   ],
 
-  // 单体时有效，提供给fsm服务
+  // 是否为单体服务，true时合并所有微服务为一个服务，微服务包括：
+  // 1. cm msg fsm三个标准微服务
+  // 2. 当前服务
+  // 3. CustomSvcDbKey配置的服务
+  "IsSingletonSvc": true,
+
+  /********** 以下配置只在单体时有效 **********/
+
+  // 自定义服务的数据源键名
+  // 1. 可以自定义cm msg fsm服务或当前服务的数据源键名，否则采用默认数据源键名
+  // 2. 定义任意其它服务的数据源键名，实现跨多个数据源操作
+  "CustomSvcDbKey": {
+    //"svcname": "dbkey"
+  },
+
+  // 提供给fsm服务
   "FixedVolume": "photo;editor;g;chat",
   "MaxRequestBodySize": 1073741824
 }

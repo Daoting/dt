@@ -6,9 +6,9 @@
       "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
     ],
     // 待导出的数据
-    "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx",
+    "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx"
     // 数据源键名，省略时使用默认键名
-    "DbKey": "dt"
+    //"DbKey": "demodb"
   },
   "OmReport": {
     "Create": [

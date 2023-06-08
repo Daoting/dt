@@ -20,11 +20,6 @@ namespace $ext_safeprojectname$
     public class SvcStub : Stub
     {
         /// <summary>
-        /// 获取服务名称，小写
-        /// </summary>
-        public override string SvcName => "lob";
-
-        /// <summary>
         /// 定义全局服务
         /// </summary>
         /// <param name="p_services"></param>
