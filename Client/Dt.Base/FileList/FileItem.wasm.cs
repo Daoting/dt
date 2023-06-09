@@ -55,7 +55,8 @@ namespace Dt.Base
 
                 case FileItemType.Video:
                 case FileItemType.Sound:
-                    Kit.Warn("wasm版不支持播放音视频，下载文件的原因，已实现MediaPlayerElement");
+                    var url = $"{Kit.GetSvcUrl("fsm")}/drv/{ID}";
+                    Play(url);
                     break;
 
                 default:
