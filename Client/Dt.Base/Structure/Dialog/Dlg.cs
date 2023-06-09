@@ -1162,32 +1162,32 @@ namespace Dt.Base
         /// <param name="direction"></param>
         void UpdateMouseCursor(ResizeDirection direction)
         {
-            //switch (direction)
-            //{
-            //    case ResizeDirection.Left:
-            //    case ResizeDirection.Right:
-            //        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
-            //        break;
+            switch (direction)
+            {
+                case ResizeDirection.Left:
+                case ResizeDirection.Right:
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeWestEast);
+                    break;
 
-            //    case ResizeDirection.TopLeft:
-            //    case ResizeDirection.BottomRight:
-            //        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthwestSoutheast);
-            //        break;
+                case ResizeDirection.TopLeft:
+                case ResizeDirection.BottomRight:
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthwestSoutheast);
+                    break;
 
-            //    case ResizeDirection.Top:
-            //    case ResizeDirection.Bottom:
-            //        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
-            //        break;
+                case ResizeDirection.Top:
+                case ResizeDirection.Bottom:
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
+                    break;
 
-            //    case ResizeDirection.TopRight:
-            //    case ResizeDirection.BottomLeft:
-            //        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
-            //        break;
+                case ResizeDirection.TopRight:
+                case ResizeDirection.BottomLeft:
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
+                    break;
 
-            //    default:
-            //        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
-            //        break;
-            //}
+                default:
+                    ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+                    break;
+            }
         }
         #endregion
     }

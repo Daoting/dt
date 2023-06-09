@@ -303,7 +303,7 @@ namespace Dt.Base.ListView
 
         void ResetCursor(InputSystemCursorShape p_cursor)
         {
-            //ProtectedCursor = InputSystemCursor.Create(p_cursor);
+            ProtectedCursor = InputSystemCursor.Create(p_cursor);
         }
     }
 }
