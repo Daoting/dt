@@ -73,6 +73,24 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 根据实体对象创建空Table
+        /// </summary>
+        /// <param name="p_row"></param>
+        /// <returns></returns>
+        public static Table<TEntity> Create(TEntity p_row)
+        {
+            var tbl = new Table<TEntity>();
+            if (p_row != null)
+            {
+                foreach (var cell in p_row.Cells)
+                {
+                    tbl._columns.Add(new Column(cell.ID, cell.Type));
+                }
+            }
+            return tbl;
+        }
+
+        /// <summary>
         /// 实体列表，只为在 linq 中能识别实体类型用！如：
         /// <para>from item in _atvs.Items</para>
         /// </summary>
