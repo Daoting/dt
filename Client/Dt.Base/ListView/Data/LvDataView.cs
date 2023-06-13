@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Reflection;
 #endregion
 
@@ -43,10 +44,19 @@ namespace Dt.Base.ListView
         /// </summary>
         public void Refresh()
         {
+            // 若延时刷新，不处理
+            if (_owner.Updating > 0)
+            {
+                _owner.DeferRefreshData = true;
+                return;
+            }
+
             IList rows;
-            if ((_owner.SortDesc != null && !string.IsNullOrEmpty(_owner.SortDesc.ID))
-                || _owner.Filter != null
-                || _owner.ExistDefaultFilterCfg)
+            if (_data.Count > 0
+                && (!string.IsNullOrEmpty(_owner.Where)
+                    || (_owner.SortDesc != null && !string.IsNullOrEmpty(_owner.SortDesc.ID))
+                    || _owner.Filter != null
+                    || _owner.ExistDefaultFilterCfg))
             {
                 rows = GetTransformedList();
             }
@@ -92,6 +102,7 @@ namespace Dt.Base.ListView
         {
             // 新增或删除 且 无排序过滤分组时直接操作，高效
             if ((args.Action == NotifyCollectionChangedAction.Add || args.Action == NotifyCollectionChangedAction.Remove)
+                && string.IsNullOrEmpty(_owner.Where)
                 && _owner.SortDesc == null
                 && string.IsNullOrEmpty(_owner.GroupName)
                 && _owner.Filter == null
@@ -126,79 +137,48 @@ namespace Dt.Base.ListView
         /// <returns></returns>
         IList GetTransformedList()
         {
-            // 过滤
-            if (_owner.Filter != null || _owner.ExistDefaultFilterCfg)
+            var query = _data.AsQueryable();
+
+            // 1. 先执行where linq 过滤
+            if (!string.IsNullOrEmpty(_owner.Where))
             {
-                // 先执行过滤回调
-                var list = new List<object>();
-                if (_owner.Filter != null)
-                {
-                    foreach (var row in _data)
-                    {
-                        if (_owner.Filter(row))
-                            list.Add(row);
-                    }
-                }
-
-                // 筛选框过滤
-                if (_owner.ExistDefaultFilterCfg)
-                {
-                    if(_owner.Filter != null)
-                    {
-                        // 在结果中再次过滤
-                        var ls = new List<object>();
-                        foreach (var row in list)
-                        {
-                            if (_owner.FilterCfg.DoDefaultFilter(row))
-                                ls.Add(row);
-                        }
-                        list = ls;
-                    }
-                    else
-                    {
-                        foreach (var row in _data)
-                        {
-                            if (_owner.FilterCfg.DoDefaultFilter(row))
-                                list.Add(row);
-                        }
-                    }
-                }
-
-                // 排序
-                if (list.Count > 0
-                    && _owner.SortDesc != null
-                    && !string.IsNullOrEmpty(_owner.SortDesc.ID))
-                {
-                    // 使用RowComparer的Compare方法排序
-                    if (_data is Table)
-                    {
-                        list.Sort(new RowComparer(_owner.SortDesc, null));
-                    }
-                    else
-                    {
-                        var pi = list[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                        if (pi != null)
-                            list.Sort(new RowComparer(_owner.SortDesc, pi));
-                    }
-                }
-                return list;
+                // 只有转成实际类型，才能调用属性和方法
+                query = query.Cast(_data[0].GetType()).Where(_owner.Where);
             }
 
-            // 无过滤，只排序
-            if (_data.Count > 0
-                && _owner.SortDesc != null
+            var ls = query.Cast<object>();
+            // 2. 再执行过滤回调
+            if (_owner.Filter != null)
+            {
+                ls = from item in ls
+                     where _owner.Filter(item)
+                     select item;
+            }
+
+            // 3. 最后筛选框过滤
+            if (_owner.ExistDefaultFilterCfg)
+            {
+                ls = from item in ls
+                     where _owner.FilterCfg.DoDefaultFilter(item)
+                     select item;
+            }
+
+            // 排序
+            if (_owner.SortDesc != null
                 && !string.IsNullOrEmpty(_owner.SortDesc.ID))
             {
-                // 使用RowComparer的Compare方法排序
                 if (_data is Table tbl)
-                    return tbl.Order(new RowComparer(_owner.SortDesc, null)).ToList();
-
-                var pi = _data[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                if (pi != null)
-                    return _data.Cast<object>().Order(new RowComparer(_owner.SortDesc, pi)).ToList();
+                {
+                    ls = ls.Order(new RowComparer(_owner.SortDesc, null));
+                }
+                else
+                {
+                    var pi = _data[0].GetType().GetProperty(_owner.SortDesc.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    ls = ls.Order(new RowComparer(_owner.SortDesc, pi));
+                }
             }
 
-            return _data;
+            return ls.ToList();
         }
 
         /// <summary>

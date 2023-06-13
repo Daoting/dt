@@ -35,17 +35,29 @@ namespace Dt.UIDemo
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+            using (_lv.Defer())
+            {
+                _lv.View = Resources["TableView"];
+                _lv.ViewMode = ViewMode.Table;
+            }
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(Resources["ListView"], ViewMode.List);
+            using (_lv.Defer())
+            {
+                _lv.View = Resources["ListView"];
+                _lv.ViewMode = ViewMode.List;
+            }
         }
 
         void OnTileView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
+            using (_lv.Defer())
+            {
+                _lv.View = Resources["TileView"];
+                _lv.ViewMode = ViewMode.Tile;
+            }
         }
 
         void OnLoadData(object sender, RoutedEventArgs e)

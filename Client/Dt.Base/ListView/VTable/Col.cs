@@ -108,7 +108,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置占用的行数，默认1行
+        /// 获取设置占用的行数，默认1行，视图模式为List和Tile时有效
         /// </summary>
         public int RowSpan
         {

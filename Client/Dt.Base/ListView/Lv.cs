@@ -112,12 +112,6 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(160d, OnReload));
 
-        public static readonly DependencyProperty FilterCfgProperty = DependencyProperty.Register(
-            "FilterCfg",
-            typeof(FilterCfg),
-            typeof(Lv),
-            new PropertyMetadata(null, OnReload));
-
         public readonly static DependencyProperty ToolbarProperty = DependencyProperty.Register(
             "Toolbar",
             typeof(Menu),
@@ -137,7 +131,7 @@ namespace Dt.Base
             }
             else
             {
-                ((Lv)d).Reload();
+                ((Lv)d).ReloadPanelContent();
             }
         }
 
@@ -154,7 +148,7 @@ namespace Dt.Base
 
         static void OnReload(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Lv)d).Reload();
+            ((Lv)d).ReloadPanelContent();
         }
         #endregion
 
@@ -164,7 +158,6 @@ namespace Dt.Base
         LvDataView _dataView;
         readonly List<LvItem> _rows;
         readonly ObservableCollection<LvItem> _selectedLvItems;
-        bool _updatingView;
         SizedPresenter _sizedPresenter;
         #endregion
 
@@ -314,15 +307,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置筛选框配置，默认null
-        /// </summary>
-        public FilterCfg FilterCfg
-        {
-            get { return (FilterCfg)GetValue(FilterCfgProperty); }
-            set { SetValue(FilterCfgProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置顶部的工具栏
         /// </summary>
         public Menu Toolbar
@@ -409,8 +393,7 @@ namespace Dt.Base
         /// </summary>
         public void Refresh()
         {
-            if (_dataView != null)
-                _dataView.Refresh();
+            _dataView?.Refresh();
         }
 
         /// <summary>
@@ -420,45 +403,13 @@ namespace Dt.Base
         /// <param name="p_viewMode">null时不切换</param>
         public void ChangeView(object p_view, ViewMode? p_viewMode)
         {
-            if (Scroll == null)
+            using (Defer())
             {
-                // 未应用模板
-                if (p_view != null)
-                    View = p_view;
-                if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
-                    ViewMode = p_viewMode.Value;
-                return;
-            }
-
-            _updatingView = true;
-            try
-            {
-                Scroll.ChangeView(0, 0, null, true);
                 if (p_view != null)
                     View = p_view;
 
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
-                {
-                    _rows.Clear();
-                    if (_selectedLvItems.Count > 0)
-                        _selectedLvItems.Clear();
-                    if (GroupRows != null)
-                    {
-                        GroupRows.Clear();
-                        GroupRows = null;
-                        MapRows = null;
-                    }
                     ViewMode = p_viewMode.Value;
-                    Refresh();
-                }
-                else if (_panel != null)
-                {
-                    _panel.Reload();
-                }
-            }
-            finally
-            {
-                _updatingView = false;
             }
         }
 
@@ -642,7 +593,7 @@ namespace Dt.Base
         /// </summary>
         void IMenuHost.UpdateContextMenu()
         {
-            Reload();
+            ReloadPanelContent();
         }
         #endregion
 

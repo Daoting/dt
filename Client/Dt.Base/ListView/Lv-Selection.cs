@@ -57,7 +57,7 @@ namespace Dt.Base
                         lv._selectedLvItems.CollectionChanged += lv.OnSelectedItemsChanged;
                     }
                 }
-                lv._panel.Reload();
+                lv.ReloadPanelContent();
             }
         }
         #endregion

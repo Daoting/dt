@@ -24,6 +24,8 @@ namespace Dt.UIDemo
         public LvTable()
         {
             InitializeComponent();
+
+            _lv.View = Resources["View1"];
             _lv.GroupName = "bumen";
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
@@ -68,6 +70,12 @@ namespace Dt.UIDemo
             int index = new Random().Next(0, ((IList)_lv.Data).Count);
             _lv.ScrollInto(index);
             Kit.Msg($"滚动到第 {index + 1} 行");
+        }
+
+        void OnToggleView(object sender, RoutedEventArgs e)
+        {
+            var view = ((Cols)_lv.View).Count == 9 ? "View2" : "View1";
+            _lv.View = Resources[view];
         }
     }
 }

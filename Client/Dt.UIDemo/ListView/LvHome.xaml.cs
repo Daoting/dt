@@ -36,6 +36,7 @@ namespace Dt.UIDemo
                 new Nav("行模板选择", typeof(LvListSelector), Icons.划卡) { Desc = "根据数据动态选择行模板" },
                 new Nav("动态行内容", typeof(LvRowView), Icons.划卡) { Desc = "根据数据动态生成行UI内容" },
                 new Nav("分组模板", typeof(LvGroupTemplate), Icons.录音) { Desc = "设置分组模板" },
+                new Nav("过滤", typeof(LvFilter), Icons.漏斗) { Desc = "三种方式：过滤回调、支持linq的where过滤串、筛选框过滤" },
                 new Nav("上下文菜单", typeof(LvContextMenu), Icons.公告) { Desc = "触发上下文菜单的方式：右键、悬停、点击标识按钮" },
                 new Nav("外部ScrollViewer", typeof(LvInScrollViewer), Icons.乐谱) { Desc = "外部嵌套ScrollViewer，和其他元素一起滚动" },
             };

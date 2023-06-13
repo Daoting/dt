@@ -94,6 +94,36 @@ namespace Dt.UIDemo
             }
             return pers;
         }
+
+        public static Table<PersonX> CreatePersonXs(int p_count)
+        {
+            Table<PersonX> tbl = null;
+           
+            DateTime birth = new DateTime(1950, 8, 22);
+            var persons = Person.GetPersons();
+            for (int i = 0; i < p_count; i++)
+            {
+                var per = persons[i % persons.Length];
+                birth = birth.AddDays(10);
+                var row = new PersonX
+                (
+                    ID: "2202820-" + i.ToString().PadLeft(5, '0'),
+                    Xm: per.Xm,
+                    Bh: i + 1,
+                    Chushengrq: birth,
+                    Shenfenzh: per.Shenfenzh,
+                    Xb: per.Xb,
+                    Hunfou: per.Hunfou,
+                    Shengao: per.Shengao,
+                    Bumen: per.Bumen,
+                    Note: per.Note
+                );
+                if (tbl == null)
+                    tbl = Table<PersonX>.Create(row);
+                tbl.Add(row);
+            }
+            return tbl;
+        }
     }
 
     public class Person : INotifyPropertyChanged
@@ -354,6 +384,102 @@ namespace Dt.UIDemo
         public override string ToString()
         {
             return $"{Xm} {Xb} {Bumen}";
+        }
+    }
+
+    public class PersonX : Entity
+    {
+        PersonX()
+        { }
+
+        public PersonX(
+            string ID = default,
+            string Xm = default,
+            int Bh = default,
+            DateTime Chushengrq = default,
+            string Shenfenzh = default,
+            string Xb = default,
+            bool Hunfou = default,
+            double Shengao = default,
+            string Bumen = default,
+            string Note = default)
+        {
+            AddCell("ID", ID);
+            AddCell("Xm", Xm);
+            AddCell("Bh", Bh);
+            AddCell("Chushengrq", Chushengrq);
+            AddCell("Shenfenzh", Shenfenzh);
+            AddCell("Xb", Xb);
+            AddCell("Hunfou", Hunfou);
+            AddCell("Shengao", Shengao);
+            AddCell("Bumen", Bumen);
+            AddCell("Note", Note);
+            IsAdded = true;
+        }
+
+        new public string ID
+        {
+            get { return (string)this["ID"]; }
+            set { this["ID"] = value; }
+        }
+
+        public string Xm
+        {
+            get { return (string)this["Xm"]; }
+            set { this["Xm"] = value; }
+        }
+
+        public int Bh
+        {
+            get { return (int)this["Bh"]; }
+            set { this["Bh"] = value; }
+        }
+
+        public DateTime Chushengrq
+        {
+            get { return (DateTime)this["Chushengrq"]; }
+            set { this["Chushengrq"] = value; }
+        }
+
+        public string Shenfenzh
+        {
+            get { return (string)this["Shenfenzh"]; }
+            set { this["Shenfenzh"] = value; }
+        }
+
+        public string Xb
+        {
+            get { return (string)this["Xb"]; }
+            set { this["Xb"] = value; }
+        }
+
+        public bool Hunfou
+        {
+            get { return (bool)this["Hunfou"]; }
+            set { this["Hunfou"] = value; }
+        }
+
+        public double Shengao
+        {
+            get { return (double)this["Shengao"]; }
+            set { this["Shengao"] = value; }
+        }
+
+        public string Bumen
+        {
+            get { return (string)this["Bumen"]; }
+            set { this["Bumen"] = value; }
+        }
+
+        public string Note
+        {
+            get { return (string)this["Note"]; }
+            set { this["Note"] = value; }
+        }
+
+        public string Name
+        {
+            get { return Xm; }
         }
     }
 }

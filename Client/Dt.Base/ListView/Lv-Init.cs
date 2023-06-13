@@ -209,16 +209,27 @@ namespace Dt.Base
         /// </summary>
         void LoadPanel()
         {
+            // 若延时刷新，不处理
+            if (_updating > 0)
+            {
+                DeferLoadPanel = true;
+                return;
+            }
+
+            // 若未ApplyTemplate 或 未设置View，不处理
             if (_root == null || View == null)
                 return;
 
             if (_panel != null)
             {
+                // 存在旧面板
                 if (IsInnerScroll)
                     Scroll.Content = null;
                 else
                     _root.Child = null;
                 _panel.Unload();
+                // 复位
+                Scroll.ChangeView(0, 0, null, true);
             }
 
             LvPanel pnl;
@@ -264,10 +275,9 @@ namespace Dt.Base
         /// <summary>
         /// 重新加载面板内容
         /// </summary>
-        void Reload()
+        void ReloadPanelContent()
         {
-            if (_panel != null && !_updatingView)
-                _panel.Reload();
+            _panel?.Reload();
         }
     }
 }

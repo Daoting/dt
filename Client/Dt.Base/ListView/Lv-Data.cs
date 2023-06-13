@@ -39,6 +39,18 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(null, OnDataViewPropertyChanged));
 
+        public readonly static DependencyProperty WhereProperty = DependencyProperty.Register(
+            "Where",
+            typeof(string),
+            typeof(Lv),
+            new PropertyMetadata(null, OnDataViewPropertyChanged));
+
+        public static readonly DependencyProperty FilterCfgProperty = DependencyProperty.Register(
+            "FilterCfg",
+            typeof(FilterCfg),
+            typeof(Lv),
+            new PropertyMetadata(null, OnFilterCfgChanged));
+
         public readonly static DependencyProperty SortDescProperty = DependencyProperty.Register(
             "SortDesc",
             typeof(SortDescription),
@@ -82,6 +94,14 @@ namespace Dt.Base
             if (lv._dataView != null)
                 lv._dataView.Refresh();
         }
+
+        static void OnFilterCfgChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if (lv._dataView != null)
+                lv._dataView.Refresh();
+            lv.ReloadPanelContent();
+        }
         #endregion
 
         #region 属性
@@ -110,6 +130,24 @@ namespace Dt.Base
         {
             get { return (Predicate<object>)GetValue(FilterProperty); }
             set { SetValue(FilterProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置linq过滤串，如：
+        /// </summary>
+        public string Where
+        {
+            get { return (string)GetValue(WhereProperty); }
+            set { SetValue(WhereProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置筛选框配置，默认null
+        /// </summary>
+        public FilterCfg FilterCfg
+        {
+            get { return (FilterCfg)GetValue(FilterCfgProperty); }
+            set { SetValue(FilterCfgProperty, value); }
         }
 
         /// <summary>

@@ -4,22 +4,34 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
+    <a:Win.Resources>
+        <a:Cols x:Key="View1">
+            <a:Col ID="xm" Title="姓名" Width="120" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="60" FontSize="12" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
+            <a:Col ID="shengao" Title="身高" Width="60" FontStyle="Italic" FontWeight="Bold" />
+            <a:Col ID="bumen" Title="所属部门" Width="100" Foreground="White" Background="Gray" />
+            <a:Col ID="note" Title="备注" Width="150" />
+        </a:Cols>
+
+        <a:Cols x:Key="View2">
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="xm" Title="姓名" Width="120" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="60" />
+        </a:Cols>
+    </a:Win.Resources>
+
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="表格">
-                <a:Lv x:Name="_lv" ViewMode="Table">
-                    <a:Cols>
-                        <a:Col ID="xm" Title="姓名" Width="120" />
-                        <a:Col ID="bh" Title="编号" Width="80" />
-                        <a:Col ID="chushengrq" Title="出生日期" Width="120" />
-                        <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
-                        <a:Col ID="xb" Title="性别" Width="60" FontSize="12" />
-                        <a:Col ID="hunfou" Title="婚否" Width="60" />
-                        <a:Col ID="shengao" Title="身高" Width="60" FontStyle="Italic" FontWeight="Bold" />
-                        <a:Col ID="bumen" Title="所属部门" Width="100" Foreground="White" Background="Gray" />
-                        <a:Col ID="note" Title="备注" Width="150" RowSpan="2" />
-                    </a:Cols>
-                </a:Lv>
+                <a:Lv x:Name="_lv" ViewMode="Table" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
@@ -53,7 +65,10 @@
                         <Button Content="自动行高" Click="OnAutoHeight" />
                         <Button Content="表单列表" Click="OnFormView" />
                         <Button Content="无选择行" Click="OnSelectNull" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Button Content="随机滚动" Click="OnScroll" />
+                        <Button Content="切换视图" Click="OnToggleView" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

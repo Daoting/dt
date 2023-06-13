@@ -149,6 +149,13 @@ namespace Dt.Base.ListView
         /// </summary>
         internal void Reload()
         {
+            // 若延时刷新，不处理
+            if (_owner.Updating > 0)
+            {
+                _owner.DeferReload = true;
+                return;
+            }
+
             DefineCreateRowFunc();
             ClearColHeader();
 
@@ -164,6 +171,10 @@ namespace Dt.Base.ListView
         /// <param name="p_existGroup">是否有分组行</param>
         internal void OnRowsChanged(bool p_existGroup)
         {
+            // Defer内部不处理，后面Reload
+            if (_owner.DeferReload)
+                return;
+
             if (_owner.IsVir)
             {
                 if (p_existGroup || !_initVirRow)
@@ -192,6 +203,10 @@ namespace Dt.Base.ListView
         /// <param name="p_count">共插入行数</param>
         internal void OnInsertRows(int p_index, int p_count)
         {
+            // Defer内部不处理，后面Reload
+            if (_owner.DeferReload)
+                return;
+
             if (_owner.IsVir)
             {
                 if (!_initVirRow)
@@ -225,6 +240,10 @@ namespace Dt.Base.ListView
         /// <param name="p_items">所有删除项的索引列表，索引已按从小到大排序</param>
         internal void OnRemoveRows(IList p_items)
         {
+            // Defer内部不处理，后面Reload
+            if (_owner.DeferReload)
+                return;
+
             if (_owner.IsVir)
             {
                 // 只需重新测量布局
