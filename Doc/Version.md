@@ -31,17 +31,18 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 增加全局Dt.Base.SelectionMode别名
 * Sqlite模型文件支持：多个数据库、多种数据库
 * 增加可配置的空服务
-
-* 升级uno4.9，MediaPlayerElement WebView2 全平台支持，Wasm支持UIElement.ProtectedCursor
-* Win上支持打印可视元素功能
-* 参考MVVM [工具包](https://learn.microsoft.com/zh-cn/dotnet/communitytoolkit/mvvm/)，简化命令等绑定写法
+* 升级uno4.9，Wasm支持UIElement.ProtectedCursor MediaPlayerElement
+* Lv增加Defer()
+* Lv增加Where
+* Fv增加Defer()
 
 ### Bug修改
 * 文件管理中的FolderPage因获取权限异步，造成初次加载时空引用
 * Excel的表格的标题下拉箭头点击后报错，无法弹出过滤、排序对话框
 * Excel打印功能升级WinUI后报错
+* 涉及元素光标的ProtectedCursor通过InputSystemCursor.Create赋值时锁死，比如：ColHeaderCell，观察
 
-* 涉及元素光标的ProtectedCursor通过InputSystemCursor.Create赋值时锁死，比如：ColHeaderCell，暂时注释，观察
+
 
 ## Release 4.0.1
 ### 变更

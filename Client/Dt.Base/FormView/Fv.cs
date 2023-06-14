@@ -528,6 +528,20 @@ namespace Dt.Base
 
             return new CText { ID = p_id };
         }
+
+        /// <summary>
+        /// 增删单元格时延迟刷新视图，等同调用_fv.Items.Defer()
+        /// using (_fv.Defer())
+        /// {
+        ///     _fv.Items.Clear();
+        ///     _fv.Items.Add(new CBool());
+        /// }
+        /// </summary>
+        /// <returns></returns>
+        public IDisposable Defer()
+        {
+            return Items.Defer();
+        }
         #endregion
 
         #region 焦点处理
