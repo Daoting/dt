@@ -160,6 +160,15 @@ namespace Dt.Core
             TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
         }
+
+        /// <summary>
+        /// 设置Boot服务的配置
+        /// </summary>
+        /// <param name="p_config"></param>
+        internal static void SetBootConfig(IConfigurationRoot p_config)
+        {
+            _config = p_config;
+        }
         #endregion
 
         #region 全局服务对象

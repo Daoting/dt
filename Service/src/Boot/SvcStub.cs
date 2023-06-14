@@ -67,6 +67,13 @@ namespace Dt.Boot
                 // 相对路径
                 pathBase = Path.Combine(AppContext.BaseDirectory, pathBase);
             }
+            if (!Directory.Exists(pathBase))
+            {
+                var msg = "wasm根路径不存在：" + pathBase;
+                Log.Fatal(msg);
+                throw new Exception(msg);
+            }
+
             var fileProvider = new PhysicalFileProvider(pathBase);
 
             p_app.UseMiddleware<RewriteBrFileMiddleware>(fileProvider);

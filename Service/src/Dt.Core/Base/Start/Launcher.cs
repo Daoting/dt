@@ -246,10 +246,11 @@ namespace Dt.Core
 
             try
             {
-                Kit.Config = new ConfigurationBuilder()
+                var cfg = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
                     .AddJsonFile("service.json", false, true)
                     .Build();
+                Kit.SetBootConfig(cfg);
                 Log.Information("读取配置成功");
             }
             catch (Exception e)
