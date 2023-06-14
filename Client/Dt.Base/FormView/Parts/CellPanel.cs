@@ -58,7 +58,6 @@ namespace Dt.Base.FormView
         #endregion
 
         #region 成员变量
-        static Rect _rcEmpty = new Rect();
         Rectangle _rcTitle;
         TextBlock _tbTitle;
         Rectangle _rcQuery;
@@ -207,10 +206,10 @@ namespace Dt.Base.FormView
             // 内容，空出左上边线
             var child = Child;
             if (child != null)
-                child.Arrange(conWidth > 1 ? new Rect(left + 1, 1, conWidth - 1, height - 1) : _rcEmpty);
+                child.Arrange(conWidth > 1 ? new Rect(left + 1, 1, conWidth - 1, height - 1) : Res.HideRect);
 
             // 内容外框
-            _rcChild.Arrange(conWidth > 0 ? new Rect(left, 0, conWidth, height) : _rcEmpty);
+            _rcChild.Arrange(conWidth > 0 ? new Rect(left, 0, conWidth, height) : Res.HideRect);
             return finalSize;
         }
 

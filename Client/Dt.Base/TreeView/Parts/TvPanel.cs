@@ -24,7 +24,6 @@ namespace Dt.Base.TreeViews
     {
         #region 成员变量
         const double PanelMaxHeight = 5000;
-        static Rect _rcEmpty = new Rect();
         static Size _sizeEmpty = new Size();
 
         TreeView _owner;
@@ -214,7 +213,7 @@ namespace Dt.Base.TreeViews
             {
                 foreach (var elem in Children)
                 {
-                    ((UIElement)elem).Arrange(_rcEmpty);
+                    ((UIElement)elem).Arrange(Res.HideRect);
                 }
                 return;
             }
@@ -252,7 +251,7 @@ namespace Dt.Base.TreeViews
                 {
                     for (int i = iDataRow; i < Children.Count; i++)
                     {
-                        ((UIElement)Children[i]).Arrange(_rcEmpty);
+                        ((UIElement)Children[i]).Arrange(Res.HideRect);
                     }
                 }
                 return;
@@ -288,7 +287,7 @@ namespace Dt.Base.TreeViews
                 else
                 {
                     // 多余的行布局在外部
-                    item.Arrange(_rcEmpty);
+                    item.Arrange(Res.HideRect);
                 }
 
                 iVirRow++;
@@ -389,7 +388,7 @@ namespace Dt.Base.TreeViews
                 foreach (var item in p_item.Children)
                 {
                     var elem = (UIElement)Children[p_info.Index];
-                    elem.Arrange(_rcEmpty);
+                    elem.Arrange(Res.HideRect);
                     p_info.Index++;
                     ArrangeChildRows(p_info, item);
                 }

@@ -791,5 +791,15 @@ namespace Dt.Base
             return color;
         }
         #endregion
+
+        #region 隐藏用的Rect
+        /// <summary>
+        /// 布局时隐藏元素时使用的矩形区域
+        /// <para>1. 用 new Rect() 时，wasm上不刷新，仍显示要隐藏的元素</para>
+        /// <para>2. 用 Rect.Empty，wasm可以隐藏，但windows上异常</para>
+        /// </summary>
+        public static Rect HideRect = new Rect(-1, -1, 0, 0);
+
+        #endregion
     }
 }

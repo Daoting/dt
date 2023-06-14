@@ -24,7 +24,6 @@ namespace Dt.Base.MenuView
     {
         #region 成员变量
         const double _miMoreWidth = 50;
-        static Rect _rcEmpty = new Rect();
         Menu _owner;
         Mi _miMore;
         Size _availableSize;
@@ -126,7 +125,7 @@ namespace Dt.Base.MenuView
                 }
                 else
                 {
-                    mi.Arrange(_rcEmpty);
+                    mi.Arrange(Res.HideRect);
                 }
             }
         }
@@ -190,7 +189,7 @@ namespace Dt.Base.MenuView
                 }
                 else
                 {
-                    mi.Arrange(_rcEmpty);
+                    mi.Arrange(Res.HideRect);
                 }
             }
         }

@@ -113,7 +113,7 @@ namespace Dt.Base.ListView
             {
                 foreach (var elem in _dataRows)
                 {
-                    elem.Arrange(_rcEmpty);
+                    elem.Arrange(Res.HideRect);
                 }
                 return;
             }
@@ -143,7 +143,7 @@ namespace Dt.Base.ListView
                 {
                     for (int i = iDataRow; i < _dataRows.Count; i++)
                     {
-                        _dataRows[i].Arrange(_rcEmpty);
+                        _dataRows[i].Arrange(Res.HideRect);
                     }
                 }
                 return;
@@ -174,7 +174,7 @@ namespace Dt.Base.ListView
                 else
                 {
                     // 多余的行布局在外部
-                    item.Arrange(_rcEmpty);
+                    item.Arrange(Res.HideRect);
                 }
 
                 iVirRow++;
@@ -196,17 +196,17 @@ namespace Dt.Base.ListView
                 // 虚拟数据行
                 foreach (var elem in _dataRows)
                 {
-                    elem.Arrange(_rcEmpty);
+                    elem.Arrange(Res.HideRect);
                 }
 
                 // 分组行
                 foreach (var grp in _owner.GroupRows)
                 {
-                    grp.Arrange(_rcEmpty);
+                    grp.Arrange(Res.HideRect);
                 }
 
                 // 分组导航头
-                _groupHeader?.Arrange(_rcEmpty);
+                _groupHeader?.Arrange(Res.HideRect);
                 return;
             }
 
@@ -232,7 +232,7 @@ namespace Dt.Base.ListView
                     else
                     {
                         // 离滚动栏顶部太远时不显示分组导航头
-                        _groupHeader.Arrange(_rcEmpty);
+                        _groupHeader.Arrange(Res.HideRect);
                     }
                 }
 
@@ -270,14 +270,14 @@ namespace Dt.Base.ListView
                 {
                     for (int i = iDataRow; i < _dataRows.Count; i++)
                     {
-                        _dataRows[i].Arrange(_rcEmpty);
+                        _dataRows[i].Arrange(Res.HideRect);
                     }
                 }
                 if (iGrpRow < _owner.GroupRows.Count)
                 {
                     for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
                     {
-                        _owner.GroupRows[i].Arrange(_rcEmpty);
+                        _owner.GroupRows[i].Arrange(Res.HideRect);
                     }
                 }
                 return;
@@ -300,7 +300,7 @@ namespace Dt.Base.ListView
                     // 分组行
                     // 布局上个分组
                     if (lastGroup != null)
-                        lastGroup.Arrange(_rcEmpty);
+                        lastGroup.Arrange(Res.HideRect);
 
                     lastGroup = _owner.GroupRows[iGrpRow];
                     double height = lastGroup.DesiredSize.Height;
@@ -342,7 +342,7 @@ namespace Dt.Base.ListView
                 else
                 {
                     // 所有数据行都在滚动栏上侧
-                    _groupHeader.Arrange(_rcEmpty);
+                    _groupHeader.Arrange(Res.HideRect);
                 }
             }
 
@@ -384,7 +384,7 @@ namespace Dt.Base.ListView
             {
                 for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
                 {
-                    _owner.GroupRows[i].Arrange(_rcEmpty);
+                    _owner.GroupRows[i].Arrange(Res.HideRect);
                 }
             }
         }
@@ -505,7 +505,7 @@ namespace Dt.Base.ListView
                 else
                 {
                     // 正在滚动 或 第一行在滚动栏下侧太远时不显示分组导航头
-                    _groupHeader.Arrange(_rcEmpty);
+                    _groupHeader.Arrange(Res.HideRect);
                 }
             }
         }

@@ -25,8 +25,6 @@ namespace Dt.Base.FormView
     public partial class FormPanel : Panel
     {
         #region 成员变量
-        static Rect _rcEmpty = new Rect();
-
         // 单元格宽度范围
         const double CellMaxWidth = 456;
         const double CellMinWidth = 296;
@@ -155,7 +153,7 @@ namespace Dt.Base.FormView
 
             foreach (var cell in Children.OfType<IFvCell>())
             {
-                cell.Arrange((cell.Visibility == Visibility.Visible) ? cell.Bounds : _rcEmpty);
+                cell.Arrange((cell.Visibility == Visibility.Visible) ? cell.Bounds : Res.HideRect);
             }
             _border.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
             return finalSize;

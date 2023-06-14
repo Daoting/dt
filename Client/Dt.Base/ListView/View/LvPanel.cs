@@ -52,7 +52,6 @@ namespace Dt.Base.ListView
         /// 分组行上部的间隔高度
         /// </summary>
         public const double GroupSeparatorHeight = 16;
-        protected static Rect _rcEmpty = new Rect();
 
         protected Lv _owner;
         protected Func<LvItem, LvRow> _createLvRow;

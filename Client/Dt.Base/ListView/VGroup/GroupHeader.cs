@@ -116,10 +116,9 @@ namespace Dt.Base.ListView
             // uno中布局时只要宽或高有一个大于0就绘制，造成本来不显示的堆在一起绘制！
             if (finalSize.Height == 0 || finalSize.Width == 0)
             {
-                var rcEmpty = new Rect();
                 foreach (var elem in Children)
                 {
-                    elem.Arrange(rcEmpty);
+                    elem.Arrange(Res.HideRect);
                 }
                 return finalSize;
             }
@@ -129,7 +128,7 @@ namespace Dt.Base.ListView
             {
                 // 完全不显示、显示部分、显示全部
                 if (left > finalSize.Width)
-                    cell.Arrange(new Rect());
+                    cell.Arrange(Res.HideRect);
                 else if (left + cell.DesiredSize.Width > finalSize.Width)
                     cell.Arrange(new Rect(left, 0, finalSize.Width - left, Res.RowOuterHeight));
                 else

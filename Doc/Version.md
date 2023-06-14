@@ -41,7 +41,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Excel的表格的标题下拉箭头点击后报错，无法弹出过滤、排序对话框
 * Excel打印功能升级WinUI后报错
 * 涉及元素光标的ProtectedCursor通过InputSystemCursor.Create赋值时锁死，比如：ColHeaderCell，观察
-
+* wasm使用new Rect()布局时无法隐藏元素，统一用Rect(-1, -1, 0, 0)
 
 
 ## Release 4.0.1
