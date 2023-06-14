@@ -46,7 +46,7 @@ namespace Dt.UIDemo
 
         void OnWhere4(object sender, RoutedEventArgs e)
         {
-            SetWhere("it.Str(0).StartsWith('李')");
+            SetWhere("it.Str(\"Xm\").StartsWith('李')");
         }
 
         void OnMyWhere(object sender, RoutedEventArgs e)
