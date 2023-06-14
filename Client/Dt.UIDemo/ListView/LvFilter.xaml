@@ -28,12 +28,28 @@
             <a:Tab Order="2" Title="属性">
                 <a:Fv>
                     <Button Content="清空过滤" Click="OnClearFilter" />
-                    <Button Content="linq过滤串：姓李" Click="OnWhere" />
-                    <Button Content="过滤回调：肾内科二" Click="OnFilter" />
-                    <Button Content="筛选框过滤" Click="OnFilterCfg" />
-                    <a:CBar Title="自定义linq过滤串" />
-                    <TextBox x:Name="_tb" />
-                    <Button Content="过滤" Click="OnMyWhere" />
+                    <a:CBar Title="linq过滤串" />
+                    <Button Content="姓李" Click="OnWhere1" />
+                    <Button Content="名字包含'涛'且编号小于15" Click="OnWhere2" />
+                    <Button Content="李全亮(使用Row)" Click="OnWhere3" />
+                    <Button Content="姓李(使用Row)" Click="OnWhere4" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="_tb" PlaceholderText="自定义过滤串" />
+                        <Button Content="过滤" Click="OnMyWhere" Grid.Column="1" />
+                    </Grid>
+
+                    <a:CBar Title="过滤回调" />
+                    <Button Content="肾内科二" Click="OnFilter" />
+                    <Button Content="组合过滤：姓李(Where串) 且 肾内科二(回调)" Click="OnCombin" />
+
+                    <a:CBar Title="筛选框过滤" />
+                    <Button Content="默认" Click="OnFilterCfg" />
+                    <Button Content="自定义" Click="OnCustFilterCfg" />
+                    <Button Content="定制" Click="OnMyFilterCfg" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

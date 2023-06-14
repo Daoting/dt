@@ -7,14 +7,10 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Xml;
 #endregion
 
 namespace Dt.Core
@@ -24,6 +20,7 @@ namespace Dt.Core
     /// </summary>
 #if !SERVER
     [Microsoft.UI.Xaml.Data.Bindable]
+    [System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqType]
 #endif
     public class Row : INotifyPropertyChanged, IRpcJson
     {

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Windows.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Linq.Dynamic.Core;
 #endregion
 
 namespace Dt.UIDemo
@@ -28,19 +29,68 @@ namespace Dt.UIDemo
             _lv.Data = SampleData.CreatePersonXs(100);
         }
 
-        void OnWhere(object sender, RoutedEventArgs e)
+        void OnWhere1(object sender, RoutedEventArgs e)
         {
-            _lv.Where = "it.Xm.Contains('李')";
+            SetWhere("Xm.StartsWith('李')");
+        }
+
+        void OnWhere2(object sender, RoutedEventArgs e)
+        {
+            SetWhere("Xm.Contains('涛') && Bh < 15");
+        }
+
+        void OnWhere3(object sender, RoutedEventArgs e)
+        {
+            SetWhere("it.Str(\"Xm\") == \"李全亮\"");
+        }
+
+        void OnWhere4(object sender, RoutedEventArgs e)
+        {
+            SetWhere("it.Str(0).StartsWith('李')");
+        }
+
+        void OnMyWhere(object sender, RoutedEventArgs e)
+        {
+            SetWhere(_tb.Text.Trim());
+        }
+
+        void OnCombin(object sender, RoutedEventArgs e)
+        {
+            SetFilter(() =>
+            {
+                _lv.Where = "Xm.StartsWith('李')";
+                _lv.Filter = FilterCallback;
+            });
         }
 
         void OnFilter(object sender, RoutedEventArgs e)
         {
-            _lv.Filter = FilterCallback;
+            SetFilter(() => _lv.Filter = FilterCallback);
         }
 
         void OnFilterCfg(object sender, RoutedEventArgs e)
         {
             _lv.FilterCfg = new FilterCfg();
+        }
+
+        void OnCustFilterCfg(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = new FilterCfg
+            {
+                FilterCols = "xm,bh",
+                EnablePinYin = true,
+                IsRealtime = true,
+            };
+        }
+
+        void OnMyFilterCfg(object sender, RoutedEventArgs e)
+        {
+            var cfg = new FilterCfg();
+            cfg.MyFilter = (s) =>
+            {
+                _lv.Data = SampleData.CreatePersonXs(new Random().Next(30));
+            };
+            _lv.FilterCfg = cfg;
         }
 
         void OnClearFilter(object sender, RoutedEventArgs e)
@@ -53,9 +103,25 @@ namespace Dt.UIDemo
             }
         }
 
-        void OnMyWhere(object sender, RoutedEventArgs e)
+        void SetWhere(string p_where)
         {
-            _lv.Where = _tb.Text.Trim();
+            using (_lv.Defer())
+            {
+                _lv.Filter = null;
+                _lv.FilterCfg = null;
+                _lv.Where = p_where;
+            }
+        }
+
+        void SetFilter(Action p_call)
+        {
+            using (_lv.Defer())
+            {
+                _lv.Where = null;
+                _lv.Filter = null;
+                _lv.FilterCfg = null;
+                p_call();
+            }
         }
 
         bool FilterCallback(object obj)

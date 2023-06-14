@@ -133,7 +133,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置linq过滤串，如：
+        /// 获取设置linq过滤串，过滤串规则：
+        /// <para>1. it是当前数据对象，调用对象的属性和方法时可以省略，如：it.Name 等同 Name</para>
+        /// <para>2. 可以访问it的任意公共属性，但访问方法时需要在类型上添加DynamicLinqType标签</para>
+        /// <para>3. it的属性为简单类型时，可调用其属性和方法，如：Name.StartsWith() Name.Contains()</para>
+        /// <para>4. it的属性为自定义类型时，访问其属性和方法也需要在其类型上添加DynamicLinqType标签</para>
+        /// <para>5. it为Row时写法复杂些，推荐使用Enity</para>
         /// </summary>
         public string Where
         {

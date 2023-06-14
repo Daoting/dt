@@ -47,7 +47,11 @@ namespace Dt.Base
         /// {
         ///     _lv.View = Resources["TableView"];
         ///     _lv.ViewMode = ViewMode.Table;
-        ///     
+        ///     _lv.Where = null;
+        ///     _lv.Filter = null;
+        ///     _lv.FilterCfg = null;
+        ///     _lv.Data = xxx;
+        ///     _lv.GroupName = "xm";
         /// }
         /// </code>
         /// </example>
@@ -70,6 +74,10 @@ namespace Dt.Base
                     {
                         LoadPanel();
                         ClearValue(DeferLoadPanelProperty);
+
+                        // 切换面板不再需要重新加载内容
+                        if (DeferReload)
+                            ClearValue(DeferReloadProperty);
                     }
 
                     if (DeferRefreshData)
