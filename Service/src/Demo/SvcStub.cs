@@ -17,9 +17,5 @@ namespace Dt.Demo
     /// </summary>
     public class SvcStub : Stub
     {
-        /// <summary>
-        /// 服务名称
-        /// </summary>
-        public override string SvcName => "demo";
     }
 }

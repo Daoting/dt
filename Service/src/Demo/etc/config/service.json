@@ -1,8 +1,10 @@
 ﻿{
   "DbKey": "dt",
-  "CacheSql": false,
+  "SvcName": "demo",
+
+  "CacheSql": true,
   "TraceSql": false,
-  "TraceRpc": false,
+  "TraceRpc": true,
 
   "KestrelListen": [
     {
@@ -10,5 +12,21 @@
       "Address": "0.0.0.0",
       "Port": "20205"
     }
-  ]
+  ],
+
+  "IsSingletonSvc": true,
+
+  /********** 以下配置只在单体时有效 **********/
+
+  // 自定义服务的数据源键名
+  // 1. 可以自定义cm msg fsm服务或当前服务的数据源键名，否则采用默认数据源键名
+  // 2. 定义任意其它服务的数据源键名，实现跨多个数据源操作
+  "CustomSvcDbKey": {
+    //"svcname": "dbkey"
+  },
+
+  // 提供给fsm服务
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
+
 }
