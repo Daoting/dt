@@ -69,8 +69,26 @@ namespace Dt.Fsm
             }
 
             Log.Information("下载：{0}", path);
+
             if (!isThumb)
-                await Kit.NewDataAccess().Exec("增加下载次数", new { path = path });
+            {
+                var da = Kit.NewDataAccess();
+                // 查询sql时若未缓存造成自动关闭
+                da.AutoClose = false;
+
+                try
+                {
+                    await da.Exec("增加下载次数", new { path = path });
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "增加下载次数时异常！");
+                }
+                finally
+                {
+                    await da.Close(true);
+                }
+            }
 
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";
