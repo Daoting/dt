@@ -30,7 +30,7 @@
                     <Button Content="清空过滤" Click="OnClearFilter" />
                     <a:CBar Title="linq过滤串" />
                     <Button Content="姓李" Click="OnWhere1" />
-                    <Button Content="名字包含'涛'且编号小于15" Click="OnWhere2" />
+                    <Button Content="名字包含'涛'且编号小于15(wasm暂不支持)" Click="OnWhere2" />
                     <Button Content="李全亮(使用Row)" Click="OnWhere3" />
                     <Button Content="姓李(使用Row)" Click="OnWhere4" />
                     <Grid>
