@@ -5,7 +5,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
-## Release 4.1.0
+## Release 4.1.1
 ### 变更
 * Cols不再继承KeyedCollection，支持重复列id
 * IFvCell移除IsHorStretch、添加ColSpan，FormPanel重写布局算法
