@@ -36,12 +36,15 @@ namespace Dt.Editor
             this.label10 = new System.Windows.Forms.Label();
             this._svcUrl = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // linkLabel4
             // 
             this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(7, 54);
+            this.linkLabel4.Location = new System.Drawing.Point(7, 73);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(41, 12);
             this.linkLabel4.TabIndex = 125;
@@ -62,7 +65,7 @@ namespace Dt.Editor
             // 
             this._cbTbls.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cbTbls.FormattingEnabled = true;
-            this._cbTbls.Location = new System.Drawing.Point(119, 49);
+            this._cbTbls.Location = new System.Drawing.Point(119, 68);
             this._cbTbls.Name = "_cbTbls";
             this._cbTbls.Size = new System.Drawing.Size(258, 20);
             this._cbTbls.TabIndex = 122;
@@ -72,9 +75,9 @@ namespace Dt.Editor
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label9.Location = new System.Drawing.Point(3, 49);
+            this.label9.Location = new System.Drawing.Point(3, 68);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(117, 21);
+            this.label9.Size = new System.Drawing.Size(117, 20);
             this.label9.TabIndex = 123;
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -104,10 +107,41 @@ namespace Dt.Editor
             this.label11.TabIndex = 120;
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(119, 49);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(258, 20);
+            this._cbSvcName.TabIndex = 149;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(7, 53);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.TabIndex = 148;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "服务名称";
+            // 
+            // label3
+            // 
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Location = new System.Drawing.Point(3, 49);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(117, 20);
+            this.label3.TabIndex = 147;
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // BatchCells
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.linkLabel4);
             this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this._cbTbls);
@@ -131,5 +165,8 @@ namespace Dt.Editor
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox _svcUrl;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label3;
     }
 }

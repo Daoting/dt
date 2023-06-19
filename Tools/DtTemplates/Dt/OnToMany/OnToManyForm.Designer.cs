@@ -51,6 +51,9 @@ namespace Dt
             this.prefix = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._btnParent = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             this.SuspendLayout();
@@ -74,7 +77,7 @@ namespace Dt
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(381, 427);
+            this._btnOK.Location = new System.Drawing.Point(381, 458);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -111,7 +114,7 @@ namespace Dt
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 306);
+            this.label4.Location = new System.Drawing.Point(12, 337);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(221, 144);
             this.label4.TabIndex = 143;
@@ -120,7 +123,7 @@ namespace Dt
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(381, 153);
+            this.btnAdd.Location = new System.Drawing.Point(381, 184);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 141;
@@ -140,7 +143,7 @@ namespace Dt
             this.Alias,
             this.Column1,
             this.序号});
-            this._dgChild.Location = new System.Drawing.Point(12, 179);
+            this._dgChild.Location = new System.Drawing.Point(12, 210);
             this._dgChild.Name = "_dgChild";
             this._dgChild.RowHeadersVisible = false;
             this._dgChild.RowTemplate.Height = 23;
@@ -186,7 +189,7 @@ namespace Dt
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 72);
+            this.label3.Location = new System.Drawing.Point(12, 103);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 144;
@@ -202,7 +205,7 @@ namespace Dt
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.prefix});
-            this._dgParent.Location = new System.Drawing.Point(12, 87);
+            this._dgParent.Location = new System.Drawing.Point(12, 118);
             this._dgParent.Name = "_dgParent";
             this._dgParent.RowHeadersVisible = false;
             this._dgParent.RowTemplate.Height = 23;
@@ -232,7 +235,7 @@ namespace Dt
             // 
             // _btnParent
             // 
-            this._btnParent.Location = new System.Drawing.Point(381, 61);
+            this._btnParent.Location = new System.Drawing.Point(381, 92);
             this._btnParent.Name = "_btnParent";
             this._btnParent.Size = new System.Drawing.Size(75, 23);
             this._btnParent.TabIndex = 146;
@@ -243,17 +246,48 @@ namespace Dt
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 164);
+            this.label5.Location = new System.Drawing.Point(10, 195);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 12);
             this.label5.TabIndex = 147;
             this.label5.Text = "子实体";
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(187, 47);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(269, 20);
+            this._cbSvcName.TabIndex = 150;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(14, 51);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.TabIndex = 149;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "服务名称";
+            // 
+            // label1
+            // 
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Location = new System.Drawing.Point(12, 47);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(176, 20);
+            this.label1.TabIndex = 148;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // OnToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 467);
+            this.ClientSize = new System.Drawing.Size(473, 497);
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this._btnParent);
             this.Controls.Add(this._dgParent);
@@ -304,5 +338,8 @@ namespace Dt
         private System.Windows.Forms.DataGridViewTextBoxColumn Alias;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label1;
     }
 }

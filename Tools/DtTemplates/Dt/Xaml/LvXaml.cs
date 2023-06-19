@@ -17,6 +17,7 @@ namespace Dt.Editor
             _viewMode.SelectedIndex = 0;
             _selectionMode.SelectedIndex = 1;
             AtSvc.BindSvcUrl(_svcUrl);
+            AtSvc.BindSvcName(_cbSvcName);
             AddTooltip();
         }
 
@@ -123,6 +124,7 @@ namespace Dt.Editor
             tip.SetToolTip(_minItemWidth, "只磁贴视图有效！");
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
+            tip.SetToolTip(linkLabel2, Kit.SvcNameTip);
         }
 
         // 编辑器中的光标位置

@@ -47,6 +47,9 @@ namespace Dt
             this._rbReplace = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this._dg)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,7 +106,7 @@ namespace Dt
             this.Tbl,
             this.Cls,
             this.Del});
-            this._dg.Location = new System.Drawing.Point(12, 47);
+            this._dg.Location = new System.Drawing.Point(12, 95);
             this._dg.Name = "_dg";
             this._dg.RowHeadersVisible = false;
             this._dg.RowTemplate.Height = 23;
@@ -136,7 +139,7 @@ namespace Dt
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(381, 282);
+            this.btnAdd.Location = new System.Drawing.Point(381, 330);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 134;
@@ -146,7 +149,7 @@ namespace Dt
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(263, 282);
+            this.btnClear.Location = new System.Drawing.Point(263, 330);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
             this.btnClear.TabIndex = 135;
@@ -156,7 +159,7 @@ namespace Dt
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(381, 399);
+            this.btnOK.Location = new System.Drawing.Point(381, 447);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 136;
@@ -168,7 +171,7 @@ namespace Dt
             // 
             this._rbDef.AutoSize = true;
             this._rbDef.Checked = true;
-            this._rbDef.Location = new System.Drawing.Point(16, 373);
+            this._rbDef.Location = new System.Drawing.Point(16, 421);
             this._rbDef.Name = "_rbDef";
             this._rbDef.Size = new System.Drawing.Size(83, 16);
             this._rbDef.TabIndex = 137;
@@ -179,7 +182,7 @@ namespace Dt
             // _rbReplace
             // 
             this._rbReplace.AutoSize = true;
-            this._rbReplace.Location = new System.Drawing.Point(16, 398);
+            this._rbReplace.Location = new System.Drawing.Point(16, 446);
             this._rbReplace.Name = "_rbReplace";
             this._rbReplace.Size = new System.Drawing.Size(155, 16);
             this._rbReplace.TabIndex = 138;
@@ -189,7 +192,7 @@ namespace Dt
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 287);
+            this.label1.Location = new System.Drawing.Point(14, 335);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(185, 36);
             this.label1.TabIndex = 139;
@@ -198,17 +201,48 @@ namespace Dt
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 352);
+            this.label3.Location = new System.Drawing.Point(16, 400);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(185, 12);
             this.label3.TabIndex = 140;
             this.label3.Text = "实体类自定义部分的cs文件存在时";
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(187, 47);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(269, 20);
+            this._cbSvcName.TabIndex = 153;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(14, 51);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.TabIndex = 152;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "服务名称";
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(12, 47);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(176, 20);
+            this.label4.TabIndex = 151;
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // InsertEntityClsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(473, 434);
+            this.ClientSize = new System.Drawing.Size(473, 484);
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._rbReplace);
@@ -253,5 +287,8 @@ namespace Dt
         private System.Windows.Forms.DataGridViewTextBoxColumn Cls;
         private System.Windows.Forms.DataGridViewButtonColumn Del;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label4;
     }
 }

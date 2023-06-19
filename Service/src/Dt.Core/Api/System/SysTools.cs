@@ -29,6 +29,15 @@ namespace Dt.Core
     public class SysTools : DomainSvc
     {
         /// <summary>
+        /// 获取所有服务名称
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSvcNames()
+        {
+            return Kit.SvcNames.ToList();
+        }
+
+        /// <summary>
         /// 生成实体类
         /// </summary>
         /// <param name="p_tblName">表名</param>
@@ -578,22 +587,6 @@ namespace Dt.Core
                 }
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// 表是否包含ParentID字段
-        /// </summary>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        public async Task<bool> ExistParentID(string p_tblName)
-        {
-            var schema = await _da.GetTableSchema(p_tblName);
-            foreach (var col in schema.Columns)
-            {
-                if (col.Name == "ParentID")
-                    return true;
-            }
-            return false;
         }
 
         /// <summary>

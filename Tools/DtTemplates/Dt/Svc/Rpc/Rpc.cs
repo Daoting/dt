@@ -32,9 +32,9 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="T">结果对象的类型</typeparam>
         /// <returns>返回远程调用结果</returns>
-        public async Task<T> Call<T>(string p_svcUrl, string p_methodName, params object[] p_params)
+        public async Task<T> Call<T>(string p_svcUrl, string p_svcName, string p_methodName, params object[] p_params)
         {
-            _data = GetRpcData(p_methodName, p_params);
+            _data = GetRpcData(p_svcName, p_methodName, p_params);
 
             byte[] data = null;
             using (var request = new HttpRequestMessage
@@ -69,9 +69,9 @@ namespace Dt.Core
             return ParseResult<T>(data);
         }
 
-        byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
+        byte[] GetRpcData(string p_svcName, string p_methodName, ICollection<object> p_params)
         {
-            byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
+            byte[] data = RpcKit.GetCallBytes(p_svcName, p_methodName, p_params);
 
             // 超过长度限制时执行压缩
             if (data.Length > RpcKit.MinCompressLength)

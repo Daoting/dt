@@ -247,6 +247,11 @@ namespace Dt
 1. 获取所有表目录
 2. 根据表结构动态生成列表、表单等xaml内容和框架代码";
 
+        public const string SvcNameTip =
+@"单体模式时用于区分不同服务；
+不同服务可能连接不同数据库；
+非单体模式只有一个服务";
+
         public const string AllTblsTip =
 @"通过服务获取的所有表目录
 服务不可用时目录为空";

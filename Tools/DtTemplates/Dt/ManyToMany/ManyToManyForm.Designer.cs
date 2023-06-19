@@ -58,6 +58,9 @@ namespace Dt
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this._dgChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgParent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dgMid)).BeginInit();
@@ -82,7 +85,7 @@ namespace Dt
             // 
             // _btnOK
             // 
-            this._btnOK.Location = new System.Drawing.Point(420, 494);
+            this._btnOK.Location = new System.Drawing.Point(420, 524);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 100;
@@ -119,7 +122,7 @@ namespace Dt
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 457);
+            this.label4.Location = new System.Drawing.Point(10, 487);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(197, 60);
             this.label4.TabIndex = 143;
@@ -127,7 +130,7 @@ namespace Dt
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(420, 153);
+            this.btnAdd.Location = new System.Drawing.Point(420, 183);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 141;
@@ -146,7 +149,7 @@ namespace Dt
             this.Cls,
             this.Alias,
             this.序号});
-            this._dgChild.Location = new System.Drawing.Point(12, 179);
+            this._dgChild.Location = new System.Drawing.Point(12, 209);
             this._dgChild.Name = "_dgChild";
             this._dgChild.RowHeadersVisible = false;
             this._dgChild.RowTemplate.Height = 23;
@@ -185,7 +188,7 @@ namespace Dt
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 72);
+            this.label3.Location = new System.Drawing.Point(12, 102);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 144;
@@ -201,7 +204,7 @@ namespace Dt
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.prefix});
-            this._dgParent.Location = new System.Drawing.Point(12, 87);
+            this._dgParent.Location = new System.Drawing.Point(12, 117);
             this._dgParent.Name = "_dgParent";
             this._dgParent.RowHeadersVisible = false;
             this._dgParent.RowTemplate.Height = 23;
@@ -231,7 +234,7 @@ namespace Dt
             // 
             // _btnParent
             // 
-            this._btnParent.Location = new System.Drawing.Point(420, 61);
+            this._btnParent.Location = new System.Drawing.Point(420, 91);
             this._btnParent.Name = "_btnParent";
             this._btnParent.Size = new System.Drawing.Size(75, 23);
             this._btnParent.TabIndex = 146;
@@ -242,7 +245,7 @@ namespace Dt
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 164);
+            this.label5.Location = new System.Drawing.Point(10, 194);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 147;
@@ -251,7 +254,7 @@ namespace Dt
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 317);
+            this.label1.Location = new System.Drawing.Point(10, 347);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 150;
@@ -259,7 +262,7 @@ namespace Dt
             // 
             // _btnMid
             // 
-            this._btnMid.Location = new System.Drawing.Point(420, 306);
+            this._btnMid.Location = new System.Drawing.Point(420, 336);
             this._btnMid.Name = "_btnMid";
             this._btnMid.Size = new System.Drawing.Size(75, 23);
             this._btnMid.TabIndex = 149;
@@ -279,7 +282,7 @@ namespace Dt
             this.dataGridViewTextBoxColumn8,
             this.dataGridViewTextBoxColumn7,
             this.dataGridViewTextBoxColumn9});
-            this._dgMid.Location = new System.Drawing.Point(12, 332);
+            this._dgMid.Location = new System.Drawing.Point(12, 362);
             this._dgMid.Name = "_dgMid";
             this._dgMid.RowHeadersVisible = false;
             this._dgMid.RowTemplate.Height = 23;
@@ -317,11 +320,42 @@ namespace Dt
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
             this.dataGridViewTextBoxColumn9.Width = 60;
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(187, 47);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(308, 20);
+            this._cbSvcName.TabIndex = 153;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(14, 51);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.TabIndex = 152;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "服务名称";
+            // 
+            // label6
+            // 
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.Location = new System.Drawing.Point(12, 47);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(176, 20);
+            this.label6.TabIndex = 151;
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // ManyToManyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(507, 526);
+            this.ClientSize = new System.Drawing.Size(507, 559);
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._btnMid);
             this.Controls.Add(this._dgMid);
@@ -383,5 +417,8 @@ namespace Dt
         private System.Windows.Forms.DataGridViewTextBoxColumn Cls;
         private System.Windows.Forms.DataGridViewTextBoxColumn Alias;
         private System.Windows.Forms.DataGridViewTextBoxColumn 序号;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label6;
     }
 }

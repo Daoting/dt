@@ -14,6 +14,7 @@ namespace Dt
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
             AtSvc.BindSvcUrl(_svcUrl);
+            AtSvc.BindSvcName(_cbSvcName);
             AddTooltip();
         }
 
@@ -128,6 +129,8 @@ namespace Dt
 @"请确保当前服务正在运行，通过服务：
 1. 获取所有表目录
 2. 根据表结构生成实体类及实体类扩展的代码");
+
+            tip.SetToolTip(linkLabel1, Kit.SvcNameTip);
         }
     }
 }

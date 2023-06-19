@@ -19,6 +19,7 @@ namespace Dt
             InitializeComponent();
             _ns.Text = Kit.GetNamespace();
             AtSvc.BindSvcUrl(_svcUrl);
+            AtSvc.BindSvcName(_cbSvcName);
             AddTooltip();
         }
 
@@ -131,6 +132,7 @@ namespace Dt
             var tip = new ToolTip();
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel2, Kit.RootNameTip);
+            tip.SetToolTip(linkLabel1, Kit.SvcNameTip);
         }
     }
 }

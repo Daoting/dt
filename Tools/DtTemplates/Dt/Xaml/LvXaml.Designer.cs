@@ -54,6 +54,9 @@ namespace Dt.Editor
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this._showToolbar = new System.Windows.Forms.CheckBox();
             this._showFilter = new System.Windows.Forms.CheckBox();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -209,7 +212,7 @@ namespace Dt.Editor
             // linkLabel4
             // 
             this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(4, 271);
+            this.linkLabel4.Location = new System.Drawing.Point(4, 290);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(41, 12);
             this.linkLabel4.TabIndex = 118;
@@ -230,7 +233,7 @@ namespace Dt.Editor
             // 
             this._cbTbls.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cbTbls.FormattingEnabled = true;
-            this._cbTbls.Location = new System.Drawing.Point(183, 266);
+            this._cbTbls.Location = new System.Drawing.Point(183, 285);
             this._cbTbls.Name = "_cbTbls";
             this._cbTbls.Size = new System.Drawing.Size(277, 20);
             this._cbTbls.TabIndex = 115;
@@ -239,9 +242,9 @@ namespace Dt.Editor
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label9.Location = new System.Drawing.Point(0, 266);
+            this.label9.Location = new System.Drawing.Point(0, 285);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(184, 21);
+            this.label9.Size = new System.Drawing.Size(184, 20);
             this.label9.TabIndex = 116;
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -301,10 +304,41 @@ namespace Dt.Editor
             this._showFilter.Text = "显示筛选框";
             this._showFilter.UseVisualStyleBackColor = true;
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(183, 266);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(277, 20);
+            this._cbSvcName.TabIndex = 152;
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(4, 270);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel2.TabIndex = 151;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "服务名称";
+            // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label5.Location = new System.Drawing.Point(0, 266);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(184, 20);
+            this.label5.TabIndex = 150;
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // LvXaml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel2);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this._showFilter);
             this.Controls.Add(this._showToolbar);
             this.Controls.Add(this.linkLabel1);
@@ -331,7 +365,7 @@ namespace Dt.Editor
             this.Controls.Add(this._name);
             this.Controls.Add(this.label1);
             this.Name = "LvXaml";
-            this.Size = new System.Drawing.Size(460, 300);
+            this.Size = new System.Drawing.Size(460, 472);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -364,5 +398,8 @@ namespace Dt.Editor
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.CheckBox _showToolbar;
         private System.Windows.Forms.CheckBox _showFilter;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.Label label5;
     }
 }

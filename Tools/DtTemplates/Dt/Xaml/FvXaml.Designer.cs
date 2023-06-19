@@ -41,6 +41,9 @@ namespace Dt.Editor
             this.label2 = new System.Windows.Forms.Label();
             this._cbReadonly = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this._cbSvcName = new System.Windows.Forms.ComboBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -64,7 +67,7 @@ namespace Dt.Editor
             // linkLabel4
             // 
             this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(4, 111);
+            this.linkLabel4.Location = new System.Drawing.Point(4, 130);
             this.linkLabel4.Name = "linkLabel4";
             this.linkLabel4.Size = new System.Drawing.Size(41, 12);
             this.linkLabel4.TabIndex = 118;
@@ -85,7 +88,7 @@ namespace Dt.Editor
             // 
             this._cbTbls.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cbTbls.FormattingEnabled = true;
-            this._cbTbls.Location = new System.Drawing.Point(183, 106);
+            this._cbTbls.Location = new System.Drawing.Point(183, 125);
             this._cbTbls.Name = "_cbTbls";
             this._cbTbls.Size = new System.Drawing.Size(277, 20);
             this._cbTbls.TabIndex = 115;
@@ -94,9 +97,9 @@ namespace Dt.Editor
             // label9
             // 
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label9.Location = new System.Drawing.Point(0, 106);
+            this.label9.Location = new System.Drawing.Point(0, 125);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(184, 21);
+            this.label9.Size = new System.Drawing.Size(184, 20);
             this.label9.TabIndex = 116;
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -154,10 +157,41 @@ namespace Dt.Editor
             this.label3.TabIndex = 121;
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // _cbSvcName
+            // 
+            this._cbSvcName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbSvcName.FormattingEnabled = true;
+            this._cbSvcName.Location = new System.Drawing.Point(183, 106);
+            this._cbSvcName.Name = "_cbSvcName";
+            this._cbSvcName.Size = new System.Drawing.Size(277, 20);
+            this._cbSvcName.TabIndex = 149;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(4, 110);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.TabIndex = 148;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "服务名称";
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(0, 106);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(184, 20);
+            this.label4.TabIndex = 147;
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // FvXaml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._cbSvcName);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this._cbReadonly);
             this.Controls.Add(this.label3);
@@ -191,5 +225,8 @@ namespace Dt.Editor
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox _cbReadonly;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox _cbSvcName;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label4;
     }
 }

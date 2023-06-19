@@ -15,6 +15,7 @@ namespace Dt.Editor
             InitializeComponent();
 
             AtSvc.BindSvcUrl(_svcUrl);
+            AtSvc.BindSvcName(_cbSvcName);
             AddTooltip();
         }
 
@@ -54,6 +55,7 @@ namespace Dt.Editor
             ToolTip tip = new ToolTip();
             tip.SetToolTip(linkLabel3, Kit.SvcUrlTip);
             tip.SetToolTip(linkLabel4, Kit.AllTblsTip);
+            tip.SetToolTip(linkLabel1, Kit.SvcNameTip);
         }
     }
 }
