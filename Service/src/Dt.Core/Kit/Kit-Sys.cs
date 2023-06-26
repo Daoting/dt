@@ -146,7 +146,6 @@ namespace Dt.Core
         static void OnConfigChanged(object p_state)
         {
             ApplyConfig();
-            Dt.Core.DataAccess.OnConfigChanged();
             ConfigChanged?.Invoke();
 
             // 每次修改后需要重新注册，立即注册又会连续触发两次！

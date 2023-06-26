@@ -39,7 +39,6 @@ namespace Dt.Core
             LoadConfig();
             BuildStubs(p_stub);
             DbSchema.Init();
-            DataAccess.CacheSql();
             RunWebHost(p_args);
             Log.CloseAndFlush();
         }

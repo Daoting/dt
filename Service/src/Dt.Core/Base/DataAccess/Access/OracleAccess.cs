@@ -30,9 +30,9 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new OracleConnection(DbInfo.ConnStr);
 
-        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_sql)
         {
-            return $"select * from (select a.*,rownum rn from ({GetSql(p_keyOrSql)}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
+            return $"select * from (select a.*,rownum rn from ({p_sql}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
         }
 
         public override Task<int> NewSequence(string p_seqName)

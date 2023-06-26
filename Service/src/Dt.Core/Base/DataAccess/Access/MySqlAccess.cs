@@ -32,9 +32,9 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new MySqlConnection(DbInfo.ConnStr);
 
-        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_sql)
         {
-            return $"select * from ({GetSql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize}";
+            return $"select * from ({p_sql}) a limit {p_starRow},{p_pageSize}";
         }
 
         public override Task<int> NewSequence(string p_seqName)

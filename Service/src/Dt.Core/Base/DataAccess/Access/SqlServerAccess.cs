@@ -30,10 +30,10 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new SqlConnection(DbInfo.ConnStr);
 
-        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql)
+        protected override string GetPageSql(int p_starRow, int p_pageSize, string p_sql)
         {
             // SQL2012以上的版本才支持，前段sql应有order by，否则出错！
-            var sql = GetSql(p_keyOrSql);
+            var sql = p_sql;
             if (!sql.Contains(" order ", StringComparison.OrdinalIgnoreCase))
             {
                 // 添加无用的order by

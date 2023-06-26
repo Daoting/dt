@@ -22,25 +22,25 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public static Task<Table> Query(string p_keyOrSql, object p_params = null)
+        public static Task<Table> Query(string p_sqlOrSp, object p_params = null)
         {
-            return _da.Query(p_keyOrSql, p_params);
+            return _da.Query(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回实体列表
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static Task<Table<TEntity>> Query<TEntity>(string p_keyOrSql, object p_params = null)
+        public static Task<Table<TEntity>> Query<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
-            return _da.Query<TEntity>(p_keyOrSql, p_params);
+            return _da.Query<TEntity>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
@@ -48,15 +48,15 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public static Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
         {
             return _da.Page(
                 p_starRow,
                 p_pageSize,
-                p_keyOrSql,
+                p_sql,
                 p_params
             );
         }
@@ -67,16 +67,16 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public static Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
             where TEntity : Entity
         {
             return _da.Page<TEntity>(
                 p_starRow,
                 p_pageSize,
-                p_keyOrSql,
+                p_sql,
                 p_params
             );
         }
@@ -84,84 +84,84 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public static Task<Row> First(string p_keyOrSql, object p_params = null)
+        public static Task<Row> First(string p_sqlOrSp, object p_params = null)
         {
-            return _da.First(p_keyOrSql, p_params);
+            return _da.First(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回第一个实体对象，实体属性由Sql决定，不存在时返回null
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
+        public static Task<TEntity> First<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
-            return _da.First<TEntity>(p_keyOrSql, p_params);
+            return _da.First<TEntity>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
         /// </summary>
         /// <typeparam name="T">第一列数据类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
-        public static Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
+        public static Task<List<T>> FirstCol<T>(string p_sqlOrSp, object p_params = null)
         {
-            return _da.FirstCol<T>(p_keyOrSql, p_params);
+            return _da.FirstCol<T>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
-        public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+        public static Task<T> GetScalar<T>(string p_sqlOrSp, object p_params = null)
         {
-            return _da.GetScalar<T>(p_keyOrSql, p_params);
+            return _da.GetScalar<T>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回Row枚举，高性能，客户端代理不支持！
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public static Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
+        public static Task<IEnumerable<Row>> Each(string p_sqlOrSp, object p_params = null)
         {
-            return _da.Each(p_keyOrSql, p_params);
+            return _da.Each(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回实体枚举，高性能，客户端代理不支持！
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体枚举</returns>
-        public static Task<IEnumerable<TEntity>> Each<TEntity>(string p_keyOrSql, object p_params = null)
+        public static Task<IEnumerable<TEntity>> Each<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
-            return _da.Each<TEntity>(p_keyOrSql, p_params);
+            return _da.Each<TEntity>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回第一列枚举，高性能，客户端代理不支持！
         /// </summary>
         /// <typeparam name="T">第一列数据类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型枚举</returns>
-        public static Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
+        public static Task<IEnumerable<T>> EachFirstCol<T>(string p_sqlOrSp, object p_params = null)
         {
-            return _da.EachFirstCol<T>(p_keyOrSql, p_params);
+            return _da.EachFirstCol<T>(p_sqlOrSp, p_params);
         }
         #endregion
 
@@ -169,12 +169,12 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，返回影响的行数，底层方法万不得已慎用！
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象</param>
         /// <returns>执行后影响的行数</returns>
-        public static Task<int> Exec(string p_keyOrSql, object p_params = null)
+        public static Task<int> Exec(string p_sqlOrSp, object p_params = null)
         {
-            return _da.Exec(p_keyOrSql, p_params);
+            return _da.Exec(p_sqlOrSp, p_params);
         }
 
         /// <summary>

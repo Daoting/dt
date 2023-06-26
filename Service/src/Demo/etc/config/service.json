@@ -2,7 +2,6 @@
   "DbKey": "dt",
   "SvcName": "demo",
 
-  "CacheSql": true,
   "TraceSql": false,
   "TraceRpc": true,
 

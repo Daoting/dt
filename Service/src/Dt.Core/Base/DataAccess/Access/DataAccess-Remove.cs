@@ -39,72 +39,72 @@ namespace Dt.Core
     //    /// 以参数值方式执行Sql语句，返回泛型列表
     //    /// </summary>
     //    /// <typeparam name="T">ORM类型</typeparam>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回泛型列表</returns>
-    //    public async Task<List<T>> GetList<T>(string p_keyOrSql, object p_params = null)
+    //    public async Task<List<T>> GetList<T>(string p_sqlOrSp, object p_params = null)
     //    {
-    //        return (List<T>)await GetListInternal<T>(p_keyOrSql, p_params, false);
+    //        return (List<T>)await GetListInternal<T>(p_sqlOrSp, p_params, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回泛型枚举，高性能
     //    /// </summary>
     //    /// <typeparam name="T">ORM类型</typeparam>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回泛型枚举</returns>
-    //    public Task<IEnumerable<T>> EachItem<T>(string p_keyOrSql, object p_params = null)
+    //    public Task<IEnumerable<T>> EachItem<T>(string p_sqlOrSp, object p_params = null)
     //    {
-    //        return GetListInternal<T>(p_keyOrSql, p_params, true);
+    //        return GetListInternal<T>(p_sqlOrSp, p_params, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回指定类型的对象列表，可直接转型为List`T
     //    /// </summary>
     //    /// <param name="p_type">ORM类型</param>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public Task<System.Collections.IEnumerable> GetList(Type p_type, string p_keyOrSql, object p_params = null)
+    //    public Task<System.Collections.IEnumerable> GetList(Type p_type, string p_sqlOrSp, object p_params = null)
     //    {
-    //        return GetListInternal(p_type, p_keyOrSql, p_params, false);
+    //        return GetListInternal(p_type, p_sqlOrSp, p_params, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回指定类型对象的枚举，高性能
     //    /// </summary>
     //    /// <param name="p_type">ORM类型</param>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回指定类型对象的枚举</returns>
-    //    public Task<System.Collections.IEnumerable> EachItem(Type p_type, string p_keyOrSql, object p_params = null)
+    //    public Task<System.Collections.IEnumerable> EachItem(Type p_type, string p_sqlOrSp, object p_params = null)
     //    {
-    //        return GetListInternal(p_type, p_keyOrSql, p_params, true);
+    //        return GetListInternal(p_type, p_sqlOrSp, p_params, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，只返回第一行数据
     //    /// </summary>
     //    /// <typeparam name="T">ORM类型</typeparam>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回第一行数据对象，无数据时返回空</returns>
-    //    public async Task<T> GetItem<T>(string p_keyOrSql, object p_params = null)
+    //    public async Task<T> GetItem<T>(string p_sqlOrSp, object p_params = null)
     //    {
-    //        return (T)await GetItem(typeof(T), p_keyOrSql, p_params);
+    //        return (T)await GetItem(typeof(T), p_sqlOrSp, p_params);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，只返回第一行数据
     //    /// </summary>
     //    /// <param name="p_tgtType">ORM类型</param>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <returns>返回第一行数据对象，无数据时返回空</returns>
-    //    public async Task<object> GetItem(Type p_tgtType, string p_keyOrSql, object p_params = null)
+    //    public async Task<object> GetItem(Type p_tgtType, string p_sqlOrSp, object p_params = null)
     //    {
-    //        var cmd = CreateCommand(p_keyOrSql, p_params, false);
+    //        var cmd = CreateCommand(p_sqlOrSp, p_params, false);
     //        try
     //        {
     //            await OpenConnection();
@@ -120,9 +120,9 @@ namespace Dt.Core
     //        }
     //    }
 
-    //    async Task<IEnumerable<T>> GetListInternal<T>(string p_keyOrSql, object p_params, bool p_deferred)
+    //    async Task<IEnumerable<T>> GetListInternal<T>(string p_sqlOrSp, object p_params, bool p_deferred)
     //    {
-    //        var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
+    //        var cmd = CreateCommand(p_sqlOrSp, p_params, p_deferred);
     //        try
     //        {
     //            await OpenConnection();
@@ -140,12 +140,12 @@ namespace Dt.Core
 
     //    // 泛型方法 QueryAsync<T>
     //    static MethodInfo _queryMethod = typeof(SqlMapper).GetMethod("QueryAsync", 1, new Type[] { typeof(IDbConnection), typeof(CommandDefinition) });
-    //    async Task<System.Collections.IEnumerable> GetListInternal(Type p_type, string p_keyOrSql, object p_params, bool p_deferred)
+    //    async Task<System.Collections.IEnumerable> GetListInternal(Type p_type, string p_sqlOrSp, object p_params, bool p_deferred)
     //    {
     //        if (p_type == null)
     //            throw new ArgumentNullException(nameof(p_type));
 
-    //        var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
+    //        var cmd = CreateCommand(p_sqlOrSp, p_params, p_deferred);
     //        try
     //        {
     //            await OpenConnection();
@@ -170,191 +170,191 @@ namespace Dt.Core
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, DontMap, DontMap, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, DontMap, DontMap, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, DontMap, DontMap, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, DontMap, DontMap, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, DontMap, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, DontMap, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, TThird, DontMap, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, TThird, DontMap, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, TThird, TFourth, DontMap, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, TThird, TFourth, DontMap, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, DontMap, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, DontMap, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, DontMap, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, DontMap, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, false);
+    //        return (List<TReturn>)await QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, false);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(string p_keyOrSql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(string p_sqlOrSp, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(p_keyOrSql, p_map, p_params, p_splitOn, true);
+    //        return QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(p_sqlOrSp, p_map, p_params, p_splitOn, true);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 列表
     //    /// </summary>
     //    /// <typeparam name="TReturn"></typeparam>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_types">返回的多个类型</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象列表</returns>
-    //    public async Task<List<TReturn>> Map<TReturn>(string p_keyOrSql, Type[] p_types, Func<object[], TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public async Task<List<TReturn>> Map<TReturn>(string p_sqlOrSp, Type[] p_types, Func<object[], TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return (List<TReturn>)await QueryMap(p_keyOrSql, p_types, p_map, p_params, false, p_splitOn);
+    //        return (List<TReturn>)await QueryMap(p_sqlOrSp, p_types, p_map, p_params, false, p_splitOn);
     //    }
 
     //    /// <summary>
     //    /// 以参数值方式执行Sql语句，返回多个类型对象通过回调合并成 TReturn 的枚举，高性能
     //    /// </summary>
     //    /// <typeparam name="TReturn"></typeparam>
-    //    /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+    //    /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
     //    /// <param name="p_types">返回的多个类型</param>
     //    /// <param name="p_map">合并结果的回调方法</param>
     //    /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
     //    /// <param name="p_splitOn">映射到多个对象的切分列名，支持一个或多个切分列，多个时用逗号隔开</param>
     //    /// <returns>返回指定类型的对象枚举</returns>
-    //    public Task<IEnumerable<TReturn>> ForEach<TReturn>(string p_keyOrSql, Type[] p_types, Func<object[], TReturn> p_map, object p_params = null, string p_splitOn = "id")
+    //    public Task<IEnumerable<TReturn>> ForEach<TReturn>(string p_sqlOrSp, Type[] p_types, Func<object[], TReturn> p_map, object p_params = null, string p_splitOn = "id")
     //    {
-    //        return QueryMap(p_keyOrSql, p_types, p_map, p_params, true, p_splitOn);
+    //        return QueryMap(p_sqlOrSp, p_types, p_map, p_params, true, p_splitOn);
     //    }
 
     //    async Task<IEnumerable<TReturn>> QueryMap<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(
-    //        string p_keyOrSql,
+    //        string p_sqlOrSp,
     //        Delegate p_map,
     //        object p_params,
     //        string p_splitOn,
@@ -363,7 +363,7 @@ namespace Dt.Core
     //        if (p_map == null)
     //            throw new ArgumentNullException(nameof(p_map));
 
-    //        var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
+    //        var cmd = CreateCommand(p_sqlOrSp, p_params, p_deferred);
     //        try
     //        {
     //            await OpenConnection();
@@ -393,14 +393,14 @@ namespace Dt.Core
     //    }
 
     //    async Task<IEnumerable<TReturn>> QueryMap<TReturn>(
-    //        string p_keyOrSql,
+    //        string p_sqlOrSp,
     //        Type[] p_types,
     //        Func<object[], TReturn> p_map,
     //        object p_params,
     //        bool p_deferred,
     //        string p_splitOn)
     //    {
-    //        string sql = Kit.Sql(p_keyOrSql);
+    //        string sql = Kit.Sql(p_sqlOrSp);
 
     //        try
     //        {
@@ -410,7 +410,7 @@ namespace Dt.Core
     //        }
     //        catch (Exception ex)
     //        {
-    //            throw GetSqlException(CreateCommand(p_keyOrSql, p_params, p_deferred), ex);
+    //            throw GetSqlException(CreateCommand(p_sqlOrSp, p_params, p_deferred), ex);
     //        }
     //        finally
     //        {

@@ -20,12 +20,12 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public Task<Table> Query(string p_keyOrSql, object p_params = null)
+        public Task<Table> Query(string p_sqlOrSp, object p_params = null)
         {
-            return _da.Query(p_keyOrSql, p_params);
+            return _da.Query(p_sqlOrSp, p_params);
         }
 
         /// <summary>
@@ -33,68 +33,68 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_starRow">起始行号：mysql中第一行为0行</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public Task<Table> Page(int p_starRow, int p_pageSize, string p_sqlOrSp, object p_params = null)
         {
-            return _da.Page(p_starRow, p_pageSize, p_keyOrSql, p_params);
+            return _da.Page(p_starRow, p_pageSize, p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public Task<Row> First(string p_keyOrSql, object p_params = null)
+        public Task<Row> First(string p_sqlOrSp, object p_params = null)
         {
-            return _da.First(p_keyOrSql, p_params);
+            return _da.First(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
         /// </summary>
         /// <param name="p_type">第一列数据类型</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
-        public Task<object> FirstCol(string p_type, string p_keyOrSql, object p_params = null)
+        public Task<object> FirstCol(string p_type, string p_sqlOrSp, object p_params = null)
         {
-            return _da.FirstCol(Type.GetType(p_type), p_keyOrSql, p_params);
+            return _da.FirstCol(Type.GetType(p_type), p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
         [CustomAgent(
-@"public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+@"public static Task<T> GetScalar<T>(string p_sqlOrSp, object p_params = null)
 {
     return new UnaryRpc(
         ###,
         ""Da.GetScalar"",
-        p_keyOrSql,
+        p_sqlOrSp,
         p_params
     ).Call<T>();
 }
 ")]
-        public Task<object> GetScalar(string p_keyOrSql, object p_params = null)
+        public Task<object> GetScalar(string p_sqlOrSp, object p_params = null)
         {
-            return _da.GetScalar<object>(p_keyOrSql, p_params);
+            return _da.GetScalar<object>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回影响的行数
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象</param>
         /// <returns>返回执行后影响的行数</returns>
-        public Task<int> Exec(string p_keyOrSql, object p_params = null)
+        public Task<int> Exec(string p_sqlOrSp, object p_params = null)
         {
-            return _da.Exec(p_keyOrSql, p_params);
+            return _da.Exec(p_sqlOrSp, p_params);
         }
 
         /// <summary>

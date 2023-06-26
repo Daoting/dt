@@ -590,20 +590,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 重新加载缓存的sql语句
-        /// </summary>
-        /// <returns></returns>
-        public async Task<string> UpdateSqlCache()
-        {
-            if (Kit.GetCfg("CacheSql", true))
-            {
-                await DataAccess.LoadCacheSql();
-                return "刷新缓存Sql成功";
-            }
-            return "未启用缓存Sql, 调试状态";
-        }
-
-        /// <summary>
         /// 获取所有微服务
         /// </summary>
         /// <returns></returns>

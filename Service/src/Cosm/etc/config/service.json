@@ -4,9 +4,7 @@
   // 服务名称
   "SvcName": "cosm",
 
-  // 是否缓存sql字典
-  "CacheSql": false,
-  // 是否输出所有运行中的Sql语句
+  // 是否输出所有调用的Sql语句或存储过程名
   "TraceSql": true,
   // 是否输出所有调用的Api名称
   "TraceRpc": true,

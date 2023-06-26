@@ -8,7 +8,9 @@
 
 #region 引用命名
 using Dapper;
+using Dapper.Oracle;
 using System.Collections;
+using System.Data;
 using System.Data.Common;
 using System.Reflection;
 using System.Text;
@@ -52,13 +54,13 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public async Task<Table> Query(string p_keyOrSql, object p_params = null)
+        public async Task<Table> Query(string p_sqlOrSp, object p_params = null)
         {
             var tbl = new Table();
-            await QueryInternal<Row>(tbl, p_keyOrSql, p_params);
+            await QueryInternal<Row>(tbl, p_sqlOrSp, p_params);
             return tbl;
         }
 
@@ -66,14 +68,14 @@ namespace Dt.Core
         /// 以参数值方式执行Sql语句，返回结果集
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public async Task<Table<TEntity>> Query<TEntity>(string p_keyOrSql, object p_params = null)
+        public async Task<Table<TEntity>> Query<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
             var tbl = new Table<TEntity>();
-            await QueryInternal<TEntity>(tbl, p_keyOrSql, p_params);
+            await QueryInternal<TEntity>(tbl, p_sqlOrSp, p_params);
             return tbl;
         }
 
@@ -82,12 +84,12 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据</returns>
-        public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
         {
-            return Query(GetPageSql(p_starRow, p_pageSize, p_keyOrSql), p_params);
+            return Query(GetPageSql(p_starRow, p_pageSize, p_sql), p_params);
         }
 
         /// <summary>
@@ -96,13 +98,13 @@ namespace Dt.Core
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            return Query<TEntity>(GetPageSql(p_starRow, p_pageSize, p_keyOrSql), p_params);
+            return Query<TEntity>(GetPageSql(p_starRow, p_pageSize, p_sql), p_params);
         }
 
         /// <summary>
@@ -110,68 +112,68 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_starRow"></param>
         /// <param name="p_pageSize"></param>
-        /// <param name="p_keyOrSql"></param>
+        /// <param name="p_sql">Sql语句</param>
         /// <returns></returns>
-        protected abstract string GetPageSql(int p_starRow, int p_pageSize, string p_keyOrSql);
+        protected abstract string GetPageSql(int p_starRow, int p_pageSize, string p_sql);
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回Row枚举，高性能
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
+        public Task<IEnumerable<Row>> Each(string p_sqlOrSp, object p_params = null)
         {
-            return ForEachRow<Row>(p_keyOrSql, p_params);
+            return ForEachRow<Row>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回Row枚举，高性能
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public Task<IEnumerable<TEntity>> Each<TEntity>(string p_keyOrSql, object p_params = null)
+        public Task<IEnumerable<TEntity>> Each<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
-            return ForEachRow<TEntity>(p_keyOrSql, p_params);
+            return ForEachRow<TEntity>(p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public async Task<Row> First(string p_keyOrSql, object p_params = null)
+        public async Task<Row> First(string p_sqlOrSp, object p_params = null)
         {
-            return (await ForEachRow<Row>(p_keyOrSql, p_params)).FirstOrDefault();
+            return (await ForEachRow<Row>(p_sqlOrSp, p_params)).FirstOrDefault();
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行Row或null</returns>
-        public async Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
+        public async Task<TEntity> First<TEntity>(string p_sqlOrSp, object p_params = null)
             where TEntity : Entity
         {
-            return (await ForEachRow<TEntity>(p_keyOrSql, p_params)).FirstOrDefault();
+            return (await ForEachRow<TEntity>(p_sqlOrSp, p_params)).FirstOrDefault();
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
         /// <typeparam name="T">单元格数据类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
-        public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+        public async Task<T> GetScalar<T>(string p_sqlOrSp, object p_params = null)
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            var cmd = CreateCommand(p_sqlOrSp, p_params, false, true);
             try
             {
                 await OpenConnection();
@@ -192,25 +194,25 @@ namespace Dt.Core
         /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
         /// </summary>
         /// <typeparam name="T">第一列数据类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
-        public async Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
+        public async Task<List<T>> FirstCol<T>(string p_sqlOrSp, object p_params = null)
         {
-            return (List<T>)await FirstCol(typeof(T), p_keyOrSql, p_params);
+            return (List<T>)await FirstCol(typeof(T), p_sqlOrSp, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回符合条件的第一列数据，并转换为指定类型
         /// </summary>
         /// <param name="p_type">第一列数据类型</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
-        public async Task<object> FirstCol(Type p_type, string p_keyOrSql, object p_params = null)
+        public async Task<object> FirstCol(Type p_type, string p_sqlOrSp, object p_params = null)
         {
             Throw.IfNull(p_type);
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            var cmd = CreateCommand(p_sqlOrSp, p_params, false, true);
             try
             {
                 await OpenConnection();
@@ -253,12 +255,12 @@ namespace Dt.Core
         /// 以参数值方式执行Sql语句，返回第一列枚举，高性能
         /// </summary>
         /// <typeparam name="T">第一列数据类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回泛型枚举</returns>
-        public async Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
+        public async Task<IEnumerable<T>> EachFirstCol<T>(string p_sqlOrSp, object p_params = null)
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, true);
+            var cmd = CreateCommand(p_sqlOrSp, p_params, true, true);
             await OpenConnection();
             var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
             return ForEachFirstCol<T>(reader);
@@ -271,10 +273,10 @@ namespace Dt.Core
         /// <returns>新序列值</returns>
         public abstract Task<int> NewSequence(string p_seqName);
 
-        async Task QueryInternal<TRow>(Table p_tbl, string p_keyOrSql, object p_params = null)
+        async Task QueryInternal<TRow>(Table p_tbl, string p_sqlOrSp, object p_params = null)
             where TRow : Row
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            var cmd = CreateCommand(p_sqlOrSp, p_params, false, true);
             try
             {
                 await OpenConnection();
@@ -339,10 +341,10 @@ namespace Dt.Core
             }
         }
 
-        async Task<IEnumerable<TRow>> ForEachRow<TRow>(string p_keyOrSql, object p_params = null)
+        async Task<IEnumerable<TRow>> ForEachRow<TRow>(string p_sqlOrSp, object p_params = null)
             where TRow : Row
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, true);
+            var cmd = CreateCommand(p_sqlOrSp, p_params, true, true);
             await OpenConnection();
             var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
             return ForEachRow<TRow>(reader);
@@ -441,21 +443,21 @@ namespace Dt.Core
         /// <summary>
         /// 以参数值方式执行Sql语句，返回影响的行数
         /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象</param>
         /// <returns>执行后影响的行数</returns>
-        public async Task<int> Exec(string p_keyOrSql, object p_params = null)
+        public async Task<int> Exec(string p_sqlOrSp, object p_params = null)
         {
             try
             {
                 await OpenConnection();
-                var cmd = CreateCommand(p_keyOrSql, p_params, false);
+                var cmd = CreateCommand(p_sqlOrSp, p_params, false, false);
                 var result = await _conn.ExecuteAsync(cmd);
                 return result;
             }
             catch (Exception ex)
             {
-                throw GetSqlException(CreateCommand(p_keyOrSql, p_params, false), ex);
+                throw GetSqlException(CreateCommand(p_sqlOrSp, p_params, false, false), ex);
             }
             finally
             {
@@ -626,24 +628,49 @@ namespace Dt.Core
         /// <summary>
         /// 创建Dapper的命令定义
         /// </summary>
-        /// <param name="p_keyOrSql"></param>
+        /// <param name="p_sqlOrSp"></param>
         /// <param name="p_params"></param>
         /// <param name="p_deferred"></param>
+        /// <param name="p_isQuery">是否为查询，oracle使用存储过程查询时自动添加Cursor参数</param>
         /// <returns></returns>
-        protected CommandDefinition CreateCommand(string p_keyOrSql, object p_params, bool p_deferred)
+        protected CommandDefinition CreateCommand(string p_sqlOrSp, object p_params, bool p_deferred, bool p_isQuery)
         {
-            string sql = GetSql(p_keyOrSql);
             if (Kit.TraceSql)
-                Log.Information(BuildSql(sql, p_params));
+                Log.Information(p_sqlOrSp);
+
+            // Sql语句中包含空格，存储过程名无空格！
+            bool isSp = p_sqlOrSp.IndexOf(' ') != -1;
+
+            // oracle使用存储过程查询时添加游标输出参数
+            if (isSp
+                && p_isQuery
+                && DbInfo.Type == DatabaseType.Oracle)
+            {
+                var pars = new OracleDynamicParameters();
+                if (p_params != null)
+                    pars.AddDynamicParams(p_params);
+
+                // 添加游标输出参数
+                pars.Add("p_cur", null, OracleMappingType.RefCursor, ParameterDirection.Output);
+
+                return new CommandDefinition(
+                    p_sqlOrSp,
+                    pars,
+                    _tran,
+                    null,
+                    CommandType.StoredProcedure,
+                    p_deferred ? CommandFlags.Pipelined : CommandFlags.Buffered,
+                    default);
+            }
 
             return new CommandDefinition(
-                sql,
+                p_sqlOrSp,
                 p_params,
                 _tran,
                 null,
-                null,
+                isSp ? CommandType.StoredProcedure : CommandType.Text,
                 p_deferred ? CommandFlags.Pipelined : CommandFlags.Buffered,
-                default(CancellationToken));
+                default);
         }
 
         /// <summary>
@@ -694,323 +721,6 @@ namespace Dt.Core
             sb.AppendLine(p_ex.Message);
             return new Exception(sb.ToString());
         }
-
-        /// <summary>
-        /// 生成执行时候的sql语句。
-        /// 注意：对于二进制编码数组的情况在实际应用时可能需要调整。
-        /// </summary>
-        /// <param name="p_sql"></param>
-        /// <param name="p_params"></param>
-        /// <returns></returns>
-        static string BuildSql(string p_sql, object p_params)
-        {
-            if (p_params == null)
-                return p_sql;
-
-            string str = p_sql;
-            try
-            {
-                string prefix = str.Contains('@') ? "@" : ":";
-                if (p_params is IDictionary<string, object> dt)
-                {
-                    // 键/值型对象
-                    foreach (var item in dt)
-                    {
-                        str = ReplaceSql(str, prefix + item.Key, item.Value);
-                    }
-                }
-                else
-                {
-                    // 普通对象
-                    Type type = p_params.GetType();
-                    foreach (var prop in type.GetProperties())
-                    {
-                        str = ReplaceSql(str, prefix + prop.Name, prop.GetValue(p_params));
-                    }
-                }
-            }
-            catch { }
-            return str;
-        }
-
-        /// <summary>
-        /// 替换sql中的占位符
-        /// </summary>
-        /// <param name="p_sql"></param>
-        /// <param name="p_key">占位符</param>
-        /// <param name="p_value"></param>
-        /// <returns></returns>
-        static string ReplaceSql(string p_sql, string p_key, object p_value)
-        {
-            string str = p_sql;
-            int posStart = str.IndexOf(p_key, StringComparison.OrdinalIgnoreCase);
-            while (posStart > -1)
-            {
-                string next, trueVal;
-                int posEnd = posStart + p_key.Length;
-                if (posEnd >= str.Length)
-                    next = "";
-                else
-                    next = str.Substring(posEnd, 1);
-
-                // 判断参数名的匹配是不是只匹配了一部分
-                if (!string.IsNullOrEmpty(next) && _sqlPattern.IsMatch(next))
-                {
-                    // 匹配了一部分则继续向后查找
-                    posStart = str.IndexOf(p_key, posEnd, StringComparison.OrdinalIgnoreCase);
-                    continue;
-                }
-
-                // mysql中非string类型外面加''也可正常运行！
-                if (p_value == null)
-                    trueVal = "null";
-                else
-                    trueVal = $"'{p_value}'";
-
-                str = str.Substring(0, posStart) + trueVal + str.Substring(posStart + p_key.Length);
-                posStart = str.IndexOf(p_key, posStart + trueVal.Length - 1, StringComparison.OrdinalIgnoreCase);
-            }
-            return str;
-        }
-
-        static readonly Regex _sqlPattern = new Regex("[0-9a-zA-Z_$]");
-        #endregion
-
-        #region Sql字典
-        /// <summary>
-        /// 获取查询Sql语句，默认从缓存字典中查询，service.json中CacheSql为false时直接从表xxx_sql查询！
-        /// </summary>
-        /// <param name="p_keyOrSql">输入参数为键名(无空格) 或 Sql语句，含空格时不需查询，直接返回Sql语句</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        protected string GetSql(string p_keyOrSql)
-        {
-            if (string.IsNullOrEmpty(p_keyOrSql))
-                throw new Exception("Sql键名不可为空！");
-
-            // Sql语句中包含空格
-            if (p_keyOrSql.IndexOf(' ') != -1)
-                return p_keyOrSql;
-
-            // 键名不包含空格！！！
-
-            // 已缓存
-            if (_sqlDict != null)
-            {
-                if (_sqlDict.TryGetValue(p_keyOrSql, out var sql))
-                    return sql;
-                throw new Exception($"不存在键名为[{p_keyOrSql}]的Sql语句！");
-            }
-
-            // 未缓存，直接查询
-            var task = GetScalar<string>(DbInfo.DebugSqlStr, new { id = p_keyOrSql });
-            task.Wait();
-            if (!string.IsNullOrEmpty(task.Result))
-                return task.Result;
-
-            throw new Exception($"不存在键名为[{p_keyOrSql}]的Sql语句！");
-        }
-
-        /// <summary>
-        /// 缓存Sql串
-        /// </summary>
-        internal static void CacheSql()
-        {
-            if (Kit.GetCfg("CacheSql", true))
-            {
-                LoadCacheSql().Wait();
-            }
-            else
-            {
-                // 生成查询sql
-                if (Kit.SingletonSvcDbs != null)
-                {
-                    Dictionary<DbInfo, IDataAccess> das = new Dictionary<DbInfo, IDataAccess>();
-                    foreach (var item in Kit.SingletonSvcDbs)
-                    {
-                        var di = item.Value;
-                        if (!das.TryGetValue(di, out var da))
-                        {
-                            da = di.NewDataAccess();
-                            da.AutoClose = false;
-                            das.Add(di, da);
-                        }
-
-                        var task = da.GetTableSchema(item.Key + "_sql");
-                        task.Wait();
-                        var schema = task.Result;
-
-                        if (schema != null)
-                        {
-                            var sql = GetSelectStr(schema, di.Type);
-                            if (di.DebugSqlStr != null && di.DebugSqlStr.Length > 0)
-                            {
-                                di.DebugSqlStr += " union (";
-                                di.DebugSqlStr += sql;
-                                di.DebugSqlStr += ")";
-                            }
-                            else
-                            {
-                                di.DebugSqlStr = sql;
-                            }
-                        }
-                    }
-
-                    foreach (var da in das.Values)
-                    {
-                        da.Close(true).Wait();
-                    }
-                }
-                else
-                {
-                    // 只默认库
-                    StringBuilder sb = new StringBuilder();
-                    foreach (var name in Kit.SvcNames)
-                    {
-                        if (DbSchema.Schema.TryGetValue(name + "_sql", out var schema))
-                        {
-                            var sql = GetSelectStr(schema, Kit.DefaultDbInfo.Type);
-                            if (sb.Length > 0)
-                            {
-                                sb.Append(" union (");
-                                sb.Append(sql);
-                                sb.Append(')');
-                            }
-                            else
-                            {
-                                sb.Append(sql);
-                            }
-                        }
-                    }
-                    Kit.DefaultDbInfo.DebugSqlStr = sb.ToString();
-                }
-                Log.Information("未缓存Sql, 调试状态");
-            }
-
-            string GetSelectStr(TableSchema p_schema, DatabaseType p_type)
-            {
-                switch (p_type)
-                {
-                    case DatabaseType.MySql:
-                        return $"select `sql` from `{p_schema.Name}` where id=@id";
-
-                    case DatabaseType.Oracle:
-                        // 字段和表名大小写敏感
-                        var sql = (from col in p_schema.Columns
-                                   where col.Name.Equals("sql", StringComparison.OrdinalIgnoreCase)
-                                   select col.Name).FirstOrDefault();
-                        return $"select \"{sql}\" from \"{p_schema.Name}\" where \"{p_schema.PrimaryKey[0].Name}\"=:id";
-
-                    default:
-                        return $"select [sql] from [{p_schema.Name}] where id=@id";
-                }
-            }
-        }
-
-        /// <summary>
-        /// 系统配置(json文件)修改事件
-        /// </summary>
-        internal static void OnConfigChanged()
-        {
-            bool refresh = false;
-            if (Kit.GetCfg("CacheSql", true) && _sqlDict == null)
-            {
-                Log.Information("切换到Sql缓存模式");
-                refresh = true;
-            }
-            else if (!Kit.GetCfg("CacheSql", true) && _sqlDict != null)
-            {
-                Log.Information("切换到Sql调试模式");
-                _sqlDict = null;
-                refresh = true;
-            }
-
-            if (refresh)
-                CacheSql();
-        }
-
-        /// <summary>
-        /// 缓存当前所有服务的所有Sql语句，表名xxx_sql
-        /// </summary>
-        internal static async Task LoadCacheSql()
-        {
-            try
-            {
-                _sqlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                if (Kit.SingletonSvcDbs == null)
-                {
-                    // 同一库
-                    var da = Kit.DefaultDbInfo.NewDataAccess();
-                    da.AutoClose = false;
-                    foreach (var name in Kit.SvcNames)
-                    {
-                        await LoadSvcCacheSql(da, name);
-                    }
-                    await da.Close(true);
-                }
-                else
-                {
-                    // 多个库
-                    Dictionary<DbInfo, IDataAccess> das = new Dictionary<DbInfo, IDataAccess>();
-                    foreach (var item in Kit.SingletonSvcDbs)
-                    {
-                        var di = item.Value;
-                        if (!das.TryGetValue(di, out var da))
-                        {
-                            da = di.NewDataAccess();
-                            da.AutoClose = false;
-                            das.Add(di, da);
-                        }
-
-                        await LoadSvcCacheSql(da, item.Key);
-                    }
-
-                    foreach (var da in das.Values)
-                    {
-                        await da.Close(true);
-                    }
-                }
-                Log.Information("缓存Sql成功");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "缓存Sql失败！");
-                throw;
-            }
-        }
-
-        static async Task LoadSvcCacheSql(IDataAccess p_da, string p_svcName)
-        {
-            var schema = await p_da.GetTableSchema(p_svcName + "_sql");
-            if (schema == null)
-                return;
-
-            string sql;
-            if (p_da.DbInfo.Type == DatabaseType.MySql)
-            {
-                sql = $"select id,`sql` from `{schema.Name}`";
-            }
-            else if (p_da.DbInfo.Type == DatabaseType.Oracle)
-            {
-                // 字段和表名大小写敏感
-                var name = (from col in schema.Columns
-                            where col.Name.Equals("sql", StringComparison.OrdinalIgnoreCase)
-                            select col.Name).FirstOrDefault();
-                sql = $"select \"{schema.PrimaryKey[0].Name}\",\"{name}\" from \"{schema.Name}\"";
-            }
-            else
-            {
-                sql = $"select id,[sql] from [{schema.Name}]";
-            }
-
-            var ls = await p_da.Each(sql);
-            foreach (Row item in ls)
-            {
-                _sqlDict[item.Str("id")] = item.Str("sql");
-            }
-        }
-
-        static Dictionary<string, string> _sqlDict;
         #endregion
     }
 }

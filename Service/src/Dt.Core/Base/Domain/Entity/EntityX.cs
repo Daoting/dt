@@ -202,22 +202,22 @@ namespace Dt.Core
 
         #region 查询
         /// <summary>
-        /// 查询实体列表，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
+        /// 查询实体列表，可以提供 where子句 或 Sql语句 或 存储过程名 进行查询
         /// </summary>
-        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <param name="p_whereOrSqlOrSp">三种查询：
         /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
-        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>2. Sql语句 或 存储过程名，自由查询，返回的实体列值自由</para>
         /// <para>3. null时返回所有实体</para>
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static async Task<Table<TEntity>> Query(string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<Table<TEntity>> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
 #if SERVER
             var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSqlOrSp.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
@@ -231,9 +231,9 @@ namespace Dt.Core
             return await Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
             var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSqlOrSp.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
@@ -249,24 +249,24 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 按页查询实体列表，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
+        /// 按页查询实体列表，可以提供 where子句 或 Sql语句 进行查询
         /// </summary>
         /// <param name="p_starRow">起始序号：第一行的序号统一为0</param>
         /// <param name="p_pageSize">每页显示行数</param>
-        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <param name="p_whereOrSql">两种查询：
         /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
-        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>2. Sql语句自由查询，返回的实体列值自由</para>
         /// <para>3. null时返回所有实体</para>
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体列表</returns>
-        public static async Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrSql, object p_params = null)
         {
 #if SERVER
             var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSql))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSql.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
@@ -274,17 +274,17 @@ namespace Dt.Core
                 }
                 else
                 {
-                    // Sql键名或Sql语句，自由查询
-                    sql = p_whereOrKeyOrSql;
+                    // Sql语句，自由查询
+                    sql = p_whereOrSql;
                 }
             }
             return await Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, sql, p_params);
 #else
             string sql;
             var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSql))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSql.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
@@ -292,8 +292,8 @@ namespace Dt.Core
                 }
                 else
                 {
-                    // Sql键名或Sql语句，自由查询
-                    sql = p_whereOrKeyOrSql;
+                    // Sql语句，自由查询
+                    sql = p_whereOrSql;
                 }
             }
             else
@@ -305,22 +305,22 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 返回第一个实体对象，不存在时返回null，可以提供 where子句 或 Sql字典的键名 或 Sql语句进行查询
+        /// 返回第一个实体对象，不存在时返回null，可以提供 where子句 或 Sql语句 或 存储过程名 进行查询
         /// </summary>
-        /// <param name="p_whereOrKeyOrSql">三种查询：
+        /// <param name="p_whereOrSqlOrSp">三种查询：
         /// <para>1. where子句，以where开头的过滤条件，返回的实体包含所有列值</para>
-        /// <para>2. Sql键名或Sql语句，自由查询，返回的实体列值自由</para>
+        /// <para>2. Sql语句 或 存储过程名，自由查询，返回的实体列值自由</para>
         /// <para>3. null时返回第一个实体</para>
         /// </param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回实体对象或null</returns>
-        public static async Task<TEntity> First(string p_whereOrKeyOrSql, object p_params = null)
+        public static async Task<TEntity> First(string p_whereOrSqlOrSp, object p_params = null)
         {
 #if SERVER
             var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSqlOrSp.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
@@ -334,9 +334,9 @@ namespace Dt.Core
             return await Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
             var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrKeyOrSql))
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
             {
-                var txt = p_whereOrKeyOrSql.Trim();
+                var txt = p_whereOrSqlOrSp.Trim();
                 if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                 {
                     // where子句
