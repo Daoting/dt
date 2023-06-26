@@ -21,6 +21,7 @@ namespace Dt.Core
         readonly List<EntitySchema> _schemas = new List<EntitySchema>();
         string _selectAll;
         string _selectByID;
+        string _selectCount;
 
         /// <summary>
         /// 获取选择所有数据的sql
@@ -53,6 +54,17 @@ namespace Dt.Core
         {
             var sql = GetSelectAllSql();
             return $"{sql} where a.{p_keyName}={_schemas[0].Schema.VarPrefix}{p_keyName}";
+        }
+
+        /// <summary>
+        /// 获取行数的sql
+        /// </summary>
+        /// <returns></returns>
+        public string GetCountSql()
+        {
+            if (_selectCount == null)
+                CreateSql();
+            return _selectCount;
         }
 
         /// <summary>
@@ -124,6 +136,7 @@ namespace Dt.Core
             }
             _selectAll = $"select {sb} from {tbls}";
             _selectByID = _selectAll + $" where a.{_schemas[0].Schema.PrimaryKey[0].Name}={_schemas[0].Schema.VarPrefix}id";
+            _selectCount = "select count(*) from " + tbls;
         }
 
         async Task Init(Type p_type)

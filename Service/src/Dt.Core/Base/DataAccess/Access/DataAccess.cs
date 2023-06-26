@@ -639,10 +639,10 @@ namespace Dt.Core
                 Log.Information(p_sqlOrSp);
 
             // Sql语句中包含空格，存储过程名无空格！
-            bool isSp = p_sqlOrSp.IndexOf(' ') != -1;
+            bool isSql = p_sqlOrSp.IndexOf(' ') != -1;
 
             // oracle使用存储过程查询时添加游标输出参数
-            if (isSp
+            if (!isSql
                 && p_isQuery
                 && DbInfo.Type == DatabaseType.Oracle)
             {
@@ -668,7 +668,7 @@ namespace Dt.Core
                 p_params,
                 _tran,
                 null,
-                isSp ? CommandType.StoredProcedure : CommandType.Text,
+                isSql ? CommandType.Text : CommandType.StoredProcedure,
                 p_deferred ? CommandFlags.Pipelined : CommandFlags.Buffered,
                 default);
         }

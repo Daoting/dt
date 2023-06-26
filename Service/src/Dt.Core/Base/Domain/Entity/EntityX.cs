@@ -390,6 +390,45 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取符合条件的实体数(行数)
+        /// </summary>
+        /// <param name="p_where">where子句，空或null返回总行数</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns></returns>
+        public static async Task<int> GetCount(string p_where, object p_params = null)
+        {
+#if SERVER
+            var sql = await GetCountSql(typeof(TEntity));
+            if (!string.IsNullOrWhiteSpace(p_where))
+            {
+                var txt = p_where.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+            }
+            return await Kit.DataAccess.GetScalar<int>(sql, p_params);
+#else
+            var res = await GetCountSql(typeof(TEntity));
+            if (!string.IsNullOrWhiteSpace(p_where))
+            {
+                var txt = p_where.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    res.Item2 += " " + txt;
+                }
+                else
+                {
+                    Throw.Msg("GetCount方法的参数以where开头！");
+                }
+            }
+            return await res.Item1.GetScalar<int>(res.Item2, p_params);
+#endif
+        }
+
+        /// <summary>
         /// 根据主键获得实体对象及所有子实体列表，仅支持单主键，不涉及缓存！
         /// </summary>
         /// <param name="p_id">主键</param>
@@ -533,6 +572,29 @@ namespace Dt.Core
 
             var model = await EntitySchema.Get(p_type);
             return (model.AccessInfo.GetDataAccess(), model.Schema.GetSelectAllSql());
+        }
+#endif
+
+#if SERVER
+        static async Task<string> GetCountSql(Type p_type)
+        {
+            if (_isVirEntity)
+            {
+                return (await VirEntitySchema.Get(p_type)).GetCountSql();
+            }
+            return (await EntitySchema.Get(p_type)).Schema.GetCountSql();
+        }
+#else
+        static async Task<(IDataAccess, string)> GetCountSql(Type p_type)
+        {
+            if (_isVirEntity)
+            {
+                var vm = await VirEntitySchema.Get(p_type);
+                return (vm.AccessInfo.GetDataAccess(), vm.GetCountSql());
+            }
+
+            var model = await EntitySchema.Get(p_type);
+            return (model.AccessInfo.GetDataAccess(), model.Schema.GetCountSql());
         }
 #endif
         #endregion

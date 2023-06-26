@@ -394,6 +394,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取行数的sql
+        /// </summary>
+        /// <returns></returns>
+        public string GetCountSql()
+        {
+            return $"select count(*) from {Prefix}{Name}{Postfix}";
+        }
+
+        /// <summary>
         /// 将纵向保存的列值转换成横向保存的列值。
         /// </summary>
         /// <param name="p_parm">dict[string,array]</param>
