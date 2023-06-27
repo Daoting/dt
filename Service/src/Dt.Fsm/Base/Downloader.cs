@@ -78,7 +78,7 @@ namespace Dt.Fsm
 
                 try
                 {
-                    await da.Exec("增加下载次数", new { path = path });
+                    await da.Exec($"update fsm_file set downloads=downloads+1 where path='{path}'");
                 }
                 catch (Exception ex)
                 {

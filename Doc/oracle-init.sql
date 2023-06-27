@@ -4,6 +4,8 @@
  2. bigint(20) NUMBER(19, 0)
  3. varchar varchar2
  4. NUMBER(1) NUMBER(1)
+ 5. datetime date
+ 5. KEY 开头的索引删除另建 create index FK_USER_ROL on fq_user_role(ROLE_ID);
 */
 
 
@@ -11,25 +13,32 @@
 -- Table structure for table cm_file_my
 --
 
-DROP TABLE cm_file_my;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE cm_file_my (
-  ID NUMBER(19, 0) NOT NULL COMMENT '文件标识',
-  ParentID NUMBER(19, 0) DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
-  Name varchar2(255) NOT NULL COMMENT '名称',
-  IsFolder NUMBER(1) NOT NULL COMMENT '是否为文件夹',
-  ExtName varchar2(8) DEFAULT NULL COMMENT '文件扩展名',
-  Info varchar2(512) NOT NULL COMMENT '文件描述信息',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  UserID NUMBER(19, 0) NOT NULL COMMENT '所属用户',
+  ID NUMBER(19, 0) NOT NULL,
+  ParentID NUMBER(19, 0) DEFAULT NULL,
+  Name varchar2(255) NOT NULL,
+  IsFolder NUMBER(1) NOT NULL,
+  ExtName varchar2(8) DEFAULT NULL,
+  Info varchar2(512) NOT NULL,
+  Ctime date NOT NULL,
+  UserID NUMBER(19, 0) NOT NULL,
   PRIMARY KEY (ID),
-  KEY fk_myfile_parentid (ParentID),
-  KEY fk_user_userid (UserID),
   CONSTRAINT fk_myfile_parentid FOREIGN KEY (ParentID) REFERENCES cm_file_my (ID),
   CONSTRAINT fk_user_userid FOREIGN KEY (UserID) REFERENCES cm_user (ID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个人文件';
-/*!40101 SET character_set_client = @saved_cs_client */;
+);
+
+create index fk_myfile_parentid on cm_file_my(ParentID);
+create index fk_user_userid on cm_file_my(UserID);
+
+COMMENT ON TABLE cm_file_my is '个人文件'; 
+COMMENT ON COLUMN cm_file_my.ID is '文件标识'; 
+COMMENT ON COLUMN cm_file_my.ParentID is '上级目录，根目录的parendid为空';
+COMMENT ON COLUMN cm_file_my.Name is '名称';
+COMMENT ON COLUMN cm_file_my.IsFolder is '是否为文件夹';
+COMMENT ON COLUMN cm_file_my.ExtName is '文件扩展名';
+COMMENT ON COLUMN cm_file_my.Info is '文件描述信息';
+COMMENT ON COLUMN cm_file_my.Ctime is '创建时间';
+COMMENT ON COLUMN cm_file_my.UserID is '所属用户';
 
 --
 -- Dumping data for table cm_file_my
@@ -54,7 +63,7 @@ CREATE TABLE cm_file_pub (
   IsFolder NUMBER(1) NOT NULL COMMENT '是否为文件夹',
   ExtName varchar2(8) DEFAULT NULL COMMENT '文件扩展名',
   Info varchar2(512) NOT NULL COMMENT '文件描述信息',
-  Ctime datetime NOT NULL COMMENT '创建时间',
+  Ctime date NOT NULL COMMENT '创建时间',
   PRIMARY KEY (ID),
   KEY fk_pubfile_parentid (ParentID),
   CONSTRAINT fk_pubfile_parentid FOREIGN KEY (ParentID) REFERENCES cm_file_pub (ID)
@@ -141,8 +150,8 @@ CREATE TABLE cm_menu (
   Note varchar2(512) NOT NULL COMMENT '备注',
   Dispidx int(11) NOT NULL COMMENT '显示顺序',
   IsLocked NUMBER(1) NOT NULL DEFAULT '0' COMMENT '定义了菜单是否被锁定。0表未锁定，1表锁定不可用',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '最后修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (ID) USING BTREE,
   KEY fk_menu_parentid (ParentID),
   CONSTRAINT fk_menu_parentid FOREIGN KEY (ParentID) REFERENCES cm_menu (ID)
@@ -223,8 +232,8 @@ CREATE TABLE cm_params (
   Name varchar2(255) NOT NULL COMMENT '参数名称',
   Value varchar2(255) NOT NULL COMMENT '参数缺省值',
   Note varchar2(255) NOT NULL COMMENT '参数描述',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '修改时间',
   PRIMARY KEY (ID) USING BTREE,
   UNIQUE KEY Name (Name) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户参数定义';
@@ -277,7 +286,7 @@ CREATE TABLE cm_pub_album (
   ID NUMBER(19, 0) NOT NULL COMMENT '专辑标识',
   Name varchar2(255) NOT NULL COMMENT '名称',
   Creator varchar2(32) NOT NULL COMMENT '创建人',
-  Ctime datetime NOT NULL COMMENT '创建时间',
+  Ctime date NOT NULL COMMENT '创建时间',
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章专辑';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -304,7 +313,7 @@ CREATE TABLE cm_pub_comment (
   Content varchar2(4000) NOT NULL COMMENT '评论内容',
   UserID NUMBER(19, 0) NOT NULL COMMENT '评论人标识',
   UserName varchar2(64) NOT NULL COMMENT '评论人',
-  Ctime datetime NOT NULL COMMENT '评论时间',
+  Ctime date NOT NULL COMMENT '评论时间',
   IsSpam NUMBER(1) NOT NULL COMMENT '是否为垃圾评论',
   ParentID NUMBER(19, 0) DEFAULT NULL COMMENT '上级评论标识',
   Support int(11) NOT NULL COMMENT '对该评论的支持数',
@@ -336,7 +345,7 @@ DROP TABLE cm_pub_keyword;
 CREATE TABLE cm_pub_keyword (
   ID varchar2(32) NOT NULL COMMENT '关键字',
   Creator varchar2(32) NOT NULL COMMENT '创建人',
-  Ctime datetime NOT NULL COMMENT '创建时间',
+  Ctime date NOT NULL COMMENT '创建时间',
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='关键字';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -373,10 +382,10 @@ CREATE TABLE cm_pub_post (
   Dispidx int(11) NOT NULL COMMENT '显示顺序',
   CreatorID NUMBER(19, 0) NOT NULL COMMENT '创建人ID',
   Creator varchar2(32) NOT NULL COMMENT '创建人',
-  Ctime datetime NOT NULL COMMENT '创建时间',
+  Ctime date NOT NULL COMMENT '创建时间',
   LastEditorID NUMBER(19, 0) DEFAULT NULL COMMENT '最后编辑人ID',
   LastEditor varchar2(32) DEFAULT NULL COMMENT '最后编辑人',
-  Mtime datetime DEFAULT NULL COMMENT '最后修改时间',
+  Mtime date DEFAULT NULL COMMENT '最后修改时间',
   ReadCount int(11) NOT NULL COMMENT '阅读次数',
   CommentCount int(11) NOT NULL COMMENT '评论总数',
   PRIMARY KEY (ID) USING BTREE
@@ -540,8 +549,8 @@ CREATE TABLE cm_rpt (
   Name varchar2(64) NOT NULL COMMENT '报表名称',
   Define varchar2(21000) NOT NULL COMMENT '报表模板定义',
   Note varchar2(255) NOT NULL COMMENT '报表描述',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '修改时间',
   PRIMARY KEY (ID) USING BTREE,
   UNIQUE KEY idx_rpt_name (Name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报表模板定义';
@@ -596,8 +605,8 @@ CREATE TABLE cm_user (
   Sex tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '#Gender#性别',
   Photo varchar2(255) NOT NULL DEFAULT '' COMMENT '头像',
   Expired NUMBER(1) NOT NULL DEFAULT '0' COMMENT '是否停用',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '修改时间',
   PRIMARY KEY (ID) USING BTREE,
   UNIQUE KEY idx_phone (Phone)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统用户';
@@ -651,7 +660,7 @@ CREATE TABLE cm_user_params (
   UserID NUMBER(19, 0) NOT NULL COMMENT '用户标识',
   ParamID NUMBER(19, 0) NOT NULL COMMENT '参数标识',
   Value varchar2(255) NOT NULL COMMENT '参数值',
-  Mtime datetime NOT NULL COMMENT '修改时间',
+  Mtime date NOT NULL COMMENT '修改时间',
   PRIMARY KEY (UserID,ParamID) USING BTREE,
   KEY fk_userparams_userid (UserID),
   KEY fk_userparams_paramsid (ParamID),
@@ -718,8 +727,8 @@ CREATE TABLE cm_wfd_atv (
   CanJumpInto NUMBER(1) NOT NULL COMMENT '是否可作为跳转目标，0不可跳转 1可以',
   TransKind tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvTransKind#当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择',
   JoinKind tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvJoinKind#同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '修改时间',
   PRIMARY KEY (ID),
   KEY fk_wfdatv_prcid (PrcID),
   CONSTRAINT fk_wfdatv_prcid FOREIGN KEY (PrcID) REFERENCES cm_wfd_prc (ID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -776,8 +785,8 @@ CREATE TABLE cm_wfd_prc (
   Singleton NUMBER(1) NOT NULL COMMENT '同一时刻只允许有一个激活的流程实例，0表非单实例，1表单实例',
   Note varchar2(255) DEFAULT NULL COMMENT '描述',
   Dispidx int(11) NOT NULL COMMENT '显示顺序',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '最后修改时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程模板';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -833,8 +842,8 @@ CREATE TABLE cm_wfi_atv (
   AtvdID NUMBER(19, 0) NOT NULL COMMENT '活动模板标识',
   Status tinyint(4) unsigned NOT NULL COMMENT '#WfiAtvStatus#活动实例的状态 0活动 1结束 2终止 3同步活动',
   InstCount int(11) NOT NULL COMMENT '活动实例在流程实例被实例化的次数',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '最后一次状态改变的时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '最后一次状态改变的时间',
   PRIMARY KEY (ID),
   KEY fk_wfiatv_prciid (PrciID),
   KEY fk_wfiatv_atvdid (AtvdID),
@@ -865,15 +874,15 @@ CREATE TABLE cm_wfi_item (
   Status tinyint(4) unsigned NOT NULL COMMENT '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动',
   AssignKind tinyint(4) unsigned NOT NULL COMMENT '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派',
   Sender varchar2(32) NOT NULL COMMENT '发送者',
-  Stime datetime NOT NULL COMMENT '发送时间',
+  Stime date NOT NULL COMMENT '发送时间',
   IsAccept NUMBER(1) NOT NULL COMMENT '是否签收此项任务',
-  AcceptTime datetime DEFAULT NULL COMMENT '签收时间',
+  AcceptTime date DEFAULT NULL COMMENT '签收时间',
   RoleID NUMBER(19, 0) DEFAULT NULL COMMENT '执行者角色标识',
   UserID NUMBER(19, 0) DEFAULT NULL COMMENT '执行者用户标识',
   Note varchar2(255) DEFAULT NULL COMMENT '工作项备注',
   Dispidx int(11) NOT NULL COMMENT '显示顺序',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '最后一次状态改变的时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '最后一次状态改变的时间',
   PRIMARY KEY (ID),
   KEY fk_wfiitem_atviid (AtviID),
   CONSTRAINT fk_wfiitem_atviid FOREIGN KEY (AtviID) REFERENCES cm_wfi_atv (ID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -902,8 +911,8 @@ CREATE TABLE cm_wfi_prc (
   Name varchar2(255) NOT NULL COMMENT '流转单名称',
   Status tinyint(4) unsigned NOT NULL COMMENT '#WfiPrcStatus#流程实例状态 0活动 1结束 2终止',
   Dispidx int(11) NOT NULL COMMENT '显示顺序',
-  Ctime datetime NOT NULL COMMENT '创建时间',
-  Mtime datetime NOT NULL COMMENT '最后一次状态改变的时间',
+  Ctime date NOT NULL COMMENT '创建时间',
+  Mtime date NOT NULL COMMENT '最后一次状态改变的时间',
   PRIMARY KEY (ID),
   KEY fk_wfiprc_prcdid (PrcdID),
   CONSTRAINT fk_wfiprc_prcdid FOREIGN KEY (PrcdID) REFERENCES cm_wfd_prc (ID)
@@ -932,7 +941,7 @@ CREATE TABLE cm_wfi_trs (
   SrcAtviID NUMBER(19, 0) NOT NULL COMMENT '起始活动实例标识',
   TgtAtviID NUMBER(19, 0) NOT NULL COMMENT '目标活动实例标识',
   IsRollback NUMBER(1) NOT NULL COMMENT '是否为回退迁移，1表回退',
-  Ctime datetime NOT NULL COMMENT '迁移时间',
+  Ctime date NOT NULL COMMENT '迁移时间',
   PRIMARY KEY (ID),
   KEY fk_wfitrs_trsdid (TrsdID),
   KEY fk_wfitrs_srcatviid (SrcAtviID),
@@ -966,7 +975,7 @@ CREATE TABLE fsm_file (
   Size NUMBER(19, 0) unsigned NOT NULL COMMENT '文件长度',
   Info varchar2(512) DEFAULT NULL COMMENT '文件描述',
   Uploader NUMBER(19, 0) unsigned NOT NULL COMMENT '上传人id',
-  Ctime datetime NOT NULL COMMENT '上传时间',
+  Ctime date NOT NULL COMMENT '上传时间',
   Downloads NUMBER(19, 0) unsigned NOT NULL COMMENT '下载次数',
   PRIMARY KEY (ID) USING BTREE,
   UNIQUE KEY idx_fsm_file_path (Path)

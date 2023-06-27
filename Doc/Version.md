@@ -5,6 +5,19 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 # 版本说明
 
+## Release 4.2.0
+### 变更
+* 权衡利弊，以key获取sql语句的方式调整为调用存储过程，key=存储过程名，调用IDataAccess的程序无需调整，需要将cm_sql表的sql语句移植到存储过程
+* 升级服务端引用包
+* 升级客户端sqlite相关包
+
+### 功能
+* 增加EntityX.GetCount方法
+
+
+### Bug修改
+
+
 ## Release 4.1.1
 ### 变更
 * Cols不再继承KeyedCollection，支持重复列id

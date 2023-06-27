@@ -227,7 +227,14 @@ namespace Dt.Fsm
                     await p_section.FileStream.CopyToAsync(writeStream, _bufferSize, _context.RequestAborted);
                     desc.Size = writeStream.Length;
                 }
-                await _da.Exec("上传文件", desc);
+                if (_da.DbInfo.Type == DatabaseType.Oracle)
+                {
+                    await _da.Exec($"insert into fsm_file values (:ID,:Name,:Path,:Size,:Uploader,:Info,:Now,0)", desc);
+                }
+                else
+                {
+                    await _da.Exec($"insert into fsm_file values (@ID,@Name,@Path,@Size,@Uploader,@Info,@Now,0)", desc);
+                }
             }
             catch
             {
@@ -322,5 +329,7 @@ namespace Dt.Fsm
         /// 文件描述
         /// </summary>
         public string Info { get; set; }
+
+        public DateTime Now => Kit.Now;
     }
 }

@@ -20,8 +20,8 @@ namespace Dt.MgrDemo
         public AppStub()
         {
             Title = "搬运工";
-            SvcUrl = "https://x13382a571.oicp.vip/demo";
-            //SvcUrl = "http://10.10.1.16/dt-cm";
+            //SvcUrl = "https://x13382a571.oicp.vip/demo";
+            SvcUrl = "http://10.10.1.16/dt-cm";
         }
 
         /// <summary>

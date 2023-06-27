@@ -1,5 +1,5 @@
 ﻿{
-  "DbKey": "orcldt",
+  "DbKey": "dt",
   "TraceSql": true,
   "TraceRpc": true,
 

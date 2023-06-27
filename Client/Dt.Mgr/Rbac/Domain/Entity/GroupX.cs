@@ -26,6 +26,16 @@ namespace Dt.Mgr.Rbac
                 Note: Note);
         }
 
+        /// <summary>
+        /// 分组_关联用户
+        /// </summary>
+        /// <param name="p_groupid"></param>
+        /// <returns></returns>
+        public static Task<List<long>> GetRelationUserIDs(long p_groupid)
+        {
+            return AtCm.FirstCol<long>($"select id,name,phone from cm_user a where exists (select userid from cm_user_group b where a.id=b.userid and groupid={p_groupid})");
+        }
+
         protected override void InitHook()
         {
             OnSaving(() =>
@@ -39,7 +49,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统分组无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_group有级联删除
-                var users = await AtCm.FirstCol<long>("cm_分组_关联用户", new { p_groupid = ID });
+                var users = await GetRelationUserIDs(ID);
                 RbacDs.DelUserDataVer(users);
             });
         }
