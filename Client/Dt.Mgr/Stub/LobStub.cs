@@ -166,7 +166,7 @@ namespace Dt.Mgr
             }
 
             // 更新用户权限，缓存新版本号
-            var tbl = await AtCm.Query("用户-具有的权限", new { userid = Kit.UserID });
+            var tbl = await AtCm.Query("cm_用户_具有的权限", new { p_userid = Kit.UserID });
 
             // 清空旧数据
             await AtLob.Exec("delete from UserPermission");

@@ -23,7 +23,7 @@ namespace Dt.Mgr.Rbac
 
         public async void Show(long p_userID)
         {
-            _lv.Data = await AtCm.Query("用户-具有的权限", new { userid = p_userID });
+            _lv.Data = await AtCm.Query("cm_用户_具有的权限", new { p_userid = p_userID });
 
             if (!Kit.IsPhoneUI)
             {

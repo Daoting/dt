@@ -40,7 +40,7 @@ namespace Dt.Mgr.Module
 
         public static async Task<T> GetParamByID<T>(long p_paramID)
         {
-            var ls = await _da.FirstCol<string>("参数-用户参数值ByID", new { userid= Kit.UserID, paramid = p_paramID });
+            var ls = await _da.FirstCol<string>("cm_参数_用户参数值ByID", new { p_userid= Kit.UserID, p_paramid = p_paramID });
             if (ls == null || ls.Count == 0)
                 Throw.Msg($"用户参数[{p_paramID}]不存在！");
 
@@ -51,7 +51,7 @@ namespace Dt.Mgr.Module
 
         public static async Task<T> GetParamByName<T>(string p_paramName)
         {
-            var ls = await _da.FirstCol<string>("参数-用户参数值ByName", new { userid = Kit.UserID, name = p_paramName });
+            var ls = await _da.FirstCol<string>("cm_参数_用户参数值ByName", new { p_userid = Kit.UserID, p_name = p_paramName });
             if (ls == null || ls.Count == 0)
                 Throw.Msg($"用户参数[{p_paramName}]不存在！");
 

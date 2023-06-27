@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await UserX.Query("分组-关联用户", new { ReleatedID = _releatedID });
+                _lv.Data = await UserX.Query("cm_分组_关联用户", new { p_groupid = _releatedID });
             }
             else
             {

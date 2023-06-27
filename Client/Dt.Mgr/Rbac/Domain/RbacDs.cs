@@ -177,7 +177,7 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                var users = await _da.FirstCol<long>("分组-关联用户", new { ReleatedID = p_groupID });
+                var users = await _da.FirstCol<long>("cm_分组_关联用户", new { p_groupid = p_groupID });
                 DelUserDataVer(users);
                 Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个关联角色");
                 return true;
@@ -209,7 +209,7 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                var users = await _da.FirstCol<long>("分组-分组列表的用户", new { groupid = string.Join(',', p_groupIDs) });
+                var users = await _da.FirstCol<long>("cm_分组_分组列表的用户", new { p_groupid = string.Join(',', p_groupIDs) });
                 DelUserDataVer(users);
                 Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个分组");
                 return true;

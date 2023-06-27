@@ -312,7 +312,7 @@ namespace Dt.Mgr
             }
 
             // 更新用户菜单，缓存新版本号
-            var ls = await _da.FirstCol<long>("用户-可访问的菜单", new { userid = Kit.UserID });
+            var ls = await _da.FirstCol<long>("cm_用户_可访问的菜单", new { p_userid = Kit.UserID });
 
             // 清空旧数据
             await AtLob.Exec("delete from UserMenu");

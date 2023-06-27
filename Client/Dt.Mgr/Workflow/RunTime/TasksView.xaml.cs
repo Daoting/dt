@@ -66,7 +66,7 @@ namespace Dt.Mgr.Workflow
 
         static async void UpdateMenuTip()
         {
-            int cnt = await AtCm.GetScalar<int>("流程-待办任务总数", new { userid = Kit.UserID });
+            int cnt = await AtCm.GetScalar<int>("cm_流程_待办任务总数", new { p_userid = Kit.UserID });
             _om.SetWarningNum(cnt);
         }
         static OmMenu _om;

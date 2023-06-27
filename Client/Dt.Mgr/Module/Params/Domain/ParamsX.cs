@@ -36,7 +36,7 @@ namespace Dt.Mgr.Module
                 Throw.IfEmpty(Name, "参数名称不可为空！");
 
                 if ((IsAdded || Cells["Name"].IsChanged)
-                    && await AtCm.GetScalar<int>("参数-重复名称", new { name = Name }) > 0)
+                    && await GetCount($"where name='{Name}'") > 0)
                 {
                     Throw.Msg("参数名称重复！");
                 }

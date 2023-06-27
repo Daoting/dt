@@ -39,7 +39,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统分组无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_group有级联删除
-                var users = await AtCm.FirstCol<long>("分组-关联用户", new { ReleatedID = ID });
+                var users = await AtCm.FirstCol<long>("cm_分组_关联用户", new { p_groupid = ID });
                 RbacDs.DelUserDataVer(users);
             });
         }

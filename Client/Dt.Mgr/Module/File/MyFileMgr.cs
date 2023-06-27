@@ -25,30 +25,30 @@ namespace Dt.Mgr.Module
 
         public FileMgrSetting Setting { get; set; }
 
-        public Task<Table> GetChildren()
+        public async Task<Table> GetChildren()
         {
             if (FolderID == -1)
-                return AtCm.Query("个人文件-根目录", new { userid = Kit.UserID });
-            return AtCm.Query("个人文件-所有子级", new { parentid = FolderID });
+                return await FileMyX.Query($"where parentid is null and userid={Kit.UserID}");
+            return await FileMyX.Query($"where parentid={FolderID}");
         }
 
-        public Task<Table> GetChildFolders()
+        public async Task<Table> GetChildFolders()
         {
             if (FolderID == -1)
-                return AtCm.Query("个人文件-根文件夹", new { userid = Kit.UserID });
-            return AtCm.Query("个人文件-子级文件夹", new { parentid = FolderID });
+                return await FileMyX.Query($"where isfolder=1 and parentid is null and userid={Kit.UserID}");
+            return await FileMyX.Query($"where isfolder=1 and parentid={FolderID}");
         }
         
-        public Task<Table> GetChildrenByType(string p_typeFilter)
+        public async Task<Table> GetChildrenByType(string p_typeFilter)
         {
             if (FolderID == -1)
-                return AtCm.Query("个人文件-扩展名过滤根目录", new { userid = Kit.UserID, extname = p_typeFilter });
-            return AtCm.Query("个人文件-扩展名过滤子级", new { parentid = FolderID, extname = p_typeFilter });
+                return await FileMyX.Query($"where parentid is null and userid = {Kit.UserID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
+            return await FileMyX.Query($"where parentid={FolderID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
         }
 
-        public Task<Table> SearchFiles(string p_name)
+        public async Task<Table> SearchFiles(string p_name)
         {
-            return AtCm.Query("个人文件-搜索文件", new { name = $"%{p_name}%", userid = Kit.UserID });
+            return await FileMyX.Query($"where isfolder=0 and userid={Kit.UserID} and name like '%{p_name}%' limit 20");
         }
 
         public Task<bool> SaveFile(Row p_row)
@@ -93,7 +93,7 @@ namespace Dt.Mgr.Module
             {
                 if (row.Bool("IsFolder"))
                 {
-                    int cnt = await AtCm.GetScalar<int>("个人文件-子项个数", new { parentid = row.ID });
+                    int cnt = await FileMyX.GetCount($"where parentid={row.ID}");
                     if (cnt > 0)
                     {
                         Kit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
