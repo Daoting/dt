@@ -36,7 +36,7 @@ namespace Dt.Mgr.Module
         {
             if (_parentID > 0)
             {
-                _lv.Data = await OptionX.Query("选项-分类选项", new { ParentID = _parentID });
+                _lv.Data = await OptionX.Query($"SELECT a.*,b.Name as GroupName FROM cm_option a, cm_option_group b where a.GroupID=b.ID and a.GroupID={_parentID} order by Dispidx");
             }
             else
             {

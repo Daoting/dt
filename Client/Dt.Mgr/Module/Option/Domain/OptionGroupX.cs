@@ -29,7 +29,7 @@ namespace Dt.Mgr.Module
                 Throw.IfEmpty(Name, "分组名称不可为空！");
 
                 if ((IsAdded || Cells["name"].IsChanged)
-                    && await AtCm.GetScalar<int>("选项-分组名称重复", new { name = Name }) > 0)
+                    && await GetCount($"where name='{Name}'") > 0)
                 {
                     Throw.Msg("分组名称重复！");
                 }
@@ -37,7 +37,7 @@ namespace Dt.Mgr.Module
 
             OnDeleting(async () =>
             {
-                int count = await AtCm.GetScalar<int>("选项-子项个数", new { groupid = ID });
+                int count = await OptionX.GetCount($"where groupid={ID}");
                 Throw.If(count > 0, "该分组含选项无法删除！");
             });
         }
