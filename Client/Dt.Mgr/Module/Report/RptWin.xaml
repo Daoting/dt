@@ -7,7 +7,6 @@
 
     <a:FuzzySearch x:Name="_search" Placeholder="报表名称" Search="OnSearch" a:Ex.Dock="Left">
         <x:String>全部</x:String>
-        <x:String>最近修改</x:String>
     </a:FuzzySearch>
     <l:RptList x:Name="_list" Order="1" />
     <l:RptForm x:Name="_form" a:Ex.Dock="Right" />

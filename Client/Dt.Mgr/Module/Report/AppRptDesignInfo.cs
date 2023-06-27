@@ -28,7 +28,7 @@ namespace Dt.Mgr.Module
 
         public override Task<string> ReadTemplate()
         {
-            return AtCm.GetScalar<string>("报表-模板", new { id = _rpt.ID });
+            return AtCm.GetScalar<string>($"select define from cm_rpt where id={_rpt.ID}");
         }
 
         public override async void SaveTemplate(string p_xml)

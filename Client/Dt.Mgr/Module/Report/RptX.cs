@@ -39,7 +39,7 @@ namespace Dt.Mgr.Module
                 Throw.IfEmpty(Name, "报表名称不可为空！");
 
                 if ((IsAdded || Cells["name"].IsChanged)
-                    && await AtCm.GetScalar<int>("报表-重复名称", new { name = Name }) > 0)
+                    && await GetCount($"where name='{Name}'") > 0)
                 {
                     Throw.Msg("报表名称重复！");
                 }

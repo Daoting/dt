@@ -49,13 +49,9 @@ namespace Dt.Mgr.Module
             {
                 _lv.Data = await RptX.Query(null);
             }
-            else if (_query == "#最近修改")
-            {
-                _lv.Data = await AtCm.Query<RptX>("报表-最近修改");
-            }
             else
             {
-                _lv.Data = await AtCm.Query<RptX>("报表-模糊查询", new { ID = $"%{_query}%" });
+                _lv.Data = await RptX.Query($"where name like '%{_query}%'");
             }
         }
 
