@@ -29,7 +29,7 @@ namespace Dt.Mgr.Rbac
                 Throw.IfEmpty(Name, "角色名称不可为空！");
 
                 if ((IsAdded || Cells["name"].IsChanged)
-                    && await AtCm.GetScalar<int>("角色-名称重复", new { name = Name }) > 0)
+                    && await GetCount($"where name='{Name}'") > 0)
                 {
                     Throw.Msg("角色名称重复！");
                 }
@@ -40,7 +40,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统角色无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_role有级联删除
-                var ls = await AtCm.FirstCol<long>("角色-关联用户", new { ReleatedID = ID });
+                var ls = await AtCm.FirstCol<long>($"select id from cm_user a where exists (select userid from cm_user_role b where a.id=b.userid and roleid={ID})");
                 RbacDs.DelUserDataVer(ls);
             });
         }

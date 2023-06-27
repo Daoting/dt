@@ -25,7 +25,7 @@ namespace Dt.Mgr.Rbac
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await MenuX.Query("角色-未关联的菜单", new { ReleatedID = p_releatedID });
+            _lv.Data = await MenuX.Query($"where isgroup=0 and not exists (select menuid from cm_role_menu b where a.id=b.menuid and roleid={p_releatedID}) order by dispidx");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

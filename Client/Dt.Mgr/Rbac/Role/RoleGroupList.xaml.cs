@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await GroupX.Query("角色-关联的分组", new { ReleatedID = _releatedID });
+                _lv.Data = await GroupX.Query($"where exists ( select groupid from cm_group_role b where a.id = b.groupid and roleid = {_releatedID} )");
             }
             else
             {

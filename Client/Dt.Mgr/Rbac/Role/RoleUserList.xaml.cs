@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await UserX.Query("角色-关联用户", new { ReleatedID = _releatedID });
+                _lv.Data = await UserX.Query($"where exists (select userid from cm_user_role b where a.id=b.userid and roleid={_releatedID}) order by name");
             }
             else
             {
