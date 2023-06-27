@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await RoleX.Query("权限-关联角色", new { ReleatedID = _releatedID });
+                _lv.Data = await RoleX.Query($"where exists (select roleid from cm_role_per b where a.id=b.roleid and perid={_releatedID})");
             }
             else
             {
