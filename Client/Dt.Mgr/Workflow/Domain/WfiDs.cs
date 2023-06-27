@@ -658,7 +658,7 @@ namespace Dt.Mgr.Workflow
 
             if (roles.Count > 0)
             {
-                var ls = await _da.FirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', roles) });
+                var ls = await _da.FirstCol<long>("cm_用户_角色列表的用户", new { p_roleid = string.Join(',', roles) });
                 if (ls.Count > 0)
                 {
                     users.UnionWith(ls);

@@ -421,7 +421,7 @@ namespace Dt.Mgr.Rbac
             }
             else
             {
-                ls = await _da.FirstCol<long>("用户-角色列表的用户", new { roleid = string.Join(',', p_roleIDs) });
+                ls = await _da.FirstCol<long>("cm_用户_角色列表的用户", new { p_roleid = string.Join(',', p_roleIDs) });
             }
 
             var keys = new List<string>();
