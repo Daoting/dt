@@ -31,7 +31,7 @@ namespace Dt.Mgr.Workflow
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query("流程-待办任务", new { userID = Kit.UserID });
+            _lv.Data = await AtCm.Query("cm_流程_待办任务", new { p_userid = Kit.UserID });
         }
 
         void OnRefresh(object sender, Mi e)

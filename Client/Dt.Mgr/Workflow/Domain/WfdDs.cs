@@ -26,5 +26,10 @@ namespace Dt.Mgr.Workflow
             await Save(p_prc.AtvRoles);
             return await Commit();
         }
+
+        public static Task<long> GetWfdTrsID(long p_prcid, long p_srcAtvID, long p_tgtAtvID, bool p_isRollback)
+        {
+            return AtCm.GetScalar<long>($"select ID from cm_wfd_trs where prcid={p_prcid} and SrcAtvID={p_srcAtvID} and TgtAtvID={p_tgtAtvID} and IsRollback={(p_isRollback? 1:0)}");
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace Dt.Mgr.Workflow
             if (InstCount == 1)
                 return true;
 
-            int count = await AtCm.GetScalar<int>("流程-工作项个数", new { atviid = ID });
+            int count = await WfiItemX.GetCount($"where atviid={ID} and status=1");
             return (count + 1) >= InstCount;
         }
 
@@ -59,11 +59,8 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         public async Task<WfiAtvX> GetRollbackAtv()
         {
-            Dict dt = new Dict();
-            dt["prciid"] = PrciID;
-            dt["SrcAtvID"] = AtvdID;
-
-            var atv = await AtCm.First<WfiAtvX>("流程-回退活动实例", dt);
+            // 回退活动实例
+            var atv = await WfiAtvX.First($"where prciid={PrciID} and exists (select TgtAtvID from cm_wfd_trs b where SrcAtvID={AtvdID} and b.IsRollback=1 and a.atvdid=b.TgtAtvID) order by mtime desc");
             if (atv != null && atv.Status != WfiAtvStatus.同步)
             {
                 // 存在同步的活动，不允许进行回退。(优先级大于设置的可以回退)

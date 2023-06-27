@@ -31,7 +31,7 @@ namespace Dt.Mgr.Workflow
                 Height = 600;
                 Width = 400;
             }
-            _lv.Data = await AtCm.Query("流程-可启动流程", new { userid = Kit.UserID });
+            _lv.Data = await AtCm.Query("cm_流程_可启动流程", new { p_userid = Kit.UserID });
         }
 
         void OnItemDoubleClick(object sender, object e)

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -77,9 +78,8 @@ namespace Dt.Mgr.Workflow
             // 当前工作项置成完成状态
             p_info.WorkItem.Finished();
 
-            Dict dict = new Dict();
-            dict["name"] = await GetSender(p_info);
-            long userId = await AtCm.GetScalar<long>("流程-获取用户ID", dict);
+            var userName = await GetSender(p_info);
+            long userId = await AtCm.GetScalar<long>($"select id from cm_user where name='{userName}'");
             var newItem = await WfiItemX.New(
                 AtviID: newAtvInst.ID,
                 Stime: time,
@@ -112,15 +112,10 @@ namespace Dt.Mgr.Workflow
             string sender = p_info.WorkItem.Sender;
             if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
             {
-                Dict dt = new Dict();
-                dt["prciid"] = p_info.AtvInst.PrciID;
-                dt["atvdid"] = p_info.AtvInst.AtvdID;
-                long id = await AtCm.GetScalar<long>("流程-最后已完成活动ID", dt);
+                long id = await AtCm.GetScalar<long>($"select id from cm_wfi_atv where prciid={p_info.AtvInst.PrciID} and atvdid={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
                 if (id != 0)
                 {
-                    dt = new Dict();
-                    dt["atviid"] = id;
-                    sender = await AtCm.GetScalar<string>("流程-活动发送者", dt);
+                    sender = await AtCm.GetScalar<string>($"select sender from cm_wfi_item where atviid={id} order by mtime desc");
                 }
             }
             return sender;
@@ -186,7 +181,7 @@ namespace Dt.Mgr.Workflow
                 return false;
             }
 
-            var tbl = await AtCm.Query("流程-后续活动工作项", new { atvdid = row.Long("atvdid"), prciid = row.Long("prciid") });
+            var tbl = await AtCm.Query("cm_流程_后续活动工作项", new { p_atvdid = row.Long("atvdid"), p_prciid = row.Long("prciid") });
             if (tbl.Count == 0)
             {
                 Kit.Warn("无后续活动，无法追回");
@@ -271,7 +266,7 @@ namespace Dt.Mgr.Workflow
             }
 
             // 获得所有后续活动，包括同步
-            var nextAtvs = await AtCm.Query<WfdAtvX>("流程-后续活动", new { atvid = p_info.AtvDef.ID });
+            var nextAtvs = await WfdAtvX.Query("cm_流程_后续活动", new { p_atvid = p_info.AtvDef.ID });
             if (nextAtvs.Count == 0)
             {
                 // 无后续活动，结束当前工作项和活动
@@ -303,7 +298,7 @@ namespace Dt.Mgr.Workflow
                         if (await IsActive(atv, p_info))
                         {
                             // 同步活动只支持一个后续活动！
-                            var syncNext = await AtCm.First<WfdAtvX>("流程-后续活动", new { atvid = atv.ID });
+                            var syncNext = await WfdAtvX.First("cm_流程_后续活动", new { p_atvid = atv.ID });
                             if (syncNext != null)
                             {
                                 recv = await LoadRecvs(syncNext, p_info);
@@ -479,12 +474,7 @@ namespace Dt.Mgr.Workflow
                     tblItems.Add(item);
 
                     // 同步迁移实例
-                    Dict dt = new Dict();
-                    dt["prcid"] = p_info.PrcInst.PrcdID;
-                    dt["SrcAtvID"] = p_info.AtvInst.AtvdID;
-                    dt["TgtAtvID"] = syncAtv.SyncDef.ID;
-                    dt["IsRollback"] = false;
-                    long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+                    long trsdid = await WfdDs.GetWfdTrsID(p_info.PrcInst.PrcdID, p_info.AtvInst.AtvdID, syncAtv.SyncDef.ID, false);
 
                     var trs = await WfiTrsX.New(
                         TrsdID: trsdid,
@@ -547,12 +537,7 @@ namespace Dt.Mgr.Workflow
                     }
 
                     // 增加迁移实例
-                    dt = new Dict();
-                    dt["prcid"] = p_info.PrcInst.PrcdID;
-                    dt["SrcAtvID"] = syncAtv.SyncDef.ID;
-                    dt["TgtAtvID"] = syncAtv.Def.ID;
-                    dt["IsRollback"] = false;
-                    trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+                    trsdid = await WfdDs.GetWfdTrsID(p_info.PrcInst.PrcdID, syncAtv.SyncDef.ID, syncAtv.Def.ID, false);
 
                     trs = await WfiTrsX.New(
                         TrsdID: trsdid,
@@ -699,7 +684,7 @@ namespace Dt.Mgr.Workflow
                 {
                     // 所有用户或任一用户，按角色发
                     recv.IsRole = true;
-                    recv.Recvs = await AtCm.Query("流程-活动的所有授权角色", new Dict { { "atvid", p_atv.ID } });
+                    recv.Recvs = await RoleX.Query($"where exists (select distinct (roleid) from cm_wfd_atv_role ar where r.id=ar.roleid and atvid={p_atv.ID})");
                 }
             }
             else
@@ -749,19 +734,14 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         static async Task<bool> IsActive(WfdAtvX p_atvSync, WfFormInfo p_info)
         {
-            Dict dt = new Dict();
-            dt["prciid"] = p_info.PrcInst.ID;
-            dt["atvdid"] = p_atvSync.ID;
-            int cnt = await AtCm.GetScalar<int>("流程-同步活动实例数", dt);
+            int cnt = await WfiAtvX.GetCount($"where prciid={p_info.PrcInst.ID} and atvdid={p_atvSync.ID}");
 
             // 已产生同步实例
             if (cnt > 0)
                 return false;
 
             // 获得同步前所有活动
-            dt = new Dict();
-            dt["TgtAtvID"] = p_atvSync.ID;
-            var trss = await AtCm.Query<WfdTrsX>("流程-活动前的迁移", dt);
+            var trss = await WfdTrsX.Query($"where tgtatvid={p_atvSync.ID}");
 
             // 聚合方式
             // 全部
@@ -790,10 +770,7 @@ namespace Dt.Mgr.Workflow
                 if (trs.SrcAtvID == p_info.AtvDef.ID)
                     continue;
 
-                var dt = new Dict();
-                dt["atvdid"] = trs.SrcAtvID;
-                dt["prciid"] = p_info.PrcInst.ID;
-                int cnt = await AtCm.GetScalar<int>("流程-活动结束的实例数", dt);
+                int cnt = await WfiAtvX.GetCount($"where atvdid={trs.SrcAtvID} and prciid={p_info.PrcInst.ID} and status=1");
                 if (cnt == 0)
                 {
                     finish = false;
@@ -817,10 +794,7 @@ namespace Dt.Mgr.Workflow
                 if (trs.SrcAtvID == p_info.AtvDef.ID)
                     continue;
 
-                var dt = new Dict();
-                dt["atvdid"] = trs.SrcAtvID;
-                dt["prciid"] = p_info.PrcInst.ID;
-                var tbl = await AtCm.Query("流程-活动实例的状态", dt);
+                var tbl = await AtCm.Query($"select status from cm_wfi_atv where atvdid={trs.SrcAtvID} and prciid={p_info.PrcInst.ID}");
                 if (tbl.Count > 0 && tbl[0].Int("status") != 1)
                 {
                     finish = false;
@@ -837,10 +811,10 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         static async Task<Table> GetAtvUsers(long p_atvid)
         {
-            Dict dt = new Dict { { "atvid", p_atvid } };
-            if (await AtCm.GetScalar<int>("流程-是否活动授权任何人", dt) == 0)
-                return await AtCm.Query("流程-活动的所有执行者", dt);
-            return await AtCm.Query("流程-所有未过期用户");
+            // 是否活动授权任何人
+            if (await WfdAtvRoleX.GetCount($"where roleid=1 and atvid={p_atvid}") == 0)
+                return await AtCm.Query($"select id,name from cm_user u where exists (select distinct (userid) from cm_user_role ur where exists (select roleid from cm_wfd_atv_role ar where ur.roleid=ar.roleid and atvid={p_atvid}) and u.id=ur.userid) order by name");
+            return await AtCm.Query("select id, name from cm_user where expired=0");
         }
 
         static Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)
@@ -850,22 +824,22 @@ namespace Dt.Mgr.Workflow
             {
                 case WfdAtvExecLimit.前一活动的执行者:
                     // 前一活动执行者
-                    key = "流程-前一活动执行者";
+                    key = "cm_流程_前一活动执行者";
                     break;
                 case WfdAtvExecLimit.前一活动的同部门执行者:
                     // 前一活动的同部门执行者
-                    key = "流程-前一活动的同部门执行者";
+                    key = "cm_流程_前一活动的同部门执行者";
                     break;
                 case WfdAtvExecLimit.已完成活动的执行者:
                     // 已完成活动执行者
-                    key = "流程-已完成活动执行者";
+                    key = "cm_流程_已完成活动执行者";
                     break;
                 default:
                     // 已完成活动同部门执行者
-                    key = "流程-已完成活动同部门执行者";
+                    key = "cm_流程_已完成活动同部门执行者";
                     break;
             }
-            return AtCm.Query(key, new { prciId = p_info.PrcInst.ID, atvdid = p_atvdid });
+            return AtCm.Query(key, new { p_prciid = p_info.PrcInst.ID, p_atvdid = p_atvdid });
         }
 
         class RecvDef

@@ -33,25 +33,25 @@ namespace Dt.Mgr.Workflow
             Row row = new Row();
             row.AddCell<DateTime>("start");
             row.AddCell<DateTime>("end");
-            row.AddCell<long>("status", 3);
+            row.AddCell<int>("status", 3);
             row.AddCell("statusname", "全部");
             row.AddCell<bool>("type");
-            row.AddCell("userid", Kit.UserID);
             _fv.Data = row;
         }
 
         async void OnSearch(object sender, Mi e)
         {
             var row = _fv.Row;
+            var dt = new { p_userid = Kit.UserID, p_start = row.Date("start"), p_end = row.Date("end"), p_status = row.Int("status") };
             if (row.Bool("type"))
             {
                 // 用户在一个流程实例中参与的所有任务
-                _lv.Data = await AtCm.Query("流程-所有经办历史任务", row.ToDict());
+                _lv.Data = await AtCm.Query("cm_流程_所有经办历史任务", dt);
             }
             else
             {
                 // 用户只能看到一个流程实例的最后完成的任务
-                _lv.Data = await AtCm.Query("流程-历史任务", row.ToDict());
+                _lv.Data = await AtCm.Query("cm_流程_历史任务", dt);
             }
         }
 

@@ -23,7 +23,7 @@ namespace Dt.Mgr.Workflow
 
         async void LoadAll()
         {
-            _lv.Data = await AtCm.Query<WfdPrcX>("流程-所有流程模板");
+            _lv.Data = await WfdPrcX.Query("where 1=1 order by Dispidx");
         }
 
         async void OnSearch(object sender, string e)
@@ -32,13 +32,9 @@ namespace Dt.Mgr.Workflow
             {
                 LoadAll();
             }
-            else if (e == "#最近修改")
-            {
-                _lv.Data = await AtCm.Query<WfdPrcX>("流程-最近修改");
-            }
             else if (!string.IsNullOrEmpty(e))
             {
-                _lv.Data = await AtCm.Query<WfdPrcX>("流程-模糊查询", new { input = $"%{e}%" });
+                _lv.Data = await WfdPrcX.Query($"where name like '%{e}%'");
             }
             NaviTo("列表");
         }

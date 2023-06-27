@@ -275,12 +275,7 @@ namespace Dt.Mgr
         /// <returns></returns>
         internal async Task<WfiTrsX> CreateAtvTrs(long p_tatvid, long p_tatviid, DateTime p_date, bool p_rollback)
         {
-            Dict dt = new Dict();
-            dt["prcid"] = PrcInst.PrcdID;
-            dt["SrcAtvID"] = AtvInst.AtvdID;
-            dt["TgtAtvID"] = p_tatvid;
-            dt["IsRollback"] = p_rollback;
-            long trsdid = await AtCm.GetScalar<long>("流程-迁移模板ID", dt);
+            long trsdid = await WfdDs.GetWfdTrsID(PrcInst.PrcdID, AtvInst.AtvdID, p_tatvid, p_rollback);
             Throw.If(trsdid == 0, "未找到流程迁移模板");
 
             return await WfiTrsX.New(
@@ -343,7 +338,7 @@ namespace Dt.Mgr
             // 根据流程实例id获取流程id 和 最后工作项id
             if (_prciID > 0)
             {
-                var row = await AtCm.First("流程-最后工作项", new { prciID = _prciID });
+                var row = await AtCm.First("cm_流程_最后工作项", new { p_prciid = _prciID });
                 _prcID = row.Long("prcID");
                 _itemID = row.Long("itemID");
             }
@@ -377,7 +372,8 @@ namespace Dt.Mgr
 
         async Task CreateWorkItem()
         {
-            AtvDef = await AtCm.First<WfdAtvX>("流程-起始活动", new { prcid = _prcID });
+            // 起始活动
+            AtvDef = await WfdAtvX.First($"where prcid={_prcID} and type=1");
 
             PrcInst = await WfiPrcX.New(
                 PrcdID: _prcID,
@@ -399,9 +395,8 @@ namespace Dt.Mgr
 
         async Task LoadWorkItem()
         {
-            Dict dt = new Dict { { "itemid", _itemID } };
-            PrcInst = await AtCm.First<WfiPrcX>("流程-工作项的流程实例", dt);
-            AtvInst = await AtCm.First<WfiAtvX>("流程-工作项的活动实例", dt);
+            PrcInst = await WfiPrcX.First($"where id=(select prciid from cm_wfi_atv where id=(select atviid from cm_wfi_item where id={_itemID}))");
+            AtvInst = await WfiAtvX.First($"where id=(select atviid from cm_wfi_item where id={_itemID})");
             WorkItem = await WfiItemX.GetByID(_itemID);
             AtvDef = await WfdAtvX.GetByID(AtvInst.AtvdID);
         }

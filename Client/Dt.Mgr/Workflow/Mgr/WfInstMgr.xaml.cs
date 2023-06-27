@@ -24,11 +24,11 @@ namespace Dt.Mgr.Workflow
 
         async void LoadSearchData()
         {
-            _fv["prcdname"].To<CList>().Data = await AtCm.Query("流程-所有流程模板名称");
+            _fv["prcdname"].To<CList>().Data = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
             Row row = new Row();
             row.AddCell<string>("prcdid");
             row.AddCell<string>("prcdname");
-            row.AddCell<long>("status", 3);
+            row.AddCell<int>("status", 3);
             row.AddCell("statusname", "全部");
             row.AddCell<string>("title");
             row.AddCell<DateTime>("start");
@@ -42,7 +42,14 @@ namespace Dt.Mgr.Workflow
             if (row.Str("prcdid") == "")
                 Kit.Warn("未选择流程模板！");
             else
-                _lv.Data = await AtCm.Query<WfiPrcX>("流程-查找实例", row.ToDict());
+                _lv.Data = await WfiPrcX.Query("cm_流程_查找实例", new
+                {
+                    p_prcdid = row.Str("prcdid"),
+                    p_start = row.Date("start"),
+                    p_end = row.Date("end"),
+                    p_status = row.Int("status"),
+                    p_title = row.Str("title"),
+                } );
         }
 
         void OnMonthClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -70,13 +77,13 @@ namespace Dt.Mgr.Workflow
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvAtv.Data = await AtCm.Query<WfiAtvX>("流程-流程实例的活动实例", new { prciID = e.Row.ID });
+                _lvAtv.Data = await WfiAtvX.Query($"select atvi.id,atvd.name,status,instcount from cm_wfi_atv atvi,cm_wfd_atv atvd where atvi.atvdid=atvd.id and atvi.prciid={e.Row.ID} order by atvi.ctime");
         }
 
         async void OnAtvClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvItem.Data = await AtCm.Query<WfiItemX>("流程-活动实例的工作项", new { atviID = e.Row.ID });
+                _lvItem.Data = await WfiItemX.Query("cm_流程_活动实例的工作项", new { p_atviid = e.Row.ID });
         }
 
         void OnShowInst(object sender, Mi e)

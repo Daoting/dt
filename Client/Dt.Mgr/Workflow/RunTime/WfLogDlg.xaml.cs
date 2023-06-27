@@ -38,7 +38,7 @@ namespace Dt.Mgr.Workflow
 
             // 查询流程模板id
             if (p_prcID <= 0)
-                p_prcID = await AtCm.GetScalar<long>("流程-实例id获取模板id", new { id = p_prciID });
+                p_prcID = await AtCm.GetScalar<long>($"select PrcdID from cm_wfi_prc where id={p_prciID}");
 
             var def = await WfFormInfo.GetPrcDef(p_prcID);
             if (string.IsNullOrEmpty(def.Diagram))
@@ -48,7 +48,7 @@ namespace Dt.Mgr.Workflow
             }
 
             _sketch.ReadXml(def.Diagram);
-            var atvs = await AtCm.Query("流程-活动实例状态", new { prciid = p_prciID });
+            var atvs = await AtCm.Query($"select atvdid,status from cm_wfi_atv where prciid={p_prciID} order by ctime");
             if (atvs.Count > 0)
             {
                 foreach (var node in _sketch.Container.Children.OfType<SNode>())
@@ -117,7 +117,7 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         async Task<string> GetWfLog(long p_prciID, long p_atvdID = 0)
         {
-            var log = await AtCm.Query("流程-生成日志列表", new { prciid = p_prciID, atvdid = p_atvdID });
+            var log = await AtCm.Query("cm_流程_生成日志列表", new { p_prciid = p_prciID, p_atvdid = p_atvdID });
             if (log.Count == 0)
                 return "";
 
@@ -206,7 +206,7 @@ namespace Dt.Mgr.Workflow
         async Task<string> BuildNext(Row p_row)
         {
             // 指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
-            var tbl = await AtCm.Query("流程-日志目标项", new { prciid = p_row.Long("prciid"), atviid = p_row.Long("atviid") });
+            var tbl = await AtCm.Query("cm_流程_日志目标项", new { p_prciid = p_row.Long("prciid"), p_atviid = p_row.Long("atviid") });
             string nexttext = "";
             foreach (var row in tbl)
             {

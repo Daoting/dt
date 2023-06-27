@@ -31,11 +31,10 @@ namespace Dt.Mgr.Workflow
 
         public static async Task<WfdPrcX> Get(long p_id)
         {
-            var dt = new Dict { { "prcid", p_id } };
-            var prc = await AtCm.First<WfdPrcX>("流程-编辑流程模板", dt);
-            prc.Atvs = await AtCm.Query<WfdAtvX>("流程-编辑活动模板", dt);
-            prc.Trss = await AtCm.Query<WfdTrsX>("流程-编辑迁移模板", dt);
-            prc.AtvRoles = await AtCm.Query<WfdAtvRoleX>("流程-编辑活动授权", dt);
+            var prc = await WfdPrcX.First($"where id={p_id}");
+            prc.Atvs = await WfdAtvX.Query("cm_流程_编辑活动模板", new { p_prcid = p_id });
+            prc.Trss = await WfdTrsX.Query($"where prcid={p_id}");
+            prc.AtvRoles = await WfdAtvRoleX.Query($"select a.*,b.name as role from cm_wfd_atv_role a,cm_role b where a.roleid=b.id and atvid in (select id from cm_wfd_atv where prcid={p_id})");
             prc.AttachEvent();
             return prc;
         }
@@ -66,7 +65,7 @@ namespace Dt.Mgr.Workflow
         {
             OnDeleting(async () =>
             {
-                int cnt = await AtCm.GetScalar<int>("流程-流程实例数", new { PrcdID = ID });
+                int cnt = await WfiPrcX.GetCount($"where PrcdID={ID}");
                 Throw.If(cnt > 0, "已有流程实例，禁止删除！");
             });
         }
