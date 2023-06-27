@@ -33,7 +33,7 @@ namespace Dt.Mgr.Rbac
 
             if (p_id > 0)
             {
-                _curItem = await MenuX.First("菜单-id菜单项", new { id = p_id });
+                _curItem = await MenuX.First($"select a.*,b.name parentname from cm_menu a left join cm_menu b on a.parentid=b.id where a.id={p_id}");
                 Data = _curItem;
                 UpdateRelated(_curItem);
             }
@@ -143,7 +143,7 @@ namespace Dt.Mgr.Rbac
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await AtCm.Query<MenuX>("菜单-分组树");
+                ((CTree)sender).Data = await MenuX.Query("where isgroup=1 order by dispidx");
             }
         }
         #endregion

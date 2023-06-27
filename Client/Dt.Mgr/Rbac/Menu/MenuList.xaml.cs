@@ -36,7 +36,7 @@ namespace Dt.Mgr.Rbac
             // 记录已选择的节点
             var m = _tv.Selected<MenuX>();
             long id = m == null ? -1 : m.ID;
-            _tv.Data = await AtCm.Query<MenuX>("菜单-完整树");
+            _tv.Data = await MenuX.Query("where 1=1 order by dispidx");
 
             object select = null;
             if (id > 0)

@@ -46,7 +46,7 @@ namespace Dt.Mgr.Rbac
 
         public async void Refresh()
         {
-            _lv.Data = await AtCm.Query<RoleMenuX>("菜单-关联的角色", new { ReleatedID = _id });
+            _lv.Data = await RoleX.Query($"where exists (select roleid from cm_role_menu b where a.id=b.roleid and menuid={_id})");
         }
         #endregion
 
