@@ -27,28 +27,22 @@ namespace Dt.Mgr.Module
 
         public async Task<Table> GetChildren()
         {
-            if (FolderID == -1)
-                return await FileMyX.Query($"where parentid is null and userid={Kit.UserID}");
-            return await FileMyX.Query($"where parentid={FolderID}");
+            return await FileMyX.GetChildren(FolderID);
         }
 
         public async Task<Table> GetChildFolders()
         {
-            if (FolderID == -1)
-                return await FileMyX.Query($"where isfolder=1 and parentid is null and userid={Kit.UserID}");
-            return await FileMyX.Query($"where isfolder=1 and parentid={FolderID}");
+            return await FileMyX.GetChildFolders(FolderID);
         }
         
         public async Task<Table> GetChildrenByType(string p_typeFilter)
         {
-            if (FolderID == -1)
-                return await FileMyX.Query($"where parentid is null and userid = {Kit.UserID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
-            return await FileMyX.Query($"where parentid={FolderID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
+            return await FileMyX.GetChildrenByType(FolderID, p_typeFilter);
         }
 
         public async Task<Table> SearchFiles(string p_name)
         {
-            return await FileMyX.Query($"where isfolder=0 and userid={Kit.UserID} and name like '%{p_name}%' limit 20");
+            return await FileMyX.SearchFiles(p_name);
         }
 
         public Task<bool> SaveFile(Row p_row)

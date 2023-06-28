@@ -33,7 +33,7 @@ namespace Dt.Mgr.Rbac
 
             if (p_id > 0)
             {
-                _curItem = await MenuX.First($"select a.*,b.name parentname from cm_menu a left join cm_menu b on a.parentid=b.id where a.id={p_id}");
+                _curItem = await MenuX.GetWithParentName(p_id);
                 Data = _curItem;
                 UpdateRelated(_curItem);
             }

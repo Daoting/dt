@@ -32,6 +32,11 @@ namespace Dt.Mgr.Rbac
                 Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
         }
 
+        public static Task<Table<UserX>> ExistsInGroup(long p_groupID)
+        {
+            return Query($"where exists (select userid from cm_user_group b where a.id=b.userid and groupid={p_groupID})");
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>

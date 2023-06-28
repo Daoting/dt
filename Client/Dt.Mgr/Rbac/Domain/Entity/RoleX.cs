@@ -22,6 +22,11 @@ namespace Dt.Mgr.Rbac
             return new RoleX(id, "新角色");
         }
 
+        public static Task<Table<RoleX>> ExistsInGroup(long p_groupID)
+        {
+            return Query($"where exists (select roleid from cm_group_role b where a.id=b.roleid and groupid={p_groupID})");
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>

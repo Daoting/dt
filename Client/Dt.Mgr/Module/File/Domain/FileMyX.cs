@@ -33,24 +33,30 @@ namespace Dt.Mgr.Module
                 UserID: UserID);
         }
 
-        protected override void InitHook()
+        public static Task<Table<FileMyX>> GetChildren(long p_parentID)
         {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+            if (p_parentID == -1)
+                return Query($"where parentid is null and userid={Kit.UserID}");
+            return Query($"where parentid={p_parentID}");
+        }
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        public static Task<Table<FileMyX>> GetChildFolders(long p_parentID)
+        {
+            if (p_parentID == -1)
+                return Query($"where isfolder=1 and parentid is null and userid={p_parentID}");
+            return Query($"where isfolder=1 and parentid={p_parentID}");
+        }
 
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
+        public static Task<Table<FileMyX>> SearchFiles(string p_name)
+        {
+            return Query($"where isfolder=0 and userid={Kit.UserID} and name like '%{p_name}%'");
+        }
+
+        public static Task<Table<FileMyX>> GetChildrenByType(long p_parentID, string p_typeFilter)
+        {
+            if (p_parentID == -1)
+                return Query($"where parentid is null and userid = {Kit.UserID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
+            return Query($"where parentid={p_parentID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
         }
     }
 }

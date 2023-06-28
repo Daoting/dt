@@ -1,1086 +1,1306 @@
--- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
---
--- Host: 10.10.1.2    Database: initdb
--- ------------------------------------------------------
--- Server version	5.7.21-log
+/*
+ Navicat Premium Data Transfer
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+ Source Server         : server2
+ Source Server Type    : MySQL
+ Source Server Version : 50721 (5.7.21-log)
+ Source Host           : 10.10.1.2:3306
+ Source Schema         : dt
 
---
--- Table structure for table `cm_file_my`
---
+ Target Server Type    : MySQL
+ Target Server Version : 50721 (5.7.21-log)
+ File Encoding         : 65001
 
+ Date: 27/06/2023 16:32:52
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for cm_file_my
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_file_my`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_file_my` (
+CREATE TABLE `cm_file_my`  (
   `ID` bigint(20) NOT NULL COMMENT '文件标识',
-  `ParentID` bigint(20) DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
-  `Name` varchar(255) NOT NULL COMMENT '名称',
+  `ParentID` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `IsFolder` tinyint(1) NOT NULL COMMENT '是否为文件夹',
-  `ExtName` varchar(8) DEFAULT NULL COMMENT '文件扩展名',
-  `Info` varchar(512) NOT NULL COMMENT '文件描述信息',
+  `ExtName` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件扩展名',
+  `Info` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件描述信息',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `UserID` bigint(20) NOT NULL COMMENT '所属用户',
-  PRIMARY KEY (`ID`),
-  KEY `fk_myfile_parentid` (`ParentID`),
-  KEY `fk_user_userid` (`UserID`),
-  CONSTRAINT `fk_myfile_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_file_my` (`ID`),
-  CONSTRAINT `fk_user_userid` FOREIGN KEY (`UserID`) REFERENCES `cm_user` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='个人文件';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_myfile_parentid`(`ParentID`) USING BTREE,
+  INDEX `fk_user_userid`(`UserID`) USING BTREE,
+  CONSTRAINT `fk_myfile_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_file_my` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_user_userid` FOREIGN KEY (`UserID`) REFERENCES `cm_user` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '个人文件';
 
---
--- Dumping data for table `cm_file_my`
---
 
-LOCK TABLES `cm_file_my` WRITE;
-/*!40000 ALTER TABLE `cm_file_my` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_file_my` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_file_pub`
---
-
+-- ----------------------------
+-- Table structure for cm_file_pub
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_file_pub`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_file_pub` (
+CREATE TABLE `cm_file_pub`  (
   `ID` bigint(20) NOT NULL COMMENT '文件标识',
-  `ParentID` bigint(20) DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
-  `Name` varchar(255) NOT NULL COMMENT '名称',
+  `ParentID` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `IsFolder` tinyint(1) NOT NULL COMMENT '是否为文件夹',
-  `ExtName` varchar(8) DEFAULT NULL COMMENT '文件扩展名',
-  `Info` varchar(512) NOT NULL COMMENT '文件描述信息',
+  `ExtName` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件扩展名',
+  `Info` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件描述信息',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_pubfile_parentid` (`ParentID`),
-  CONSTRAINT `fk_pubfile_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_file_pub` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公共文件';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_pubfile_parentid`(`ParentID`) USING BTREE,
+  CONSTRAINT `fk_pubfile_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_file_pub` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '公共文件';
 
---
--- Dumping data for table `cm_file_pub`
---
+-- ----------------------------
+-- Records of cm_file_pub
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_file_pub` (`ID`, `ParentID`, `Name`, `IsFolder`, `ExtName`, `Info`, `Ctime`) VALUES (1, NULL, '公共文件', 1, NULL, '', '2020-10-21 15:19:20'), (2, NULL, '素材库', 1, NULL, '', '2020-10-21 15:20:21');
+COMMIT;
 
-LOCK TABLES `cm_file_pub` WRITE;
-/*!40000 ALTER TABLE `cm_file_pub` DISABLE KEYS */;
-INSERT INTO `cm_file_pub` VALUES (1,NULL,'公共文件',1,NULL,'','2020-10-21 15:19:20'),(2,NULL,'素材库',1,NULL,'','2020-10-21 15:20:21');
-/*!40000 ALTER TABLE `cm_file_pub` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_group`
---
-
+-- ----------------------------
+-- Table structure for cm_group
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_group` (
+CREATE TABLE `cm_group`  (
   `ID` bigint(20) NOT NULL COMMENT '组标识',
-  `Name` varchar(64) NOT NULL COMMENT '组名',
-  `Note` varchar(255) NOT NULL COMMENT '组描述',
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `idx_group_name` (`Name`) COMMENT '不重复'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分组，与用户和角色多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '组名',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '组描述',
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE INDEX `idx_group_name`(`Name`) USING BTREE COMMENT '不重复'
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '分组，与用户和角色多对多';
 
---
--- Dumping data for table `cm_group`
---
 
-LOCK TABLES `cm_group` WRITE;
-/*!40000 ALTER TABLE `cm_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_group_role`
---
-
+-- ----------------------------
+-- Table structure for cm_group_role
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_group_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_group_role` (
+CREATE TABLE `cm_group_role`  (
   `GroupID` bigint(20) NOT NULL COMMENT '组标识',
   `RoleID` bigint(20) NOT NULL COMMENT '角色标识',
-  PRIMARY KEY (`GroupID`,`RoleID`),
-  KEY `fk_grouprole_roleid` (`RoleID`),
-  KEY `fk_grouprole_groupid` (`GroupID`),
+  PRIMARY KEY (`GroupID`, `RoleID`) USING BTREE,
+  INDEX `fk_grouprole_roleid`(`RoleID`) USING BTREE,
+  INDEX `fk_grouprole_groupid`(`GroupID`) USING BTREE,
   CONSTRAINT `fk_grouprole_groupid` FOREIGN KEY (`GroupID`) REFERENCES `cm_group` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_grouprole_roleid` FOREIGN KEY (`RoleID`) REFERENCES `cm_role` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='组一角色多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '组一角色多对多';
 
---
--- Dumping data for table `cm_group_role`
---
 
-LOCK TABLES `cm_group_role` WRITE;
-/*!40000 ALTER TABLE `cm_group_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_group_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_menu`
---
-
+-- ----------------------------
+-- Table structure for cm_menu
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_menu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_menu` (
+CREATE TABLE `cm_menu`  (
   `ID` bigint(20) NOT NULL COMMENT '菜单标识',
-  `ParentID` bigint(20) DEFAULT NULL COMMENT '父菜单标识',
-  `Name` varchar(64) NOT NULL COMMENT '菜单名称',
+  `ParentID` bigint(20) NULL DEFAULT NULL COMMENT '父菜单标识',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
   `IsGroup` tinyint(1) NOT NULL COMMENT '分组或实例。0表实例，1表分组',
-  `ViewName` varchar(128) NOT NULL COMMENT '视图名称',
-  `Params` varchar(4000) NOT NULL COMMENT '传递给菜单程序的参数',
-  `Icon` varchar(128) NOT NULL COMMENT '图标',
-  `Note` varchar(512) NOT NULL COMMENT '备注',
+  `ViewName` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '视图名称',
+  `Params` varchar(4000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '传递给菜单程序的参数',
+  `Icon` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '图标',
+  `Note` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '备注',
   `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
-  `IsLocked` tinyint(1) NOT NULL DEFAULT '0' COMMENT '定义了菜单是否被锁定。0表未锁定，1表锁定不可用',
+  `IsLocked` tinyint(1) NOT NULL DEFAULT 0 COMMENT '定义了菜单是否被锁定。0表未锁定，1表锁定不可用',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  KEY `fk_menu_parentid` (`ParentID`),
-  CONSTRAINT `fk_menu_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_menu` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='业务菜单';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `fk_menu_parentid`(`ParentID`) USING BTREE,
+  CONSTRAINT `fk_menu_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_menu` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '业务菜单';
 
---
--- Dumping data for table `cm_menu`
---
+-- ----------------------------
+-- Records of cm_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_menu` (`ID`, `ParentID`, `Name`, `IsGroup`, `ViewName`, `Params`, `Icon`, `Note`, `Dispidx`, `IsLocked`, `Ctime`, `Mtime`) VALUES (1, NULL, '工作台', 1, '', '', '搬运工', '', 1, 0, '2019-03-07 10:45:44', '2019-03-07 10:45:43'), (2, 1, '用户账号', 0, '用户账号', '', '钥匙', '', 2, 0, '2019-11-08 11:42:28', '2019-11-08 11:43:53'), (3, 1, '菜单管理', 0, '菜单管理', '', '大图标', '', 3, 0, '2019-03-11 11:35:59', '2019-03-11 11:35:58'), (4, 1, '系统角色', 0, '系统角色', '', '两人', '', 4, 0, '2019-11-08 11:47:21', '2019-11-08 11:48:22'), (5, 1, '分组管理', 0, '分组管理', '', '分组', '', 5, 0, '2023-03-10 08:34:49', '2023-03-10 08:34:49'), (6, 1, '基础权限', 0, '基础权限', '', '审核', '', 6, 0, '2019-03-12 09:11:22', '2019-03-07 11:23:40'), (7, 1, '参数定义', 0, '参数定义', '', '调色板', '', 7, 0, '2019-03-12 15:35:56', '2019-03-12 15:37:10'), (8, 1, '基础选项', 0, '基础选项', '', '修理', '', 8, 0, '2019-11-08 11:49:40', '2019-11-08 11:49:46'), (9, 1, '报表设计', 0, '报表设计', '', '折线图', '', 76, 0, '2020-10-19 11:21:38', '2020-10-19 11:21:38'), (10, 1, '流程设计', 0, '流程设计', '', '双绞线', '', 79, 0, '2020-11-02 16:21:19', '2020-11-02 16:21:19');
+COMMIT;
 
-LOCK TABLES `cm_menu` WRITE;
-/*!40000 ALTER TABLE `cm_menu` DISABLE KEYS */;
-INSERT INTO `cm_menu` VALUES (1,NULL,'工作台',1,'','','搬运工','',1,0,'2019-03-07 10:45:44','2019-03-07 10:45:43'),(2,1,'用户账号',0,'用户账号','','钥匙','',2,0,'2019-11-08 11:42:28','2019-11-08 11:43:53'),(3,1,'菜单管理',0,'菜单管理','','大图标','',3,0,'2019-03-11 11:35:59','2019-03-11 11:35:58'),(4,1,'系统角色',0,'系统角色','','两人','',4,0,'2019-11-08 11:47:21','2019-11-08 11:48:22'),(5,1,'分组管理',0,'分组管理','','分组','',5,0,'2023-03-10 08:34:49','2023-03-10 08:34:49'),(6,1,'基础权限',0,'基础权限','','审核','',6,0,'2019-03-12 09:11:22','2019-03-07 11:23:40'),(7,1,'参数定义',0,'参数定义','','调色板','',7,0,'2019-03-12 15:35:56','2019-03-12 15:37:10'),(8,1,'基础选项',0,'基础选项','','修理','',8,0,'2019-11-08 11:49:40','2019-11-08 11:49:46'),(9,1,'报表设计',0,'报表设计','','折线图','',76,0,'2020-10-19 11:21:38','2020-10-19 11:21:38'),(10,1,'流程设计',0,'流程设计','','双绞线','',79,0,'2020-11-02 16:21:19','2020-11-02 16:21:19'),(11,1,'发布管理',0,'发布管理','','书籍','',88,0,'2020-10-27 16:09:27','2020-10-27 16:09:27');
-/*!40000 ALTER TABLE `cm_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_option`
---
-
+-- ----------------------------
+-- Table structure for cm_option
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_option`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_option` (
+CREATE TABLE `cm_option`  (
   `ID` bigint(20) NOT NULL COMMENT '标识',
-  `Name` varchar(64) NOT NULL COMMENT '选项名称',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '选项名称',
   `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
   `GroupID` bigint(20) NOT NULL COMMENT '所属分组',
   PRIMARY KEY (`ID`) USING BTREE,
-  KEY `fk_option_groupid` (`GroupID`),
-  CONSTRAINT `fk_option_groupid` FOREIGN KEY (`GroupID`) REFERENCES `cm_option_group` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='基础选项';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `fk_option_groupid`(`GroupID`) USING BTREE,
+  CONSTRAINT `fk_option_groupid` FOREIGN KEY (`GroupID`) REFERENCES `cm_option_group` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '基础选项';
 
---
--- Dumping data for table `cm_option`
---
+-- ----------------------------
+-- Records of cm_option
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_option` (`ID`, `Name`, `Dispidx`, `GroupID`) VALUES (2, '汉族', 2, 1), (3, '蒙古族', 3, 1), (4, '回族', 4, 1), (5, '藏族', 5, 1), (6, '维吾尔族', 6, 1), (7, '苗族', 7, 1), (8, '彝族', 8, 1), (9, '壮族', 9, 1), (10, '布依族', 10, 1), (11, '朝鲜族', 11, 1), (12, '满族', 12, 1), (13, '侗族', 13, 1), (14, '瑶族', 14, 1), (15, '白族', 15, 1), (16, '土家族', 16, 1), (17, '哈尼族', 17, 1), (18, '哈萨克族', 18, 1), (19, '傣族', 19, 1), (20, '黎族', 20, 1), (21, '傈僳族', 21, 1), (22, '佤族', 22, 1), (23, '畲族', 23, 1), (24, '高山族', 24, 1), (25, '拉祜族', 25, 1), (26, '水族', 26, 1), (27, '东乡族', 27, 1), (28, '纳西族', 28, 1), (29, '景颇族', 29, 1), (30, '柯尔克孜族', 30, 1), (31, '土族', 31, 1), (32, '达斡尔族', 32, 1), (33, '仫佬族', 33, 1), (34, '羌族', 34, 1), (35, '布朗族', 35, 1), (36, '撒拉族', 36, 1), (37, '毛难族', 37, 1), (38, '仡佬族', 38, 1), (39, '锡伯族', 39, 1), (40, '阿昌族', 40, 1), (41, '普米族', 41, 1), (42, '塔吉克族', 42, 1), (43, '怒族', 43, 1), (44, '乌孜别克族', 44, 1), (45, '俄罗斯族', 45, 1), (46, '鄂温克族', 46, 1), (47, '德昂族', 47, 1), (48, '保安族', 48, 1), (49, '裕固族', 49, 1), (50, '京族', 50, 1), (51, '塔塔尔族', 51, 1), (52, '独龙族', 52, 1), (53, '鄂伦春族', 53, 1), (54, '赫哲族', 54, 1), (55, '门巴族', 55, 1), (56, '珞巴族', 56, 1), (57, '基诺族', 57, 1), (58, '大学', 58, 2), (59, '高中', 59, 2), (60, '中学', 60, 2), (61, '小学', 61, 2), (62, '硕士', 62, 2), (63, '博士', 63, 2), (64, '其他', 64, 2), (65, '黑龙江杜尔伯特县', 65, 3), (66, '黑龙江富裕县', 66, 3), (67, '黑龙江林甸县', 67, 3), (68, '黑龙江克山县', 68, 3), (69, '黑龙江克东县', 69, 3), (70, '黑龙江省拜泉县', 70, 3), (71, '黑龙江鸡西市', 71, 3), (72, '黑龙江鸡东县', 72, 3), (73, '黑龙江鹤岗市', 73, 3), (74, '黑龙江萝北县', 74, 3), (75, '黑龙江绥滨县', 75, 3), (76, '黑龙江双鸭山市', 76, 3), (77, '黑龙江集贤县', 77, 3), (78, '黑龙江大庆市', 78, 3), (79, '黑龙江伊春市', 79, 3), (80, '黑龙江嘉荫县', 80, 3), (81, '黑龙江佳木斯市', 81, 3), (82, '黑龙江桦南县', 82, 3), (83, '黑龙江依兰县', 83, 3), (84, '黑龙江桦川县', 84, 3), (85, '黑龙江省宝清县', 85, 3), (86, '黑龙江汤原县', 86, 3), (87, '黑龙江饶河县', 87, 3), (88, '黑龙江抚远县', 88, 3), (89, '黑龙江友谊县', 89, 3), (90, '黑龙江七台河市', 90, 3), (91, '黑龙江省勃利县', 91, 3), (92, '黑龙江牡丹江市', 92, 3), (93, '黑龙江宁安县', 93, 3), (94, '黑龙江海林县', 94, 3), (95, '黑龙江穆棱县', 95, 3), (96, '黑龙江东宁县', 96, 3), (97, '黑龙江林口县', 97, 3), (98, '黑龙江虎林县', 98, 3), (99, '黑龙江双城市', 99, 3), (100, '黑龙江尚志市', 100, 3), (101, '黑龙江省宾县', 101, 3), (102, '黑龙江五常县', 102, 3), (103, '黑龙江省巴彦县', 103, 3), (104, '黑龙江木兰县', 104, 3), (105, '黑龙江通河县', 105, 3), (106, '黑龙江方正县', 106, 3), (107, '黑龙江延寿县', 107, 3), (108, '黑龙江绥化市', 108, 3), (109, '黑龙江省安达市', 109, 3), (110, '黑龙江肇东市', 110, 3), (111, '黑龙江海伦县', 111, 3), (112, '黑龙江望奎县', 112, 3), (113, '黑龙江兰西县', 113, 3), (114, '黑龙江青冈县', 114, 3), (115, '黑龙江肇源县', 115, 3), (116, '黑龙江肇州县', 116, 3), (117, '黑龙江庆安县', 117, 3), (118, '黑龙江明水县', 118, 3), (119, '黑龙江绥棱县', 119, 3), (120, '黑龙江黑河市', 120, 3), (121, '黑龙江省北安市', 121, 3), (122, '黑龙江五大连池市', 122, 3), (123, '黑龙江嫩江县', 123, 3), (124, '黑龙江省德都县', 124, 3), (125, '黑龙江逊克县', 125, 3), (126, '黑龙江孙吴县', 126, 3), (127, '黑龙江呼玛县', 127, 3), (128, '黑龙江塔河县', 128, 3), (129, '黑龙江漠河县', 129, 3), (130, '黑龙江绥芬河市', 130, 3), (131, '黑龙江省阿城市', 131, 3), (132, '黑龙江同江市', 132, 3), (133, '黑龙江富锦市', 133, 3), (134, '黑龙江铁力市', 134, 3), (135, '黑龙江密山市', 135, 3), (136, '吉林省长春市', 136, 3), (137, '内蒙古呼和浩特市', 137, 3), (138, '内蒙古土默特左旗', 138, 3), (139, '内蒙古托克托县', 139, 3), (140, '内蒙古包头市', 140, 3), (141, '内蒙古土默特右旗', 141, 3), (142, '内蒙古固阳县', 142, 3), (143, '内蒙古乌海市', 143, 3), (144, '内蒙古赤峰市', 144, 3), (145, '内蒙古阿鲁科尔沁旗', 145, 3), (146, '内蒙古巴林左旗', 146, 3), (147, '内蒙古巴林右旗', 147, 3), (148, '内蒙古林西县', 148, 3), (149, '内蒙古克什克腾旗', 149, 3), (150, '内蒙古翁牛特旗', 150, 3), (151, '内蒙古喀喇沁旗', 151, 3), (152, '内蒙古宁城县', 152, 3), (153, '内蒙古敖汉旗', 153, 3), (154, '内蒙古海拉尔市', 154, 3), (155, '内蒙古满州里市', 155, 3), (156, '内蒙古扎兰屯市', 156, 3), (157, '内蒙古牙克石市', 157, 3), (158, '内蒙古阿荣旗', 158, 3), (159, '内蒙古莫力县', 159, 3), (160, '内蒙古额尔古纳右旗', 160, 3), (161, '内蒙古额尔古纳左旗', 161, 3), (162, '内蒙古鄂伦春自治旗', 162, 3), (163, '内蒙古鄂温克族自治旗', 163, 3), (164, '内蒙古新巴尔虎右旗', 164, 3), (165, '内蒙古新巴尔虎左旗', 165, 3), (166, '内蒙古陈巴尔虎旗', 166, 3), (167, '内蒙古乌兰浩特市', 167, 3), (168, '内蒙古科尔沁右翼前旗', 168, 3), (169, '内蒙古科尔沁右翼中旗', 169, 3), (170, '内蒙古扎赉特旗', 170, 3), (171, '内蒙古突泉县', 171, 3), (172, '内蒙古通辽市', 172, 3), (173, '内蒙古霍林郭勒市', 173, 3), (174, '内蒙古科尔沁左翼中旗', 174, 3), (175, '内蒙古科尔沁左翼后旗', 175, 3), (176, '内蒙古开鲁县', 176, 3), (177, '内蒙古库伦旗', 177, 3), (178, '内蒙古奈曼旗', 178, 3), (179, '内蒙古扎鲁特旗', 179, 3), (180, '内蒙古二连浩特市', 180, 3), (181, '内蒙古锡林浩特市', 181, 3), (182, '内蒙古阿巴嘎旗', 182, 3), (183, '内蒙古苏尼特左旗', 183, 3), (184, '内蒙古苏尼特右旗', 184, 3), (185, '内蒙古东乌珠穆沁旗', 185, 3), (186, '内蒙古西乌珠穆沁旗', 186, 3), (187, '内蒙古太仆寺旗', 187, 3), (188, '内蒙古镶黄旗', 188, 3), (189, '内蒙古正镶白旗', 189, 3), (190, '内蒙古正蓝旗', 190, 3), (191, '内蒙古多伦县', 191, 3), (192, '内蒙古集宁市', 192, 3), (193, '内蒙古武川县', 193, 3), (194, '内蒙古和林格尔县', 194, 3), (195, '内蒙古清水河县', 195, 3), (196, '内蒙古卓资县', 196, 3), (197, '内蒙古化德县', 197, 3), (198, '内蒙古商都县', 198, 3), (199, '内蒙古兴和县', 199, 3), (200, '内蒙古丰镇县', 200, 3), (201, '内蒙古凉城县', 201, 3), (202, '内蒙古察哈尔右翼前旗', 202, 3), (203, '内蒙古察哈尔右翼中旗', 203, 3), (204, '内蒙古察哈尔右翼后旗', 204, 3), (205, '内蒙古达尔罕茂明安联', 205, 3), (206, '内蒙古四子王旗', 206, 3), (207, '内蒙古东胜市', 207, 3), (208, '内蒙古达拉特旗', 208, 3), (209, '内蒙古准格尔旗', 209, 3), (210, '内蒙古鄂托克前旗', 210, 3), (211, '内蒙古鄂托克旗', 211, 3), (212, '内蒙古杭锦旗', 212, 3), (213, '内蒙古乌审旗', 213, 3), (214, '内蒙古伊金霍洛旗', 214, 3), (215, '内蒙古临河市', 215, 3), (216, '内蒙古五原县', 216, 3), (217, '内蒙古磴口县', 217, 3), (218, '内蒙古乌拉特前旗', 218, 3), (219, '内蒙古乌拉特中旗', 219, 3), (220, '内蒙古乌拉特后旗', 220, 3), (221, '内蒙古杭锦后旗', 221, 3), (222, '内蒙古阿拉善左旗', 222, 3), (223, '内蒙古阿拉善右旗', 223, 3), (224, '内蒙古额济纳旗', 224, 3), (225, '辽宁省', 225, 3), (226, '辽宁省沈阳市', 226, 3), (227, '辽宁省新民县', 227, 3), (228, '辽宁省辽中县', 228, 3), (229, '辽宁省大连市', 229, 3), (230, '辽宁省新金县', 230, 3), (231, '辽宁省长海县', 231, 3), (232, '辽宁省庄河县', 232, 3), (233, '辽宁省鞍山市', 233, 3), (234, '辽宁省台安县', 234, 3), (235, '辽宁省抚顺市', 235, 3), (236, '辽宁省抚顺县', 236, 3), (237, '辽宁省新宾县', 237, 3), (238, '辽宁省清原县', 238, 3), (239, '辽宁省本溪市', 239, 3), (240, '辽宁省本溪县', 240, 3), (241, '辽宁省桓仁县', 241, 3), (242, '辽宁省丹东市', 242, 3), (243, '辽宁省凤城县', 243, 3), (244, '辽宁省岫岩县', 244, 3), (245, '辽宁省东沟县', 245, 3), (246, '辽宁省宽甸县', 246, 3), (247, '辽宁省锦州市', 247, 3), (248, '辽宁省绥中县', 248, 3), (249, '辽宁省锦  县', 249, 3), (250, '辽宁省北镇县', 250, 3), (251, '辽宁省黑山县', 251, 3), (252, '辽宁省义  县', 252, 3), (253, '辽宁省营口市', 253, 3), (254, '辽宁省营口县', 254, 3), (255, '辽宁省盖  县', 255, 3), (256, '辽宁省阜新市', 256, 3), (257, '辽宁省阜新县', 257, 3), (258, '辽宁省彰武县', 258, 3), (259, '辽宁省辽阳市', 259, 3), (260, '辽宁省辽阳县', 260, 3), (261, '辽宁省灯塔县', 261, 3), (262, '辽宁省盘锦市', 262, 3), (263, '辽宁省大洼县', 263, 3), (264, '辽宁省盘山县', 264, 3), (265, '辽宁省铁岭市', 265, 3), (266, '辽宁省铁岭县', 266, 3), (267, '辽宁省西丰县', 267, 3), (268, '辽宁省昌图县', 268, 3), (269, '辽宁省康平县', 269, 3), (270, '辽宁省法库县', 270, 3), (271, '辽宁省朝阳市', 271, 3), (272, '辽宁省朝阳县', 272, 3), (273, '辽宁省建平县', 273, 3), (274, '辽宁省凌源县', 274, 3), (275, '辽宁省喀喇沁县', 275, 3), (276, '辽宁省建昌县', 276, 3), (277, '辽宁省直辖行政单位', 277, 3), (278, '辽宁省瓦房店市', 278, 3), (279, '辽宁省海城市', 279, 3), (280, '辽宁省锦西市', 280, 3), (281, '辽宁省兴城市', 281, 3), (282, '辽宁省铁法市', 282, 3), (283, '辽宁省北票市', 283, 3), (284, '辽宁省开原市', 284, 3), (285, '吉林省', 285, 3), (286, '吉林省榆树县', 286, 3), (287, '吉林省农安县', 287, 3), (288, '吉林省德惠县', 288, 3), (289, '吉林省双阳县', 289, 3), (290, '吉林省吉林市', 290, 3), (291, '吉林省永吉县', 291, 3), (292, '吉林省舒兰县', 292, 3), (293, '吉林省磐石县', 293, 3), (294, '吉林省蛟河县', 294, 3), (295, '吉林省四平市', 295, 3), (296, '吉林省梨树县', 296, 3), (297, '吉林省伊通县', 297, 3), (298, '吉林省双辽县', 298, 3), (299, '吉林省辽源市', 299, 3), (300, '吉林省东丰县', 300, 3), (301, '吉林省东辽县', 301, 3), (302, '吉林省通化市', 302, 3), (303, '吉林省通化县', 303, 3), (304, '吉林省辉南县', 304, 3), (305, '吉林省柳河县', 305, 3), (306, '吉林省浑江市', 306, 3), (307, '吉林省抚松县', 307, 3), (308, '吉林省靖宇县', 308, 3), (309, '吉林省长白县', 309, 3), (310, '吉林省白城地区', 310, 3), (311, '吉林省白城市', 311, 3), (312, '吉林省洮南市', 312, 3), (313, '吉林省扶余市', 313, 3), (314, '吉林省大安市', 314, 3), (315, '吉林省长岭县', 315, 3), (316, '吉林省前郭尔罗斯县', 316, 3), (317, '吉林省镇赉县', 317, 3), (318, '吉林省通榆县', 318, 3), (319, '吉林省乾安县', 319, 3), (320, '吉林省延吉市', 320, 3), (321, '吉林省图们市', 321, 3), (322, '吉林省敦化市', 322, 3), (323, '吉林省珲春市', 323, 3), (324, '吉林省龙井市', 324, 3), (325, '吉林省和龙县', 325, 3), (326, '吉林省汪清县', 326, 3), (327, '吉林省安图县', 327, 3), (328, '吉林省公主岭市', 328, 3), (329, '吉林省梅河口市', 329, 3), (330, '吉林省集安市', 330, 3), (331, '吉林省桦甸市', 331, 3), (332, '吉林省九台市', 332, 3), (333, '黑龙江省', 333, 3), (334, '黑龙江哈尔滨市', 334, 3), (335, '黑龙江呼兰县', 335, 3), (336, '黑龙江齐齐哈尔市', 336, 3), (337, '黑龙江龙江县', 337, 3), (338, '黑龙江讷河县', 338, 3), (339, '黑龙江依安县', 339, 3), (340, '黑龙江泰来县', 340, 3), (341, '黑龙江甘南县', 341, 3), (342, '男', 342, 4), (343, '女', 343, 4), (344, '未知', 344, 4), (345, '不明', 345, 4), (346, 'string', 346, 5), (347, 'int', 347, 5), (348, 'double', 348, 5), (349, 'DateTime', 349, 5), (350, 'Date', 350, 5), (351, 'bool', 351, 5);
+COMMIT;
 
-LOCK TABLES `cm_option` WRITE;
-/*!40000 ALTER TABLE `cm_option` DISABLE KEYS */;
-INSERT INTO `cm_option` VALUES (2,'汉族',2,1),(3,'蒙古族',3,1),(4,'回族',4,1),(5,'藏族',5,1),(6,'维吾尔族',6,1),(7,'苗族',7,1),(8,'彝族',8,1),(9,'壮族',9,1),(10,'布依族',10,1),(11,'朝鲜族',11,1),(12,'满族',12,1),(13,'侗族',13,1),(14,'瑶族',14,1),(15,'白族',15,1),(16,'土家族',16,1),(17,'哈尼族',17,1),(18,'哈萨克族',18,1),(19,'傣族',19,1),(20,'黎族',20,1),(21,'傈僳族',21,1),(22,'佤族',22,1),(23,'畲族',23,1),(24,'高山族',24,1),(25,'拉祜族',25,1),(26,'水族',26,1),(27,'东乡族',27,1),(28,'纳西族',28,1),(29,'景颇族',29,1),(30,'柯尔克孜族',30,1),(31,'土族',31,1),(32,'达斡尔族',32,1),(33,'仫佬族',33,1),(34,'羌族',34,1),(35,'布朗族',35,1),(36,'撒拉族',36,1),(37,'毛难族',37,1),(38,'仡佬族',38,1),(39,'锡伯族',39,1),(40,'阿昌族',40,1),(41,'普米族',41,1),(42,'塔吉克族',42,1),(43,'怒族',43,1),(44,'乌孜别克族',44,1),(45,'俄罗斯族',45,1),(46,'鄂温克族',46,1),(47,'德昂族',47,1),(48,'保安族',48,1),(49,'裕固族',49,1),(50,'京族',50,1),(51,'塔塔尔族',51,1),(52,'独龙族',52,1),(53,'鄂伦春族',53,1),(54,'赫哲族',54,1),(55,'门巴族',55,1),(56,'珞巴族',56,1),(57,'基诺族',57,1),(58,'大学',58,2),(59,'高中',59,2),(60,'中学',60,2),(61,'小学',61,2),(62,'硕士',62,2),(63,'博士',63,2),(64,'其他',64,2),(342,'男',342,4),(343,'女',343,4),(344,'未知',344,4),(345,'不明',345,4),(346,'string',346,5),(347,'int',347,5),(348,'double',348,5),(349,'DateTime',349,5),(350,'Date',350,5),(351,'bool',351,5);
-/*!40000 ALTER TABLE `cm_option` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_option_group`
---
-
+-- ----------------------------
+-- Table structure for cm_option_group
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_option_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_option_group` (
+CREATE TABLE `cm_option_group`  (
   `ID` bigint(20) NOT NULL COMMENT '标识',
-  `Name` varchar(255) NOT NULL COMMENT '分组名称',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='基础选项分组';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '分组名称',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '基础选项分组';
 
---
--- Dumping data for table `cm_option_group`
---
+-- ----------------------------
+-- Records of cm_option_group
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_option_group` (`ID`, `Name`) VALUES (1, '民族'), (2, '学历'), (3, '地区'), (4, '性别'), (5, '数据类型');
+COMMIT;
 
-LOCK TABLES `cm_option_group` WRITE;
-/*!40000 ALTER TABLE `cm_option_group` DISABLE KEYS */;
-INSERT INTO `cm_option_group` VALUES (1,'民族'),(2,'学历'),(4,'性别'),(5,'数据类型');
-/*!40000 ALTER TABLE `cm_option_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_params`
---
-
+-- ----------------------------
+-- Table structure for cm_params
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_params`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_params` (
+CREATE TABLE `cm_params`  (
   `ID` bigint(20) NOT NULL COMMENT '用户参数标识',
-  `Name` varchar(255) NOT NULL COMMENT '参数名称',
-  `Value` varchar(255) NOT NULL COMMENT '参数缺省值',
-  `Note` varchar(255) NOT NULL COMMENT '参数描述',
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数名称',
+  `Value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数缺省值',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数描述',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `Name` (`Name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户参数定义';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE INDEX `Name`(`Name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户参数定义';
 
---
--- Dumping data for table `cm_params`
---
+-- ----------------------------
+-- Records of cm_params
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_params` (`ID`, `Name`, `Value`, `Note`, `Ctime`, `Mtime`) VALUES (1, '接收新任务', 'true', '', '2020-12-01 15:13:49', '2020-12-02 09:23:53'), (2, '接收新发布通知', 'true', '', '2020-12-02 09:25:15', '2020-12-02 09:25:15'), (3, '接收新消息', 'true', '接收通讯录消息推送', '2020-12-02 09:24:28', '2020-12-02 09:24:28');
+COMMIT;
 
-LOCK TABLES `cm_params` WRITE;
-/*!40000 ALTER TABLE `cm_params` DISABLE KEYS */;
-INSERT INTO `cm_params` VALUES (1,'接收新任务','true','','2020-12-01 15:13:49','2020-12-02 09:23:53'),(2,'接收新发布通知','true','','2020-12-02 09:25:15','2020-12-02 09:25:15'),(3,'接收新消息','true','接收通讯录消息推送','2020-12-02 09:24:28','2020-12-02 09:24:28');
-/*!40000 ALTER TABLE `cm_params` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_permission`
---
-
+-- ----------------------------
+-- Table structure for cm_permission
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_permission`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_permission` (
+CREATE TABLE `cm_permission`  (
   `ID` bigint(20) NOT NULL COMMENT '权限标识',
-  `Name` varchar(64) NOT NULL COMMENT '权限名称',
-  `Note` varchar(255) DEFAULT NULL COMMENT '权限描述',
-  PRIMARY KEY (`ID`),
-  UNIQUE KEY `idx_permission_name` (`Name`) COMMENT '不重复'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_permission`
---
-
-LOCK TABLES `cm_permission` WRITE;
-/*!40000 ALTER TABLE `cm_permission` DISABLE KEYS */;
-INSERT INTO `cm_permission` VALUES (1,'公共文件管理','禁止删除'),(2,'素材库管理','禁止删除');
-/*!40000 ALTER TABLE `cm_permission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_album`
---
-
-DROP TABLE IF EXISTS `cm_pub_album`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_album` (
-  `ID` bigint(20) NOT NULL COMMENT '专辑标识',
-  `Name` varchar(255) NOT NULL COMMENT '名称',
-  `Creator` varchar(32) NOT NULL COMMENT '创建人',
-  `Ctime` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章专辑';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_album`
---
-
-LOCK TABLES `cm_pub_album` WRITE;
-/*!40000 ALTER TABLE `cm_pub_album` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_album` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_comment`
---
-
-DROP TABLE IF EXISTS `cm_pub_comment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_comment` (
-  `ID` bigint(20) NOT NULL COMMENT '评论标识',
-  `PostID` bigint(20) NOT NULL COMMENT '文章标识',
-  `Content` varchar(4000) NOT NULL COMMENT '评论内容',
-  `UserID` bigint(20) NOT NULL COMMENT '评论人标识',
-  `UserName` varchar(64) NOT NULL COMMENT '评论人',
-  `Ctime` datetime NOT NULL COMMENT '评论时间',
-  `IsSpam` tinyint(1) NOT NULL COMMENT '是否为垃圾评论',
-  `ParentID` bigint(20) DEFAULT NULL COMMENT '上级评论标识',
-  `Support` int(11) NOT NULL COMMENT '对该评论的支持数',
-  `Oppose` int(11) NOT NULL COMMENT '对该评论的反对数',
-  PRIMARY KEY (`ID`),
-  KEY `fk_comment_postid` (`PostID`),
-  KEY `fk_comment_parentid` (`ParentID`),
-  CONSTRAINT `fk_comment_parentid` FOREIGN KEY (`ParentID`) REFERENCES `cm_pub_comment` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_comment_postid` FOREIGN KEY (`PostID`) REFERENCES `cm_pub_post` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评论信息';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_comment`
---
-
-LOCK TABLES `cm_pub_comment` WRITE;
-/*!40000 ALTER TABLE `cm_pub_comment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_comment` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_keyword`
---
-
-DROP TABLE IF EXISTS `cm_pub_keyword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_keyword` (
-  `ID` varchar(32) NOT NULL COMMENT '关键字',
-  `Creator` varchar(32) NOT NULL COMMENT '创建人',
-  `Ctime` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='关键字';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_keyword`
---
-
-LOCK TABLES `cm_pub_keyword` WRITE;
-/*!40000 ALTER TABLE `cm_pub_keyword` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_keyword` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_post`
---
-
-DROP TABLE IF EXISTS `cm_pub_post`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_post` (
-  `ID` bigint(20) NOT NULL COMMENT '文章标识',
-  `Title` varchar(255) NOT NULL COMMENT '标题',
-  `Cover` varchar(1024) NOT NULL COMMENT '封面',
-  `Summary` varchar(512) NOT NULL COMMENT '摘要',
-  `Content` text NOT NULL COMMENT '内容',
-  `TempType` tinyint(4) unsigned NOT NULL COMMENT '#PostTempType#在列表中显示时的模板类型',
-  `IsPublish` tinyint(1) NOT NULL COMMENT '是否发布',
-  `AllowCoverClick` tinyint(1) NOT NULL COMMENT '封面可点击',
-  `AllowComment` tinyint(1) NOT NULL COMMENT '是否允许评论',
-  `AddAlbumLink` tinyint(1) NOT NULL COMMENT '文章末尾是否添加同专辑链接',
-  `AddKeywordLink` tinyint(1) NOT NULL COMMENT '文章末尾是否添加同关键字链接',
-  `Url` varchar(128) NOT NULL COMMENT '文章地址',
-  `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
-  `CreatorID` bigint(20) NOT NULL COMMENT '创建人ID',
-  `Creator` varchar(32) NOT NULL COMMENT '创建人',
-  `Ctime` datetime NOT NULL COMMENT '创建时间',
-  `LastEditorID` bigint(20) DEFAULT NULL COMMENT '最后编辑人ID',
-  `LastEditor` varchar(32) DEFAULT NULL COMMENT '最后编辑人',
-  `Mtime` datetime DEFAULT NULL COMMENT '最后修改时间',
-  `ReadCount` int(11) NOT NULL COMMENT '阅读次数',
-  `CommentCount` int(11) NOT NULL COMMENT '评论总数',
-  PRIMARY KEY (`ID`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='文章/帖子';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_post`
---
-
-LOCK TABLES `cm_pub_post` WRITE;
-/*!40000 ALTER TABLE `cm_pub_post` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_post` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_post_album`
---
-
-DROP TABLE IF EXISTS `cm_pub_post_album`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_post_album` (
-  `PostID` bigint(20) NOT NULL COMMENT '文章标识',
-  `AlbumID` bigint(20) NOT NULL COMMENT '专辑标识',
-  PRIMARY KEY (`PostID`,`AlbumID`) USING BTREE,
-  KEY `fk_postalbum_albumid` (`AlbumID`),
-  KEY `fk_postalbum_postid` (`PostID`) USING BTREE,
-  CONSTRAINT `fk_postalbum_albumid` FOREIGN KEY (`AlbumID`) REFERENCES `cm_pub_album` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_postalbum_postid` FOREIGN KEY (`PostID`) REFERENCES `cm_pub_post` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_post_album`
---
-
-LOCK TABLES `cm_pub_post_album` WRITE;
-/*!40000 ALTER TABLE `cm_pub_post_album` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_post_album` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_pub_post_keyword`
---
-
-DROP TABLE IF EXISTS `cm_pub_post_keyword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_pub_post_keyword` (
-  `PostID` bigint(20) NOT NULL COMMENT '文章标识',
-  `Keyword` varchar(32) NOT NULL COMMENT '关键字',
-  PRIMARY KEY (`PostID`,`Keyword`) USING BTREE,
-  KEY `fk_postkw_postid` (`PostID`) USING BTREE,
-  KEY `fk_postkw_keyword` (`Keyword`),
-  CONSTRAINT `fk_postkw_keyword` FOREIGN KEY (`Keyword`) REFERENCES `cm_pub_keyword` (`ID`),
-  CONSTRAINT `fk_postkw_postid` FOREIGN KEY (`PostID`) REFERENCES `cm_pub_post` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_pub_post_keyword`
---
-
-LOCK TABLES `cm_pub_post_keyword` WRITE;
-/*!40000 ALTER TABLE `cm_pub_post_keyword` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_pub_post_keyword` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_role`
---
-
-DROP TABLE IF EXISTS `cm_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_role` (
-  `ID` bigint(20) NOT NULL COMMENT '角色标识',
-  `Name` varchar(32) NOT NULL COMMENT '角色名称',
-  `Note` varchar(255) DEFAULT NULL COMMENT '角色描述',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '权限名称',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限描述',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_role_name` (`Name`) COMMENT '不重复'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE INDEX `idx_permission_name`(`Name`) USING BTREE COMMENT '不重复'
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '权限';
 
---
--- Dumping data for table `cm_role`
---
+-- ----------------------------
+-- Records of cm_permission
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_permission` (`ID`, `Name`, `Note`) VALUES (1, '公共文件管理', '禁止删除'), (2, '素材库管理', '禁止删除');
+COMMIT;
 
-LOCK TABLES `cm_role` WRITE;
-/*!40000 ALTER TABLE `cm_role` DISABLE KEYS */;
-INSERT INTO `cm_role` VALUES (1,'任何人','所有用户默认都具有该角色，不可删除'),(2,'系统管理员','系统角色，不可删除');
-/*!40000 ALTER TABLE `cm_role` ENABLE KEYS */;
-UNLOCK TABLES;
+-- ----------------------------
+-- Table structure for cm_role
+-- ----------------------------
+DROP TABLE IF EXISTS `cm_role`;
+CREATE TABLE `cm_role`  (
+  `ID` bigint(20) NOT NULL COMMENT '角色标识',
+  `Name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '角色名称',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色描述',
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE INDEX `idx_role_name`(`Name`) USING BTREE COMMENT '不重复'
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色';
 
---
--- Table structure for table `cm_role_menu`
---
+-- ----------------------------
+-- Records of cm_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_role` (`ID`, `Name`, `Note`) VALUES (1, '任何人', '所有用户默认都具有该角色，不可删除'), (2, '系统管理员', '系统角色，不可删除');
+COMMIT;
 
+-- ----------------------------
+-- Table structure for cm_role_menu
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_role_menu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_role_menu` (
+CREATE TABLE `cm_role_menu`  (
   `RoleID` bigint(20) NOT NULL COMMENT '角色标识',
   `MenuID` bigint(20) NOT NULL COMMENT '菜单标识',
-  PRIMARY KEY (`RoleID`,`MenuID`) USING BTREE,
-  KEY `fk_rolemenu_menuid` (`MenuID`),
-  KEY `fk_rolemenu_roleid` (`RoleID`),
+  PRIMARY KEY (`RoleID`, `MenuID`) USING BTREE,
+  INDEX `fk_rolemenu_menuid`(`MenuID`) USING BTREE,
+  INDEX `fk_rolemenu_roleid`(`RoleID`) USING BTREE,
   CONSTRAINT `fk_rolemenu_menuid` FOREIGN KEY (`MenuID`) REFERENCES `cm_menu` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_rolemenu_roleid` FOREIGN KEY (`RoleID`) REFERENCES `cm_role` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色一菜单多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色一菜单多对多';
 
---
--- Dumping data for table `cm_role_menu`
---
+-- ----------------------------
+-- Records of cm_role_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_role_menu` (`RoleID`, `MenuID`) VALUES (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (1, 7), (1, 8), (1, 9), (2, 10);
+COMMIT;
 
-LOCK TABLES `cm_role_menu` WRITE;
-/*!40000 ALTER TABLE `cm_role_menu` DISABLE KEYS */;
-INSERT INTO `cm_role_menu` VALUES (2,2),(2,3),(2,4),(2,5),(2,6),(1,7),(1,8),(1,9),(2,10),(2,11);
-/*!40000 ALTER TABLE `cm_role_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_role_per`
---
-
+-- ----------------------------
+-- Table structure for cm_role_per
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_role_per`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_role_per` (
+CREATE TABLE `cm_role_per`  (
   `RoleID` bigint(20) NOT NULL COMMENT '角色标识',
   `PerID` bigint(20) NOT NULL COMMENT '权限标识',
-  PRIMARY KEY (`RoleID`,`PerID`),
-  KEY `fk_roleper_perid` (`PerID`),
-  KEY `fk_roleper_roleid` (`RoleID`),
+  PRIMARY KEY (`RoleID`, `PerID`) USING BTREE,
+  INDEX `fk_roleper_perid`(`PerID`) USING BTREE,
+  INDEX `fk_roleper_roleid`(`RoleID`) USING BTREE,
   CONSTRAINT `fk_roleper_perid` FOREIGN KEY (`PerID`) REFERENCES `cm_permission` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_roleper_roleid` FOREIGN KEY (`RoleID`) REFERENCES `cm_role` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色一权限多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色一权限多对多';
 
---
--- Dumping data for table `cm_role_per`
---
+-- ----------------------------
+-- Records of cm_role_per
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_role_per` (`RoleID`, `PerID`) VALUES (1, 1), (1, 2);
+COMMIT;
 
-LOCK TABLES `cm_role_per` WRITE;
-/*!40000 ALTER TABLE `cm_role_per` DISABLE KEYS */;
-INSERT INTO `cm_role_per` VALUES (1,1),(1,2);
-/*!40000 ALTER TABLE `cm_role_per` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_rpt`
---
-
+-- ----------------------------
+-- Table structure for cm_rpt
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_rpt`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_rpt` (
+CREATE TABLE `cm_rpt`  (
   `ID` bigint(20) NOT NULL COMMENT '报表标识',
-  `Name` varchar(64) NOT NULL COMMENT '报表名称',
-  `Define` varchar(21000) NOT NULL COMMENT '报表模板定义',
-  `Note` varchar(255) NOT NULL COMMENT '报表描述',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报表名称',
+  `Define` varchar(21000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报表模板定义',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '报表描述',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_rpt_name` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报表模板定义';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE INDEX `idx_rpt_name`(`Name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '报表模板定义';
 
---
--- Dumping data for table `cm_rpt`
---
 
-LOCK TABLES `cm_rpt` WRITE;
-/*!40000 ALTER TABLE `cm_rpt` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_rpt` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_sql`
---
-
-DROP TABLE IF EXISTS `cm_sql`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_sql` (
-  `id` varchar(128) NOT NULL COMMENT 'sql键值',
-  `sql` varchar(20000) NOT NULL COMMENT 'sql内容',
-  `note` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='服务的sql语句';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cm_sql`
---
-
-LOCK TABLES `cm_sql` WRITE;
-/*!40000 ALTER TABLE `cm_sql` DISABLE KEYS */;
-INSERT INTO `cm_sql` VALUES ('个人文件-子级文件夹','select * from cm_file_my where isfolder=1 and parentid=@parentid',NULL),('个人文件-子项个数','select count(*) from cm_file_my where parentid=@parentid',NULL),('个人文件-所有子级','select * from cm_file_my where parentid=@parentid',NULL),('个人文件-扩展名过滤子级','select\r\n	* \r\nfrom\r\n	cm_file_my \r\nwhere\r\n	parentid = @parentid \r\n	and ( isfolder = 1 or locate( extname, @extname ) )',NULL),('个人文件-扩展名过滤根目录','select\r\n	* \r\nfrom\r\n	cm_file_my \r\nwhere\r\n	parentid is null \r\n	and userid = @userid \r\n	and ( isfolder = 1 or locate( extname, @extname ) )',NULL),('个人文件-搜索文件','select * from cm_file_my where isfolder=0 and userid=@userid and name like @name limit 20',NULL),('个人文件-根文件夹','select * from cm_file_my where isfolder=1 and parentid is null and userid=@userid',NULL),('个人文件-根目录','select * from cm_file_my where parentid is null and userid=@userid',NULL),('分组-关联用户','SELECT\r\n	id,\r\n	NAME,\r\n	phone \r\nFROM\r\n	cm_user a \r\nWHERE\r\n	EXISTS ( SELECT UserID FROM cm_user_group b WHERE a.ID = b.UserID AND GroupID = @ReleatedID )',NULL),('分组-关联角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	EXISTS ( SELECT RoleID FROM cm_group_role b WHERE a.ID = b.RoleID AND GroupID = @ReleatedID )',NULL),('分组-分组列表的用户','SELECT DISTINCT(userid) FROM cm_user_group where FIND_IN_SET(groupid, @groupid)',NULL),('分组-未关联的用户','SELECT\r\n	id,\r\n	NAME,\r\n	phone \r\nFROM\r\n	cm_user a \r\nWHERE\r\n	NOT EXISTS ( SELECT UserID FROM cm_user_group b WHERE a.ID = b.UserID AND GroupID = @ReleatedID )',NULL),('分组-未关联的角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	NOT EXISTS ( SELECT RoleID FROM cm_group_role b WHERE a.ID = b.RoleID AND GroupID = @ReleatedID )\r\n	 and a.ID!=1',NULL),('参数-用户参数值ByID','SELECT VALUE FROM cm_user_params WHERE userid = @userid and paramid = @paramid\r\nUNION\r\nSELECT VALUE FROM cm_params a  WHERE id = @paramid',NULL),('参数-用户参数值ByName','SELECT a.VALUE FROM cm_user_params a, cm_params b WHERE a.paramid=b.id and a.userid = @userid and b.name = @name\r\nUNION\r\nSELECT VALUE FROM cm_params a  WHERE name = @name',NULL),('参数-用户参数列表','SELECT paramid,VALUE FROM cm_user_params WHERE userid = @userid\r\n	UNION\nSELECT id,VALUE FROM cm_params a  WHERE\n	NOT EXISTS ( SELECT paramid FROM cm_user_params b WHERE a.id = b.paramid AND userid = @userid )\n',NULL),('参数-重复名称','select count(*) from cm_params where name=@name',NULL),('发布-专辑引用数','select count(*) from cm_pub_post_album where albumid=@albumid',NULL),('发布-关键字引用数','select count(*) from cm_pub_post_keyword where keyword=@keyword',NULL),('发布-模糊查询专辑','select * from cm_pub_album where name like @name',NULL),('发布-模糊查询关键字','select * from cm_pub_keyword where id like @id',NULL),('报表-最近修改','SELECT\r\n	id,name,note,ctime,mtime\r\nFROM\r\n	cm_rpt\r\nWHERE\r\n	to_days(now()) - to_days(mtime) <= 2',NULL),('报表-模板','select define from cm_rpt where id=@id',NULL),('报表-模糊查询',' SELECT\r\n	id,name,note,ctime,mtime\r\nFROM\r\n	cm_rpt\r\nWHERE\r\n	NAME LIKE @input',NULL),('报表-重复名称','select count(*) from cm_rpt where name=@name',NULL),('文件-子级文件夹','select * from cm_file_pub where isfolder=1 and parentid=@parentid',NULL),('文件-子项个数','select count(*) from cm_file_pub where parentid=@parentid',NULL),('文件-所有子级','select * from cm_file_pub where parentid=@parentid',NULL),('文件-扩展名过滤子级','select\r\n	* \r\nfrom\r\n	cm_file_pub \r\nwhere\r\n	parentid = @parentid \r\n	and ( isfolder = 1 or locate( extname, @extname ) )',NULL),('文件-搜索所有文件','select\r\n	info \r\nfrom\r\n	cm_file_pub \r\nwhere\r\n	isfolder = 0 \r\n	and name like @name union\r\nselect\r\n	info \r\nfrom\r\n	cm_file_my \r\nwhere\r\n	isfolder = 0 \r\n	and userid = @userid \r\n	and name like @name \r\n	limit 20',NULL),('文件-搜索扩展名文件','select\r\n	info \r\nfrom\r\n	cm_file_pub \r\nwhere\r\n	isfolder = 0 \r\n	and locate( extname, @extname ) \r\n	and name like @name union\r\nselect\r\n	info \r\nfrom\r\n	cm_file_my \r\nwhere\r\n	isfolder = 0 \r\n	and locate( extname, @extname ) \r\n	and userid = @userid \r\n	and name like @name \r\n	limit 20',NULL),('文件-搜索文件','select * from cm_file_pub where isfolder=0 and name like @name limit 20',NULL),('文章-已选专辑','select\r\n	a.id,\r\n	a.name \r\nfrom\r\n	cm_pub_album a\r\n	inner join cm_pub_post_album b on a.id = b.albumid \r\nwhere\r\n	b.postid = @postid',NULL),('文章-已选关键字','select keyword from cm_pub_post_keyword where postid=@postid',NULL),('文章-未选专辑','select\r\n	id,\r\n	name\r\nfrom\r\n	cm_pub_album a \r\nwhere\r\n	not exists ( select albumid from cm_pub_post_album where albumid = a.id and postid = @postid )',NULL),('文章-未选关键字','select\r\n	id \r\nfrom\r\n	cm_pub_keyword a \r\nwhere\r\n	not exists ( select keyword from cm_pub_post_keyword where keyword = a.id and postid = @postid )',NULL),('文章-模糊查询','select\r\n	ID,\r\n	Title,\r\n	IsPublish,\r\n	Dispidx,\r\n	Creator,\r\n	Ctime,\r\n	ReadCount,\r\n	CommentCount \r\nfrom\r\n	cm_pub_post\r\nwhere\r\n	Title like @input\r\norder by\r\n	Dispidx desc',NULL),('文章-管理列表','select\r\n	ID,\r\n	Title,\r\n	IsPublish,\r\n	Dispidx,\r\n	Creator,\r\n	Ctime,\r\n	ReadCount,\r\n	CommentCount \r\nfrom\r\n	cm_pub_post \r\norder by\r\n	Dispidx desc',NULL),('文章-编辑','select\r\n	a.*,\r\n	( CASE a.TempType WHEN 0 THEN \'普通\' WHEN 1 THEN \'封面标题混合\' ELSE \'普通\' END ) TempType_dsp \r\nfrom\r\n	cm_pub_post a \r\nwhere\r\n	id = @id',NULL),('权限-关联用户','select distinct (c.name)\r\n  from cm_role_prv a, cm_user_role b, cm_user c\r\n where a.roleid = b.roleid\r\n   and b.userid = c.id\r\n   and a.prvid = @prvid\r\n order by c.name',NULL),('权限-关联角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	EXISTS ( SELECT RoleID FROM cm_role_per b WHERE a.ID = b.RoleID AND PerID = @ReleatedID )',NULL),('权限-名称重复','select count(id) from cm_permission where name=@name',NULL),('权限-未关联的角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	NOT EXISTS ( SELECT RoleID FROM cm_role_per b WHERE a.ID = b.RoleID AND PerID = @ReleatedID )',NULL),('流程-前一活动执行者','select distinct\r\n	userid \r\nfrom\r\n	cm_wfi_item \r\nwhere\r\n	atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = @atvdid ) )',NULL),('流程-前一活动的同部门执行者','select distinct\r\n	userid \r\nfrom\r\n	cm_xemp \r\nwhere\r\n	depid in (\r\nselect distinct\r\n	depid \r\nfrom\r\n	cm_xemp \r\nwhere\r\n	userid in (\r\nselect\r\n	userid \r\nfrom\r\n	cm_wfi_item \r\nwhere\r\n	atviid in ( select ID from cm_wfi_atv where prciid = @prciId and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = @atvdid ) ) \r\n	) \r\n	)',NULL),('流程-历史任务','select wi.id itemid,\r\n			 pi.id prciid,\r\n			 pd.id prcdid,\r\n			 ad.id atvdid,\r\n			 ai.id atviid,\r\n			 pd.name prcname,\r\n			 ( CASE pi.status WHEN 1 THEN \'已结束\' WHEN 2 THEN \'已终止\' ELSE ad.name END ) as atvname,\r\n			 pi.status,\r\n			 pi.name formname,\r\n			 wi.sender,\r\n			 wi.stime,\r\n			 max(wi.mtime) mtime,\r\n			 wi.reCount\r\n	from cm_wfi_atv ai,\r\n			 cm_wfi_prc pi,\r\n			 cm_wfd_atv ad,\r\n			 cm_wfd_prc pd,\r\n			 (select id,\r\n							 atviid,\r\n							 mtime,\r\n							 sender,\r\n							 stime,\r\n							 (select count(1)\r\n									from cm_wfi_item\r\n								 where atviid = t.atviid\r\n									 and AssignKind = 4\r\n									 and id <> t.id) as reCount\r\n					from cm_wfi_item t\r\n				 where status = 1\r\n					 and userid = @userID\r\n					 and (@start < \'1900-01-01\' or mtime >= @start)\r\n					 and (@end < \'1900-01-01\' or mtime <= @end)\r\n					 order by mtime desc) wi\r\n where wi.atviid = ai.id\r\n	 and ai.prciid = pi.id\r\n	 and pi.prcdid = pd.id\r\n	 and ai.atvdid = ad.id\r\n	 and wi.reCount = 0\r\n	 and (@status > 2 or pi.status = @status)\r\n group by prciid\r\n order by wi.stime desc',NULL),('流程-参与的流程','select distinct\r\n	p.id,\r\n	p.name\r\nfrom\r\n	cm_wfd_prc p,\r\n	cm_wfd_atv a,\r\n	cm_wfd_atv_role r,\r\n	cm_user_role u \r\nwhere\r\n	p.id = a.prcid \r\n	and a.id = r.atvid \r\n	and ( r.roleid = u.roleid or r.roleid = 1 ) \r\n	and u.userid = @userID\r\norder by\r\n	p.dispidx',NULL),('流程-可启动流程','select\r\n	pd.id,\r\n	name \r\nfrom\r\n	cm_wfd_prc pd,\r\n	(\r\nselect distinct\r\n	p.id \r\nfrom\r\n	cm_wfd_prc p,\r\n	cm_wfd_atv a,\r\n	cm_wfd_atv_role r,\r\n	cm_user_role u \r\nwhere\r\n	p.id = a.prcid \r\n	and a.id = r.atvid \r\n	and ( r.roleid = u.roleid or r.roleid = 1 ) \r\n	and u.userid = @userid \r\n	and p.islocked = 0 \r\n	and a.type = 1 \r\n	) pa \r\nwhere\r\n	pd.id = pa.id \r\norder by\r\n	dispidx;',NULL),('流程-同步活动实例数','select\r\n	count( * ) \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	prciid = @prciid \r\n	and atvdid = @atvdid',NULL),('流程-后续活动','select\r\n	atv.* \r\nfrom\r\n	cm_wfd_atv atv,\r\n	( select trs.TgtAtvID atvid from cm_wfd_trs trs where trs.SrcAtvID = @atvid and IsRollback = 0 ) trs \r\nwhere\r\n	atv.id = trs.atvid',NULL),('流程-后续活动工作项','select\r\n	a.IsAccept,\r\n	a.Status,\r\n	b.id atviid \r\nfrom\r\n	cm_wfi_item a,\r\n	cm_wfi_atv b \r\nwhere\r\n	a.atviid = b.id \r\n	and b.atvdid in ( select TgtAtvID from cm_wfd_trs d where d.SrcAtvID = @atvdid and d.IsRollback = 0 ) \r\n	and b.prciid = @prciid',NULL),('流程-回退活动实例','select\r\n	* \r\nfrom\r\n	cm_wfi_atv a \r\nwhere\r\n	prciid = @prciid \r\n	and exists ( select TgtAtvID from cm_wfd_trs b where SrcAtvID = @SrcAtvID and b.IsRollback = 1 and a.atvdid = b.TgtAtvID ) \r\norder by\r\n	mtime desc',NULL),('流程-实例id获取模板id','select PrcdID from cm_wfi_prc where id=@id',NULL),('流程-工作项个数','select\r\n	count( * ) \r\nfrom\r\n	cm_wfi_item \r\nwhere\r\n	atviid = @atviid \r\n	and status = 1',NULL),('流程-工作项的活动实例','select\r\n	* \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	id = ( select atviid from cm_wfi_item where id = @itemid )',NULL),('流程-工作项的流程实例','select\r\n	* \r\nfrom\r\n	cm_wfi_prc \r\nwhere\r\n	id = ( select prciid from cm_wfi_atv where id = ( select atviid from cm_wfi_item where id = @itemid ) )',NULL),('流程-已完成活动同部门执行者','select distinct\r\n	userid \r\nfrom\r\n	cm_xemp \r\nwhere\r\n	depid in (\r\nselect distinct\r\n	depid \r\nfrom\r\n	cm_xemp \r\nwhere\r\n	userid in ( select userid from cm_wfi_item where atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid = @atvdid ) ) \r\n	)',NULL),('流程-已完成活动执行者','select distinct\r\n	userid \r\nfrom\r\n	cm_wfi_item \r\nwhere\r\n	atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid = @atvdid )',NULL),('流程-待办任务','select wi.id   itemid,\r\n		 pi.id     prciid,\r\n		 pd.id     prcdid,\r\n		 pd.name   prcname,\r\n		 ad.name   atvname,\r\n		 pi.name   formname,\r\n		 wi.AssignKind,\r\n		 wi.sender,\r\n		 wi.stime,\r\n		 wi.IsAccept\r\nfrom cm_wfi_atv ai,\r\n		 cm_wfd_atv ad,\r\n		 cm_wfi_prc pi,\r\n		 cm_wfd_prc pd,\r\n		 (select id,\r\n						 atviid,\r\n						 sender,\r\n						 stime,\r\n						 IsAccept,\r\n						 AssignKind\r\n				from cm_wfi_item wi\r\n			 where status = 0\r\n				 and (userid = @userID or\r\n						 (userid is null and\r\n						 (exists (select 1\r\n													from cm_user_role\r\n												 where wi.roleid = roleid\r\n													 and userid = @userID)) or\r\n						 roleid = 1))) wi\r\nwhere ai.id = wi.atviid\r\n and ai.atvdid = ad.id\r\n and ai.prciid = pi.id\r\n and pi.prcdid = pd.id\r\norder by wi.stime desc',NULL),('流程-待办任务总数','select\r\n	sum( 1 ) allTask \r\nfrom\r\n	cm_wfi_prc a,\r\n	cm_wfi_atv b,\r\n	cm_wfi_item c \r\nwhere\r\n	a.id = b.prciid \r\n	and b.id = c.atviid \r\n	and c.status = 0 \r\n	and (\r\n	c.userid = @userid \r\n	or ( userid is null and exists ( select 1 from cm_user_role where c.roleid = roleid and userid = @userid ) ) \r\n	)',NULL),('流程-所有未过期用户','select id, name from cm_user where expired = 0',NULL),('流程-所有流程模板','select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc order by Dispidx',NULL),('流程-所有流程模板名称','select\r\n	id,\r\n	name \r\nfrom\r\n	cm_wfd_prc \r\norder by\r\n	dispidx;',NULL),('流程-所有经办历史任务','select wi.id itemid,\r\n			 pi.id prciid,\r\n			 pd.id prcdid,\r\n			 ad.id atvdid,\r\n			 ai.id atviid,\r\n			 pd.name prcname,\r\n			 ad.name atvname,\r\n			 pi.status,\r\n			 pi.name formname,\r\n			 wi.sender,\r\n			 wi.stime,\r\n			 wi.mtime,\r\n			 wi.reCount\r\n	from cm_wfi_atv ai,\r\n			 cm_wfi_prc pi,\r\n			 cm_wfd_atv ad,\r\n			 cm_wfd_prc pd,\r\n			 (select id,\r\n							 atviid,\r\n							 mtime,\r\n							 sender,\r\n							 stime,\r\n							 (select count(1)\r\n									from cm_wfi_item\r\n								 where atviid = t.atviid\r\n									 and AssignKind = 4\r\n									 and id <> t.id) as reCount\r\n					from cm_wfi_item t\r\n				 where status = 1\r\n					 and userid = @userID\r\n					 and (@start < \'1900-01-01\' or mtime >= @start)\r\n					 and (@end < \'1900-01-01\' or mtime <= @end)) wi\r\n	where wi.atviid = ai.id\r\n	 and ai.prciid = pi.id\r\n	 and pi.prcdid = pd.id\r\n	 and ai.atvdid = ad.id\r\n	 and (@status > 2 or pi.status = @status)\r\n	order by wi.stime desc',NULL),('流程-日志目标项','select ( CASE username WHEN NULL THEN rolename ELSE username END ) accpname,\r\n			 atvdname,\r\n			 atvdtype,\r\n			 joinkind,\r\n			 atviid\r\n	from (select a.atviid,\r\n							 (select group_concat(name order by a.dispidx separator \'、\') from cm_user where id = a.userid) as username,\r\n							 (select group_concat(name order by a.dispidx separator \'、\') from cm_role where id = a.roleid) as rolename,\r\n							 max(a.dispidx) dispidx,\r\n							 c.name as atvdname,\r\n							 c.type as atvdtype,\r\n							 c.joinkind\r\n					from cm_wfi_item a,\r\n							 (select ti.TgtAtviID id\r\n									from cm_wfi_atv ai, cm_wfi_trs ti\r\n								 where ai.id = ti.SrcAtviID\r\n									 and ai.prciid = @prciid\r\n									 and ti.SrcAtviID = @atviid) b,\r\n							 cm_wfd_atv c,\r\n							 cm_wfi_atv d\r\n				 where a.atviid = b.id\r\n					 and b.id = d.id\r\n					 and d.atvdid = c.id\r\n				 group by a.atviid, c.name, c.type, c.joinkind) t\r\n order by dispidx',NULL),('流程-是否活动授权任何人','select\r\n	count(*) \r\nfrom\r\n	cm_wfd_atv_role \r\nwhere\r\n	roleid = 1 \r\n	and atvid = @atvid',NULL),('流程-最后工作项','select\r\n	wi.id itemid,\r\n	pi.PrcdID prcid \r\nfrom\r\n	cm_wfi_item wi,\r\n	cm_wfi_atv wa,\r\n	cm_wfi_prc pi \r\nwhere\r\n	wi.atviid = wa.id \r\n	and wa.PrciID = pi.id \r\n	and pi.id = @prciID \r\norder by\r\n	wi.mtime desc \r\n	LIMIT 0,\r\n	1',NULL),('流程-最后已完成活动ID','select\r\n	id \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	prciid = @prciid \r\n	and atvdid = @atvdid \r\n	and status = 1 \r\norder by\r\n	mtime desc',NULL),('流程-最近修改','select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc WHERE to_days(now()) - to_days(mtime) <= 2',NULL),('流程-查找实例','select\r\n	id,\r\n	PrcdID,\r\n	name,\r\n	Status,\r\n	Ctime,\r\n	Mtime \r\nfrom\r\n	cm_wfi_prc \r\nwhere\r\n	PrcdID = @PrcdID \r\n	and ( @Status > 2 or `Status` = @Status ) \r\n	and ( @title = \'\' or name = @title ) \r\n	and ( @start < \'1900-01-01\' or Mtime >= @start ) \r\n	and ( @end < \'1900-01-01\' or Mtime <= @end ) \r\norder by\r\n	dispidx',NULL),('流程-模糊查询','select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc WHERE NAME LIKE @input',NULL),('流程-活动前的迁移','select\r\n	* \r\nfrom\r\n	cm_wfd_trs \r\nwhere\r\n	TgtAtvID = @TgtAtvID',NULL),('流程-活动发送者','select\r\n	sender \r\nfrom\r\n	cm_wfi_item \r\nwhere\r\n	atviid = @atviid \r\norder by\r\n	mtime desc',NULL),('流程-活动实例状态','select\r\n	atvdid,\r\n	status \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	prciid = @prciid \r\norder by\r\n	ctime',NULL),('流程-活动实例的工作项','select\r\n	status,\r\n	AssignKind,\r\n	concat( sender, \' -> \', usr.name ) sendprc,\r\n	IsAccept,\r\n	wi.mtime \r\nfrom\r\n	cm_wfi_item wi\r\n	left join cm_user usr on wi.userid = usr.id \r\nwhere\r\n	atviid = @atviID \r\norder by\r\n	dispidx',NULL),('流程-活动实例的状态','select status \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	atvdid = @atvdid \r\n	and prciid = @prciid',NULL),('流程-活动未关联的角色','SELECT\r\n	a.id,\r\n	a.NAME\r\nFROM\r\n	cm_role a\r\nWHERE\r\n	NOT EXISTS ( SELECT roleid FROM cm_wfd_atv_role b WHERE a.id = b.roleid AND atvid = @atvid )',NULL),('流程-活动的所有执行者','select\r\n	id,\r\nname \r\nfrom\r\n	cm_user u \r\nwhere\r\n	exists (\r\nselect distinct\r\n	( userid ) \r\nfrom\r\n	cm_user_role ur \r\nwhere\r\n	exists ( select roleid from cm_wfd_atv_role ar where ur.roleid = ar.roleid and atvid = @atvid ) \r\n	and u.id = ur.userid \r\n	) \r\norder by\r\nname',NULL),('流程-活动的所有授权角色','select\r\n	id,\r\nname \r\nfrom\r\n	cm_role r \r\nwhere\r\n	exists ( select distinct ( roleid ) from cm_wfd_atv_role ar where r.id = ar.roleid and atvid = @atvid )',NULL),('流程-活动结束的实例数','select\r\n	count( * ) \r\nfrom\r\n	cm_wfi_atv \r\nwhere\r\n	atvdid = @atvdid \r\n	and prciid = @prciid \r\n	and status = 1',NULL),('流程-流程实例数','select count(*) from cm_wfi_prc where PrcdID=@PrcdID',NULL),('流程-流程实例的活动实例','select\r\n	atvi.id,\r\n	atvd.name,\r\n	status,\r\n	instcount \r\nfrom\r\n	cm_wfi_atv atvi,\r\n	cm_wfd_atv atvd \r\nwhere\r\n	atvi.atvdid = atvd.id \r\n	and atvi.prciid = @prciID \r\norder by\r\n	atvi.ctime',NULL),('流程-生成日志列表','select b.prciid,\r\n			 b.id atviid,\r\n			 c.status prcistatus,\r\n			 d.name atvdname,\r\n			 a.AssignKind,\r\n			 a.IsAccept,\r\n			 a.AcceptTime,\r\n			 a.status itemstatus,\r\n			 ( CASE userid WHEN NULL THEN (select name from cm_role t where t.id = a.roleid) ELSE (select name from cm_user t where t.id = a.userid) END ) username,\r\n			 a.note,\r\n			 a.ctime,\r\n			 a.mtime,\r\n			 c.mtime prcitime,\r\n			 a.sender\r\nfrom cm_wfi_item a, cm_wfi_atv b, cm_wfi_prc c, cm_wfd_atv d\r\nwhere a.atviid = b.id\r\n	 and b.prciid = c.id\r\n	 and b.atvdid = d.id\r\n	 and b.prciid = @prciid\r\n	 and (@atvdid = 0 or b.atvdid = @atvdid)\r\norder by a.dispidx',NULL),('流程-编辑活动授权','select\r\n	a.*,\r\n	b.name as role \r\nfrom\r\n	cm_wfd_atv_role a,\r\n	cm_role b \r\nwhere\r\n	a.roleid = b.id \r\n	and atvid in ( select id from cm_wfd_atv where prcid = @prcid )',NULL),('流程-编辑活动模板','select\r\n	a.*,\r\n	( CASE execscope WHEN 0 THEN \'一组用户\' WHEN 1 THEN \'所有用户\' WHEN 2 THEN \'单个用户\' WHEN 3 THEN \'任一用户\' END ) execscope_dsp,\r\n	( CASE execlimit WHEN 0 THEN \'无限制\' WHEN 1 THEN \'前一活动的执行者\' WHEN 2 THEN \'前一活动的同部门执行者\' WHEN 3 THEN \'已完成活动的执行者\' WHEN 4 THEN \'已完成活动的同部门执行者\' END ) execlimit_dsp,\r\n	( CASE JOINKIND WHEN 0 THEN \'全部任务\' WHEN 1 THEN \'任一任务\' WHEN 2 THEN \'即时同步\' END ) joinkind_dsp,\r\n	( CASE transkind WHEN 0 THEN \'自由选择\' WHEN 1 THEN \'全部\' WHEN 2 THEN \'独占式选择\' END ) transkind_dsp,\r\n	( select name from cm_wfd_atv where id = a.execatvid ) as execatvid_dsp \r\nfrom\r\n	cm_wfd_atv a \r\nwhere\r\n	prcid = @prcid',NULL),('流程-编辑流程模板','select * from cm_wfd_prc where id=@prcid',NULL),('流程-编辑迁移模板','select * from cm_wfd_trs where prcid=@prcid',NULL),('流程-获取用户ID','select id from cm_user where name = @name',NULL),('流程-起始活动','select * from cm_wfd_atv where prcid=@prcid and type=1',NULL),('流程-迁移模板ID','select\r\n	ID \r\nfrom\r\n	cm_wfd_trs \r\nwhere\r\n	prcid = @prcid \r\n	and SrcAtvID = @SrcAtvID \r\n	and TgtAtvID = @TgtAtvID \r\n	and IsRollback = @IsRollback',NULL),('流程-重复名称','select count(*) from cm_wfd_prc where name=@name',NULL),('用户-关联分组','select id,name from cm_group a where exists ( select GroupID from cm_user_group b where a.ID = b.GroupID and UserID=@ReleatedID )',NULL),('用户-关联角色','select id,name from cm_role a	where exists ( select RoleID from cm_user_role b where a.ID = b.RoleID and UserID=@ReleatedID )',NULL),('用户-具有的权限','SELECT id, NAME\r\nFROM\r\n	(\r\n		SELECT DISTINCT ( b.id ),\r\n			b.NAME\r\n		FROM\r\n			cm_role_per a\r\n			LEFT JOIN cm_permission b ON a.perid = b.id \r\n		WHERE\r\n			EXISTS (\r\n					SELECT\r\n						roleid \r\n					FROM\r\n						cm_user_role c \r\n					WHERE\r\n						a.roleid = c.roleid \r\n						AND userid = @userid\r\n				  UNION\r\n					SELECT\r\n						roleid \r\n					FROM\r\n						cm_group_role d \r\n					WHERE\r\n						a.roleid = d.roleid \r\n						AND EXISTS ( SELECT groupid FROM cm_user_group e WHERE d.groupid = e.groupid AND e.userid = @userid ) \r\n			) \r\n			OR a.roleid = 1 \r\n	) t \r\nORDER BY\r\n	id',NULL),('用户-可访问的菜单','select id,name\r\n  from (select distinct (b.id), b.name, dispidx\r\n          from cm_role_menu a\r\n          left join cm_menu b\r\n            on a.menuid = b.id\r\n         where exists\r\n         (select roleid\r\n                  from cm_user_role c\r\n                 where a.roleid = c.roleid\r\n                   and userid = @userid\r\n					union\r\n					select roleid\r\n					        from cm_group_role d\r\n									where a.roleid = d.roleid\r\n									  and exists (select groupid from cm_user_group e where d.groupid=e.groupid and e.userid=@userid)\r\n					) or a.roleid=1\r\n			 ) t\r\n order by dispidx',NULL),('用户-未关联的分组','SELECT\r\n	id,\r\n  name \r\nFROM\r\n	cm_group a \r\nWHERE\r\n	NOT EXISTS ( SELECT GroupID FROM cm_user_group b WHERE a.ID = b.GroupID AND UserID = @ReleatedID )',NULL),('用户-未关联的角色','SELECT\r\n	a.id,\r\n	a.NAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	NOT EXISTS ( SELECT RoleID FROM cm_user_role b WHERE a.ID = b.RoleID AND UserID = @ReleatedID ) \r\n	AND a.ID !=1',NULL),('用户-角色列表的用户','SELECT DISTINCT(userid) FROM cm_user_role where FIND_IN_SET(roleid, @roleid)',NULL),('用户-重复手机号','select count(id) from cm_user where phone=@phone',NULL),('登录-手机号获取用户','select * from cm_user where phone=@phone',NULL),('菜单-id菜单项','SELECT\r\n	a.*,\r\n	b.NAME parentname \r\nFROM\r\n	cm_menu a\r\n	LEFT JOIN cm_menu b ON a.parentid = b.id \r\nWHERE\r\n	a.id = @id',NULL),('菜单-关联的角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	EXISTS ( SELECT RoleID FROM cm_role_menu b WHERE a.ID = b.RoleID AND MenuID = @ReleatedID )',NULL),('菜单-分组树','SELECT\r\n	id,\r\n	NAME,\r\n	parentid \r\nFROM\r\n	cm_menu \r\nWHERE\r\n	isgroup = 1 \r\nORDER BY\r\n	dispidx',NULL),('菜单-完整树','SELECT\r\n	id,\r\n	NAME,\r\n	parentid,\r\n	isgroup,\r\n	icon,\r\n	dispidx\r\nFROM\r\n	cm_menu \r\nORDER BY\r\n	dispidx',NULL),('菜单-是否有子菜单','select count(*) from cm_menu where parentid=@parentid',NULL),('菜单-未关联的角色','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_role a \r\nWHERE\r\n	NOT EXISTS ( SELECT RoleID FROM cm_role_menu b WHERE a.ID = b.RoleID AND MenuID = @ReleatedID )',NULL),('角色-关联用户','SELECT\r\n	id,\r\n	NAME,\r\n	phone \r\nFROM\r\n	cm_user a \r\nWHERE\r\n	EXISTS ( SELECT UserID FROM cm_user_role b WHERE a.ID = b.UserID AND RoleID = @ReleatedID ) \r\nORDER BY\r\nNAME',NULL),('角色-关联的分组','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_group a \r\nWHERE\r\n	EXISTS ( SELECT GroupID FROM cm_group_role b WHERE a.ID = b.GroupID AND RoleID = @ReleatedID )',NULL),('角色-关联的权限','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_permission a \r\nWHERE\r\n	EXISTS ( SELECT PerID FROM cm_role_per b WHERE a.ID = b.PerID AND RoleID = @ReleatedID )',NULL),('角色-关联的菜单','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_menu a \r\nWHERE\r\n	EXISTS ( SELECT MenuID FROM cm_role_menu b WHERE a.ID = b.MenuID AND RoleID = @ReleatedID ) \r\nORDER BY\r\n	dispidx',NULL),('角色-名称重复','select count(id) from cm_role where name=@name',NULL),('角色-未关联的分组','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_group a \r\nWHERE\r\n	NOT EXISTS ( SELECT GroupID FROM cm_group_role b WHERE a.ID = b.GroupID AND RoleID = @ReleatedID )',NULL),('角色-未关联的权限','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_permission a \r\nWHERE\r\n	NOT EXISTS ( SELECT PerID FROM cm_role_per b WHERE a.ID = b.PerID AND RoleID = @ReleatedID )',NULL),('角色-未关联的用户','SELECT\r\n	id,\r\n	NAME,\r\n	phone \r\nFROM\r\n	cm_user a \r\nWHERE\r\n	NOT EXISTS ( SELECT UserID FROM cm_user_role b WHERE a.ID = b.UserID AND RoleID = @ReleatedID ) \r\nORDER BY\r\nNAME',NULL),('角色-未关联的菜单','SELECT\r\n	id,\r\nNAME \r\nFROM\r\n	cm_menu a \r\nWHERE\r\n	isgroup = 0 \r\n	AND NOT EXISTS ( SELECT menuid FROM cm_role_menu b WHERE a.id = b.menuid AND roleid = @ReleatedID ) \r\nORDER BY\r\n	dispidx',NULL),('角色-系统角色','select * from cm_role where id < 1000',NULL),('选项-分类选项','SELECT a.*,b.Name as GroupName FROM cm_option a, cm_option_group b where a.GroupID=b.ID and a.GroupID=@ParentID order by Dispidx',NULL),('选项-分组名称重复','select count(*) from cm_option_group where name=@name',NULL),('选项-子项个数','SELECT count(*) FROM cm_option where groupid=@groupid',NULL);
-/*!40000 ALTER TABLE `cm_sql` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_user`
---
-
+-- ----------------------------
+-- Table structure for cm_user
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_user` (
+CREATE TABLE `cm_user`  (
   `ID` bigint(20) NOT NULL COMMENT '用户标识',
-  `Phone` char(11) NOT NULL COMMENT '手机号，唯一',
-  `Name` varchar(32) NOT NULL COMMENT '姓名',
-  `Pwd` char(32) NOT NULL COMMENT '密码的md5',
-  `Sex` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '#Gender#性别',
-  `Photo` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
-  `Expired` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否停用',
+  `Phone` char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '手机号，唯一',
+  `Name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
+  `Pwd` char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码的md5',
+  `Sex` tinyint(4) UNSIGNED NOT NULL DEFAULT 1 COMMENT '#Gender#性别',
+  `Photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '头像',
+  `Expired` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否停用',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_phone` (`Phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统用户';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE INDEX `idx_phone`(`Phone`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统用户';
 
---
--- Dumping data for table `cm_user`
---
+-- ----------------------------
+-- Records of cm_user
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_user` (`ID`, `Phone`, `Name`, `Pwd`, `Sex`, `Photo`, `Expired`, `Ctime`, `Mtime`) VALUES (1, '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', 1, '[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 09:06:38', '2023-03-16 08:35:39'), (2, '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', 2, '[[\"photo/2.jpg\",\"2\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 13:03:19', '2023-03-16 08:36:23'), (3, '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '[[\"photo/3.jpg\",\"3\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '0001-01-01 00:00:00', '2023-03-16 08:36:46');
+COMMIT;
 
-LOCK TABLES `cm_user` WRITE;
-/*!40000 ALTER TABLE `cm_user` DISABLE KEYS */;
-INSERT INTO `cm_user` VALUES (1,'13511111111','Windows','af3303f852abeccd793068486a391626',1,'[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]',0,'2019-10-24 09:06:38','2023-03-16 08:35:39'),(2,'13522222222','安卓','b59c67bf196a4758191e42f76670ceba',2,'[[\"photo/2.jpg\",\"2\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]',0,'2019-10-24 13:03:19','2023-03-16 08:36:23'),(3,'13533333333','苹果','674f3c2c1a8a6f90461e8a66fb5550ba',1,'[[\"photo/3.jpg\",\"3\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]',0,'0001-01-01 00:00:00','2023-03-16 08:36:46');
-/*!40000 ALTER TABLE `cm_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_user_group`
---
-
+-- ----------------------------
+-- Table structure for cm_user_group
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_user_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_user_group` (
+CREATE TABLE `cm_user_group`  (
   `UserID` bigint(20) NOT NULL COMMENT '用户标识',
   `GroupID` bigint(20) NOT NULL COMMENT '组标识',
-  PRIMARY KEY (`UserID`,`GroupID`),
-  KEY `fk_usergroup_groupid` (`GroupID`),
-  KEY `fk_usergroup_userid` (`UserID`),
+  PRIMARY KEY (`UserID`, `GroupID`) USING BTREE,
+  INDEX `fk_usergroup_groupid`(`GroupID`) USING BTREE,
+  INDEX `fk_usergroup_userid`(`UserID`) USING BTREE,
   CONSTRAINT `fk_usergroup_groupid` FOREIGN KEY (`GroupID`) REFERENCES `cm_group` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_usergroup_userid` FOREIGN KEY (`UserID`) REFERENCES `cm_user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户一组多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户一组多对多';
 
---
--- Dumping data for table `cm_user_group`
---
 
-LOCK TABLES `cm_user_group` WRITE;
-/*!40000 ALTER TABLE `cm_user_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_user_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_user_params`
---
-
+-- ----------------------------
+-- Table structure for cm_user_params
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_user_params`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_user_params` (
+CREATE TABLE `cm_user_params`  (
   `UserID` bigint(20) NOT NULL COMMENT '用户标识',
   `ParamID` bigint(20) NOT NULL COMMENT '参数标识',
-  `Value` varchar(255) NOT NULL COMMENT '参数值',
+  `Value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '参数值',
   `Mtime` datetime NOT NULL COMMENT '修改时间',
-  PRIMARY KEY (`UserID`,`ParamID`) USING BTREE,
-  KEY `fk_userparams_userid` (`UserID`),
-  KEY `fk_userparams_paramsid` (`ParamID`),
+  PRIMARY KEY (`UserID`, `ParamID`) USING BTREE,
+  INDEX `fk_userparams_userid`(`UserID`) USING BTREE,
+  INDEX `fk_userparams_paramsid`(`ParamID`) USING BTREE,
   CONSTRAINT `fk_userparams_paramsid` FOREIGN KEY (`ParamID`) REFERENCES `cm_params` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_userparams_userid` FOREIGN KEY (`UserID`) REFERENCES `cm_user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户参数值';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户参数值';
 
---
--- Dumping data for table `cm_user_params`
---
 
-LOCK TABLES `cm_user_params` WRITE;
-/*!40000 ALTER TABLE `cm_user_params` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_user_params` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_user_role`
---
-
+-- ----------------------------
+-- Table structure for cm_user_role
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_user_role` (
+CREATE TABLE `cm_user_role`  (
   `UserID` bigint(20) NOT NULL COMMENT '用户标识',
   `RoleID` bigint(20) NOT NULL COMMENT '角色标识',
-  PRIMARY KEY (`UserID`,`RoleID`) USING BTREE,
-  KEY `fk_userrole_userid` (`UserID`),
-  KEY `fk_userrole_roleid` (`RoleID`),
+  PRIMARY KEY (`UserID`, `RoleID`) USING BTREE,
+  INDEX `fk_userrole_userid`(`UserID`) USING BTREE,
+  INDEX `fk_userrole_roleid`(`RoleID`) USING BTREE,
   CONSTRAINT `fk_userrole_roleid` FOREIGN KEY (`RoleID`) REFERENCES `cm_role` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_userrole_userid` FOREIGN KEY (`UserID`) REFERENCES `cm_user` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户一角色多对多';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户一角色多对多';
 
---
--- Dumping data for table `cm_user_role`
---
+-- ----------------------------
+-- Records of cm_user_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `cm_user_role` (`UserID`, `RoleID`) VALUES (1, 2), (2, 2),(3, 2);
+COMMIT;
 
-LOCK TABLES `cm_user_role` WRITE;
-/*!40000 ALTER TABLE `cm_user_role` DISABLE KEYS */;
-INSERT INTO `cm_user_role` VALUES (1,2),(2,2),(3,2);
-/*!40000 ALTER TABLE `cm_user_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfd_atv`
---
-
+-- ----------------------------
+-- Table structure for cm_wfd_atv
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfd_atv`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfd_atv` (
+CREATE TABLE `cm_wfd_atv`  (
   `ID` bigint(20) NOT NULL COMMENT '活动标识',
   `PrcID` bigint(20) NOT NULL COMMENT '流程标识',
-  `Name` varchar(64) NOT NULL COMMENT '活动名称，同时作为状态名称',
-  `Type` tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvType#活动类别 0:普通活动 1:开始活动 2:同步活动 3:结束活动',
-  `ExecScope` tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvExecScope#执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户',
-  `ExecLimit` tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvExecLimit#执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者',
-  `ExecAtvID` bigint(20) DEFAULT NULL COMMENT '在执行者限制为3或4时选择的活动',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '活动名称，同时作为状态名称',
+  `Type` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfdAtvType#活动类别 0:普通活动 1:开始活动 2:同步活动 3:结束活动',
+  `ExecScope` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfdAtvExecScope#执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户',
+  `ExecLimit` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfdAtvExecLimit#执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者',
+  `ExecAtvID` bigint(20) NULL DEFAULT NULL COMMENT '在执行者限制为3或4时选择的活动',
   `AutoAccept` tinyint(1) NOT NULL COMMENT '是否自动签收，打开工作流视图时自动签收工作项',
   `CanDelete` tinyint(1) NOT NULL COMMENT '能否删除流程实例和业务数据，0否 1',
   `CanTerminate` tinyint(1) NOT NULL COMMENT '能否中止流程实例，中止一个流程是流程的一种非正常的结束，0否 1能',
   `CanJumpInto` tinyint(1) NOT NULL COMMENT '是否可作为跳转目标，0不可跳转 1可以',
-  `TransKind` tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvTransKind#当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择',
-  `JoinKind` tinyint(4) unsigned NOT NULL COMMENT '#WfdAtvJoinKind#同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步',
+  `TransKind` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfdAtvTransKind#当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择',
+  `JoinKind` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfdAtvJoinKind#同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '修改时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfdatv_prcid` (`PrcID`),
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfdatv_prcid`(`PrcID`) USING BTREE,
   CONSTRAINT `fk_wfdatv_prcid` FOREIGN KEY (`PrcID`) REFERENCES `cm_wfd_prc` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动模板';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '活动模板';
 
---
--- Dumping data for table `cm_wfd_atv`
---
 
-LOCK TABLES `cm_wfd_atv` WRITE;
-/*!40000 ALTER TABLE `cm_wfd_atv` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfd_atv` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfd_atv_role`
---
-
+-- ----------------------------
+-- Table structure for cm_wfd_atv_role
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfd_atv_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfd_atv_role` (
+CREATE TABLE `cm_wfd_atv_role`  (
   `AtvID` bigint(20) NOT NULL COMMENT '活动标识',
   `RoleID` bigint(20) NOT NULL COMMENT '角色标识',
-  PRIMARY KEY (`AtvID`,`RoleID`),
-  KEY `fk_wfdatvrole_roleid` (`RoleID`),
+  PRIMARY KEY (`AtvID`, `RoleID`) USING BTREE,
+  INDEX `fk_wfdatvrole_roleid`(`RoleID`) USING BTREE,
   CONSTRAINT `fk_wfdatvrole_atvid` FOREIGN KEY (`AtvID`) REFERENCES `cm_wfd_atv` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_wfdatvrole_roleid` FOREIGN KEY (`RoleID`) REFERENCES `cm_role` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动授权';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '活动授权';
 
---
--- Dumping data for table `cm_wfd_atv_role`
---
 
-LOCK TABLES `cm_wfd_atv_role` WRITE;
-/*!40000 ALTER TABLE `cm_wfd_atv_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfd_atv_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfd_prc`
---
-
+-- ----------------------------
+-- Table structure for cm_wfd_prc
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfd_prc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfd_prc` (
+CREATE TABLE `cm_wfd_prc`  (
   `ID` bigint(20) NOT NULL COMMENT '流程标识',
-  `Name` varchar(64) NOT NULL COMMENT '流程名称',
-  `Diagram` varchar(21000) DEFAULT NULL COMMENT '流程图',
+  `Name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流程名称',
+  `Diagram` varchar(21000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '流程图',
   `IsLocked` tinyint(1) NOT NULL COMMENT '锁定标志，0表未锁定；1表锁定，不能创建流程实例，已启动的流程实例继续执行',
   `Singleton` tinyint(1) NOT NULL COMMENT '同一时刻只允许有一个激活的流程实例，0表非单实例，1表单实例',
-  `Note` varchar(255) DEFAULT NULL COMMENT '描述',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后修改时间',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程模板';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程模板';
 
---
--- Dumping data for table `cm_wfd_prc`
---
 
-LOCK TABLES `cm_wfd_prc` WRITE;
-/*!40000 ALTER TABLE `cm_wfd_prc` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfd_prc` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfd_trs`
---
-
+-- ----------------------------
+-- Table structure for cm_wfd_trs
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfd_trs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfd_trs` (
+CREATE TABLE `cm_wfd_trs`  (
   `ID` bigint(20) NOT NULL COMMENT '迁移标识',
   `PrcID` bigint(20) NOT NULL COMMENT '流程模板标识',
   `SrcAtvID` bigint(20) NOT NULL COMMENT '起始活动模板标识',
   `TgtAtvID` bigint(20) NOT NULL COMMENT '目标活动模板标识',
   `IsRollback` tinyint(1) NOT NULL COMMENT '是否为回退迁移',
-  `TrsID` bigint(20) DEFAULT NULL COMMENT '类别为回退迁移时对应的常规迁移标识',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfdtrs_prcid` (`PrcID`),
+  `TrsID` bigint(20) NULL DEFAULT NULL COMMENT '类别为回退迁移时对应的常规迁移标识',
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfdtrs_prcid`(`PrcID`) USING BTREE,
   CONSTRAINT `fk_wfdtrs_prcid` FOREIGN KEY (`PrcID`) REFERENCES `cm_wfd_prc` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='迁移模板';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '迁移模板';
 
---
--- Dumping data for table `cm_wfd_trs`
---
 
-LOCK TABLES `cm_wfd_trs` WRITE;
-/*!40000 ALTER TABLE `cm_wfd_trs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfd_trs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfi_atv`
---
-
+-- ----------------------------
+-- Table structure for cm_wfi_atv
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfi_atv`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfi_atv` (
+CREATE TABLE `cm_wfi_atv`  (
   `ID` bigint(20) NOT NULL COMMENT '活动实例标识',
   `PrciID` bigint(20) NOT NULL COMMENT '流程实例标识',
   `AtvdID` bigint(20) NOT NULL COMMENT '活动模板标识',
-  `Status` tinyint(4) unsigned NOT NULL COMMENT '#WfiAtvStatus#活动实例的状态 0活动 1结束 2终止 3同步活动',
+  `Status` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiAtvStatus#活动实例的状态 0活动 1结束 2终止 3同步活动',
   `InstCount` int(11) NOT NULL COMMENT '活动实例在流程实例被实例化的次数',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后一次状态改变的时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfiatv_prciid` (`PrciID`),
-  KEY `fk_wfiatv_atvdid` (`AtvdID`),
-  CONSTRAINT `fk_wfiatv_atvdid` FOREIGN KEY (`AtvdID`) REFERENCES `cm_wfd_atv` (`ID`),
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfiatv_prciid`(`PrciID`) USING BTREE,
+  INDEX `fk_wfiatv_atvdid`(`AtvdID`) USING BTREE,
+  CONSTRAINT `fk_wfiatv_atvdid` FOREIGN KEY (`AtvdID`) REFERENCES `cm_wfd_atv` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_wfiatv_prciid` FOREIGN KEY (`PrciID`) REFERENCES `cm_wfi_prc` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='活动实例';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '活动实例';
 
---
--- Dumping data for table `cm_wfi_atv`
---
 
-LOCK TABLES `cm_wfi_atv` WRITE;
-/*!40000 ALTER TABLE `cm_wfi_atv` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfi_atv` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfi_item`
---
-
+-- ----------------------------
+-- Table structure for cm_wfi_item
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfi_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfi_item` (
+CREATE TABLE `cm_wfi_item`  (
   `ID` bigint(20) NOT NULL COMMENT '工作项标识',
   `AtviID` bigint(20) NOT NULL COMMENT '活动实例标识',
-  `Status` tinyint(4) unsigned NOT NULL COMMENT '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动',
-  `AssignKind` tinyint(4) unsigned NOT NULL COMMENT '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派',
-  `Sender` varchar(32) NOT NULL COMMENT '发送者',
+  `Status` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动',
+  `AssignKind` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派',
+  `Sender` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '发送者',
   `Stime` datetime NOT NULL COMMENT '发送时间',
   `IsAccept` tinyint(1) NOT NULL COMMENT '是否签收此项任务',
-  `AcceptTime` datetime DEFAULT NULL COMMENT '签收时间',
-  `RoleID` bigint(20) DEFAULT NULL COMMENT '执行者角色标识',
-  `UserID` bigint(20) DEFAULT NULL COMMENT '执行者用户标识',
-  `Note` varchar(255) DEFAULT NULL COMMENT '工作项备注',
+  `AcceptTime` datetime NULL DEFAULT NULL COMMENT '签收时间',
+  `RoleID` bigint(20) NULL DEFAULT NULL COMMENT '执行者角色标识',
+  `UserID` bigint(20) NULL DEFAULT NULL COMMENT '执行者用户标识',
+  `Note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '工作项备注',
   `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后一次状态改变的时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfiitem_atviid` (`AtviID`),
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfiitem_atviid`(`AtviID`) USING BTREE,
   CONSTRAINT `fk_wfiitem_atviid` FOREIGN KEY (`AtviID`) REFERENCES `cm_wfi_atv` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='工作项';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '工作项';
 
---
--- Dumping data for table `cm_wfi_item`
---
 
-LOCK TABLES `cm_wfi_item` WRITE;
-/*!40000 ALTER TABLE `cm_wfi_item` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfi_item` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfi_prc`
---
-
+-- ----------------------------
+-- Table structure for cm_wfi_prc
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfi_prc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfi_prc` (
+CREATE TABLE `cm_wfi_prc`  (
   `ID` bigint(20) NOT NULL COMMENT '流程实例标识，同时为业务数据主键',
   `PrcdID` bigint(20) NOT NULL COMMENT '流程模板标识',
-  `Name` varchar(255) NOT NULL COMMENT '流转单名称',
-  `Status` tinyint(4) unsigned NOT NULL COMMENT '#WfiPrcStatus#流程实例状态 0活动 1结束 2终止',
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '流转单名称',
+  `Status` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiPrcStatus#流程实例状态 0活动 1结束 2终止',
   `Dispidx` int(11) NOT NULL COMMENT '显示顺序',
   `Ctime` datetime NOT NULL COMMENT '创建时间',
   `Mtime` datetime NOT NULL COMMENT '最后一次状态改变的时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfiprc_prcdid` (`PrcdID`),
-  CONSTRAINT `fk_wfiprc_prcdid` FOREIGN KEY (`PrcdID`) REFERENCES `cm_wfd_prc` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='流程实例';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfiprc_prcdid`(`PrcdID`) USING BTREE,
+  CONSTRAINT `fk_wfiprc_prcdid` FOREIGN KEY (`PrcdID`) REFERENCES `cm_wfd_prc` (`ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程实例';
 
---
--- Dumping data for table `cm_wfi_prc`
---
 
-LOCK TABLES `cm_wfi_prc` WRITE;
-/*!40000 ALTER TABLE `cm_wfi_prc` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfi_prc` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cm_wfi_trs`
---
-
+-- ----------------------------
+-- Table structure for cm_wfi_trs
+-- ----------------------------
 DROP TABLE IF EXISTS `cm_wfi_trs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cm_wfi_trs` (
+CREATE TABLE `cm_wfi_trs`  (
   `ID` bigint(20) NOT NULL COMMENT '迁移实例标识',
   `TrsdID` bigint(20) NOT NULL COMMENT '迁移模板标识',
   `SrcAtviID` bigint(20) NOT NULL COMMENT '起始活动实例标识',
   `TgtAtviID` bigint(20) NOT NULL COMMENT '目标活动实例标识',
   `IsRollback` tinyint(1) NOT NULL COMMENT '是否为回退迁移，1表回退',
   `Ctime` datetime NOT NULL COMMENT '迁移时间',
-  PRIMARY KEY (`ID`),
-  KEY `fk_wfitrs_trsdid` (`TrsdID`),
-  KEY `fk_wfitrs_srcatviid` (`SrcAtviID`),
-  KEY `fk_wfitrs_tgtatviid` (`TgtAtviID`),
+  PRIMARY KEY (`ID`) USING BTREE,
+  INDEX `fk_wfitrs_trsdid`(`TrsdID`) USING BTREE,
+  INDEX `fk_wfitrs_srcatviid`(`SrcAtviID`) USING BTREE,
+  INDEX `fk_wfitrs_tgtatviid`(`TgtAtviID`) USING BTREE,
   CONSTRAINT `fk_wfitrs_srcatviid` FOREIGN KEY (`SrcAtviID`) REFERENCES `cm_wfi_atv` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_wfitrs_tgtatviid` FOREIGN KEY (`TgtAtviID`) REFERENCES `cm_wfi_atv` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_wfitrs_trsdid` FOREIGN KEY (`TrsdID`) REFERENCES `cm_wfd_trs` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='迁移实例';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '迁移实例';
 
---
--- Dumping data for table `cm_wfi_trs`
---
 
-LOCK TABLES `cm_wfi_trs` WRITE;
-/*!40000 ALTER TABLE `cm_wfi_trs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cm_wfi_trs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `fsm_file`
---
-
+-- ----------------------------
+-- Table structure for fsm_file
+-- ----------------------------
 DROP TABLE IF EXISTS `fsm_file`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `fsm_file` (
-  `ID` bigint(20) unsigned NOT NULL COMMENT '文件标识',
-  `Name` varchar(512) NOT NULL COMMENT '文件名称',
-  `Path` varchar(512) NOT NULL COMMENT '存放路径：卷/两级目录/id.ext',
-  `Size` bigint(20) unsigned NOT NULL COMMENT '文件长度',
-  `Info` varchar(512) DEFAULT NULL COMMENT '文件描述',
-  `Uploader` bigint(20) unsigned NOT NULL COMMENT '上传人id',
+CREATE TABLE `fsm_file`  (
+  `ID` bigint(20) UNSIGNED NOT NULL COMMENT '文件标识',
+  `Name` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文件名称',
+  `Path` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '存放路径：卷/两级目录/id.ext',
+  `Size` bigint(20) UNSIGNED NOT NULL COMMENT '文件长度',
+  `Info` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件描述',
+  `Uploader` bigint(20) UNSIGNED NOT NULL COMMENT '上传人id',
   `Ctime` datetime NOT NULL COMMENT '上传时间',
-  `Downloads` bigint(20) unsigned NOT NULL COMMENT '下载次数',
+  `Downloads` bigint(20) UNSIGNED NOT NULL COMMENT '下载次数',
   PRIMARY KEY (`ID`) USING BTREE,
-  UNIQUE KEY `idx_fsm_file_path` (`Path`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE INDEX `idx_fsm_file_path`(`Path`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
---
--- Dumping data for table `fsm_file`
---
 
-LOCK TABLES `fsm_file` WRITE;
-/*!40000 ALTER TABLE `fsm_file` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fsm_file` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `fsm_sql`
---
-
-DROP TABLE IF EXISTS `fsm_sql`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `fsm_sql` (
-  `id` varchar(128) NOT NULL COMMENT 'sql键值',
-  `sql` varchar(20000) NOT NULL COMMENT 'sql内容',
-  `note` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `fsm_sql`
---
-
-LOCK TABLES `fsm_sql` WRITE;
-/*!40000 ALTER TABLE `fsm_sql` DISABLE KEYS */;
-INSERT INTO `fsm_sql` VALUES ('上传文件','INSERT INTO fsm_file ( id, NAME, path, size, uploader, info, ctime, downloads )\r\nVALUES\r\n	( @id, @NAME, @path, @size, @uploader, @info, now( ), 0 )',NULL),('增加下载次数','update fsm_file set downloads=downloads+1 where path=@path',NULL);
-/*!40000 ALTER TABLE `fsm_sql` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `msg_sql`
---
-
-DROP TABLE IF EXISTS `msg_sql`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `msg_sql` (
-  `id` varchar(128) NOT NULL COMMENT 'sql键值',
-  `sql` varchar(20000) NOT NULL COMMENT 'sql内容',
-  `note` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `msg_sql`
---
-
-LOCK TABLES `msg_sql` WRITE;
-/*!40000 ALTER TABLE `msg_sql` DISABLE KEYS */;
-/*!40000 ALTER TABLE `msg_sql` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sequence`
---
-
+-- ----------------------------
+-- Table structure for sequence
+-- ----------------------------
 DROP TABLE IF EXISTS `sequence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sequence` (
-  `id` varchar(64) NOT NULL COMMENT '序列名称',
+CREATE TABLE `sequence`  (
+  `id` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '序列名称',
   `val` int(11) NOT NULL COMMENT '序列的当前值',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模拟Sequence';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '模拟Sequence';
 
---
--- Dumping data for table `sequence`
---
+-- ----------------------------
+-- Records of sequence
+-- ----------------------------
+BEGIN;
+INSERT INTO `sequence` (`id`, `val`) VALUES ('cm_menu+dispidx', 89), ('cm_option+dispidx', 1031), ('cm_pub_post+dispidx', 167), ('cm_wfd_prc+dispidx', 11), ('cm_wfi_item+dispidx', 176), ('cm_wfi_prc+dispidx', 65), ('demo_crud+dispidx', 84), ('demo_基础+序列', 11);
+COMMIT;
 
-LOCK TABLES `sequence` WRITE;
-/*!40000 ALTER TABLE `sequence` DISABLE KEYS */;
-INSERT INTO `sequence` VALUES ('cm_menu+dispidx',89),('cm_option+dispidx',1031),('cm_pub_post+dispidx',167),('cm_wfd_prc+dispidx',11),('cm_wfi_item+dispidx',176),('cm_wfi_prc+dispidx',65);
-/*!40000 ALTER TABLE `sequence` ENABLE KEYS */;
-UNLOCK TABLES;
+-- ----------------------------
+-- Procedure structure for cm_参数_用户参数列表
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_参数_用户参数列表`;
+delimiter ;;
+CREATE PROCEDURE `cm_参数_用户参数列表`(`p_userid` bigint)
+BEGIN
 
---
--- Dumping events for database 'initdb'
---
+select paramid,value from cm_user_params where userid =p_userid
+	union
+select id,value from cm_params a  where
+	not exists ( select paramid from cm_user_params b where a.id = b.paramid and userid = p_userid );
+	
+END
+;;
+delimiter ;
 
---
--- Dumping routines for database 'initdb'
---
-/*!50003 DROP FUNCTION IF EXISTS `nextval` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`dt`@`%` FUNCTION `nextval`( v_seq_name VARCHAR ( 200 ) ) RETURNS int(11)
+-- ----------------------------
+-- Procedure structure for cm_参数_用户参数值ByID
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_参数_用户参数值ByID`;
+delimiter ;;
+CREATE PROCEDURE `cm_参数_用户参数值ByID`(`p_userid` bigint,`p_paramid` bigint)
+BEGIN
+	
+select value from cm_user_params where userid = p_userid and paramid = p_paramid
+union
+select value from cm_params a  where id = p_paramid;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_参数_用户参数值ByName
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_参数_用户参数值ByName`;
+delimiter ;;
+CREATE PROCEDURE `cm_参数_用户参数值ByName`(`p_userid` bigint,`p_name` varchar(200))
+BEGIN
+	
+select a.value from cm_user_params a, cm_params b where a.paramid=b.id and a.userid = p_userid and b.name = p_name
+union
+select value from cm_params a  where name = p_name;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_分组_分组列表的用户
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_分组_分组列表的用户`;
+delimiter ;;
+CREATE PROCEDURE `cm_分组_分组列表的用户`(`p_groupid` VARCHAR(4000))
+BEGIN
+	
+select distinct(userid) from cm_user_group where find_in_set(groupid, p_groupid);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_编辑活动模板
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_编辑活动模板`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_编辑活动模板`(`p_prcid` bigint)
+BEGIN
+
+select
+	a.*,
+	( CASE execscope WHEN 0 THEN '一组用户' WHEN 1 THEN '所有用户' WHEN 2 THEN '单个用户' WHEN 3 THEN '任一用户' END ) execscope_dsp,
+	( CASE execlimit WHEN 0 THEN '无限制' WHEN 1 THEN '前一活动的执行者' WHEN 2 THEN '前一活动的同部门执行者' WHEN 3 THEN '已完成活动的执行者' WHEN 4 THEN '已完成活动的同部门执行者' END ) execlimit_dsp,
+	( CASE JOINKIND WHEN 0 THEN '全部任务' WHEN 1 THEN '任一任务' WHEN 2 THEN '即时同步' END ) joinkind_dsp,
+	( CASE transkind WHEN 0 THEN '自由选择' WHEN 1 THEN '全部' WHEN 2 THEN '独占式选择' END ) transkind_dsp,
+	( select name from cm_wfd_atv where id = a.execatvid ) as execatvid_dsp 
+from
+	cm_wfd_atv a 
+where
+	prcid = p_prcid;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_参与的流程
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_参与的流程`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_参与的流程`(p_userid bigint)
+BEGIN
+
+select distinct
+	p.id,
+	p.name
+from
+	cm_wfd_prc p,
+	cm_wfd_atv a,
+	cm_wfd_atv_role r,
+	cm_user_role u 
+where
+	p.id = a.prcid 
+	and a.id = r.atvid 
+	and ( r.roleid = u.roleid or r.roleid = 1 ) 
+	and u.userid = p_userid
+order by
+	p.dispidx;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_查找实例
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_查找实例`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_查找实例`(p_prcdid bigint, p_start datetime, p_end datetime, p_status int, p_title VARCHAR(200))
+BEGIN
+
+select
+	id,
+	PrcdID,
+	name,
+	Status,
+	Ctime,
+	Mtime 
+from
+	cm_wfi_prc 
+where
+	PrcdID = p_prcdid 
+	and ( p_status > 2 or `Status` = p_status ) 
+	and ( p_title = '' or name = p_title ) 
+	and ( p_start < '1900-01-01' or Mtime >= p_start ) 
+	and ( p_end < '1900-01-01' or Mtime <= p_end ) 
+order by
+	dispidx;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_待办任务
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_待办任务`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_待办任务`(p_userid bigint)
+BEGIN
+
+select wi.id   itemid,
+		 pi.id     prciid,
+		 pd.id     prcdid,
+		 pd.name   prcname,
+		 ad.name   atvname,
+		 pi.name   formname,
+		 wi.AssignKind,
+		 wi.sender,
+		 wi.stime,
+		 wi.IsAccept
+from cm_wfi_atv ai,
+		 cm_wfd_atv ad,
+		 cm_wfi_prc pi,
+		 cm_wfd_prc pd,
+		 (select id,
+						 atviid,
+						 sender,
+						 stime,
+						 IsAccept,
+						 AssignKind
+				from cm_wfi_item wi
+			 where status = 0
+				 and (userid = p_userid or
+						 (userid is null and
+						 (exists (select 1
+													from cm_user_role
+												 where wi.roleid = roleid
+													 and userid = p_userid)) or
+						 roleid = 1))) wi
+where ai.id = wi.atviid
+ and ai.atvdid = ad.id
+ and ai.prciid = pi.id
+ and pi.prcdid = pd.id
+order by wi.stime desc;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_待办任务总数
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_待办任务总数`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_待办任务总数`(`p_userid` bigint)
+BEGIN
+	
+select
+	sum( 1 ) allTask 
+from
+	cm_wfi_prc a,
+	cm_wfi_atv b,
+	cm_wfi_item c 
+where
+	a.id = b.prciid 
+	and b.id = c.atviid 
+	and c.status = 0 
+	and 
+	(
+		c.userid = p_userid 
+		or ( userid is null and exists ( select 1 from cm_user_role where c.roleid = roleid and userid = p_userid ) ) 
+	);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_后续活动
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_后续活动`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_后续活动`(p_atvid bigint)
+BEGIN
+
+select
+	atv.* 
+from
+	cm_wfd_atv atv,
+	( select trs.TgtAtvID atvid from cm_wfd_trs trs where trs.SrcAtvID = p_atvid and IsRollback = 0 ) trs 
+where
+	atv.id = trs.atvid;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_后续活动工作项
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_后续活动工作项`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_后续活动工作项`(p_prciid bigint, p_atvdid bigint)
+BEGIN
+
+select
+	a.IsAccept,
+	a.Status,
+	b.id atviid 
+from
+	cm_wfi_item a,
+	cm_wfi_atv b 
+where
+	a.atviid = b.id 
+	and b.atvdid in ( select TgtAtvID from cm_wfd_trs d where d.SrcAtvID = p_atvdid and d.IsRollback = 0 ) 
+	and b.prciid = p_prciid;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_活动实例的工作项
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_活动实例的工作项`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_活动实例的工作项`(`p_atviid` bigint)
+BEGIN
+
+select
+	status,
+	AssignKind,
+	concat( sender, ' -> ', usr.name ) sendprc,
+	IsAccept,
+	wi.mtime 
+from
+	cm_wfi_item wi
+	left join cm_user usr on wi.userid = usr.id 
+where
+	atviid = p_atviid
+order by
+	dispidx;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_可启动流程
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_可启动流程`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_可启动流程`(p_userid bigint)
+BEGIN
+
+select
+	pd.id,
+	name 
+from
+	cm_wfd_prc pd,
+	(
+select distinct
+	p.id 
+from
+	cm_wfd_prc p,
+	cm_wfd_atv a,
+	cm_wfd_atv_role r,
+	cm_user_role u 
+where
+	p.id = a.prcid 
+	and a.id = r.atvid 
+	and ( r.roleid = u.roleid or r.roleid = 1 ) 
+	and u.userid = p_userid
+	and p.islocked = 0 
+	and a.type = 1 
+	) pa 
+where
+	pd.id = pa.id 
+order by
+	dispidx;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_历史任务
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_历史任务`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_历史任务`(p_userid bigint, p_start datetime, p_end datetime, p_status int)
+BEGIN
+
+select wi.id itemid,
+			 pi.id prciid,
+			 pd.id prcdid,
+			 ad.id atvdid,
+			 ai.id atviid,
+			 pd.name prcname,
+			 ( CASE pi.status WHEN 1 THEN '已结束' WHEN 2 THEN '已终止' ELSE ad.name END ) as atvname,
+			 pi.status,
+			 pi.name formname,
+			 wi.sender,
+			 wi.stime,
+			 max(wi.mtime) mtime,
+			 wi.reCount
+	from cm_wfi_atv ai,
+			 cm_wfi_prc pi,
+			 cm_wfd_atv ad,
+			 cm_wfd_prc pd,
+			 (select id,
+							 atviid,
+							 mtime,
+							 sender,
+							 stime,
+							 (select count(1)
+									from cm_wfi_item
+								 where atviid = t.atviid
+									 and AssignKind = 4
+									 and id <> t.id) as reCount
+					from cm_wfi_item t
+				 where status = 1
+					 and userid = p_userid
+					 and (p_start < '1900-01-01' or mtime >= p_start)
+					 and (p_end < '1900-01-01' or mtime <= p_end)
+					 order by mtime desc) wi
+ where wi.atviid = ai.id
+	 and ai.prciid = pi.id
+	 and pi.prcdid = pd.id
+	 and ai.atvdid = ad.id
+	 and wi.reCount = 0
+	 and (p_status > 2 or pi.status = p_status)
+ group by prciid
+ order by wi.stime desc;
+ 
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_前一活动的同部门执行者
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_前一活动的同部门执行者`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_前一活动的同部门执行者`(`p_prciid` bigint,`p_atvdid` bigint)
+BEGIN
+
+select distinct userid from cm_xemp
+where depid in (
+  select distinct depid from cm_xemp
+	where userid in (
+    select userid from cm_wfi_item
+		where atviid in (
+      select ID from cm_wfi_atv
+			where prciid = p_prciid
+	          and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = p_atvdid ))));
+						
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_前一活动执行者
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_前一活动执行者`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_前一活动执行者`(`p_prciid` bigint,`p_atvdid` bigint)
+BEGIN
+
+select distinct userid from cm_wfi_item
+where atviid in (
+  select id from cm_wfi_atv
+	where prciid = p_prciid
+		and atvdid in (select SrcAtvID from cm_wfd_trs where TgtAtvID=p_atvdid));
+		
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_日志目标项
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_日志目标项`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_日志目标项`(p_prciid bigint, p_atviid bigint)
+BEGIN
+
+select ( CASE username WHEN NULL THEN rolename ELSE username END ) accpname,
+			 atvdname,
+			 atvdtype,
+			 joinkind,
+			 atviid
+	from (select a.atviid,
+							 (select group_concat(name order by a.dispidx separator '、') from cm_user where id = a.userid) as username,
+							 (select group_concat(name order by a.dispidx separator '、') from cm_role where id = a.roleid) as rolename,
+							 max(a.dispidx) dispidx,
+							 c.name as atvdname,
+							 c.type as atvdtype,
+							 c.joinkind
+					from cm_wfi_item a,
+							 (select ti.TgtAtviID id
+									from cm_wfi_atv ai, cm_wfi_trs ti
+								 where ai.id = ti.SrcAtviID
+									 and ai.prciid = p_prciid
+									 and ti.SrcAtviID = p_atviid) b,
+							 cm_wfd_atv c,
+							 cm_wfi_atv d
+				 where a.atviid = b.id
+					 and b.id = d.id
+					 and d.atvdid = c.id
+				 group by a.atviid, c.name, c.type, c.joinkind) t
+ order by dispidx;
+ 
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_生成日志列表
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_生成日志列表`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_生成日志列表`(p_prciid bigint, p_atvdid bigint)
+BEGIN
+
+select b.prciid,
+			 b.id atviid,
+			 c.status prcistatus,
+			 d.name atvdname,
+			 a.AssignKind,
+			 a.IsAccept,
+			 a.AcceptTime,
+			 a.status itemstatus,
+			 ( CASE userid WHEN NULL THEN (select name from cm_role t where t.id = a.roleid) ELSE (select name from cm_user t where t.id = a.userid) END ) username,
+			 a.note,
+			 a.ctime,
+			 a.mtime,
+			 c.mtime prcitime,
+			 a.sender
+from cm_wfi_item a, cm_wfi_atv b, cm_wfi_prc c, cm_wfd_atv d
+where a.atviid = b.id
+	 and b.prciid = c.id
+	 and b.atvdid = d.id
+	 and b.prciid = p_prciid
+	 and (p_atvdid = 0 or b.atvdid = p_atvdid)
+order by a.dispidx;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_所有经办历史任务
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_所有经办历史任务`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_所有经办历史任务`(p_userid bigint, p_start datetime, p_end datetime, p_status int)
+BEGIN
+
+select wi.id itemid,
+			 pi.id prciid,
+			 pd.id prcdid,
+			 ad.id atvdid,
+			 ai.id atviid,
+			 pd.name prcname,
+			 ad.name atvname,
+			 pi.status,
+			 pi.name formname,
+			 wi.sender,
+			 wi.stime,
+			 wi.mtime,
+			 wi.reCount
+	from cm_wfi_atv ai,
+			 cm_wfi_prc pi,
+			 cm_wfd_atv ad,
+			 cm_wfd_prc pd,
+			 (select id,
+							 atviid,
+							 mtime,
+							 sender,
+							 stime,
+							 (select count(1)
+									from cm_wfi_item
+								 where atviid = t.atviid
+									 and AssignKind = 4
+									 and id <> t.id) as reCount
+					from cm_wfi_item t
+				 where status = 1
+					 and userid = p_userid
+					 and (p_start < '1900-01-01' or mtime >= p_start)
+					 and (p_end < '1900-01-01' or mtime <= p_end)) wi
+	where wi.atviid = ai.id
+	 and ai.prciid = pi.id
+	 and pi.prcdid = pd.id
+	 and ai.atvdid = ad.id
+	 and (p_status > 2 or pi.status = p_status)
+	order by wi.stime desc;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_已完成活动同部门执行者
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_已完成活动同部门执行者`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_已完成活动同部门执行者`(`p_prciid` bigint,`p_atvdid` bigint)
+BEGIN
+
+select distinct userid from cm_xemp
+where
+	depid in (
+  select distinct depid from cm_xemp
+  where
+	userid in ( select userid from cm_wfi_item where atviid in ( select id from cm_wfi_atv where prciid = p_prciid and atvdid = p_atvdid ) ) 
+	);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_已完成活动执行者
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_已完成活动执行者`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_已完成活动执行者`(`p_prciid` bigint,`p_atvdid` bigint)
+BEGIN
+
+select distinct
+	userid 
+from
+	cm_wfi_item 
+where
+	atviid in ( select id from cm_wfi_atv where prciid = p_prciid and atvdid = p_atvdid );
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_流程_最后工作项
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_流程_最后工作项`;
+delimiter ;;
+CREATE PROCEDURE `cm_流程_最后工作项`(p_prciid bigint)
+BEGIN
+
+select
+	wi.id itemid,
+	pi.PrcdID prcid 
+from
+	cm_wfi_item wi,
+	cm_wfi_atv wa,
+	cm_wfi_prc pi 
+where
+	wi.atviid = wa.id 
+	and wa.PrciID = pi.id 
+	and pi.id = p_prciid
+order by
+	wi.mtime desc 
+	LIMIT 0,
+	1;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_文件_搜索扩展名文件
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_文件_搜索扩展名文件`;
+delimiter ;;
+CREATE PROCEDURE `cm_文件_搜索扩展名文件`(`p_name` varchar(200),`p_userid` bigint,`p_extname` varchar(200))
+BEGIN
+	
+select info from cm_file_pub
+where
+	isfolder = 0 
+	and locate( extname, p_extname ) 
+	and name like p_name
+union
+select info from cm_file_my
+where
+	isfolder = 0 
+	and locate( extname, p_extname ) 
+	and userid = p_userid 
+	and name like p_name 
+	limit 20;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_文件_搜索所有文件
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_文件_搜索所有文件`;
+delimiter ;;
+CREATE PROCEDURE `cm_文件_搜索所有文件`(`p_name` varchar(200),`p_userid` bigint)
+BEGIN
+	
+select info from cm_file_pub where isfolder=0 and `name` like p_name
+union
+select info from cm_file_my
+ where
+	isfolder = 0 
+	and userid = p_userid
+	and `name` like p_name 
+	limit 20;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_用户_角色列表的用户
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_用户_角色列表的用户`;
+delimiter ;;
+CREATE PROCEDURE `cm_用户_角色列表的用户`(`p_roleid` varchar(4000))
+BEGIN
+	
+select distinct(userid) from cm_user_role where find_in_set(roleid, p_roleid);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_用户_具有的权限
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_用户_具有的权限`;
+delimiter ;;
+CREATE PROCEDURE `cm_用户_具有的权限`(`p_userid` bigint)
+BEGIN
+
+select id, name
+from
+	(
+		select distinct ( b.id ),
+			b.name
+		from
+			cm_role_per a
+			left join cm_permission b on a.perid = b.id 
+		where
+			exists (
+					select
+						roleid 
+					from
+						cm_user_role c 
+					where
+						a.roleid = c.roleid 
+						and userid = p_userid
+				  union
+					select
+						roleid 
+					from
+						cm_group_role d 
+					where
+						a.roleid = d.roleid 
+						and exists ( select groupid from cm_user_group e where d.groupid = e.groupid and e.userid = p_userid ) 
+			) 
+			or a.roleid = 1 
+	) t 
+order by
+	id;
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for cm_用户_可访问的菜单
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `cm_用户_可访问的菜单`;
+delimiter ;;
+CREATE PROCEDURE `cm_用户_可访问的菜单`(`p_userid` bigint)
+BEGIN
+
+select id,name
+  from (select distinct (b.id), b.name, dispidx
+          from cm_role_menu a
+          left join cm_menu b
+            on a.menuid = b.id
+         where exists
+         (select roleid
+                  from cm_user_role c
+                 where a.roleid = c.roleid
+                   and userid = p_userid
+					union
+					select roleid
+					        from cm_group_role d
+									where a.roleid = d.roleid
+									  and exists (select groupid from cm_user_group e where d.groupid=e.groupid and e.userid=p_userid)
+					) or a.roleid=1
+			 ) t
+ order by dispidx;
+ 
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Function structure for nextval
+-- ----------------------------
+DROP FUNCTION IF EXISTS `nextval`;
+delimiter ;;
+CREATE FUNCTION `nextval`(v_seq_name VARCHAR ( 200 ))
+ RETURNS int(11)
 BEGIN
 DECLARE
 	res INTEGER;
@@ -1098,20 +1318,8 @@ WHERE
 	id = v_seq_name;
 RETURN res;
 
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+END
+;;
+delimiter ;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2023-04-26 14:18:24
+SET FOREIGN_KEY_CHECKS = 1;

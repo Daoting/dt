@@ -43,6 +43,11 @@ namespace Dt.Mgr.Rbac
                 Mtime: Mtime);
         }
 
+        public static Task<MenuX> GetWithParentName(long p_id)
+        {
+            return First($"select a.*,b.name parentname from cm_menu a left join cm_menu b on a.parentid=b.id where a.id={p_id}");
+        }
+
         protected override void InitHook()
         {
             OnSaving(() =>
