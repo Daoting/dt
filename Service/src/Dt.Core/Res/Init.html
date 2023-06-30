@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u {
+            font-family: Arial,宋体;
+            font-size: 16px;
+        }
+
+            a:link {
+                text-decoration: none;
+            }
+
+        table {
+            border: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .trClass {
+            height: 40px;
+            vertical-align: bottom;
+        }
+
+        .trMethod {
+            height: 30px;
+        }
+
+        .tdMethod {
+            width: 20%;
+        }
+
+        .trLeft {
+            height: 20px;
+        }
+
+        .tdParam {
+            border-right: 1px solid #C3C3C3;
+            border-bottom: 1px solid #C3C3C3;
+            padding-left: 5px;
+        }
+
+        .aTitle {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+
+        .logTitle {
+            background: green;
+            padding: 4px 4px 4px 4px;
+        }
+
+        .divCaption {
+            background: #F1F1F1;
+            border: 1px solid #E0E0E0;
+            padding: 10px 0px 10px 0px;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; height: 100%;">
+    <div style="position: fixed; left: 50%; top: 50%; width: 800px; height: 700px; margin-left: -400px; margin-top: -350px; ">
+        <div class="divCaption">
+            <span class="aTitle">数据库初始化向导</span>
+        </div>
+        <div style="display: flex; justify-content: center; border: 1px solid #E0E0E0; padding: 20px; height: 360px; margin-top: -1px">
+            <div>
+                <label>数据库类型</label>
+                <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
+                    <option value="0">mysql</option>
+                    <option value="1">oracle</option>
+                    <option value="2">sqlserver</option>
+                </select><br /><br />
+                <label>主机</label>
+                <input type="text" id="host"><br /><br />
+                <label>端口</label>
+                <input type="text" id="port" value="3306"><br /><br />
+                <label id="lblpwd">root密码</label>
+                <input type="password" id="pwd"><br /><br />
+                <label id="lblsvc" style="visibility: hidden">服务名</label>
+                <input type="text" id="svc" style="visibility:hidden"><br /><br />
+
+                <label style="color:red;width:auto">* 新库或新用户名已存在时将删除重建，请谨慎！</label><br />
+                <label id="lbldb">新库名</label>
+                <input type="text" id="dbname"><br /><br />
+                <label>新用户名</label>
+                <input type="text" id="username"><br /><br /><br />
+                <input type="button" value="初始化" style="width:200px;margin-left:80px;" onclick="onDoInit()">
+            </div>
+        </div>
+        <div class="divCaption" style="margin-top:10px">
+            <span class="aTitle">输出日志</span>
+        </div>
+        <div style="padding: 10px 10px 10px 10px; background: black; color: white; overflow: auto; height: 180px;">
+            <pre id="log"></pre>
+        </div>
+    </div>
+
+    <script>
+        var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
+        window.onload = function ()
+        {
+            receiveLog();
+        }
+
+        function onDbChanged(db)
+        {
+            if (db == 0)
+            {
+                $("port").value = "3306";
+                $("lblpwd").innerText = "root密码";
+                $("lblsvc").style = "visibility:hidden";
+                $("svc").style = "visibility:hidden";
+                $("lbldb").innerText = "新库名";
+            }
+            else if (db == 1)
+            {
+                $("port").value = "1521";
+                $("lblpwd").innerText = "system密码";
+                $("lblsvc").style = "";
+                $("svc").style = "";
+                $("lbldb").innerText = "新表空间";
+            }
+            else
+            {
+                $("port").value = "1433";
+                $("lblpwd").innerText = "sa密码";
+                $("lblsvc").style = "visibility:hidden";
+                $("svc").style = "visibility:hidden";
+                $("lbldb").innerText = "新库名";
+            }
+        }
+
+        async function onDoInit()
+        {
+            if ($("host").value == "")
+            {
+                $("host").focus();
+                return;
+            }
+            if ($("port").value == "")
+            {
+                $("port").focus();
+                return
+            }
+            if ($("pwd").value == "")
+            {
+                $("pwd").focus();
+                return
+            }
+
+            if ($("dbtype").value == 1 && $("svc").value == "")
+            {
+                $("svc").focus();
+                return
+            }
+
+            if ($("dbname").value == "")
+            {
+                $("dbname").focus();
+                return
+            }
+
+            if ($("username").value == "")
+            {
+                $("username").focus();
+                return
+            }
+
+            var list = "[\"&ss\",\""
+                + $("dbtype").value + "\",\""
+                + $("host").value + "\",\""
+                + $("port").value + "\",\""
+                + $("pwd").value + "\",\""
+                + $("svc").value + "\",\""
+                + $("dbname").value + "\",\""
+                + $("username").value + "\"]";
+
+            var suc = await call("[\"ExistsDb\"," + list + "]");
+            var goOn = !suc;
+            if (suc)
+            {
+                var msg = "数据库[" + $("dbname").value + "]已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                if (confirm(msg + "1") == true
+                    && confirm(msg + "2") == true
+                    && confirm(msg + "3") == true)
+                {
+                    goOn = true;
+                }
+            }
+            if (!goOn)
+                return;
+
+            suc = await call("[\"ExistsUser\"," + list + "]");
+            var goOn = !suc;
+            if (suc)
+            {
+                var msg = "用户名[" + $("username").value + "]已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                if (confirm(msg + "1") == true
+                    && confirm(msg + "2") == true
+                    && confirm(msg + "3") == true)
+                {
+                    goOn = true;
+                }
+            }
+            if (goOn)
+                suc = await call("[\"DoInit\"," + list + "]");
+        }
+
+        function $(id)
+        {
+            return document.getElementById(id);
+        }
+
+        function call(content)
+        {
+            return new Promise(function (resolve, reject)
+            {
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = "arraybuffer";
+                xhr.open("post", _rpcUrl, true);
+                xhr.onload = function ()
+                {
+                    if (xhr.status != 200)
+                        return;
+
+                    var result = JSON.parse(readFrame(xhr.response));
+                    if (result.length != 2)
+                    {
+                        alert("调用失败！");
+                    }
+                    else if (result[0] == 1)
+                    {
+                        alert(result[1]);
+                    }
+                    else
+                    {
+                        resolve(result[1]);
+                    }
+                };
+                xhr.send(writeFrame(content));
+            });
+        }
+
+        function writeFrame(str)
+        {
+            // Frame内容
+            var data = [];
+            var len, c;
+            len = str.length;
+            for (var i = 0; i < len; i++)
+            {
+                c = str.charCodeAt(i);
+                if (c >= 0x010000 && c <= 0x10FFFF)
+                {
+                    data.push(((c >> 18) & 0x07) | 0xF0);
+                    data.push(((c >> 12) & 0x3F) | 0x80);
+                    data.push(((c >> 6) & 0x3F) | 0x80);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else if (c >= 0x000800 && c <= 0x00FFFF)
+                {
+                    data.push(((c >> 12) & 0x0F) | 0xE0);
+                    data.push(((c >> 6) & 0x3F) | 0x80);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else if (c >= 0x000080 && c <= 0x0007FF)
+                {
+                    data.push(((c >> 6) & 0x1F) | 0xC0);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else
+                {
+                    data.push(c & 0xFF);
+                }
+            }
+
+            // Frame头
+            var header = [];
+            // 始终不压缩
+            header.push(0 & 0xFF);
+            // 内容长度
+            len = data.length;
+            header.push((len >> 24) & 0xFF);
+            header.push((len >> 16) & 0xFF);
+            header.push((len >> 8) & 0xFF);
+            header.push(len & 0xFF);
+
+            return new Uint8Array(header.concat(data));
+        }
+
+        function readFrame(buf)
+        {
+            // 1字节压缩标志 + 4字节内容长度
+            var arr = new Uint8Array(buf);
+
+            // Frame内容，始终不压缩
+            var data = arr.slice(5);
+
+            // 字节转utf8
+            var str = "";
+            for (var i = 0; i < data.length; i++)
+            {
+                var one = data[i].toString(2),
+                    v = one.match(/^1+?(?=0)/);
+                if (v && one.length == 8)
+                {
+                    var bytesLength = v[0].length;
+                    var store = data[i].toString(2).slice(7 - bytesLength);
+                    for (var st = 1; st < bytesLength; st++)
+                    {
+                        store += data[st + i].toString(2).slice(2);
+                    }
+                    str += String.fromCharCode(parseInt(store, 2));
+                    i += bytesLength - 1;
+                }
+                else
+                {
+                    str += String.fromCharCode(data[i]);
+                }
+            }
+            return str;
+        }
+
+        /************************ 日志 ************************/
+        var logRequest = null;
+        var logIndex = 0;
+        var _logUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.log?index=";
+
+        function receiveLog()
+        {
+            if (logRequest !== null)
+            {
+                logRequest.abort();
+                logRequest = null;
+            }
+
+            logRequest = new XMLHttpRequest();
+            logRequest.open("get", _logUrl + logIndex, true);
+            logRequest.onload = function ()
+            {
+                if (logRequest.status == 200)
+                {
+                    // 返回格式：日志索引+日志列表
+                    var split = logRequest.response.indexOf("+");
+                    if (split > -1)
+                    {
+                        logIndex = logRequest.response.substring(0, split);
+                        $("log").innerHTML += logRequest.response.substring(split + 1);
+                    }
+
+                    // 再次请求
+                    receiveLog();
+                }
+            };
+            logRequest.send();
+        }
+    </script>
+</body>
+</html>

@@ -218,9 +218,12 @@ namespace Dt.Core
         internal static void ConfigureServices(IServiceCollection p_services)
         {
             // 外部
-            foreach (var stub in Stubs)
+            if (Stubs != null)
             {
-                stub.ConfigureServices(p_services);
+                foreach (var stub in Stubs)
+                {
+                    stub.ConfigureServices(p_services);
+                }
             }
 
             // 以便访问当前的HttpContext
@@ -232,9 +235,13 @@ namespace Dt.Core
             // 全局服务容器
             _svcProvider = p_app.ApplicationServices;
             _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
-            foreach (var stub in Stubs)
+
+            if (Stubs != null)
             {
-                stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                foreach (var stub in Stubs)
+                {
+                    stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                }
             }
         }
         #endregion

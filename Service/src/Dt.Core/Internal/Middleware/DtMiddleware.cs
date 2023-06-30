@@ -137,7 +137,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_context"></param>
         /// <returns></returns>
-        static async Task ResponseLog(HttpContext p_context)
+        internal static async Task ResponseLog(HttpContext p_context)
         {
             try
             {

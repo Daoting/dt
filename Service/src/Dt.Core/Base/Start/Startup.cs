@@ -81,7 +81,7 @@ namespace Dt.Core
         /// KestrelServer 监听设置
         /// </summary>
         /// <param name="p_options"></param>
-        void ConfigureKestrelListen(KestrelServerOptions p_options)
+        internal static void ConfigureKestrelListen(KestrelServerOptions p_options)
         {
             var sect = Kit.Config.GetSection("KestrelListen").GetChildren();
 

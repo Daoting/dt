@@ -27,7 +27,6 @@ namespace Dt.Core
         /// + 创建日志对象
         /// + 读取配置
         /// + 缓存默认库表结构、同步时间
-        /// + 缓存Sql语句
         /// + 启动http服务器
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
@@ -37,9 +36,17 @@ namespace Dt.Core
         {
             CreateLogger();
             LoadConfig();
-            BuildStubs(p_stub);
-            DbSchema.Init();
-            RunWebHost(p_args);
+            if (Kit.GetCfg("InitMode", false))
+            {
+                // 进入初始化模式
+                RunInitModeWebHost();
+            }
+            else
+            {
+                BuildStubs(p_stub);
+                DbSchema.Init();
+                RunWebHost(p_args);
+            }
             Log.CloseAndFlush();
         }
 
@@ -214,6 +221,31 @@ namespace Dt.Core
                     .ConfigureWebHostDefaults(web => web.UseStartup<Startup>())
                     // 改用Autofac来实现依赖注入
                     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
+                    .UseSerilog()
+                    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
+                    .Build()
+                    // 内部调用WebHost.StartAsync()
+                    .Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Web服务器启动失败");
+                throw;
+            }
+        }
+
+
+        static void RunInitModeWebHost()
+        {
+            try
+            {
+                // 部署在IIS进程内模式时创建 IISHttpServer
+                // 其他情况创建 KestrelServer
+                // 两种 Web服务器的配置在Startup.ConfigureServices
+                Host.CreateDefaultBuilder()
+                    // 为WebHost配置默认设置
+                    .ConfigureWebHostDefaults(web => web.UseStartup<InitModeStartup>())
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
                     .UseSerilog()
                     // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure

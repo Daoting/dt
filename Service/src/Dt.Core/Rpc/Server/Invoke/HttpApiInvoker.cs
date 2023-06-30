@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Dt.Core.Rpc
 {
     /// <summary>
-    /// 处理接收到的 RabbitMQ Rpc消息
+    /// 处理接收到的 Http Rpc消息
     /// </summary>
     class HttpApiInvoker : ApiInvoker
     {

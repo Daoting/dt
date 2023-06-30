@@ -3,6 +3,7 @@
 	
 	<ItemGroup>
 		<EmbeddedResource Include="Res\404.html" />
+		<EmbeddedResource Include="Res\Init.html" />
 		<EmbeddedResource Include="Res\Admin.html" />
 		<EmbeddedResource Include="Res\Error.html" />
 	</ItemGroup>
