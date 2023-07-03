@@ -83,19 +83,19 @@
                     <option value="2">sqlserver</option>
                 </select><br /><br />
                 <label>主机</label>
-                <input type="text" id="host"><br /><br />
+                <input type="text" id="host" value="10.10.1.2"><br /><br />
                 <label>端口</label>
                 <input type="text" id="port" value="3306"><br /><br />
+                <label id="lbldefdb">库名</label>
+                <input type="text" id="defdb" value="dt" ><br /><br />
                 <label id="lblpwd">root密码</label>
-                <input type="password" id="pwd"><br /><br />
-                <label id="lblsvc" style="visibility: hidden">服务名</label>
-                <input type="text" id="svc" style="visibility:hidden"><br /><br />
+                <input type="password" id="pwd" value="dt"><br /><br /><br />
 
                 <label style="color:red;width:auto">* 新库或新用户名已存在时将删除重建，请谨慎！</label><br />
                 <label id="lbldb">新库名</label>
-                <input type="text" id="dbname"><br /><br />
+                <input type="text" id="newdb"><br /><br />
                 <label>新用户名</label>
-                <input type="text" id="username"><br /><br /><br />
+                <input type="text" id="newuser"><br /><br />
                 <input type="button" value="初始化" style="width:200px;margin-left:80px;" onclick="onDoInit()">
             </div>
         </div>
@@ -120,78 +120,44 @@
             {
                 $("port").value = "3306";
                 $("lblpwd").innerText = "root密码";
-                $("lblsvc").style = "visibility:hidden";
-                $("svc").style = "visibility:hidden";
+                $("lbldefdb").innerText = "库名";
                 $("lbldb").innerText = "新库名";
             }
             else if (db == 1)
             {
                 $("port").value = "1521";
                 $("lblpwd").innerText = "system密码";
-                $("lblsvc").style = "";
-                $("svc").style = "";
+                $("lbldefdb").innerText = "表空间";
                 $("lbldb").innerText = "新表空间";
             }
             else
             {
                 $("port").value = "1433";
                 $("lblpwd").innerText = "sa密码";
-                $("lblsvc").style = "visibility:hidden";
-                $("svc").style = "visibility:hidden";
+                $("lbldefdb").innerText = "库名";
                 $("lbldb").innerText = "新库名";
             }
         }
 
         async function onDoInit()
         {
-            if ($("host").value == "")
-            {
-                $("host").focus();
+            if (!isValid())
                 return;
-            }
-            if ($("port").value == "")
-            {
-                $("port").focus();
-                return
-            }
-            if ($("pwd").value == "")
-            {
-                $("pwd").focus();
-                return
-            }
-
-            if ($("dbtype").value == 1 && $("svc").value == "")
-            {
-                $("svc").focus();
-                return
-            }
-
-            if ($("dbname").value == "")
-            {
-                $("dbname").focus();
-                return
-            }
-
-            if ($("username").value == "")
-            {
-                $("username").focus();
-                return
-            }
-
+            
             var list = "[\"&ss\",\""
                 + $("dbtype").value + "\",\""
                 + $("host").value + "\",\""
                 + $("port").value + "\",\""
+                + $("defdb").value + "\",\""
                 + $("pwd").value + "\",\""
-                + $("svc").value + "\",\""
-                + $("dbname").value + "\",\""
-                + $("username").value + "\"]";
+                + $("newdb").value + "\",\""
+                + $("newuser").value + "\"]";
 
             var suc = await call("[\"ExistsDb\"," + list + "]");
             var goOn = !suc;
             if (suc)
             {
-                var msg = "数据库[" + $("dbname").value + "]已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                var msg = "数据库【" + $("newdb").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
                 if (confirm(msg + "1") == true
                     && confirm(msg + "2") == true
                     && confirm(msg + "3") == true)
@@ -206,7 +172,7 @@
             var goOn = !suc;
             if (suc)
             {
-                var msg = "用户名[" + $("username").value + "]已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                var msg = "用户名【" + $("newuser").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
                 if (confirm(msg + "1") == true
                     && confirm(msg + "2") == true
                     && confirm(msg + "3") == true)
@@ -214,8 +180,43 @@
                     goOn = true;
                 }
             }
+
             if (goOn)
                 suc = await call("[\"DoInit\"," + list + "]");
+        }
+
+        function isValid()
+        {
+            var suc = false;
+            if ($("host").value == "")
+            {
+                $("host").focus();
+            }
+            else if ($("port").value == "")
+            {
+                $("port").focus();
+            }
+            else if ($("pwd").value == "")
+            {
+                $("pwd").focus();
+            }
+            else if ($("defdb").value == "")
+            {
+                $("defdb").focus();
+            }
+            else if ($("newdb").value == "")
+            {
+                $("newdb").focus();
+            }
+            else if ($("newuser").value == "")
+            {
+                $("newuser").focus();
+            }
+            else
+            {
+                suc = true;
+            }
+            return suc;
         }
 
         function $(id)

@@ -2,7 +2,7 @@
   "App": "dt",
   "Database": {
     "dt": {
-      "ConnStr": "Server=10.10.1.2;Database=dt;Uid=dt;Pwd=dt;",
+      "ConnStr": "Server=10.10.1.2;Port=3306;Database=dt;Uid=dt;Pwd=dt;",
       "DbType": "mysql",
       "ExportToModel": true
     },

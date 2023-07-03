@@ -23,21 +23,29 @@ namespace Dt.Core.Rpc
 {
     class InitModeApi
     {
-        public bool ExistsDb(List<string> p_list)
+        public Task<bool> ExistsDb(List<string> p_list)
         {
-            return true;
+            return GetTools(p_list).ExistsDb();
         }
 
-        public bool ExistsUser(List<string> p_list)
+        public Task<bool> ExistsUser(List<string> p_list)
         {
-            Log.Warning("用户名已存在！");
-            return true;
+            return GetTools(p_list).ExistsUser();
         }
 
-        public bool DoInit(List<string> p_list)
+        public Task<bool> DoInit(List<string> p_list)
         {
-            Log.Information("初始化成功");
-            return true;
+            return GetTools(p_list).InitDb();
+        }
+
+        IDbTools GetTools(List<string> p_list)
+        {
+            if (p_list == null || p_list.Count != 7)
+                Throw.Msg("参数个数应为7个！");
+
+            if (p_list[0] == "0")
+                return new MySqlTools(p_list);
+            return null;
         }
     }
 }
