@@ -45,6 +45,8 @@ namespace Dt.Core.Rpc
 
             if (p_list[0] == "0")
                 return new MySqlTools(p_list);
+            if (p_list[0] == "1")
+                return new OracleTools(p_list);
             return null;
         }
     }

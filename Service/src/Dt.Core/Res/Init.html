@@ -79,17 +79,17 @@
                 <label>数据库类型</label>
                 <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
                     <option value="0">mysql</option>
-                    <option value="1">oracle</option>
+                    <option value="1" selected="selected">oracle</option>
                     <option value="2">sqlserver</option>
                 </select><br /><br />
                 <label>主机</label>
                 <input type="text" id="host" value="10.10.1.2"><br /><br />
                 <label>端口</label>
-                <input type="text" id="port" value="3306"><br /><br />
+                <input type="text" id="port" value="1521"><br /><br />
                 <label id="lbldefdb">库名</label>
-                <input type="text" id="defdb" value="dt" ><br /><br />
+                <input type="text" id="defdb" value="sec" ><br /><br />
                 <label id="lblpwd">root密码</label>
-                <input type="password" id="pwd" value="dt"><br /><br /><br />
+                <input type="password" id="pwd" value="hdt"><br /><br /><br />
 
                 <label style="color:red;width:auto">* 新库或新用户名已存在时将删除重建，请谨慎！</label><br />
                 <label id="lbldb">新库名</label>
@@ -157,10 +157,9 @@
             var goOn = !suc;
             if (suc)
             {
-                var msg = "数据库【" + $("newdb").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                var msg = "【" + $("newdb").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定多次避免误操作！\r\n";
                 if (confirm(msg + "1") == true
-                    && confirm(msg + "2") == true
-                    && confirm(msg + "3") == true)
+                    && confirm(msg + "2") == true)
                 {
                     goOn = true;
                 }
@@ -172,10 +171,9 @@
             var goOn = !suc;
             if (suc)
             {
-                var msg = "用户名【" + $("newuser").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定3遍避免误操作！\r\n";
+                var msg = "用户名【" + $("newuser").value + "】已存在，\r\n点击【确定】将删除重建！\r\n请确定多次避免误操作！\r\n";
                 if (confirm(msg + "1") == true
-                    && confirm(msg + "2") == true
-                    && confirm(msg + "3") == true)
+                    && confirm(msg + "2") == true)
                 {
                     goOn = true;
                 }

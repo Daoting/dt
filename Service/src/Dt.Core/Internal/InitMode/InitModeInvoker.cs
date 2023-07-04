@@ -80,6 +80,7 @@ namespace Dt.Core.Rpc
 
                 responseType = ApiResponseType.Error;
                 error = $"调用{_method.Name}出错\r\n" + ex.Message;
+                Log.Fatal(ex, $"调用{_method.Name}出错");
             }
 
             await Response(responseType, error == null ? result : error);

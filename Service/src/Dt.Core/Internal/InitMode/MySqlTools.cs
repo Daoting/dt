@@ -63,7 +63,7 @@ namespace Dt.Core
                 await _da.Exec($"drop user '{_newUser}'@'%'");
                 if (!await ExistsUser())
                 {
-                    Log.Warning($"【{_newDb}】删除成功！");
+                    Log.Warning($"【{_newUser}】删除成功！");
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace Dt.Core
             Log.Information($"关闭root连接，打开新库【{_newDb}】的连接");
 
             var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newDb};";
-            _da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
+            var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
 
             string sql;
             using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.mysql-init.sql")))
@@ -113,7 +113,7 @@ namespace Dt.Core
             }
 
             Log.Information($"初始化数据库...");
-            int cnt = await _da.Exec(sql);
+            int cnt = await da.Exec(sql);
             Log.Information($"初始化成功，运行脚本{cnt}个");
 
             Log.Information("新库连接串：\r\n" + connStr);
