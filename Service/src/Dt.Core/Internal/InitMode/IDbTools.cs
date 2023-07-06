@@ -18,6 +18,6 @@ namespace Dt.Core
     {
         Task<string> IsExists();
 
-        Task<bool> InitDb();
+        Task<bool> InitDb(bool p_isInit);
     }
 }

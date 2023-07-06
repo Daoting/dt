@@ -74,29 +74,32 @@
         <div class="divCaption">
             <span class="aTitle">数据库初始化向导</span>
         </div>
-        <div style="display: flex; justify-content: center; border: 1px solid #E0E0E0; padding: 20px; height: 360px; margin-top: -1px">
+        <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; border: 1px solid #E0E0E0; padding: 20px; height: 360px; margin-top: -1px">
             <div>
                 <label>数据库类型</label>
                 <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
                     <option value="0">mysql</option>
                     <option value="1">oracle</option>
-                    <option value="2" selected="selected">sqlserver</option>
+                    <option value="2">sqlserver</option>
                 </select><br /><br />
                 <label>主机</label>
                 <input type="text" id="host" value="10.10.1.2"><br /><br />
                 <label>端口</label>
-                <input type="text" id="port" value="1433"><br /><br />
-                <label id="lbldefdb">库名</label>
-                <input type="text" id="defdb" value="dt" ><br /><br />
+                <input type="text" id="port" value="3306"><br /><br />
+                <label id="lbldefdb">默认库名</label>
+                <input type="text" id="defdb"><br /><br />
                 <label id="lblpwd">root密码</label>
-                <input type="password" id="pwd" value="dt"><br /><br /><br />
+                <input type="password" id="pwd"><br /><br /><br />
 
                 <label style="color:red;width:auto">* 新库或新用户名已存在时将删除重建，请谨慎！</label><br />
                 <label id="lbldb">新库名</label>
                 <input type="text" id="newdb"><br /><br />
                 <label>新用户名</label>
                 <input type="text" id="newuser"><br /><br />
-                <input type="button" value="初始化" style="width:200px;margin-left:80px;" onclick="onDoInit()">
+            </div>
+            <div style="display: flex; justify-content:center;">
+                <input type="button" value="只创建空库" style="width:160px;" onclick="onDoInit(false)">
+                <input type="button" value="创建并初始化新库" style="width:160px;margin-left:40px;" onclick="onDoInit(true)">
             </div>
         </div>
         <div class="divCaption" style="margin-top:10px">
@@ -120,26 +123,26 @@
             {
                 $("port").value = "3306";
                 $("lblpwd").innerText = "root密码";
-                $("lbldefdb").innerText = "库名";
+                $("lbldefdb").innerText = "默认库名";
                 $("lbldb").innerText = "新库名";
             }
             else if (db == 1)
             {
                 $("port").value = "1521";
                 $("lblpwd").innerText = "system密码";
-                $("lbldefdb").innerText = "表空间";
+                $("lbldefdb").innerText = "服务名";
                 $("lbldb").innerText = "新表空间";
             }
             else
             {
                 $("port").value = "1433";
                 $("lblpwd").innerText = "sa密码";
-                $("lbldefdb").innerText = "库名";
+                $("lbldefdb").innerText = "默认库名";
                 $("lbldb").innerText = "新库名";
             }
         }
 
-        async function onDoInit()
+        async function onDoInit(p_isInit)
         {
             if (!isValid())
                 return;
@@ -164,7 +167,7 @@
                 }
             }
 
-            await call("[\"DoInit\"," + list + "]");
+            await call("[\"DoInit\"," + list + "," + p_isInit + "]");
         }
 
         function isValid()

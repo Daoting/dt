@@ -41,9 +41,9 @@ namespace Dt.Core
             if (await ExistsUser())
             {
                 if (msg == null)
-                    msg = $"用户名【{_newUser}】";
+                    msg = $"用户【{_newUser}】";
                 else
-                    msg += $"、用户名【{_newUser}】";
+                    msg += $"、用户【{_newUser}】";
             }
 
             if (msg != null)
@@ -63,7 +63,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from sys.server_principals where type_desc='SQL_LOGIN' and name='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb()
+        public async Task<bool> InitDb(bool p_isInit)
         {
             _da.AutoClose = false;
             await DropExists();
@@ -71,35 +71,43 @@ namespace Dt.Core
             await CreateDb();
             await CreateUser();
             await _da.Close(true);
-            Log.Information($"关闭sa连接，打开新库【{_newDb}】的连接");
+            Log.Information("创建空库成功");
 
             var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newDb};Encrypt=True;TrustServerCertificate=True;";
-            var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer, false));
-            da.AutoClose = false;
 
-            string sql;
-            using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.sqlserver-init.sql")))
+            if (p_isInit)
             {
-                sql = sr.ReadToEnd();
-            }
+                var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer, false));
+                da.AutoClose = false;
 
-            var ls = sql.Split("GO");
-            foreach (var item in ls)
-            {
-                if (!string.IsNullOrWhiteSpace(item))
+                string sql;
+                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.sqlserver-init.sql")))
                 {
-                    try
+                    sql = sr.ReadToEnd();
+                }
+
+                var ls = sql.Split("GO");
+                foreach (var item in ls)
+                {
+                    if (!string.IsNullOrWhiteSpace(item))
                     {
-                        await da.Exec(item);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex.Message);
+                        try
+                        {
+                            await da.Exec(item);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex.Message);
+                        }
                     }
                 }
+
+                int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
+                int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
+                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程");
+
+                await da.Close(true);
             }
-            await da.Close(true);
-            Log.Information("初始化成功");
 
             Log.Information("新库连接串：\r\n" + connStr);
             return true;

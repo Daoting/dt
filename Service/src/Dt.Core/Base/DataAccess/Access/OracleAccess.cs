@@ -44,9 +44,9 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "SELECT table_name FROM user_tables";
+        const string _sqlAllTbls = "select table_name from user_tables";
         const string _sqlCols = "select * from \"{0}\" where 1!=1";
-        const string _sqlComment = "SELECT a.data_default, b.comments FROM user_tab_columns a, user_col_comments b WHERE a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
+        const string _sqlComment = "select a.data_default, b.comments from user_tab_columns a, user_col_comments b where a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
         const string _sqlPk = "select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{0}'";
 
         /// <summary>

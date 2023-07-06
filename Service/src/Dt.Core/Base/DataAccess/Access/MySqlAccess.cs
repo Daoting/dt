@@ -46,9 +46,9 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "SELECT table_name FROM information_schema.tables WHERE table_schema='{0}'";
+        const string _sqlAllTbls = "select table_name from information_schema.tables where table_schema='{0}'";
         const string _sqlCols = "select * from `{0}` where 1!=1";
-        const string _sqlComment = "SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{0}' and table_name='{1}' and column_name='{2}'";
+        const string _sqlComment = "select column_default,column_comment from information_schema.columns where table_schema='{0}' and table_name='{1}' and column_name='{2}'";
 
         /// <summary>
         /// 获取数据库所有表结构信息（已调整到最优）

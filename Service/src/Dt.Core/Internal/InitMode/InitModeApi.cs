@@ -28,9 +28,9 @@ namespace Dt.Core.Rpc
             return GetTools(p_list).IsExists();
         }
 
-        public Task<bool> DoInit(List<string> p_list)
+        public Task<bool> DoInit(List<string> p_list, bool p_isInit)
         {
-            return GetTools(p_list).InitDb();
+            return GetTools(p_list).InitDb(p_isInit);
         }
 
         IDbTools GetTools(List<string> p_list)

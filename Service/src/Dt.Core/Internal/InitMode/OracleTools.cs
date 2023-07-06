@@ -41,9 +41,9 @@ namespace Dt.Core
             if (await ExistsUser())
             {
                 if (msg == null)
-                    msg = $"用户名【{_newUser}】";
+                    msg = $"用户【{_newUser}】";
                 else
-                    msg += $"、用户名【{_newUser}】";
+                    msg += $"、用户【{_newUser}】";
             }
 
             if (msg != null)
@@ -63,7 +63,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from all_users where username='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb()
+        public async Task<bool> InitDb(bool p_isInit)
         {
             _da.AutoClose = false;
             await DropExistsDB();
@@ -72,29 +72,37 @@ namespace Dt.Core
             await CreateUser();
 
             await _da.Close(true);
-            Log.Information("关闭system连接，打开新连接");
+            Log.Information("创建空库成功");
 
             var connStr = $"User Id={_newUser};Password={_newDb.ToLower()};{_host}";
-            var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
-            da.AutoClose = false;
 
-            string sql;
-            using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.oracle-init.sql")))
+            if (p_isInit)
             {
-                sql = sr.ReadToEnd();
-            }
+                var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
+                da.AutoClose = false;
 
-            Log.Information($"初始化数据库...");
-            var ls = sql.Split(';');
-            foreach (var item in ls)
-            {
-                if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
+                string sql;
+                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.oracle-init.sql")))
                 {
-                    await da.Exec(item);
+                    sql = sr.ReadToEnd();
                 }
+
+                Log.Information($"初始化数据库...");
+                var ls = sql.Split(';');
+                foreach (var item in ls)
+                {
+                    if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
+                    {
+                        await da.Exec(item);
+                    }
+                }
+
+                int cntTbl = await da.GetScalar<int>("select count(*) from user_tables");
+                int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='PROCEDURE'");
+                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程");
+
+                await da.Close(true);
             }
-            await da.Close(true);
-            Log.Information("初始化成功");
 
             Log.Information("新库连接串：\r\n" + connStr);
 
