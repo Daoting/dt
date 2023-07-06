@@ -31,12 +31,34 @@ namespace Dt.Core
             Kit.TraceSql = false;
         }
 
-        public async Task<bool> ExistsDb()
+        public async Task<string> IsExists()
+        {
+            string msg = null;
+            if (await ExistsDb())
+            {
+                msg = $"表空间【{_newDb}】";
+            }
+            if (await ExistsUser())
+            {
+                if (msg == null)
+                    msg = $"用户名【{_newUser}】";
+                else
+                    msg += $"、用户名【{_newUser}】";
+            }
+
+            if (msg != null)
+            {
+                msg += "已存在，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
+            }
+            return msg;
+        }
+
+        async Task<bool> ExistsDb()
         {
             return await _da.GetScalar<int>($"select count(*) from sys.dba_tablespaces where tablespace_name='{_newDb}'") > 0;
         }
 
-        public async Task<bool> ExistsUser()
+        async Task<bool> ExistsUser()
         {
             return await _da.GetScalar<int>($"select count(*) from all_users where username='{_newUser}'") > 0;
         }
@@ -52,7 +74,7 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("关闭system连接，打开新连接");
 
-            var connStr = $"User Id={_newUser};Password={_newDb};{_host}";
+            var connStr = $"User Id={_newUser};Password={_newDb.ToLower()};{_host}";
             var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
             da.AutoClose = false;
 
@@ -66,7 +88,7 @@ namespace Dt.Core
             var ls = sql.Split(';');
             foreach (var item in ls)
             {
-                if (!string.IsNullOrEmpty(item) && item != "\r\nCOMMIT")
+                if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
                 {
                     await da.Exec(item);
                 }
@@ -109,7 +131,7 @@ namespace Dt.Core
         async Task CreateUser()
         {
             Log.Information($"正在创建用户 {_newUser} ...");
-            await _da.Exec($"create user {_newUser} identified by {_newDb} default tablespace \"{_newDb}\" temporary tablespace \"{_newDb}TEMP\"");
+            await _da.Exec($"create user {_newUser} identified by {_newDb.ToLower()} default tablespace \"{_newDb}\" temporary tablespace \"{_newDb}TEMP\"");
             await _da.Exec($"grant DBA to {_newUser} with admin option");
             await _da.Exec($"grant ALTER ANY CLUSTER to {_newUser} with admin option");
             await _da.Exec($"grant ALTER ANY DIMENSION to {_newUser} with admin option");
@@ -228,7 +250,7 @@ namespace Dt.Core
             await _da.Exec($"alter user {_newUser} quota 0 on users");
             await _da.Exec($"alter user {_newUser} quota unlimited on {_newDb}");
 
-            Log.Information("创建用户并赋予权限成功");
+            Log.Information($"创建用户并赋予权限成功！默认密码：{_newDb.ToLower()}");
         }
         #endregion
 

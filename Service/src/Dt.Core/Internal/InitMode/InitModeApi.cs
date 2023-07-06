@@ -23,14 +23,9 @@ namespace Dt.Core.Rpc
 {
     class InitModeApi
     {
-        public Task<bool> ExistsDb(List<string> p_list)
+        public Task<string> IsExists(List<string> p_list)
         {
-            return GetTools(p_list).ExistsDb();
-        }
-
-        public Task<bool> ExistsUser(List<string> p_list)
-        {
-            return GetTools(p_list).ExistsUser();
+            return GetTools(p_list).IsExists();
         }
 
         public Task<bool> DoInit(List<string> p_list)
@@ -47,7 +42,7 @@ namespace Dt.Core.Rpc
                 return new MySqlTools(p_list);
             if (p_list[0] == "1")
                 return new OracleTools(p_list);
-            return null;
+            return new SqlServerTools(p_list);
         }
     }
 }

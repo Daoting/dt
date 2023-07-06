@@ -29,12 +29,34 @@ namespace Dt.Core
             Kit.TraceSql = false;
         }
 
-        public async Task<bool> ExistsDb()
+        public async Task<string> IsExists()
+        {
+            string msg = null;
+            if (await ExistsDb())
+            {
+                msg = $"数据库【{_newDb}】";
+            }
+            if (await ExistsUser())
+            {
+                if (msg == null)
+                    msg = $"用户名【{_newUser}】";
+                else
+                    msg += $"、用户名【{_newUser}】";
+            }
+
+            if (msg != null)
+            {
+                msg += "已存在，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
+            }
+            return msg;
+        }
+
+        async Task<bool> ExistsDb()
         {
             return await _da.GetScalar<int>($"select count(*) from information_schema.schemata where schema_name = '{_newDb}'") == 1;
         }
 
-        public async Task<bool> ExistsUser()
+        async Task<bool> ExistsUser()
         {
             return await _da.GetScalar<int>($"select count(*) from mysql.user where user='{_newUser}'") == 1;
         }
