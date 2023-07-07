@@ -75,12 +75,16 @@ namespace Dt.Core
 
                 var dbType = sect.GetValue(item.Key + ":DbType", "mysql").ToLower();
                 DatabaseType tp;
-                if (dbType == "oracle")
+                if (dbType == "mysql")
+                    tp = DatabaseType.MySql;
+                else if (dbType == "oracle")
                     tp = DatabaseType.Oracle;
                 else if (dbType == "sqlserver")
                     tp = DatabaseType.SqlServer;
+                else if (dbType == "postgresql")
+                    tp = DatabaseType.PostgreSql;
                 else
-                    tp = DatabaseType.MySql;
+                    continue;
 
                 var export = sect.GetValue(item.Key + ":ExportToModel", true);
 

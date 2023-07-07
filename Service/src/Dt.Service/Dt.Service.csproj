@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>4.1.5</Version>
+		<Version>4.2.0</Version>
 		<PackageId Condition="'$(Configuration)'=='Debug'">Dt.Service.Debug</PackageId>
 		<PackageId Condition="'$(Configuration)'=='Release'">Dt.Service</PackageId>
 		<!-- 将引用项目合并打包 -->
@@ -63,6 +63,7 @@
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.100" />
 		<PackageReference Include="Dapper.Oracle" Version="2.0.3" />
+		<PackageReference Include="Npgsql" Version="7.0.4" />
 		<PackageReference Include="Autofac" Version="6.5.0" />
 		<PackageReference Include="Castle.Core" Version="5.1.0" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.8" />

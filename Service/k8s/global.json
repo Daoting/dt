@@ -15,6 +15,11 @@
       "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=sa;Password=dt;Encrypt=True;TrustServerCertificate=True;",
       "DbType": "sqlserver",
       "ExportToModel": false
+    },
+    "pgdt": {
+      "ConnStr": "Host=10.10.1.2;Port=5432;Username=postgres;Password=postgres;Database=postgres",
+      "DbType": "postgresql",
+      "ExportToModel": false
     }
   },
   "RabbitMq": {

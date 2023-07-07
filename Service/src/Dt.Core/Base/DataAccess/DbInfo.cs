@@ -69,7 +69,13 @@ namespace Dt.Core
             if (Type == DatabaseType.Oracle)
                 return new OracleAccess(this);
 
-            return new SqlServerAccess(this);
+            if (Type == DatabaseType.SqlServer)
+                return new SqlServerAccess(this);
+
+            if (Type == DatabaseType.PostgreSql)
+                return new PostgreSqlAccess(this);
+
+            throw new Exception($"无法创建[{Type}]类型的数据访问对象！");
         }
 
         /*

@@ -49,6 +49,12 @@ namespace Dt.Core
                     Postfix = "]";
                     VarPrefix = "@";
                     break;
+
+                case DatabaseType.PostgreSql:
+                    Prefix = Postfix = "\"";
+                    // @ 和 : 都可以
+                    VarPrefix = "@";
+                    break;
             }
         }
 
@@ -471,6 +477,7 @@ namespace Dt.Core
         MySql,
         Oracle,
         SqlServer,
+        PostgreSql,
         Sqlite
     }
 }
