@@ -32,7 +32,7 @@
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Custom.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Stub\Options\AppStub-Single.cs</ProjectItem>
 			<ProjectItem>Stub\Options\Common.props</ProjectItem>
-			
+			<ProjectItem>Stub\Options\filenesting.json</ProjectItem>
 		</Project>
 	</TemplateContent>
 </VSTemplate>

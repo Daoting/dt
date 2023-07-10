@@ -70,6 +70,9 @@ namespace Dt.PrjWizard
                 var optionsPath = Path.Combine(stubPath, "Options");
                 var stubFile = Path.Combine(stubPath, "AppStub.cs");
 
+                // 自定义文件嵌套
+                File.Copy(Path.Combine(optionsPath, "filenesting.json"), Path.Combine(_targetPath, ".filenesting.json"));
+
                 // Common.props复制到根目录
                 File.Copy(Path.Combine(optionsPath, "Common.props"), Path.Combine(_targetPath, "Common.props"));
                 if (_useSvcType == SvcType.DtSvc)

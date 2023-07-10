@@ -10,4 +10,4 @@ $ext_safeprojectname$.Svc          服务项目
 https://github.com/daoting/dt
 
 教程
-https://daotingh.gitee.io/dt-site/docs/
+https://daotingh.gitee.io/dt-docs/docs/
