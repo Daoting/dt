@@ -165,7 +165,7 @@
                 + $("newuser").value + "\"]";
 
             var msg = await call("[\"IsExists\"," + list + "]");
-            if (msg != "")
+            if (msg != null && msg != "")
             {
                 if (confirm(msg + "\r\n1") == false
                     || confirm(msg + "\r\n2") == false

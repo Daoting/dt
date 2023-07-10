@@ -17,7 +17,7 @@
       "ExportToModel": false
     },
     "pgdt": {
-      "ConnStr": "Host=10.10.1.2;Port=5432;Database=postgres;Username=postgres;Password=postgres;",
+      "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
       "DbType": "postgresql",
       "ExportToModel": false
     }

@@ -13,7 +13,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 ### 功能
 * 增加EntityX.GetCount方法
-
+* .admin页增加初始化数据库功能
+* 增加PostgreSql支持
 
 ### Bug修改
 

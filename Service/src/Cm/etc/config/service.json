@@ -20,5 +20,7 @@
     "msg": "*/dt-msg",
     "fsm": "*/dt-fsm",
     "demo": "*/dt-demo"
-  }
+  },
+
+  "InitMode": false
 }
