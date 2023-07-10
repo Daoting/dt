@@ -35,5 +35,9 @@
 
   // 提供给fsm服务
   "FixedVolume": "photo;editor;g;chat",
-  "MaxRequestBodySize": 1073741824
+  "MaxRequestBodySize": 1073741824,
+
+  /************** 是否为初始化模式 **************/
+  // 初始化模式只用来创建初始库
+  "InitMode": false
 }

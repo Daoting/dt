@@ -13,7 +13,6 @@
 			<ProjectItem ReplaceParameters="true">SvcStub.cs</ProjectItem>
 			<ProjectItem TargetFileName="Api\TestApi.cs" ReplaceParameters="true">TestApi.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Properties\launchSettings.json</ProjectItem>
-			<ProjectItem>Properties\mysql-init.sql</ProjectItem>
 			<ProjectItem ReplaceParameters="true">etc\config\global.json</ProjectItem>
 			<ProjectItem ReplaceParameters="true">etc\config\service.json</ProjectItem>
 			<ProjectItem>etc\config\model.json</ProjectItem>

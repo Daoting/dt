@@ -81,7 +81,7 @@ namespace Dt.Core
                 da.AutoClose = false;
 
                 string sql;
-                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.oracle-init.sql")))
+                using (var sr = MySqlTools.GetSqlStream("oracle-init.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }

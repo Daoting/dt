@@ -101,7 +101,7 @@ namespace Dt.Core
                 da.AutoClose = false;
 
                 string sql;
-                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.postgresql-init.sql")))
+                using (var sr = MySqlTools.GetSqlStream("postgresql-init.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }

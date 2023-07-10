@@ -100,7 +100,7 @@ namespace Dt.Core
                 var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
 
                 string sql;
-                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.mysql-init.sql")))
+                using (var sr = GetSqlStream("mysql-init.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }
@@ -115,6 +115,11 @@ namespace Dt.Core
 
             Log.Information("新库连接串：\r\n" + connStr);
             return true;
+        }
+
+        internal static StreamReader GetSqlStream(string p_sqlFile)
+        {
+            return new StreamReader(typeof(MySqlTools).Assembly.GetManifestResourceStream("Dt.Core.Internal.InitMode.InitSql." + p_sqlFile));
         }
     }
 }

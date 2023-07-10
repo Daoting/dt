@@ -3,6 +3,7 @@
 	
 	<ItemGroup>
 		<EmbeddedResource Include="Res\*.*" />
+		<EmbeddedResource Include="Internal\InitMode\InitSql\*.*" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -6,5 +6,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
+		<!-- 在在引用该包的项目中显示初始化数据库的脚本文件 -->
+		<Content Include="$(MSBuildThisFileDirectory)..\content\**">
+			<Visible>true</Visible>
+		</Content>
 	</ItemGroup>
 </Project>

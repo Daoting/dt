@@ -30,6 +30,12 @@
 			<Visible>false</Visible>
 			<PackagePath>\tools\drive</PackagePath>
 		</Content>
+		<!-- 将初始化数据库的脚本文件打包，在引用该包的项目中显示 -->
+		<Content Include="..\Dt.Core\Internal\InitMode\InitSql\**">
+			<Pack>True</Pack>
+			<Visible>false</Visible>
+			<PackagePath>\content\Properties\InitSql</PackagePath>
+		</Content>
 		<!-- build时将tools下的文件copy到输出目录 -->
 		<Content Include="Dt.Service.targets" Condition="'$(Configuration)'=='Debug'">
 			<Pack>True</Pack>
