@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
-#endregion
-
 using Oracle.ManagedDataAccess.Client;
+#endregion
 
 namespace Dt.Core
 {

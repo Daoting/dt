@@ -78,9 +78,10 @@
             <div>
                 <label>数据库类型</label>
                 <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
-                    <option value="0">mysql</option>
-                    <option value="1">oracle</option>
-                    <option value="2">sqlserver</option>
+                    <option value="0">MySql</option>
+                    <option value="1">Oracle</option>
+                    <option value="2">Sql Server</option>
+                    <option value="3">PostgreSql</option>
                 </select><br /><br />
                 <label>主机</label>
                 <input type="text" id="host" value="10.10.1.2"><br /><br />
@@ -133,10 +134,17 @@
                 $("lbldefdb").innerText = "服务名";
                 $("lbldb").innerText = "新表空间";
             }
-            else
+            else if (db == 2)
             {
                 $("port").value = "1433";
                 $("lblpwd").innerText = "sa密码";
+                $("lbldefdb").innerText = "默认库名";
+                $("lbldb").innerText = "新库名";
+            }
+            else if (db == 3)
+            {
+                $("port").value = "5432";
+                $("lblpwd").innerText = "postgres密码";
                 $("lbldefdb").innerText = "默认库名";
                 $("lbldb").innerText = "新库名";
             }

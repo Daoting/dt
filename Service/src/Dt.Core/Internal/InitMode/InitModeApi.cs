@@ -42,7 +42,12 @@ namespace Dt.Core.Rpc
                 return new MySqlTools(p_list);
             if (p_list[0] == "1")
                 return new OracleTools(p_list);
-            return new SqlServerTools(p_list);
+            if (p_list[0] == "2")
+                return new SqlServerTools(p_list);
+            if (p_list[0] == "3")
+                return new PostgreSqlTools(p_list);
+
+            throw new Exception("不支持该数据库类型！");
         }
     }
 }
