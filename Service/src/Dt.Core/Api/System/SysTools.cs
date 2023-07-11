@@ -115,19 +115,17 @@ namespace Dt.Core
             foreach (var col in schema.PrimaryKey)
             {
                 AppendTabSpace(sb, 3);
-                var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
-                sb.Append(colType);
+                sb.Append(col.GetTypeName());
                 sb.Append(" ");
-                sb.Append(col.Name);
+                sb.Append(col.GetPropertyName());
                 sb.AppendLine(",");
             }
             foreach (var col in schema.Columns)
             {
                 AppendTabSpace(sb, 3);
-                var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
-                sb.Append(colType);
+                sb.Append(col.GetTypeName());
                 sb.Append(" ");
-                sb.Append(col.Name);
+                sb.Append(col.GetPropertyName());
                 if (string.IsNullOrEmpty(col.Default))
                 {
                     sb.AppendLine(" = default,");
@@ -144,9 +142,9 @@ namespace Dt.Core
                     else
                         sb.AppendLine("false,");
                 }
-                else if (col.Type == typeof(byte) && colType != "byte")
+                else if (col.IsEnumCol)
                 {
-                    sb.AppendLine($" = ({colType}){col.Default},");
+                    sb.AppendLine($" = ({col.GetEnumName()}){col.Default},");
                 }
                 else
                 {
@@ -170,7 +168,7 @@ namespace Dt.Core
                 // 内部为enum类型
                 //if (IsEnumCol(col))
                 //    sb.Append("(byte)");
-                sb.Append(col.Name);
+                sb.Append(col.GetPropertyName());
                 sb.AppendLine(");");
             }
             AppendTabSpace(sb, 3);
@@ -252,10 +250,9 @@ namespace Dt.Core
                 foreach (var col in schema.Columns)
                 {
                     AppendTabSpace(sb, 3);
-                    var colType = col.Type == typeof(byte) ? GetEnumName(col) : GetTypeName(col.Type);
-                    sb.Append(colType);
+                    sb.Append(col.GetTypeName());
                     sb.Append(" ");
-                    sb.Append(col.Name);
+                    sb.Append(col.GetPropertyName());
                     if (string.IsNullOrEmpty(col.Default))
                     {
                         sb.AppendLine(" = default,");
@@ -272,9 +269,9 @@ namespace Dt.Core
                         else
                             sb.AppendLine("false,");
                     }
-                    else if (col.Type == typeof(byte) && colType != "byte")
+                    else if (col.IsEnumCol)
                     {
-                        sb.AppendLine($" = ({colType}){col.Default},");
+                        sb.AppendLine($" = ({col.GetEnumName()}){col.Default},");
                     }
                     else
                     {
@@ -293,7 +290,8 @@ namespace Dt.Core
                 foreach (var col in schema.Columns)
                 {
                     AppendTabSpace(sb, 4);
-                    sb.AppendLine($"{col.Name}: {col.Name},");
+                    var prop = col.GetPropertyName();
+                    sb.AppendLine($"{prop}: {prop},");
                 }
                 sb.Remove(sb.Length - 3, 3);
                 sb.AppendLine(");");
@@ -342,26 +340,36 @@ namespace Dt.Core
                     if (sb.Length > 0)
                         sb.AppendLine();
                     AppendTabSpace(sb, 2);
-                    bool isEnum = IsEnumCol(col);
 
-                    string title = "";
+                    string title;
+                    if (col.IsEnumCol)
+                    {
+                        // 枚举 CList
+                        if (col.IsChinessName)
+                        {
+                            title = "";
+                        }
+                        else
+                        {
+                            string tpName = col.GetEnumName();
+                            title = col.Comments.Substring(tpName.Length + 2);
+                            title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
+                        }
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} />");
+                        continue;
+                    }
 
                     // 字段名中文时不再需要Title
-                    if (!string.IsNullOrEmpty(col.Comments)
-                        && !isEnum
-                        && !IsChiness(col.Name))
+                    if (!string.IsNullOrEmpty(col.Comments) && !col.IsChinessName)
                     {
                         title = $" Title=\"{col.Comments}\"";
                     }
-
-                    if (isEnum)
+                    else
                     {
-                        string tpName = GetEnumName(col);
-                        title = col.Comments.Substring(tpName.Length + 2);
-                        title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} />");
+                        title = "";
                     }
-                    else if (col.Type == typeof(bool))
+                    
+                    if (col.Type == typeof(bool))
                     {
                         sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
                     }
@@ -442,11 +450,11 @@ namespace Dt.Core
 
                     // 字段名中文时不再需要Title
                     if (!string.IsNullOrEmpty(col.Comments)
-                        && !IsChiness(col.Name))
+                        && !col.IsChinessName)
                     {
-                        if (IsEnumCol(col))
+                        if (col.IsEnumCol)
                         {
-                            string tpName = GetEnumName(col);
+                            string tpName = col.GetEnumName();
                             title = $" Title=\"{col.Comments.Substring(tpName.Length + 2)}\"";
                         }
                         else
@@ -516,26 +524,36 @@ namespace Dt.Core
                     if (sb.Length > 0)
                         sb.AppendLine();
                     AppendTabSpace(sb, 3);
-                    bool isEnum = IsEnumCol(col);
-
-                    string title = "";
+                    
+                    string title;
+                    if (col.IsEnumCol)
+                    {
+                        // 枚举 CList
+                        if (col.IsChinessName)
+                        {
+                            title = "";
+                        }
+                        else
+                        {
+                            string tpName = col.GetEnumName();
+                            title = col.Comments.Substring(tpName.Length + 2);
+                            title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
+                        }
+                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        continue;
+                    }
 
                     // 字段名中文时不再需要Title
-                    if (!string.IsNullOrEmpty(col.Comments)
-                        && !isEnum
-                        && !IsChiness(col.Name))
+                    if (!string.IsNullOrEmpty(col.Comments) && !col.IsChinessName)
                     {
                         title = $" Title=\"{col.Comments}\"";
                     }
-
-                    if (isEnum)
+                    else
                     {
-                        string tpName = GetEnumName(col);
-                        title = col.Comments.Substring(tpName.Length + 2);
-                        title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        title = "";
                     }
-                    else if (col.Type == typeof(bool))
+
+                    if (col.Type == typeof(bool))
                     {
                         sb.Append($"<a:CBool ID=\"{col.Name}\"{title} Query=\"Editable\" />");
                     }
@@ -579,11 +597,8 @@ namespace Dt.Core
                 var schema = await _da.GetTableSchema(tbl);
                 foreach (var col in schema.Columns)
                 {
-                    bool isEnum = IsEnumCol(col);
-                    string tpName = isEnum ? GetEnumName(col) : GetTypeName(col.Type);
-
                     AppendTabSpace(sb, 3);
-                    sb.AppendLine($"row.AddCell<{tpName}>(\"{col.Name}\");");
+                    sb.AppendLine($"row.AddCell<{col.GetTypeName()}>(\"{col.Name}\");");
                 }
             }
             return sb.ToString();
@@ -611,15 +626,14 @@ namespace Dt.Core
         void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)
         {
             // 枚举类型特殊
-            bool isEnum = IsEnumCol(p_col);
-            string tpName = isEnum ? GetEnumName(p_col) : GetTypeName(p_col.Type);
+            string tpName = p_col.GetTypeName();
 
             p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("/// <summary>");
             AppendTabSpace(p_sb, 2);
             p_sb.Append("/// ");
-            if (isEnum)
+            if (p_col.IsEnumCol)
                 p_sb.AppendLine(p_col.Comments.Substring(tpName.Length + 2));
             else
                 p_sb.AppendLine(p_col.Comments);
@@ -629,7 +643,7 @@ namespace Dt.Core
 
             if (p_isNew)
                 p_sb.Append("new ");
-            p_sb.AppendLine($"public {tpName} {p_col.Name}");
+            p_sb.AppendLine($"public {tpName} {p_col.GetPropertyName()}");
 
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
@@ -663,46 +677,6 @@ namespace Dt.Core
             return clsName + "X";
         }
 
-        string GetEnumName(TableCol p_col)
-        {
-            if (!string.IsNullOrEmpty(p_col.Comments))
-            {
-                var match = Regex.Match(p_col.Comments, @"^#[^\s#]+");
-                if (match.Success)
-                    return match.Value.Trim('#');
-            }
-            return "byte";
-        }
-
-        bool IsEnumCol(TableCol p_col)
-        {
-            return p_col.Type == typeof(byte)
-                && !string.IsNullOrEmpty(p_col.Comments)
-                && Regex.IsMatch(p_col.Comments, @"^#[^\s#]+");
-        }
-
-        string GetTypeName(Type p_type)
-        {
-            if (p_type.IsGenericType && p_type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                return GetTypeName(p_type.GetGenericArguments()[0]) + "?";
-
-            if (p_type == typeof(string))
-                return "string";
-            if (p_type == typeof(bool))
-                return "bool";
-            if (p_type == typeof(int))
-                return "int";
-            if (p_type == typeof(long))
-                return "long";
-            if (p_type == typeof(double))
-                return "double";
-            if (p_type == typeof(byte))
-                return "byte";
-            if (p_type == typeof(sbyte))
-                return "sbyte";
-            return p_type.Name;
-        }
-
         static void AppendTabSpace(StringBuilder p_sb, int p_num)
         {
             for (int i = 0; i < p_num; i++)
@@ -716,16 +690,6 @@ namespace Dt.Core
             char[] a = p_str.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
-        }
-
-        static bool IsChiness(string p_str)
-        {
-            foreach (char vChar in p_str)
-            {
-                if ((int)vChar > 255)
-                    return true;
-            }
-            return false;
         }
 
         const string _initHook =

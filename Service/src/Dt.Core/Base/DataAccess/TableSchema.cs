@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace Dt.Core
@@ -467,6 +468,103 @@ namespace Dt.Core
         /// 列注释
         /// </summary>
         public string Comments { get; set; }
+
+        /// <summary>
+        /// 类中的属性名
+        /// </summary>
+        public string GetPropertyName()
+        {
+            if (IsChinessName)
+                return Name;
+
+            string name = "";
+            var arr = Name.ToLower().Split('_');
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var str = arr[i];
+                if (str == "id")
+                {
+                    // id特殊
+                    name += "ID";
+                }
+                else
+                {
+                    name += char.ToUpper(str[0]) + str.Substring(1);
+                }
+            }
+            return name;
+        }
+
+        /// <summary>
+        /// 列类型的名称
+        /// </summary>
+        /// <returns></returns>
+        public string GetTypeName()
+        {
+            return Type == typeof(byte) ? GetEnumName() : GetTypeNameStr(Type);
+        }
+
+        /// <summary>
+        /// 该列是否为枚举类型
+        /// </summary>
+        public bool IsEnumCol =>
+            Type == typeof(byte)
+            && !string.IsNullOrEmpty(Comments)
+            && Regex.IsMatch(Comments, @"^#[^\s#]+");
+
+        /// <summary>
+        /// 枚举类型名
+        /// </summary>
+        /// <returns></returns>
+        public string GetEnumName()
+        {
+            if (!string.IsNullOrEmpty(Comments))
+            {
+                var match = Regex.Match(Comments, @"^#[^\s#]+");
+                if (match.Success)
+                    return match.Value.Trim('#');
+            }
+            return "byte";
+        }
+
+        /// <summary>
+        /// 字段名是否为中文
+        /// </summary>
+        /// <returns></returns>
+        public bool IsChinessName
+        {
+            get
+            {
+                foreach (char vChar in Name)
+                {
+                    if (vChar > 255)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        string GetTypeNameStr(Type p_type)
+        {
+            if (p_type.IsGenericType && p_type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return GetTypeNameStr(p_type.GetGenericArguments()[0]) + "?";
+
+            if (p_type == typeof(string))
+                return "string";
+            if (p_type == typeof(bool))
+                return "bool";
+            if (p_type == typeof(int))
+                return "int";
+            if (p_type == typeof(long))
+                return "long";
+            if (p_type == typeof(double))
+                return "double";
+            if (p_type == typeof(byte))
+                return "byte";
+            if (p_type == typeof(sbyte))
+                return "sbyte";
+            return p_type.Name;
+        }
     }
 
     /// <summary>

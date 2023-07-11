@@ -79,6 +79,7 @@ namespace Dt
 
             int cntDesign = 0;
             int cntCustom = 0;
+            int cntSql = 0;
             for (int i = 0; i < _dg.Rows.Count; i++)
             {
                 var tbl = _dg.Rows[i].Cells[0].Value.ToString();
@@ -86,11 +87,20 @@ namespace Dt
                 if (string.IsNullOrEmpty(cls))
                     continue;
 
-                var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.Designer.cs");
+                var path = Path.Combine(Kit.GetFolderPath(), $"{cls}.tbl.cs");
                 var entity = await AtSvc.GetEntityClass(tbl, cls);
                 dt["$entitybody$"] = entity;
                 Kit.WritePrjFile(path, "Dt.InsertEntity.Entity.cs", dt, false);
                 cntDesign++;
+
+                // 空的含sql的文件，只生成一次
+                path = Path.Combine(Kit.GetFolderPath(), $"{cls}.sql.cs");
+                if (!File.Exists(path))
+                {
+                    dt["$entitybody$"] = $"    public partial class {cls}\r\n    {{\r\n\r\n    }}";
+                    Kit.WritePrjFile(path, "Dt.InsertEntity.Entity.cs", dt, false);
+                    cntSql++;
+                }
 
                 path = Path.Combine(Kit.GetFolderPath(), $"{cls}.cs");
                 if (File.Exists(path))
@@ -110,7 +120,7 @@ namespace Dt
                 cntCustom++;
             }
 
-            Kit.Output($"共生成实体类Designer文件 {cntDesign} 个，自定义cs文件 {cntCustom} 个");
+            Kit.Output($"共生成：.tbl.cs文件 {cntDesign} 个，.sql.cs文件 {cntSql} 个，.cs文件 {cntCustom} 个");
             Close();
         }
 
