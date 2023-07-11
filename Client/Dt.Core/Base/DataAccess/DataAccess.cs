@@ -264,6 +264,26 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 库信息
+        /// <summary>
+        /// 获取当前服务默认数据库的类型
+        /// </summary>
+        /// <returns></returns>
+        public static Task<DatabaseType> GetDbType()
+        {
+            return _da.GetDbType();
+        }
+
+        /// <summary>
+        /// 获取当前服务的默认数据源键名
+        /// </summary>
+        /// <returns></returns>
+        public static Task<string> GetDbKey()
+        {
+            return _da.GetDbKey();
+        }
+        #endregion
+
         /// <summary>
         /// 数据访问对象
         /// </summary>

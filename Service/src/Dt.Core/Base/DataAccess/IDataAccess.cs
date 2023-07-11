@@ -212,6 +212,20 @@ namespace Dt.Core
 #endif
         #endregion
 
+        #region 库信息
+        /// <summary>
+        /// 获取当前服务默认数据库的类型
+        /// </summary>
+        /// <returns></returns>
+        Task<DatabaseType> GetDbType();
+
+        /// <summary>
+        /// 获取当前服务的默认数据源键名
+        /// </summary>
+        /// <returns></returns>
+        Task<string> GetDbKey();
+        #endregion
+
 #if SERVER
         #region 表结构
         /// <summary>

@@ -258,5 +258,25 @@ namespace Dt.Core
                 .Debug($"{_dbName}.{p_method}");
         }
         #endregion
+
+        #region 库信息
+        /// <summary>
+        /// 获取当前服务默认数据库的类型
+        /// </summary>
+        /// <returns></returns>
+        public Task<DatabaseType> GetDbType()
+        {
+            return Task.FromResult(DatabaseType.Sqlite);
+        }
+
+        /// <summary>
+        /// 获取当前服务的默认数据源键名
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> GetDbKey()
+        {
+            return Task.FromResult(_dbName);
+        }
+        #endregion
     }
 }

@@ -125,5 +125,23 @@ namespace Dt.Core
         {
             return _da.NewSequence(p_seqName);
         }
+
+        /// <summary>
+        /// 获取当前服务默认数据库的类型
+        /// </summary>
+        /// <returns></returns>
+        public Task<DatabaseType> GetDbType()
+        {
+            return _da.GetDbType();
+        }
+
+        /// <summary>
+        /// 获取当前服务的默认数据源键名
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> GetDbKey()
+        {
+            return _da.GetDbKey();
+        }
     }
 }

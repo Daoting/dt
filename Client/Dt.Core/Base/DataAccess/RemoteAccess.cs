@@ -221,5 +221,31 @@ namespace Dt.Core
             );
         }
         #endregion
+
+        #region 库信息
+        /// <summary>
+        /// 获取当前服务默认数据库的类型
+        /// </summary>
+        /// <returns></returns>
+        public Task<DatabaseType> GetDbType()
+        {
+            return new UnaryRpc(
+                _svc,
+                "Da.GetDbType"
+            ).Call<DatabaseType>();
+        }
+
+        /// <summary>
+        /// 获取当前服务的默认数据源键名
+        /// </summary>
+        /// <returns></returns>
+        public Task<string> GetDbKey()
+        {
+            return new UnaryRpc(
+                _svc,
+                "Da.GetDbKey"
+            ).Call<string>();
+        }
+        #endregion
     }
 }
