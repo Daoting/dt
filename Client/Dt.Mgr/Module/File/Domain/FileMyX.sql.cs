@@ -2,22 +2,17 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-28 创建
+* 日志: 2023-07-11 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Mgr.Module
 {
-    /// <summary>
-    /// 数据库操作接口
-    /// </summary>
-    interface IDbTools
+    public partial class FileMyX
     {
-        Task<string> IsExists();
 
-        Task<bool> InitDb(int p_initType);
     }
 }

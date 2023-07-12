@@ -1,41 +1,44 @@
-/*
- Navicat 工具 -> 数据传输 -> 源 mysql 目标 oracle sql文件
-
-导出后修改：
-1. NVARCHAR2 VARCHAR2
-2. NUMBER(4) 布尔类型
-   ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
-   ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1));
-3. NCLOB VARCHAR2(4000)
-4. 双引号 删除
-*/
+-- ----------------------------
+--  Navicat 工具 -> 数据传输 -> 源 mysql 目标 oracle sql文件
+-- 
+-- 导出后修改：
+-- 1. VARCHAR2 VARCHAR2
+-- 2. NUMBER(4) 布尔类型修改为
+--    ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
+--    ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1))
+-- 
+--    有部分枚举类型改成 NUMBER(3)
+-- 3. NCLOB VARCHAR2(4000)
+-- 4. 双引号 删除
+-- 5. NCHAR CHAR
+-- ----------------------------
 
 
 -- ----------------------------
 -- Table structure for cm_file_my
 -- ----------------------------
 CREATE TABLE CM_FILE_MY (
-  ID NUMBER(20) NOT NULL ,
-  PARENTID NUMBER(20) ,
-  NAME VARCHAR2(255) NOT NULL ,
-  ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
-  EXTNAME VARCHAR2(8) ,
-  INFO VARCHAR2(512) ,
-  CTIME DATE NOT NULL ,
-  USERID NUMBER(20) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PARENT_ID NUMBER(20),
+  NAME VARCHAR2(255) NOT NULL,
+  IS_FOLDER CHAR(1) DEFAULT 0 NOT NULL,
+  EXT_NAME VARCHAR2(8),
+  INFO VARCHAR2(512),
+  CTIME DATE NOT NULL,
+  USER_ID NUMBER(20) NOT NULL
 )
 ;
 
-ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1));
+ALTER TABLE CM_FILE_MY ADD CHECK (IS_FOLDER in (0,1));
 
 COMMENT ON COLUMN CM_FILE_MY.ID IS '文件标识';
-COMMENT ON COLUMN CM_FILE_MY.PARENTID IS '上级目录，根目录的parendid为空';
+COMMENT ON COLUMN CM_FILE_MY.PARENT_ID IS '上级目录，根目录的parendid为空';
 COMMENT ON COLUMN CM_FILE_MY.NAME IS '名称';
-COMMENT ON COLUMN CM_FILE_MY.ISFOLDER IS '是否为文件夹';
-COMMENT ON COLUMN CM_FILE_MY.EXTNAME IS '文件扩展名';
+COMMENT ON COLUMN CM_FILE_MY.IS_FOLDER IS '是否为文件夹';
+COMMENT ON COLUMN CM_FILE_MY.EXT_NAME IS '文件扩展名';
 COMMENT ON COLUMN CM_FILE_MY.INFO IS '文件描述信息';
 COMMENT ON COLUMN CM_FILE_MY.CTIME IS '创建时间';
-COMMENT ON COLUMN CM_FILE_MY.USERID IS '所属用户';
+COMMENT ON COLUMN CM_FILE_MY.USER_ID IS '所属用户';
 COMMENT ON TABLE CM_FILE_MY IS '个人文件';
 
 -- ----------------------------
@@ -45,29 +48,28 @@ INSERT INTO CM_FILE_MY VALUES ('140724076930789376', NULL, '新目录1', '1', NU
 INSERT INTO CM_FILE_MY VALUES ('140724154458304512', '140724076930789376', 'b', '1', NULL, '', TO_DATE('2020-10-23 15:47:34', 'SYYYY-MM-DD HH24:MI:SS'), '1');
 INSERT INTO CM_FILE_MY VALUES ('141735914371936256', NULL, '新目录12', '1', NULL, '', TO_DATE('2020-10-26 10:48:01', 'SYYYY-MM-DD HH24:MI:SS'), '2');
 INSERT INTO CM_FILE_MY VALUES ('456284281217503232', NULL, '新Tab', '1', '', '', TO_DATE('2023-03-13 10:30:55', 'SYYYY-MM-DD HH24:MI:SS'), '1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_file_pub
 -- ----------------------------
 CREATE TABLE CM_FILE_PUB (
-  ID NUMBER(20) NOT NULL ,
-  PARENTID NUMBER(20) ,
-  NAME VARCHAR2(255) NOT NULL ,
-  ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
-  EXTNAME VARCHAR2(8) ,
-  INFO VARCHAR2(512) ,
-  CTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PARENT_ID NUMBER(20),
+  NAME VARCHAR2(255) NOT NULL,
+  IS_FOLDER CHAR(1) DEFAULT 0 NOT NULL,
+  EXT_NAME VARCHAR2(8),
+  INFO VARCHAR2(512),
+  CTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_FILE_PUB ADD CHECK (ISFOLDER in (0,1));
+ALTER TABLE CM_FILE_PUB ADD CHECK (IS_FOLDER in (0,1));
 
 COMMENT ON COLUMN CM_FILE_PUB.ID IS '文件标识';
-COMMENT ON COLUMN CM_FILE_PUB.PARENTID IS '上级目录，根目录的parendid为空';
+COMMENT ON COLUMN CM_FILE_PUB.PARENT_ID IS '上级目录，根目录的parendid为空';
 COMMENT ON COLUMN CM_FILE_PUB.NAME IS '名称';
-COMMENT ON COLUMN CM_FILE_PUB.ISFOLDER IS '是否为文件夹';
-COMMENT ON COLUMN CM_FILE_PUB.EXTNAME IS '文件扩展名';
+COMMENT ON COLUMN CM_FILE_PUB.IS_FOLDER IS '是否为文件夹';
+COMMENT ON COLUMN CM_FILE_PUB.EXT_NAME IS '文件扩展名';
 COMMENT ON COLUMN CM_FILE_PUB.INFO IS '文件描述信息';
 COMMENT ON COLUMN CM_FILE_PUB.CTIME IS '创建时间';
 COMMENT ON TABLE CM_FILE_PUB IS '公共文件';
@@ -102,15 +104,14 @@ INSERT INTO CM_FILE_PUB VALUES ('456276498464133120', '456277006646005760', '未
 INSERT INTO CM_FILE_PUB VALUES ('456277006646005760', '1', '新Tab', '1', '', '', TO_DATE('2023-03-13 10:02:00', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_FILE_PUB VALUES ('456281421624922112', '255970120425140224', '未标题-2', '0', 'jpg', '[[editor/E3/18/456281422107267072.jpg,未标题-2,300 x 300 (.jpg),49179,daoting,2023-03-13 10:19]]', TO_DATE('2023-03-13 10:19:33', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_FILE_PUB VALUES ('456281921225248768', '456277006646005760', 'UserList', '0', 'xaml', '[[editor/C1/45/456281921523044352.xaml,UserList,xaml文件,2682,daoting,2023-03-13 10:21]]', TO_DATE('2023-03-13 10:21:32', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_group
 -- ----------------------------
 CREATE TABLE CM_GROUP (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  NOTE VARCHAR2(255) 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  NOTE VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN CM_GROUP.ID IS '组标识';
@@ -124,18 +125,17 @@ COMMENT ON TABLE CM_GROUP IS '分组，与用户和角色多对多';
 INSERT INTO CM_GROUP VALUES ('454483802783240192', '分组1', '');
 INSERT INTO CM_GROUP VALUES ('454484847190102016', '2', '');
 INSERT INTO CM_GROUP VALUES ('454484924033945600', '3', '');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_group_role
 -- ----------------------------
 CREATE TABLE CM_GROUP_ROLE (
-  GROUPID NUMBER(20) NOT NULL ,
-  ROLEID NUMBER(20) NOT NULL 
+  GROUP_ID NUMBER(20) NOT NULL,
+  ROLE_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_GROUP_ROLE.GROUPID IS '组标识';
-COMMENT ON COLUMN CM_GROUP_ROLE.ROLEID IS '角色标识';
+COMMENT ON COLUMN CM_GROUP_ROLE.GROUP_ID IS '组标识';
+COMMENT ON COLUMN CM_GROUP_ROLE.ROLE_ID IS '角色标识';
 COMMENT ON TABLE CM_GROUP_ROLE IS '组一角色多对多';
 
 -- ----------------------------
@@ -143,44 +143,43 @@ COMMENT ON TABLE CM_GROUP_ROLE IS '组一角色多对多';
 -- ----------------------------
 INSERT INTO CM_GROUP_ROLE VALUES ('454483802783240192', '2');
 INSERT INTO CM_GROUP_ROLE VALUES ('454483802783240192', '22844822693027840');
-INSERT INTO CM_GROUP_ROLE VALUES ('454484924033945600', '22844822693027840');
 INSERT INTO CM_GROUP_ROLE VALUES ('454483802783240192', '152695933758603264');
-INSERT INTO CM_GROUP_ROLE VALUES ('454484924033945600', '152695933758603264');
 INSERT INTO CM_GROUP_ROLE VALUES ('454483802783240192', '152696004814307328');
-COMMIT;
+INSERT INTO CM_GROUP_ROLE VALUES ('454484847190102016', '152695933758603264');
+INSERT INTO CM_GROUP_ROLE VALUES ('454484924033945600', '22844822693027840');
 
 -- ----------------------------
 -- Table structure for cm_menu
 -- ----------------------------
 CREATE TABLE CM_MENU (
-  ID NUMBER(20) NOT NULL ,
-  PARENTID NUMBER(20) ,
-  NAME VARCHAR2(64) NOT NULL ,
-  ISGROUP CHAR(1) DEFAULT 0 NOT NULL ,
-  VIEWNAME VARCHAR2(128) ,
-  PARAMS VARCHAR2(4000) ,
-  ICON VARCHAR2(128) ,
-  NOTE VARCHAR2(512) ,
-  DISPIDX NUMBER(11) ,
-  ISLOCKED CHAR(1) DEFAULT 0 NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PARENT_ID NUMBER(20),
+  NAME VARCHAR2(64) NOT NULL,
+  IS_GROUP CHAR(1) DEFAULT 0 NOT NULL,
+  VIEW_NAME VARCHAR2(128),
+  PARAMS VARCHAR2(4000),
+  ICON VARCHAR2(128),
+  NOTE VARCHAR2(512),
+  DISPIDX NUMBER(11) NOT NULL,
+  IS_LOCKED CHAR(1) DEFAULT 0 NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_MENU ADD CHECK (ISGROUP in (0,1));
-ALTER TABLE CM_MENU ADD CHECK (ISLOCKED in (0,1));
+ALTER TABLE CM_MENU ADD CHECK (IS_GROUP in (0,1));
+ALTER TABLE CM_MENU ADD CHECK (IS_LOCKED in (0,1));
 
 COMMENT ON COLUMN CM_MENU.ID IS '菜单标识';
-COMMENT ON COLUMN CM_MENU.PARENTID IS '父菜单标识';
+COMMENT ON COLUMN CM_MENU.PARENT_ID IS '父菜单标识';
 COMMENT ON COLUMN CM_MENU.NAME IS '菜单名称';
-COMMENT ON COLUMN CM_MENU.ISGROUP IS '分组或实例。0表实例，1表分组';
-COMMENT ON COLUMN CM_MENU.VIEWNAME IS '视图名称';
+COMMENT ON COLUMN CM_MENU.IS_GROUP IS '分组或实例。0表实例，1表分组';
+COMMENT ON COLUMN CM_MENU.VIEW_NAME IS '视图名称';
 COMMENT ON COLUMN CM_MENU.PARAMS IS '传递给菜单程序的参数';
 COMMENT ON COLUMN CM_MENU.ICON IS '图标';
 COMMENT ON COLUMN CM_MENU.NOTE IS '备注';
 COMMENT ON COLUMN CM_MENU.DISPIDX IS '显示顺序';
-COMMENT ON COLUMN CM_MENU.ISLOCKED IS '定义了菜单是否被锁定。0表未锁定，1表锁定不可用';
+COMMENT ON COLUMN CM_MENU.IS_LOCKED IS '定义了菜单是否被锁定。0表未锁定，1表锁定不可用';
 COMMENT ON COLUMN CM_MENU.CTIME IS '创建时间';
 COMMENT ON COLUMN CM_MENU.MTIME IS '最后修改时间';
 COMMENT ON TABLE CM_MENU IS '业务菜单';
@@ -203,25 +202,23 @@ INSERT INTO CM_MENU VALUES ('15315637929975808', '18562741636898816', '新菜单
 INSERT INTO CM_MENU VALUES ('15315938808373248', NULL, '新菜单组额', '1', '', '', '文件夹', '', '67', '0', TO_DATE('2019-11-12 14:20:04', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-12 14:20:14', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_MENU VALUES ('18562741636898816', '15315938808373248', '新组t', '1', '', '', '文件夹', '', '63', '0', TO_DATE('2019-11-21 13:21:43', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-21 13:21:43', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_MENU VALUES ('18860286065975296', NULL, '新菜单a123', '0', '报表', '新报表111,abc1', '文件', '', '68', '0', TO_DATE('2019-11-22 09:04:04', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-22 09:04:04', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('154430055023640576', NULL, '新菜单xxx', '0', '报表', '', '文件', '', '83', '0', TO_DATE('2020-11-30 11:29:56', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-30 11:29:56', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('259520016549801984', NULL, '新组bcd', '1', '', '', '文件夹', '', '84', '0', TO_DATE('2021-09-16 11:19:54', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-09-16 11:19:54', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('455168269038407680', NULL, '新菜单asb', '0', '', '', '文件', '', '85', '0', TO_DATE('2023-03-10 08:36:18', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-10 08:36:18', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
+INSERT INTO CM_MENU VALUES ('154430055023640576', NULL, '新菜单xxx', '0', '报表', '', '文件', '', '84', '0', TO_DATE('2020-11-30 11:29:56', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-30 11:29:56', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('259520016549801984', NULL, '新组bcd', '1', '', '', '文件夹', '', '83', '0', TO_DATE('2021-09-16 11:19:54', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-09-16 11:19:54', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
 -- Table structure for cm_option
 -- ----------------------------
 CREATE TABLE CM_OPTION (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  DISPIDX NUMBER(11) NOT NULL ,
-  GROUPID NUMBER(20) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  DISPIDX NUMBER(11) NOT NULL,
+  GROUP_ID NUMBER(20) NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_OPTION.ID IS '标识';
 COMMENT ON COLUMN CM_OPTION.NAME IS '选项名称';
 COMMENT ON COLUMN CM_OPTION.DISPIDX IS '显示顺序';
-COMMENT ON COLUMN CM_OPTION.GROUPID IS '所属分组';
+COMMENT ON COLUMN CM_OPTION.GROUP_ID IS '所属分组';
 COMMENT ON TABLE CM_OPTION IS '基础选项';
 
 -- ----------------------------
@@ -579,14 +576,13 @@ INSERT INTO CM_OPTION VALUES ('350', 'Date', '350', '5');
 INSERT INTO CM_OPTION VALUES ('351', 'bool', '351', '5');
 INSERT INTO CM_OPTION VALUES ('456661440205443072', '1', '1023', '456659310463700992');
 INSERT INTO CM_OPTION VALUES ('456662703420755968', '2', '1026', '456659310463700992');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_option_group
 -- ----------------------------
 CREATE TABLE CM_OPTION_GROUP (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_OPTION_GROUP.ID IS '标识';
@@ -602,18 +598,17 @@ INSERT INTO CM_OPTION_GROUP VALUES ('3', '地区');
 INSERT INTO CM_OPTION_GROUP VALUES ('4', '性别');
 INSERT INTO CM_OPTION_GROUP VALUES ('5', '数据类型');
 INSERT INTO CM_OPTION_GROUP VALUES ('456659310463700992', '新组');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_params
 -- ----------------------------
 CREATE TABLE CM_PARAMS (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL ,
-  VALUE VARCHAR2(255) ,
-  NOTE VARCHAR2(255) ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL,
+  VALUE VARCHAR2(255),
+  NOTE VARCHAR2(255),
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_PARAMS.ID IS '用户参数标识';
@@ -630,15 +625,14 @@ COMMENT ON TABLE CM_PARAMS IS '用户参数定义';
 INSERT INTO CM_PARAMS VALUES ('1', '接收新任务', 'true', '', TO_DATE('2020-12-01 15:13:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-02 09:23:53', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_PARAMS VALUES ('2', '接收新发布通知', 'true', '', TO_DATE('2020-12-02 09:25:15', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-02 09:25:15', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_PARAMS VALUES ('3', '接收新消息', 'true', '接收通讯录消息推送', TO_DATE('2020-12-02 09:24:28', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-02 09:24:28', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
 CREATE TABLE CM_PERMISSION (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  NOTE VARCHAR2(255) 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  NOTE VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN CM_PERMISSION.ID IS '权限标识';
@@ -651,16 +645,15 @@ COMMENT ON TABLE CM_PERMISSION IS '权限';
 -- ----------------------------
 INSERT INTO CM_PERMISSION VALUES ('1', '公共文件管理', '禁止删除');
 INSERT INTO CM_PERMISSION VALUES ('2', '素材库管理', '禁止删除');
-INSERT INTO CM_PERMISSION VALUES ('455253883184238592', '测试212', '');
-COMMIT;
+INSERT INTO CM_PERMISSION VALUES ('455253883184238592', '测试1', '');
 
 -- ----------------------------
 -- Table structure for cm_role
 -- ----------------------------
 CREATE TABLE CM_ROLE (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(32) NOT NULL ,
-  NOTE VARCHAR2(255) 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(32) NOT NULL,
+  NOTE VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN CM_ROLE.ID IS '角色标识';
@@ -677,19 +670,17 @@ INSERT INTO CM_ROLE VALUES ('22844822693027840', '收发员', '');
 INSERT INTO CM_ROLE VALUES ('152695933758603264', '市场经理', '');
 INSERT INTO CM_ROLE VALUES ('152696004814307328', '综合经理', '');
 INSERT INTO CM_ROLE VALUES ('152696042718232576', '财务经理', '');
-INSERT INTO CM_ROLE VALUES ('456324988334526464', '新角色1', '');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_role_menu
 -- ----------------------------
 CREATE TABLE CM_ROLE_MENU (
-  ROLEID NUMBER(20) NOT NULL ,
-  MENUID NUMBER(20) NOT NULL 
+  ROLE_ID NUMBER(20) NOT NULL,
+  MENU_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_ROLE_MENU.ROLEID IS '角色标识';
-COMMENT ON COLUMN CM_ROLE_MENU.MENUID IS '菜单标识';
+COMMENT ON COLUMN CM_ROLE_MENU.ROLE_ID IS '角色标识';
+COMMENT ON COLUMN CM_ROLE_MENU.MENU_ID IS '菜单标识';
 COMMENT ON TABLE CM_ROLE_MENU IS '角色一菜单多对多';
 
 -- ----------------------------
@@ -704,23 +695,20 @@ INSERT INTO CM_ROLE_MENU VALUES ('1', '7');
 INSERT INTO CM_ROLE_MENU VALUES ('1', '8');
 INSERT INTO CM_ROLE_MENU VALUES ('1', '9');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '10');
-INSERT INTO CM_ROLE_MENU VALUES ('2', '11');
 INSERT INTO CM_ROLE_MENU VALUES ('1', '15315637929975808');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '18860286065975296');
 INSERT INTO CM_ROLE_MENU VALUES ('22844822693027840', '154430055023640576');
-INSERT INTO CM_ROLE_MENU VALUES ('22844822693027840', '455168269038407680');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_role_per
 -- ----------------------------
 CREATE TABLE CM_ROLE_PER (
-  ROLEID NUMBER(20) NOT NULL ,
-  PERID NUMBER(20) NOT NULL 
+  ROLE_ID NUMBER(20) NOT NULL,
+  PER_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_ROLE_PER.ROLEID IS '角色标识';
-COMMENT ON COLUMN CM_ROLE_PER.PERID IS '权限标识';
+COMMENT ON COLUMN CM_ROLE_PER.ROLE_ID IS '角色标识';
+COMMENT ON COLUMN CM_ROLE_PER.PER_ID IS '权限标识';
 COMMENT ON TABLE CM_ROLE_PER IS '角色一权限多对多';
 
 -- ----------------------------
@@ -729,19 +717,18 @@ COMMENT ON TABLE CM_ROLE_PER IS '角色一权限多对多';
 INSERT INTO CM_ROLE_PER VALUES ('1', '1');
 INSERT INTO CM_ROLE_PER VALUES ('1', '2');
 INSERT INTO CM_ROLE_PER VALUES ('22844822693027840', '455253883184238592');
-INSERT INTO CM_ROLE_PER VALUES ('152695933758603264', '455253883184238592');
-COMMIT;
+INSERT INTO CM_ROLE_PER VALUES ('152696004814307328', '455253883184238592');
 
 -- ----------------------------
 -- Table structure for cm_rpt
 -- ----------------------------
 CREATE TABLE CM_RPT (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  DEFINE CLOB ,
-  NOTE VARCHAR2(255) ,
-  CTIME DATE ,
-  MTIME DATE 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  DEFINE CLOB,
+  NOTE VARCHAR2(255),
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_RPT.ID IS '报表标识';
@@ -763,12 +750,13 @@ INSERT INTO CM_RPT VALUES ('139241259579338752', '测试报表111', '<Rpt cols=8
   <Data />
   <Page />
   <Header />
-  <Body rows=30,30,30,30,30>
+  <Body rows=30,30,30,30,30,30,30,30,30,30>
     <Text row=4 col=6 val=文本 lbs=None tbs=None rbs=None bbs=None />
+    <Text row=7 col=6 rowspan=3 val=文本 lbs=None tbs=None rbs=None bbs=None />
   </Body>
   <Footer />
   <View />
-</Rpt>', '新增测试1', TO_DATE('2020-10-19 13:35:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-10-20 13:34:54', 'SYYYY-MM-DD HH24:MI:SS'));
+</Rpt>', '新增测试1', TO_DATE('2020-10-19 13:35:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-06-28 08:39:08', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_RPT VALUES ('139540400075304960', 'abc1', '<Rpt cols=80,80,80,80,80>
   <Params />
   <Data />
@@ -786,870 +774,20 @@ INSERT INTO CM_RPT VALUES ('139540400075304960', 'abc1', '<Rpt cols=80,80,80,80,
 INSERT INTO CM_RPT VALUES ('150118388697264128', 'abc12', '', '', TO_DATE('2020-11-18 13:57:21', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-18 13:57:21', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_RPT VALUES ('154424288497369088', '新报表abc', '', '', TO_DATE('2020-11-30 11:07:07', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-30 11:07:07', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_RPT VALUES ('259588273038290944', '新报表3', '', '', TO_DATE('2021-09-16 15:51:31', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-09-16 15:51:53', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
-
--- ----------------------------
--- Table structure for cm_sql
--- ----------------------------
-CREATE TABLE CM_SQL (
-  ID VARCHAR2(128) NOT NULL ,
-  SQL VARCHAR2(4000) NOT NULL ,
-  NOTE VARCHAR2(255) 
-)
-;
-COMMENT ON COLUMN CM_SQL.ID IS 'sql键值';
-COMMENT ON COLUMN CM_SQL.SQL IS 'sql内容';
-COMMENT ON COLUMN CM_SQL.NOTE IS '备注';
-COMMENT ON TABLE CM_SQL IS '服务的sql语句';
-
--- ----------------------------
--- Records of cm_sql
--- ----------------------------
-INSERT INTO CM_SQL VALUES ('个人文件-子级文件夹', 'select * from cm_file_my where isfolder=1 and parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-子项个数', 'select count(*) from cm_file_my where parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-所有子级', 'select * from cm_file_my where parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-扩展名过滤子级', 'select
-	* 
-from
-	cm_file_my 
-where
-	parentid = @parentid 
-	and ( isfolder = 1 or locate( extname, @extname ) )', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-扩展名过滤根目录', 'select
-	* 
-from
-	cm_file_my 
-where
-	parentid is null 
-	and userid = @userid 
-	and ( isfolder = 1 or locate( extname, @extname ) )', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-搜索文件', 'select * from cm_file_my where isfolder=0 and userid=@userid and name like @name limit 20', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-根文件夹', 'select * from cm_file_my where isfolder=1 and parentid is null and userid=@userid', NULL);
-INSERT INTO CM_SQL VALUES ('个人文件-根目录', 'select * from cm_file_my where parentid is null and userid=@userid', NULL);
-INSERT INTO CM_SQL VALUES ('分组-关联用户', 'SELECT
-	id,
-	NAME,
-	phone 
-FROM
-	cm_user a 
-WHERE
-	EXISTS ( SELECT UserID FROM cm_user_group b WHERE a.ID = b.UserID AND GroupID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('分组-关联角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	EXISTS ( SELECT RoleID FROM cm_group_role b WHERE a.ID = b.RoleID AND GroupID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('分组-分组列表的用户', 'SELECT DISTINCT(userid) FROM cm_user_group where FIND_IN_SET(groupid, @groupid)', NULL);
-INSERT INTO CM_SQL VALUES ('分组-未关联的用户', 'SELECT
-	id,
-	NAME,
-	phone 
-FROM
-	cm_user a 
-WHERE
-	NOT EXISTS ( SELECT UserID FROM cm_user_group b WHERE a.ID = b.UserID AND GroupID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('分组-未关联的角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	NOT EXISTS ( SELECT RoleID FROM cm_group_role b WHERE a.ID = b.RoleID AND GroupID = @ReleatedID )
-	 and a.ID!=1', NULL);
-INSERT INTO CM_SQL VALUES ('参数-用户参数值ByID', 'SELECT VALUE FROM cm_user_params WHERE userid = @userid and paramid = @paramid
-UNION
-SELECT VALUE FROM cm_params a  WHERE id = @paramid', NULL);
-INSERT INTO CM_SQL VALUES ('参数-用户参数值ByName', 'SELECT a.VALUE FROM cm_user_params a, cm_params b WHERE a.paramid=b.id and a.userid = @userid and b.name = @name
-UNION
-SELECT VALUE FROM cm_params a  WHERE name = @name', NULL);
-INSERT INTO CM_SQL VALUES ('参数-用户参数列表', 'SELECT paramid,VALUE FROM cm_user_params WHERE userid = @userid
-	UNION
-SELECT id,VALUE FROM cm_params a  WHERE
-	NOT EXISTS ( SELECT paramid FROM cm_user_params b WHERE a.id = b.paramid AND userid = @userid )
-', NULL);
-INSERT INTO CM_SQL VALUES ('参数-重复名称', 'select count(*) from cm_params where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('报表-最近修改', 'SELECT
-	id,name,note,ctime,mtime
-FROM
-	cm_rpt
-WHERE
-	to_days(now()) - to_days(mtime) <= 2', NULL);
-INSERT INTO CM_SQL VALUES ('报表-模板', 'select define from cm_rpt where id=@id', NULL);
-INSERT INTO CM_SQL VALUES ('报表-模糊查询', ' SELECT
-	id,name,note,ctime,mtime
-FROM
-	cm_rpt
-WHERE
-	NAME LIKE @input', NULL);
-INSERT INTO CM_SQL VALUES ('报表-重复名称', 'select count(*) from cm_rpt where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('文件-子级文件夹', 'select * from cm_file_pub where isfolder=1 and parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('文件-子项个数', 'select count(*) from cm_file_pub where parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('文件-所有子级', 'select * from cm_file_pub where parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('文件-扩展名过滤子级', 'select
-	* 
-from
-	cm_file_pub 
-where
-	parentid = @parentid 
-	and ( isfolder = 1 or locate( extname, @extname ) )', NULL);
-INSERT INTO CM_SQL VALUES ('文件-搜索所有文件', 'select
-	info 
-from
-	cm_file_pub 
-where
-	isfolder = 0 
-	and name like @name union
-select
-	info 
-from
-	cm_file_my 
-where
-	isfolder = 0 
-	and userid = @userid 
-	and name like @name 
-	limit 20', NULL);
-INSERT INTO CM_SQL VALUES ('文件-搜索扩展名文件', 'select
-	info 
-from
-	cm_file_pub 
-where
-	isfolder = 0 
-	and locate( extname, @extname ) 
-	and name like @name union
-select
-	info 
-from
-	cm_file_my 
-where
-	isfolder = 0 
-	and locate( extname, @extname ) 
-	and userid = @userid 
-	and name like @name 
-	limit 20', NULL);
-INSERT INTO CM_SQL VALUES ('文件-搜索文件', 'select * from cm_file_pub where isfolder=0 and name like @name limit 20', NULL);
-INSERT INTO CM_SQL VALUES ('权限-关联用户', 'select distinct (c.name)
-  from cm_role_prv a, cm_user_role b, cm_user c
- where a.roleid = b.roleid
-   and b.userid = c.id
-   and a.prvid = @prvid
- order by c.name', NULL);
-INSERT INTO CM_SQL VALUES ('权限-关联角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	EXISTS ( SELECT RoleID FROM cm_role_per b WHERE a.ID = b.RoleID AND PerID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('权限-名称重复', 'select count(id) from cm_permission where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('权限-未关联的角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	NOT EXISTS ( SELECT RoleID FROM cm_role_per b WHERE a.ID = b.RoleID AND PerID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-前一活动执行者', 'select distinct
-	userid 
-from
-	cm_wfi_item 
-where
-	atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = @atvdid ) )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-前一活动的同部门执行者', 'select distinct
-	userid 
-from
-	cm_xemp 
-where
-	depid in (
-select distinct
-	depid 
-from
-	cm_xemp 
-where
-	userid in (
-select
-	userid 
-from
-	cm_wfi_item 
-where
-	atviid in ( select ID from cm_wfi_atv where prciid = @prciId and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = @atvdid ) ) 
-	) 
-	)', NULL);
-INSERT INTO CM_SQL VALUES ('流程-历史任务', 'select wi.id itemid,
-			 pi.id prciid,
-			 pd.id prcdid,
-			 ad.id atvdid,
-			 ai.id atviid,
-			 pd.name prcname,
-			 ( CASE pi.status WHEN 1 THEN ''已结束'' WHEN 2 THEN ''已终止'' ELSE ad.name END ) as atvname,
-			 pi.status,
-			 pi.name formname,
-			 wi.sender,
-			 wi.stime,
-			 max(wi.mtime) mtime,
-			 wi.reCount
-	from cm_wfi_atv ai,
-			 cm_wfi_prc pi,
-			 cm_wfd_atv ad,
-			 cm_wfd_prc pd,
-			 (select id,
-							 atviid,
-							 mtime,
-							 sender,
-							 stime,
-							 (select count(1)
-									from cm_wfi_item
-								 where atviid = t.atviid
-									 and AssignKind = 4
-									 and id <> t.id) as reCount
-					from cm_wfi_item t
-				 where status = 1
-					 and userid = @userID
-					 and (@start < ''1900-01-01'' or mtime >= @start)
-					 and (@end < ''1900-01-01'' or mtime <= @end)
-					 order by mtime desc) wi
- where wi.atviid = ai.id
-	 and ai.prciid = pi.id
-	 and pi.prcdid = pd.id
-	 and ai.atvdid = ad.id
-	 and wi.reCount = 0
-	 and (@status > 2 or pi.status = @status)
- group by prciid
- order by wi.stime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-参与的流程', 'select distinct
-	p.id,
-	p.name
-from
-	cm_wfd_prc p,
-	cm_wfd_atv a,
-	cm_wfd_atv_role r,
-	cm_user_role u 
-where
-	p.id = a.prcid 
-	and a.id = r.atvid 
-	and ( r.roleid = u.roleid or r.roleid = 1 ) 
-	and u.userid = @userID
-order by
-	p.dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-可启动流程', 'select
-	pd.id,
-	name 
-from
-	cm_wfd_prc pd,
-	(
-select distinct
-	p.id 
-from
-	cm_wfd_prc p,
-	cm_wfd_atv a,
-	cm_wfd_atv_role r,
-	cm_user_role u 
-where
-	p.id = a.prcid 
-	and a.id = r.atvid 
-	and ( r.roleid = u.roleid or r.roleid = 1 ) 
-	and u.userid = @userid 
-	and p.islocked = 0 
-	and a.type = 1 
-	) pa 
-where
-	pd.id = pa.id 
-order by
-	dispidx;', NULL);
-INSERT INTO CM_SQL VALUES ('流程-同步活动实例数', 'select
-	count( * ) 
-from
-	cm_wfi_atv 
-where
-	prciid = @prciid 
-	and atvdid = @atvdid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-后续活动', 'select
-	atv.* 
-from
-	cm_wfd_atv atv,
-	( select trs.TgtAtvID atvid from cm_wfd_trs trs where trs.SrcAtvID = @atvid and IsRollback = 0 ) trs 
-where
-	atv.id = trs.atvid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-后续活动工作项', 'select
-	a.IsAccept,
-	a.Status,
-	b.id atviid 
-from
-	cm_wfi_item a,
-	cm_wfi_atv b 
-where
-	a.atviid = b.id 
-	and b.atvdid in ( select TgtAtvID from cm_wfd_trs d where d.SrcAtvID = @atvdid and d.IsRollback = 0 ) 
-	and b.prciid = @prciid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-回退活动实例', 'select
-	* 
-from
-	cm_wfi_atv a 
-where
-	prciid = @prciid 
-	and exists ( select TgtAtvID from cm_wfd_trs b where SrcAtvID = @SrcAtvID and b.IsRollback = 1 and a.atvdid = b.TgtAtvID ) 
-order by
-	mtime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-实例id获取模板id', 'select PrcdID from cm_wfi_prc where id=@id', NULL);
-INSERT INTO CM_SQL VALUES ('流程-工作项个数', 'select
-	count( * ) 
-from
-	cm_wfi_item 
-where
-	atviid = @atviid 
-	and status = 1', NULL);
-INSERT INTO CM_SQL VALUES ('流程-工作项的活动实例', 'select
-	* 
-from
-	cm_wfi_atv 
-where
-	id = ( select atviid from cm_wfi_item where id = @itemid )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-工作项的流程实例', 'select
-	* 
-from
-	cm_wfi_prc 
-where
-	id = ( select prciid from cm_wfi_atv where id = ( select atviid from cm_wfi_item where id = @itemid ) )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-已完成活动同部门执行者', 'select distinct
-	userid 
-from
-	cm_xemp 
-where
-	depid in (
-select distinct
-	depid 
-from
-	cm_xemp 
-where
-	userid in ( select userid from cm_wfi_item where atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid = @atvdid ) ) 
-	)', NULL);
-INSERT INTO CM_SQL VALUES ('流程-已完成活动执行者', 'select distinct
-	userid 
-from
-	cm_wfi_item 
-where
-	atviid in ( select id from cm_wfi_atv where prciid = @prciId and atvdid = @atvdid )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-待办任务', 'select wi.id   itemid,
-		 pi.id     prciid,
-		 pd.id     prcdid,
-		 pd.name   prcname,
-		 ad.name   atvname,
-		 pi.name   formname,
-		 wi.AssignKind,
-		 wi.sender,
-		 wi.stime,
-		 wi.IsAccept
-from cm_wfi_atv ai,
-		 cm_wfd_atv ad,
-		 cm_wfi_prc pi,
-		 cm_wfd_prc pd,
-		 (select id,
-						 atviid,
-						 sender,
-						 stime,
-						 IsAccept,
-						 AssignKind
-				from cm_wfi_item wi
-			 where status = 0
-				 and (userid = @userID or
-						 (userid is null and
-						 (exists (select 1
-													from cm_user_role
-												 where wi.roleid = roleid
-													 and userid = @userID)) or
-						 roleid = 1))) wi
-where ai.id = wi.atviid
- and ai.atvdid = ad.id
- and ai.prciid = pi.id
- and pi.prcdid = pd.id
-order by wi.stime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-待办任务总数', 'select
-	sum( 1 ) allTask 
-from
-	cm_wfi_prc a,
-	cm_wfi_atv b,
-	cm_wfi_item c 
-where
-	a.id = b.prciid 
-	and b.id = c.atviid 
-	and c.status = 0 
-	and (
-	c.userid = @userid 
-	or ( userid is null and exists ( select 1 from cm_user_role where c.roleid = roleid and userid = @userid ) ) 
-	)', NULL);
-INSERT INTO CM_SQL VALUES ('流程-所有未过期用户', 'select id, name from cm_user where expired = 0', NULL);
-INSERT INTO CM_SQL VALUES ('流程-所有流程模板', 'select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc order by Dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-所有流程模板名称', 'select
-	id,
-	name 
-from
-	cm_wfd_prc 
-order by
-	dispidx;', NULL);
-INSERT INTO CM_SQL VALUES ('流程-所有经办历史任务', 'select wi.id itemid,
-			 pi.id prciid,
-			 pd.id prcdid,
-			 ad.id atvdid,
-			 ai.id atviid,
-			 pd.name prcname,
-			 ad.name atvname,
-			 pi.status,
-			 pi.name formname,
-			 wi.sender,
-			 wi.stime,
-			 wi.mtime,
-			 wi.reCount
-	from cm_wfi_atv ai,
-			 cm_wfi_prc pi,
-			 cm_wfd_atv ad,
-			 cm_wfd_prc pd,
-			 (select id,
-							 atviid,
-							 mtime,
-							 sender,
-							 stime,
-							 (select count(1)
-									from cm_wfi_item
-								 where atviid = t.atviid
-									 and AssignKind = 4
-									 and id <> t.id) as reCount
-					from cm_wfi_item t
-				 where status = 1
-					 and userid = @userID
-					 and (@start < ''1900-01-01'' or mtime >= @start)
-					 and (@end < ''1900-01-01'' or mtime <= @end)) wi
-	where wi.atviid = ai.id
-	 and ai.prciid = pi.id
-	 and pi.prcdid = pd.id
-	 and ai.atvdid = ad.id
-	 and (@status > 2 or pi.status = @status)
-	order by wi.stime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-日志目标项', 'select ( CASE username WHEN NULL THEN rolename ELSE username END ) accpname,
-			 atvdname,
-			 atvdtype,
-			 joinkind,
-			 atviid
-	from (select a.atviid,
-							 (select group_concat(name order by a.dispidx separator ''、'') from cm_user where id = a.userid) as username,
-							 (select group_concat(name order by a.dispidx separator ''、'') from cm_role where id = a.roleid) as rolename,
-							 max(a.dispidx) dispidx,
-							 c.name as atvdname,
-							 c.type as atvdtype,
-							 c.joinkind
-					from cm_wfi_item a,
-							 (select ti.TgtAtviID id
-									from cm_wfi_atv ai, cm_wfi_trs ti
-								 where ai.id = ti.SrcAtviID
-									 and ai.prciid = @prciid
-									 and ti.SrcAtviID = @atviid) b,
-							 cm_wfd_atv c,
-							 cm_wfi_atv d
-				 where a.atviid = b.id
-					 and b.id = d.id
-					 and d.atvdid = c.id
-				 group by a.atviid, c.name, c.type, c.joinkind) t
- order by dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-是否活动授权任何人', 'select
-	count(*) 
-from
-	cm_wfd_atv_role 
-where
-	roleid = 1 
-	and atvid = @atvid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-最后工作项', 'select
-	wi.id itemid,
-	pi.PrcdID prcid 
-from
-	cm_wfi_item wi,
-	cm_wfi_atv wa,
-	cm_wfi_prc pi 
-where
-	wi.atviid = wa.id 
-	and wa.PrciID = pi.id 
-	and pi.id = @prciID 
-order by
-	wi.mtime desc 
-	LIMIT 0,
-	1', NULL);
-INSERT INTO CM_SQL VALUES ('流程-最后已完成活动ID', 'select
-	id 
-from
-	cm_wfi_atv 
-where
-	prciid = @prciid 
-	and atvdid = @atvdid 
-	and status = 1 
-order by
-	mtime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-最近修改', 'select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc WHERE to_days(now()) - to_days(mtime) <= 2', NULL);
-INSERT INTO CM_SQL VALUES ('流程-查找实例', 'select
-	id,
-	PrcdID,
-	name,
-	Status,
-	Ctime,
-	Mtime 
-from
-	cm_wfi_prc 
-where
-	PrcdID = @PrcdID 
-	and ( @Status > 2 or `Status` = @Status ) 
-	and ( @title = '''' or name = @title ) 
-	and ( @start < ''1900-01-01'' or Mtime >= @start ) 
-	and ( @end < ''1900-01-01'' or Mtime <= @end ) 
-order by
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-模糊查询', 'select ID,Name,IsLocked,Singleton,Note,Dispidx,Ctime,Mtime from cm_wfd_prc WHERE NAME LIKE @input', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动前的迁移', 'select
-	* 
-from
-	cm_wfd_trs 
-where
-	TgtAtvID = @TgtAtvID', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动发送者', 'select
-	sender 
-from
-	cm_wfi_item 
-where
-	atviid = @atviid 
-order by
-	mtime desc', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动实例状态', 'select
-	atvdid,
-	status 
-from
-	cm_wfi_atv 
-where
-	prciid = @prciid 
-order by
-	ctime', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动实例的工作项', 'select
-	status,
-	AssignKind,
-	concat( sender, '' -> '', usr.name ) sendprc,
-	IsAccept,
-	wi.mtime 
-from
-	cm_wfi_item wi
-	left join cm_user usr on wi.userid = usr.id 
-where
-	atviid = @atviID 
-order by
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动实例的状态', 'select status 
-from
-	cm_wfi_atv 
-where
-	atvdid = @atvdid 
-	and prciid = @prciid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动未关联的角色', 'SELECT
-	a.id,
-	a.NAME
-FROM
-	cm_role a
-WHERE
-	NOT EXISTS ( SELECT roleid FROM cm_wfd_atv_role b WHERE a.id = b.roleid AND atvid = @atvid )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动的所有执行者', 'select
-	id,
-name 
-from
-	cm_user u 
-where
-	exists (
-select distinct
-	( userid ) 
-from
-	cm_user_role ur 
-where
-	exists ( select roleid from cm_wfd_atv_role ar where ur.roleid = ar.roleid and atvid = @atvid ) 
-	and u.id = ur.userid 
-	) 
-order by
-name', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动的所有授权角色', 'select
-	id,
-name 
-from
-	cm_role r 
-where
-	exists ( select distinct ( roleid ) from cm_wfd_atv_role ar where r.id = ar.roleid and atvid = @atvid )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-活动结束的实例数', 'select
-	count( * ) 
-from
-	cm_wfi_atv 
-where
-	atvdid = @atvdid 
-	and prciid = @prciid 
-	and status = 1', NULL);
-INSERT INTO CM_SQL VALUES ('流程-流程实例数', 'select count(*) from cm_wfi_prc where PrcdID=@PrcdID', NULL);
-INSERT INTO CM_SQL VALUES ('流程-流程实例的活动实例', 'select
-	atvi.id,
-	atvd.name,
-	status,
-	instcount 
-from
-	cm_wfi_atv atvi,
-	cm_wfd_atv atvd 
-where
-	atvi.atvdid = atvd.id 
-	and atvi.prciid = @prciID 
-order by
-	atvi.ctime', NULL);
-INSERT INTO CM_SQL VALUES ('流程-生成日志列表', 'select b.prciid,
-			 b.id atviid,
-			 c.status prcistatus,
-			 d.name atvdname,
-			 a.AssignKind,
-			 a.IsAccept,
-			 a.AcceptTime,
-			 a.status itemstatus,
-			 ( CASE userid WHEN NULL THEN (select name from cm_role t where t.id = a.roleid) ELSE (select name from cm_user t where t.id = a.userid) END ) username,
-			 a.note,
-			 a.ctime,
-			 a.mtime,
-			 c.mtime prcitime,
-			 a.sender
-from cm_wfi_item a, cm_wfi_atv b, cm_wfi_prc c, cm_wfd_atv d
-where a.atviid = b.id
-	 and b.prciid = c.id
-	 and b.atvdid = d.id
-	 and b.prciid = @prciid
-	 and (@atvdid = 0 or b.atvdid = @atvdid)
-order by a.dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('流程-编辑活动授权', 'select
-	a.*,
-	b.name as role 
-from
-	cm_wfd_atv_role a,
-	cm_role b 
-where
-	a.roleid = b.id 
-	and atvid in ( select id from cm_wfd_atv where prcid = @prcid )', NULL);
-INSERT INTO CM_SQL VALUES ('流程-编辑活动模板', 'select
-	a.*,
-	( CASE execscope WHEN 0 THEN ''一组用户'' WHEN 1 THEN ''所有用户'' WHEN 2 THEN ''单个用户'' WHEN 3 THEN ''任一用户'' END ) execscope_dsp,
-	( CASE execlimit WHEN 0 THEN ''无限制'' WHEN 1 THEN ''前一活动的执行者'' WHEN 2 THEN ''前一活动的同部门执行者'' WHEN 3 THEN ''已完成活动的执行者'' WHEN 4 THEN ''已完成活动的同部门执行者'' END ) execlimit_dsp,
-	( CASE JOINKIND WHEN 0 THEN ''全部任务'' WHEN 1 THEN ''任一任务'' WHEN 2 THEN ''即时同步'' END ) joinkind_dsp,
-	( CASE transkind WHEN 0 THEN ''自由选择'' WHEN 1 THEN ''全部'' WHEN 2 THEN ''独占式选择'' END ) transkind_dsp,
-	( select name from cm_wfd_atv where id = a.execatvid ) as execatvid_dsp 
-from
-	cm_wfd_atv a 
-where
-	prcid = @prcid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-编辑流程模板', 'select * from cm_wfd_prc where id=@prcid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-编辑迁移模板', 'select * from cm_wfd_trs where prcid=@prcid', NULL);
-INSERT INTO CM_SQL VALUES ('流程-获取用户ID', 'select id from cm_user where name = @name', NULL);
-INSERT INTO CM_SQL VALUES ('流程-起始活动', 'select * from cm_wfd_atv where prcid=@prcid and type=1', NULL);
-INSERT INTO CM_SQL VALUES ('流程-迁移模板ID', 'select
-	ID 
-from
-	cm_wfd_trs 
-where
-	prcid = @prcid 
-	and SrcAtvID = @SrcAtvID 
-	and TgtAtvID = @TgtAtvID 
-	and IsRollback = @IsRollback', NULL);
-INSERT INTO CM_SQL VALUES ('流程-重复名称', 'select count(*) from cm_wfd_prc where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('用户-关联分组', 'select id,name from cm_group a where exists ( select GroupID from cm_user_group b where a.ID = b.GroupID and UserID=@ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('用户-关联角色', 'select id,name from cm_role a	where exists ( select RoleID from cm_user_role b where a.ID = b.RoleID and UserID=@ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('用户-具有的权限', 'SELECT id, NAME
-FROM
-	(
-		SELECT DISTINCT ( b.id ),
-			b.NAME
-		FROM
-			cm_role_per a
-			LEFT JOIN cm_permission b ON a.perid = b.id 
-		WHERE
-			EXISTS (
-					SELECT
-						roleid 
-					FROM
-						cm_user_role c 
-					WHERE
-						a.roleid = c.roleid 
-						AND userid = @userid
-				  UNION
-					SELECT
-						roleid 
-					FROM
-						cm_group_role d 
-					WHERE
-						a.roleid = d.roleid 
-						AND EXISTS ( SELECT groupid FROM cm_user_group e WHERE d.groupid = e.groupid AND e.userid = @userid ) 
-			) 
-			OR a.roleid = 1 
-	) t 
-ORDER BY
-	id', NULL);
-INSERT INTO CM_SQL VALUES ('用户-可访问的菜单', 'select id,name
-  from (select distinct (b.id), b.name, dispidx
-          from cm_role_menu a
-          left join cm_menu b
-            on a.menuid = b.id
-         where exists
-         (select roleid
-                  from cm_user_role c
-                 where a.roleid = c.roleid
-                   and userid = @userid
-					union
-					select roleid
-					        from cm_group_role d
-									where a.roleid = d.roleid
-									  and exists (select groupid from cm_user_group e where d.groupid=e.groupid and e.userid=@userid)
-					) or a.roleid=1
-			 ) t
- order by dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('用户-未关联的分组', 'SELECT
-	id,
-  name 
-FROM
-	cm_group a 
-WHERE
-	NOT EXISTS ( SELECT GroupID FROM cm_user_group b WHERE a.ID = b.GroupID AND UserID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('用户-未关联的角色', 'SELECT
-	a.id,
-	a.NAME 
-FROM
-	cm_role a 
-WHERE
-	NOT EXISTS ( SELECT RoleID FROM cm_user_role b WHERE a.ID = b.RoleID AND UserID = @ReleatedID ) 
-	AND a.ID !=1', NULL);
-INSERT INTO CM_SQL VALUES ('用户-角色列表的用户', 'SELECT DISTINCT(userid) FROM cm_user_role where FIND_IN_SET(roleid, @roleid)', NULL);
-INSERT INTO CM_SQL VALUES ('用户-重复手机号', 'select count(id) from cm_user where phone=@phone', NULL);
-INSERT INTO CM_SQL VALUES ('登录-手机号获取用户', 'select * from cm_user where phone=@phone', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-id菜单项', 'SELECT
-	a.*,
-	b.NAME parentname 
-FROM
-	cm_menu a
-	LEFT JOIN cm_menu b ON a.parentid = b.id 
-WHERE
-	a.id = @id', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-关联的角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	EXISTS ( SELECT RoleID FROM cm_role_menu b WHERE a.ID = b.RoleID AND MenuID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-分组树', 'SELECT
-	id,
-	NAME,
-	parentid 
-FROM
-	cm_menu 
-WHERE
-	isgroup = 1 
-ORDER BY
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-完整树', 'SELECT
-	id,
-	NAME,
-	parentid,
-	isgroup,
-	icon,
-	dispidx
-FROM
-	cm_menu 
-ORDER BY
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-是否有子菜单', 'select count(*) from cm_menu where parentid=@parentid', NULL);
-INSERT INTO CM_SQL VALUES ('菜单-未关联的角色', 'SELECT
-	id,
-NAME 
-FROM
-	cm_role a 
-WHERE
-	NOT EXISTS ( SELECT RoleID FROM cm_role_menu b WHERE a.ID = b.RoleID AND MenuID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('角色-关联用户', 'SELECT
-	id,
-	NAME,
-	phone 
-FROM
-	cm_user a 
-WHERE
-	EXISTS ( SELECT UserID FROM cm_user_role b WHERE a.ID = b.UserID AND RoleID = @ReleatedID ) 
-ORDER BY
-NAME', NULL);
-INSERT INTO CM_SQL VALUES ('角色-关联的分组', 'SELECT
-	id,
-NAME 
-FROM
-	cm_group a 
-WHERE
-	EXISTS ( SELECT GroupID FROM cm_group_role b WHERE a.ID = b.GroupID AND RoleID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('角色-关联的权限', 'SELECT
-	id,
-NAME 
-FROM
-	cm_permission a 
-WHERE
-	EXISTS ( SELECT PerID FROM cm_role_per b WHERE a.ID = b.PerID AND RoleID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('角色-关联的菜单', 'SELECT
-	id,
-NAME 
-FROM
-	cm_menu a 
-WHERE
-	EXISTS ( SELECT MenuID FROM cm_role_menu b WHERE a.ID = b.MenuID AND RoleID = @ReleatedID ) 
-ORDER BY
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('角色-名称重复', 'select count(id) from cm_role where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('角色-未关联的分组', 'SELECT
-	id,
-NAME 
-FROM
-	cm_group a 
-WHERE
-	NOT EXISTS ( SELECT GroupID FROM cm_group_role b WHERE a.ID = b.GroupID AND RoleID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('角色-未关联的权限', 'SELECT
-	id,
-NAME 
-FROM
-	cm_permission a 
-WHERE
-	NOT EXISTS ( SELECT PerID FROM cm_role_per b WHERE a.ID = b.PerID AND RoleID = @ReleatedID )', NULL);
-INSERT INTO CM_SQL VALUES ('角色-未关联的用户', 'SELECT
-	id,
-	NAME,
-	phone 
-FROM
-	cm_user a 
-WHERE
-	NOT EXISTS ( SELECT UserID FROM cm_user_role b WHERE a.ID = b.UserID AND RoleID = @ReleatedID ) 
-ORDER BY
-NAME', NULL);
-INSERT INTO CM_SQL VALUES ('角色-未关联的菜单', 'SELECT
-	id,
-NAME 
-FROM
-	cm_menu a 
-WHERE
-	isgroup = 0 
-	AND NOT EXISTS ( SELECT menuid FROM cm_role_menu b WHERE a.id = b.menuid AND roleid = @ReleatedID ) 
-ORDER BY
-	dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('角色-系统角色', 'select * from cm_role where id < 1000', NULL);
-INSERT INTO CM_SQL VALUES ('选项-分类选项', 'SELECT a.*,b.Name as GroupName FROM cm_option a, cm_option_group b where a.GroupID=b.ID and a.GroupID=@ParentID order by Dispidx', NULL);
-INSERT INTO CM_SQL VALUES ('选项-分组名称重复', 'select count(*) from cm_option_group where name=@name', NULL);
-INSERT INTO CM_SQL VALUES ('选项-子项个数', 'SELECT count(*) FROM cm_option where groupid=@groupid', NULL);
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_user
 -- ----------------------------
 CREATE TABLE CM_USER (
-  ID NUMBER(20) NOT NULL ,
-  PHONE NCHAR(11) NOT NULL ,
-  NAME VARCHAR2(32) NOT NULL ,
-  PWD NCHAR(32) NOT NULL ,
-  SEX NUMBER(4) NOT NULL ,
-  PHOTO VARCHAR2(255) ,
-  EXPIRED CHAR(1) DEFAULT 0 NOT NULL ,
-  CTIME DATE ,
-  MTIME DATE 
+  ID NUMBER(20) NOT NULL,
+  PHONE CHAR(11) NOT NULL,
+  NAME VARCHAR2(32) NOT NULL,
+  PWD CHAR(32) NOT NULL,
+  SEX NUMBER(3) NOT NULL,
+  PHOTO VARCHAR2(255),
+  EXPIRED CHAR(1) DEFAULT 0 NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 
@@ -1685,19 +823,17 @@ INSERT INTO CM_USER VALUES ('227949556179791872', '13612345678', 'WebAssembly', 
 INSERT INTO CM_USER VALUES ('229519641138819072', '13311111111', '13311111111', 'b59c67bf196a4758191e42f76670ceba', '1', '[[editor/E3/18/452737920958222336.jpg,未标题-2,300 x 300 (.jpg),49179,daoting,2023-03-03 15:38]]', '0', TO_DATE('2021-06-25 16:29:06', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-06-25 16:29:06', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_USER VALUES ('231620526086156288', '13611111111', '13611111111', 'b59c67bf196a4758191e42f76670ceba', '1', '', '0', TO_DATE('2021-07-01 11:37:18', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-07-01 11:37:18', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_USER VALUES ('247170018466197504', '15948341897', '15948341892', 'af3303f852abeccd793068486a391626', '1', '', '0', TO_DATE('2021-08-13 09:25:26', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-09-10 09:36:37', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_USER VALUES ('455216573428289536', '13512342222', '新用户1', '674f3c2c1a8a6f90461e8a66fb5550ba', '1', '', '0', TO_DATE('2023-03-10 11:48:30', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-10 11:53:32', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_user_group
 -- ----------------------------
 CREATE TABLE CM_USER_GROUP (
-  USERID NUMBER(20) NOT NULL ,
-  GROUPID NUMBER(20) NOT NULL 
+  USER_ID NUMBER(20) NOT NULL,
+  GROUP_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_USER_GROUP.USERID IS '用户标识';
-COMMENT ON COLUMN CM_USER_GROUP.GROUPID IS '组标识';
+COMMENT ON COLUMN CM_USER_GROUP.USER_ID IS '用户标识';
+COMMENT ON COLUMN CM_USER_GROUP.GROUP_ID IS '组标识';
 COMMENT ON TABLE CM_USER_GROUP IS '用户一组多对多';
 
 -- ----------------------------
@@ -1705,21 +841,20 @@ COMMENT ON TABLE CM_USER_GROUP IS '用户一组多对多';
 -- ----------------------------
 INSERT INTO CM_USER_GROUP VALUES ('1', '454483802783240192');
 INSERT INTO CM_USER_GROUP VALUES ('1', '454484924033945600');
-INSERT INTO CM_USER_GROUP VALUES ('3', '454484924033945600');
-COMMIT;
+INSERT INTO CM_USER_GROUP VALUES ('149709966847897600', '454484847190102016');
 
 -- ----------------------------
 -- Table structure for cm_user_params
 -- ----------------------------
 CREATE TABLE CM_USER_PARAMS (
-  USERID NUMBER(20) NOT NULL ,
-  PARAMID NUMBER(20) NOT NULL ,
-  VALUE VARCHAR2(255) ,
-  MTIME DATE 
+  USER_ID NUMBER(20) NOT NULL,
+  PARAM_ID NUMBER(20) NOT NULL,
+  VALUE VARCHAR2(255),
+  MTIME DATE NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_USER_PARAMS.USERID IS '用户标识';
-COMMENT ON COLUMN CM_USER_PARAMS.PARAMID IS '参数标识';
+COMMENT ON COLUMN CM_USER_PARAMS.USER_ID IS '用户标识';
+COMMENT ON COLUMN CM_USER_PARAMS.PARAM_ID IS '参数标识';
 COMMENT ON COLUMN CM_USER_PARAMS.VALUE IS '参数值';
 COMMENT ON COLUMN CM_USER_PARAMS.MTIME IS '修改时间';
 COMMENT ON TABLE CM_USER_PARAMS IS '用户参数值';
@@ -1728,18 +863,17 @@ COMMENT ON TABLE CM_USER_PARAMS IS '用户参数值';
 -- Records of cm_user_params
 -- ----------------------------
 INSERT INTO CM_USER_PARAMS VALUES ('2', '1', 'false', TO_DATE('2020-12-04 13:29:05', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_user_role
 -- ----------------------------
 CREATE TABLE CM_USER_ROLE (
-  USERID NUMBER(20) NOT NULL ,
-  ROLEID NUMBER(20) NOT NULL 
+  USER_ID NUMBER(20) NOT NULL,
+  ROLE_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_USER_ROLE.USERID IS '用户标识';
-COMMENT ON COLUMN CM_USER_ROLE.ROLEID IS '角色标识';
+COMMENT ON COLUMN CM_USER_ROLE.USER_ID IS '用户标识';
+COMMENT ON COLUMN CM_USER_ROLE.ROLE_ID IS '角色标识';
 COMMENT ON TABLE CM_USER_ROLE IS '用户一角色多对多';
 
 -- ----------------------------
@@ -1758,48 +892,47 @@ INSERT INTO CM_USER_ROLE VALUES ('149709966847897600', '152695933758603264');
 INSERT INTO CM_USER_ROLE VALUES ('152695627289198592', '152696004814307328');
 INSERT INTO CM_USER_ROLE VALUES ('152695790787362816', '152696042718232576');
 INSERT INTO CM_USER_ROLE VALUES ('247170018466197504', '22844822693027840');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfd_atv
 -- ----------------------------
 CREATE TABLE CM_WFD_ATV (
-  ID NUMBER(20) NOT NULL ,
-  PRCID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  TYPE NUMBER(4) NOT NULL ,
-  EXECSCOPE NUMBER(4) NOT NULL ,
-  EXECLIMIT NUMBER(4) NOT NULL ,
-  EXECATVID NUMBER(20) ,
-  AUTOACCEPT CHAR(1) DEFAULT 0 NOT NULL ,
-  CANDELETE CHAR(1) DEFAULT 0 NOT NULL ,
-  CANTERMINATE CHAR(1) DEFAULT 0 NOT NULL ,
-  CANJUMPINTO CHAR(1) DEFAULT 0 NOT NULL ,
-  TRANSKIND NUMBER(4) NOT NULL ,
-  JOINKIND NUMBER(4) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PRC_ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  TYPE NUMBER(3) NOT NULL,
+  EXEC_SCOPE NUMBER(3) NOT NULL,
+  EXEC_LIMIT NUMBER(3) NOT NULL,
+  EXEC_ATV_ID NUMBER(20),
+  AUTO_ACCEPT CHAR(1) DEFAULT 0 NOT NULL,
+  CAN_DELETE CHAR(1) DEFAULT 0 NOT NULL,
+  CAN_TERMINATE CHAR(1) DEFAULT 0 NOT NULL,
+  CAN_JUMP_INTO CHAR(1) DEFAULT 0 NOT NULL,
+  TRANS_KIND NUMBER(3) NOT NULL,
+  JOIN_KIND NUMBER(3) NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_WFD_ATV ADD CHECK (AUTOACCEPT in (0,1));
-ALTER TABLE CM_WFD_ATV ADD CHECK (CANDELETE in (0,1));
-ALTER TABLE CM_WFD_ATV ADD CHECK (CANTERMINATE in (0,1));
-ALTER TABLE CM_WFD_ATV ADD CHECK (CANJUMPINTO in (0,1));
+ALTER TABLE CM_WFD_ATV ADD CHECK (AUTO_ACCEPT in (0,1));
+ALTER TABLE CM_WFD_ATV ADD CHECK (CAN_DELETE in (0,1));
+ALTER TABLE CM_WFD_ATV ADD CHECK (CAN_TERMINATE in (0,1));
+ALTER TABLE CM_WFD_ATV ADD CHECK (CAN_JUMP_INTO in (0,1));
 
 COMMENT ON COLUMN CM_WFD_ATV.ID IS '活动标识';
-COMMENT ON COLUMN CM_WFD_ATV.PRCID IS '流程标识';
+COMMENT ON COLUMN CM_WFD_ATV.PRC_ID IS '流程标识';
 COMMENT ON COLUMN CM_WFD_ATV.NAME IS '活动名称，同时作为状态名称';
 COMMENT ON COLUMN CM_WFD_ATV.TYPE IS '#WfdAtvType#活动类别 0:普通活动 1:开始活动 2:同步活动 3:结束活动';
-COMMENT ON COLUMN CM_WFD_ATV.EXECSCOPE IS '#WfdAtvExecScope#执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户';
-COMMENT ON COLUMN CM_WFD_ATV.EXECLIMIT IS '#WfdAtvExecLimit#执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者';
-COMMENT ON COLUMN CM_WFD_ATV.EXECATVID IS '在执行者限制为3或4时选择的活动';
-COMMENT ON COLUMN CM_WFD_ATV.AUTOACCEPT IS '是否自动签收，打开工作流视图时自动签收工作项';
-COMMENT ON COLUMN CM_WFD_ATV.CANDELETE IS '能否删除流程实例和业务数据，0否 1';
-COMMENT ON COLUMN CM_WFD_ATV.CANTERMINATE IS '能否中止流程实例，中止一个流程是流程的一种非正常的结束，0否 1能';
-COMMENT ON COLUMN CM_WFD_ATV.CANJUMPINTO IS '是否可作为跳转目标，0不可跳转 1可以';
-COMMENT ON COLUMN CM_WFD_ATV.TRANSKIND IS '#WfdAtvTransKind#当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择';
-COMMENT ON COLUMN CM_WFD_ATV.JOINKIND IS '#WfdAtvJoinKind#同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步';
+COMMENT ON COLUMN CM_WFD_ATV.EXEC_SCOPE IS '#WfdAtvExecScope#执行者范围 0:一组用户 1:所有用户 2:单个用户  3:任一用户';
+COMMENT ON COLUMN CM_WFD_ATV.EXEC_LIMIT IS '#WfdAtvExecLimit#执行者限制 0无限制 1前一活动的执行者 2前一活动的同部门执行者 3已完成活动的执行者 4已完成活动的同部门执行者';
+COMMENT ON COLUMN CM_WFD_ATV.EXEC_ATV_ID IS '在执行者限制为3或4时选择的活动';
+COMMENT ON COLUMN CM_WFD_ATV.AUTO_ACCEPT IS '是否自动签收，打开工作流视图时自动签收工作项';
+COMMENT ON COLUMN CM_WFD_ATV.CAN_DELETE IS '能否删除流程实例和业务数据，0否 1';
+COMMENT ON COLUMN CM_WFD_ATV.CAN_TERMINATE IS '能否中止流程实例，中止一个流程是流程的一种非正常的结束，0否 1能';
+COMMENT ON COLUMN CM_WFD_ATV.CAN_JUMP_INTO IS '是否可作为跳转目标，0不可跳转 1可以';
+COMMENT ON COLUMN CM_WFD_ATV.TRANS_KIND IS '#WfdAtvTransKind#当前活动的后续迁移方式 0:自由选择 1:并行 2:独占式选择';
+COMMENT ON COLUMN CM_WFD_ATV.JOIN_KIND IS '#WfdAtvJoinKind#同步活动有效，聚合方式，0:全部任务 1:任一任务 2:即时同步';
 COMMENT ON COLUMN CM_WFD_ATV.CTIME IS '创建时间';
 COMMENT ON COLUMN CM_WFD_ATV.MTIME IS '修改时间';
 COMMENT ON TABLE CM_WFD_ATV IS '活动模板';
@@ -1822,18 +955,17 @@ INSERT INTO CM_WFD_ATV VALUES ('152684895835258880', '152588581545967616', '同�
 INSERT INTO CM_WFD_ATV VALUES ('152685032993193984', '152588581545967616', '综合部传阅', '0', '0', '0', NULL, '1', '0', '0', '0', '0', '0', TO_DATE('2020-11-25 15:55:50', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-25 15:56:10', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFD_ATV VALUES ('152685491275431936', '152588581545967616', '返回收文人', '0', '0', '0', NULL, '1', '0', '0', '0', '0', '0', TO_DATE('2020-11-25 15:57:39', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-25 15:58:18', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFD_ATV VALUES ('152685608543977472', '152588581545967616', '完成', '3', '0', '0', NULL, '1', '0', '0', '0', '0', '0', TO_DATE('2020-11-25 15:58:07', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-25 15:58:07', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfd_atv_role
 -- ----------------------------
 CREATE TABLE CM_WFD_ATV_ROLE (
-  ATVID NUMBER(20) NOT NULL ,
-  ROLEID NUMBER(20) NOT NULL 
+  ATV_ID NUMBER(20) NOT NULL,
+  ROLE_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN CM_WFD_ATV_ROLE.ATVID IS '活动标识';
-COMMENT ON COLUMN CM_WFD_ATV_ROLE.ROLEID IS '角色标识';
+COMMENT ON COLUMN CM_WFD_ATV_ROLE.ATV_ID IS '活动标识';
+COMMENT ON COLUMN CM_WFD_ATV_ROLE.ROLE_ID IS '角色标识';
 COMMENT ON TABLE CM_WFD_ATV_ROLE IS '活动授权';
 
 -- ----------------------------
@@ -1852,31 +984,30 @@ INSERT INTO CM_WFD_ATV_ROLE VALUES ('152685032993193984', '22844822693027840');
 INSERT INTO CM_WFD_ATV_ROLE VALUES ('152685491275431936', '22844822693027840');
 INSERT INTO CM_WFD_ATV_ROLE VALUES ('152683112727576576', '152695933758603264');
 INSERT INTO CM_WFD_ATV_ROLE VALUES ('152684512937246720', '152696004814307328');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfd_prc
 -- ----------------------------
 CREATE TABLE CM_WFD_PRC (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(64) NOT NULL ,
-  DIAGRAM VARCHAR2(4000) ,
-  ISLOCKED CHAR(1) DEFAULT 0 NOT NULL ,
-  SINGLETON CHAR(1) DEFAULT 0 NOT NULL ,
-  NOTE VARCHAR2(255) ,
-  DISPIDX NUMBER(11) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(64) NOT NULL,
+  DIAGRAM CLOB,
+  IS_LOCKED CHAR(1) DEFAULT 0 NOT NULL,
+  SINGLETON CHAR(1) DEFAULT 0 NOT NULL,
+  NOTE VARCHAR2(255),
+  DISPIDX NUMBER(11) NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_WFD_PRC ADD CHECK (ISLOCKED in (0,1));
+ALTER TABLE CM_WFD_PRC ADD CHECK (IS_LOCKED in (0,1));
 ALTER TABLE CM_WFD_PRC ADD CHECK (SINGLETON in (0,1));
 
 COMMENT ON COLUMN CM_WFD_PRC.ID IS '流程标识';
 COMMENT ON COLUMN CM_WFD_PRC.NAME IS '流程名称';
 COMMENT ON COLUMN CM_WFD_PRC.DIAGRAM IS '流程图';
-COMMENT ON COLUMN CM_WFD_PRC.ISLOCKED IS '锁定标志，0表未锁定；1表锁定，不能创建流程实例，已启动的流程实例继续执行';
+COMMENT ON COLUMN CM_WFD_PRC.IS_LOCKED IS '锁定标志，0表未锁定；1表锁定，不能创建流程实例，已启动的流程实例继续执行';
 COMMENT ON COLUMN CM_WFD_PRC.SINGLETON IS '同一时刻只允许有一个激活的流程实例，0表非单实例，1表单实例';
 COMMENT ON COLUMN CM_WFD_PRC.NOTE IS '描述';
 COMMENT ON COLUMN CM_WFD_PRC.DISPIDX IS '显示顺序';
@@ -1893,29 +1024,28 @@ INSERT INTO CM_WFD_PRC VALUES ('146900823984435200', '777', '<Sketch><Node id=14
 INSERT INTO CM_WFD_PRC VALUES ('146901403339452416', '888', '<Sketch><Node id=146901433265811456 title=开始 shape=开始 left=340 top=140 width=80 height=60 /></Sketch>', '0', '0', '', '6', TO_DATE('0001-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-09 16:54:39', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFD_PRC VALUES ('147141147767992320', 'ggg', '<Sketch><Node id=147141181158846464 title=开始 shape=开始 left=320 top=40 width=80 height=60 /><Node id=147141718000398336 title=任务项 shape=任务 left=380 top=480 width=120 height=60 /><Line id=147141749642227712 headerid=147141181158846464 bounds=400,100,50,380 headerport=3 tailid=147141718000398336 tailport=0 /></Sketch>', '1', '0', '', '2', TO_DATE('2020-11-10 08:46:24', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-10 08:50:03', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFD_PRC VALUES ('152588581545967616', '收文样例', '<Sketch><Node id=152588671081775104 title=接收文件 shape=开始 left=300 top=40 width=80 height=60 /><Node id=152683112727576576 title=市场部 shape=任务 left=160 top=140 width=120 height=60 /><Line id=152683122982649856 headerid=152588671081775104 bounds=210,70,50,70 headerport=6 tailid=152683112727576576 tailport=0 /><Node id=152684512937246720 title=综合部 shape=任务 left=400 top=140 width=120 height=60 /><Line id=152684673721696256 headerid=152588671081775104 bounds=380,70,90,70 headerport=2 tailid=152684512937246720 tailport=0 /><Node id=152684758027206656 title=市场部传阅 shape=任务 left=160 top=260 width=120 height=60 /><Node id=152684895835258880 title=同步 shape=同步 background=#FF9D9D9D borderbrush=#FF969696 left=280 top=400 width=120 height=60 /><Line id=152684951493672960 headerid=152683112727576576 bounds=210,200,20,60 headerport=4 tailid=152684758027206656 tailport=0 /><Line id=152684981348728832 headerid=152683112727576576 bounds=120,170,160,470 headerport=6 tailid=152685608543977472 tailport=6 /><Node id=152685032993193984 title=综合部传阅 shape=任务 left=400 top=260 width=120 height=60 /><Line id=152685133509689344 headerid=152684512937246720 bounds=450,200,20,60 headerport=4 tailid=152685032993193984 tailport=0 /><Line id=152685169891082240 headerid=152684512937246720 bounds=400,170,160,270 headerport=2 tailid=152684895835258880 tailport=2 /><Line id=152685211767013376 headerid=152684758027206656 bounds=220,320,60,120 headerport=4 tailid=152684895835258880 tailport=6 /><Line id=152685247745753088 headerid=152685032993193984 bounds=400,320,60,120 headerport=4 tailid=152684895835258880 tailport=2 /><Node id=152685491275431936 title=返回收文人 shape=任务 left=280 top=500 width=120 height=60 /><Line id=152685585135566848 headerid=152684895835258880 bounds=330,460,20,40 headerport=4 tailid=152685491275431936 tailport=0 /><Node id=152685608543977472 title=完成 shape=结束 background=#FF9D9D9D borderbrush=#FF969696 left=300 top=600 width=80 height=60 /><Line id=152685622099968000 headerid=152685491275431936 bounds=330,560,20,40 headerport=4 tailid=152685608543977472 tailport=0 /></Sketch>', '0', '0', '', '5', TO_DATE('2020-11-25 09:32:33', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2021-08-24 15:45:54', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfd_trs
 -- ----------------------------
 CREATE TABLE CM_WFD_TRS (
-  ID NUMBER(20) NOT NULL ,
-  PRCID NUMBER(20) NOT NULL ,
-  SRCATVID NUMBER(20) NOT NULL ,
-  TGTATVID NUMBER(20) NOT NULL ,
-  ISROLLBACK CHAR(1) DEFAULT 0 NOT NULL ,
-  TRSID NUMBER(20) 
+  ID NUMBER(20) NOT NULL,
+  PRC_ID NUMBER(20) NOT NULL,
+  SRC_ATV_ID NUMBER(20) NOT NULL,
+  TGT_ATV_ID NUMBER(20) NOT NULL,
+  IS_ROLLBACK CHAR(1) DEFAULT 0 NOT NULL,
+  TRS_ID NUMBER(20)
 )
 ;
 
-ALTER TABLE CM_WFD_TRS ADD CHECK (ISROLLBACK in (0,1));
+ALTER TABLE CM_WFD_TRS ADD CHECK (IS_ROLLBACK in (0,1));
 
 COMMENT ON COLUMN CM_WFD_TRS.ID IS '迁移标识';
-COMMENT ON COLUMN CM_WFD_TRS.PRCID IS '流程模板标识';
-COMMENT ON COLUMN CM_WFD_TRS.SRCATVID IS '起始活动模板标识';
-COMMENT ON COLUMN CM_WFD_TRS.TGTATVID IS '目标活动模板标识';
-COMMENT ON COLUMN CM_WFD_TRS.ISROLLBACK IS '是否为回退迁移';
-COMMENT ON COLUMN CM_WFD_TRS.TRSID IS '类别为回退迁移时对应的常规迁移标识';
+COMMENT ON COLUMN CM_WFD_TRS.PRC_ID IS '流程模板标识';
+COMMENT ON COLUMN CM_WFD_TRS.SRC_ATV_ID IS '起始活动模板标识';
+COMMENT ON COLUMN CM_WFD_TRS.TGT_ATV_ID IS '目标活动模板标识';
+COMMENT ON COLUMN CM_WFD_TRS.IS_ROLLBACK IS '是否为回退迁移';
+COMMENT ON COLUMN CM_WFD_TRS.TRS_ID IS '类别为回退迁移时对应的常规迁移标识';
 COMMENT ON TABLE CM_WFD_TRS IS '迁移模板';
 
 -- ----------------------------
@@ -1934,26 +1064,25 @@ INSERT INTO CM_WFD_TRS VALUES ('152685247745753088', '152588581545967616', '1526
 INSERT INTO CM_WFD_TRS VALUES ('152685585135566848', '152588581545967616', '152684895835258880', '152685491275431936', '0', NULL);
 INSERT INTO CM_WFD_TRS VALUES ('152685622099968000', '152588581545967616', '152685491275431936', '152685608543977472', '0', NULL);
 INSERT INTO CM_WFD_TRS VALUES ('160910207789953024', '152588581545967616', '152683112727576576', '152588671081775104', '1', '152683122982649856');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfi_atv
 -- ----------------------------
 CREATE TABLE CM_WFI_ATV (
-  ID NUMBER(20) NOT NULL ,
-  PRCIID NUMBER(20) NOT NULL ,
-  ATVDID NUMBER(20) NOT NULL ,
-  STATUS NUMBER(4) NOT NULL ,
-  INSTCOUNT NUMBER(11) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PRCI_ID NUMBER(20) NOT NULL,
+  ATVD_ID NUMBER(20) NOT NULL,
+  STATUS NUMBER(3) NOT NULL,
+  INST_COUNT NUMBER(11) NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_WFI_ATV.ID IS '活动实例标识';
-COMMENT ON COLUMN CM_WFI_ATV.PRCIID IS '流程实例标识';
-COMMENT ON COLUMN CM_WFI_ATV.ATVDID IS '活动模板标识';
+COMMENT ON COLUMN CM_WFI_ATV.PRCI_ID IS '流程实例标识';
+COMMENT ON COLUMN CM_WFI_ATV.ATVD_ID IS '活动模板标识';
 COMMENT ON COLUMN CM_WFI_ATV.STATUS IS '#WfiAtvStatus#活动实例的状态 0活动 1结束 2终止 3同步活动';
-COMMENT ON COLUMN CM_WFI_ATV.INSTCOUNT IS '活动实例在流程实例被实例化的次数';
+COMMENT ON COLUMN CM_WFI_ATV.INST_COUNT IS '活动实例在流程实例被实例化的次数';
 COMMENT ON COLUMN CM_WFI_ATV.CTIME IS '创建时间';
 COMMENT ON COLUMN CM_WFI_ATV.MTIME IS '最后一次状态改变的时间';
 COMMENT ON TABLE CM_WFI_ATV IS '活动实例';
@@ -1978,41 +1107,40 @@ INSERT INTO CM_WFI_ATV VALUES ('457385885710700544', '457384396879581184', '1526
 INSERT INTO CM_WFI_ATV VALUES ('457388173628035072', '457388173615452160', '152588671081775104', '1', '1', TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ATV VALUES ('457388387768225792', '457388173615452160', '152683112727576576', '1', '1', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:50', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ATV VALUES ('457388561571794944', '457388173615452160', '152684758027206656', '0', '1', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfi_item
 -- ----------------------------
 CREATE TABLE CM_WFI_ITEM (
-  ID NUMBER(20) NOT NULL ,
-  ATVIID NUMBER(20) NOT NULL ,
-  STATUS NUMBER(4) NOT NULL ,
-  ASSIGNKIND NUMBER(4) NOT NULL ,
-  SENDER VARCHAR2(32) NOT NULL ,
-  STIME DATE NOT NULL ,
-  ISACCEPT CHAR(1) DEFAULT 0 NOT NULL ,
-  ACCEPTTIME DATE ,
-  ROLEID NUMBER(20) ,
-  USERID NUMBER(20) ,
-  NOTE VARCHAR2(255) ,
-  DISPIDX NUMBER(11) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  ATVI_ID NUMBER(20) NOT NULL,
+  STATUS NUMBER(3) NOT NULL,
+  ASSIGN_KIND NUMBER(3) NOT NULL,
+  SENDER VARCHAR2(32),
+  STIME DATE NOT NULL,
+  IS_ACCEPT CHAR(1) DEFAULT 0 NOT NULL,
+  ACCEPT_TIME DATE,
+  ROLE_ID NUMBER(20),
+  USER_ID NUMBER(20),
+  NOTE VARCHAR2(255),
+  DISPIDX NUMBER(11) NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_WFI_ITEM ADD CHECK (ISACCEPT in (0,1));
+ALTER TABLE CM_WFI_ITEM ADD CHECK (IS_ACCEPT in (0,1));
 
 COMMENT ON COLUMN CM_WFI_ITEM.ID IS '工作项标识';
-COMMENT ON COLUMN CM_WFI_ITEM.ATVIID IS '活动实例标识';
+COMMENT ON COLUMN CM_WFI_ITEM.ATVI_ID IS '活动实例标识';
 COMMENT ON COLUMN CM_WFI_ITEM.STATUS IS '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动';
-COMMENT ON COLUMN CM_WFI_ITEM.ASSIGNKIND IS '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派';
+COMMENT ON COLUMN CM_WFI_ITEM.ASSIGN_KIND IS '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派';
 COMMENT ON COLUMN CM_WFI_ITEM.SENDER IS '发送者';
 COMMENT ON COLUMN CM_WFI_ITEM.STIME IS '发送时间';
-COMMENT ON COLUMN CM_WFI_ITEM.ISACCEPT IS '是否签收此项任务';
-COMMENT ON COLUMN CM_WFI_ITEM.ACCEPTTIME IS '签收时间';
-COMMENT ON COLUMN CM_WFI_ITEM.ROLEID IS '执行者角色标识';
-COMMENT ON COLUMN CM_WFI_ITEM.USERID IS '执行者用户标识';
+COMMENT ON COLUMN CM_WFI_ITEM.IS_ACCEPT IS '是否签收此项任务';
+COMMENT ON COLUMN CM_WFI_ITEM.ACCEPT_TIME IS '签收时间';
+COMMENT ON COLUMN CM_WFI_ITEM.ROLE_ID IS '执行者角色标识';
+COMMENT ON COLUMN CM_WFI_ITEM.USER_ID IS '执行者用户标识';
 COMMENT ON COLUMN CM_WFI_ITEM.NOTE IS '工作项备注';
 COMMENT ON COLUMN CM_WFI_ITEM.DISPIDX IS '显示顺序';
 COMMENT ON COLUMN CM_WFI_ITEM.CTIME IS '创建时间';
@@ -2028,35 +1156,34 @@ INSERT INTO CM_WFI_ITEM VALUES ('162119526686519296', '162119526644576256', '1',
 INSERT INTO CM_WFI_ITEM VALUES ('162119548064886784', '162119548043915264', '3', '0', 'daoting', TO_DATE('2020-12-21 16:45:11', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '1', '', '160', TO_DATE('2020-12-21 16:45:11', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-21 16:45:11', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ITEM VALUES ('162119548220076032', '162119548199104512', '1', '0', 'daoting', TO_DATE('2020-12-21 16:45:11', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2020-12-21 16:45:12', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '161', TO_DATE('2020-12-21 16:45:11', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-21 16:45:13', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ITEM VALUES ('162401333642391552', '162401333625614336', '1', '1', 'daoting', TO_DATE('2020-12-22 11:25:22', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2020-12-22 11:25:22', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '162', TO_DATE('2020-12-22 11:25:22', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 10:42:58', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457374495021223936', '457374494836674560', '1', '0', 'daoting', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 10:43:13', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '163', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457374495696506880', '457374495587454976', '0', '0', 'daoting', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '152695627289198592', '', '164', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457381430646820864', '457381430491631616', '0', '0', 'daoting', TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:11:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '165', TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457374495021223936', '457374494836674560', '1', '0', '', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 10:43:13', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '163', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457374495696506880', '457374495587454976', '0', '0', '', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '152695627289198592', '', '164', TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 10:42:57', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457381430646820864', '457381430491631616', '0', '0', '', TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:11:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '165', TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:10:31', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ITEM VALUES ('457384397164793856', '457384397022187520', '1', '1', 'Windows', TO_DATE('2023-03-16 11:22:27', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:22:27', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '167', TO_DATE('2023-03-16 11:22:27', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:23:30', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457384696902340608', '457384696747151360', '1', '0', 'daoting', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:23:45', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '168', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:27:51', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457384697523097600', '457384697418240000', '1', '0', 'daoting', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:23:46', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '169', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457385791196254208', '457385791041064960', '1', '0', 'daoting', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:28:02', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '170', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:25', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457385791531798528', '457385791041064960', '0', '0', 'daoting', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '247170018466197504', '', '171', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457385885811363840', '457385885710700544', '0', '0', 'daoting', TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '2', '', '172', TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457384696902340608', '457384696747151360', '1', '0', '', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:23:45', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '168', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:27:51', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457384697523097600', '457384697418240000', '1', '0', '', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:23:46', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '169', TO_DATE('2023-03-16 11:23:29', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457385791196254208', '457385791041064960', '1', '0', '', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:28:02', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '170', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:25', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457385791531798528', '457385791041064960', '0', '0', '', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '247170018466197504', '', '171', TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:27:50', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457385885811363840', '457385885710700544', '0', '0', '', TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '2', '', '172', TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_ITEM VALUES ('457388173640617984', '457388173628035072', '1', '1', 'Windows', TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '1', '', '174', TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457388387776614400', '457388387768225792', '1', '0', 'daoting', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:38:22', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '2', '', '175', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:50', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_WFI_ITEM VALUES ('457388561714401280', '457388561571794944', '0', '0', 'daoting', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '1', '', '176', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
+INSERT INTO CM_WFI_ITEM VALUES ('457388387776614400', '457388387768225792', '1', '0', '', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'), '1', TO_DATE('2023-03-16 11:38:22', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '2', '', '175', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:50', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_WFI_ITEM VALUES ('457388561714401280', '457388561571794944', '0', '0', '', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'), '0', NULL, NULL, '1', '', '176', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
 -- Table structure for cm_wfi_prc
 -- ----------------------------
 CREATE TABLE CM_WFI_PRC (
-  ID NUMBER(20) NOT NULL ,
-  PRCDID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL ,
-  STATUS NUMBER(4) NOT NULL ,
-  DISPIDX NUMBER(11) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  MTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PRCD_ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL,
+  STATUS NUMBER(3) NOT NULL,
+  DISPIDX NUMBER(11) NOT NULL,
+  CTIME DATE NOT NULL,
+  MTIME DATE NOT NULL
 )
 ;
 COMMENT ON COLUMN CM_WFI_PRC.ID IS '流程实例标识，同时为业务数据主键';
-COMMENT ON COLUMN CM_WFI_PRC.PRCDID IS '流程模板标识';
+COMMENT ON COLUMN CM_WFI_PRC.PRCD_ID IS '流程模板标识';
 COMMENT ON COLUMN CM_WFI_PRC.NAME IS '流转单名称';
 COMMENT ON COLUMN CM_WFI_PRC.STATUS IS '#WfiPrcStatus#流程实例状态 0活动 1结束 2终止';
 COMMENT ON COLUMN CM_WFI_PRC.DISPIDX IS '显示顺序';
@@ -2071,28 +1198,27 @@ INSERT INTO CM_WFI_PRC VALUES ('162025231350624256', '152588581545967616', 'a', 
 INSERT INTO CM_WFI_PRC VALUES ('162401333600448512', '152588581545967616', '关于新冠疫情的批示', '0', '59', TO_DATE('2020-12-22 11:25:22', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-22 11:25:22', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_PRC VALUES ('457384396879581184', '152588581545967616', '阿斯蒂芬', '0', '64', TO_DATE('2023-03-16 11:22:27', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:22:27', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_PRC VALUES ('457388173615452160', '152588581545967616', '疫情在', '0', '65', TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 11:37:33', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for cm_wfi_trs
 -- ----------------------------
 CREATE TABLE CM_WFI_TRS (
-  ID NUMBER(20) NOT NULL ,
-  TRSDID NUMBER(20) NOT NULL ,
-  SRCATVIID NUMBER(20) NOT NULL ,
-  TGTATVIID NUMBER(20) NOT NULL ,
-  ISROLLBACK CHAR(1) DEFAULT 0 NOT NULL ,
-  CTIME DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  TRSD_ID NUMBER(20) NOT NULL,
+  SRC_ATVI_ID NUMBER(20) NOT NULL,
+  TGT_ATVI_ID NUMBER(20) NOT NULL,
+  IS_ROLLBACK CHAR(1) DEFAULT 0 NOT NULL,
+  CTIME DATE NOT NULL
 )
 ;
 
-ALTER TABLE CM_WFI_TRS ADD CHECK (ISROLLBACK in (0,1));
+ALTER TABLE CM_WFI_TRS ADD CHECK (IS_ROLLBACK in (0,1));
 
 COMMENT ON COLUMN CM_WFI_TRS.ID IS '迁移实例标识';
-COMMENT ON COLUMN CM_WFI_TRS.TRSDID IS '迁移模板标识';
-COMMENT ON COLUMN CM_WFI_TRS.SRCATVIID IS '起始活动实例标识';
-COMMENT ON COLUMN CM_WFI_TRS.TGTATVIID IS '目标活动实例标识';
-COMMENT ON COLUMN CM_WFI_TRS.ISROLLBACK IS '是否为回退迁移，1表回退';
+COMMENT ON COLUMN CM_WFI_TRS.TRSD_ID IS '迁移模板标识';
+COMMENT ON COLUMN CM_WFI_TRS.SRC_ATVI_ID IS '起始活动实例标识';
+COMMENT ON COLUMN CM_WFI_TRS.TGT_ATVI_ID IS '目标活动实例标识';
+COMMENT ON COLUMN CM_WFI_TRS.IS_ROLLBACK IS '是否为回退迁移，1表回退';
 COMMENT ON COLUMN CM_WFI_TRS.CTIME IS '迁移时间';
 COMMENT ON TABLE CM_WFI_TRS IS '迁移实例';
 
@@ -2112,15 +1238,14 @@ INSERT INTO CM_WFI_TRS VALUES ('457385791921868800', '152684951493672960', '4573
 INSERT INTO CM_WFI_TRS VALUES ('457385886172073984', '152685133509689344', '457384697418240000', '457385885710700544', '0', TO_DATE('2023-03-16 11:28:13', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_TRS VALUES ('457388387831140352', '152683122982649856', '457388173628035072', '457388387768225792', '0', TO_DATE('2023-03-16 11:38:10', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_WFI_TRS VALUES ('457388562041556992', '152684951493672960', '457388387768225792', '457388561571794944', '0', TO_DATE('2023-03-16 11:38:49', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_cache_tbl1
 -- ----------------------------
 CREATE TABLE DEMO_CACHE_TBL1 (
-  ID NUMBER(20) NOT NULL ,
-  PHONE VARCHAR2(255) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PHONE VARCHAR2(255) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL
 )
 ;
 
@@ -2131,15 +1256,14 @@ INSERT INTO DEMO_CACHE_TBL1 VALUES ('454454068519129088', 'ca4f271212bc4add946c5
 INSERT INTO DEMO_CACHE_TBL1 VALUES ('484620968746045440', '3f435d84c76a46e29002f467a4cd0187', '7425');
 INSERT INTO DEMO_CACHE_TBL1 VALUES ('484621133057904640', '3329d521b2134b0195083828152cb5b0', '1786');
 INSERT INTO DEMO_CACHE_TBL1 VALUES ('484624179913576448', 'd80e785d1d44472abe88723e4ed17ca8', '156');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_child_tbl1
 -- ----------------------------
 CREATE TABLE DEMO_CHILD_TBL1 (
-  ID NUMBER(20) NOT NULL ,
-  PARENTID NUMBER(20) NOT NULL ,
-  ITEMNAME VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PARENT_ID NUMBER(20) NOT NULL,
+  ITEM_NAME VARCHAR2(255) NOT NULL
 )
 ;
 
@@ -2170,15 +1294,14 @@ INSERT INTO DEMO_CHILD_TBL1 VALUES ('484623850744598528', '484623850568437760', 
 INSERT INTO DEMO_CHILD_TBL1 VALUES ('484623850987868160', '484623850568437760', '新增1');
 INSERT INTO DEMO_CHILD_TBL1 VALUES ('484623946806743040', '484623946693496832', '新增0');
 INSERT INTO DEMO_CHILD_TBL1 VALUES ('484623947016458240', '484623946693496832', '新增1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_child_tbl2
 -- ----------------------------
 CREATE TABLE DEMO_CHILD_TBL2 (
-  ID NUMBER(20) NOT NULL ,
-  GROUPID NUMBER(20) NOT NULL ,
-  ITEMNAME VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  GROUP_ID NUMBER(20) NOT NULL,
+  ITEM_NAME VARCHAR2(255)
 )
 ;
 
@@ -2207,33 +1330,32 @@ INSERT INTO DEMO_CHILD_TBL2 VALUES ('484623850878816256', '484623850568437760', 
 INSERT INTO DEMO_CHILD_TBL2 VALUES ('484623851092725760', '484623850568437760', '新增1');
 INSERT INTO DEMO_CHILD_TBL2 VALUES ('484623946907406336', '484623946693496832', '新增0');
 INSERT INTO DEMO_CHILD_TBL2 VALUES ('484623947121315840', '484623946693496832', '新增1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_crud
 -- ----------------------------
 CREATE TABLE DEMO_CRUD (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL ,
-  DISPIDX NUMBER(11) NOT NULL ,
-  MTIME DATE NOT NULL ,
-  ENABLEINSERTEVENT CHAR(1) DEFAULT 0 NOT NULL ,
-  ENABLENAMECHANGEDEVENT CHAR(1) DEFAULT 0 NOT NULL ,
-  ENABLEDELEVENT CHAR(1) DEFAULT 0 NOT NULL
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL,
+  DISPIDX NUMBER(11) NOT NULL,
+  MTIME DATE NOT NULL,
+  ENABLE_INSERT_EVENT CHAR(1) DEFAULT 0 NOT NULL,
+  ENABLE_NAME_CHANGED_EVENT CHAR(1) DEFAULT 0 NOT NULL,
+  ENABLE_DEL_EVENT CHAR(1) DEFAULT 0 NOT NULL
 )
 ;
 
-ALTER TABLE DEMO_CRUD ADD CHECK (ENABLEINSERTEVENT in (0,1));
-ALTER TABLE DEMO_CRUD ADD CHECK (ENABLENAMECHANGEDEVENT in (0,1));
-ALTER TABLE DEMO_CRUD ADD CHECK (ENABLEDELEVENT in (0,1));
+ALTER TABLE DEMO_CRUD ADD CHECK (ENABLE_INSERT_EVENT in (0,1));
+ALTER TABLE DEMO_CRUD ADD CHECK (ENABLE_NAME_CHANGED_EVENT in (0,1));
+ALTER TABLE DEMO_CRUD ADD CHECK (ENABLE_DEL_EVENT in (0,1));
 
 COMMENT ON COLUMN DEMO_CRUD.ID IS '标识';
 COMMENT ON COLUMN DEMO_CRUD.NAME IS '名称';
 COMMENT ON COLUMN DEMO_CRUD.DISPIDX IS '显示顺序';
 COMMENT ON COLUMN DEMO_CRUD.MTIME IS '最后修改时间';
-COMMENT ON COLUMN DEMO_CRUD.ENABLEINSERTEVENT IS 'true时允许发布插入事件';
-COMMENT ON COLUMN DEMO_CRUD.ENABLENAMECHANGEDEVENT IS 'true时允许发布Name变化事件';
-COMMENT ON COLUMN DEMO_CRUD.ENABLEDELEVENT IS 'true时允许发布删除事件';
+COMMENT ON COLUMN DEMO_CRUD.ENABLE_INSERT_EVENT IS 'true时允许发布插入事件';
+COMMENT ON COLUMN DEMO_CRUD.ENABLE_NAME_CHANGED_EVENT IS 'true时允许发布Name变化事件';
+COMMENT ON COLUMN DEMO_CRUD.ENABLE_DEL_EVENT IS 'true时允许发布删除事件';
 COMMENT ON TABLE DEMO_CRUD IS '#demo#基础增删改';
 
 -- ----------------------------
@@ -2268,14 +1390,13 @@ INSERT INTO DEMO_CRUD VALUES ('484988812650369024', '批增更778', '81', TO_DAT
 INSERT INTO DEMO_CRUD VALUES ('486788489460862976', '单个4284', '82', TO_DATE('2023-06-05 14:43:45', 'SYYYY-MM-DD HH24:MI:SS'), '0', '0', '0');
 INSERT INTO DEMO_CRUD VALUES ('487086064026013696', '单个1221', '83', TO_DATE('2023-06-06 10:26:08', 'SYYYY-MM-DD HH24:MI:SS'), '0', '0', '0');
 INSERT INTO DEMO_CRUD VALUES ('487086286626115584', '单个685', '84', TO_DATE('2023-06-06 10:27:01', 'SYYYY-MM-DD HH24:MI:SS'), '0', '0', '0');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_par_tbl
 -- ----------------------------
 CREATE TABLE DEMO_PAR_TBL (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(255) NOT NULL
 )
 ;
 
@@ -2292,27 +1413,13 @@ INSERT INTO DEMO_PAR_TBL VALUES ('484622270804807680', '新增');
 INSERT INTO DEMO_PAR_TBL VALUES ('484622408633831424', '新增');
 INSERT INTO DEMO_PAR_TBL VALUES ('484623850568437760', '新增');
 INSERT INTO DEMO_PAR_TBL VALUES ('484623946693496832', '新增');
-COMMIT;
-
--- ----------------------------
--- Table structure for demo_sql
--- ----------------------------
-CREATE TABLE DEMO_SQL (
-  ID VARCHAR2(128) NOT NULL ,
-  SQL VARCHAR2(4000) NOT NULL ,
-  NOTE VARCHAR2(255) 
-)
-;
-COMMENT ON COLUMN DEMO_SQL.ID IS 'sql键值';
-COMMENT ON COLUMN DEMO_SQL.SQL IS 'sql内容';
-COMMENT ON COLUMN DEMO_SQL.NOTE IS '备注';
 
 -- ----------------------------
 -- Table structure for demo_virtbl1
 -- ----------------------------
 CREATE TABLE DEMO_VIRTBL1 (
-  ID NUMBER(20) NOT NULL ,
-  NAME1 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME1 VARCHAR2(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN DEMO_VIRTBL1.NAME1 IS '名称1';
@@ -2325,14 +1432,13 @@ INSERT INTO DEMO_VIRTBL1 VALUES ('484613939734269952', '新1');
 INSERT INTO DEMO_VIRTBL1 VALUES ('484614242416218112', '批增1');
 INSERT INTO DEMO_VIRTBL1 VALUES ('484621407772233728', '新1');
 INSERT INTO DEMO_VIRTBL1 VALUES ('484623466739290112', '新1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_virtbl2
 -- ----------------------------
 CREATE TABLE DEMO_VIRTBL2 (
-  ID NUMBER(20) NOT NULL ,
-  NAME2 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME2 VARCHAR2(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN DEMO_VIRTBL2.NAME2 IS '名称2';
@@ -2345,14 +1451,13 @@ INSERT INTO DEMO_VIRTBL2 VALUES ('484613939734269952', '新2');
 INSERT INTO DEMO_VIRTBL2 VALUES ('484614242416218112', '批增2');
 INSERT INTO DEMO_VIRTBL2 VALUES ('484621407772233728', '新2');
 INSERT INTO DEMO_VIRTBL2 VALUES ('484623466739290112', '新2');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_virtbl3
 -- ----------------------------
 CREATE TABLE DEMO_VIRTBL3 (
-  ID NUMBER(20) NOT NULL ,
-  NAME3 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME3 VARCHAR2(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN DEMO_VIRTBL3.NAME3 IS '名称3';
@@ -2365,15 +1470,14 @@ INSERT INTO DEMO_VIRTBL3 VALUES ('484613939734269952', '新3');
 INSERT INTO DEMO_VIRTBL3 VALUES ('484614242416218112', '批增3');
 INSERT INTO DEMO_VIRTBL3 VALUES ('484621407772233728', '新3');
 INSERT INTO DEMO_VIRTBL3 VALUES ('484623466739290112', '新3');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_大儿
 -- ----------------------------
 CREATE TABLE DEMO_大儿 (
-  ID NUMBER(20) NOT NULL ,
-  PARENTID NUMBER(20) NOT NULL ,
-  大儿名 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  PARENT_ID NUMBER(20) NOT NULL,
+  大儿名 VARCHAR2(255) NOT NULL
 )
 ;
 
@@ -2384,14 +1488,13 @@ INSERT INTO DEMO_大儿 VALUES ('453807589999792128', '448686488403595264', '啊
 INSERT INTO DEMO_大儿 VALUES ('453810847795400704', '453810798449414144', 'bd');
 INSERT INTO DEMO_大儿 VALUES ('453811346175184896', '453810798449414144', 'asdf');
 INSERT INTO DEMO_大儿 VALUES ('453811364621733888', '453810798449414144', 'bde');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_父表
 -- ----------------------------
 CREATE TABLE DEMO_父表 (
-  ID NUMBER(20) NOT NULL ,
-  父名 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  父名 VARCHAR2(255) NOT NULL
 )
 ;
 
@@ -2401,22 +1504,21 @@ CREATE TABLE DEMO_父表 (
 INSERT INTO DEMO_父表 VALUES ('448686488403595264', '123');
 INSERT INTO DEMO_父表 VALUES ('449120963746877440', '单位');
 INSERT INTO DEMO_父表 VALUES ('453810798449414144', 'aaaa');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_基础
 -- ----------------------------
 CREATE TABLE DEMO_基础 (
-  ID NUMBER(20) NOT NULL ,
-  序列 NUMBER(11) NOT NULL ,
-  限长4 VARCHAR2(16) NOT NULL ,
-  不重复 VARCHAR2(64) NOT NULL ,
-  禁止选中 CHAR(1) DEFAULT 0 NOT NULL ,
-  禁止保存 CHAR(1) DEFAULT 0 NOT NULL ,
-  禁止删除 CHAR(1) DEFAULT 0 NOT NULL ,
-  值变事件 VARCHAR2(64) NOT NULL ,
-  创建时间 DATE NOT NULL ,
-  修改时间 DATE NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  序列 NUMBER(11) NOT NULL,
+  限长4 VARCHAR2(16) ,
+  不重复 VARCHAR2(64) ,
+  禁止选中 CHAR(1) DEFAULT 0 NOT NULL,
+  禁止保存 CHAR(1) DEFAULT 0 NOT NULL,
+  禁止删除 CHAR(1) DEFAULT 0 NOT NULL,
+  值变事件 VARCHAR2(64),
+  创建时间 DATE NOT NULL,
+  修改时间 DATE NOT NULL
 )
 ;
 
@@ -2440,15 +1542,14 @@ COMMENT ON COLUMN DEMO_基础.修改时间 IS '最后修改时间';
 -- ----------------------------
 INSERT INTO DEMO_基础 VALUES ('1', '1', 'adb', 'ddd', '1', '1', '1', 'a', TO_DATE('2023-01-17 10:08:10', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-01-17 10:08:14', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO DEMO_基础 VALUES ('447570516976357376', '6', '11', 'dd', '0', '0', '1', 'snv111', TO_DATE('2023-02-17 09:25:27', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-02-17 09:25:27', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_角色
 -- ----------------------------
 CREATE TABLE DEMO_角色 (
-  ID NUMBER(20) NOT NULL ,
-  角色名称 VARCHAR2(32) NOT NULL ,
-  角色描述 VARCHAR2(255) 
+  ID NUMBER(20) NOT NULL,
+  角色名称 VARCHAR2(32) NOT NULL,
+  角色描述 VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN DEMO_角色.ID IS '角色标识';
@@ -2463,33 +1564,31 @@ INSERT INTO DEMO_角色 VALUES ('449487215124303872', 'xxx', 'df');
 INSERT INTO DEMO_角色 VALUES ('449812931669938176', '管理员', '');
 INSERT INTO DEMO_角色 VALUES ('449812975420723200', '维护1', '');
 INSERT INTO DEMO_角色 VALUES ('449813053959065600', '维护2', '');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_角色权限
 -- ----------------------------
 CREATE TABLE DEMO_角色权限 (
-  ROLEID NUMBER(20) NOT NULL ,
-  PRVID NUMBER(20) NOT NULL 
+  ROLE_ID NUMBER(20) NOT NULL,
+  PRV_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN DEMO_角色权限.ROLEID IS '角色标识';
-COMMENT ON COLUMN DEMO_角色权限.PRVID IS '权限标识';
+COMMENT ON COLUMN DEMO_角色权限.ROLE_ID IS '角色标识';
+COMMENT ON COLUMN DEMO_角色权限.PRV_ID IS '权限标识';
 COMMENT ON TABLE DEMO_角色权限 IS '角色关联的权限';
 
 -- ----------------------------
 -- Records of demo_角色权限
 -- ----------------------------
 INSERT INTO DEMO_角色权限 VALUES ('449487215124303872', '449812884102336512');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_扩展1
 -- ----------------------------
 CREATE TABLE DEMO_扩展1 (
-  ID NUMBER(20) NOT NULL ,
-  扩展1名称 VARCHAR2(255) ,
-  禁止选中 CHAR(1) DEFAULT 0 NOT NULL ,
+  ID NUMBER(20) NOT NULL,
+  扩展1名称 VARCHAR2(255),
+  禁止选中 CHAR(1) DEFAULT 0 NOT NULL,
   禁止保存 CHAR(1) DEFAULT 0 NOT NULL
 )
 ;
@@ -2506,16 +1605,15 @@ COMMENT ON COLUMN DEMO_扩展1.禁止保存 IS 'true时保存前校验不通过'
 -- ----------------------------
 INSERT INTO DEMO_扩展1 VALUES ('447555037331214336', 'a', '0', '0');
 INSERT INTO DEMO_扩展1 VALUES ('447577275388416000', '221', '0', '0');
-INSERT INTO DEMO_扩展1 VALUES ('447577372700463104', 'abc', '0', '0');
-COMMIT;
+INSERT INTO DEMO_扩展1 VALUES ('447577372700463104', '', '0', '0');
 
 -- ----------------------------
 -- Table structure for demo_扩展2
 -- ----------------------------
 CREATE TABLE DEMO_扩展2 (
-  ID NUMBER(20) NOT NULL ,
-  扩展2名称 VARCHAR2(255) ,
-  禁止删除 CHAR(1) DEFAULT 0 NOT NULL ,
+  ID NUMBER(20) NOT NULL,
+  扩展2名称 VARCHAR2(255),
+  禁止删除 CHAR(1) DEFAULT 0 NOT NULL,
   值变事件 VARCHAR2(255)
 )
 ;
@@ -2532,14 +1630,13 @@ COMMENT ON COLUMN DEMO_扩展2.值变事件 IS '每次值变化时触发领域�
 INSERT INTO DEMO_扩展2 VALUES ('447555037331214336', 'a', '0', '');
 INSERT INTO DEMO_扩展2 VALUES ('447577275388416000', '', '0', '221');
 INSERT INTO DEMO_扩展2 VALUES ('447577372700463104', '', '0', '');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_权限
 -- ----------------------------
 CREATE TABLE DEMO_权限 (
-  ID NUMBER(20) NOT NULL ,
-  权限名称 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  权限名称 VARCHAR2(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN DEMO_权限.ID IS '权限名称';
@@ -2550,20 +1647,19 @@ COMMENT ON TABLE DEMO_权限 IS '权限';
 -- ----------------------------
 INSERT INTO DEMO_权限 VALUES ('449812852120768512', '删除');
 INSERT INTO DEMO_权限 VALUES ('449812884102336512', '修改');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_收文
 -- ----------------------------
 CREATE TABLE DEMO_收文 (
-  ID NUMBER(20) NOT NULL ,
-  来文单位 VARCHAR2(255) ,
-  来文时间 DATE NOT NULL ,
-  密级 NUMBER(4) NOT NULL ,
-  文件标题 VARCHAR2(255) NOT NULL ,
-  文件附件 VARCHAR2(512) ,
-  市场部经理意见 VARCHAR2(255) ,
-  综合部经理意见 VARCHAR2(255) ,
+  ID NUMBER(20) NOT NULL,
+  来文单位 VARCHAR2(255),
+  来文时间 DATE NOT NULL,
+  密级 NUMBER(3) NOT NULL,
+  文件标题 VARCHAR2(255),
+  文件附件 VARCHAR2(512),
+  市场部经理意见 VARCHAR2(255),
+  综合部经理意见 VARCHAR2(255),
   收文完成时间 DATE
 )
 ;
@@ -2576,15 +1672,14 @@ INSERT INTO DEMO_收文 VALUES ('162025231350624256', '123', TO_DATE('2020-12-21
 INSERT INTO DEMO_收文 VALUES ('162401333600448512', 'abc', TO_DATE('2020-12-22', 'SYYYY-MM-DD HH24:MI:SS'), '0', '关于新冠疫情的批示', '', '', '', TO_DATE('0001-01-01', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO DEMO_收文 VALUES ('457384396879581184', '', TO_DATE('2023-03-16', 'SYYYY-MM-DD HH24:MI:SS'), '0', '阿斯蒂芬', '', '', '', TO_DATE('0001-01-01', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO DEMO_收文 VALUES ('457388173615452160', '', TO_DATE('2023-03-16', 'SYYYY-MM-DD HH24:MI:SS'), '0', '疫情在', '', '', '', TO_DATE('0001-01-01', 'SYYYY-MM-DD HH24:MI:SS'));
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_小儿
 -- ----------------------------
 CREATE TABLE DEMO_小儿 (
-  ID NUMBER(20) NOT NULL ,
-  GROUPID NUMBER(20) NOT NULL ,
-  小儿名 VARCHAR2(255) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  GROUP_ID NUMBER(20) NOT NULL,
+  小儿名 VARCHAR2(255)
 )
 ;
 
@@ -2594,16 +1689,15 @@ CREATE TABLE DEMO_小儿 (
 INSERT INTO DEMO_小儿 VALUES ('449113382156521472', '448686488403595264', 'wwww');
 INSERT INTO DEMO_小儿 VALUES ('453810909078376448', '453810798449414144', '34');
 INSERT INTO DEMO_小儿 VALUES ('453811464773324800', '453810798449414144', 'adgas');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_用户
 -- ----------------------------
 CREATE TABLE DEMO_用户 (
-  ID NUMBER(20) NOT NULL ,
-  手机号 NCHAR(11) NOT NULL ,
-  姓名 VARCHAR2(32) ,
-  密码 NCHAR(32) 
+  ID NUMBER(20) NOT NULL,
+  手机号 CHAR(11) NOT NULL,
+  姓名 VARCHAR2(32),
+  密码 CHAR(32)
 )
 ;
 COMMENT ON COLUMN DEMO_用户.ID IS '用户标识';
@@ -2618,18 +1712,17 @@ COMMENT ON TABLE DEMO_用户 IS '系统用户';
 INSERT INTO DEMO_用户 VALUES ('449772627373871104', '13223333', '阿斯顿', '');
 INSERT INTO DEMO_用户 VALUES ('453805638385946624', '111', '', '');
 INSERT INTO DEMO_用户 VALUES ('453805654500462592', '222', '', '');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_用户角色
 -- ----------------------------
 CREATE TABLE DEMO_用户角色 (
-  USERID NUMBER(20) NOT NULL ,
-  ROLEID NUMBER(20) NOT NULL 
+  USER_ID NUMBER(20) NOT NULL,
+  ROLE_ID NUMBER(20) NOT NULL
 )
 ;
-COMMENT ON COLUMN DEMO_用户角色.USERID IS '用户标识';
-COMMENT ON COLUMN DEMO_用户角色.ROLEID IS '角色标识';
+COMMENT ON COLUMN DEMO_用户角色.USER_ID IS '用户标识';
+COMMENT ON COLUMN DEMO_用户角色.ROLE_ID IS '角色标识';
 COMMENT ON TABLE DEMO_用户角色 IS '用户关联的角色';
 
 -- ----------------------------
@@ -2637,16 +1730,15 @@ COMMENT ON TABLE DEMO_用户角色 IS '用户关联的角色';
 -- ----------------------------
 INSERT INTO DEMO_用户角色 VALUES ('449772627373871104', '449487215124303872');
 INSERT INTO DEMO_用户角色 VALUES ('449772627373871104', '449812931669938176');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for demo_主表
 -- ----------------------------
 CREATE TABLE DEMO_主表 (
-  ID NUMBER(20) NOT NULL ,
-  主表名称 VARCHAR2(255) ,
-  限长4 VARCHAR2(16) ,
-  不重复 VARCHAR2(255) 
+  ID NUMBER(20) NOT NULL,
+  主表名称 VARCHAR2(255),
+  限长4 VARCHAR2(16),
+  不重复 VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN DEMO_主表.限长4 IS '限制最大长度4';
@@ -2658,20 +1750,19 @@ COMMENT ON COLUMN DEMO_主表.不重复 IS '列值无重复';
 INSERT INTO DEMO_主表 VALUES ('447555037331214336', 'a', '', '');
 INSERT INTO DEMO_主表 VALUES ('447577275388416000', '1', '222222', '121');
 INSERT INTO DEMO_主表 VALUES ('447577372700463104', '', '', '1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for fsm_file
 -- ----------------------------
 CREATE TABLE FSM_FILE (
-  ID NUMBER(20) NOT NULL ,
-  NAME VARCHAR2(512) NOT NULL ,
-  PATH VARCHAR2(512) NOT NULL ,
-  "SIZE" NUMBER(20) NOT NULL ,
-  INFO VARCHAR2(512) ,
-  UPLOADER NUMBER(20) NOT NULL ,
-  CTIME DATE NOT NULL ,
-  DOWNLOADS NUMBER(20) NOT NULL 
+  ID NUMBER(20) NOT NULL,
+  NAME VARCHAR2(512) NOT NULL,
+  PATH VARCHAR2(512) NOT NULL,
+  "SIZE" NUMBER(20) NOT NULL,
+  INFO VARCHAR2(512),
+  UPLOADER NUMBER(20) NOT NULL,
+  CTIME DATE NOT NULL,
+  DOWNLOADS NUMBER(20) NOT NULL
 )
 ;
 COMMENT ON COLUMN FSM_FILE.ID IS '文件标识';
@@ -2687,43 +1778,6 @@ COMMENT ON COLUMN FSM_FILE.DOWNLOADS IS '下载次数';
 -- Records of fsm_file
 -- ----------------------------
 
-COMMIT;
-
--- ----------------------------
--- Table structure for fsm_sql
--- ----------------------------
-CREATE TABLE FSM_SQL (
-  ID VARCHAR2(128) NOT NULL ,
-  SQL VARCHAR2(4000) NOT NULL ,
-  NOTE VARCHAR2(255) 
-)
-;
-COMMENT ON COLUMN FSM_SQL.ID IS 'sql键值';
-COMMENT ON COLUMN FSM_SQL.SQL IS 'sql内容';
-COMMENT ON COLUMN FSM_SQL.NOTE IS '备注';
-
--- ----------------------------
--- Records of fsm_sql
--- ----------------------------
-INSERT INTO FSM_SQL VALUES ('上传文件', 'INSERT INTO fsm_file ( id, NAME, path, size, uploader, info, ctime, downloads )
-VALUES
-	( @id, @NAME, @path, @size, @uploader, @info, now( ), 0 )', NULL);
-INSERT INTO FSM_SQL VALUES ('增加下载次数', 'update fsm_file set downloads=downloads+1 where path=@path', NULL);
-COMMIT;
-
--- ----------------------------
--- Table structure for msg_sql
--- ----------------------------
-CREATE TABLE MSG_SQL (
-  ID VARCHAR2(128) NOT NULL ,
-  SQL VARCHAR2(4000) NOT NULL ,
-  NOTE VARCHAR2(255) 
-)
-;
-COMMENT ON COLUMN MSG_SQL.ID IS 'sql键值';
-COMMENT ON COLUMN MSG_SQL.SQL IS 'sql内容';
-COMMENT ON COLUMN MSG_SQL.NOTE IS '备注';
-
 -- ----------------------------
 -- Primary Key structure for table cm_file_my
 -- ----------------------------
@@ -2733,9 +1787,9 @@ ALTER TABLE CM_FILE_MY ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_file_my
 -- ----------------------------
 CREATE INDEX FK_MYFILE_PARENTID
-  ON cm_file_my (PARENTID);
+  ON CM_FILE_MY (PARENT_ID ASC);
 CREATE INDEX FK_USER_USERID
-  ON cm_file_my (USERID);
+  ON CM_FILE_MY (USER_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_file_pub
@@ -2746,7 +1800,7 @@ ALTER TABLE CM_FILE_PUB ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_file_pub
 -- ----------------------------
 CREATE INDEX FK_PUBFILE_PARENTID
-  ON cm_file_pub (PARENTID);
+  ON CM_FILE_PUB (PARENT_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_group
@@ -2757,20 +1811,20 @@ ALTER TABLE CM_GROUP ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_group
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_GROUP_NAME
-  ON cm_group (NAME);
+  ON CM_GROUP (NAME ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_group_role
 -- ----------------------------
-ALTER TABLE CM_GROUP_ROLE ADD PRIMARY KEY (GROUPID, ROLEID);
+ALTER TABLE CM_GROUP_ROLE ADD PRIMARY KEY (GROUP_ID, ROLE_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_group_role
 -- ----------------------------
 CREATE INDEX FK_GROUPROLE_ROLEID
-  ON cm_group_role (ROLEID);
+  ON CM_GROUP_ROLE (ROLE_ID ASC);
 CREATE INDEX FK_GROUPROLE_GROUPID
-  ON cm_group_role (GROUPID);
+  ON CM_GROUP_ROLE (GROUP_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_menu
@@ -2781,7 +1835,7 @@ ALTER TABLE CM_MENU ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_menu
 -- ----------------------------
 CREATE INDEX FK_MENU_PARENTID
-  ON cm_menu (PARENTID);
+  ON CM_MENU (PARENT_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_option
@@ -2792,7 +1846,7 @@ ALTER TABLE CM_OPTION ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_option
 -- ----------------------------
 CREATE INDEX FK_OPTION_GROUPID
-  ON cm_option (GROUPID);
+  ON CM_OPTION (GROUP_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_option_group
@@ -2808,7 +1862,7 @@ ALTER TABLE CM_PARAMS ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_params
 -- ----------------------------
 CREATE UNIQUE INDEX NAME
-  ON cm_params (NAME);
+  ON CM_PARAMS (NAME ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_permission
@@ -2819,7 +1873,7 @@ ALTER TABLE CM_PERMISSION ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_permission
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_PERMISSION_NAME
-  ON cm_permission (NAME);
+  ON CM_PERMISSION (NAME ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_role
@@ -2830,33 +1884,33 @@ ALTER TABLE CM_ROLE ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_role
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_ROLE_NAME
-  ON cm_role (NAME);
+  ON CM_ROLE (NAME ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_role_menu
 -- ----------------------------
-ALTER TABLE CM_ROLE_MENU ADD PRIMARY KEY (ROLEID, MENUID);
+ALTER TABLE CM_ROLE_MENU ADD PRIMARY KEY (ROLE_ID, MENU_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_role_menu
 -- ----------------------------
 CREATE INDEX FK_ROLEMENU_MENUID
-  ON cm_role_menu (MENUID);
+  ON CM_ROLE_MENU (MENU_ID ASC);
 CREATE INDEX FK_ROLEMENU_ROLEID
-  ON cm_role_menu (ROLEID);
+  ON CM_ROLE_MENU (ROLE_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_role_per
 -- ----------------------------
-ALTER TABLE CM_ROLE_PER ADD PRIMARY KEY (ROLEID, PERID);
+ALTER TABLE CM_ROLE_PER ADD PRIMARY KEY (ROLE_ID, PER_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_role_per
 -- ----------------------------
 CREATE INDEX FK_ROLEPER_PERID
-  ON cm_role_per (PERID);
+  ON CM_ROLE_PER (PER_ID ASC);
 CREATE INDEX FK_ROLEPER_ROLEID
-  ON cm_role_per (ROLEID);
+  ON CM_ROLE_PER (ROLE_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_rpt
@@ -2867,12 +1921,7 @@ ALTER TABLE CM_RPT ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_rpt
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_RPT_NAME
-  ON cm_rpt (NAME);
-
--- ----------------------------
--- Primary Key structure for table cm_sql
--- ----------------------------
-ALTER TABLE CM_SQL ADD PRIMARY KEY (ID);
+  ON CM_RPT (NAME ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_user
@@ -2882,47 +1931,47 @@ ALTER TABLE CM_USER ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE UNIQUE INDEX IDX_PHONE
-  ON cm_user (PHONE);
+CREATE UNIQUE INDEX IDX_USER_PHONE
+  ON CM_USER (PHONE ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_user_group
 -- ----------------------------
-ALTER TABLE CM_USER_GROUP ADD PRIMARY KEY (USERID, GROUPID);
+ALTER TABLE CM_USER_GROUP ADD PRIMARY KEY (USER_ID, GROUP_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_user_group
 -- ----------------------------
 CREATE INDEX FK_USERGROUP_GROUPID
-  ON cm_user_group (GROUPID);
+  ON CM_USER_GROUP (GROUP_ID ASC);
 CREATE INDEX FK_USERGROUP_USERID
-  ON cm_user_group (USERID);
+  ON CM_USER_GROUP (USER_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_user_params
 -- ----------------------------
-ALTER TABLE CM_USER_PARAMS ADD PRIMARY KEY (USERID, PARAMID);
+ALTER TABLE CM_USER_PARAMS ADD PRIMARY KEY (USER_ID, PARAM_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_user_params
 -- ----------------------------
 CREATE INDEX FK_USERPARAMS_USERID
-  ON cm_user_params (USERID);
+  ON CM_USER_PARAMS (USER_ID ASC);
 CREATE INDEX FK_USERPARAMS_PARAMSID
-  ON cm_user_params (PARAMID);
+  ON CM_USER_PARAMS (PARAM_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_user_role
 -- ----------------------------
-ALTER TABLE CM_USER_ROLE ADD PRIMARY KEY (USERID, ROLEID);
+ALTER TABLE CM_USER_ROLE ADD PRIMARY KEY (USER_ID, ROLE_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_user_role
 -- ----------------------------
 CREATE INDEX FK_USERROLE_USERID
-  ON cm_user_role (USERID);
+  ON CM_USER_ROLE (USER_ID ASC);
 CREATE INDEX FK_USERROLE_ROLEID
-  ON cm_user_role (ROLEID);
+  ON CM_USER_ROLE (ROLE_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfd_atv
@@ -2933,18 +1982,18 @@ ALTER TABLE CM_WFD_ATV ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfd_atv
 -- ----------------------------
 CREATE INDEX FK_WFDATV_PRCID
-  ON cm_wfd_atv (PRCID);
+  ON CM_WFD_ATV (PRC_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfd_atv_role
 -- ----------------------------
-ALTER TABLE CM_WFD_ATV_ROLE ADD PRIMARY KEY (ATVID, ROLEID);
+ALTER TABLE CM_WFD_ATV_ROLE ADD PRIMARY KEY (ATV_ID, ROLE_ID);
 
 -- ----------------------------
 -- Indexes structure for table cm_wfd_atv_role
 -- ----------------------------
 CREATE INDEX FK_WFDATVROLE_ROLEID
-  ON cm_wfd_atv_role (ROLEID);
+  ON CM_WFD_ATV_ROLE (ROLE_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfd_prc
@@ -2960,7 +2009,7 @@ ALTER TABLE CM_WFD_TRS ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfd_trs
 -- ----------------------------
 CREATE INDEX FK_WFDTRS_PRCID
-  ON cm_wfd_trs (PRCID);
+  ON CM_WFD_TRS (PRC_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfi_atv
@@ -2971,9 +2020,9 @@ ALTER TABLE CM_WFI_ATV ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfi_atv
 -- ----------------------------
 CREATE INDEX FK_WFIATV_PRCIID
-  ON cm_wfi_atv (PRCIID);
+  ON CM_WFI_ATV (PRCI_ID ASC);
 CREATE INDEX FK_WFIATV_ATVDID
-  ON cm_wfi_atv (ATVDID);
+  ON CM_WFI_ATV (ATVD_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfi_item
@@ -2984,7 +2033,7 @@ ALTER TABLE CM_WFI_ITEM ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfi_item
 -- ----------------------------
 CREATE INDEX FK_WFIITEM_ATVIID
-  ON cm_wfi_item (ATVIID);
+  ON CM_WFI_ITEM (ATVI_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfi_prc
@@ -2995,7 +2044,7 @@ ALTER TABLE CM_WFI_PRC ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfi_prc
 -- ----------------------------
 CREATE INDEX FK_WFIPRC_PRCDID
-  ON cm_wfi_prc (PRCDID);
+  ON CM_WFI_PRC (PRCD_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table cm_wfi_trs
@@ -3006,11 +2055,11 @@ ALTER TABLE CM_WFI_TRS ADD PRIMARY KEY (ID);
 -- Indexes structure for table cm_wfi_trs
 -- ----------------------------
 CREATE INDEX FK_WFITRS_TRSDID
-  ON cm_wfi_trs (TRSDID);
+  ON CM_WFI_TRS (TRSD_ID ASC);
 CREATE INDEX FK_WFITRS_SRCATVIID
-  ON cm_wfi_trs (SRCATVIID);
+  ON CM_WFI_TRS (SRC_ATVI_ID ASC);
 CREATE INDEX FK_WFITRS_TGTATVIID
-  ON cm_wfi_trs (TGTATVIID);
+  ON CM_WFI_TRS (TGT_ATVI_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table demo_cache_tbl1
@@ -3038,11 +2087,6 @@ ALTER TABLE DEMO_CRUD ADD PRIMARY KEY (ID);
 ALTER TABLE DEMO_PAR_TBL ADD PRIMARY KEY (ID);
 
 -- ----------------------------
--- Primary Key structure for table demo_sql
--- ----------------------------
-ALTER TABLE DEMO_SQL ADD PRIMARY KEY (ID);
-
--- ----------------------------
 -- Primary Key structure for table demo_virtbl1
 -- ----------------------------
 ALTER TABLE DEMO_VIRTBL1 ADD PRIMARY KEY (ID);
@@ -3065,8 +2109,8 @@ ALTER TABLE DEMO_大儿 ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table demo_大儿
 -- ----------------------------
-CREATE INDEX PARENDID
-  ON demo_大儿 (PARENTID);
+CREATE INDEX FK_大儿_PARENDID
+  ON DEMO_大儿 (PARENT_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table demo_父表
@@ -3086,13 +2130,13 @@ ALTER TABLE DEMO_角色 ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Primary Key structure for table demo_角色权限
 -- ----------------------------
-ALTER TABLE DEMO_角色权限 ADD PRIMARY KEY (ROLEID, PRVID);
+ALTER TABLE DEMO_角色权限 ADD PRIMARY KEY (ROLE_ID, PRV_ID);
 
 -- ----------------------------
 -- Indexes structure for table demo_角色权限
 -- ----------------------------
-CREATE INDEX FK_ROLEPRVX_PRVID
-  ON demo_角色权限 (PRVID);
+CREATE INDEX FK_角色权限_PRVID
+  ON DEMO_角色权限 (PRV_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table demo_扩展1
@@ -3122,8 +2166,8 @@ ALTER TABLE DEMO_小儿 ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table demo_小儿
 -- ----------------------------
-CREATE INDEX PARENTID
-  ON demo_小儿 (GROUPID);
+CREATE INDEX FK_小儿_GROUPID
+  ON DEMO_小儿 (GROUP_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table demo_用户
@@ -3131,23 +2175,17 @@ CREATE INDEX PARENTID
 ALTER TABLE DEMO_用户 ADD PRIMARY KEY (ID);
 
 -- ----------------------------
--- Indexes structure for table demo_用户
--- ----------------------------
-CREATE UNIQUE INDEX IDX_用户_PHONE
-  ON demo_用户 (手机号);
-
--- ----------------------------
 -- Primary Key structure for table demo_用户角色
 -- ----------------------------
-ALTER TABLE DEMO_用户角色 ADD PRIMARY KEY (USERID, ROLEID);
+ALTER TABLE DEMO_用户角色 ADD PRIMARY KEY (USER_ID, ROLE_ID);
 
 -- ----------------------------
 -- Indexes structure for table demo_用户角色
 -- ----------------------------
-CREATE INDEX FK_USERROLEX_USERID
-  ON demo_用户角色 (USERID);
-CREATE INDEX FK_USERROLEX_ROLEID
-  ON demo_用户角色 (ROLEID);
+CREATE INDEX FK_用户角色_USERID
+  ON DEMO_用户角色 (USER_ID ASC);
+CREATE INDEX FK_用户角色_ROLEID
+  ON DEMO_用户角色 (ROLE_ID ASC);
 
 -- ----------------------------
 -- Primary Key structure for table demo_主表
@@ -3163,133 +2201,116 @@ ALTER TABLE FSM_FILE ADD PRIMARY KEY (ID);
 -- Indexes structure for table fsm_file
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_FSM_FILE_PATH
-  ON fsm_file (PATH);
-
--- ----------------------------
--- Primary Key structure for table fsm_sql
--- ----------------------------
-ALTER TABLE FSM_SQL ADD PRIMARY KEY (ID);
-
--- ----------------------------
--- Primary Key structure for table msg_sql
--- ----------------------------
-ALTER TABLE MSG_SQL ADD PRIMARY KEY (ID);
+  ON FSM_FILE (PATH ASC);
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_file_my
 -- ----------------------------
-ALTER TABLE CM_FILE_MY ADD CONSTRAINT FK_MYFILE_PARENTID FOREIGN KEY (PARENTID) REFERENCES CM_FILE_MY (ID);
-ALTER TABLE CM_FILE_MY ADD CONSTRAINT FK_USER_USERID FOREIGN KEY (USERID) REFERENCES CM_USER (ID);
-
--- ----------------------------
--- Foreign Keys structure for table cm_file_pub
--- ----------------------------
-ALTER TABLE CM_FILE_PUB ADD CONSTRAINT FK_PUBFILE_PARENTID FOREIGN KEY (PARENTID) REFERENCES CM_FILE_PUB (ID);
+ALTER TABLE "CM_FILE_MY" ADD CONSTRAINT "FK_USER_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_group_role
 -- ----------------------------
-ALTER TABLE CM_GROUP_ROLE ADD CONSTRAINT FK_GROUPROLE_GROUPID FOREIGN KEY (GROUPID) REFERENCES CM_GROUP (ID);
-ALTER TABLE CM_GROUP_ROLE ADD CONSTRAINT FK_GROUPROLE_ROLEID FOREIGN KEY (ROLEID) REFERENCES CM_ROLE (ID);
+ALTER TABLE "CM_GROUP_ROLE" ADD CONSTRAINT "FK_GROUPROLE_GROUPID" FOREIGN KEY ("GROUP_ID") REFERENCES "CM_GROUP" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_GROUP_ROLE" ADD CONSTRAINT "FK_GROUPROLE_ROLEID" FOREIGN KEY ("ROLE_ID") REFERENCES "CM_ROLE" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_menu
 -- ----------------------------
-ALTER TABLE CM_MENU ADD CONSTRAINT FK_MENU_PARENTID FOREIGN KEY (PARENTID) REFERENCES CM_MENU (ID);
+ALTER TABLE "CM_MENU" ADD CONSTRAINT "FK_MENU_PARENTID" FOREIGN KEY ("PARENT_ID") REFERENCES "CM_MENU" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_option
 -- ----------------------------
-ALTER TABLE CM_OPTION ADD CONSTRAINT FK_OPTION_GROUPID FOREIGN KEY (GROUPID) REFERENCES CM_OPTION_GROUP (ID);
+ALTER TABLE "CM_OPTION" ADD CONSTRAINT "FK_OPTION_GROUPID" FOREIGN KEY ("GROUP_ID") REFERENCES "CM_OPTION_GROUP" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_role_menu
 -- ----------------------------
-ALTER TABLE CM_ROLE_MENU ADD CONSTRAINT FK_ROLEMENU_MENUID FOREIGN KEY (MENUID) REFERENCES CM_MENU (ID);
-ALTER TABLE CM_ROLE_MENU ADD CONSTRAINT FK_ROLEMENU_ROLEID FOREIGN KEY (ROLEID) REFERENCES CM_ROLE (ID);
+ALTER TABLE "CM_ROLE_MENU" ADD CONSTRAINT "FK_ROLEMENU_MENUID" FOREIGN KEY ("MENU_ID") REFERENCES "CM_MENU" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_ROLE_MENU" ADD CONSTRAINT "FK_ROLEMENU_ROLEID" FOREIGN KEY ("ROLE_ID") REFERENCES "CM_ROLE" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_role_per
 -- ----------------------------
-ALTER TABLE CM_ROLE_PER ADD CONSTRAINT FK_ROLEPER_PERID FOREIGN KEY (PERID) REFERENCES CM_PERMISSION (ID);
-ALTER TABLE CM_ROLE_PER ADD CONSTRAINT FK_ROLEPER_ROLEID FOREIGN KEY (ROLEID) REFERENCES CM_ROLE (ID);
+ALTER TABLE "CM_ROLE_PER" ADD CONSTRAINT "FK_ROLEPER_PERID" FOREIGN KEY ("PER_ID") REFERENCES "CM_PERMISSION" ("ID");
+ALTER TABLE "CM_ROLE_PER" ADD CONSTRAINT "FK_ROLEPER_ROLEID" FOREIGN KEY ("ROLE_ID") REFERENCES "CM_ROLE" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_group
 -- ----------------------------
-ALTER TABLE CM_USER_GROUP ADD CONSTRAINT FK_USERGROUP_GROUPID FOREIGN KEY (GROUPID) REFERENCES CM_GROUP (ID);
-ALTER TABLE CM_USER_GROUP ADD CONSTRAINT FK_USERGROUP_USERID FOREIGN KEY (USERID) REFERENCES CM_USER (ID);
+ALTER TABLE "CM_USER_GROUP" ADD CONSTRAINT "FK_USERGROUP_GROUPID" FOREIGN KEY ("GROUP_ID") REFERENCES "CM_GROUP" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_USER_GROUP" ADD CONSTRAINT "FK_USERGROUP_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_params
 -- ----------------------------
-ALTER TABLE CM_USER_PARAMS ADD CONSTRAINT FK_USERPARAMS_PARAMSID FOREIGN KEY (PARAMID) REFERENCES CM_PARAMS (ID);
-ALTER TABLE CM_USER_PARAMS ADD CONSTRAINT FK_USERPARAMS_USERID FOREIGN KEY (USERID) REFERENCES CM_USER (ID);
+ALTER TABLE "CM_USER_PARAMS" ADD CONSTRAINT "FK_USERPARAMS_PARAMSID" FOREIGN KEY ("PARAM_ID") REFERENCES "CM_PARAMS" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_USER_PARAMS" ADD CONSTRAINT "FK_USERPARAMS_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_role
 -- ----------------------------
-ALTER TABLE CM_USER_ROLE ADD CONSTRAINT FK_USERROLE_ROLEID FOREIGN KEY (ROLEID) REFERENCES CM_ROLE (ID);
-ALTER TABLE CM_USER_ROLE ADD CONSTRAINT FK_USERROLE_USERID FOREIGN KEY (USERID) REFERENCES CM_USER (ID);
+ALTER TABLE "CM_USER_ROLE" ADD CONSTRAINT "FK_USERROLE_ROLEID" FOREIGN KEY ("ROLE_ID") REFERENCES "CM_ROLE" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_USER_ROLE" ADD CONSTRAINT "FK_USERROLE_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_atv
 -- ----------------------------
-ALTER TABLE CM_WFD_ATV ADD CONSTRAINT FK_WFDATV_PRCID FOREIGN KEY (PRCID) REFERENCES CM_WFD_PRC (ID);
+ALTER TABLE "CM_WFD_ATV" ADD CONSTRAINT "FK_WFDATV_PRCID" FOREIGN KEY ("PRC_ID") REFERENCES "CM_WFD_PRC" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_atv_role
 -- ----------------------------
-ALTER TABLE CM_WFD_ATV_ROLE ADD CONSTRAINT FK_WFDATVROLE_ATVID FOREIGN KEY (ATVID) REFERENCES CM_WFD_ATV (ID);
-ALTER TABLE CM_WFD_ATV_ROLE ADD CONSTRAINT FK_WFDATVROLE_ROLEID FOREIGN KEY (ROLEID) REFERENCES CM_ROLE (ID);
+ALTER TABLE "CM_WFD_ATV_ROLE" ADD CONSTRAINT "FK_WFDATVROLE_ATVID" FOREIGN KEY ("ATV_ID") REFERENCES "CM_WFD_ATV" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_WFD_ATV_ROLE" ADD CONSTRAINT "FK_WFDATVROLE_ROLEID" FOREIGN KEY ("ROLE_ID") REFERENCES "CM_ROLE" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_trs
 -- ----------------------------
-ALTER TABLE CM_WFD_TRS ADD CONSTRAINT FK_WFDTRS_PRCID FOREIGN KEY (PRCID) REFERENCES CM_WFD_PRC (ID);
+ALTER TABLE "CM_WFD_TRS" ADD CONSTRAINT "FK_WFDTRS_PRCID" FOREIGN KEY ("PRC_ID") REFERENCES "CM_WFD_PRC" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_atv
 -- ----------------------------
-ALTER TABLE CM_WFI_ATV ADD CONSTRAINT FK_WFIATV_ATVDID FOREIGN KEY (ATVDID) REFERENCES CM_WFD_ATV (ID);
-ALTER TABLE CM_WFI_ATV ADD CONSTRAINT FK_WFIATV_PRCIID FOREIGN KEY (PRCIID) REFERENCES CM_WFI_PRC (ID);
+ALTER TABLE "CM_WFI_ATV" ADD CONSTRAINT "FK_WFIATV_ATVDID" FOREIGN KEY ("ATVD_ID") REFERENCES "CM_WFD_ATV" ("ID");
+ALTER TABLE "CM_WFI_ATV" ADD CONSTRAINT "FK_WFIATV_PRCIID" FOREIGN KEY ("PRCI_ID") REFERENCES "CM_WFI_PRC" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_item
 -- ----------------------------
-ALTER TABLE CM_WFI_ITEM ADD CONSTRAINT FK_WFIITEM_ATVIID FOREIGN KEY (ATVIID) REFERENCES CM_WFI_ATV (ID);
+ALTER TABLE "CM_WFI_ITEM" ADD CONSTRAINT "FK_WFIITEM_ATVIID" FOREIGN KEY ("ATVI_ID") REFERENCES "CM_WFI_ATV" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_prc
 -- ----------------------------
-ALTER TABLE CM_WFI_PRC ADD CONSTRAINT FK_WFIPRC_PRCDID FOREIGN KEY (PRCDID) REFERENCES CM_WFD_PRC (ID);
+ALTER TABLE "CM_WFI_PRC" ADD CONSTRAINT "FK_WFIPRC_PRCDID" FOREIGN KEY ("PRCD_ID") REFERENCES "CM_WFD_PRC" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_trs
 -- ----------------------------
-ALTER TABLE CM_WFI_TRS ADD CONSTRAINT FK_WFITRS_SRCATVIID FOREIGN KEY (SRCATVIID) REFERENCES CM_WFI_ATV (ID);
-ALTER TABLE CM_WFI_TRS ADD CONSTRAINT FK_WFITRS_TGTATVIID FOREIGN KEY (TGTATVIID) REFERENCES CM_WFI_ATV (ID);
-ALTER TABLE CM_WFI_TRS ADD CONSTRAINT FK_WFITRS_TRSDID FOREIGN KEY (TRSDID) REFERENCES CM_WFD_TRS (ID);
+ALTER TABLE "CM_WFI_TRS" ADD CONSTRAINT "FK_WFITRS_SRCATVIID" FOREIGN KEY ("SRC_ATVI_ID") REFERENCES "CM_WFI_ATV" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_WFI_TRS" ADD CONSTRAINT "FK_WFITRS_TGTATVIID" FOREIGN KEY ("TGT_ATVI_ID") REFERENCES "CM_WFI_ATV" ("ID") ON DELETE CASCADE;
+ALTER TABLE "CM_WFI_TRS" ADD CONSTRAINT "FK_WFITRS_TRSDID" FOREIGN KEY ("TRSD_ID") REFERENCES "CM_WFD_TRS" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_大儿
 -- ----------------------------
-ALTER TABLE DEMO_大儿 ADD CONSTRAINT PARENDID FOREIGN KEY (PARENTID) REFERENCES DEMO_父表 (ID);
+ALTER TABLE "DEMO_大儿" ADD CONSTRAINT "DEMO_大儿_PARENDID1" FOREIGN KEY ("PARENT_ID") REFERENCES "DEMO_父表" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_角色权限
 -- ----------------------------
-ALTER TABLE DEMO_角色权限 ADD CONSTRAINT DEMO_角色权限_IBFK_1 FOREIGN KEY (PRVID) REFERENCES DEMO_权限 (ID);
-ALTER TABLE DEMO_角色权限 ADD CONSTRAINT DEMO_角色权限_IBFK_2 FOREIGN KEY (ROLEID) REFERENCES DEMO_角色 (ID);
+ALTER TABLE "DEMO_角色权限" ADD CONSTRAINT "DEMO_角色权限_IBFK_1" FOREIGN KEY ("PRV_ID") REFERENCES "DEMO_权限" ("ID") ON DELETE CASCADE;
+ALTER TABLE "DEMO_角色权限" ADD CONSTRAINT "DEMO_角色权限_IBFK_2" FOREIGN KEY ("ROLE_ID") REFERENCES "DEMO_角色" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_小儿
 -- ----------------------------
-ALTER TABLE DEMO_小儿 ADD CONSTRAINT PARENTID FOREIGN KEY (GROUPID) REFERENCES DEMO_父表 (ID);
+ALTER TABLE "DEMO_小儿" ADD CONSTRAINT "DEMO_小儿_PARENTID1" FOREIGN KEY ("GROUP_ID") REFERENCES "DEMO_父表" ("ID") ON DELETE CASCADE;
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_用户角色
 -- ----------------------------
-ALTER TABLE DEMO_用户角色 ADD CONSTRAINT DEMO_用户角色_IBFK_1 FOREIGN KEY (ROLEID) REFERENCES DEMO_角色 (ID);
-ALTER TABLE DEMO_用户角色 ADD CONSTRAINT DEMO_用户角色_IBFK_2 FOREIGN KEY (USERID) REFERENCES DEMO_用户 (ID);
-COMMIT;
+ALTER TABLE "DEMO_用户角色" ADD CONSTRAINT "DEMO_用户角色_IBFK_1" FOREIGN KEY ("ROLE_ID") REFERENCES "DEMO_角色" ("ID") ON DELETE CASCADE;
+ALTER TABLE "DEMO_用户角色" ADD CONSTRAINT "DEMO_用户角色_IBFK_2" FOREIGN KEY ("USER_ID") REFERENCES "DEMO_用户" ("ID") ON DELETE CASCADE;

@@ -52,7 +52,7 @@ namespace Dt.Mgr.Module
                 ParentID: FolderID == -1 ? (long?)null : FolderID,
                 Name: p_row.Str("name"),
                 IsFolder: false,
-                ExtName: p_row.Str("extname"),
+                ExtName: p_row.Str("ext_name"),
                 Info: p_row.Str("info"),
                 Ctime: p_row.Date("ctime"),
                 UserID: Kit.UserID);
@@ -85,9 +85,9 @@ namespace Dt.Mgr.Module
             var ls = new List<FileMyX>();
             foreach (var row in p_rows)
             {
-                if (row.Bool("IsFolder"))
+                if (row.Bool("is_folder"))
                 {
-                    int cnt = await FileMyX.GetCount($"where parentid={row.ID}");
+                    int cnt = await FileMyX.GetCount($"where parent_id={row.ID}");
                     if (cnt > 0)
                     {
                         Kit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
@@ -107,7 +107,7 @@ namespace Dt.Mgr.Module
             {
                 var pf = new FileMyX(ID: row.ID);
                 pf.IsAdded = false;
-                pf["ParentID"] = p_folderID;
+                pf.ParentID = p_folderID;
                 ls.Add(pf);
             }
             return ls.Save(false);

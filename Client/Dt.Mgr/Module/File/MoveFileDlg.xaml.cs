@@ -77,7 +77,7 @@ namespace Dt.Mgr.Module
 
             foreach (var row in _files)
             {
-                if (row.Bool("IsFolder"))
+                if (row.Bool("is_folder"))
                 {
                     for (int i = 0; i < p_tbl.Count; i++)
                     {

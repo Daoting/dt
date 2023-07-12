@@ -50,22 +50,22 @@ namespace Dt.Mgr.Module
 
         public async Task<Table> GetChildren()
         {
-            return await FilePubX.Query($"where parentid={FolderID}");
+            return await FilePubX.Query($"where parent_id={FolderID}");
         }
 
         public async Task<Table> GetChildFolders()
         {
-            return await FilePubX.Query($"where isfolder=1 and parentid={FolderID}");
+            return await FilePubX.Query($"where is_folder=1 and parent_id={FolderID}");
         }
 
         public async Task<Table> GetChildrenByType(string p_typeFilter)
         {
-            return await FilePubX.Query($"where parentid={FolderID} and ( isfolder = 1 or locate( extname, '{p_typeFilter}' ) )");
+            return await FilePubX.Query($"where parent_id={FolderID} and ( is_folder = 1 or locate( ext_name, '{p_typeFilter}' ) )");
         }
 
         public async Task<Table> SearchFiles(string p_name)
         {
-            return await FilePubX.Query($"where isfolder=0 and name like '%{p_name}%' limit 20");
+            return await FilePubX.Query($"where is_folder=0 and name like '%{p_name}%' limit 20");
         }
 
         public Task<bool> SaveFile(Row p_row)
@@ -75,7 +75,7 @@ namespace Dt.Mgr.Module
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
                     IsFolder: false,
-                    ExtName: p_row.Str("extname"),
+                    ExtName: p_row.Str("ext_name"),
                     Info: p_row.Str("info"),
                     Ctime: p_row.Date("ctime"));
             return pf.Save(false);
@@ -106,9 +106,9 @@ namespace Dt.Mgr.Module
             var ls = new List<FilePubX>();
             foreach (var row in p_rows)
             {
-                if (row.Bool("IsFolder"))
+                if (row.Bool("is_folder"))
                 {
-                    int cnt = await FilePubX.GetCount($"where parentid={row.ID}");
+                    int cnt = await FilePubX.GetCount($"where parent_id={row.ID}");
                     if (cnt > 0)
                     {
                         Kit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
@@ -128,7 +128,7 @@ namespace Dt.Mgr.Module
             {
                 var pf = new FilePubX(ID: row.ID);
                 pf.IsAdded = false;
-                pf["ParentID"] = p_folderID;
+                pf.ParentID = p_folderID;
                 ls.Add(pf);
             }
             return ls.Save(false);

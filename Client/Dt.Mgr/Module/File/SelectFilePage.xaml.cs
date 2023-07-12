@@ -47,7 +47,7 @@ namespace Dt.Mgr.Module
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (e.Row.Bool("IsFolder"))
+            if (e.Row.Bool("is_folder"))
             {
                 _lv.ClearSelection();
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());

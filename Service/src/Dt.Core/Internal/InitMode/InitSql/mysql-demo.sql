@@ -551,7 +551,6 @@ COMMIT;
 -- Procedure structure for cm_参数_用户参数列表
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_参数_用户参数列表`;
-delimiter ;;
 CREATE PROCEDURE `cm_参数_用户参数列表`(`p_userid` bigint)
 BEGIN
 
@@ -561,14 +560,12 @@ select id,value from cm_params a  where
 	not exists ( select paramid from cm_user_params b where a.id = b.paramid and userid = p_userid );
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_参数_用户参数值ByID
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_参数_用户参数值ByID`;
-delimiter ;;
 CREATE PROCEDURE `cm_参数_用户参数值ByID`(`p_userid` bigint,`p_paramid` bigint)
 BEGIN
 	
@@ -577,14 +574,12 @@ union
 select value from cm_params a  where id = p_paramid;
 
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_参数_用户参数值ByName
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_参数_用户参数值ByName`;
-delimiter ;;
 CREATE PROCEDURE `cm_参数_用户参数值ByName`(`p_userid` bigint,`p_name` varchar(200))
 BEGIN
 	
@@ -593,28 +588,24 @@ union
 select value from cm_params a  where name = p_name;
 
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_分组_分组列表的用户
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_分组_分组列表的用户`;
-delimiter ;;
 CREATE PROCEDURE `cm_分组_分组列表的用户`(`p_groupid` VARCHAR(4000))
 BEGIN
 	
 select distinct(userid) from cm_user_group where find_in_set(groupid, p_groupid);
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_编辑活动模板
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_编辑活动模板`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_编辑活动模板`(`p_prcid` bigint)
 BEGIN
 
@@ -631,14 +622,12 @@ where
 	prcid = p_prcid;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_参与的流程
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_参与的流程`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_参与的流程`(p_userid bigint)
 BEGIN
 
@@ -659,14 +648,12 @@ order by
 	p.dispidx;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_查找实例
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_查找实例`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_查找实例`(p_prcdid bigint, p_start datetime, p_end datetime, p_status int, p_title VARCHAR(200))
 BEGIN
 
@@ -689,14 +676,12 @@ order by
 	dispidx;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_待办任务
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_待办任务`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_待办任务`(p_userid bigint)
 BEGIN
 
@@ -736,14 +721,12 @@ where ai.id = wi.atviid
 order by wi.stime desc;
 
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_待办任务总数
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_待办任务总数`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_待办任务总数`(`p_userid` bigint)
 BEGIN
 	
@@ -764,14 +747,12 @@ where
 	);
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_后续活动
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_后续活动`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_后续活动`(p_atvid bigint)
 BEGIN
 
@@ -784,14 +765,12 @@ where
 	atv.id = trs.atvid;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_后续活动工作项
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_后续活动工作项`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_后续活动工作项`(p_prciid bigint, p_atvdid bigint)
 BEGIN
 
@@ -808,14 +787,12 @@ where
 	and b.prciid = p_prciid;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_活动实例的工作项
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_活动实例的工作项`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_活动实例的工作项`(`p_atviid` bigint)
 BEGIN
 
@@ -834,14 +811,12 @@ order by
 	dispidx;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_可启动流程
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_可启动流程`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_可启动流程`(p_userid bigint)
 BEGIN
 
@@ -872,14 +847,12 @@ order by
 	dispidx;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_历史任务
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_历史任务`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_历史任务`(p_userid bigint, p_start datetime, p_end datetime, p_status int)
 BEGIN
 
@@ -926,14 +899,12 @@ select wi.id itemid,
  order by wi.stime desc;
  
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_前一活动的同部门执行者
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_前一活动的同部门执行者`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_前一活动的同部门执行者`(`p_prciid` bigint,`p_atvdid` bigint)
 BEGIN
 
@@ -948,14 +919,12 @@ where depid in (
 	          and atvdid in ( select SrcAtvID from cm_wfd_trs where TgtAtvID = p_atvdid ))));
 						
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_前一活动执行者
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_前一活动执行者`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_前一活动执行者`(`p_prciid` bigint,`p_atvdid` bigint)
 BEGIN
 
@@ -966,14 +935,12 @@ where atviid in (
 		and atvdid in (select SrcAtvID from cm_wfd_trs where TgtAtvID=p_atvdid));
 		
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_日志目标项
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_日志目标项`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_日志目标项`(p_prciid bigint, p_atviid bigint)
 BEGIN
 
@@ -1004,14 +971,12 @@ select ( CASE username WHEN NULL THEN rolename ELSE username END ) accpname,
  order by dispidx;
  
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_生成日志列表
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_生成日志列表`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_生成日志列表`(p_prciid bigint, p_atvdid bigint)
 BEGIN
 
@@ -1038,14 +1003,12 @@ where a.atviid = b.id
 order by a.dispidx;
 
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_所有经办历史任务
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_所有经办历史任务`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_所有经办历史任务`(p_userid bigint, p_start datetime, p_end datetime, p_status int)
 BEGIN
 
@@ -1089,14 +1052,12 @@ select wi.id itemid,
 	order by wi.stime desc;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_已完成活动同部门执行者
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_已完成活动同部门执行者`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_已完成活动同部门执行者`(`p_prciid` bigint,`p_atvdid` bigint)
 BEGIN
 
@@ -1109,14 +1070,12 @@ where
 	);
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_已完成活动执行者
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_已完成活动执行者`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_已完成活动执行者`(`p_prciid` bigint,`p_atvdid` bigint)
 BEGIN
 
@@ -1128,14 +1087,12 @@ where
 	atviid in ( select id from cm_wfi_atv where prciid = p_prciid and atvdid = p_atvdid );
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_流程_最后工作项
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_流程_最后工作项`;
-delimiter ;;
 CREATE PROCEDURE `cm_流程_最后工作项`(p_prciid bigint)
 BEGIN
 
@@ -1156,14 +1113,12 @@ order by
 	1;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_文件_搜索扩展名文件
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_文件_搜索扩展名文件`;
-delimiter ;;
 CREATE PROCEDURE `cm_文件_搜索扩展名文件`(`p_name` varchar(200),`p_userid` bigint,`p_extname` varchar(200))
 BEGIN
 	
@@ -1182,14 +1137,12 @@ where
 	limit 20;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_文件_搜索所有文件
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_文件_搜索所有文件`;
-delimiter ;;
 CREATE PROCEDURE `cm_文件_搜索所有文件`(`p_name` varchar(200),`p_userid` bigint)
 BEGIN
 	
@@ -1203,28 +1156,24 @@ select info from cm_file_my
 	limit 20;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_用户_角色列表的用户
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_用户_角色列表的用户`;
-delimiter ;;
 CREATE PROCEDURE `cm_用户_角色列表的用户`(`p_roleid` varchar(4000))
 BEGIN
 	
 select distinct(userid) from cm_user_role where find_in_set(roleid, p_roleid);
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_用户_具有的权限
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_用户_具有的权限`;
-delimiter ;;
 CREATE PROCEDURE `cm_用户_具有的权限`(`p_userid` bigint)
 BEGIN
 
@@ -1260,14 +1209,12 @@ order by
 	id;
 	
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Procedure structure for cm_用户_可访问的菜单
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `cm_用户_可访问的菜单`;
-delimiter ;;
 CREATE PROCEDURE `cm_用户_可访问的菜单`(`p_userid` bigint)
 BEGIN
 
@@ -1291,14 +1238,12 @@ select id,name
  order by dispidx;
  
 END
-;;
-delimiter ;
+;
 
 -- ----------------------------
 -- Function structure for nextval
 -- ----------------------------
 DROP FUNCTION IF EXISTS `nextval`;
-delimiter ;;
 CREATE FUNCTION `nextval`(v_seq_name VARCHAR ( 200 ))
  RETURNS int(11)
 BEGIN
@@ -1319,7 +1264,6 @@ WHERE
 RETURN res;
 
 END
-;;
-delimiter ;
+;
 
 SET FOREIGN_KEY_CHECKS = 1;

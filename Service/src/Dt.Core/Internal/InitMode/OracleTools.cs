@@ -62,7 +62,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from all_users where username='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb(bool p_isInit)
+        public async Task<bool> InitDb(int p_initType)
         {
             _da.AutoClose = false;
             await DropExistsDB();
@@ -75,13 +75,13 @@ namespace Dt.Core
 
             var connStr = $"User Id={_newUser};Password={_newDb.ToLower()};{_host}";
 
-            if (p_isInit)
+            if (p_initType != 1)
             {
                 var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
                 da.AutoClose = false;
 
                 string sql;
-                using (var sr = MySqlTools.GetSqlStream("oracle-init.sql"))
+                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "oracle-init.sql" : "oracle-demo.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }

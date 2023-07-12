@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-10 创建
+* 日志: 2023-07-11 创建
 ******************************************************************************/
 #endregion
 
@@ -32,14 +32,14 @@ namespace Dt.Mgr.Module
             DateTime Ctime = default,
             long UserID = default)
         {
-            AddCell("ID", ID);
-            AddCell("ParentID", ParentID);
-            AddCell("Name", Name);
-            AddCell("IsFolder", IsFolder);
-            AddCell("ExtName", ExtName);
-            AddCell("Info", Info);
-            AddCell("Ctime", Ctime);
-            AddCell("UserID", UserID);
+            AddCell("id", ID);
+            AddCell("parent_id", ParentID);
+            AddCell("name", Name);
+            AddCell("is_folder", IsFolder);
+            AddCell("ext_name", ExtName);
+            AddCell("info", Info);
+            AddCell("ctime", Ctime);
+            AddCell("user_id", UserID);
             IsAdded = true;
         }
         #endregion
@@ -49,8 +49,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public long? ParentID
         {
-            get { return (long?)this["ParentID"]; }
-            set { this["ParentID"] = value; }
+            get { return (long?)this["parent_id"]; }
+            set { this["parent_id"] = value; }
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public string Name
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public bool IsFolder
         {
-            get { return (bool)this["IsFolder"]; }
-            set { this["IsFolder"] = value; }
+            get { return (bool)this["is_folder"]; }
+            set { this["is_folder"] = value; }
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public string ExtName
         {
-            get { return (string)this["ExtName"]; }
-            set { this["ExtName"] = value; }
+            get { return (string)this["ext_name"]; }
+            set { this["ext_name"] = value; }
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public string Info
         {
-            get { return (string)this["Info"]; }
-            set { this["Info"] = value; }
+            get { return (string)this["info"]; }
+            set { this["info"] = value; }
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)this["Ctime"]; }
-            set { this["Ctime"] = value; }
+            get { return (DateTime)this["ctime"]; }
+            set { this["ctime"] = value; }
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace Dt.Mgr.Module
         /// </summary>
         public long UserID
         {
-            get { return (long)this["UserID"]; }
-            set { this["UserID"] = value; }
+            get { return (long)this["user_id"]; }
+            set { this["user_id"] = value; }
         }
     }
 }

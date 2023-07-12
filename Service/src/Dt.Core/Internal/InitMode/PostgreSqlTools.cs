@@ -63,7 +63,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from pg_user where usename='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb(bool p_isInit)
+        public async Task<bool> InitDb(int p_initType)
         {
             _da.AutoClose = false;
             await DropExistsDB();
@@ -95,13 +95,13 @@ namespace Dt.Core
 
             connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newDb};";
 
-            if (p_isInit)
+            if (p_initType != 1)
             {
                 da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql, false));
                 da.AutoClose = false;
 
                 string sql;
-                using (var sr = MySqlTools.GetSqlStream("postgresql-init.sql"))
+                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "postgresql-init.sql" : "postgresql-demo.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }

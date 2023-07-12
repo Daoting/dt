@@ -70,11 +70,11 @@
     </style>
 </head>
 <body style="margin: 0; padding: 0; height: 100%;">
-    <div style="position: fixed; left: 50%; top: 50%; width: 800px; height: 700px; margin-left: -400px; margin-top: -350px; ">
+    <div style="position: fixed; left: 50%; top: 50%; width: 800px; height: 740px; margin-left: -400px; margin-top: -370px; ">
         <div class="divCaption">
             <span class="aTitle">数据库初始化向导</span>
         </div>
-        <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; border: 1px solid #E0E0E0; padding: 20px; height: 360px; margin-top: -1px">
+        <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; border: 1px solid #E0E0E0; padding: 20px; height: 400px; margin-top: -1px">
             <div>
                 <label>数据库类型</label>
                 <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
@@ -98,9 +98,10 @@
                 <label>新用户名</label>
                 <input type="text" id="newuser"><br /><br />
             </div>
+            <input type="button" value="创建并初始化新库" style="width:350px;" onclick="onDoInit(0)"><br />
             <div style="display: flex; justify-content:center;">
-                <input type="button" value="只创建空库" style="width:160px;" onclick="onDoInit(false)">
-                <input type="button" value="创建并初始化新库" style="width:160px;margin-left:40px;" onclick="onDoInit(true)">
+                <input type="button" value="只创建空库" style="width:150px;" onclick="onDoInit(1)">
+                <input type="button" value="创建demo库" style="width:150px;margin-left:50px;" onclick="onDoInit(2)">
             </div>
         </div>
         <div class="divCaption" style="margin-top:10px">
@@ -150,7 +151,7 @@
             }
         }
 
-        async function onDoInit(p_isInit)
+        async function onDoInit(p_initType)
         {
             if (!isValid())
                 return;
@@ -175,7 +176,7 @@
                 }
             }
 
-            await call("[\"DoInit\"," + list + "," + p_isInit + "]");
+            await call("[\"DoInit\"," + list + "," + p_initType + "]");
         }
 
         function isValid()

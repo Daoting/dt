@@ -63,7 +63,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from sys.server_principals where type_desc='SQL_LOGIN' and name='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb(bool p_isInit)
+        public async Task<bool> InitDb(int p_initType)
         {
             _da.AutoClose = false;
             await DropExists();
@@ -75,13 +75,13 @@ namespace Dt.Core
 
             var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newDb};Encrypt=True;TrustServerCertificate=True;";
 
-            if (p_isInit)
+            if (p_initType != 1)
             {
                 var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer, false));
                 da.AutoClose = false;
 
                 string sql;
-                using (var sr = MySqlTools.GetSqlStream("sqlserver-init.sql"))
+                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "sqlserver-init.sql" : "sqlserver-demo.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }

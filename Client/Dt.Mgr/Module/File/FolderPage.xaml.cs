@@ -46,7 +46,7 @@ namespace Dt.Mgr.Module
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple || !e.Row.Bool("IsFolder"))
+            if (_lv.SelectionMode == Base.SelectionMode.Multiple || !e.Row.Bool("is_folder"))
                 return;
 
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
@@ -91,10 +91,10 @@ namespace Dt.Mgr.Module
             {
                 Row row = new Row();
                 row.AddCell("id", await FilePubX.NewID());
-                row.AddCell("parentid", _fileMgr.FolderID);
+                row.AddCell("parent_id", _fileMgr.FolderID);
                 row.AddCell("name", file.DisplayName);
-                row.AddCell("isfolder", false);
-                row.AddCell("extname", file.Ext.TrimStart('.'));
+                row.AddCell("is_folder", false);
+                row.AddCell("ext_name", file.Ext.TrimStart('.'));
                 row.AddCell<string>("info");
                 row.AddCell("ctime", ctime);
                 _lv.Data.Add(row);
@@ -190,7 +190,7 @@ namespace Dt.Mgr.Module
                 // 不删除实际文件，其他位置可能已引用！
                 //foreach (var row in p_rows)
                 //{
-                //    if (!row.Bool("IsFolder"))
+                //    if (!row.Bool("is_folder"))
                 //    {
                 //        // 删除文件
                 //        var fi = GetFileItem(row);
@@ -219,7 +219,7 @@ namespace Dt.Mgr.Module
         async void OnMenuOpening(object sender, AsyncCancelEventArgs e)
         {
             Row row = (Row)_m.TargetData;
-            if (row.Bool("isfolder"))
+            if (row.Bool("is_folder"))
             {
                 if (await _fileMgr.Setting.AllowEdit())
                 {
@@ -329,7 +329,7 @@ namespace Dt.Mgr.Module
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (((LvItem)item).Row.Bool("IsFolder"))
+            if (((LvItem)item).Row.Bool("is_folder"))
                 return _folder;
             return _file;
         }

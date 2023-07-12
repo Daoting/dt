@@ -61,7 +61,7 @@ namespace Dt.Core
             return await _da.GetScalar<int>($"select count(*) from mysql.user where user='{_newUser}'") > 0;
         }
 
-        public async Task<bool> InitDb(bool p_isInit)
+        public async Task<bool> InitDb(int p_initType)
         {
             _da.AutoClose = false;
             if (await ExistsDb())
@@ -95,12 +95,12 @@ namespace Dt.Core
 
             var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newDb};";
 
-            if (p_isInit)
+            if (p_initType != 1)
             {
                 var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
 
                 string sql;
-                using (var sr = GetSqlStream("mysql-init.sql"))
+                using (var sr = GetSqlStream(p_initType == 0? "mysql-init.sql" : "mysql-demo.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }
