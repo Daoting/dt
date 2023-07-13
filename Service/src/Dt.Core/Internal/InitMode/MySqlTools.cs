@@ -21,7 +21,7 @@ namespace Dt.Core
         public MySqlTools(List<string> p_list)
         {
             _host = $"Server={p_list[1]};Port={p_list[2]}";
-            var connStr = $"{_host};Database={p_list[3]};Uid=root;Pwd={p_list[4]};";
+            var connStr = $"{_host};Uid=root;Pwd={p_list[4]};";
             _da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
 
             _newDb = p_list[5];

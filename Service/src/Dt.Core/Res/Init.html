@@ -87,7 +87,7 @@
                 <input type="text" id="host" value="10.10.1.2"><br /><br />
                 <label>端口</label>
                 <input type="text" id="port" value="3306"><br /><br />
-                <label id="lbldefdb">默认库名</label>
+                <label id="lbldefdb">无需填写</label>
                 <input type="text" id="defdb"><br /><br />
                 <label id="lblpwd">root密码</label>
                 <input type="password" id="pwd"><br /><br /><br />
@@ -125,7 +125,8 @@
             {
                 $("port").value = "3306";
                 $("lblpwd").innerText = "root密码";
-                $("lbldefdb").innerText = "默认库名";
+                $("lbldefdb").innerText = "无需填写";
+                $("defdb").value = "";
                 $("lbldb").innerText = "新库名";
             }
             else if (db == 1)
@@ -133,6 +134,7 @@
                 $("port").value = "1521";
                 $("lblpwd").innerText = "system密码";
                 $("lbldefdb").innerText = "服务名";
+                $("defdb").value = "orcl";
                 $("lbldb").innerText = "新表空间";
             }
             else if (db == 2)
@@ -140,6 +142,7 @@
                 $("port").value = "1433";
                 $("lblpwd").innerText = "sa密码";
                 $("lbldefdb").innerText = "默认库名";
+                $("defdb").value = "master";
                 $("lbldb").innerText = "新库名";
             }
             else if (db == 3)
@@ -147,6 +150,7 @@
                 $("port").value = "5432";
                 $("lblpwd").innerText = "postgres密码";
                 $("lbldefdb").innerText = "默认库名";
+                $("defdb").value = "postgres";
                 $("lbldb").innerText = "新库名";
             }
         }
@@ -194,7 +198,7 @@
             {
                 $("pwd").focus();
             }
-            else if ($("defdb").value == "")
+            else if ($("defdb").value == "" && $("dbtype").value != 0)
             {
                 $("defdb").focus();
             }

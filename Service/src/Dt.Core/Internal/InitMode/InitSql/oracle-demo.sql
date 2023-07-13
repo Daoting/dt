@@ -1,17 +1,15 @@
--- ----------------------------
---  Navicat 工具 -> 数据传输 -> 源 mysql 目标 oracle sql文件
--- 
--- 导出后修改：
--- 1. VARCHAR2 VARCHAR2
--- 2. NUMBER(4) 布尔类型修改为
---    ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
---    ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1))
--- 
---    有部分枚举类型改成 NUMBER(3)
--- 3. NCLOB VARCHAR2(4000)
--- 4. 双引号 删除
--- 5. NCHAR CHAR
--- ----------------------------
+/*
+Navicat 从 mysql 导出后修改：
+1. VARCHAR2 VARCHAR2
+2. NUMBER(4) 布尔类型修改为
+   ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
+   ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1))
+
+   有部分枚举类型改成 NUMBER(3)
+3. NCLOB VARCHAR2(4000)
+4. 双引号 删除
+5. NCHAR CHAR
+*/
 
 
 -- ----------------------------
@@ -1786,9 +1784,9 @@ ALTER TABLE CM_FILE_MY ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_file_my
 -- ----------------------------
-CREATE INDEX FK_MYFILE_PARENTID
+CREATE INDEX IDX_MYFILE_PARENTID
   ON CM_FILE_MY (PARENT_ID ASC);
-CREATE INDEX FK_USER_USERID
+CREATE INDEX IDX_MYFILE_USERID
   ON CM_FILE_MY (USER_ID ASC);
 
 -- ----------------------------
@@ -1799,7 +1797,7 @@ ALTER TABLE CM_FILE_PUB ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_file_pub
 -- ----------------------------
-CREATE INDEX FK_PUBFILE_PARENTID
+CREATE INDEX IDX_PUBFILE_PARENTID
   ON CM_FILE_PUB (PARENT_ID ASC);
 
 -- ----------------------------
@@ -1821,9 +1819,9 @@ ALTER TABLE CM_GROUP_ROLE ADD PRIMARY KEY (GROUP_ID, ROLE_ID);
 -- ----------------------------
 -- Indexes structure for table cm_group_role
 -- ----------------------------
-CREATE INDEX FK_GROUPROLE_ROLEID
+CREATE INDEX IDX_GROUPROLE_ROLEID
   ON CM_GROUP_ROLE (ROLE_ID ASC);
-CREATE INDEX FK_GROUPROLE_GROUPID
+CREATE INDEX IDX_GROUPROLE_GROUPID
   ON CM_GROUP_ROLE (GROUP_ID ASC);
 
 -- ----------------------------
@@ -1834,7 +1832,7 @@ ALTER TABLE CM_MENU ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_menu
 -- ----------------------------
-CREATE INDEX FK_MENU_PARENTID
+CREATE INDEX IDX_MENU_PARENTID
   ON CM_MENU (PARENT_ID ASC);
 
 -- ----------------------------
@@ -1845,7 +1843,7 @@ ALTER TABLE CM_OPTION ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_option
 -- ----------------------------
-CREATE INDEX FK_OPTION_GROUPID
+CREATE INDEX IDX_OPTION_GROUPID
   ON CM_OPTION (GROUP_ID ASC);
 
 -- ----------------------------
@@ -1861,7 +1859,7 @@ ALTER TABLE CM_PARAMS ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_params
 -- ----------------------------
-CREATE UNIQUE INDEX NAME
+CREATE UNIQUE INDEX IDX_PARAMS_NAME
   ON CM_PARAMS (NAME ASC);
 
 -- ----------------------------
@@ -1894,9 +1892,9 @@ ALTER TABLE CM_ROLE_MENU ADD PRIMARY KEY (ROLE_ID, MENU_ID);
 -- ----------------------------
 -- Indexes structure for table cm_role_menu
 -- ----------------------------
-CREATE INDEX FK_ROLEMENU_MENUID
+CREATE INDEX IDX_ROLEMENU_MENUID
   ON CM_ROLE_MENU (MENU_ID ASC);
-CREATE INDEX FK_ROLEMENU_ROLEID
+CREATE INDEX IDX_ROLEMENU_ROLEID
   ON CM_ROLE_MENU (ROLE_ID ASC);
 
 -- ----------------------------
@@ -1907,9 +1905,9 @@ ALTER TABLE CM_ROLE_PER ADD PRIMARY KEY (ROLE_ID, PER_ID);
 -- ----------------------------
 -- Indexes structure for table cm_role_per
 -- ----------------------------
-CREATE INDEX FK_ROLEPER_PERID
+CREATE INDEX IDX_ROLEPER_PERID
   ON CM_ROLE_PER (PER_ID ASC);
-CREATE INDEX FK_ROLEPER_ROLEID
+CREATE INDEX IDX_ROLEPER_ROLEID
   ON CM_ROLE_PER (ROLE_ID ASC);
 
 -- ----------------------------
@@ -1942,9 +1940,9 @@ ALTER TABLE CM_USER_GROUP ADD PRIMARY KEY (USER_ID, GROUP_ID);
 -- ----------------------------
 -- Indexes structure for table cm_user_group
 -- ----------------------------
-CREATE INDEX FK_USERGROUP_GROUPID
+CREATE INDEX IDX_USERGROUP_GROUPID
   ON CM_USER_GROUP (GROUP_ID ASC);
-CREATE INDEX FK_USERGROUP_USERID
+CREATE INDEX IDX_USERGROUP_USERID
   ON CM_USER_GROUP (USER_ID ASC);
 
 -- ----------------------------
@@ -1955,9 +1953,9 @@ ALTER TABLE CM_USER_PARAMS ADD PRIMARY KEY (USER_ID, PARAM_ID);
 -- ----------------------------
 -- Indexes structure for table cm_user_params
 -- ----------------------------
-CREATE INDEX FK_USERPARAMS_USERID
+CREATE INDEX IDX_USERPARAMS_USERID
   ON CM_USER_PARAMS (USER_ID ASC);
-CREATE INDEX FK_USERPARAMS_PARAMSID
+CREATE INDEX IDX_USERPARAMS_PARAMSID
   ON CM_USER_PARAMS (PARAM_ID ASC);
 
 -- ----------------------------
@@ -1968,9 +1966,9 @@ ALTER TABLE CM_USER_ROLE ADD PRIMARY KEY (USER_ID, ROLE_ID);
 -- ----------------------------
 -- Indexes structure for table cm_user_role
 -- ----------------------------
-CREATE INDEX FK_USERROLE_USERID
+CREATE INDEX IDX_USERROLE_USERID
   ON CM_USER_ROLE (USER_ID ASC);
-CREATE INDEX FK_USERROLE_ROLEID
+CREATE INDEX IDX_USERROLE_ROLEID
   ON CM_USER_ROLE (ROLE_ID ASC);
 
 -- ----------------------------
@@ -1981,7 +1979,7 @@ ALTER TABLE CM_WFD_ATV ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfd_atv
 -- ----------------------------
-CREATE INDEX FK_WFDATV_PRCID
+CREATE INDEX IDX_WFDATV_PRCID
   ON CM_WFD_ATV (PRC_ID ASC);
 
 -- ----------------------------
@@ -1992,7 +1990,7 @@ ALTER TABLE CM_WFD_ATV_ROLE ADD PRIMARY KEY (ATV_ID, ROLE_ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfd_atv_role
 -- ----------------------------
-CREATE INDEX FK_WFDATVROLE_ROLEID
+CREATE INDEX IDX_WFDATVROLE_ROLEID
   ON CM_WFD_ATV_ROLE (ROLE_ID ASC);
 
 -- ----------------------------
@@ -2008,7 +2006,7 @@ ALTER TABLE CM_WFD_TRS ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfd_trs
 -- ----------------------------
-CREATE INDEX FK_WFDTRS_PRCID
+CREATE INDEX IDX_WFDTRS_PRCID
   ON CM_WFD_TRS (PRC_ID ASC);
 
 -- ----------------------------
@@ -2019,9 +2017,9 @@ ALTER TABLE CM_WFI_ATV ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfi_atv
 -- ----------------------------
-CREATE INDEX FK_WFIATV_PRCIID
+CREATE INDEX IDX_WFIATV_PRCIID
   ON CM_WFI_ATV (PRCI_ID ASC);
-CREATE INDEX FK_WFIATV_ATVDID
+CREATE INDEX IDX_WFIATV_ATVDID
   ON CM_WFI_ATV (ATVD_ID ASC);
 
 -- ----------------------------
@@ -2032,7 +2030,7 @@ ALTER TABLE CM_WFI_ITEM ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfi_item
 -- ----------------------------
-CREATE INDEX FK_WFIITEM_ATVIID
+CREATE INDEX IDX_WFIITEM_ATVIID
   ON CM_WFI_ITEM (ATVI_ID ASC);
 
 -- ----------------------------
@@ -2043,7 +2041,7 @@ ALTER TABLE CM_WFI_PRC ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfi_prc
 -- ----------------------------
-CREATE INDEX FK_WFIPRC_PRCDID
+CREATE INDEX IDX_WFIPRC_PRCDID
   ON CM_WFI_PRC (PRCD_ID ASC);
 
 -- ----------------------------
@@ -2054,11 +2052,11 @@ ALTER TABLE CM_WFI_TRS ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_wfi_trs
 -- ----------------------------
-CREATE INDEX FK_WFITRS_TRSDID
+CREATE INDEX IDX_WFITRS_TRSDID
   ON CM_WFI_TRS (TRSD_ID ASC);
-CREATE INDEX FK_WFITRS_SRCATVIID
+CREATE INDEX IDX_WFITRS_SRCATVIID
   ON CM_WFI_TRS (SRC_ATVI_ID ASC);
-CREATE INDEX FK_WFITRS_TGTATVIID
+CREATE INDEX IDX_WFITRS_TGTATVIID
   ON CM_WFI_TRS (TGT_ATVI_ID ASC);
 
 -- ----------------------------
@@ -2109,7 +2107,7 @@ ALTER TABLE DEMO_大儿 ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table demo_大儿
 -- ----------------------------
-CREATE INDEX FK_大儿_PARENDID
+CREATE INDEX IDX_大儿_PARENDID
   ON DEMO_大儿 (PARENT_ID ASC);
 
 -- ----------------------------
@@ -2135,7 +2133,7 @@ ALTER TABLE DEMO_角色权限 ADD PRIMARY KEY (ROLE_ID, PRV_ID);
 -- ----------------------------
 -- Indexes structure for table demo_角色权限
 -- ----------------------------
-CREATE INDEX FK_角色权限_PRVID
+CREATE INDEX IDX_角色权限_PRVID
   ON DEMO_角色权限 (PRV_ID ASC);
 
 -- ----------------------------
@@ -2166,7 +2164,7 @@ ALTER TABLE DEMO_小儿 ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table demo_小儿
 -- ----------------------------
-CREATE INDEX FK_小儿_GROUPID
+CREATE INDEX IDX_小儿_GROUPID
   ON DEMO_小儿 (GROUP_ID ASC);
 
 -- ----------------------------
@@ -2182,9 +2180,9 @@ ALTER TABLE DEMO_用户角色 ADD PRIMARY KEY (USER_ID, ROLE_ID);
 -- ----------------------------
 -- Indexes structure for table demo_用户角色
 -- ----------------------------
-CREATE INDEX FK_用户角色_USERID
+CREATE INDEX IDX_用户角色_USERID
   ON DEMO_用户角色 (USER_ID ASC);
-CREATE INDEX FK_用户角色_ROLEID
+CREATE INDEX IDX_用户角色_ROLEID
   ON DEMO_用户角色 (ROLE_ID ASC);
 
 -- ----------------------------
@@ -2206,7 +2204,10 @@ CREATE UNIQUE INDEX IDX_FSM_FILE_PATH
 -- ----------------------------
 -- Foreign Keys structure for table cm_file_my
 -- ----------------------------
-ALTER TABLE "CM_FILE_MY" ADD CONSTRAINT "FK_USER_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID");
+ALTER TABLE "CM_FILE_MY" ADD CONSTRAINT "FK_FILE_MY_PARENTID" FOREIGN KEY ("PARENT_ID") REFERENCES "CM_FILE_MY" ("ID");
+ALTER TABLE "CM_FILE_MY" ADD CONSTRAINT "FK_FILE_MY_USERID" FOREIGN KEY ("USER_ID") REFERENCES "CM_USER" ("ID");
+
+ALTER TABLE "CM_FILE_PUB" ADD CONSTRAINT "FK_FILE_PUB_PARENTID" FOREIGN KEY ("PARENT_ID") REFERENCES "CM_FILE_PUB" ("ID");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_group_role
