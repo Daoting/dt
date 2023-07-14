@@ -1,6 +1,6 @@
 ﻿{
   // 默认数据源键名
-  "DbKey": "dt",
+  "DbKey": "mydt",
   // 服务名称
   "SvcName": "cosm",
 

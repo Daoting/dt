@@ -1,5 +1,5 @@
 ﻿{
-  "DbKey": "dt",
+  "DbKey": "mydt",
   "TraceSql": false,
   "TraceRpc": false,
 

@@ -1,7 +1,7 @@
 ﻿{
   "App": "dt",
   "Database": {
-    "dt": {
+    "mydt": {
       "ConnStr": "Server=10.10.1.2;Port=3306;Database=dt;Uid=dt;Pwd=dt;",
       "DbType": "mysql",
       "ExportToModel": true
@@ -12,7 +12,7 @@
       "ExportToModel": false
     },
     "sqldt": {
-      "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=sa;Password=dt;Encrypt=True;TrustServerCertificate=True;",
+      "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=dt;Password=dt;Encrypt=True;TrustServerCertificate=True;",
       "DbType": "sqlserver",
       "ExportToModel": false
     },
