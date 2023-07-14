@@ -120,7 +120,7 @@ where pg_class.relname = '{0}' and pg_constraint.contype='p'";
 
                         foreach (var colSchema in cols)
                         {
-                            TableCol col = new TableCol();
+                            TableCol col = new TableCol(tblCols);
                             col.Name = colSchema.ColumnName;
 
                             // 可为null的值类型
@@ -258,7 +258,7 @@ where tb.table_schema = 'public' and lower(tb.table_name)='{0}'", p_tblName.ToLo
 
                     foreach (var colSchema in cols)
                     {
-                        TableCol col = new TableCol();
+                        TableCol col = new TableCol(tblCols);
                         col.Name = colSchema.ColumnName;
 
                         // 可为null的值类型

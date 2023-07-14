@@ -33,7 +33,7 @@ namespace Dt.Mgr
             if (data.Count > 1)
             {
                 // 不同库的表重名，先取该服务的默认数据源键名
-                var dbKey = await Kit.Rpc<string>(p_tblAttr.Svc, "SvcInfo.GetDefaultDbKey");
+                var dbKey = await Kit.Rpc<string>(p_tblAttr.Svc, "Da.GetDbKey");
                 foreach (var r in data)
                 {
                     if (dbKey.Equals(r.DbKey, StringComparison.OrdinalIgnoreCase))
@@ -54,7 +54,7 @@ namespace Dt.Mgr
             var cols = await AtModel.Each<OmColumn>($"select * from OmColumn where TableID={tbl.ID}");
             foreach (var oc in cols)
             {
-                TableCol col = new TableCol();
+                TableCol col = new TableCol(schema);
                 col.Name = oc.ColName;
                 col.Type = Table.GetColType(oc.DbType);
                 col.Length = oc.Length;

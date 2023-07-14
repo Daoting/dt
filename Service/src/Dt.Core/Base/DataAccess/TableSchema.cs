@@ -439,6 +439,11 @@ namespace Dt.Core
     /// </summary>
     public class TableCol
     {
+        public TableCol(TableSchema p_owner)
+        {
+            Owner = p_owner;
+        }
+
         /// <summary>
         /// 列名，数据库中的原始写法，未调整到小写
         /// </summary>
@@ -468,6 +473,11 @@ namespace Dt.Core
         /// 列注释
         /// </summary>
         public string Comments { get; set; }
+
+        /// <summary>
+        /// 所属表
+        /// </summary>
+        public TableSchema Owner { get; }
 
         /// <summary>
         /// 类中的属性名

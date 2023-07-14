@@ -102,7 +102,7 @@ namespace Dt.Core
                     continue;
 
                 bool isPK = p.GetCustomAttribute<PrimaryKeyAttribute>(false) != null;
-                TableCol col = new TableCol();
+                TableCol col = new TableCol(schema);
                 col.Name = p.Name;
                 col.Type = p.PropertyType;
                 col.Nullable = !isPK;

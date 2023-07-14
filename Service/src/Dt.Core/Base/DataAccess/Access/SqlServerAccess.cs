@@ -125,7 +125,7 @@ namespace Dt.Core
 
                         foreach (var colSchema in cols)
                         {
-                            TableCol col = new TableCol();
+                            TableCol col = new TableCol(tblCols);
                             col.Name = colSchema.ColumnName;
 
                             // 可为null的值类型
@@ -250,7 +250,7 @@ namespace Dt.Core
 
                     foreach (var colSchema in cols)
                     {
-                        TableCol col = new TableCol();
+                        TableCol col = new TableCol(tblCols);
                         col.Name = colSchema.ColumnName;
 
                         // 可为null的值类型
