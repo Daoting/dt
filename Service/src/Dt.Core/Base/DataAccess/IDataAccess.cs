@@ -226,6 +226,14 @@ namespace Dt.Core
         Task<string> GetDbKey();
         #endregion
 
+        #region 实体写入器
+        /// <summary>
+        /// 获取实体写入器
+        /// </summary>
+        /// <returns></returns>
+        IEntityWriter NewWriter();
+        #endregion
+
 #if SERVER
         #region 表结构
         /// <summary>

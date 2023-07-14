@@ -89,14 +89,15 @@ namespace Dt.Mgr.Workflow
                 Status: WfiItemStatus.活动,
                 UserID: userId);
 
+            var w = _da.NewWriter();
             if (p_info.AtvInst.IsChanged)
-                await Save(p_info.AtvInst);
-            await Save(p_info.WorkItem);
-            await Save(newAtvInst);
-            await Save(newItem);
-            await Save(newTrs);
+                await w.Save(p_info.AtvInst);
+            await w.Save(p_info.WorkItem);
+            await w.Save(newAtvInst);
+            await w.Save(newItem);
+            await w.Save(newTrs);
 
-            if (await Commit(false))
+            if (await w.Commit(false))
             {
                 Kit.Msg("回退成功！");
                 p_info.CloseWin();
@@ -154,14 +155,15 @@ namespace Dt.Mgr.Workflow
                 p_info.WorkItem.Stime = time;
             }
 
+            var w = _da.NewWriter();
             if (p_info.PrcInst.IsAdded || p_info.PrcInst.IsChanged)
-                await Save(p_info.PrcInst);
+                await w.Save(p_info.PrcInst);
             if (p_info.AtvInst.IsAdded || p_info.AtvInst.IsChanged)
-                await Save(p_info.AtvInst);
+                await w.Save(p_info.AtvInst);
             if (p_info.WorkItem.IsAdded || p_info.WorkItem.IsChanged)
-                await Save(p_info.WorkItem);
+                await w.Save(p_info.WorkItem);
 
-            return await Commit(false);
+            return await w.Commit(false);
         }
         #endregion
 
@@ -238,10 +240,11 @@ namespace Dt.Mgr.Workflow
             }
 
             // 一个事务批量保存
-            await Save(nextAtvs);
-            await Save(curAtvi);
-            await Save(newItem);
-            return await Commit(false);
+            var w = _da.NewWriter();
+            await w.Save(nextAtvs);
+            await w.Save(curAtvi);
+            await w.Save(newItem);
+            return await w.Commit(false);
         }
         #endregion
 
@@ -560,24 +563,25 @@ namespace Dt.Mgr.Workflow
             #endregion
 
             #region 整理待保存数据
+            var w = _da.NewWriter();
             if (p_info.PrcInst.IsChanged)
-                await Save(p_info.PrcInst);
+                await w.Save(p_info.PrcInst);
 
             p_info.AtvInst.Finished();
-            await Save(p_info.AtvInst);
+            await w.Save(p_info.AtvInst);
 
             p_info.WorkItem.Finished();
-            await Save(p_info.WorkItem);
+            await w.Save(p_info.WorkItem);
 
             if (tblAtvs.Count > 0)
             {
-                await Save(tblAtvs);
-                await Save(tblItems);
-                await Save(tblTrs);
+                await w.Save(tblAtvs);
+                await w.Save(tblItems);
+                await w.Save(tblTrs);
             }
             #endregion
 
-            if (await Commit(false))
+            if (await w.Commit(false))
             {
                 Kit.Msg("发送成功！");
                 p_info.CloseWin();
@@ -610,11 +614,12 @@ namespace Dt.Mgr.Workflow
                 p_info.AtvInst.Finished();
             p_info.WorkItem.Finished();
 
+            var w = _da.NewWriter();
             if (p_info.AtvInst.IsChanged)
-                await Save(p_info.AtvInst);
-            await Save(p_info.WorkItem);
+                await w.Save(p_info.AtvInst);
+            await w.Save(p_info.WorkItem);
 
-            if (await Commit(false))
+            if (await w.Commit(false))
             {
                 Kit.Msg(p_isFinished ? "任务结束" : "当前工作项完成");
                 p_info.CloseWin();

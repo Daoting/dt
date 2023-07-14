@@ -17,7 +17,7 @@ namespace Dt.Core
     /// <para>写入器在一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚</para>
     /// <para>无论提交成功失败都清空状态，准备下次提交！</para>
     /// </summary>
-    class EntityWriter
+    class EntityWriter : IEntityWriter
     {
         #region 成员变量
         readonly List<UnitItem> _items = new List<UnitItem>();

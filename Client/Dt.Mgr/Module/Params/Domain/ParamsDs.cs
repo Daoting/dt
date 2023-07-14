@@ -18,10 +18,11 @@ namespace Dt.Mgr.Module
             if (!long.TryParse(p_paramID, out var paramID))
                 Throw.Msg("参数标识错误！");
 
+            var w = _da.NewWriter();
             var old = new UserParamsX(
                 UserID: Kit.UserID,
                 ParamID: paramID);
-            await Delete(old);
+            await w.Delete(old);
 
             var def = await ParamsX.GetByID(p_paramID);
             if (def.Value != p_value)
@@ -32,10 +33,10 @@ namespace Dt.Mgr.Module
                     ParamID: paramID,
                     Value: p_value,
                     Mtime: Kit.Now);
-                await Save(up);
+                await w.Save(up);
             }
 
-            return await Commit(false);
+            return await w.Commit(false);
         }
 
         public static async Task<T> GetParamByID<T>(long p_paramID)

@@ -20,7 +20,9 @@ namespace Dt.MgrDemo.Crud
         public static async Task BatchSave()
         {
             var x = await CrudX.New("领域服务");
-            await Save(x);
+
+            var w = _da.NewWriter();
+            await w.Save(x);
 
             var tbl = await CrudX.Page(0, 4, null);
             if (tbl.Count > 1)
@@ -33,13 +35,13 @@ namespace Dt.MgrDemo.Crud
             }
             // 增
             tbl.Add(await CrudX.New("服务更"));
-            await Save(tbl);
+            await w.Save(tbl);
 
             var par = await _da.First<ParTblX>("select * from demo_par_tbl");
             par.Name = Kit.NewGuid;
-            await Save(par);
+            await w.Save(par);
 
-            bool suc = await Commit();
+            bool suc = await w.Commit();
 
             // 日志源属性有UsageDs，容易识别
             if (suc)

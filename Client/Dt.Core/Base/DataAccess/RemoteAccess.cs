@@ -223,10 +223,6 @@ namespace Dt.Core
         #endregion
 
         #region 库信息
-        /// <summary>
-        /// 获取当前服务默认数据库的类型
-        /// </summary>
-        /// <returns></returns>
         public Task<DatabaseType> GetDbType()
         {
             return new UnaryRpc(
@@ -235,10 +231,6 @@ namespace Dt.Core
             ).Call<DatabaseType>();
         }
 
-        /// <summary>
-        /// 获取当前服务的默认数据源键名
-        /// </summary>
-        /// <returns></returns>
         public Task<string> GetDbKey()
         {
             return new UnaryRpc(
@@ -246,6 +238,10 @@ namespace Dt.Core
                 "Da.GetDbKey"
             ).Call<string>();
         }
+        #endregion
+
+        #region 实体写入器
+        public IEntityWriter NewWriter() => new EntityWriter();
         #endregion
     }
 }
