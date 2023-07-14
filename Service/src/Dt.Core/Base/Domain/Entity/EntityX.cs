@@ -21,6 +21,11 @@ namespace Dt.Core
     public abstract class EntityX<TEntity> : Entity
         where TEntity : Entity
     {
+        /// <summary>
+        /// 日志对象，日志属性中包含来源
+        /// </summary>
+        protected static readonly ILogger _log = Log.ForContext<TEntity>();
+
         #region 构造方法
         public EntityX()
         { }

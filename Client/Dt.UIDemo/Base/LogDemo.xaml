@@ -42,5 +42,13 @@
             <Button Content="警告" Click="OnDsWarn" />
             <Button Content="出错" Click="OnDsError" />
         </StackPanel>
+
+        <a:CBar Title="实体中的日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnEntityDebug" />
+            <Button Content="普通" Click="OnEntityNormal" />
+            <Button Content="警告" Click="OnEntityWarn" />
+            <Button Content="出错" Click="OnEntityError" />
+        </StackPanel>
     </a:Fv>
 </a:Win>

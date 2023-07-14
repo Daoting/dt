@@ -127,10 +127,60 @@ namespace Dt.UIDemo
         {
             LogDemoDs.LogError();
         }
+
+        void OnEntityDebug(object sender, RoutedEventArgs e)
+        {
+            LogEntityX.LogDebug();
+        }
+
+        void OnEntityNormal(object sender, RoutedEventArgs e)
+        {
+            LogEntityX.LogInfo();
+        }
+
+        void OnEntityWarn(object sender, RoutedEventArgs e)
+        {
+            LogEntityX.LogWarn();
+        }
+
+        void OnEntityError(object sender, RoutedEventArgs e)
+        {
+            LogEntityX.LogError();
+        }
     }
 
     class LogDemoDs : DomainSvc<LogDemoDs, AtState.Info>
     {
+        public static void LogDebug()
+        {
+            _log.ForContext("Detail", "详细内容")
+                .Debug("内部调试级信息，含详细内容");
+        }
+
+        public static void LogInfo()
+        {
+            _log.Information("普通信息内容");
+        }
+
+        public static void LogWarn()
+        {
+            _log.Warning(new Exception("异常信息内容"), "警告信息内容");
+        }
+
+        public static void LogError()
+        {
+            _log.Error(new Exception("异常信息内容"), "出错信息内容");
+        }
+    }
+
+    class LogEntityX : EntityX<LogEntityX>
+    {
+        #region 构造方法
+        LogEntityX() { }
+
+        public LogEntityX(CellList p_cells) : base(p_cells) { }
+        #endregion
+
         public static void LogDebug()
         {
             _log.ForContext("Detail", "详细内容")
