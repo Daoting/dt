@@ -50,10 +50,6 @@ namespace Dt.Core
         const string _sqlCols = "select * from `{0}` where 1!=1";
         const string _sqlComment = "select column_default,column_comment from information_schema.columns where table_schema='{0}' and table_name='{1}' and column_name='{2}'";
 
-        /// <summary>
-        /// 获取数据库所有表结构信息（已调整到最优）
-        /// </summary>
-        /// <returns>返回加载结果信息</returns>
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
         {
             try
@@ -128,10 +124,6 @@ namespace Dt.Core
                         }
                         schema[tbl] = tblCols;
                     }
-
-                    // 取Db时间
-                    cmd.CommandText = "select now()";
-                    Kit.Now = (DateTime)await cmd.ExecuteScalarAsync();
                 }
                 return schema;
             }
@@ -145,21 +137,12 @@ namespace Dt.Core
             }
         }
 
-        /// <summary>
-        /// 获取数据库的所有表名
-        /// </summary>
-        /// <returns></returns>
         public override async Task<List<string>> GetAllTableNames()
         {
             await OpenConnection();
             return await FirstCol<string>(string.Format(_sqlAllTbls, _conn.Database));
         }
 
-        /// <summary>
-        /// 获取单个表结构信息
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
         public override async Task<TableSchema> GetTableSchema(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
@@ -243,6 +226,11 @@ namespace Dt.Core
             {
                 ReleaseConnection();
             }
+        }
+
+        public override async Task SyncDbTime()
+        {
+            Kit.Now = await GetScalar<DateTime>("select now()");
         }
         #endregion
     }

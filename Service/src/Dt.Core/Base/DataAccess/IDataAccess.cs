@@ -254,6 +254,12 @@ namespace Dt.Core
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
         Task<TableSchema> GetTableSchema(string p_tblName);
+
+        /// <summary>
+        /// 同步数据库时间
+        /// </summary>
+        /// <returns></returns>
+        Task SyncDbTime();
         #endregion
 
         #region 其他

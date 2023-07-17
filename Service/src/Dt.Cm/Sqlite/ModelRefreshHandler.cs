@@ -67,8 +67,8 @@ namespace Dt.Cm
             // 刷新表结构缓存
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            await DbSchema.RefreshSchema();
-            sb.AppendLine($"刷新表结构缓存 {watch.ElapsedMilliseconds} 毫秒");
+            var defSchema = await Kit.NewDataAccess().GetDbSchema();
+            sb.AppendLine($"获取默认库表结构 {watch.ElapsedMilliseconds} 毫秒");
 
             // 创建Data目录
             string path = SqliteModelHandler.ModelPath;
@@ -106,7 +106,7 @@ namespace Dt.Cm
                     List<OmColumn> cols = new List<OmColumn>();
 
                     // 加载默认库表结构
-                    LoadSchema(DbSchema.Schema, tbls, cols, Kit.DefaultDbInfo);
+                    LoadSchema(defSchema, tbls, cols, Kit.DefaultDbInfo);
 
                     // 默认库键名
                     var dbConn = Kit.Config["DbKey"];
@@ -185,9 +185,11 @@ namespace Dt.Cm
 
                 Log.Information(sb.ToString());
             }
-            catch
+            catch (Exception ex)
             {
                 watch.Stop();
+                sb.AppendLine("导出模型失败！");
+                Log.Error(ex, sb.ToString());
                 throw;
             }
             finally

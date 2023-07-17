@@ -44,7 +44,6 @@ namespace Dt.Core
             else
             {
                 BuildStubs(p_stub);
-                DbSchema.Init();
                 RunWebHost(p_args);
             }
             Log.CloseAndFlush();

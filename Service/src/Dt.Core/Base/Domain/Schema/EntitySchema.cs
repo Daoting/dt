@@ -47,7 +47,7 @@ namespace Dt.Core
 
         internal static Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)
         {
-            return Task.FromResult(DbSchema.GetTableSchema(p_tblAttr.Name));
+            return DbSchema.GetTableSchema(p_tblAttr.Name);
         }
 
 #else

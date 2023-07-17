@@ -62,10 +62,6 @@ inner join pg_class on pg_constraint.conrelid = pg_class.oid
 inner join pg_attribute attr on attr.attrelid = pg_class.oid and attr.attnum = pg_constraint.conkey[1] 
 where pg_class.relname = '{0}' and pg_constraint.contype='p'";
 
-        /// <summary>
-        /// 获取数据库所有表结构信息
-        /// </summary>
-        /// <returns>返回加载结果信息</returns>
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
         {
             try
@@ -161,10 +157,6 @@ where pg_class.relname = '{0}' and pg_constraint.contype='p'";
                         }
                         schema[tbl] = tblCols;
                     }
-
-                    // 取Db时间
-                    cmd.CommandText = "select now()";
-                    Kit.Now = (DateTime)await cmd.ExecuteScalarAsync();
                 }
                 return schema;
             }
@@ -178,20 +170,11 @@ where pg_class.relname = '{0}' and pg_constraint.contype='p'";
             }
         }
 
-        /// <summary>
-        /// 获取数据库的所有表名
-        /// </summary>
-        /// <returns></returns>
         public override Task<List<string>> GetAllTableNames()
         {
             return FirstCol<string>(_sqlAllTbls);
         }
 
-        /// <summary>
-        /// 获取单个表结构信息
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
         public override async Task<TableSchema> GetTableSchema(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
@@ -304,6 +287,11 @@ where tb.table_schema = 'public' and lower(tb.table_name)='{0}'", p_tblName.ToLo
             {
                 ReleaseConnection();
             }
+        }
+
+        public override async Task SyncDbTime()
+        {
+            Kit.Now = await GetScalar<DateTime>("select now()");
         }
         #endregion
     }

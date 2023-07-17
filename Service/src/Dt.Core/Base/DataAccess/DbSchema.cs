@@ -8,14 +8,7 @@
 
 #region 引用命名
 using MySqlConnector;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using System.Collections.Concurrent;
 #endregion
 
 namespace Dt.Core
@@ -28,34 +21,29 @@ namespace Dt.Core
         /// <summary>
         /// 默认库的所有表结构，键名为表名，库里原始大小写，比较时大小写不敏感
         /// </summary>
-        public static IReadOnlyDictionary<string, TableSchema> Schema { get; private set; }
+        static ConcurrentDictionary<string, TableSchema> _schema { get; } = new ConcurrentDictionary<string, TableSchema>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 加载默认库的所有表结构，初次Mysql连接
+        /// 同步数据库时间
         /// </summary>
-        internal static void Init()
+        internal static void SyncDbTime()
         {
             try
             {
-                var task = Kit.NewDataAccess().GetDbSchema();
-                task.Wait();
-                Schema = task.Result;
+                bool trace = Kit.TraceSql;
+                Kit.TraceSql = false;
 
-                Log.Information("缓存表结构、同步时间成功");
+                var task = Kit.NewDataAccess().SyncDbTime();
+                task.Wait();
+                
+                Kit.TraceSql = trace;
+                Log.Information("同步数据库时间成功");
             }
             catch (Exception e)
             {
-                Log.Fatal(e, "缓存表结构、同步时间失败！");
+                Log.Fatal(e, "同步数据库时间失败！");
                 throw;
             }
-        }
-
-        /// <summary>
-        /// 刷新表结构信息
-        /// </summary>
-        public static async Task RefreshSchema()
-        {
-            Schema = await Kit.NewDataAccess().GetDbSchema();
         }
 
         /// <summary>
@@ -63,11 +51,18 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public static TableSchema GetTableSchema(string p_tblName)
+        public static async Task<TableSchema> GetTableSchema(string p_tblName)
         {
             TableSchema schema;
-            if (Schema.TryGetValue(p_tblName, out schema))
+            if (_schema.TryGetValue(p_tblName, out schema))
                 return schema;
+
+            schema = await Kit.NewDataAccess().GetTableSchema(p_tblName);
+            if (schema != null)
+            {
+                _schema.TryAdd(p_tblName, schema);
+                return schema;
+            }
             throw new Exception($"未找到表{p_tblName}的结构信息！");
         }
 

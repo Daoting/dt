@@ -69,10 +69,6 @@ namespace Dt.Core
 "where a.name=b.name and b.id=c.id and b.indid=c.indid\n" +
 "and a.xtype='PK' and a.parent_obj=object_id('{0}') and c.id=object_id('{0}')";
 
-        /// <summary>
-        /// 获取数据库所有表结构信息
-        /// </summary>
-        /// <returns>返回加载结果信息</returns>
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
         {
             try
@@ -159,10 +155,6 @@ namespace Dt.Core
                         }
                         schema[tbl] = tblCols;
                     }
-
-                    // 取Db时间
-                    cmd.CommandText = "select getdate()";
-                    Kit.Now = (DateTime)await cmd.ExecuteScalarAsync();
                 }
                 return schema;
             }
@@ -176,20 +168,11 @@ namespace Dt.Core
             }
         }
 
-        /// <summary>
-        /// 获取数据库的所有表名
-        /// </summary>
-        /// <returns></returns>
         public override Task<List<string>> GetAllTableNames()
         {
             return FirstCol<string>(_sqlAllTbls);
         }
 
-        /// <summary>
-        /// 获取单个表结构信息
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
         public override async Task<TableSchema> GetTableSchema(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
@@ -289,6 +272,11 @@ namespace Dt.Core
             {
                 ReleaseConnection();
             }
+        }
+
+        public override async Task SyncDbTime()
+        {
+            Kit.Now = await GetScalar<DateTime>("select getdate()");
         }
         #endregion
     }

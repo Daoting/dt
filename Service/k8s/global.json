@@ -4,7 +4,7 @@
     "mydt": {
       "ConnStr": "Server=10.10.1.2;Port=3306;Database=dt;Uid=dt;Pwd=dt;",
       "DbType": "mysql",
-      "ExportToModel": true
+      "ExportToModel": false
     },
     "orcldt": {
       "ConnStr": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))",

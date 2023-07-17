@@ -172,6 +172,7 @@ namespace Dt.Core
             if (Kit.EnableRabbitMQ)
                 RabbitMQCenter.Subscribe(p_app.ApplicationServices);
 
+            DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
         }
     }

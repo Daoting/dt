@@ -77,10 +77,6 @@ namespace Dt.Core
         const string _sqlComment = "select a.data_default, b.comments from user_tab_columns a, user_col_comments b where a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
         const string _sqlPk = "select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{0}'";
 
-        /// <summary>
-        /// 获取数据库所有表结构信息
-        /// </summary>
-        /// <returns>返回加载结果信息</returns>
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
         {
             try
@@ -170,10 +166,6 @@ namespace Dt.Core
                         }
                         schema[tbl] = tblCols;
                     }
-
-                    // 取Db时间
-                    cmd.CommandText = "select sysdate from dual";
-                    Kit.Now = (DateTime)await cmd.ExecuteScalarAsync();
                 }
                 return schema;
             }
@@ -187,20 +179,11 @@ namespace Dt.Core
             }
         }
 
-        /// <summary>
-        /// 获取数据库的所有表名
-        /// </summary>
-        /// <returns></returns>
         public override Task<List<string>> GetAllTableNames()
         {
             return FirstCol<string>(_sqlAllTbls);
         }
 
-        /// <summary>
-        /// 获取单个表结构信息
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
         public override async Task<TableSchema> GetTableSchema(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
@@ -301,6 +284,11 @@ namespace Dt.Core
             {
                 ReleaseConnection();
             }
+        }
+
+        public override async Task SyncDbTime()
+        {
+            Kit.Now = await GetScalar<DateTime>("select sysdate from dual");
         }
         #endregion
     }
