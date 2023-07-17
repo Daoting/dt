@@ -30,6 +30,34 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new OracleConnection(DbInfo.ConnStr);
 
+
+        protected override Type GetColumnType(DbColumn p_col)
+        {
+            if (p_col.DataType == typeof(decimal))
+            {
+                // number(19)
+                return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(long?) : typeof(long);
+            }
+
+            if (p_col.DataType == typeof(string)
+                && p_col.ColumnSize.HasValue
+                && p_col.ColumnSize.Value == 1)
+            {
+                // char(1)
+                return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(bool?) : typeof(bool);
+            }
+
+            if (p_col.AllowDBNull.HasValue
+                && p_col.AllowDBNull.Value
+                && p_col.DataType.IsValueType)
+            {
+                // 可为null的值类型
+                return typeof(Nullable<>).MakeGenericType(p_col.DataType);
+            }
+
+            return p_col.DataType;
+        }
+
         protected override string GetPageSql(int p_starRow, int p_pageSize, string p_sql)
         {
             return $"select * from (select a.*,rownum rn from ({p_sql}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
@@ -109,13 +137,8 @@ namespace Dt.Core
                         {
                             TableCol col = new TableCol(tblCols);
                             col.Name = colSchema.ColumnName;
-
-                            // 可为null的值类型
-                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                                col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
-                            else
-                                col.Type = colSchema.DataType;
-
+                            col.Type = GetColumnType(colSchema);
+                            
                             // character_maximum_length
                             if (colSchema.ColumnSize.HasValue)
                                 col.Length = colSchema.ColumnSize.Value;
@@ -235,13 +258,8 @@ namespace Dt.Core
                     {
                         TableCol col = new TableCol(tblCols);
                         col.Name = colSchema.ColumnName;
-
-                        // 可为null的值类型
-                        if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                            col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
-                        else
-                            col.Type = colSchema.DataType;
-
+                        col.Type = GetColumnType(colSchema);
+                        
                         // character_maximum_length
                         if (colSchema.ColumnSize.HasValue)
                             col.Length = colSchema.ColumnSize.Value;

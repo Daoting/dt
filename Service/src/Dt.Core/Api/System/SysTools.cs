@@ -163,7 +163,7 @@ namespace Dt.Core
                 // 简化写法不需要类型
                 //sb.Append(GetTypeName(col.Type));
                 //sb.Append(">(\"");
-                sb.Append(col.Name);
+                sb.Append(col.Name.ToLower());
                 sb.Append("\", ");
                 // 内部为enum类型
                 //if (IsEnumCol(col))
@@ -648,9 +648,9 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
+            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name.ToLower()}\"]; }}");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
+            p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
         }

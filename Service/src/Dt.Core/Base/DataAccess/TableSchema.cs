@@ -511,16 +511,33 @@ namespace Dt.Core
         /// <returns></returns>
         public string GetTypeName()
         {
-            return Type == typeof(byte) ? GetEnumName() : GetTypeNameStr(Type);
+            return IsEnumCol ? GetEnumName() : GetTypeNameStr(Type);
         }
 
         /// <summary>
         /// 该列是否为枚举类型
         /// </summary>
-        public bool IsEnumCol =>
-            Type == typeof(byte)
-            && !string.IsNullOrEmpty(Comments)
-            && Regex.IsMatch(Comments, @"^#[^\s#]+");
+        public bool IsEnumCol
+        {
+            get
+            {
+                bool isEnumType = false;
+                switch (Owner.DbType)
+                {
+                    case DatabaseType.MySql:
+                        isEnumType = Type == typeof(byte);
+                        break;
+
+                    case DatabaseType.Oracle:
+                        isEnumType = Type == typeof(Int16);
+                        break;
+                }
+
+                return isEnumType
+                    && !string.IsNullOrEmpty(Comments)
+                    && Regex.IsMatch(Comments, @"^#[^\s#]+");
+            }
+        }
 
         /// <summary>
         /// 枚举类型名

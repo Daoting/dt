@@ -127,12 +127,7 @@ namespace Dt.Core
                         {
                             TableCol col = new TableCol(tblCols);
                             col.Name = colSchema.ColumnName;
-
-                            // 可为null的值类型
-                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                                col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
-                            else
-                                col.Type = colSchema.DataType;
+                            col.Type = GetColumnType(colSchema);
 
                             // character_maximum_length
                             if (colSchema.ColumnSize.HasValue)
@@ -252,12 +247,7 @@ namespace Dt.Core
                     {
                         TableCol col = new TableCol(tblCols);
                         col.Name = colSchema.ColumnName;
-
-                        // 可为null的值类型
-                        if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                            col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
-                        else
-                            col.Type = colSchema.DataType;
+                        col.Type = GetColumnType(colSchema);
 
                         // character_maximum_length
                         if (colSchema.ColumnSize.HasValue)

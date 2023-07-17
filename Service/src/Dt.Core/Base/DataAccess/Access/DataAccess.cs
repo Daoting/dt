@@ -12,9 +12,7 @@ using Dapper.Oracle;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 #endregion
 
 namespace Dt.Core
@@ -285,33 +283,11 @@ namespace Dt.Core
                     // Dapper2.0 改版
                     var reader = (DbDataReader)wrappedReader.Reader;
 
-                    // Entity类型
-                    Type tpEntity = null;
-                    if (typeof(TRow).IsSubclassOf(typeof(Entity)))
-                    {
-                        tpEntity = typeof(TRow);
-                    }
-
-                    // 参见github上的MySqlDataReader.cs
                     // 获取列定义
                     var cols = reader.GetColumnSchema();
                     foreach (var col in cols)
                     {
-                        if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
-                        {
-                            // 可为null的值类型
-                            p_tbl.Add(col.ColumnName, typeof(Nullable<>).MakeGenericType(col.DataType));
-                        }
-                        else if (col.DataType == typeof(byte) && tpEntity != null)
-                        {
-                            // Entity 时根据属性类型将 byte 自动转为 enum 类型
-                            var prop = tpEntity.GetProperty(col.ColumnName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
-                            p_tbl.Add(col.ColumnName, prop != null ? prop.PropertyType : col.DataType);
-                        }
-                        else
-                        {
-                            p_tbl.Add(col.ColumnName, col.DataType);
-                        }
+                        p_tbl.Add(col.ColumnName.ToLower(), GetColumnType(col));
                     }
 
                     while (await reader.ReadAsync())
@@ -341,6 +317,19 @@ namespace Dt.Core
             }
         }
 
+        protected virtual Type GetColumnType(DbColumn p_col)
+        {
+            if (p_col.AllowDBNull.HasValue
+                && p_col.AllowDBNull.Value
+                && p_col.DataType.IsValueType)
+            {
+                // 可为null的值类型
+                return typeof(Nullable<>).MakeGenericType(p_col.DataType);
+            }
+
+            return p_col.DataType;
+        }
+
         async Task<IEnumerable<TRow>> ForEachRow<TRow>(string p_sqlOrSp, object p_params = null)
             where TRow : Row
         {
@@ -362,13 +351,6 @@ namespace Dt.Core
                     var reader = (DbDataReader)p_wrappedReader.Reader;
                     var cols = reader.GetColumnSchema();
 
-                    // Entity类型
-                    Type tpEntity = null;
-                    if (typeof(TRow).IsSubclassOf(typeof(Entity)))
-                    {
-                        tpEntity = typeof(TRow);
-                    }
-
                     while (reader.Read())
                     {
                         // 无参数构造方法可能为private，如实体类型
@@ -377,24 +359,11 @@ namespace Dt.Core
                         {
                             var col = cols[i];
 
-                            Type colType = col.DataType;
-                            if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
-                            {
-                                // 可为null的值类型
-                                colType = typeof(Nullable<>).MakeGenericType(col.DataType);
-                            }
-                            else if (colType == typeof(byte) && tpEntity != null)
-                            {
-                                // Entity 时根据属性类型将 byte 自动转为 enum 类型
-                                var prop = tpEntity.GetProperty(col.ColumnName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
-                                if (prop != null)
-                                    colType = prop.PropertyType;
-                            }
-
+                            Type colType = GetColumnType(col);
                             if (reader.IsDBNull(i))
-                                new Cell(row, col.ColumnName, colType);
+                                new Cell(row, col.ColumnName.ToLower(), colType);
                             else
-                                new Cell(row, col.ColumnName, colType, reader.GetValue(i));
+                                new Cell(row, col.ColumnName.ToLower(), colType, reader.GetValue(i));
                         }
                         yield return row;
                     }
