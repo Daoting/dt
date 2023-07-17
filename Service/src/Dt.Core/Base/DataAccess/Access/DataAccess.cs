@@ -27,6 +27,8 @@ namespace Dt.Core
         #region 成员变量
         protected DbConnection _conn;
         protected DbTransaction _tran;
+        // 只Npgsql为KeyInfo，否则不返回列结构！其余 Default
+        protected CommandBehavior _cmdBehavior;
         #endregion
 
         #region 构造方法
@@ -214,7 +216,7 @@ namespace Dt.Core
             try
             {
                 await OpenConnection();
-                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
+                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd, _cmdBehavior))
                 {
                     // Dapper2.0 改版
                     var reader = (DbDataReader)wrappedReader.Reader;
@@ -260,7 +262,7 @@ namespace Dt.Core
         {
             var cmd = CreateCommand(p_sqlOrSp, p_params, true, true);
             await OpenConnection();
-            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
+            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd, _cmdBehavior);
             return ForEachFirstCol<T>(reader);
         }
 
@@ -278,7 +280,7 @@ namespace Dt.Core
             try
             {
                 await OpenConnection();
-                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
+                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd, _cmdBehavior))
                 {
                     // Dapper2.0 改版
                     var reader = (DbDataReader)wrappedReader.Reader;
@@ -335,7 +337,7 @@ namespace Dt.Core
         {
             var cmd = CreateCommand(p_sqlOrSp, p_params, true, true);
             await OpenConnection();
-            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
+            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd, _cmdBehavior);
             return ForEachRow<TRow>(reader);
         }
 

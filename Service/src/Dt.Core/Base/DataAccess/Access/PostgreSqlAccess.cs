@@ -9,6 +9,7 @@
 #region 引用命名
 using Npgsql;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.Common;
 #endregion
 
@@ -23,6 +24,9 @@ namespace Dt.Core
         public PostgreSqlAccess(DbInfo p_info)
             : base(p_info)
         {
+            // Npgsql真变态，必须为 KeyInfo 才能查询到列结构信息！否则AllowDBNull始终null
+            // 速度变慢
+            _cmdBehavior = CommandBehavior.KeyInfo;
         }
         #endregion
 
@@ -95,7 +99,7 @@ where pg_class.relname = '{0}' and pg_constraint.contype='p'";
 
                         TableSchema tblCols = new TableSchema(tbl, DatabaseType.PostgreSql);
                         ReadOnlyCollection<DbColumn> cols;
-                        using (reader = await cmd.ExecuteReaderAsync())
+                        using (reader = await cmd.ExecuteReaderAsync(_cmdBehavior))
                         {
                             cols = reader.GetColumnSchema();
                         }
@@ -215,7 +219,7 @@ where tb.table_schema = 'public' and lower(tb.table_name)='{0}'", p_tblName.ToLo
                     // 所有列
                     ReadOnlyCollection<DbColumn> cols;
                     cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
-                    using (reader = await cmd.ExecuteReaderAsync())
+                    using (reader = await cmd.ExecuteReaderAsync(_cmdBehavior))
                     {
                         cols = reader.GetColumnSchema();
                     }

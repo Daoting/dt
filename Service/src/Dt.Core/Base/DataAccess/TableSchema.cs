@@ -525,12 +525,15 @@ namespace Dt.Core
                 switch (Owner.DbType)
                 {
                     case DatabaseType.MySql:
+                    case DatabaseType.SqlServer:
                         isEnumType = Type == typeof(byte);
                         break;
 
                     case DatabaseType.Oracle:
+                    case DatabaseType.PostgreSql:
                         isEnumType = Type == typeof(Int16);
                         break;
+
                 }
 
                 return isEnumType
