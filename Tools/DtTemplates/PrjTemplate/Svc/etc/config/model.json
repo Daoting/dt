@@ -6,9 +6,9 @@
       "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
     ],
     // 待导出的数据
-    "Data": "select a.Name,b.Name Category from cm_option a, cm_option_group b where a.GroupID=b.ID order by Category,Dispidx"
+    "Data": "select a.name,b.name category from cm_option a, cm_option_group b where a.group_id=b.id order by category,dispidx"
     // 数据源键名，省略时使用默认键名
-    //"DbKey": "demodb"
+    //"DbKey": "mydt"
   },
   "OmReport": {
     "Create": [
@@ -20,6 +20,6 @@
     "Create": [
       "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,Note text,DispIdx integer,primary key (ID))"
     ],
-    "Data": "select * from cm_menu where islocked=0 order by dispidx"
+    "Data": "select id,parent_id parentid, name, is_group isgroup, view_name viewname,params,icon,note,dispidx from cm_menu where is_locked='0' order by dispidx"
   }
 }

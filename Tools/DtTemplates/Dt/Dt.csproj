@@ -61,6 +61,7 @@
     <EmbeddedResource Include="InsertClass\EventTemp.cs" />
     <Compile Include="InsertClass\ClsType.cs" />
     <EmbeddedResource Include="InsertClass\FvCallTemp.cs" />
+    <EmbeddedResource Include="InsertClass\DomainSvcSql.cs" />
     <Compile Include="InsertClass\InsertClassForm.cs">
       <SubType>Form</SubType>
     </Compile>

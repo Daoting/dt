@@ -97,6 +97,12 @@ namespace Dt
             Kit.WritePrjFile(path, "Dt.InsertClass." + _tempFile, dt);
             Kit.OpenFile(path);
 
+            if (_clsType == ClsType.DomainEx)
+            {
+                // 领域服务增加sql文件
+                path = Path.Combine(Kit.GetFolderPath(), $"{cls}.sql.cs");
+                Kit.WritePrjFile(path, "Dt.InsertClass.DomainSvcSql.cs", dt);
+            }
             Close();
         }
     }

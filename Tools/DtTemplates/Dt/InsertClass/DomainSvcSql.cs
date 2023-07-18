@@ -11,15 +11,8 @@
 
 namespace $rootnamespace$
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    [Api]
-    public partial class $clsname$ : DomainSvc
+    partial class $clsname$
     {
-        public Dict GetConfig()
-        {
-            return null;
-        }
+        
     }
 }
