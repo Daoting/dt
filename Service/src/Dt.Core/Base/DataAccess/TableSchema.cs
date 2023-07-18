@@ -215,7 +215,7 @@ namespace Dt.Core
                     insertVal.Append(col.Name);
 
                     dtInsert[col.Name] = (from row in insertRows
-                                          select row[col.Name]).ToArray();
+                                          select row.Cells[col.Name]).ToList();
                 }
 
                 if (update && updateCols.Contains(col.Name, StringComparer.OrdinalIgnoreCase))
@@ -231,7 +231,7 @@ namespace Dt.Core
 
                     // 更新主键时避免重复
                     dtUpdate[updateIndex.ToString()] = (from row in updateRows
-                                                        select row[col.Name]).ToArray();
+                                                        select row.Cells[col.Name]).ToList();
                     updateIndex++;
                 }
             }
@@ -252,7 +252,7 @@ namespace Dt.Core
 
                     // 主键可能被更新
                     dtUpdate[col.Name] = (from row in updateRows
-                                          select row.Cells[col.Name].OriginalVal).ToArray();
+                                          select row.Cells[col.Name]).ToList();
                 }
             }
 
@@ -274,7 +274,7 @@ namespace Dt.Core
 
                 dt = new Dict();
                 dt["text"] = sql.ToString();
-                var pls = GenRowParm(dtInsert);
+                var pls = (DbType == DatabaseType.Oracle) ? GenOrclInsertParm(dtInsert) : GenInsertParm(dtInsert);
                 dt["params"] = pls.Count == 1 ? pls[0] : pls;
                 dts.Add(dt);
             }
@@ -299,7 +299,7 @@ namespace Dt.Core
 
                     dt = new Dict();
                     dt["text"] = sql.ToString();
-                    var pls = GenRowParm(dtUpdate);
+                    var pls = (DbType == DatabaseType.Oracle) ? GenOrclUpdateParm(dtUpdate) : GenUpdateParm(dtUpdate);
                     dt["params"] = pls.Count == 1 ? pls[0] : pls;
                     dts.Add(dt);
                 }
@@ -339,7 +339,7 @@ namespace Dt.Core
 
                 // 主键可能已修改
                 dtParams[col.Name] = (from row in p_rows.OfType<Row>()
-                                      select row.Cells[col.Name].OriginalVal).ToArray();
+                                      select row.Cells[col.Name]).ToList();
             }
 
             StringBuilder sql = new StringBuilder();
@@ -352,7 +352,7 @@ namespace Dt.Core
 
             Dict result = new Dict();
             result["text"] = sql.ToString();
-            var pls = GenRowParm(dtParams);
+            var pls = GenDelParm(dtParams);
             result["params"] = pls.Count == 1 ? pls[0] : pls;
             return result;
         }
@@ -412,21 +412,84 @@ namespace Dt.Core
         /// <summary>
         /// 将纵向保存的列值转换成横向保存的列值。
         /// </summary>
-        /// <param name="p_parm">dict[string,array]</param>
+        /// <param name="p_parm">dict[string, List`Cell`]</param>
         /// <returns></returns>
-        List<Dict> GenRowParm(Dict p_parm)
+        List<Dict> GenInsertParm(Dict p_parm)
         {
-            if (p_parm == null || p_parm.Count == 0 || ((Array)p_parm.Values.First()).Length == 0)
+            return GenParams(p_parm, (dt, key, cell) =>
+            {
+                dt[key] = cell.Val;
+            });
+        }
+
+        List<Dict> GenOrclInsertParm(Dict p_parm)
+        {
+            return GenParams(p_parm, (dt, key, cell) =>
+            {
+                // oracle中 bool 类型需要转换成 1 或 0
+                dt[key] = cell.Type == typeof(bool) ? ((bool)cell.Val ? "1" : "0") : cell.Val;
+            });
+        }
+
+        List<Dict> GenUpdateParm(Dict p_parm)
+        {
+            return GenParams(p_parm, (dt, key, cell) =>
+            {
+                if (int.TryParse(key, out int index))
+                {
+                    // 更新的列值
+                    dt[key] = cell.Val;
+                }
+                else
+                {
+                    // where后的主键，主键可能被更新
+                    dt[key] = cell.OriginalVal;
+                }
+            });
+        }
+
+        List<Dict> GenOrclUpdateParm(Dict p_parm)
+        {
+            return GenParams(p_parm, (dt, key, cell) =>
+            {
+                if (int.TryParse(key, out int index))
+                {
+                    // oracle中 bool 类型需要转换成 1 或 0
+                    dt[key] = cell.Type == typeof(bool) ? ((bool)cell.Val ? "1" : "0") : cell.Val;
+                }
+                else
+                {
+                    // where后的主键，主键可能被更新
+                    dt[key] = cell.OriginalVal;
+                }
+            });
+        }
+
+        List<Dict> GenDelParm(Dict p_parm)
+        {
+            return GenParams(p_parm, (dt, key, cell) =>
+            {
+                // where后的主键，主键可能被更新
+                dt[key] = cell.OriginalVal;
+            });
+        }
+
+        List<Dict> GenParams(Dict p_parm, Action<Dict, string, Cell> p_callback)
+        {
+            if (p_parm == null || p_parm.Count == 0)
+                return null;
+
+            var first = p_parm.Values.First() as List<Cell>;
+            if (first == null || first.Count == 0)
                 return null;
 
             List<Dict> rtn = new List<Dict>();
-            int rowCount = ((Array)p_parm.Values.First()).Length;
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < first.Count; i++)
             {
                 Dict parm = new Dict();
                 foreach (var item in p_parm)
                 {
-                    parm[item.Key] = ((object[])item.Value)[i];
+                    p_callback(parm, item.Key, ((List<Cell>)item.Value)[i]);
                 }
                 rtn.Add(parm);
             }
