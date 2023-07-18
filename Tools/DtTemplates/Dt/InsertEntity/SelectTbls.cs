@@ -19,6 +19,7 @@ namespace Dt
         {
             InitializeComponent();
             LoadTbls(p_tbls);
+            _cbCls.Checked = Kit.TblNameNoPrefix;
         }
 
         public IEnumerable<string> GetSelection()
@@ -61,6 +62,11 @@ namespace Dt
         {
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        void _cbCls_CheckedChanged(object sender, EventArgs e)
+        {
+            Kit.TblNameNoPrefix = _cbCls.Checked;
         }
     }
 }

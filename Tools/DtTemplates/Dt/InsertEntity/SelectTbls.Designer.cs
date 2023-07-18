@@ -32,6 +32,7 @@ namespace Dt
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectTbls));
             this._btnOK = new System.Windows.Forms.Button();
             this._cbList = new System.Windows.Forms.CheckedListBox();
+            this._cbCls = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // _btnOK
@@ -54,12 +55,24 @@ namespace Dt
             this._cbList.Size = new System.Drawing.Size(460, 276);
             this._cbList.TabIndex = 3;
             // 
+            // _cbCls
+            // 
+            this._cbCls.AutoSize = true;
+            this._cbCls.Location = new System.Drawing.Point(12, 308);
+            this._cbCls.Name = "_cbCls";
+            this._cbCls.Size = new System.Drawing.Size(108, 16);
+            this._cbCls.TabIndex = 4;
+            this._cbCls.Text = "表名不包括前缀";
+            this._cbCls.UseVisualStyleBackColor = true;
+            this._cbCls.CheckedChanged += new System.EventHandler(this._cbCls_CheckedChanged);
+            // 
             // SelectTbls
             // 
             this.AcceptButton = this._btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 345);
+            this.Controls.Add(this._cbCls);
             this.Controls.Add(this._cbList);
             this.Controls.Add(this._btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -71,11 +84,13 @@ namespace Dt
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "选择表";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.CheckedListBox _cbList;
+        private System.Windows.Forms.CheckBox _cbCls;
     }
 }
