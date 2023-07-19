@@ -12,14 +12,21 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 升级客户端sqlite相关包
 * 因支持4数据库，命名特点各不相同，为实现自动生成实体的属性符合命名规范，基础的表名、字段名都采用小写，单词间以下划线分隔，生成的属性名符合Pascal规则，无下划线，建议业务表和字段都采用中文
 * IDataAccess增加创建IEntityWriter，调整DomainSvc中的写法
+* 服务启动时不再缓存所有库表结构
+* 生成Entity代码3个文件，tbl.cs sql.cs .cs
+* 生成DomainSvc类2个文件，sql.cs .cs
+* service.json将单体模式和初始化库合并，cm配置增加导出模型库设置
 
 ### 功能
 * 增加EntityX.GetCount方法
 * .admin页增加初始化数据库功能
 * 增加PostgreSql支持
+* postgresql必须设置CommandBehavior.KeyInfo才能查询到列结构信息，含列结构信息时pg最慢！
 * 增加获取当前服务默认数据库的类型、键名
 * 初始化库增加demo库
 * TableCol记录所属TableSchema
+* VS扩展实体类选择表时增加“表名不包括前缀”选项
+* oracle插入更新时bool类型自动转换
 
 ### Bug修改
 

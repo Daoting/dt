@@ -86,9 +86,7 @@ namespace Dt.Core
                 else
                     continue;
 
-                var export = sect.GetValue(item.Key + ":ExportToModel", true);
-
-                var di = new DbInfo(item.Key, connStr, tp, export);
+                var di = new DbInfo(item.Key, connStr, tp);
                 _dbAll[item.Key] = di;
 
                 if (item.Key.Equals(defDbKey, StringComparison.OrdinalIgnoreCase))

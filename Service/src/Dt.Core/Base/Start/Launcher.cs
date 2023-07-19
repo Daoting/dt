@@ -36,9 +36,9 @@ namespace Dt.Core
         {
             CreateLogger();
             LoadConfig();
-            if (Kit.GetCfg("InitMode", false))
+            if ("InitDb".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase))
             {
-                // 进入初始化模式
+                // 进入初始化数据库模式
                 RunInitModeWebHost();
             }
             else
@@ -129,7 +129,7 @@ namespace Dt.Core
             }
 
             // 配置中允许单体服务 且 服务Stub中也允许单体服务时，才单体服务
-            bool isSingletonSvc = Kit.GetCfg("IsSingletonSvc", false);
+            bool isSingletonSvc = "SingletonSvc".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase);
             if (isSingletonSvc && p_stub.AllowSingleton)
             {
                 List<Stub> stubs = new List<Stub> { p_stub };
@@ -200,7 +200,8 @@ namespace Dt.Core
                 Kit.Stubs = new Stub[] { p_stub };
             }
 
-            Kit.EnableRabbitMQ = !isSingletonSvc;
+            // 单体不启用 RabbitMQ
+            Kit.EnableRabbitMQ = Kit.Stubs.Length == 1;
             Log.Information($"启动 {string.Join('+', Kit.SvcNames)} ...");
         }
 

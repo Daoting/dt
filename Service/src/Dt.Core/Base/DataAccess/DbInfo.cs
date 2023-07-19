@@ -17,12 +17,11 @@ namespace Dt.Core
     /// </summary>
     public class DbInfo
     {
-        public DbInfo(string p_key, string p_connStr, DatabaseType p_type, bool p_export)
+        public DbInfo(string p_key, string p_connStr, DatabaseType p_type)
         {
             Key = p_key;
             ConnStr = p_connStr;
             Type = p_type;
-            ExportToModel = p_export;
 
             //if (p_type == DatabaseType.MySql)
             //    ParseMySql();
@@ -46,11 +45,6 @@ namespace Dt.Core
         /// 数据库类型
         /// </summary>
         public DatabaseType Type { get; }
-
-        /// <summary>
-        /// 是否将表结构导出到模型库
-        /// </summary>
-        public bool ExportToModel { get; }
 
         /// <summary>
         /// 直接从库中xxx_sql表中查询Sql的语句，只在调试时用！多个服务时之间 union

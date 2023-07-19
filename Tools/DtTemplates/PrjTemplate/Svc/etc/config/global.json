@@ -3,24 +3,20 @@
   "Database": {
     "demodb": {
       "ConnStr": "Server=10.10.1.2;Database=demo;Uid=dt;Pwd=dt;",
-      "DbType": "mysql",
-      "ExportToModel": false
+      "DbType": "mysql"
     }
     // 不同类型数据源
     //"orcldt": {
     //  "ConnStr": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))",
-    //  "DbType": "oracle",
-    //  "ExportToModel": false
+    //  "DbType": "oracle"
     //},
     //"sqldt": {
     //  "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=dt;Password=dt;Encrypt=True;TrustServerCertificate=True;",
-    //  "DbType": "sqlserver",
-    //  "ExportToModel": false
+    //  "DbType": "sqlserver"
     //},
     //"pgdt": {
     //  "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
-    //  "DbType": "postgresql",
-    //  "ExportToModel": false
+    //  "DbType": "postgresql"
     //}
   },
   "RabbitMq": {

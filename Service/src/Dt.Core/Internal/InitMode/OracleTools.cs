@@ -23,7 +23,7 @@ namespace Dt.Core
         {
             _host = $"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={p_list[1]})(PORT={p_list[2]}))(CONNECT_DATA=(SERVICE_NAME={p_list[3]})(SERVER=dedicated)))";
             var connStr = $"User Id=system;Password={p_list[4]};{_host}";
-            _da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
+            _da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle));
 
             _newDb = p_list[5].Trim().ToUpper();
             _newUser = p_list[6].Trim().ToUpper();
@@ -77,7 +77,7 @@ namespace Dt.Core
 
             if (p_initType != 1)
             {
-                var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle, false));
+                var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle));
                 da.AutoClose = false;
 
                 string sql;

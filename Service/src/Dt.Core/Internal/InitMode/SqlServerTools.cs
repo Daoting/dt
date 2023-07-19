@@ -23,7 +23,7 @@ namespace Dt.Core
         {
             _host = $"Data Source={p_list[1]},{p_list[2]}";
             var connStr = $"{_host};Initial Catalog={p_list[3]};User ID=sa;Password={p_list[4]};Encrypt=True;TrustServerCertificate=True;";
-            _da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer, false));
+            _da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
 
             _newDb = p_list[5];
             _newUser = p_list[6];
@@ -77,7 +77,7 @@ namespace Dt.Core
 
             if (p_initType != 1)
             {
-                var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer, false));
+                var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
                 da.AutoClose = false;
 
                 string sql;

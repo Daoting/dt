@@ -1,4 +1,6 @@
 ﻿{
+  //"Mode": "SingletonSvc",
+
   "DbKey": "mydt",
   "SvcName": "demo",
 
@@ -13,8 +15,6 @@
     }
   ],
 
-  "IsSingletonSvc": true,
-
   /********** 以下配置只在单体时有效 **********/
 
   // 自定义服务的数据源键名
@@ -23,6 +23,9 @@
   "CustomSvcDbKey": {
     //"svcname": "dbkey"
   },
+
+  // cm服务用，除默认数据源外，其余需要导出到模型库的数据源键名
+  "ExportToModel": [],
 
   // 提供给fsm服务
   "FixedVolume": "photo;editor;g;chat",

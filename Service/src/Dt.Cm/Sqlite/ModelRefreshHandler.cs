@@ -108,19 +108,26 @@ namespace Dt.Cm
                     // 加载默认库表结构
                     LoadSchema(defSchema, tbls, cols, Kit.DefaultDbInfo);
 
-                    // 默认库键名
-                    var dbConn = Kit.Config["DbKey"];
-                    foreach (var item in Kit.AllDbInfo)
+                    var exports = Kit.Config.GetSection("ExportToModel").GetChildren().ToList();
+                    if (exports != null && exports.Count > 0)
                     {
-                        // 排除默认库表结构 和 不需要导出的库
-                        if (dbConn.Equals(item.Key, StringComparison.OrdinalIgnoreCase)
-                            || !item.Value.ExportToModel)
-                            continue;
+                        // 默认库键名
+                        var dbConn = Kit.Config["DbKey"];
+                        foreach (var item in exports)
+                        {
+                            var dbKey = item.Value;
 
-                        var schema = await Kit.NewDataAccess(item.Key).GetDbSchema();
-                        LoadSchema(schema, tbls, cols, item.Value);
-                    }
+                            // 排除默认库、不存在的库
+                            if (string.IsNullOrEmpty(dbKey)
+                                || dbConn.Equals(dbKey, StringComparison.OrdinalIgnoreCase)
+                                || !Kit.AllDbInfo.ContainsKey(dbKey))
+                                continue;
 
+                            var schema = await Kit.NewDataAccess(dbKey).GetDbSchema();
+                            LoadSchema(schema, tbls, cols, Kit.AllDbInfo[dbKey]);
+                        }
+                    }    
+                    
                     InsertSchema(conn, tbls, cols);
                     sb.AppendFormat("导出表结构：{0}张表，{1}个字段\r\n", tbls.Count, cols.Count);
                     #endregion

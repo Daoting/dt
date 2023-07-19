@@ -1,8 +1,11 @@
 ﻿{
+  //"Mode": "InitDb",
+
   "DbKey": "orcldt",
   "TraceSql": true,
   "TraceRpc": true,
 
+  // 启动KestrelServer时的监听设置
   "KestrelListen": [
     {
       "Scheme": "http",
@@ -16,11 +19,13 @@
     }
   ],
 
+  // 每个服务的url
   "SvcUrls": {
     "msg": "*/dt-msg",
     "fsm": "*/dt-fsm",
     "demo": "*/dt-demo"
   },
 
-  "InitMode": false
+  // 除默认数据源外，其余需要导出到模型库的数据源键名
+  "ExportToModel": []
 }

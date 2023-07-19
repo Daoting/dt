@@ -1,4 +1,10 @@
 ﻿{
+  // 设置运行模式，共三种，默认Svc模式
+  // 1. Svc          普通微服务模式
+  // 2. SingletonSvc 单体服务模式
+  // 3. InitDb       初始化数据库模式
+  "Mode": "$issingletonsvc$",
+
   // 默认数据源键名
   "DbKey": "demodb",
   // 服务名称
@@ -18,13 +24,11 @@
     }
   ],
 
-  // 是否为单体服务，true时合并所有微服务为一个服务，微服务包括：
+  /************** 以下配置只在单体时有效 **************/
+  // 单体服务时合并所有微服务为一个服务，微服务包括：
   // 1. cm msg fsm三个标准微服务
   // 2. 当前服务
   // 3. CustomSvcDbKey配置的服务
-  "IsSingletonSvc": "$issingletonsvc$",
-
-  /********** 以下配置只在单体时有效 **********/
 
   // 自定义服务的数据源键名
   // 1. 可以自定义cm msg fsm服务或当前服务的数据源键名，否则采用默认数据源键名
@@ -33,11 +37,10 @@
     //"svcname": "dbkey"
   },
 
-  // 提供给fsm服务
-  "FixedVolume": "photo;editor;g;chat",
-  "MaxRequestBodySize": 1073741824,
+  // cm服务用，除默认数据源外，其余需要导出到模型库的数据源键名
+  "ExportToModel": [],
 
-  /************** 是否为初始化模式 **************/
-  // 初始化模式只用来创建初始库
-  "InitMode": false
+  // fsm服务用
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
 }

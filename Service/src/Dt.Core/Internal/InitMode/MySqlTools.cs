@@ -22,7 +22,7 @@ namespace Dt.Core
         {
             _host = $"Server={p_list[1]};Port={p_list[2]}";
             var connStr = $"{_host};Uid=root;Pwd={p_list[4]};";
-            _da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
+            _da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
 
             _newDb = p_list[5];
             _newUser = p_list[6];
@@ -97,7 +97,7 @@ namespace Dt.Core
 
             if (p_initType != 1)
             {
-                var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql, false));
+                var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
 
                 string sql;
                 using (var sr = GetSqlStream(p_initType == 0? "mysql-init.sql" : "mysql-demo.sql"))

@@ -23,7 +23,7 @@ namespace Dt.Core
         {
             _host = $"Host={p_list[1]};Port={p_list[2]}";
             var connStr = $"{_host};Database={p_list[3]};Username=postgres;Password={p_list[4]};";
-            _da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql, false));
+            _da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
 
             _pwdPostgres = p_list[4];
             _newDb = p_list[5].Trim().ToLower();
@@ -79,7 +79,7 @@ namespace Dt.Core
 
             // 切换库，授权
             var connStr = $"{_host};Database={_newDb};Username=postgres;Password={_pwdPostgres};";
-            var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql, false));
+            var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
             da.AutoClose = false;
             Log.Information($"数据库【{_newDb}】的所有权限授予给用户【{_newUser}】...");
             await da.Exec($"grant all privileges on database {_newDb} to {_newUser}");
@@ -97,7 +97,7 @@ namespace Dt.Core
 
             if (p_initType != 1)
             {
-                da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql, false));
+                da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
                 da.AutoClose = false;
 
                 string sql;
