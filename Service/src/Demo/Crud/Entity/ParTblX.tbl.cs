@@ -2,19 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-03 创建
+* 日志: 2023-07-19 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Demo.Crud
 {
-    [Tbl("demo_par_tbl")]
+    [Tbl("DEMO_PAR_TBL")]
     public partial class ParTblX : EntityX<ParTblX>
     {
         #region 构造方法
@@ -26,8 +23,8 @@ namespace Demo.Crud
             long ID,
             string Name = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name", Name);
+            AddCell("id", ID);
+            AddCell("name", Name);
             IsAdded = true;
         }
         #endregion
@@ -37,8 +34,8 @@ namespace Demo.Crud
         /// </summary>
         public string Name
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
     }
 }

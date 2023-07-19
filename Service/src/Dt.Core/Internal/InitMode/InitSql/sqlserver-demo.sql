@@ -2,6 +2,7 @@
 Navicat 从 mysql 导出后修改：
 1. tinyint bool类型转bit 枚举类型保留
 2. nchar 转 char
+3. datetime2 转 datetime
 */
 
 -- ----------------------------
@@ -14,7 +15,7 @@ CREATE TABLE [dbo].[cm_file_my] (
   [is_folder] bit NOT NULL,
   [ext_name] nvarchar(8) NULL,
   [info] nvarchar(512) NOT NULL,
-  [ctime] datetime2 NOT NULL,
+  [ctime] datetime NOT NULL,
   [user_id] bigint NOT NULL
 )
 GO
@@ -99,7 +100,7 @@ CREATE TABLE [dbo].[cm_file_pub] (
   [is_folder] bit NOT NULL,
   [ext_name] nvarchar(8) NULL,
   [info] nvarchar(512) NOT NULL,
-  [ctime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL
 )
 GO
 
@@ -162,7 +163,7 @@ GO
 -- ----------------------------
 -- Records of cm_file_pub
 -- ----------------------------
-INSERT INTO [dbo].[cm_file_pub] VALUES (N'1', NULL, N'公共文件', N'1', NULL, N'', N'2020-10-21 15:19:20'), (N'2', NULL, N'素材库', N'1', NULL, N'', N'2020-10-21 15:20:21'), (N'140015729575325696', N'1', N'新目录a', N'1', NULL, N'', N'0001-01-01 00:00:00'), (N'140016348063199232', N'1', N'新目录1111', N'1', NULL, N'', N'2020-10-21 16:55:00'), (N'140244264617373696', N'140016348063199232', N'新目录q', N'1', NULL, N'', N'2020-10-22 08:00:39'), (N'140253323206717440', N'140244264617373696', N'ab', N'1', NULL, N'', N'2020-10-22 08:36:39'), (N'140266906502164480', N'140244264617373696', N'aa', N'0', N'xlsx', N'[["v0/1F/4A/140266906879651840.xlsx","aa","xlsx文件",8236,"daoting","2020-10-22 09:30"]]', N'2020-10-22 09:30:37'), (N'142873261784297472', N'2', N'新目录1', N'1', NULL, N'', N'2020-10-29 14:07:20'), (N'142888903606398976', N'2', N'12', N'0', N'xlsx', N'[["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]]', N'2020-10-29 15:09:30'), (N'142913881819181056', N'2', N'未标题-2', N'0', N'jpg', N'[["v0/E3/18/142913882284748800.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-10-29 16:48"]]', N'2020-10-29 16:48:44'), (N'142914110945619968', N'2', N'Icon-20@2x', N'0', N'png', N'[["v0/E3/0D/142914111109197824.png","Icon-20@2x","40 x 40 (.png)",436,"daoting","2020-10-29 16:49"]]', N'2020-10-29 16:49:39'), (N'143174605384577024', N'140016348063199232', N'Icon-20@3x', N'0', N'png', N'[["v0/56/59/143174606269575168.png","Icon-20@3x","60 x 60 (.png)",496,"daoting","2020-10-30 10:04"]]', N'2020-10-30 10:04:47'), (N'143191060503195648', N'1', N'Icon-20@3x', N'0', N'png', N'[["v0/56/59/143191060947791872.png","Icon-20@3x","60 x 60 (.png)",534,"daoting","2020-10-30 11:10"]]', N'2020-10-30 11:10:10'), (N'143192411157164032', N'140015729575325696', N'Icon-29@2x', N'0', N'png', N'[["v0/46/CE/143192411832446976.png","Icon-29@2x","58 x 58 (.png)",624,"daoting","2020-10-30 11:15"]]', N'2020-10-30 11:15:32'), (N'143193081423720448', N'140015729575325696', N'3709740f5c5e4cb4909a6cc79f412734_th', N'0', N'png', N'[["v0/BF/6D/143193081931231232.png","3709740f5c5e4cb4909a6cc79f412734_th","537 x 302 (.png)",27589,"daoting","2020-10-30 11:18"]]', N'2020-10-30 11:18:12'), (N'143195001659977728', N'1', N'未标题-2', N'0', N'jpg', N'[["v0/E3/18/143195002217820160.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-10-30 11:25"]]', N'2020-10-30 11:25:50'), (N'143203944146792448', N'1', N'ImageStabilization', N'0', N'wmv', N'[["v0/EA/34/143203944767549440.wmv","ImageStabilization","00:00:06 (480 x 288)",403671,"daoting","2020-10-30 12:01"]]', N'2020-10-30 12:01:22'), (N'172190549410705408', N'1', N'公司服务器及网络', N'0', N'txt', N'[["v0/5F/37/172190549775609856.txt","公司服务器及网络","txt文件",435,"daoting","2021-01-18 11:43"]]', N'2021-01-18 11:43:37'), (N'185641691419373568', N'1', N'1', N'0', N'png', N'[["v0/FC/63/185641725430984704.png","1","1101 x 428 (.png)",47916,"daoting","2021-02-24 14:33"]]', N'2021-02-24 14:33:46'), (N'187725770344230912', N'1', N'doc1', N'0', N'png', N'[["v0/D8/28/187725778074333184.png","doc1","1076 x 601 (.png)",59038,"daoting","2021-03-02 08:35"]]', N'2021-03-02 08:35:12'), (N'205916917767991296', N'140015729575325696', N'state', N'0', N'db', N'[["v0/DF/F3/205916918690738176.db","state","db文件",90112,"苹果","2021-04-21 13:20"]]', N'2021-04-21 13:20:20'), (N'255970120425140224', N'456277006646005760', N'abc', N'1', N'', N'', N'2021-09-06 16:13:53'), (N'322270820868235264', N'1', N'172190549775609856', N'0', N'txt', N'[["editor/57/01/322270823007330304.txt","172190549775609856","txt文件",435,"daoting","2022-03-08 15:09"]]', N'2022-03-08 15:09:10'), (N'456276498464133120', N'456277006646005760', N'未标题-2', N'0', N'jpg', N'[["editor/E3/18/456276498854203392.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-13 09:59"]]', N'2023-03-13 09:59:59'), (N'456277006646005760', N'1', N'新Tab', N'1', N'', N'', N'2023-03-13 10:02:00'), (N'456281421624922112', N'255970120425140224', N'未标题-2', N'0', N'jpg', N'[["editor/E3/18/456281422107267072.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-13 10:19"]]', N'2023-03-13 10:19:33'), (N'456281921225248768', N'456277006646005760', N'UserList', N'0', N'xaml', N'[["editor/C1/45/456281921523044352.xaml","UserList","xaml文件",2682,"daoting","2023-03-13 10:21"]]', N'2023-03-13 10:21:32')
+INSERT INTO [dbo].[cm_file_pub] VALUES (N'1', NULL, N'公共文件', N'1', NULL, N'', N'2020-10-21 15:19:20'), (N'2', NULL, N'素材库', N'1', NULL, N'', N'2020-10-21 15:20:21'), (N'140015729575325696', N'1', N'新目录a', N'1', NULL, N'', N'2020-11-19 13:17:25'), (N'140016348063199232', N'1', N'新目录1111', N'1', NULL, N'', N'2020-10-21 16:55:00'), (N'140244264617373696', N'140016348063199232', N'新目录q', N'1', NULL, N'', N'2020-10-22 08:00:39'), (N'140253323206717440', N'140244264617373696', N'ab', N'1', NULL, N'', N'2020-10-22 08:36:39'), (N'140266906502164480', N'140244264617373696', N'aa', N'0', N'xlsx', N'[["v0/1F/4A/140266906879651840.xlsx","aa","xlsx文件",8236,"daoting","2020-10-22 09:30"]]', N'2020-10-22 09:30:37'), (N'142873261784297472', N'2', N'新目录1', N'1', NULL, N'', N'2020-10-29 14:07:20'), (N'142888903606398976', N'2', N'12', N'0', N'xlsx', N'[["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]]', N'2020-10-29 15:09:30'), (N'142913881819181056', N'2', N'未标题-2', N'0', N'jpg', N'[["v0/E3/18/142913882284748800.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-10-29 16:48"]]', N'2020-10-29 16:48:44'), (N'142914110945619968', N'2', N'Icon-20@2x', N'0', N'png', N'[["v0/E3/0D/142914111109197824.png","Icon-20@2x","40 x 40 (.png)",436,"daoting","2020-10-29 16:49"]]', N'2020-10-29 16:49:39'), (N'143174605384577024', N'140016348063199232', N'Icon-20@3x', N'0', N'png', N'[["v0/56/59/143174606269575168.png","Icon-20@3x","60 x 60 (.png)",496,"daoting","2020-10-30 10:04"]]', N'2020-10-30 10:04:47'), (N'143191060503195648', N'1', N'Icon-20@3x', N'0', N'png', N'[["v0/56/59/143191060947791872.png","Icon-20@3x","60 x 60 (.png)",534,"daoting","2020-10-30 11:10"]]', N'2020-10-30 11:10:10'), (N'143192411157164032', N'140015729575325696', N'Icon-29@2x', N'0', N'png', N'[["v0/46/CE/143192411832446976.png","Icon-29@2x","58 x 58 (.png)",624,"daoting","2020-10-30 11:15"]]', N'2020-10-30 11:15:32'), (N'143193081423720448', N'140015729575325696', N'3709740f5c5e4cb4909a6cc79f412734_th', N'0', N'png', N'[["v0/BF/6D/143193081931231232.png","3709740f5c5e4cb4909a6cc79f412734_th","537 x 302 (.png)",27589,"daoting","2020-10-30 11:18"]]', N'2020-10-30 11:18:12'), (N'143195001659977728', N'1', N'未标题-2', N'0', N'jpg', N'[["v0/E3/18/143195002217820160.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-10-30 11:25"]]', N'2020-10-30 11:25:50'), (N'143203944146792448', N'1', N'ImageStabilization', N'0', N'wmv', N'[["v0/EA/34/143203944767549440.wmv","ImageStabilization","00:00:06 (480 x 288)",403671,"daoting","2020-10-30 12:01"]]', N'2020-10-30 12:01:22'), (N'172190549410705408', N'1', N'公司服务器及网络', N'0', N'txt', N'[["v0/5F/37/172190549775609856.txt","公司服务器及网络","txt文件",435,"daoting","2021-01-18 11:43"]]', N'2021-01-18 11:43:37'), (N'185641691419373568', N'1', N'1', N'0', N'png', N'[["v0/FC/63/185641725430984704.png","1","1101 x 428 (.png)",47916,"daoting","2021-02-24 14:33"]]', N'2021-02-24 14:33:46'), (N'187725770344230912', N'1', N'doc1', N'0', N'png', N'[["v0/D8/28/187725778074333184.png","doc1","1076 x 601 (.png)",59038,"daoting","2021-03-02 08:35"]]', N'2021-03-02 08:35:12'), (N'205916917767991296', N'140015729575325696', N'state', N'0', N'db', N'[["v0/DF/F3/205916918690738176.db","state","db文件",90112,"苹果","2021-04-21 13:20"]]', N'2021-04-21 13:20:20'), (N'255970120425140224', N'456277006646005760', N'abc', N'1', N'', N'', N'2021-09-06 16:13:53'), (N'322270820868235264', N'1', N'172190549775609856', N'0', N'txt', N'[["editor/57/01/322270823007330304.txt","172190549775609856","txt文件",435,"daoting","2022-03-08 15:09"]]', N'2022-03-08 15:09:10'), (N'456276498464133120', N'456277006646005760', N'未标题-2', N'0', N'jpg', N'[["editor/E3/18/456276498854203392.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-13 09:59"]]', N'2023-03-13 09:59:59'), (N'456277006646005760', N'1', N'新Tab', N'1', N'', N'', N'2023-03-13 10:02:00'), (N'456281421624922112', N'255970120425140224', N'未标题-2', N'0', N'jpg', N'[["editor/E3/18/456281422107267072.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-13 10:19"]]', N'2023-03-13 10:19:33'), (N'456281921225248768', N'456277006646005760', N'UserList', N'0', N'xaml', N'[["editor/C1/45/456281921523044352.xaml","UserList","xaml文件",2682,"daoting","2023-03-13 10:21"]]', N'2023-03-13 10:21:32')
 GO
 
 
@@ -262,8 +263,8 @@ CREATE TABLE [dbo].[cm_menu] (
   [note] nvarchar(512) NOT NULL,
   [dispidx] int NOT NULL,
   [is_locked] bit NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -472,8 +473,8 @@ CREATE TABLE [dbo].[cm_params] (
   [name] nvarchar(255) NOT NULL,
   [value] nvarchar(255) NOT NULL,
   [note] nvarchar(255) NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -705,8 +706,8 @@ CREATE TABLE [dbo].[cm_rpt] (
   [name] nvarchar(64) NOT NULL,
   [define] nvarchar(max) NOT NULL,
   [note] nvarchar(255) NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -804,8 +805,8 @@ CREATE TABLE [dbo].[cm_user] (
   [sex] tinyint NOT NULL,
   [photo] nvarchar(255) NOT NULL,
   [expired] bit NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -882,7 +883,7 @@ GO
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO [dbo].[cm_user] VALUES (N'1', N'13511111111', N'Windows', N'af3303f852abeccd793068486a391626', N'1', N'[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 09:06:38', N'2023-03-16 08:35:39'), (N'2', N'13522222222', N'安卓', N'b59c67bf196a4758191e42f76670ceba', N'2', N'[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 13:03:19', N'2023-03-16 08:36:23'), (N'3', N'13533333333', N'苹果', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'0001-01-01 00:00:00', N'2023-03-16 08:36:46'), (N'149709966847897600', N'13122222222', N'李市场', N'934b535800b1cba8f96a5d72f72f1611', N'1', N'', N'0', N'2020-11-17 10:54:29', N'2020-11-25 16:37:55'), (N'152695627289198592', N'13211111111', N'王综合', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2020-11-25 16:38:34', N'2020-11-25 16:38:34'), (N'152695790787362816', N'13866666666', N'张财务', N'e9510081ac30ffa83f10b68cde1cac07', N'1', N'', N'0', N'2020-11-25 16:38:54', N'2020-11-25 16:38:54'), (N'184215437633777664', N'15955555555', N'15955555555', N'6074c6aa3488f3c2dddff2a7ca821aab', N'1', N'', N'0', N'2021-02-20 16:06:23', N'2021-02-20 16:06:23'), (N'185188338092601344', N'15912345678', N'15912345678', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'', N'0', N'2021-02-23 08:32:20', N'2021-02-23 08:32:20'), (N'185212597401677824', N'15912345671', N'15912345677', N'cca8f108b55ec9e39d7885e24f7da0af', N'2', N'', N'0', N'2021-02-23 10:08:43', N'2022-01-19 15:49:43'), (N'192818293676994560', N'18543175028', N'18543175028', N'bf8dd8c68d02e161c28dc9ea139d4784', N'1', N'', N'0', N'2021-03-16 09:51:02', N'2021-03-16 09:51:02'), (N'196167762048839680', N'18843175028', N'18843175028', N'bf8dd8c68d02e161c28dc9ea139d4784', N'1', N'', N'0', N'2021-03-25 15:40:38', N'2021-03-25 15:40:38'), (N'224062063923556352', N'14411111111', N'14411111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2021-06-10 15:02:39', N'2021-06-10 15:02:39'), (N'227949556179791872', N'13612345678', N'WebAssembly', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'', N'0', N'2021-06-21 08:30:10', N'2021-06-21 08:30:34'), (N'229519641138819072', N'13311111111', N'13311111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'[["editor/E3/18/452737920958222336.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-03 15:38"]]', N'0', N'2021-06-25 16:29:06', N'2021-06-25 16:29:06'), (N'231620526086156288', N'13611111111', N'13611111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2021-07-01 11:37:18', N'2021-07-01 11:37:18'), (N'247170018466197504', N'15948341897', N'15948341892', N'af3303f852abeccd793068486a391626', N'1', N'', N'0', N'2021-08-13 09:25:26', N'2021-09-10 09:36:37')
+INSERT INTO [dbo].[cm_user] VALUES (N'1', N'13511111111', N'Windows', N'af3303f852abeccd793068486a391626', N'1', N'[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 09:06:38', N'2023-03-16 08:35:39'), (N'2', N'13522222222', N'安卓', N'b59c67bf196a4758191e42f76670ceba', N'2', N'[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 13:03:19', N'2023-03-16 08:36:23'), (N'3', N'13533333333', N'苹果', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2020-11-19 13:17:25', N'2023-03-16 08:36:46'), (N'149709966847897600', N'13122222222', N'李市场', N'934b535800b1cba8f96a5d72f72f1611', N'1', N'', N'0', N'2020-11-17 10:54:29', N'2020-11-25 16:37:55'), (N'152695627289198592', N'13211111111', N'王综合', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2020-11-25 16:38:34', N'2020-11-25 16:38:34'), (N'152695790787362816', N'13866666666', N'张财务', N'e9510081ac30ffa83f10b68cde1cac07', N'1', N'', N'0', N'2020-11-25 16:38:54', N'2020-11-25 16:38:54'), (N'184215437633777664', N'15955555555', N'15955555555', N'6074c6aa3488f3c2dddff2a7ca821aab', N'1', N'', N'0', N'2021-02-20 16:06:23', N'2021-02-20 16:06:23'), (N'185188338092601344', N'15912345678', N'15912345678', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'', N'0', N'2021-02-23 08:32:20', N'2021-02-23 08:32:20'), (N'185212597401677824', N'15912345671', N'15912345677', N'cca8f108b55ec9e39d7885e24f7da0af', N'2', N'', N'0', N'2021-02-23 10:08:43', N'2022-01-19 15:49:43'), (N'192818293676994560', N'18543175028', N'18543175028', N'bf8dd8c68d02e161c28dc9ea139d4784', N'1', N'', N'0', N'2021-03-16 09:51:02', N'2021-03-16 09:51:02'), (N'196167762048839680', N'18843175028', N'18843175028', N'bf8dd8c68d02e161c28dc9ea139d4784', N'1', N'', N'0', N'2021-03-25 15:40:38', N'2021-03-25 15:40:38'), (N'224062063923556352', N'14411111111', N'14411111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2021-06-10 15:02:39', N'2021-06-10 15:02:39'), (N'227949556179791872', N'13612345678', N'WebAssembly', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'', N'0', N'2021-06-21 08:30:10', N'2021-06-21 08:30:34'), (N'229519641138819072', N'13311111111', N'13311111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'[["editor/E3/18/452737920958222336.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-03 15:38"]]', N'0', N'2021-06-25 16:29:06', N'2021-06-25 16:29:06'), (N'231620526086156288', N'13611111111', N'13611111111', N'b59c67bf196a4758191e42f76670ceba', N'1', N'', N'0', N'2021-07-01 11:37:18', N'2021-07-01 11:37:18'), (N'247170018466197504', N'15948341897', N'15948341892', N'af3303f852abeccd793068486a391626', N'1', N'', N'0', N'2021-08-13 09:25:26', N'2021-09-10 09:36:37')
 GO
 
 
@@ -930,7 +931,7 @@ CREATE TABLE [dbo].[cm_user_params] (
   [user_id] bigint NOT NULL,
   [param_id] bigint NOT NULL,
   [value] nvarchar(255) NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1030,8 +1031,8 @@ CREATE TABLE [dbo].[cm_wfd_atv] (
   [can_jump_into] bit NOT NULL,
   [trans_kind] tinyint NOT NULL,
   [join_kind] tinyint NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1202,8 +1203,8 @@ CREATE TABLE [dbo].[cm_wfd_prc] (
   [singleton] bit NOT NULL,
   [note] nvarchar(255) NULL,
   [dispidx] int NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1280,7 +1281,7 @@ GO
 -- ----------------------------
 -- Records of cm_wfd_prc
 -- ----------------------------
-INSERT INTO [dbo].[cm_wfd_prc] VALUES (N'146898695127691264', N'555', N'<Sketch><Node id="146898715155492864" title="开始" shape="开始" left="340" top="100" width="80" height="60" /><Node id="146898876447453184" title="任务项" shape="任务" left="340" top="360" width="120" height="60" /><Line id="146898896794021888" headerid="146898715155492864" bounds="380,160,30,200" headerport="4" tailid="146898876447453184" tailport="0" /></Sketch>', N'0', N'0', N'', N'1', N'0001-01-01 00:00:00', N'2020-11-19 13:17:25'), (N'146900552231284736', N'666', N'<Sketch><Node id="146900570585559040" title="开始" shape="开始" left="620" top="120" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'3', N'0001-01-01 00:00:00', N'2020-11-09 16:50:56'), (N'146900823984435200', N'777', N'<Sketch><Node id="146900847761944576" title="开始" shape="开始" left="300" top="220" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'4', N'0001-01-01 00:00:00', N'2020-11-09 16:52:58'), (N'146901403339452416', N'888', N'<Sketch><Node id="146901433265811456" title="开始" shape="开始" left="340" top="140" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'6', N'0001-01-01 00:00:00', N'2020-11-09 16:54:39'), (N'147141147767992320', N'ggg', N'<Sketch><Node id="147141181158846464" title="开始" shape="开始" left="320" top="40" width="80" height="60" /><Node id="147141718000398336" title="任务项" shape="任务" left="380" top="480" width="120" height="60" /><Line id="147141749642227712" headerid="147141181158846464" bounds="400,100,50,380" headerport="3" tailid="147141718000398336" tailport="0" /></Sketch>', N'1', N'0', N'', N'2', N'2020-11-10 08:46:24', N'2020-11-10 08:50:03'), (N'152588581545967616', N'收文样例', N'<Sketch><Node id="152588671081775104" title="接收文件" shape="开始" left="300" top="40" width="80" height="60" /><Node id="152683112727576576" title="市场部" shape="任务" left="160" top="140" width="120" height="60" /><Line id="152683122982649856" headerid="152588671081775104" bounds="210,70,50,70" headerport="6" tailid="152683112727576576" tailport="0" /><Node id="152684512937246720" title="综合部" shape="任务" left="400" top="140" width="120" height="60" /><Line id="152684673721696256" headerid="152588671081775104" bounds="380,70,90,70" headerport="2" tailid="152684512937246720" tailport="0" /><Node id="152684758027206656" title="市场部传阅" shape="任务" left="160" top="260" width="120" height="60" /><Node id="152684895835258880" title="同步" shape="同步" background="#FF9D9D9D" borderbrush="#FF969696" left="280" top="400" width="120" height="60" /><Line id="152684951493672960" headerid="152683112727576576" bounds="210,200,20,60" headerport="4" tailid="152684758027206656" tailport="0" /><Line id="152684981348728832" headerid="152683112727576576" bounds="120,170,160,470" headerport="6" tailid="152685608543977472" tailport="6" /><Node id="152685032993193984" title="综合部传阅" shape="任务" left="400" top="260" width="120" height="60" /><Line id="152685133509689344" headerid="152684512937246720" bounds="450,200,20,60" headerport="4" tailid="152685032993193984" tailport="0" /><Line id="152685169891082240" headerid="152684512937246720" bounds="400,170,160,270" headerport="2" tailid="152684895835258880" tailport="2" /><Line id="152685211767013376" headerid="152684758027206656" bounds="220,320,60,120" headerport="4" tailid="152684895835258880" tailport="6" /><Line id="152685247745753088" headerid="152685032993193984" bounds="400,320,60,120" headerport="4" tailid="152684895835258880" tailport="2" /><Node id="152685491275431936" title="返回收文人" shape="任务" left="280" top="500" width="120" height="60" /><Line id="152685585135566848" headerid="152684895835258880" bounds="330,460,20,40" headerport="4" tailid="152685491275431936" tailport="0" /><Node id="152685608543977472" title="完成" shape="结束" background="#FF9D9D9D" borderbrush="#FF969696" left="300" top="600" width="80" height="60" /><Line id="152685622099968000" headerid="152685491275431936" bounds="330,560,20,40" headerport="4" tailid="152685608543977472" tailport="0" /></Sketch>', N'0', N'0', N'', N'5', N'2020-11-25 09:32:33', N'2021-08-24 15:45:54')
+INSERT INTO [dbo].[cm_wfd_prc] VALUES (N'146898695127691264', N'555', N'<Sketch><Node id="146898715155492864" title="开始" shape="开始" left="340" top="100" width="80" height="60" /><Node id="146898876447453184" title="任务项" shape="任务" left="340" top="360" width="120" height="60" /><Line id="146898896794021888" headerid="146898715155492864" bounds="380,160,30,200" headerport="4" tailid="146898876447453184" tailport="0" /></Sketch>', N'0', N'0', N'', N'1', N'2020-11-19 13:17:25', N'2020-11-19 13:17:25'), (N'146900552231284736', N'666', N'<Sketch><Node id="146900570585559040" title="开始" shape="开始" left="620" top="120" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'3', N'2020-11-19 13:17:25', N'2020-11-09 16:50:56'), (N'146900823984435200', N'777', N'<Sketch><Node id="146900847761944576" title="开始" shape="开始" left="300" top="220" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'4', N'2020-11-19 13:17:25', N'2020-11-09 16:52:58'), (N'146901403339452416', N'888', N'<Sketch><Node id="146901433265811456" title="开始" shape="开始" left="340" top="140" width="80" height="60" /></Sketch>', N'0', N'0', N'', N'6', N'2020-11-19 13:17:25', N'2020-11-09 16:54:39'), (N'147141147767992320', N'ggg', N'<Sketch><Node id="147141181158846464" title="开始" shape="开始" left="320" top="40" width="80" height="60" /><Node id="147141718000398336" title="任务项" shape="任务" left="380" top="480" width="120" height="60" /><Line id="147141749642227712" headerid="147141181158846464" bounds="400,100,50,380" headerport="3" tailid="147141718000398336" tailport="0" /></Sketch>', N'1', N'0', N'', N'2', N'2020-11-10 08:46:24', N'2020-11-10 08:50:03'), (N'152588581545967616', N'收文样例', N'<Sketch><Node id="152588671081775104" title="接收文件" shape="开始" left="300" top="40" width="80" height="60" /><Node id="152683112727576576" title="市场部" shape="任务" left="160" top="140" width="120" height="60" /><Line id="152683122982649856" headerid="152588671081775104" bounds="210,70,50,70" headerport="6" tailid="152683112727576576" tailport="0" /><Node id="152684512937246720" title="综合部" shape="任务" left="400" top="140" width="120" height="60" /><Line id="152684673721696256" headerid="152588671081775104" bounds="380,70,90,70" headerport="2" tailid="152684512937246720" tailport="0" /><Node id="152684758027206656" title="市场部传阅" shape="任务" left="160" top="260" width="120" height="60" /><Node id="152684895835258880" title="同步" shape="同步" background="#FF9D9D9D" borderbrush="#FF969696" left="280" top="400" width="120" height="60" /><Line id="152684951493672960" headerid="152683112727576576" bounds="210,200,20,60" headerport="4" tailid="152684758027206656" tailport="0" /><Line id="152684981348728832" headerid="152683112727576576" bounds="120,170,160,470" headerport="6" tailid="152685608543977472" tailport="6" /><Node id="152685032993193984" title="综合部传阅" shape="任务" left="400" top="260" width="120" height="60" /><Line id="152685133509689344" headerid="152684512937246720" bounds="450,200,20,60" headerport="4" tailid="152685032993193984" tailport="0" /><Line id="152685169891082240" headerid="152684512937246720" bounds="400,170,160,270" headerport="2" tailid="152684895835258880" tailport="2" /><Line id="152685211767013376" headerid="152684758027206656" bounds="220,320,60,120" headerport="4" tailid="152684895835258880" tailport="6" /><Line id="152685247745753088" headerid="152685032993193984" bounds="400,320,60,120" headerport="4" tailid="152684895835258880" tailport="2" /><Node id="152685491275431936" title="返回收文人" shape="任务" left="280" top="500" width="120" height="60" /><Line id="152685585135566848" headerid="152684895835258880" bounds="330,460,20,40" headerport="4" tailid="152685491275431936" tailport="0" /><Node id="152685608543977472" title="完成" shape="结束" background="#FF9D9D9D" borderbrush="#FF969696" left="300" top="600" width="80" height="60" /><Line id="152685622099968000" headerid="152685491275431936" bounds="330,560,20,40" headerport="4" tailid="152685608543977472" tailport="0" /></Sketch>', N'0', N'0', N'', N'5', N'2020-11-25 09:32:33', N'2021-08-24 15:45:54')
 GO
 
 
@@ -1362,8 +1363,8 @@ CREATE TABLE [dbo].[cm_wfi_atv] (
   [atvd_id] bigint NOT NULL,
   [status] tinyint NOT NULL,
   [inst_count] int NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1439,15 +1440,15 @@ CREATE TABLE [dbo].[cm_wfi_item] (
   [status] tinyint NOT NULL,
   [assign_kind] tinyint NOT NULL,
   [sender] nvarchar(32) NOT NULL,
-  [stime] datetime2 NOT NULL,
+  [stime] datetime NOT NULL,
   [is_accept] bit NOT NULL,
-  [accept_time] datetime2 NULL,
+  [accept_time] datetime NULL,
   [role_id] bigint NULL,
   [user_id] bigint NULL,
   [note] nvarchar(255) NULL,
   [dispidx] int NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1572,8 +1573,8 @@ CREATE TABLE [dbo].[cm_wfi_prc] (
   [name] nvarchar(255) NOT NULL,
   [status] tinyint NOT NULL,
   [dispidx] int NOT NULL,
-  [ctime] datetime2 NOT NULL,
-  [mtime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL,
+  [mtime] datetime NOT NULL
 )
 GO
 
@@ -1649,7 +1650,7 @@ CREATE TABLE [dbo].[cm_wfi_trs] (
   [src_atvi_id] bigint NOT NULL,
   [tgt_atvi_id] bigint NOT NULL,
   [is_rollback] bit NOT NULL,
-  [ctime] datetime2 NOT NULL
+  [ctime] datetime NOT NULL
 )
 GO
 
@@ -1770,7 +1771,7 @@ CREATE TABLE [dbo].[demo_crud] (
   [id] bigint NOT NULL,
   [name] nvarchar(255) NOT NULL,
   [dispidx] int NOT NULL,
-  [mtime] datetime2 NOT NULL,
+  [mtime] datetime NOT NULL,
   [enable_insert_event] bit NOT NULL,
   [enable_name_changed_event] bit NOT NULL,
   [enable_del_event] bit NOT NULL
@@ -1976,8 +1977,8 @@ CREATE TABLE [dbo].[demo_基础] (
   [禁止保存] bit NOT NULL,
   [禁止删除] bit NOT NULL,
   [值变事件] nvarchar(64) NOT NULL,
-  [创建时间] datetime2 NOT NULL,
-  [修改时间] datetime2 NOT NULL
+  [创建时间] datetime NOT NULL,
+  [修改时间] datetime NOT NULL
 )
 GO
 
@@ -2433,7 +2434,7 @@ CREATE TABLE [dbo].[fsm_file] (
   [size] bigint NOT NULL,
   [info] nvarchar(512) NULL,
   [uploader] bigint NOT NULL,
-  [ctime] datetime2 NOT NULL,
+  [ctime] datetime NOT NULL,
   [downloads] bigint NOT NULL
 )
 GO
@@ -2498,42 +2499,6 @@ GO
 -- ----------------------------
 -- Records of fsm_file
 -- ----------------------------
-
--- ----------------------------
--- Table structure for sequence
--- ----------------------------
-CREATE TABLE [dbo].[sequence] (
-  [id] nvarchar(64) NOT NULL,
-  [val] int NOT NULL
-)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'序列名称',
-'SCHEMA', N'dbo',
-'TABLE', N'sequence',
-'COLUMN', N'id'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'序列的当前值',
-'SCHEMA', N'dbo',
-'TABLE', N'sequence',
-'COLUMN', N'val'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'模拟Sequence',
-'SCHEMA', N'dbo',
-'TABLE', N'sequence'
-GO
-
-
--- ----------------------------
--- Records of sequence
--- ----------------------------
-INSERT INTO [dbo].[sequence] VALUES (N'cm_menu+dispidx', N'89'), (N'cm_option+dispidx', N'1031'), (N'cm_pub_post+dispidx', N'167'), (N'cm_wfd_prc+dispidx', N'11'), (N'cm_wfi_item+dispidx', N'176'), (N'cm_wfi_prc+dispidx', N'65'), (N'demo_crud+dispidx', N'84'), (N'demo_基础+序列', N'11')
-GO
 
 
 -- ----------------------------
@@ -3286,14 +3251,6 @@ GO
 
 
 -- ----------------------------
--- Primary Key structure for table sequence
--- ----------------------------
-ALTER TABLE [dbo].[sequence] ADD PRIMARY KEY CLUSTERED ([id])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
-GO
-
-
--- ----------------------------
 -- Foreign Keys structure for table cm_file_my
 -- ----------------------------
 ALTER TABLE [dbo].[cm_file_my] ADD CONSTRAINT [fk_file_my_parentid] FOREIGN KEY ([parent_id]) REFERENCES [dbo].[cm_file_my] ([id])
@@ -3476,4 +3433,16 @@ ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_rolei
 GO
 
 ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[demo_用户] ([id])
+GO
+
+-- ----------------------------
+-- 序列
+-- ----------------------------
+create sequence cm_menu_dispidx start with 90;
+create sequence cm_option_dispidx start with 1032;
+create sequence cm_wfd_prc_dispidx start with 12;
+create sequence cm_wfi_item_dispidx start with 177;
+create sequence cm_wfi_prc_dispidx start with 66;
+create sequence demo_crud_dispidx start with 86;
+create sequence demo_基础_序列 start with 12;
 GO

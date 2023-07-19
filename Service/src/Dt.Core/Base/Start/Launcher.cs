@@ -240,6 +240,8 @@ namespace Dt.Core
         {
             try
             {
+                Log.Information("初始化数据库模式");
+
                 // 部署在IIS进程内模式时创建 IISHttpServer
                 // 其他情况创建 KestrelServer
                 // 两种 Web服务器的配置在Startup.ConfigureServices

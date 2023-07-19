@@ -172,6 +172,7 @@ namespace Dt.Core
             if (Kit.EnableRabbitMQ)
                 RabbitMQCenter.Subscribe(p_app.ApplicationServices);
 
+            Log.Information($"连接{Kit.DefaultDbInfo.Type}库【{Kit.DefaultDbInfo.Key}】");
             DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
         }

@@ -2,19 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-07 创建
+* 日志: 2023-07-19 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Demo.Crud
 {
-    [Tbl("demo_cache_tbl1")]
+    [Tbl("DEMO_CACHE_TBL1")]
     public partial class CacheTbl1X : EntityX<CacheTbl1X>
     {
         #region 构造方法
@@ -27,9 +24,9 @@ namespace Demo.Crud
             string Phone = default,
             string Name = default)
         {
-            AddCell("ID", ID);
-            AddCell("Phone", Phone);
-            AddCell("Name", Name);
+            AddCell("id", ID);
+            AddCell("phone", Phone);
+            AddCell("name", Name);
             IsAdded = true;
         }
         #endregion
@@ -39,8 +36,8 @@ namespace Demo.Crud
         /// </summary>
         public string Phone
         {
-            get { return (string)this["Phone"]; }
-            set { this["Phone"] = value; }
+            get { return (string)this["phone"]; }
+            set { this["phone"] = value; }
         }
 
         /// <summary>
@@ -48,8 +45,8 @@ namespace Demo.Crud
         /// </summary>
         public string Name
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
     }
 }

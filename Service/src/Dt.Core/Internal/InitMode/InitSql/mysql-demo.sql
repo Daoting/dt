@@ -884,7 +884,7 @@ CREATE TABLE `sequence`  (
 -- ----------------------------
 -- Records of sequence
 -- ----------------------------
-INSERT INTO `sequence` VALUES ('cm_menu+dispidx', 89), ('cm_option+dispidx', 1031), ('cm_pub_post+dispidx', 167), ('cm_wfd_prc+dispidx', 11), ('cm_wfi_item+dispidx', 176), ('cm_wfi_prc+dispidx', 65), ('demo_crud+dispidx', 84), ('demo_基础+序列', 11);
+INSERT INTO `sequence` VALUES ('cm_menu_dispidx', 89), ('cm_option_dispidx', 1031), ('cm_wfd_prc_dispidx', 11), ('cm_wfi_item_dispidx', 176), ('cm_wfi_prc_dispidx', 65), ('demo_crud_dispidx', 84), ('demo_基础_序列', 11);
 
 -- ----------------------------
 -- Procedure structure for cm_参数_用户参数列表

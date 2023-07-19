@@ -109,7 +109,8 @@ namespace Dt.Core
                 await da.Exec(sql);
                 int cntTbl = await da.GetScalar<int>($"select count(*) from pg_tables where schemaname='public'");
                 int cntSp = await da.GetScalar<int>($"select count(*) from pg_proc p join pg_namespace n on p.pronamespace = n.oid where n.nspname='public' and p.prokind = 'p'");
-                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程");
+                int cntSeq = await da.GetScalar<int>($"select count(*) from pg_sequence");
+                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程, {cntSeq}个序列");
 
                 await da.Close(true);
             }

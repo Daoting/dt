@@ -654,11 +654,11 @@ namespace Dt.Core
 
             var model = await EntitySchema.Get(typeof(TEntity));
 
-            // 序列名称：表名+字段名，全小写
-            var seqName = model.Schema.Name + "+" + p_colName.ToLower();
+            // 序列名称：表名_字段名，全小写
+            var seqName = model.Schema.Name.ToLower() + "_" + p_colName.ToLower();
             int seq = 0;
 #if SERVER
-            seq = await Kit.DataAccess.GetScalar<int>($"select nextval('{seqName}')");
+            seq = await Kit.DataAccess.NewSequence(seqName);
 #else
             Throw.If(model.AccessInfo.Type == AccessType.Local, "sqlite本地库不支持序列功能！");
             seq = await Kit.Rpc<int>(

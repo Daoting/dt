@@ -42,7 +42,7 @@ namespace Dt.Core
         public override Task<int> NewSequence(string p_seqName)
         {
             if (!string.IsNullOrEmpty(p_seqName))
-                return GetScalar<int>($"select {p_seqName}.nextval from dual");
+                return GetScalar<int>($"select nextval('{p_seqName}')");
             return Task.FromResult(0);
         }
         #endregion

@@ -2,6 +2,7 @@
 Navicat 从 mysql 导出后修改：
 1. int2 部分转bool 其余保留，转bool的数据需要加''
 2. varchar(21000) varchar(65535)
+3. timestamp 转 timestamp(0)
 */
 
 
@@ -15,7 +16,7 @@ CREATE TABLE "public"."cm_file_my" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512) NOT NULL,
-  "ctime" timestamp NOT NULL,
+  "ctime" timestamp(0) NOT NULL,
   "user_id" int8 NOT NULL
 )
 ;
@@ -47,7 +48,7 @@ CREATE TABLE "public"."cm_file_pub" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512) NOT NULL,
-  "ctime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_file_pub"."id" IS '文件标识';
@@ -147,8 +148,8 @@ CREATE TABLE "public"."cm_menu" (
   "note" varchar(512) NOT NULL,
   "dispidx" int4 NOT NULL,
   "is_locked" bool NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_menu"."id" IS '菜单标识';
@@ -588,8 +589,8 @@ CREATE TABLE "public"."cm_params" (
   "name" varchar(255) NOT NULL,
   "value" varchar(255) NOT NULL,
   "note" varchar(255) NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_params"."id" IS '用户参数标识';
@@ -708,8 +709,8 @@ CREATE TABLE "public"."cm_rpt" (
   "name" varchar(64) NOT NULL,
   "define" varchar(65535) NOT NULL,
   "note" varchar(255) NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_rpt"."id" IS '报表标识';
@@ -767,8 +768,8 @@ CREATE TABLE "public"."cm_user" (
   "sex" int2 NOT NULL,
   "photo" varchar(255) NOT NULL,
   "expired" bool NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_user"."id" IS '用户标识';
@@ -828,7 +829,7 @@ CREATE TABLE "public"."cm_user_params" (
   "user_id" int8 NOT NULL,
   "param_id" int8 NOT NULL,
   "value" varchar(255) NOT NULL,
-  "mtime" timestamp NOT NULL
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_user_params"."user_id" IS '用户标识';
@@ -888,8 +889,8 @@ CREATE TABLE "public"."cm_wfd_atv" (
   "can_jump_into" bool NOT NULL,
   "trans_kind" int2 NOT NULL,
   "join_kind" int2 NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfd_atv"."id" IS '活动标识';
@@ -968,8 +969,8 @@ CREATE TABLE "public"."cm_wfd_prc" (
   "singleton" bool NOT NULL,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfd_prc"."id" IS '流程标识';
@@ -1039,8 +1040,8 @@ CREATE TABLE "public"."cm_wfi_atv" (
   "atvd_id" int8 NOT NULL,
   "status" int2 NOT NULL,
   "inst_count" int4 NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfi_atv"."id" IS '活动实例标识';
@@ -1082,15 +1083,15 @@ CREATE TABLE "public"."cm_wfi_item" (
   "status" int2 NOT NULL,
   "assign_kind" int2 NOT NULL,
   "sender" varchar(32) NOT NULL,
-  "stime" timestamp NOT NULL,
+  "stime" timestamp(0) NOT NULL,
   "is_accept" bool NOT NULL,
-  "accept_time" timestamp,
+  "accept_time" timestamp(0),
   "role_id" int8,
   "user_id" int8,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfi_item"."id" IS '工作项标识';
@@ -1140,8 +1141,8 @@ CREATE TABLE "public"."cm_wfi_prc" (
   "name" varchar(255) NOT NULL,
   "status" int2 NOT NULL,
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp NOT NULL,
-  "mtime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL,
+  "mtime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfi_prc"."id" IS '流程实例标识，同时为业务数据主键';
@@ -1170,7 +1171,7 @@ CREATE TABLE "public"."cm_wfi_trs" (
   "src_atvi_id" int8 NOT NULL,
   "tgt_atvi_id" int8 NOT NULL,
   "is_rollback" bool NOT NULL,
-  "ctime" timestamp NOT NULL
+  "ctime" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."cm_wfi_trs"."id" IS '迁移实例标识';
@@ -1297,7 +1298,7 @@ CREATE TABLE "public"."demo_crud" (
   "id" int8 NOT NULL,
   "name" varchar(255) NOT NULL,
   "dispidx" int4 NOT NULL,
-  "mtime" timestamp NOT NULL,
+  "mtime" timestamp(0) NOT NULL,
   "enable_insert_event" bool NOT NULL,
   "enable_name_changed_event" bool NOT NULL,
   "enable_del_event" bool NOT NULL
@@ -1471,8 +1472,8 @@ CREATE TABLE "public"."demo_基础" (
   "禁止保存" bool NOT NULL,
   "禁止删除" bool NOT NULL,
   "值变事件" varchar(64) NOT NULL,
-  "创建时间" timestamp NOT NULL,
-  "修改时间" timestamp NOT NULL
+  "创建时间" timestamp(0) NOT NULL,
+  "修改时间" timestamp(0) NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."demo_基础"."id" IS '标识';
@@ -1703,7 +1704,7 @@ CREATE TABLE "public"."fsm_file" (
   "size" numeric(20) NOT NULL,
   "info" varchar(512),
   "uploader" numeric(20) NOT NULL,
-  "ctime" timestamp NOT NULL,
+  "ctime" timestamp(0) NOT NULL,
   "downloads" numeric(20) NOT NULL
 )
 ;
@@ -1719,30 +1720,6 @@ COMMENT ON COLUMN "public"."fsm_file"."downloads" IS '下载次数';
 -- ----------------------------
 -- Records of fsm_file
 -- ----------------------------
-
--- ----------------------------
--- Table structure for sequence
--- ----------------------------
-CREATE TABLE "public"."sequence" (
-  "id" varchar(64) NOT NULL,
-  "val" int4 NOT NULL
-)
-;
-COMMENT ON COLUMN "public"."sequence"."id" IS '序列名称';
-COMMENT ON COLUMN "public"."sequence"."val" IS '序列的当前值';
-COMMENT ON TABLE "public"."sequence" IS '模拟Sequence';
-
--- ----------------------------
--- Records of sequence
--- ----------------------------
-INSERT INTO "public"."sequence" VALUES ('cm_menu+dispidx', 89);
-INSERT INTO "public"."sequence" VALUES ('cm_option+dispidx', 1031);
-INSERT INTO "public"."sequence" VALUES ('cm_pub_post+dispidx', 167);
-INSERT INTO "public"."sequence" VALUES ('cm_wfd_prc+dispidx', 11);
-INSERT INTO "public"."sequence" VALUES ('cm_wfi_item+dispidx', 176);
-INSERT INTO "public"."sequence" VALUES ('cm_wfi_prc+dispidx', 65);
-INSERT INTO "public"."sequence" VALUES ('demo_crud+dispidx', 84);
-INSERT INTO "public"."sequence" VALUES ('demo_基础+序列', 11);
 
 -- ----------------------------
 -- Indexes structure for table cm_file_my
@@ -2215,11 +2192,6 @@ CREATE UNIQUE INDEX "idx_fsm_file_path" ON "public"."fsm_file" USING btree (
 ALTER TABLE "public"."fsm_file" ADD PRIMARY KEY ("id");
 
 -- ----------------------------
--- Primary Key structure for table sequence
--- ----------------------------
-ALTER TABLE "public"."sequence" ADD PRIMARY KEY ("id");
-
--- ----------------------------
 -- Foreign Keys structure for table cm_file_my
 -- ----------------------------
 ALTER TABLE "public"."cm_file_my" ADD CONSTRAINT "fk_file_my_parentid" FOREIGN KEY ("parent_id") REFERENCES "public"."cm_file_my" ("id");
@@ -2336,3 +2308,14 @@ ALTER TABLE "public"."demo_小儿" ADD CONSTRAINT "fk_小儿_parentid" FOREIGN K
 -- ----------------------------
 ALTER TABLE "public"."demo_用户角色" ADD CONSTRAINT "fk_demo_用户角色_roleid" FOREIGN KEY ("role_id") REFERENCES "public"."demo_角色" ("id");
 ALTER TABLE "public"."demo_用户角色" ADD CONSTRAINT "fk_demo_用户角色_userid" FOREIGN KEY ("user_id") REFERENCES "public"."demo_用户" ("id");
+
+-- ----------------------------
+-- 序列
+-- ----------------------------
+create sequence cm_menu_dispidx start 90;
+create sequence cm_option_dispidx start 1032;
+create sequence cm_wfd_prc_dispidx start 12;
+create sequence cm_wfi_item_dispidx start 177;
+create sequence cm_wfi_prc_dispidx start 66;
+create sequence demo_crud_dispidx start 86;
+create sequence demo_基础_序列 start 12;

@@ -2,19 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-03 创建
+* 日志: 2023-07-19 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Demo.Crud
 {
-    [Tbl("demo_child_tbl2")]
+    [Tbl("DEMO_CHILD_TBL2")]
     public partial class ChildTbl2X : EntityX<ChildTbl2X>
     {
         #region 构造方法
@@ -27,9 +24,9 @@ namespace Demo.Crud
             long GroupID = default,
             string ItemName = default)
         {
-            AddCell("ID", ID);
-            AddCell("GroupID", GroupID);
-            AddCell("ItemName", ItemName);
+            AddCell("id", ID);
+            AddCell("group_id", GroupID);
+            AddCell("item_name", ItemName);
             IsAdded = true;
         }
         #endregion
@@ -39,8 +36,8 @@ namespace Demo.Crud
         /// </summary>
         public long GroupID
         {
-            get { return (long)this["GroupID"]; }
-            set { this["GroupID"] = value; }
+            get { return (long)this["group_id"]; }
+            set { this["group_id"] = value; }
         }
 
         /// <summary>
@@ -48,8 +45,8 @@ namespace Demo.Crud
         /// </summary>
         public string ItemName
         {
-            get { return (string)this["ItemName"]; }
-            set { this["ItemName"] = value; }
+            get { return (string)this["item_name"]; }
+            set { this["item_name"] = value; }
         }
     }
 }

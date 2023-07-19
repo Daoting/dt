@@ -16,6 +16,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 生成Entity代码3个文件，tbl.cs sql.cs .cs
 * 生成DomainSvc类2个文件，sql.cs .cs
 * service.json将单体模式和初始化库合并，cm配置增加导出模型库设置
+* 序列名称：表名_字段名，4库不同的取序列值方法，时间类型统一精确到秒
 
 ### 功能
 * 增加EntityX.GetCount方法

@@ -2,14 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-08 创建
+* 日志: 2023-07-19 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Demo.Crud
@@ -17,7 +14,7 @@ namespace Demo.Crud
     /// <summary>
     /// 基础增删改
     /// </summary>
-    [Tbl("demo_crud", "cm")]
+    [Tbl("DEMO_CRUD", "demo")]
     public partial class CrudX : EntityX<CrudX>
     {
         #region 构造方法
@@ -34,13 +31,13 @@ namespace Demo.Crud
             bool EnableNameChangedEvent = default,
             bool EnableDelEvent = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name", Name);
-            AddCell("Dispidx", Dispidx);
-            AddCell("Mtime", Mtime);
-            AddCell("EnableInsertEvent", EnableInsertEvent);
-            AddCell("EnableNameChangedEvent", EnableNameChangedEvent);
-            AddCell("EnableDelEvent", EnableDelEvent);
+            AddCell("id", ID);
+            AddCell("name", Name);
+            AddCell("dispidx", Dispidx);
+            AddCell("mtime", Mtime);
+            AddCell("enable_insert_event", EnableInsertEvent);
+            AddCell("enable_name_changed_event", EnableNameChangedEvent);
+            AddCell("enable_del_event", EnableDelEvent);
             IsAdded = true;
         }
         #endregion
@@ -50,8 +47,8 @@ namespace Demo.Crud
         /// </summary>
         public string Name
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
 
         /// <summary>
@@ -59,8 +56,8 @@ namespace Demo.Crud
         /// </summary>
         public int Dispidx
         {
-            get { return (int)this["Dispidx"]; }
-            set { this["Dispidx"] = value; }
+            get { return (int)this["dispidx"]; }
+            set { this["dispidx"] = value; }
         }
 
         /// <summary>
@@ -68,8 +65,8 @@ namespace Demo.Crud
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["Mtime"]; }
-            set { this["Mtime"] = value; }
+            get { return (DateTime)this["mtime"]; }
+            set { this["mtime"] = value; }
         }
 
         /// <summary>
@@ -77,8 +74,8 @@ namespace Demo.Crud
         /// </summary>
         public bool EnableInsertEvent
         {
-            get { return (bool)this["EnableInsertEvent"]; }
-            set { this["EnableInsertEvent"] = value; }
+            get { return (bool)this["enable_insert_event"]; }
+            set { this["enable_insert_event"] = value; }
         }
 
         /// <summary>
@@ -86,8 +83,8 @@ namespace Demo.Crud
         /// </summary>
         public bool EnableNameChangedEvent
         {
-            get { return (bool)this["EnableNameChangedEvent"]; }
-            set { this["EnableNameChangedEvent"] = value; }
+            get { return (bool)this["enable_name_changed_event"]; }
+            set { this["enable_name_changed_event"] = value; }
         }
 
         /// <summary>
@@ -95,8 +92,8 @@ namespace Demo.Crud
         /// </summary>
         public bool EnableDelEvent
         {
-            get { return (bool)this["EnableDelEvent"]; }
-            set { this["EnableDelEvent"] = value; }
+            get { return (bool)this["enable_del_event"]; }
+            set { this["enable_del_event"] = value; }
         }
     }
 }
