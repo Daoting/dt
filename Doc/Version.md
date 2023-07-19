@@ -28,6 +28,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * TableCol记录所属TableSchema
 * VS扩展实体类选择表时增加“表名不包括前缀”选项
 * oracle插入更新时bool类型自动转换
+* postgresql分页查询功能，根据id查询数据不能为string
 
 ### Bug修改
 

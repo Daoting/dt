@@ -36,7 +36,7 @@ namespace Dt.Core
 
         protected override string GetPageSql(int p_starRow, int p_pageSize, string p_sql)
         {
-            return $"select * from (select a.*,rownum rn from ({p_sql}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
+            return $"select * from ({p_sql}) a limit {p_pageSize} offset {p_starRow}";
         }
 
         public override Task<int> NewSequence(string p_seqName)

@@ -367,10 +367,7 @@ namespace Dt.Core
             List<Dict> ls = new List<Dict>();
             foreach (var id in p_ids)
             {
-                if (id != null && !string.IsNullOrEmpty(id.ToString()))
-                {
-                    ls.Add(new Dict { { "id", id.ToString() } });
-                }
+                ls.Add(new Dict { { "id", id } });
             }
             if (ls.Count == 0)
                 return null;

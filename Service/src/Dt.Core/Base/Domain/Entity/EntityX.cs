@@ -363,21 +363,21 @@ namespace Dt.Core
         /// <returns>返回实体对象或null</returns>
         public static async Task<TEntity> GetByID(object p_id)
         {
-            if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
+            if (p_id == null)
                 return default(TEntity);
 
             if (_isVirEntity)
             {
                 // 虚拟实体不涉及缓存
                 var vm = await VirEntitySchema.Get(typeof(TEntity));
-                return await GetByKeyInternal(vm.PrimaryKeyName, p_id.ToString());
+                return await GetByKeyInternal(vm.PrimaryKeyName, p_id);
             }
 
             var model = await EntitySchema.Get(typeof(TEntity));
             if (model.Schema.PrimaryKey.Count != 1)
                 Throw.Msg("根据主键获得实体对象时仅支持单主键！");
 
-            return await GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id.ToString());
+            return await GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id);
         }
 
         /// <summary>
@@ -386,9 +386,9 @@ namespace Dt.Core
         /// <param name="p_keyName">主键或唯一索引列名</param>
         /// <param name="p_keyVal">键值</param>
         /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetByKey(string p_keyName, string p_keyVal)
+        public static Task<TEntity> GetByKey(string p_keyName, object p_keyVal)
         {
-            if (string.IsNullOrWhiteSpace(p_keyName) || string.IsNullOrWhiteSpace(p_keyVal))
+            if (string.IsNullOrWhiteSpace(p_keyName) || p_keyVal == null)
                 Throw.Msg("GetByKey查询时主键或唯一索引不可为空！");
 
             return GetByKeyInternal(p_keyName, p_keyVal);
@@ -443,14 +443,14 @@ namespace Dt.Core
             if (_isVirEntity)
                 Throw.Msg("虚拟实体不支持子实体列表！");
 
-            if (p_id == null || string.IsNullOrWhiteSpace(p_id.ToString()))
+            if (p_id == null)
                 return default;
 
             var model = await EntitySchema.Get(typeof(TEntity));
             if (model.Schema.PrimaryKey.Count != 1)
                 Throw.Msg("根据主键获得实体对象时仅支持单主键！");
 
-            var parent = await GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id.ToString());
+            var parent = await GetByKeyInternal(model.Schema.PrimaryKey[0].Name, p_id);
             if (parent == null)
                 return default;
 
@@ -488,9 +488,9 @@ namespace Dt.Core
         /// <param name="p_keyName">主键或唯一索引列名，确保缓存中键名的唯一</param>
         /// <param name="p_keyVal">键值</param>
         /// <returns></returns>
-        public static async Task<TEntity> GetFromCacheFirst(string p_keyName, string p_keyVal)
+        public static async Task<TEntity> GetFromCacheFirst(string p_keyName, object p_keyVal)
         {
-            if (string.IsNullOrWhiteSpace(p_keyName) || string.IsNullOrWhiteSpace(p_keyVal))
+            if (string.IsNullOrWhiteSpace(p_keyName) || p_keyVal == null)
                 Throw.Msg("GetFromCacheFirst查询时主键或唯一索引不可为空！");
 
             if (_isVirEntity)
@@ -504,7 +504,7 @@ namespace Dt.Core
 
             // 首先从缓存中获取，有则直接返回
             var cacher = new EntityCacher(model);
-            TEntity entity = await cacher.Get<TEntity>(p_keyName, p_keyVal);
+            TEntity entity = await cacher.Get<TEntity>(p_keyName, p_keyVal.ToString());
 
             if (entity == null)
             {
@@ -512,12 +512,12 @@ namespace Dt.Core
                 entity = await GetByKeyInternal(p_keyName, p_keyVal);
                 // 并将查询结果添加到缓存以备下次使用
                 if (entity != null)
-                    await cacher.Cache(entity, p_keyName, p_keyVal);
+                    await cacher.Cache(entity, p_keyName, p_keyVal.ToString());
             }
             return entity;
         }
 
-        static async Task<TEntity> GetByKeyInternal(string p_keyName, string p_keyVal)
+        static async Task<TEntity> GetByKeyInternal(string p_keyName, object p_keyVal)
         {
             // 不再校验
             // if (string.IsNullOrWhiteSpace(p_keyName) || string.IsNullOrWhiteSpace(p_keyVal))

@@ -36,6 +36,7 @@ namespace Demo.Crud
             if (x != null)
             {
                 x.Name = _rnd.Next(1000).ToString();
+                x.EnableDelEvent = !x.EnableDelEvent;
                 return await x.Save();
             }
             return false;
