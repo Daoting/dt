@@ -11,7 +11,7 @@
 
 namespace $rootnamespace$
 {
-    partial class $clsname$ : DomainSvc<$clsname$, AtSvc.Info>
+    public partial class $clsname$ : DomainSvc<$clsname$, AtSvc.Info>
     {
         
     }

@@ -11,7 +11,7 @@
 
 namespace $rootnamespace$
 {
-    partial class $clsname$
+    public partial class $clsname$
     {
         
     }
