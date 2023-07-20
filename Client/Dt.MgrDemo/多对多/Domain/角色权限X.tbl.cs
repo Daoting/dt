@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-23 创建
+* 日志: 2023-07-20 创建
 ******************************************************************************/
 #endregion
 
@@ -26,8 +26,8 @@ namespace Dt.MgrDemo.多对多
             long RoleID,
             long PrvID)
         {
-            AddCell("RoleID", RoleID);
-            AddCell("PrvID", PrvID);
+            AddCell("role_id", RoleID);
+            AddCell("prv_id", PrvID);
             IsAdded = true;
         }
         #endregion
@@ -37,8 +37,8 @@ namespace Dt.MgrDemo.多对多
         /// </summary>
         public long RoleID
         {
-            get { return (long)this["RoleID"]; }
-            set { this["RoleID"] = value; }
+            get { return (long)this["role_id"]; }
+            set { this["role_id"] = value; }
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace Dt.MgrDemo.多对多
         /// </summary>
         public long PrvID
         {
-            get { return (long)this["PrvID"]; }
-            set { this["PrvID"] = value; }
+            get { return (long)this["prv_id"]; }
+            set { this["prv_id"] = value; }
         }
 
         new public long ID { get { return -1; } }

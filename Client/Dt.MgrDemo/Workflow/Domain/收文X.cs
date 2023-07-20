@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.MgrDemo
+namespace Dt.MgrDemo.Workflow
 {
     public partial class 收文X
     {

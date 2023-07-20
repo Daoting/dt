@@ -32,11 +32,11 @@ namespace Demo.Crud
         {
         }
 
-        [ChildX("ParentID")]
+        [ChildX("parent_id")]
         public Table<ChildTbl1X> Tbl1 { get; set; }
 
 
-        [ChildX("GroupID")]
+        [ChildX("group_id")]
         public Table<ChildTbl2X> Tbl2 { get; set; }
     }
 }

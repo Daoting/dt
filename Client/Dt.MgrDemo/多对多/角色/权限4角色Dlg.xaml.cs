@@ -24,7 +24,7 @@ namespace Dt.MgrDemo.多对多
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await 权限X.Query($"where not exists ( select PrvID from demo_角色权限 b where a.ID = b.PrvID and RoleID={p_releatedID} )");
+            _lv.Data = await 权限X.Query($"where not exists ( select prv_id from demo_角色权限 b where a.ID = b.prv_id and role_id={p_releatedID} )");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

@@ -7,13 +7,13 @@
 
     <a:Tab.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="ParentID" />
+            <a:Col ID="parent_id" />
             <a:Col ID="大儿名" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
             <StackPanel Padding="10">
-                <a:Dot ID="ParentID" />
+                <a:Dot ID="parent_id" />
                 <a:Dot ID="大儿名" />
             </StackPanel>
         </DataTemplate>

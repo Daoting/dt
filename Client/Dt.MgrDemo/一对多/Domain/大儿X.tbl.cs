@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-22 创建
+* 日志: 2023-07-20 创建
 ******************************************************************************/
 #endregion
 
@@ -24,8 +24,8 @@ namespace Dt.MgrDemo.一对多
             long ParentID = default,
             string 大儿名 = default)
         {
-            AddCell("ID", ID);
-            AddCell("ParentID", ParentID);
+            AddCell("id", ID);
+            AddCell("parent_id", ParentID);
             AddCell("大儿名", 大儿名);
             IsAdded = true;
         }
@@ -36,8 +36,8 @@ namespace Dt.MgrDemo.一对多
         /// </summary>
         public long ParentID
         {
-            get { return (long)this["ParentID"]; }
-            set { this["ParentID"] = value; }
+            get { return (long)this["parent_id"]; }
+            set { this["parent_id"] = value; }
         }
 
         /// <summary>

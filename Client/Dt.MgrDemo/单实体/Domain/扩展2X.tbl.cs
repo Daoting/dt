@@ -2,14 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-17 创建
+* 日志: 2023-07-20 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.MgrDemo.单实体
@@ -28,7 +25,7 @@ namespace Dt.MgrDemo.单实体
             bool 禁止删除 = default,
             string 值变事件 = default)
         {
-            AddCell("ID", ID);
+            AddCell("id", ID);
             AddCell("扩展2名称", 扩展2名称);
             AddCell("禁止删除", 禁止删除);
             AddCell("值变事件", 值变事件);

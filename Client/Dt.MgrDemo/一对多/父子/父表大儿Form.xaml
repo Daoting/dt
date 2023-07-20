@@ -14,7 +14,7 @@
     </a:Tab.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CNum ID="ParentID" />
+        <a:CNum ID="parent_id" />
         <a:CText ID="大儿名" />
     </a:Fv>
 </a:Tab>

@@ -2,14 +2,11 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-02-03 创建
+* 日志: 2023-07-19 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.MgrDemo.Crud
@@ -26,8 +23,8 @@ namespace Dt.MgrDemo.Crud
             long ID,
             string Name3 = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name3", Name3);
+            AddCell("id", ID);
+            AddCell("name3", Name3);
             IsAdded = true;
         }
         #endregion
@@ -37,8 +34,8 @@ namespace Dt.MgrDemo.Crud
         /// </summary>
         public string Name3
         {
-            get { return (string)this["Name3"]; }
-            set { this["Name3"] = value; }
+            get { return (string)this["name3"]; }
+            set { this["name3"] = value; }
         }
     }
 }

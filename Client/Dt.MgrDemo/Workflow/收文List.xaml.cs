@@ -11,7 +11,7 @@ using Dt.Base;
 using Dt.Mgr;
 #endregion
 
-namespace Dt.MgrDemo
+namespace Dt.MgrDemo.Workflow
 {
     [WfList("收文样例")]
     public partial class 收文List : Win

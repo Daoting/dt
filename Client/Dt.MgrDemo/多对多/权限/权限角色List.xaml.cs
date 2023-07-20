@@ -35,7 +35,7 @@ namespace Dt.MgrDemo.多对多
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await 角色X.Query($"where exists ( select RoleID from demo_角色权限 b where a.ID = b.RoleID and PrvID={_releatedID} )");
+                _lv.Data = await 角色X.Query($"where exists ( select role_id from demo_角色权限 b where a.ID = b.role_id and prv_id={_releatedID} )");
             }
             else
             {

@@ -2,17 +2,14 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-01-30 创建
+* 日志: 2023-07-20 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.MgrDemo
+namespace Dt.MgrDemo.Workflow
 {
     [Tbl("demo_收文")]
     public partial class 收文X : EntityX<收文X>
@@ -33,7 +30,7 @@ namespace Dt.MgrDemo
             string 综合部经理意见 = default,
             DateTime 收文完成时间 = default)
         {
-            AddCell("ID", ID);
+            AddCell("id", ID);
             AddCell("来文单位", 来文单位);
             AddCell("来文时间", 来文时间);
             AddCell("密级", 密级);
