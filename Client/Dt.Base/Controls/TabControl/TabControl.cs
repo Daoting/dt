@@ -420,6 +420,22 @@ namespace Dt.Base
             SelectedIndex = -1;
         }
 
+        void OnPopResized(object sender, EventArgs e)
+        {
+            TabItem item = SelectedItem;
+            if (item == null)
+                return;
+
+            if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
+            {
+                item.PopWidth = _dlg.Width;
+            }
+            else
+            {
+                item.PopHeight = _dlg.Height;
+            }
+        }
+
         /// <summary>
         /// 初始选择状态，优先级：SelectedIndex > SelectedItem > TabItem.IsSelected
         /// </summary>
@@ -757,7 +773,7 @@ namespace Dt.Base
 
         void CreateDlg()
         {
-            _dlg = new Dlg() { ClipElement = _itemsPanel, PlacementTarget = _itemsPanel, Resizeable = false, HideTitleBar = true };
+            _dlg = new Dlg() { ClipElement = _itemsPanel, PlacementTarget = _itemsPanel, HideTitleBar = true };
             _dlg.Content = LoadDlgContent();
             switch (TabStripPlacement)
             {
@@ -777,6 +793,7 @@ namespace Dt.Base
                     break;
             }
             _dlg.Closed += OnPopClosed;
+            _dlg.Resized += OnPopResized;
         }
 
         protected virtual object LoadDlgContent()

@@ -210,6 +210,11 @@ namespace Dt.Base
         /// 对话框关闭后事件
         /// </summary>
         public event EventHandler<bool> Closed;
+
+        /// <summary>
+        /// 拖拽调整大小后事件
+        /// </summary>
+        public event EventHandler Resized;
         #endregion
 
         #region 属性
@@ -1104,6 +1109,9 @@ namespace Dt.Base
                 Top = Canvas.GetTop(_bdResize);
                 UITree.RemoveDlgResizeFlag(_bdResize);
                 _bdResize = null;
+
+                // 触发事件
+                Resized?.Invoke(this, EventArgs.Empty);
             }
         }
 

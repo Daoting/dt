@@ -36,6 +36,7 @@
             </a:Tab>
             <a:Tab Title="左上二" />
             <a:Tab Title="左停靠" IsPinned="False" PopWidth="300" />
+            <a:Tab Title="左停靠宽" IsPinned="False" PopWidth="800" />
         </a:Tabs>
         <a:Tabs InitHeight="300">
             <a:Tab Title="左下一" />
