@@ -939,8 +939,25 @@ namespace Dt.Base
                     }
                     else
                     {
+                        // 该区无已固定的停靠
                         Pane dockItem = new Pane();
                         dockItem.Pos = dockState;
+
+                        // 停靠后面板尺寸按照Tab浮动时展开的尺寸
+                        switch (dockItem.Pos)
+                        {
+                            case PanePosition.Right:
+                            case PanePosition.Left:
+                                if (item.ReadLocalValue(TabItem.PopWidthProperty) != DependencyProperty.UnsetValue)
+                                    dockItem.InitWidth = item.PopWidth;
+                                break;
+                            case PanePosition.Bottom:
+                            case PanePosition.Top:
+                                if (item.ReadLocalValue(TabItem.PopHeightProperty) != DependencyProperty.UnsetValue)
+                                    dockItem.InitHeight = item.PopHeight;
+                                break;
+                        }
+
                         sect = new Tabs();
                         dockItem.Items.Add(sect);
                         sect.Items.Add(item);

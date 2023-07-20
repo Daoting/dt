@@ -80,8 +80,9 @@ namespace Dt.Base.Docking
         internal void Pin(Tab p_tab)
         {
             Items.Remove(p_tab);
-            p_tab.ClearValue(TabItem.PopWidthProperty);
-            p_tab.ClearValue(TabItem.PopHeightProperty);
+            // 需要保留历史浮动尺寸，可能再次浮动
+            //p_tab.ClearValue(TabItem.PopWidthProperty);
+            //p_tab.ClearValue(TabItem.PopHeightProperty);
         }
 
         /// <summary>
