@@ -49,7 +49,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         /// <param name="p_showVeil"></param>
         /// <returns></returns>
-        public static Dlg Busy(this FrameworkElement p_target, string p_msg, bool p_showVeil = true)
+        public static Dlg Busy(this FrameworkElement p_target, string p_msg = null, bool p_showVeil = true)
         {
             Dlg dlg = new Dlg
             {
