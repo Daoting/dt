@@ -43,6 +43,53 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 显示等待对话框
+        /// </summary>
+        /// <param name="p_target"></param>
+        /// <param name="p_msg"></param>
+        /// <param name="p_showVeil"></param>
+        /// <returns></returns>
+        public static Dlg Busy(this FrameworkElement p_target, string p_msg, bool p_showVeil = true)
+        {
+            Dlg dlg = new Dlg
+            {
+                WinPlacement = DlgPlacement.TargetOverlap,
+                PhonePlacement = DlgPlacement.TargetOverlap,
+                PlacementTarget = p_target,
+                HideTitleBar = true,
+                IsPinned = true,
+                Background = null,
+                BorderThickness = new Thickness(0),
+                Resizeable = false,
+                AutoAdjustPosition = false,
+            };
+
+            Grid grid = new Grid();
+            if (p_showVeil)
+                grid.Background = Res.深暗遮罩;
+
+            var sp = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            sp.Children.Add(new ProgressRing { Height = 60, Width = 60, IsActive = true, HorizontalAlignment = HorizontalAlignment.Center });
+            sp.Children.Add(new Border
+            {
+                Background = Res.主蓝,
+                Margin = new Thickness(0, 10, 0, 0),
+                Padding = new Thickness(10),
+                Child = new TextBlock
+                {
+                    Text = string.IsNullOrEmpty(p_msg) ? "请稍等..." : p_msg,
+                    Foreground = Res.WhiteBrush,
+                    TextWrapping = TextWrapping.Wrap,
+                },
+            });
+            grid.Children.Add(sp);
+            
+            dlg.Content = grid;
+            dlg.Show();
+            return dlg;
+        }
+
+        /// <summary>
         /// 显示提示信息
         /// </summary>
         /// <param name="p_target"></param>

@@ -49,7 +49,7 @@ namespace Dt.UIDemo
                 new Nav("窗口布局", typeof(WinLayout)) { Desc = "只Win模式：窗口内的所有Tab可拖动并自动停靠" },
                 new Nav("窗口内导航", typeof(WinNavi)) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
                 new Nav("Tab区域内导航", typeof(TabNavi)) { Desc = "导航时支持带遮罩的模式视图、导航参数、导航结果" },
-                new Nav("对话框", typeof(DlgDemo)) { To = NavTarget.WinMain, Desc = "模拟传统对话框" },
+                new Nav("对话框", typeof(DlgHome)) { Desc = "模拟传统对话框" },
                 new Nav("提示信息", typeof(NotifyDemo)) { To = NavTarget.WinMain, Desc = "普通信息、警告信息、Toast通知、后台任务" },
             };
             group.Title = "框架结构";

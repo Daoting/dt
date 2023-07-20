@@ -1,0 +1,21 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.SysDlgDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <StackPanel Orientation="Horizontal">
+            <Button Content="确认对话框" Click="OnClicked1" />
+            <Button Content="错误对话框" Click="OnClicked2" />
+        </StackPanel>
+        <a:CBar Title="提示信息对话框" />
+        <TextBox x:Name="_tb" PlaceholderText="文本框内容含4出警告框" TextChanged="OnTextChanged" />
+        <Button x:Name="_btn" Content="显示消息框" Click="OnMsgClick" />
+
+        <a:CBar Title="其它" />
+        <Button Content="内嵌单个Tab" Click="OnSingle" />
+        <Button Content="内嵌多个Tab" Click="OnMulti" />
+        <Button Content="椭圆形对话框" Click="OnClicked4" />
+    </a:Fv>
+</a:Win>
