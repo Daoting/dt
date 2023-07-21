@@ -11,7 +11,7 @@
 
 namespace Dt.Mgr.Rbac
 {
-    class RbacDs : DomainSvc<RbacDs, AtCm.Info>
+    partial class RbacDs : DomainSvc<RbacDs, AtCm.Info>
     {
         #region 用户分组
         public static Task<bool> AddUserGroups(long p_userID, List<long> p_groupIDs)
@@ -146,6 +146,11 @@ namespace Dt.Mgr.Rbac
             }
             return false;
         }
+
+        public static Task<List<long>> GetUsersOfRoles(List<long> p_roleIDs)
+        {
+            return _da.FirstCol<long>(string.Format(Sql角色列表的用户, string.Join(',', p_roleIDs)));
+        }
         #endregion
 
         #region 分组角色
@@ -209,7 +214,7 @@ namespace Dt.Mgr.Rbac
             var suc = p_isRemove ? await ls.Delete(false) : await ls.Save(false);
             if (suc)
             {
-                var users = await _da.FirstCol<long>("cm_分组_分组列表的用户", new { p_groupid = string.Join(',', p_groupIDs) });
+                var users = await _da.FirstCol<long>(string.Format(Sql分组列表的用户, string.Join(',', p_groupIDs)));
                 DelUserDataVer(users);
                 Kit.Msg($"{(p_isRemove ? "移除" : "增加")}{ls.Count}个分组");
                 return true;
@@ -421,7 +426,7 @@ namespace Dt.Mgr.Rbac
             }
             else
             {
-                ls = await _da.FirstCol<long>("cm_用户_角色列表的用户", new { p_roleid = string.Join(',', p_roleIDs) });
+                ls = await GetUsersOfRoles(p_roleIDs);
             }
 
             var keys = new List<string>();

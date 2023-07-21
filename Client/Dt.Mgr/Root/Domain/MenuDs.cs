@@ -16,7 +16,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 当前登录用户相关的菜单
     /// </summary>
-    class MenuDs : DomainSvc<MenuDs, AtCm.Info>
+    partial class MenuDs : DomainSvc<MenuDs, AtCm.Info>
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
@@ -312,7 +312,7 @@ namespace Dt.Mgr
             }
 
             // 更新用户菜单，缓存新版本号
-            var ls = await _da.FirstCol<long>("cm_用户_可访问的菜单", new { p_userid = Kit.UserID });
+            var ls = await _da.FirstCol<long>(string.Format(Sql用户可访问的菜单, Kit.UserID));
 
             // 清空旧数据
             await AtLob.Exec("delete from UserMenu");

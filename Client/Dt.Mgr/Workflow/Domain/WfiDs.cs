@@ -648,7 +648,7 @@ namespace Dt.Mgr.Workflow
 
             if (roles.Count > 0)
             {
-                var ls = await _da.FirstCol<long>("cm_用户_角色列表的用户", new { p_roleid = string.Join(',', roles) });
+                var ls = await RbacDs.GetUsersOfRoles(roles);
                 if (ls.Count > 0)
                 {
                     users.UnionWith(ls);

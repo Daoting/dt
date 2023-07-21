@@ -26,6 +26,11 @@ namespace Dt.Mgr.Rbac
                 Note: Note);
         }
 
+        public static Task<Table<PermissionX>> GetUserPermission(long p_userID)
+        {
+            return Query(string.Format(Sql用户具有的权限, p_userID));
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>

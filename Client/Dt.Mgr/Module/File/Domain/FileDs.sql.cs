@@ -13,7 +13,7 @@ namespace Dt.Mgr.Module
 {
     partial class FileDs
     {
-        const string _搜索所有文件 = @"
+        const string Sql搜索所有文件 = @"
 select {2} * from
 (
 select info from cm_file_pub
@@ -30,7 +30,7 @@ where
 {3}
 ";
 
-        const string _搜索扩展名文件 = @"
+        const string Sql搜索扩展名文件 = @"
 select {4} * from
 (
 select info from cm_file_pub

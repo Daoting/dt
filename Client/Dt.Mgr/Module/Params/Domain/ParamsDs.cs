@@ -11,7 +11,7 @@
 
 namespace Dt.Mgr.Module
 {
-    class ParamsDs : DomainSvc<ParamsDs, AtCm.Info>
+    partial class ParamsDs : DomainSvc<ParamsDs, AtCm.Info>
     {
         public static async Task<bool> SaveParams(string p_paramID, string p_value)
         {
@@ -41,7 +41,7 @@ namespace Dt.Mgr.Module
 
         public static async Task<T> GetParamByID<T>(long p_paramID)
         {
-            var ls = await _da.FirstCol<string>("cm_参数_用户参数值ByID", new { p_userid= Kit.UserID, p_paramid = p_paramID });
+            var ls = await _da.FirstCol<string>(string.Format(Sql用户参数值byid, Kit.UserID, p_paramID));
             if (ls == null || ls.Count == 0)
                 Throw.Msg($"用户参数[{p_paramID}]不存在！");
 
@@ -52,13 +52,18 @@ namespace Dt.Mgr.Module
 
         public static async Task<T> GetParamByName<T>(string p_paramName)
         {
-            var ls = await _da.FirstCol<string>("cm_参数_用户参数值ByName", new { p_userid = Kit.UserID, p_name = p_paramName });
+            var ls = await _da.FirstCol<string>(string.Format(Sql用户参数值byname, Kit.UserID, p_paramName));
             if (ls == null || ls.Count == 0)
                 Throw.Msg($"用户参数[{p_paramName}]不存在！");
 
             if (string.IsNullOrEmpty(ls[0]))
                 return default;
             return ls[0].To<T>();
+        }
+
+        public static Task<Table> GetUserParams(long p_userID)
+        {
+            return _da.Query(string.Format(Sql用户参数列表, p_userID));
         }
     }
 }

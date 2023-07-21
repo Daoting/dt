@@ -23,7 +23,7 @@ namespace Dt.Mgr.Rbac
 
         public async void Show(long p_userID)
         {
-            _lv.Data = await AtCm.Query("cm_用户_可访问的菜单", new { p_userid = p_userID });
+            _lv.Data = await AtCm.Query(string.Format(MenuDs.Sql用户可访问的菜单, p_userID));
 
             if (!Kit.IsPhoneUI)
             {

@@ -23,15 +23,15 @@ namespace Dt.Mgr.Module
                 switch (dbType)
                 {
                     case DatabaseType.Oracle:
-                        sql = string.Format(_搜索所有文件, $"%{p_name}%", Kit.UserID, "", "where rownum<50");
+                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "where rownum<50");
                         break;
 
                     case DatabaseType.SqlServer:
-                        sql = string.Format(_搜索所有文件, $"%{p_name}%", Kit.UserID, "top 50", "");
+                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "top 50", "");
                         break;
 
                     default:
-                        sql = string.Format(_搜索所有文件, $"%{p_name}%", Kit.UserID, "", "limit 50");
+                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "limit 50");
                         break;
                 }
                 return await _da.Query(sql);
@@ -40,19 +40,19 @@ namespace Dt.Mgr.Module
             switch (dbType)
             {
                 case DatabaseType.Oracle:
-                    sql = string.Format(_搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "instr", "", "where rownum<50");
+                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "instr", "", "where rownum<50");
                     break;
 
                 case DatabaseType.SqlServer:
-                    sql = string.Format(_搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "charindex", "top 50", "");
+                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "charindex", "top 50", "");
                     break;
 
                 case DatabaseType.PostgreSql:
-                    sql = string.Format(_搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "strpos", "", "limit 50");
+                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "strpos", "", "limit 50");
                     break;
 
                 default:
-                    sql = string.Format(_搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "locate", "", "limit 50");
+                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "locate", "", "limit 50");
                     break;
             }
             return await _da.Query(sql);

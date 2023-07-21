@@ -23,7 +23,7 @@ namespace Dt.Mgr.Module
 
         async void LoadVals()
         {
-            var tbl = await AtCm.Query("cm_参数_用户参数列表", new { p_userid = Kit.UserID });
+            var tbl = await ParamsDs.GetUserParams(Kit.UserID);
             if (tbl == null || tbl.Count == 0)
                 return;
 
