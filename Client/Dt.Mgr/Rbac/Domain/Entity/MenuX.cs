@@ -45,7 +45,7 @@ namespace Dt.Mgr.Rbac
 
         public static Task<MenuX> GetWithParentName(long p_id)
         {
-            return First($"select a.*,b.name parentname from cm_menu a left join cm_menu b on a.parentid=b.id where a.id={p_id}");
+            return First($"select a.*,b.name parentname from cm_menu a left join cm_menu b on a.parent_id=b.id where a.id={p_id}");
         }
 
         protected override void InitHook()
@@ -63,12 +63,12 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统菜单无法删除！");
                 if (IsGroup)
                 {
-                    int count = await GetCount($"where parentid={ID}");
+                    int count = await GetCount($"where parent_id={ID}");
                     Throw.If(count > 0, "含子菜单无法删除！");
                 }
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_menu有级联删除
-                var ls = await AtCm.FirstCol<long>($"select id from cm_role a where exists (select roleid from cm_role_menu b where a.id=b.roleid and menuid={ID})");
+                var ls = await AtCm.FirstCol<long>($"select id from cm_role a where exists (select role_id from cm_role_menu b where a.id=b.role_id and menu_id={ID})");
                 RbacDs.DelRoleDataVer(ls, RbacDs.PrefixMenu);
             });
         }

@@ -17,7 +17,7 @@
                 <wf:AtvRole x:Name="_atvRole" />
             </a:CBar>
             <a:CBar Title="其它"/>
-            <a:CList ID="transkind" Title="后续迁移方式" Ex="EnumData#Dt.Mgr.Workflow.WfdAtvTransKind,Dt.Mgr" />
+            <a:CList ID="trans_kind" Title="后续迁移方式" Ex="EnumData#Dt.Mgr.Workflow.WfdAtvTransKind,Dt.Mgr" />
             <a:CTip ID="ctime" Title="创建时间" />
             <a:CTip ID="mtime" Title="修改时间" />
         </a:Fv>

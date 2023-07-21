@@ -113,10 +113,10 @@ namespace Dt.Mgr.Workflow
             string sender = p_info.WorkItem.Sender;
             if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
             {
-                long id = await AtCm.GetScalar<long>($"select id from cm_wfi_atv where prciid={p_info.AtvInst.PrciID} and atvdid={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
+                long id = await AtCm.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
                 if (id != 0)
                 {
-                    sender = await AtCm.GetScalar<string>($"select sender from cm_wfi_item where atviid={id} order by mtime desc");
+                    sender = await AtCm.GetScalar<string>($"select sender from cm_wfi_item where atvi_id={id} order by mtime desc");
                 }
             }
             return sender;
@@ -183,7 +183,7 @@ namespace Dt.Mgr.Workflow
                 return false;
             }
 
-            var tbl = await AtCm.Query("cm_流程_后续活动工作项", new { p_atvdid = row.Long("atvdid"), p_prciid = row.Long("prciid") });
+            var tbl = await AtCm.Query("cm_流程_后续活动工作项", new { p_atvdid = row.Long("atvd_id"), p_prciid = row.Long("prci_id") });
             if (tbl.Count == 0)
             {
                 Kit.Warn("无后续活动，无法追回");
@@ -211,7 +211,7 @@ namespace Dt.Mgr.Workflow
 
             // 更新当前实例状态为活动
             DateTime time = Kit.Now;
-            WfiAtvX curAtvi = await WfiAtvX.GetByID(row.Long("atviid"));
+            WfiAtvX curAtvi = await WfiAtvX.GetByID(row.Long("atvi_id"));
             curAtvi.Status = WfiAtvStatus.活动;
             curAtvi.InstCount += 1;
             curAtvi.Mtime = time;
@@ -689,7 +689,7 @@ namespace Dt.Mgr.Workflow
                 {
                     // 所有用户或任一用户，按角色发
                     recv.IsRole = true;
-                    recv.Recvs = await RoleX.Query($"where exists (select distinct (roleid) from cm_wfd_atv_role ar where r.id=ar.roleid and atvid={p_atv.ID})");
+                    recv.Recvs = await RoleX.Query($"where exists (select distinct (role_id) from cm_wfd_atv_role ar where r.id=ar.role_id and atv_id={p_atv.ID})");
                 }
             }
             else
@@ -739,14 +739,14 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         static async Task<bool> IsActive(WfdAtvX p_atvSync, WfFormInfo p_info)
         {
-            int cnt = await WfiAtvX.GetCount($"where prciid={p_info.PrcInst.ID} and atvdid={p_atvSync.ID}");
+            int cnt = await WfiAtvX.GetCount($"where prci_id={p_info.PrcInst.ID} and atvd_id={p_atvSync.ID}");
 
             // 已产生同步实例
             if (cnt > 0)
                 return false;
 
             // 获得同步前所有活动
-            var trss = await WfdTrsX.Query($"where tgtatvid={p_atvSync.ID}");
+            var trss = await WfdTrsX.Query($"where tgt_atv_id={p_atvSync.ID}");
 
             // 聚合方式
             // 全部
@@ -775,7 +775,7 @@ namespace Dt.Mgr.Workflow
                 if (trs.SrcAtvID == p_info.AtvDef.ID)
                     continue;
 
-                int cnt = await WfiAtvX.GetCount($"where atvdid={trs.SrcAtvID} and prciid={p_info.PrcInst.ID} and status=1");
+                int cnt = await WfiAtvX.GetCount($"where atvd_id={trs.SrcAtvID} and prci_id={p_info.PrcInst.ID} and status=1");
                 if (cnt == 0)
                 {
                     finish = false;
@@ -799,7 +799,7 @@ namespace Dt.Mgr.Workflow
                 if (trs.SrcAtvID == p_info.AtvDef.ID)
                     continue;
 
-                var tbl = await AtCm.Query($"select status from cm_wfi_atv where atvdid={trs.SrcAtvID} and prciid={p_info.PrcInst.ID}");
+                var tbl = await AtCm.Query($"select status from cm_wfi_atv where atvd_id={trs.SrcAtvID} and prci_id={p_info.PrcInst.ID}");
                 if (tbl.Count > 0 && tbl[0].Int("status") != 1)
                 {
                     finish = false;
@@ -817,8 +817,8 @@ namespace Dt.Mgr.Workflow
         static async Task<Table> GetAtvUsers(long p_atvid)
         {
             // 是否活动授权任何人
-            if (await WfdAtvRoleX.GetCount($"where roleid=1 and atvid={p_atvid}") == 0)
-                return await AtCm.Query($"select id,name from cm_user u where exists (select distinct (userid) from cm_user_role ur where exists (select roleid from cm_wfd_atv_role ar where ur.roleid=ar.roleid and atvid={p_atvid}) and u.id=ur.userid) order by name");
+            if (await WfdAtvRoleX.GetCount($"where role_id=1 and atv_id={p_atvid}") == 0)
+                return await AtCm.Query($"select id,name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
             return await AtCm.Query("select id, name from cm_user where expired=0");
         }
 

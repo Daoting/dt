@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await RoleX.Query($"where exists ( select RoleID from cm_user_role b where a.ID = b.RoleID and UserID={_releatedID} )");
+                _lv.Data = await RoleX.Query($"where exists ( select role_id from cm_user_role b where a.ID = b.role_id and user_id={_releatedID} )");
             }
             else
             {

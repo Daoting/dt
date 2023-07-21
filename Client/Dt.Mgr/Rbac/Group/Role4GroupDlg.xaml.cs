@@ -25,7 +25,7 @@ namespace Dt.Mgr.Rbac
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await RoleX.Query($"where not exists ( select RoleID from cm_group_role b where a.ID = b.RoleID and GroupID={p_releatedID} ) and a.ID!=1");
+            _lv.Data = await RoleX.Query($"where not exists ( select role_id from cm_group_role b where a.ID = b.role_id and group_id={p_releatedID} ) and a.ID!=1");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

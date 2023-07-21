@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await GroupX.Query($"where exists ( select GroupID from cm_user_group b where a.ID = b.GroupID and UserID={_releatedID} )");
+                _lv.Data = await GroupX.Query($"where exists ( select group_id from cm_user_group b where a.ID = b.group_id and user_id={_releatedID} )");
             }
             else
             {

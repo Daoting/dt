@@ -38,7 +38,7 @@ namespace Dt.Mgr.Workflow
 
             // 查询流程模板id
             if (p_prcID <= 0)
-                p_prcID = await AtCm.GetScalar<long>($"select PrcdID from cm_wfi_prc where id={p_prciID}");
+                p_prcID = await AtCm.GetScalar<long>($"select prcd_id from cm_wfi_prc where id={p_prciID}");
 
             var def = await WfFormInfo.GetPrcDef(p_prcID);
             if (string.IsNullOrEmpty(def.Diagram))
@@ -48,13 +48,13 @@ namespace Dt.Mgr.Workflow
             }
 
             _sketch.ReadXml(def.Diagram);
-            var atvs = await AtCm.Query($"select atvdid,status from cm_wfi_atv where prciid={p_prciID} order by ctime");
+            var atvs = await AtCm.Query($"select atvd_id,status from cm_wfi_atv where prci_id={p_prciID} order by ctime");
             if (atvs.Count > 0)
             {
                 foreach (var node in _sketch.Container.Children.OfType<SNode>())
                 {
                     var dr = (from c in atvs
-                              where c.Long("atvdid") == node.ID
+                              where c.Long("atvd_id") == node.ID
                               select c).LastOrDefault();
                     if (dr != null)
                     {
@@ -140,7 +140,7 @@ namespace Dt.Mgr.Workflow
 
                 sb.AppendFormat("🚩 {0}（{1}）", dr.Str("atvdname"), dr.Str("username"));
                 // 指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
-                var akind = (WfiItemAssignKind)dr.Int("AssignKind");
+                var akind = (WfiItemAssignKind)dr.Int("assign_kind");
                 switch (akind)
                 {
                     case WfiItemAssignKind.起始指派:
@@ -165,10 +165,10 @@ namespace Dt.Mgr.Workflow
                         }
                         else
                         {
-                            if (!dr.Bool("IsAccept"))
+                            if (!dr.Bool("is_accept"))
                                 sb.AppendFormat("\n正在进行{0}，尚未签收 🕒", dr.Str("atvdname"));
                             else
-                                sb.AppendFormat("\n正在进行{0}，已签收（{1}） 🕔", dr.Str("atvdname"), dr.Date("AcceptTime").ToString("MM-dd HH:mm"));
+                                sb.AppendFormat("\n正在进行{0}，已签收（{1}） 🕔", dr.Str("atvdname"), dr.Date("accept_time").ToString("MM-dd HH:mm"));
                         }
                         break;
                     case WfiItemStatus.结束:
@@ -206,7 +206,7 @@ namespace Dt.Mgr.Workflow
         async Task<string> BuildNext(Row p_row)
         {
             // 指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
-            var tbl = await AtCm.Query("cm_流程_日志目标项", new { p_prciid = p_row.Long("prciid"), p_atviid = p_row.Long("atviid") });
+            var tbl = await AtCm.Query("cm_流程_日志目标项", new { p_prciid = p_row.Long("prci_id"), p_atviid = p_row.Long("atvi_id") });
             string nexttext = "";
             foreach (var row in tbl)
             {

@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await PermissionX.Query($"where exists ( select perid from cm_role_per b where a.id = b.perid and roleid = {_releatedID} )");
+                _lv.Data = await PermissionX.Query($"where exists ( select per_id from cm_role_per b where a.id = b.per_id and role_id = {_releatedID} )");
             }
             else
             {

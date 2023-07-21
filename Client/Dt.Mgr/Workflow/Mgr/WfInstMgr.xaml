@@ -13,7 +13,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CList ID="prcdname" Title="选择流程模板" SrcID="id" TgtID="prcdid" />
+                    <a:CList ID="prcdname" Title="选择流程模板" SrcID="id" TgtID="prcd_id" />
                     <a:CList ID="statusname" Title="状态" SrcID="id" TgtID="status">
                         <a:CList.Items>
                             <a:IDStr ID="0" Str="流转中" />
@@ -61,7 +61,7 @@
                     <a:Cols>
                         <a:Col ID="Status" Title="状态" Width="60" />
                         <a:Col ID="Name" Title="活动名称" Width="200" />
-                        <a:Col ID="instcount" Title="工作项数" Width="100" />
+                        <a:Col ID="inst_count" Title="工作项数" Width="100" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>
@@ -71,9 +71,9 @@
                 <a:Lv x:Name="_lvItem" ViewMode="Table">
                     <a:Cols>
                         <a:Col ID="Status" Title="状态" Width="60" />
-                        <a:Col ID="AssignKind" Title="指派方式" Width="100" />
+                        <a:Col ID="assign_kind" Title="指派方式" Width="100" />
                         <a:Col ID="sendprc" Title="发送者 -> 执行者" Width="180" />
-                        <a:Col ID="IsAccept" Title="已签收" Width="80" />
+                        <a:Col ID="is_accept" Title="已签收" Width="80" />
                         <a:Col ID="mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
                     </a:Cols>
                 </a:Lv>

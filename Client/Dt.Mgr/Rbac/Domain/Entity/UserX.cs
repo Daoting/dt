@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
 
         public static Task<Table<UserX>> ExistsInGroup(long p_groupID)
         {
-            return Query($"where exists (select userid from cm_user_group b where a.id=b.userid and groupid={p_groupID})");
+            return Query($"where exists (select user_id from cm_user_group b where a.id=b.user_id and group_id={p_groupID})");
         }
 
         protected override void InitHook()

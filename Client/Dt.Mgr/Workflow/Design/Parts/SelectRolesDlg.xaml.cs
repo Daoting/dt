@@ -34,7 +34,7 @@ namespace Dt.Mgr.Workflow
 
         public async Task<bool> Show(string p_tgtID, FrameworkElement p_target)
         {
-            _lv.Data = await RoleX.Query($"where not exists (select roleid from cm_wfd_atv_role b where a.id=b.roleid and atvid={p_tgtID})");
+            _lv.Data = await RoleX.Query($"where not exists (select role_id from cm_wfd_atv_role b where a.id=b.role_id and atv_id={p_tgtID})");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

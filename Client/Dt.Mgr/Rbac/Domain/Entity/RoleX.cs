@@ -24,7 +24,7 @@ namespace Dt.Mgr.Rbac
 
         public static Task<Table<RoleX>> ExistsInGroup(long p_groupID)
         {
-            return Query($"where exists (select roleid from cm_group_role b where a.id=b.roleid and groupid={p_groupID})");
+            return Query($"where exists (select role_id from cm_group_role b where a.id=b.role_id and group_id={p_groupID})");
         }
 
         protected override void InitHook()
@@ -45,7 +45,7 @@ namespace Dt.Mgr.Rbac
                 Throw.If(ID < 1000, "系统角色无法删除！");
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_user_role有级联删除
-                var ls = await AtCm.FirstCol<long>($"select id from cm_user a where exists (select userid from cm_user_role b where a.id=b.userid and roleid={ID})");
+                var ls = await AtCm.FirstCol<long>($"select id from cm_user a where exists (select user_id from cm_user_role b where a.id=b.user_id and role_id={ID})");
                 RbacDs.DelUserDataVer(ls);
             });
         }

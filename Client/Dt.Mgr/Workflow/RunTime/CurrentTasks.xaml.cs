@@ -43,11 +43,11 @@ namespace Dt.Mgr.Workflow
         {
             if (InputKit.IsCtrlPressed)
             {
-                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Edit));
+                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Edit));
             }
             else if (e.IsChanged)
             {
-                var info = new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Edit);
+                var info = new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Edit);
                 var win = await AtWf.CreateFormWin(info);
                 info.FormClosed += (s, arg) => Refresh();
                 LoadMain(win);
@@ -86,7 +86,7 @@ namespace Dt.Mgr.Workflow
                 tbName.Text = c.Row.Str("formname");
                 tbAtv.Text = c.Row.Str("atvname");
 
-                var kind = (WfiItemAssignKind)c.Row.Int("AssignKind");
+                var kind = (WfiItemAssignKind)c.Row.Int("assign_kind");
                 switch (kind)
                 {
                     case WfiItemAssignKind.起始指派:

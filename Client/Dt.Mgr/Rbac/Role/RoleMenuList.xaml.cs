@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await MenuX.Query($"where exists (select menuid from cm_role_menu b where a.id=b.menuid and roleid={_releatedID}) order by dispidx");
+                _lv.Data = await MenuX.Query($"where exists (select menu_id from cm_role_menu b where a.id=b.menu_id and role_id={_releatedID}) order by dispidx");
             }
             else
             {

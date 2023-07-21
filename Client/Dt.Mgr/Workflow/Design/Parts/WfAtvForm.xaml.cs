@@ -46,7 +46,7 @@ namespace Dt.Mgr.Workflow
             {
                 ls.Add(new IDStr() { ID = atv.ID.ToString(), Str = atv.Name });
             }
-            ((CList)_fv["execatvid"]).Data = ls;
+            ((CList)_fv["exec_atv_id"]).Data = ls;
         }
     }
 }

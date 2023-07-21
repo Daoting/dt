@@ -26,7 +26,7 @@ namespace Dt.Mgr.Workflow
         {
             _fv["prcdname"].To<CList>().Data = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
             Row row = new Row();
-            row.AddCell<string>("prcdid");
+            row.AddCell<string>("prcd_id");
             row.AddCell<string>("prcdname");
             row.AddCell<int>("status", 3);
             row.AddCell("statusname", "全部");
@@ -39,12 +39,12 @@ namespace Dt.Mgr.Workflow
         async void OnSearch(object sender, Mi e)
         {
             var row = _fv.Row;
-            if (row.Str("prcdid") == "")
+            if (row.Str("prcd_id") == "")
                 Kit.Warn("未选择流程模板！");
             else
                 _lv.Data = await WfiPrcX.Query("cm_流程_查找实例", new
                 {
-                    p_prcdid = row.Str("prcdid"),
+                    p_prcdid = row.Str("prcd_id"),
                     p_start = row.Date("start"),
                     p_end = row.Date("end"),
                     p_status = row.Int("status"),
@@ -77,7 +77,7 @@ namespace Dt.Mgr.Workflow
         async void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvAtv.Data = await WfiAtvX.Query($"select atvi.id,atvd.name,status,instcount from cm_wfi_atv atvi,cm_wfd_atv atvd where atvi.atvdid=atvd.id and atvi.prciid={e.Row.ID} order by atvi.ctime");
+                _lvAtv.Data = await WfiAtvX.Query($"select atvi.id,atvd.name,status,inst_count from cm_wfi_atv atvi,cm_wfd_atv atvd where atvi.atvd_id=atvd.id and atvi.prci_id={e.Row.ID} order by atvi.ctime");
         }
 
         async void OnAtvClick(object sender, ItemClickArgs e)

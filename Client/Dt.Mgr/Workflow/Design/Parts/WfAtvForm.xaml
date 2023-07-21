@@ -17,16 +17,16 @@
                 <wf:AtvRole x:Name="_atvRole" />
             </a:CBar>
             <a:CBar Title="执行者控制"/>
-            <a:CList ID="execscope" Title="执行者范围" />
-            <a:CList ID="execlimit" Title="执行者限制" />
-            <a:CList ID="execatvid" Title="已完成活动" />
+            <a:CList ID="exec_scope" Title="执行者范围" />
+            <a:CList ID="exec_limit" Title="执行者限制" />
+            <a:CList ID="exec_atv_id" Title="已完成活动" />
 
             <a:CBar Title="其它"/>
-            <a:CList ID="transkind" Title="后续迁移方式" />
-            <a:CBool ID="autoaccept" Title="自动签收" />
-            <a:CBool ID="canjumpinto" Title="可接收跳转" />
-            <a:CBool ID="canterminate" Title="可中止实例" />
-            <a:CBool ID="candelete" Title="可删流程实例" />
+            <a:CList ID="trans_kind" Title="后续迁移方式" />
+            <a:CBool ID="auto_accept" Title="自动签收" />
+            <a:CBool ID="can_jump_into" Title="可接收跳转" />
+            <a:CBool ID="can_terminate" Title="可中止实例" />
+            <a:CBool ID="can_delete" Title="可删流程实例" />
             <a:CTip ID="ctime" Title="创建时间" />
             <a:CTip ID="mtime" Title="修改时间" />
         </a:Fv>

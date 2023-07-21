@@ -30,7 +30,7 @@ namespace Dt.Mgr.Workflow
 
         public static Task<long> GetWfdTrsID(long p_prcid, long p_srcAtvID, long p_tgtAtvID, bool p_isRollback)
         {
-            return _da.GetScalar<long>($"select ID from cm_wfd_trs where prcid={p_prcid} and SrcAtvID={p_srcAtvID} and TgtAtvID={p_tgtAtvID} and IsRollback={(p_isRollback ? 1 : 0)}");
+            return _da.GetScalar<long>($"select ID from cm_wfd_trs where prc_id={p_prcid} and src_atv_id={p_srcAtvID} and tgt_atv_id={p_tgtAtvID} and is_rollback={(p_isRollback ? 1 : 0)}");
         }
     }
 }

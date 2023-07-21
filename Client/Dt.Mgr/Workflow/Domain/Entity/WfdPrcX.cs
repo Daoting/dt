@@ -33,8 +33,8 @@ namespace Dt.Mgr.Workflow
         {
             var prc = await WfdPrcX.First($"where id={p_id}");
             prc.Atvs = await WfdAtvX.Query("cm_流程_编辑活动模板", new { p_prcid = p_id });
-            prc.Trss = await WfdTrsX.Query($"where prcid={p_id}");
-            prc.AtvRoles = await WfdAtvRoleX.Query($"select a.*,b.name as role from cm_wfd_atv_role a,cm_role b where a.roleid=b.id and atvid in (select id from cm_wfd_atv where prcid={p_id})");
+            prc.Trss = await WfdTrsX.Query($"where prc_id={p_id}");
+            prc.AtvRoles = await WfdAtvRoleX.Query($"select a.*,b.name as role from cm_wfd_atv_role a,cm_role b where a.role_id=b.id and atv_id in (select id from cm_wfd_atv where prc_id={p_id})");
             prc.AttachEvent();
             return prc;
         }
@@ -65,7 +65,7 @@ namespace Dt.Mgr.Workflow
         {
             OnDeleting(async () =>
             {
-                int cnt = await WfiPrcX.GetCount($"where PrcdID={ID}");
+                int cnt = await WfiPrcX.GetCount($"where prcd_id={ID}");
                 Throw.If(cnt > 0, "已有流程实例，禁止删除！");
             });
         }

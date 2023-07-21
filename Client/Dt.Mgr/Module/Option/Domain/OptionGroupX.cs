@@ -37,7 +37,7 @@ namespace Dt.Mgr.Module
 
             OnDeleting(async () =>
             {
-                int count = await OptionX.GetCount($"where groupid={ID}");
+                int count = await OptionX.GetCount($"where group_id={ID}");
                 Throw.If(count > 0, "该分组含选项无法删除！");
             });
         }

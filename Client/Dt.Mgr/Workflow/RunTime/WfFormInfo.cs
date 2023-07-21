@@ -373,7 +373,7 @@ namespace Dt.Mgr
         async Task CreateWorkItem()
         {
             // 起始活动
-            AtvDef = await WfdAtvX.First($"where prcid={_prcID} and type=1");
+            AtvDef = await WfdAtvX.First($"where prc_id={_prcID} and type=1");
 
             PrcInst = await WfiPrcX.New(
                 PrcdID: _prcID,
@@ -395,8 +395,8 @@ namespace Dt.Mgr
 
         async Task LoadWorkItem()
         {
-            PrcInst = await WfiPrcX.First($"where id=(select prciid from cm_wfi_atv where id=(select atviid from cm_wfi_item where id={_itemID}))");
-            AtvInst = await WfiAtvX.First($"where id=(select atviid from cm_wfi_item where id={_itemID})");
+            PrcInst = await WfiPrcX.First($"where id=(select prci_id from cm_wfi_atv where id=(select atvi_id from cm_wfi_item where id={_itemID}))");
+            AtvInst = await WfiAtvX.First($"where id=(select atvi_id from cm_wfi_item where id={_itemID})");
             WorkItem = await WfiItemX.GetByID(_itemID);
             AtvDef = await WfdAtvX.GetByID(AtvInst.AtvdID);
         }

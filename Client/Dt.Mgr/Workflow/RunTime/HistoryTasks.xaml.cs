@@ -79,13 +79,13 @@ namespace Dt.Mgr.Workflow
 
         void OnShowInst(object sender, Mi e)
         {
-            AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcdid"), e.Row.Long("itemid"), WfFormUsage.Read));
+            AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Read));
         }
 
         void OnItemDoubleClick(object sender, object e)
         {
             Row row = (Row)e;
-            AtWf.OpenFormWin(new WfFormInfo(row.Long("prcdid"), row.Long("itemid"), WfFormUsage.Read));
+            AtWf.OpenFormWin(new WfFormInfo(row.Long("prcd_id"), row.Long("itemid"), WfFormUsage.Read));
         }
 
         async void OnRetrieve(object sender, Mi e)
@@ -104,7 +104,7 @@ namespace Dt.Mgr.Workflow
 
         void OnShowLog(object sender, Mi e)
         {
-            AtWf.ShowLog(e.Row.Long("prciid"), e.Row.Long("prcdid"));
+            AtWf.ShowLog(e.Row.Long("prci_id"), e.Row.Long("prcd_id"));
         }
     }
 
