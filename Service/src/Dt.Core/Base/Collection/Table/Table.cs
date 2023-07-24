@@ -732,10 +732,14 @@ namespace Dt.Core
                     else
                     {
                         colType = GetColType(p_reader.GetString());
-                        if (colType == typeof(byte) && tpEntity != null)
+
+                        // MySql SqlServer枚举为byte，Oracle PostgreSql枚举为short
+                        if (tpEntity != null
+                            && (colType == typeof(byte) || colType == typeof(short)))
                         {
-                            // Entity 时根据属性类型将 byte 自动转为 enum 类型
-                            var prop = tpEntity.GetProperty(colName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
+                            // Entity 时根据属性类型自动转为 enum 类型
+                            // 自动生成属性名时无下划线
+                            var prop = tpEntity.GetProperty(colName.Replace("_", ""), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
                             if (prop != null)
                                 colType = prop.PropertyType;
                         }

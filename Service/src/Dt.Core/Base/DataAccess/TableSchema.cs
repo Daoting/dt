@@ -591,7 +591,7 @@ namespace Dt.Core
 
                     case DatabaseType.Oracle:
                     case DatabaseType.PostgreSql:
-                        isEnumType = Type == typeof(Int16);
+                        isEnumType = Type == typeof(short);
                         break;
 
                 }
