@@ -25,6 +25,23 @@ namespace Dt.Mgr.Workflow
             return new WfiPrcX(id, PrcdID, Name, Status, Dispidx, Ctime, Mtime);
         }
 
+        public static async Task<Table<WfiPrcX>> Search(long p_prcdid, DateTime p_start, DateTime p_end, int p_status, string p_title)
+        {
+            var sql = Sql查询实例;
+            var db = await AtCm.GetDbType();
+            if (db == DatabaseType.Oracle)
+                sql = sql.Replace("@", ":");
+
+            return await Query(sql, new
+            {
+                prcdid = p_prcdid,
+                start = p_start,
+                end = p_end,
+                status = p_status,
+                title = p_title,
+            });
+        }
+
         protected override void InitHook()
         {
         }

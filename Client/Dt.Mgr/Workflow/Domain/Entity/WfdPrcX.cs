@@ -32,7 +32,7 @@ namespace Dt.Mgr.Workflow
         public static async Task<WfdPrcX> Get(long p_id)
         {
             var prc = await WfdPrcX.First($"where id={p_id}");
-            prc.Atvs = await WfdAtvX.Query("cm_流程_编辑活动模板", new { p_prcid = p_id });
+            prc.Atvs = await WfdAtvX.Query($"where prc_id={p_id}");
             prc.Trss = await WfdTrsX.Query($"where prc_id={p_id}");
             prc.AtvRoles = await WfdAtvRoleX.Query($"select a.*,b.name as role from cm_wfd_atv_role a,cm_role b where a.role_id=b.id and atv_id in (select id from cm_wfd_atv where prc_id={p_id})");
             prc.AttachEvent();

@@ -44,6 +44,31 @@ namespace Dt.Mgr.Workflow
                 Mtime: Mtime);
         }
 
+        public static Task<Table<WfiItemX>> GetNextItems(long p_atvdid, long p_prciid)
+        {
+            return Query(string.Format(Sql后续活动工作项, p_atvdid, p_prciid));
+        }
+
+        public static async Task<Row> GetLastItem(long p_prciid)
+        {
+            return await First(string.Format(Sql最后工作项, p_prciid));
+        }
+
+        public static Task<Table<WfiItemX>> GetItemsOfAtvi(long p_atviid)
+        {
+            return Query(string.Format(Sql活动实例的工作项, p_atviid));
+        }
+
+        public static async Task<Table> GetLogList(long p_prciID, long p_atvdID = 0)
+        {
+            return await Query(string.Format(Sql生成日志列表, p_prciID, p_atvdID));
+        }
+
+        public static async Task<Table> GetAtviLog(long p_prciID, long p_atviID = 0)
+        {
+            return await Query(string.Format(Sql日志目标项, p_prciID, p_atviID));
+        }
+
         public void Finished()
         {
             Status = WfiItemStatus.结束;

@@ -30,7 +30,7 @@ namespace Dt.Mgr.Workflow
 
         async void LoadTasks()
         {
-            _lvTask.Data = await AtCm.Query("cm_流程_参与的流程", new { p_userid = Kit.UserID });
+            _lvTask.Data = await WfdDs.GetAllMyPrc();
         }
 
         void OnTaskItemClick(object sender, ItemClickArgs e)

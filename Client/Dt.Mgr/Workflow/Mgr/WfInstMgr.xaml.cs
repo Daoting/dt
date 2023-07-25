@@ -42,14 +42,7 @@ namespace Dt.Mgr.Workflow
             if (row.Str("prcd_id") == "")
                 Kit.Warn("未选择流程模板！");
             else
-                _lv.Data = await WfiPrcX.Query("cm_流程_查找实例", new
-                {
-                    p_prcdid = row.Str("prcd_id"),
-                    p_start = row.Date("start"),
-                    p_end = row.Date("end"),
-                    p_status = row.Int("status"),
-                    p_title = row.Str("title"),
-                } );
+                _lv.Data = await WfiPrcX.Search(row.Long("prcd_id"), row.Date("start"), row.Date("end"), row.Int("status"), row.Str("title"));
         }
 
         void OnMonthClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -83,7 +76,7 @@ namespace Dt.Mgr.Workflow
         async void OnAtvClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvItem.Data = await WfiItemX.Query("cm_流程_活动实例的工作项", new { p_atviid = e.Row.ID });
+                _lvItem.Data = await WfiItemX.GetItemsOfAtvi(e.Row.ID);
         }
 
         void OnShowInst(object sender, Mi e)

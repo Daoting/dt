@@ -117,7 +117,7 @@ namespace Dt.Mgr.Workflow
         /// <returns></returns>
         async Task<string> GetWfLog(long p_prciID, long p_atvdID = 0)
         {
-            var log = await AtCm.Query("cm_流程_生成日志列表", new { p_prciid = p_prciID, p_atvdid = p_atvdID });
+            var log = await WfiItemX.GetLogList(p_prciID, p_atvdID);
             if (log.Count == 0)
                 return "";
 
@@ -206,7 +206,7 @@ namespace Dt.Mgr.Workflow
         async Task<string> BuildNext(Row p_row)
         {
             // 指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
-            var tbl = await AtCm.Query("cm_流程_日志目标项", new { p_prciid = p_row.Long("prci_id"), p_atviid = p_row.Long("atvi_id") });
+            var tbl = await WfiItemX.GetAtviLog(p_row.Long("prci_id"), p_row.Long("atvi_id"));
             string nexttext = "";
             foreach (var row in tbl)
             {

@@ -47,24 +47,19 @@ namespace Dt.Mgr.Workflow
                 Mtime: Mtime);
         }
 
+        public static Task<Table<WfdAtvX>> GetNextAtv(long p_atvid)
+        {
+            return Query(string.Format(Sql后续活动, p_atvid));
+        }
+
+        public static Task<WfdAtvX> GetFirstNextAtv(long p_atvid)
+        {
+            return First(string.Format(Sql后续活动, p_atvid));
+        }
+
         protected override void InitHook()
         {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
+            
         }
     }
 }

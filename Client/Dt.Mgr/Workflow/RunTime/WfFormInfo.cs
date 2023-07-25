@@ -338,7 +338,7 @@ namespace Dt.Mgr
             // 根据流程实例id获取流程id 和 最后工作项id
             if (_prciID > 0)
             {
-                var row = await AtCm.First("cm_流程_最后工作项", new { p_prciid = _prciID });
+                var row = await WfiItemX.GetLastItem(_prciID);
                 _prcID = row.Long("prcID");
                 _itemID = row.Long("itemID");
             }

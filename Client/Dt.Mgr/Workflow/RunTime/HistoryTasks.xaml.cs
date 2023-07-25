@@ -42,17 +42,7 @@ namespace Dt.Mgr.Workflow
         async void OnSearch(object sender, Mi e)
         {
             var row = _fv.Row;
-            var dt = new { p_userid = Kit.UserID, p_start = row.Date("start"), p_end = row.Date("end"), p_status = row.Int("status") };
-            if (row.Bool("type"))
-            {
-                // 用户在一个流程实例中参与的所有任务
-                _lv.Data = await AtCm.Query("cm_流程_所有经办历史任务", dt);
-            }
-            else
-            {
-                // 用户只能看到一个流程实例的最后完成的任务
-                _lv.Data = await AtCm.Query("cm_流程_历史任务", dt);
-            }
+            _lv.Data = await WfdDs.GetMyHistoryPrcs(row.Bool("type"), row.Date("start"), row.Date("end"), row.Int("status"));
         }
 
         void OnMonthClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -79,13 +69,13 @@ namespace Dt.Mgr.Workflow
 
         void OnShowInst(object sender, Mi e)
         {
-            AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Read));
+            AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("item_id"), WfFormUsage.Read));
         }
 
         void OnItemDoubleClick(object sender, object e)
         {
             Row row = (Row)e;
-            AtWf.OpenFormWin(new WfFormInfo(row.Long("prcd_id"), row.Long("itemid"), WfFormUsage.Read));
+            AtWf.OpenFormWin(new WfFormInfo(row.Long("prcd_id"), row.Long("item_id"), WfFormUsage.Read));
         }
 
         async void OnRetrieve(object sender, Mi e)

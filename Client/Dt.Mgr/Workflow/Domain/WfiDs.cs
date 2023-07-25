@@ -17,7 +17,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 流程实例
     /// </summary>
-    class WfiDs : DomainSvc<WfiDs, AtCm.Info>
+    partial class WfiDs : DomainSvc<WfiDs, AtCm.Info>
     {
         #region 签收
         public static async Task ToggleAccept(WfFormInfo p_info)
@@ -79,7 +79,7 @@ namespace Dt.Mgr.Workflow
             p_info.WorkItem.Finished();
 
             var userName = await GetSender(p_info);
-            long userId = await AtCm.GetScalar<long>($"select id from cm_user where name='{userName}'");
+            long userId = await _da.GetScalar<long>($"select id from cm_user where name='{userName}'");
             var newItem = await WfiItemX.New(
                 AtviID: newAtvInst.ID,
                 Stime: time,
@@ -113,10 +113,10 @@ namespace Dt.Mgr.Workflow
             string sender = p_info.WorkItem.Sender;
             if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
             {
-                long id = await AtCm.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
+                long id = await _da.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
                 if (id != 0)
                 {
-                    sender = await AtCm.GetScalar<string>($"select sender from cm_wfi_item where atvi_id={id} order by mtime desc");
+                    sender = await _da.GetScalar<string>($"select sender from cm_wfi_item where atvi_id={id} order by mtime desc");
                 }
             }
             return sender;
@@ -183,7 +183,7 @@ namespace Dt.Mgr.Workflow
                 return false;
             }
 
-            var tbl = await AtCm.Query("cm_流程_后续活动工作项", new { p_atvdid = row.Long("atvd_id"), p_prciid = row.Long("prci_id") });
+            var tbl = await WfiItemX.GetNextItems(row.Long("atvd_id"), row.Long("prci_id"));
             if (tbl.Count == 0)
             {
                 Kit.Warn("无后续活动，无法追回");
@@ -193,7 +193,7 @@ namespace Dt.Mgr.Workflow
             HashSet<long> ls = new HashSet<long>();
             foreach (var r in tbl)
             {
-                var itemState = (WfiItemStatus)r.Int("Status");
+                var itemState = r.Status;
                 if (itemState == WfiItemStatus.同步)
                 {
                     Kit.Warn("后续活动包含同步，无法追回");
@@ -201,7 +201,7 @@ namespace Dt.Mgr.Workflow
                 }
 
                 if (itemState != WfiItemStatus.活动
-                    || r.Bool("IsAccept"))
+                    || r.IsAccept)
                 {
                     Kit.Warn("已签收无法追回！");
                     return false;
@@ -269,7 +269,7 @@ namespace Dt.Mgr.Workflow
             }
 
             // 获得所有后续活动，包括同步
-            var nextAtvs = await WfdAtvX.Query("cm_流程_后续活动", new { p_atvid = p_info.AtvDef.ID });
+            var nextAtvs = await WfdAtvX.GetNextAtv(p_info.AtvDef.ID);
             if (nextAtvs.Count == 0)
             {
                 // 无后续活动，结束当前工作项和活动
@@ -301,7 +301,7 @@ namespace Dt.Mgr.Workflow
                         if (await IsActive(atv, p_info))
                         {
                             // 同步活动只支持一个后续活动！
-                            var syncNext = await WfdAtvX.First("cm_流程_后续活动", new { p_atvid = atv.ID });
+                            var syncNext = await WfdAtvX.GetFirstNextAtv(atv.ID);
                             if (syncNext != null)
                             {
                                 recv = await LoadRecvs(syncNext, p_info);
@@ -799,7 +799,7 @@ namespace Dt.Mgr.Workflow
                 if (trs.SrcAtvID == p_info.AtvDef.ID)
                     continue;
 
-                var tbl = await AtCm.Query($"select status from cm_wfi_atv where atvd_id={trs.SrcAtvID} and prci_id={p_info.PrcInst.ID}");
+                var tbl = await _da.Query($"select status from cm_wfi_atv where atvd_id={trs.SrcAtvID} and prci_id={p_info.PrcInst.ID}");
                 if (tbl.Count > 0 && tbl[0].Int("status") != 1)
                 {
                     finish = false;
@@ -818,33 +818,34 @@ namespace Dt.Mgr.Workflow
         {
             // 是否活动授权任何人
             if (await WfdAtvRoleX.GetCount($"where role_id=1 and atv_id={p_atvid}") == 0)
-                return await AtCm.Query($"select id,name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
-            return await AtCm.Query("select id, name from cm_user where expired=0");
+                return await _da.Query($"select id,name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
+            return await _da.Query("select id, name from cm_user where expired=0");
         }
 
         static Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)
         {
-            string key;
+            string sql;
             switch (p_execLimit)
             {
                 case WfdAtvExecLimit.前一活动的执行者:
                     // 前一活动执行者
-                    key = "cm_流程_前一活动执行者";
+                    sql = Sql前一活动的执行者;
                     break;
                 case WfdAtvExecLimit.前一活动的同部门执行者:
                     // 前一活动的同部门执行者
-                    key = "cm_流程_前一活动的同部门执行者";
+                    sql = Sql前一活动的同部门执行者;
                     break;
                 case WfdAtvExecLimit.已完成活动的执行者:
                     // 已完成活动执行者
-                    key = "cm_流程_已完成活动执行者";
+                    sql = Sql已完成活动的执行者;
                     break;
                 default:
                     // 已完成活动同部门执行者
-                    key = "cm_流程_已完成活动同部门执行者";
+                    sql = Sql已完成活动同部门执行者;
                     break;
             }
-            return AtCm.Query(key, new { p_prciid = p_info.PrcInst.ID, p_atvdid = p_atvdid });
+            Throw.IfEmpty(sql, "暂时未实现");
+            return _da.Query(string.Format(sql, p_info.PrcInst.ID, p_atvdid));
         }
 
         class RecvDef

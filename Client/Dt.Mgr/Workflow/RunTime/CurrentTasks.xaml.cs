@@ -31,7 +31,7 @@ namespace Dt.Mgr.Workflow
 
         async void Refresh()
         {
-            _lv.Data = await AtCm.Query("cm_流程_待办任务", new { p_userid = Kit.UserID });
+            _lv.Data = await WfdDs.GetMyTodoTasks();
         }
 
         void OnRefresh(object sender, Mi e)
@@ -43,11 +43,11 @@ namespace Dt.Mgr.Workflow
         {
             if (InputKit.IsCtrlPressed)
             {
-                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Edit));
+                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("item_id"), WfFormUsage.Edit));
             }
             else if (e.IsChanged)
             {
-                var info = new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("itemid"), WfFormUsage.Edit);
+                var info = new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("item_id"), WfFormUsage.Edit);
                 var win = await AtWf.CreateFormWin(info);
                 info.FormClosed += (s, arg) => Refresh();
                 LoadMain(win);

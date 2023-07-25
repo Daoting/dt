@@ -38,6 +38,11 @@ namespace Dt.Mgr.Workflow
 
         void LoadExecDrop(WfdAtvX p_atv)
         {
+            if (!p_atv.Contains("exec_atv_id_dsp"))
+            {
+                p_atv.AddCell("exec_atv_id_dsp", "");
+            }
+
             var items = from item in p_atv.Table.OfType<WfdAtvX>()
                         where item != p_atv && item.Type != WfdAtvType.Sync && item.Type != WfdAtvType.Finish
                         select item;
@@ -45,8 +50,12 @@ namespace Dt.Mgr.Workflow
             foreach (var atv in items)
             {
                 ls.Add(new IDStr() { ID = atv.ID.ToString(), Str = atv.Name });
+                if (p_atv.ExecAtvID == atv.ID)
+                {
+                    p_atv["exec_atv_id_dsp"] = atv.Name;
+                }
             }
-            ((CList)_fv["exec_atv_id"]).Data = ls;
+            ((CList)_fv["exec_atv_id_dsp"]).Data = ls;
         }
     }
 }

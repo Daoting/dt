@@ -13,6 +13,16 @@ namespace Dt.Mgr.Workflow
 {
     public partial class WfiPrcX
     {
-
+        const string Sql查询实例 = @"
+select * from cm_wfi_prc
+where
+	prcd_id = @prcdid 
+	and ( @status > 2 or status = @status )
+	and ( @title = '' or name = @title )
+	and ( @start < '1900-01-01' or Mtime >= @start )
+	and ( @end < '1900-01-01' or Mtime <= @end )
+order by
+	dispidx
+";
     }
 }

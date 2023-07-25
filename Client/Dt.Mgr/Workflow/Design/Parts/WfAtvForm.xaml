@@ -19,7 +19,7 @@
             <a:CBar Title="执行者控制"/>
             <a:CList ID="exec_scope" Title="执行者范围" />
             <a:CList ID="exec_limit" Title="执行者限制" />
-            <a:CList ID="exec_atv_id" Title="已完成活动" />
+            <a:CList ID="exec_atv_id_dsp" Title="已完成活动" SrcID="id" TgtID="exec_atv_id" />
 
             <a:CBar Title="其它"/>
             <a:CList ID="trans_kind" Title="后续迁移方式" />
