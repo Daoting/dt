@@ -107,8 +107,8 @@ namespace Dt.Core
 
                 await da.Exec(sql);
                 int cntTbl = await da.GetScalar<int>($"select count(*) from information_schema.tables where table_schema='{_newDb}'");
-                int cntSp = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='procedure'");
-                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程");
+                int cntSp = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='function'");
+                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个函数");
 
                 await da.Close(true);
             }

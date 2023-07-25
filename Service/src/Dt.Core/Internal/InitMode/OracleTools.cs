@@ -97,8 +97,8 @@ namespace Dt.Core
                 }
 
                 int cntTbl = await da.GetScalar<int>("select count(*) from user_tables");
-                int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='PROCEDURE'");
-                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个存储过程");
+                int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='SEQUENCE'");
+                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个序列");
 
                 await da.Close(true);
             }
