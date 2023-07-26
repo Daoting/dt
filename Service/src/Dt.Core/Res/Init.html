@@ -98,10 +98,10 @@
                 <label>新用户名</label>
                 <input type="text" id="newuser"><br /><br />
             </div>
-            <input type="button" value="创建并初始化新库" style="width:350px;" onclick="onDoInit(0)"><br />
+            <input id="btn0" type="button" value="创建并初始化新库" style="width:350px;" onclick="onDoInit(0)"><br />
             <div style="display: flex; justify-content:center;">
-                <input type="button" value="只创建空库" style="width:150px;" onclick="onDoInit(1)">
-                <input type="button" value="创建demo库" style="width:150px;margin-left:50px;" onclick="onDoInit(2)">
+                <input id="btn1" type="button" value="只创建空库" style="width:150px;" onclick="onDoInit(1)">
+                <input id="btn2" type="button" value="创建demo库" style="width:150px;margin-left:50px;" onclick="onDoInit(2)">
             </div>
         </div>
         <div class="divCaption" style="margin-top:10px">
@@ -159,7 +159,8 @@
         {
             if (!isValid())
                 return;
-            
+
+            toggleButton(true);
             var list = "[\"&ss\",\""
                 + $("dbtype").value + "\",\""
                 + $("host").value + "\",\""
@@ -176,11 +177,29 @@
                     || confirm(msg + "\r\n2") == false
                     || confirm(msg + "\r\n3") == false)
                 {
+                    toggleButton(false);
                     return;
                 }
             }
 
             await call("[\"DoInit\"," + list + "," + p_initType + "]");
+            toggleButton(false);
+        }
+
+        function toggleButton(p_disabled)
+        {
+            if (p_disabled)
+            {
+                $("btn0").disabled = "disabled";
+                $("btn1").disabled = "disabled";
+                $("btn2").disabled = "disabled";
+            }
+            else
+            {
+                $("btn0").disabled = "";
+                $("btn1").disabled = "";
+                $("btn2").disabled = "";
+            }
         }
 
         function isValid()
