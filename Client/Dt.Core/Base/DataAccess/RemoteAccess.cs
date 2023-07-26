@@ -223,12 +223,16 @@ namespace Dt.Core
         #endregion
 
         #region 库信息
-        public Task<DatabaseType> GetDbType()
+        public async Task<DatabaseType> GetDbType()
         {
-            return new UnaryRpc(
-                _svc,
-                "Da.GetDbType"
-            ).Call<DatabaseType>();
+            if (!_dbType.HasValue)
+            {
+                _dbType = await new UnaryRpc(
+                    _svc,
+                    "Da.GetDbType"
+                ).Call<DatabaseType>();
+            }
+            return _dbType.Value;
         }
 
         public Task<string> GetDbKey()
@@ -238,6 +242,8 @@ namespace Dt.Core
                 "Da.GetDbKey"
             ).Call<string>();
         }
+
+        DatabaseType? _dbType;
         #endregion
 
         #region 实体写入器
