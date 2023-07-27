@@ -46,6 +46,7 @@ namespace Dt.MgrDemo
             {
                 new DemoItem("单实体", typeof(实体Win), "单表的增删改查框架"),
                 new DemoItem("虚拟实体", typeof(虚拟Win), "因字段过多将单表拆分成多表时适用于虚拟实体，本质还是单实体框架"),
+                new DemoItem("视图实体", typeof(视图Win), "单个视图的增删改查"),
             };
             group.Title = "单实体框架";
             ds.Add(group);

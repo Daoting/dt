@@ -21,12 +21,12 @@ namespace Dt.MgrDemo
         {
             Title = "搬运工";
             //SvcUrl = "https://x13382a571.oicp.vip/demo";
-            SvcUrl = "http://10.10.1.16/dt-cm";
+            //SvcUrl = "http://10.10.1.16/dt-cm";
 
             //SvcUrl = "http://10.10.1.16/cosm-mysql";
             //SvcUrl = "http://10.10.1.16/cosm-orcl";
             //SvcUrl = "http://10.10.1.16/cosm-ms";
-            //SvcUrl = "http://10.10.1.16/cosm-pg";
+            SvcUrl = "http://10.10.1.16/cosm-pg";
         }
 
         /// <summary>

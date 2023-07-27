@@ -357,10 +357,5 @@ namespace Dt.MgrDemo
             Kit.Msg(msg, 0);
         }
 
-        async void OnQueryByView(object sender, RoutedEventArgs e)
-        {
-            //var v = await ChildTbl1X.First<ParentV>("");
-            //v.
-        }
     }
 }

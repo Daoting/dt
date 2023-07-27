@@ -34,6 +34,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Entity 反序列化时对于byte short类型的列根据属性类型自动转 enum 类型
 * 增加调用存储过程返回Table的demo
 * 支持视图生成Enity
+* 增加视图实体的增删改demo，mysql sqlserver能保存的列最多，oracle只可保存主键列所属表的列，pg视图不能保存数据
 
 ### Bug修改
 * Win中停靠在四周的Tab在固定、停靠切换时丢失弹出面板的尺寸

@@ -41,7 +41,8 @@ namespace Dt.Core
                     break;
 
                 case DatabaseType.Oracle:
-                    Prefix = Postfix = "\"";
+                    // 默认始终全大写，不需要用引号括
+                    Prefix = Postfix = "";
                     VarPrefix = ":";
                     break;
 
