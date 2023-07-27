@@ -887,6 +887,39 @@ CREATE TABLE `sequence`  (
 INSERT INTO `sequence` VALUES ('cm_menu_dispidx', 89), ('cm_option_dispidx', 1031), ('cm_wfd_prc_dispidx', 11), ('cm_wfi_item_dispidx', 176), ('cm_wfi_prc_dispidx', 65), ('demo_crud_dispidx', 84), ('demo_基础_序列', 11);
 
 -- ----------------------------
+-- View structure for demo_child_view
+-- ----------------------------
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `demo_child_view` AS select `c`.`id` AS `id`,`c`.`parent_id` AS `parent_id`,`c`.`item_name` AS `item_name`,`p`.`name` AS `name` from (`demo_child_tbl1` `c` join `demo_par_tbl` `p` on((`c`.`parent_id` = `p`.`id`)));
+
+-- ----------------------------
+-- Procedure structure for demo_用户可访问的菜单
+-- ----------------------------
+CREATE PROCEDURE `demo_用户可访问的菜单`(`p_userid` bigint)
+BEGIN
+
+select id,name
+  from (select distinct (b.id), b.name, dispidx
+          from cm_role_menu a
+          left join cm_menu b
+            on a.menu_id = b.id
+         where exists
+         (select role_id
+                  from cm_user_role c
+                 where a.role_id = c.role_id
+                   and user_id = p_userid
+					union
+					select role_id
+					        from cm_group_role d
+									where a.role_id = d.role_id
+									  and exists (select group_id from cm_user_group e where d.group_id=e.group_id and e.user_id=p_userid)
+					) or a.role_id=1
+			 ) t
+ order by dispidx;
+ 
+END
+;
+
+-- ----------------------------
 -- Function structure for nextval
 -- ----------------------------
 CREATE FUNCTION `nextval`(v_seq_name VARCHAR ( 200 ))

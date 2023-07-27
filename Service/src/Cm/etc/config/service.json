@@ -1,7 +1,7 @@
 ﻿{
   //"Mode": "InitDb",
 
-  "DbKey": "orcldt",
+  "DbKey": "mydt",
   "TraceSql": true,
   "TraceRpc": true,
 

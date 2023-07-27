@@ -3446,3 +3446,43 @@ create sequence cm_wfi_prc_dispidx start with 66;
 create sequence demo_crud_dispidx start with 86;
 create sequence demo_基础_序列 start with 12;
 GO
+
+-- ----------------------------
+-- View structure for demo_child_view
+-- ----------------------------
+CREATE VIEW [dbo].[demo_child_view] AS SELECT
+	c.*, 
+	p.name
+FROM
+	demo_child_tbl1 c join
+	demo_par_tbl p on c.parent_id=p.id
+GO
+
+
+-- ----------------------------
+-- procedure structure for demo_用户可访问的菜单
+-- ----------------------------
+CREATE PROCEDURE [dbo].[demo_用户可访问的菜单]
+  @p_userid AS bigint 
+AS
+BEGIN
+	select id,name
+  from (select distinct (b.id), b.name, dispidx
+          from cm_role_menu a
+          left join cm_menu b
+            on a.menu_id = b.id
+         where exists
+         (select role_id
+                  from cm_user_role c
+                 where a.role_id = c.role_id
+                   and user_id = @p_userid
+					union
+					select role_id
+					        from cm_group_role d
+									where a.role_id = d.role_id
+									  and exists (select group_id from cm_user_group e where d.group_id=e.group_id and e.user_id=@p_userid)
+					) or a.role_id=1
+			 ) t
+  order by dispidx;
+END
+GO

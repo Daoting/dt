@@ -337,5 +337,30 @@ namespace Dt.MgrDemo
             await UsageDs.BatchSave();
         }
         #endregion
+
+        async void OnQueryBySp(object sender, RoutedEventArgs e)
+        {
+            var db = await AtCm.GetDbType();
+            if (db == DatabaseType.PostgreSql)
+            {
+                Kit.Warn("PostgreSql的存储过程不支持返回数据集");
+                return;
+            }
+
+            var tbl = await AtCm.Query("demo_用户可访问的菜单", new { p_userid = Kit.UserID });
+            string msg = "可访问的菜单：\r\n";
+            foreach (var r in tbl)
+            {
+                msg += r.Str(1);
+                msg += "、";
+            }
+            Kit.Msg(msg, 0);
+        }
+
+        async void OnQueryByView(object sender, RoutedEventArgs e)
+        {
+            //var v = await ChildTbl1X.First<ParentV>("");
+            //v.
+        }
     }
 }

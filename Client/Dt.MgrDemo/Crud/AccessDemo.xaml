@@ -58,5 +58,10 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="自由批量增删改" Click="OnSaveDs" />
         </StackPanel>
+
+        <a:CBar Title="其它" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="存储过程查询数据" Click="OnQueryBySp" />
+        </StackPanel>
     </a:Fv>
 </a:Win>

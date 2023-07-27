@@ -2319,3 +2319,13 @@ create sequence cm_wfi_item_dispidx start 177;
 create sequence cm_wfi_prc_dispidx start 66;
 create sequence demo_crud_dispidx start 86;
 create sequence demo_基础_序列 start 12;
+
+-- ----------------------------
+-- View structure for demo_child_view
+-- ----------------------------
+CREATE VIEW "demo_child_view" AS  SELECT c.id,
+    c.parent_id,
+    c.item_name,
+    p.name
+   FROM demo_child_tbl1 c
+     JOIN demo_par_tbl p ON c.parent_id = p.id;

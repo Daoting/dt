@@ -92,13 +92,21 @@ namespace Dt.Core
                 {
                     if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
                     {
-                        await da.Exec(item);
+                        var str = item;
+                        // 存储过程
+                        if (str.EndsWith("END"))
+                        {
+                            str = str.Substring(0, str.Length - 3).TrimEnd() + ";\r\n\r\nEND;";
+                        }
+                        await da.Exec(str);
                     }
                 }
 
                 int cntTbl = await da.GetScalar<int>("select count(*) from user_tables");
-                int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='SEQUENCE'");
-                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSp}个序列");
+                int cntSeq = await da.GetScalar<int>("select count(*) from user_objects where object_type='SEQUENCE'");
+                int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='PROCEDURE'");
+                int cntView = await da.GetScalar<int>("select count(*) from user_objects where object_type='VIEW'");
+                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }

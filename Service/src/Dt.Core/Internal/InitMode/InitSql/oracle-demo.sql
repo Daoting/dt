@@ -11,6 +11,7 @@ Navicat 从 mysql 导出后修改：
 5. NCHAR CHAR
 6. NUMBER(20) NUMBER(19)
 7. NUMBER(11) NUMBER(9)
+8. 存储过程内部的分号去除，避免 END 被拆分成独立语句
 */
 
 
@@ -2328,3 +2329,42 @@ CREATE SEQUENCE CM_WFI_ITEM_DISPIDX START WITH 177;
 CREATE SEQUENCE CM_WFI_PRC_DISPIDX START WITH 66;
 CREATE SEQUENCE DEMO_CRUD_DISPIDX START WITH 86;
 CREATE SEQUENCE DEMO_基础_序列 START WITH 12;
+
+-- ----------------------------
+-- View structure for DEMO_CHILD_VIEW
+-- ----------------------------
+CREATE VIEW "DEMO_CHILD_VIEW" AS SELECT
+	c.ID,c.PARENT_ID,c.ITEM_NAME, 
+	p.NAME
+FROM
+	DEMO_CHILD_TBL1 c JOIN
+	DEMO_PAR_TBL p on c.PARENT_ID = p.ID;
+
+-- ----------------------------
+-- Function structure for DEMO_用户可访问的菜单
+-- ----------------------------
+CREATE OR REPLACE PROCEDURE "DEMO_用户可访问的菜单" (p_cur out sys_refcursor, p_userid in number)
+AS
+BEGIN
+
+	open p_cur for
+	select id,name
+  from (select distinct (b.id), b.name, dispidx
+          from cm_role_menu a
+          left join cm_menu b
+            on a.menu_id = b.id
+         where exists
+         (select role_id
+                  from cm_user_role c
+                 where a.role_id = c.role_id
+                   and user_id = p_userid
+					union
+					select role_id
+					        from cm_group_role d
+									where a.role_id = d.role_id
+									  and exists (select group_id from cm_user_group e where d.group_id=e.group_id and e.user_id=p_userid)
+					) or a.role_id=1
+			 ) t
+ order by dispidx
+ 
+END;

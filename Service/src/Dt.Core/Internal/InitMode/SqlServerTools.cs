@@ -103,8 +103,10 @@ namespace Dt.Core
                 }
 
                 int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
+                int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
+                int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
                 int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
-                Log.Information($"新库初始化成功，共{cntTbl}个表，{cntSeq}个序列");
+                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }
