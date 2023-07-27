@@ -52,7 +52,7 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "select name from sysobjects where xtype='u'";
+        const string _sqlAllTbls = "select name from sysobjects where xtype='U' or xtype='V'";
         const string _sqlCols = "select * from [{0}] where 1!=1";
         const string _sqlComment =
 "SELECT d.text def, c.value comment 　　 \n" +
@@ -95,65 +95,7 @@ namespace Dt.Core
                     // 表结构
                     foreach (var tbl in tbls)
                     {
-                        TableSchema tblCols = new TableSchema(tbl, DatabaseType.SqlServer);
-
-                        // 所有列
-                        ReadOnlyCollection<DbColumn> cols;
-                        cmd.CommandText = string.Format(_sqlCols, tbl);
-                        using (reader = await cmd.ExecuteReaderAsync())
-                        {
-                            cols = reader.GetColumnSchema();
-                        }
-
-                        // 表的主键
-                        cmd.CommandText = string.Format(_sqlPk, tbl);
-                        List<string> pk = new List<string>();
-                        using (reader = await cmd.ExecuteReaderAsync())
-                        {
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    pk.Add(reader.GetString(0));
-                                }
-                            }
-                        }
-
-                        foreach (var colSchema in cols)
-                        {
-                            TableCol col = new TableCol(tblCols);
-                            col.Name = colSchema.ColumnName;
-                            col.Type = GetColumnType(colSchema);
-
-                            // character_maximum_length
-                            if (colSchema.ColumnSize.HasValue)
-                                col.Length = colSchema.ColumnSize.Value;
-
-                            if (colSchema.AllowDBNull.HasValue)
-                                col.Nullable = colSchema.AllowDBNull.Value;
-
-                            // 读取列结构
-                            cmd.CommandText = string.Format(_sqlComment, tbl, colSchema.ColumnName);
-                            using (reader = await cmd.ExecuteReaderAsync())
-                            {
-                                if (reader.HasRows && reader.Read())
-                                {
-                                    // 默认值
-                                    if (!reader.IsDBNull(0))
-                                        col.Default = reader.GetString(0);
-                                    // 字段注释
-                                    if (!reader.IsDBNull(1))
-                                        col.Comments = reader.GetString(1);
-                                }
-                            }
-
-                            // 是否为主键
-                            if (pk.Contains(colSchema.ColumnName))
-                                tblCols.PrimaryKey.Add(col);
-                            else
-                                tblCols.Columns.Add(col);
-                        }
-                        schema[tbl] = tblCols;
+                        schema[tbl] = await GetTblOrViewSchema(tbl, cmd);
                     }
                 }
                 return schema;
@@ -183,85 +125,7 @@ namespace Dt.Core
                 await OpenConnection();
                 using (var cmd = _conn.CreateCommand())
                 {
-                    DbDataReader reader;
-                    TableSchema tblCols = null;
-
-                    // 表注释
-                    cmd.CommandText = $"select a.name,g.[value] from sys.tables a left join sys.extended_properties g on (a.object_id = g.major_id AND g.minor_id = 0) where a.name='{p_tblName}'";
-                    using (reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows && reader.Read())
-                        {
-                            // 原始名称
-                            if (!reader.IsDBNull(0))
-                                tblCols = new TableSchema(reader.GetString(0), DatabaseType.SqlServer);
-
-                            // 注释
-                            if (!reader.IsDBNull(1))
-                                tblCols.Comments = reader.GetString(1);
-                        }
-                    }
-                    if (tblCols == null)
-                        return null;
-
-                    // 表结构
-                    cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
-                    ReadOnlyCollection<DbColumn> cols;
-                    using (reader = await cmd.ExecuteReaderAsync())
-                    {
-                        cols = reader.GetColumnSchema();
-                    }
-
-                    // 表的主键
-                    cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
-                    List<string> pk = new List<string>();
-                    using (reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                pk.Add(reader.GetString(0));
-                            }
-                        }
-                    }
-
-                    foreach (var colSchema in cols)
-                    {
-                        TableCol col = new TableCol(tblCols);
-                        col.Name = colSchema.ColumnName;
-                        col.Type = GetColumnType(colSchema);
-
-                        // character_maximum_length
-                        if (colSchema.ColumnSize.HasValue)
-                            col.Length = colSchema.ColumnSize.Value;
-
-                        if (colSchema.AllowDBNull.HasValue)
-                            col.Nullable = colSchema.AllowDBNull.Value;
-
-                        // 读取列结构
-                        cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
-                        using (reader = await cmd.ExecuteReaderAsync())
-                        {
-                            if (reader.HasRows && reader.Read())
-                            {
-                                // 默认值
-                                if (!reader.IsDBNull(0))
-                                    col.Default = reader.GetString(0);
-                                // 字段注释
-                                if (!reader.IsDBNull(1))
-                                    col.Comments = reader.GetString(1);
-                            }
-                        }
-
-                        // 是否为主键
-                        if (pk.Contains(colSchema.ColumnName))
-                            tblCols.PrimaryKey.Add(col);
-                        else
-                            tblCols.Columns.Add(col);
-                    }
-
-                    return tblCols;
+                    return await GetTblOrViewSchema(p_tblName, cmd);
                 }
             }
             catch (Exception ex)
@@ -277,6 +141,105 @@ namespace Dt.Core
         public override async Task SyncDbTime()
         {
             Kit.Now = await GetScalar<DateTime>("select getdate()");
+        }
+
+        async Task<TableSchema> GetTblOrViewSchema(string p_tblName, DbCommand p_cmd)
+        {
+            DbDataReader reader;
+            TableSchema tblCols = null;
+
+            // 表注释
+            string sql = @"select a.name,g.[value] from
+	( select object_id, name from sys.tables union select object_id, name from sys.views ) a
+	left join sys.extended_properties g on ( a.object_id = g.major_id AND g.minor_id = 0 ) 
+where a.name= '{0}'";
+
+            p_cmd.CommandText = string.Format(sql, p_tblName);
+            using (reader = await p_cmd.ExecuteReaderAsync())
+            {
+                if (reader.HasRows && reader.Read())
+                {
+                    // 原始名称
+                    if (!reader.IsDBNull(0))
+                        tblCols = new TableSchema(reader.GetString(0), DatabaseType.SqlServer);
+
+                    // 注释
+                    if (!reader.IsDBNull(1))
+                        tblCols.Comments = reader.GetString(1);
+                }
+            }
+            if (tblCols == null)
+                return null;
+
+            // 表结构
+            p_cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
+            ReadOnlyCollection<DbColumn> cols;
+            using (reader = await p_cmd.ExecuteReaderAsync())
+            {
+                cols = reader.GetColumnSchema();
+            }
+
+            // 表的主键
+            p_cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
+            List<string> pk = new List<string>();
+            using (reader = await p_cmd.ExecuteReaderAsync())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        pk.Add(reader.GetString(0));
+                    }
+                }
+                else
+                {
+                    // 视图无法查找主键，id默认为主键
+                    var idCol = (from c in cols
+                                 where c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase)
+                                 select c).FirstOrDefault();
+                    if (idCol != null)
+                    {
+                        pk.Add(idCol.ColumnName);
+                    }
+                }
+            }
+
+            foreach (var colSchema in cols)
+            {
+                TableCol col = new TableCol(tblCols);
+                col.Name = colSchema.ColumnName;
+                col.Type = GetColumnType(colSchema);
+
+                // character_maximum_length
+                if (colSchema.ColumnSize.HasValue)
+                    col.Length = colSchema.ColumnSize.Value;
+
+                if (colSchema.AllowDBNull.HasValue)
+                    col.Nullable = colSchema.AllowDBNull.Value;
+
+                // 读取列结构
+                p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
+                using (reader = await p_cmd.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows && reader.Read())
+                    {
+                        // 默认值
+                        if (!reader.IsDBNull(0))
+                            col.Default = reader.GetString(0);
+                        // 字段注释
+                        if (!reader.IsDBNull(1))
+                            col.Comments = reader.GetString(1);
+                    }
+                }
+
+                // 是否为主键
+                if (pk.Contains(colSchema.ColumnName))
+                    tblCols.PrimaryKey.Add(col);
+                else
+                    tblCols.Columns.Add(col);
+            }
+
+            return tblCols;
         }
         #endregion
     }
