@@ -95,7 +95,7 @@ namespace Dt.Core
                 {
                     base.RemoveAt(ls[i]);
                 }
-                    
+
                 CheckChanges();
                 _updating = 0;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, ls));
@@ -204,12 +204,15 @@ namespace Dt.Core
         #region ITreeData
         IEnumerable<object> ITreeData.GetTreeRoot()
         {
-            // 固定字段 id, parentid
-            if (_columns.Contains("parentid") && Count > 0)
+            var parentID = GetTreeNodeParentID();
+            if (parentID == null)
+                throw new Exception(_treeErr);
+
+            if (Count > 0)
             {
                 // parentid类型可以为long?
                 return from row in this
-                       where row.Str("parentid") == string.Empty
+                       where row.Str(parentID) == string.Empty
                        select row;
             }
             return null;
@@ -217,16 +220,33 @@ namespace Dt.Core
 
         IEnumerable<object> ITreeData.GetTreeItemChildren(object p_parent)
         {
+            var parentID = GetTreeNodeParentID();
+            if (parentID == null)
+                throw new Exception(_treeErr);
+
             Row parent = p_parent as Row;
             if (parent != null && parent.Contains("id"))
             {
                 // id, parentid类型可以为long, string等
                 return from row in this
-                       where row.Str("parentid") == parent.Str("id")
+                       where row.Str(parentID) == parent.Str("id")
                        select row;
             }
             return null;
         }
+
+        string GetTreeNodeParentID()
+        {
+            foreach (var name in _defTreeNodeParentID)
+            {
+                if (_columns.Contains(name))
+                    return name;
+            }
+            return null;
+        }
+
+        static string[] _defTreeNodeParentID = new string[] { "parent_id", "parentid", "group_id", "groupid" };
+        const string _treeErr = "Table 作为 ITreeData 未指定 ParentID 的列名！";
         #endregion
     }
 }
