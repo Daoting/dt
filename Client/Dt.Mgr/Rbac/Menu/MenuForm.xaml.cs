@@ -143,7 +143,7 @@ namespace Dt.Mgr.Rbac
         {
             using (e.Wait())
             {
-                ((CTree)sender).Data = await MenuX.Query("where is_group=1 order by dispidx");
+                ((CTree)sender).Data = await MenuX.Query("where is_group='1' order by dispidx");
             }
         }
         #endregion

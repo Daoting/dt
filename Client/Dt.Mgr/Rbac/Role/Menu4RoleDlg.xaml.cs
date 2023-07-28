@@ -25,7 +25,7 @@ namespace Dt.Mgr.Rbac
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await MenuX.Query($"where is_group=0 and not exists (select menu_id from cm_role_menu b where a.id=b.menu_id and role_id={p_releatedID}) order by dispidx");
+            _lv.Data = await MenuX.Query($"where is_group='0' and not exists (select menu_id from cm_role_menu b where a.id=b.menu_id and role_id={p_releatedID}) order by dispidx");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

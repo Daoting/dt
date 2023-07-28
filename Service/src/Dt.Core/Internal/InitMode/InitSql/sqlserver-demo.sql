@@ -3270,10 +3270,10 @@ GO
 -- ----------------------------
 -- Foreign Keys structure for table cm_group_role
 -- ----------------------------
-ALTER TABLE [dbo].[cm_group_role] ADD CONSTRAINT [fk_group_role_groupid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[cm_group] ([id])
+ALTER TABLE [dbo].[cm_group_role] ADD CONSTRAINT [fk_group_role_groupid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[cm_group] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_group_role] ADD CONSTRAINT [fk_group_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id])
+ALTER TABLE [dbo].[cm_group_role] ADD CONSTRAINT [fk_group_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id]) ON DELETE CASCADE
 GO
 
 
@@ -3294,74 +3294,74 @@ GO
 -- ----------------------------
 -- Foreign Keys structure for table cm_role_menu
 -- ----------------------------
-ALTER TABLE [dbo].[cm_role_menu] ADD CONSTRAINT [fk_role_menu_menuid] FOREIGN KEY ([menu_id]) REFERENCES [dbo].[cm_menu] ([id])
+ALTER TABLE [dbo].[cm_role_menu] ADD CONSTRAINT [fk_role_menu_menuid] FOREIGN KEY ([menu_id]) REFERENCES [dbo].[cm_menu] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_role_menu] ADD CONSTRAINT [fk_role_menu_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id])
+ALTER TABLE [dbo].[cm_role_menu] ADD CONSTRAINT [fk_role_menu_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_role_per
 -- ----------------------------
-ALTER TABLE [dbo].[cm_role_per] ADD CONSTRAINT [fk_role_per_perid] FOREIGN KEY ([per_id]) REFERENCES [dbo].[cm_permission] ([id])
+ALTER TABLE [dbo].[cm_role_per] ADD CONSTRAINT [fk_role_per_perid] FOREIGN KEY ([per_id]) REFERENCES [dbo].[cm_permission] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_role_per] ADD CONSTRAINT [fk_role_per_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id])
+ALTER TABLE [dbo].[cm_role_per] ADD CONSTRAINT [fk_role_per_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_group
 -- ----------------------------
-ALTER TABLE [dbo].[cm_user_group] ADD CONSTRAINT [fk_user_group_groupid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[cm_group] ([id])
+ALTER TABLE [dbo].[cm_user_group] ADD CONSTRAINT [fk_user_group_groupid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[cm_group] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_user_group] ADD CONSTRAINT [fk_user_group_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id])
+ALTER TABLE [dbo].[cm_user_group] ADD CONSTRAINT [fk_user_group_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_params
 -- ----------------------------
-ALTER TABLE [dbo].[cm_user_params] ADD CONSTRAINT [fk_user_params_paramsid] FOREIGN KEY ([param_id]) REFERENCES [dbo].[cm_params] ([id])
+ALTER TABLE [dbo].[cm_user_params] ADD CONSTRAINT [fk_user_params_paramsid] FOREIGN KEY ([param_id]) REFERENCES [dbo].[cm_params] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_user_params] ADD CONSTRAINT [fk_user_params_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id])
+ALTER TABLE [dbo].[cm_user_params] ADD CONSTRAINT [fk_user_params_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_user_role
 -- ----------------------------
-ALTER TABLE [dbo].[cm_user_role] ADD CONSTRAINT [fk_user_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id])
+ALTER TABLE [dbo].[cm_user_role] ADD CONSTRAINT [fk_user_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_user_role] ADD CONSTRAINT [fk_user_role_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id])
+ALTER TABLE [dbo].[cm_user_role] ADD CONSTRAINT [fk_user_role_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[cm_user] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_atv
 -- ----------------------------
-ALTER TABLE [dbo].[cm_wfd_atv] ADD CONSTRAINT [fk_wfd_atv_prcid] FOREIGN KEY ([prc_id]) REFERENCES [dbo].[cm_wfd_prc] ([id])
+ALTER TABLE [dbo].[cm_wfd_atv] ADD CONSTRAINT [fk_wfd_atv_prcid] FOREIGN KEY ([prc_id]) REFERENCES [dbo].[cm_wfd_prc] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_atv_role
 -- ----------------------------
-ALTER TABLE [dbo].[cm_wfd_atv_role] ADD CONSTRAINT [fk_wfd_atv_role_atvid] FOREIGN KEY ([atv_id]) REFERENCES [dbo].[cm_wfd_atv] ([id])
+ALTER TABLE [dbo].[cm_wfd_atv_role] ADD CONSTRAINT [fk_wfd_atv_role_atvid] FOREIGN KEY ([atv_id]) REFERENCES [dbo].[cm_wfd_atv] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[cm_wfd_atv_role] ADD CONSTRAINT [fk_wfd_atv_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id])
+ALTER TABLE [dbo].[cm_wfd_atv_role] ADD CONSTRAINT [fk_wfd_atv_role_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[cm_role] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfd_trs
 -- ----------------------------
-ALTER TABLE [dbo].[cm_wfd_trs] ADD CONSTRAINT [fk_wfd_trs_prcid] FOREIGN KEY ([prc_id]) REFERENCES [dbo].[cm_wfd_prc] ([id])
+ALTER TABLE [dbo].[cm_wfd_trs] ADD CONSTRAINT [fk_wfd_trs_prcid] FOREIGN KEY ([prc_id]) REFERENCES [dbo].[cm_wfd_prc] ([id]) ON DELETE CASCADE
 GO
 
 
@@ -3371,14 +3371,14 @@ GO
 ALTER TABLE [dbo].[cm_wfi_atv] ADD CONSTRAINT [fk_wfi_atv_atvdid] FOREIGN KEY ([atvd_id]) REFERENCES [dbo].[cm_wfd_atv] ([id])
 GO
 
-ALTER TABLE [dbo].[cm_wfi_atv] ADD CONSTRAINT [fk_wfi_atv_prciid] FOREIGN KEY ([prci_id]) REFERENCES [dbo].[cm_wfi_prc] ([id])
+ALTER TABLE [dbo].[cm_wfi_atv] ADD CONSTRAINT [fk_wfi_atv_prciid] FOREIGN KEY ([prci_id]) REFERENCES [dbo].[cm_wfi_prc] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_item
 -- ----------------------------
-ALTER TABLE [dbo].[cm_wfi_item] ADD CONSTRAINT [fk_wfi_item_atviid] FOREIGN KEY ([atvi_id]) REFERENCES [dbo].[cm_wfi_atv] ([id])
+ALTER TABLE [dbo].[cm_wfi_item] ADD CONSTRAINT [fk_wfi_item_atviid] FOREIGN KEY ([atvi_id]) REFERENCES [dbo].[cm_wfi_atv] ([id]) ON DELETE CASCADE
 GO
 
 
@@ -3392,47 +3392,47 @@ GO
 -- ----------------------------
 -- Foreign Keys structure for table cm_wfi_trs
 -- ----------------------------
-ALTER TABLE [dbo].[cm_wfi_trs] ADD CONSTRAINT [fk_wfi_trs_srcatviid] FOREIGN KEY ([src_atvi_id]) REFERENCES [dbo].[cm_wfi_atv] ([id])
+ALTER TABLE [dbo].[cm_wfi_trs] ADD CONSTRAINT [fk_wfi_trs_srcatviid] FOREIGN KEY ([src_atvi_id]) REFERENCES [dbo].[cm_wfi_atv] ([id]) ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[cm_wfi_trs] ADD CONSTRAINT [fk_wfi_trs_tgtatviid] FOREIGN KEY ([tgt_atvi_id]) REFERENCES [dbo].[cm_wfi_atv] ([id])
 GO
 
-ALTER TABLE [dbo].[cm_wfi_trs] ADD CONSTRAINT [fk_wfi_trs_trsdid] FOREIGN KEY ([trsd_id]) REFERENCES [dbo].[cm_wfd_trs] ([id])
+ALTER TABLE [dbo].[cm_wfi_trs] ADD CONSTRAINT [fk_wfi_trs_trsdid] FOREIGN KEY ([trsd_id]) REFERENCES [dbo].[cm_wfd_trs] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_大儿
 -- ----------------------------
-ALTER TABLE [dbo].[demo_大儿] ADD CONSTRAINT [fk_大儿_parendid] FOREIGN KEY ([parent_id]) REFERENCES [dbo].[demo_父表] ([id])
+ALTER TABLE [dbo].[demo_大儿] ADD CONSTRAINT [fk_大儿_parendid] FOREIGN KEY ([parent_id]) REFERENCES [dbo].[demo_父表] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_角色权限
 -- ----------------------------
-ALTER TABLE [dbo].[demo_角色权限] ADD CONSTRAINT [fk_角色权限_prvid] FOREIGN KEY ([prv_id]) REFERENCES [dbo].[demo_权限] ([id])
+ALTER TABLE [dbo].[demo_角色权限] ADD CONSTRAINT [fk_角色权限_prvid] FOREIGN KEY ([prv_id]) REFERENCES [dbo].[demo_权限] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[demo_角色权限] ADD CONSTRAINT [fk_角色权限_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[demo_角色] ([id])
+ALTER TABLE [dbo].[demo_角色权限] ADD CONSTRAINT [fk_角色权限_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[demo_角色] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_小儿
 -- ----------------------------
-ALTER TABLE [dbo].[demo_小儿] ADD CONSTRAINT [fk_小儿_parentid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[demo_父表] ([id])
+ALTER TABLE [dbo].[demo_小儿] ADD CONSTRAINT [fk_小儿_parentid] FOREIGN KEY ([group_id]) REFERENCES [dbo].[demo_父表] ([id]) ON DELETE CASCADE
 GO
 
 
 -- ----------------------------
 -- Foreign Keys structure for table demo_用户角色
 -- ----------------------------
-ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[demo_角色] ([id])
+ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_roleid] FOREIGN KEY ([role_id]) REFERENCES [dbo].[demo_角色] ([id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[demo_用户] ([id])
+ALTER TABLE [dbo].[demo_用户角色] ADD CONSTRAINT [fk_demo_用户角色_userid] FOREIGN KEY ([user_id]) REFERENCES [dbo].[demo_用户] ([id]) ON DELETE CASCADE
 GO
 
 -- ----------------------------
