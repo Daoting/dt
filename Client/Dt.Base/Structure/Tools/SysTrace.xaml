@@ -16,12 +16,39 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Lv x:Name="_lv" AutoScrollBottom="True" Background="Black" SelectionMode="None" ItemHeight="NaN">
-        <DataTemplate>
-            <StackPanel Padding="10,0,10,10">
-                <a:Dot ID="Title" Call="SysTraceCellUI.FormatTitle" />
-                <a:Dot ID="Message" Foreground="White" />
-            </StackPanel>
-        </DataTemplate>
-    </a:Lv>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="240" />
+        </Grid.RowDefinitions>
+        <a:Lv x:Name="_lv" ItemClick="OnOutputClick" AutoScrollBottom="True" Background="Black" SelectionMode="None" ItemHeight="NaN">
+            <DataTemplate>
+                <StackPanel Padding="10,0,10,10">
+                    <a:Dot ID="Title" Call="SysTraceCellUI.FormatTitle" />
+                    <a:Dot ID="Message" Foreground="White" />
+                </StackPanel>
+            </DataTemplate>
+        </a:Lv>
+
+        <Grid Background="{StaticResource 浅灰1}" 
+              BorderBrush="{StaticResource 浅灰2}"
+              BorderThickness="1"
+              Margin="0,0,-1,0"
+              Grid.Row="1">
+            <a:Menu>
+                <a:Mi ID="标题" Icon="页签" Click="CopyTitle" />
+                <a:Mi ID="内容" Icon="卡片" Click="CopyMessage" />
+                <a:Mi ID="详细" Icon="代码" Click="CopyDetail" />
+                <a:Mi ID="查询语句" Icon="命令" Click="CopySql" />
+            </a:Menu>
+        </Grid>
+        <TextBox x:Name="_tb"
+                 AcceptsReturn="True"
+                 VerticalAlignment="Stretch"
+                 BorderThickness="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Grid.Row="2"/>
+    </Grid>
 </a:Dlg>

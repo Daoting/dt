@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Controls;
 using Serilog.Events;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -154,6 +155,104 @@ namespace Dt.Base.Tools
             }
             Log.Debug(name);
         }
+
+        #region 输出
+        void OnOutputClick(object sender, ItemClickArgs e)
+        {
+            var item = e.Data.To<TraceLogItem>();
+            _tb.Text = item.Detial;
+            _tb.Tag = item;
+        }
+
+        void CopyTitle(object sender, Mi e)
+        {
+            var item = _tb.Tag as TraceLogItem;
+            if (item == null)
+                return;
+
+            string msg;
+            if (item.Log.Properties.TryGetValue("SourceContext", out var val))
+            {
+                // 含日志来源，不显示命名空间，后缀为级别
+                msg = val.ToString("l", null);
+                int index = msg.LastIndexOf('.');
+                if (index > -1)
+                    msg = msg.Substring(index + 1);
+            }
+            else
+            {
+                msg = item.Log.Level.ToString();
+            }
+            CopyToClipboard(msg);
+        }
+
+        void CopyMessage(object sender, Mi e)
+        {
+            var item = _tb.Tag as TraceLogItem;
+            if (item != null)
+                CopyToClipboard(item.Message);
+        }
+
+        void CopyDetail(object sender, Mi e)
+        {
+            var item = _tb.Tag as TraceLogItem;
+            if (item != null)
+                CopyToClipboard(item.Detial);
+        }
+
+        void CopySql(object sender, Mi e)
+        {
+            string con;
+            var item = _tb.Tag as TraceLogItem;
+            if (item == null
+                || !item.ExistDetial
+                || (con = item.Detial) == null
+                || !con.StartsWith('[')
+                || !con.EndsWith(']'))
+            {
+                Kit.Warn("无 select 查询语句！");
+                return;
+            }
+
+            bool find = false;
+            try
+            {
+                var elem = JsonSerializer.Deserialize<JsonElement>(con);
+                if (elem.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var it in elem.EnumerateArray())
+                    {
+                        if (it.ValueKind == JsonValueKind.String)
+                        {
+                            var val = it.GetString().Trim();
+                            if (val.StartsWith("select", StringComparison.OrdinalIgnoreCase))
+                            {
+                                CopyToClipboard(val);
+                                find = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            if (!find)
+                Kit.Warn("无 select 查询语句！");
+        }
+
+        /// <summary>
+        /// 将文本复制到剪贴板
+        /// </summary>
+        /// <param name="p_text"></param>
+        static void CopyToClipboard(string p_text)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_text);
+            Clipboard.SetContent(data);
+            Kit.Warn("已复制到剪切板！");
+        }
+        #endregion
 
         #region 生成存根代码
 #if WIN
@@ -310,7 +409,6 @@ namespace Dt.Base.Tools
                 ColumnDefinitions =
                 {
                     new ColumnDefinition() { Width = GridLength.Auto },
-                    new ColumnDefinition() { Width = GridLength.Auto },
                     new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) },
                 },
                 Height = 40,
@@ -321,11 +419,6 @@ namespace Dt.Base.Tools
             var tbLevel = new TextBlock { Foreground = Res.深灰1, Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
             Grid.SetColumn(tbLevel, 1);
             grid.Children.Add(tbLevel);
-
-            Button btn = new Button { Content = "\uE03F", Style = Res.浅字符按钮, HorizontalAlignment = HorizontalAlignment.Right };
-            btn.Click += ShowMenu;
-            Grid.SetColumn(btn, 2);
-            grid.Children.Add(btn);
             e.UI = grid;
 
             e.Set += c =>
@@ -369,104 +462,5 @@ namespace Dt.Base.Tools
                 }
             };
         }
-
-        #region 菜单
-        static Menu _menu;
-        static async void ShowMenu(object sender, RoutedEventArgs e)
-        {
-            if (_menu == null)
-            {
-                _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
-                var mi = new Mi { ID = "查看详细", Icon = Icons.眼睛 };
-                mi.Click += ShowDetail;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "复制详细", Icon = Icons.复制 };
-                mi.Click += CopyDetail;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "复制标题", Icon = Icons.复制 };
-                mi.Click += CopyTitle;
-                _menu.Items.Add(mi);
-
-                mi = new Mi { ID = "除此清空", Icon = Icons.垃圾箱 };
-                mi.Click += ClearExcept;
-                _menu.Items.Add(mi);
-            }
-
-            var btn = (Button)sender;
-            var item = (TraceLogItem)((LvItem)btn.DataContext).Data;
-            if (item.ExistDetial)
-            {
-                _menu["查看详细"].Visibility = Visibility.Visible;
-                _menu["复制详细"].Visibility = Visibility.Visible;
-            }
-            else
-            {
-                _menu["查看详细"].Visibility = Visibility.Collapsed;
-                _menu["复制详细"].Visibility = Visibility.Collapsed;
-            }
-
-            _menu.Tag = item;
-            await _menu.OpenContextMenu(btn);
-        }
-
-        static void ClearExcept(object sender, Mi e)
-        {
-            TraceLogs.ClearExcept((TraceLogItem)_menu.Tag);
-        }
-
-        static void CopyTitle(object sender, Mi e)
-        {
-            CopyToClipboard(((TraceLogItem)_menu.Tag).Message);
-        }
-
-        static void CopyDetail(object sender, Mi e)
-        {
-            CopyToClipboard(((TraceLogItem)_menu.Tag).Detial);
-        }
-
-        static void ShowDetail(object sender, Mi e)
-        {
-            var item = (TraceLogItem)_menu.Tag;
-
-            TextBox tb = new TextBox
-            {
-                AcceptsReturn = true,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                BorderThickness = new Thickness(),
-                Text = item.Detial,
-            };
-            ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
-            ScrollViewer.SetVerticalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
-
-            Dlg dlg = new Dlg
-            {
-                Title = item.Log.Timestamp.ToString("HH:mm:ss"),
-                Content = tb,
-                IsPinned = true,
-            };
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.MinWidth = 400;
-                dlg.MaxWidth = Kit.ViewWidth - 80;
-                dlg.MinHeight = 300;
-                dlg.MaxHeight = Kit.ViewHeight - 80;
-            }
-            dlg.Show();
-        }
-
-        /// <summary>
-        /// 将文本复制到剪贴板
-        /// </summary>
-        /// <param name="p_text"></param>
-        static void CopyToClipboard(string p_text)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_text);
-            Clipboard.SetContent(data);
-            Kit.Warn("已复制到剪切板！");
-        }
-        #endregion
     }
 }
