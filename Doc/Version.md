@@ -36,9 +36,11 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 支持视图生成Enity
 * 增加视图实体的增删改demo，mysql sqlserver能保存的列最多，oracle只可保存主键列所属表的列，pg视图不能保存数据
 * 系统日志增加复制select语句的功能，方便调试查询语句
+* 增加Table 作为 ITreeData时父节点id的列名
 
 ### Bug修改
 * Win中停靠在四周的Tab在固定、停靠切换时丢失弹出面板的尺寸
+* 解决Excel控件中公式不再重新计算bug
 
 ## Release 4.1.1
 ### 变更
