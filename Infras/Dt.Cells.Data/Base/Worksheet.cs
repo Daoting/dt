@@ -12108,7 +12108,8 @@ namespace Dt.Cells.Data
         /// </summary>
         public void SuspendCalcService()
         {
-            _calcEngineSuspended++;
+            // 解决公式不再重新计算bug，暂屏蔽
+            //_calcEngineSuspended++;
         }
 
         /// <summary>
