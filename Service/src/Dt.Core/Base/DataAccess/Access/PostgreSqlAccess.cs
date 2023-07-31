@@ -58,13 +58,20 @@ from pg_class as c,pg_attribute as a
 where a.attrelid = c.oid
       and a.attnum>0 
       and c.relname = '{0}'
-      and a.attname='{1}'";
+      and a.attname='{1}'
+";
 
         const string _sqlPk = @"
-select attr.attname as colname from pg_constraint 
-inner join pg_class on pg_constraint.conrelid = pg_class.oid 
-inner join pg_attribute attr on attr.attrelid = pg_class.oid and attr.attnum = pg_constraint.conkey[1] 
-where pg_class.relname = '{0}' and pg_constraint.contype='p'";
+select kcu.column_name
+from information_schema.table_constraints tco
+join information_schema.key_column_usage kcu 
+     on kcu.constraint_name = tco.constraint_name
+     and kcu.constraint_schema = tco.constraint_schema
+     and kcu.constraint_name = tco.constraint_name
+where tco.constraint_type = 'PRIMARY KEY'
+      and kcu.table_schema='public'
+      and kcu.table_name='{0}'
+";
 
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
         {
