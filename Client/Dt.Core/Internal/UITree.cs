@@ -62,6 +62,7 @@ namespace Dt.Core
             // WinUI中Window.Current为null
             MainWin = new Window { Title = Stub.Inst.Title };
             MainWin.Activate();
+            LoadWinState();
 #else
             // uno中若新创建，Window.Bounds始终为(0, 0)！
             MainWin = Window.Current;
@@ -82,7 +83,7 @@ namespace Dt.Core
             Brush bgBrush = (theme == null) ?
                 new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2))
                 : theme.ThemeBrush;
-            
+
             // 根Grid，背景为主题画刷
             RootGrid = new Grid { Background = bgBrush };
 
@@ -354,6 +355,9 @@ namespace Dt.Core
         /// <param name="e"></param>
         static void OnWindowSizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs e)
         {
+#if WIN
+            SaveWinState();
+#endif
             bool isPhoneUI = e.Size.Width < _maxPhoneUIWidth;
             if (isPhoneUI == Kit.IsPhoneUI)
                 return;
@@ -369,6 +373,55 @@ namespace Dt.Core
             // 调整对话框层
             _dlgCanvas.Children.Clear();
             Stub.Inst.OnUIModeChanged();
+        }
+#endif
+        #endregion
+
+        #region 窗口最大化
+#if WIN
+        const string _maximizeFlagFile = "maximize.flag";
+        static bool _lastMaximized;
+
+        /// <summary>
+        /// 若窗口历史为最大化，启动时调整为最大化
+        /// </summary>
+        static void LoadWinState()
+        {
+            if (File.Exists(Path.Combine(Kit.CachePath, _maximizeFlagFile)))
+            {
+                var presenter = (Microsoft.UI.Windowing.OverlappedPresenter)MainWin.AppWindow.Presenter;
+                presenter.Maximize();
+                _lastMaximized = true;
+            }
+        }
+
+        /// <summary>
+        /// 记录最大化窗口标志
+        /// </summary>
+        static void SaveWinState()
+        {
+            var isMaximized = ((Microsoft.UI.Windowing.OverlappedPresenter)MainWin.AppWindow.Presenter).State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized;
+            if (isMaximized == _lastMaximized)
+                return;
+
+            _lastMaximized = isMaximized;
+            var flag = Path.Combine(Kit.CachePath, _maximizeFlagFile);
+            if (isMaximized)
+            {
+                if (!File.Exists(flag))
+                {
+                    // 空的标志文件
+                    File.Create(flag).Close();
+                }
+            }
+            else if (File.Exists(flag))
+            {
+                try
+                {
+                    File.Delete(flag);
+                }
+                catch { }
+            }
         }
 #endif
         #endregion
