@@ -31,6 +31,23 @@ namespace Dt.Core
             Kit.TraceSql = false;
         }
 
+        public static async Task<bool> TestConnect(List<string> p_list)
+        {
+            var da = new SqlServerAccess(new DbInfo(
+                "sqlserver",
+                $"Data Source={p_list[1]},{p_list[2]};Initial Catalog={p_list[3]};User ID=sa;Password={p_list[4]};Encrypt=True;TrustServerCertificate=True;",
+                DatabaseType.SqlServer));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<string> IsExists()
         {
             string msg = null;
@@ -106,7 +123,9 @@ namespace Dt.Core
                 int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
                 int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
                 int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
-                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+                var tp = p_initType == 0 ? "标准库" : "样例库";
+                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }

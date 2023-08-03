@@ -67,6 +67,13 @@
             border: 1px solid #E0E0E0;
             padding: 10px 0px 10px 0px;
         }
+
+        .divContent {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body style="margin: 0; padding: 0; height: 100%;">
@@ -74,43 +81,56 @@
         <div class="divCaption">
             <span class="aTitle">数据库初始化向导</span>
         </div>
-        <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; border: 1px solid #E0E0E0; padding: 20px; height: 400px; margin-top: -1px">
-            <div>
-                <label>数据库类型</label>
-                <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
-                    <option value="0">MySql</option>
-                    <option value="1">Oracle</option>
-                    <option value="2">Sql Server</option>
-                    <option value="3">PostgreSql</option>
-                </select><br /><br />
-                <label>主机</label>
-                <input type="text" id="host" value="10.10.1.2"><br /><br />
-                <label>端口</label>
-                <input type="text" id="port" value="3306"><br /><br />
-                <label id="lbldefdb">无需填写</label>
-                <input type="text" id="defdb"><br /><br />
-                <label id="lblpwd">root密码</label>
-                <input type="password" id="pwd"><br /><br /><br />
-
-                <label style="color:red;width:auto">* 新库或新用户名已存在时将删除重建，请谨慎！</label><br />
-                <label id="lbldb">新库名</label>
-                <input type="text" id="newdb"><br /><br />
-                <label>新用户名</label>
-                <input type="text" id="newuser"><br /><br />
+        <div style="border: 1px solid #E0E0E0; padding: 20px; height: 240px; margin-top: -1px">
+            <div id="divFirst" class="divContent">
+                <div>
+                    <label>数据库类型</label>
+                    <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
+                        <option value="0">MySql</option>
+                        <option value="1">Oracle</option>
+                        <option value="2">Sql Server</option>
+                        <option value="3">PostgreSql</option>
+                    </select><br /><br />
+                    <label>主机</label>
+                    <input type="text" id="host"><br /><br />
+                    <label>端口</label>
+                    <input type="text" id="port" value="3306"><br /><br />
+                    <label id="lbldefdb">无需填写</label>
+                    <input id="defdb" type="text" readonly="readonly"><br /><br />
+                    <label id="lblpwd">root密码</label>
+                    <input id="pwd" type="password" ><br /><br />
+                    <input id="btnConnec" type="button" value="连　　接" style="width:100%;" onclick="onConnect()">
+                </div>
             </div>
-            <input id="btn0" type="button" value="创建并初始化新库" style="width:350px;" onclick="onDoInit(0)"><br />
-            <div style="display: flex; justify-content:center;">
-                <input id="btn1" type="button" value="只创建空库" style="width:150px;" onclick="onDoInit(1)">
-                <input id="btn2" type="button" value="创建demo库" style="width:150px;margin-left:50px;" onclick="onDoInit(2)">
+            <div id="divSecond" class="divContent" style="display: none">
+                <div>
+                    <label id="lbldb">新库名</label>
+                    <input type="text" id="newdb"><br /><br />
+                    <label>新用户名</label>
+                    <input type="text" id="newuser"><br /><br />
+                    <label>新库内容</label>
+                    <select id="dbContent" style="width:203px;padding:1px 2px">
+                        <option value="0">标准库</option>
+                        <option value="1">空库</option>
+                        <option value="2">样例库</option>
+                    </select><br /><br />
+                    <input id="btn0" type="button" value="创　建　新　库" style="width: 100%;" onclick="onDoInit()">
+                    <input id="btn1" type="button" value="返　回" style="width: 100%; margin-top: 10px;" onclick="onBack()">
+                    <div style="margin-top: 20px;">
+                        <label style="color: red; width: auto;">1. 新库或新用户名已存在时将删除重建！</label><br />
+                        <label style="color: red; width: auto;">2. 新用户的默认密码和用户名相同！</label>
+                    </div>
+                </div>
+                
             </div>
         </div>
         <div class="divCaption" style="margin-top:10px">
             <span class="aTitle">输出日志</span>
         </div>
-        <div style="padding: 10px 10px 10px 10px; background: black; color: white; overflow: auto; height: 180px;">
+        <div style="padding: 10px 10px 10px 10px; background: black; color: white; overflow: auto; height: 340px;">
             <pre id="log"></pre>
         </div>
-    </div>
+     </div>
 
     <script>
         var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
@@ -126,6 +146,7 @@
                 $("port").value = "3306";
                 $("lblpwd").innerText = "root密码";
                 $("lbldefdb").innerText = "无需填写";
+                $("defdb").setAttribute("readonly", "readonly");
                 $("defdb").value = "";
                 $("lbldb").innerText = "新库名";
             }
@@ -133,7 +154,9 @@
             {
                 $("port").value = "1521";
                 $("lblpwd").innerText = "system密码";
+                $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "服务名";
+                $("defdb").removeAttribute("readOnly");
                 $("defdb").value = "orcl";
                 $("lbldb").innerText = "新表空间";
             }
@@ -141,7 +164,9 @@
             {
                 $("port").value = "1433";
                 $("lblpwd").innerText = "sa密码";
+                $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "默认库名";
+                $("defdb").removeAttribute("readOnly");
                 $("defdb").value = "master";
                 $("lbldb").innerText = "新库名";
             }
@@ -149,13 +174,41 @@
             {
                 $("port").value = "5432";
                 $("lblpwd").innerText = "postgres密码";
+                $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "默认库名";
+                $("defdb").removeAttribute("readOnly");
                 $("defdb").value = "postgres";
                 $("lbldb").innerText = "新库名";
             }
         }
 
-        async function onDoInit(p_initType)
+        async function onConnect()
+        {
+            if (!isConnectValid())
+                return;
+
+            $("btnConnec").disabled = "disabled";
+            var list = "[\"&ss\",\""
+                + $("dbtype").value + "\",\""
+                + $("host").value + "\",\""
+                + $("port").value + "\",\""
+                + $("defdb").value + "\",\""
+                + $("pwd").value + "\"]";
+                
+            var msg = await call("[\"TestConnect\"," + list + "]");
+            if (msg != null && msg != "")
+            {
+                alert(msg);
+            }
+            else
+            {
+                $("divFirst").style = "display: none";
+                $("divSecond").style = "display: flex";
+            }
+            $("btnConnec").disabled = "";
+        }
+
+        async function onDoInit()
         {
             if (!isValid())
                 return;
@@ -182,8 +235,15 @@
                 }
             }
 
-            await call("[\"DoInit\"," + list + "," + p_initType + "]");
+            var initType = $("dbContent").value;
+            await call("[\"DoInit\"," + list + "," + initType + "]");
             toggleButton(false);
+        }
+
+        function onBack()
+        {
+            $("divFirst").style = "display: flex";
+            $("divSecond").style = "display: none";
         }
 
         function toggleButton(p_disabled)
@@ -192,14 +252,38 @@
             {
                 $("btn0").disabled = "disabled";
                 $("btn1").disabled = "disabled";
-                $("btn2").disabled = "disabled";
             }
             else
             {
                 $("btn0").disabled = "";
                 $("btn1").disabled = "";
-                $("btn2").disabled = "";
             }
+        }
+
+        function isConnectValid()
+        {
+            var suc = false;
+            if ($("host").value == "")
+            {
+                $("host").focus();
+            }
+            else if ($("port").value == "")
+            {
+                $("port").focus();
+            }
+            else if ($("pwd").value == "")
+            {
+                $("pwd").focus();
+            }
+            else if ($("defdb").value == "" && $("dbtype").value != 0)
+            {
+                $("defdb").focus();
+            }
+            else
+            {
+                suc = true;
+            }
+            return suc;
         }
 
         function isValid()

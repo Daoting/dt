@@ -29,6 +29,23 @@ namespace Dt.Core
             Kit.TraceSql = false;
         }
 
+        public static async Task<bool> TestConnect(List<string> p_list)
+        {
+            var da = new MySqlAccess(new DbInfo(
+                "mysql",
+                $"Server={p_list[1]};Port={p_list[2]};Uid=root;Pwd={p_list[4]};",
+                DatabaseType.MySql));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<string> IsExists()
         {
             string msg = null;
@@ -100,7 +117,7 @@ namespace Dt.Core
                 var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
 
                 string sql;
-                using (var sr = GetSqlStream(p_initType == 0? "mysql-init.sql" : "mysql-demo.sql"))
+                using (var sr = GetSqlStream(p_initType == 0 ? "mysql-init.sql" : "mysql-demo.sql"))
                 {
                     sql = sr.ReadToEnd();
                 }
@@ -110,7 +127,9 @@ namespace Dt.Core
                 int cntFun = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='function'");
                 int cntSp = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='procedure'");
                 int cntView = await da.GetScalar<int>($"select count(*) from information_schema.views where table_schema='{_newDb}'");
-                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntFun}个函数\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+                var tp = p_initType == 0 ? "标准库" : "样例库";
+                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntFun}个函数\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }

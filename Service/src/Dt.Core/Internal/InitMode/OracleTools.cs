@@ -30,6 +30,23 @@ namespace Dt.Core
             Kit.TraceSql = false;
         }
 
+        public static async Task<bool> TestConnect(List<string> p_list)
+        {
+            var da = new OracleAccess(new DbInfo(
+                "orcl",
+                $"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={p_list[1]})(PORT={p_list[2]}))(CONNECT_DATA=(SERVICE_NAME={p_list[3]})(SERVER=dedicated)));User Id=system;Password={p_list[4]};",
+                DatabaseType.Oracle));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<string> IsExists()
         {
             string msg = null;
@@ -106,7 +123,9 @@ namespace Dt.Core
                 int cntSeq = await da.GetScalar<int>("select count(*) from user_objects where object_type='SEQUENCE'");
                 int cntSp = await da.GetScalar<int>("select count(*) from user_objects where object_type='PROCEDURE'");
                 int cntView = await da.GetScalar<int>("select count(*) from user_objects where object_type='VIEW'");
-                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+                var tp = p_initType == 0 ? "标准库" : "样例库";
+                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }

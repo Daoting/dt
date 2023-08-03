@@ -23,9 +23,54 @@ namespace Dt.Core.Rpc
 {
     class InitModeApi
     {
-        public Task<string> IsExists(List<string> p_list)
+        public async Task<string> TestConnect(List<string> p_list)
         {
-            return GetTools(p_list).IsExists();
+            if (p_list == null || p_list.Count != 5)
+                return "参数个数应为5个！";
+
+            Log.Information("正在连接...");
+            Kit.TraceSql = false;
+            bool suc;
+            if (p_list[0] == "0")
+            {
+                suc = await MySqlTools.TestConnect(p_list);
+            }
+            else if (p_list[0] == "1")
+            {
+                suc = await OracleTools.TestConnect(p_list);
+            }
+            else if (p_list[0] == "2")
+            {
+                suc = await SqlServerTools.TestConnect(p_list);
+            }
+            else if (p_list[0] == "3")
+            {
+                suc = await PostgreSqlTools.TestConnect(p_list);
+            }
+            else
+            {
+                return "不支持该数据库类型！";
+            }
+
+            if (suc)
+            {
+                Log.Information("数据库连接成功！");
+                return null;
+            }
+
+            Log.Error("数据库连接失败，请检查输入！");
+            return "数据库连接失败，请检查输入！";
+        }
+
+        public async Task<string> IsExists(List<string> p_list)
+        {
+            Log.Information("判断新库或新用户名已存在...");
+            var msg = await GetTools(p_list).IsExists();
+            if (!string.IsNullOrEmpty(msg))
+            {
+                Log.Warning(msg);
+            }
+            return msg;
         }
 
         public Task<bool> DoInit(List<string> p_list, int p_initType)

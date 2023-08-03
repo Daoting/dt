@@ -9,6 +9,8 @@
 #region 引用命名
 #endregion
 
+using Npgsql;
+
 namespace Dt.Core
 {
     class PostgreSqlTools : IDbTools
@@ -29,6 +31,23 @@ namespace Dt.Core
             _newDb = p_list[5].Trim().ToLower();
             _newUser = p_list[6].Trim().ToLower();
             Kit.TraceSql = false;
+        }
+
+        public static async Task<bool> TestConnect(List<string> p_list)
+        {
+            var da = new PostgreSqlAccess(new DbInfo(
+                "pg",
+                $"Host={p_list[1]};Port={p_list[2]};Database={p_list[3]};Username=postgres;Password={p_list[4]};",
+                DatabaseType.PostgreSql));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<string> IsExists()
@@ -111,12 +130,17 @@ namespace Dt.Core
                 int cntSp = await da.GetScalar<int>($"select count(*) from pg_proc p join pg_namespace n on p.pronamespace = n.oid where n.nspname='public' and p.prokind = 'p'");
                 int cntSeq = await da.GetScalar<int>($"select count(*) from pg_sequence");
                 int cntView = await da.GetScalar<int>($"select count(*) from pg_views where schemaname='public'");
-                Log.Information($"新库初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+                var tp = p_initType == 0 ? "标准库" : "样例库";
+                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
                 await da.Close(true);
             }
 
             Log.Information("新库连接串：\r\n" + connStr);
+
+            // 不清理连接池，再次创建同样表空间时无法删除文件
+            NpgsqlConnection.ClearAllPools();
             return true;
         }
 
