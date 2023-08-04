@@ -25,6 +25,15 @@
             word-wrap: break-word;
         }
 
+        .divHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F1F1F1;
+            border: 1px solid #E0E0E0;
+            padding: 10px 20px;
+        }
+
         .trClass {
             height: 40px;
             vertical-align: bottom;
@@ -55,7 +64,7 @@
 
         .logTitle {
             background: green;
-            padding: 4px 4px 4px 4px;
+            padding: 4px;
         }
     </style>
     <script>
@@ -65,8 +74,12 @@
 </head>
 <body style="margin: 0; padding: 0; height: 100%;">
     <div style="width: 100%; position: absolute;">
-        <div style="background: #F1F1F1; border: 1px solid #E0E0E0; padding: 10px 20px 10px 20px;">
-            <pre id="topbar"></pre><a onclick="toggleLog()" href="javascript:void(0);" class="aTitle">日志</a>
+        <div class="divHeader">
+            <div>
+                <pre id="topbar"></pre>
+                <a onclick="toggleLog()" href="javascript:void(0);" class="aTitle">日志</a>
+            </div>
+            <label>V4.2.1</label>
         </div>
         <div style="padding: 0px 20px 20px 20px;">
             <pre id="content"></pre>
