@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 namespace Dt.Core
 {
     /// <summary>
-    /// 系统内置中间件，完成内部特殊路径处理；
+    /// 系统内置中间件，初始化数据库
     /// </summary>
     public class InitModeMiddleware
     {

@@ -20,7 +20,7 @@ namespace Dt.Core
     /// <summary>
     /// 启动微服务
     /// </summary>
-    public static class Launcher
+    public static partial class Launcher
     {
         /// <summary>
         /// 初始化服务，任一环节失败即启动失败
@@ -235,7 +235,6 @@ namespace Dt.Core
             }
         }
 
-
         static void RunInitModeWebHost()
         {
             try
@@ -260,42 +259,6 @@ namespace Dt.Core
                 Log.Fatal(e, "Web服务器启动失败");
                 throw;
             }
-        }
-
-        /// <summary>
-        /// 启动boot服务
-        /// </summary>
-        /// <param name="p_args"></param>
-        /// <param name="p_stub"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public static void StartBoot(string[] p_args, Stub p_stub)
-        {
-            if (p_stub == null)
-                throw new ArgumentException(nameof(p_stub));
-            Kit.Stubs = new Stub[] { p_stub };
-            Kit.EnableRabbitMQ = false;
-
-            CreateLogger();
-
-            try
-            {
-                var cfg = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
-                    .AddJsonFile("service.json", false, true)
-                    .Build();
-                Kit.SetBootConfig(cfg);
-                Log.Information("读取配置成功");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "读取配置失败！");
-                throw;
-            }
-
-            // 无db连接，无sql
-
-            RunWebHost(p_args);
-            Log.CloseAndFlush();
         }
 
         static void LogException(string p_msg)
