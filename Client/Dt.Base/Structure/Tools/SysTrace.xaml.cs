@@ -158,7 +158,7 @@ namespace Dt.Base.Tools
 
         void OnAbout(object sender, Mi e)
         {
-            Log.Information("搬运工\r\n版本 V4.2.0");
+            Log.Information("搬运工\r\n版本 V4.2.1");
         }
 
         #region 输出
