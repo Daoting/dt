@@ -1,13 +1,14 @@
-<h1 align=center>
- <img align=center src="https://raw.githubusercontent.com/Daoting/dt/master/logo.png" width="64" />
-</h1>
+<div align=center>
+ <img src="https://raw.githubusercontent.com/Daoting/dt/master/logo.png" width="64" />
+ <h1>搬运工</h1>
+</div>
 
 ## 利用 C# + XAML 进行快速业务开发的跨平台框架
 [![GitHub Stars](https://img.shields.io/github/stars/daoting/dt?label=github%20stars)](https://github.com/daoting/dt/stargazers/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/dt.client.svg)](https://www.nuget.org/packages/dt.client)
 
 # 概述
-框架全名“数据的搬运工(Data Transfer)”，简称搬运工，缩写dt。
+框架全名“数据的搬运工(Data Transfer)”，简称**搬运工**，缩写**dt**。
 
 涉及技术：.NET、UWP/WinUI、C# + Xaml、[Uno Platform](https://github.com/unoplatform/uno) 、云原生。
 
@@ -15,12 +16,12 @@
 
 * 客户端部分通过[Uno Platform](https://github.com/unoplatform/uno)支持在Windows、 浏览器(WebAssembly)、手机上跨平台运行，包括一系列可复用的前端控件和各种基础功能模块；
 
-* 服务端部分全面采用.NET云原生开发，提供4个通用的微服务，利用这些预定义的内容可直接快速的开发出符合常规要求的业务系统；
+* 服务端部分全面采用.NET云原生开发，提供多个通用的微服务，利用这些预定义的内容可直接快速的开发出符合常规要求的业务系统；
 
 * 同时，两部分都支持独立使用，也可根据规范在不同层面、不同粒度下扩展框架，从而满足特定的业务需求。
 
 # 客户端
-客户端样例已升级到.NET7.0 + WinAppSdk1.2(WinUI3.0) + Uno.WinUI 4.6.x，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
+客户端样例已在各主流应用商店中上架，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
 * [微软商店](https://www.microsoft.com/store/productId/9PBFQ5NHPH14)
 * [WebAssembly 样例](https://x13382a571.oicp.vip/demoui/)
 * [Android 安装包](https://x13382a571.oicp.vip/packages/com.dt.samples-3.3.0.apk)
@@ -38,10 +39,6 @@ https://user-images.githubusercontent.com/29876815/145151944-549bec31-b599-4d2d-
 
 https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-b978-2523a0f82f5d.mp4
 
-客户端已完成到 .NET7.0 + WinAppSdk1.2(WinUI3.0) + Uno.WinUI 4.6.x 的迁移。
-
-客户端完整功能请参考《[搬运工客户端手册](https://github.com/Daoting/dt/blob/master/Doc/%E6%90%AC%E8%BF%90%E5%B7%A5%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%89%8B%E5%86%8C.docx)》
-
 # 服务端
 全面采用基于.NET Core的云原生应用开发，所有服务既可以使用 Kubernetes 调度，也支持简单部署到IIS。
 
@@ -56,8 +53,6 @@ https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-
 * 网页发布服务(pub)，是静态网页服务，包括html富文本编辑器和动态生成的网页两部分，html编辑器用于编辑网页内容，编辑后的网页内容可以保存在数据库或根据模板生成完整网页。
 
 服务端已升级到 .NET7.0。
-
-服务端完整功能请参考《[搬运工服务端手册](https://github.com/Daoting/dt/blob/master/Doc/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%89%8B%E5%86%8C.docx)》
 
 # 开始使用
 
