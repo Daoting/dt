@@ -11,7 +11,7 @@
     <Identity
       Name="19855Modern.91683A99ECB1"
       Publisher="CN=61C2C806-8989-430B-8C58-9882D00412CA"
-      Version="2.8.2.0" />
+      Version="4.2.0.0" />
 
     <Properties>
         <DisplayName>搬运工样例</DisplayName>
