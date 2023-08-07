@@ -7,7 +7,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/daoting/dt?label=github%20stars)](https://github.com/daoting/dt/stargazers/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/dt.client.svg)](https://www.nuget.org/packages/dt.client)
 
-# 概述
+## 概述
 框架全名“数据的搬运工(Data Transfer)”，简称**搬运工**，缩写**dt**。
 
 涉及技术：.NET、UWP/WinUI、C# + Xaml、[Uno Platform](https://github.com/unoplatform/uno) 、云原生。
@@ -20,11 +20,14 @@
 
 * 同时，两部分都支持独立使用，也可根据规范在不同层面、不同粒度下扩展框架，从而满足特定的业务需求。
 
-# 客户端
+## 教程
+ [查看详细教程](https://daotingh.gitee.io/dt-docs/docs)
+ 
+## 客户端
 客户端样例已在各主流应用商店中上架，请在应用商店搜索【搬运工样例】或使用以下链接进行安装：
 * [微软商店](https://www.microsoft.com/store/productId/9PBFQ5NHPH14)
 * [WebAssembly 样例](https://x13382a571.oicp.vip/demoui/)
-* [Android 安装包](https://x13382a571.oicp.vip/packages/com.dt.samples-3.3.0.apk)
+* [Android 安装包](https://x13382a571.oicp.vip/downloads/com.dt.samples.apk)
 * [苹果商店](https://apps.apple.com/cn/app/%E6%90%AC%E8%BF%90%E5%B7%A5%E6%A0%B7%E4%BE%8B/id1591859126)
 
 客户端在界面布局上有个创新，内置两种界面模式：windows模式和phone模式，iOS和Android上是Phone模式；windows和wasm上支持两种模式的自动切换，当应用界面的实际宽度足够时按照windows模式显示，宽度较小时自动切换到Phone模式，两种模式的可视树根节点完全不同。
@@ -39,25 +42,19 @@ https://user-images.githubusercontent.com/29876815/145151944-549bec31-b599-4d2d-
 
 https://user-images.githubusercontent.com/29876815/145152462-30b51172-01bd-4dc9-b978-2523a0f82f5d.mp4
 
-# 服务端
-全面采用基于.NET Core的云原生应用开发，所有服务既可以使用 Kubernetes 调度，也支持简单部署到IIS。
+## 服务端
+全面采用基于 .NET 的云原生应用开发。
+* 所有服务既可以使用 Kubernetes 调度，也支持简单部署到IIS；
+* 既支持标准的微服务部署方式，也支持将所有服务合并成单体服务的部署方式。
 
-系统未严格按照当前常见的某种具体的服务架构进行设计，而是根据自身整体架构的特点，借鉴常见架构的思想，比如DDD模式的领域事件、充血模式、数据仓库，CQRS架构的读写分离，六边形架构的微服务API设计等，结合客户端xaml的优势，使用MVVM(Model-View-ViewModel)模式开发客户端控件，完美实现技术与业务解耦、业务逻辑解耦、业务封装复用等关键功能，为业务开发提供一种易懂易用的框架风格。总体框架图：
+系统未严格按照当前常见的某种具体的服务架构进行设计，而是根据自身整体架构的特点，借鉴常见架构的思想，比如DDD模式的领域事件、充血模式、数据仓库，CQRS架构的读写分离，六边形架构的微服务API设计等，结合客户端xaml的优势，使用MVVM(Model-View-ViewModel)模式开发客户端控件。**实现客户端领域层和服务端领域层代码相同**，既可以将业务放在客户端处理也可以稍加修改放在服务端处理，完美实现技术与业务解耦、业务逻辑解耦、业务封装复用等关键功能，为开发人员提供一种易懂易用的框架风格。总体框架图：
 
-![fm](https://user-images.githubusercontent.com/29876815/145155698-2faddf3d-161a-4101-89da-202ce0904d7a.png)
+![fm](https://daotingh.gitee.io/dt-docs/docs/2%E5%9F%BA%E7%A1%80/1%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84/6.png)
 
-目前提供4个通用的微服务：
+目前提供3个通用的微服务：
 * 内核模型服务(cm)，CM是Core Model的缩写，为平台提供基础的内核模型服务
 * 消息服务(msg)，平台内置的基础消息服务，支持多副本部署，所有已注册的客户端在启动时调用服务端的Register方法，该Api采用基于http2协议的ServerStream模式，即：客户端发送一个请求，服务端返回数据流响应，相当于在服务端和客户端建立了长连接，服务端可以实时向客户端推送信息
 * 文件服务(fsm)，统一管理应用范围内使用的文件，在k8s中支持多副本部署，支持分卷存储文件，可通过ConfigMap将数据卷Volume挂载到指定目录，该服务只负责文件的上传下载和文件管理功能，不涉及具体的业务问题，在功能和Api上较稳定。
-* 网页发布服务(pub)，是静态网页服务，包括html富文本编辑器和动态生成的网页两部分，html编辑器用于编辑网页内容，编辑后的网页内容可以保存在数据库或根据模板生成完整网页。
 
-服务端已升级到 .NET7.0。
 
-# 开始使用
-
-为了提高搬运工的使用体验，请在VS管理扩展中安装“搬运工”扩展工具，下载慢也可 [本地下载](https://x13382a571.oicp.vip/packages/Dt-3.3.0.vsix)，手动安装。
-![image](https://user-images.githubusercontent.com/29876815/195238627-4cf54376-1a95-4951-b0cb-9539b2c57cf6.png)
-
-详细使用过程请参考《[开始搬运](https://github.com/Daoting/dt/blob/master/Doc/%E5%BC%80%E5%A7%8B%E6%90%AC%E8%BF%90.docx)》
-
+# [打开教程，开始使用](https://daotingh.gitee.io/dt-docs/docs)
