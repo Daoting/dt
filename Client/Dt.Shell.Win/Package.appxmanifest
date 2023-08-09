@@ -10,7 +10,7 @@
 
     <Identity
       Name="19855Modern.91683A99ECB1"
-      Publisher="CN=61C2C806-8989-430B-8C58-9882D00412CA"
+      Publisher="CN=Daoting"
       Version="4.2.0.0" />
 
     <Properties>
@@ -67,6 +67,8 @@
 
     <Capabilities>
         <rescap:Capability Name="runFullTrust" />
+        <!-- 包管理功能，自动更新 -->
+        <rescap:Capability Name="packageManagement" />
     </Capabilities>
     
     <Extensions>

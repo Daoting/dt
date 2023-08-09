@@ -101,6 +101,15 @@ namespace Dt.Base
                 var item = new Mi { ID = "系统日志" };
                 item.Click += (s, a) => SysTrace.ShowBox();
                 _menu.Items.Add(item);
+
+#if WIN
+                if (Kit.IsUsingSvc)
+                {
+                    item = new Mi { ID = "检查更新" };
+                    item.Click += (s, a) => WinPkgUpdate.CheckUpdate(true);
+                    _menu.Items.Add(item);
+                }
+#endif
             }
             _ = _menu.OpenContextMenu(p_pos);
         }

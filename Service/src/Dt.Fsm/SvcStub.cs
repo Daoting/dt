@@ -11,9 +11,11 @@ using Dt.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
+using System.Net.Mime;
 #endregion
 
 namespace Dt.Fsm
@@ -50,7 +52,7 @@ namespace Dt.Fsm
                 x.MultipartBodyLengthLimit = int.MaxValue;
             });
 
-            // 增加浏览目录功能，测试用
+            // 增加浏览目录功能
             p_services.AddDirectoryBrowser();
         }
 
@@ -62,12 +64,13 @@ namespace Dt.Fsm
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
             Cfg.Init();
+            MsixCfg.Init();
 
             // 注册请求路径处理
             p_handlers["/.u"] = (p_context) => new Uploader(p_context).Handle();
             p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
 
-            // 设置可浏览目录的根目录，测试用
+            // 设置可浏览目录的根目录
             p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
                 FileProvider = new PhysicalFileProvider(Cfg.Root),
@@ -75,9 +78,13 @@ namespace Dt.Fsm
             });
 
             // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
+            // 支持下载msix类型文件
+            var mimeTypeProvider = new FileExtensionContentTypeProvider();
+            mimeTypeProvider.Mappings.TryAdd(".msix", MediaTypeNames.Application.Octet);
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Cfg.Root),
+                ContentTypeProvider = mimeTypeProvider,
                 RequestPath = "/drv"
             });
         }

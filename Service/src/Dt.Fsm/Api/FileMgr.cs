@@ -7,9 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System.IO;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Fsm
@@ -105,6 +102,15 @@ namespace Dt.Fsm
                 return "文件保存出错！";
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获取windows应用的版本信息
+        /// </summary>
+        /// <returns></returns>
+        public Dict GetWinAppVer()
+        {
+            return MsixCfg.WinAppVer;
         }
     }
 }
