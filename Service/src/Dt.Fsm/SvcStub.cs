@@ -81,6 +81,7 @@ namespace Dt.Fsm
             // 支持下载msix类型文件
             var mimeTypeProvider = new FileExtensionContentTypeProvider();
             mimeTypeProvider.Mappings.TryAdd(".msix", MediaTypeNames.Application.Octet);
+            mimeTypeProvider.Mappings.TryAdd(".cer", MediaTypeNames.Application.Octet);
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Cfg.Root),
