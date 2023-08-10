@@ -55,10 +55,10 @@ namespace Dt.Base
 
             // 强制更新 或 确认更新
             if (dt.Bool("force")
-                || await Kit.Confirm("已发现新版本应用，要更新应用吗？"))
+                || await Kit.Confirm("已发现新版本应用，要升级吗？"))
             {
                 var file = $"{dt.Str("file")}_{dt.Str("ver")}_{pkg.Id.Architecture.ToString().ToLower()}.msix";
-                await UpdatePkg(file);
+                Kit.RunAsync(async () => await UpdatePkg(file));
             }
         }
 
@@ -80,7 +80,7 @@ namespace Dt.Base
             sp.Children.Add(new ProgressRing { Height = 60, Width = 60, IsActive = true, HorizontalAlignment = HorizontalAlignment.Center });
             sp.Children.Add(new TextBlock
             {
-                Text = "发现新版本，正在更新...\r\n　完成后自动重启",
+                Text = "发现新版本，正在升级...\r\n　完成后自动重启",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Margin = new Thickness(10),
             });

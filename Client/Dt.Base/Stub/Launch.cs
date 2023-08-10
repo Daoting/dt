@@ -78,6 +78,14 @@ namespace Dt.Base
 
                 // 注册后台任务
                 BgJob.Register();
+
+#if WIN && !DEBUG
+                if (Kit.IsUsingSvc)
+                {
+                    // win应用自动更新，间隔3秒再检查更新
+                    await Task.Delay(3000).ContinueWith((s) => WinPkgUpdate.CheckUpdate());
+                }
+#endif
             }
             catch (Exception ex)
             {

@@ -102,7 +102,7 @@ namespace Dt.Base
                 item.Click += (s, a) => SysTrace.ShowBox();
                 _menu.Items.Add(item);
 
-#if WIN
+#if WIN && !DEBUG
                 if (Kit.IsUsingSvc)
                 {
                     item = new Mi { ID = "检查更新" };
