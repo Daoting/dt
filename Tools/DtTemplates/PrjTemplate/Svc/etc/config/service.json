@@ -37,9 +37,6 @@
     //"svcname": "dbkey"
   },
 
-  // cm服务用，除默认数据源外，其余需要导出到模型库的数据源键名
-  "ExportToModel": [],
-
   // fsm服务用
   "FixedVolume": "photo;editor;g;chat",
   "MaxRequestBodySize": 1073741824

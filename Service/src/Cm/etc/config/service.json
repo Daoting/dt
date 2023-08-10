@@ -24,8 +24,5 @@
     "msg": "*/dt-msg",
     "fsm": "*/dt-fsm",
     "demo": "*/dt-demo"
-  },
-
-  // 除默认数据源外，其余需要导出到模型库的数据源键名
-  "ExportToModel": []
+  }
 }

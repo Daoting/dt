@@ -86,6 +86,12 @@ namespace Dt.Cm
                 {
                     conn.Open();
                     sb.AppendLine("开始导出模型及数据");
+                    
+                    // 加载 model.json 中配置的缓存数据
+                    var cfg = new ConfigurationBuilder()
+                        .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                        .AddJsonFile("model.json", false, false)
+                        .Build();
 
                     using var tran = conn.BeginTransaction();
 
@@ -108,7 +114,7 @@ namespace Dt.Cm
                     // 加载默认库表结构
                     LoadSchema(defSchema, tbls, cols, Kit.DefaultDbInfo);
 
-                    var exports = Kit.Config.GetSection("ExportToModel").GetChildren().ToList();
+                    var exports = cfg.GetSection("ExportToModel").GetChildren().ToList();
                     if (exports != null && exports.Count > 0)
                     {
                         // 默认库键名
@@ -132,14 +138,10 @@ namespace Dt.Cm
                     sb.AppendFormat("导出表结构：{0}张表，{1}个字段\r\n", tbls.Count, cols.Count);
                     #endregion
 
-                    // 加载 model.json 中配置的缓存数据
-                    var cfg = new ConfigurationBuilder()
-                        .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
-                        .AddJsonFile("model.json", false, false)
-                        .Build();
-                    foreach (var item in cfg.GetChildren())
+                    
+                    foreach (var item in cfg.GetSection("Tables").GetChildren())
                     {
-                        var arr = cfg.GetSection($"{item.Key}:Create").Get<string[]>();
+                        var arr = cfg.GetSection($"{item.Path}:Create").Get<string[]>();
                         if (arr == null || arr.Length == 0)
                             continue;
 
@@ -158,7 +160,7 @@ namespace Dt.Cm
                         sb.AppendFormat("创建表{0}成功，", item.Key);
 
                         // 导入数据
-                        int cnt = await ImportData(cfg, item.Key, conn);
+                        int cnt = await ImportData(cfg, item, conn);
                         if (cnt == 0)
                             sb.AppendLine("无数据");
                         else
@@ -222,10 +224,10 @@ namespace Dt.Cm
             catch { }
         }
 
-        async Task<int> ImportData(IConfigurationRoot p_cfg, string p_tblName, SqliteConnection p_conn)
+        async Task<int> ImportData(IConfigurationRoot p_cfg, IConfigurationSection p_item, SqliteConnection p_conn)
         {
-            var dbConn = p_cfg.GetValue<string>($"{p_tblName}:DbKey");
-            var select = p_cfg.GetValue<string>($"{p_tblName}:Data");
+            var dbConn = p_cfg.GetValue<string>($"{p_item.Path}:DbKey");
+            var select = p_cfg.GetValue<string>($"{p_item.Path}:Data");
             if (string.IsNullOrEmpty(select))
                 return 0;
 
@@ -241,11 +243,12 @@ namespace Dt.Cm
                 List<string> columns = new List<string>();
                 string colNames = null;
                 string paraNames = null;
+                string tblName = p_item.Key;
 
                 // 查询表的所有列
                 using (var cmdCol = p_conn.CreateCommand())
                 {
-                    cmdCol.CommandText = $"SELECT c.name, c.type FROM sqlite_master AS t, pragma_table_info(t.name) AS c WHERE t.type = 'table' and t.name='{p_tblName}'";
+                    cmdCol.CommandText = $"SELECT c.name, c.type FROM sqlite_master AS t, pragma_table_info(t.name) AS c WHERE t.type = 'table' and t.name='{tblName}'";
                     var colReader = cmdCol.ExecuteReader();
                     if (colReader != null && colReader.FieldCount == 2)
                     {
@@ -273,7 +276,7 @@ namespace Dt.Cm
                     }
                 }
 
-                cmd.CommandText = $"insert into {p_tblName} ({colNames}) values ({paraNames})";
+                cmd.CommandText = $"insert into {tblName} ({colNames}) values ({paraNames})";
                 foreach (var row in tbl)
                 {
                     foreach (var col in columns)
