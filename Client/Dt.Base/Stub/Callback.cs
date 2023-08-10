@@ -30,6 +30,24 @@ namespace Dt.Base
         /// <returns>true表确认</returns>
         internal override Task<bool> Confirm(string p_content, string p_title)
         {
+            var dispatcher = UITree.MainWin.DispatcherQueue;
+            if (dispatcher.HasThreadAccess)
+            {
+                return ConfirmInternal(p_content, p_title);
+            }
+
+            var taskSrc = new TaskCompletionSource<bool>();
+            dispatcher.TryEnqueue(async () =>
+            {
+                var ok = await ConfirmInternal(p_content, p_title);
+                taskSrc.TrySetResult(ok);
+            });
+            taskSrc.Task.Wait();
+            return Task.FromResult(taskSrc.Task.Result);
+        }
+
+        Task<bool> ConfirmInternal(string p_content, string p_title)
+        {
             var dlg = new Dlg { Title = p_title, IsPinned = true };
             if (Kit.IsPhoneUI)
             {
@@ -69,28 +87,31 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         internal override void Error(string p_content, string p_title)
         {
-            var dlg = new Dlg { Title = p_title, IsPinned = true };
-            if (Kit.IsPhoneUI)
+            Kit.RunAsync(() =>
             {
-                dlg.PhonePlacement = DlgPlacement.CenterScreen;
-                dlg.Width = Kit.ViewWidth - 40;
-            }
-            else
-            {
-                dlg.WinPlacement = DlgPlacement.CenterScreen;
-                dlg.MinWidth = 300;
-                dlg.MaxWidth = Kit.ViewWidth / 4;
-                dlg.ShowVeil = true;
-            }
-            Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) });
-            grid.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
-            var tb = new TextBlock { Text = p_content, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-            Grid.SetColumn(tb, 1);
-            grid.Children.Add(tb);
-            dlg.Content = grid;
-            dlg.Show();
+                var dlg = new Dlg { Title = p_title, IsPinned = true };
+                if (Kit.IsPhoneUI)
+                {
+                    dlg.PhonePlacement = DlgPlacement.CenterScreen;
+                    dlg.Width = Kit.ViewWidth - 40;
+                }
+                else
+                {
+                    dlg.WinPlacement = DlgPlacement.CenterScreen;
+                    dlg.MinWidth = 300;
+                    dlg.MaxWidth = Kit.ViewWidth / 4;
+                    dlg.ShowVeil = true;
+                }
+                Grid grid = new Grid { Margin = new Thickness(20), VerticalAlignment = VerticalAlignment.Center };
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.0, GridUnitType.Star) });
+                grid.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.RedBrush, FontSize = 30, Margin = new Thickness(0, 0, 10, 0), });
+                var tb = new TextBlock { Text = p_content, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
+                Grid.SetColumn(tb, 1);
+                grid.Children.Add(tb);
+                dlg.Content = grid;
+                dlg.Show();
+            });
         }
 
         /// <summary>
@@ -188,7 +209,7 @@ namespace Dt.Base
         /// </summary>
         internal override void OnResuming()
         {
-            
+
         }
 
         /// <summary>
