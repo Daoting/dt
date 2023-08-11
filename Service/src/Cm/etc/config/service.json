@@ -17,12 +17,5 @@
       "Address": "0.0.0.0",
       "Port": "20201"
     }
-  ],
-
-  // 每个服务的url
-  "SvcUrls": {
-    "msg": "*/dt-msg",
-    "fsm": "*/dt-fsm",
-    "demo": "*/dt-demo"
-  }
+  ]
 }

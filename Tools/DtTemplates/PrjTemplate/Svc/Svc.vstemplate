@@ -15,6 +15,7 @@
 			<ProjectItem ReplaceParameters="true">Properties\launchSettings.json</ProjectItem>
 			<ProjectItem ReplaceParameters="true">etc\config\global.json</ProjectItem>
 			<ProjectItem ReplaceParameters="true">etc\config\service.json</ProjectItem>
+			<ProjectItem>etc\config\url.json</ProjectItem>
 			<ProjectItem>etc\config\model.json</ProjectItem>
 			<ProjectItem>etc\config\logger.json</ProjectItem>
 		</Project>

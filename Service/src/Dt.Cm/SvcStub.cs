@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
@@ -50,6 +51,31 @@ namespace Dt.Cm
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
             Kit.GetService<SqliteModelHandler>().Init(p_handlers);
+
+            if (!Kit.IsSingletonSvc)
+                LoadSvcUrls();
+        }
+
+        void LoadSvcUrls()
+        {
+            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/url.json")))
+            {
+                Log.Fatal("缺少url.json文件，无法获取所有服务的地址信息");
+                return;
+            }
+
+            var config = new ConfigurationBuilder()
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .AddJsonFile("url.json", false, true)
+                    .Build();
+
+            Dict dt = new Dict();
+            foreach (var item in config.GetChildren())
+            {
+                dt[item.Key] = item.Value;
+            }
+            SysKernel.SvcUrls = dt;
+            Log.Information("加载所有服务的地址信息");
         }
     }
 }

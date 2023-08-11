@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.Extensions.Configuration;
 #endregion
 
 namespace Dt.Cm
@@ -19,7 +20,6 @@ namespace Dt.Cm
     public class SysKernel : DomainSvc
     {
         static readonly SqliteModelHandler _modelHandler = Kit.GetService<SqliteModelHandler>();
-        static Dict _svcUrls;
 
         /// <summary>
         /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
@@ -35,9 +35,9 @@ namespace Dt.Cm
             }
             else
             {
-                if (_svcUrls == null)
-                    LoadSvcUrls();
-                ls.Add(_svcUrls);
+                if (SvcUrls == null)
+                    Throw.Msg("缺少url.json文件，无法获取所有服务的地址信息");
+                ls.Add(SvcUrls);
             }
             ls.Add(_modelHandler.Version);
             return ls;
@@ -52,18 +52,6 @@ namespace Dt.Cm
             return _modelHandler.Refresh();
         }
 
-        static void LoadSvcUrls()
-        {
-            // service.json 调整后支持实时更新服务地址
-            Kit.ConfigChanged -= LoadSvcUrls;
-            Kit.ConfigChanged += LoadSvcUrls;
-
-            Dict dt = new Dict();
-            foreach (var item in Kit.Config.GetSection("SvcUrls").GetChildren())
-            {
-                dt[item.Key] = item.Value;
-            }
-            _svcUrls = dt;
-        }
+        internal static Dict SvcUrls { get; set; }
     }
 }
