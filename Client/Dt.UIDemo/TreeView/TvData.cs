@@ -299,6 +299,59 @@ namespace Dt.UIDemo
             return _tbl;
         }
 
+        public static Table GetOneRootTbl()
+        {
+            var tbl = new Table
+            {
+                { "id" },
+                { "parentid" },
+                { "name" },
+                { "code" },
+            };
+
+            tbl.AddRow(new Medic("1", "", "根节点", "b"));
+            tbl.AddRow(new Medic("421", "1", "标价", "BJ"));
+            tbl.AddRow(new Medic("722", "1", "凯旋院区老干部用药", "KXYQLGBYY"));
+            tbl.AddRow(new Medic("803", "1", "解热镇痛抗炎抗风湿药", "JRZTKYKFSY"));
+            tbl.AddRow(new Medic("807", "1", "内脏各系统药物", "NZGXTYW"));
+            
+            tbl.AddRow(new Medic("422", "421", "抗微生物药物", "KWSWYW"));
+            tbl.AddRow(new Medic("804", "803", "解热镇痛抗炎抗风湿药", "JRZTKYKFSY"));
+            tbl.AddRow(new Medic("805", "803", "抗变态反应药", "KBTFYY"));
+            tbl.AddRow(new Medic("806", "803", "抗痛风药", "KTFY"));
+
+            tbl.AddRow(new Medic("808", "807", "调脂药", "DZY"));
+            tbl.AddRow(new Medic("809", "807", "治疗心衰药、抗休克药", "ZLXSYKXKY"));
+            tbl.AddRow(new Medic("810", "807", "抗血栓药", "KXSY"));
+            tbl.AddRow(new Medic("815", "807", "抗高血压药", "KGXYY"));
+            tbl.AddRow(new Medic("821", "807", "抗心律失常类", "KXLSCL"));
+            tbl.AddRow(new Medic("822", "807", "防治冠心病、心绞痛药及其他心脑血管用药", "FZGXBXJTYJ"));
+            tbl.AddRow(new Medic("823", "807", "呼吸系统药", "HXXTY"));
+            
+            tbl.AddRow(new Medic("427", "422", "合成抗菌药物", "HCKJYW"));
+            tbl.AddRow(new Medic("429", "422", "抗病毒类", "KBDL"));
+            tbl.AddRow(new Medic("850", "422", "抗结核类", "KJHL"));
+
+            tbl.AddRow(new Medic("811", "810", "血小板抑制剂", "XXBYZJ"));
+            tbl.AddRow(new Medic("812", "810", "抗凝剂", "KNJ"));
+            tbl.AddRow(new Medic("813", "810", "溶栓药", "RSY"));
+            tbl.AddRow(new Medic("814", "810", "其他", "QT"));
+
+            tbl.AddRow(new Medic("428", "427", "抗感染中草药", "KGRZCY"));
+            tbl.AddRow(new Medic("938", "427", "激素类", "JSL"));
+            tbl.AddRow(new Medic("939", "427", "抗代谢类", "KDXL"));
+
+            tbl.AddRow(new Medic("840", "811", "有机磷中毒解毒药", "YJLZDJDY"));
+            tbl.AddRow(new Medic("841", "811", "其他解毒药", "QTJDY"));
+
+            tbl.AddRow(new Medic("827", "939", "消化系统药", "XHXTY"));
+            tbl.AddRow(new Medic("837", "939", "血液系统药", "XYXTY"));
+            tbl.AddRow(new Medic("856", "840", "口服降血糖药", "KFJXTY"));
+            tbl.AddRow(new Medic("862", "840", "注射降血糖药", "ZSJXTY"));
+            tbl.AddRow(new Medic("868", "840", "利尿药", "LNY"));
+            return tbl;
+        }
+
         public static MedTree GetTreeData()
         {
             if (_tree != null)

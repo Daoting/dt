@@ -31,6 +31,7 @@ namespace Dt.UIDemo
                 new Nav("节点模板选择器", typeof(TvViewSelector), Icons.排列) { Desc = "动态设置节点模板，节点非虚拟化" },
                 new Nav("上下文菜单", typeof(TvContextMenu), Icons.公告) { Desc = "触发上下文菜单的方式：右键、悬停、点击标识按钮" },
                 new Nav("外部ScrollViewer", typeof(TvInScrollViewer), Icons.乐谱) { Desc = "外部嵌套ScrollViewer，和其他元素一起滚动" },
+                new Nav("树状图表", typeof(TdBase), Icons.向下) { Desc = "上下层级关系的树状图表" },
             };
         }
     }

@@ -12,5 +12,6 @@
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/TreeView.xaml" />
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/FileList.xaml" />
         <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/Sketch.xaml" />
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Styles/TreeDiagram.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
