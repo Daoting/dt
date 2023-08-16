@@ -101,7 +101,11 @@ where tco.constraint_type = 'PRIMARY KEY'
                     // 表结构
                     foreach (var tbl in tbls)
                     {
-                        schema[tbl] = await GetTblOrViewSchema(tbl, cmd);
+                        var vs = await GetTblOrViewSchema(tbl, cmd);
+                        if (vs != null)
+                        {
+                            schema[tbl] = vs;
+                        }
                     }
                 }
                 return schema;
@@ -151,117 +155,132 @@ where tco.constraint_type = 'PRIMARY KEY'
 
         async Task<TableSchema> GetTblOrViewSchema(string p_tblName, DbCommand p_cmd)
         {
-            DbDataReader reader;
+            DbDataReader reader = null;
             TableSchema tblCols = null;
 
-            // 表注释
-            p_cmd.CommandText = string.Format(@"
+            try
+            {
+                // 表注释
+                p_cmd.CommandText = string.Format(@"
 select tb.table_name,d.description,tb.table_type
 from information_schema.tables tb
      join pg_class c on c.relname = tb.table_name
      left join pg_description d on d.objoid = c.oid and d.objsubid = '0'
 where tb.table_schema = 'public' and lower(tb.table_name)='{0}'", p_tblName.ToLower());
 
-            bool isView = false;
-            using (reader = await p_cmd.ExecuteReaderAsync())
-            {
-                if (reader.HasRows && reader.Read())
-                {
-                    // 原始名称
-                    if (!reader.IsDBNull(0))
-                        tblCols = new TableSchema(reader.GetString(0), DatabaseType.PostgreSql);
-
-                    // 注释
-                    if (!reader.IsDBNull(1))
-                        tblCols.Comments = reader.GetString(1);
-
-                    if (!reader.IsDBNull(2))
-                        isView = reader.GetString(2) == "VIEW";
-                }
-            }
-            if (tblCols == null)
-                return null;
-
-            // 所有列
-            // 建表时的SQL中表名用引号括起来了，pg不外加引号都为小写，Oracle不外加引号都为大写
-            p_cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
-
-            ReadOnlyCollection<DbColumn> cols;
-            using (reader = await p_cmd.ExecuteReaderAsync(_cmdBehavior))
-            {
-                cols = reader.GetColumnSchema();
-            }
-
-            // 表的主键
-            List<string> pk = new List<string>();
-            if (!isView)
-            {
-                p_cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
+                bool isView = false;
                 using (reader = await p_cmd.ExecuteReaderAsync())
                 {
-                    if (reader.HasRows)
+                    if (reader.HasRows && reader.Read())
                     {
-                        while (reader.Read())
+                        // 原始名称
+                        if (!reader.IsDBNull(0))
+                            tblCols = new TableSchema(reader.GetString(0), DatabaseType.PostgreSql);
+
+                        // 注释
+                        if (!reader.IsDBNull(1))
+                            tblCols.Comments = reader.GetString(1);
+
+                        if (!reader.IsDBNull(2))
+                            isView = reader.GetString(2) == "VIEW";
+                    }
+                }
+                if (tblCols == null)
+                    return null;
+
+                // 所有列
+                // 建表时的SQL中表名用引号括起来了，pg不外加引号都为小写，Oracle不外加引号都为大写
+                p_cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
+
+                ReadOnlyCollection<DbColumn> cols;
+                using (reader = await p_cmd.ExecuteReaderAsync(_cmdBehavior))
+                {
+                    cols = reader.GetColumnSchema();
+                }
+
+                // 表的主键
+                List<string> pk = new List<string>();
+                if (!isView)
+                {
+                    p_cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
+                    using (reader = await p_cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows)
                         {
-                            pk.Add(reader.GetString(0));
+                            while (reader.Read())
+                            {
+                                pk.Add(reader.GetString(0));
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                // 视图无法查找主键，id默认为主键
-                var idCol = (from c in cols
-                             where c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase)
-                             select c).FirstOrDefault();
-                if (idCol != null)
-                {
-                    pk.Add(idCol.ColumnName);
-                }
-            }
-
-            foreach (var colSchema in cols)
-            {
-                TableCol col = new TableCol(tblCols);
-                col.Name = colSchema.ColumnName;
-                col.Type = isView ? colSchema.DataType : GetColumnType(colSchema);
-
-                // character_maximum_length
-                if (colSchema.ColumnSize.HasValue)
-                    col.Length = colSchema.ColumnSize.Value;
-
-                if (colSchema.AllowDBNull.HasValue)
-                    col.Nullable = colSchema.AllowDBNull.Value;
-
-                // 列默认值
-                p_cmd.CommandText = string.Format(_sqlDefaultVal, tblCols.Name, colSchema.ColumnName);
-                using (reader = await p_cmd.ExecuteReaderAsync())
-                {
-                    if (reader.HasRows && reader.Read())
-                    {
-                        if (!reader.IsDBNull(0))
-                            col.Default = reader.GetString(0);
-                    }
-                }
-
-                // 列注释
-                p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
-                using (reader = await p_cmd.ExecuteReaderAsync())
-                {
-                    if (reader.HasRows && reader.Read())
-                    {
-                        if (!reader.IsDBNull(0))
-                            col.Comments = reader.GetString(0);
-                    }
-                }
-
-                // 是否为主键
-                if (pk.Contains(colSchema.ColumnName))
-                    tblCols.PrimaryKey.Add(col);
                 else
-                    tblCols.Columns.Add(col);
-            }
+                {
+                    // 视图无法查找主键，id默认为主键
+                    var idCol = (from c in cols
+                                 where c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase)
+                                 select c).FirstOrDefault();
+                    if (idCol != null)
+                    {
+                        pk.Add(idCol.ColumnName);
+                    }
+                }
 
+                foreach (var colSchema in cols)
+                {
+                    TableCol col = new TableCol(tblCols);
+                    col.Name = colSchema.ColumnName;
+                    col.Type = isView ? colSchema.DataType : GetColumnType(colSchema);
+
+                    // character_maximum_length
+                    if (colSchema.ColumnSize.HasValue)
+                        col.Length = colSchema.ColumnSize.Value;
+
+                    if (colSchema.AllowDBNull.HasValue)
+                        col.Nullable = colSchema.AllowDBNull.Value;
+
+                    // 列默认值
+                    p_cmd.CommandText = string.Format(_sqlDefaultVal, tblCols.Name, colSchema.ColumnName);
+                    using (reader = await p_cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows && reader.Read())
+                        {
+                            if (!reader.IsDBNull(0))
+                                col.Default = reader.GetString(0);
+                        }
+                    }
+
+                    // 列注释
+                    p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
+                    using (reader = await p_cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows && reader.Read())
+                        {
+                            if (!reader.IsDBNull(0))
+                                col.Comments = reader.GetString(0);
+                        }
+                    }
+
+                    // 是否为主键
+                    if (pk.Contains(colSchema.ColumnName))
+                        tblCols.PrimaryKey.Add(col);
+                    else
+                        tblCols.Columns.Add(col);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 出现异常，重置null，可能视图编译错误等
+                tblCols = null;
+                Log.Error(ex, $"获取{p_tblName}的表结构异常！");
+            }
+            finally
+            {
+                if (reader != null && !reader.IsClosed)
+                {
+                    reader.Close();
+                }
+            }
             return tblCols;
         }
         #endregion

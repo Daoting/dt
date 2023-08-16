@@ -105,7 +105,11 @@ namespace Dt.Core
                     // 表结构
                     foreach (var tbl in tbls)
                     {
-                        schema[tbl] = await GetTblOrViewSchema(tbl, cmd);
+                        var vs = await GetTblOrViewSchema(tbl, cmd);
+                        if (vs != null)
+                        {
+                            schema[tbl] = vs;
+                        }
                     }
                 }
                 return schema;
@@ -155,98 +159,113 @@ namespace Dt.Core
 
         async Task<TableSchema> GetTblOrViewSchema(string p_tblName, DbCommand p_cmd)
         {
-            DbDataReader reader;
+            DbDataReader reader = null;
             TableSchema tblCols = null;
 
-            // 表注释
-            p_cmd.CommandText = $"select table_name,comments from user_tab_comments where LOWER(table_name)='{p_tblName.ToLower()}'";
-            using (reader = await p_cmd.ExecuteReaderAsync())
+            try
             {
-                if (reader.HasRows && reader.Read())
-                {
-                    // 原始名称
-                    if (!reader.IsDBNull(0))
-                        tblCols = new TableSchema(reader.GetString(0), DatabaseType.Oracle);
-
-                    // 注释
-                    if (!reader.IsDBNull(1))
-                        tblCols.Comments = reader.GetString(1);
-                }
-            }
-            if (tblCols == null)
-                return null;
-
-            // 所有列
-            // 建表时的SQL中表名用引号括起来了，则此处报 Oracle ORA-00942: table or view does not exist
-            p_cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
-
-            ReadOnlyCollection<DbColumn> cols;
-            using (reader = await p_cmd.ExecuteReaderAsync())
-            {
-                cols = reader.GetColumnSchema();
-            }
-
-            // 表的主键
-            p_cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
-            List<string> pk = new List<string>();
-            using (reader = await p_cmd.ExecuteReaderAsync())
-            {
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        pk.Add(reader.GetString(0));
-                    }
-                }
-                else
-                {
-                    // 视图无法查找主键，id默认为主键
-                    var idCol = (from c in cols
-                                 where c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase)
-                                 select c).FirstOrDefault();
-                    if (idCol != null)
-                    {
-                        pk.Add(idCol.ColumnName);
-                    }
-                }
-            }
-
-            foreach (var colSchema in cols)
-            {
-                TableCol col = new TableCol(tblCols);
-                col.Name = colSchema.ColumnName;
-                col.Type = GetColumnType(colSchema);
-
-                // character_maximum_length
-                if (colSchema.ColumnSize.HasValue)
-                    col.Length = colSchema.ColumnSize.Value;
-
-                if (colSchema.AllowDBNull.HasValue)
-                    col.Nullable = colSchema.AllowDBNull.Value;
-
-                // 读取列结构
-                p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
+                // 表注释
+                p_cmd.CommandText = $"select table_name,comments from user_tab_comments where LOWER(table_name)='{p_tblName.ToLower()}'";
                 using (reader = await p_cmd.ExecuteReaderAsync())
                 {
                     if (reader.HasRows && reader.Read())
                     {
-                        // 默认值
+                        // 原始名称
                         if (!reader.IsDBNull(0))
-                            col.Default = reader.GetString(0);
+                            tblCols = new TableSchema(reader.GetString(0), DatabaseType.Oracle);
 
-                        // 字段注释
+                        // 注释
                         if (!reader.IsDBNull(1))
-                            col.Comments = reader.GetString(1);
+                            tblCols.Comments = reader.GetString(1);
+                    }
+                }
+                if (tblCols == null)
+                    return null;
+
+                // 所有列
+                // 建表时的SQL中表名用引号括起来了，则此处报 Oracle ORA-00942: table or view does not exist
+                p_cmd.CommandText = string.Format(_sqlCols, tblCols.Name);
+
+                ReadOnlyCollection<DbColumn> cols;
+                using (reader = await p_cmd.ExecuteReaderAsync())
+                {
+                    cols = reader.GetColumnSchema();
+                }
+
+                // 表的主键
+                p_cmd.CommandText = string.Format(_sqlPk, tblCols.Name);
+                List<string> pk = new List<string>();
+                using (reader = await p_cmd.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            pk.Add(reader.GetString(0));
+                        }
+                    }
+                    else
+                    {
+                        // 视图无法查找主键，id默认为主键
+                        var idCol = (from c in cols
+                                     where c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase)
+                                     select c).FirstOrDefault();
+                        if (idCol != null)
+                        {
+                            pk.Add(idCol.ColumnName);
+                        }
                     }
                 }
 
-                // 是否为主键
-                if (pk.Contains(colSchema.ColumnName))
-                    tblCols.PrimaryKey.Add(col);
-                else
-                    tblCols.Columns.Add(col);
-            }
+                foreach (var colSchema in cols)
+                {
+                    TableCol col = new TableCol(tblCols);
+                    col.Name = colSchema.ColumnName;
+                    col.Type = GetColumnType(colSchema);
 
+                    // character_maximum_length
+                    if (colSchema.ColumnSize.HasValue)
+                        col.Length = colSchema.ColumnSize.Value;
+
+                    if (colSchema.AllowDBNull.HasValue)
+                        col.Nullable = colSchema.AllowDBNull.Value;
+
+                    // 读取列结构
+                    p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
+                    using (reader = await p_cmd.ExecuteReaderAsync())
+                    {
+                        if (reader.HasRows && reader.Read())
+                        {
+                            // 默认值
+                            if (!reader.IsDBNull(0))
+                                col.Default = reader.GetString(0);
+
+                            // 字段注释
+                            if (!reader.IsDBNull(1))
+                                col.Comments = reader.GetString(1);
+                        }
+                    }
+
+                    // 是否为主键
+                    if (pk.Contains(colSchema.ColumnName))
+                        tblCols.PrimaryKey.Add(col);
+                    else
+                        tblCols.Columns.Add(col);
+                }
+            }
+            catch(Exception ex)
+            {
+                // 出现异常，重置null，可能视图编译错误等
+                tblCols = null;
+                Log.Error(ex, $"获取{p_tblName}的表结构异常！");
+            }
+            finally
+            {
+                if (reader != null && !reader.IsClosed)
+                {
+                    reader.Close();
+                }
+            }
             return tblCols;
         }
         #endregion

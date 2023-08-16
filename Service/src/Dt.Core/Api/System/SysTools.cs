@@ -51,6 +51,8 @@ namespace Dt.Core
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
             var schema = await _da.GetTableSchema(tblName);
+            if (schema == null)
+                return null;
 
             StringBuilder sb = new StringBuilder();
 
@@ -230,6 +232,8 @@ namespace Dt.Core
             string tblName = p_tblName.ToLower();
             string clsName = string.IsNullOrEmpty(p_clsName) ? GetClsName(tblName) : p_clsName;
             var schema = await _da.GetTableSchema(tblName);
+            if (schema == null)
+                return null;
 
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 1);
@@ -335,6 +339,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -414,6 +421,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     sb.AppendLine();
@@ -444,6 +454,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     string title = "";
@@ -489,6 +502,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     if (col.Type == typeof(string))
@@ -519,6 +535,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     if (sb.Length > 0)
@@ -595,6 +614,9 @@ namespace Dt.Core
                     continue;
 
                 var schema = await _da.GetTableSchema(tbl);
+                if (schema == null)
+                    continue;
+
                 foreach (var col in schema.Columns)
                 {
                     AppendTabSpace(sb, 3);
