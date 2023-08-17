@@ -8,18 +8,22 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 ### 变更
 * 导出模型库，将ExportToModel放入model.json
 * 服务地址拆分成独立配置文件url.json
+* oracle导出sqlite模型库时非常慢，将模型库和其它sqlite缓存数据分文件存储
 
 ### 功能
 * .admin页面增加版本号
 * 增加客户端版本号
 * win版app增加自动更新功能
 * 增加TreeDiagram控件
+* 优化oracle导出sqlite模型库的性能，增加导出过程日志
+* 根据配置导出普通sqlite文件
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态
 * 优化数据库初始化向导，简单易懂
 * boot服务启动bug，启动过程拆分成独立
 * 确认对话框、错误对话框不支持非UI线程显示
+
 
 ## Release 4.2.0
 ### 变更

@@ -1,6 +1,6 @@
 ﻿{
   // 除默认数据源外，其余需要导出到模型库的数据源键名
-  "ExportToModel": [ "orcldt" ],
+  "ExportToModel": [ ],
 
   // 定义sqlite文件列表
   "Files": {
@@ -31,7 +31,6 @@
 
     "option": {
       "OmOption": {
-
         "Create": [
           "create table if not exists OmOption (Name text not null,Category text not null)",
           "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"

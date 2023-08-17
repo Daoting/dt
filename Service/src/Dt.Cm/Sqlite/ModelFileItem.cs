@@ -70,11 +70,11 @@ namespace Dt.Cm
             if (fi != null)
             {
                 Version = fi.Name.Substring(0, fi.Name.Length - 3);
-                Log.Information("当前模型文件 " + Version);
+                Log.Information("sqlite文件 {0} ", Version);
             }
             else
             {
-                Log.Error("模型文件不存在，客户端连接前请务必创建！");
+                Log.Error("缺少sqlite文件 {0}，客户端连接前务必创建！！！", "model_*");
             }
         }
 
@@ -98,7 +98,7 @@ namespace Dt.Cm
             // 刷新标志，避免重复刷新
             IsRefreshing = true;
             var newVer = "model_" + Guid.NewGuid().ToString().Substring(0, 8);
-            Log.Information("准备更新model文件，新版本：" + newVer);
+            Log.Information("准备更新 {0}", newVer);
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -112,6 +112,8 @@ namespace Dt.Cm
 
             bool trace = Kit.TraceSql;
             Kit.TraceSql = false;
+            List<OmTable> tbls = new List<OmTable>();
+            List<OmColumn> cols = new List<OmColumn>();
 
             try
             {
@@ -129,9 +131,6 @@ namespace Dt.Cm
                         cmd.CommandText = _createOmColumn;
                         cmd.ExecuteNonQuery();
                     }
-
-                    List<OmTable> tbls = new List<OmTable>();
-                    List<OmColumn> cols = new List<OmColumn>();
 
                     // 加载默认库表结构
                     LoadSchema(defSchema, tbls, cols, Kit.DefaultDbInfo);
@@ -158,31 +157,27 @@ namespace Dt.Cm
                     }
 
                     InsertSchema(conn, tbls, cols);
-                    Log.Information("共导出结构：{0} 张表，{1} 个字段", tbls.Count, cols.Count);
-
                     tran.Commit();
                 }
 
                 // 将结果模型文件内容压缩
                 string gzFile = newVer + ".gz";
-                Log.Information("开始生成 {0} 文件...", gzFile);
                 using (FileStream inFile = File.Open(dbFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (FileStream outFile = File.Create(System.IO.Path.Combine(SqliteFileHandler.Path.FullName, gzFile)))
                 using (GZipStream gzStream = new GZipStream(outFile, CompressionMode.Compress))
                 {
                     inFile.CopyTo(gzStream);
                 }
-                Log.Information("成功生成 {0}", gzFile);
 
                 // 更新版本
                 Version = newVer;
                 watch.Stop();
-                Log.Information("更新model文件结束！用时 {0} 毫秒", watch.ElapsedMilliseconds);
+                Log.Information("生成 {0}，{1} 张表，{2} 个字段，{3} 毫秒", gzFile, tbls.Count, cols.Count, watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
                 watch.Stop();
-                Log.Error(ex, "更新model文件失败！");
+                Log.Error(ex, "更新 {0} 文件失败！", newVer);
                 throw;
             }
             finally
@@ -210,7 +205,7 @@ namespace Dt.Cm
 
         void LoadFile()
         {
-            string gzFile = Path.Combine(SqliteFileHandler.Path.FullName, Version);
+            string gzFile = Path.Combine(SqliteFileHandler.Path.FullName, Version + ".gz");
             using (FileStream fs = new FileStream(gzFile, FileMode.Open, FileAccess.Read))
             {
                 using (BinaryReader reader = new BinaryReader(fs))
@@ -322,7 +317,7 @@ namespace Dt.Cm
         /// 移除文件的只读属性
         /// </summary>
         /// <param name="p_filePath"></param>
-        static void RemoveReadOnlyFlag(string p_filePath)
+        internal static void RemoveReadOnlyFlag(string p_filePath)
         {
             FileAttributes fileAttributes = File.GetAttributes(p_filePath);
             if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
