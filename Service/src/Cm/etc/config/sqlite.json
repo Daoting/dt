@@ -1,0 +1,43 @@
+﻿{
+  // 除默认数据源外，其余需要导出到模型库的数据源键名
+  "ExportToModel": [ "orcldt" ],
+
+  // 定义sqlite文件列表
+  "Files": {
+
+    // sqlite文件，包含多表
+    "menu": {
+      // 表名
+      "OmMenu": {
+        // 创建sqlite表、索引等
+        "Create": [
+          "create table if not exists OmMenu (ID integer not null,ParentID integer,Name text,IsGroup integer,ViewName text,Params text,Icon text,Note text,DispIdx integer,primary key (ID))"
+        ],
+        // 待导出的数据
+        "Data": "select id,parent_id parentid, name, is_group isgroup, view_name viewname,params,icon,note,dispidx from cm_menu where is_locked='0' order by dispidx"
+        // 数据源键名，省略时使用默认键名
+        //"DbKey": "mydt"
+      }
+    },
+
+    "report": {
+      "OmReport": {
+        "Create": [
+          "create table if not exists OmReport (ID integer not null,Name text,Define text,primary key (ID))"
+        ],
+        "Data": "select id,name,define from cm_rpt"
+      }
+    },
+
+    "option": {
+      "OmOption": {
+
+        "Create": [
+          "create table if not exists OmOption (Name text not null,Category text not null)",
+          "create index if not exists \"OmOption_Category\" on \"OmOption\"(\"Category\")"
+        ],
+        "Data": "select a.name,b.name category from cm_option a, cm_option_group b where a.group_id=b.id order by category,dispidx"
+      }
+    }
+  }
+}

@@ -2,33 +2,31 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2018-06-08 创建
+* 日志: 2019-08-27 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Castle.Core.Configuration;
 using Dt.Core.EventBus;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
-using MySqlConnector;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 #endregion
 
 namespace Dt.Cm
 {
     /// <summary>
-    /// Sqlite模型文件生成类
+    /// 模型文件处理类
     /// </summary>
-    public class ModelRefreshHandler : IRemoteEventHandler<ModelRefreshEvent>
+    class ModelFileItem
     {
         #region 成员变量
         // 表名及列的数据少，不需要索引！！！
@@ -48,34 +46,69 @@ namespace Dt.Cm
                                             "Length integer,\n" +
                                             "Nullable integer)";
         const string _insertOmColumn = "insert into OmColumn (TableID,ColName,DbType,IsPrimary,Length,Nullable) values (:TableID,:ColName,:DbType,:IsPrimary,:Length,:Nullable)";
+
+        List<string> _exportDbs;
+        byte[] _data;
         #endregion
 
-        public async Task Handle(ModelRefreshEvent p_event)
+        /// <summary>
+        /// 是否正在刷新中
+        /// </summary>
+        public bool IsRefreshing { get; set; }
+
+        /// <summary>
+        /// sqlite文件名作为版本号
+        /// </summary>
+        public string Version { get; private set; }
+
+        public void Init(IConfigurationRoot p_cfg)
         {
-            if (SqliteModelHandler.Refreshing)
+            _exportDbs = (from item in p_cfg.GetSection("ExportToModel").GetChildren()
+                          select item.Value).ToList();
+
+            FileInfo fi = SqliteFileHandler.Path.EnumerateFiles("model_*.gz", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (fi != null)
             {
-                Log.Warning("模型刷新进行中，无法重复刷新！");
+                Version = fi.Name.Substring(0, fi.Name.Length - 3);
+                Log.Information("当前模型文件 " + Version);
+            }
+            else
+            {
+                Log.Error("模型文件不存在，客户端连接前请务必创建！");
+            }
+        }
+
+        public byte[] GetData()
+        {
+            if (_data == null)
+            {
+                LoadFile();
+            }
+            return _data;
+        }
+
+        public async Task Refresh()
+        {
+            if (IsRefreshing)
+            {
+                Log.Warning("更新模型文件进行中，无法重复更新！");
                 return;
             }
 
             // 刷新标志，避免重复刷新
-            SqliteModelHandler.Refreshing = true;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("准备更新模型...");
-            sb.AppendFormat("模型版本 {0}\r\n", p_event.Version);
+            IsRefreshing = true;
+            var newVer = "model_" + Guid.NewGuid().ToString().Substring(0, 8);
+            Log.Information("准备更新model文件，新版本：" + newVer);
 
-            // 刷新表结构缓存
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            var defSchema = await Kit.NewDataAccess().GetDbSchema();
-            sb.AppendLine($"获取默认库表结构 {watch.ElapsedMilliseconds} 毫秒");
 
-            // 创建Data目录
-            string path = SqliteModelHandler.ModelPath;
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            string dbFile = System.IO.Path.Combine(path, p_event.Version + ".db");
-            var handler = Kit.GetService<SqliteModelHandler>();
+            // 刷新表结构缓存
+            Log.Information("开始刷新 {0} 库表结构...", Kit.DefaultDbInfo.Key);
+            var defSchema = await Kit.NewDataAccess().GetDbSchema();
+            Log.Information("刷新 {0} {1} 毫秒", Kit.DefaultDbInfo.Key, watch.ElapsedMilliseconds);
+
+            string dbFile = System.IO.Path.Combine(SqliteFileHandler.Path.FullName, newVer + ".db");
 
             bool trace = Kit.TraceSql;
             Kit.TraceSql = false;
@@ -85,18 +118,7 @@ namespace Dt.Cm
                 using (var conn = new SqliteConnection($"Data Source={dbFile}"))
                 {
                     conn.Open();
-                    sb.AppendLine("开始导出模型及数据");
-                    
-                    // 加载 model.json 中配置的缓存数据
-                    var cfg = new ConfigurationBuilder()
-                        .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
-                        .AddJsonFile("model.json", false, false)
-                        .Build();
-
                     using var tran = conn.BeginTransaction();
-
-                    #region 表结构模型
-                    // 加载global.json配置中 ExportToModel=true 的所有库的表结构
 
                     // 创建 OmTable OmColumn 表结构
                     using (var cmd = conn.CreateCommand())
@@ -114,107 +136,69 @@ namespace Dt.Cm
                     // 加载默认库表结构
                     LoadSchema(defSchema, tbls, cols, Kit.DefaultDbInfo);
 
-                    var exports = cfg.GetSection("ExportToModel").GetChildren().ToList();
-                    if (exports != null && exports.Count > 0)
+                    if (_exportDbs != null && _exportDbs.Count > 0)
                     {
                         // 默认库键名
-                        var dbConn = Kit.Config["DbKey"];
-                        foreach (var item in exports)
+                        var dbConn = Kit.DefaultDbInfo.Key;
+                        foreach (var dbKey in _exportDbs)
                         {
-                            var dbKey = item.Value;
-
                             // 排除默认库、不存在的库
                             if (string.IsNullOrEmpty(dbKey)
                                 || dbConn.Equals(dbKey, StringComparison.OrdinalIgnoreCase)
                                 || !Kit.AllDbInfo.ContainsKey(dbKey))
                                 continue;
 
+                            Log.Information("开始刷新 {0} 库表结构...", dbKey);
+                            var startSec = watch.ElapsedMilliseconds;
                             var schema = await Kit.NewDataAccess(dbKey).GetDbSchema();
+                            Log.Information("刷新 {0} {1} 毫秒", dbKey, watch.ElapsedMilliseconds - startSec);
+
                             LoadSchema(schema, tbls, cols, Kit.AllDbInfo[dbKey]);
                         }
-                    }    
-                    
-                    InsertSchema(conn, tbls, cols);
-                    sb.AppendFormat("导出表结构：{0}张表，{1}个字段\r\n", tbls.Count, cols.Count);
-                    #endregion
-
-                    
-                    foreach (var item in cfg.GetSection("Tables").GetChildren())
-                    {
-                        var arr = cfg.GetSection($"{item.Path}:Create").Get<string[]>();
-                        if (arr == null || arr.Length == 0)
-                            continue;
-
-                        // 创建表及索引
-                        using (var cmd = conn.CreateCommand())
-                        {
-                            foreach (var sql in arr)
-                            {
-                                if (!string.IsNullOrEmpty(sql))
-                                {
-                                    cmd.CommandText = sql;
-                                    cmd.ExecuteNonQuery();
-                                }
-                            }
-                        }
-                        sb.AppendFormat("创建表{0}成功，", item.Key);
-
-                        // 导入数据
-                        int cnt = await ImportData(cfg, item, conn);
-                        if (cnt == 0)
-                            sb.AppendLine("无数据");
-                        else
-                            sb.AppendFormat("导出{0}行\r\n", cnt);
                     }
+
+                    InsertSchema(conn, tbls, cols);
+                    Log.Information("共导出结构：{0} 张表，{1} 个字段", tbls.Count, cols.Count);
 
                     tran.Commit();
                 }
 
                 // 将结果模型文件内容压缩
-                sb.Append("生成压缩文件...");
+                string gzFile = newVer + ".gz";
+                Log.Information("开始生成 {0} 文件...", gzFile);
                 using (FileStream inFile = File.Open(dbFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream outFile = File.Create(System.IO.Path.Combine(SqliteFileHandler.Path.FullName, gzFile)))
+                using (GZipStream gzStream = new GZipStream(outFile, CompressionMode.Compress))
                 {
-                    using (FileStream outFile = File.Create(System.IO.Path.Combine(path, p_event.Version + ".gz")))
-                    {
-                        using (GZipStream gzStream = new GZipStream(outFile, CompressionMode.Compress))
-                        {
-                            inFile.CopyTo(gzStream);
-                        }
-                    }
+                    inFile.CopyTo(gzStream);
                 }
-                sb.AppendLine("成功！");
+                Log.Information("成功生成 {0}", gzFile);
 
-                // 更新缓存、通知版本变化
-                handler.Version = p_event.Version;
-                handler.LoadModelFile();
-                sb.AppendLine("缓存模型文件成功！");
-
+                // 更新版本
+                Version = newVer;
                 watch.Stop();
-                sb.AppendLine($"创建结束！用时{watch.ElapsedMilliseconds}毫秒");
-
-                Log.Information(sb.ToString());
+                Log.Information("更新model文件结束！用时 {0} 毫秒", watch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
                 watch.Stop();
-                sb.AppendLine("导出模型失败！");
-                Log.Error(ex, sb.ToString());
+                Log.Error(ex, "更新model文件失败！");
                 throw;
             }
             finally
             {
                 // 移除标志
-                SqliteModelHandler.Refreshing = false;
+                IsRefreshing = false;
                 Kit.TraceSql = trace;
             }
 
             // 删除历史文件
             try
             {
-                DirectoryInfo dir = new DirectoryInfo(path);
-                foreach (FileInfo fi in dir.EnumerateFiles())
+                foreach (FileInfo fi in SqliteFileHandler.Path.EnumerateFiles())
                 {
-                    if (!fi.Name.StartsWith(p_event.Version))
+                    if (fi.Name.StartsWith("model_")
+                        && !fi.Name.StartsWith(Version))
                     {
                         RemoveReadOnlyFlag(fi.FullName);
                         fi.Delete();
@@ -224,83 +208,16 @@ namespace Dt.Cm
             catch { }
         }
 
-        async Task<int> ImportData(IConfigurationRoot p_cfg, IConfigurationSection p_item, SqliteConnection p_conn)
+        void LoadFile()
         {
-            var dbConn = p_cfg.GetValue<string>($"{p_item.Path}:DbKey");
-            var select = p_cfg.GetValue<string>($"{p_item.Path}:Data");
-            if (string.IsNullOrEmpty(select))
-                return 0;
-
-            // 连接不同的库
-            var da = Kit.NewDataAccess(dbConn);
-
-            Table tbl = await da.Query(select);
-            if (tbl.Count == 0)
-                return 0;
-
-            using (var cmd = p_conn.CreateCommand())
+            string gzFile = Path.Combine(SqliteFileHandler.Path.FullName, Version);
+            using (FileStream fs = new FileStream(gzFile, FileMode.Open, FileAccess.Read))
             {
-                List<string> columns = new List<string>();
-                string colNames = null;
-                string paraNames = null;
-                string tblName = p_item.Key;
-
-                // 查询表的所有列
-                using (var cmdCol = p_conn.CreateCommand())
+                using (BinaryReader reader = new BinaryReader(fs))
                 {
-                    cmdCol.CommandText = $"SELECT c.name, c.type FROM sqlite_master AS t, pragma_table_info(t.name) AS c WHERE t.type = 'table' and t.name='{tblName}'";
-                    var colReader = cmdCol.ExecuteReader();
-                    if (colReader != null && colReader.FieldCount == 2)
-                    {
-                        while (colReader.Read())
-                        {
-                            var colName = colReader[0].ToString();
-                            columns.Add(colName);
-                            if (colNames == null)
-                                colNames = colName;
-                            else
-                                colNames += "," + colName;
-                            if (paraNames == null)
-                                paraNames = ":" + colName;
-                            else
-                                paraNames += ",:" + colName;
-
-                            SqliteType tp = SqliteType.Text;
-                            var colType = colReader[1].ToString().ToLower();
-                            if (colType == "integer")
-                                tp = SqliteType.Integer;
-                            else if (colType == "real")
-                                tp = SqliteType.Real;
-                            cmd.Parameters.Add(colName, tp);
-                        }
-                    }
+                    _data = new byte[fs.Length];
+                    reader.Read(_data, 0, (int)fs.Length);
                 }
-
-                cmd.CommandText = $"insert into {tblName} ({colNames}) values ({paraNames})";
-                foreach (var row in tbl)
-                {
-                    foreach (var col in columns)
-                    {
-                        var obj = row[col];
-                        cmd.Parameters[col].Value = (obj == null ? DBNull.Value : obj);
-                    }
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            return tbl.Count;
-        }
-
-        /// <summary>
-        /// 移除文件的只读属性
-        /// </summary>
-        /// <param name="p_filePath"></param>
-        static void RemoveReadOnlyFlag(string p_filePath)
-        {
-            FileAttributes fileAttributes = File.GetAttributes(p_filePath);
-            if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-            {
-                fileAttributes &= ~FileAttributes.ReadOnly;
-                File.SetAttributes(p_filePath, fileAttributes);
             }
         }
 
@@ -398,6 +315,20 @@ namespace Dt.Cm
                     cmd.Parameters["Nullable"].Value = col.Nullable;
                     cmd.ExecuteNonQuery();
                 }
+            }
+        }
+
+        /// <summary>
+        /// 移除文件的只读属性
+        /// </summary>
+        /// <param name="p_filePath"></param>
+        static void RemoveReadOnlyFlag(string p_filePath)
+        {
+            FileAttributes fileAttributes = File.GetAttributes(p_filePath);
+            if ((fileAttributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            {
+                fileAttributes &= ~FileAttributes.ReadOnly;
+                File.SetAttributes(p_filePath, fileAttributes);
             }
         }
 

@@ -40,7 +40,7 @@ namespace Dt.Cm
         /// <param name="p_services"></param>
         public override void ConfigureServices(IServiceCollection p_services)
         {
-            p_services.AddSingleton<SqliteModelHandler>();
+            p_services.AddSingleton<SqliteFileHandler>();
         }
 
         /// <summary>
@@ -50,14 +50,20 @@ namespace Dt.Cm
         /// <param name="p_handlers">注册自定义请求处理</param>
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            Kit.GetService<SqliteModelHandler>().Init(p_handlers);
-
-            if (!Kit.IsSingletonSvc)
-                LoadSvcUrls();
+            Kit.GetService<SqliteFileHandler>().Init(p_handlers);
+            LoadSvcUrls();
         }
 
         void LoadSvcUrls()
         {
+            if (Kit.IsSingletonSvc)
+            {
+                // 单体服务时，只需一个地址
+                SysKernel.Config["IsSingletonSvc"] = true;
+                return;
+            }
+
+            SysKernel.Config["IsSingletonSvc"] = false;
             if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/url.json")))
             {
                 Log.Fatal("缺少url.json文件，无法获取所有服务的地址信息");
@@ -74,7 +80,7 @@ namespace Dt.Cm
             {
                 dt[item.Key] = item.Value;
             }
-            SysKernel.SvcUrls = dt;
+            SysKernel.Config["SvcUrls"] = dt;
             Log.Information("加载所有服务的地址信息");
         }
     }

@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Microsoft.Extensions.Configuration;
 #endregion
 
 namespace Dt.Cm
@@ -19,39 +17,41 @@ namespace Dt.Cm
     [Api]
     public class SysKernel : DomainSvc
     {
-        static readonly SqliteModelHandler _modelHandler = Kit.GetService<SqliteModelHandler>();
+        static readonly SqliteFileHandler _modelHandler = Kit.GetService<SqliteFileHandler>();
+        static readonly Dict _config = new Dict();
 
         /// <summary>
-        /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
+        /// 获取参数配置，包括服务器时间、所有服务地址、sqlite文件版本号
         /// </summary>
         /// <returns></returns>
-        public List<object> GetConfig()
+        public Dict GetConfig()
         {
-            var ls = new List<object> { Kit.Now };
-            if (Kit.IsSingletonSvc)
-            {
-                // 单体服务只传标志
-                ls.Add(true);
-            }
-            else
-            {
-                if (SvcUrls == null)
-                    Throw.Msg("缺少url.json文件，无法获取所有服务的地址信息");
-                ls.Add(SvcUrls);
-            }
-            ls.Add(_modelHandler.Version);
-            return ls;
+            _config["Now"] = Kit.Now;
+            return _config;
         }
 
         /// <summary>
-        /// 更新服务端表结构缓存和sqlite模型库文件
+        /// 更新服务端所有sqlite文件，包括sqlite.json中定义的所有sqlite文件，异步处理
         /// </summary>
         /// <returns></returns>
-        public bool UpdateModel()
+        public string UpdateAllSqliteFile()
         {
-            return _modelHandler.Refresh();
+            return _modelHandler.RefreshAll();
         }
 
-        internal static Dict SvcUrls { get; set; }
+        /// <summary>
+        /// 更新服务端单个sqlite文件，确保文件名已在sqlite.json中定义
+        /// </summary>
+        /// <param name="p_fileName"></param>
+        /// <returns></returns>
+        public string UpdateSqliteFile(string p_fileName)
+        {
+            return _modelHandler.Refresh(p_fileName);
+        }
+
+        /// <summary>
+        /// 参数配置
+        /// </summary>
+        internal static Dict Config => _config;
     }
 }
