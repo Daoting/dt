@@ -186,7 +186,7 @@ namespace Dt.Cm
             }
 
             byte[] data = null;
-            path = path.Substring(index);
+            path = path.Substring(index + 1);
             if ("model".Equals(path, StringComparison.OrdinalIgnoreCase))
             {
                 data = _model.GetData();

@@ -27,7 +27,7 @@ namespace Dt.Mgr
         /// <exception cref="Exception"></exception>
         public override async Task<INotifyList> GetData()
         {
-            return await AtModel.Query($"select name from OmOption where Category=\"{_params}\"");
+            return await AtOption.Query($"select name from OmOption where Category=\"{_params}\"");
         }
     }
 }

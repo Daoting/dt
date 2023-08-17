@@ -74,7 +74,7 @@ namespace Dt.Mgr
                 Task.Run(async () =>
                 {
                     // 非固定菜单项
-                    if (await AtModel.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+                    if (await AtMenu.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
                     {
                         // 点击次数保存在客户端
                         Dict dt = new Dict();
@@ -136,7 +136,7 @@ namespace Dt.Mgr
                 // 过滤无权限的项
                 if (idsAll.Contains(fav.MenuID))
                 {
-                    var om = await AtModel.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                    var om = await AtMenu.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
                     _favMenus.Add(om);
                     // 原位置仍存在
                     //idsAll.Remove(fav.MenuID);
@@ -151,7 +151,7 @@ namespace Dt.Mgr
             var roots = new List<OmMenu>();
 
             // 整理菜单项
-            foreach (var item in await AtModel.Each<OmMenu>("select * from OmMenu order by dispidx"))
+            foreach (var item in await AtMenu.Each<OmMenu>("select * from OmMenu order by dispidx"))
             {
                 // 过滤无权限的项，保留所有分组
                 if (!item.IsGroup && !idsAll.Contains(item.ID))

@@ -52,15 +52,15 @@ namespace Dt.Mgr
         /// <summary>
         /// 初始化所有微服务地址
         /// </summary>
-        /// <param name="p_cfg"></param>
-        internal void InitSvcUrls(object p_cfg)
+        /// <param name="p_svcUrls"></param>
+        internal void InitSvcUrls(Dict p_svcUrls)
         {
-            if (p_cfg is bool)
+            if (p_svcUrls == null)
             {
                 // 单体服务
                 _isSingletonSvc = true;
             }
-            else if (p_cfg is Dict dt && !string.IsNullOrWhiteSpace(SvcUrl))
+            else if (!string.IsNullOrWhiteSpace(SvcUrl))
             {
                 var match = Regex.Match(SvcUrl, @"^http[s]?://[^\s/]+");
                 string prefix = "";
@@ -68,7 +68,7 @@ namespace Dt.Mgr
                     prefix = match.Value;
 
                 _urlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var item in dt)
+                foreach (var item in p_svcUrls)
                 {
                     var url = item.Value as string;
                     if (url.StartsWith("*/"))

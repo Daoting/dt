@@ -175,12 +175,10 @@ namespace Dt.Cm
         {
             string gzFile = Path.Combine(SqliteFileHandler.Path.FullName, Version + ".gz");
             using (FileStream fs = new FileStream(gzFile, FileMode.Open, FileAccess.Read))
+            using (BinaryReader reader = new BinaryReader(fs))
             {
-                using (BinaryReader reader = new BinaryReader(fs))
-                {
-                    _data = new byte[fs.Length];
-                    reader.Read(_data, 0, (int)fs.Length);
-                }
+                _data = new byte[fs.Length];
+                reader.Read(_data, 0, (int)fs.Length);
             }
         }
 

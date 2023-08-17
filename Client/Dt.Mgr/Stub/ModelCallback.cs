@@ -74,7 +74,7 @@ namespace Dt.Mgr
         /// <returns></returns>
         public async Task<string> GetReportTemplate(string p_rptName)
         {
-            string define = await AtModel.GetScalar<string>("select define from OmReport where name=@name", new Dict { { "name", p_rptName } });
+            string define = await AtReport.GetScalar<string>("select define from OmReport where name=@name", new Dict { { "name", p_rptName } });
             if (string.IsNullOrEmpty(define))
                 Kit.Warn($"未找到报表模板【{p_rptName}】！");
             return define;

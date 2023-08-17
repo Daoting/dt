@@ -6,12 +6,12 @@
     public partial class AtCm
     {
         /// <summary>
-        /// 获取参数配置，包括服务器时间、所有服务地址、模型文件版本号
+        /// 获取参数配置，包括服务器时间、所有服务地址、sqlite文件版本号
         /// </summary>
         /// <returns></returns>
-        public static Task<List<object>> GetConfig()
+        public static Task<Dict> GetConfig()
         {
-            return Kit.Rpc<List<object>>(
+            return Kit.Rpc<Dict>(
                 "cm",
                 "SysKernel.GetConfig"
             );
