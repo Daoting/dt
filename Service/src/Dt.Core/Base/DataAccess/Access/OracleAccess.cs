@@ -74,7 +74,8 @@ namespace Dt.Core
         #region 表结构
         const string _sqlAllTbls = "select table_name from user_tables union select view_name from user_views";
         const string _sqlCols = "select * from \"{0}\" where 1!=1";
-        const string _sqlComment = "select a.data_default, b.comments from user_tab_columns a, user_col_comments b where a.table_name=b.table_name AND a.column_name=b.column_name AND a.table_name='{0}' AND a.column_name='{1}'";
+        const string _sqlDef = "select column_name,data_default from user_tab_columns where table_name = '{0}'";
+        const string _sqlComment = "select column_name,comments from user_col_comments where table_name = '{0}'";
         const string _sqlPk = "select cu.column_name from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name AND au.constraint_type = 'P' AND cu.table_name='{0}'";
 
         public override async Task<IReadOnlyDictionary<string, TableSchema>> GetDbSchema()
@@ -102,15 +103,21 @@ namespace Dt.Core
                         }
                     }
 
+                    Log.Information("共 {0} 张表或视图", tbls.Count);
+
                     // 表结构
-                    foreach (var tbl in tbls)
+                    for (int i = 0; i < tbls.Count; i++)
                     {
+                        var tbl = tbls[i];
+                        Log.Information("导出 {0} {1}/{2}", tbl, i + 1, tbls.Count);
                         var vs = await GetTblOrViewSchema(tbl, cmd);
                         if (vs != null)
                         {
                             schema[tbl] = vs;
                         }
                     }
+
+                    Log.Information("实际导出 {0} 张", schema.Count);
                 }
                 return schema;
             }
@@ -217,6 +224,36 @@ namespace Dt.Core
                     }
                 }
 
+                // 字段默认值
+                Dictionary<string, string> defVals = new Dictionary<string, string>();
+                p_cmd.CommandText = string.Format(_sqlDef, tblCols.Name);
+                using (reader = await p_cmd.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (!reader.IsDBNull(0) && !reader.IsDBNull(1))
+                                defVals.Add(reader.GetString(0), reader.GetString(1));
+                        }
+                    }
+                }
+
+                // 字段注释
+                Dictionary<string, string> comments = new Dictionary<string, string>();
+                p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name);
+                using (reader = await p_cmd.ExecuteReaderAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (!reader.IsDBNull(0) && !reader.IsDBNull(1))
+                                comments.Add(reader.GetString(0), reader.GetString(1));
+                        }
+                    }
+                }
+
                 foreach (var colSchema in cols)
                 {
                     TableCol col = new TableCol(tblCols);
@@ -230,22 +267,14 @@ namespace Dt.Core
                     if (colSchema.AllowDBNull.HasValue)
                         col.Nullable = colSchema.AllowDBNull.Value;
 
-                    // 读取列结构
-                    p_cmd.CommandText = string.Format(_sqlComment, tblCols.Name, colSchema.ColumnName);
-                    using (reader = await p_cmd.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows && reader.Read())
-                        {
-                            // 默认值
-                            if (!reader.IsDBNull(0))
-                                col.Default = reader.GetString(0);
-
-                            // 字段注释
-                            if (!reader.IsDBNull(1))
-                                col.Comments = reader.GetString(1);
-                        }
-                    }
-
+                    // 默认值
+                    if (defVals.TryGetValue(colSchema.ColumnName, out var def))
+                        col.Default = def;
+                    
+                    // 字段注释
+                    if (comments.TryGetValue(colSchema.ColumnName, out var cmts))
+                        col.Comments = cmts;
+                    
                     // 是否为主键
                     if (pk.Contains(colSchema.ColumnName))
                         tblCols.PrimaryKey.Add(col);
@@ -253,7 +282,7 @@ namespace Dt.Core
                         tblCols.Columns.Add(col);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // 出现异常，重置null，可能视图编译错误等
                 tblCols = null;
