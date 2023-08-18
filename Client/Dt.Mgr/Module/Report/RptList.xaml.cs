@@ -18,6 +18,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Dt.Mgr.Rbac;
+using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Mgr.Module
@@ -80,7 +81,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateSqliteFile("report");
+            LocalDbView.UpdateSqliteFile("report");
         }
 
         RptWin _win => (RptWin)OwnWin;

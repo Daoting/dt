@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Mgr.Rbac
@@ -126,7 +127,7 @@ namespace Dt.Mgr.Rbac
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateSqliteFile("menu");
+            LocalDbView.UpdateSqliteFile("menu");
         }
         #endregion
 

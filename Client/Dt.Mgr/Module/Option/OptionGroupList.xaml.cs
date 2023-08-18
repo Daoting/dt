@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Tools;
 using Dt.Mgr.Rbac;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -87,7 +88,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateSqliteFile("option");
+            LocalDbView.UpdateSqliteFile("option");
         }
         #endregion
 

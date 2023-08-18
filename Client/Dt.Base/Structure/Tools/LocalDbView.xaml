@@ -47,4 +47,20 @@
             </a:Tab>
         </a:Tabs>
     </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="服务端sqlite文件">
+                <a:Lv x:Name="_lvFile" >
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="更新" Icon="刷新" Click="OnRefreshFile" />
+                        </a:Menu>
+                    </a:Ex.Menu>
+                    <DataTemplate>
+                        <a:Dot Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
 </a:Win>

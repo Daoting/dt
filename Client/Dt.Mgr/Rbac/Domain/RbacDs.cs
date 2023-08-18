@@ -353,36 +353,7 @@ namespace Dt.Mgr.Rbac
         }
         #endregion
 
-        #region 更新sqlite文件
-        public static async void UpdateSqliteFile(string p_fileName)
-        {
-            if (await Kit.Confirm($"确认要更新服务端的{p_fileName}文件吗？\r\n更新后需要重启应用才能生效"))
-            {
-#if WIN
-                Dlg dlg = new Dlg
-                {
-                    Title = "服务日志",
-                    IsPinned = true,
-                    Content = new WebView2 { Source = new Uri($"{Kit.GetSvcUrl("cm")}/.output") }
-                };
-
-                if (!Kit.IsPhoneUI)
-                {
-                    dlg.Height = Kit.ViewHeight - 200;
-                    dlg.Width = Math.Min(900, Kit.ViewWidth - 300);
-                }
-                dlg.Show();
-
-                await AtCm.UpdateSqliteFile(p_fileName);
-#else
-                var msg = await AtCm.UpdateSqliteFile(p_fileName);
-                Kit.Msg(msg);
-#endif
-            }
-        }
-#endregion
-
-#region 缓存版本
+        #region 缓存版本
         /// <summary>
         /// 删除用户的所有缓存版本号
         /// </summary>
@@ -443,6 +414,6 @@ namespace Dt.Mgr.Rbac
 
         public const string PrefixMenu = "ver:menu:";
         public const string PrefixPer = "ver:per:";
-#endregion
+        #endregion
     }
 }
