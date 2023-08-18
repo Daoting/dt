@@ -98,14 +98,22 @@ namespace Dt.Base
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                var item = new Mi { ID = "系统日志" };
+                var item = new Mi { ID = "系统日志", Icon = Icons.日志 };
                 item.Click += (s, a) => SysTrace.ShowBox();
                 _menu.Items.Add(item);
 
-#if WIN && !DEBUG
+                item = new Mi { ID = "本地库", Icon = Icons.数据库 };
+                item.Click += (s, a) => Kit.OpenWin(typeof(LocalDbView));
+                _menu.Items.Add(item);
+
+                item = new Mi { ID = "本地文件", Icon = Icons.文件 };
+                item.Click += (s, a) => Kit.OpenWin(typeof(LocalFileView));
+                _menu.Items.Add(item);
+
+#if WIN //&& !DEBUG
                 if (Kit.IsUsingSvc)
                 {
-                    item = new Mi { ID = "检查更新" };
+                    item = new Mi { ID = "检查更新", Icon = Icons.刷新卡片 };
                     item.Click += (s, a) => WinPkgUpdate.CheckUpdate(true);
                     _menu.Items.Add(item);
                 }

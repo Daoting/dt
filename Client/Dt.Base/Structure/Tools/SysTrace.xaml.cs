@@ -116,6 +116,11 @@ namespace Dt.Base.Tools
             Log.Debug(ApplicationData.Current.LocalFolder.Path);
         }
 
+        void OnSvcLog(object sender, Mi e)
+        {
+            Kit.OpenUrl(Kit.GetSvcUrl("cm") + "/.output");
+        }
+
         void OnInstallPath(object sender, Mi e)
         {
             Log.Debug(Package.Current.InstalledLocation.Path);

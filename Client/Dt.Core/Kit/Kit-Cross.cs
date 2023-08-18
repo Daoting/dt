@@ -41,6 +41,20 @@ namespace Dt.Core
             });
 #endif
         }
+
+        /// <summary>
+        /// 打开url
+        /// </summary>
+        /// <param name="p_url"></param>
+        /// <returns></returns>
+        public static Task OpenUrl(string p_url)
+        {
+#if WASM
+            return Task.CompletedTask;
+#else
+            return Launcher.OpenAsync(p_url);
+#endif
+        }
         #endregion
 
         #region 分享
