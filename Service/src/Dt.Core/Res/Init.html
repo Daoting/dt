@@ -77,11 +77,11 @@
     </style>
 </head>
 <body style="margin: 0; padding: 0; height: 100%;">
-    <div style="position: fixed; left: 50%; top: 50%; width: 800px; height: 740px; margin-left: -400px; margin-top: -370px; ">
+    <div style="position: fixed; left: 50%; top: 50%; width: 800px; height: 800px; margin-left: -400px; margin-top: -400px; ">
         <div class="divCaption">
             <span class="aTitle">数据库初始化向导</span>
         </div>
-        <div style="border: 1px solid #E0E0E0; padding: 20px; height: 240px; margin-top: -1px">
+        <div style="border: 1px solid #E0E0E0; padding: 20px; height: 300px; margin-top: -1px">
             <div id="divFirst" class="divContent">
                 <div>
                     <label>数据库类型</label>
@@ -97,9 +97,12 @@
                     <input type="text" id="port" value="3306"><br /><br />
                     <label id="lbldefdb">无需填写</label>
                     <input id="defdb" type="text" readonly="readonly"><br /><br />
-                    <label id="lblpwd">root密码</label>
-                    <input id="pwd" type="password" ><br /><br />
+                    <label>用户名 </label>
+                    <input type="text" id="defuser" value="root"><br /><br />
+                    <label>密码</label>
+                    <input id="pwd" type="password"><br /><br />
                     <input id="btnConnec" type="button" value="连　　接" style="width:100%;" onclick="onConnect()">
+                    <label style="color: red; width: auto; margin-top: 10px;">* 确保该用户具有增删库权限</label>
                 </div>
             </div>
             <div id="divSecond" class="divContent" style="display: none">
@@ -108,6 +111,8 @@
                     <input type="text" id="newdb"><br /><br />
                     <label>新用户名</label>
                     <input type="text" id="newuser"><br /><br />
+                    <label>密码</label>
+                    <input id="newpwd" type="password"><br /><br />
                     <label>新库内容</label>
                     <select id="dbContent" style="width:203px;padding:1px 2px">
                         <option value="0">标准库</option>
@@ -116,9 +121,11 @@
                     </select><br /><br />
                     <input id="btn0" type="button" value="创　建　新　库" style="width: 100%;" onclick="onDoInit()">
                     <input id="btn1" type="button" value="返　回" style="width: 100%; margin-top: 10px;" onclick="onBack()">
-                    <div style="margin-top: 20px;">
-                        <label style="color: red; width: auto;">1. 新库或新用户名已存在时将删除重建！</label><br />
-                        <label style="color: red; width: auto;">2. 新用户的默认密码和用户名相同！</label>
+                    <div style="margin-top: 10px;">
+                        <label style="color: red; width: auto;">1. * 新库或新用户名已存在时将删除重建 *</label><br />
+                        <label style="color: red; width: auto;">2. 根据dt库和业务库是否使用同一库，推荐：</label><br />
+                        <label style="color: red; width: auto; margin-left: 20px;">无论是否同库，推荐 新库名和新用户名相同</label><br />
+                        <label style="color: red; width: auto; margin-left: 20px;">不同库时，推荐 dt库名=业务库名_dt</label>
                     </div>
                 </div>
                 
@@ -144,7 +151,7 @@
             if (db == 0)
             {
                 $("port").value = "3306";
-                $("lblpwd").innerText = "root密码";
+                $("defuser").value = "root";
                 $("lbldefdb").innerText = "无需填写";
                 $("defdb").setAttribute("readonly", "readonly");
                 $("defdb").value = "";
@@ -153,7 +160,7 @@
             else if (db == 1)
             {
                 $("port").value = "1521";
-                $("lblpwd").innerText = "system密码";
+                $("defuser").value = "system";
                 $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "服务名";
                 $("defdb").removeAttribute("readOnly");
@@ -163,7 +170,7 @@
             else if (db == 2)
             {
                 $("port").value = "1433";
-                $("lblpwd").innerText = "sa密码";
+                $("defuser").value = "sa";
                 $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "默认库名";
                 $("defdb").removeAttribute("readOnly");
@@ -173,7 +180,7 @@
             else if (db == 3)
             {
                 $("port").value = "5432";
-                $("lblpwd").innerText = "postgres密码";
+                $("defuser").value = "postgres";
                 $("defdb").style = "visibility:visible";
                 $("lbldefdb").innerText = "默认库名";
                 $("defdb").removeAttribute("readOnly");
@@ -193,6 +200,7 @@
                 + $("host").value + "\",\""
                 + $("port").value + "\",\""
                 + $("defdb").value + "\",\""
+                + $("defuser").value + "\",\""
                 + $("pwd").value + "\"]";
                 
             var msg = await call("[\"TestConnect\"," + list + "]");
@@ -219,9 +227,11 @@
                 + $("host").value + "\",\""
                 + $("port").value + "\",\""
                 + $("defdb").value + "\",\""
+                + $("defuser").value + "\",\""
                 + $("pwd").value + "\",\""
                 + $("newdb").value + "\",\""
-                + $("newuser").value + "\"]";
+                + $("newuser").value + "\",\""
+                + $("newpwd").value + "\"]";
 
             var msg = await call("[\"IsExists\"," + list + "]");
             if (msg != null && msg != "")
@@ -271,13 +281,17 @@
             {
                 $("port").focus();
             }
-            else if ($("pwd").value == "")
-            {
-                $("pwd").focus();
-            }
             else if ($("defdb").value == "" && $("dbtype").value != 0)
             {
                 $("defdb").focus();
+            }
+            else if ($("defuser").value == "")
+            {
+                $("defuser").focus();
+            }
+            else if ($("pwd").value == "")
+            {
+                $("pwd").focus();
             }
             else
             {
@@ -297,13 +311,17 @@
             {
                 $("port").focus();
             }
-            else if ($("pwd").value == "")
-            {
-                $("pwd").focus();
-            }
             else if ($("defdb").value == "" && $("dbtype").value != 0)
             {
                 $("defdb").focus();
+            }
+            else if ($("defuser").value == "")
+            {
+                $("defuser").focus();
+            }
+            else if ($("pwd").value == "")
+            {
+                $("pwd").focus();
             }
             else if ($("newdb").value == "")
             {
@@ -312,6 +330,10 @@
             else if ($("newuser").value == "")
             {
                 $("newuser").focus();
+            }
+            else if ($("newpwd").value == "")
+            {
+                $("newpwd").focus();
             }
             else
             {

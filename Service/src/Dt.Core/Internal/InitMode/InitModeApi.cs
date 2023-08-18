@@ -25,8 +25,8 @@ namespace Dt.Core.Rpc
     {
         public async Task<string> TestConnect(List<string> p_list)
         {
-            if (p_list == null || p_list.Count != 5)
-                return "参数个数应为5个！";
+            if (p_list == null || p_list.Count != 6)
+                return "参数个数应为6个！";
 
             Log.Information("正在连接...");
             Kit.TraceSql = false;
@@ -80,8 +80,8 @@ namespace Dt.Core.Rpc
 
         IDbTools GetTools(List<string> p_list)
         {
-            if (p_list == null || p_list.Count != 7)
-                Throw.Msg("参数个数应为7个！");
+            if (p_list == null || p_list.Count != 9)
+                Throw.Msg("参数个数应为9个！");
 
             if (p_list[0] == "0")
                 return new MySqlTools(p_list);

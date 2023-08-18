@@ -17,15 +17,17 @@ namespace Dt.Core
         string _host;
         string _newDb;
         string _newUser;
+        string _newPwd;
 
         public MySqlTools(List<string> p_list)
         {
             _host = $"Server={p_list[1]};Port={p_list[2]}";
-            var connStr = $"{_host};Uid=root;Pwd={p_list[4]};";
+            var connStr = $"{_host};Uid={p_list[4]};Pwd={p_list[5]};";
             _da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
 
-            _newDb = p_list[5];
-            _newUser = p_list[6];
+            _newDb = p_list[6].Trim();
+            _newUser = p_list[7].Trim();
+            _newPwd = p_list[8].Trim();
             Kit.TraceSql = false;
         }
 
@@ -33,7 +35,7 @@ namespace Dt.Core
         {
             var da = new MySqlAccess(new DbInfo(
                 "mysql",
-                $"Server={p_list[1]};Port={p_list[2]};Uid=root;Pwd={p_list[4]};",
+                $"Server={p_list[1]};Port={p_list[2]};Uid={p_list[4]};Pwd={p_list[5]};",
                 DatabaseType.MySql));
             try
             {
@@ -100,8 +102,8 @@ namespace Dt.Core
             Log.Information("创建成功！");
 
             Log.Information($"创建用户【{_newUser}】...");
-            await _da.Exec($"create user '{_newUser}'@'%' identified by '{_newDb}'");
-            Log.Information($"创建成功！默认密码：{_newDb}");
+            await _da.Exec($"create user '{_newUser}'@'%' identified by '{_newPwd}'");
+            Log.Information($"创建成功！密码：{_newPwd}");
 
             Log.Information($"数据库【{_newDb}】的所有权限授予给用户【{_newUser}】...");
             await _da.Exec($"grant all privileges on {_newDb}.* to '{_newUser}'@'%'");
@@ -110,7 +112,7 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("创建空库成功");
 
-            var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newDb};";
+            var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newPwd};";
 
             if (p_initType != 1)
             {

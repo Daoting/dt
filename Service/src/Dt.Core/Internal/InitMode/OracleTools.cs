@@ -18,15 +18,17 @@ namespace Dt.Core
         string _host;
         string _newDb;
         string _newUser;
+        string _newPwd;
 
         public OracleTools(List<string> p_list)
         {
             _host = $"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={p_list[1]})(PORT={p_list[2]}))(CONNECT_DATA=(SERVICE_NAME={p_list[3]})(SERVER=dedicated)))";
-            var connStr = $"User Id=system;Password={p_list[4]};{_host}";
+            var connStr = $"User Id={p_list[4]};Password={p_list[5]};{_host}";
             _da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle));
 
-            _newDb = p_list[5].Trim().ToUpper();
-            _newUser = p_list[6].Trim().ToUpper();
+            _newDb = p_list[6].Trim().ToUpper();
+            _newUser = p_list[7].Trim().ToUpper();
+            _newPwd = p_list[8].Trim();
             Kit.TraceSql = false;
         }
 
@@ -34,7 +36,7 @@ namespace Dt.Core
         {
             var da = new OracleAccess(new DbInfo(
                 "orcl",
-                $"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={p_list[1]})(PORT={p_list[2]}))(CONNECT_DATA=(SERVICE_NAME={p_list[3]})(SERVER=dedicated)));User Id=system;Password={p_list[4]};",
+                $"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={p_list[1]})(PORT={p_list[2]}))(CONNECT_DATA=(SERVICE_NAME={p_list[3]})(SERVER=dedicated)));User Id={p_list[4]};Password={p_list[5]};",
                 DatabaseType.Oracle));
             try
             {
@@ -90,7 +92,7 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("创建空库成功");
 
-            var connStr = $"User Id={_newUser};Password={_newDb.ToLower()};{_host}";
+            var connStr = $"User Id={_newUser};Password={_newPwd};{_host}";
 
             if (p_initType != 1)
             {
@@ -165,7 +167,7 @@ namespace Dt.Core
         async Task CreateUser()
         {
             Log.Information($"正在创建用户 {_newUser} ...");
-            await _da.Exec($"create user {_newUser} identified by {_newDb.ToLower()} default tablespace \"{_newDb}\" temporary tablespace \"{_newDb}TEMP\"");
+            await _da.Exec($"create user {_newUser} identified by {_newPwd} default tablespace \"{_newDb}\" temporary tablespace \"{_newDb}TEMP\"");
             await _da.Exec($"grant DBA to {_newUser} with admin option");
             await _da.Exec($"grant ALTER ANY CLUSTER to {_newUser} with admin option");
             await _da.Exec($"grant ALTER ANY DIMENSION to {_newUser} with admin option");
@@ -284,7 +286,7 @@ namespace Dt.Core
             await _da.Exec($"alter user {_newUser} quota 0 on users");
             await _da.Exec($"alter user {_newUser} quota unlimited on {_newDb}");
 
-            Log.Information($"创建用户并赋予权限成功！默认密码：{_newDb.ToLower()}");
+            Log.Information($"创建用户并赋予权限成功！密码：{_newPwd}");
         }
         #endregion
 

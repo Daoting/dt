@@ -17,16 +17,18 @@ namespace Dt.Core
         string _host;
         string _newDb;
         string _newUser;
+        string _newPwd;
         string _defDb;
 
         public SqlServerTools(List<string> p_list)
         {
             _host = $"Data Source={p_list[1]},{p_list[2]}";
-            var connStr = $"{_host};Initial Catalog={p_list[3]};User ID=sa;Password={p_list[4]};Encrypt=True;TrustServerCertificate=True;";
+            var connStr = $"{_host};Initial Catalog={p_list[3]};User ID={p_list[4]};Password={p_list[5]};Encrypt=True;TrustServerCertificate=True;";
             _da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
 
-            _newDb = p_list[5];
-            _newUser = p_list[6];
+            _newDb = p_list[6].Trim();
+            _newUser = p_list[7].Trim();
+            _newPwd = p_list[8].Trim();
             _defDb = p_list[3];
             Kit.TraceSql = false;
         }
@@ -35,7 +37,7 @@ namespace Dt.Core
         {
             var da = new SqlServerAccess(new DbInfo(
                 "sqlserver",
-                $"Data Source={p_list[1]},{p_list[2]};Initial Catalog={p_list[3]};User ID=sa;Password={p_list[4]};Encrypt=True;TrustServerCertificate=True;",
+                $"Data Source={p_list[1]},{p_list[2]};Initial Catalog={p_list[3]};User ID={p_list[4]};Password={p_list[5]};Encrypt=True;TrustServerCertificate=True;",
                 DatabaseType.SqlServer));
             try
             {
@@ -90,7 +92,7 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("创建空库成功");
 
-            var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newDb};Encrypt=True;TrustServerCertificate=True;";
+            var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newPwd};Encrypt=True;TrustServerCertificate=True;";
 
             if (p_initType != 1)
             {
@@ -162,10 +164,10 @@ LOG ON
         async Task CreateUser()
         {
             Log.Information($"创建用户【{_newUser}】...");
-            await _da.Exec($"create login {_newUser} with password='{_newDb}',default_database={_newDb}");
+            await _da.Exec($"create login {_newUser} with password='{_newPwd}',default_database={_newDb}");
             await _da.Exec("use " + _newDb);
             await _da.Exec(string.Format("create user {0} for login {0} with default_schema=dbo", _newUser));
-            Log.Information($"创建成功！默认密码：{_newDb}");
+            Log.Information($"创建成功！密码：{_newPwd}");
 
             Log.Information($"数据库【{_newDb}】的所有权限授予给用户【{_newUser}】...");
             await _da.Exec("sp_addrolemember", new { rolename = "db_owner", membername = _newUser });

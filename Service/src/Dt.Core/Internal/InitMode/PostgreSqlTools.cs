@@ -19,17 +19,19 @@ namespace Dt.Core
         string _host;
         string _newDb;
         string _newUser;
-        string _pwdPostgres;
+        string _newPwd;
+        string _sysUser;
 
         public PostgreSqlTools(List<string> p_list)
         {
             _host = $"Host={p_list[1]};Port={p_list[2]}";
-            var connStr = $"{_host};Database={p_list[3]};Username=postgres;Password={p_list[4]};";
+            var connStr = $"{_host};Database={p_list[3]};Username={p_list[4]};Password={p_list[5]};";
             _da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
 
-            _pwdPostgres = p_list[4];
-            _newDb = p_list[5].Trim().ToLower();
-            _newUser = p_list[6].Trim().ToLower();
+            _sysUser = $"Username={p_list[4]};Password={p_list[5]};";
+            _newDb = p_list[6].Trim().ToLower();
+            _newUser = p_list[7].Trim().ToLower();
+            _newPwd = p_list[8].Trim();
             Kit.TraceSql = false;
         }
 
@@ -37,7 +39,7 @@ namespace Dt.Core
         {
             var da = new PostgreSqlAccess(new DbInfo(
                 "pg",
-                $"Host={p_list[1]};Port={p_list[2]};Database={p_list[3]};Username=postgres;Password={p_list[4]};",
+                $"Host={p_list[1]};Port={p_list[2]};Database={p_list[3]};Username={p_list[4]};Password={p_list[5]};",
                 DatabaseType.PostgreSql));
             try
             {
@@ -88,8 +90,8 @@ namespace Dt.Core
             await DropExistsDB();
 
             Log.Information($"正在创建用户 {_newUser} ...");
-            await _da.Exec($"create user {_newUser} with password '{_newDb}'");
-            Log.Information($"创建用户成功！默认密码：{_newDb}");
+            await _da.Exec($"create user {_newUser} with password '{_newPwd}'");
+            Log.Information($"创建用户成功！密码：{_newPwd}");
 
             Log.Information($"创建数据库【{_newDb}】...");
             await _da.Exec($"create database {_newDb} owner {_newUser}");
@@ -97,7 +99,7 @@ namespace Dt.Core
             await _da.Close(true);
 
             // 切换库，授权
-            var connStr = $"{_host};Database={_newDb};Username=postgres;Password={_pwdPostgres};";
+            var connStr = $"{_host};Database={_newDb};{_sysUser}";
             var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
             da.AutoClose = false;
             Log.Information($"数据库【{_newDb}】的所有权限授予给用户【{_newUser}】...");
@@ -112,7 +114,7 @@ namespace Dt.Core
             await da.Close(true);
             Log.Information("创建空库成功");
 
-            connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newDb};";
+            connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newPwd};";
 
             if (p_initType != 1)
             {
