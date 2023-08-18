@@ -180,9 +180,7 @@ namespace Dt.Base
                 if (trans.X > 0)
                 {
                     sv = page.FindChildByType<ScrollViewer>();
-                    if (sv == null
-                        || sv.ScrollableWidth == 0
-                        || sv.HorizontalOffset == 0)
+                    if (sv == null || sv.ScrollableWidth == 0)
                     {
                         InputKit.GoBack();
                     }
@@ -192,20 +190,10 @@ namespace Dt.Base
 
             // 内容为PhoneTabs，支持左右滑动
             sv = tabs.FindChildByType<ScrollViewer>();
-            if (sv != null)
+            if (sv != null && sv.ScrollableWidth > 0)
             {
-                // 内容正在垂直滚动
-                //if (trans.Y != 0
-                //    && sv.ScrollableHeight > 0
-                //    && ((trans.Y < 0 && sv.VerticalOffset < sv.ScrollableHeight)
-                //        || (trans.Y > 0 && sv.VerticalOffset > 0)))
-                //    return;
-
-                // 内容正在水平滚动
-                if (sv.ScrollableWidth > 0
-                    && ((trans.X < 0 && sv.HorizontalOffset < sv.ScrollableWidth)
-                        || (trans.X > 0 && sv.HorizontalOffset > 0)))
-                    return;
+                // 内容有水平滚动栏时不支持左右滑动
+                return;
             }
 
             if (trans.X < 0)
