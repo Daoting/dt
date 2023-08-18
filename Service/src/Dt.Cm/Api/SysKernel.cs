@@ -50,6 +50,15 @@ namespace Dt.Cm
         }
 
         /// <summary>
+        /// 获取所有sqlite文件名
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllSqliteFile()
+        {
+            return _modelHandler.GetAllFile();
+        }
+
+        /// <summary>
         /// 参数配置
         /// </summary>
         internal static Dict Config => _config;

@@ -87,7 +87,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateModel();
+            RbacDs.UpdateSqliteFile("option");
         }
         #endregion
 

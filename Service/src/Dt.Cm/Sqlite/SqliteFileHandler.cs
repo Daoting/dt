@@ -166,6 +166,17 @@ namespace Dt.Cm
         }
 
         /// <summary>
+        /// 获取所有sqlite文件名
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetAllFile()
+        {
+            var ls = _fileItem.Keys.ToList();
+            ls.Insert(0, "model");
+            return ls;
+        }
+
+        /// <summary>
         /// 向客户端返回sqlite文件内容
         /// </summary>
         /// <param name="p_context"></param>

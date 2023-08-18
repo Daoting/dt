@@ -80,7 +80,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateModel();
+            RbacDs.UpdateSqliteFile("report");
         }
 
         RptWin _win => (RptWin)OwnWin;

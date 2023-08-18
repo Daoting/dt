@@ -9,6 +9,8 @@
 #region 引用命名
 #endregion
 
+using Microsoft.UI.Xaml.Controls;
+
 namespace Dt.Mgr.Rbac
 {
     partial class RbacDs : DomainSvc<RbacDs, AtCm.Info>
@@ -351,34 +353,36 @@ namespace Dt.Mgr.Rbac
         }
         #endregion
 
-        #region 提示更新模型
-        /// <summary>
-        /// 提示需要更新模型
-        /// </summary>
-        /// <param name="p_msg">提示消息</param>
-        public static void PromptForUpdateModel(string p_msg = null)
+        #region 更新sqlite文件
+        public static async void UpdateSqliteFile(string p_fileName)
         {
-            var notify = new NotifyInfo();
-            notify.Message = string.IsNullOrEmpty(p_msg) ? "需要更新模型才能生效" : p_msg + "，需要更新模型才能生效";
-            notify.Delay = 5;
-            notify.Link = "更新模型";
-            notify.LinkCallback = (e) => UpdateModel();
-            Kit.Notify(notify);
-        }
-
-        public static async void UpdateModel()
-        {
-            if (await Kit.Confirm("确认要更新模型吗？\r\n模型包括表结构、菜单、报表、基础选项\r\n更新后需要重启应用才能生效"))
+            if (await Kit.Confirm($"确认要更新服务端的{p_fileName}文件吗？\r\n更新后需要重启应用才能生效"))
             {
-                if (await AtCm.UpdateModel())
-                    Kit.Msg("更新模型成功，请重启应用！");
-                else
-                    Kit.Warn("更新模型失败！");
+#if WIN
+                Dlg dlg = new Dlg
+                {
+                    Title = "服务日志",
+                    IsPinned = true,
+                    Content = new WebView2 { Source = new Uri($"{Kit.GetSvcUrl("cm")}/.output") }
+                };
+
+                if (!Kit.IsPhoneUI)
+                {
+                    dlg.Height = Kit.ViewHeight - 200;
+                    dlg.Width = Math.Min(900, Kit.ViewWidth - 300);
+                }
+                dlg.Show();
+
+                await AtCm.UpdateSqliteFile(p_fileName);
+#else
+                var msg = await AtCm.UpdateSqliteFile(p_fileName);
+                Kit.Msg(msg);
+#endif
             }
         }
-        #endregion
+#endregion
 
-        #region 缓存版本
+#region 缓存版本
         /// <summary>
         /// 删除用户的所有缓存版本号
         /// </summary>
@@ -439,6 +443,6 @@ namespace Dt.Mgr.Rbac
 
         public const string PrefixMenu = "ver:menu:";
         public const string PrefixPer = "ver:per:";
-        #endregion
+#endregion
     }
 }

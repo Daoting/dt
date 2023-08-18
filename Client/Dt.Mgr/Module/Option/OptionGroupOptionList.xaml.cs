@@ -76,26 +76,16 @@ namespace Dt.Mgr.Module
             if (_lv.SelectionMode == Base.SelectionMode.Multiple)
             {
                 var ls = _lv.SelectedItems.Cast<OptionX>().ToList();
-                if (await ls.Delete(false))
+                if (await ls.Delete())
                 {
                     Refresh();
-                    RbacDs.PromptForUpdateModel("基础选项删除成功");
-                }
-                else
-                {
-                    Kit.Warn("基础选项删除失败！");
                 }
             }
             else
             {
-                if (await e.Data.To<OptionX>().Delete(false))
+                if (await e.Data.To<OptionX>().Delete())
                 {
                     Refresh();
-                    RbacDs.PromptForUpdateModel("基础选项删除成功");
-                }
-                else
-                {
-                    Kit.Warn("基础选项删除失败！");
                 }
             }
             _win.ChildForm.BackToHome();
@@ -132,7 +122,6 @@ namespace Dt.Mgr.Module
             if (await tbl.Save(false))
             {
                 Refresh();
-                RbacDs.PromptForUpdateModel("调序成功");
             }
             else
             {

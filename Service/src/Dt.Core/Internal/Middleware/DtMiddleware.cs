@@ -27,6 +27,7 @@ namespace Dt.Core
 
         static string _adminPage;
         static string _errorPage;
+        static string _logPage;
 
         readonly RequestDelegate _next;
         #endregion
@@ -48,6 +49,8 @@ namespace Dt.Core
                 return ResponseAdminPage(p_context);
             if (path == "/.log")
                 return ResponseLog(p_context);
+            if (path == "/.output")
+                return ResponseOutputPage(p_context);
             if (path == "/.download")
                 return DownloadFile(p_context);
             if (path == "/.error")
@@ -127,6 +130,28 @@ namespace Dt.Core
                 await p_context.Response.WriteAsync(msg == null ? "" : msg, p_context.RequestAborted);
             }
             catch { }
+        }
+
+        /// <summary>
+        /// 获取日志输出页面
+        /// </summary>
+        /// <param name="p_context"></param>
+        /// <returns></returns>
+        static async Task ResponseOutputPage(HttpContext p_context)
+        {
+            if (string.IsNullOrEmpty(_logPage))
+            {
+                try
+                {
+                    using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Log.html")))
+                    {
+                        _logPage = sr.ReadToEnd();
+                    }
+                }
+                catch { }
+            }
+            p_context.Response.ContentType = "text/html";
+            await p_context.Response.WriteAsync(_logPage);
         }
 
         /// <summary>

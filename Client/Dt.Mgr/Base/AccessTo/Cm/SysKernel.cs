@@ -18,14 +18,40 @@
         }
 
         /// <summary>
-        /// 更新服务端表结构缓存和sqlite模型库文件
+        /// 更新服务端所有sqlite文件，包括sqlite.json中定义的所有sqlite文件，异步处理
         /// </summary>
         /// <returns></returns>
-        public static Task<bool> UpdateModel()
+        public static Task<string> UpdateAllSqliteFile()
         {
-            return Kit.Rpc<bool>(
+            return Kit.Rpc<string>(
                 "cm",
-                "SysKernel.UpdateModel"
+                "SysKernel.UpdateAllSqliteFile"
+            );
+        }
+
+        /// <summary>
+        /// 更新服务端单个sqlite文件，确保文件名已在sqlite.json中定义
+        /// </summary>
+        /// <param name="p_fileName"></param>
+        /// <returns></returns>
+        public static Task<string> UpdateSqliteFile(string p_fileName)
+        {
+            return Kit.Rpc<string>(
+                "cm",
+                "SysKernel.UpdateSqliteFile",
+                p_fileName
+            );
+        }
+
+        /// <summary>
+        /// 获取所有sqlite文件名
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<string>> GetAllSqliteFile()
+        {
+            return Kit.Rpc<List<string>>(
+                "cm",
+                "SysKernel.GetAllSqliteFile"
             );
         }
     }

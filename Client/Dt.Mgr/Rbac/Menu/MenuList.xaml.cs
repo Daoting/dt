@@ -117,7 +117,6 @@ namespace Dt.Mgr.Rbac
             if (await ExchangeDispidx(src, tgt))
             {
                 Update();
-                RbacDs.PromptForUpdateModel("菜单调序成功");
             }
             else
             {
@@ -127,7 +126,7 @@ namespace Dt.Mgr.Rbac
 
         void OnRefresh(object sender, Mi e)
         {
-            RbacDs.UpdateModel();
+            RbacDs.UpdateSqliteFile("menu");
         }
         #endregion
 

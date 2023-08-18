@@ -46,14 +46,7 @@ namespace Dt.Mgr.Module
                 _rpt["mtime"] = Kit.Now;
             }
 
-            if (await _rpt.Save(false))
-            {
-                RbacDs.PromptForUpdateModel("报表模板保存成功");
-            }
-            else
-            {
-                Kit.Warn("报表模板保存失败！");
-            }
+            await _rpt.Save();
         }
     }
 }

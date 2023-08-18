@@ -66,14 +66,9 @@ namespace Dt.Mgr.Module
         #region 交互
         async void OnSave(object sender, Mi e)
         {
-            if (await _fv.Data.To<RptX>().Save(false))
+            if (await _fv.Data.To<RptX>().Save())
             {
                 _win.List.Update();
-                RbacDs.PromptForUpdateModel("报表模板保存成功");
-            }
-            else
-            {
-                Kit.Warn("报表模板保存失败！");
             }
         }
 
@@ -100,15 +95,10 @@ namespace Dt.Mgr.Module
                 return;
             }
 
-            if (await RptX.DelByID(d.ID, true, false))
+            if (await RptX.DelByID(d.ID, true))
             {
                 Clear();
                 _win.List.Update();
-                RbacDs.PromptForUpdateModel("报表模板删除成功");
-            }
-            else
-            {
-                Kit.Warn("报表模板保存失败！");
             }
         }
 
