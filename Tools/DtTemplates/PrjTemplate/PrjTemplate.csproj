@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Client\Stub\Options\filenesting.json" />
-    <None Include="Svc\etc\config\model.json" />
+    <None Include="Svc\etc\config\sqlite.json" />
     <None Include="Svc\etc\config\url.json" />
     <None Include="Wasm\pwa\manifest.json" />
     <None Include="Wasm\Program.cs" />

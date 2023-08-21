@@ -4,5 +4,5 @@
   // 2. *代表和cm服务域名相同
   "msg": "*/dt-msg",
   "fsm": "*/dt-fsm",
-  "demo": "*/dt-demo"
+  "lob": "*/lob"
 }
