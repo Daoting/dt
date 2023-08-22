@@ -675,6 +675,10 @@ namespace Dt.Core
             p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
+
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name.ToLower()}\"];");
         }
 
         string GetClsName(string p_tblName)

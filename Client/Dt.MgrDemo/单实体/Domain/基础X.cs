@@ -41,21 +41,21 @@ namespace Dt.MgrDemo.单实体
         {
             OnSaving(async () =>
             {
-                if (_cells["不重复"].IsChanged)
+                if (c不重复.IsChanged)
                 {
                     int cnt = await AtSvc.GetScalar<int>($"select count(1) from demo_基础 where 不重复='{不重复}' and ID!={ID}");
                     if (cnt > 0 )
                     {
-                        Throw.Msg("[不重复]列存在重复值！");
+                        Throw.Msg("[不重复]列存在重复值！", c不重复);
                     }
                 }
 
                 if (禁止保存)
                 {
-                    Throw.Msg("已选中[禁止保存]，保存前校验不通过！");
+                    Throw.Msg("已选中[禁止保存]，保存前校验不通过！", c禁止保存);
                 }
 
-                if (_cells["值变事件"].IsChanged)
+                if (c值变事件.IsChanged)
                 {
                     AddEvent(new 值变Event
                     {
@@ -76,7 +76,7 @@ namespace Dt.MgrDemo.单实体
 
             OnChanging<string>(nameof(限长4), v =>
             {
-                Throw.If(v.Length > 4, "超出最大长度4");
+                Throw.If(v.Length > 4, "超出最大长度4", c限长4);
             });
 
             OnChanging<bool>(nameof(禁止选中), v =>

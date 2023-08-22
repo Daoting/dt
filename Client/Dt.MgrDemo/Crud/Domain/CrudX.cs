@@ -35,12 +35,12 @@ namespace Dt.MgrDemo.Crud
                 }
                 else if (!IsAdded
                     && EnableNameChangedEvent
-                    && _cells["Name"].IsChanged)
+                    && cName.IsChanged)
                 {
                     AddEvent(new NameChangedEvent
                     {
                         // 保存后信息丢失
-                        OriginalVal = _cells["Name"].GetOriginalVal<string>(),
+                        OriginalVal = cName.GetOriginalVal<string>(),
                         NewVal = Name,
                     });
                 }

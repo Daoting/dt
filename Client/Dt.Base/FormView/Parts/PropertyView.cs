@@ -204,20 +204,30 @@ namespace Dt.Base.FormView
         /// 触发提示消息事件
         /// </summary>
         /// <param name="p_msg"></param>
-        public void Msg(string p_msg)
+        /// <returns>是否有订阅该事件的接收者</returns>
+        public bool Msg(string p_msg)
         {
             if (Message != null)
+            {
                 Message(this, new CellMessageArgs(false, p_msg));
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
         /// 触发警告信息事件
         /// </summary>
         /// <param name="p_msg"></param>
-        public void Warn(string p_msg)
+        /// <returns>是否有订阅该事件的接收者</returns>
+        public bool Warn(string p_msg)
         {
             if (Message != null)
+            {
                 Message(this, new CellMessageArgs(true, p_msg));
+                return true;
+            }
+            return false;
         }
         #endregion
     }

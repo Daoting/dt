@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-08-22 创建
 ******************************************************************************/
 #endregion
 
@@ -51,6 +51,8 @@ namespace Dt.MgrDemo.Crud
             set { this["name"] = value; }
         }
 
+        public Cell cName => _cells["name"];
+
         /// <summary>
         /// 显示顺序
         /// </summary>
@@ -59,6 +61,8 @@ namespace Dt.MgrDemo.Crud
             get { return (int)this["dispidx"]; }
             set { this["dispidx"] = value; }
         }
+
+        public Cell cDispidx => _cells["dispidx"];
 
         /// <summary>
         /// 最后修改时间
@@ -69,6 +73,8 @@ namespace Dt.MgrDemo.Crud
             set { this["mtime"] = value; }
         }
 
+        public Cell cMtime => _cells["mtime"];
+
         /// <summary>
         /// true时允许发布插入事件
         /// </summary>
@@ -77,6 +83,8 @@ namespace Dt.MgrDemo.Crud
             get { return (bool)this["enable_insert_event"]; }
             set { this["enable_insert_event"] = value; }
         }
+
+        public Cell cEnableInsertEvent => _cells["enable_insert_event"];
 
         /// <summary>
         /// true时允许发布Name变化事件
@@ -87,6 +95,8 @@ namespace Dt.MgrDemo.Crud
             set { this["enable_name_changed_event"] = value; }
         }
 
+        public Cell cEnableNameChangedEvent => _cells["enable_name_changed_event"];
+
         /// <summary>
         /// true时允许发布删除事件
         /// </summary>
@@ -95,5 +105,7 @@ namespace Dt.MgrDemo.Crud
             get { return (bool)this["enable_del_event"]; }
             set { this["enable_del_event"] = value; }
         }
+
+        public Cell cEnableDelEvent => _cells["enable_del_event"];
     }
 }

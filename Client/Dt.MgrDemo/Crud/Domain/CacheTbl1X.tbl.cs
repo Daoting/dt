@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-08-22 创建
 ******************************************************************************/
 #endregion
 
@@ -40,6 +40,8 @@ namespace Dt.MgrDemo.Crud
             set { this["phone"] = value; }
         }
 
+        public Cell cPhone => _cells["phone"];
+
         /// <summary>
         /// 
         /// </summary>
@@ -48,5 +50,7 @@ namespace Dt.MgrDemo.Crud
             get { return (string)this["name"]; }
             set { this["name"] = value; }
         }
+
+        public Cell cName => _cells["name"];
     }
 }

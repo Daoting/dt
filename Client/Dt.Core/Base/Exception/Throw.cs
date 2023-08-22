@@ -101,13 +101,10 @@ namespace Dt.Core
             }
 
 #if !SERVER
-            if (p_cell != null)
+            // 首先触发Cell警告信息事件 -> FvCell显示警告框
+            if (p_cell == null || !p_cell.Warn(p_msg))
             {
-                // 触发Cell警告信息事件 -> FvCell显示警告框
-                p_cell.Warn(p_msg);
-            }
-            else
-            {
+                // 外部无订阅时，显示普通警告
                 Kit.Warn(p_msg);
             }
 #endif

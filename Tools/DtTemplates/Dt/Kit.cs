@@ -201,13 +201,22 @@ namespace Dt
 
         public static string GetClsName(string p_tblName)
         {
+            string clsName;
             string[] arr = p_tblName.ToLower().Split('_');
-
-            int start = TblNameNoPrefix ? 0 : 1;
-            string clsName = "";
-            for (int i = start; i < arr.Length; i++)
+            if (arr.Length > 1)
             {
-                clsName += SetFirstToUpper(arr[i]);
+                clsName = SetFirstToUpper(arr[1]);
+                if (arr.Length > 2)
+                {
+                    for (int i = 2; i < arr.Length; i++)
+                    {
+                        clsName += SetFirstToUpper(arr[i]);
+                    }
+                }
+            }
+            else
+            {
+                clsName = SetFirstToUpper(p_tblName);
             }
             return clsName;
         }

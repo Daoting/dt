@@ -74,12 +74,14 @@ namespace Dt.Core
         /// 触发警告信息事件
         /// </summary>
         /// <param name="p_msg"></param>
-        void Warn(string p_msg);
+        /// <returns>是否有订阅该事件的接收者</returns>
+        bool Warn(string p_msg);
 
         /// <summary>
         /// 触发提示消息事件
         /// </summary>
         /// <param name="p_msg"></param>
-        void Msg(string p_msg);
+        /// <returns>是否有订阅该事件的接收者</returns>
+        bool Msg(string p_msg);
     }
 }
