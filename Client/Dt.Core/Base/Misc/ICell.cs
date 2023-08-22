@@ -24,6 +24,11 @@ namespace Dt.Core
         event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
+        /// 提示消息或警告信息事件
+        /// </summary>
+        event EventHandler<CellMessageArgs> Message;
+
+        /// <summary>
         /// 获取数据项名称
         /// </summary>
         string ID { get; }
@@ -64,5 +69,17 @@ namespace Dt.Core
         /// <typeparam name="T">将值转换为指定的类型</typeparam>
         /// <returns>指定类型的值</returns>
         T GetVal<T>();
+
+        /// <summary>
+        /// 触发警告信息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        void Warn(string p_msg);
+
+        /// <summary>
+        /// 触发提示消息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        void Msg(string p_msg);
     }
 }

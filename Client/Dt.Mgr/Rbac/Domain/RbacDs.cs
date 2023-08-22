@@ -149,9 +149,12 @@ namespace Dt.Mgr.Rbac
             return false;
         }
 
-        public static Task<List<long>> GetUsersOfRoles(List<long> p_roleIDs)
+        public static async Task<List<long>> GetUsersOfRoles(List<long> p_roleIDs)
         {
-            return _da.FirstCol<long>(string.Format(Sql角色列表的用户, string.Join(',', p_roleIDs)));
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return new List<long>();
+
+            return await _da.FirstCol<long>(string.Format(Sql角色列表的用户, string.Join(',', p_roleIDs)));
         }
         #endregion
 
@@ -393,6 +396,9 @@ namespace Dt.Mgr.Rbac
         /// <param name="p_key"></param>
         public static async void DelRoleDataVer(List<long> p_roleIDs, string p_key)
         {
+            if (p_roleIDs == null || p_roleIDs.Count == 0)
+                return;
+
             List<long> ls;
             if (p_roleIDs.Contains(1))
             {

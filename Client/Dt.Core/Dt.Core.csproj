@@ -41,7 +41,6 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\Misc\RpcJson\LetterInfo.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\Misc\RpcJson\MsgInfo.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\ServerException.cs" Link="Base\Exception\ServerException.cs" />
-		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Throw.cs" Link="Base\Exception\Throw.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />

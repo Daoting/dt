@@ -533,6 +533,7 @@ namespace Dt.Base
                 // 不需回滚，有时需要编辑结果！
                 //cell.RejectChanges();
                 cell.PropertyChanged -= OnDataPropertyChanged;
+                cell.Message -= OnCellMessage;
             }
 
             // 空数据源
@@ -550,6 +551,7 @@ namespace Dt.Base
                 {
                     var c = row.Cells[ID];
                     c.PropertyChanged += OnDataPropertyChanged;
+                    c.Message += OnCellMessage;
 
                     // 设置新绑定，只设置Source引起immutable异常！
                     ValBinding = new FvCellBind(this, p_data)
@@ -646,6 +648,18 @@ namespace Dt.Base
             {
                 if (_panel != null)
                     _panel.ToggleIsChanged(cell.IsChanged);
+            }
+        }
+
+        void OnCellMessage(object sender, CellMessageArgs e)
+        {
+            if (e.IsWarning)
+            {
+                Warn(e.Message);
+            }
+            else
+            {
+                Msg(e.Message);
             }
         }
 

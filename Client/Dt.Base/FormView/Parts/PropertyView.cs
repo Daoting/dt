@@ -193,5 +193,32 @@ namespace Dt.Base.FormView
             }
             return false;
         }
+
+        #region 事件
+        /// <summary>
+        /// 提示消息或警告信息事件
+        /// </summary>
+        public event EventHandler<CellMessageArgs> Message;
+
+        /// <summary>
+        /// 触发提示消息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public void Msg(string p_msg)
+        {
+            if (Message != null)
+                Message(this, new CellMessageArgs(false, p_msg));
+        }
+
+        /// <summary>
+        /// 触发警告信息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public void Warn(string p_msg)
+        {
+            if (Message != null)
+                Message(this, new CellMessageArgs(true, p_msg));
+        }
+        #endregion
     }
 }

@@ -228,6 +228,33 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 事件
+        /// <summary>
+        /// 提示消息或警告信息事件
+        /// </summary>
+        public event EventHandler<CellMessageArgs> Message;
+
+        /// <summary>
+        /// 触发提示消息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public void Msg(string p_msg)
+        {
+            if (Message != null)
+                Message(this, new CellMessageArgs(false, p_msg));
+        }
+
+        /// <summary>
+        /// 触发警告信息事件
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public void Warn(string p_msg)
+        {
+            if (Message != null)
+                Message(this, new CellMessageArgs(true, p_msg));
+        }
+        #endregion
+
         #region 内部方法
         /// <summary>
         /// 内部赋值
@@ -376,5 +403,24 @@ namespace Dt.Core
             throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
         #endregion
+    }
+
+    public class CellMessageArgs : EventArgs
+    {
+        public CellMessageArgs(bool p_isWarning, string p_msg)
+        {
+            IsWarning = p_isWarning;
+            Message = p_msg;
+        }
+
+        /// <summary>
+        /// 是否为警告信息
+        /// </summary>
+        public bool IsWarning { get; }
+
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public string Message { get; }
     }
 }
