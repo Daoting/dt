@@ -289,7 +289,7 @@ namespace Dt.Core
                     Dictionary<string, Type> specialCols = null;
                     if (typeof(TRow).IsSubclassOf(typeof(Entity)))
                     {
-                        // 提取Entity中特殊类型的属性：enum bool，其实只有oracle需要特殊处理bool，enum都需要处理，为统一写法
+                        // 提取Entity中特殊类型的属性：enum bool，enum都需要处理，只有oracle需要特殊处理bool，只为统一写法
                         // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
                         // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
                         specialCols = Entity.GetSpecialCols(typeof(TRow));
@@ -383,7 +383,7 @@ namespace Dt.Core
                     Dictionary<string, Type> specialCols = null;
                     if (typeof(TRow).IsSubclassOf(typeof(Entity)))
                     {
-                        // 提取Entity中特殊类型的属性：enum bool，其实只有oracle需要特殊处理bool，enum都需要处理，为统一写法
+                        // 提取Entity中特殊类型的属性：enum bool，enum都需要处理，只有oracle需要特殊处理bool，只为统一写法
                         // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
                         // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
                         specialCols = Entity.GetSpecialCols(typeof(TRow));

@@ -699,10 +699,13 @@ namespace Dt.Core
         void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
             // Entity类型
-            Type tpEntity = null;
+            Dictionary<string, Type> specialCols = null;
             if (GetType().IsGenericType)
             {
-                tpEntity = GetType().GetGenericArguments()[0];
+                // 提取Entity中特殊类型的属性：enum bool，enum都需要处理，只有oracle需要特殊处理bool，只为统一写法
+                // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
+                // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
+                specialCols = Entity.GetSpecialCols(GetType().GetGenericArguments()[0]);
             }
 
             // cols外层 [
@@ -732,19 +735,14 @@ namespace Dt.Core
                     else
                     {
                         colType = GetColType(p_reader.GetString());
-
-                        // MySql SqlServer枚举为byte，Oracle PostgreSql枚举为short
-                        if (tpEntity != null
-                            && (colType == typeof(byte) || colType == typeof(short)))
-                        {
-                            // Entity 时根据属性类型自动转为 enum 类型
-                            // 自动生成属性名时无下划线
-                            var prop = tpEntity.GetProperty(colName.Replace("_", ""), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
-                            if (prop != null)
-                                colType = prop.PropertyType;
-                        }
                     }
                     index++;
+                }
+
+                // 列是否为特殊类型 enum bool
+                if (specialCols != null && specialCols.TryGetValue(colName.Replace("_", ""), out var speType))
+                {
+                    colType = speType;
                 }
                 _columns.Add(new Column(colName, colType));
             }

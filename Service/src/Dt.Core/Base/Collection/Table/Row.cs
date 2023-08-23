@@ -713,7 +713,16 @@ namespace Dt.Core
                     p_reader.Read();
                 }
 
-                bool isEntity = GetType().IsSubclassOf(typeof(Entity));
+                // Entity类型
+                Dictionary<string, Type> specialCols = null;
+                if (GetType().IsSubclassOf(typeof(Entity)))
+                {
+                    // 提取Entity中特殊类型的属性：enum bool，enum都需要处理，只有oracle需要特殊处理bool，只为统一写法
+                    // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
+                    // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
+                    specialCols = Entity.GetSpecialCols(GetType());
+                }
+
                 while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
                 {
                     string id = p_reader.GetString();
@@ -726,15 +735,10 @@ namespace Dt.Core
                         p_reader.Read();
                         Type type = Table.GetColType(p_reader.GetString());
 
-                        // MySql SqlServer枚举为byte，Oracle PostgreSql枚举为short
-                        if (isEntity
-                            && (type == typeof(byte) || type == typeof(short)))
+                        // 列是否为特殊类型 enum bool
+                        if (specialCols != null && specialCols.TryGetValue(id.Replace("_", ""), out var speType))
                         {
-                            // Entity 时根据属性类型自动转为 enum 类型
-                            // 自动生成属性名时无下划线
-                            var prop = GetType().GetProperty(id.Replace("_", ""), BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase);
-                            if (prop != null)
-                                type = prop.PropertyType;
+                            type = speType;
                         }
 
                         // 当前值
@@ -758,7 +762,15 @@ namespace Dt.Core
                     else
                     {
                         // string类型，值无变化
-                        new Cell(this, id, typeof(string), JsonRpcSerializer.Deserialize(ref p_reader));
+                        // 列是否为特殊类型 enum bool
+                        if (specialCols != null && specialCols.TryGetValue(id.Replace("_", ""), out var speType))
+                        {
+                            new Cell(this, id, speType, JsonRpcSerializer.Deserialize(ref p_reader));
+                        }
+                        else
+                        {
+                            new Cell(this, id, typeof(string), JsonRpcSerializer.Deserialize(ref p_reader));
+                        }
                     }
                 }
                 // 最外层 ]

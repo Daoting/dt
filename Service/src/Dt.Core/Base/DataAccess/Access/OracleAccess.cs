@@ -273,7 +273,18 @@ namespace Dt.Core
 
                     // 字段注释
                     if (comments.TryGetValue(colSchema.ColumnName, out var cmts))
+                    {
                         col.Comments = cmts;
+
+                        // oracle char(1) 注释以 #bool# 开头时，bool类型
+                        if (!string.IsNullOrEmpty(cmts)
+                            && cmts.StartsWith("#bool#", StringComparison.OrdinalIgnoreCase)
+                            && col.Type == typeof(string)
+                            && col.Length == 1)
+                        {
+                            col.Type = typeof(bool);
+                        }
+                    }
 
                     // 是否为主键
                     if (pk.Contains(colSchema.ColumnName))

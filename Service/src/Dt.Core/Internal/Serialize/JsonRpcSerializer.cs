@@ -232,8 +232,16 @@ namespace Dt.Core
                     {
                         if (p_tgtType == null || p_tgtType == typeof(string))
                             return p_reader.GetString();
+
                         if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                             return p_reader.GetDateTime();
+                        
+                        if (p_tgtType == typeof(bool))
+                        {
+                            string val = p_reader.GetString();
+                            return (val == "1" || val == "true");
+                        }
+
                         // base64编码的字节数组
                         if (p_tgtType == typeof(byte[]))
                             return Convert.FromBase64String(p_reader.GetString());
