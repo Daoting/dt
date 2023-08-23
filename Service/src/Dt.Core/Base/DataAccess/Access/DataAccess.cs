@@ -285,11 +285,37 @@ namespace Dt.Core
                     // Dapper2.0 改版
                     var reader = (DbDataReader)wrappedReader.Reader;
 
-                    // 获取列定义
-                    var cols = reader.GetColumnSchema();
-                    foreach (var col in cols)
+                    // Entity类型
+                    Dictionary<string, Type> specialCols = null;
+                    if (typeof(TRow).IsSubclassOf(typeof(Entity)))
                     {
-                        p_tbl.Add(col.ColumnName.ToLower(), GetColumnType(col));
+                        // 提取Entity中特殊类型的属性：enum bool，其实只有oracle需要特殊处理bool，enum都需要处理，为统一写法
+                        // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
+                        // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
+                        specialCols = Entity.GetSpecialCols(typeof(TRow));
+                    }
+
+                    // 加载列定义
+                    var cols = reader.GetColumnSchema();
+                    if (specialCols != null && specialCols.Count > 0)
+                    {
+                        foreach (var col in cols)
+                        {
+                            Type colType;
+
+                            // 自动生成属性名时无下划线，字典有说明为enum 或 bool
+                            if (!specialCols.TryGetValue(col.ColumnName.Replace("_", ""), out colType))
+                                colType = GetColumnType(col);
+
+                            p_tbl.Add(col.ColumnName, colType);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var col in cols)
+                        {
+                            p_tbl.Add(col.ColumnName, GetColumnType(col));
+                        }
                     }
 
                     while (await reader.ReadAsync())
@@ -353,6 +379,16 @@ namespace Dt.Core
                     var reader = (DbDataReader)p_wrappedReader.Reader;
                     var cols = reader.GetColumnSchema();
 
+                    // Entity类型
+                    Dictionary<string, Type> specialCols = null;
+                    if (typeof(TRow).IsSubclassOf(typeof(Entity)))
+                    {
+                        // 提取Entity中特殊类型的属性：enum bool，其实只有oracle需要特殊处理bool，enum都需要处理，为统一写法
+                        // bool：mysql tinyint(1)，sqlserver bit，pg bool 默认自动映射，只有 oracle char(1) 需特殊处理
+                        // enum：mysql sqlserver枚举为byte，oracle pg枚举为short
+                        specialCols = Entity.GetSpecialCols(typeof(TRow));
+                    }
+
                     while (reader.Read())
                     {
                         // 无参数构造方法可能为private，如实体类型
@@ -361,11 +397,13 @@ namespace Dt.Core
                         {
                             var col = cols[i];
 
-                            Type colType = GetColumnType(col);
+                            if (specialCols == null || !specialCols.TryGetValue(col.ColumnName.Replace("_", ""), out var colType))
+                                colType = GetColumnType(col);
+
                             if (reader.IsDBNull(i))
-                                new Cell(row, col.ColumnName.ToLower(), colType);
+                                new Cell(row, col.ColumnName, colType);
                             else
-                                new Cell(row, col.ColumnName.ToLower(), colType, reader.GetValue(i));
+                                new Cell(row, col.ColumnName, colType, reader.GetValue(i));
                         }
                         yield return row;
                     }

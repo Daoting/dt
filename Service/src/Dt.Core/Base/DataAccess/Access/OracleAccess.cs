@@ -30,22 +30,22 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new OracleConnection(DbInfo.ConnStr);
 
-
         protected override Type GetColumnType(DbColumn p_col)
         {
             if (p_col.DataType == typeof(decimal))
             {
-                // number(19)
+                // ODP.Net 原来对于 number(19) 映射为long，新版变成 decimal，无用
                 return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(long?) : typeof(long);
             }
 
-            if (p_col.DataType == typeof(string)
-                && p_col.ColumnSize.HasValue
-                && p_col.ColumnSize.Value == 1)
-            {
-                // char(1)
-                return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(bool?) : typeof(bool);
-            }
+            // char(1) 不一定是bool，放在客户端反序列化时根据Entity处理
+            //if (p_col.DataType == typeof(string)
+            //    && p_col.ColumnSize.HasValue
+            //    && p_col.ColumnSize.Value == 1)
+            //{
+            //    // char(1)
+            //    return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(bool?) : typeof(bool);
+            //}
 
             if (p_col.AllowDBNull.HasValue
                 && p_col.AllowDBNull.Value
@@ -270,11 +270,11 @@ namespace Dt.Core
                     // 默认值
                     if (defVals.TryGetValue(colSchema.ColumnName, out var def))
                         col.Default = def;
-                    
+
                     // 字段注释
                     if (comments.TryGetValue(colSchema.ColumnName, out var cmts))
                         col.Comments = cmts;
-                    
+
                     // 是否为主键
                     if (pk.Contains(colSchema.ColumnName))
                         tblCols.PrimaryKey.Add(col);

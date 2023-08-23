@@ -7,7 +7,8 @@
 #endregion
 
 #region 引用命名
-
+using System.Collections.Concurrent;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -221,6 +222,41 @@ namespace Dt.Core
             return p_type.GetInterface("IVirEntity") == typeof(IVirEntity);
         }
 
+        // 缓存实体类的特殊属性
+        static readonly ConcurrentDictionary<Type, Dictionary<string, Type>> _specialCols = new ConcurrentDictionary<Type, Dictionary<string, Type>>();
+
+        /// <summary>
+        /// 提取特殊类型的属性：enum bool
+        /// bool：mysql tinyint(1)，sqlserver bit，pg bool 默认映射，只有 oracle char(1) 需特殊处理
+        /// enum：mysql sqlserver枚举为byte，oracle pg枚举为short
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public static Dictionary<string, Type> GetSpecialCols(Type p_type)
+        {
+            if (p_type == null)
+                return null;
+
+            if (_specialCols.TryGetValue(p_type, out var dt))
+                return dt;
+
+            dt = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+            var props = p_type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            if (props != null && props.Length > 0)
+            {
+                for (int i = 0; i < props.Length; i++)
+                {
+                    var prop = props[i];
+                    if (prop.CanWrite
+                        && (prop.PropertyType.IsEnum || prop.PropertyType == typeof(bool)))
+                    {
+                        dt.Add(prop.Name, prop.PropertyType);
+                    }
+                }
+            }
+            _specialCols.TryAdd(p_type, dt);
+            return dt;
+        }
         #endregion
 
         #region 判断相同

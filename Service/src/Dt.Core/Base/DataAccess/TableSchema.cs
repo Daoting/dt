@@ -572,7 +572,19 @@ namespace Dt.Core
         /// <returns></returns>
         public string GetTypeName()
         {
-            return IsEnumCol ? GetEnumName() : GetTypeNameStr(Type);
+            var tp = IsEnumCol ? GetEnumName() : GetTypeNameStr(Type);
+
+            // oracle char(1) 注释以 #bool# 开头
+            if (Owner.DbType == DatabaseType.Oracle
+                && tp == "string"
+                && Length == 1
+                && !string.IsNullOrEmpty(Comments)
+                && Comments.StartsWith("#bool#", StringComparison.OrdinalIgnoreCase))
+            {
+                tp = "bool";
+            }
+
+            return tp;
         }
 
         /// <summary>

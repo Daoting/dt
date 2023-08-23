@@ -1,7 +1,7 @@
 ﻿{
   //"Mode": "SingletonSvc",
 
-  "DbKey": "mydt",
+  "DbKey": "orcldt",
   "SvcName": "demo",
 
   "TraceSql": false,

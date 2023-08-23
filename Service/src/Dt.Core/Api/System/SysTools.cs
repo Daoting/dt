@@ -165,7 +165,7 @@ namespace Dt.Core
                 // 简化写法不需要类型
                 //sb.Append(GetTypeName(col.Type));
                 //sb.Append(">(\"");
-                sb.Append(col.Name.ToLower());
+                sb.Append(col.Name);
                 sb.Append("\", ");
                 // 内部为enum类型
                 //if (IsEnumCol(col))
@@ -656,9 +656,18 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.Append("/// ");
             if (p_col.IsEnumCol)
+            {
                 p_sb.AppendLine(p_col.Comments.Substring(tpName.Length + 2));
+            }
+            else if (p_col.Owner.DbType == DatabaseType.Oracle && tpName == "bool")
+            {
+                // 移除 #bool#
+                p_sb.AppendLine(p_col.Comments.Substring(6));
+            }
             else
+            {
                 p_sb.AppendLine(p_col.Comments);
+            }
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("/// </summary>");
             AppendTabSpace(p_sb, 2);
@@ -670,15 +679,15 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name.ToLower()}\"]; }}");
+            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
+            p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
 
             p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name.ToLower()}\"];");
+            p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name}\"];");
         }
 
         string GetClsName(string p_tblName)
