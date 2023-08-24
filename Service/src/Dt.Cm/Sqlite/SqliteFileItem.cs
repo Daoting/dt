@@ -141,6 +141,7 @@ namespace Dt.Cm
                 Version = newVer;
                 watch.Stop();
                 Log.Information("生成 {0}，{1} 张表，{1} 毫秒", gzFile, sum, watch.ElapsedMilliseconds);
+                _data = null;
             }
             catch (Exception ex)
             {

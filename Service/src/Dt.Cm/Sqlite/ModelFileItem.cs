@@ -173,6 +173,7 @@ namespace Dt.Cm
                 Version = newVer;
                 watch.Stop();
                 Log.Information("生成 {0}，{1} 张表，{2} 个字段，{3} 毫秒", gzFile, tbls.Count, cols.Count, watch.ElapsedMilliseconds);
+                _data = null;
             }
             catch (Exception ex)
             {
