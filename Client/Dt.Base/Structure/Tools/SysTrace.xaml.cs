@@ -42,6 +42,7 @@ namespace Dt.Base.Tools
             //#endif
         }
 
+        #region 静态方法
         public static void ShowBox()
         {
             if (_dlg == null)
@@ -58,6 +59,41 @@ namespace Dt.Base.Tools
             _dlg.Show();
         }
 
+        public static void CopyLocalPath()
+        {
+            CopyToClipboard(ApplicationData.Current.LocalFolder.Path, true);
+        }
+
+        public static void CopyWinType()
+        {
+            string name;
+            if (UITree.RootContent is Desktop)
+            {
+                name = Desktop.Inst.MainWin.GetType().FullName;
+            }
+            else if (UITree.RootContent is Frame frame)
+            {
+                if (frame.Content is PhonePage page)
+                {
+                    if (page.Content is Tab tab)
+                        name = tab.OwnWin?.GetType().FullName;
+                    else if (page.Content is PhoneTabs tabs)
+                        name = tabs.OwnWin?.GetType().FullName;
+                    else
+                        name = page.Content.GetType().FullName;
+                }
+                else
+                {
+                    name = frame.Content.GetType().FullName;
+                }
+            }
+            else
+            {
+                name = UITree.RootContent.GetType().FullName;
+            }
+            CopyToClipboard(name, true);
+        }
+
         /// <summary>
         /// 模式切换时关闭dlg并置null，再次打开时重新创建
         /// </summary>
@@ -69,6 +105,23 @@ namespace Dt.Base.Tools
                 _dlg = null;
             }
         }
+
+        /// <summary>
+        /// 将文本复制到剪贴板
+        /// </summary>
+        /// <param name="p_text"></param>
+        /// <param name="p_showText">是否显示要复制的内容</param>
+        static void CopyToClipboard(string p_text, bool p_showText = false)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_text);
+            Clipboard.SetContent(data);
+            if (p_showText)
+                Kit.Msg("已复制到剪切板：\r\n" + p_text);
+            else
+                Kit.Msg("已复制到剪切板！");
+        }
+        #endregion
 
         void OnClear(object sender, Mi e)
         {
@@ -111,11 +164,6 @@ namespace Dt.Base.Tools
             }
         }
 
-        void OnLocalPath(object sender, Mi e)
-        {
-            Log.Debug(ApplicationData.Current.LocalFolder.Path);
-        }
-
         void OnSvcLog(object sender, Mi e)
         {
             Kit.OpenUrl(Kit.GetSvcUrl("cm") + "/.output");
@@ -129,36 +177,6 @@ namespace Dt.Base.Tools
         void OnHostOS(object sender, Mi e)
         {
             Log.Debug(Kit.HostOS.ToString());
-        }
-
-        void OnPageType(object sender, Mi e)
-        {
-            string name;
-            if (UITree.RootContent is Desktop)
-            {
-                name = Desktop.Inst.MainWin.GetType().FullName;
-            }
-            else if (UITree.RootContent is Frame frame)
-            {
-                if (frame.Content is PhonePage page)
-                {
-                    if (page.Content is Tab tab)
-                        name = tab.OwnWin?.GetType().FullName;
-                    else if (page.Content is PhoneTabs tabs)
-                        name = tabs.OwnWin?.GetType().FullName;
-                    else
-                        name = page.Content.GetType().FullName;
-                }
-                else
-                {
-                    name = frame.Content.GetType().FullName;
-                }
-            }
-            else
-            {
-                name = UITree.RootContent.GetType().FullName;
-            }
-            Log.Debug(name);
         }
 
         void OnAbout(object sender, Mi e)
@@ -251,17 +269,6 @@ namespace Dt.Base.Tools
                 Kit.Warn("无 select 查询语句！");
         }
 
-        /// <summary>
-        /// 将文本复制到剪贴板
-        /// </summary>
-        /// <param name="p_text"></param>
-        static void CopyToClipboard(string p_text)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_text);
-            Clipboard.SetContent(data);
-            Kit.Warn("已复制到剪切板！");
-        }
         #endregion
 
         #region 生成存根代码

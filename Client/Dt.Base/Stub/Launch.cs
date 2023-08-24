@@ -154,16 +154,43 @@ namespace Dt.Base
             var accelerator = new KeyboardAccelerator()
             {
                 Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Left
+                Key = VirtualKey.Down
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ← 系统日志
+                // Alt + ↓ 系统
                 e.Handled = true;
                 SysTrace.ShowBox();
             };
             // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
-            UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators.Add(accelerator);
+            var accs = UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators;
+            accs.Add(accelerator);
+
+            accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Left
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + ← 窗口类型
+                e.Handled = true;
+                SysTrace.CopyWinType();
+            };
+            accs.Add(accelerator);
+
+            accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Right
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + → LocalState路径
+                e.Handled = true;
+                SysTrace.CopyLocalPath();
+            };
+            accs.Add(accelerator);
 #endif
         }
 

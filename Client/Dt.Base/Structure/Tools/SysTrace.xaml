@@ -9,9 +9,7 @@
             <a:Mi ID="清空" Icon="垃圾箱" Click="OnClear" />
             <a:Mi ID="本地库" Icon="数据库" Click="OnLocalDb" />
             <a:Mi ID="本地文件" Icon="文件" Click="OnLocalFiles" />
-            <a:Mi ID="页面类型" Icon="地址" Click="OnPageType" />
             <a:Mi ID="服务日志" Icon="服务器" Click="OnSvcLog" />
-            <a:Mi ID="库路径" Icon="文件夹" Click="OnLocalPath" />
             <a:Mi ID="安装路径" Icon="文件夹" Click="OnInstallPath" />
             <a:Mi ID="操作系统" Icon="服务器" Click="OnHostOS" />
             <a:Mi ID="关于" Icon="搬运工" Click="OnAbout" />
