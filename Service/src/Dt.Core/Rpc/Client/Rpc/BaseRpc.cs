@@ -124,9 +124,8 @@ namespace Dt.Core.Rpc
             // 级别允许输出日志
             if (_log != null)
             {
-                string id = TraceLogs.AddDetail(data);
-                _log.ForContext("Detail", id)
-                    .Debug($"{_svcName}.{p_methodName}");
+                _log.ForContext("Title", $"{_svcName}.{p_methodName}")
+                    .Debug(Encoding.UTF8.GetString(data));
             }
 #endif
 

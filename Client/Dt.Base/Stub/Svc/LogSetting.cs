@@ -23,9 +23,9 @@ namespace Dt.Base
         public bool ConsoleEnabled => true;
 
         /// <summary>
-        /// 是否将日志保存到文件，默认false
+        /// 是否将日志保存到文件，默认true
         /// </summary>
-        public bool FileEnabled => false;
+        public bool FileEnabled => true;
 
         /// <summary>
         /// 是否将日志输出到Trace，默认true

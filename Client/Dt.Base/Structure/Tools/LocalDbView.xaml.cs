@@ -156,7 +156,7 @@ namespace Dt.Base.Tools
         async void OnTblClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                _lvData.Data = await GetDb().Query($"select * from '{e.Row.Str("name")}'");
+                _lvData.Data = await GetDb().Query($"select * from '{e.Row.Str("name")}' limit 500");
             NaviTo("数据");
         }
 

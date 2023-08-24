@@ -41,7 +41,7 @@ namespace Dt.Core
         public async Task<Table> Query(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("Query", p_sql, p_params);
+                Trace("Query", p_sql);
 
             var db = await GetDb();
             return await db.Query(p_sql, p_params);
@@ -51,7 +51,7 @@ namespace Dt.Core
             where TEntity : Entity
         {
             if (_log != null)
-                Trace("Query", p_sql, p_params);
+                Trace("Query", p_sql);
 
             var db = await GetDb();
             return await db.Query<TEntity>(p_sql, p_params);
@@ -77,7 +77,7 @@ namespace Dt.Core
         public async Task<Row> First(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("First", p_sql, p_params);
+                Trace("First", p_sql);
 
             var db = await GetDb();
             return (await db.ForEach<Row>(p_sql, p_params)).FirstOrDefault();
@@ -87,7 +87,7 @@ namespace Dt.Core
             where TEntity : Entity
         {
             if (_log != null)
-                Trace("First", p_sql, p_params);
+                Trace("First", p_sql);
 
             var db = await GetDb();
             return (await db.ForEach<TEntity>(p_sql, p_params)).FirstOrDefault();
@@ -96,7 +96,7 @@ namespace Dt.Core
         public async Task<List<T>> FirstCol<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("FirstCol", p_sql, p_params);
+                Trace("FirstCol", p_sql);
 
             var db = await GetDb();
             return await db.GetFirstCol<T>(p_sql, p_params);
@@ -105,7 +105,7 @@ namespace Dt.Core
         public async Task<T> GetScalar<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("GetScalar", p_sql, p_params);
+                Trace("GetScalar", p_sql);
 
             var db = await GetDb();
             return await db.GetScalar<T>(p_sql, p_params);
@@ -114,7 +114,7 @@ namespace Dt.Core
         public async Task<IEnumerable<Row>> Each(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("Each", p_sql, p_params);
+                Trace("Each", p_sql);
 
             var db = await GetDb();
             return await db.ForEach<Row>(p_sql, p_params);
@@ -124,7 +124,7 @@ namespace Dt.Core
             where TEntity : Entity
         {
             if (_log != null)
-                Trace("Each", p_sql, p_params);
+                Trace("Each", p_sql);
 
             var db = await GetDb();
             return await db.ForEach<TEntity>(p_sql, p_params);
@@ -133,7 +133,7 @@ namespace Dt.Core
         public async Task<IEnumerable<T>> EachFirstCol<T>(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("EachFirstCol", p_sql, p_params);
+                Trace("EachFirstCol", p_sql);
 
             var db = await GetDb();
             return await db.EachFirstCol<T>(p_sql, p_params);
@@ -144,7 +144,7 @@ namespace Dt.Core
         public async Task<int> Exec(string p_sql, object p_params = null)
         {
             if (_log != null)
-                Trace("Exec", p_sql, p_params);
+                Trace("Exec", p_sql);
 
             var db = await GetDb();
             return await db.Execute(p_sql, p_params);
@@ -153,7 +153,7 @@ namespace Dt.Core
         public async Task<int> BatchExec(List<Dict> p_dts)
         {
             if (_log != null)
-                Trace("BatchExec", p_dts);
+                Trace("BatchExec", "批量sql");
 
             var db = await GetDb();
             return await db.BatchExec(p_dts);
@@ -251,11 +251,10 @@ namespace Dt.Core
             return _db;
         }
 
-        void Trace(string p_method, params object[] p_params)
+        void Trace(string p_method, string p_sql)
         {
-            var id = TraceLogs.AddDetail(p_params);
-            _log.ForContext("Detail", id)
-                .Debug($"{_dbName}.{p_method}");
+            _log.ForContext("Title", $"{_dbName}.{p_method}")
+                .Debug(p_sql);
         }
         #endregion
 

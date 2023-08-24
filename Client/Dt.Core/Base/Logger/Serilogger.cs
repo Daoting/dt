@@ -33,7 +33,10 @@ namespace Dt.Core
                     cfg.WriteTo.Sink(new ConsoleSink());
 
                 if (setting.FileEnabled)
-                    AddFileLogging(cfg);
+                {
+                    // 日志文件默认最大10m用新文件
+                    cfg.WriteTo.SQLite(Path.Combine(ApplicationData.Current.LocalFolder.Path, ".data", "dtlog.db"));
+                }
 
                 if (setting.TraceEnabled || setting.ConsoleEnabled || setting.FileEnabled)
                     Log.Logger = cfg.CreateLogger();
@@ -43,26 +46,6 @@ namespace Dt.Core
                 Console.WriteLine($"创建日志对象失败：{e.Message}");
                 throw;
             }
-        }
-
-        static void AddFileLogging(LoggerConfiguration p_cfg)
-        {
-            string fileName;
-#if ANDROID
-            fileName = "android-.log";
-#elif IOS
-            fileName = "iOS-.log";
-#elif WASM
-            fileName = "wasm-.log";
-#else
-            fileName = "win-.log";
-#endif
-
-            p_cfg.WriteTo.File(
-                    new CompactJsonFormatter(),
-                    Path.Combine(ApplicationData.Current.LocalFolder.Path, ".data", fileName),
-                    rollingInterval: RollingInterval.Day, // 文件名末尾加日期
-                    fileSizeLimitBytes: 10485760);        // 10mb
         }
     }
 }

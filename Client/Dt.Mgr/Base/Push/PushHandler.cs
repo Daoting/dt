@@ -175,10 +175,9 @@ namespace Dt.Mgr
                 // 输出日志信息
                 if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
-                    string id = TraceLogs.AddDetail(data);
                     Log.ForContext("SourceContext", "Push")
-                        .ForContext("Detail", id)
-                        .Debug($"msg推送—> {method}");
+                        .ForContext("Title", $"msg推送—> {method}")
+                        .Debug(p_msg);
                 }
             }
             catch (Exception ex)

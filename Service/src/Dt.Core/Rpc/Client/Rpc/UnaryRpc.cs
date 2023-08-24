@@ -125,9 +125,8 @@ namespace Dt.Core.Rpc
             // 级别允许输出日志
             if (_log != null)
             {
-                string id = TraceLogs.AddDetail(p_data);
-                _log.ForContext("Detail", id)
-                    .Debug($"{_svcName}.{_methodName} — {result.Elapsed}ms");
+                _log.ForContext("Title", $"{_svcName}.{_methodName} — {result.Elapsed}ms")
+                    .Debug(Encoding.UTF8.GetString(p_data));
             }
             
             // ⚡ 为服务器标志
