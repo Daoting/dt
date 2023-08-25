@@ -88,7 +88,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            LocalDbView.UpdateSqliteFile("option");
+            RefreshSqliteWin.UpdateSqliteFile("option");
         }
         #endregion
 

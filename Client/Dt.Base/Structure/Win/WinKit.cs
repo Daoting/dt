@@ -46,16 +46,8 @@ namespace Dt.Base
                     item.Click += SetAutoStart;
                     _menu.Items.Add(item);
 
-                    item = new Mi { ID = "系统日志", Icon = Icons.日志 };
+                    item = new Mi { ID = "系统", Icon = Icons.设置 };
                     item.Click += (o, a) => SysTrace.ShowBox();
-                    _menu.Items.Add(item);
-
-                    item = new Mi { ID = "本地库", Icon = Icons.数据库 };
-                    item.Click += (s, a) => Kit.OpenWin(typeof(LocalDbView));
-                    _menu.Items.Add(item);
-
-                    item = new Mi { ID = "本地文件", Icon = Icons.文件 };
-                    item.Click += (s, a) => Kit.OpenWin(typeof(LocalFileView));
                     _menu.Items.Add(item);
                 }
 

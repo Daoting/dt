@@ -18,11 +18,11 @@ namespace Dt.Base.Tools
     /// <summary>
     /// 本地文件
     /// </summary>
-    public sealed partial class LocalFileView : Win
+    public sealed partial class LocalFileWin : Win
     {
         string _dir = ".doc";
 
-        public LocalFileView()
+        public LocalFileWin()
         {
             InitializeComponent();
         }

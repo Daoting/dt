@@ -127,7 +127,7 @@ namespace Dt.Mgr.Rbac
 
         void OnRefresh(object sender, Mi e)
         {
-            LocalDbView.UpdateSqliteFile("menu");
+            RefreshSqliteWin.UpdateSqliteFile("menu");
         }
         #endregion
 

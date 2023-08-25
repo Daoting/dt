@@ -173,7 +173,7 @@ namespace Dt.Base
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ← 窗口类型
+                // Alt + ← 复制窗口类型
                 e.Handled = true;
                 SysTrace.CopyWinType();
             };
@@ -186,9 +186,9 @@ namespace Dt.Base
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + → LocalState路径
+                // Alt + → 打开LocalState路径
                 e.Handled = true;
-                SysTrace.CopyLocalPath();
+                SysTrace.OpenLocalPath();
             };
             accs.Add(accelerator);
 #endif

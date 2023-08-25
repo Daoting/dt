@@ -81,7 +81,7 @@ namespace Dt.Mgr.Module
 
         void OnRefresh(object sender, Mi e)
         {
-            LocalDbView.UpdateSqliteFile("report");
+            RefreshSqliteWin.UpdateSqliteFile("report");
         }
 
         RptWin _win => (RptWin)OwnWin;

@@ -7,9 +7,12 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI;
+using Microsoft.UI.Xaml.Media;
 using Serilog.Events;
 using Serilog.Formatting;
 using Serilog.Formatting.Display;
+using Windows.UI;
 #endregion
 
 namespace Dt.Core
@@ -54,6 +57,40 @@ namespace Dt.Core
                     }
                 }
                 return _msg;
+            }
+        }
+
+        public string Time => Log.Timestamp.ToString("HH:mm:ss");
+
+        public string Title
+        {
+            get
+            {
+                string title;
+                if (Log.Properties.TryGetValue("SourceContext", out var val))
+                {
+                    // 含日志来源，不显示命名空间，后缀为级别
+                    title = val.ToString("l", null);
+                    int index = title.LastIndexOf('.');
+                    if (index > -1)
+                        title = title.Substring(index + 1);
+
+                    if (Log.Level == LogEventLevel.Warning
+                        || Log.Level == LogEventLevel.Error
+                        || Log.Level == LogEventLevel.Fatal)
+                    {
+                        title = $"{title} — {Log.Level}";
+                    }
+                }
+                else if (Log.Level == LogEventLevel.Information)
+                {
+                    title = "Inf";
+                }
+                else
+                {
+                    title = Log.Level.ToString();
+                }
+                return title;
             }
         }
 

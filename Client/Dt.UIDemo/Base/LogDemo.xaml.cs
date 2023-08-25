@@ -13,7 +13,7 @@ namespace Dt.UIDemo
         {
             InitializeComponent();
             if (!Kit.IsPhoneUI)
-                _fv.FirstLoaded(() => SysTrace.ShowBox());
+                _fv.FirstLoaded(() => SysTrace.ShowRealtimeLogDlg());
         }
 
         void OnDebug(object sender, RoutedEventArgs e)

@@ -223,8 +223,6 @@ namespace Dt.Base
             //            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Kit.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             //#endif
 
-            SysTrace.OnUIModeChanged();
-
             if (Kit.IsPhoneUI)
             {
                 // WinUI模式 -> PhoneUI模式

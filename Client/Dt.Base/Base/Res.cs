@@ -313,6 +313,7 @@ namespace Dt.Base
         public static SolidColorBrush 浅灰2 => (SolidColorBrush)_dict["浅灰2"];
         public static SolidColorBrush 深灰1 => (SolidColorBrush)_dict["深灰1"];
         public static SolidColorBrush 深灰2 => (SolidColorBrush)_dict["深灰2"];
+        public static SolidColorBrush 深黄 => (SolidColorBrush)_dict["深黄"];
         public static SolidColorBrush 中黄 => (SolidColorBrush)_dict["中黄"];
         public static SolidColorBrush 浅黄 => (SolidColorBrush)_dict["浅黄"];
         public static SolidColorBrush 中绿 => (SolidColorBrush)_dict["中绿"];

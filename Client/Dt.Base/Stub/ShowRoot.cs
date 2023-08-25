@@ -134,7 +134,7 @@ namespace Dt.Base
         /// <param name="p_pageType"></param>
         void LoadRootPage(Type p_pageType)
         {
-            // 使用Frame确保PhoneUI模式下正常导航！如 系统日志->本地库
+            // 使用Frame确保PhoneUI模式下正常导航！如 系统->本地库
             Frame fm = new Frame();
             UITree.RootContent = fm;
             fm.Navigate(p_pageType);

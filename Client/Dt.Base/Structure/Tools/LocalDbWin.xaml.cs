@@ -24,13 +24,12 @@ namespace Dt.Base.Tools
     /// <summary>
     /// 本地库
     /// </summary>
-    public sealed partial class LocalDbView : Win
+    public sealed partial class LocalDbWin : Win
     {
-        public LocalDbView()
+        public LocalDbWin()
         {
             InitializeComponent();
             LoadData();
-            LoadFileList();
         }
 
         async void LoadData()
@@ -209,61 +208,6 @@ namespace Dt.Base.Tools
         IDataAccess GetDb()
         {
             return AccessInfo.GetSqliteAccess(_lvDb.SelectedRow.Str("name"));
-        }
-
-        async void LoadFileList()
-        {
-            var ls = await Kit.Rpc<List<string>>(
-                "cm",
-                "SysKernel.GetAllSqliteFile"
-            );
-
-            Nl<string> nl = new Nl<string>(ls);
-            _lvFile.Data = nl;
-        }
-
-        void OnRefreshFile(object sender, Mi e)
-        {
-            UpdateSqliteFile(e.Data.ToString());
-        }
-
-        /// <summary>
-        /// 更新sqlite文件
-        /// </summary>
-        /// <param name="p_fileName"></param>
-        public static async void UpdateSqliteFile(string p_fileName)
-        {
-            if (await Kit.Confirm($"确认要更新服务端的{p_fileName}文件吗？\r\n更新后需要重启应用才能生效"))
-            {
-#if WIN
-                Dlg dlg = new Dlg
-                {
-                    Title = "服务日志",
-                    IsPinned = true,
-                    Content = new WebView2 { Source = new Uri($"{Kit.GetSvcUrl("cm")}/.output") }
-                };
-
-                if (!Kit.IsPhoneUI)
-                {
-                    dlg.Height = Kit.ViewHeight - 200;
-                    dlg.Width = Math.Min(900, Kit.ViewWidth - 300);
-                }
-                dlg.Show();
-
-                await Kit.Rpc<string>(
-                    "cm",
-                    "SysKernel.UpdateSqliteFile",
-                    p_fileName
-                );
-#else
-                var msg = await Kit.Rpc<string>(
-                    "cm",
-                    "SysKernel.UpdateSqliteFile",
-                    p_fileName
-                );
-                Kit.Msg(msg);
-#endif
-            }
         }
     }
 }
