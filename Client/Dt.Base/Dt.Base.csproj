@@ -6,6 +6,11 @@
 
     <Import Project="..\Targets.props" />
     <Import Project="..\Common.props" />
+    <ItemGroup>
+      <None Remove="Structure\Tools\HistoryLogList.xaml" />
+      <None Remove="Structure\Tools\HistoryLogQuery.xaml" />
+      <None Remove="Structure\Tools\TraceLogForm.xaml" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
@@ -14,5 +19,18 @@
     <ItemGroup>
         <EmbeddedResource Include="Controls\Policy\Privacy.txt" />
         <EmbeddedResource Include="Controls\Policy\Agreement.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Structure\Tools\HistoryLogList.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Structure\Tools\TraceLogForm.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
+      <Page Update="Structure\Tools\HistoryLogQuery.xaml">
+        <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      </Page>
     </ItemGroup>
 </Project>

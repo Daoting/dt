@@ -33,7 +33,30 @@ namespace Dt.Base.Tools
 
         void OnOutputClick(object sender, ItemClickArgs e)
         {
-            
+            var item = e.Data.To<TraceLogItem>();
+            var d = new TraceLogData
+            {
+                Time = item.Time,
+                Level = item.Log.Level.ToString(),
+                Detial = item.Detial,
+            };
+
+            if (item.Log.Properties.TryGetValue("SourceContext", out var val))
+            {
+                d.Source = val.ToString("l", null);
+            }
+            else
+            {
+                d.Source = "未知";
+            }
+
+            if (item.Log.Properties.TryGetValue("Title", out var vtitle)
+                && vtitle.ToString("l", null) is string msg)
+            {
+                d.Title = msg;
+            }
+
+            _fm.Update(d);
         }
 
         void OnClear(object sender, Mi e)

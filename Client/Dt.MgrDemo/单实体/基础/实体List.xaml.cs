@@ -34,7 +34,7 @@ namespace Dt.MgrDemo.单实体
             {
                 var par = await Clause.Build<基础X>();
                 _lv.Data = await 基础X.Query(par.Sql, par.Params);
-    }
+            }
         }
         #endregion
 

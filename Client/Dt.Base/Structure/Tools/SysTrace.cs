@@ -82,7 +82,7 @@ namespace Dt.Base.Tools
         /// </summary>
         /// <param name="p_text"></param>
         /// <param name="p_showText">是否显示要复制的内容</param>
-        static void CopyToClipboard(string p_text, bool p_showText = false)
+        public static void CopyToClipboard(string p_text, bool p_showText = false)
         {
             DataPackage data = new DataPackage();
             data.SetText(p_text);

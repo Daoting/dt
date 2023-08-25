@@ -1,0 +1,35 @@
+﻿<a:Tab
+    x:Class="Dt.Base.Tools.TraceLogForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="日志内容">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:Fv x:Name="_fv">
+            <a:CTip ID="Time" Title="时间" />
+            <a:CTip ID="Level" Title="级别" />
+            <a:CTip ID="Source" Title="来源" ColSpan="0.9" />
+            <a:CFree ColSpan="0.1" ShowTitle="False">
+                <Button Content="&#xE007;" Style="{StaticResource 字符按钮}" Click="CopySource" />
+            </a:CFree>
+            <a:CTip ID="Title" Title="简述" />
+        </a:Fv>
+        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1" Margin="0,0,-1,0" Grid.Row="1">
+            <TextBlock Text="内容" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <Button Content="提取sql" Click="CopySql" HorizontalAlignment="Right" />
+        </Grid>
+        <TextBox x:Name="_tb"
+                 AcceptsReturn="True"
+                 VerticalAlignment="Stretch"
+                 BorderThickness="0"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Grid.Row="2"/>
+    </Grid>
+</a:Tab>

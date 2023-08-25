@@ -31,5 +31,21 @@ namespace Dt.Base.Tools
             InitializeComponent();
             
         }
+
+        public HistoryLogList List => _list;
+
+        public TraceLogForm Form => _fm;
+
+        public HistoryLogQuery Query => _query;
+    }
+
+    public class AtDtlog : DataAccess<AtDtlog.Info>
+    {
+        public class Info : AccessInfo
+        {
+            public override AccessType Type => AccessType.Local;
+
+            public override string Name => "dtlog";
+        }
     }
 }
