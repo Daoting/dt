@@ -43,8 +43,8 @@ namespace Dt.Base.Tools
                 new Nav("视图类型", typeof(LocalDbWin), Icons.划卡) { Desc = "所有可作为独立视图显示的名称与类型列表" },
                 new Nav("流程表单类型", typeof(LocalDbWin), Icons.排列) { Desc = "所有流程表单类型" },
 
-                new Nav("切换服务", null, Icons.服务器) { Desc = "管理 LocalState\\.data 目录下的 sqlite 库", Callback = (w, n) => Kit.Msg("未实现") },
-                new Nav("关于", null, Icons.证书) { Desc = "App V2.3.0\r\nDt  V4.2.1", },
+                new Nav("切换服务", null, Icons.服务器) { Desc = "切换服务地址", Callback = (w, n) => SysTrace.ToggleSvcUrl() },
+                new Nav("关于", null, Icons.证书) { Desc = "App V2.3.0\r\nDt  V4.2.1", Callback = (w, n) => Kit.Msg(n.Desc) },
             };
         }
     }

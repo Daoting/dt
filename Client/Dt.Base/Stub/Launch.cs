@@ -173,9 +173,9 @@ namespace Dt.Base
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ← 复制窗口类型
+                // Alt + ← 动态日志
                 e.Handled = true;
-                SysTrace.CopyWinType();
+                SysTrace.ShowRealtimeLogDlg();
             };
             accs.Add(accelerator);
 
@@ -189,6 +189,32 @@ namespace Dt.Base
                 // Alt + → 打开LocalState路径
                 e.Handled = true;
                 SysTrace.OpenLocalPath();
+            };
+            accs.Add(accelerator);
+
+            accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Up
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + ↑ 切换服务
+                e.Handled = true;
+                SysTrace.ToggleSvcUrl();
+            };
+            accs.Add(accelerator);
+
+            accelerator = new KeyboardAccelerator()
+            {
+                Modifiers = VirtualKeyModifiers.Menu,
+                Key = VirtualKey.Enter
+            };
+            accelerator.Invoked += (s, e) =>
+            {
+                // Alt + 回车 复制窗口类型
+                e.Handled = true;
+                SysTrace.CopyWinType();
             };
             accs.Add(accelerator);
 #endif

@@ -33,7 +33,12 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * oracle的bool字段char(1)，注释以 #bool# 开头，和枚举类似
 * oracle导出模型库时bool类型的字段正确
 * 客户端日志输出到sqlite文件
-* 快捷键：Alt + ↓ 系统， Alt + ← 复制窗口类型，Alt + →  复制LocalState路径
+* 快捷键：
+  Alt + ↓ 系统
+  Alt + ← 动态日志
+  Alt + → 打开LocalState路径
+  Alt + ↑ 切换服务
+  Alt + 回车 复制窗口类型
 
 * 客户端日志浏览
 * 切换服务器地址

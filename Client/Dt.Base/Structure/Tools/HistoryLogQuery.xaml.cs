@@ -85,23 +85,22 @@ namespace Dt.Base.Tools
             }
             sql += " order by id desc limit 100";
 
-            //var tbl = new Table
-            //{
-            //    { "Time" },
-            //    { "LevelAndSource" },
-            //    { "Level" },
-            //    { "Source" },
-            //    { "Message" },
-            //    { "Title" },
-            //    { "Detial" },
-            //};
-            //var ls = await AtDtlog.Each(sql, dt);
-            //foreach (var r in ls)
-            //{
+            var tbl = new Table
+            {
+                { "Time" },
+                { "LevelAndSource" },
+                { "Level" },
+                { "Source" },
+                { "Message" },
+                { "Title" },
+                { "Detial" },
+            };
+            var ls = await AtDtlog.Each(sql, dt);
+            foreach (var r in ls)
+            {
 
-            //}
-            //_win.List.Data = tbl;
-            _win.List.Data = await AtDtlog.Query(sql, dt);
+            }
+            _win.List.Data = tbl;
         }
 
         HistoryLogWin _win => OwnWin as HistoryLogWin;

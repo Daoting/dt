@@ -42,6 +42,11 @@ namespace Dt.Base.Tools
             dlg.Show();
         }
 
+        public static void ToggleSvcUrl()
+        {
+            Kit.Msg("未实现");
+        }
+
         public static void OpenLocalPath()
         {
             Kit.OpenUrl(ApplicationData.Current.LocalFolder.Path);
