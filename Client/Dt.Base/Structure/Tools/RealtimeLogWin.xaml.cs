@@ -36,8 +36,7 @@ namespace Dt.Base.Tools
             var item = e.Data.To<TraceLogItem>();
             var d = new TraceLogData
             {
-                Time = item.Time,
-                Level = item.Log.Level.ToString(),
+                TimeLevel = item.Time + " — " + item.Log.Level.ToString(),
                 Detial = item.Detial,
             };
 
@@ -48,12 +47,6 @@ namespace Dt.Base.Tools
             else
             {
                 d.Source = "未知";
-            }
-
-            if (item.Log.Properties.TryGetValue("Title", out var vtitle)
-                && vtitle.ToString("l", null) is string msg)
-            {
-                d.Title = msg;
             }
 
             _fm.Update(d);

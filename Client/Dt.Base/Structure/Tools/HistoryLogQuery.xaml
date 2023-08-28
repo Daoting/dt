@@ -20,9 +20,13 @@
                 <a:CList.Items>
                     <x:String>全部</x:String>
                     <x:String>Debug</x:String>
+                    <x:String>Information</x:String>
+                    <x:String>Warning</x:String>
+                    <x:String>Error</x:String>
+                    <x:String>Fatal</x:String>
                 </a:CList.Items>
             </a:CList>
-            <a:CText ID="content" Query="Editable" QueryFlag="Contains" />
+            <a:CText ID="content" Title="内容" Query="Editable" QueryFlag="Contains" />
         </a:QueryFv>
         <Grid x:Name="_grid" ColumnDefinitions="*,*" Margin="20" Grid.Row="1">
             <Button Content="重置" Command="{Binding CmdReset}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 深灰2}" HorizontalAlignment="Stretch" />

@@ -55,52 +55,9 @@ namespace Dt.Base.Tools
             _fv.Row["end"] = time;
         }
 
-        async void OnQuery(object sender, QueryClause e)
+        void OnQuery(object sender, QueryClause e)
         {
-            Row row = _fv.Row;
-
-            Dict dt = new Dict();
-            string sql = "select * from logs where 1=1 ";
-            if (row.Date("start") != default)
-            {
-                sql += " and timestamp>=@start";
-                dt["start"] = row.Date("start");
-            }
-            if (row.Date("end") != default)
-            {
-                sql += " and timestamp<=@end";
-                dt["end"] = row.Date("end");
-            }
-            if (row.Str("level") != "全部")
-            {
-                sql += " and level=@level";
-                dt["level"] = row.Str("level");
-            }
-            if (row.Str("content") != "")
-            {
-                var con = row.Str("content");
-                var flag = _fv["content"].QueryFlag;
-                if (flag == CompFlag.Contains)
-                    sql += $" and (RenderedMessage like '%{con}%' or Exception like '%{con}%')";
-            }
-            sql += " order by id desc limit 100";
-
-            var tbl = new Table
-            {
-                { "Time" },
-                { "LevelAndSource" },
-                { "Level" },
-                { "Source" },
-                { "Message" },
-                { "Title" },
-                { "Detial" },
-            };
-            var ls = await AtDtlog.Each(sql, dt);
-            foreach (var r in ls)
-            {
-
-            }
-            _win.List.Data = tbl;
+            _win.List.OnSearch(e);
         }
 
         HistoryLogWin _win => OwnWin as HistoryLogWin;

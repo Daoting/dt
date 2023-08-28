@@ -635,8 +635,17 @@ namespace Dt.Base
                 case DlgPlacement.FromLeft:
                     // Desktop时不覆盖任务栏
                     Top = UITree.RootContent is Desktop ? 44 : 0;
+                    if (Height != double.NaN && Height < maxHeight - Top)
+                    {
+                        // 设置高度时垂直居中
+                        Top = Math.Ceiling((maxHeight - Top - Height) / 2);
+                    }
+                    else
+                    {
+                        // 未设置高度时占用除任务栏的整个高度
+                        Height = maxHeight - Top;
+                    }
                     Left = 0;
-                    Height = maxHeight - Top;
                     if (maxWidth < actWidth)
                         Width = maxWidth;
                     break;
@@ -652,7 +661,16 @@ namespace Dt.Base
                 case DlgPlacement.FromRight:
                     // Desktop时不覆盖任务栏
                     Top = UITree.RootContent is Desktop ? 44 : 0;
-                    Height = maxHeight - Top;
+                    if (Height != double.NaN && Height < maxHeight - Top)
+                    {
+                        // 设置高度时垂直居中
+                        Top = Math.Ceiling((maxHeight - Top - Height) / 2);
+                    }
+                    else
+                    {
+                        // 未设置高度时占用除任务栏的整个高度
+                        Height = maxHeight - Top;
+                    }
                     if (maxWidth < actWidth)
                     {
                         Left = 0;

@@ -90,24 +90,14 @@ namespace Dt.Base.Tools
     public class TraceLogData
     {
         /// <summary>
-        /// 时间
+        /// 时间及级别
         /// </summary>
-        public string Time { get; set; }
-
-        /// <summary>
-        /// 级别
-        /// </summary>
-        public string Level { get; set; }
+        public string TimeLevel { get; set; }
 
         /// <summary>
         /// 日志源
         /// </summary>
         public string Source { get; set; }
-
-        /// <summary>
-        /// Title属性
-        /// </summary>
-        public string Title { get; set; }
 
         /// <summary>
         /// 日志项的详细内容

@@ -37,7 +37,10 @@ namespace Dt.Base.Tools
             };
 
             if (!Kit.IsPhoneUI)
-                dlg.Width = 756;
+            {
+                dlg.Width = 752;
+                dlg.Height = Kit.ViewHeight / 2;
+            }
             dlg.Closed += (s, e) => win.ClearData();
             dlg.Show();
         }

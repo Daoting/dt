@@ -50,16 +50,7 @@ namespace Dt.Core
                     if (index > -1)
                         title = title.Substring(index + 1);
 
-                    if (Log.Level == LogEventLevel.Warning
-                        || Log.Level == LogEventLevel.Error
-                        || Log.Level == LogEventLevel.Fatal)
-                    {
-                        title = $"{title} — {Log.Level}";
-                    }
-                }
-                else if (Log.Level == LogEventLevel.Information)
-                {
-                    title = "Inf";
+                    title = $"{title} — {Log.Level}";
                 }
                 else
                 {
