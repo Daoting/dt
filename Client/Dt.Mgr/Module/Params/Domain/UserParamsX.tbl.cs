@@ -28,10 +28,10 @@ namespace Dt.Mgr.Module
             string Value = default,
             DateTime Mtime = default)
         {
-            AddCell("user_id", UserID);
-            AddCell("param_id", ParamID);
-            AddCell("value", Value);
-            AddCell("mtime", Mtime);
+            Add("user_id", UserID);
+            Add("param_id", ParamID);
+            Add("value", Value);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

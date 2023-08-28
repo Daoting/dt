@@ -27,9 +27,9 @@ namespace Dt.MgrDemo.CrudSqlite
             long GroupID = default,
             string ItemName = default)
         {
-            AddCell("ID", ID);
-            AddCell("GroupID", GroupID);
-            AddCell("ItemName", ItemName);
+            Add("ID", ID);
+            Add("GroupID", GroupID);
+            Add("ItemName", ItemName);
             IsAdded = true;
         }
         #endregion

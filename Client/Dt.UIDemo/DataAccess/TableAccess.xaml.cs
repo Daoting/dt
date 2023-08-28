@@ -56,7 +56,7 @@ namespace Dt.UIDemo
         void OnCreateTableByTable(object sender, RoutedEventArgs e)
         {
             Table src = CreateTable();
-            Table tbl = Table.Create(src);
+            Table tbl = Table.Clone(src);
             WriteColumns(tbl);
         }
 
@@ -64,7 +64,7 @@ namespace Dt.UIDemo
         {
             Table src = CreateTable();
             Row row = src.NewRow();
-            Table tbl = Table.Create(row);
+            Table tbl = Table.Clone(row);
             WriteColumns(tbl);
         }
 
@@ -101,17 +101,27 @@ namespace Dt.UIDemo
 
         void OnAddRow(object sender, RoutedEventArgs e)
         {
-            var tbl = CreateTable();
-            var row = tbl.AddRow(new
+            var row = new Row
             {
-                id = "abc",
-                bh = 110,
-                chushengrq = DateTime.Now,
-                hunfou = true,
-                shengao = 1.80,
-                bumen = Gender.女
-            });
-            WriteRows(tbl);
+                { "id", 100L },
+                { "bh", 110 },
+                { "chushengrq", DateTime.Now },
+                { "hunfou", true },
+                { "shengao", 1.80 },
+                { "bumen", Gender.女 },
+            };
+
+            _tbInfo.Text = @"创建独立行:
+var row = new Row
+{
+    { ""id"", 100L },
+    { ""bh"", 110 },
+    { ""chushengrq"", DateTime.Now },
+    { ""hunfou"", true },
+    { ""shengao"", 1.80 },
+    { ""bumen"", Gender.女 },
+};
+";
         }
 
         void OnAddSingleRow(object sender, RoutedEventArgs e)

@@ -33,14 +33,14 @@ namespace Dt.Mgr.Rbac
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<string>("Phone");
-            row.AddCell<string>("Name");
-            row.AddCell<string>("Pwd");
-            row.AddCell<Gender>("Sex");
-            row.AddCell<string>("Photo");
-            row.AddCell<bool>("Expired");
-            row.AddCell<DateTime>("Ctime");
-            row.AddCell<DateTime>("Mtime");
+            row.Add<string>("Phone");
+            row.Add<string>("Name");
+            row.Add<string>("Pwd");
+            row.Add<Gender>("Sex");
+            row.Add<string>("Photo");
+            row.Add<bool>("Expired");
+            row.Add<DateTime>("Ctime");
+            row.Add<DateTime>("Mtime");
 
             _fv.Data = row;
         }

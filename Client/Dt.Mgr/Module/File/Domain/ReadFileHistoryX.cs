@@ -27,9 +27,9 @@ namespace Dt.Mgr.Module
             string Info = default,
             DateTime LastReadTime = default)
         {
-            AddCell("ID", ID);
-            AddCell("Info", Info);
-            AddCell("LastReadTime", LastReadTime);
+            Add("ID", ID);
+            Add("Info", Info);
+            Add("LastReadTime", LastReadTime);
             IsAdded = true;
         }
         #endregion

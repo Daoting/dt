@@ -36,18 +36,18 @@ namespace Dt.Mgr.Chat
             DateTime STime = default,
             string Photo = default)
         {
-            AddCell("ID", ID);
-            AddCell("LoginID", LoginID);
-            AddCell("MsgID", MsgID);
-            AddCell("OtherID", OtherID);
-            AddCell("OtherName", OtherName);
-            AddCell("IsReceived", IsReceived);
-            AddCell("Unread", Unread);
-            AddCell("LetterType", LetterType);
-            AddCell("OtherIsOnline", OtherIsOnline);
-            AddCell("Content", Content);
-            AddCell("STime", STime);
-            AddCell("Photo", Photo);
+            Add("ID", ID);
+            Add("LoginID", LoginID);
+            Add("MsgID", MsgID);
+            Add("OtherID", OtherID);
+            Add("OtherName", OtherName);
+            Add("IsReceived", IsReceived);
+            Add("Unread", Unread);
+            Add("LetterType", LetterType);
+            Add("OtherIsOnline", OtherIsOnline);
+            Add("Content", Content);
+            Add("STime", STime);
+            Add("Photo", Photo);
             IsAdded = true;
         }
         #endregion
@@ -161,13 +161,13 @@ namespace Dt.Mgr.Chat
             get
             {
                 if (!Contains("Photo"))
-                    AddCell("Photo", "");
+                    Add("Photo", "");
                 return (string)this["Photo"];
             }
             set
             {
                 if (!Contains("Photo"))
-                    AddCell("Photo", "");
+                    Add("Photo", "");
                 this["Photo"] = value;
             }
         }

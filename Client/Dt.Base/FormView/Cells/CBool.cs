@@ -121,6 +121,8 @@ namespace Dt.Base
             else
             {
                 CheckBox cb = new CheckBox { MinWidth = 30, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+                if (!ShowTitle)
+                    cb.Content = Title;
                 Binding bind = new Binding { Path = new PropertyPath("ReadOnlyBinding"), Converter = new BoolToggleConverter(), Source = this };
                 cb.SetBinding(CheckBox.IsEnabledProperty, bind);
                 if (_isLoaded)

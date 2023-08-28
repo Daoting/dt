@@ -33,15 +33,15 @@ namespace Dt.Mgr.Rbac
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("phone", Phone);
-            AddCell("name", Name);
-            AddCell("pwd", Pwd);
-            AddCell("sex", Sex);
-            AddCell("photo", Photo);
-            AddCell("expired", Expired);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("phone", Phone);
+            Add("name", Name);
+            Add("pwd", Pwd);
+            Add("sex", Sex);
+            Add("photo", Photo);
+            Add("expired", Expired);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

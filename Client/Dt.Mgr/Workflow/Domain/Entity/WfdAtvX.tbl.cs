@@ -39,21 +39,21 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("prc_id", PrcID);
-            AddCell("name", Name);
-            AddCell("type", Type);
-            AddCell("exec_scope", ExecScope);
-            AddCell("exec_limit", ExecLimit);
-            AddCell("exec_atv_id", ExecAtvID);
-            AddCell("auto_accept", AutoAccept);
-            AddCell("can_delete", CanDelete);
-            AddCell("can_terminate", CanTerminate);
-            AddCell("can_jump_into", CanJumpInto);
-            AddCell("trans_kind", TransKind);
-            AddCell("join_kind", JoinKind);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("prc_id", PrcID);
+            Add("name", Name);
+            Add("type", Type);
+            Add("exec_scope", ExecScope);
+            Add("exec_limit", ExecLimit);
+            Add("exec_atv_id", ExecAtvID);
+            Add("auto_accept", AutoAccept);
+            Add("can_delete", CanDelete);
+            Add("can_terminate", CanTerminate);
+            Add("can_jump_into", CanJumpInto);
+            Add("trans_kind", TransKind);
+            Add("join_kind", JoinKind);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

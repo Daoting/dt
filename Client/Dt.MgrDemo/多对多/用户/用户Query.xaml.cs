@@ -33,9 +33,9 @@ namespace Dt.MgrDemo.多对多
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<string>("手机号");
-            row.AddCell<string>("姓名");
-            row.AddCell<string>("密码");
+            row.Add<string>("手机号");
+            row.Add<string>("姓名");
+            row.Add<string>("密码");
 
             _fv.Data = row;
         }

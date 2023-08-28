@@ -31,13 +31,13 @@ namespace Dt.MgrDemo.CrudSqlite
             bool EnableNameChangedEvent = default,
             bool EnableDelEvent = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name", Name);
-            AddCell("Dispidx", Dispidx);
-            AddCell("Mtime", Mtime);
-            AddCell("EnableInsertEvent", EnableInsertEvent);
-            AddCell("EnableNameChangedEvent", EnableNameChangedEvent);
-            AddCell("EnableDelEvent", EnableDelEvent);
+            Add("ID", ID);
+            Add("Name", Name);
+            Add("Dispidx", Dispidx);
+            Add("Mtime", Mtime);
+            Add("EnableInsertEvent", EnableInsertEvent);
+            Add("EnableNameChangedEvent", EnableNameChangedEvent);
+            Add("EnableDelEvent", EnableDelEvent);
             IsAdded = true;
         }
         #endregion

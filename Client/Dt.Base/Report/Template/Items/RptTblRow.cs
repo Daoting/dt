@@ -22,7 +22,7 @@ namespace Dt.Base.Report
             : base(p_table)
         {
             // 最少行数
-            _data.AddCell("minrowcount", 0);
+            _data.Add("minrowcount", 0);
         }
 
         /// <summary>

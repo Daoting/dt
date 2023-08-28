@@ -30,7 +30,7 @@ namespace Dt.Mgr.Module
             Row row = new Row();
             foreach (var r in tbl)
             {
-                row.AddCell(r.Str(0), r.Str(1));
+                row.Add(r.Str(0), r.Str(1));
             }
             _fv.Data = row;
             row.Changed += OnValChanged;

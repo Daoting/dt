@@ -31,8 +31,8 @@ namespace Dt.Base.Report
             _total = p_item.Parent as RptMtxSubtotal;
 
             Row row = new Row();
-            row.AddCell("span", _total.Data.Int("span"));
-            row.AddCell("beforelevel", _total.Data.Bool("beforelevel"));
+            row.Add("span", _total.Data.Int("span"));
+            row.Add("beforelevel", _total.Data.Bool("beforelevel"));
             row.Changed += OnChanged;
             _fv.Data = row;
 

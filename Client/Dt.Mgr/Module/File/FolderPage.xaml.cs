@@ -90,13 +90,13 @@ namespace Dt.Mgr.Module
             foreach (var file in files)
             {
                 Row row = new Row();
-                row.AddCell("id", await FilePubX.NewID());
-                row.AddCell("parent_id", _fileMgr.FolderID);
-                row.AddCell("name", file.DisplayName);
-                row.AddCell("is_folder", false);
-                row.AddCell("ext_name", file.Ext.TrimStart('.'));
-                row.AddCell<string>("info");
-                row.AddCell("ctime", ctime);
+                row.Add("id", await FilePubX.NewID());
+                row.Add("parent_id", _fileMgr.FolderID);
+                row.Add("name", file.DisplayName);
+                row.Add("is_folder", false);
+                row.Add("ext_name", file.Ext.TrimStart('.'));
+                row.Add<string>("info");
+                row.Add("ctime", ctime);
                 _lv.Data.Add(row);
 
                 FileList fl;

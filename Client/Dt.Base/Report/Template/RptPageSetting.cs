@@ -27,14 +27,14 @@ namespace Dt.Base.Report
             Root = p_root;
             Data = new Row();
             // 纸张名称不保存
-            Data.AddCell<string>("papername");
-            Data.AddCell("height", _defaultHeight);
-            Data.AddCell("width", _defaultWidth);
-            Data.AddCell("leftmargin", _defaultMargin);
-            Data.AddCell("topmargin", _defaultMargin);
-            Data.AddCell("rightmargin", _defaultMargin);
-            Data.AddCell("bottommargin", _defaultMargin);
-            Data.AddCell<bool>("landscape");
+            Data.Add<string>("papername");
+            Data.Add("height", _defaultHeight);
+            Data.Add("width", _defaultWidth);
+            Data.Add("leftmargin", _defaultMargin);
+            Data.Add("topmargin", _defaultMargin);
+            Data.Add("rightmargin", _defaultMargin);
+            Data.Add("bottommargin", _defaultMargin);
+            Data.Add<bool>("landscape");
             Data.Changed += Root.OnCellValueChanged;
         }
 

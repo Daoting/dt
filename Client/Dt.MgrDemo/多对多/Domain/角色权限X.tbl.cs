@@ -26,8 +26,8 @@ namespace Dt.MgrDemo.多对多
             long RoleID,
             long PrvID)
         {
-            AddCell("role_id", RoleID);
-            AddCell("prv_id", PrvID);
+            Add("role_id", RoleID);
+            Add("prv_id", PrvID);
             IsAdded = true;
         }
         #endregion

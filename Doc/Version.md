@@ -14,6 +14,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * oracle导出sqlite模型库时非常慢，将模型库和其它sqlite缓存数据分文件存储
 * sqlite的model与其它sqlite文件分开存储，调整客户端
 * 将开发调试、系统管理员的常用功能集成到“系统”，右键开始或快捷键：Alt + ↓ 
+* DataTable中Copy是复制数据和结构，Clone是只结构，Table中调整成相同习惯
 
 ### 功能
 * .admin页面增加版本号

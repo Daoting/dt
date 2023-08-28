@@ -28,10 +28,10 @@ namespace Dt.MgrDemo.单实体
             string ItemName = default,
             string Name = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("item_name", ItemName);
-            AddCell("name", Name);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("item_name", ItemName);
+            Add("name", Name);
             IsAdded = true;
         }
         #endregion

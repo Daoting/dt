@@ -24,9 +24,9 @@ namespace Dt.MgrDemo.一对多
             long ParentID = default,
             string 大儿名 = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("大儿名", 大儿名);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("大儿名", 大儿名);
             IsAdded = true;
         }
         #endregion

@@ -28,31 +28,31 @@ namespace Dt.Base.Report
             : base(p_owner)
         {
             // 图表类型
-            _data.AddCell("type", "Column");
+            _data.Add("type", "Column");
             // 图例是否可见
-            _data.AddCell("showlegend", true);
+            _data.Add("showlegend", true);
             // 图例标题
-            _data.AddCell<string>("legtitle");
+            _data.Add<string>("legtitle");
             // 图例位置
-            _data.AddCell("legpos", "Right");
+            _data.Add("legpos", "Right");
             // 布局方向
-            _data.AddCell("legorientation", "Vertical");
+            _data.Add("legorientation", "Vertical");
             // 标题
-            _data.AddCell<string>("title");
+            _data.Add<string>("title");
             // X轴标题
-            _data.AddCell<string>("titlex");
+            _data.Add<string>("titlex");
             // Y轴标题
-            _data.AddCell<string>("titley");
+            _data.Add<string>("titley");
             // 数据源名称
-            _data.AddCell<string>("tbl");
+            _data.Add<string>("tbl");
             // 系列字段名
-            _data.AddCell<string>("fieldseries");
+            _data.Add<string>("fieldseries");
             // x轴字段名
-            _data.AddCell<string>("fieldx");
+            _data.Add<string>("fieldx");
             // y轴字段名
-            _data.AddCell<string>("fieldy");
+            _data.Add<string>("fieldy");
             //  扩展字段
-            _data.AddCell<string>("fieldz");
+            _data.Add<string>("fieldz");
         }
 
         /// <summary>

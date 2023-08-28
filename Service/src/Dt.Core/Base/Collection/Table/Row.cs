@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Dt.Core
     [Microsoft.UI.Xaml.Data.Bindable]
     [System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqType]
 #endif
-    public class Row : INotifyPropertyChanged, IRpcJson
+    public class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
     {
         #region 成员变量
         const string _indexError = "索引值{0}超出范围(0-{1})！";
@@ -228,12 +229,18 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 添加新数据项
+        /// 添加新数据项，支持手动创建Row的简化写法！如：
+        /// var row = new Row
+        /// {
+        ///     { "id", 100L },
+        ///     { "xm", "新名称" },
+        ///     { "bh", true }
+        /// };
         /// </summary>
         /// <typeparam name="T">Cell的数据类型</typeparam>
         /// <param name="p_cellName">字段名，不可为空，作为键值</param>
         /// <param name="p_value">初始值</param>
-        public Cell AddCell<T>(string p_cellName, T p_value = default)
+        public Cell Add<T>(string p_cellName, T p_value = default)
         {
             if (Contains(p_cellName))
                 throw new Exception($"已包含{p_cellName}列！");
@@ -823,6 +830,13 @@ namespace Dt.Core
             p_writer.WriteEndObject();
 
             p_writer.WriteEndArray();
+        }
+        #endregion
+
+        #region IEnumerable
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_cells).GetEnumerator();
         }
         #endregion
 

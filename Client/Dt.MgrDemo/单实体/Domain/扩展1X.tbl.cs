@@ -25,10 +25,10 @@ namespace Dt.MgrDemo.单实体
             bool 禁止选中 = default,
             bool 禁止保存 = default)
         {
-            AddCell("id", ID);
-            AddCell("扩展1名称", 扩展1名称);
-            AddCell("禁止选中", 禁止选中);
-            AddCell("禁止保存", 禁止保存);
+            Add("id", ID);
+            Add("扩展1名称", 扩展1名称);
+            Add("禁止选中", 禁止选中);
+            Add("禁止保存", 禁止保存);
             IsAdded = true;
         }
         #endregion

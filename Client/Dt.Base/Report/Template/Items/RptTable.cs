@@ -24,15 +24,15 @@ namespace Dt.Base.Report
             : base(p_owner)
         {
             // 数据源名称
-            _data.AddCell<string>("tbl");
+            _data.Add<string>("tbl");
             // 在每页重复表头表尾
-            _data.AddCell<bool>("repeatheader");
-            _data.AddCell<bool>("repeatfooter");
+            _data.Add<bool>("repeatheader");
+            _data.Add<bool>("repeatfooter");
             // 最少行数
-            _data.AddCell("minrowcount", 0);
+            _data.Add("minrowcount", 0);
             // 多列显示
-            _data.AddCell("rowbreakcount", 0);
-            _data.AddCell("colbreakcount", 1);
+            _data.Add("rowbreakcount", 0);
+            _data.Add("colbreakcount", 1);
         }
 
         /// <summary>

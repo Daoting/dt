@@ -31,11 +31,11 @@ namespace Dt.Mgr.Workflow
         void LoadSearchData()
         {
             Row row = new Row();
-            row.AddCell<DateTime>("start");
-            row.AddCell<DateTime>("end");
-            row.AddCell<int>("status", 3);
-            row.AddCell("statusname", "全部");
-            row.AddCell<bool>("type");
+            row.Add<DateTime>("start");
+            row.Add<DateTime>("end");
+            row.Add<int>("status", 3);
+            row.Add("statusname", "全部");
+            row.Add<bool>("type");
             _fv.Data = row;
         }
 

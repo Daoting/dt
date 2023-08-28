@@ -33,7 +33,7 @@ namespace Dt.Base.Report
             SubTotals = new List<RptMtxSubtotal>();
             SubTitles = new List<RptMtxSubtitle>();
             // 对应字段名
-            _data.AddCell<string>("field");
+            _data.Add<string>("field");
         }
         #endregion
 

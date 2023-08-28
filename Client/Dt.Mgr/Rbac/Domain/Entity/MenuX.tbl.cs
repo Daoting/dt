@@ -36,18 +36,18 @@ namespace Dt.Mgr.Rbac
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("name", Name);
-            AddCell("is_group", IsGroup);
-            AddCell("view_name", ViewName);
-            AddCell("params", Params);
-            AddCell("icon", Icon);
-            AddCell("note", Note);
-            AddCell("dispidx", Dispidx);
-            AddCell("is_locked", IsLocked);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("name", Name);
+            Add("is_group", IsGroup);
+            Add("view_name", ViewName);
+            Add("params", Params);
+            Add("icon", Icon);
+            Add("note", Note);
+            Add("dispidx", Dispidx);
+            Add("is_locked", IsLocked);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

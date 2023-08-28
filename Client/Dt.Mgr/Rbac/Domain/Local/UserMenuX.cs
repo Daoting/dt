@@ -23,7 +23,7 @@ namespace Dt.Mgr
 
         public UserMenuX(long ID)
         {
-            AddCell("ID", ID);
+            Add("ID", ID);
             IsAdded = true;
         }
         #endregion

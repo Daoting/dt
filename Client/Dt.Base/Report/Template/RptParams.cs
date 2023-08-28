@@ -98,50 +98,50 @@ namespace Dt.Base.Report
                     case "bool":
                         if (val == "")
                         {
-                            data.AddCell<bool>(name);
+                            data.Add<bool>(name);
                         }
                         else
                         {
                             string l = val.ToLower();
-                            data.AddCell(name, (l == "1" || l == "true"));
+                            data.Add(name, (l == "1" || l == "true"));
                         }
                         break;
 
                     case "double":
                         if (val != "" && double.TryParse(val, out var v))
                         {
-                            data.AddCell(name, v);
+                            data.Add(name, v);
                         }
                         else
                         {
-                            data.AddCell<double>(name);
+                            data.Add<double>(name);
                         }
                         break;
 
                     case "int":
                         if (val != "" && int.TryParse(val, out var i))
                         {
-                            data.AddCell(name, i);
+                            data.Add(name, i);
                         }
                         else
                         {
-                            data.AddCell<int>(name);
+                            data.Add<int>(name);
                         }
                         break;
 
                     case "date":
                         if (val != "" && DateTime.TryParse(val, out var d))
                         {
-                            data.AddCell(name, d);
+                            data.Add(name, d);
                         }
                         else
                         {
-                            data.AddCell<DateTime>(name);
+                            data.Add<DateTime>(name);
                         }
                         break;
 
                     default:
-                        data.AddCell(name, val);
+                        data.Add(name, val);
                         break;
                 }
             }

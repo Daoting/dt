@@ -77,7 +77,7 @@ namespace Dt.Mgr.Rbac
                 ParentID: _curItem != null ? (long?)_curItem.ID : null,
                 Ctime: Kit.Now,
                 Mtime: Kit.Now);
-            m.AddCell("parentname", _curItem?.Name);
+            m.Add("parentname", _curItem?.Name);
             Data = m;
             ClearRelated();
         }

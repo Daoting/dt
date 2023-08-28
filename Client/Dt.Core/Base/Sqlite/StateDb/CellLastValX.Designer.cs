@@ -24,8 +24,8 @@ namespace Dt.Core
             string ID,
             string Val = default)
         {
-            AddCell("ID", ID);
-            AddCell("Val", Val);
+            Add("ID", ID);
+            Add("Val", Val);
             IsAdded = true;
         }
         #endregion

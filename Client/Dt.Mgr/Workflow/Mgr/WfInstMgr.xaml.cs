@@ -26,13 +26,13 @@ namespace Dt.Mgr.Workflow
         {
             _fv["prcdname"].To<CList>().Data = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
             Row row = new Row();
-            row.AddCell<string>("prcd_id");
-            row.AddCell<string>("prcdname");
-            row.AddCell<int>("status", 3);
-            row.AddCell("statusname", "全部");
-            row.AddCell<string>("title");
-            row.AddCell<DateTime>("start");
-            row.AddCell<DateTime>("end");
+            row.Add<string>("prcd_id");
+            row.Add<string>("prcdname");
+            row.Add<int>("status", 3);
+            row.Add("statusname", "全部");
+            row.Add<string>("title");
+            row.Add<DateTime>("start");
+            row.Add<DateTime>("end");
             _fv.Data = row;
         }
 

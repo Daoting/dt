@@ -24,9 +24,9 @@ namespace Dt.MgrDemo.Crud
             string Phone = default,
             string Name = default)
         {
-            AddCell("id", ID);
-            AddCell("phone", Phone);
-            AddCell("name", Name);
+            Add("id", ID);
+            Add("phone", Phone);
+            Add("name", Name);
             IsAdded = true;
         }
         #endregion

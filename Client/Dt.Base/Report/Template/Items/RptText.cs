@@ -41,31 +41,31 @@ namespace Dt.Base.Report
         public RptText(RptPart p_owner)
             : base(p_owner)
         {
-            _data.AddCell<string>("val");
-            _data.AddCell<bool>("hidetopdup");
-            _data.AddCell<bool>("hideleftdup");
-            _data.AddCell<bool>("autoheight");
-            _data.AddCell<bool>("handleclick");
-            _data.AddCell<bool>("wordwrap");
-            _data.AddCell("fontfamily", DefaultFontName);
-            _data.AddCell("fontsize", DefaultFontSize);
-            _data.AddCell<bool>("bold");
-            _data.AddCell<bool>("italic");
-            _data.AddCell<bool>("underline");
-            _data.AddCell<bool>("strikeout");
-            _data.AddCell("foreground", _defaultForeground);
-            _data.AddCell("background", _defaultBackground);
-            _data.AddCell("horalign", _defaultAlign);
-            _data.AddCell("veralign", _defaultAlign);
-            _data.AddCell("margin", 0);
-            _data.AddCell("lbc", _defaultForeground);
-            _data.AddCell("tbc", _defaultForeground);
-            _data.AddCell("rbc", _defaultForeground);
-            _data.AddCell("bbc", _defaultForeground);
-            _data.AddCell("lbs", _defaultBorder);
-            _data.AddCell("tbs", _defaultBorder);
-            _data.AddCell("rbs", _defaultBorder);
-            _data.AddCell("bbs", _defaultBorder);
+            _data.Add<string>("val");
+            _data.Add<bool>("hidetopdup");
+            _data.Add<bool>("hideleftdup");
+            _data.Add<bool>("autoheight");
+            _data.Add<bool>("handleclick");
+            _data.Add<bool>("wordwrap");
+            _data.Add("fontfamily", DefaultFontName);
+            _data.Add("fontsize", DefaultFontSize);
+            _data.Add<bool>("bold");
+            _data.Add<bool>("italic");
+            _data.Add<bool>("underline");
+            _data.Add<bool>("strikeout");
+            _data.Add("foreground", _defaultForeground);
+            _data.Add("background", _defaultBackground);
+            _data.Add("horalign", _defaultAlign);
+            _data.Add("veralign", _defaultAlign);
+            _data.Add("margin", 0);
+            _data.Add("lbc", _defaultForeground);
+            _data.Add("tbc", _defaultForeground);
+            _data.Add("rbc", _defaultForeground);
+            _data.Add("bbc", _defaultForeground);
+            _data.Add("lbs", _defaultBorder);
+            _data.Add("tbs", _defaultBorder);
+            _data.Add("rbs", _defaultBorder);
+            _data.Add("bbs", _defaultBorder);
         }
 
         public RptText(RptItemBase p_parent)

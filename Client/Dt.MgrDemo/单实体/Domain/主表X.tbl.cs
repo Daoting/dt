@@ -25,10 +25,10 @@ namespace Dt.MgrDemo.单实体
             string 限长4 = default,
             string 不重复 = default)
         {
-            AddCell("id", ID);
-            AddCell("主表名称", 主表名称);
-            AddCell("限长4", 限长4);
-            AddCell("不重复", 不重复);
+            Add("id", ID);
+            Add("主表名称", 主表名称);
+            Add("限长4", 限长4);
+            Add("不重复", 不重复);
             IsAdded = true;
         }
         #endregion

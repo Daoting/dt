@@ -739,13 +739,13 @@ namespace Dt.Cm
             byte Col6 = default,
             byte[] Col7 = default)
         {
-            AddCell("Col1", Col1);
-            AddCell("Col2", Col2);
-            AddCell("Col3", Col3);
-            AddCell("Col4", Col4);
-            AddCell("Col5", Col5);
-            AddCell("Col6", Col6);
-            AddCell("Col7", Col7);
+            Add("Col1", Col1);
+            Add("Col2", Col2);
+            Add("Col3", Col3);
+            Add("Col4", Col4);
+            Add("Col5", Col5);
+            Add("Col6", Col6);
+            Add("Col7", Col7);
             IsAdded = true;
         }
 

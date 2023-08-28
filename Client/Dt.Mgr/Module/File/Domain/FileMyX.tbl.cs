@@ -32,14 +32,14 @@ namespace Dt.Mgr.Module
             DateTime Ctime = default,
             long UserID = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("name", Name);
-            AddCell("is_folder", IsFolder);
-            AddCell("ext_name", ExtName);
-            AddCell("info", Info);
-            AddCell("ctime", Ctime);
-            AddCell("user_id", UserID);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("name", Name);
+            Add("is_folder", IsFolder);
+            Add("ext_name", ExtName);
+            Add("info", Info);
+            Add("ctime", Ctime);
+            Add("user_id", UserID);
             IsAdded = true;
         }
         #endregion

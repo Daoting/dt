@@ -25,10 +25,10 @@ namespace Dt.Base.Tools
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<DateTime>("start");
-            row.AddCell<DateTime>("end");
-            row.AddCell("level", "全部");
-            row.AddCell("content", "");
+            row.Add<DateTime>("start");
+            row.Add<DateTime>("end");
+            row.Add("level", "全部");
+            row.Add("content", "");
 
             _fv.Data = row;
         }

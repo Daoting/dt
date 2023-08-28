@@ -24,9 +24,9 @@ namespace Demo.Crud
             long ParentID = default,
             string ItemName = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("item_name", ItemName);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("item_name", ItemName);
             IsAdded = true;
         }
         #endregion

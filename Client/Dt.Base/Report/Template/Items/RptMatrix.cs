@@ -26,13 +26,13 @@ namespace Dt.Base.Report
             : base(p_owner)
         {
             Rows = new List<RptMtxRow>();
-            _data.AddCell<string>("tbl");
-            _data.AddCell<bool>("hiderowheader");
-            _data.AddCell<bool>("hidecolheader");
-            _data.AddCell<bool>("repeatrowheader");
-            _data.AddCell<bool>("repeatcolheader");
-            _data.AddCell<string>("rowsort");
-            _data.AddCell<string>("colsort");
+            _data.Add<string>("tbl");
+            _data.Add<bool>("hiderowheader");
+            _data.Add<bool>("hidecolheader");
+            _data.Add<bool>("repeatrowheader");
+            _data.Add<bool>("repeatcolheader");
+            _data.Add<string>("rowsort");
+            _data.Add<string>("colsort");
         }
         #endregion
 
@@ -453,11 +453,11 @@ namespace Dt.Base.Report
             IOrderedEnumerable<Row> orderData = null;
             if (rowOrder.Length > 0)
             {
-                orderData = Order(orderData, p_data.Clone(), rowOrder);
+                orderData = Order(orderData, p_data.Copy(), rowOrder);
             }
             if (colOrder.Length > 0)
             {
-                orderData = Order(orderData, p_data.Clone(), colOrder);
+                orderData = Order(orderData, p_data.Copy(), colOrder);
             }
             if (orderData != null)
             {

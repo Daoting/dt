@@ -33,16 +33,16 @@ namespace Dt.Core
             int Dispidx = default,
             string Warning = default)
         {
-            AddCell("ID", ID);
-            AddCell("ParentID", ParentID);
-            AddCell("Name", Name);
-            AddCell("IsGroup", IsGroup);
-            AddCell("ViewName", ViewName);
-            AddCell("Params", Params);
-            AddCell("Icon", Icon);
-            AddCell("Note", Note);
-            AddCell("Dispidx", Dispidx);
-            AddCell("Warning", Warning);
+            Add("ID", ID);
+            Add("ParentID", ParentID);
+            Add("Name", Name);
+            Add("IsGroup", IsGroup);
+            Add("ViewName", ViewName);
+            Add("Params", Params);
+            Add("Icon", Icon);
+            Add("Note", Note);
+            Add("Dispidx", Dispidx);
+            Add("Warning", Warning);
             IsAdded = true;
         }
         #endregion
@@ -142,7 +142,7 @@ namespace Dt.Core
             get
             {
                 if (!Contains("Warning"))
-                    AddCell("Warning", "");
+                    Add("Warning", "");
                 return (string)this["Warning"];
             }
         }
@@ -162,7 +162,7 @@ namespace Dt.Core
                 msg = "┅";
 
             if (!Contains("Warning"))
-                AddCell("Warning", msg);
+                Add("Warning", msg);
             else
                 this["Warning"] = msg;
         }

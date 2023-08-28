@@ -30,12 +30,12 @@ namespace Dt.Mgr.Workflow
             bool IsRollback = default,
             long? TrsID = default)
         {
-            AddCell("id", ID);
-            AddCell("prc_id", PrcID);
-            AddCell("src_atv_id", SrcAtvID);
-            AddCell("tgt_atv_id", TgtAtvID);
-            AddCell("is_rollback", IsRollback);
-            AddCell("trs_id", TrsID);
+            Add("id", ID);
+            Add("prc_id", PrcID);
+            Add("src_atv_id", SrcAtvID);
+            Add("tgt_atv_id", TgtAtvID);
+            Add("is_rollback", IsRollback);
+            Add("trs_id", TrsID);
             IsAdded = true;
         }
         #endregion

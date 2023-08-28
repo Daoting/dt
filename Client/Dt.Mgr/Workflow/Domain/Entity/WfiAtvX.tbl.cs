@@ -31,13 +31,13 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("prci_id", PrciID);
-            AddCell("atvd_id", AtvdID);
-            AddCell("status", Status);
-            AddCell("inst_count", InstCount);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("prci_id", PrciID);
+            Add("atvd_id", AtvdID);
+            Add("status", Status);
+            Add("inst_count", InstCount);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

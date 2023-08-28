@@ -26,8 +26,8 @@ namespace Dt.Mgr.Workflow
             long AtvID,
             long RoleID)
         {
-            AddCell("atv_id", AtvID);
-            AddCell("role_id", RoleID);
+            Add("atv_id", AtvID);
+            Add("role_id", RoleID);
             IsAdded = true;
         }
         #endregion

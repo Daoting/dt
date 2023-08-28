@@ -22,7 +22,7 @@ namespace Dt.Mgr
 
         public UserPermissionX(string Name)
         {
-            AddCell("Name", Name);
+            Add("Name", Name);
             IsAdded = true;
         }
         #endregion

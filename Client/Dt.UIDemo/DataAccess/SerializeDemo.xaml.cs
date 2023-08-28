@@ -371,7 +371,7 @@ namespace Dt.UIDemo
         async void SetTableDict(object sender, RoutedEventArgs e)
         {
             Dict dtl = new Dict();
-            var tbl = _tbl.Clone();
+            var tbl = _tbl.Copy();
             tbl.AcceptChanges();
             dtl["table2"] = tbl;
             Dict result = await AtTestCm.SetTableDict(dtl);
@@ -413,7 +413,7 @@ namespace Dt.UIDemo
         {
             List<Table> tbls = new List<Table>();
             tbls.Add(_tbl);
-            tbls.Add(_tbl.Clone());
+            tbls.Add(_tbl.Copy());
             tbls = await AtTestCm.SetTableList(tbls);
             _tbInfo.Text = tbls.Count == 2 ? "调用成功！" : "调用不成功！";
         }
@@ -460,7 +460,7 @@ namespace Dt.UIDemo
             cls["null"] = null;
             dt["基本数据类型"] = cls;
 
-            var tbl = _tbl.Clone();
+            var tbl = _tbl.Copy();
             tbl.AcceptChanges();
             dt["DataTable"] = tbl;
 
@@ -788,13 +788,13 @@ namespace Dt.UIDemo
             byte Col6 = default,
             byte[] Col7 = default)
         {
-            AddCell("Col1", Col1);
-            AddCell("Col2", Col2);
-            AddCell("Col3", Col3);
-            AddCell("Col4", Col4);
-            AddCell("Col5", Col5);
-            AddCell("Col6", Col6);
-            AddCell("Col7", Col7);
+            Add("Col1", Col1);
+            Add("Col2", Col2);
+            Add("Col3", Col3);
+            Add("Col4", Col4);
+            Add("Col5", Col5);
+            Add("Col6", Col6);
+            Add("Col7", Col7);
             IsAdded = true;
         }
 

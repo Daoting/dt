@@ -30,12 +30,12 @@ namespace Dt.Mgr.Workflow
             bool IsRollback = default,
             DateTime Ctime = default)
         {
-            AddCell("id", ID);
-            AddCell("trsd_id", TrsdID);
-            AddCell("src_atvi_id", SrcAtviID);
-            AddCell("tgt_atvi_id", TgtAtviID);
-            AddCell("is_rollback", IsRollback);
-            AddCell("ctime", Ctime);
+            Add("id", ID);
+            Add("trsd_id", TrsdID);
+            Add("src_atvi_id", SrcAtviID);
+            Add("tgt_atvi_id", TgtAtviID);
+            Add("is_rollback", IsRollback);
+            Add("ctime", Ctime);
             IsAdded = true;
         }
         #endregion

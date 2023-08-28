@@ -25,10 +25,10 @@ namespace Dt.MgrDemo.单实体
             bool 禁止删除 = default,
             string 值变事件 = default)
         {
-            AddCell("id", ID);
-            AddCell("扩展2名称", 扩展2名称);
-            AddCell("禁止删除", 禁止删除);
-            AddCell("值变事件", 值变事件);
+            Add("id", ID);
+            Add("扩展2名称", 扩展2名称);
+            Add("禁止删除", 禁止删除);
+            Add("值变事件", 值变事件);
             IsAdded = true;
         }
         #endregion

@@ -25,9 +25,9 @@ namespace Dt.Core
             string BaseUri = default,
             string Content = default)
         {
-            AddCell("ID", ID);
-            AddCell("BaseUri", BaseUri);
-            AddCell("Content", Content);
+            Add("ID", ID);
+            Add("BaseUri", BaseUri);
+            Add("Content", Content);
             IsAdded = true;
         }
         #endregion

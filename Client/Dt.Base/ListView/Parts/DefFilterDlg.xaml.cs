@@ -408,7 +408,7 @@ namespace Dt.Base.ListView
         void CreateCol(string p_id, Type p_type)
         {
             new Cell(_data, p_id, p_type);
-            var conCell = _condition.AddCell(p_id, p_type == typeof(string) ? SearchConditionType.包含 : SearchConditionType.等于);
+            var conCell = _condition.Add(p_id, p_type == typeof(string) ? SearchConditionType.包含 : SearchConditionType.等于);
 
             CBar bar = new CBar();
             var grid = new Grid();

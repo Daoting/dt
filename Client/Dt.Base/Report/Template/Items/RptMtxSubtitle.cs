@@ -34,7 +34,7 @@ namespace Dt.Base.Report
             Item = new RptText(this);
             SubTitles = new List<RptMtxSubtitle>();
             // 所占行数/列数
-            _data.AddCell("span", 1);
+            _data.Add("span", 1);
         }
         #endregion
 

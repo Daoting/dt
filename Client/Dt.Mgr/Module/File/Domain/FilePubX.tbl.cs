@@ -31,13 +31,13 @@ namespace Dt.Mgr.Module
             string Info = default,
             DateTime Ctime = default)
         {
-            AddCell("id", ID);
-            AddCell("parent_id", ParentID);
-            AddCell("name", Name);
-            AddCell("is_folder", IsFolder);
-            AddCell("ext_name", ExtName);
-            AddCell("info", Info);
-            AddCell("ctime", Ctime);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("name", Name);
+            Add("is_folder", IsFolder);
+            Add("ext_name", ExtName);
+            Add("info", Info);
+            Add("ctime", Ctime);
             IsAdded = true;
         }
         #endregion

@@ -33,7 +33,7 @@ namespace Dt.MgrDemo.一对多
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<string>("父名");
+            row.Add<string>("父名");
 
             _fv.Data = row;
         }

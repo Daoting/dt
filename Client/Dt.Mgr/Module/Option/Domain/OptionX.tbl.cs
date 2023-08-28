@@ -28,10 +28,10 @@ namespace Dt.Mgr.Module
             int Dispidx = default,
             long GroupID = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
-            AddCell("dispidx", Dispidx);
-            AddCell("group_id", GroupID);
+            Add("id", ID);
+            Add("name", Name);
+            Add("dispidx", Dispidx);
+            Add("group_id", GroupID);
             IsAdded = true;
         }
         #endregion

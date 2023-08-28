@@ -26,9 +26,9 @@ namespace Dt.Mgr
             long MenuID = default,
             int Clicks = default)
         {
-            AddCell("UserID", UserID);
-            AddCell("MenuID", MenuID);
-            AddCell("Clicks", Clicks);
+            Add("UserID", UserID);
+            Add("MenuID", MenuID);
+            Add("Clicks", Clicks);
             IsAdded = true;
         }
         #endregion

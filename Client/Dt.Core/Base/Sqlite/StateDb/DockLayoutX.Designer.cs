@@ -25,8 +25,8 @@ namespace Dt.Core
             string BaseUri,
             string Layout = default)
         {
-            AddCell("BaseUri", BaseUri);
-            AddCell("Layout", Layout);
+            Add("BaseUri", BaseUri);
+            Add("Layout", Layout);
             IsAdded = true;
         }
         #endregion

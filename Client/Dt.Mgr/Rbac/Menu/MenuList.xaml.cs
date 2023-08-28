@@ -77,7 +77,7 @@ namespace Dt.Mgr.Rbac
         protected override void OnFirstLoaded()
         {
             MenuX m = new MenuX(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
-            m.AddCell("parentname", "");
+            m.Add("parentname", "");
             _tv.FixedRoot = m;
 
             Update();

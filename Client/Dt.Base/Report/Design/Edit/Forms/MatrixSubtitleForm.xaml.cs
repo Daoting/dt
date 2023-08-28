@@ -31,7 +31,7 @@ namespace Dt.Base.Report
             _title = p_item.Parent as RptMtxSubtitle;
 
             Row row = new Row();
-            row.AddCell("span", _title.Data.Int("span"));
+            row.Add("span", _title.Data.Int("span"));
             row.Changed += OnChanged;
             _fv.Data = row;
 

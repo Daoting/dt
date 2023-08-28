@@ -39,13 +39,13 @@ namespace Dt.UIDemo
         void LoadData()
         {
             var row = new Row();
-            row.AddCell<string>("字符串");
-            row.AddCell<double>("数值");
-            row.AddCell<DateTime>("时间_min");
-            row.AddCell<DateTime>("时间_max");
-            row.AddCell<int>("值_min");
-            row.AddCell<int>("值_max");
-            row.AddCell<string>("忽略");
+            row.Add<string>("字符串");
+            row.Add<double>("数值");
+            row.Add<DateTime>("时间_min");
+            row.Add<DateTime>("时间_max");
+            row.Add<int>("值_min");
+            row.Add<int>("值_max");
+            row.Add<string>("忽略");
             _fv.Data = row;
         }
     }

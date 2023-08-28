@@ -131,7 +131,7 @@ namespace Dt.Core
         /// {
         ///     { "id" },
         ///     { "xm" },
-        ///     { "bh", typeof(int)
+        ///     { "bh", typeof(int) }
         /// };
         /// </summary>
         /// <param name="p_colName">列名</param>
@@ -139,42 +139,6 @@ namespace Dt.Core
         public void Add(string p_colName, Type p_colType = null)
         {
             _columns.Add(new Column(p_colName, p_colType));
-        }
-
-        /// <summary>
-        /// 通过复制创建空Table（不复制数据！）
-        /// </summary>
-        /// <param name="p_tbl"></param>
-        /// <returns></returns>
-        public static Table Create(Table p_tbl)
-        {
-            Table tbl = new Table();
-            if (p_tbl != null && p_tbl._columns.Count > 0)
-            {
-                foreach (var col in p_tbl._columns)
-                {
-                    tbl._columns.Add(new Column(col.ID, col.Type));
-                }
-            }
-            return tbl;
-        }
-
-        /// <summary>
-        /// 根据行创建空Table
-        /// </summary>
-        /// <param name="p_row"></param>
-        /// <returns></returns>
-        public static Table Create(Row p_row)
-        {
-            Table tbl = new Table();
-            if (p_row != null)
-            {
-                foreach (var cell in p_row.Cells)
-                {
-                    tbl._columns.Add(new Column(cell.ID, cell.Type));
-                }
-            }
-            return tbl;
         }
 
         /// <summary>
@@ -435,15 +399,59 @@ namespace Dt.Core
             IsChanged = false;
             _delayCheckChanges = false;
         }
+        #endregion
+
+        #region 克隆表结构
+        // DataTable中Copy是复制数据和结构，Clone是只结构，保持相同习惯
+
+        /// <summary>
+        /// 通过复制创建空Table（不复制数据！）
+        /// </summary>
+        /// <param name="p_tbl"></param>
+        /// <returns></returns>
+        public static Table Clone(Table p_tbl)
+        {
+            Table tbl = new Table();
+            if (p_tbl != null && p_tbl._columns.Count > 0)
+            {
+                foreach (var col in p_tbl._columns)
+                {
+                    tbl._columns.Add(new Column(col.ID, col.Type));
+                }
+            }
+            return tbl;
+        }
+
+        /// <summary>
+        /// 根据行创建空Table
+        /// </summary>
+        /// <param name="p_row"></param>
+        /// <returns></returns>
+        public static Table Clone(Row p_row)
+        {
+            Table tbl = new Table();
+            if (p_row != null)
+            {
+                foreach (var cell in p_row.Cells)
+                {
+                    tbl._columns.Add(new Column(cell.ID, cell.Type));
+                }
+            }
+            return tbl;
+        }
+        #endregion
+
+        #region 复制表结构及数据
+        // DataTable中Copy是复制数据和结构，Clone是只结构，保持相同习惯
 
         /// <summary>
         /// 深度克隆表结构及数据，返回同类型的Table
         /// </summary>
         /// <returns></returns>
-        public Table Clone()
+        public Table Copy()
         {
             if (Count > 0)
-                return CloneTo(this[0].GetType());
+                return CopyTo(this[0].GetType());
 
             // 空表
             // 当前可能为Table<TRow>
@@ -461,10 +469,10 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns>返回新实体表</returns>
-        public Table<TEntity> CloneTo<TEntity>()
+        public Table<TEntity> CopyTo<TEntity>()
             where TEntity : Entity
         {
-            return (Table<TEntity>)CloneTo(typeof(TEntity));
+            return (Table<TEntity>)CopyTo(typeof(TEntity));
         }
 
         /// <summary>
@@ -472,7 +480,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rowType">实体类型</param>
         /// <returns>返回新实体表</returns>
-        public Table CloneTo(Type p_rowType)
+        public Table CopyTo(Type p_rowType)
         {
             Table tbl;
             if (p_rowType == typeof(Row))

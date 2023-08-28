@@ -33,9 +33,9 @@ namespace Dt.MgrDemo.单实体
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<long>("parent_id");
-            row.AddCell<string>("item_name");
-            row.AddCell<string>("name");
+            row.Add<long>("parent_id");
+            row.Add<string>("item_name");
+            row.Add<string>("name");
 
             _fv.Data = row;
         }

@@ -45,8 +45,8 @@ namespace Dt.Mgr.Module
         Row CreateData()
         {
             Row row = new Row();
-            row.AddCell<long>("id", -1);
-            row.AddCell("name", "新目录");
+            row.Add<long>("id", -1);
+            row.Add("name", "新目录");
             return row;
         }
 

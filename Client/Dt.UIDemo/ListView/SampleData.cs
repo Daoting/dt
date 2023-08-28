@@ -404,16 +404,16 @@ namespace Dt.UIDemo
             string Bumen = default,
             string Note = default)
         {
-            AddCell("ID", ID);
-            AddCell("Xm", Xm);
-            AddCell("Bh", Bh);
-            AddCell("Chushengrq", Chushengrq);
-            AddCell("Shenfenzh", Shenfenzh);
-            AddCell("Xb", Xb);
-            AddCell("Hunfou", Hunfou);
-            AddCell("Shengao", Shengao);
-            AddCell("Bumen", Bumen);
-            AddCell("Note", Note);
+            Add("ID", ID);
+            Add("Xm", Xm);
+            Add("Bh", Bh);
+            Add("Chushengrq", Chushengrq);
+            Add("Shenfenzh", Shenfenzh);
+            Add("Xb", Xb);
+            Add("Hunfou", Hunfou);
+            Add("Shengao", Shengao);
+            Add("Bumen", Bumen);
+            Add("Note", Note);
             IsAdded = true;
         }
 

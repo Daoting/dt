@@ -40,7 +40,7 @@ namespace Dt.Mgr.Workflow
         {
             if (!p_atv.Contains("exec_atv_id_dsp"))
             {
-                p_atv.AddCell("exec_atv_id_dsp", "");
+                p_atv.Add("exec_atv_id_dsp", "");
             }
 
             var items = from item in p_atv.Table.OfType<WfdAtvX>()

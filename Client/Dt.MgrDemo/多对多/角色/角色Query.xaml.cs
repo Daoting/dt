@@ -33,8 +33,8 @@ namespace Dt.MgrDemo.多对多
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.AddCell<string>("角色名称");
-            row.AddCell<string>("角色描述");
+            row.Add<string>("角色名称");
+            row.Add<string>("角色描述");
 
             _fv.Data = row;
         }

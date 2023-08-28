@@ -30,12 +30,12 @@ namespace Dt.Mgr.Module
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
-            AddCell("value", Value);
-            AddCell("note", Note);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("name", Name);
+            Add("value", Value);
+            Add("note", Note);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

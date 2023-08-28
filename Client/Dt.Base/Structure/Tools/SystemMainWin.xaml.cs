@@ -40,6 +40,8 @@ namespace Dt.Base.Tools
                 new Nav("本地文件", typeof(LocalFileWin), Icons.文件) { Desc = "管理 LocalState 的所有文件" },
                 new Nav("更新缓存文件", typeof(RefreshSqliteWin), Icons.刷新) { Desc = "刷新服务端指定的 sqlite 缓存文件" },
 
+                new Nav("数据库工具", typeof(LocalDbWin), Icons.数据库) { Desc = "" },
+
                 new Nav("视图类型", typeof(LocalDbWin), Icons.划卡) { Desc = "所有可作为独立视图显示的名称与类型列表" },
                 new Nav("流程表单类型", typeof(LocalDbWin), Icons.排列) { Desc = "所有流程表单类型" },
 

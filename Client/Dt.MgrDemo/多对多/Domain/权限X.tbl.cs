@@ -26,8 +26,8 @@ namespace Dt.MgrDemo.多对多
             long ID,
             string 权限名称 = default)
         {
-            AddCell("id", ID);
-            AddCell("权限名称", 权限名称);
+            Add("id", ID);
+            Add("权限名称", 权限名称);
             IsAdded = true;
         }
         #endregion

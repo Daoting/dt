@@ -30,15 +30,15 @@ namespace Dt.MgrDemo.Workflow
             string 综合部经理意见 = default,
             DateTime 收文完成时间 = default)
         {
-            AddCell("id", ID);
-            AddCell("来文单位", 来文单位);
-            AddCell("来文时间", 来文时间);
-            AddCell("密级", 密级);
-            AddCell("文件标题", 文件标题);
-            AddCell("文件附件", 文件附件);
-            AddCell("市场部经理意见", 市场部经理意见);
-            AddCell("综合部经理意见", 综合部经理意见);
-            AddCell("收文完成时间", 收文完成时间);
+            Add("id", ID);
+            Add("来文单位", 来文单位);
+            Add("来文时间", 来文时间);
+            Add("密级", 密级);
+            Add("文件标题", 文件标题);
+            Add("文件附件", 文件附件);
+            Add("市场部经理意见", 市场部经理意见);
+            Add("综合部经理意见", 综合部经理意见);
+            Add("收文完成时间", 收文完成时间);
             IsAdded = true;
         }
         #endregion

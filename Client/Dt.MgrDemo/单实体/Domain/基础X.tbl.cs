@@ -31,16 +31,16 @@ namespace Dt.MgrDemo.单实体
             DateTime 创建时间 = default,
             DateTime 修改时间 = default)
         {
-            AddCell("id", ID);
-            AddCell("序列", 序列);
-            AddCell("限长4", 限长4);
-            AddCell("不重复", 不重复);
-            AddCell("禁止选中", 禁止选中);
-            AddCell("禁止保存", 禁止保存);
-            AddCell("禁止删除", 禁止删除);
-            AddCell("值变事件", 值变事件);
-            AddCell("创建时间", 创建时间);
-            AddCell("修改时间", 修改时间);
+            Add("id", ID);
+            Add("序列", 序列);
+            Add("限长4", 限长4);
+            Add("不重复", 不重复);
+            Add("禁止选中", 禁止选中);
+            Add("禁止保存", 禁止保存);
+            Add("禁止删除", 禁止删除);
+            Add("值变事件", 值变事件);
+            Add("创建时间", 创建时间);
+            Add("修改时间", 修改时间);
             IsAdded = true;
         }
         #endregion

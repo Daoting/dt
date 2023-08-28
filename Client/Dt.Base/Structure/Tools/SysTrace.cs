@@ -47,7 +47,7 @@ namespace Dt.Base.Tools
 
         public static void ToggleSvcUrl()
         {
-            Kit.Msg("未实现");
+            ToggleSvcUrlDlg.ShowDlg();
         }
 
         public static void OpenLocalPath()

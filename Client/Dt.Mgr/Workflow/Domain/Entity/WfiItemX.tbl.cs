@@ -38,20 +38,20 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("atvi_id", AtviID);
-            AddCell("status", Status);
-            AddCell("assign_kind", AssignKind);
-            AddCell("sender", Sender);
-            AddCell("stime", Stime);
-            AddCell("is_accept", IsAccept);
-            AddCell("accept_time", AcceptTime);
-            AddCell("role_id", RoleID);
-            AddCell("user_id", UserID);
-            AddCell("note", Note);
-            AddCell("dispidx", Dispidx);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("atvi_id", AtviID);
+            Add("status", Status);
+            Add("assign_kind", AssignKind);
+            Add("sender", Sender);
+            Add("stime", Stime);
+            Add("is_accept", IsAccept);
+            Add("accept_time", AcceptTime);
+            Add("role_id", RoleID);
+            Add("user_id", UserID);
+            Add("note", Note);
+            Add("dispidx", Dispidx);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

@@ -24,9 +24,9 @@ namespace Dt.MgrDemo.Crud
             long GroupID = default,
             string ItemName = default)
         {
-            AddCell("id", ID);
-            AddCell("group_id", GroupID);
-            AddCell("item_name", ItemName);
+            Add("id", ID);
+            Add("group_id", GroupID);
+            Add("item_name", ItemName);
             IsAdded = true;
         }
         #endregion

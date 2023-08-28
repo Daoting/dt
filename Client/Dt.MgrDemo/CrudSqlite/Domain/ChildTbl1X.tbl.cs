@@ -27,9 +27,9 @@ namespace Dt.MgrDemo.CrudSqlite
             long ParentID = default,
             string ItemName = default)
         {
-            AddCell("ID", ID);
-            AddCell("ParentID", ParentID);
-            AddCell("ItemName", ItemName);
+            Add("ID", ID);
+            Add("ParentID", ParentID);
+            Add("ItemName", ItemName);
             IsAdded = true;
         }
         #endregion

@@ -34,7 +34,7 @@ namespace Dt.Mgr.Module
         public override async void SaveTemplate(string p_xml)
         {
             if (!_rpt.Contains("define"))
-                _rpt.AddCell<string>("define");
+                _rpt.Add<string>("define");
             _rpt["define"] = p_xml;
 
             if (_rpt.IsAdded)

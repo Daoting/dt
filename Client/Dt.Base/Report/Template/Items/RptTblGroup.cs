@@ -26,7 +26,7 @@ namespace Dt.Base.Report
         {
             Table = p_table;
             // 分组字段
-            _data.AddCell<string>("field");
+            _data.Add<string>("field");
         }
 
         /// <summary>

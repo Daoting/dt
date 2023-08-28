@@ -23,24 +23,24 @@ namespace Dt.Base.Report
         {
             Root = p_root;
             var row = new Row();
-            row.AddCell<string>("script");
-            row.AddCell("showsearchform", true);
-            row.AddCell<bool>("autoquery");
+            row.Add<string>("script");
+            row.Add("showsearchform", true);
+            row.Add<bool>("autoquery");
 
-            row.AddCell<bool>("showcolheader");
-            row.AddCell<bool>("showrowheader");
-            row.AddCell<bool>("showgridline");
+            row.Add<bool>("showcolheader");
+            row.Add<bool>("showrowheader");
+            row.Add<bool>("showgridline");
 
-            row.AddCell("showmenu", true);
-            row.AddCell<bool>("showcontextmenu");
-            row.AddCell<bool>("showselectionmenu");
+            row.Add("showmenu", true);
+            row.Add<bool>("showcontextmenu");
+            row.Add<bool>("showselectionmenu");
 
-            row.AddCell<bool>("showquery");
-            row.AddCell("showexport", true);
-            row.AddCell("showprint", true);
-            row.AddCell<bool>("colheaderitem");
-            row.AddCell<bool>("rowheaderitem");
-            row.AddCell<bool>("gridlineitem");
+            row.Add<bool>("showquery");
+            row.Add("showexport", true);
+            row.Add("showprint", true);
+            row.Add<bool>("colheaderitem");
+            row.Add<bool>("rowheaderitem");
+            row.Add<bool>("gridlineitem");
 
             row.Changed += Root.OnCellValueChanged;
             Data = row;

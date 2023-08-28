@@ -60,7 +60,7 @@ namespace Dt.UIDemo
                 using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.数据源.{p_name}.json"))
                 {
                     var tbl = Table.Create(stream);
-                    var tgt = Table.Create(tbl);
+                    var tgt = Table.Clone(tbl);
                     var ls = from row in tbl
                              where row.Str("parentid") == View.Info.Params.Str("parentid")
                              select row;

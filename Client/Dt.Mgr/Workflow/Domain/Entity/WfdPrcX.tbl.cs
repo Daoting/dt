@@ -33,15 +33,15 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
-            AddCell("diagram", Diagram);
-            AddCell("is_locked", IsLocked);
-            AddCell("singleton", Singleton);
-            AddCell("note", Note);
-            AddCell("dispidx", Dispidx);
-            AddCell("ctime", Ctime);
-            AddCell("mtime", Mtime);
+            Add("id", ID);
+            Add("name", Name);
+            Add("diagram", Diagram);
+            Add("is_locked", IsLocked);
+            Add("singleton", Singleton);
+            Add("note", Note);
+            Add("dispidx", Dispidx);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion

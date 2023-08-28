@@ -26,8 +26,8 @@ namespace Dt.Mgr.Rbac
             long RoleID,
             long MenuID)
         {
-            AddCell("role_id", RoleID);
-            AddCell("menu_id", MenuID);
+            Add("role_id", RoleID);
+            Add("menu_id", MenuID);
             IsAdded = true;
         }
         #endregion

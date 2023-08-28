@@ -24,8 +24,8 @@ namespace Dt.Core
             string Key,
             string Val = default)
         {
-            AddCell("Key", Key);
-            AddCell("Val", Val);
+            Add("Key", Key);
+            Add("Val", Val);
             IsAdded = true;
         }
         #endregion

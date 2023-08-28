@@ -27,9 +27,9 @@ namespace Dt.Mgr.Rbac
             string Name = default,
             string Note = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
-            AddCell("note", Note);
+            Add("id", ID);
+            Add("name", Name);
+            Add("note", Note);
             IsAdded = true;
         }
         #endregion

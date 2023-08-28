@@ -31,13 +31,13 @@ namespace Dt.MgrDemo.Crud
             bool EnableNameChangedEvent = default,
             bool EnableDelEvent = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
-            AddCell("dispidx", Dispidx);
-            AddCell("mtime", Mtime);
-            AddCell("enable_insert_event", EnableInsertEvent);
-            AddCell("enable_name_changed_event", EnableNameChangedEvent);
-            AddCell("enable_del_event", EnableDelEvent);
+            Add("id", ID);
+            Add("name", Name);
+            Add("dispidx", Dispidx);
+            Add("mtime", Mtime);
+            Add("enable_insert_event", EnableInsertEvent);
+            Add("enable_name_changed_event", EnableNameChangedEvent);
+            Add("enable_del_event", EnableDelEvent);
             IsAdded = true;
         }
         #endregion

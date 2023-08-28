@@ -53,7 +53,7 @@ namespace Dt.Mgr.Workflow
                     var ar = new WfdAtvRoleX(
                         AtvID: _atvID,
                         RoleID: row.ID);
-                    ar.AddCell("role", row.Str("name"));
+                    ar.Add("role", row.Str("name"));
                     _lv.Data.Add(ar);
                 }
             }

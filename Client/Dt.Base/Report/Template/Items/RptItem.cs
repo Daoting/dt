@@ -32,10 +32,10 @@ namespace Dt.Base.Report
         public RptItem(RptPart p_owner)
         {
             _part = p_owner;
-            _data.AddCell("row", 0);
-            _data.AddCell("col", 0);
-            _data.AddCell("rowspan", 1);
-            _data.AddCell("colspan", 1);
+            _data.Add("row", 0);
+            _data.Add("col", 0);
+            _data.Add("rowspan", 1);
+            _data.Add("colspan", 1);
         }
 
         /// <summary>

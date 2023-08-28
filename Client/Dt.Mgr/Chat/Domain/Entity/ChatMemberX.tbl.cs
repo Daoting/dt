@@ -30,12 +30,12 @@ namespace Dt.Mgr.Chat
             string Photo = default,
             DateTime Mtime = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name", Name);
-            AddCell("Phone", Phone);
-            AddCell("Sex", Sex);
-            AddCell("Photo", Photo);
-            AddCell("Mtime", Mtime);
+            Add("ID", ID);
+            Add("Name", Name);
+            Add("Phone", Phone);
+            Add("Sex", Sex);
+            Add("Photo", Photo);
+            Add("Mtime", Mtime);
             IsAdded = true;
         }
         #endregion

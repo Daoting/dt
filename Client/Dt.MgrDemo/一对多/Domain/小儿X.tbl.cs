@@ -24,9 +24,9 @@ namespace Dt.MgrDemo.一对多
             long GroupID = default,
             string 小儿名 = default)
         {
-            AddCell("id", ID);
-            AddCell("group_id", GroupID);
-            AddCell("小儿名", 小儿名);
+            Add("id", ID);
+            Add("group_id", GroupID);
+            Add("小儿名", 小儿名);
             IsAdded = true;
         }
         #endregion

@@ -24,8 +24,8 @@ namespace Dt.UIDemo
         public CustomRptSearch(RptInfo p_info) : base(p_info)
         {
             InitializeComponent();
-            _row.AddCell("unuse", "选项二");
-            _row.AddCell("idstr", "1");
+            _row.Add("unuse", "选项二");
+            _row.Add("idstr", "1");
             _fv.Data = _row;
         }
     }

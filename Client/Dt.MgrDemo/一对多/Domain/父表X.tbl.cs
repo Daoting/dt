@@ -23,8 +23,8 @@ namespace Dt.MgrDemo.一对多
             long ID,
             string 父名 = default)
         {
-            AddCell("id", ID);
-            AddCell("父名", 父名);
+            Add("id", ID);
+            Add("父名", 父名);
             IsAdded = true;
         }
         #endregion

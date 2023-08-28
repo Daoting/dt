@@ -26,8 +26,8 @@ namespace Dt.MgrDemo.CrudSqlite
             long ID,
             string Name3 = default)
         {
-            AddCell("ID", ID);
-            AddCell("Name3", Name3);
+            Add("ID", ID);
+            Add("Name3", Name3);
             IsAdded = true;
         }
         #endregion

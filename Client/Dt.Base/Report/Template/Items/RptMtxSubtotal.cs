@@ -32,9 +32,9 @@ namespace Dt.Base.Report
             SubTotals = new List<RptMtxSubtotal>();
 
             // 是否在层次前面
-            _data.AddCell("beforelevel", "1");
+            _data.Add("beforelevel", "1");
             // 所占行数/列数
-            _data.AddCell("span", 1);
+            _data.Add("span", 1);
         }
         #endregion
 

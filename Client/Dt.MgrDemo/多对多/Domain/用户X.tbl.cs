@@ -28,10 +28,10 @@ namespace Dt.MgrDemo.多对多
             string 姓名 = default,
             string 密码 = default)
         {
-            AddCell("id", ID);
-            AddCell("手机号", 手机号);
-            AddCell("姓名", 姓名);
-            AddCell("密码", 密码);
+            Add("id", ID);
+            Add("手机号", 手机号);
+            Add("姓名", 姓名);
+            Add("密码", 密码);
             IsAdded = true;
         }
         #endregion

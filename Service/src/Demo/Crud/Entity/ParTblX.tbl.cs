@@ -23,8 +23,8 @@ namespace Demo.Crud
             long ID,
             string Name = default)
         {
-            AddCell("id", ID);
-            AddCell("name", Name);
+            Add("id", ID);
+            Add("name", Name);
             IsAdded = true;
         }
         #endregion

@@ -27,9 +27,9 @@ namespace Dt.MgrDemo.多对多
             string 角色名称 = default,
             string 角色描述 = default)
         {
-            AddCell("id", ID);
-            AddCell("角色名称", 角色名称);
-            AddCell("角色描述", 角色描述);
+            Add("id", ID);
+            Add("角色名称", 角色名称);
+            Add("角色描述", 角色描述);
             IsAdded = true;
         }
         #endregion
