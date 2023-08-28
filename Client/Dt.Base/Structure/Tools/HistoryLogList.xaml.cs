@@ -51,7 +51,21 @@ namespace Dt.Base.Tools
                 var con = row.Str("content");
                 var flag = p_clause.Fv["content"].QueryFlag;
                 if (flag == CompFlag.Contains)
+                {
                     _sql += $" and (RenderedMessage like '%{con}%' or Exception like '%{con}%')";
+                }
+                else if (flag == CompFlag.StartsWith)
+                {
+                    _sql += $" and RenderedMessage like '{con}%'";
+                }
+                else if (flag == CompFlag.EndsWith)
+                {
+                    _sql += $" and RenderedMessage like '%{con}'";
+                }
+                else if (flag != CompFlag.Ignore)
+                {
+                    _sql += $" and RenderedMessage='{con}'";
+                }
             }
             _sql += " order by id desc";
 
