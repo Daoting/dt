@@ -6,31 +6,25 @@
     Title="查询"
     Icon="漏斗">
 
-    <Grid RowDefinitions="*,Auto">
-        <a:QueryFv x:Name="_fv">
-            <a:CBar Title="时间范围" />
-            <StackPanel Orientation="Horizontal">
-                <Button Content="近三天" Click="OnDaysClick" />
-                <Button Content="本月" Click="OnMonthClick"/>
-                <Button Content="本季度" Click="OnQuarterClick"/>
-            </StackPanel>
-            <a:CDate ID="start" Title="起始时间" />
-            <a:CDate ID="end" Title="终止时间" />
-            <a:CList ID="level" Title="级别">
-                <a:CList.Items>
-                    <x:String>全部</x:String>
-                    <x:String>Debug</x:String>
-                    <x:String>Information</x:String>
-                    <x:String>Warning</x:String>
-                    <x:String>Error</x:String>
-                    <x:String>Fatal</x:String>
-                </a:CList.Items>
-            </a:CList>
-            <a:CText ID="content" Title="内容" Query="Editable" QueryFlag="Contains" />
-        </a:QueryFv>
-        <Grid x:Name="_grid" ColumnDefinitions="*,*" Margin="20" Grid.Row="1">
-            <Button Content="重置" Command="{Binding CmdReset}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 深灰2}" HorizontalAlignment="Stretch" />
-            <Button Content="查询" Command="{Binding CmdQuery}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 亮红}" HorizontalAlignment="Stretch" Grid.Column="1" />
-        </Grid>
-    </Grid>
+    <a:QueryFv x:Name="_fv">
+        <a:CBar Title="时间范围" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="近三天" Click="OnDaysClick" />
+            <Button Content="本月" Click="OnMonthClick"/>
+            <Button Content="本季度" Click="OnQuarterClick"/>
+        </StackPanel>
+        <a:CDate ID="start" Title="起始时间" />
+        <a:CDate ID="end" Title="终止时间" />
+        <a:CList ID="level" Title="级别">
+            <a:CList.Items>
+                <x:String>全部</x:String>
+                <x:String>Debug</x:String>
+                <x:String>Information</x:String>
+                <x:String>Warning</x:String>
+                <x:String>Error</x:String>
+                <x:String>Fatal</x:String>
+            </a:CList.Items>
+        </a:CList>
+        <a:CText ID="content" Title="内容" Query="Editable" QueryFlag="Contains" />
+    </a:QueryFv>
 </a:Tab>

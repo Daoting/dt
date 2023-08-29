@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -23,11 +24,24 @@ namespace Dt.Base
             typeof(bool),
             typeof(QueryFv),
             new PropertyMetadata(true));
+
+        public readonly static DependencyProperty ShowQueryButtonProperty = DependencyProperty.Register(
+            "ShowQueryButton",
+            typeof(bool),
+            typeof(QueryFv),
+            new PropertyMetadata(true));
         #endregion
 
         #region 成员变量
         BaseCommand _cmdQuery;
         BaseCommand _cmdReset;
+        #endregion
+
+        #region 构造方法
+        public QueryFv()
+        {
+            DefaultStyleKey = typeof(QueryFv);
+        }
         #endregion
 
         #region 事件
@@ -46,9 +60,24 @@ namespace Dt.Base
             set { SetValue(IsAndProperty, value); }
         }
 
+        /// <summary>
+        /// 获取设置是否显示查询、重置按钮，默认true
+        /// </summary>
+        public bool ShowQueryButton
+        {
+            get { return (bool)GetValue(ShowQueryButtonProperty); }
+            set { SetValue(ShowQueryButtonProperty, value); }
+        }
+
         public void OnQuery()
         {
             Query?.Invoke(this, new QueryClause(this));
+        }
+
+        public void OnReset()
+        {
+            if (Data is Row row)
+                row.RejectChanges();
         }
 
         #region 命令对象
@@ -60,7 +89,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdQuery == null)
-                    _cmdQuery = new BaseCommand(p_params => { OnQuery(); });
+                    _cmdQuery = new BaseCommand(p_params => OnQuery());
                 return _cmdQuery;
             }
         }
@@ -74,15 +103,31 @@ namespace Dt.Base
             {
                 if (_cmdReset == null)
                 {
-                    _cmdReset = new BaseCommand(p_params =>
-                    {
-                        if (Data is Row row)
-                            row.RejectChanges();
-                    });
+                    _cmdReset = new BaseCommand(p_params => OnReset());
                 }
                 return _cmdReset;
             }
         }
         #endregion
+
+        #region 重写方法
+        protected override void OnLoadTemplate()
+        {
+            base.OnLoadTemplate();
+
+            var btn = (Button)GetTemplateChild("BtnQuery");
+            if (btn != null)
+            {
+                btn.Click += (s, e) => OnQuery();
+            }
+
+            btn = (Button)GetTemplateChild("BtnReset");
+            if (btn != null)
+            {
+                btn.Click += (s, e) => OnReset();
+            }
+        }
+        #endregion
+
     }
 }

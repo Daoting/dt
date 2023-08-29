@@ -26,6 +26,7 @@ namespace Dt.UIDemo
         public QueryFvDemo()
         {
             InitializeComponent();
+            _fvFull.Data = _fv;
             _fv.CellClick += (s, e) => _fvCell.Data = e;
             _fv.Query += OnQuery;
             LoadData();

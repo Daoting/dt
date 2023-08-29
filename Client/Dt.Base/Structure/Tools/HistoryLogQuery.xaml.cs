@@ -18,7 +18,6 @@ namespace Dt.Base.Tools
         public HistoryLogQuery()
         {
             InitializeComponent();
-            _grid.DataContext = _fv;
             _fv.Query += OnQuery;
         }
 

@@ -24,6 +24,29 @@
         </Setter>
     </Style>
 
+    
+    <!--QueryFv-->
+    <Style TargetType="a:QueryFv">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:QueryFv">
+                    <Grid RowDefinitions="*,Auto">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}" />
+                        <Grid Visibility="{Binding ShowQueryButton, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}" ColumnDefinitions="*,*" Margin="20" Grid.Row="1">
+                            <Button x:Name="BtnReset" Content="重置" Style="{StaticResource 浅色按钮}" Background="{StaticResource 深灰2}" HorizontalAlignment="Stretch" />
+                            <Button x:Name="BtnQuery" Content="查询" Style="{StaticResource 浅色按钮}" Background="{StaticResource 亮红}" HorizontalAlignment="Stretch" Grid.Column="1" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--FvCell-->
     <Style TargetType="a:FvCell">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

@@ -6,14 +6,8 @@
     Title="查询"
     Icon="漏斗">
 
-    <Grid RowDefinitions="*,Auto">
-        <a:QueryFv x:Name="_fv">
-            <a:CText ID="父名" Query="Editable" />
-            <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
-        </a:QueryFv>
-        <Grid ColumnDefinitions="*,*" Margin="20" Grid.Row="1">
-            <Button Content="重置" Command="{Binding CmdReset,ElementName=_fv}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 深灰2}" HorizontalAlignment="Stretch" />
-            <Button Content="查询" Command="{Binding CmdQuery,ElementName=_fv}" Style="{StaticResource 浅色按钮}" Background="{StaticResource 亮红}" HorizontalAlignment="Stretch" Grid.Column="1" />
-        </Grid>
-    </Grid>
+    <a:QueryFv x:Name="_fv">
+        <a:CText ID="父名" Query="Editable" />
+        <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
+    </a:QueryFv>
 </a:Tab>

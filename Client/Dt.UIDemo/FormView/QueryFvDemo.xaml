@@ -31,10 +31,20 @@
     <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Order="2" Title="属性">
-                <a:Fv x:Name="_fvCell">
-                    <a:CList Title="查询比较符" ID="Query" />
-                    <a:CList Title="比较符" ID="QueryFlag" />
-                </a:Fv>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <a:Fv x:Name="_fvFull">
+                        <a:CBool Title="显示查询按钮" ID="ShowQueryButton" />
+                        <a:CBar Title="单元格" />
+                    </a:Fv>
+                    <a:Fv x:Name="_fvCell" Grid.Row="1">
+                        <a:CList Title="查询比较符" ID="Query" />
+                        <a:CList Title="比较符" ID="QueryFlag" />
+                    </a:Fv>
+                </Grid>
             </a:Tab>
         </a:Tabs>
     </a:Pane>
