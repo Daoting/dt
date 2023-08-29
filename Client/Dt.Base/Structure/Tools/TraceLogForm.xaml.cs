@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 #endregion
@@ -41,23 +42,37 @@ namespace Dt.Base.Tools
             bool find = false;
             try
             {
-                if (_data.Detial.StartsWith('[') && _data.Detial.EndsWith(']'))
+                if (_data.Source == "Rpc" && _data.Detial.StartsWith('[') && _data.Detial.EndsWith(']'))
                 {
-                    var elem = JsonSerializer.Deserialize<JsonElement>(_data.Detial);
-                    if (elem.ValueKind == JsonValueKind.Array)
+                    Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(_data.Detial));
+                    // [
+                    reader.Read();
+                    // SvcName
+                    reader.Read();
+                    // ApiName
+                    reader.Read();
+                    // 第一个参数
+                    reader.Read();
+                    if (reader.TokenType == JsonTokenType.String)
                     {
-                        foreach (var it in elem.EnumerateArray())
+                        string sql = reader.GetString().Trim();
+                        if (sql.StartsWith("select", StringComparison.OrdinalIgnoreCase)
+                            || sql.StartsWith("update", StringComparison.OrdinalIgnoreCase)
+                            || sql.StartsWith("insert", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (it.ValueKind == JsonValueKind.String)
+                            try
                             {
-                                var val = it.GetString().Trim();
-                                if (val.StartsWith("select", StringComparison.OrdinalIgnoreCase)
-                                    || val.StartsWith("update", StringComparison.OrdinalIgnoreCase)
-                                    || val.StartsWith("insert", StringComparison.OrdinalIgnoreCase))
+                                reader.Read();
+                                var dt = JsonRpcSerializer.Deserialize(ref reader, typeof(Dict)) as Dict;
+                                sql = BuildSql(sql, dt);
+                            }
+                            catch { }
+                            finally
+                            {
+                                if (!string.IsNullOrEmpty(sql))
                                 {
-                                    SysTrace.CopyToClipboard(val);
+                                    SysTrace.CopyToClipboard(sql);
                                     find = true;
-                                    break;
                                 }
                             }
                         }
@@ -88,7 +103,7 @@ namespace Dt.Base.Tools
         /// <param name="p_sql"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        static string BuildSql(string p_sql, object p_params)
+        static string BuildSql(string p_sql, Dict p_params)
         {
             if (p_params == null)
                 return p_sql;
@@ -103,15 +118,6 @@ namespace Dt.Base.Tools
                     foreach (var item in dt)
                     {
                         str = ReplaceSql(str, prefix + item.Key, item.Value);
-                    }
-                }
-                else
-                {
-                    // 普通对象
-                    Type type = p_params.GetType();
-                    foreach (var prop in type.GetProperties())
-                    {
-                        str = ReplaceSql(str, prefix + prop.Name, prop.GetValue(p_params));
                     }
                 }
             }
