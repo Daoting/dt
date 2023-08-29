@@ -23,6 +23,8 @@ namespace Dt.Mgr
 
         public string SvcUrl { get; set; }
 
+        public List<string> SvcUrlOptions { get; set; }
+
         /// <summary>
         /// 获取服务地址，末尾无/，如：https://10.10.1.16/dt-cm
         /// </summary>
@@ -47,6 +49,27 @@ namespace Dt.Mgr
         public void OnRpcUnauthorized(string p_methodName)
         {
             Throw.Msg($"⚡对【{p_methodName}】无访问权限！");
+        }
+
+        /// <summary>
+        /// 获取可选的服务地址列表，用于切换服务时选择，切换服务也支持手动填写
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSvcUrlOptions()
+        {
+            return SvcUrlOptions;
+        }
+
+        /// <summary>
+        /// 加载Cookie中存放的自定义服务地址，切换服务时保存的
+        /// </summary>
+        internal async Task LoadCustomSvcUrl()
+        {
+            var url = await CookieX.Get("CustomSvcUrl");
+            if (url != "")
+            {
+                SvcUrl = url;
+            }
         }
 
         /// <summary>

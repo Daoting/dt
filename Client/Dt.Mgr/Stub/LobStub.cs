@@ -36,6 +36,18 @@ namespace Dt.Mgr
         }
 
         /// <summary>
+        /// 获取可选的cm服务地址列表，用于切换服务时选择，切换服务也支持手动填写
+        /// </summary>
+        public List<string> SvcUrlOptions
+        {
+            get { return (Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrlOptions; }
+            protected set
+            {
+                (Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig).SvcUrlOptions = value;
+            }
+        }
+
+        /// <summary>
         /// 注入全局服务
         /// </summary>
         /// <param name="p_svcs"></param>
@@ -52,6 +64,8 @@ namespace Dt.Mgr
         /// <returns></returns>
         protected sealed override async Task InitConfig()
         {
+            await (Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig).LoadCustomSvcUrl();
+
             // 获取全局参数：服务器时间、所有服务地址、模型文件版本号
             Dict cfg;
             try

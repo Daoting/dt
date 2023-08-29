@@ -18,7 +18,7 @@ namespace Dt.Core
     public partial class CookieX
     {
         /// <summary>
-        /// 查询本地存储的Cookie值
+        /// 查询本地存储的Cookie值，值为null时返回string.Empty
         /// </summary>
         /// <param name="p_key"></param>
         /// <returns></returns>

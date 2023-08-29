@@ -33,5 +33,14 @@ namespace Dt.UIDemo
         {
             Throw.Msg($"⚡对【{p_methodName}】无访问权限！");
         }
+
+        /// <summary>
+        /// 获取可选的服务地址列表，用于切换服务时选择，切换服务也支持手动填写
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSvcUrlOptions()
+        {
+            return null;
+        }
     }
 }

@@ -20,13 +20,18 @@ namespace Dt.MgrDemo
         public AppStub()
         {
             Title = "搬运工";
-            SvcUrl = "https://x13382a571.oicp.vip/demo";
-            //SvcUrl = "http://10.10.1.16/dt-cm";
 
-            //SvcUrl = "http://10.10.1.16/cosm-mysql";
-            //SvcUrl = "http://10.10.1.16/cosm-orcl";
-            //SvcUrl = "http://10.10.1.16/cosm-ms";
-            //SvcUrl = "http://10.10.1.16/cosm-pg";
+            SvcUrl = "http://10.10.1.16/dt-cm";
+            SvcUrlOptions = new List<string>
+            {
+                "https://x13382a571.oicp.vip/demo",
+                "http://58.240.201.154:25435/lob",
+                "http://10.10.1.16/cosm-mysql",
+                "http://10.10.1.16/cosm-orcl",
+                "http://10.10.1.16/cosm-ms",
+                "http://10.10.1.16/cosm-pg",
+                "http://10.10.1.16/dt-cm"
+            };
         }
 
         /// <summary>

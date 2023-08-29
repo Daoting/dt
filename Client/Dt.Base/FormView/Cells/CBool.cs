@@ -122,7 +122,12 @@ namespace Dt.Base
             {
                 CheckBox cb = new CheckBox { MinWidth = 30, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
                 if (!ShowTitle)
+                {
+                    // 不显示标题时
                     cb.Content = Title;
+                    cb.HorizontalAlignment = HorizontalAlignment.Left;
+                    cb.Margin = new Thickness(10, 0, 10, 0);
+                }
                 Binding bind = new Binding { Path = new PropertyPath("ReadOnlyBinding"), Converter = new BoolToggleConverter(), Source = this };
                 cb.SetBinding(CheckBox.IsEnabledProperty, bind);
                 if (_isLoaded)
