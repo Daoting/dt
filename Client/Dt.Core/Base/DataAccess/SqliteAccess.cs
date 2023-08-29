@@ -27,7 +27,8 @@ namespace Dt.Core
         #region 构造方法
         static SqliteAccess()
         {
-            if (Log.IsEnabled(LogEventLevel.Debug))
+            // 只要详细级别才输出sqlite的sql
+            if (Log.IsEnabled(LogEventLevel.Verbose))
                 _log = Log.ForContext("SourceContext", "Sqlite");
         }
 

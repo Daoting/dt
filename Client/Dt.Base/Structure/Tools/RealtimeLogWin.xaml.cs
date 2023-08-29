@@ -28,7 +28,6 @@ namespace Dt.Base.Tools
             Closed += (s, e) => _lv.Data = null;
 
             _menu["Rpc"].SetBinding(Mi.IsCheckedProperty, new Binding { Path = new PropertyPath("ShowRpcLog"), Source = TraceLogs.Filter, Mode = BindingMode.TwoWay });
-            _menu["Sqlite"].SetBinding(Mi.IsCheckedProperty, new Binding { Path = new PropertyPath("ShowSqliteLog"), Source = TraceLogs.Filter, Mode = BindingMode.TwoWay });
         }
 
         void OnOutputClick(object sender, ItemClickArgs e)
