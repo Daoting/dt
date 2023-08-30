@@ -124,20 +124,28 @@ namespace Dt.Base.ListView
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
+            double height = Res.RowOuterHeight;
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Measure(new Size(cell.Col.Width, Res.RowOuterHeight));
+                cell.Measure(new Size(cell.Col.Width, availableSize.Height));
+                if (cell.DesiredSize.Height > height)
+                    height = cell.DesiredSize.Height;
             }
+
+            // 大于默认行高时，上下留边距
+            if (height > Res.RowOuterHeight)
+                height += 18;
+
             if (_lastDrag > -1)
-                _tbDrag.Measure(new Size(20, Res.RowOuterHeight));
-            return new Size(Lv.Cols.TotalWidth, Res.RowOuterHeight);
+                _tbDrag.Measure(new Size(20, height));
+            return new Size(Lv.Cols.TotalWidth, height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.Width, Res.RowOuterHeight));
+                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.Width, finalSize.Height));
             }
             if (_lastDrag > -1)
             {
@@ -147,7 +155,7 @@ namespace Dt.Base.ListView
                     left = Lv.Cols[_lastDrag].Left - 10;
                 else if (_lastDrag == cols.Count)
                     left = cols.TotalWidth - 10;
-                _tbDrag.Arrange(new Rect(left, 0, 20, Res.RowOuterHeight));
+                _tbDrag.Arrange(new Rect(left, 0, 20, finalSize.Height));
             }
             return finalSize;
         }
