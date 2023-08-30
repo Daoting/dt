@@ -667,7 +667,7 @@ namespace Dt.Core
         protected CommandDefinition CreateCommand(string p_sqlOrSp, object p_params, bool p_deferred, bool p_isQuery)
         {
             if (Kit.TraceSql)
-                Log.Information(p_sqlOrSp);
+                Kit.ContextLog.Information(p_sqlOrSp);
 
             // Sql语句中包含空格，存储过程名无空格！
             bool isSql = p_sqlOrSp.IndexOf(' ') != -1;

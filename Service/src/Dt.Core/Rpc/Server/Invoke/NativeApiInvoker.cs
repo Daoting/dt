@@ -31,7 +31,11 @@ namespace Dt.Core.Rpc
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
             // 初始化整个调用期间有效的数据包
-            Bag bag = new Bag(p_svcName, 112, Log.ForContext(new ApiLogEnricher(p_methodName, 112)));
+            var log = Serilog.Log
+                .ForContext("ip", "NativeCall")
+                .ForContext("src", p_methodName)
+                .ForContext("user", 112);
+            Bag bag = new Bag(p_svcName, 112, log);
             tgt.Init(bag);
 
             bool suc = await CallMethod(mi, tgt, p_params);

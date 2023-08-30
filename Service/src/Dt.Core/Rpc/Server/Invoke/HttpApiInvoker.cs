@@ -52,6 +52,11 @@ namespace Dt.Core.Rpc
         /// </summary>
         public override CancellationToken RequestAborted => _context.RequestAborted;
 
+        /// <summary>
+        /// 客户端ip
+        /// </summary>
+        public override string ClientIP => _context.Request.Host.Host;
+
         public HttpContext Context => _context;
 
         /// <summary>

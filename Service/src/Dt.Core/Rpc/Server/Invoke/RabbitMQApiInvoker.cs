@@ -33,6 +33,11 @@ namespace Dt.Core.Rpc
         public override long UserID => 111;
 
         /// <summary>
+        /// 客户端ip
+        /// </summary>
+        public override string ClientIP => "RabbitMQ";
+
+        /// <summary>
         /// 取消请求的令牌
         /// </summary>
         public override CancellationToken RequestAborted => CancellationToken.None;

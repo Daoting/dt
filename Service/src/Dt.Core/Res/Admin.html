@@ -434,7 +434,11 @@
                     }
 
                     if ($("divLog").style.visibility == "visible")
+                    {
+                        var div = $("logContent");
+                        div.scrollTop = div.scrollHeight;
                         receiveLog();
+                    }
                 }
             };
             logRequest.send();

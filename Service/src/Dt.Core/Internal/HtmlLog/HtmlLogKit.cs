@@ -23,7 +23,7 @@ namespace Dt.Core
     public static class HtmlLogKit
     {
         static readonly object DefaultSyncRoot = new object();
-        const string DefaultConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}";
+        const string DefaultConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {ip} {src} {user}\n{Message:lj}{NewLine}{Exception}\n";
 
         /// <summary>
         /// 扩展方法 WriteTo.Html()

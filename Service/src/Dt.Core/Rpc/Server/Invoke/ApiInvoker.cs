@@ -33,7 +33,12 @@ namespace Dt.Core.Rpc
             get
             {
                 if (_logger == null)
-                    _logger = Serilog.Log.ForContext(new ApiLogEnricher(ApiName, UserID));
+                {
+                    _logger = Serilog.Log
+                        .ForContext("ip", ClientIP)
+                        .ForContext("src", ApiName)
+                        .ForContext("user", UserID);
+                }
                 return _logger;
             }
         }
@@ -68,6 +73,11 @@ namespace Dt.Core.Rpc
         /// 服务名称
         /// </summary>
         public string SvcName { get; private set; }
+
+        /// <summary>
+        /// 客户端ip
+        /// </summary>
+        public virtual string ClientIP { get; }
         #endregion
 
         /// <summary>
