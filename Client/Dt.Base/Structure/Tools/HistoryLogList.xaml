@@ -5,17 +5,32 @@
     xmlns:a="using:Dt.Base"
     Title="日志列表">
 
-    <a:Lv x:Name="_lv" ItemClick="OnOutputClick" ItemHeight="NaN">
-        <DataTemplate>
-            <StackPanel Padding="10,0,10,10">
-                <StackPanel Padding="10,0,10,10">
-                    <StackPanel Height="40" Orientation="Horizontal">
-                        <a:Dot ID="Time" Foreground="{StaticResource 深灰1}" />
-                        <a:Dot ID="LevelAndSource" Call="HisLogCellUI.TitleBrush" Margin="10, 6, 0, 6" Padding="10,0,10,0" />
-                    </StackPanel>
-                    <a:Dot ID="Message" />
-                </StackPanel>
+    <a:Tab.Menu>
+        <a:Menu>
+            <a:Mi ID="选择日志" Icon="选日" Click="OnSelectFile" />
+            <a:Mi ID="打开其它" Icon="文件夹" Click="OnOpenFile" />
+        </a:Menu>
+    </a:Tab.Menu>
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Background="{StaticResource 浅灰1}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource 浅灰2}" Padding="10">
+            <TextBlock x:Name="_tbInfo" Text="❌ 未加载日志文件" />
+            <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,20,0,0">
+                <Button Content="&#xE02B;" Style="{StaticResource 字符按钮}" Click="OnFirstPage" />
+                <Button Content="&#xE010;" Style="{StaticResource 字符按钮}" Click="OnPrePage" />
+                <TextBox x:Name="_tbPageNum" Text="0" KeyUp="OnNumKeyUp" />
+                <TextBlock x:Name="_tbTotalPage" Text="/ 0 页" VerticalAlignment="Center" />
+                <Button Content="&#xE011;" Style="{StaticResource 字符按钮}" Click="OnNextPage" />
+                <Button Content="&#xE030;" Style="{StaticResource 字符按钮}" Click="OnLastPage" />
+                <TextBlock x:Name="_tbTotalRow" VerticalAlignment="Center" />
             </StackPanel>
-        </DataTemplate>
-    </a:Lv>
+        </StackPanel>
+        <a:Lv x:Name="_lv" ItemClick="OnOutputClick" Grid.Row="1">
+            <DataTemplate>
+                <StackPanel Padding="10">
+                    <a:Dot ID="@t" />
+                    <a:Dot ID="msg" Height="40" />
+                </StackPanel>
+            </DataTemplate>
+        </a:Lv>
+    </Grid>
 </a:Tab>

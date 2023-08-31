@@ -34,7 +34,7 @@ namespace Dt.Core.Rpc
             var log = Serilog.Log
                 .ForContext("ip", "NativeCall")
                 .ForContext("src", p_methodName)
-                .ForContext("user", 112);
+                .ForContext("user", "112");
             Bag bag = new Bag(p_svcName, 112, log);
             tgt.Init(bag);
 

@@ -26,8 +26,6 @@ namespace Dt.Base.Tools
             // 数据源是静态的，即使关闭仍做绑定处理
             _lv.Loaded += (s, e) => _lv.Data = TraceLogs.Data;
             Closed += (s, e) => _lv.Data = null;
-
-            _menu["Rpc"].SetBinding(Mi.IsCheckedProperty, new Binding { Path = new PropertyPath("ShowRpcLog"), Source = TraceLogs.Filter, Mode = BindingMode.TwoWay });
         }
 
         void OnOutputClick(object sender, ItemClickArgs e)

@@ -83,6 +83,9 @@ namespace Dt.Base
             {
                 // 从Row取
                 tp = dr.Cells[ID].Type;
+                // 界面元素直接返回
+                if (tp.IsSubclassOf(typeof(UIElement)))
+                    return (UIElement)dr[ID];
             }
             else
             {
@@ -91,6 +94,9 @@ namespace Dt.Base
                 if (pi != null)
                 {
                     tp = pi.PropertyType;
+                    // 界面元素直接返回
+                    if (tp.IsSubclassOf(typeof(UIElement)))
+                        return (UIElement)pi.GetValue(p_vi.Data);
                 }
             }
 

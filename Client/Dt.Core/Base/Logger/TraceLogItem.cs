@@ -21,6 +21,7 @@ namespace Dt.Core
     {
         static ITextFormatter _ftMessage = new MessageTemplateTextFormatter("{Message:lj}");
         static ITextFormatter _ftAll = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
+        static ITextFormatter _ftLevel = new MessageTemplateTextFormatter("{Level:u3}");
         string _msg;
         string _detial;
 
@@ -42,6 +43,12 @@ namespace Dt.Core
             get
             {
                 string title;
+                string level;
+                using (var buffer = new StringWriter())
+                {
+                    _ftLevel.Format(Log, buffer);
+                    level = buffer.ToString().Trim();
+                }
                 if (Log.Properties.TryGetValue("SourceContext", out var val))
                 {
                     // 含日志来源，不显示命名空间，后缀为级别
@@ -50,11 +57,11 @@ namespace Dt.Core
                     if (index > -1)
                         title = title.Substring(index + 1);
 
-                    title = $"{title} — {Log.Level}";
+                    title = $"{title} — {level}";
                 }
                 else
                 {
-                    title = Log.Level.ToString();
+                    title = level;
                 }
                 return title;
             }

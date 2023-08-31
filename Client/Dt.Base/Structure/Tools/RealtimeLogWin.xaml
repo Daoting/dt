@@ -13,7 +13,6 @@
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
                         <a:Mi ID="清空" Icon="垃圾箱" Click="OnClear" />
-                        <a:Mi ID="Rpc" IsCheckable="True" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lv" ItemClick="OnOutputClick" ItemHeight="NaN">

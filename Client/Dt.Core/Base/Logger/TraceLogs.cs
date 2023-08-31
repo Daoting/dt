@@ -18,7 +18,6 @@ namespace Dt.Core
     public static class TraceLogs
     {
         const int _maxTrace = 30;
-        static readonly TraceLogFilter _filter = new TraceLogFilter();
 
         /// <summary>
         /// Trace日志列表
@@ -26,29 +25,11 @@ namespace Dt.Core
         internal static readonly Nl<TraceLogItem> Data = new Nl<TraceLogItem>();
 
         /// <summary>
-        /// Trace日志过滤器
-        /// </summary>
-        internal static TraceLogFilter Filter => _filter;
-
-        /// <summary>
         /// 向Trace窗口输出信息
         /// </summary>
         /// <param name="p_logEvent"></param>
         internal static void AddItem(LogEvent p_logEvent)
         {
-            if (!_filter.ShowRpcLog || !_filter.ShowSqliteLog)
-            {
-                if (p_logEvent.Properties.TryGetValue("SourceContext", out var val))
-                {
-                    var title = val.ToString("l", null);
-                    if ((title == "Rpc" && !_filter.ShowRpcLog)
-                        || (title == "Sqlite" && !_filter.ShowSqliteLog))
-                    {
-                        return;
-                    }
-                }
-            }
-
             var item = new TraceLogItem { Log = p_logEvent };
             Kit.RunAsync(() =>
             {

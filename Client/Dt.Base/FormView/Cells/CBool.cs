@@ -127,6 +127,7 @@ namespace Dt.Base
                     cb.Content = Title;
                     cb.HorizontalAlignment = HorizontalAlignment.Left;
                     cb.Margin = new Thickness(10, 0, 10, 0);
+                    _panel.Background = Res.浅灰1;
                 }
                 Binding bind = new Binding { Path = new PropertyPath("ReadOnlyBinding"), Converter = new BoolToggleConverter(), Source = this };
                 cb.SetBinding(CheckBox.IsEnabledProperty, bind);
