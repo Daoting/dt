@@ -11,7 +11,7 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Lv x:Name="_lv">
+    <a:Lv x:Name="_lv" ItemDoubleClick="OnDblClick">
         <DataTemplate>
             <StackPanel Margin="10">
                 <a:Dot ID="Name" />

@@ -35,15 +35,11 @@ namespace Dt.Core
             {
                 using (Data.Defer())
                 {
-                    if (Data.Count > 0)
-                        Data.Insert(0, item);
-                    else
-                        Data.Add(item);
-
+                    Data.Add(item);
                     if (Data.Count > _maxTrace)
                     {
                         // 确保输出行数不超过给定的最大行数
-                        Data.RemoveAt(Data.Count - 1);
+                        Data.RemoveAt(0);
                     }
                 }
             });

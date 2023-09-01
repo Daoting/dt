@@ -11,13 +11,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:Fv x:Name="_fv">
-            <a:CTip ID="TimeLevel" Title="时间" />
-            <a:CTip ID="Source" Title="来源" ColSpan="0.9" />
-            <a:CFree ColSpan="0.1" ShowTitle="False">
-                <Button Content="&#xE007;" Style="{StaticResource 字符按钮}" Click="CopySource" HorizontalAlignment="Stretch" />
-            </a:CFree>
-        </a:Fv>
+        <TextBlock x:Name="_tbInfo" IsTextSelectionEnabled="True" Margin="10" />
         <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1" Margin="0,0,-1,0" Grid.Row="1">
             <TextBlock Text="内容" VerticalAlignment="Center" Margin="10,0,10,0" />
             <Button Content="提取sql" Click="CopySql" HorizontalAlignment="Right" />

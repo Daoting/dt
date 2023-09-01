@@ -26,14 +26,12 @@ namespace Dt.Base.Tools
 
         void OnOpen(object sender, Mi e)
         {
-            if (_lv.SelectedItem == null)
-            {
-                Kit.Warn("未选择日志文件");
-            }
-            else
-            {
-                Close(true);
-            }
+            DoOpen();
+        }
+
+        void OnDblClick(object sender, object e)
+        {
+            DoOpen();
         }
 
         void LoadFiles()
@@ -45,6 +43,18 @@ namespace Dt.Base.Tools
                 list.Add(new LocalFileItem(fi));
             }
             _lv.Data = list;
+        }
+
+        void DoOpen()
+        {
+            if (_lv.SelectedItem == null)
+            {
+                Kit.Warn("未选择日志文件");
+            }
+            else
+            {
+                Close(true);
+            }
         }
     }
 }

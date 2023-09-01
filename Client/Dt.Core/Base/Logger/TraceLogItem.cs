@@ -19,11 +19,10 @@ namespace Dt.Core
     /// </summary>
     public class TraceLogItem
     {
-        static ITextFormatter _ftMessage = new MessageTemplateTextFormatter("{Message:lj}");
-        static ITextFormatter _ftAll = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
-        static ITextFormatter _ftLevel = new MessageTemplateTextFormatter("{Level:u3}");
+        static ITextFormatter _ftMsg = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
+        static ITextFormatter _ftInfo = new MessageTemplateTextFormatter("[{Timestamp:HH:mm:ss.fff} {Level:u3}] {src}");
+        string _info;
         string _msg;
-        string _detial;
 
         /// <summary>
         /// 日志项
@@ -31,90 +30,40 @@ namespace Dt.Core
         public LogEvent Log { get; set; }
 
         /// <summary>
-        /// 时间
+        /// 日志描述信息
         /// </summary>
-        public string Time => Log.Timestamp.ToString("HH:mm:ss");
-
-        /// <summary>
-        /// 日志源和级别
-        /// </summary>
-        public string LevelAndSource
+        public string Info
         {
             get
             {
-                string title;
-                string level;
-                using (var buffer = new StringWriter())
+                if (_info == null)
                 {
-                    _ftLevel.Format(Log, buffer);
-                    level = buffer.ToString().Trim();
+                    using (var buffer = new StringWriter())
+                    {
+                        _ftInfo.Format(Log, buffer);
+                        _info = buffer.ToString().Trim();
+                    }
                 }
-                if (Log.Properties.TryGetValue("SourceContext", out var val))
-                {
-                    // 含日志来源，不显示命名空间，后缀为级别
-                    title = val.ToString("l", null);
-                    int index = title.LastIndexOf('.');
-                    if (index > -1)
-                        title = title.Substring(index + 1);
-
-                    title = $"{title} — {level}";
-                }
-                else
-                {
-                    title = level;
-                }
-                return title;
+                return _info;
             }
         }
 
         /// <summary>
-        /// Title属性或消息内容
+        /// 日志详细内容
         /// </summary>
-        public string Message
+        public string Msg
         {
             get
             {
                 if (_msg == null)
                 {
-                    if (Log.Properties.TryGetValue("Title", out var vtitle)
-                        && vtitle.ToString("l", null) is string msg)
+                    using (var buffer = new StringWriter())
                     {
-                        // 内置标题属性
-                        _msg = msg;
-                    }
-                    else
-                    {
-                        using (var buffer = new StringWriter())
-                        {
-                            _ftMessage.Format(Log, buffer);
-                            _msg = buffer.ToString().Trim();
-                            if (_msg.Length > 100)
-                            {
-                                _msg = _msg.Substring(0, 100) + "...";
-                            }
-                        }
+                        _ftMsg.Format(Log, buffer);
+                        _msg = buffer.ToString().Trim();
                     }
                 }
                 return _msg;
-            }
-        }
-
-        /// <summary>
-        /// 日志项的详细内容
-        /// </summary>
-        public string Detial
-        {
-            get
-            {
-                if (_detial == null)
-                {
-                    using (var buffer = new StringWriter())
-                    {
-                        _ftAll.Format(Log, buffer);
-                        _detial = buffer.ToString().Trim();
-                    }
-                }
-                return _detial;
             }
         }
     }

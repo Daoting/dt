@@ -201,11 +201,12 @@ namespace Dt.Base.Tools
         void OnOutputClick(object sender, ItemClickArgs e)
         {
             var r = e.Row;
+            var lev = r.Str("level");
+            lev = lev == "" ? "INF" : lev;
             var d = new TraceLogData
             {
-                TimeLevel = r.Str("time") + " — " + r.Str("level"),
-                Source = r.Str("src"),
-                Detial = r.Str("msg")
+                Info = $"[{r.Str("time")} {lev}] {r.Str("src")} {r.Str("ip")} {r.Str("user")}",
+                Msg = r.Str("msg"),
             };
             _win.Form.Update(d);
         }
@@ -286,8 +287,8 @@ namespace Dt.Base.Tools
             _tbl = CreateTbl();
             _linesPos.Clear();
 
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            //Stopwatch watch = new Stopwatch();
+            //watch.Start();
 
             // 1G文件，820360行，耗时2.7秒，内存占用增加2M
             using (FileStream fs = new FileStream(_fi.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -301,7 +302,7 @@ namespace Dt.Base.Tools
                     {
                         var data = Encoding.UTF8.GetBytes(json);
                         pos += data.Length;
-                        if (_linesPos.Count < _pageSize)
+                        if (_linesPos.Count <= _pageSize)
                         {
                             AddRow(data);
                         }
@@ -312,8 +313,8 @@ namespace Dt.Base.Tools
                 _linesPos.Add(pos);
             }
             int cnt = _linesPos.Count - 1;
-            watch.Stop();
-            Kit.Msg($"{cnt.ToString("n0")}行，耗时：{watch.ElapsedMilliseconds}毫秒", 0);
+            //watch.Stop();
+            //Kit.Msg($"{cnt.ToString("n0")}行，耗时：{watch.ElapsedMilliseconds}毫秒", 0);
 
             _lv.Data = _tbl;
             _totalNum = (int)Math.Ceiling((double)cnt / _pageSize);
@@ -333,8 +334,8 @@ namespace Dt.Base.Tools
             string json;
             _tbl = CreateTbl();
 
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            //Stopwatch watch = new Stopwatch();
+            //watch.Start();
 
             // 1G文件，820360行，耗时2.7秒，内存占用增加2M
             using (FileStream fs = new FileStream(_fi.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -361,8 +362,8 @@ namespace Dt.Base.Tools
                 }
             }
 
-            watch.Stop();
-            Kit.Msg($"耗时：{watch.ElapsedMilliseconds}毫秒", 0);
+            //watch.Stop();
+            //Kit.Msg($"耗时：{watch.ElapsedMilliseconds}毫秒", 0);
 
             _lv.Data = _tbl;
             _tbPageNum.Text = p_pageNo.ToString();
@@ -422,7 +423,7 @@ namespace Dt.Base.Tools
                                 }
                                 else if (lev == "Warning")
                                 {
-                                    lev = "WAN";
+                                    lev = "WRN";
                                 }
                                 else if (lev == "Error")
                                 {
@@ -485,13 +486,8 @@ namespace Dt.Base.Tools
                 },
             };
 
-            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, };
-            var tbLevel = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
-            sp.Children.Add(tbLevel);
-
-            var tbInfo = new TextBlock { Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0) };
-            sp.Children.Add(tbInfo);
-            grid.Children.Add(sp);
+            var tbInfo = new TextBlock();
+            grid.Children.Add(tbInfo);
 
             var tbMsg = new TextBlock { Style = Res.LvTextBlock, Margin = new Thickness(0, 6, 0, 6), };
             Grid.SetRow(tbMsg, 1);
@@ -507,29 +503,29 @@ namespace Dt.Base.Tools
                 var r = c.Row;
 
                 var lev = r.Str("level");
-                tbLevel.Text = lev == "" ? "INF" : lev;
+                lev = lev == "" ? "INF" : lev;
                 if (lev == "DBG")
                 {
-                    tbLevel.Foreground = Res.深灰1;
+                    tbInfo.Foreground = Res.深灰1;
                 }
-                else if (lev == "WAN")
+                else if (lev == "WRN")
                 {
-                    tbLevel.Foreground = Res.深黄;
+                    tbInfo.Foreground = Res.深黄;
                 }
                 else if (lev == "ERR")
                 {
-                    tbLevel.Foreground = Res.RedBrush;
+                    tbInfo.Foreground = Res.RedBrush;
                 }
                 else if (lev == "FAL")
                 {
-                    tbLevel.Foreground = Res.亮红;
+                    tbInfo.Foreground = Res.亮红;
                 }
                 else
                 {
-                    tbLevel.Foreground = Res.BlackBrush;
+                    tbInfo.Foreground = Res.BlackBrush;
                 }
 
-                tbInfo.Text = $"[{r.Str("time")}]　{r.Str("src")}　{r.Str("ip")}　{r.Str("user")}";
+                tbInfo.Text = $"[{r.Str("time")} {lev}] {r.Str("src")} {r.Str("ip")} {r.Str("user")}";
                 tbMsg.Text = r.Str("msg");
                 tbIndex.Text = (r.Index + 1).ToString();
             };

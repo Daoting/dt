@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Serilog.Events;
 #endregion
@@ -33,18 +34,9 @@ namespace Dt.Base.Tools
             var item = e.Data.To<TraceLogItem>();
             var d = new TraceLogData
             {
-                TimeLevel = item.Time + " — " + item.Log.Level.ToString(),
-                Detial = item.Detial,
+                Info = item.Info,
+                Msg = item.Msg,
             };
-
-            if (item.Log.Properties.TryGetValue("SourceContext", out var val))
-            {
-                d.Source = val.ToString("l", null);
-            }
-            else
-            {
-                d.Source = "未知";
-            }
 
             _fm.Update(d);
         }
@@ -63,26 +55,53 @@ namespace Dt.Base.Tools
     [LvCall]
     public class LogCellUI
     {
-        public static void TitleBrush(Env e)
+        public static void FormatItem(Env e)
         {
+            Grid grid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition() { Height = GridLength.Auto },
+                    new RowDefinition() { Height = new GridLength(60) },
+                },
+            };
+            
+            var tbInfo = new TextBlock();
+            grid.Children.Add(tbInfo);
+
+            var tbMsg = new TextBlock { Style = Res.LvTextBlock, Margin = new Thickness(0, 6, 0, 6), };
+            Grid.SetRow(tbMsg, 1);
+            grid.Children.Add(tbMsg);
+            e.UI = grid;
+
             e.Set += c =>
             {
-                var item = (TraceLogItem)c.Data;
-                if (item.Log.Level == LogEventLevel.Error || item.Log.Level == LogEventLevel.Fatal)
+                var r = c.Data as TraceLogItem;
+
+                tbInfo.Text = r.Info;
+                switch (r.Log.Level)
                 {
-                    e.Dot.Foreground = Res.WhiteBrush;
-                    e.Dot.Background = Res.RedBrush;
+                    case LogEventLevel.Debug:
+                        tbInfo.Foreground = Res.深灰1;
+                        break;
+
+                    case LogEventLevel.Warning:
+                        tbInfo.Foreground = Res.深黄;
+                        break;
+
+                    case LogEventLevel.Error:
+                        tbInfo.Foreground = Res.RedBrush;
+                        break;
+
+                    case LogEventLevel.Fatal:
+                        tbInfo.Foreground = Res.亮红;
+                        break;
+
+                    default:
+                        tbInfo.Foreground = Res.BlackBrush;
+                        break;
                 }
-                else if (item.Log.Level == LogEventLevel.Warning)
-                {
-                    e.Dot.Foreground = Res.WhiteBrush;
-                    e.Dot.Background = Res.深黄;
-                }
-                else
-                {
-                    e.Dot.Foreground = Res.深灰1;
-                    e.Dot.Background = Res.WhiteBrush;
-                }
+                tbMsg.Text = r.Msg;
             };
         }
     }
