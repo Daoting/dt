@@ -31,6 +31,7 @@ namespace Dt.Base.Tools
             InitializeComponent();
         }
 
+        #region 搜索
         public void OnSearch(QueryClause p_clause)
         {
             NaviTo(this);
@@ -47,48 +48,7 @@ namespace Dt.Base.Tools
             #region 包含
             if (r.Bool("eninclude") && (tmp = r.Str("include")) != "")
             {
-                var arrAnd = tmp.Split('&');
-                for (int i = 0; i < arrAnd.Length; i++)
-                {
-                    var str = arrAnd[i].Trim();
-                    if (str == "")
-                        continue;
-
-                    var arrOr = str.Split('|');
-                    if (arrOr.Length > 1)
-                    {
-                        IQueryable<Row> tmpQuery = null;
-                        for (int j = 0; j < arrOr.Length; j++)
-                        {
-                            var strOr = arrOr[j].Trim();
-                            if (strOr == "")
-                                continue;
-
-                            if (j == 0)
-                            {
-                                tmpQuery = from it in query
-                                           where it.Str("msg").Contains(strOr)
-                                           select it;
-                            }
-                            else
-                            {
-                                tmpQuery = tmpQuery.Union
-                                (
-                                from it in query
-                                where it.Str("msg").Contains(strOr)
-                                select it
-                                );
-                            }
-                        }
-                        query = tmpQuery;
-                    }
-                    else
-                    {
-                        query = from it in query
-                                where it.Str("msg").Contains(str)
-                                select it;
-                    }
-                }
+                query = QueryContains(query, tmp, "msg");
             }
             #endregion
 
@@ -113,7 +73,7 @@ namespace Dt.Base.Tools
                                 continue;
 
                             query = from it in query
-                                    where !it.Str("msg").Contains(strAnd)
+                                    where !it.Str("msg").Contains(strAnd, StringComparison.OrdinalIgnoreCase)
                                     select it;
                         }
                     }
@@ -122,7 +82,7 @@ namespace Dt.Base.Tools
                         if (i == 0)
                         {
                             tmpQuery = from it in query
-                                       where !it.Str("msg").Contains(str)
+                                       where !it.Str("msg").Contains(str, StringComparison.OrdinalIgnoreCase)
                                        select it;
                         }
                         else
@@ -130,7 +90,7 @@ namespace Dt.Base.Tools
                             tmpQuery = tmpQuery.Union
                             (
                             from it in query
-                            where !it.Str("msg").Contains(str)
+                            where !it.Str("msg").Contains(str, StringComparison.OrdinalIgnoreCase)
                             select it
                             );
                         }
@@ -144,39 +104,113 @@ namespace Dt.Base.Tools
             #region 行号范围
             if (r.Bool("enline"))
             {
-                int start = r.Int("startno");
-                int end = r.Int("endno");
+                int start = r.Int("startno") - 1;
+                int end = r.Int("endno") - 1;
                 query = from it in query
                         where it.Index >= start && it.Index <= end
                         select it;
             }
             #endregion
 
+            #region 日志来源
+            if (r.Bool("ensrc") && (tmp = r.Str("src")) != "")
+            {
+                query = QueryContains(query, tmp, "src");
+            }
+            #endregion
+
+            #region 客户端IP
+            if (r.Bool("enip") && (tmp = r.Str("ip")) != "")
+            {
+                query = QueryContains(query, tmp, "ip");
+            }
+            #endregion
+
+            #region 用户ID
+            if (r.Bool("enuser") && (tmp = r.Str("user")) != "")
+            {
+                query = QueryContains(query, tmp, "user");
+            }
+            #endregion
+
+            #region 级别
             if (r.Str("level") != "全部")
             {
                 var level = r.Str("level");
+                // INF时缺省为空
+                level = level == "INF" ? "" : level;
                 query = from it in query
-                        where it.Str("@l") == level
+                        where it.Str("level") == level
                         select it;
             }
+            #endregion
 
             var rows = new Nl<Row>(query);
             _lv.Data = rows;
             _tbTotalRow.Text = $"当前共 {rows.Count} 行";
         }
 
+        IQueryable<Row> QueryContains(IQueryable<Row> p_query, string p_input, string p_colName)
+        {
+            var arrAnd = p_input.Split('&');
+            for (int i = 0; i < arrAnd.Length; i++)
+            {
+                var str = arrAnd[i].Trim();
+                if (str == "")
+                    continue;
+
+                var arrOr = str.Split('|');
+                if (arrOr.Length > 1)
+                {
+                    IQueryable<Row> tmpQuery = null;
+                    for (int j = 0; j < arrOr.Length; j++)
+                    {
+                        var strOr = arrOr[j].Trim();
+                        if (strOr == "")
+                            continue;
+
+                        if (j == 0)
+                        {
+                            tmpQuery = from it in p_query
+                                       where it.Str(p_colName).Contains(strOr, StringComparison.OrdinalIgnoreCase)
+                                       select it;
+                        }
+                        else
+                        {
+                            tmpQuery = tmpQuery.Union
+                            (
+                            from it in p_query
+                            where it.Str(p_colName).Contains(strOr, StringComparison.OrdinalIgnoreCase)
+                            select it
+                            );
+                        }
+                    }
+                    p_query = tmpQuery;
+                }
+                else
+                {
+                    p_query = from it in p_query
+                            where it.Str(p_colName).Contains(str, StringComparison.OrdinalIgnoreCase)
+                            select it;
+                }
+            }
+            return p_query;
+        }
+        #endregion
+
         void OnOutputClick(object sender, ItemClickArgs e)
         {
-            //var r = e.Row;
-            //var d = new TraceLogData
-            //{
-            //    TimeLevel = r.Str("Time") + " — " + r.Str("Level"),
-            //    Source = r.Str("Source"),
-            //    Detial = r.Str("Detial")
-            //};
-            //_win.Form.Update(d);
+            var r = e.Row;
+            var d = new TraceLogData
+            {
+                TimeLevel = r.Str("time") + " — " + r.Str("level"),
+                Source = r.Str("src"),
+                Detial = r.Str("msg")
+            };
+            _win.Form.Update(d);
         }
 
+        #region 换页
         async void OnOpenFile(object sender, Mi e)
         {
             var picker = Kit.GetFileOpenPicker();
@@ -236,13 +270,13 @@ namespace Dt.Base.Tools
         {
             LoadPage(_totalNum);
         }
+        #endregion
 
+        #region 加载
         void LoadFile(FileInfo p_info)
         {
             _fi = p_info;
-            _tbInfo.Text = $"✔ 当前日志文件\r\n{p_info.Name}　　{Kit.GetFileSizeDesc((ulong)p_info.Length)}";
             InitRowsInfo();
-            _tbInfo.Text += $"　　{_linesPos.Count.ToString("n0")} 行";
         }
 
         void InitRowsInfo()
@@ -265,10 +299,11 @@ namespace Dt.Base.Tools
                     json = sr.ReadLine();
                     if (!string.IsNullOrEmpty(json))
                     {
-                        pos += Encoding.UTF8.GetBytes(json).Length;
+                        var data = Encoding.UTF8.GetBytes(json);
+                        pos += data.Length;
                         if (_linesPos.Count < _pageSize)
                         {
-                            AddRow(json);
+                            AddRow(data);
                         }
                     }
                     // \r\n 两字符
@@ -315,7 +350,7 @@ namespace Dt.Base.Tools
                         {
                             if (_tbl.Count < _pageSize)
                             {
-                                AddRow(json);
+                                AddRow(Encoding.UTF8.GetBytes(json));
                             }
                             else
                             {
@@ -338,22 +373,19 @@ namespace Dt.Base.Tools
         {
             return new Table
             {
-                { "@t" },
-                { "@l" },
+                { "time" },
+                { "level" },
+                // 合并消息和异常内容
+                { "msg" },
                 { "ip" },
                 { "src" },
                 { "user" },
-                // 合并消息和异常内容
-                { "msg" },
-
-                { "tbinfo", typeof(TextBlock) },
-                { "tbmsg", typeof(TextBlock) },
             };
         }
 
-        void AddRow(string p_json)
+        void AddRow(byte[] p_json)
         {
-            Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_json));
+            Utf8JsonReader reader = new Utf8JsonReader(p_json);
             // {
             reader.Read();
 
@@ -376,9 +408,35 @@ namespace Dt.Base.Tools
                         // 只取有用的列
                         if (reader.TokenType == JsonTokenType.String)
                         {
-                            if (row.Contains(id))
+                            if (id == "@t")
                             {
-                                row.InitVal(id, reader.GetString());
+                                var time = reader.GetDateTime();
+                                row.InitVal("time", time.ToString("yyyy-MM-dd HH:mm:ss"));
+                            }
+                            else if (id == "@l")
+                            {
+                                var lev = reader.GetString();
+                                if (lev == "Debug")
+                                {
+                                    lev = "DBG";
+                                }
+                                else if (lev == "Warning")
+                                {
+                                    lev = "WAN";
+                                }
+                                else if (lev == "Error")
+                                {
+                                    lev = "ERR";
+                                }
+                                else if (lev == "Fatal")
+                                {
+                                    lev = "FAL";
+                                }
+                                else
+                                {
+                                    lev = "INF";
+                                }
+                                row.InitVal("level", lev);
                             }
                             else if (id == "@mt" || id == "@x")
                             {
@@ -386,6 +444,7 @@ namespace Dt.Base.Tools
                                 var con = reader.GetString();
                                 if (!string.IsNullOrEmpty(con))
                                 {
+                                    con = con.Trim();
                                     var old = row.Str("msg");
                                     if (old != "")
                                     {
@@ -397,51 +456,83 @@ namespace Dt.Base.Tools
                                     }
                                 }
                             }
+                            else if (row.Contains(id))
+                            {
+                                row.InitVal(id, reader.GetString());
+                            }
                         }
                     }
                 }
-
-                //var tb = new TextBlock();
-                //Run r = new Run { Text = $"[{row.Str("@t")} ", Foreground = Res.深灰1 };
-                //tb.Inlines.Add(r);
-
-                //var lev = row.Str("@l");
-                //if (lev == "Information")
-                //{
-                //    r = new Run { Text = $"INF" };
-                //}
-                //else if(lev == "Warning")
-                //{
-                //    r = new Run { Text = $"WAN", Foreground = Res.深黄 };
-                //}
-                //else if (lev == "Error")
-                //{
-                //    r = new Run { Text = $"ERR", Foreground = Res.RedBrush };
-                //}
-                //else if (lev == "Fatal")
-                //{
-                //    r = new Run { Text = $"FAL", Foreground = Res.亮红 };
-                //}
-                //else
-                //{
-                //    r = new Run { Text = $"DBG" };
-                //}
-                //tb.Inlines.Add(r);
-
-                //r = new Run { Text = $"] {row.Str("ip")} {row.Str("src")} {row.Str("user")}", Foreground = Res.深灰1 };
-                //tb.Inlines.Add(r);
-
-                //row["tbinfo"] = tb;
-
-                //tb = new TextBlock { TextTrimming = TextTrimming.CharacterEllipsis, TextWrapping = TextWrapping.Wrap };
-                //var msg = row.Str("msg");
-                //if (msg.Length > 80)
-                //    msg = msg.Substring(0, 78) + "...";
-                //tb.Text = msg;
-                //row["tbmsg"] = tb;
             }
         }
+        #endregion
 
         HistoryLogWin _win => OwnWin as HistoryLogWin;
+    }
+
+    [LvCall]
+    public class HisLogStyle
+    {
+        public static void FormatItem(Env e)
+        {
+            Grid grid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition() { Height = GridLength.Auto },
+                    new RowDefinition() { Height = new GridLength(60) },
+                    new RowDefinition() { Height = GridLength.Auto },
+                },
+            };
+
+            StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, };
+            var tbLevel = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+            sp.Children.Add(tbLevel);
+
+            var tbInfo = new TextBlock { Foreground = Res.深灰1, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(10, 0, 0, 0) };
+            sp.Children.Add(tbInfo);
+            grid.Children.Add(sp);
+
+            var tbMsg = new TextBlock { Style = Res.LvTextBlock, Margin = new Thickness(0, 6, 0, 6), };
+            Grid.SetRow(tbMsg, 1);
+            grid.Children.Add(tbMsg);
+
+            var tbIndex = new TextBlock { Foreground = Res.深灰1, FontSize = Res.小字, HorizontalAlignment = HorizontalAlignment.Center };
+            Grid.SetRow(tbIndex, 2);
+            grid.Children.Add(tbIndex);
+            e.UI = grid;
+
+            e.Set += c =>
+            {
+                var r = c.Row;
+
+                var lev = r.Str("level");
+                tbLevel.Text = lev == "" ? "INF" : lev;
+                if (lev == "DBG")
+                {
+                    tbLevel.Foreground = Res.深灰1;
+                }
+                else if (lev == "WAN")
+                {
+                    tbLevel.Foreground = Res.深黄;
+                }
+                else if (lev == "ERR")
+                {
+                    tbLevel.Foreground = Res.RedBrush;
+                }
+                else if (lev == "FAL")
+                {
+                    tbLevel.Foreground = Res.亮红;
+                }
+                else
+                {
+                    tbLevel.Foreground = Res.BlackBrush;
+                }
+
+                tbInfo.Text = $"[{r.Str("time")}]　{r.Str("src")}　{r.Str("ip")}　{r.Str("user")}";
+                tbMsg.Text = r.Str("msg");
+                tbIndex.Text = (r.Index + 1).ToString();
+            };
+        }
     }
 }

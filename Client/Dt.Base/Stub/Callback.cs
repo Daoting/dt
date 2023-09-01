@@ -178,7 +178,7 @@ namespace Dt.Base
         /// </summary>
         internal override void ShowTraceBox()
         {
-            SysTrace.ShowBox();
+            SysTrace.ShowRealtimeLogDlg();
         }
 
         /// <summary>

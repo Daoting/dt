@@ -34,6 +34,12 @@ namespace Dt.Base.Tools
                 { "enline", false },
                 { "startno", 0 },
                 { "endno", 5000 },
+                { "ensrc", false },
+                { "src", "" },
+                { "enip", false },
+                { "ip", "" },
+                { "enuser", false },
+                { "user", "" },
                 { "level", "全部" },
             };
             _fv.Data = row;

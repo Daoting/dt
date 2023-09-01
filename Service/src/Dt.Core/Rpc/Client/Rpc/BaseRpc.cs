@@ -69,7 +69,7 @@ namespace Dt.Core.Rpc
 
 #if !SERVER
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
-                _log = Log.ForContext("SourceContext", "Rpc");
+                _log = Log.Logger;
 #endif
         }
 
@@ -124,7 +124,7 @@ namespace Dt.Core.Rpc
             // 级别允许输出日志
             if (_log != null)
             {
-                _log.ForContext("Title", $"{_svcName}.{p_methodName}")
+                _log.ForContext("src", $"{_svcName}.{p_methodName}")
                     .Debug(Encoding.UTF8.GetString(data));
             }
 #endif

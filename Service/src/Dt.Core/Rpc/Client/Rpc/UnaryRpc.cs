@@ -125,7 +125,7 @@ namespace Dt.Core.Rpc
             // 级别允许输出日志
             if (_log != null)
             {
-                _log.ForContext("Title", $"{_svcName}.{_methodName} — {result.Elapsed}ms")
+                _log.ForContext("src", $"{_svcName}.{_methodName} — {result.Elapsed}ms")
                     .Debug(Encoding.UTF8.GetString(p_data));
             }
             

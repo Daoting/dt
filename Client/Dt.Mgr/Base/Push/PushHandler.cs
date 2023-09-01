@@ -175,8 +175,7 @@ namespace Dt.Mgr
                 // 输出日志信息
                 if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))
                 {
-                    Log.ForContext("SourceContext", "Push")
-                        .ForContext("Title", $"msg推送—> {method}")
+                    Log.ForContext("src", $"msg推送—> {method}")
                         .Debug(p_msg);
                 }
             }

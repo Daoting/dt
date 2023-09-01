@@ -28,9 +28,10 @@
             <Button Content="出错" Click="OnSrcError" />
         </StackPanel>
 
-        <a:CBar Title="在系统日志中可查看详细" />
+        <a:CBar Title="系统日志内置属性" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="含详细内容" Click="OnDetail" />
+            <Button Content="含IP内置属性" Click="OnAddIP" />
+            <Button Content="含用户ID内置属性" Click="OnAddUser" />
             <Button Content="多附加属性" Click="OnAddContext" />
             <Button Content="消息模板" Click="OnFormat" />
         </StackPanel>

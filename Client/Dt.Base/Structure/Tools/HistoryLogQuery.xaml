@@ -7,22 +7,29 @@
     Icon="漏斗">
     
     <a:QueryFv x:Name="_fv">
-        <a:CBool ID="eninclude" Title="包含，文字之间用 &amp; 和 | 表示与或关系" ShowTitle="False" />
+        <a:CBool ID="eninclude" Title="日志内容中包含文字，支持 &amp; 和 |" ShowTitle="False" />
         <a:CText ID="include" ShowTitle="False" />
-        <a:CBool ID="enexclude" Title="排除，文字之间用 &amp; 和 | 表示与或关系" ShowTitle="False" />
+        <a:CBool ID="enexclude" Title="日志内容中排除包含的文字，支持 &amp; 和 |" ShowTitle="False" />
         <a:CText ID="exclude" ShowTitle="False" />
         <a:CBool ID="enline" Title="行号范围" ShowTitle="False" />
         <a:CNum ID="startno" IsInteger="True" Title="始" TitleWidth="40" ColSpan="0.5" />
         <a:CNum ID="endno" IsInteger="True" Title="终" TitleWidth="40" ColSpan="0.5" />
+        <a:CBool ID="ensrc" Title="日志来源，支持 &amp; 和 |" ShowTitle="False" />
+        <a:CText ID="src" ShowTitle="False" />
+        <a:CBool ID="enip" Title="服务端日志的客户端IP，支持 &amp; 和 |" ShowTitle="False" />
+        <a:CText ID="ip" ShowTitle="False" />
+        <a:CBool ID="enuser" Title="服务端日志的用户ID，支持 &amp; 和 |" ShowTitle="False" />
+        <a:CText ID="user" ShowTitle="False" />
         <a:CList ID="level" Title="级别">
             <a:CList.Items>
                 <x:String>全部</x:String>
-                <x:String>Debug</x:String>
-                <x:String>Information</x:String>
-                <x:String>Warning</x:String>
-                <x:String>Error</x:String>
-                <x:String>Fatal</x:String>
+                <x:String>DBG</x:String>
+                <x:String>INF</x:String>
+                <x:String>WAN</x:String>
+                <x:String>ERR</x:String>
+                <x:String>FAL</x:String>
             </a:CList.Items>
         </a:CList>
+        <a:CBar Title="支持 &amp; 和 | 表示文本框文字之间&#10;可以用其表示与或关系" RowSpan="2" />
     </a:QueryFv>
 </a:Tab>
