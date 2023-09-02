@@ -34,8 +34,11 @@ namespace Dt.Core
 
                 if (setting.FileEnabled)
                 {
-                    // 日志文件默认最大10m用新文件
-                    cfg.WriteTo.SQLite(Path.Combine(ApplicationData.Current.LocalFolder.Path, ".data", "dtlog.db"));
+                    cfg.WriteTo.File(
+                        new CompactJsonFormatter(),
+                        Path.Combine(ApplicationData.Current.LocalFolder.Path, ".log", "dt-.log"),
+                        rollingInterval: RollingInterval.Day, // 文件名末尾加日期
+                        rollOnFileSizeLimit: true); // 超过1G时新文件名末尾加序号
                 }
 
                 if (setting.TraceEnabled || setting.ConsoleEnabled || setting.FileEnabled)

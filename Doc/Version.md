@@ -54,6 +54,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * boot服务启动bug，启动过程拆分成独立
 * 确认对话框、错误对话框不支持非UI线程显示
 * Phone模式页面内容有水平滚动栏时不支持左右滑动
+* 设置Lv.SelectedItem和SelectedIndex时触发的SelectionChanged事件参数值类型不同
 
 ## Release 4.2.0
 ### 变更

@@ -30,21 +30,47 @@ namespace Dt.Base.Tools
         public void Update(TraceLogData p_data)
         {
             _data = p_data;
-            _fv.Data = _data;
-            _tb.Text = _data.Detial;
+            _tbInfo.Text = _data.Info;
+            _tb.Text = _data.Msg;
+
+            int index = _data.Info.IndexOf(']');
+            if (index > 3)
+            {
+                var lev = _data.Info.Substring(index - 3, 3);
+                if (lev == "DBG")
+                {
+                    _tbInfo.Foreground = Res.深灰1;
+                }
+                else if (lev == "WRN")
+                {
+                    _tbInfo.Foreground = Res.深黄;
+                }
+                else if (lev == "ERR")
+                {
+                    _tbInfo.Foreground = Res.RedBrush;
+                }
+                else if (lev == "FAL")
+                {
+                    _tbInfo.Foreground = Res.亮红;
+                }
+                else
+                {
+                    _tbInfo.Foreground = Res.BlackBrush;
+                }
+            }
         }
 
         void CopySql(object sender, RoutedEventArgs e)
         {
-            if (_data == null || string.IsNullOrEmpty(_data.Detial))
+            if (_data == null || string.IsNullOrEmpty(_data.Msg))
                 return;
 
             bool find = false;
             try
             {
-                if (_data.Source == "Rpc" && _data.Detial.StartsWith('[') && _data.Detial.EndsWith(']'))
+                if (_data.Msg.StartsWith('[') && _data.Msg.EndsWith(']'))
                 {
-                    Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(_data.Detial));
+                    Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(_data.Msg));
                     // [
                     reader.Read();
                     // SvcName
@@ -80,7 +106,7 @@ namespace Dt.Base.Tools
                 }
                 else
                 {
-                    var det = _data.Detial.Trim();
+                    var det = _data.Msg.Trim();
                     if (det.StartsWith("select", StringComparison.OrdinalIgnoreCase)
                         || det.StartsWith("update", StringComparison.OrdinalIgnoreCase)
                         || det.StartsWith("insert", StringComparison.OrdinalIgnoreCase))
@@ -166,29 +192,18 @@ namespace Dt.Base.Tools
         }
 
         static readonly Regex _sqlPattern = new Regex("[0-9a-zA-Z_$]");
-
-        void CopySource(object sender, RoutedEventArgs e)
-        {
-            if (_data != null && !string.IsNullOrEmpty(_data.Source))
-                SysTrace.CopyToClipboard(_data.Source, true);
-        }
     }
 
     public class TraceLogData
     {
         /// <summary>
-        /// 时间及级别
+        /// 日志描述信息
         /// </summary>
-        public string TimeLevel { get; set; }
+        public string Info { get; set; }
 
         /// <summary>
-        /// 日志源
+        /// 日志详细内容
         /// </summary>
-        public string Source { get; set; }
-
-        /// <summary>
-        /// 日志项的详细内容
-        /// </summary>
-        public string Detial { get; set; }
+        public string Msg { get; set; }
     }
 }

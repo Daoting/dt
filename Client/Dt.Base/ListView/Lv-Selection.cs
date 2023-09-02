@@ -191,7 +191,7 @@ namespace Dt.Base
                     if (row != selectedRow)
                     {
                         row.IsSelected = false;
-                        removes.Add(row);
+                        removes.Add(row.Data);
                     }
                     else
                     {
@@ -220,7 +220,7 @@ namespace Dt.Base
                 {
                     List<object> adds = new List<object>();
                     if (!exist)
-                        adds.Add(value);
+                        adds.Add(selectedRow.Data);
                     SelectionChanged(this, new SelectionChangedEventArgs(removes, adds));
                 }
             }

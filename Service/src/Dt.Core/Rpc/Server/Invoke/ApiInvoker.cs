@@ -37,7 +37,7 @@ namespace Dt.Core.Rpc
                     _logger = Serilog.Log
                         .ForContext("ip", ClientIP)
                         .ForContext("src", ApiName)
-                        .ForContext("user", UserID);
+                        .ForContext("user", UserID.ToString());
                 }
                 return _logger;
             }

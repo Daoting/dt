@@ -38,50 +38,51 @@ namespace Dt.UIDemo
 
         void OnRpc(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("SourceContext", "Rpc")
+            Log.ForContext("src", "Rpc")
                 .Debug("Http请求响应信息");
         }
 
         void OnSqlite(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("SourceContext", "Sqlite")
+            Log.ForContext("src", "Sqlite")
                 .Debug("Sqlite访问信息");
         }
 
         void OnPush(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("SourceContext", "Push")
+            Log.ForContext("src", "Push")
                 .Debug("Push推送信息");
         }
 
         void OnSrcDebug(object sender, RoutedEventArgs e)
         {
             // SourceContext：Dt.UIDemo.LogDemo
-            Log.ForContext<LogDemo>()
+            Log.ForContext("src", typeof(LogDemo).FullName)
                 .Debug("Serilog中将日志分为六级：Verbose(冗余详细级)、Debug(内部调试级)、Information(普通信息级)、Warning(警告级)、Error(错误级)、Fatal(崩溃级)，以上为递增顺序，可以通过设置最小级别控制输出内容。");
         }
 
         void OnSrcNormal(object sender, RoutedEventArgs e)
         {
-            Log.ForContext<LogDemo>()
+            Log.ForContext("src", typeof(LogDemo).FullName)
                 .Information("普通信息内容");
         }
 
         void OnSrcWarn(object sender, RoutedEventArgs e)
         {
-            Log.ForContext<LogDemo>()
+            Log.ForContext("src", typeof(LogDemo).FullName)
                 .Warning(new Exception("异常信息内容"), "警告信息内容");
         }
 
         void OnSrcError(object sender, RoutedEventArgs e)
         {
-            Log.ForContext<LogDemo>()
+            Log.ForContext("src", typeof(LogDemo).FullName)
                 .Error(new Exception("异常信息内容"), "出错信息内容");
         }
 
-        void OnDetail(object sender, RoutedEventArgs e)
+        void OnAddIP(object sender, RoutedEventArgs e)
         {
-            Log.ForContext("Detail", "详细内容描述")
+            Log.ForContext("src", "属性例子")
+                .ForContext("ip", "localhost")
                 .Information("点击右上菜单，可以查看或复制详细内容");
         }
 
@@ -92,6 +93,13 @@ namespace Dt.UIDemo
 
             // 不推荐
             //Log.Debug($"PhoneUI模式：{Kit.IsPhoneUI}，操作系统：{Kit.HostOS}");
+        }
+
+        void OnAddUser(object sender, RoutedEventArgs e)
+        {
+            Log.ForContext("src", "属性例子")
+                .ForContext("user", "12345")
+                .Information("用在服务端");
         }
 
         void OnAddContext(object sender, RoutedEventArgs e)
@@ -153,8 +161,7 @@ namespace Dt.UIDemo
     {
         public static void LogDebug()
         {
-            _log.ForContext("Detail", "详细内容")
-                .Debug("内部调试级信息，含详细内容");
+            _log.Debug("内部调试级信息，含详细内容");
         }
 
         public static void LogInfo()
@@ -183,8 +190,7 @@ namespace Dt.UIDemo
 
         public static void LogDebug()
         {
-            _log.ForContext("Detail", "详细内容")
-                .Debug("内部调试级信息，含详细内容");
+            _log.Debug("内部调试级信息，含详细内容");
         }
 
         public static void LogInfo()

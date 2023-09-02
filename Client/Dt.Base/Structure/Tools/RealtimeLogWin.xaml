@@ -13,18 +13,11 @@
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
                         <a:Mi ID="清空" Icon="垃圾箱" Click="OnClear" />
-                        <a:Mi ID="Rpc" IsCheckable="True" />
                     </a:Menu>
                 </a:Tab.Menu>
-                <a:Lv x:Name="_lv" ItemClick="OnOutputClick" ItemHeight="NaN">
+                <a:Lv x:Name="_lv" ItemClick="OnOutputClick" AutoScrollBottom="True">
                     <DataTemplate>
-                        <StackPanel Padding="10,0,10,10">
-                            <StackPanel Height="40" Orientation="Horizontal">
-                                <a:Dot ID="Time" Foreground="{StaticResource 深灰1}" />
-                                <a:Dot ID="LevelAndSource" Call="LogCellUI.TitleBrush" Margin="10, 6, 0, 6" Padding="10,0,10,0" />
-                            </StackPanel>
-                            <a:Dot ID="Message" />
-                        </StackPanel>
+                        <a:Dot Call="LogCellUI.FormatItem" Padding="6" />
                     </DataTemplate>
                 </a:Lv>
             </a:Tab>

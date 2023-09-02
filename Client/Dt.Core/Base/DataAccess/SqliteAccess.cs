@@ -29,7 +29,7 @@ namespace Dt.Core
         {
             // 只要详细级别才输出sqlite的sql
             if (Log.IsEnabled(LogEventLevel.Verbose))
-                _log = Log.ForContext("SourceContext", "Sqlite");
+                _log = Log.Logger;
         }
 
         public SqliteAccess(string p_dbName)
@@ -254,7 +254,7 @@ namespace Dt.Core
 
         void Trace(string p_method, string p_sql)
         {
-            _log.ForContext("Title", $"{_dbName}.{p_method}")
+            _log.ForContext("src", $"{_dbName}.{p_method}")
                 .Debug(p_sql);
         }
         #endregion
