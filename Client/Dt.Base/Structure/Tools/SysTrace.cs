@@ -21,7 +21,39 @@ namespace Dt.Base.Tools
     {
         public static void ShowBox()
         {
-            OpenWin(typeof(SystemMainWin), "系统");
+            var nav = new NavList { ViewMode = NavViewMode.Tile, Title = "系统", To = NavTarget.NewWin };
+            nav.Data = new Nl<Nav>
+            {
+                new Nav("实时日志", typeof(RealtimeLogWin), Icons.到今日) { Desc = "查看当前客户端正在输出的日志" },
+                new Nav("历史日志", typeof(HistoryLogWin), Icons.选日) { Desc = "查看客户端历史日志" },
+                new Nav("弹出实时日志", null, Icons.到今日) { Desc = "保持实时日志始终在最上层显示", Callback = (w, n) => SysTrace.ShowRealtimeLogDlg() },
+                new Nav("服务日志", null, Icons.服务器) { Desc = "查看服务端日志", Callback = (w, n) => Kit.OpenUrl(Kit.GetSvcUrl("cm") + "/.output") },
+
+                new Nav("本地库", typeof(LocalDbWin), Icons.数据库) { Desc = "管理 LocalState\\.data 目录下的 sqlite 库" },
+                new Nav("本地文件", typeof(LocalFileWin), Icons.文件) { Desc = "管理 LocalState 的所有文件" },
+                new Nav("更新缓存文件", typeof(RefreshSqliteWin), Icons.刷新) { Desc = "刷新服务端指定的 sqlite 缓存文件" },
+
+                new Nav("数据库工具", typeof(LocalDbWin), Icons.数据库) { Desc = "" },
+
+                new Nav("视图类型", typeof(LocalDbWin), Icons.划卡) { Desc = "所有可作为独立视图显示的名称与类型列表" },
+                new Nav("流程表单类型", typeof(LocalDbWin), Icons.排列) { Desc = "所有流程表单类型" },
+
+                new Nav("切换服务", null, Icons.服务器) { Desc = "切换服务地址", Callback = (w, n) => SysTrace.ToggleSvcUrl() },
+                new Nav("关于", null, Icons.证书) { Desc = "App V2.3.0\r\nDt  V4.2.1", Callback = (w, n) => Kit.Msg(n.Desc) },
+            };
+
+            var dlg = new Dlg
+            {
+                HideTitleBar = true,
+                WinPlacement = DlgPlacement.FromTop,
+            };
+            dlg.LoadTab(nav);
+
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = 600;
+            }
+            dlg.Show();
         }
 
         public static void ShowRealtimeLogDlg()
@@ -38,7 +70,7 @@ namespace Dt.Base.Tools
 
             if (!Kit.IsPhoneUI)
             {
-                dlg.Width = 752;
+                dlg.Width = 755;
                 dlg.Height = Kit.ViewHeight / 2;
             }
             dlg.Closed += (s, e) => win.ClearData();

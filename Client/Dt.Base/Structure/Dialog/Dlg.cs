@@ -95,6 +95,12 @@ namespace Dt.Base
             typeof(Dlg),
             new PropertyMetadata(0.0, OnTopChanged));
 
+        public static readonly DependencyProperty EdgeMarginProperty = DependencyProperty.Register(
+            "EdgeMargin",
+            typeof(double),
+            typeof(Dlg),
+            new PropertyMetadata(0.0));
+
         public static readonly DependencyProperty ResizeableProperty = DependencyProperty.Register(
             "Resizeable",
             typeof(bool),
@@ -312,6 +318,15 @@ namespace Dt.Base
         {
             get { return (double)GetValue(TopProperty); }
             set { SetValue(TopProperty, value); }
+        }
+
+        /// <summary>
+        /// WinPlacement为 FromLeft FromTop FromRight FromBottom 时，与所在边的边距
+        /// </summary>
+        public double EdgeMargin
+        {
+            get { return (double)GetValue(EdgeMarginProperty); }
+            set { SetValue(EdgeMarginProperty, value); }
         }
 
         /// <summary>
@@ -645,15 +660,24 @@ namespace Dt.Base
                         // 未设置高度时占用除任务栏的整个高度
                         Height = maxHeight - Top;
                     }
-                    Left = 0;
+                    Left = EdgeMargin;
                     if (maxWidth < actWidth)
                         Width = maxWidth;
                     break;
 
                 case DlgPlacement.FromTop:
                     Left = 0;
-                    Top = 0;
-                    Width = maxWidth;
+                    Top = EdgeMargin;
+                    if (Width != double.NaN && Width < maxWidth)
+                    {
+                        // 设置宽度时水平居中
+                        Left = Math.Ceiling((maxWidth - Width) / 2);
+                    }
+                    else
+                    {
+                        // 未设置宽度时占用整个宽度
+                        Width = maxWidth;
+                    }
                     if (maxHeight < actHeight)
                         Height = maxHeight;
                     break;
@@ -678,13 +702,22 @@ namespace Dt.Base
                     }
                     else
                     {
-                        Left = maxWidth - actWidth;
+                        Left = maxWidth - actWidth - EdgeMargin;
                     }
                     break;
 
                 case DlgPlacement.FromBottom:
                     Left = 0;
-                    Width = maxWidth;
+                    if (Width != double.NaN && Width < maxWidth)
+                    {
+                        // 设置宽度时水平居中
+                        Left = Math.Ceiling((maxWidth - Width) / 2);
+                    }
+                    else
+                    {
+                        // 未设置宽度时占用整个宽度
+                        Width = maxWidth;
+                    }
                     if (maxHeight < actHeight)
                     {
                         Top = 0;
@@ -692,7 +725,7 @@ namespace Dt.Base
                     }
                     else
                     {
-                        Top = maxHeight - actHeight;
+                        Top = maxHeight - actHeight - EdgeMargin;
                     }
                     break;
 

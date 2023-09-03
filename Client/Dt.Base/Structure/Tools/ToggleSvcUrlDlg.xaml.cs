@@ -37,8 +37,13 @@ namespace Dt.Base.Tools
             var dlg = new ToggleSvcUrlDlg
             {
                 IsPinned = true,
+                WinPlacement = DlgPlacement.FromBottom,
             };
-
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = 400;
+                dlg.EdgeMargin = Kit.ViewHeight / 2;
+            }
             dlg.Show();
         }
 

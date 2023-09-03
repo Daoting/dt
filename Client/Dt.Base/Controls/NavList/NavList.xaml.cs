@@ -30,6 +30,12 @@ namespace Dt.Base
             typeof(NavList),
             new PropertyMetadata(null, OnItemTemplateChanged));
 
+        public readonly static DependencyProperty AutoCloseDlgProperty = DependencyProperty.Register(
+            "AutoCloseDlg",
+            typeof(bool),
+            typeof(NavList),
+            new PropertyMetadata(true));
+
         static void OnItemTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var nav = (NavList)d;
@@ -129,6 +135,15 @@ namespace Dt.Base
             get { return _lv.SelectionMode; }
             set { _lv.SelectionMode = value; }
         }
+
+        /// <summary>
+        /// 当放在Dlg中时，点击项后是否自动关闭对话框，默认true
+        /// </summary>
+        public bool AutoCloseDlg
+        {
+            get { return (bool)GetValue(AutoCloseDlgProperty); }
+            set { SetValue(AutoCloseDlgProperty, value); }
+        }
         #endregion
 
         #region 外部方法
@@ -207,6 +222,8 @@ namespace Dt.Base
                 else
                 {
                     Kit.OpenWin(p_nav.Type, p_nav.Title, p_nav.Icon, p_nav.Params);
+                    if (OwnDlg != null && AutoCloseDlg)
+                        OwnDlg.Close();
                 }
             }
         }
