@@ -222,7 +222,7 @@ namespace Dt.Mgr
 
         void OnShowTrace(object sender, DoubleTappedRoutedEventArgs e)
         {
-            Dt.Base.Tools.SysTrace.ShowBox();
+            Dt.Base.Tools.SysTrace.ShowSysBox();
         }
     }
 }

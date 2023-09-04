@@ -35,7 +35,7 @@ namespace Dt.Mgr.Workflow
             //LoadMain(ls[0].GetCenter());
         }
 
-        void StartNewWf(Win p_win, Nav p_nav)
+        void StartNewWf(object p_owner, Nav p_nav)
         {
             if (_dlgStart == null)
                 _dlgStart = new StartWorkflow();

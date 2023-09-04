@@ -160,7 +160,7 @@ namespace Dt.Base
             {
                 // Alt + ↓ 系统
                 e.Handled = true;
-                SysTrace.ShowBox();
+                SysTrace.ShowSysBox();
             };
             // 因总有浮动的快捷键提示，放在提示信息层，少烦人！
             var accs = UITree.RootGrid.Children[UITree.RootGrid.Children.Count - 1].KeyboardAccelerators;
@@ -175,7 +175,7 @@ namespace Dt.Base
             {
                 // Alt + ← 动态日志
                 e.Handled = true;
-                SysTrace.ShowRealtimeLogDlg();
+                SysTrace.ShowLogBox();
             };
             accs.Add(accelerator);
 

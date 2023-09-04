@@ -203,7 +203,7 @@ namespace Dt.Base
 
             if (p_nav.Callback != null)
             {
-                p_nav.Callback.Invoke(OwnWin, p_nav);
+                p_nav.Callback.Invoke(OwnWin == null ? OwnDlg : OwnWin, p_nav);
             }
             else if (p_nav.Type != null)
             {

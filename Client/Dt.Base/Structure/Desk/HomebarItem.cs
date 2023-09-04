@@ -99,7 +99,7 @@ namespace Dt.Base
             {
                 _menu = new Menu { IsContextMenu = true };
                 var item = new Mi { ID = "系统", Icon = Icons.设置 };
-                item.Click += (s, a) => SysTrace.ShowBox();
+                item.Click += (s, a) => SysTrace.ShowSysBox();
                 _menu.Items.Add(item);
 
 #if WIN //&& !DEBUG

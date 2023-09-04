@@ -47,7 +47,7 @@ namespace Dt.Base
                     _menu.Items.Add(item);
 
                     item = new Mi { ID = "系统", Icon = Icons.设置 };
-                    item.Click += (o, a) => SysTrace.ShowBox();
+                    item.Click += (o, a) => SysTrace.ShowSysBox();
                     _menu.Items.Add(item);
                 }
 

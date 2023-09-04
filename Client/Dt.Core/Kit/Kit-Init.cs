@@ -228,7 +228,7 @@ namespace Dt.Core
                     };
                     notify.LinkCallback = (e) =>
                     {
-                        ShowTraceBox();
+                        ShowLogBox();
                         notify.Close();
                     };
                     Notify(notify);

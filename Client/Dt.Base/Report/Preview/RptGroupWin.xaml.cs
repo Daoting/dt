@@ -35,7 +35,7 @@ namespace Dt.Base.Report
             _nav.Select(0);
         }
 
-        async void OpenWin(Win p_win, Nav p_nav)
+        async void OpenWin(object p_owner, Nav p_nav)
         {
             var info = p_nav.Params as RptInfo;
             if (await info.Init())

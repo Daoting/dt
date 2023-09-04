@@ -71,7 +71,7 @@ namespace Dt.UIDemo
         }
 
         Button _btn;
-        void OnCreateBtn(Win arg1, Nav p_nav)
+        void OnCreateBtn(object p_owner, Nav p_nav)
         {
             if (_btn == null)
                 _btn = new Button { Content = "按钮", Margin = new Thickness(40) };

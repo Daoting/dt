@@ -55,7 +55,7 @@ namespace Dt.Base.Report
             _nav.Select(0);
         }
 
-        void OnExport(Win p_win, Nav p_nav)
+        void OnExport(object p_owner, Nav p_nav)
         {
             var tb = new TextBox { AcceptsReturn = true, Style = Res.FvTextBox };
             ScrollViewer.SetHorizontalScrollBarVisibility(tb, ScrollBarVisibility.Auto);
@@ -64,7 +64,7 @@ namespace Dt.Base.Report
             LoadMain(tb);
         }
 
-        async void OnImport(Win p_win, Nav p_nav)
+        async void OnImport(object p_owner, Nav p_nav)
         {
             if (_info.IsDirty && !await Kit.Confirm("当前模板已修改，导入新模板会丢失修改内容，继续导入吗？"))
                 return;
@@ -89,7 +89,7 @@ namespace Dt.Base.Report
             }
         }
 
-        void OnPreview(Win p_win, Nav p_nav)
+        void OnPreview(object p_owner, Nav p_nav)
         {
             // 比较窗口类型和初始参数，关闭旧窗口
             var info = new RptInfo { Name = _info.Name, Root = _info.Root };
@@ -103,7 +103,7 @@ namespace Dt.Base.Report
             Rpt.Show(info);
         }
 
-        void OnSave(Win p_win, Nav p_nav)
+        void OnSave(object p_owner, Nav p_nav)
         {
             if (_info.IsDirty)
                 _info.SaveTemplate();

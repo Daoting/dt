@@ -176,9 +176,9 @@ namespace Dt.Base
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        internal override void ShowTraceBox()
+        internal override void ShowLogBox()
         {
-            SysTrace.ShowRealtimeLogDlg();
+            SysTrace.ShowLogBox();
         }
 
         /// <summary>

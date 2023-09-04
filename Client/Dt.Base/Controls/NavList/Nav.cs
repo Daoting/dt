@@ -116,7 +116,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置外部回调方法
         /// </summary>
-        public Action<Win, Nav> Callback { get; set; }
+        public Action<object, Nav> Callback { get; set; }
 
         /// <summary>
         /// 新窗口或主区内容的类型的构造方法的参数

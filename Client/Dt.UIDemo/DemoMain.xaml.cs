@@ -143,7 +143,7 @@ namespace Dt.UIDemo
             _navModule.Data = ds;
         }
 
-        void OpenHomeWin(Win p_win, Nav p_nav)
+        void OpenHomeWin(object p_owner, Nav p_nav)
         {
             Stub.Reboot(Type.GetType("Dt.MgrDemo.AppStub,Dt.MgrDemo"));
         }

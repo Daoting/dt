@@ -58,7 +58,7 @@ namespace Dt.Core
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        internal abstract void ShowTraceBox();
+        internal abstract void ShowLogBox();
 
         /// <summary>
         /// 挂起时的处理，必须耗时小！

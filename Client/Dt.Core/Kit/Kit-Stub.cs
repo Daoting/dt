@@ -187,7 +187,7 @@ namespace Dt.Core
         /// <summary>
         /// 显示系统日志窗口
         /// </summary>
-        public static Action ShowTraceBox => Stub.Inst.ShowTraceBox;
+        public static Action ShowLogBox => Stub.Inst.ShowLogBox;
         #endregion
 
         #region 选择文件
