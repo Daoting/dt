@@ -7,8 +7,9 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="选择日志" Icon="选日" Click="OnSelectFile" />
-            <a:Mi ID="打开其它" Icon="文件夹" Click="OnOpenFile" />
+            <a:Mi ID="其它应用日志" Icon="应用" Click="OnSelectOther" Visibility="Collapsed" />
+            <a:Mi ID="本应用日志" Icon="选日" Click="OnSelectSelf" />
+            <a:Mi ID="其它位置" Icon="文件夹" Click="OnOpenFile" />
         </a:Menu>
     </a:Tab.Menu>
     <Grid RowDefinitions="Auto,*">

@@ -29,6 +29,7 @@ namespace Dt.Base.Tools
         public HistoryLogList()
         {
             InitializeComponent();
+
         }
 
         #region 搜索
@@ -211,7 +212,7 @@ namespace Dt.Base.Tools
             _win.Form.Update(d);
         }
 
-        #region 换页
+        #region 打开
         async void OnOpenFile(object sender, Mi e)
         {
             var picker = Kit.GetFileOpenPicker();
@@ -223,7 +224,21 @@ namespace Dt.Base.Tools
                 LoadFile(new FileInfo(file.Path));
         }
 
-        async void OnSelectFile(object sender, Mi e)
+        async void OnSelectOther(object sender, Mi e)
+        {
+            var dlg = new HisLogFileOtherDlg();
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Width = 500;
+                dlg.Height = 600;
+            }
+            if (await dlg.ShowAsync())
+            {
+                LoadFile(dlg.FileInfo);
+            }
+        }
+
+        async void OnSelectSelf(object sender, Mi e)
         {
             var dlg = new HisLogFileDlg();
             if (!Kit.IsPhoneUI)
@@ -237,6 +252,16 @@ namespace Dt.Base.Tools
             }
         }
 
+        protected override void OnFirstLoaded()
+        {
+#if WIN
+            if (_win.IncludeOtherApp)
+                Menu[0].Visibility = Visibility.Visible;
+#endif
+        }
+        #endregion
+
+        #region 换页
         void OnFirstPage(object sender, RoutedEventArgs e)
         {
             LoadPage(1);

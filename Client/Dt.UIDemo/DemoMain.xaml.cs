@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
+using Dt.Base.Tools;
+using Microsoft.UI.Xaml;
 #endregion
 
 namespace Dt.UIDemo
@@ -32,6 +34,7 @@ namespace Dt.UIDemo
             InitializeComponent();
             LoadControlList();
             LoadModuleList();
+            LoadTools();
         }
 
         void LoadControlList()
@@ -50,7 +53,7 @@ namespace Dt.UIDemo
                 new Nav("窗口内导航", typeof(WinNavi)) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
                 new Nav("Tab区域内导航", typeof(TabNavi)) { Desc = "导航时支持带遮罩的模式视图、导航参数、导航结果" },
                 new Nav("对话框", typeof(DlgHome)) { Desc = "模拟传统对话框" },
-                new Nav("提示信息", typeof(NotifyDemo)) { To = NavTarget.WinMain, Desc = "普通信息、警告信息、Toast通知、后台任务" },
+                new Nav("提示信息", typeof(NotifyDemo)) { Desc = "普通信息、警告信息、Toast通知、后台任务" },
             };
             group.Title = "框架结构";
             ds.Add(group);
@@ -75,9 +78,9 @@ namespace Dt.UIDemo
             #region 样式资源
             group = new GroupData<Nav>
             {
-                new Nav("字体", typeof(FontDemo)) { To = NavTarget.WinMain, Desc = "常用字体大小" },
-                new Nav("常用画刷", typeof(BrushDemo)) { To = NavTarget.WinMain, Desc = "内部标准画刷" },
-                new Nav("按钮", typeof(BtnDemo)) { To = NavTarget.WinMain, Desc = "常用按钮样式" },
+                new Nav("字体", typeof(FontDemo)) { Desc = "常用字体大小" },
+                new Nav("常用画刷", typeof(BrushDemo)) { Desc = "内部标准画刷" },
+                new Nav("按钮", typeof(BtnDemo)) { Desc = "常用按钮样式" },
                 new Nav("标准控件", typeof(StyleHome)) { Desc = "常用系统控件的样式" },
             };
             group.Title = "样式资源";
@@ -103,30 +106,18 @@ namespace Dt.UIDemo
         {
             Nl<GroupData<Nav>> ds = new Nl<GroupData<Nav>>();
 
-            #region 工具
+            #region 综合
             var group = new GroupData<Nav>
-            {
-                new Nav("查找图标", typeof(IconDemo)) { Desc = "内置的矢量文字，可用作图标、提示" },
-#if WIN
-                new Nav("生成App图片", typeof(AppIcon)) { To = NavTarget.WinMain, Desc = "生成 android 和 iOS 中用到的app图片" },
-#endif
-                new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
-            };
-            group.Title = "工具";
-            ds.Add(group);
-            #endregion
-
-            #region 模块视图
-            group = new GroupData<Nav>
             {
                 new Nav("功能列表视图", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
                 new Nav("通用搜索视图", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
+                new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
             };
-            group.Title = "模块视图";
+            group.Title = "综合";
             ds.Add(group);
             #endregion
 
-            #region 综合
+            #region 服务
             if (Kit.IsUsingSvc)
             {
                 group = new GroupData<Nav>
@@ -135,12 +126,33 @@ namespace Dt.UIDemo
                     new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，需要联网" },
                     new Nav("切换到后台管理") { Callback = OpenHomeWin, Desc = "平台提供的默认后台管理，需要联网登录" },
                 };
-                group.Title = "综合";
+                group.Title = "服务";
                 ds.Add(group);
             }
             #endregion
 
             _navModule.Data = ds;
+        }
+
+        void LoadTools()
+        {
+            var lv = _navTools.ListView;
+            lv.MaxWidth = 600;
+            lv.BorderThickness = new Thickness(1, 0, 1, 1);
+            lv.BorderBrush = Res.浅灰2;
+
+            _navTools.Data = new Nl<Nav>
+            {
+                new Nav("查找图标", typeof(IconDemo), Icons.图标) { Desc = "内置的矢量文字，可用作图标、提示" },
+
+                new Nav("日志查询", typeof(HistoryLogWin), Icons.选日) { Params = true, Desc = "以管理员身份运行可查询其它App客户端日志" },
+
+                new Nav("数据库工具", typeof(RemoteDbWin), Icons.数据库) { Desc = "数据库初始化、备份等功能" },
+
+#if WIN
+                new Nav("生成App图片", typeof(AppIcon), Icons.图片) { Desc = "生成 android 和 iOS 中用到的app图片" },
+#endif
+            };
         }
 
         void OpenHomeWin(object p_owner, Nav p_nav)

@@ -53,19 +53,9 @@ namespace Dt.Core
         /// <param name="p_picker"></param>
         static void Init(object p_picker)
         {
-            var initializeWithWindowWrapper = WinRT.CastExtensions.As<IInitializeWithWindow>(p_picker);
-            var hwnd = GetActiveWindow();
-            initializeWithWindowWrapper.Initialize(hwnd);
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(MainWin);
+            WinRT.Interop.InitializeWithWindow.Initialize(p_picker, hWnd);
         }
-
-        [ComImport, Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IInitializeWithWindow
-        {
-            void Initialize([In] IntPtr hwnd);
-        }
-
-        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto, PreserveSig = true, SetLastError = false)]
-        public static extern IntPtr GetActiveWindow();
 #endif
     }
 }

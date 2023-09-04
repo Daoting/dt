@@ -29,7 +29,7 @@ namespace Dt.Base.Tools
             var nav = new NavList { ViewMode = NavViewMode.Tile, Title = "系统", To = NavTarget.NewWin };
             nav.Data = new Nl<Nav>
             {
-                new Nav("历史日志", typeof(HistoryLogWin), Icons.选日) { Desc = "查看客户端历史日志" },
+                new Nav("历史日志", typeof(HistoryLogWin), Icons.选日) { Params = false, Desc = "查看客户端历史日志" },
                 new Nav("实时日志", null, Icons.到今日) { Desc = "查看当前客户端正在输出的日志", Callback = (s, n) =>
                 {
                     ShowLogBox();

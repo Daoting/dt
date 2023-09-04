@@ -144,6 +144,11 @@ namespace Dt.Base
             get { return (bool)GetValue(AutoCloseDlgProperty); }
             set { SetValue(AutoCloseDlgProperty, value); }
         }
+
+        /// <summary>
+        /// 获取内部的Lv控件
+        /// </summary>
+        public Lv ListView => _lv;
         #endregion
 
         #region 外部方法
