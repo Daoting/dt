@@ -2,24 +2,27 @@
     x:Class="Dt.Base.Tools.TypeAliasWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.Base.Tools">
+    xmlns:a="using:Dt.Base">
 
-    <a:Pane>
-        <a:Tabs>
-            <a:Tab Order="1" Title="左区1">
+    <a:Tab Title="分组" a:Ex.Dock="Left">
+        <a:Lv x:Name="_lvGroup" ItemClick="OnItemClick" a:Ex.Dock="Left">
+            <DataTemplate>
+                <StackPanel Margin="10">
+                    <a:Dot ID="name" />
+                    <a:Dot ID="count" Call="Def.小灰" />
+                </StackPanel>
+            </DataTemplate>
+        </a:Lv>
+    </a:Tab>
 
-            </a:Tab>
-            <a:Tab Order="2" Title="左区2">
-
-            </a:Tab>
-        </a:Tabs>
-    </a:Pane>
-    <a:Main>
-        <a:Tabs>
-            <a:Tab Title="主区">
-
-            </a:Tab>
-        </a:Tabs>
-    </a:Main>
+    <a:Tab Title="类型列表">
+        <a:Lv x:Name="_lvType">
+            <DataTemplate>
+                <StackPanel Margin="10">
+                    <a:Dot ID="alias" />
+                    <a:Dot ID="types" Call="Def.小灰" />
+                </StackPanel>
+            </DataTemplate>
+        </a:Lv>
+    </a:Tab>
 </a:Win>

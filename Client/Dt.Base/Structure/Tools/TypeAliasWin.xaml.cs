@@ -18,8 +18,59 @@ namespace Dt.Base.Tools
         public TypeAliasWin()
         {
             InitializeComponent();
-
+            LoadGroup();
         }
 
+        void LoadGroup()
+        {
+            var tmp = new Dictionary<string, int>();
+            var dt = Stub.Inst._typeAlias;
+            foreach (var key in dt.Keys)
+            {
+                int index = key.IndexOf('-');
+                if (index < 1)
+                    continue;
+
+                var tp = key.Substring(0, index);
+                if (tmp.TryGetValue(tp, out int cnt))
+                {
+                    tmp[tp] = cnt + 1;
+                }
+                else
+                {
+                    tmp.Add(tp, 1);
+                }
+            }
+
+            var tbl = new Table { { "name" }, { "count" } };
+            foreach (var item in tmp)
+            {
+                tbl.AddRow(new { Name = item.Key + "Attribute", Count = $"共 {item.Value} 个类型" });
+            }
+            _lvGroup.Data = tbl;
+        }
+
+        void OnItemClick(object sender, ItemClickArgs e)
+        {
+            var pre = e.Row.Str(0).Replace("Attribute", "-");
+
+            var tbl = new Table { { "alias" }, { "types" } };
+            var dt = Stub.Inst._typeAlias;
+            foreach (var item in Stub.Inst._typeAlias)
+            {
+                if (!item.Key.StartsWith(pre))
+                    continue;
+
+                var r = tbl.AddRow();
+                r.InitVal("alias", item.Key.Substring(pre.Length));
+                string tps = "";
+                foreach (var tp in item.Value)
+                {
+                    tps += tp.FullName + ", ";
+                }
+                r.InitVal("types", tps);
+            }
+            _lvType.Data = tbl;
+        }
     }
 }
