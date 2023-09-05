@@ -29,7 +29,6 @@ namespace Dt.Base.Tools
         public HistoryLogList()
         {
             InitializeComponent();
-
         }
 
         #region 搜索
@@ -199,6 +198,7 @@ namespace Dt.Base.Tools
         }
         #endregion
 
+        #region 详细
         void OnOutputClick(object sender, ItemClickArgs e)
         {
             var r = e.Row;
@@ -211,6 +211,7 @@ namespace Dt.Base.Tools
             };
             _win.Form.Update(d);
         }
+        #endregion
 
         #region 打开
         async void OnOpenFile(object sender, Mi e)

@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Text;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 #endregion
 
@@ -170,6 +171,22 @@ namespace Dt.Core
         /// 获取新Guid，小写无连字符'-'
         /// </summary>
         public static string NewGuid => Guid.NewGuid().ToString("N");
+
+        /// <summary>
+        /// 将文本复制到剪贴板
+        /// </summary>
+        /// <param name="p_text"></param>
+        /// <param name="p_showText">是否显示要复制的内容</param>
+        public static void CopyToClipboard(string p_text, bool p_showText = false)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_text);
+            Clipboard.SetContent(data);
+            if (p_showText)
+                Msg("已复制到剪切板：\r\n" + p_text);
+            else
+                Msg("已复制到剪切板！");
+        }
 
         /// <summary>
         /// 将字节长度转成描述信息

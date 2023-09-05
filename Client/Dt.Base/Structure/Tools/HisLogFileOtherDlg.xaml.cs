@@ -71,7 +71,7 @@ namespace Dt.Base.Tools
         {
             if (_lvApp.SelectedItem is PackageKit.LogPathInfo info)
             {
-                SysTrace.CopyToClipboard(info.Path);
+                Kit.CopyToClipboard(info.Path);
             }
         }
     }

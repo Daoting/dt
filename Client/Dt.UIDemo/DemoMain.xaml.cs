@@ -126,7 +126,7 @@ namespace Dt.UIDemo
                     new Nav("文件", typeof(FileHome)) { Desc = "跨平台文件选择、上传下载文件、不同类型图像资源，需要联网" },
                     new Nav("切换到后台管理") { Callback = OpenHomeWin, Desc = "平台提供的默认后台管理，需要联网登录" },
                 };
-                group.Title = "服务";
+                group.Title = "需要连服务";
                 ds.Add(group);
             }
             #endregion
@@ -146,8 +146,6 @@ namespace Dt.UIDemo
                 new Nav("查找图标", typeof(IconDemo), Icons.图标) { Desc = "内置的矢量文字，可用作图标、提示" },
 
                 new Nav("日志查询", typeof(HistoryLogWin), Icons.选日) { Params = true, Desc = "以管理员身份运行可查询其它App客户端日志" },
-
-                new Nav("数据库工具", typeof(RemoteDbWin), Icons.数据库) { Desc = "数据库初始化、备份等功能" },
 
 #if WIN
                 new Nav("生成App图片", typeof(AppIcon), Icons.图片) { Desc = "生成 android 和 iOS 中用到的app图片" },

@@ -16,6 +16,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 将开发调试、系统管理员的常用功能集成到“系统”，右键开始或快捷键：Alt + ↓ 
 * DataTable中Copy是复制数据和结构，Clone是只结构，Table中调整成相同习惯
 * 只要详细级别才输出sqlite的sql
+* CopyToClipboard放入Kit
 
 ### 功能
 * .admin页面增加版本号

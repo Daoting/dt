@@ -97,7 +97,7 @@ namespace Dt.Base.Tools
                             {
                                 if (!string.IsNullOrEmpty(sql))
                                 {
-                                    SysTrace.CopyToClipboard(sql);
+                                    Kit.CopyToClipboard(sql);
                                     find = true;
                                 }
                             }
@@ -111,7 +111,7 @@ namespace Dt.Base.Tools
                         || det.StartsWith("update", StringComparison.OrdinalIgnoreCase)
                         || det.StartsWith("insert", StringComparison.OrdinalIgnoreCase))
                     {
-                        SysTrace.CopyToClipboard(det);
+                        Kit.CopyToClipboard(det);
                         find = true;
                     }
                 }
