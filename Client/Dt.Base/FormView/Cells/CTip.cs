@@ -120,6 +120,11 @@ namespace Dt.Base
         {
             _tb?.SetBinding(TextBlock.TextProperty, ValBinding);
         }
+
+        protected override bool SetFocus()
+        {
+            return false;
+        }
         #endregion
 
         #region 动态内容

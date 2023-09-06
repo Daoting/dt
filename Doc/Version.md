@@ -58,6 +58,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 确认对话框、错误对话框不支持非UI线程显示
 * Phone模式页面内容有水平滚动栏时不支持左右滑动
 * 设置Lv.SelectedItem和SelectedIndex时触发的SelectionChanged事件参数值类型不同
+* Fv的CTip不接收Tab停靠
 
 * 查询日志时“以管理员运行"，无法打开其它位置的日志
 
