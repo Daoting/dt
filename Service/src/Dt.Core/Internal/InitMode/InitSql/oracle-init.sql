@@ -409,9 +409,9 @@ COMMENT ON TABLE CM_USER IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO CM_USER VALUES ('1', '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', '1', '[[photo/1.jpg,1,300 x 300 (.jpg),49179,daoting,2020-03-13 10:37]]', '0', TO_DATE('2019-10-24 09:06:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:35:39', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_USER VALUES ('2', '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', '2', '[[photo/2.jpg,2,300 x 300 (.jpg),49179,daoting,2020-03-13 10:37]]', '0', TO_DATE('2019-10-24 13:03:19', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:23', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_USER VALUES ('3', '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', '1', '[[photo/3.jpg,3,300 x 300 (.jpg),49179,daoting,2020-03-13 10:37]]', '0', TO_DATE('0001-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:46', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_USER VALUES ('1', '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', '1', '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('2019-10-24 09:06:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:35:39', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_USER VALUES ('2', '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', '2', '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('2019-10-24 13:03:19', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:23', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_USER VALUES ('3', '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', '1', '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('0001-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:46', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
 -- Table structure for cm_user_group
