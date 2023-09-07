@@ -85,15 +85,22 @@ namespace Dt.Mgr.Rbac
                 return;
             }
 
-            var usr = new UserX(ID: user.ID);
-            usr.IsAdded = false;
+            user.IsAdded = false;
             string phone = user.Phone;
-            usr.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
+            user.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
 
-            if (await usr.Save(false))
+            if (!user.cPwd.IsChanged)
+            {
+                Kit.Msg("密码为手机号后4位，无需重置！");
+            }
+            else if(await user.Save(false))
+            {
                 Kit.Msg("密码已重置为手机号后4位！");
+            }
             else
+            {
                 Kit.Msg("重置密码失败！");
+            }
         }
 
         async void OnToggleExpired(object sender, Mi e)
@@ -106,11 +113,10 @@ namespace Dt.Mgr.Rbac
                 return;
             }
 
-            var usr = new UserX(ID: e.Row.ID, Expired: user.Expired);
-            usr.IsAdded = false;
-            usr.Expired = !user.Expired;
+            user.IsAdded = false;
+            user.Expired = !user.Expired;
 
-            if (await usr.Save(false))
+            if (await user.Save(false))
             {
                 Kit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
                 Update();

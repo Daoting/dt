@@ -51,11 +51,6 @@ namespace $ext_safeprojectname$
                     Icon: "文件夹",
                     ViewName: "文件"),
 
-                new OmMenu(
-                    ID: 1004,
-                    Name: "发布",
-                    Icon: "公告",
-                    ViewName: "发布"),
             };
         }
     }

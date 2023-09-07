@@ -17,7 +17,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 流程实例
     /// </summary>
-    partial class WfiDs : DomainSvc<WfiDs, AtCm.Info>
+    public partial class WfiDs : DomainSvc<WfiDs, AtCm.Info>
     {
         #region 签收
         public static async Task ToggleAccept(WfFormInfo p_info)

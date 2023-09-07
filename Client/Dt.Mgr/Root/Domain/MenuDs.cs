@@ -16,7 +16,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 当前登录用户相关的菜单
     /// </summary>
-    partial class MenuDs : DomainSvc<MenuDs, AtCm.Info>
+    public partial class MenuDs : DomainSvc<MenuDs, AtCm.Info>
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
@@ -113,8 +113,9 @@ namespace Dt.Mgr
         /// 加载当前登录用户的菜单，性能已调优
         /// </summary>
         /// <param name="p_fixedMenus">固定菜单项，通常在加载菜单前由外部设置</param>
+        /// <param name="p_maxFavCount">常用组菜单项的最多个数：固定项 + 点击次数最多的前n项</param>
         /// <returns></returns>
-        public static async Task LoadMenus(IList<OmMenu> p_fixedMenus)
+        public static async Task LoadMenus(IList<OmMenu> p_fixedMenus, int p_maxFavCount)
         {
             // 所有可访问项
             List<long> idsAll = await GetAllUserMenus();
@@ -129,17 +130,20 @@ namespace Dt.Mgr
             }
 
             // 点击次数最多的前n项
-            int maxFav = (_favMenus.Count % 2 == 0) ? 6 : 5;
-            var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
-            foreach (var fav in favMenu)
+            int maxFav = p_maxFavCount - _favMenus.Count;
+            if (maxFav > 0)
             {
-                // 过滤无权限的项
-                if (idsAll.Contains(fav.MenuID))
+                var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
+                foreach (var fav in favMenu)
                 {
-                    var om = await AtMenu.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
-                    _favMenus.Add(om);
-                    // 原位置仍存在
-                    //idsAll.Remove(fav.MenuID);
+                    // 过滤无权限的项
+                    if (idsAll.Contains(fav.MenuID))
+                    {
+                        var om = await AtMenu.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                        _favMenus.Add(om);
+                        // 原位置仍存在
+                        //idsAll.Remove(fav.MenuID);
+                    }
                 }
             }
 

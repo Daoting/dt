@@ -18,10 +18,10 @@ namespace Dt.Base.Tools
         public ToggleSvcUrlDlg()
         {
             InitializeComponent();
-            Init();
+            InitUrl();
         }
 
-        void Init()
+        void InitUrl()
         {
             _fv.Data = new Row { { "url", Kit.GetSvcUrl("cm") } };
 

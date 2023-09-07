@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-21 创建
+* 日志: 2023-09-06 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 流程实例
     /// </summary>
-    [Tbl("cm_wfi_prc")]
+    [Tbl("CM_WFI_PRC")]
     public partial class WfiPrcX : EntityX<WfiPrcX>
     {
         #region 构造方法
@@ -31,13 +31,13 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            Add("id", ID);
-            Add("prcd_id", PrcdID);
-            Add("name", Name);
-            Add("status", Status);
-            Add("dispidx", Dispidx);
-            Add("ctime", Ctime);
-            Add("mtime", Mtime);
+            Add("ID", ID);
+            Add("PRCD_ID", PrcdID);
+            Add("NAME", Name);
+            Add("STATUS", Status);
+            Add("DISPIDX", Dispidx);
+            Add("CTIME", Ctime);
+            Add("MTIME", Mtime);
             IsAdded = true;
         }
         #endregion
@@ -47,53 +47,65 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         public long PrcdID
         {
-            get { return (long)this["prcd_id"]; }
-            set { this["prcd_id"] = value; }
+            get { return (long)this["PRCD_ID"]; }
+            set { this["PRCD_ID"] = value; }
         }
+
+        public Cell cPrcdID => _cells["PRCD_ID"];
 
         /// <summary>
         /// 流转单名称
         /// </summary>
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["NAME"]; }
+            set { this["NAME"] = value; }
         }
+
+        public Cell cName => _cells["NAME"];
 
         /// <summary>
         /// 流程实例状态 0活动 1结束 2终止
         /// </summary>
         public WfiPrcStatus Status
         {
-            get { return (WfiPrcStatus)this["status"]; }
-            set { this["status"] = value; }
+            get { return (WfiPrcStatus)this["STATUS"]; }
+            set { this["STATUS"] = value; }
         }
+
+        public Cell cStatus => _cells["STATUS"];
 
         /// <summary>
         /// 显示顺序
         /// </summary>
         public int Dispidx
         {
-            get { return (int)this["dispidx"]; }
-            set { this["dispidx"] = value; }
+            get { return (int)this["DISPIDX"]; }
+            set { this["DISPIDX"] = value; }
         }
+
+        public Cell cDispidx => _cells["DISPIDX"];
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)this["ctime"]; }
-            set { this["ctime"] = value; }
+            get { return (DateTime)this["CTIME"]; }
+            set { this["CTIME"] = value; }
         }
+
+        public Cell cCtime => _cells["CTIME"];
 
         /// <summary>
         /// 最后一次状态改变的时间
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["mtime"]; }
-            set { this["mtime"] = value; }
+            get { return (DateTime)this["MTIME"]; }
+            set { this["MTIME"] = value; }
         }
+
+        public Cell cMtime => _cells["MTIME"];
     }
 }

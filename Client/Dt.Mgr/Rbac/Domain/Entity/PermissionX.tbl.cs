@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-21 创建
+* 日志: 2023-09-06 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Rbac
     /// <summary>
     /// 权限
     /// </summary>
-    [Tbl("cm_permission")]
+    [Tbl("CM_PERMISSION")]
     public partial class PermissionX : EntityX<PermissionX>
     {
         #region 构造方法
@@ -27,9 +27,9 @@ namespace Dt.Mgr.Rbac
             string Name = default,
             string Note = default)
         {
-            Add("id", ID);
-            Add("name", Name);
-            Add("note", Note);
+            Add("ID", ID);
+            Add("NAME", Name);
+            Add("NOTE", Note);
             IsAdded = true;
         }
         #endregion
@@ -39,17 +39,21 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["NAME"]; }
+            set { this["NAME"] = value; }
         }
+
+        public Cell cName => _cells["NAME"];
 
         /// <summary>
         /// 权限描述
         /// </summary>
         public string Note
         {
-            get { return (string)this["note"]; }
-            set { this["note"] = value; }
+            get { return (string)this["NOTE"]; }
+            set { this["NOTE"] = value; }
         }
+
+        public Cell cNote => _cells["NOTE"];
     }
 }

@@ -25,6 +25,12 @@ namespace Dt.Mgr.Home
             typeof(RootMenu),
             new PropertyMetadata(null, OnFixedMenusChanged));
 
+        public readonly static DependencyProperty MaxFavMenuCountProperty = DependencyProperty.Register(
+            "MaxFavMenuCount",
+            typeof(int),
+            typeof(RootMenu),
+            new PropertyMetadata(12));
+
         static void OnFixedMenusChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
             var rm = (RootMenu)d;
@@ -53,6 +59,15 @@ namespace Dt.Mgr.Home
         }
 
         /// <summary>
+        /// 获取设置常用组菜单项的最多个数(固定项 + 点击次数最多的前n项)，默认12
+        /// </summary>
+        public int MaxFavMenuCount
+        {
+            get { return (int)GetValue(MaxFavMenuCountProperty); }
+            set { SetValue(MaxFavMenuCountProperty, value); }
+        }
+
+        /// <summary>
         /// 固定菜单项数
         /// </summary>
         int FixedMenusCount => FixedMenus == null ? 0 : FixedMenus.Count;
@@ -64,7 +79,7 @@ namespace Dt.Mgr.Home
 
         async void LoadMenus()
         {
-            await MenuDs.LoadMenus(FixedMenus);
+            await MenuDs.LoadMenus(FixedMenus, MaxFavMenuCount);
             _lv.Data = MenuDs.RootPageMenus;
             _miReset.Visibility = (MenuDs.FavMenus.Count > FixedMenusCount) ? Visibility.Visible : Visibility.Collapsed;
 

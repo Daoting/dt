@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-21 创建
+* 日志: 2023-09-06 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Rbac
     /// <summary>
     /// 系统用户
     /// </summary>
-    [Tbl("cm_user")]
+    [Tbl("CM_USER")]
     public partial class UserX : EntityX<UserX>
     {
         #region 构造方法
@@ -29,19 +29,19 @@ namespace Dt.Mgr.Rbac
             string Pwd = default,
             Gender Sex = (Gender)1,
             string Photo = default,
-            bool Expired = false,
+            bool Expired = default,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            Add("id", ID);
-            Add("phone", Phone);
-            Add("name", Name);
-            Add("pwd", Pwd);
-            Add("sex", Sex);
-            Add("photo", Photo);
-            Add("expired", Expired);
-            Add("ctime", Ctime);
-            Add("mtime", Mtime);
+            Add("ID", ID);
+            Add("PHONE", Phone);
+            Add("NAME", Name);
+            Add("PWD", Pwd);
+            Add("SEX", Sex);
+            Add("PHOTO", Photo);
+            Add("EXPIRED", Expired);
+            Add("CTIME", Ctime);
+            Add("MTIME", Mtime);
             IsAdded = true;
         }
         #endregion
@@ -51,71 +51,87 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public string Phone
         {
-            get { return (string)this["phone"]; }
-            set { this["phone"] = value; }
+            get { return (string)this["PHONE"]; }
+            set { this["PHONE"] = value; }
         }
+
+        public Cell cPhone => _cells["PHONE"];
 
         /// <summary>
         /// 姓名
         /// </summary>
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["NAME"]; }
+            set { this["NAME"] = value; }
         }
+
+        public Cell cName => _cells["NAME"];
 
         /// <summary>
         /// 密码的md5
         /// </summary>
         public string Pwd
         {
-            get { return (string)this["pwd"]; }
-            set { this["pwd"] = value; }
+            get { return (string)this["PWD"]; }
+            set { this["PWD"] = value; }
         }
+
+        public Cell cPwd => _cells["PWD"];
 
         /// <summary>
         /// 性别
         /// </summary>
         public Gender Sex
         {
-            get { return (Gender)this["sex"]; }
-            set { this["sex"] = value; }
+            get { return (Gender)this["SEX"]; }
+            set { this["SEX"] = value; }
         }
+
+        public Cell cSex => _cells["SEX"];
 
         /// <summary>
         /// 头像
         /// </summary>
         public string Photo
         {
-            get { return (string)this["photo"]; }
-            set { this["photo"] = value; }
+            get { return (string)this["PHOTO"]; }
+            set { this["PHOTO"] = value; }
         }
+
+        public Cell cPhoto => _cells["PHOTO"];
 
         /// <summary>
         /// 是否停用
         /// </summary>
         public bool Expired
         {
-            get { return (bool)this["expired"]; }
-            set { this["expired"] = value; }
+            get { return (bool)this["EXPIRED"]; }
+            set { this["EXPIRED"] = value; }
         }
+
+        public Cell cExpired => _cells["EXPIRED"];
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)this["ctime"]; }
-            set { this["ctime"] = value; }
+            get { return (DateTime)this["CTIME"]; }
+            set { this["CTIME"] = value; }
         }
+
+        public Cell cCtime => _cells["CTIME"];
 
         /// <summary>
         /// 修改时间
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["mtime"]; }
-            set { this["mtime"] = value; }
+            get { return (DateTime)this["MTIME"]; }
+            set { this["MTIME"] = value; }
         }
+
+        public Cell cMtime => _cells["MTIME"];
     }
 }

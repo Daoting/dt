@@ -13,7 +13,7 @@ using System.Text.Json;
 
 namespace Dt.Mgr.Workflow
 {
-    partial class WfdDs : DomainSvc<WfdDs, AtCm.Info>
+    public partial class WfdDs : DomainSvc<WfdDs, AtCm.Info>
     {
         public static async Task<bool> SavePrc(WfdPrcX p_prc)
         {
