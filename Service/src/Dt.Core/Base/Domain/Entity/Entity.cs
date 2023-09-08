@@ -128,7 +128,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public virtual Action<CellValChangingArgs> GetCellHook(string p_id)
+        public override Action<CellValChangingArgs> GetCellHook(string p_id)
         {
             return GetHooks().GetCellHook(p_id);
         }

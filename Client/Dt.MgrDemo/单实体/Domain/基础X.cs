@@ -77,10 +77,12 @@ namespace Dt.MgrDemo.单实体
             OnChanging(c限长4, e =>
             {
                 e.NewVal = e.Str.ToUpper();
-                //Throw.If(e.Gb2312Length > 4, "超出最大长度4", c限长4);
-                //Throw.If(e.Str.Length > 4, "超出最大长度4", c限长4);
-                //Throw.If(e.Utf8Length > 4, "超出最大长度4", c限长4);
-                //Throw.If(e.UnicodeLength > 4, "超出最大长度4", c限长4);
+
+                // 内部已有默认的超长校验，按照数据库字段长度
+                Throw.If(e.GbkLength > 8, "超出最大长度", e.Cell);
+                Throw.If(e.Str.Length > 8, "超出最大长度", e.Cell);
+                Throw.If(e.Utf8Length > 8, "超出最大长度", e.Cell);
+                Throw.If(e.UnicodeLength > 8, "超出最大长度", e.Cell);
             });
 
             OnChanging(c禁止选中, e =>

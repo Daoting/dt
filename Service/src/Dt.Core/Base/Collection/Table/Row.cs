@@ -669,6 +669,55 @@ namespace Dt.Core
         }
         #endregion
 
+        #region Hook
+        /// <summary>
+        /// 注册Cell.Val值变化前的回调，回调方法通常为业务校验或特殊数据处理，校验失败时触发异常使赋值失败，并使UI重绑回原值
+        /// </summary>
+        /// <param name="p_id">当前Cell</param>
+        /// <param name="p_callback">Hook 方法</param>
+        public void SetCellHook(string p_id, Action<CellValChangingArgs> p_callback)
+        {
+            if (!string.IsNullOrEmpty(p_id) && p_callback != null)
+            {
+                if (_hooks == null)
+                    _hooks = new RowHooks();
+
+                _hooks.AddCellHook(p_id, p_callback);
+            }
+        }
+
+        /// <summary>
+        /// 获取Cell.Val值变化前的回调方法
+        /// </summary>
+        /// <param name="p_id">Cell.ID</param>
+        /// <returns></returns>
+        public virtual Action<CellValChangingArgs> GetCellHook(string p_id)
+        {
+            if (_hooks != null)
+                return _hooks.GetCellHook(p_id);
+            return null;
+        }
+
+        RowHooks _hooks;
+
+        class RowHooks
+        {
+            readonly Dictionary<string, Action<CellValChangingArgs>> _cellHooks = new Dictionary<string, Action<CellValChangingArgs>>(StringComparer.OrdinalIgnoreCase);
+
+            public Action<CellValChangingArgs> GetCellHook(string p_id)
+            {
+                if (_cellHooks.Count > 0 && _cellHooks.TryGetValue(p_id, out var hook))
+                    return hook;
+                return null;
+            }
+
+            public void AddCellHook(string p_id, Action<CellValChangingArgs> p_callback)
+            {
+                _cellHooks[p_id] = p_callback;
+            }
+        }
+        #endregion
+
         #region 内部方法
         /// <summary>
         /// 检查当前行数据是否有变化，同时更新IsChanged属性

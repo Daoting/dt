@@ -57,7 +57,7 @@ namespace Dt.Core
         /// </summary>
         public AccessInfo AccessInfo { get; private set; }
 
-        async Task Init()
+        async Task<bool> Init()
         {
             AccessInfo ai = null;
             var tbl = EntityType.GetCustomAttribute<TblAttribute>(false);
@@ -75,12 +75,23 @@ namespace Dt.Core
                     ai = new AccessInfo(AccessType.Local, sqlite.DbName);
                 }
             }
+
             if (ai == null)
-                throw new Exception($"实体{EntityType.Name}缺少 TblAttribute 或 SqliteAttribute 标签！");
-            AccessInfo = ai;
+            {
+                Log.ForContext("src", "EntitySchema")
+                    .Information($"实体{EntityType.Name}缺少 TblAttribute 或 SqliteAttribute 标签！");
+                return false;
+            }
 
             if (Schema.PrimaryKey.Count == 0)
-                throw new Exception($"实体{EntityType.Name}的映射表{Schema.Name}无主键！");
+            {
+                Log.ForContext("src", "EntitySchema")
+                    .Information($"实体{EntityType.Name}的映射表{Schema.Name}无主键！");
+                return false;
+            }
+
+            AccessInfo = ai;
+            return true;
         }
 
         internal static Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)
@@ -159,7 +170,10 @@ namespace Dt.Core
                 return m;
 
             var model = new EntitySchema(p_type);
-            await model.Init();
+            var suc = await model.Init();
+            if (!suc)
+                return null;
+
             _models[p_type] = model;
             return model;
         }

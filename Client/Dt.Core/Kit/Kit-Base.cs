@@ -216,16 +216,23 @@ namespace Dt.Core
             return Encoding.UTF8.GetBytes(p_content).Length;
         }
 
+        static Encoding _gbk;
         /// <summary>
-        /// 获取字符串按gb2312编码的字节长度
+        /// 获取字符串按GBK编码的字节长度
         /// </summary>
         /// <param name="p_content"></param>
         /// <returns></returns>
-        public static int GetGb2312Length(string p_content)
+        public static int GetGbkLength(string p_content)
         {
             if (string.IsNullOrEmpty(p_content))
                 return 0;
-            return Encoding.GetEncoding("gb2312").GetBytes(p_content).Length;
+
+            if (_gbk == null)
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                _gbk = Encoding.GetEncoding("GBK");
+            }
+            return _gbk.GetBytes(p_content).Length;
         }
 
         /// <summary>

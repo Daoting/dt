@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -78,7 +79,7 @@ namespace Dt.Core
         /// <summary>
         /// 普通列列表
         /// </summary>
-        public List<TableCol> Columns { get; } = new List<TableCol>();
+        public TableColList Columns { get; } = new TableColList();
 
         /// <summary>
         /// 表注释
@@ -408,6 +409,24 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取列定义
+        /// </summary>
+        /// <param name="p_colName"></param>
+        /// <returns></returns>
+        public TableCol GetColumn(string p_colName)
+        {
+            if (string.IsNullOrEmpty(p_colName))
+                return null;
+
+            if (Columns.TryGetValue(p_colName, out var col))
+                return col;
+
+            return (from c in PrimaryKey
+                   where p_colName.Equals(c.Name, StringComparison.OrdinalIgnoreCase)
+                   select c).FirstOrDefault();
+        }
+
+        /// <summary>
         /// 将纵向保存的列值转换成横向保存的列值。
         /// </summary>
         /// <param name="p_parm">dict[string, List`Cell`]</param>
@@ -655,6 +674,27 @@ namespace Dt.Core
             if (p_type == typeof(sbyte))
                 return "sbyte";
             return p_type.Name;
+        }
+    }
+
+    public class TableColList : KeyedCollection<string, TableCol>
+    {
+        /// <summary>
+        /// 构造方法，键比较时忽略大小写
+        /// </summary>
+        public TableColList()
+            : base(StringComparer.OrdinalIgnoreCase)
+        {
+        }
+
+        /// <summary>
+        /// 根据数据列获得列字段名
+        /// </summary>
+        /// <param name="item">数据列</param>
+        /// <returns>列字段名</returns>
+        protected override string GetKeyForItem(TableCol item)
+        {
+            return item.Name;
         }
     }
 

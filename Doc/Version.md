@@ -51,7 +51,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * "系统"原左侧列表方式调整为面板方式
 * 搬运工样例 转 助手，增加查询其它App日志功能，需“以管理员运行"
 * Entity的OnChanging钩子参数更易用
-* Entity的OnChanging放入Row
+* Row增加的CellHook钩子
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态

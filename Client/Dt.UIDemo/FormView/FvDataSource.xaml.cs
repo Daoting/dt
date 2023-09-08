@@ -19,24 +19,29 @@ namespace Dt.UIDemo
 {
     public partial class FvDataSource : Win
     {
-        Table _tbl;
         int _rowNum;
 
         public FvDataSource()
         {
             InitializeComponent();
-
-            _tbl = new Table { { "name" }, { "fontsize", typeof(double) }, { "id" }, };
         }
 
         void OnDataRow(object sender, RoutedEventArgs e)
         {
-            _fv.Data = _tbl.AddRow(new
+            var r = new Row
             {
-                name = $"第{++_rowNum}行",
-                fontsize = 22,
-                id = _rowNum.ToString()
+                { "name", $"第{++_rowNum}行" },
+                { "fontsize", 22 },
+                { "id", _rowNum.ToString() },
+            };
+
+            r.SetCellHook("name", e =>
+            {
+                e.NewVal = e.Str.ToUpper();
+                Throw.If(e.GbkLength > 8, "超出最大长度", e.Cell);
             });
+
+            _fv.Data = r;
         }
 
         void OnTgt1(object sender, RoutedEventArgs e)

@@ -24,6 +24,7 @@ namespace Dt.Core
     public partial class Cell : INotifyPropertyChanged
     {
         #region 成员变量
+        const string _outLengthErr = "已超出最大长度！";
         object _val;
         bool _isChanged = false;
 
@@ -165,7 +166,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取字符串按gb2312编码的字节长度
         /// </summary>
-        public int Gb2312Length => Kit.GetGb2312Length(GetVal<string>());
+        public int GbkLength => Kit.GetGbkLength(GetVal<string>());
 
         /// <summary>
         /// 获取字符串按Unicode编码的字节长度
@@ -290,8 +291,8 @@ namespace Dt.Core
         /// 内部赋值
         /// </summary>
         /// <param name="p_val"></param>
-        /// <param name="p_initVal">是否正在通过InitVal设置默认值，true时不检查IsChanged状态、不调用Entity的Hook</param>
-        void SetValueInternal(object p_val, bool p_initVal)
+        /// <param name="p_initVal">是否正在通过InitVal设置默认值，true时不检查IsChanged状态、不检查是否超长、不调用外部hook</param>
+        async void SetValueInternal(object p_val, bool p_initVal)
         {
             // 过滤多次赋值现象，当cell的类型为string时，在给val赋值null时，将一直保持初始的string.Empty的值
             if (object.Equals(_val, p_val)
@@ -301,55 +302,98 @@ namespace Dt.Core
             // 类型不同时转换
             object val = GetValInternal(p_val, Type);
 
-            // 调用Entity外部钩子，通常为业务校验，校验失败时触发异常使赋值失败
             bool hookChangedVal = false;
-            if (!p_initVal
-                && Row is Entity entity
-                && entity.GetCellHook(ID) is Action<CellValChangingArgs> hook)
+            if (!p_initVal)
             {
-                var args = new CellValChangingArgs(this, val);
-#if SERVER
-                // 服务端无绑定
-                hook(args);
-#else
-                if (PropertyChanged == null)
+                #region 检查是否超长
+                if (Type == typeof(string)
+                    && Row.GetType().IsSubclassOf(typeof(Entity)))
                 {
-                    // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
-                    hook(args);
-                }
-                else
-                {
-                    try
+                    var model = await EntitySchema.Get(Row.GetType());
+                    if (model != null && model.Schema.GetColumn(ID) is TableCol col)
                     {
-                        // 绑定时钩子抛出异常会造成绑定失败：无法将值从目标保存回源，故先catch，然后触发Val属性变化重绑回原值
+                        int length;
+                        if (model.Schema.DbType == DatabaseType.Oracle)
+                        {
+                            // oracle按gb2312算字节长度
+                            length = Kit.GetGbkLength((string)val);
+                        }
+                        else
+                        {
+                            // 其余库按utf8计算字节长度
+                            length = Kit.GetUtf8Length((string)val);
+                        }
+
+                        if (length > col.Length)
+                        {
+                            // 超长抛出异常
+#if SERVER
+                            // 服务端无绑定
+                            Throw.Msg(_outLengthErr, this);
+#else
+                            if (PropertyChanged == null)
+                            {
+                                // 无绑定时统一在未处理异常中提示警告信息
+                                Throw.Msg(_outLengthErr, this);
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    // 绑定时抛出异常会造成绑定失败：无法将值从目标保存回源，故先catch，然后触发Val属性变化重绑回原值
+                                    Throw.Msg(_outLengthErr, this);
+                                }
+                                catch
+                                {
+                                    RollbackValForUI();
+                                    // 赋值失败，直接返回
+                                    return;
+                                }
+                            }
+#endif
+                        }
+                    }
+                }
+                #endregion
+
+                #region 调用外部钩子
+                // 通常为业务校验或特殊数据处理，校验失败时触发异常使赋值失败
+                var hook = Row.GetCellHook(ID);
+                if (hook != null)
+                {
+                    var args = new CellValChangingArgs(this, val);
+#if SERVER
+                   // 服务端无绑定
+                   hook(args);
+#else
+                    if (PropertyChanged == null)
+                    {
+                        // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
                         hook(args);
                     }
-                    catch
+                    else
                     {
-                        // 通知UI重置原值
-#if !WIN
-                        // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
-                        var old = OriginalVal;
-                        OriginalVal = _val;
-                        _val = p_val;
-                        PropertyChanged(this, new PropertyChangedEventArgs("Val"));
-                        _val = OriginalVal;
-                        OriginalVal = old;
+                        try
+                        {
+                            // 绑定时钩子抛出异常会造成绑定失败：无法将值从目标保存回源，故先catch，然后触发Val属性变化重绑回原值
+                            hook(args);
+                        }
+                        catch
+                        {
+                            RollbackValForUI();
+                            // 赋值失败，直接返回
+                            return;
+                        }
+                    }
 #endif
-                        // 立即调用时无效！
-                        Kit.RunInQueue(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
-
-                        // 直接返回，赋值失败
-                        return;
+                    // 钩子可能已修改值，用钩子的值
+                    if (val != args.NewVal)
+                    {
+                        val = args.NewVal;
+                        hookChangedVal = true;
                     }
                 }
-#endif
-                // 钩子可能已修改值，用钩子的值
-                if (val != args.NewVal)
-                {
-                    val = args.NewVal;
-                    hookChangedVal = true;
-                }
+                #endregion
             }
 
             // 成功赋值
@@ -451,6 +495,25 @@ namespace Dt.Core
 
             throw new Exception($"Cell列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
+
+        /// <summary>
+        /// 通知UI重置原值
+        /// </summary>
+        void RollbackValForUI()
+        {
+#if !WIN
+            // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
+            var old = OriginalVal;
+            OriginalVal = _val;
+            _val = p_val;
+            PropertyChanged(this, new PropertyChangedEventArgs("Val"));
+            _val = OriginalVal;
+            OriginalVal = old;
+#endif
+            // 立即调用时无效！
+            Kit.RunInQueue(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
+
+        }
         #endregion
     }
 
@@ -532,12 +595,17 @@ namespace Dt.Core
         /// <summary>
         /// 获取字符串按gb2312编码的字节长度
         /// </summary>
-        public int Gb2312Length => Kit.GetGb2312Length(GetVal<string>());
+        public int GbkLength => Kit.GetGbkLength(GetVal<string>());
 
         /// <summary>
         /// 获取字符串按Unicode编码的字节长度
         /// </summary>
         public int UnicodeLength => Kit.GetUnicodeLength(GetVal<string>());
+
+        /// <summary>
+        /// 获取当前Cell
+        /// </summary>
+        public Cell Cell => _cell;
 
         /// <summary>
         /// 获取当前新值

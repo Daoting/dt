@@ -40,6 +40,8 @@
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.2" />
+        <!-- 用到gbk -->
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
     </ItemGroup>
 
     <!-- 非windows引用包 -->
