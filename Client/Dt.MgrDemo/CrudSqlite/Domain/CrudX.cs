@@ -56,10 +56,6 @@ namespace Dt.MgrDemo.CrudSqlite
                 return Task.CompletedTask;
             });
 
-            OnChanging<string>(nameof(Name), v =>
-            {
-                //Kit.Msg("Name新值：" + v);
-            });
         }
     }
 }

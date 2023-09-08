@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.MgrDemo.多对多
     /// <summary>
     /// 用户关联的角色
     /// </summary>
-    [Tbl("demo_用户角色")]
+    [Tbl("DEMO_用户角色")]
     public partial class 用户角色X : EntityX<用户角色X>
     {
         #region 构造方法
@@ -26,8 +26,8 @@ namespace Dt.MgrDemo.多对多
             long UserID,
             long RoleID)
         {
-            Add("user_id", UserID);
-            Add("role_id", RoleID);
+            Add("USER_ID", UserID);
+            Add("ROLE_ID", RoleID);
             IsAdded = true;
         }
         #endregion
@@ -37,18 +37,22 @@ namespace Dt.MgrDemo.多对多
         /// </summary>
         public long UserID
         {
-            get { return (long)this["user_id"]; }
-            set { this["user_id"] = value; }
+            get { return (long)this["USER_ID"]; }
+            set { this["USER_ID"] = value; }
         }
+
+        public Cell cUserID => _cells["USER_ID"];
 
         /// <summary>
         /// 角色标识
         /// </summary>
         public long RoleID
         {
-            get { return (long)this["role_id"]; }
-            set { this["role_id"] = value; }
+            get { return (long)this["ROLE_ID"]; }
+            set { this["ROLE_ID"] = value; }
         }
+
+        public Cell cRoleID => _cells["ROLE_ID"];
 
         new public long ID { get { return -1; } }
     }

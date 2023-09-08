@@ -116,6 +116,63 @@ namespace Dt.Core
         public object Tag { get; set; }
         #endregion
 
+        #region 值属性
+        /// <summary>
+        /// 获取当前新值的字符串值，为null时返回string.Empty！！！
+        /// </summary>
+        public string Str => GetVal<string>();
+
+        /// <summary>
+        /// 获取当前新值是否为1或true
+        /// </summary>
+        public bool Bool => GetVal<bool>();
+
+        /// <summary>
+        /// 获取当前新值的double值，为null时返回零即default(double)！！！
+        /// </summary>
+        public double Double => GetVal<double>();
+
+        /// <summary>
+        /// 获取当前新值的整数值，为null时返回零即default(int)！！！
+        /// </summary>
+        public int Int => GetVal<int>();
+
+        /// <summary>
+        /// 获取当前新值的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        public long Long => GetVal<long>();
+
+        /// <summary>
+        /// 获取当前新值的日期值，为null时返回DateTime.MinValue，即default(DateTime)！！！
+        /// </summary>
+        public DateTime Date => GetVal<DateTime>();
+
+        /// <summary>
+        /// 获取当前新字符串值是否为空
+        /// </summary>
+        public bool IsEmpty => GetVal<string>() == "";
+
+        /// <summary>
+        /// 获取当前新值是否为0
+        /// </summary>
+        public bool IsZero => GetVal<string>() == "0";
+
+        /// <summary>
+        /// 获取字符串按utf8编码的字节长度
+        /// </summary>
+        public int Utf8Length => Kit.GetUtf8Length(GetVal<string>());
+
+        /// <summary>
+        /// 获取字符串按gb2312编码的字节长度
+        /// </summary>
+        public int Gb2312Length => Kit.GetGb2312Length(GetVal<string>());
+
+        /// <summary>
+        /// 获取字符串按Unicode编码的字节长度
+        /// </summary>
+        public int UnicodeLength => Kit.GetUnicodeLength(GetVal<string>());
+        #endregion
+
         #region 外部方法
         /// <summary>
         /// 提交自上次调用以来对该数据项进行的所有更改。
@@ -245,25 +302,27 @@ namespace Dt.Core
             object val = GetValInternal(p_val, Type);
 
             // 调用Entity外部钩子，通常为业务校验，校验失败时触发异常使赋值失败
+            bool hookChangedVal = false;
             if (!p_initVal
                 && Row is Entity entity
-                && entity.GetCellHook(ID) is Action<object> hook)
+                && entity.GetCellHook(ID) is Action<CellValChangingArgs> hook)
             {
+                var args = new CellValChangingArgs(this, val);
 #if SERVER
                 // 服务端无绑定
-                hook(val);
+                hook(args);
 #else
                 if (PropertyChanged == null)
                 {
                     // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
-                    hook(val);
+                    hook(args);
                 }
                 else
                 {
                     try
                     {
                         // 绑定时钩子抛出异常会造成绑定失败：无法将值从目标保存回源，故先catch，然后触发Val属性变化重绑回原值
-                        hook(val);
+                        hook(args);
                     }
                     catch
                     {
@@ -285,6 +344,12 @@ namespace Dt.Core
                     }
                 }
 #endif
+                // 钩子可能已修改值，用钩子的值
+                if (val != args.NewVal)
+                {
+                    val = args.NewVal;
+                    hookChangedVal = true;
+                }
             }
 
             // 成功赋值
@@ -295,7 +360,18 @@ namespace Dt.Core
                 IsChanged = !object.Equals(_val, OriginalVal);
 
             // 触发属性变化事件
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Val"));
+            if (PropertyChanged != null)
+            {
+                if (hookChangedVal)
+                {
+                    // 外部钩子修改值后，立即调用时无效！
+                    Kit.RunInQueue(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
+                }
+                else
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("Val"));
+                }
+            }
 
             // 数据项值改变时统一在Table和Row中触发事件
             Row.OnValueChanged(this);
@@ -309,7 +385,7 @@ namespace Dt.Core
         /// <param name="p_val">值</param>
         /// <param name="p_tgtType">目标类型</param>
         /// <returns>转换结果</returns>
-        object GetValInternal(object p_val, Type p_tgtType)
+        internal static object GetValInternal(object p_val, Type p_tgtType)
         {
             // null时
             if (p_val == null)
@@ -373,8 +449,104 @@ namespace Dt.Core
             if (p_val is IConvertible)
                 return Convert.ChangeType(p_val, p_tgtType);
 
-            throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
+            throw new Exception($"Cell列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
         #endregion
+    }
+
+    /// <summary>
+    /// Cell值变化时提供给钩子回调的参数
+    /// </summary>
+    public class CellValChangingArgs
+    {
+        Cell _cell;
+        object _newVal;
+
+        internal CellValChangingArgs(Cell p_cell, object p_newVal)
+        {
+            _cell = p_cell;
+            _newVal = p_newVal;
+        }
+
+        /// <summary>
+        /// 获取设置Cell当前的新值
+        /// </summary>
+        public object NewVal
+        {
+            get { return _newVal; }
+            set
+            {
+                if (_newVal != value)
+                {
+                    // 类型不同时转换
+                    _newVal = Cell.GetValInternal(value, _cell.Type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取当前新值的字符串值，为null时返回string.Empty！！！
+        /// </summary>
+        public string Str => GetVal<string>();
+
+        /// <summary>
+        /// 获取当前新值是否为1或true
+        /// </summary>
+        public bool Bool => GetVal<bool>();
+
+        /// <summary>
+        /// 获取当前新值的double值，为null时返回零即default(double)！！！
+        /// </summary>
+        public double Double => GetVal<double>();
+
+        /// <summary>
+        /// 获取当前新值的整数值，为null时返回零即default(int)！！！
+        /// </summary>
+        public int Int => GetVal<int>();
+
+        /// <summary>
+        /// 获取当前新值的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        public long Long => GetVal<long>();
+
+        /// <summary>
+        /// 获取当前新值的日期值，为null时返回DateTime.MinValue，即default(DateTime)！！！
+        /// </summary>
+        public DateTime Date => GetVal<DateTime>();
+
+        /// <summary>
+        /// 获取当前新字符串值是否为空
+        /// </summary>
+        public bool IsEmpty => GetVal<string>() == "";
+
+        /// <summary>
+        /// 获取当前新值是否为0
+        /// </summary>
+        public bool IsZero => GetVal<string>() == "0";
+
+        /// <summary>
+        /// 获取字符串按utf8编码的字节长度
+        /// </summary>
+        public int Utf8Length => Kit.GetUtf8Length(GetVal<string>());
+
+        /// <summary>
+        /// 获取字符串按gb2312编码的字节长度
+        /// </summary>
+        public int Gb2312Length => Kit.GetGb2312Length(GetVal<string>());
+
+        /// <summary>
+        /// 获取字符串按Unicode编码的字节长度
+        /// </summary>
+        public int UnicodeLength => Kit.GetUnicodeLength(GetVal<string>());
+
+        /// <summary>
+        /// 获取当前新值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetVal<T>()
+        {
+            return (T)Cell.GetValInternal(_newVal, typeof(T));
+        }
     }
 }

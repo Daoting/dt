@@ -74,15 +74,20 @@ namespace Dt.MgrDemo.单实体
                 return Task.CompletedTask;
             });
 
-            OnChanging<string>(nameof(限长4), v =>
+            OnChanging(c限长4, e =>
             {
-                Throw.If(v.Length > 4, "超出最大长度4", c限长4);
+                e.NewVal = e.Str.ToUpper();
+                //Throw.If(e.Gb2312Length > 4, "超出最大长度4", c限长4);
+                //Throw.If(e.Str.Length > 4, "超出最大长度4", c限长4);
+                //Throw.If(e.Utf8Length > 4, "超出最大长度4", c限长4);
+                //Throw.If(e.UnicodeLength > 4, "超出最大长度4", c限长4);
             });
 
-            OnChanging<bool>(nameof(禁止选中), v =>
+            OnChanging(c禁止选中, e =>
             {
-                Throw.If(v, "[禁止选中]列无法选中");
+                Throw.If(e.Bool, "[禁止选中]列无法选中");
             });
+
         }
     }
 }

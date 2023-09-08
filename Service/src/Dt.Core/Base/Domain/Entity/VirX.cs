@@ -86,7 +86,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public override Action<object> GetCellHook(string p_id)
+        public override Action<CellValChangingArgs> GetCellHook(string p_id)
         {
             var hook = E1.GetCellHook(p_id);
             if (hook == null)
@@ -213,7 +213,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public override Action<object> GetCellHook(string p_id)
+        public override Action<CellValChangingArgs> GetCellHook(string p_id)
         {
             var hook = E1.GetCellHook(p_id);
             if (hook == null)

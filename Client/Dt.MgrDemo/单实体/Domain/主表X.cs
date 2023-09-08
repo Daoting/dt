@@ -32,7 +32,7 @@ namespace Dt.MgrDemo.单实体
         {
             OnSaving(async () =>
             {
-                if (_cells["不重复"].IsChanged)
+                if (c不重复.IsChanged)
                 {
                     int cnt = await AtSvc.GetScalar<int>($"select count(1) from demo_主表 where 不重复='{不重复}' and ID!={ID}");
                     if (cnt > 0)
@@ -48,9 +48,9 @@ namespace Dt.MgrDemo.单实体
             //    return Task.CompletedTask;
             //});
 
-            OnChanging<string>(nameof(限长4), v =>
+            OnChanging(c限长4, e =>
             {
-                Throw.If(v.Length > 4, "超出最大长度4");
+                Throw.If(e.Utf8Length > 4, "超出最大长度4");
             });
         }
     }

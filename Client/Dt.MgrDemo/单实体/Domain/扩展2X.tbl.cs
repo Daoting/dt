@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@
 
 namespace Dt.MgrDemo.单实体
 {
-    [Tbl("demo_扩展2")]
+    [Tbl("DEMO_扩展2")]
     public partial class 扩展2X : EntityX<扩展2X>
     {
         #region 构造方法
@@ -25,7 +25,7 @@ namespace Dt.MgrDemo.单实体
             bool 禁止删除 = default,
             string 值变事件 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("扩展2名称", 扩展2名称);
             Add("禁止删除", 禁止删除);
             Add("值变事件", 值变事件);
@@ -42,6 +42,8 @@ namespace Dt.MgrDemo.单实体
             set { this["扩展2名称"] = value; }
         }
 
+        public Cell c扩展2名称 => _cells["扩展2名称"];
+
         /// <summary>
         /// true时删除前校验不通过
         /// </summary>
@@ -51,6 +53,8 @@ namespace Dt.MgrDemo.单实体
             set { this["禁止删除"] = value; }
         }
 
+        public Cell c禁止删除 => _cells["禁止删除"];
+
         /// <summary>
         /// 每次值变化时触发领域事件
         /// </summary>
@@ -59,5 +63,7 @@ namespace Dt.MgrDemo.单实体
             get { return (string)this["值变事件"]; }
             set { this["值变事件"] = value; }
         }
+
+        public Cell c值变事件 => _cells["值变事件"];
     }
 }

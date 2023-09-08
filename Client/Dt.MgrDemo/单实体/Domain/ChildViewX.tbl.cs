@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-27 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -11,10 +11,7 @@
 
 namespace Dt.MgrDemo.单实体
 {
-    /// <summary>
-    /// VIEW
-    /// </summary>
-    [Tbl("demo_child_view")]
+    [Tbl("DEMO_CHILD_VIEW")]
     public partial class ChildViewX : EntityX<ChildViewX>
     {
         #region 构造方法
@@ -28,10 +25,10 @@ namespace Dt.MgrDemo.单实体
             string ItemName = default,
             string Name = default)
         {
-            Add("id", ID);
-            Add("parent_id", ParentID);
-            Add("item_name", ItemName);
-            Add("name", Name);
+            Add("ID", ID);
+            Add("PARENT_ID", ParentID);
+            Add("ITEM_NAME", ItemName);
+            Add("NAME", Name);
             IsAdded = true;
         }
         #endregion
@@ -41,26 +38,32 @@ namespace Dt.MgrDemo.单实体
         /// </summary>
         public long ParentID
         {
-            get { return (long)this["parent_id"]; }
-            set { this["parent_id"] = value; }
+            get { return (long)this["PARENT_ID"]; }
+            set { this["PARENT_ID"] = value; }
         }
+
+        public Cell cParentID => _cells["PARENT_ID"];
 
         /// <summary>
         /// 
         /// </summary>
         public string ItemName
         {
-            get { return (string)this["item_name"]; }
-            set { this["item_name"] = value; }
+            get { return (string)this["ITEM_NAME"]; }
+            set { this["ITEM_NAME"] = value; }
         }
+
+        public Cell cItemName => _cells["ITEM_NAME"];
 
         /// <summary>
         /// 
         /// </summary>
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["NAME"]; }
+            set { this["NAME"] = value; }
         }
+
+        public Cell cName => _cells["NAME"];
     }
 }

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@
 
 namespace Dt.MgrDemo.单实体
 {
-    [Tbl("demo_主表")]
+    [Tbl("DEMO_主表")]
     public partial class 主表X : EntityX<主表X>
     {
         #region 构造方法
@@ -25,7 +25,7 @@ namespace Dt.MgrDemo.单实体
             string 限长4 = default,
             string 不重复 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("主表名称", 主表名称);
             Add("限长4", 限长4);
             Add("不重复", 不重复);
@@ -42,6 +42,8 @@ namespace Dt.MgrDemo.单实体
             set { this["主表名称"] = value; }
         }
 
+        public Cell c主表名称 => _cells["主表名称"];
+
         /// <summary>
         /// 限制最大长度4
         /// </summary>
@@ -51,6 +53,8 @@ namespace Dt.MgrDemo.单实体
             set { this["限长4"] = value; }
         }
 
+        public Cell c限长4 => _cells["限长4"];
+
         /// <summary>
         /// 列值无重复
         /// </summary>
@@ -59,5 +63,7 @@ namespace Dt.MgrDemo.单实体
             get { return (string)this["不重复"]; }
             set { this["不重复"] = value; }
         }
+
+        public Cell c不重复 => _cells["不重复"];
     }
 }

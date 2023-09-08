@@ -113,15 +113,14 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 注册Cell.Val值变化前的回调，回调方法通常为业务校验，校验失败时触发异常使赋值失败，并使UI重绑回原值
+        /// 注册Cell.Val值变化前的回调，回调方法通常为业务校验或特殊数据处理，校验失败时触发异常使赋值失败，并使UI重绑回原值
         /// </summary>
-        /// <typeparam name="T">Cell值类型</typeparam>
-        /// <param name="p_id">nameof(ID)，使用 nameof 避免列名不存在</param>
+        /// <param name="p_cell">当前Cell</param>
         /// <param name="p_callback">Hook 方法</param>
-        protected void OnChanging<T>(string p_id, Action<T> p_callback)
+        protected void OnChanging(Cell p_cell, Action<CellValChangingArgs> p_callback)
         {
-            if (_cells.Contains(p_id) && p_callback != null)
-                GetHooks().AddCellHook(p_id, p_callback);
+            if (p_cell != null && p_callback != null)
+                GetHooks().AddCellHook(p_cell, p_callback);
         }
 
         /// <summary>
@@ -129,7 +128,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">Cell.ID</param>
         /// <returns></returns>
-        public virtual Action<object> GetCellHook(string p_id)
+        public virtual Action<CellValChangingArgs> GetCellHook(string p_id)
         {
             return GetHooks().GetCellHook(p_id);
         }
@@ -186,7 +185,7 @@ namespace Dt.Core
 
         class EntityHooks
         {
-            readonly Dictionary<string, Action<object>> _cellHooks = new Dictionary<string, Action<object>>(StringComparer.OrdinalIgnoreCase);
+            readonly Dictionary<string, Action<CellValChangingArgs>> _cellHooks = new Dictionary<string, Action<CellValChangingArgs>>(StringComparer.OrdinalIgnoreCase);
 
             public Func<Task> SavingHook { get; set; }
 
@@ -196,17 +195,16 @@ namespace Dt.Core
 
             public Func<Task> DeletedHook { get; set; }
 
-            public Action<object> GetCellHook(string p_id)
+            public Action<CellValChangingArgs> GetCellHook(string p_id)
             {
                 if (_cellHooks.Count > 0 && _cellHooks.TryGetValue(p_id, out var hook))
                     return hook;
                 return null;
             }
 
-            public void AddCellHook<T>(string p_id, Action<T> p_callback)
+            public void AddCellHook(Cell p_cell, Action<CellValChangingArgs> p_callback)
             {
-                // Action<T> 无法转成 Action<object>，只能内部调用
-                _cellHooks[p_id] = new Action<object>((o) => p_callback((T)o));
+                _cellHooks[p_cell.ID] = p_callback;
             }
         }
         #endregion

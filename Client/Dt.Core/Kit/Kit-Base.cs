@@ -205,25 +205,39 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 计算字符串在oracle中占的长度
+        /// 获取字符串按utf8编码的字节长度
         /// </summary>
         /// <param name="p_content">要计算的字符串 </param>
         /// <returns></returns>
-        public static int GetVarcharLength(string p_content)
+        public static int GetUtf8Length(string p_content)
         {
             if (string.IsNullOrEmpty(p_content))
                 return 0;
+            return Encoding.UTF8.GetBytes(p_content).Length;
+        }
 
-            int length = 0;
-            byte[] content = Encoding.Unicode.GetBytes(p_content);
-            foreach (byte item in content)
-            {
-                if (item != 0)
-                {
-                    length++;
-                }
-            }
-            return length;
+        /// <summary>
+        /// 获取字符串按gb2312编码的字节长度
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <returns></returns>
+        public static int GetGb2312Length(string p_content)
+        {
+            if (string.IsNullOrEmpty(p_content))
+                return 0;
+            return Encoding.GetEncoding("gb2312").GetBytes(p_content).Length;
+        }
+
+        /// <summary>
+        /// 获取字符串按Unicode编码的字节长度
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <returns></returns>
+        public static int GetUnicodeLength(string p_content)
+        {
+            if (string.IsNullOrEmpty(p_content))
+                return 0;
+            return Encoding.Unicode.GetBytes(p_content).Length;
         }
 
         /// <summary>

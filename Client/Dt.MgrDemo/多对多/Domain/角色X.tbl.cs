@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.MgrDemo.多对多
     /// <summary>
     /// 角色
     /// </summary>
-    [Tbl("demo_角色")]
+    [Tbl("DEMO_角色")]
     public partial class 角色X : EntityX<角色X>
     {
         #region 构造方法
@@ -27,7 +27,7 @@ namespace Dt.MgrDemo.多对多
             string 角色名称 = default,
             string 角色描述 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("角色名称", 角色名称);
             Add("角色描述", 角色描述);
             IsAdded = true;
@@ -43,6 +43,8 @@ namespace Dt.MgrDemo.多对多
             set { this["角色名称"] = value; }
         }
 
+        public Cell c角色名称 => _cells["角色名称"];
+
         /// <summary>
         /// 角色描述
         /// </summary>
@@ -51,5 +53,7 @@ namespace Dt.MgrDemo.多对多
             get { return (string)this["角色描述"]; }
             set { this["角色描述"] = value; }
         }
+
+        public Cell c角色描述 => _cells["角色描述"];
     }
 }

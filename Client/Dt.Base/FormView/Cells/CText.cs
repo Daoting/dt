@@ -177,13 +177,27 @@ namespace Dt.Base
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void OnUpdateSource(object sender, TextChangedEventArgs e)
+        void OnUpdateSource(object sender, TextChangedEventArgs e)
         {
-            TextBox tb = (TextBox)sender;
-            // 确保实时更新到数据源
-            BindingExpression expresson = tb.GetBindingExpression(TextBox.TextProperty);
-            if (expresson != null)
+            BindingExpression expresson = _tb.GetBindingExpression(TextBox.TextProperty);
+            if (expresson == null)
+                return;
+
+            string src = null;
+            if (ValBinding.Source is ICell cell)
+                src = cell.GetVal<string>();
+
+            if (src == _tb.Text)
+            {
+                // 数据源的值和TextBox.Text相同，是数据源钩子修改了新值，再次更新到TextBox触发TextChanged事件，并且将光标重置到开头位置
+                // 不需要再更新到数据源，光标置最后
+                _tb.SelectionStart = _tb.Text.Length;
+            }
+            else
+            {
+                // 确保实时更新到数据源
                 expresson.UpdateSource();
+            }
         }
     }
 

@@ -56,9 +56,9 @@ namespace Dt.MgrDemo.Crud
                 return Task.CompletedTask;
             });
 
-            OnChanging<string>(nameof(Name), v =>
+            OnChanging(cName, e =>
             {
-                //Kit.Msg("Name新值：" + v);
+                //Kit.Msg("Name新值：" + e.Str);
             });
         }
     }

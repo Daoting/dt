@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@
 
 namespace Dt.MgrDemo.单实体
 {
-    [Tbl("demo_扩展1")]
+    [Tbl("DEMO_扩展1")]
     public partial class 扩展1X : EntityX<扩展1X>
     {
         #region 构造方法
@@ -25,7 +25,7 @@ namespace Dt.MgrDemo.单实体
             bool 禁止选中 = default,
             bool 禁止保存 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("扩展1名称", 扩展1名称);
             Add("禁止选中", 禁止选中);
             Add("禁止保存", 禁止保存);
@@ -42,6 +42,8 @@ namespace Dt.MgrDemo.单实体
             set { this["扩展1名称"] = value; }
         }
 
+        public Cell c扩展1名称 => _cells["扩展1名称"];
+
         /// <summary>
         /// 始终为false
         /// </summary>
@@ -51,6 +53,8 @@ namespace Dt.MgrDemo.单实体
             set { this["禁止选中"] = value; }
         }
 
+        public Cell c禁止选中 => _cells["禁止选中"];
+
         /// <summary>
         /// true时保存前校验不通过
         /// </summary>
@@ -59,5 +63,7 @@ namespace Dt.MgrDemo.单实体
             get { return (bool)this["禁止保存"]; }
             set { this["禁止保存"] = value; }
         }
+
+        public Cell c禁止保存 => _cells["禁止保存"];
     }
 }

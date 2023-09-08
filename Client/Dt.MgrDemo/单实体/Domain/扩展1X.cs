@@ -45,9 +45,9 @@ namespace Dt.MgrDemo.单实体
             //    return Task.CompletedTask;
             //});
 
-            OnChanging<bool>(nameof(禁止选中), v =>
+            OnChanging(c禁止选中, e =>
             {
-                Throw.If(v, "[禁止选中]列无法选中");
+                Throw.If(e.Bool, "[禁止选中]列无法选中");
             });
         }
     }

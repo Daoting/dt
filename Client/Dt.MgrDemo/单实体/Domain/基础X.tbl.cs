@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-08-22 创建
+* 日志: 2023-09-07 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@
 
 namespace Dt.MgrDemo.单实体
 {
-    [Tbl("demo_基础")]
+    [Tbl("DEMO_基础")]
     public partial class 基础X : EntityX<基础X>
     {
         #region 构造方法
@@ -31,7 +31,7 @@ namespace Dt.MgrDemo.单实体
             DateTime 创建时间 = default,
             DateTime 修改时间 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("序列", 序列);
             Add("限长4", 限长4);
             Add("不重复", 不重复);

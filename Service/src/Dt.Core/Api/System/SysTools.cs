@@ -754,7 +754,7 @@ namespace Dt.Core
             //    return Task.CompletedTask;
             //});
 
-            //OnChanging<string>(nameof(Name), v =>
+            //OnChanging(cName, e =>
             //{
                 
             //});
