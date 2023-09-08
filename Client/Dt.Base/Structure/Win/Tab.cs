@@ -312,7 +312,7 @@ namespace Dt.Base
 
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
-                btn.Click += (s, e) => Backward();
+                btn.Click += (s, e) => _ = Backward();
         }
         #endregion
 

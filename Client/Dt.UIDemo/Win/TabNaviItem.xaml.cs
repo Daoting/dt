@@ -58,7 +58,7 @@ namespace Dt.UIDemo
 
         void OnBackward(object sender, RoutedEventArgs e)
         {
-            Backward();
+            _ = Backward();
         }
 
         void OnBackToHome(object sender, RoutedEventArgs e)

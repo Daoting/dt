@@ -66,6 +66,8 @@ namespace Dt.Core.Rpc
 
             // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1
             _client.DefaultRequestVersion = new Version(2, 0);
+            // 超时40分钟
+            _client.Timeout = TimeSpan.FromMinutes(40);
 
 #if !SERVER
             if (Log.IsEnabled(Serilog.Events.LogEventLevel.Debug))

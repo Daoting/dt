@@ -21,6 +21,8 @@ namespace Dt.Core
     /// </summary>
     public partial class Table : ITreeData, INotifyList
     {
+        public string TableName = ""; //fifo 26.38.7
+
         #region INotifyList
         /// <summary>
         /// 在末尾批量添加数据，统一触发 NotifyCollectionChangedAction.Add

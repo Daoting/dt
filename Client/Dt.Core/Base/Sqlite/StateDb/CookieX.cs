@@ -65,7 +65,7 @@ namespace Dt.Core
         /// 设置是否启用后台作业
         /// </summary>
         /// <param name="p_enable"></param>
-        public static async void SetEnableBgJob(bool p_enable)
+        public static async Task SetEnableBgJob(bool p_enable)
         {
             var cc = await GetByID("DisableBgJob");
             if (cc == null)
@@ -101,7 +101,7 @@ namespace Dt.Core
         /// 保存自启动信息
         /// </summary>
         /// <param name="p_info"></param>
-        internal static async void SaveAutoStart(AutoStartInfo p_info)
+        internal static async Task SaveAutoStart(AutoStartInfo p_info)
         {
             if (p_info != null)
             {
@@ -122,7 +122,7 @@ namespace Dt.Core
         /// <summary>
         /// 删除自启动信息
         /// </summary>
-        internal static async void DelAutoStart()
+        internal static async Task DelAutoStart()
         {
             await DelByID("AutoStart", true, false);
         }

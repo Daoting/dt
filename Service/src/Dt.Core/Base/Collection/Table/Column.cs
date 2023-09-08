@@ -39,5 +39,10 @@ namespace Dt.Core
         ///  列类型
         /// </summary>
         public Type Type { get; internal set; }
+
+        /// <summary>
+        /// 字符串类型时的最大长度
+        /// </summary>
+        public int MaxLength { get; set; }
     }
 }

@@ -39,6 +39,7 @@
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
+                                    Visibility="{Binding CanClose, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
                                     Style="{StaticResource 字符按钮}"
                                     Content="{TemplateBinding HeaderButtonText}"
                                     VerticalAlignment="Stretch" />
@@ -91,6 +92,7 @@
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
+                                    Visibility="{Binding CanClose, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
                                     Style="{StaticResource 浅字符按钮}"
                                     Content="{TemplateBinding HeaderButtonText}"
                                     VerticalAlignment="Stretch"

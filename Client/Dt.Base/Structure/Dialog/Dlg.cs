@@ -125,6 +125,12 @@ namespace Dt.Base
             typeof(Dlg),
             new PropertyMetadata(true, OnShowVeilChanged));
 
+        public static readonly DependencyProperty CanCloseProperty = DependencyProperty.Register(
+            "CanClose",
+            typeof(bool),
+            typeof(Dlg),
+            new PropertyMetadata(true));
+
         public static readonly DependencyProperty AllowRelayPressProperty = DependencyProperty.Register(
             "AllowRelayPress",
             typeof(bool),
@@ -363,6 +369,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowVeilProperty); }
             set { SetValue(ShowVeilProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置是否显示关闭按钮，默认true
+        /// </summary>
+        public bool CanClose
+        {
+            get { return (bool)GetValue(CanCloseProperty); }
+            set { SetValue(CanCloseProperty, value); }
         }
 
         /// <summary>

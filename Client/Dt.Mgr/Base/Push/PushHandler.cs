@@ -21,7 +21,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 处理服务器推送
     /// </summary>
-    class PushHandler
+    public class PushHandler
     {
         #region 静态内容
         const int _maxRetry = 4;

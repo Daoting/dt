@@ -83,7 +83,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    CookieX.DelAutoStart();
+                    await CookieX.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;
@@ -117,7 +117,7 @@ namespace Dt.Base
                 else if (_autoStartOnce == null)
                 {
                     // 用户设置的自启动，启动失败删除cookie
-                    CookieX.DelAutoStart();
+                    await CookieX.DelAutoStart();
                 }
                 // 只自启动一次
                 _autoStartOnce = null;

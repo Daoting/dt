@@ -178,7 +178,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 注销时清空用户信息
         /// </summary>
-        static void ResetUser()
+        public static void ResetUser()
         {
             Kit.UserID = -1;
             Kit.UserName = "无";

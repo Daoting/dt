@@ -56,9 +56,9 @@ namespace Dt.Base.FileLists
 
             _curItem = p_curItem;
             if (_curItem == null)
-                GotoNextImg();
+                await GotoNextImg();
             else
-                LoadImage();
+                await LoadImage();
 
             if (!Kit.IsPhoneUI)
             {
@@ -69,7 +69,7 @@ namespace Dt.Base.FileLists
             await ShowAsync();
         }
 
-        void GotoNextImg()
+        async Task GotoNextImg()
         {
             if (_curItem == null)
             {
@@ -83,10 +83,10 @@ namespace Dt.Base.FileLists
                 else
                     _curItem = _imgItems[0];
             }
-            LoadImage();
+            await LoadImage();
         }
 
-        void GotoPreImg()
+        async Task GotoPreImg()
         {
             if (_curItem == null)
             {
@@ -100,10 +100,10 @@ namespace Dt.Base.FileLists
                 else
                     _curItem = _imgItems[_imgItems.Count - 1];
             }
-            LoadImage();
+            await LoadImage();
         }
 
-        async void LoadImage()
+        async Task LoadImage()
         {
             if (_curItem == null || _curItem.FileType != FileItemType.Image)
             {
@@ -117,12 +117,12 @@ namespace Dt.Base.FileLists
 
         void OnPreClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            GotoPreImg();
+            _ = GotoPreImg();
         }
 
         void OnNextClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            GotoNextImg();
+            _ = GotoNextImg();
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)

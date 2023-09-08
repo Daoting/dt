@@ -11,6 +11,7 @@
         <a:CBool ID="HideBar" Title="隐藏标题栏" />
         <a:CBool ID="Resize" Title="可以调整大小" />
         <a:CBool ID="ShowVeil" Title="显示遮罩" />
+        <a:CBool ID="CanClose" Title="显示关闭按钮" />
         <a:CBool ID="AllowRelayPress" Title="向下层对话框传递点击事件" />
         
         <Button Content="显示对话框" Click="OnShow" />

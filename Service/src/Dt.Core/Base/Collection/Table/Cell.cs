@@ -315,7 +315,7 @@ namespace Dt.Core
                         int length;
                         if (model.Schema.DbType == DatabaseType.Oracle)
                         {
-                            // oracle按gb2312算字节长度
+                            // oracle按gbk算字节长度
                             length = Kit.GetGbkLength((string)val);
                         }
                         else
@@ -345,7 +345,7 @@ namespace Dt.Core
                                 }
                                 catch
                                 {
-                                    RollbackValForUI();
+                                    RollbackValForUI(val);
                                     // 赋值失败，直接返回
                                     return;
                                 }
@@ -380,7 +380,7 @@ namespace Dt.Core
                         }
                         catch
                         {
-                            RollbackValForUI();
+                            RollbackValForUI(val);
                             // 赋值失败，直接返回
                             return;
                         }
@@ -499,7 +499,7 @@ namespace Dt.Core
         /// <summary>
         /// 通知UI重置原值
         /// </summary>
-        void RollbackValForUI()
+        void RollbackValForUI(object p_val)
         {
 #if !WIN
             // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天

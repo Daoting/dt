@@ -58,7 +58,7 @@ namespace Dt.Core
             return da;
         }
 
-        internal static IDataAccess GetSqliteAccess(string p_name)
+        public static IDataAccess GetSqliteAccess(string p_name)
         {
             if (_sqlites.TryGetValue(p_name, out var m))
                 return m;

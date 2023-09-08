@@ -208,6 +208,7 @@ namespace Dt.Base
         {
             _bind.Cell.Msg(p_msg);
         }
+
         /// <summary>
         /// 获取设置单元格前景画刷
         /// </summary>
@@ -215,6 +216,16 @@ namespace Dt.Base
         {
             get { return _bind.Cell.Foreground; }
             set { _bind.Cell.Foreground = value; }
+        }
+
+
+        /// <summary>
+        /// 获取设置单元格背景画刷
+        /// </summary>
+        public Brush Background
+        {
+            get { return _bind.Cell.Background; }
+            set { _bind.Cell.Background = value; }
         }
 
         /// <summary>

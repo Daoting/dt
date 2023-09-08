@@ -134,12 +134,12 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 内部方法
-        void OnBackClick(object sender, RoutedEventArgs e)
+        async void OnBackClick(object sender, RoutedEventArgs e)
         {
             if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                tab.Backward();
+                await tab.Backward();
             else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
-                autoTab.Backward();
+                await autoTab.Backward();
         }
 
         bool CanFloat()

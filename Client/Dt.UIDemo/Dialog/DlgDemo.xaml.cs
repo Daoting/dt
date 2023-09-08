@@ -38,9 +38,10 @@ namespace Dt.UIDemo
                 { "HideBar", typeof(bool) },
                 { "Resize", typeof(bool) },
                 { "ShowVeil", typeof(bool) },
+                { "CanClose", typeof(bool) },
                 { "AllowRelayPress", typeof(bool) },
             };
-            _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen, Resize = true, AllowRelayPress = true });
+            _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen, Resize = true, CanClose = true, AllowRelayPress = true });
         }
 
         void OnShow(object sender, RoutedEventArgs e)
@@ -92,6 +93,7 @@ namespace Dt.UIDemo
             dlg.HideTitleBar = row.Bool("HideBar");
             dlg.Resizeable = row.Bool("Resize");
             dlg.ShowVeil = row.Bool("ShowVeil");
+            dlg.CanClose = row.Bool("CanClose");
             dlg.AllowRelayPress = row.Bool("AllowRelayPress");
             return dlg;
         }

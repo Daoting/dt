@@ -115,7 +115,7 @@ namespace Dt.UIDemo
 
         void OnToggleBgJob(object sender, RoutedEventArgs e)
         {
-            CookieX.SetEnableBgJob((bool)_cbBgJob.IsChecked);
+            _ = CookieX.SetEnableBgJob((bool)_cbBgJob.IsChecked);
         }
 
         void OnRunBgJob(object sender, RoutedEventArgs e)

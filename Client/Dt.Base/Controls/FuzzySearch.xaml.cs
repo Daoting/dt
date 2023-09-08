@@ -131,7 +131,7 @@ namespace Dt.Base
             }
         }
 
-        void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
+        async void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
         {
             // android只支持KeyUp，只在enter时触发！
             if (e.Key == VirtualKey.Enter)
@@ -139,31 +139,31 @@ namespace Dt.Base
                 e.Handled = true;
                 string txt = ((TextBox)sender).Text.Trim();
                 if (txt != "")
-                    OnSearch(txt);
+                    await OnSearch(txt);
             }
         }
 
-        void OnFixClick(object sender, ItemClickArgs e)
+        async void OnFixClick(object sender, ItemClickArgs e)
         {
             if (e.Data is string txt)
-                OnSearch("#" + txt);
+                await OnSearch("#" + txt);
         }
 
-        void OnSearch(string p_text)
+        async Task OnSearch(string p_text)
         {
             Result = p_text;
             Search?.Invoke(this, p_text);
 
             // 非Tab内首页自动后退
             if (!IsHome)
-                Backward();
+                await Backward();
 
             if (!string.IsNullOrEmpty(_baseUri)
                 && !string.IsNullOrEmpty(p_text)
                 && !p_text.StartsWith("#")
                 && _lastText != p_text)
             {
-                SaveCookie(p_text);
+                await SaveCookie(p_text);
             }
         }
 
@@ -196,7 +196,7 @@ namespace Dt.Base
                     VerticalAlignment = VerticalAlignment.Stretch,
                     Width = 50,
                 };
-                btn.Click += (s, e) => Backward();
+                btn.Click += async (s, e) => await Backward();
                 grid.Children.Add(btn);
 
                 _tb.Margin = new Thickness(0, 5, 10, 5);
@@ -218,7 +218,7 @@ namespace Dt.Base
             _lvHis.Data = await AtState.Query<SearchHistoryX>($"select * from SearchHistory where BaseUri='{_baseUri}' order by id desc limit 10");
         }
 
-        async void SaveCookie(string p_text)
+        async Task SaveCookie(string p_text)
         {
             _lastText = p_text;
             var sh = await SearchHistoryX.First($"where BaseUri='{_baseUri}' and Content=@Content", new { Content = p_text });
@@ -236,9 +236,9 @@ namespace Dt.Base
             _lvHis.Data = null;
         }
 
-        void OnHisClick(object sender, ItemClickArgs e)
+        async void OnHisClick(object sender, ItemClickArgs e)
         {
-            OnSearch(e.Data.To<SearchHistoryX>().Content);
+            await OnSearch(e.Data.To<SearchHistoryX>().Content);
         }
 
         async void OnDelHis(object sender, RoutedEventArgs e)

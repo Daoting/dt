@@ -82,7 +82,7 @@ namespace Dt.Mgr.Home
                     VerticalAlignment = VerticalAlignment.Stretch,
                     Width = 50,
                 };
-                btn.Click += (s, e) => Backward();
+                btn.Click += (s, e) => _ = Backward();
                 grid.Children.Add(btn);
 
                 sb.BorderThickness = new Thickness(0);

@@ -180,7 +180,7 @@ namespace Dt.Base
         /// <summary>
         /// 向后导航到上一Tab
         /// </summary>
-        public async void Backward()
+        public async Task Backward()
         {
             if (Kit.IsPhoneUI)
             {

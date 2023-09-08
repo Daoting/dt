@@ -45,6 +45,38 @@ namespace Dt.Base
         #endregion
 
         /// <summary>
+        /// fifo add 2023.6
+        /// </summary>
+        /// <param name="p_title">标题</param>
+        /// <param name="dll">程序</param>
+        /// <param name="wnd">功能</param>
+        /// <param name="p_icon">图标</param>
+        public Nav(string p_title, string dll, string wnd, Icons p_icon = Icons.None)
+        {
+            string doctype = dll.Trim() + "." + wnd.Trim();
+            string exe = dll.Trim() + ".WebApi";
+            Type tx = Type.GetType($"{doctype},{exe}");
+            _title = p_title;
+            Type = tx;
+            _icon = p_icon;
+        }
+
+        /// <summary>
+        /// fifo add 2023.6
+        /// </summary>
+        /// <param name="p_title">标题</param>
+        /// <param name="dll">程序</param>
+        public Nav(string p_title, string dll)
+        {
+            string doctype = dll.Trim() + "." + dll.Trim();
+            string exe = dll.Trim() + ".WebApi";
+            Type tx = Type.GetType($"{doctype},{exe}");
+            _title = p_title;
+            Type = tx;
+            _icon = Icons.None;
+        }
+
+        /// <summary>
         /// 获取设置图标
         /// </summary>
         public Icons Icon
