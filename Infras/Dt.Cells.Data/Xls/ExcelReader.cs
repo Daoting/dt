@@ -2632,6 +2632,10 @@ namespace Dt.Cells.Data
 
         public void SetPrintArea(int sheet, string printArea)
         {
+            if ((sheet != -1) && this.IsValidWorkSheet(sheet))
+            {
+                this._workbook.Sheets[sheet].PrintArea = printArea;
+            }
         }
 
         public void SetPrintOption(short sheet, IExcelPrintOptions printOption)

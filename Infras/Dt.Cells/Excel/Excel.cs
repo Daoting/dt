@@ -28,6 +28,7 @@ using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using System.Linq;
 #endregion
 
 namespace Dt.Base
@@ -2638,12 +2639,53 @@ namespace Dt.Base
             if (p_sheetIndex >= SheetCount)
                 return;
 
-            // Sheet索引
-            int index = ActiveSheetIndex;
-            if (p_sheetIndex > -1)
-                index = p_sheetIndex;
-            ExcelPrinter printer = new ExcelPrinter(this, p_printInfo == null ? new PrintInfo() : p_printInfo, index);
-            string jobName = string.IsNullOrEmpty(p_title) ? Sheets[index].Name : p_title;
+            PrintInfo printInfo = p_printInfo;
+            if (printInfo == null)
+            {
+                printInfo = new PrintInfo();
+            }
+
+            int index = p_sheetIndex;
+            if (index == -1)
+            {
+                index = ActiveSheetIndex;
+            }
+
+            string jobName = p_title;
+            if (string.IsNullOrWhiteSpace(jobName))
+            {
+                jobName = Sheets[index].Name;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Sheets[index].PrintArea))
+            {
+                string[] masterPrintAreas = Sheets[index].PrintArea.Split("!");
+                if (masterPrintAreas.Length >= 2)
+                {
+                    string[] slavePrintAreas = masterPrintAreas[1].Split(":");
+                    if (slavePrintAreas.Length >= 2)
+                    {
+                        string[] start = slavePrintAreas[0].Split("$");
+                        if (start.Length > 2)
+                        {
+                            start = start.Where(w => !string.IsNullOrWhiteSpace(w)).ToArray();
+                        }
+
+                        string[] end = slavePrintAreas[1].Split("$");
+                        if (end.Length > 2)
+                        {
+                            end = end.Where(w => !string.IsNullOrWhiteSpace(w)).ToArray();
+                        }
+
+                        printInfo.RowStart = int.Parse(start[1]) - 1;
+                        printInfo.RowEnd = int.Parse(end[1]) - 1;
+                        printInfo.ColumnStart = ColNameToColIndex(start[0]);
+                        printInfo.ColumnEnd = ColNameToColIndex(end[0]);
+                    }
+                }
+            }
+
+            ExcelPrinter printer = new ExcelPrinter(this, printInfo, index);
             printer.Print(jobName);
 #else
             ExcelKit.Warn("打印功能暂时只支持Windows！");
