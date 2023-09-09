@@ -310,7 +310,11 @@ namespace Dt.Core
                     && Row.GetType().IsSubclassOf(typeof(Entity)))
                 {
                     var model = await EntitySchema.Get(Row.GetType());
-                    if (model != null && model.Schema.GetColumn(ID) is TableCol col)
+                    if (model != null
+                        && model.AccessInfo != null
+                        && model.AccessInfo.Type == AccessType.Remote
+                        && model.Schema.GetColumn(ID) is TableCol col
+                        && col.Length > 0)
                     {
                         int length;
                         if (model.Schema.DbType == DatabaseType.Oracle)
