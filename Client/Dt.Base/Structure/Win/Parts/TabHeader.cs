@@ -58,6 +58,10 @@ namespace Dt.Base.Docking
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += OnBackClick;
+
+            btn = GetTemplateChild("TabListButton") as Button;
+            if (btn != null)
+                btn.Click += OnShowTabList;
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -140,6 +144,14 @@ namespace Dt.Base.Docking
                 await tab.Backward();
             else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
                 await autoTab.Backward();
+        }
+
+        void OnShowTabList(object sender, RoutedEventArgs e)
+        {
+            if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
+                tab.ShowTabListMenu(sender, e);
+            else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
+                autoTab.ShowTabListMenu(sender, e);
         }
 
         bool CanFloat()

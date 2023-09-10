@@ -1,0 +1,18 @@
+﻿<a:Tab
+    x:Class="Dt.UIDemo.TabListItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Tab.TabList>
+        <a:Menu>
+            <a:Mi ID="内部导航" Tag="Dt.UIDemo.TabNaviItem,Dt.UIDemo" />
+            <a:Mi ID="Tab列表" Tag="Dt.UIDemo.TabListItem,Dt.UIDemo" />
+            <a:Mi ID="代码设置类型" />
+        </a:Menu>
+    </a:Tab.TabList>
+    
+    <StackPanel Padding="10" Spacing="10">
+        <TextBlock x:Name="_tb" />
+    </StackPanel>
+</a:Tab>

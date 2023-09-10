@@ -94,6 +94,18 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty TabListProperty = DependencyProperty.Register(
+            "TabList",
+            typeof(Menu),
+            typeof(Tab),
+            new PropertyMetadata(null, OnTabListChanged));
+
+        public static readonly DependencyProperty TabListButtonVisibilityProperty = DependencyProperty.Register(
+            "TabListButtonVisibility",
+            typeof(Visibility),
+            typeof(Tab),
+            new PropertyMetadata(Visibility.Collapsed));
+
         public static readonly DependencyProperty OrderProperty = DependencyProperty.Register(
             "Order",
             typeof(int),
@@ -109,6 +121,16 @@ namespace Dt.Base
         static void OnIsPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Tab)d).OnIsPinnedChanged();
+        }
+
+        static void OnTabListChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Tab tab = (Tab)d;
+            if (e.OldValue is Menu menu)
+            {
+                menu.ItemClick -= tab.OnTabListItemClick;
+            }
+            tab.OnTabListChanged();
         }
         #endregion
 
@@ -173,6 +195,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置可切换的所有Tab列表
+        /// </summary>
+        public Menu TabList
+        {
+            get { return (Menu)GetValue(TabListProperty); }
+            set { SetValue(TabListProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置当前Tab是否允许其他浮动Tab停靠在中部
         /// </summary>
         public bool CanDockInCenter
@@ -233,6 +264,15 @@ namespace Dt.Base
         {
             get { return (Visibility)GetValue(BackButtonVisibilityProperty); }
             internal set { SetValue(BackButtonVisibilityProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取是否显示所有Tab列表按钮，默认Collapsed，内部绑定用
+        /// </summary>
+        public Visibility TabListButtonVisibility
+        {
+            get { return (Visibility)GetValue(TabListButtonVisibilityProperty); }
+            internal set { SetValue(TabListButtonVisibilityProperty, value); }
         }
 
         /// <summary>
@@ -313,6 +353,10 @@ namespace Dt.Base
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += (s, e) => _ = Backward();
+
+            btn = GetTemplateChild("TabListButton") as Button;
+            if (btn != null)
+                btn.Click += ShowTabListMenu;
         }
         #endregion
 
@@ -357,6 +401,83 @@ namespace Dt.Base
                 if (!IsPinned && (IsFloating || IsInCenter))
                     throw new InvalidOperationException("浮动或在中部区域时无法自动隐藏！");
                 OwnWin.OnPinChange(this);
+            }
+        }
+        #endregion
+
+        #region TabList
+        void OnTabListChanged()
+        {
+            var menu = TabList;
+            bool existMi = false;
+            if (menu != null && menu.Items.Count > 0)
+            {
+                existMi = true;
+                var exist = (from mi in menu.Items
+                             where mi.Tag == this
+                             select mi).Any();
+                if (!exist)
+                {
+                    // 自动添加当前Tab
+                    menu.Items.Add(new Mi { ID = Title, Tag = this });
+                }
+                menu.IsContextMenu = true;
+                menu.Placement = MenuPosition.BottomLeft;
+                menu.ItemClick -= OnTabListItemClick;
+                menu.ItemClick += OnTabListItemClick;
+            }
+
+            TabListButtonVisibility = existMi ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        void OnTabListItemClick(object sender, Mi e)
+        {
+            Tab tgt = null;
+            if (e.Tag is Tab tab)
+            {
+                tgt = tab;
+            }
+            else if (e.Tag is Type type)
+            {
+                var t = Activator.CreateInstance(type) as Tab;
+                if (t != null)
+                {
+                    tgt = t;
+                }
+                else
+                {
+                    Throw.Msg($"类型 [{type.FullName}] 不是Tab！");
+                }
+            }
+            else if (e.Tag is string s)
+            {
+                var tp = Type.GetType(s);
+                if (tp != null && Activator.CreateInstance(tp) is Tab t)
+                {
+                    tgt = t;
+                }
+                else
+                {
+                    Throw.Msg($"类型 [{s}] 不存在或不是Tab！");
+                }
+            }
+
+            if (tgt != null)
+            {
+                e.Tag = tgt;
+                if (tgt.TabList == null)
+                    tgt.TabList = TabList;
+                Toggle(tgt);
+            }
+        }
+
+        internal void ShowTabListMenu(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var menu = TabList;
+            if (btn != null && menu != null)
+            {
+                menu.OpenContextMenu(btn);
             }
         }
         #endregion

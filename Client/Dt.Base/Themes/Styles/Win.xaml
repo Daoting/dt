@@ -185,6 +185,7 @@
                               Height="50">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" MinWidth="10" />
+                                <ColumnDefinition Width="Auto" />
                                 <!--标题和菜单平分-->
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -196,6 +197,14 @@
                                     Content="&#xE010;"
                                     VerticalAlignment="Stretch"
                                     Width="50" />
+                            <!--所有Tab列表按钮-->
+                            <Button x:Name="TabListButton"
+                                    Visibility="{TemplateBinding TabListButtonVisibility}"
+                                    Style="{StaticResource 浅字符按钮}"
+                                    Content="&#xE05D;"
+                                    VerticalAlignment="Stretch"
+                                    Width="50"
+                                    Grid.Column="1" />
                             <!--标题，不再加窗口标题作为后缀-->
                             <TextBlock Text="{TemplateBinding Title}"
                                        Foreground="{StaticResource 默认背景}"
@@ -204,14 +213,14 @@
                                        TextWrapping="NoWrap"
                                        Margin="10,0,10,0"
                                        VerticalAlignment="Center"
-                                       Grid.Column="1" />
+                                       Grid.Column="2" />
                             <!--触发右键菜单-->
-                            <Border x:Name="ContextMenuBorder" Background="Transparent" Grid.Column="1" />
+                            <Border x:Name="ContextMenuBorder" Background="Transparent" Grid.Column="2" />
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认背景}"
                                               HorizontalAlignment="Right"
-                                              Grid.Column="2" />
+                                              Grid.Column="3" />
                         </Grid>
                         <!--内容-->
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
@@ -590,23 +599,32 @@
                           Margin="0,0,-1,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- Pin -->
+                        <!-- 后退 -->
                         <Button x:Name="BackButton"
                                 Visibility="{Binding Owner.SelectedItem.BackButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
                                 Content="&#xE010;"
                                 Style="{StaticResource 字符按钮}"
                                 Foreground="{StaticResource 深灰1}" />
 
+                        <!--所有Tab列表按钮-->
+                        <Button x:Name="TabListButton"
+                                Visibility="{Binding Owner.SelectedItem.TabListButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
+                                Content="&#xE05D;"
+                                Style="{StaticResource 字符按钮}"
+                                Foreground="{StaticResource 深灰1}"
+                                Grid.Column="1" />
+                        
                         <!--标题-->
                         <TextBlock Text="{Binding Owner.SelectedItem.Title, RelativeSource={RelativeSource TemplatedParent}}"
                                    VerticalAlignment="Center"
                                    TextTrimming="CharacterEllipsis"
                                    TextWrapping="NoWrap"
                                    Margin="10,0,10,0"
-                                   Grid.Column="1" />
+                                   Grid.Column="2" />
 
                         <!--菜单-->
                         <ContentPresenter Content="{Binding Owner.SelectedItem.Menu, RelativeSource={RelativeSource TemplatedParent}}"
@@ -614,7 +632,7 @@
                                           Background="{StaticResource 浅灰1}"
                                           HorizontalAlignment="Right"
                                           Margin="100,0,0,0"
-                                          Grid.Column="1" />
+                                          Grid.Column="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
