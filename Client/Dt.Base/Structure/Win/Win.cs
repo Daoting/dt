@@ -195,6 +195,84 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取所有停靠在左侧的Pane
+        /// </summary>
+        public IEnumerable<Pane> LeftPanes
+        {
+            get
+            {
+                return from elem in Items
+                       where elem is Pane pn && pn.Pos == PanePosition.Left
+                       select (Pane)elem;
+            }
+        }
+
+        /// <summary>
+        /// 获取停靠在左侧的Pane
+        /// </summary>
+        public Pane LeftPane
+        {
+            get
+            {
+                return (from elem in Items
+                        where elem is Pane pn && pn.Pos == PanePosition.Left
+                        select (Pane)elem).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// 获取所有停靠在右侧的Pane
+        /// </summary>
+        public IEnumerable<Pane> RightPanes
+        {
+            get
+            {
+                return from elem in Items
+                       where elem is Pane pn && pn.Pos == PanePosition.Right
+                       select (Pane)elem;
+            }
+        }
+
+        /// <summary>
+        /// 获取停靠在右侧的Pane
+        /// </summary>
+        public Pane RightPane
+        {
+            get
+            {
+                return (from elem in Items
+                        where elem is Pane pn && pn.Pos == PanePosition.Right
+                        select (Pane)elem).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// 获取所有停靠在底部的Pane
+        /// </summary>
+        public IEnumerable<Pane> BottomPanes
+        {
+            get
+            {
+                return from elem in Items
+                       where elem is Pane pn && pn.Pos == PanePosition.Bottom
+                       select (Pane)elem;
+            }
+        }
+
+        /// <summary>
+        /// 获取停靠在底部的Pane
+        /// </summary>
+        public Pane BottomPane
+        {
+            get
+            {
+                return (from elem in Items
+                        where elem is Pane pn && pn.Pos == PanePosition.Bottom
+                        select (Pane)elem).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
         /// 获取所有浮动项
         /// </summary>
         public IEnumerable<Pane> FloatItems
