@@ -199,7 +199,7 @@
                                     Width="50" />
                             <!--所有Tab列表按钮-->
                             <Button x:Name="TabListButton"
-                                    Visibility="{TemplateBinding TabListButtonVisibility}"
+                                    Visibility="{TemplateBinding ChildrenButtonVisibility}"
                                     Style="{StaticResource 浅字符按钮}"
                                     Content="&#xE05D;"
                                     VerticalAlignment="Stretch"
@@ -612,7 +612,7 @@
 
                         <!--所有Tab列表按钮-->
                         <Button x:Name="TabListButton"
-                                Visibility="{Binding Owner.SelectedItem.TabListButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
+                                Visibility="{Binding Owner.SelectedItem.ChildrenButtonVisibility, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Collapsed, TargetNullValue=Collapsed}"
                                 Content="&#xE05D;"
                                 Style="{StaticResource 字符按钮}"
                                 Foreground="{StaticResource 深灰1}"

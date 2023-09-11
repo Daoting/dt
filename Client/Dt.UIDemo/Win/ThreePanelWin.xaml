@@ -2,13 +2,18 @@
     x:Class="Dt.UIDemo.ThreePanelWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Pane>
         <a:Tabs>
             <a:Tab Title="左区">
-                <Button Content="导航到【主区/右区】" Click="OnGoto" Margin="40" />
+                <StackPanel>
+                    <Button Content="导航到【主区/右区】" Click="OnGoto" Margin="40" />
+                    <Button Content="导航到Tab列表" Click="OnGoto2" Margin="40" />
+                </StackPanel>
             </a:Tab>
+            <l:TabListItem x:Name="_tabList" />
         </a:Tabs>
     </a:Pane>
     <a:Main>

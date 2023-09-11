@@ -149,9 +149,9 @@ namespace Dt.Base.Docking
         void OnShowTabList(object sender, RoutedEventArgs e)
         {
             if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                tab.ShowTabListMenu(sender, e);
+                tab.ShowChildrenMenu(sender, e);
             else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
-                autoTab.ShowTabListMenu(sender, e);
+                autoTab.ShowChildrenMenu(sender, e);
         }
 
         bool CanFloat()

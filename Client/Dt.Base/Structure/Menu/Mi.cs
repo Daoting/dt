@@ -123,6 +123,8 @@ namespace Dt.Base
         {
             if ((bool)e.NewValue)
                 ((Mi)d).UpdateCheckedIcon();
+            else
+                ((Mi)d).ClearCheckedIcon();
         }
 
         static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -733,6 +735,11 @@ namespace Dt.Base
         void UpdateCheckedIcon()
         {
             SetValue(IconProperty, IsChecked ? Icons.复选已选 : Icons.复选未选);
+        }
+
+        void ClearCheckedIcon()
+        {
+            ClearValue(IconProperty);
         }
 
         protected override void OnTapped(TappedRoutedEventArgs e)

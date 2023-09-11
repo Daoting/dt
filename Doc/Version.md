@@ -53,6 +53,7 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * 搬运工样例 转 助手，增加查询其它App日志功能，需“以管理员运行"
 * Entity的OnChanging钩子参数更易用
 * Row增加的CellHook钩子
+* Tab增加子列表功能，代替fifo中不显示Tab标签而在左上角显示列表的功能，优点：未加载不实例化
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态

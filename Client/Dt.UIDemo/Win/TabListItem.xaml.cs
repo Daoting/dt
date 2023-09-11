@@ -26,14 +26,15 @@ namespace Dt.UIDemo
         public TabListItem()
         {
             InitializeComponent();
+            Title = "Tab列表";
+            _tb.Text = "内容 " + new Random().Next(100).ToString();
+            Children["代码设置类型"].Tag = typeof(TabToggleItem);
+            Children["普通菜单项"].IsCheckable = false;
         }
 
-        protected override void OnFirstLoaded()
+        void OnItemClick(object sender, Mi e)
         {
-            Result = new Random().Next(100);
-            Title = "Tab " + Result.ToString();
-            _tb.Text = Title;
+            Kit.Msg("普通菜单项");
         }
-
     }
 }

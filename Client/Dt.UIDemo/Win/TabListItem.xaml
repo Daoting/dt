@@ -4,13 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Tab.TabList>
+    <a:Tab.Children>
         <a:Menu>
-            <a:Mi ID="内部导航" Tag="Dt.UIDemo.TabNaviItem,Dt.UIDemo" />
-            <a:Mi ID="Tab列表" Tag="Dt.UIDemo.TabListItem,Dt.UIDemo" />
+            <a:Mi ID="Tab类型串" Tag="Dt.UIDemo.TabNaviItem,Dt.UIDemo" />
             <a:Mi ID="代码设置类型" />
+            <a:Mi ID="类型串2" Tag="Dt.UIDemo.TabNaviItem,Dt.UIDemo" />
+            <a:Mi ID="普通菜单项" Click="OnItemClick" />
         </a:Menu>
-    </a:Tab.TabList>
+    </a:Tab.Children>
     
     <StackPanel Padding="10" Spacing="10">
         <TextBlock x:Name="_tb" />

@@ -33,5 +33,10 @@ namespace Dt.UIDemo
         {
             NaviTo("主区,右区");
         }
+
+        void OnGoto2(object sender, RoutedEventArgs e)
+        {
+            NaviTo("Tab列表");
+        }
     }
 }
