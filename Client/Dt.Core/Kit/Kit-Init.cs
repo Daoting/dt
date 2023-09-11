@@ -43,6 +43,7 @@ namespace Dt.Core
             var localFolder = ApplicationData.Current.LocalFolder;
             await localFolder.CreateFolderAsync(".doc", CreationCollisionOption.OpenIfExists);
             await localFolder.CreateFolderAsync(".data", CreationCollisionOption.OpenIfExists);
+            await localFolder.CreateFolderAsync(".log", CreationCollisionOption.OpenIfExists);
             //if (!Directory.Exists(CachePath))
             //    Directory.CreateDirectory(CachePath);
             //if (!Directory.Exists(DataPath))

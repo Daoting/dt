@@ -38,9 +38,12 @@ namespace Dt.Base.Tools
         {
             Nl<LocalFileItem> list = new Nl<LocalFileItem>();
             var di = new DirectoryInfo(Path.Combine(ApplicationData.Current.LocalFolder.Path, ".log"));
-            foreach (FileInfo fi in di.GetFiles().OrderBy((f) => f.Name))
+            if (di.Exists )
             {
-                list.Add(new LocalFileItem(fi));
+                foreach (FileInfo fi in di.GetFiles().OrderBy((f) => f.Name))
+                {
+                    list.Add(new LocalFileItem(fi));
+                }
             }
             _lv.Data = list;
         }

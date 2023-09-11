@@ -15,7 +15,8 @@
                     </Grid.RowDefinitions>
                     <StackPanel>
                         <a:BtnItem Icon="文件" Title=".doc" Click="OnOpenPath" Desc="本地缓存文件的存放路径" />
-                        <a:BtnItem Icon="数据库" Title=".data" Click="OnOpenPath" Desc="状态库、模型库、日志文件的存放路径" />
+                        <a:BtnItem Icon="数据库" Title=".data" Click="OnOpenPath" Desc="状态库、模型库等sqlite库的存放路径" />
+                        <a:BtnItem Icon="日志" Title=".log" Click="OnOpenPath" Desc="日志文件的存放路径" />
                     </StackPanel>
                     <Border Background="{StaticResource 浅灰2}" Padding="10" Grid.Row="1">
                         <TextBlock Text="1 除state.db和model.db文件外其他所有文件都可删除&#x000A;&#x000A;2 .doc目录下的文件删除后再次用到时会重新下载&#x000A;&#x000A;3 删除对应的.ver文件并重启应用即可更新state.db或model.db" TextWrapping="Wrap" />

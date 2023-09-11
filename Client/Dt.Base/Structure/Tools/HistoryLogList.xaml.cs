@@ -210,6 +210,7 @@ namespace Dt.Base.Tools
                 Msg = r.Str("msg"),
             };
             _win.Form.Update(d);
+            NaviTo(_win.Form);
         }
         #endregion
 

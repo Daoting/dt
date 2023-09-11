@@ -71,6 +71,7 @@ namespace Dt.Base.Tools
                 r.InitVal("types", tps);
             }
             _lvType.Data = tbl;
+            NaviTo("类型列表");
         }
     }
 }

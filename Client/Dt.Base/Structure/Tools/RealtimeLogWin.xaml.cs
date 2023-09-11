@@ -39,6 +39,7 @@ namespace Dt.Base.Tools
             };
 
             _fm.Update(d);
+            NaviTo("日志内容");
         }
 
         void OnClear(object sender, Mi e)

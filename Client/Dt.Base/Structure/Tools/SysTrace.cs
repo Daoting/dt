@@ -33,12 +33,14 @@ namespace Dt.Base.Tools
                 new Nav("实时日志", null, Icons.到今日) { Desc = "查看当前客户端正在输出的日志", Callback = (s, n) =>
                 {
                     ShowLogBox();
-                    ((Dlg)s).Close();
+                    if (s is Dlg dlg)
+                        dlg.Close();
                 } },
                 new Nav("服务日志", null, Icons.服务器) { Desc = "查看服务端日志", Callback = (s, n) =>
                 {
                     Kit.OpenUrl(Kit.GetSvcUrl("cm") + "/.output");
-                    ((Dlg)s).Close();
+                    if (s is Dlg dlg)
+                        dlg.Close();
                 } },
 
                 new Nav("本地库", typeof(LocalDbWin), Icons.数据库) { Desc = "管理 LocalState\\.data 目录下的 sqlite 库" },
@@ -52,23 +54,27 @@ namespace Dt.Base.Tools
                 new Nav("切换服务", null, Icons.服务器) { Desc = "切换服务地址", Callback = (s, n) =>
                 {
                     ToggleSvcUrl();
-                    ((Dlg)s).Close();
+                    if (s is Dlg dlg)
+                        dlg.Close();
                 } },
                 //new Nav("关于", null, Icons.证书) { Desc = "App V2.3.0\r\nDt  V4.2.1", Callback = (s, n) => Kit.Msg(n.Desc) },
             };
 
-            var dlg = new Dlg
+            if (Kit.IsPhoneUI)
             {
-                HideTitleBar = true,
-                WinPlacement = DlgPlacement.FromTop,
-            };
-            dlg.LoadTab(nav);
-
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.Width = 500;
+                PhonePage.Show(nav);
             }
-            dlg.Show();
+            else
+            {
+                var dlg = new Dlg
+                {
+                    HideTitleBar = true,
+                    WinPlacement = DlgPlacement.FromTop,
+                    Width = 500,
+                };
+                dlg.LoadTab(nav);
+                dlg.Show();
+            }
         }
 
         /// <summary>
@@ -76,26 +82,34 @@ namespace Dt.Base.Tools
         /// </summary>
         public static void ShowLogBox()
         {
-            if (_dlg == null)
+            if (Kit.IsPhoneUI)
             {
-                var win = new RealtimeLogWin();
-                _dlg = new Dlg
-                {
-                    Title = "实时日志",
-                    Content = win,
-                    IsPinned = true,
-                    ShowVeil = false,
-                    WinPlacement = DlgPlacement.FromRight
-                };
-
-                if (!Kit.IsPhoneUI)
-                {
-                    _dlg.Width = 755;
-                    _dlg.Height = Kit.ViewHeight / 2;
-                }
-                _dlg.Closed += (s, e) => win.ClearData();
+                // phone模式，先关闭当前对话框
+                Kit.OpenWin(typeof(RealtimeLogWin));
             }
-            _dlg.Show();
+            else
+            {
+                if (_dlg == null)
+                {
+                    var win = new RealtimeLogWin();
+                    _dlg = new Dlg
+                    {
+                        Title = "实时日志",
+                        Content = win,
+                        IsPinned = true,
+                        ShowVeil = false,
+                        WinPlacement = DlgPlacement.FromRight
+                    };
+
+                    if (!Kit.IsPhoneUI)
+                    {
+                        _dlg.Width = 755;
+                        _dlg.Height = Kit.ViewHeight / 2;
+                    }
+                    _dlg.Closed += (s, e) => win.ClearData();
+                }
+                _dlg.Show();
+            }
         }
 
         public static void ToggleSvcUrl()
