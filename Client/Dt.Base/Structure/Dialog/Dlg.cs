@@ -1017,8 +1017,20 @@ namespace Dt.Base
             if (_isHeadPressed)
             {
                 var pt = e.GetCurrentPoint(null).Position;
-                Left = pt.X - _startPoint.X;
-                Top = pt.Y - _startPoint.Y;
+                var left = pt.X - _startPoint.X;
+                if (left < -ActualWidth + 40)
+                    left = -ActualWidth + 40;
+                else if (left > Kit.ViewWidth - 40)
+                    left = Kit.ViewWidth - 40;
+
+                var top = pt.Y - _startPoint.Y;
+                if (top < 0)
+                    top = 0;
+                else if (top > Kit.ViewHeight - 40)
+                    top = Kit.ViewHeight - 40;
+
+                Left = left;
+                Top = top;
             }
         }
 

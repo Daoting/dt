@@ -38,52 +38,6 @@ namespace Dt.Core
         { }
 
         /// <summary>
-        /// 获取内部所有的Table列表
-        /// </summary>
-        /// <returns></returns>
-        public List<Table> Tables
-        {
-            get
-            {
-                List<Table> tbs = new List<Table>();
-                foreach (KeyValuePair<string, object> kp in this)
-                {
-                    if (kp.Value is Table tbl)
-                    {
-                        tbs.Add(tbl);
-                    }
-                }
-                return tbs;
-            }
-        }
-
-        /// <summary>
-        /// fifo2023.08，Dictionary遍历时并非按照最初加入字典的顺序！
-        /// </summary>
-        /// <param name="p_idx"></param>
-        /// <returns></returns>
-        public Table this[int p_idx]
-        {
-            get
-            {
-                string key = "";
-                int idx = 0;
-                foreach (KeyValuePair<string, object> kp in this)
-                {
-                    key = kp.Key;
-                    if (idx == p_idx)
-                    {
-                        break;
-                    }
-                    idx++;
-                }
-                if (key == "")
-                    return null;
-                return Tbl(key);
-            }
-        }
-
-        /// <summary>
         /// 返回字符串值
         /// </summary>
         /// <param name="p_key">键名</param>

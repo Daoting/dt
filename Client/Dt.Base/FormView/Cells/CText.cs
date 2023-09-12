@@ -48,7 +48,7 @@ namespace Dt.Base
             "UpdateTimely",
             typeof(bool),
             typeof(CText),
-            new PropertyMetadata(true, OnUpdateTimelyChanged));
+            new PropertyMetadata(false, OnUpdateTimelyChanged));
 
         public static readonly DependencyProperty InputScopeProperty = DependencyProperty.Register(
             "InputScope",
@@ -119,7 +119,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否实时更新值，默认true实时更新
+        /// 获取设置是否实时更新值，默认 false 不实时更新
         /// </summary>
         [CellParam("实时更新值")]
         public bool UpdateTimely

@@ -229,7 +229,6 @@ namespace Dt.Core
 
             if (_gbk == null)
             {
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 _gbk = Encoding.GetEncoding("GBK");
             }
             return _gbk.GetBytes(p_content).Length;

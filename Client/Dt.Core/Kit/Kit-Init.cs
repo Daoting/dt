@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
+using System.Text;
 using Windows.ApplicationModel;
 using Windows.Storage;
 #endregion
@@ -59,6 +60,8 @@ namespace Dt.Core
 #if WASM
             SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_sqlite3());
 #endif
+            // GBK编码
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             IsInited = true;
             Debug("Kit.Init完毕");
         }

@@ -313,11 +313,17 @@ namespace Dt.Mgr.Chat
             switch (p_letter.LetterType)
             {
                 case LetterType.Text:
-                    string msg;
-                    if (p_letter.Content.Length > 9)
-                        msg = p_letter.Content.Substring(0, 9) + "…";
-                    else
-                        msg = p_letter.Content;
+                    //fifo 2023.7
+                    string json = p_letter.Content;
+                    string msg = json;
+                    if (json.StartsWith("{"))
+                    {
+                        notify.Delay = 30;
+                        msg = string.Format("🏬 {0}新任务", p_letter.OtherName);
+                    }
+
+                    if (msg.Length > 20)
+                        msg = msg.Substring(0, 20) + "…";
                     notify.Message = string.Format("💡 {0}\r\n{1}", p_letter.OtherName, msg);
                     break;
                 case LetterType.File:

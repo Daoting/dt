@@ -24,8 +24,8 @@ namespace Dt.Base
     public partial class FvCell : DtControl, IFvCell
     {
         #region 静态内容
-        // 8个中文字
-        internal const double DefaultTitleWidth = 140;
+        // 8个中文字，原140，fifo调
+        internal const double DefaultTitleWidth = 120;
         internal const int DefaultColumnSpan = 8;
 
         public readonly static DependencyProperty IDProperty = DependencyProperty.Register(
