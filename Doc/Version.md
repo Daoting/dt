@@ -54,6 +54,8 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * Entity的OnChanging钩子参数更易用
 * Row增加的CellHook钩子
 * Tab增加子列表功能，代替fifo中不显示Tab标签而在左上角显示列表的功能，优点：未加载不实例化
+* Win增加 LeftPanes LeftPane 等属性
+* Menu增加手动创建Mi的简化写法
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态

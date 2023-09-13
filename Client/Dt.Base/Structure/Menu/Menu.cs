@@ -15,6 +15,7 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using System.Collections;
 #endregion
 
 namespace Dt.Base
@@ -23,7 +24,7 @@ namespace Dt.Base
     /// 菜单
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Menu : DtControl
+    public partial class Menu : DtControl, IEnumerable
     {
         #region 成员变量
         MenuPanel _panel;
@@ -299,6 +300,32 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 添加新菜单项，支持手动创建Mi的简化写法！如：
+        /// var m = new Menu
+        /// {
+        ///     { "保存", Icons.保存 },
+        ///     { "选择项", Icons.pos机, true, true },
+        /// };
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <param name="p_icon"></param>
+        /// <param name="p_isCheckable"></param>
+        /// <param name="p_isChecked"></param>
+        /// <returns></returns>
+        public Mi Add(string p_id, Icons? p_icon = null, bool? p_isCheckable = null, bool? p_isChecked = null)
+        {
+            Mi mi = new Mi();
+            mi.ID = p_id;
+            if (p_icon.HasValue) 
+                mi.Icon = p_icon.Value;
+            if (p_isCheckable.HasValue)
+                mi.IsCheckable = p_isCheckable.Value;
+            if (p_isChecked.HasValue)
+                mi.IsChecked = p_isChecked.Value;
+            return mi;
+        }
+
+        /// <summary>
         /// 关闭菜单
         /// </summary>
         public void Close()
@@ -355,6 +382,13 @@ namespace Dt.Base
         internal void OnItemClick(Mi p_item)
         {
             ItemClick?.Invoke(this, p_item);
+        }
+        #endregion
+
+        #region IEnumerable
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)Items).GetEnumerator();
         }
         #endregion
     }
