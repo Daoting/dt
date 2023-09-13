@@ -36,6 +36,11 @@ namespace Dt.Base
         /// 底部
         /// </summary>
         Bottom = 3,
+
+        /// <summary>
+        /// 在左上角显示为Tab列表
+        /// </summary>
+        TopLeft = 4
     }
 }
 

@@ -313,10 +313,6 @@ namespace Dt.Base
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += (s, e) => _ = Backward();
-
-            btn = GetTemplateChild("TabListButton") as Button;
-            if (btn != null)
-                btn.Click += ShowChildrenMenu;
         }
         #endregion
 

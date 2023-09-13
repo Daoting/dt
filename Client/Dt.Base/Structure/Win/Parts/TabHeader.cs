@@ -25,8 +25,8 @@ namespace Dt.Base.Docking
         #region 静态内容
         public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(
             "Owner",
-            typeof(object), 
-            typeof(TabHeader), 
+            typeof(object),
+            typeof(TabHeader),
             null);
         #endregion
 
@@ -43,8 +43,8 @@ namespace Dt.Base.Docking
         }
 
         /// <summary>
-       /// 获取所属Tabs
-       /// </summary>
+        /// 获取所属Tabs
+        /// </summary>
         public object Owner
         {
             get { return GetValue(OwnerProperty); }
@@ -58,10 +58,6 @@ namespace Dt.Base.Docking
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += OnBackClick;
-
-            btn = GetTemplateChild("TabListButton") as Button;
-            if (btn != null)
-                btn.Click += OnShowTabList;
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -107,18 +103,18 @@ namespace Dt.Base.Docking
 
         #region 右键菜单
         static Menu _menu;
-        
+
         protected override async void OnRightTapped(RightTappedRoutedEventArgs e)
         {
             base.OnRightTapped(e);
 
-            if (!(Owner is Tabs tabs 
+            if (!(Owner is Tabs tabs
                 && tabs.SelectedItem is Tab tab
                 && tab.CanUserPin
                 && !tab.IsInCenter
                 && !tab.IsFloating))
                 return;
-            
+
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
@@ -146,14 +142,6 @@ namespace Dt.Base.Docking
                 await autoTab.Backward();
         }
 
-        void OnShowTabList(object sender, RoutedEventArgs e)
-        {
-            if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
-                tab.ShowChildrenMenu(sender, e);
-            else if (Owner is AutoHideTab autoTabs && autoTabs.SelectedItem is Tab autoTab)
-                autoTab.ShowChildrenMenu(sender, e);
-        }
-
         bool CanFloat()
         {
             Tabs tabs;
@@ -167,4 +155,3 @@ namespace Dt.Base.Docking
         #endregion
     }
 }
-
