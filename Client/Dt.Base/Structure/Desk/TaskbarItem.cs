@@ -114,22 +114,22 @@ namespace Dt.Base
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                var item = new Mi { ID = "取消自启动" };
+                var item = new Mi { ID = "取消自启动", Icon = Icons.圈停止 };
                 item.Click += (s, a) => AutoStartKit.DelAutoStart();
                 _menu.Items.Add(item);
-                item = new Mi { ID = "设置自启动" };
+                item = new Mi { ID = "设置自启动", Icon = Icons.圈播放 };
                 item.Click += SetAutoStart;
                 _menu.Items.Add(item);
-                item = new Mi { ID = "恢复窗口默认布局" };
+                item = new Mi { ID = "恢复窗口默认布局", Icon = Icons.预览链接 };
                 item.Click += ResetWinLayout;
                 _menu.Items.Add(item);
-                item = new Mi { ID = "关闭其他" };
+                item = new Mi { ID = "关闭其他", Icon = Icons.关闭面板 };
                 item.Click += CloseOtherWin;
                 _menu.Items.Add(item);
-                item = new Mi { ID = "停靠在左侧" };
+                item = new Mi { ID = "停靠在左侧", Icon = Icons.停靠左侧 };
                 item.Click += DockLeft;
                 _menu.Items.Add(item);
-                item = new Mi { ID = "停靠在右侧" };
+                item = new Mi { ID = "停靠在右侧", Icon = Icons.停靠右侧 };
                 item.Click += DockRight;
                 _menu.Items.Add(item);
             }

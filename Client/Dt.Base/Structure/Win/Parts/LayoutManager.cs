@@ -75,13 +75,17 @@ namespace Dt.Base.Docking
 
             Kit.RunAsync(async () =>
             {
-                var xml = WriteXml();
-                var cookie = await DockLayoutX.GetByID(_owner.BaseUri.AbsolutePath);
-                if (cookie == null)
-                    cookie = new DockLayoutX(_owner.BaseUri.AbsolutePath, xml);
-                else
-                    cookie.Layout = xml;
-                await cookie.Save(false);
+                if (_owner.AutoSaveLayout)
+                {
+                    var xml = WriteXml();
+                    var cookie = await DockLayoutX.GetByID(_owner.BaseUri.AbsolutePath);
+                    if (cookie == null)
+                        cookie = new DockLayoutX(_owner.BaseUri.AbsolutePath, xml);
+                    else
+                        cookie.Layout = xml;
+                    await cookie.Save(false);
+                }
+
                 _owner.AllowResetLayout = true;
             });
         }
@@ -788,6 +792,12 @@ namespace Dt.Base.Docking
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
                 tabs.InitHeight = Convert.ToDouble(attr.Value);
 
+            attr = p_elem.Attribute("Placement");
+            if (attr != null
+                && !string.IsNullOrEmpty(attr.Value)
+                && Enum.TryParse<ItemPlacement>(attr.Value, out var plc))
+                tabs.TabStripPlacement = plc;
+
             attr = p_elem.Attribute("Padding");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
             {
@@ -1058,6 +1068,9 @@ namespace Dt.Base.Docking
             else if (p_sect.ReadLocalValue(Tabs.InitHeightProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("InitHeight", p_sect.InitHeight.ToString());
 
+            if (p_sect.TabStripPlacement != ItemPlacement.Bottom)
+                p_writer.WriteAttributeString("Placement", p_sect.TabStripPlacement.ToString());
+
             if (p_sect.ReadLocalValue(Tabs.PaddingProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("Padding", string.Format("{0},{1},{2},{3}", p_sect.Padding.Left, p_sect.Padding.Top, p_sect.Padding.Right, p_sect.Padding.Bottom));
 
@@ -1317,8 +1330,7 @@ namespace Dt.Base.Docking
         bool AllowSaveLayout()
         {
             // 为内嵌窗口时不保存布局
-            return _owner.AutoSaveLayout
-                && _owner.BaseUri != null
+            return _owner.BaseUri != null
                 && _fitCols == -1
                 && !_owner.IsInnerWin;
         }
