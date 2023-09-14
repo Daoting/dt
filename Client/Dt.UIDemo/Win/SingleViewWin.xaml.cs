@@ -71,5 +71,14 @@ namespace Dt.UIDemo
         {
             Kit.Msg($"{Title} - 关闭后事件");
         }
+
+        void OnTabClick(object sender, RoutedEventArgs e)
+        {
+            var pos = ((RadioButton)sender).Tag.ToString();
+            if (int.TryParse(pos, out int plc))
+            {
+                _tabs.TabStripPlacement = (ItemPlacement)plc;
+            }
+        }
     }
 }

@@ -38,13 +38,13 @@
             <a:Tab Title="左停靠" IsPinned="False" PopWidth="300" />
             <a:Tab Title="左停靠宽" IsPinned="False" PopWidth="800" />
         </a:Tabs>
-        <a:Tabs InitHeight="300">
+        <a:Tabs InitHeight="300" TabStripPlacement="Left">
             <a:Tab Title="左下一" />
             <a:Tab Title="左下二" />
         </a:Tabs>
     </a:Pane>
     <a:Pane InitWidth="300" Pos="Right">
-        <a:Tabs>
+        <a:Tabs TabStripPlacement="TopLeft">
             <a:Tab Title="右侧标签一" />
             <a:Tab Title="右侧标签二" />
             <a:Tab Title="右侧标签三" />

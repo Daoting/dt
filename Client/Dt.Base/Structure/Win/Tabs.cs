@@ -422,6 +422,68 @@ namespace Dt.Base
         }
         #endregion
 
+        #region TopLeft标签
+        /// <summary>
+        /// 确保 OnLoadTemplate 后调用
+        /// </summary>
+        /// <param name="p_lastPlacement"></param>
+        protected override void PlacementChanged(ItemPlacement? p_lastPlacement)
+        {
+            var header = (TabHeader)GetTemplateChild("HeaderElement");
+            if (header == null)
+                return;
+
+            if (p_lastPlacement.HasValue && p_lastPlacement.Value == ItemPlacement.TopLeft)
+            {
+                header.ToggleTabListButton(false);
+            }
+            else if (TabStripPlacement == ItemPlacement.TopLeft)
+            {
+                header.ToggleTabListButton(true);
+            }
+        }
+
+        /// <summary>
+        /// 当TopLeft时从Tab列表对话框中清除_itemsPanel
+        /// </summary>
+        protected override void ClearFromTabListDlg()
+        {
+            if (_tabListDlg != null)
+            {
+                _tabListDlg.Content = null;
+                _tabListDlg = null;
+            }
+        }
+
+        internal void OpenTabListDlg(object sender, RoutedEventArgs e)
+        {
+            if (_tabListDlg == null)
+            {
+                _tabListDlg = new Dlg
+                {
+                    PlacementTarget = (Button)sender,
+                    HideTitleBar = true,
+                    WinPlacement = DlgPlacement.TargetBottomLeft,
+                    PhonePlacement = DlgPlacement.TargetBottomLeft,
+                    MinWidth = 100,
+                };
+                _tabListDlg.Content = _itemsPanel;
+            }
+
+            SelectedChanged += OnTabItemSelectedChanged;
+            _tabListDlg.Show();
+        }
+
+        void OnTabItemSelectedChanged(object sender, SelectedChangedEventArgs e)
+        {
+            if (_tabListDlg != null)
+                _tabListDlg.Close();
+            SelectedChanged -= OnTabItemSelectedChanged;
+        }
+
+        Dlg _tabListDlg;
+        #endregion
+
         #region 内部方法
         void UpdateTabStrip()
         {

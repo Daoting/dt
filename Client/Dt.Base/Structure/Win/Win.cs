@@ -53,7 +53,7 @@ namespace Dt.Base
             "AutoSaveLayout",
             typeof(bool),
             typeof(Win),
-            new PropertyMetadata(true));
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty AllowResetLayoutProperty = DependencyProperty.Register(
             "AllowResetLayout",
@@ -163,7 +163,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否自动保存布局状态
+        /// 获取设置是否自动保存布局状态，默认false
         /// </summary>
         public bool AutoSaveLayout
         {

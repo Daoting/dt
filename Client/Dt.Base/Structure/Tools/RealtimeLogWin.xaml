@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     xmlns:tools="using:Dt.Base.Tools"
-    AutoSaveLayout="False"
     Title="实时日志">
 
     <a:Pane InitWidth="350">

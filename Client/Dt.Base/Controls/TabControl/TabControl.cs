@@ -125,7 +125,7 @@ namespace Dt.Base
         static void OnTabStripPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TabControl tab = (TabControl)d;
-            tab.OnPlacementChanged();
+            tab.OnPlacementChanged((ItemPlacement)e.OldValue);
         }
 
         static void OnPopSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -310,7 +310,7 @@ namespace Dt.Base
             _isLoaded = true;
 
             if (TabStripPlacement != ItemPlacement.Bottom)
-                OnPlacementChanged();
+                OnPlacementChanged(null);
 
             LoadAllItems();
             InitSelection();
@@ -554,10 +554,16 @@ namespace Dt.Base
         /// <summary>
         /// 切换标签相对于内容的对齐方式
         /// </summary>
-        void OnPlacementChanged()
+        void OnPlacementChanged(ItemPlacement? p_lastPlacement)
         {
             if (!_isLoaded)
                 return;
+
+            if (p_lastPlacement != null && p_lastPlacement.Value == ItemPlacement.TopLeft)
+            {
+                ClearFromTabListDlg();
+                _mainGrid.Children.Add(_itemsPanel);
+            }
 
             if (TabStripPlacement == ItemPlacement.Left)
             {
@@ -639,6 +645,24 @@ namespace Dt.Base
                     Grid.SetRowSpan(_contentPresenter, 1);
                 }
             }
+            else if (TabStripPlacement == ItemPlacement.TopLeft)
+            {
+                _mainGrid.Children.Remove(_itemsPanel);
+                _itemsPanel.ChildrenTransitions = null;
+
+                _mainGrid.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Star);
+                _mainGrid.RowDefinitions[1].Height = new GridLength(1.0, GridUnitType.Auto);
+                _mainGrid.ColumnDefinitions[0].Width = new GridLength(1.0, GridUnitType.Auto);
+                _mainGrid.ColumnDefinitions[1].Width = new GridLength(1.0, GridUnitType.Star);
+
+                if (_contentPresenter != null)
+                {
+                    Grid.SetColumn(_contentPresenter, 0);
+                    Grid.SetColumnSpan(_contentPresenter, 2);
+                    Grid.SetRow(_contentPresenter, 0);
+                    Grid.SetRowSpan(_contentPresenter, 2);
+                }
+            }
 
             ApplyPopStyle();
 
@@ -651,6 +675,7 @@ namespace Dt.Base
             {
                 item.TabStripPlacement = TabStripPlacement;
             }
+            PlacementChanged(p_lastPlacement);
         }
 
         /// <summary>
@@ -663,6 +688,12 @@ namespace Dt.Base
                 || TabStripPlacement == ItemPlacement.Left
                 || TabStripPlacement == ItemPlacement.Right)
                 return;
+
+            if (TabStripPlacement == ItemPlacement.TopLeft)
+            {
+                _itemsPanel.Orientation = Orientation.Vertical;
+                return;
+            }
 
             // 20 是默认stripborder的留白
             double width = 20;
@@ -712,6 +743,18 @@ namespace Dt.Base
                 _dlg.Width = double.NaN;
             }
         }
+
+        /// <summary>
+        /// 切换标签相对于内容的对齐方式
+        /// </summary>
+        protected virtual void PlacementChanged(ItemPlacement? p_lastPlacement)
+        { }
+
+        /// <summary>
+        /// 当TopLeft时从Tab列表对话框中清除_itemsPanel
+        /// </summary>
+        protected virtual void ClearFromTabListDlg()
+        { }
         #endregion
 
         #region 选择相关

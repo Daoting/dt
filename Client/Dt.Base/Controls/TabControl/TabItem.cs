@@ -276,6 +276,17 @@ namespace Dt.Base
                 ChangeVisualState();
             }
         }
+
+        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
+        {
+            base.OnPointerCaptureLost(e);
+            if (Owner != null)
+            {
+                _pointerID = null;
+                _state = MouseVisualState.Normal;
+                ChangeVisualState();
+            }
+        }
         #endregion
 
         #region 内部方法

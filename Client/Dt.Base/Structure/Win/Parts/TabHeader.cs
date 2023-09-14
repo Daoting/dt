@@ -58,6 +58,13 @@ namespace Dt.Base.Docking
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += OnBackClick;
+
+            if (Owner is Tabs tabs
+                && tabs.TabStripPlacement == ItemPlacement.TopLeft
+                && tabs.Items.Count > 1)
+            {
+                ToggleTabListButton(true);
+            }
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -151,6 +158,37 @@ namespace Dt.Base.Docking
             return (from pane in tabs.Items
                     where pane is Tab
                     select pane).All((item) => (item as Tab).CanFloat);
+        }
+
+        internal void ToggleTabListButton(bool p_show)
+        {
+            if (Owner is not Tabs tabs
+                || GetTemplateChild("Content") is not Grid grid)
+                return;
+
+            if (p_show && tabs.Items.Count > 1)
+            {
+                var btn = new Button
+                {
+                    Content = "\uE05D",
+                    Style = Res.字符按钮,
+                    Foreground = Res.深灰1,
+                };
+                btn.Click += tabs.OpenTabListDlg;
+                Grid.SetColumn(btn, 1);
+                grid.Children.Add(btn);
+            }
+            else
+            {
+                foreach (var elem in grid.Children)
+                {
+                    if (elem is Button btn && btn.Content == "\uE05D")
+                    {
+                        grid.Children.Remove(elem);
+                        break;
+                    }
+                }
+            }
         }
         #endregion
     }
