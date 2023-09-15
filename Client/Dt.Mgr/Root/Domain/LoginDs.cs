@@ -140,6 +140,19 @@ namespace Dt.Mgr
             return true;
         }
 
+        public static async Task<bool> LoginByFifo(long p_userID, string p_userName)
+        {
+            Kit.UserID = p_userID;
+            Kit.UserName = p_userName;
+            RefreshHeader();
+            LoginSuc?.Invoke();
+
+            // 接收服务器推送
+            _ = Task.Run(() => PushHandler.Register());
+            await Task.CompletedTask;
+            return true;
+        }
+
         /// <summary>
         /// 刷新HttpClient头的用户信息
         /// </summary>

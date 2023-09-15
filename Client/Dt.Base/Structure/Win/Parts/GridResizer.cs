@@ -418,6 +418,7 @@ namespace Dt.Base.Docking
 
         void ResetCursor()
         {
+#if ENABLECURSOR
             if (!Placement.HasValue)
                 return;
 
@@ -429,6 +430,7 @@ namespace Dt.Base.Docking
             {
                 ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
             }
+#endif
         }
 
         void OnLayoutChangeEnded()

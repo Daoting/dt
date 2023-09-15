@@ -11,6 +11,7 @@
     
     <!-- 定义平台常量 -->
     <PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
+        <!--ENABLECURSOR 启用光标，winui赋值时容易锁死-->
         <DefineConstants>$(DefineConstants);WIN</DefineConstants>
         <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     </PropertyGroup>
@@ -30,11 +31,11 @@
     </PropertyGroup>
 
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.6.19" />
+        <PackageReference Include="Uno.WinUI" Version="4.10.13" />
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221109.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230822000" />
     </ItemGroup>
 
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->

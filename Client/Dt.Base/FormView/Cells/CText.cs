@@ -88,7 +88,7 @@ namespace Dt.Base
         }
         #endregion
 
-        readonly TextBox _tb;
+        protected TextBox _tb;
 
         #region 构造方法
         public CText()

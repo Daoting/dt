@@ -1248,6 +1248,7 @@ namespace Dt.Base
         /// <param name="direction"></param>
         void UpdateMouseCursor(ResizeDirection direction)
         {
+#if ENABLECURSOR
             switch (direction)
             {
                 case ResizeDirection.Left:
@@ -1274,6 +1275,7 @@ namespace Dt.Base
                     ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
                     break;
             }
+#endif
         }
         #endregion
     }

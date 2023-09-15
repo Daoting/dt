@@ -43,7 +43,7 @@ namespace Dt.Base
 
         internal void SetBuiltInCursor(CoreCursorType cursorType)
         {
-#if WIN
+#if ENABLECURSOR
             // WinUI
             ProtectedCursor = InputSystemCursor.Create((InputSystemCursorShape)cursorType);
 #endif

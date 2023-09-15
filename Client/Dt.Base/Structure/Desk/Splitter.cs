@@ -138,7 +138,9 @@ namespace Dt.Base
 
         void ResetCursor(InputSystemCursorShape p_cursor)
         {
+#if ENABLECURSOR
             ProtectedCursor = InputSystemCursor.Create(p_cursor);
+#endif
         }
         #endregion
     }
