@@ -24,13 +24,13 @@ namespace Dt.Core
                 var cfg = new LoggerConfiguration();
 
                 // 设置最小输出级别，默认Information
-                cfg.MinimumLevel.Is(setting.LogLevel);
-                
+                cfg.MinimumLevel.Is(Serilog.Events.LogEventLevel.Debug);
+
                 if (setting.TraceEnabled)
-                    cfg.WriteTo.Sink(new TraceSink());
+                    cfg.WriteTo.Sink(new TraceSink(), restrictedToMinimumLevel: setting.TraceLogLevel);
 
                 if (setting.ConsoleEnabled)
-                    cfg.WriteTo.Sink(new ConsoleSink());
+                    cfg.WriteTo.Sink(new ConsoleSink(), restrictedToMinimumLevel: setting.ConsoleLogLevel);
 
                 if (setting.FileEnabled)
                 {
@@ -38,6 +38,7 @@ namespace Dt.Core
                         new CompactJsonFormatter(),
                         Path.Combine(ApplicationData.Current.LocalFolder.Path, ".log", "dt-.log"),
                         rollingInterval: RollingInterval.Day, // 文件名末尾加日期
+                        restrictedToMinimumLevel: setting.FileLogLevel, // 设置最小输出级别，默认Information
                         rollOnFileSizeLimit: true); // 超过1G时新文件名末尾加序号
                 }
 

@@ -190,8 +190,8 @@ namespace Dt.Base.Tools
                 else
                 {
                     p_query = from it in p_query
-                            where it.Str(p_colName).Contains(str, StringComparison.OrdinalIgnoreCase)
-                            select it;
+                              where it.Str(p_colName).Contains(str, StringComparison.OrdinalIgnoreCase)
+                              select it;
                 }
             }
             return p_query;
@@ -509,20 +509,18 @@ namespace Dt.Base.Tools
                 {
                     new RowDefinition() { Height = GridLength.Auto },
                     new RowDefinition() { Height = new GridLength(60) },
-                    new RowDefinition() { Height = GridLength.Auto },
                 },
             };
 
             var tbInfo = new TextBlock();
             grid.Children.Add(tbInfo);
 
+            var tbIndex = new TextBlock { Foreground = Res.深灰1, FontSize = Res.小字, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center };
+            grid.Children.Add(tbIndex);
+
             var tbMsg = new TextBlock { Style = Res.LvTextBlock, Margin = new Thickness(0, 6, 0, 6), };
             Grid.SetRow(tbMsg, 1);
             grid.Children.Add(tbMsg);
-
-            var tbIndex = new TextBlock { Foreground = Res.深灰1, FontSize = Res.小字, HorizontalAlignment = HorizontalAlignment.Center };
-            Grid.SetRow(tbIndex, 2);
-            grid.Children.Add(tbIndex);
             e.UI = grid;
 
             e.Set += c =>

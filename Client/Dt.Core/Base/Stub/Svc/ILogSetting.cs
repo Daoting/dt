@@ -23,9 +23,19 @@ namespace Dt.Core
         bool ConsoleEnabled { get; }
 
         /// <summary>
+        /// 输出到Console的级别
+        /// </summary>
+        LogEventLevel ConsoleLogLevel { get; }
+
+        /// <summary>
         /// 是否将日志保存到文件
         /// </summary>
         bool FileEnabled { get; }
+
+        /// <summary>
+        /// 日志输出到文件的级别
+        /// </summary>
+        LogEventLevel FileLogLevel { get; }
 
         /// <summary>
         /// 是否将日志输出到Trace
@@ -33,8 +43,8 @@ namespace Dt.Core
         bool TraceEnabled { get; }
 
         /// <summary>
-        /// 日志输出级别
+        /// 日志到Trace的级别
         /// </summary>
-        LogEventLevel LogLevel { get; }
+        LogEventLevel TraceLogLevel { get; }
     }
 }

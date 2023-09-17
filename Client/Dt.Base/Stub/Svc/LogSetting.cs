@@ -23,9 +23,19 @@ namespace Dt.Base
         public bool ConsoleEnabled => true;
 
         /// <summary>
+        /// 日志输出到Console的级别，默认Debug
+        /// </summary>
+        public LogEventLevel ConsoleLogLevel => LogEventLevel.Debug;
+
+        /// <summary>
         /// 是否将日志保存到文件，默认true
         /// </summary>
         public bool FileEnabled => true;
+
+        /// <summary>
+        /// 日志输出到文件的级别，默认Info
+        /// </summary>
+        public LogEventLevel FileLogLevel => LogEventLevel.Information;
 
         /// <summary>
         /// 是否将日志输出到Trace，默认true
@@ -33,8 +43,8 @@ namespace Dt.Base
         public bool TraceEnabled => true;
 
         /// <summary>
-        /// 日志输出级别，默认Debug
+        /// 日志到Trace的级别，默认Debug
         /// </summary>
-        public LogEventLevel LogLevel => LogEventLevel.Debug;
+        public LogEventLevel TraceLogLevel => LogEventLevel.Debug;
     }
 }
