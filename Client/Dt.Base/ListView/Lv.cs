@@ -57,7 +57,7 @@ namespace Dt.Base
             "ItemHeight",
             typeof(double),
             typeof(Lv),
-            new PropertyMetadata(0d, OnReload));
+            new PropertyMetadata(0d, OnItemHeightChanged));
 
         public static readonly DependencyProperty ShowItemBorderProperty = DependencyProperty.Register(
             "ShowItemBorder",
@@ -149,6 +149,11 @@ namespace Dt.Base
         static void OnReload(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Lv)d).ReloadPanelContent();
+        }
+
+        static void OnItemHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Lv)d).OnItemHeightChanged();
         }
         #endregion
 

@@ -79,6 +79,14 @@ namespace Dt.Base.ListView
             // 超过宽度时水平滚动
             double maxWidth = Math.Max(_maxSize.Width, _owner.Cols.TotalWidth + topLeftWidth);
 
+            // 普通行高未设置并且列头多行时，行高按照列头高度
+            int cntLine;
+            if (_owner.ItemHeight == 0
+                && (cntLine = _owner.Cols.GetLineCount()) > 1)
+            {
+                _owner.SetItemHeightNoReload(cntLine * 22 + 18);
+            }
+
             // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
             // 先添加一行，作为行高标准
             var virRow = _createLvRow(_owner.Rows[0]);

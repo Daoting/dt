@@ -385,5 +385,22 @@ namespace Dt.Base
             throw new NotImplementedException();
         }
         #endregion
+
+        #region ItemHeight变化
+        bool _itemHeightNoReload;
+
+        void OnItemHeightChanged()
+        {
+            if (!_itemHeightNoReload)
+                ReloadPanelContent();
+        }
+
+        internal void SetItemHeightNoReload(double p_itemHeight)
+        {
+            _itemHeightNoReload = true;
+            ItemHeight = p_itemHeight;
+            _itemHeightNoReload = false;
+        }
+        #endregion
     }
 }

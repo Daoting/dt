@@ -62,5 +62,23 @@ namespace Dt.Base
                 TotalWidth += col.Width;
             }
         }
+
+        /// <summary>
+        /// 列头最多占用的行数
+        /// </summary>
+        internal int GetLineCount()
+        {
+            int cnt;
+            int maxCnt = 1;
+            foreach (Col col in this)
+            {
+                if (!string.IsNullOrEmpty(col.Title)
+                    && (cnt = col.Title.Split('\u000A').Length) > maxCnt)
+                {
+                    maxCnt = cnt;
+                }
+            }
+            return maxCnt;
+        }
     }
 }
