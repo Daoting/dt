@@ -95,7 +95,11 @@ namespace Dt.Base
         public string Title
         {
             get { return string.IsNullOrEmpty(_title) ? ID : _title; }
-            set { _title = value; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    _title = value.Replace('@', '\u000A');
+            }
         }
 
         /// <summary>
