@@ -26,16 +26,10 @@ namespace Dt.Base.Tools
     /// </summary>
     public sealed partial class HistoryLogWin : Win
     {
-        public HistoryLogWin(bool p_includeOtherApp)
+        public HistoryLogWin()
         {
             InitializeComponent();
-            IncludeOtherApp = p_includeOtherApp;
         }
-
-        /// <summary>
-        /// 是否包含其它App日志
-        /// </summary>
-        public bool IncludeOtherApp { get; }
 
         public HistoryLogList List => _list;
 

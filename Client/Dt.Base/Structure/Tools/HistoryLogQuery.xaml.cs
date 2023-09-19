@@ -9,8 +9,10 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System.Diagnostics;
 using Windows.Storage.Pickers;
+using Windows.System;
 #endregion
 
 namespace Dt.Base.Tools
@@ -48,6 +50,15 @@ namespace Dt.Base.Tools
         void OnQuery(object sender, QueryClause e)
         {
             _win.List.OnSearch(e);
+        }
+
+        void OnKeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                e.Handled = true;
+                _fv.OnQuery();
+            }
         }
 
         HistoryLogWin _win => OwnWin as HistoryLogWin;

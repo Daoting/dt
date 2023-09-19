@@ -1,4 +1,4 @@
-﻿
+
 #总体
 wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响应慢，用户体验差，不推荐使用。
 
@@ -18,6 +18,7 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * DataTable中Copy是复制数据和结构，Clone是只结构，Table中调整成相同习惯
 * 只要详细级别才输出sqlite的sql
 * CopyToClipboard放入Kit
+* 日志输出级别各对象分开，日志文件默认Info，trace默认debug
 
 ### 功能
 * .admin页面增加版本号
@@ -56,6 +57,9 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * Win增加 LeftPanes LeftPane 等属性
 * Menu增加手动创建Mi的简化写法
 * 实现fifo中在标题栏左上角显示Tab列表
+* Lv列头多行时同步数据行高度
+* Col多行支持@分割
+* FvCell增加KeyUp事件
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态
@@ -65,6 +69,8 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * Phone模式页面内容有水平滚动栏时不支持左右滑动
 * 设置Lv.SelectedItem和SelectedIndex时触发的SelectionChanged事件参数值类型不同
 * Fv的CTip不接收Tab停靠
+
+* Lv调整列宽的宽度消息不提示
 
 * 查询日志时“以管理员运行"，无法打开其它位置的日志
 

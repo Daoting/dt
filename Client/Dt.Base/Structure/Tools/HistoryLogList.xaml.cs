@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Input;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base.Tools
@@ -257,8 +258,24 @@ namespace Dt.Base.Tools
         protected override void OnFirstLoaded()
         {
 #if WIN
-            if (_win.IncludeOtherApp)
-                Menu[0].Visibility = Visibility.Visible;
+            try
+            {
+                Windows.Management.Deployment.PackageManager pkgMgr = new();
+                pkgMgr.FindPackage("Dt.Demo");
+                Menu[2].Visibility = Visibility.Visible;
+            }
+            catch
+            {
+                Kit.Msg("“以管理员身份运行”当前应用可访问其它App历史日志！");
+            }
+
+            var di = new DirectoryInfo(Path.Combine(ApplicationData.Current.LocalFolder.Path, ".log"));
+            if (di.Exists)
+            {
+                FileInfo fi = di.GetFiles().OrderByDescending((f) => f.LastWriteTime).FirstOrDefault();
+                if (fi != null)
+                    LoadFile(fi);
+            }
 #endif
         }
         #endregion

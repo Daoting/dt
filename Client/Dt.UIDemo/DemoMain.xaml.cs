@@ -145,8 +145,6 @@ namespace Dt.UIDemo
             {
                 new Nav("查找图标", typeof(IconDemo), Icons.图标) { Desc = "内置的矢量文字，可用作图标、提示" },
 
-                new Nav("日志查询", typeof(HistoryLogWin), Icons.选日) { Params = true, Desc = "以管理员身份运行可查询其它App客户端日志" },
-
 #if WIN
                 new Nav("生成App图片", typeof(AppIcon), Icons.图片) { Desc = "生成 android 和 iOS 中用到的app图片" },
 #endif
