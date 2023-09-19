@@ -11,6 +11,7 @@ using Dt.Base.FormView;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
 using System.ComponentModel;
 using System.Reflection;
 using Windows.Foundation;
@@ -233,6 +234,11 @@ namespace Dt.Base
         /// 单元格值修改后事件，参数为新值
         /// </summary>
         public event EventHandler<object> Changed;
+
+        /// <summary>
+        /// 编辑器的按键事件
+        /// </summary>
+        new public event KeyEventHandler KeyUp;
         #endregion
 
         #region 属性
@@ -494,6 +500,11 @@ namespace Dt.Base
                     return Activator.CreateInstance(tp) as IFvCall;
             }
             return DefaultMiddle;
+        }
+
+        internal void PostKeyUp(KeyRoutedEventArgs e)
+        {
+            KeyUp?.Invoke(this, e);
         }
         #endregion
 

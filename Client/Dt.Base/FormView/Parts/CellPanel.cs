@@ -305,6 +305,11 @@ namespace Dt.Base.FormView
             if (_owner == null || _owner.Owner == null)
                 return;
 
+            // 外部处理输入，若 e.Handled = true 不再处理
+            _owner.PostKeyUp(e);
+            if (e.Handled)
+                return;
+
             Fv fv = _owner.Owner;
             switch (e.Key)
             {
