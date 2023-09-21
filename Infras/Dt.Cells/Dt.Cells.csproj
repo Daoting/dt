@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>2.5.3</Version>
+		<Version>2.5.4</Version>
         <PackageId>Dt.Infras</PackageId>
 		<Description>搬运工客户端 Excel Chart 等基础控件</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -18,96 +18,37 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Icons\Ascend.png" />
-		<EmbeddedResource Include="Icons\AutoFillIndicator.png" />
-		<EmbeddedResource Include="Icons\BottomCenterGrip.png" />
-		<EmbeddedResource Include="Icons\BottomLeftGrip.png" />
-		<EmbeddedResource Include="Icons\BottomRightGrip.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45GrayDown.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45GrayUp.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45YellowDown.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Arrow45YellowUp.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowBlueUp.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayDown.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayRight.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowGrayUp.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowRedDown.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\ArrowYellowRight.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\BlackCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\BlackFillCircles.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Box0.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Box1.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Box2.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Box3.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Box4.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GrayFillCicle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCheck.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCheckSymbol.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GreenCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GreenFlag.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\GreenTraficLight.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\PinkFillCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter0.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter1.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter2.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter3.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Quarter4.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Rating0.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Rating1.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Rating2.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Rating3.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Rating4.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedCross.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedCrossSymbol.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedDiamond.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedFillCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedFlag.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\RedTraficLight.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Star0.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Star1.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\Star2.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleGreenUp.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleRedDown.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\TriangleYellow.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowCircle.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowExclamation.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowExclamationSymbol.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowFlag.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowTraficLight.png" />
-		<EmbeddedResource Include="Icons\ConditionalFormats\YellowTrangle.png" />
-		<EmbeddedResource Include="Icons\Descend.png" />
-		<EmbeddedResource Include="Icons\DragCell_CtrlDragCursor.png" />
-		<EmbeddedResource Include="Icons\DragCell_DragCursor.png" />
-		<EmbeddedResource Include="Icons\DragFill_CtrlDragCursor.png" />
-		<EmbeddedResource Include="Icons\DragFill_DragCursor.png" />
-		<EmbeddedResource Include="Icons\Filter.png" />
-		<EmbeddedResource Include="Icons\FilterAscend.png" />
-		<EmbeddedResource Include="Icons\FilterDescend.png" />
-		<EmbeddedResource Include="Icons\MiddleLeftGrip.png" />
-		<EmbeddedResource Include="Icons\MiddleRightGrip.png" />
-		<EmbeddedResource Include="Icons\NoSortFilter.png" />
-		<EmbeddedResource Include="Icons\ResizeGripperHor.png" />
-		<EmbeddedResource Include="Icons\ResizeGripperHor_dark.png" />
-		<EmbeddedResource Include="Icons\ResizeGripperVer.png" />
-		<EmbeddedResource Include="Icons\ResizeGripperVer_dark.png" />
-		<EmbeddedResource Include="Icons\Resize_HorizontalCursor.png" />
-		<EmbeddedResource Include="Icons\Resize_HorizontalCursor_dark.png" />
-		<EmbeddedResource Include="Icons\Resize_HorizontalSplitCursor.png" />
-		<EmbeddedResource Include="Icons\Resize_HorizontalSplitCursor_dark.png" />
-		<EmbeddedResource Include="Icons\Resize_VerticalCursor.png" />
-		<EmbeddedResource Include="Icons\Resize_VerticalCursor_dark.png" />
-		<EmbeddedResource Include="Icons\Resize_VerticalSplitCursor.png" />
-		<EmbeddedResource Include="Icons\Resize_VerticalSplitCursor_dark.png" />
-		<EmbeddedResource Include="Icons\SortAscending.png" />
-		<EmbeddedResource Include="Icons\SortDescending.png" />
-		<EmbeddedResource Include="Icons\TopCenterGrip.png" />
-		<EmbeddedResource Include="Icons\TopLeftGrip.png" />
-		<EmbeddedResource Include="Icons\TopRightGrip.png" />
 		<EmbeddedResource Include="Res\FunctionInformation.xml" />
-		<EmbeddedResource Include="Res\FunctionInformation.zh_CN.xml" />
+        <EmbeddedResource Include="Res\FunctionInformation.zh_CN.xml" />
 	</ItemGroup>
 
+    <!--win上将图片嵌入到Pri，不使用嵌入资源方式-->
+    <!--因二进制文件作为嵌入资源时，不但会放入dll，而且会在pri列表中作为外部资源文件，造成在被引用时总要复制无用的文件-->
+    <!--文件文件作为嵌入资源时，和传统一致，放入dll，与pri无任何关系-->
+    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+        <Content Remove="Icons\**" />
+        <MyEmbeddedItems Include="Icons\**" />
+    </ItemGroup>
+    
+    <Target Name="AddMyEmbeddedItems" BeforeTargets="_GenerateProjectPriFileCore" AfterTargets="_CalculateInputsForGenerateProjectPriFileCore" Condition="$(TargetFramework.Contains('-windows'))">
+        <Copy SourceFiles="@(MyEmbeddedItems)" DestinationFolder="$(IntermediateOutputPath)\embed\Icons\" />
+        <ReadLinesFromFile File="$(_EmbedFileResfilePath)">
+            <Output TaskParameter="Lines" ItemName="ItemsFromFile" />
+        </ReadLinesFromFile>
+
+        <ItemGroup>
+            <MyEmbeddedFileList Include="@(ItemsFromFile)" />
+            <MyEmbeddedFileList Include="@(MyEmbeddedItems)" />
+        </ItemGroup>
+
+        <WriteLinesToFile File="$(_EmbedFileResfilePath)" Lines="@(MyEmbeddedFileList)" Overwrite="true" Encoding="Unicode" />
+    </Target>
+
+    <!--其它平台仍使用嵌入资源-->
+    <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
+        <EmbeddedResource Include="Icons\**" />
+    </ItemGroup>
+    
 	<ItemGroup>
 		<!--PrivateAssets避免引用项目的 nuget 包-->
 		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />

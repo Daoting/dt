@@ -18,8 +18,6 @@
 			<PackagePath>\</PackagePath>
             <Visible>false</Visible>
 		</None>
-		<None Include="Chat\WebRTC\WebRTC通信流程.png" />
-		<None Include="Rbac\Domain\rbac.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,5 +48,6 @@
 
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
+        <Content Remove="Rbac\Domain\rbac.png" />
     </ItemGroup>
 </Project>

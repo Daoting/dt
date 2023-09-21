@@ -8,6 +8,8 @@
         <UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
         <!-- release不输出pbd调试信息 -->
         <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
+        <!--xbf嵌入到pri文件-->
+        <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
     </PropertyGroup>
 
     <!-- 定义平台常量 -->
@@ -33,7 +35,7 @@
 
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="2.5.3" />
+        <PackageReference Include="Dt.Infras" Version="2.5.4" />
         <PackageReference Include="Dt.BuildTools" Version="1.3.4" PrivateAssets="none" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.11" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />

@@ -28,14 +28,20 @@ namespace Dt.Cells.UI
                 return bmp;
 
             bmp = new BitmapImage();
+#if WIN
+            // win将图片嵌入在pri中
+            var rm = new Microsoft.Windows.ApplicationModel.Resources.ResourceManager();
+            var data = rm.MainResourceMap.GetValue("Files/Icons/" + resourceId).ValueAsBytes;
+            using (var stream = new MemoryStream(data))
+            {
+                await bmp.SetSourceAsync(stream.AsRandomAccessStream());
+            }
+#else
             using (var stream = typeof(SR).Assembly.GetManifestResourceStream("Dt.Cells.Icons." + resourceId))
             {
-#if WIN
-                await bmp.SetSourceAsync(stream.AsRandomAccessStream());
-#else
                 await bmp.SetSourceAsync(stream);
-#endif
             }
+#endif
             _caches[resourceId] = bmp;
             return bmp;
         }
