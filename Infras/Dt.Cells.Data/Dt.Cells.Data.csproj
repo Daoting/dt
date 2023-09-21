@@ -11,8 +11,4 @@
 		<ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
 		<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<PRIResource Include="Res\Resources.resw" />
-	</ItemGroup>
 </Project>

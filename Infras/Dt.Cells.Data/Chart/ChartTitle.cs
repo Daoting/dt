@@ -24,22 +24,16 @@ namespace Dt.Cells.Data
     public class ChartTitle : SpreadChartTextElement
     {
         Dt.Cells.Data.TitleType _titleType;
-        string DefaultAxisTitle;
-        string DefaultChartTitle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ChartTitle" /> class.
         /// </summary>
         public ChartTitle()
         {
-            this.DefaultAxisTitle = ResourceStrings.DefaultAxisTitle;
-            this.DefaultChartTitle = ResourceStrings.DefaultChartTitle;
         }
 
         internal ChartTitle(SpreadChartBase owner) : base(owner)
         {
-            this.DefaultAxisTitle = ResourceStrings.DefaultAxisTitle;
-            this.DefaultChartTitle = ResourceStrings.DefaultChartTitle;
         }
 
         void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
