@@ -18,9 +18,12 @@
 
         <a:CBar Title="行操作" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="创建新空行" Click="OnAddEmptyRow" />
-            <Button Content="创建初始值新行" Click="OnAddRow" />
-            <Button Content="创建独立行" Click="OnAddSingleRow" />
+            <Button Content="表新增空行" Click="OnAddEmptyRow" />
+            <Button Content="根据表结构创建独立行" Click="OnAddSingleRow" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="创建含初始值的独立行" Click="OnAddRow" />
+            <Button Content="创建空的独立行" Click="OnAddRowByType" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Content="克隆行" Click="OnCloneRow" />

@@ -99,6 +99,13 @@ namespace Dt.UIDemo
             WriteRows(tbl);
         }
 
+        void OnAddSingleRow(object sender, RoutedEventArgs e)
+        {
+            var tbl = CreateTable();
+            var row = tbl.NewRow(new { id = "123" });
+            _tbInfo.Text = "创建独立行: tbl.CreateRow()";
+        }
+
         void OnAddRow(object sender, RoutedEventArgs e)
         {
             var row = new Row
@@ -111,7 +118,7 @@ namespace Dt.UIDemo
                 { "bumen", Gender.女 },
             };
 
-            _tbInfo.Text = @"创建独立行:
+            _tbInfo.Text = @"创建含初始值的独立行:
 var row = new Row
 {
     { ""id"", 100L },
@@ -124,11 +131,21 @@ var row = new Row
 ";
         }
 
-        void OnAddSingleRow(object sender, RoutedEventArgs e)
+        void OnAddRowByType(object sender, RoutedEventArgs e)
         {
-            var tbl = CreateTable();
-            var row = tbl.NewRow(new { id = "123" });
-            _tbInfo.Text = "创建独立行: tbl.CreateRow()";
+            var row = new Row
+            {
+                { "id", typeof(long) },
+                { "bh", typeof(string) },
+            };
+
+            _tbInfo.Text = @"创建空的独立行:
+var row = new Row
+{
+    { ""id"", typeof(long) },
+    { ""bh"", typeof(string) },
+};
+";
         }
 
         void OnCloneRow(object sender, RoutedEventArgs e)

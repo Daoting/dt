@@ -65,7 +65,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 虚拟行时：能填充可视区域的UI行列表(可看作一页)，真实行时：与数据行一一对应的UI行列表，
         /// </summary>
-        protected readonly List<LvRow> _dataRows = new List<LvRow>();
+        internal protected readonly List<LvRow> _dataRows = new List<LvRow>();
 
         /// <summary>
         /// 采用虚拟行时使用，_dataRows的所有行总高度，看作页面高度

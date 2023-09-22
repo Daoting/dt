@@ -509,6 +509,15 @@ namespace Dt.Base
             Clipboard.SetContent(data);
             Kit.Msg("已成功复制到剪贴板！");
         }
+
+        /// <summary>
+        /// 获取所有的界面行，真实行时与数据行一一对应，虚拟行时无效！
+        /// </summary>
+        /// <returns></returns>
+        public List<LvRow> GetRowUIs()
+        {
+            return _panel?._dataRows;
+        }
         #endregion
 
         #region 滚动到可视

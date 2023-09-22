@@ -591,6 +591,84 @@ namespace Dt.Base
             }
             return null;
         }
+
+        /// <summary>
+        /// 根据数据项设置对应节点的状态
+        /// </summary>
+        /// <param name="p_item">数据项</param>
+        /// <param name="p_status"></param>
+        public void SetItemSelectionStatus(object p_item, int p_status)
+        {
+            TvItem item = RootItems.GetAllItems().Where(w => w.Data == p_item).FirstOrDefault();
+            if (item == null)
+            {
+                return;
+            }
+
+            TvItem tvItem = _selectedRows.Where(w => w.Data == item).FirstOrDefault();
+            if (tvItem == null)
+            {
+                if (p_status == 0)
+                {
+                    if (item.IsSelected == false)
+                    {
+                        return;
+                    }
+                }
+
+                if (p_status == 2)
+                {
+                    if (item.IsSelected == null)
+                    {
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (p_status == 1)
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
+                switch (p_status)
+                {
+                    case 0:
+                        if (_selectedRows.Contains(item))
+                        {
+                            _selectedRows.Remove(item);
+                        }
+                        item.IsSelected = false;
+                        HasSelected = false;
+                        break;
+                    case 1:
+                        _selectedRows.Add(item);
+                        item.IsSelected = true;
+                        HasSelected = true;
+                        break;
+                    case 2:
+                        if (_selectedRows.Contains(item))
+                        {
+                            _selectedRows.Remove(item);
+                        }
+                        item.IsSelected = null;
+                        HasSelected = false;
+                        break;
+                }
+                if (_panel != null)
+                {
+                    _panel.ScrollIntoItem(item);
+                }
+            }
+            finally
+            {
+                _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+            }
+        }
         #endregion
 
         #region 展开/折叠

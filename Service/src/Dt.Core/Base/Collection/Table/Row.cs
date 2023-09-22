@@ -229,25 +229,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 添加新数据项，支持手动创建Row的简化写法！如：
-        /// var row = new Row
-        /// {
-        ///     { "id", 100L },
-        ///     { "xm", "新名称" },
-        ///     { "bh", true }
-        /// };
-        /// </summary>
-        /// <typeparam name="T">Cell的数据类型</typeparam>
-        /// <param name="p_cellName">字段名，不可为空，作为键值</param>
-        /// <param name="p_value">初始值</param>
-        public Cell Add<T>(string p_cellName, T p_value = default)
-        {
-            if (Contains(p_cellName))
-                throw new Exception($"已包含{p_cellName}列！");
-            return new Cell(this, p_cellName, typeof(T), p_value);
-        }
-
-        /// <summary>
         /// 判断是否包含给定的列
         /// </summary>
         /// <param name="p_columnName">列名</param>
@@ -279,6 +260,47 @@ namespace Dt.Core
                 dt[cell.ID] = cell.Val;
             }
             return dt;
+        }
+        #endregion
+
+        #region 添加Cell
+        /// <summary>
+        /// 添加新数据项，支持手动创建Row的简化写法！如：
+        /// var row = new Row
+        /// {
+        ///     { "id", 100L },
+        ///     { "xm", "新名称" },
+        ///     { "bh", true }
+        /// };
+        /// </summary>
+        /// <typeparam name="T">Cell的数据类型</typeparam>
+        /// <param name="p_cellName">字段名，不可为空，作为键值</param>
+        /// <param name="p_value">初始值</param>
+        public Cell Add<T>(string p_cellName, T p_value = default)
+        {
+            return AddCellInternal(p_cellName, typeof(T), p_value);
+        }
+
+        /// <summary>
+        /// 添加新数据项，支持手动创建Row的简化写法！如：
+        /// var row = new Row
+        /// {
+        ///     { "id", typeof(long) },
+        ///     { "xm", typeof(string) },
+        /// };
+        /// </summary>
+        /// <param name="p_cellName">字段名，不可为空，作为键值</param>
+        /// <param name="p_type">数据项值的类型</param>
+        public Cell Add(string p_cellName, Type p_type)
+        {
+            return AddCellInternal(p_cellName, p_type, null);
+        }
+
+        Cell AddCellInternal(string p_cellName, Type p_type, object p_value)
+        {
+            if (Contains(p_cellName))
+                throw new Exception($"已包含{p_cellName}列！");
+            return new Cell(this, p_cellName, p_type ?? typeof(string), p_value);
         }
         #endregion
 
