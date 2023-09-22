@@ -302,7 +302,9 @@ namespace Dt.Core
             // 类型不同时转换
             object val = GetValInternal(p_val, Type);
 
+#if !SERVER
             bool hookChangedVal = false;
+#endif
             if (!p_initVal)
             {
                 #region 检查是否超长
@@ -310,11 +312,18 @@ namespace Dt.Core
                     && Row.GetType().IsSubclassOf(typeof(Entity)))
                 {
                     var model = await EntitySchema.Get(Row.GetType());
+
+#if SERVER
+                    if (model != null
+                        && model.Schema.GetColumn(ID) is TableCol col
+                        && col.Length > 0)
+#else
                     if (model != null
                         && model.AccessInfo != null
                         && model.AccessInfo.Type == AccessType.Remote
                         && model.Schema.GetColumn(ID) is TableCol col
                         && col.Length > 0)
+#endif
                     {
                         int length;
                         if (model.Schema.DbType == DatabaseType.Oracle)
@@ -333,7 +342,7 @@ namespace Dt.Core
                             // 超长抛出异常
 #if SERVER
                             // 服务端无绑定
-                            Throw.Msg(_outLengthErr, this);
+                            Throw.Msg(_outLengthErr);
 #else
                             if (PropertyChanged == null)
                             {
@@ -367,8 +376,8 @@ namespace Dt.Core
                 {
                     var args = new CellValChangingArgs(this, val);
 #if SERVER
-                   // 服务端无绑定
-                   hook(args);
+                    // 服务端无绑定
+                    hook(args);
 #else
                     if (PropertyChanged == null)
                     {
@@ -394,7 +403,9 @@ namespace Dt.Core
                     if (val != args.NewVal)
                     {
                         val = args.NewVal;
+#if !SERVER
                         hookChangedVal = true;
+#endif
                     }
                 }
                 #endregion
@@ -410,6 +421,9 @@ namespace Dt.Core
             // 触发属性变化事件
             if (PropertyChanged != null)
             {
+#if SERVER
+                PropertyChanged(this, new PropertyChangedEventArgs("Val"));
+#else
                 if (hookChangedVal)
                 {
                     // 外部钩子修改值后，立即调用时无效！
@@ -419,6 +433,7 @@ namespace Dt.Core
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Val"));
                 }
+#endif
             }
 
             // 数据项值改变时统一在Table和Row中触发事件
@@ -433,7 +448,7 @@ namespace Dt.Core
         /// <param name="p_val">值</param>
         /// <param name="p_tgtType">目标类型</param>
         /// <returns>转换结果</returns>
-        internal static object GetValInternal(object p_val, Type p_tgtType)
+        internal object GetValInternal(object p_val, Type p_tgtType)
         {
             // null时
             if (p_val == null)
@@ -497,9 +512,10 @@ namespace Dt.Core
             if (p_val is IConvertible)
                 return Convert.ChangeType(p_val, p_tgtType);
 
-            throw new Exception($"Cell列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
+            throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
 
+#if !SERVER
         /// <summary>
         /// 通知UI重置原值
         /// </summary>
@@ -518,6 +534,7 @@ namespace Dt.Core
             Kit.RunInQueue(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
 
         }
+#endif
         #endregion
     }
 
@@ -546,7 +563,7 @@ namespace Dt.Core
                 if (_newVal != value)
                 {
                     // 类型不同时转换
-                    _newVal = Cell.GetValInternal(value, _cell.Type);
+                    _newVal = _cell.GetValInternal(value, _cell.Type);
                 }
             }
         }
@@ -618,7 +635,7 @@ namespace Dt.Core
         /// <returns></returns>
         public T GetVal<T>()
         {
-            return (T)Cell.GetValInternal(_newVal, typeof(T));
+            return (T)_cell.GetValInternal(_newVal, typeof(T));
         }
     }
 }

@@ -83,4 +83,11 @@
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.116" />
 	</ItemGroup>
+
+    <!--打包后新包放在统一位置，删除该版本的旧包-->
+    <Target Name="CopyPackage" AfterTargets="Pack">
+        <Copy SourceFiles="bin\$(Configuration)\$(PackageId).$(Version).nupkg" DestinationFolder="d:\Dt\Packages\" />
+        <!--删除旧包-->
+        <RemoveDir Directories="$(UserProfile)\.nuget\packages\$(PackageId)\$(Version)" />
+    </Target>
 </Project>

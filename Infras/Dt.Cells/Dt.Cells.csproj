@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Version>3.0.0</Version>
-        <PackageId>Dt.Infras</PackageId>
+        <PackageId Condition="'$(Configuration)'=='Debug'">Dt.Infras.Debug</PackageId>
+        <PackageId Condition="'$(Configuration)'=='Release'">Dt.Infras</PackageId>
 		<Description>搬运工客户端 Excel Chart 等基础控件</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
@@ -26,12 +27,12 @@
     <!--因二进制文件作为嵌入资源时，不但会放入dll，而且会在pri列表中作为外部资源文件，造成在被引用时总要复制无用的文件-->
     <!--文件文件作为嵌入资源时，和传统一致，放入dll，与pri无任何关系-->
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <Content Remove="Icons\**" />
-        <MyEmbeddedItems Include="Icons\**" />
+        <Content Remove="Dt.Cells\**" />
+        <MyEmbeddedItems Include="Dt.Cells\Icons\**" />
     </ItemGroup>
     
     <Target Name="AddMyEmbeddedItems" BeforeTargets="_GenerateProjectPriFileCore" AfterTargets="_CalculateInputsForGenerateProjectPriFileCore" Condition="$(TargetFramework.Contains('-windows'))">
-        <Copy SourceFiles="@(MyEmbeddedItems)" DestinationFolder="$(IntermediateOutputPath)\embed\Icons\" />
+        <Copy SourceFiles="@(MyEmbeddedItems)" DestinationFolder="$(IntermediateOutputPath)\embed\Dt.Cells\Icons\" />
         <ReadLinesFromFile File="$(_EmbedFileResfilePath)">
             <Output TaskParameter="Lines" ItemName="ItemsFromFile" />
         </ReadLinesFromFile>
@@ -46,7 +47,7 @@
 
     <!--其它平台仍使用嵌入资源-->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <EmbeddedResource Include="Icons\**" />
+        <EmbeddedResource Include="Dt.Cells\Icons\**" />
     </ItemGroup>
     
 	<ItemGroup>

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 #endregion
 
 namespace Dt.Core
@@ -171,6 +172,9 @@ namespace Dt.Core
             // 订阅事件
             if (Kit.EnableRabbitMQ)
                 RabbitMQCenter.Subscribe(p_app.ApplicationServices);
+
+            // GBK编码
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             Log.Information($"连接{Kit.DefaultDbInfo.Type}库【{Kit.DefaultDbInfo.Key}】");
             DbSchema.SyncDbTime();

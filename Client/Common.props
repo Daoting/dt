@@ -43,8 +43,6 @@
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.4" />
-        <!-- 用到gbk -->
-        <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
     </ItemGroup>
 
     <!-- 非windows引用包 -->
@@ -60,7 +58,7 @@
 
     <!-- windows引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230822000" PrivateAssets="none" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" PrivateAssets="none" />
         <!-- Toast参数启动引用 -->
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     </ItemGroup>

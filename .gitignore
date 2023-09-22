@@ -356,6 +356,7 @@ Service/src/Dt.Fsm/etc/log/
 !Service/iis/tls.pfx 
 !Client/Dt.Mgr/Module/Publish/
 Package/
+Packages/
 Publish/
 Doc/商店截图/
 Doc/旧文档/

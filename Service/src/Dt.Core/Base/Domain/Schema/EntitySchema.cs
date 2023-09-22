@@ -34,7 +34,7 @@ namespace Dt.Core
         public TableSchema Schema { get; private set; }
 
 #if SERVER
-        async Task Init()
+        async Task<bool> Init()
         {
             var tbl = EntityType.GetCustomAttribute<TblAttribute>(false);
             if (tbl == null || string.IsNullOrEmpty(tbl.Name))
@@ -43,6 +43,7 @@ namespace Dt.Core
             Schema = await GetTableSchema(tbl);
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{EntityType.Name}的映射表{Schema.Name}无主键！");
+            return true;
         }
 
         internal static Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)

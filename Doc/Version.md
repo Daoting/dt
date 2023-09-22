@@ -60,6 +60,10 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * Lv列头多行时同步数据行高度
 * Col多行支持@分割
 * FvCell增加KeyUp事件
+* Dt.Cells中的图标在pri中放入Dt.Cells.Icons，避免外部覆盖
+* 打包时删除本地nuget的旧版本包
+* 解决服务中Cell的错误
+* 恢复Cell.GetValInternal异常时给出ID提示
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态

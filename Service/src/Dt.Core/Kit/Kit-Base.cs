@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Text;
 #endregion
 
 namespace Dt.Core
@@ -74,6 +75,48 @@ namespace Dt.Core
             if (p_size < GB)
                 return string.Format("{0}MB", Math.Round(p_size / (float)MB, 2));
             return string.Format("{0}GB", Math.Round(p_size / (float)GB, 2));
+        }
+
+        /// <summary>
+        /// 获取字符串按utf8编码的字节长度
+        /// </summary>
+        /// <param name="p_content">要计算的字符串 </param>
+        /// <returns></returns>
+        public static int GetUtf8Length(string p_content)
+        {
+            if (string.IsNullOrEmpty(p_content))
+                return 0;
+            return Encoding.UTF8.GetBytes(p_content).Length;
+        }
+
+        static Encoding _gbk;
+        /// <summary>
+        /// 获取字符串按GBK编码的字节长度
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <returns></returns>
+        public static int GetGbkLength(string p_content)
+        {
+            if (string.IsNullOrEmpty(p_content))
+                return 0;
+
+            if (_gbk == null)
+            {
+                _gbk = Encoding.GetEncoding("GBK");
+            }
+            return _gbk.GetBytes(p_content).Length;
+        }
+
+        /// <summary>
+        /// 获取字符串按Unicode编码的字节长度
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <returns></returns>
+        public static int GetUnicodeLength(string p_content)
+        {
+            if (string.IsNullOrEmpty(p_content))
+                return 0;
+            return Encoding.Unicode.GetBytes(p_content).Length;
         }
 
         #region 常量
