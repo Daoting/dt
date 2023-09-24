@@ -7,7 +7,7 @@
 
     <a:Main>
         <a:Tabs x:Name="_tabs" >
-            <a:Tab Order="1" Title="窗口属性">
+            <a:Tab Order="1" Title="窗口属性" HeaderDoubleClick="OnHeaderDoubleClick">
                 <StackPanel Margin="10">
                     <TextBox Text="{Binding Title,Mode=TwoWay,ElementName=_win}" />
                     <Button Content="切换图标" Click="OnToggleIcon" />

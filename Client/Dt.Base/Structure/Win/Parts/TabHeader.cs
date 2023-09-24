@@ -115,22 +115,63 @@ namespace Dt.Base.Docking
         {
             base.OnRightTapped(e);
 
-            if (!(Owner is Tabs tabs
-                && tabs.SelectedItem is Tab tab
-                && tab.CanUserPin
-                && !tab.IsInCenter
-                && !tab.IsFloating))
-                return;
-
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
-                var item = new Mi { ID = "自动隐藏" };
-                item.Click += OnAutoHide;
-                _menu.Items.Add(item);
+
+                Mi mi = new Mi { ID = "自动隐藏" };
+                mi.Click += OnAutoHide;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "复制容器类名" };
+                mi.Click += OnCopyWin;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "标签内容类名" };
+                mi.Click += OnCopyTab;
+                _menu.Items.Add(mi);
+
+#if WIN
+                mi = new Mi { ID = "预览容器Xaml" };
+                mi.Click += OnWinXaml;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "预览标签Xaml" };
+                mi.Click += OnTabXaml;
+                _menu.Items.Add(mi);
+#endif
             }
-            _menu.DataContext = tab;
-            await _menu.OpenContextMenu(e.GetPosition(null));
+
+            if (Owner is TabControl tc
+                && tc.SelectedItem is Tab t)
+            {
+                _menu.DataContext = t;
+
+                if (Owner is Tabs tabs
+                    && tabs.OwnWin != null
+                    && tabs.SelectedItem is Tab tab
+                    && tab.CanUserPin
+                    && !tab.IsInCenter
+                    && !tab.IsFloating)
+                {
+                    _menu[0].Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    _menu[0].Visibility = Visibility.Collapsed;
+                }
+                await _menu.OpenContextMenu(e.GetPosition(null));
+            }
+        }
+
+        protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
+        {
+            base.OnDoubleTapped(e);
+            if (Owner is TabControl tc
+                && tc.SelectedItem is Tab t)
+            {
+                t.OnHeaderDoubleClick(e);
+            }
         }
 
         static void OnAutoHide(object sender, Mi e)
@@ -138,6 +179,146 @@ namespace Dt.Base.Docking
             if (_menu.DataContext is Tab tab)
                 tab.IsPinned = false;
         }
+
+        static void OnCopyWin(object sender, Mi e)
+        {
+            var tab = _menu.DataContext as Tab;
+            Type tp = tab.OwnWin != null ? tab.OwnWin.GetType() : (tab.OwnDlg != null ? tab.OwnDlg.GetType() : null);
+            if (tp == null)
+            {
+                Kit.Warn($"未找到[{tab.GetType().FullName}]的容器！");
+            }
+            else
+            {
+                Kit.CopyToClipboard(tp.FullName, true);
+            }
+        }
+
+        static void OnCopyTab(object sender, Mi e)
+        {
+            var tab = _menu.DataContext as Tab;
+            Type tp = tab.GetType();
+            if ((tp == typeof(Tab) || tp.Name.EndsWith(".Fab"))
+                && tab.Content != null)
+            {
+                tp = tab.Content.GetType();
+            }
+            Kit.CopyToClipboard(tp.FullName, true);
+        }
+
+#if WIN
+        static void OnWinXaml(object sender, Mi e)
+        {
+            var tab = _menu.DataContext as Tab;
+            Type tp = tab.OwnWin != null ? tab.OwnWin.GetType() : (tab.OwnDlg != null ? tab.OwnDlg.GetType() : null);
+            if (tp == null)
+            {
+                Kit.Warn($"未找到 [{tab.GetType().FullName}] 的容器！");
+                return;
+            }
+
+            string res = GetSourcePath(tp);
+            if (res == null)
+            {
+                Kit.Warn($"未找到 [{tp.FullName}] 的Xaml内容！");
+            }
+            else
+            {
+                ShowXamlDlg(res, tp);
+            }
+        }
+
+        static void OnTabXaml(object sender, Mi e)
+        {
+            var tab = _menu.DataContext as Tab;
+            Type tp = tab.GetType();
+            if ((tp == typeof(Tab) || tp.Name.EndsWith(".Fab"))
+                && tab.Content != null)
+            {
+                tp = tab.Content.GetType();
+            }
+
+            string res = GetSourcePath(tp);
+            if (res == null)
+            {
+                Kit.Msg($"[{tp.Name}] 无Xaml内容，\r\n显示容器Xaml");
+                OnWinXaml(sender, e);
+            }
+            else
+            {
+                ShowXamlDlg(res, tp);
+            }
+        }
+
+        static string GetSourcePath(Type p_type)
+        {
+            var asmName = p_type.Assembly.GetName().Name;
+            if (asmName.StartsWith("Microsoft.")
+                || asmName.StartsWith("Windows.")
+                || asmName.StartsWith("System."))
+                return null;
+
+            string res = null;
+            var xbf = $"/{p_type.Name}.xbf";
+
+            try
+            {
+                var rm = new Microsoft.Windows.ApplicationModel.Resources.ResourceManager();
+                var sub = rm.MainResourceMap.GetSubtree("Files/" + asmName);
+                for (uint i = 0; i < sub.ResourceCount; i++)
+                {
+                    var key = sub.GetValueByIndex(i).Key;
+                    if (key.EndsWith(xbf, StringComparison.OrdinalIgnoreCase))
+                    {
+                        res = asmName + "." + key.Substring(0, key.Length - 3).Replace('/', '.') + "xaml";
+                        break;
+                    }
+                }
+            }
+            catch { }
+            return res;
+        }
+
+        static void ShowXamlDlg(string p_res, Type p_tp)
+        {
+            try
+            {
+                string xaml;
+                using (Stream stream = p_tp.Assembly.GetManifestResourceStream(p_res))
+                using (var sr = new StreamReader(stream))
+                {
+                    xaml = sr.ReadToEnd();
+                }
+
+                Dlg dlg = new Dlg
+                {
+                    Title = p_tp.FullName,
+                    IsPinned = true,
+                    Height = Kit.ViewHeight - 150,
+                    Width = Math.Ceiling(Kit.ViewWidth / 2),
+                };
+                var sc = new ScrollViewer
+                {
+                    HorizontalScrollMode = ScrollMode.Auto,
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    VerticalScrollMode = ScrollMode.Auto,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    Margin = new Thickness(0, 0, 10, 10),
+                };
+                sc.Content = new TextBlock
+                {
+                    Text = xaml,
+                    TextTrimming = TextTrimming.None,
+                    TextWrapping = TextWrapping.NoWrap,
+                    IsTextSelectionEnabled = true,
+                    Padding = new Thickness(20),
+                };
+                dlg.Content = sc;
+                dlg.Show();
+            }
+            catch { }
+        }
+#endif
         #endregion
 
         #region 内部方法

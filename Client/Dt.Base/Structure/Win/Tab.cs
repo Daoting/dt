@@ -123,6 +123,13 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 事件
+        /// <summary>
+        /// 双击Tab头事件
+        /// </summary>
+        public event EventHandler<DoubleTappedRoutedEventArgs> HeaderDoubleClick;
+        #endregion
+
         #region 属性
         /// <summary>
         /// 获取设置菜单
@@ -358,6 +365,11 @@ namespace Dt.Base
                     throw new InvalidOperationException("浮动或在中部区域时无法自动隐藏！");
                 OwnWin.OnPinChange(this);
             }
+        }
+
+        internal void OnHeaderDoubleClick(DoubleTappedRoutedEventArgs e)
+        {
+            HeaderDoubleClick?.Invoke(this, e);
         }
         #endregion
     }

@@ -12,6 +12,7 @@ using Dt.Core;
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.UIDemo
@@ -68,6 +69,11 @@ namespace Dt.UIDemo
         void OnClosed(object sender, EventArgs e)
         {
             Kit.Msg($"{Title} - 关闭后事件");
+        }
+
+        void OnHeaderDoubleClick(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            Kit.Msg("双击Tab头事件");
         }
     }
 }
