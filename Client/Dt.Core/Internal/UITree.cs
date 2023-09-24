@@ -61,8 +61,8 @@ namespace Dt.Core
 #if WIN
             // WinUI中Window.Current为null
             MainWin = new Window { Title = Stub.Inst.Title };
+            CustomWin();
             MainWin.Activate();
-            LoadWinState();
 #else
             // uno中若新创建，Window.Bounds始终为(0, 0)！
             MainWin = Window.Current;
@@ -377,10 +377,20 @@ namespace Dt.Core
 #endif
         #endregion
 
-        #region 窗口最大化
+        #region 窗口
 #if WIN
         const string _maximizeFlagFile = "maximize.flag";
         static bool _lastMaximized;
+
+        /// <summary>
+        /// 自定义窗口
+        /// </summary>
+        static void CustomWin()
+        {
+            // 自定义窗口标题
+            MainWin.ExtendsContentIntoTitleBar = true;
+            LoadWinState();
+        }
 
         /// <summary>
         /// 若窗口历史为最大化，启动时调整为最大化
