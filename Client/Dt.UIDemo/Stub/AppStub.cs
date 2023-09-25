@@ -33,6 +33,7 @@ namespace Dt.UIDemo
             p_svcs.AddSingleton<IRpcConfig, RpcConfig>();
             p_svcs.AddTransient<IBackgroundJob, BackgroundJob>();
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
+            p_svcs.AddTransient<ITaskbar, Taskbar>();
             //p_svcs.AddSingleton<ILogSetting, LogSetting>();
             //p_svcs.AddTransient<ITheme, CustomTheme>();
         }

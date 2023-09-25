@@ -322,6 +322,7 @@ namespace Dt.Base
             _taskbarPanel = (StackPanel)GetTemplateChild("TaskbarPanel");
             var home = (HomebarItem)GetTemplateChild("HomeItem");
             home.SetWin(HomeWin);
+            LoadTaskbar();
 
             if (MainWin != null)
                 ChangeMainWin(null, MainWin);
@@ -329,36 +330,8 @@ namespace Dt.Base
                 ChangeLeftWin(null, LeftWin);
             if (RightWin != null)
                 ChangeRightWin(null, RightWin);
-
-            var tray = new Button { Content = "abc" };
-            if (tray != null)
-            {
-                Grid.SetColumn(tray, 2);
-                _gridTaskbar.Children.Add(tray);
-            }
-
-            LoadAllItems();
-            Items.ItemsChanged += OnItemsChanged;
-            SizeChanged += (s, e) => UpdateTaskbar();
-
-#if WIN
-            var bar = Kit.MainWin.AppWindow.TitleBar;
-            var margin = new Thickness(0, 0, Math.Ceiling(((double)bar.RightInset / XamlRoot.RasterizationScale) + 20), 0);
-            if (tray != null)
-                tray.Margin = margin;
-            else
-                _taskbarPanel.Margin = margin;
-
-            // 最小留出标题栏功能宽度
-            _taskbarPanel.Padding = new Thickness(0, 0, 40, 0);
-#else
-            var margin = new Thickness(0, 0, 20, 0);
-            if (tray != null)
-                tray.Margin = margin;
-            else
-                _taskbarPanel.Margin = margin;
-#endif
         }
+
         #endregion
 
         #region 切换 MainWin
@@ -541,20 +514,61 @@ namespace Dt.Base
         #endregion
 
         #region 任务栏
+
+        void LoadTaskbar()
+        {
+            FrameworkElement start = null;
+            FrameworkElement tray = null;
+            var svc = Kit.GetService<ITaskbar>();
+            if (svc != null)
+            {
+                start = svc.GetStartUI();
+                tray = svc.GetTrayUI();
+            }
+            if (start != null)
+            {
+                start.Margin = new Thickness(20, 0, 0, 0);
+                _gridTaskbar.Children.Add(start);
+            }
+            if (tray != null)
+            {
+                Grid.SetColumn(tray, 3);
+                _gridTaskbar.Children.Add(tray);
+            }
+
+            LoadAllItems();
+            Items.ItemsChanged += OnItemsChanged;
+            _gridTaskbar.SizeChanged += (s, e) => UpdateTaskbar();
+
+#if WIN
+            var bar = Kit.MainWin.AppWindow.TitleBar;
+            var margin = new Thickness(0, 0, Math.Ceiling(((double)bar.RightInset / XamlRoot.RasterizationScale) + 10), 0);
+            if (tray != null)
+                tray.Margin = margin;
+            else
+                _taskbarPanel.Margin = margin;
+
+            // 最小留出标题栏拖拽宽度
+            _taskbarPanel.Padding = new Thickness(0, 0, 40, 0);
+#else
+            var margin = new Thickness(0, 0, 20, 0);
+            if (tray != null)
+                tray.Margin = margin;
+            else
+                _taskbarPanel.Margin = margin;
+#endif
+        }
+
         /// <summary>
         /// 重置任务栏按扭的宽度
         /// </summary>
         void UpdateTaskbar()
         {
-#if WIN
-            var bar = Kit.MainWin.AppWindow.TitleBar;
-            double pnlWidth = Kit.ViewWidth - 140 - Math.Ceiling(((double)bar.RightInset / XamlRoot.RasterizationScale) + 20);
-#else
-
-#endif
+            // _taskbarPanel.ActualWidth不准！
+            double pnlWidth = _gridTaskbar.ColumnDefinitions[2].ActualWidth - _taskbarPanel.Margin.Right;
             if (Items.Count > 0)
             {
-                double width = Math.Floor((_taskbarPanel.ActualWidth - _taskbarPanel.Padding.Right) / Items.Count);
+                double width = Math.Floor((pnlWidth - _taskbarPanel.Padding.Right) / Items.Count);
                 if (width < _maxItemWidth && width != ((TaskbarItem)_taskbarPanel.Children[0]).Width)
                 {
                     foreach (var item in _taskbarPanel.Children.OfType<TaskbarItem>())
@@ -572,9 +586,9 @@ namespace Dt.Base
             }
 
 #if WIN
-            // 左边空出20边距，主页按钮120
-            double left = 140;
-            double dragWidth = _taskbarPanel.ActualWidth;
+            // 左边空出开始、主页按钮
+            double left = _gridTaskbar.ColumnDefinitions[0].ActualWidth + _gridTaskbar.ColumnDefinitions[1].ActualWidth;
+            double dragWidth = pnlWidth;
             if (Items.Count > 0)
             {
                 double barWidth = ((TaskbarItem)_taskbarPanel.Children[0]).Width * Items.Count;
@@ -582,12 +596,12 @@ namespace Dt.Base
                 dragWidth -= barWidth;
             }
 
-            Windows.Graphics.RectInt32 rect = new (
+            Windows.Graphics.RectInt32 rect = new(
                 (int)Math.Ceiling(left * XamlRoot.RasterizationScale),
                 0,
                 (int)Math.Ceiling(dragWidth * XamlRoot.RasterizationScale),
                 (int)Math.Ceiling(_taskbarPanel.ActualHeight * XamlRoot.RasterizationScale));
-            bar.SetDragRectangles(new Windows.Graphics.RectInt32[] { rect });
+            Kit.MainWin.AppWindow.TitleBar.SetDragRectangles(new Windows.Graphics.RectInt32[] { rect });
 #endif
         }
 
@@ -615,6 +629,6 @@ namespace Dt.Base
             }
             UpdateTaskbar();
         }
-#endregion
+        #endregion
     }
 }

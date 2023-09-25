@@ -64,6 +64,8 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * 打包时删除本地nuget的旧版本包
 * 解决服务中Cell的错误
 * 恢复Cell.GetValInternal异常时给出ID提示
+* 桌面任务栏作为app窗口标题栏
+* 任务栏支持外部自定义开始和托盘内容
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态
