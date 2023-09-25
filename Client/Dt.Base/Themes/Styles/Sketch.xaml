@@ -144,7 +144,6 @@
                                       VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                                       IsHorizontalRailEnabled="False"
                                       IsVerticalRailEnabled="False"
-                                      ZoomMode="Disabled"
                                       IsDeferredScrollingEnabled="False"
                                       Grid.Row="1"
                                       Grid.Column="1">
