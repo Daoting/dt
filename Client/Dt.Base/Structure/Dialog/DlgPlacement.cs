@@ -27,24 +27,64 @@ namespace Dt.Base
         Maximized,
 
         /// <summary>
-        /// 从左侧弹出
-        /// </summary>
-        FromLeft,
-
-        /// <summary>
-        /// 从上面弹出
+        /// 从上边缘向下弹出
         /// </summary>
         FromTop,
 
         /// <summary>
-        /// 从右侧弹出
+        /// 从左上角向下弹出
+        /// </summary>
+        FromTopLeft,
+
+        /// <summary>
+        /// 从右上角向下弹出
+        /// </summary>
+        FromTopRight,
+
+        /// <summary>
+        /// 从左侧向右弹出
+        /// </summary>
+        FromLeft,
+
+        /// <summary>
+        /// 从左上角向右弹出
+        /// </summary>
+        FromLeftTop,
+
+        /// <summary>
+        /// 从左下角向右弹出
+        /// </summary>
+        FromLeftBottom,
+
+        /// <summary>
+        /// 从右侧向左弹出
         /// </summary>
         FromRight,
 
         /// <summary>
-        /// 从下面弹出
+        /// 从右上角向左弹出
+        /// </summary>
+        FromRightTop,
+
+        /// <summary>
+        /// 从右下角向左弹出
+        /// </summary>
+        FromRightBottom,
+
+        /// <summary>
+        /// 从下边缘向上弹出
         /// </summary>
         FromBottom,
+
+        /// <summary>
+        /// 从左下角向上弹出
+        /// </summary>
+        FromBottomLeft,
+
+        /// <summary>
+        /// 从右下角向上弹出
+        /// </summary>
+        FromBottomRight,
 
         /// <summary>
         /// 左上对齐（对话框的左上角与目标元素的左上角重叠）

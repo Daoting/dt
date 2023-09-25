@@ -66,6 +66,7 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * 恢复Cell.GetValInternal异常时给出ID提示
 * 桌面任务栏作为app窗口标题栏
 * 任务栏支持外部自定义开始和托盘内容
+* Dlg增加从8个边缘角滑入的选项
 
 ### Bug修改
 * 库初始化异常时恢复按钮状态

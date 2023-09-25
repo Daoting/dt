@@ -680,9 +680,38 @@ namespace Dt.Base
                         Width = maxWidth;
                     break;
 
+                case DlgPlacement.FromLeftTop:
+                    // Desktop时不覆盖任务栏
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
+                    if (Height != double.NaN && Height > maxHeight - Top)
+                    {
+                        // 未设置高度时占用除任务栏的整个高度
+                        Height = maxHeight - Top;
+                    }
+                    Left = EdgeMargin;
+                    if (maxWidth < actWidth)
+                        Width = maxWidth;
+                    break;
+
+                case DlgPlacement.FromLeftBottom:
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
+                    if (actHeight < maxHeight - Top)
+                    {
+                        Top = Math.Ceiling(maxHeight - actHeight);
+                    }
+                    else
+                    {
+                        // 未设置高度时占用除任务栏的整个高度
+                        Height = maxHeight - Top;
+                    }
+                    Left = EdgeMargin;
+                    if (maxWidth < actWidth)
+                        Width = maxWidth;
+                    break;
+
                 case DlgPlacement.FromTop:
                     Left = 0;
-                    Top = EdgeMargin;
+                    Top = EdgeMargin + (UITree.RootContent is Desktop ? 44 : 0);
                     if (Width != double.NaN && Width < maxWidth)
                     {
                         // 设置宽度时水平居中
@@ -691,6 +720,33 @@ namespace Dt.Base
                     else
                     {
                         // 未设置宽度时占用整个宽度
+                        Width = maxWidth;
+                    }
+                    if (maxHeight < actHeight)
+                        Height = maxHeight;
+                    break;
+
+                case DlgPlacement.FromTopLeft:
+                    Left = 0;
+                    Top = EdgeMargin + (UITree.RootContent is Desktop ? 44 : 0);
+                    if (actWidth > maxWidth)
+                    {
+                        // 未设置宽度时占用整个宽度
+                        Width = maxWidth;
+                    }
+                    if (maxHeight < actHeight)
+                        Height = maxHeight;
+                    break;
+
+                case DlgPlacement.FromTopRight:
+                    Top = EdgeMargin + (UITree.RootContent is Desktop ? 44 : 0);
+                    if (actWidth < maxWidth)
+                    {
+                        Left = Math.Ceiling(maxWidth - actWidth);
+                    }
+                    else
+                    {
+                        Left = 0;
                         Width = maxWidth;
                     }
                     if (maxHeight < actHeight)
@@ -721,6 +777,47 @@ namespace Dt.Base
                     }
                     break;
 
+                case DlgPlacement.FromRightTop:
+                    // Desktop时不覆盖任务栏
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
+                    if (actHeight > maxHeight - Top)
+                    {
+                        Height = maxHeight - Top;
+                    }
+                    if (maxWidth < actWidth)
+                    {
+                        Left = 0;
+                        Width = maxWidth;
+                    }
+                    else
+                    {
+                        Left = maxWidth - actWidth - EdgeMargin;
+                    }
+                    break;
+
+                case DlgPlacement.FromRightBottom:
+                    // Desktop时不覆盖任务栏
+                    Top = UITree.RootContent is Desktop ? 44 : 0;
+                    if (actHeight < maxHeight - Top)
+                    {
+                        Top = Math.Ceiling(maxHeight - actHeight);
+                    }
+                    else
+                    {
+                        Top = 0;
+                        Height = maxHeight - Top;
+                    }
+                    if (maxWidth < actWidth)
+                    {
+                        Left = 0;
+                        Width = maxWidth;
+                    }
+                    else
+                    {
+                        Left = maxWidth - actWidth - EdgeMargin;
+                    }
+                    break;
+
                 case DlgPlacement.FromBottom:
                     Left = 0;
                     if (Width != double.NaN && Width < maxWidth)
@@ -731,6 +828,44 @@ namespace Dt.Base
                     else
                     {
                         // 未设置宽度时占用整个宽度
+                        Width = maxWidth;
+                    }
+                    if (maxHeight < actHeight)
+                    {
+                        Top = 0;
+                        Height = maxHeight;
+                    }
+                    else
+                    {
+                        Top = maxHeight - actHeight - EdgeMargin;
+                    }
+                    break;
+
+                case DlgPlacement.FromBottomLeft:
+                    Left = 0;
+                    if (actWidth > maxWidth)
+                    {
+                        Width = maxWidth;
+                    }
+                    if (maxHeight < actHeight)
+                    {
+                        Top = 0;
+                        Height = maxHeight;
+                    }
+                    else
+                    {
+                        Top = maxHeight - actHeight - EdgeMargin;
+                    }
+                    break;
+
+                case DlgPlacement.FromBottomRight:
+                    Left = 0;
+                    if (actWidth < maxWidth)
+                    {
+                        Left = Math.Ceiling(maxWidth - actWidth);
+                    }
+                    else
+                    {
                         Width = maxWidth;
                     }
                     if (maxHeight < actHeight)
@@ -914,15 +1049,23 @@ namespace Dt.Base
             switch (placement)
             {
                 case DlgPlacement.FromLeft:
+                case DlgPlacement.FromLeftTop:
+                case DlgPlacement.FromLeftBottom:
                     Transitions.Add(new EdgeUIThemeTransition { Edge = EdgeTransitionLocation.Left });
                     break;
                 case DlgPlacement.FromTop:
+                case DlgPlacement.FromTopLeft:
+                case DlgPlacement.FromTopRight:
                     Transitions.Add(new EdgeUIThemeTransition { Edge = EdgeTransitionLocation.Top });
                     break;
                 case DlgPlacement.FromRight:
+                case DlgPlacement.FromRightTop:
+                case DlgPlacement.FromRightBottom:
                     Transitions.Add(new EdgeUIThemeTransition { Edge = EdgeTransitionLocation.Right });
                     break;
                 case DlgPlacement.FromBottom:
+                case DlgPlacement.FromBottomLeft:
+                case DlgPlacement.FromBottomRight:
                     Transitions.Add(new EdgeUIThemeTransition { Edge = EdgeTransitionLocation.Bottom });
                     break;
                 default:
