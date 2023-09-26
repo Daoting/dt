@@ -29,14 +29,14 @@ namespace Dt.Base.Tools
             var nav = new NavList { ViewMode = NavViewMode.Tile, Title = "系统", To = NavTarget.NewWin };
             nav.Data = new Nl<Nav>
             {
-                new Nav("实时日志", null, Icons.到今日) { Desc = "查看当前客户端正在输出的日志", Callback = (s, n) =>
+                new Nav("实时日志", Icons.到今日) { Desc = "查看当前客户端正在输出的日志", Callback = (s, n) =>
                 {
                     ShowLogBox();
                     if (s is Dlg dlg)
                         dlg.Close();
                 } },
                 new Nav("历史日志", typeof(HistoryLogWin), Icons.选日) { Desc = "查看客户端历史日志" },
-                new Nav("服务日志", null, Icons.服务器) { Desc = "查看服务端日志", Callback = (s, n) =>
+                new Nav("服务日志", Icons.服务器) { Desc = "查看服务端日志", Callback = (s, n) =>
                 {
                     Kit.OpenUrl(Kit.GetSvcUrl("cm") + "/.output");
                     if (s is Dlg dlg)
@@ -51,7 +51,7 @@ namespace Dt.Base.Tools
 
                 new Nav("类型别名", typeof(TypeAliasWin), Icons.划卡) { Desc = "所有为类型命名别名的名称与类型的列表" },
 
-                new Nav("切换服务", null, Icons.服务器) { Desc = "切换服务地址", Callback = (s, n) =>
+                new Nav("切换服务", Icons.服务器) { Desc = "切换服务地址", Callback = (s, n) =>
                 {
                     ToggleSvcUrl();
                     if (s is Dlg dlg)

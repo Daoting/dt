@@ -62,7 +62,7 @@ namespace Dt.UIDemo
 
                 new Nav("类型别名", typeof(TypeAliasWin), Icons.划卡) { Desc = "所有为类型命名别名的名称与类型的列表" },
 
-                new Nav("切换服务", null, Icons.服务器) { Desc = "切换服务地址", Callback = (s, n) =>
+                new Nav("切换服务", Icons.服务器) { Desc = "切换服务地址", Callback = (s, n) =>
                 {
                     SysTrace.ToggleSvcUrl();
                     if (s is Dlg dlg)

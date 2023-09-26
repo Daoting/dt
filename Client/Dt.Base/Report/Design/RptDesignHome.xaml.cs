@@ -43,10 +43,10 @@ namespace Dt.Base.Report
 
             group = new GroupData<Nav>
             {
-                new Nav("保存模板", null, Icons.保存) { Callback = OnSave, Desc = "保存报表模板Xml内容" },
-                new Nav("查看模板Xml", null, Icons.导出) { Callback = OnExport, Desc = "浏览当前报表模板的Xml内容" },
-                new Nav("导入", null, Icons.导入) { Callback = OnImport, Desc = "从外部导入报表模板" },
-                new Nav("报表预览", null, Icons.门卫) { Callback = OnPreview, Desc = "浏览运行时报表" },
+                new Nav("保存模板", Icons.保存) { Callback = OnSave, Desc = "保存报表模板Xml内容" },
+                new Nav("查看模板Xml", Icons.导出) { Callback = OnExport, Desc = "浏览当前报表模板的Xml内容" },
+                new Nav("导入", Icons.导入) { Callback = OnImport, Desc = "从外部导入报表模板" },
+                new Nav("报表预览", Icons.门卫) { Callback = OnPreview, Desc = "浏览运行时报表" },
             };
             group.Title = "操作";
             ds.Add(group);

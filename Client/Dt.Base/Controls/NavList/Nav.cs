@@ -36,45 +36,62 @@ namespace Dt.Base
         /// <param name="p_title">标题</param>
         /// <param name="p_type">新窗口或主区内容的类型</param>
         /// <param name="p_icon">图标</param>
-        public Nav(string p_title, Type p_type = null, Icons p_icon = Icons.None)
+        public Nav(string p_title, Type p_type, Icons p_icon)
         {
             _title = p_title;
             Type = p_type;
             _icon = p_icon;
         }
-        #endregion
 
         /// <summary>
-        /// fifo add 2023.6
+        /// 
         /// </summary>
         /// <param name="p_title">标题</param>
-        /// <param name="dll">程序</param>
-        /// <param name="wnd">功能</param>
+        /// <param name="p_type">新窗口或主区内容的类型</param>
+        public Nav(string p_title, Type p_type)
+            : this(p_title, p_type, Icons.None)
+        { }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="p_title">标题</param>
         /// <param name="p_icon">图标</param>
-        public Nav(string p_title, string dll, string wnd, Icons p_icon = Icons.None)
+        public Nav(string p_title, Icons p_icon)
+        : this(p_title, default(Type), p_icon)
+        { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_title">标题</param>
+        public Nav(string p_title)
+            : this(p_title, default(Type), Icons.None)
+        { }
+
+        /// <summary>
+        ///  新窗口或主区内容通过视图别名指定
+        /// </summary>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_viewAlias">视图别名</param>
+        /// <param name="p_icon">图标</param>
+        public Nav(string p_title, string p_viewAlias, Icons p_icon)
         {
-            string doctype = dll.Trim() + "." + wnd.Trim();
-            string exe = dll.Trim() + ".WebApi";
-            Type tx = Type.GetType($"{doctype},{exe}");
             _title = p_title;
-            Type = tx;
+            if (!string.IsNullOrEmpty(p_viewAlias))
+                Type = Kit.GetViewTypeByAlias(p_viewAlias);
             _icon = p_icon;
         }
 
         /// <summary>
-        /// fifo add 2023.6
+        ///  新窗口或主区内容通过视图别名指定
         /// </summary>
         /// <param name="p_title">标题</param>
-        /// <param name="dll">程序</param>
-        public Nav(string p_title, string dll)
-        {
-            string doctype = dll.Trim() + "." + dll.Trim();
-            string exe = dll.Trim() + ".WebApi";
-            Type tx = Type.GetType($"{doctype},{exe}");
-            _title = p_title;
-            Type = tx;
-            _icon = Icons.None;
-        }
+        /// <param name="p_viewAlias">视图别名</param>
+        public Nav(string p_title, string p_viewAlias)
+            : this(p_title, p_viewAlias, Icons.None)
+        { }
+        #endregion
 
         /// <summary>
         /// 获取设置图标

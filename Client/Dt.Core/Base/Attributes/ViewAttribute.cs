@@ -26,5 +26,7 @@ namespace Dt.Core
             : base(p_alias == null ? null : p_alias.ToString())
         {
         }
+
+        public ViewAttribute() { }
     }
 }
