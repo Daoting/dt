@@ -132,6 +132,16 @@ namespace Dt.Base
                 item = new Mi { ID = "停靠在右侧", Icon = Icons.停靠右侧 };
                 item.Click += DockRight;
                 _menu.Items.Add(item);
+
+
+                item = new Mi { ID = "复制类名", Icon = Icons.地址 };
+                item.Click += OnCopyWinName;
+                _menu.Items.Add(item);
+#if WIN
+                item = new Mi { ID = "预览Xaml", Icon = Icons.Html };
+                item.Click += OnWinXaml;
+                _menu.Items.Add(item);
+#endif
             }
 
             var autoStart = await CookieX.GetAutoStart();
@@ -220,6 +230,34 @@ namespace Dt.Base
         {
             Desktop.Inst.RightWin = _currentItem._win;
         }
+
+        static void OnCopyWinName(object sender, Mi e)
+        {
+            Type tp = _currentItem._win.GetType();
+            Kit.CopyToClipboard(tp.FullName, true);
+        }
+
+#if WIN
+        static void OnWinXaml(object sender, Mi e)
+        {
+            Type tp = _currentItem._win.GetType();
+            if (tp == typeof(Win))
+            {
+                Kit.Warn("标准的Win，无Xaml内容！");
+                return;
+            }
+
+            string res = Docking.TabHeader.GetSourcePath(tp);
+            if (res == null)
+            {
+                Kit.Warn($"未找到 [{tp.FullName}] 的Xaml内容！");
+            }
+            else
+            {
+                Docking.TabHeader.ShowXamlDlg(res, tp);
+            }
+        }
+#endif
         #endregion
 
         #region 内部方法

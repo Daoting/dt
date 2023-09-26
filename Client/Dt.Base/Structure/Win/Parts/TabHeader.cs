@@ -250,7 +250,7 @@ namespace Dt.Base.Docking
             }
         }
 
-        static string GetSourcePath(Type p_type)
+        internal static string GetSourcePath(Type p_type)
         {
             var asmName = p_type.Assembly.GetName().Name;
             if (asmName.StartsWith("Microsoft.")
@@ -279,7 +279,7 @@ namespace Dt.Base.Docking
             return res;
         }
 
-        static void ShowXamlDlg(string p_res, Type p_tp)
+        internal static void ShowXamlDlg(string p_res, Type p_tp)
         {
             try
             {

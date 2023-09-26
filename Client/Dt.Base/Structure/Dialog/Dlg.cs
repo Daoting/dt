@@ -604,9 +604,13 @@ namespace Dt.Base
                 _headerGrid.PointerPressed += OnHeaderPointerPressed;
                 _headerGrid.PointerMoved += OnHeaderPointerMoved;
                 _headerGrid.PointerReleased += OnHeaderPointerReleased;
+#if WIN
+                _headerGrid.RightTapped += OnHeaderRightTapped;
+#endif
             }
             ApplyVeilBrush();
         }
+
         #endregion
 
         #region 显示
@@ -1420,6 +1424,100 @@ namespace Dt.Base
             }
 #endif
         }
+        #endregion
+
+        #region 标题栏右键菜单
+#if WIN
+        static Menu _menu;
+
+        async void OnHeaderRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (_menu == null)
+            {
+                _menu = new Menu { IsContextMenu = true };
+
+                Mi mi = new Mi { ID = "复制类名" };
+                mi.Click += OnCopyDlg;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "复制内容类名" };
+                mi.Click += OnCopyContent;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "预览Xaml" };
+                mi.Click += OnDlgXaml;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "预览内容Xaml" };
+                mi.Click += OnContentXaml;
+                _menu.Items.Add(mi);
+            }
+
+            _menu.DataContext = this;
+            await _menu.OpenContextMenu(e.GetPosition(null));
+        }
+
+        static void OnCopyDlg(object sender, Mi e)
+        {
+            var dlg = _menu.DataContext as Dlg;
+            Kit.CopyToClipboard(dlg.GetType().FullName, true);
+        }
+
+        static void OnCopyContent(object sender, Mi e)
+        {
+            var dlg = _menu.DataContext as Dlg;
+            if (dlg.Content != null)
+            {
+                Kit.CopyToClipboard(dlg.Content.GetType().FullName, true);
+            }
+            else
+            {
+                Kit.Warn("Dlg无内容！");
+            }
+        }
+
+        static void OnDlgXaml(object sender, Mi e)
+        {
+            Type tp = _menu.DataContext.GetType();
+            if (tp == typeof(Dlg))
+            {
+                Kit.Warn("标准的Dlg，无Xaml内容！");
+                return;
+            }
+
+            string res = Docking.TabHeader.GetSourcePath(tp);
+            if (res == null)
+            {
+                Kit.Warn($"未找到 [{tp.FullName}] 的Xaml内容！");
+            }
+            else
+            {
+                Docking.TabHeader.ShowXamlDlg(res, tp);
+            }
+        }
+
+        static void OnContentXaml(object sender, Mi e)
+        {
+            var dlg = _menu.DataContext as Dlg;
+            if (dlg.Content != null)
+            {
+                Type tp = dlg.Content.GetType();
+                string res = Docking.TabHeader.GetSourcePath(tp);
+                if (res == null)
+                {
+                    Kit.Warn($"未找到 [{tp.FullName}] 的Xaml内容！");
+                }
+                else
+                {
+                    Docking.TabHeader.ShowXamlDlg(res, tp);
+                }
+            }
+            else
+            {
+                Kit.Warn("Dlg无内容！");
+            }
+        }
+#endif
         #endregion
     }
 }
