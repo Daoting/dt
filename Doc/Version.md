@@ -5,10 +5,25 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 未解决：
 服务正在运行时，oracle表增加字段后，涉及该表的查询 和 获取表结构都异常，提示超出索引，暂时无解
 
-fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribute标记类型
+查询日志时“以管理员运行"，无法打开其它位置的日志
+
+
 
 # 版本说明
 ## Release 4.2.x
+### 变更
+
+
+### 功能
+* Lv表格调整列宽时按住ctrl显示的宽度消息
+
+### Bug修改
+* 命名空间与类名相同并放在根目录查找xaml
+
+
+
+
+## Release 4.2.2
 ### 变更
 * 导出模型库，将ExportToModel放入model.json
 * 服务地址拆分成独立配置文件url.json
@@ -78,10 +93,6 @@ fifo中Nav构造方法暂时先放进dt，可否用自定义的TypeAliasAttribut
 * Phone模式页面内容有水平滚动栏时不支持左右滑动
 * 设置Lv.SelectedItem和SelectedIndex时触发的SelectionChanged事件参数值类型不同
 * Fv的CTip不接收Tab停靠
-
-* Lv调整列宽的宽度消息不提示
-
-* 查询日志时“以管理员运行"，无法打开其它位置的日志
 
 ## Release 4.2.0
 ### 变更

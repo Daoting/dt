@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>4.2.2</Version>
+		<Version>4.2.3</Version>
         <PackageId Condition="'$(Configuration)'=='Debug'">Dt.Client.Debug</PackageId>
         <PackageId Condition="'$(Configuration)'=='Release'">Dt.Client</PackageId>
 		<Description>搬运工客户端基础包</Description>

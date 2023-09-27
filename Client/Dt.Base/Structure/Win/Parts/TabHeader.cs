@@ -198,7 +198,8 @@ namespace Dt.Base.Docking
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.GetType();
-            if ((tp == typeof(Tab) || tp.Name.EndsWith(".Fab"))
+            // fifo的Fab
+            if ((tp == typeof(Tab) || tp.Name == "Fab")
                 && tab.Content != null)
             {
                 tp = tab.Content.GetType();
@@ -232,7 +233,7 @@ namespace Dt.Base.Docking
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.GetType();
-            if ((tp == typeof(Tab) || tp.Name.EndsWith(".Fab"))
+            if ((tp == typeof(Tab) || tp.Name == "Fab")
                 && tab.Content != null)
             {
                 tp = tab.Content.GetType();
@@ -259,7 +260,8 @@ namespace Dt.Base.Docking
                 return null;
 
             string res = null;
-            var xbf = $"/{p_type.Name}.xbf";
+            var xbf = p_type.Name + ".xbf";
+            var xbfPath = $"/{p_type.Name}.xbf";
 
             try
             {
@@ -268,7 +270,8 @@ namespace Dt.Base.Docking
                 for (uint i = 0; i < sub.ResourceCount; i++)
                 {
                     var key = sub.GetValueByIndex(i).Key;
-                    if (key.EndsWith(xbf, StringComparison.OrdinalIgnoreCase))
+                    if (key.EndsWith(xbfPath, StringComparison.OrdinalIgnoreCase)
+                        || key.Equals(xbf, StringComparison.OrdinalIgnoreCase))
                     {
                         res = asmName + "." + key.Substring(0, key.Length - 3).Replace('/', '.') + "xaml";
                         break;
