@@ -193,6 +193,10 @@ namespace Dt.Base.ListView
                 cols.Insert(index, Col);
                 cols.Invalidate();
             }
+            else if (_resizingCol != null && InputKit.IsCtrlPressed)
+            {
+                Kit.Msg($"{_resizingCol.Title}：{_resizingCol.Width}");
+            }
             ResetMouseState();
         }
 
