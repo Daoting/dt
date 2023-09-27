@@ -37,7 +37,8 @@
     <ItemGroup>
         <PackageReference Include="Dt.Infras" Version="3.0.0" />
         <PackageReference Include="Dt.BuildTools" Version="1.3.4" PrivateAssets="none" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.11" />
+        <!--高于7.0.9时wasm出错-->
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Serilog" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />

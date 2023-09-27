@@ -423,6 +423,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 通过复制创建空Table（不复制数据！）
+        /// </summary>
+        /// <returns></returns>
+        public Table Clone()
+        {
+            return Clone(this);
+        }
+
+        /// <summary>
         /// 根据行创建空Table
         /// </summary>
         /// <param name="p_row"></param>

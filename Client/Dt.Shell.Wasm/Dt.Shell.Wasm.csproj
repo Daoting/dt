@@ -8,7 +8,7 @@
         <UseWasmTools>true</UseWasmTools>
         
         <!-- 必须sdk完整路径，避免总下载失败 -->
-        <NetCoreWasmSDKUri>d:\dt\Package\wasm\dotnet-runtime-wasm-windows-633c7b6-0cee4aaff9c-3338312971-Sqlite.zip</NetCoreWasmSDKUri>
+        <NetCoreWasmSDKUri>d:\dt\Packages\wasm\dotnet-runtime-wasm-windows-633c7b6-0cee4aaff9c-3338312971-Sqlite.zip</NetCoreWasmSDKUri>
 
         <!-- 默认Interpreter -->
         <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
