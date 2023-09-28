@@ -292,7 +292,7 @@ namespace Dt.Base
         /// <param name="p_names">无值时隐藏所有</param>
         public void HideExcept(params string[] p_names)
         {
-            foreach (var item in Items)
+            foreach (var item in Items.OfType<UIElement>())
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     item.Visibility = Visibility.Visible;
@@ -324,7 +324,7 @@ namespace Dt.Base
         /// <param name="p_names">无值时显示所有</param>
         public void ShowExcept(params string[] p_names)
         {
-            foreach (var item in Items)
+            foreach (var item in Items.OfType<UIElement>())
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     item.Visibility = Visibility.Collapsed;
@@ -887,7 +887,9 @@ namespace Dt.Base
             {
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    var item = Items[i];
+                    if (Items[i] is not UIElement item)
+                        continue;
+
                     if (_panel.Children.Count > i)
                     {
                         var elem = _panel.Children[i];
@@ -919,9 +921,9 @@ namespace Dt.Base
             }
         }
 
-        protected void AddItem(FrameworkElement p_item, int p_index)
+        protected void AddItem(object p_item, int p_index)
         {
-            FrameworkElement elem = p_item;
+            var elem = p_item as UIElement;
             if (p_item is FvCell cell)
             {
                 cell.Owner = this;
@@ -932,7 +934,7 @@ namespace Dt.Base
                 CFree c = new CFree();
                 c.Owner = this;
                 c.ShowTitle = false;
-                c.Content = p_item;
+                c.Content = elem;
                 elem = c;
             }
             _panel.Children.Insert(p_index, elem);

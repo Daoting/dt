@@ -27,7 +27,7 @@ namespace Dt.Base
         /// </summary>
         public readonly static DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
-            typeof(FrameworkElement),
+            typeof(UIElement),
             typeof(CFree),
             new PropertyMetadata(null, OnContentPropertyChanged));
 
@@ -51,9 +51,9 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置自定义格内容
         /// </summary>
-        public FrameworkElement Content
+        public UIElement Content
         {
-            get { return (FrameworkElement)GetValue(ContentProperty); }
+            get { return (UIElement)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
 

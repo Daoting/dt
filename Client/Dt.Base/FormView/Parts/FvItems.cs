@@ -20,10 +20,10 @@ namespace Dt.Base
     /// <summary>
     /// Fv单元格集合，列表 + 字典 + 集合更改事件
     /// </summary>
-    public class FvItems : IList<FrameworkElement>, IEnumerable<FrameworkElement>
+    public class FvItems : IList<object>, IEnumerable<object>
     {
         // 所有元素
-        readonly IList<FrameworkElement> _list = new List<FrameworkElement>();
+        readonly IList<object> _list = new List<object>();
         // 所有含ID的格元素
         readonly Dictionary<string, FvCell> _cells = new Dictionary<string, FvCell>(StringComparer.OrdinalIgnoreCase);
         int _updating;
@@ -55,7 +55,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_index"></param>
         /// <returns></returns>
-        public FrameworkElement this[int p_index]
+        public object this[int p_index]
         {
             get { return _list[p_index]; }
             set
@@ -113,7 +113,7 @@ namespace Dt.Base
         /// 添加新项
         /// </summary>
         /// <param name="p_item"></param>
-        public void Add(FrameworkElement p_item)
+        public void Add(object p_item)
         {
             _list.Add(p_item);
             if (p_item is FvCell cell && !string.IsNullOrEmpty(cell.ID))
@@ -136,34 +136,34 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        public bool Contains(FrameworkElement p_item) => _list.Contains(p_item);
+        public bool Contains(object p_item) => _list.Contains(p_item);
 
         /// <summary>
         /// 将集合复制到新列表
         /// </summary>
         /// <param name="array"></param>
         /// <param name="arrayIndex"></param>
-        public void CopyTo(FrameworkElement[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
+        public void CopyTo(object[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
 
         /// <summary>
         /// 获取枚举器
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<FrameworkElement> GetEnumerator() => _list.GetEnumerator();
+        public IEnumerator<object> GetEnumerator() => _list.GetEnumerator();
 
         /// <summary>
         /// 获取项的索引
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        public int IndexOf(FrameworkElement p_item) => _list.IndexOf(p_item);
+        public int IndexOf(object p_item) => _list.IndexOf(p_item);
 
         /// <summary>
         /// 在指定位置插入新项
         /// </summary>
         /// <param name="index"></param>
         /// <param name="p_item"></param>
-        public void Insert(int index, FrameworkElement p_item)
+        public void Insert(int index, object p_item)
         {
             _list.Insert(index, p_item);
             if (p_item is FvCell cell && !string.IsNullOrEmpty(cell.ID))
@@ -176,7 +176,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        public bool Remove(FrameworkElement p_item)
+        public bool Remove(object p_item)
         {
             var index = _list.IndexOf(p_item);
             if (index != -1)
