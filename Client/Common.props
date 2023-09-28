@@ -8,6 +8,7 @@
         <UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
         <!-- release不输出pbd调试信息 -->
         <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
+        <BaseOutputPath>..\build</BaseOutputPath>
         <!--xbf嵌入到pri文件-->
         <!--<DisableEmbeddedXbf>false</DisableEmbeddedXbf>-->
     </PropertyGroup>
@@ -48,11 +49,11 @@
 
     <!-- 非windows引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.10.13" PrivateAssets="none" />
+        <PackageReference Include="Uno.WinUI" Version="4.10.26" PrivateAssets="none" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-        <PackageReference Include="Uno.WinUI.Lottie" Version="4.10.13" />
+        <PackageReference Include="Uno.WinUI.Lottie" Version="4.10.26" />
         <!-- uno日志 -->
-        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.13" />
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.26" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     </ItemGroup>
@@ -79,8 +80,8 @@
     <!-- wasm引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-'))">
         <!-- 打包后提供给外部 web 项目引用时，需要 build 里的 .target -->
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.10.13" PrivateAssets="none" />
-        <PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="4.10.13" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.10.26" PrivateAssets="none" />
+        <PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="4.10.26" />
         <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
         <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
     </ItemGroup>
