@@ -23,7 +23,7 @@
             <!-- 打包引用项目的文件 -->
             <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
             <!-- 将本项目输出目录的所有子目录内容打包，写法保证只复制子目录不重复复制文件，自创，佩服在下 -->
-            <!--<TfmSpecificPackageFile Include="$(OutputPath)**" Exclude="$(OutputPath)*.*" PackagePath="lib\$(TargetFramework)" Condition="$(TargetFramework.Contains('-windows'))" />-->
+            <TfmSpecificPackageFile Include="$(OutputPath)**" Exclude="$(OutputPath)*.*" PackagePath="lib\$(TargetFramework)" Condition="$(TargetFramework.Contains('-windows'))" />
         </ItemGroup>
     </Target>
 

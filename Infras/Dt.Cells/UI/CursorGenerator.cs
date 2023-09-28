@@ -31,20 +31,14 @@ namespace Dt.Cells.UI
                 bool flag = cursorType.ToString().StartsWith("Resize");
                 string str = cursorType.ToString() + (((Application.Current.RequestedTheme == ApplicationTheme.Dark) && flag) ? "_dark" : "") + ".png";
                 source = new BitmapImage();
+                using (var stream = typeof(CursorGenerator).Assembly.GetManifestResourceStream("Dt.Cells.Icons." + str))
+                {
 #if WIN
-                // win将图片嵌入在pri中
-                var rm = new Microsoft.Windows.ApplicationModel.Resources.ResourceManager();
-                var data = rm.MainResourceMap.GetValue("Files/Dt.Cells/Icons/" + str).ValueAsBytes;
-                using (var stream = new MemoryStream(data))
-                {
                     await source.SetSourceAsync(stream.AsRandomAccessStream());
-                }
 #else
-                using (var stream = typeof(CursorGenerator).Assembly.GetManifestResourceStream("Dt.Cells.Dt.Cells.Icons." + str))
-                {
                     await source.SetSourceAsync(stream);
-                }
 #endif
+                }
                 _cache[cursorType] = source;
             }
             return source;

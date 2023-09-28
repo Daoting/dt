@@ -350,20 +350,14 @@ namespace Dt.Cells.UI
                 if (source == null)
                 {
                     BitmapImage bmp = new BitmapImage();
+                    using (var stream = typeof(SR).Assembly.GetManifestResourceStream("Dt.Cells.Icons.ConditionalFormats." + CachedIconNames[num, iconIndex]))
+                    {
 #if WIN
-                    // win将图片嵌入在pri中
-                    var rm = new Microsoft.Windows.ApplicationModel.Resources.ResourceManager();
-                    var data = rm.MainResourceMap.GetValue("Files/Dt.Cells/Icons/" + CachedIconNames[num, iconIndex]).ValueAsBytes;
-                    using (var stream = new MemoryStream(data))
-                    {
                         await bmp.SetSourceAsync(stream.AsRandomAccessStream());
-                    }
 #else
-                    using (var stream = typeof(SR).Assembly.GetManifestResourceStream("Dt.Cells.Dt.Cells.Icons." + CachedIconNames[num, iconIndex]))
-                    {
                         await bmp.SetSourceAsync(stream);
-                    }
 #endif
+                    }
                     source = bmp;
                     CachedImageSources[num, iconIndex] = bmp;
                 }
