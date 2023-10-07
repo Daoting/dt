@@ -153,12 +153,12 @@ namespace Dt.Base
             // 全局快捷键
             var accelerator = new KeyboardAccelerator()
             {
-                Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Down
+                Modifiers = VirtualKeyModifiers.Control,
+                Key = VirtualKey.Enter
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ↓ 系统
+                // Ctrl + 回车 系统
                 e.Handled = true;
                 SysTrace.ShowSysBox();
             };
@@ -168,12 +168,12 @@ namespace Dt.Base
 
             accelerator = new KeyboardAccelerator()
             {
-                Modifiers = VirtualKeyModifiers.Menu,
+                Modifiers = VirtualKeyModifiers.Control,
                 Key = VirtualKey.Left
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ← 动态日志
+                // Ctrl + ← 动态日志
                 e.Handled = true;
                 SysTrace.ShowLogBox();
             };
@@ -181,12 +181,12 @@ namespace Dt.Base
 
             accelerator = new KeyboardAccelerator()
             {
-                Modifiers = VirtualKeyModifiers.Menu,
+                Modifiers = VirtualKeyModifiers.Control,
                 Key = VirtualKey.Right
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + → 打开LocalState路径
+                // Ctrl + → 打开LocalState路径
                 e.Handled = true;
                 SysTrace.OpenLocalPath();
             };
@@ -194,27 +194,14 @@ namespace Dt.Base
 
             accelerator = new KeyboardAccelerator()
             {
-                Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Up
+                Modifiers = VirtualKeyModifiers.Control,
+                Key = VirtualKey.L
             };
             accelerator.Invoked += (s, e) =>
             {
-                // Alt + ↑ 切换服务
+                // Ctrl + L 切换顶层显示
                 e.Handled = true;
-                SysTrace.ToggleSvcUrl();
-            };
-            accs.Add(accelerator);
-
-            accelerator = new KeyboardAccelerator()
-            {
-                Modifiers = VirtualKeyModifiers.Menu,
-                Key = VirtualKey.Enter
-            };
-            accelerator.Invoked += (s, e) =>
-            {
-                // Alt + 回车 复制窗口类型
-                e.Handled = true;
-                SysTrace.CopyWinType();
+                SysTrace.ToggleAlwaysOnTop();
             };
             accs.Add(accelerator);
 #endif

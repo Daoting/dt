@@ -57,6 +57,29 @@ namespace Dt.Base.Tools
                     if (s is Dlg dlg)
                         dlg.Close();
                 } },
+
+#if WIN
+                new Nav("打开本地文件目录", Icons.文件夹) { Desc = "快捷键：Ctrl + →", Callback = (s, n) =>
+                {
+                    OpenLocalPath();
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+
+                new Nav("复制窗口类型", Icons.复制) { Desc = "复制当前窗口类型", Callback = (s, n) =>
+                {
+                    CopyWinType();
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+
+                new Nav("切换顶层显示", Icons.复制) { Desc = "快捷键：Ctrl + L", Callback = (s, n) =>
+                {
+                    ToggleAlwaysOnTop();
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+#endif
                 //new Nav("关于", null, Icons.证书) { Desc = "App V2.3.0\r\nDt  V4.2.1", Callback = (s, n) => Kit.Msg(n.Desc) },
             };
 
@@ -150,6 +173,12 @@ namespace Dt.Base.Tools
                 name = UITree.RootContent.GetType().FullName;
             }
             Kit.CopyToClipboard(name, true);
+        }
+
+        public static void ToggleAlwaysOnTop()
+        {
+            var pre = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
+            pre.IsAlwaysOnTop = !pre.IsAlwaysOnTop;
         }
 
         static void OpenWin(Type p_type, string p_title)
