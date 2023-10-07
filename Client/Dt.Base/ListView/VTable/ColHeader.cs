@@ -12,6 +12,7 @@ using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Collections.Specialized;
 #endregion
 
 namespace Dt.Base.ListView
@@ -31,16 +32,14 @@ namespace Dt.Base.ListView
         {
             Lv = p_owner;
             Cols cols = p_owner.Cols;
-            cols.Update += (s, e) => InvalidateMeasure();
-            foreach (var col in cols)
-            {
-                Children.Add(new ColHeaderCell(col, this));
-            }
+            cols.LockCols();
+            cols.ColWidthChanged += (s, e) => InvalidateMeasure();
+            cols.Reloading += OnColsReloading;
+            LoadAllCols();
         }
         #endregion
 
         internal Lv Lv { get; }
-
 
         internal ColHeaderCell GetCellByID(string p_id)
         {
@@ -59,7 +58,7 @@ namespace Dt.Base.ListView
             Cols cols = Lv.Cols;
             for (int i = 0; i < cols.Count; i++)
             {
-                col = cols[i];
+                col = (Col)cols[i];
                 if (p_pos >= col.Left && p_pos <= col.Left + col.Width)
                 {
                     index = i;
@@ -68,7 +67,7 @@ namespace Dt.Base.ListView
             }
 
             // 未找到或还在原来列
-            if (index == -1 || (col = cols[index]) == p_col)
+            if (index == -1 || (col = (Col)cols[index]) == p_col)
             {
                 if (_lastDrag > -1)
                 {
@@ -100,7 +99,7 @@ namespace Dt.Base.ListView
                     InvalidateArrange();
                 }
             }
-            return cols[index];
+            return (Col)cols[index];
         }
 
         internal void FinishedDrag()
@@ -152,7 +151,7 @@ namespace Dt.Base.ListView
                 Cols cols = Lv.Cols;
                 double left = -10;
                 if (_lastDrag > 0 && _lastDrag < cols.Count)
-                    left = Lv.Cols[_lastDrag].Left - 10;
+                    left = ((Col)Lv.Cols[_lastDrag]).Left - 10;
                 else if (_lastDrag == cols.Count)
                     left = cols.TotalWidth - 10;
                 _tbDrag.Arrange(new Rect(left, 0, 20, finalSize.Height));
@@ -160,5 +159,19 @@ namespace Dt.Base.ListView
             return finalSize;
         }
         #endregion
+
+        void LoadAllCols()
+        {
+            foreach (var col in Lv.Cols.OfType<Col>())
+            {
+                Children.Add(new ColHeaderCell(col, this));
+            }
+        }
+
+        void OnColsReloading(object sender, EventArgs e)
+        {
+            Children.Clear();
+            LoadAllCols();
+        }
     }
 }

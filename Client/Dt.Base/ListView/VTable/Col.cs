@@ -21,11 +21,17 @@ namespace Dt.Base
     public partial class Col : DependencyObject
     {
         #region 静态内容
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
+            typeof(string),
+            typeof(Col),
+            new PropertyMetadata(null, OnTitleChanged));
+
         public static readonly DependencyProperty WidthProperty = DependencyProperty.Register(
             "Width",
             typeof(double),
             typeof(Col),
-            new PropertyMetadata(100d));
+            new PropertyMetadata(100d, OnWidthChanged));
 
         public static readonly DependencyProperty RowSpanProperty = DependencyProperty.Register(
             "RowSpan",
@@ -81,25 +87,51 @@ namespace Dt.Base
             typeof(Col),
             new PropertyMetadata(16d));
 
-        string _title;
+        static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Col c = (Col)d;
+            var val = (string)e.NewValue;
+            if (!string.IsNullOrEmpty(val) && val.Contains('@'))
+            {
+                c.Title = val.Replace('@', '\u000A');
+                if (c.Owner != null)
+                    c.Owner.OnColWidthChanged();
+            }
+        }
+
+        static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Col c = (Col)d;
+            if (c.Owner != null)
+                c.Owner.OnColWidthChanged();
+        }
+
+        string _id;
         #endregion
 
         /// <summary>
         /// 获取设置列名(字段名)
         /// </summary>
-        public string ID { get; set; }
+        public string ID
+        {
+            get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    Owner?.OnReloading();
+                }
+            }
+        }
 
         /// <summary>
         /// 获取设置列标题
         /// </summary>
         public string Title
         {
-            get { return string.IsNullOrEmpty(_title) ? ID : _title; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    _title = value.Replace('@', '\u000A');
-            }
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
         /// <summary>
@@ -197,5 +229,7 @@ namespace Dt.Base
         /// 水平位置
         /// </summary>
         internal double Left { get; set; }
+
+        internal Cols Owner { get; set; }
     }
 }

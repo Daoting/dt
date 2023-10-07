@@ -463,7 +463,7 @@ namespace Dt.Base
             {
                 foreach (var item in _selectedLvItems)
                 {
-                    foreach (var col in cols)
+                    foreach (var col in cols.OfType<Col>())
                     {
                         var val = item[col.ID];
                         if (val != null)

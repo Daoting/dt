@@ -7,8 +7,10 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI.Xaml.Markup;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 #endregion
 
 namespace Dt.Base
@@ -16,15 +18,17 @@ namespace Dt.Base
     /// <summary>
     /// 列集合
     /// </summary>
-    public class Cols : List<Col>
+    public class Cols : Nl<object>
     {
         /// <summary>
-        /// 列位置失效事件
+        /// 列宽变化事件
         /// </summary>
-        public event EventHandler Update;
+        public event EventHandler ColWidthChanged;
 
-        public Cols()
-        { }
+        /// <summary>
+        /// 列集合变化、Col.ID变化等引起的重新加载事件
+        /// </summary>
+        public event EventHandler Reloading;
 
         /// <summary>
         /// 获取设置点击列头是否可以排序
@@ -42,12 +46,21 @@ namespace Dt.Base
         internal double TotalWidth { get; set; }
 
         /// <summary>
-        /// 列位置失效，触发重新测量布局
+        /// 列宽失效，触发重新测量布局
         /// </summary>
-        internal void Invalidate()
+        internal void OnColWidthChanged()
         {
             FixWidth();
-            Update?.Invoke(this, EventArgs.Empty);
+            ColWidthChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 列集合变化、Col.ID变化等引起的重新加载
+        /// </summary>
+        internal void OnReloading()
+        {
+            FixWidth();
+            Reloading?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -56,7 +69,7 @@ namespace Dt.Base
         internal void FixWidth()
         {
             TotalWidth = 0;
-            foreach (Col col in this)
+            foreach (Col col in this.OfType<Col>())
             {
                 col.Left = TotalWidth;
                 TotalWidth += col.Width;
@@ -70,7 +83,7 @@ namespace Dt.Base
         {
             int cnt;
             int maxCnt = 1;
-            foreach (Col col in this)
+            foreach (Col col in this.OfType<Col>())
             {
                 if (!string.IsNullOrEmpty(col.Title)
                     && (cnt = col.Title.Split('\u000A').Length) > maxCnt)
@@ -79,6 +92,39 @@ namespace Dt.Base
                 }
             }
             return maxCnt;
+        }
+
+        /// <summary>
+        /// 锁定列集合，集合变化Reloading
+        /// </summary>
+        internal void LockCols()
+        {
+            CollectionChanged -= OnColsCollectionChanged;
+            CollectionChanged += OnColsCollectionChanged;
+
+            foreach (var col in this.OfType<Col>())
+            {
+                col.Owner = this;
+            }
+        }
+
+        void OnColsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var col in e.NewItems.OfType<Col>())
+                {
+                    col.Owner = this;
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset || e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (var col in this.OfType<Col>())
+                {
+                    col.Owner = this;
+                }
+            }
+            OnReloading();
         }
     }
 }

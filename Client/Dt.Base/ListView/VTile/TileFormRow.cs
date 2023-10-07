@@ -110,7 +110,7 @@ namespace Dt.Base.ListView
 
             for (int i = 0; i < cols.Count; i++)
             {
-                Col col = cols[i];
+                Col col = (Col)cols[i];
                 Grid grid = new Grid
                 {
                     Height = col.RowSpan * Res.RowOuterHeight,

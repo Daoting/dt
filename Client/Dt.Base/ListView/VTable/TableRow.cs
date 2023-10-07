@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Shapes;
+using System.Collections.Specialized;
 #endregion
 
 namespace Dt.Base.ListView
@@ -33,6 +34,19 @@ namespace Dt.Base.ListView
         public TableRow(Lv p_owner) : base(p_owner)
         {
             _cells = new Dictionary<Col, UIElement>();
+
+            Cols cols = _owner.Cols;
+            cols.ColWidthChanged += (s, e) => InvalidateMeasure();
+            cols.Reloading += OnColsReloading;
+            _owner.Scroll.ViewChanged += (s, e) =>
+            {
+                _rcPointer.Fill = null;
+                InvalidateArrange();
+            };
+
+            // 背景
+            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
+
             LoadCells();
             AttachEvent();
         }
@@ -50,9 +64,9 @@ namespace Dt.Base.ListView
                 // 自动行高
                 for (int i = 0; i < cols.Count; i++)
                 {
-                    Col col = cols[i];
+                    Col col = (Col)cols[i];
                     var elem = _cells[col];
-                    elem.Measure(new Size(cols[i].Width, availableSize.Height));
+                    elem.Measure(new Size(col.Width, availableSize.Height));
                     if (elem.DesiredSize.Height > height)
                         height = elem.DesiredSize.Height;
                 }
@@ -64,8 +78,8 @@ namespace Dt.Base.ListView
 
                 for (int i = 0; i < cols.Count; i++)
                 {
-                    Col col = cols[i];
-                    _cells[col].Measure(new Size(cols[i].Width, height));
+                    Col col = (Col)cols[i];
+                    _cells[col].Measure(new Size(col.Width, height));
                 }
             }
 
@@ -95,7 +109,7 @@ namespace Dt.Base.ListView
             // 行单元格
             for (int i = 0; i < cols.Count; i++)
             {
-                Col col = cols[i];
+                Col col = (Col)cols[i];
                 _cells[col].Arrange(new Rect(col.Left + headerWidth, 0, col.Width, finalSize.Height));
             }
 
@@ -110,20 +124,9 @@ namespace Dt.Base.ListView
 
         void LoadCells()
         {
-            Cols cols = _owner.Cols;
-            cols.Update += (s, e) => InvalidateMeasure();
-            _owner.Scroll.ViewChanged += (s, e) =>
-            {
-                _rcPointer.Fill = null;
-                InvalidateArrange();
-            };
-
-            // 背景
-            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
-
             // 单元格
             Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
-            foreach (var col in cols)
+            foreach (var col in _owner.Cols.OfType<Col>())
             {
                 Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 CopyColToDot(col, dot);
@@ -194,6 +197,12 @@ namespace Dt.Base.ListView
                 else
                     RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
             }
+        }
+
+        void OnColsReloading(object sender, EventArgs e)
+        {
+            Children.Clear();
+            LoadCells();
         }
     }
 }

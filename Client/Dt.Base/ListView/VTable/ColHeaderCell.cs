@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Input;
+using Microsoft.UI.Xaml.Data;
 #endregion
 
 namespace Dt.Base.ListView
@@ -55,7 +56,15 @@ namespace Dt.Base.ListView
             DefaultStyleKey = typeof(ColHeaderCell);
             Col = p_col;
             _owner = p_owner;
-            Title = p_col.Title;
+
+            // 标题支持动态调整
+            SetBinding(TitleProperty, new Binding
+            {
+                Path = new PropertyPath("Title"),
+                Mode = BindingMode.OneWay,
+                Converter = new ColTitleConverter(p_col),
+                Source = p_col
+            });
             Loaded += OnLoaded;
         }
         #endregion
@@ -168,7 +177,7 @@ namespace Dt.Base.ListView
                 {
                     // 最小宽度能显示一个字
                     _resizingCol.Width = width;
-                    _owner.Lv.Cols.Invalidate();
+                    _owner.Lv.Cols.OnColWidthChanged();
                     _ptLast = cur;
                 }
                 return;
@@ -191,7 +200,7 @@ namespace Dt.Base.ListView
                 int index = cols.IndexOf(_dragTgtCol);
                 cols.Remove(Col);
                 cols.Insert(index, Col);
-                cols.Invalidate();
+                cols.OnColWidthChanged();
             }
             else if (_resizingCol != null && InputKit.IsCtrlPressed)
             {
@@ -280,7 +289,7 @@ namespace Dt.Base.ListView
             Cols cols = _owner.Lv.Cols;
             for (int i = 0; i < cols.Count; i++)
             {
-                if (Col == cols[i])
+                if (Col == (Col)cols[i])
                 {
                     index = i;
                     break;
@@ -289,7 +298,7 @@ namespace Dt.Base.ListView
 
             if (index == 0)
                 return null;
-            return cols[index - 1];
+            return (Col)cols[index - 1];
         }
 
         void ResetMouseState()
@@ -310,6 +319,28 @@ namespace Dt.Base.ListView
 #if ENABLECURSOR
             ProtectedCursor = InputSystemCursor.Create(p_cursor);
 #endif
+        }
+
+        class ColTitleConverter : IValueConverter
+        {
+            Col _col;
+
+            public ColTitleConverter(Col p_col)
+            {
+                _col = p_col;
+            }
+
+            public object Convert(object value, Type targetType, object parameter, string language)
+            {
+                if (value == null || (string)value == string.Empty)
+                    return _col.ID;
+                return value;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, string language)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

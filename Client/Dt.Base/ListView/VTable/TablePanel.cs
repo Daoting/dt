@@ -720,7 +720,7 @@ namespace Dt.Base.ListView
         void CreateColHeader()
         {
             // 只附加一次
-            _owner.Cols.Update += (s, e) => InvalidateMeasure();
+            _owner.Cols.ColWidthChanged += (s, e) => InvalidateMeasure();
             _colHeader = new ColHeader(_owner);
 
             // 左上角
