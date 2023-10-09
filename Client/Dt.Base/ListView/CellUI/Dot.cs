@@ -25,22 +25,28 @@ namespace Dt.Base
             "Call",
             typeof(string),
             typeof(Dot),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnReload));
 
         public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
             "Format",
             typeof(string),
             typeof(Dot),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnReload));
 
         public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(
             "AutoHide",
             typeof(bool),
             typeof(Dot),
-            new PropertyMetadata(true));
+            new PropertyMetadata(true, OnReload));
+
+        static void OnReload(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Dot)d).Reload();
+        }
         #endregion
 
         #region 成员变量
+        string _id;
         bool _isInit;
         Action<CallArgs> _set;
         #endregion
@@ -57,7 +63,18 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置Dot内容对应的数据对象的属性名，null或空时对应数据对象本身
         /// </summary>
-        public string ID { get; set; }
+        public string ID
+        {
+            get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    Reload();
+                }
+            }
+        }
 
         /// <summary>
         /// 获取设置自定义单元格UI的方法名，多个方法名用逗号隔开，形如：Def.Icon,Def.小灰
@@ -152,6 +169,17 @@ namespace Dt.Base
             else
             {
                 _set?.Invoke(new CallArgs(vi, this));
+            }
+        }
+
+        void Reload()
+        {
+            if (_isInit)
+            {
+                _isInit = false;
+                var dc = DataContext;
+                DataContext = null;
+                DataContext = dc;
             }
         }
     }

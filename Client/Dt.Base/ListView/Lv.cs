@@ -124,14 +124,23 @@ namespace Dt.Base
             if (cols != null)
                 cols.FixWidth();
 
-            if (e.OldValue == null)
+            var lv = (Lv)d;
+            if (e.NewValue != null)
             {
-                // 初次设置View
-                ((Lv)d).LoadPanel();
+                if (lv._panel == null)
+                {
+                    // 初次设置View
+                    lv.LoadPanel();
+                }
+                else
+                {
+                    lv.ReloadPanelContent();
+                }
             }
             else
             {
-                ((Lv)d).ReloadPanelContent();
+                // 清除面板，热重载用
+                lv.ClearPanel();
             }
         }
 

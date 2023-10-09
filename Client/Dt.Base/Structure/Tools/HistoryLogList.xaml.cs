@@ -456,7 +456,7 @@ namespace Dt.Base.Tools
                             if (id == "@t")
                             {
                                 var time = reader.GetDateTime();
-                                row.InitVal("time", time.ToString("yyyy-MM-dd HH:mm:ss"));
+                                row.InitVal("time", time.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
                             }
                             else if (id == "@l")
                             {

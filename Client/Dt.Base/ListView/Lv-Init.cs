@@ -279,5 +279,19 @@ namespace Dt.Base
         {
             _panel?.Reload();
         }
+
+        /// <summary>
+        /// 清除面板，热重载用
+        /// </summary>
+        void ClearPanel()
+        {
+            if (_panel != null)
+            {
+                // 热重载时，为了刷新List模式下的DataTemplate，只能通过切换注释的方式进行刷新！！！
+                // 但切换注释后测量失效，行高始终 41，，设置 ItemHeight 为保持高度看效果！！！
+                SetItemHeightNoReload(double.NaN);
+                _panel.Children.Clear();
+            }
+        }
     }
 }

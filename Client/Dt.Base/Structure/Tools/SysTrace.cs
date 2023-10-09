@@ -175,11 +175,13 @@ namespace Dt.Base.Tools
             Kit.CopyToClipboard(name, true);
         }
 
+#if WIN
         public static void ToggleAlwaysOnTop()
         {
             var pre = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
             pre.IsAlwaysOnTop = !pre.IsAlwaysOnTop;
         }
+#endif
 
         static void OpenWin(Type p_type, string p_title)
         {
