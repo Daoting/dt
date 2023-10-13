@@ -2,8 +2,8 @@
     <PropertyGroup>
         <TargetFrameworks>net7.0-windows10.0.19041;net7.0;net7.0-android;net7.0-ios</TargetFrameworks>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252</NoWarn>
-        <!--xbf嵌入到pri文件-->
-        <!--<DisableEmbeddedXbf>false</DisableEmbeddedXbf>-->
+        <!--始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译-->
+        <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
     </PropertyGroup>
 
     <!-- release不输出pbd调试信息 -->

@@ -620,7 +620,7 @@ namespace Dt.Core
                 foreach (var col in schema.Columns)
                 {
                     AppendTabSpace(sb, 3);
-                    sb.AppendLine($"row.AddCell<{col.GetTypeName()}>(\"{col.Name}\");");
+                    sb.AppendLine($"row.Add<{col.GetTypeName()}>(\"{col.Name}\");");
                 }
             }
             return sb.ToString();

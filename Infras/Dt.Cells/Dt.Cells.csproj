@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>3.0.1</Version>
+		<Version>3.0.2</Version>
         <PackageId Condition="'$(Configuration)'=='Debug'">Dt.Infras.Debug</PackageId>
         <PackageId Condition="'$(Configuration)'=='Release'">Dt.Infras</PackageId>
 		<Description>搬运工客户端 Excel Chart 等基础控件</Description>

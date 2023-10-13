@@ -3,7 +3,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>4.2.3</Version>
+		<Version>4.2.5</Version>
 		<PackageId Condition="'$(Configuration)'=='Debug'">Dt.Service.Debug</PackageId>
 		<PackageId Condition="'$(Configuration)'=='Release'">Dt.Service</PackageId>
 		<!-- 将引用项目合并打包 -->
