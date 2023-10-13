@@ -447,6 +447,13 @@
     <None Include="Resources\Logo.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PrjItemTemplate\PrjItemTemplate.csproj">
+      <Project>{BE658C76-3960-4DAD-BF5A-79CB6AB34A08}</Project>
+      <Name>PrjItemTemplate</Name>
+      <VSIXSubPath>ProjectTemplates</VSIXSubPath>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IncludeOutputGroupsInVSIX>TemplateProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\PrjTemplate\PrjTemplate.csproj">
       <Project>{C3B63B07-864B-4369-AE58-1448E72BAEC2}</Project>
       <Name>PrjTemplate</Name>

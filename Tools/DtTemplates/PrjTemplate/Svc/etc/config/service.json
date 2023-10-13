@@ -3,7 +3,7 @@
   // 1. Svc          普通微服务模式
   // 2. SingletonSvc 单体服务模式
   // 3. InitDb       初始化数据库模式
-  "Mode": "$issingletonsvc$",
+  "Mode": "SingletonSvc",
 
   // 默认数据源键名
   "DbKey": "demodb",

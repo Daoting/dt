@@ -54,25 +54,28 @@ namespace Dt
             var folder = projects[0].Object as ProjectItem;
             var root = folder.ContainingProject.Properties.Item("RootNamespace").Value.ToString();
 
-            // 类型为文件夹
-            string ns = folder.Name;
-            while (true)
-            {
-                folder = folder.Collection.Parent as ProjectItem;
-                if (folder != null && folder.Kind == "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}")
-                {
-                    // 只使用第一级的模板名作为命名空间
-                    ns = folder.Name;
+            // 使用项目默认命名空间
+            return root;
 
-                    // 父文件夹添加前面
-                    //ns = $"{folder.Name}.{ns}";
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return root + "." + ns;
+            // 类型为文件夹
+            //string ns = folder.Name;
+            //while (true)
+            //{
+            //    folder = folder.Collection.Parent as ProjectItem;
+            //    if (folder != null && folder.Kind == "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}")
+            //    {
+            //        // 只使用第一级的模板名作为命名空间
+            //        ns = folder.Name;
+
+            //        // 父文件夹添加前面
+            //        //ns = $"{folder.Name}.{ns}";
+            //    }
+            //    else
+            //    {
+            //        break;
+            //    }
+            //}
+            //return root + "." + ns;
         }
 
         public static string GetRootNamespace()
@@ -197,26 +200,37 @@ namespace Dt
         /// <summary>
         /// 表名不包括前缀
         /// </summary>
-        public static bool TblNameNoPrefix = false;
+        public static bool TblNameNoPrefix = true;
 
         public static string GetClsName(string p_tblName)
         {
             string clsName;
             string[] arr = p_tblName.ToLower().Split('_');
-            if (arr.Length > 1)
+            if (TblNameNoPrefix)
             {
-                clsName = SetFirstToUpper(arr[1]);
-                if (arr.Length > 2)
+                clsName = "";
+                for (int i = 0; i < arr.Length; i++)
                 {
-                    for (int i = 2; i < arr.Length; i++)
-                    {
-                        clsName += SetFirstToUpper(arr[i]);
-                    }
+                    clsName += SetFirstToUpper(arr[i]);
                 }
             }
             else
             {
-                clsName = SetFirstToUpper(p_tblName);
+                if (arr.Length > 1)
+                {
+                    clsName = SetFirstToUpper(arr[1]);
+                    if (arr.Length > 2)
+                    {
+                        for (int i = 2; i < arr.Length; i++)
+                        {
+                            clsName += SetFirstToUpper(arr[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    clsName = SetFirstToUpper(p_tblName);
+                }
             }
             return clsName;
         }

@@ -7,10 +7,7 @@
 	</PropertyGroup>
 
 	<Import Project="..\Common.props" />
-
-	<ItemGroup>
-		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
-	</ItemGroup>
+	<Import Project="..\RefAll.props" />
 
 	<ItemGroup>
 		<AndroidAsset Include="..\$ext_safeprojectname$.Win\Assets\Fonts\*.ttf" Link="Android\Assets\Fonts\%(Filename).ttf" />

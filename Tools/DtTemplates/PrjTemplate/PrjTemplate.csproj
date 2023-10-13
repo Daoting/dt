@@ -54,7 +54,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\Stub\Options\filenesting.json" />
+    <None Include="Base\Base.csproj" />
+    <None Include="Entry\Stub\Options\filenesting.json" />
+    <None Include="Entry\Stub\Options\RefAll.props" />
+    <None Include="Entry\Stub\Options\RefBase.props" />
+    <None Include="Entry\Stub\Options\Targets.props" />
     <None Include="Svc\etc\config\sqlite.json" />
     <None Include="Svc\etc\config\url.json" />
     <None Include="Wasm\pwa\manifest.json" />
@@ -65,8 +69,8 @@
     <None Include="iOS\iOS\Entitlements.plist" />
     <None Include="iOS\iOS\Info.plist" />
     <None Include="iOS\iOS\LaunchScreen.storyboard" />
-    <None Include="Client\Stub\Options\Common.props" />
-    <None Include="Client\Client.csproj" />
+    <None Include="Entry\Stub\Options\Common.props" />
+    <None Include="Entry\Entry.csproj" />
     <None Include="Svc\etc\config\global.json" />
     <None Include="Svc\etc\config\logger.json" />
     <None Include="Svc\etc\config\service.json" />
@@ -84,31 +88,29 @@
     <None Include="Win\Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="Win\Properties\PublishProfiles\win10-x86.pubxml" />
     <None Include="Win\Win.csproj" />
-    <None Include="Client\Stub\Options\AppStub-Lob.cs" />
+    <None Include="Entry\Stub\Options\AppStub-Lob.cs" />
     <None Include="Win\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </None>
-    <None Include="Client\Stub\Home\MainWin.xaml.cs">
+    <None Include="Entry\Home\MainWin.xaml.cs">
       <DependentUpon>MainWin.xaml</DependentUpon>
     </None>
     <None Include="Droid\MainActivity.cs" />
     <None Include="iOS\Main.cs" />
     <None Include="Svc\Program.cs" />
     <None Include="Svc\SvcStub.cs" />
-    <None Include="Client\Stub\Inject\BackgroundJob.cs" />
-    <None Include="Client\Stub\Inject\ReceiveShare.cs" />
-    <None Include="Client\Base\AccessTo\AtSvc.cs" />
-    <None Include="Client\Base\AccessTo\AtLocal.cs" />
-    <None Include="Client\Stub\Inject\LogSetting.cs" />
-    <None Include="Client\Stub\Inject\PushApi.cs" />
-    <None Include="Client\Stub\Inject\CustomTheme.cs" />
-    <None Include="Client\Stub\Options\AppStub-Custom.cs" />
-    <None Include="Client\Stub\Options\AppStub-Single.cs" />
-    <None Include="Client\Stub\Inject\RpcConfig.cs" />
-    <None Include="Client\Stub\Home\HomeWin.xaml.cs">
+    <None Include="Entry\Stub\Inject\BackgroundJob.cs" />
+    <None Include="Entry\Stub\Inject\ReceiveShare.cs" />
+    <None Include="Base\Base\AtSvc.cs" />
+    <None Include="Base\Base\AtLocal.cs" />
+    <None Include="Entry\Stub\Inject\LogSetting.cs" />
+    <None Include="Entry\Stub\Inject\PushApi.cs" />
+    <None Include="Entry\Stub\Inject\CustomTheme.cs" />
+    <None Include="Entry\Stub\Options\AppStub-Single.cs" />
+    <None Include="Entry\Home\HomeWin.xaml.cs">
       <DependentUpon>HomeWin.xaml</DependentUpon>
     </None>
-    <None Include="Client\Stub\Home\HomeMain.xaml.cs">
+    <None Include="Entry\Home\HomeMain.xaml.cs">
       <DependentUpon>HomeMain.xaml</DependentUpon>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,7 +132,7 @@
     <VSTemplate Include="Win\Win.vstemplate" />
   </ItemGroup>
   <ItemGroup>
-    <VSTemplate Include="Client\Client.vstemplate" />
+    <VSTemplate Include="Entry\Entry.vstemplate" />
   </ItemGroup>
   <ItemGroup>
     <VSTemplate Include="Svc\Svc.vstemplate" />
@@ -182,7 +184,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\Stub\Home\MainWin.xaml">
+    <None Include="Entry\Home\MainWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
@@ -200,7 +202,8 @@
     <VSTemplate Include="Wasm\Wasm.vstemplate" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Client\Stub\Readme.txt" />
+    <VSTemplate Include="Base\Base.vstemplate" />
+    <Content Include="Entry\Stub\Readme.txt" />
     <Content Include="Note.txt" />
     <Content Include="Wasm\assets\SplashScreen.png" />
     <Content Include="Wasm\LinkerConfig.xml" />
@@ -245,17 +248,18 @@
     <Content Include="Wasm\WasmScripts\AppManifest.js" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\Stub\Home\HomeWin.xaml">
+    <None Include="Entry\Home\HomeWin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Client\Stub\Home\HomeMain.xaml">
+    <None Include="Entry\Home\HomeMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

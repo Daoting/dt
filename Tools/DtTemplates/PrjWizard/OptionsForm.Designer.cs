@@ -37,7 +37,6 @@ namespace Dt.PrjWizard
             this.cbAndroid = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.rbAll = new System.Windows.Forms.RadioButton();
-            this.rbCustom = new System.Windows.Forms.RadioButton();
             this.rbNone = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,7 +45,7 @@ namespace Dt.PrjWizard
             // _btnOK
             // 
             this._btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this._btnOK.Location = new System.Drawing.Point(236, 313);
+            this._btnOK.Location = new System.Drawing.Point(236, 263);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 22;
@@ -56,7 +55,7 @@ namespace Dt.PrjWizard
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(338, 313);
+            this.button1.Location = new System.Drawing.Point(338, 263);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 23;
@@ -120,24 +119,14 @@ namespace Dt.PrjWizard
             this.rbAll.Text = "使用搬运工标准服务，包括通用后台管理、文件服务、消息服务等";
             this.rbAll.UseVisualStyleBackColor = true;
             // 
-            // rbCustom
-            // 
-            this.rbCustom.AutoSize = true;
-            this.rbCustom.Location = new System.Drawing.Point(42, 212);
-            this.rbCustom.Name = "rbCustom";
-            this.rbCustom.Size = new System.Drawing.Size(215, 16);
-            this.rbCustom.TabIndex = 29;
-            this.rbCustom.Text = "不使用搬运工标准服务，自定义服务";
-            this.rbCustom.UseVisualStyleBackColor = true;
-            // 
             // rbNone
             // 
             this.rbNone.AutoSize = true;
-            this.rbNone.Location = new System.Drawing.Point(42, 251);
+            this.rbNone.Location = new System.Drawing.Point(42, 208);
             this.rbNone.Name = "rbNone";
-            this.rbNone.Size = new System.Drawing.Size(131, 16);
+            this.rbNone.Size = new System.Drawing.Size(215, 16);
             this.rbNone.TabIndex = 30;
-            this.rbNone.Text = "单机版应用，无服务";
+            this.rbNone.Text = "单机版应用，无服务，使用Sqlite库";
             this.rbNone.UseVisualStyleBackColor = true;
             // 
             // label2
@@ -152,7 +141,7 @@ namespace Dt.PrjWizard
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(42, 318);
+            this.label3.Location = new System.Drawing.Point(42, 268);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(125, 12);
             this.label3.TabIndex = 32;
@@ -162,11 +151,10 @@ namespace Dt.PrjWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(452, 367);
+            this.ClientSize = new System.Drawing.Size(452, 313);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.rbNone);
-            this.Controls.Add(this.rbCustom);
             this.Controls.Add(this.rbAll);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbAndroid);
@@ -195,7 +183,6 @@ namespace Dt.PrjWizard
         private System.Windows.Forms.CheckBox cbAndroid;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton rbAll;
-        private System.Windows.Forms.RadioButton rbCustom;
         private System.Windows.Forms.RadioButton rbNone;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

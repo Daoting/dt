@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>搬运工</Name>
+		<ProjectType>CSharp</ProjectType>
+		<CreateInPlace>true</CreateInPlace>
+		<!-- 内部模板标记为隐藏 -->
+		<Hidden>true</Hidden>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="Base.csproj" ReplaceParameters="true">
+			<ProjectItem ReplaceParameters="true">Base\AtSvc.cs</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Base\AtLocal.cs</ProjectItem>
+
+		</Project>
+	</TemplateContent>
+</VSTemplate>

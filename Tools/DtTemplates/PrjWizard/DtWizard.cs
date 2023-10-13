@@ -29,9 +29,7 @@ namespace Dt.PrjWizard
                     _useWebAssembly = form.UseWebAssembly;
                     _useiOS = form.UseiOS;
                     _useAndroid = form.UseAndroid;
-                    _useSvcType = form.UseSvcType;
-
-                    //replacementsDictionary["$issingletonsvc$"] = (_useSvcType == SvcType.CustomSvc) ? "false" : "true";
+                    _useSvc = form.UseSvc;
                 }
                 else
                 {
@@ -54,7 +52,6 @@ namespace Dt.PrjWizard
 
             ShowWelcomePage();
             AdjustClientPrj();
-            AdjustSvcFiles();
             RemoveUnselectPrj();
             SetStartupPrj();
         }
@@ -63,42 +60,34 @@ namespace Dt.PrjWizard
         {
             try
             {
-                // Client\Stub下的文件
-                var stubPath = Path.Combine(_targetPath, _projectName + ".Client", "Stub");
+                // Entry\Stub下的文件
+                var stubPath = Path.Combine(_targetPath, _projectName + ".Entry", "Stub");
                 var injectPath = Path.Combine(stubPath, "Inject");
-                var homePath = Path.Combine(stubPath, "Home");
+                var homePath = Path.Combine(_targetPath, _projectName + ".Entry", "Home");
                 var optionsPath = Path.Combine(stubPath, "Options");
                 var stubFile = Path.Combine(stubPath, "AppStub.cs");
 
                 // 自定义文件嵌套
                 File.Copy(Path.Combine(optionsPath, "filenesting.json"), Path.Combine(_targetPath, ".filenesting.json"));
 
-                // Common.props复制到根目录
+                // *.props复制到根目录
                 File.Copy(Path.Combine(optionsPath, "Common.props"), Path.Combine(_targetPath, "Common.props"));
-                if (_useSvcType == SvcType.DtSvc)
+                File.Copy(Path.Combine(optionsPath, "Targets.props"), Path.Combine(_targetPath, "Targets.props"));
+                File.Copy(Path.Combine(optionsPath, "RefAll.props"), Path.Combine(_targetPath, "RefAll.props"));
+                File.Copy(Path.Combine(optionsPath, "RefBase.props"), Path.Combine(_targetPath, "RefBase.props"));
+
+                if (_useSvc)
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Lob.cs"), stubFile);
-                    File.Delete(Path.Combine(injectPath, "RpcConfig.cs"));
 
                     File.Delete(Path.Combine(homePath, "MainWin.xaml"));
                     File.Delete(Path.Combine(homePath, "MainWin.xaml.cs"));
                 }
-                else if (_useSvcType == SvcType.CustomSvc)
-                {
-                    File.Copy(Path.Combine(optionsPath, "AppStub-Custom.cs"), stubFile);
-                    File.Delete(Path.Combine(injectPath, "PushApi.cs"));
-
-                    File.Delete(Path.Combine(homePath, "HomeWin.xaml"));
-                    File.Delete(Path.Combine(homePath, "HomeWin.xaml.cs"));
-                    File.Delete(Path.Combine(homePath, "HomeMain.xaml"));
-                    File.Delete(Path.Combine(homePath, "HomeMain.xaml.cs"));
-                }
                 else
                 {
                     File.Copy(Path.Combine(optionsPath, "AppStub-Single.cs"), stubFile);
-                    File.Delete(Path.Combine(_targetPath, _projectName + ".Client", "Base", "AccessTo", "AtSvc.cs"));
+                    File.Delete(Path.Combine(_targetPath, _projectName + ".Base", "Base", "AtSvc.cs"));
                     File.Delete(Path.Combine(injectPath, "PushApi.cs"));
-                    File.Delete(Path.Combine(injectPath, "RpcConfig.cs"));
 
                     File.Delete(Path.Combine(homePath, "HomeWin.xaml"));
                     File.Delete(Path.Combine(homePath, "HomeWin.xaml.cs"));
@@ -112,7 +101,7 @@ namespace Dt.PrjWizard
             /* 动态替换TargetFrameworks占位符造成初次无法编译！很多方法都无法解决！！
             try
             {
-                // Client项目支持的平台
+                // Entry项目支持的平台
                 string target = "";
                 if (_useAndroid)
                     target = ";net6.0-android";
@@ -136,27 +125,11 @@ namespace Dt.PrjWizard
                 prj.Delete();
                 Directory.Delete(Path.Combine(_targetPath, _projectName + ".Test"), true);
 
-                var cli = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Client"));
+                var cli = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Entry"));
                 cli.Save();
             }
             catch { }
             */
-        }
-
-        void AdjustSvcFiles()
-        {
-            try
-            {
-                using (var fs = File.Open(Path.Combine(_targetPath, _projectName + ".Svc", "etc", "config", "service.json"), FileMode.Open, FileAccess.ReadWrite))
-                using (var sr = new StreamReader(fs))
-                {
-                    var str = sr.ReadToEnd().Replace("$issingletonsvc$", (_useSvcType == SvcType.CustomSvc) ? "Svc" : "SingletonSvc");
-                    var data = Encoding.UTF8.GetBytes(str);
-                    fs.SetLength(0);
-                    fs.Write(data, 0, data.Length);
-                }
-            }
-            catch { }
         }
 
         void RemoveUnselectPrj()
@@ -182,14 +155,10 @@ namespace Dt.PrjWizard
                 }
 
                 // 删除单机版的服务
-                if (_useSvcType == SvcType.None)
+                if (!_useSvc)
                 {
-                    var svc = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
-                    if (svc != null)
-                    {
-                        svc.Delete();
-                        Directory.Delete(Path.Combine(_targetPath, _projectName + ".Svc"), true);
-                    }
+                    GetAppSubPrj(".Svc")?.Delete();
+                    Directory.Delete(Path.Combine(_targetPath, _projectName + ".Svc"), true);
                 }
             }
             catch { }
@@ -211,7 +180,7 @@ namespace Dt.PrjWizard
                 }
 
                 // 设置启动项目
-                var prj = _dte.Solution.Projects.OfType<Project>().FirstOrDefault((Project p) => p.Name.EndsWith(".Svc"));
+                var prj = GetAppSubPrj(".Svc");
                 if (prj == null)
                     prj = GetAppSubPrj(".Win");
                 if (prj != null)
@@ -223,7 +192,7 @@ namespace Dt.PrjWizard
         void ShowWelcomePage()
         {
             // 欢迎页
-            var path = Path.Combine(_targetPath, _projectName + ".Client", "Stub", "Readme.txt");
+            var path = Path.Combine(_targetPath, _projectName + ".Entry", "Stub", "Readme.txt");
             if (File.Exists(path))
                 _dte.ItemOperations.OpenFile(path);
 
@@ -291,6 +260,6 @@ namespace Dt.PrjWizard
         bool _useWebAssembly;
         bool _useiOS;
         bool _useAndroid;
-        SvcType _useSvcType;
+        bool _useSvc;
     }
 }

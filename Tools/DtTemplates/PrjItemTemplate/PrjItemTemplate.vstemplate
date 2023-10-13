@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+	<TemplateData>
+		<Name>搬运工客户端项目</Name>
+		<Description>项目通常实现独立的模块功能</Description>
+		<Icon>Logo.ico</Icon>
+		<ProjectType>CSharp</ProjectType>
+		<LanguageTag>csharp</LanguageTag>
+		<PlatformTag>windows</PlatformTag>
+		<PlatformTag>iOS</PlatformTag>
+		<PlatformTag>Android</PlatformTag>
+		<PlatformTag>Web</PlatformTag>
+		<SortOrder>10</SortOrder>
+		<TemplateID>e7f78669-a9df-4e13-aa7e-13a07b118985</TemplateID>
+		<CreateNewFolder>true</CreateNewFolder>
+		<DefaultName>PrjName.Mod</DefaultName>
+		<ProvideDefaultName>false</ProvideDefaultName>
+		<!-- 不加CreateInPlace，项目无文件 -->
+		<CreateInPlace>true</CreateInPlace>
+	</TemplateData>
+	<TemplateContent>
+		<Project File="PrjItem.csproj" ReplaceParameters="true">
+			<ProjectItem ReplaceParameters="true" OpenInEditor="true">Readme.txt</ProjectItem>
+			<ProjectItem ReplaceParameters="true">Class1.cs</ProjectItem>
+		</Project>
+	</TemplateContent>
+</VSTemplate>

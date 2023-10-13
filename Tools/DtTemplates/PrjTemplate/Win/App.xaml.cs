@@ -23,7 +23,7 @@ namespace $ext_safeprojectname$
         public App()
         {
             InitializeComponent();
-            _stub = new AppStub();
+            _stub = new Entry.AppStub();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)

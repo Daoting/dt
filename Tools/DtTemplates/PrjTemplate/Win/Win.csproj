@@ -12,10 +12,7 @@
 	</PropertyGroup>
 
 	<Import Project="..\Common.props" />
-
-	<ItemGroup>
-		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
-	</ItemGroup>
+	<Import Project="..\RefAll.props" />
 
 	<ItemGroup>
 		<PackageReference Include="Dt.Tasks" Version="2.0.0" />

@@ -15,13 +15,6 @@ namespace Dt.PrjWizard
 
         public bool UseAndroid => cbAndroid.Checked;
 
-        public SvcType UseSvcType => rbAll.Checked ? SvcType.DtSvc : (rbCustom.Checked ? SvcType.CustomSvc : SvcType.None);
-    }
-
-    public enum SvcType
-    {
-        DtSvc,
-        CustomSvc,
-        None
+        public bool UseSvc => rbAll.Checked;
     }
 }

@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net7.0-windows10.0.19041;net7.0-android;net7.0-ios;net7.0</TargetFrameworks>
-		<RootNamespace>$ext_safeprojectname$</RootNamespace>
-	</PropertyGroup>
-
-	<Import Project="..\Common.props" />
-</Project>

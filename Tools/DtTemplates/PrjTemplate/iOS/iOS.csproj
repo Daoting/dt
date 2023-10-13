@@ -9,10 +9,7 @@
 	</PropertyGroup>
 
 	<Import Project="..\Common.props" />
-
-	<ItemGroup>
-		<ProjectReference Include="..\$ext_safeprojectname$.Client\$ext_safeprojectname$.Client.csproj" />
-	</ItemGroup>
+	<Import Project="..\RefAll.props" />
 
 	<ItemGroup>
 		<Page Include="..\$ext_safeprojectname$.Win\App.xaml" Link="App.xaml" />

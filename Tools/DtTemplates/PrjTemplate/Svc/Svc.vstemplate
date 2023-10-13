@@ -14,7 +14,7 @@
 			<ProjectItem TargetFileName="Api\TestApi.cs" ReplaceParameters="true">TestApi.cs</ProjectItem>
 			<ProjectItem ReplaceParameters="true">Properties\launchSettings.json</ProjectItem>
 			<ProjectItem ReplaceParameters="true">etc\config\global.json</ProjectItem>
-			<ProjectItem ReplaceParameters="true">etc\config\service.json</ProjectItem>
+			<ProjectItem>etc\config\service.json</ProjectItem>
 			<ProjectItem>etc\config\url.json</ProjectItem>
 			<ProjectItem>etc\config\sqlite.json</ProjectItem>
 			<ProjectItem>etc\config\logger.json</ProjectItem>

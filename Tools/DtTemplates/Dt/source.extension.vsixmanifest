@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Dt.3e623bcb-4dc7-4826-87c1-4d2d33a02bf7" Version="4.2.2.0" Language="zh-CN" Publisher="搬运工" />
+        <Identity Id="Dt.3e623bcb-4dc7-4826-87c1-4d2d33a02bf7" Version="4.2.5" Language="zh-CN" Publisher="搬运工" />
         <DisplayName>搬运工</DisplayName>
         <Description xml:space="preserve">搬运工平台常用代码模板及工具</Description>
         <Icon>Resources\Logo.png</Icon>
@@ -21,5 +21,6 @@
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
         <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="PrjTemplate" d:TargetPath="|PrjTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
         <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="PrjWizard" Path="|PrjWizard|" AssemblyName="|PrjWizard;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="Project" d:ProjectName="PrjItemTemplate" d:TargetPath="|PrjItemTemplate;TemplateProjectOutputGroup|" Path="ProjectTemplates" d:VsixSubPath="ProjectTemplates" />
     </Assets>
 </PackageManifest>

@@ -2,7 +2,7 @@
 <VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
 	<TemplateData>
 		<Name>搬运工</Name>
-		<Description>包括6个项目：WinUI iOS Android Web 客户端类库 业务服务</Description>
+		<Description>包括7个项目：4个平台项目，2个客户端项目 1个服务项目</Description>
 		<SortOrder>10</SortOrder>
 		<Icon>Logo.ico</Icon>
 		<ProjectType>CSharp</ProjectType>
@@ -20,11 +20,13 @@
 	</TemplateData>
 	<TemplateContent>
 		<ProjectCollection>
-			<ProjectTemplateLink ProjectName="$safeprojectname$.Client" CopyParameters="true">
-				Client\Client.vstemplate
+			<!-- 客户端基础项目，无任何UI，包括实体、领域服务、数据访问类、接口等 -->
+			<ProjectTemplateLink ProjectName="$safeprojectname$.Base" CopyParameters="true">
+				Base\Base.vstemplate
 			</ProjectTemplateLink>
-			<ProjectTemplateLink ProjectName="$safeprojectname$.Svc" CopyParameters="true">
-				Svc\Svc.vstemplate
+			<!-- 含Stub、主窗口、框架UI的入口项目 -->
+			<ProjectTemplateLink ProjectName="$safeprojectname$.Entry" CopyParameters="true">
+				Entry\Entry.vstemplate
 			</ProjectTemplateLink>
 			<SolutionFolder Name="App">
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Droid" CopyParameters="true">
@@ -39,6 +41,13 @@
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Wasm" CopyParameters="true">
 					Wasm\Wasm.vstemplate
 				</ProjectTemplateLink>
+				<!-- 服务项目 -->
+				<ProjectTemplateLink ProjectName="$safeprojectname$.Svc" CopyParameters="true">
+					Svc\Svc.vstemplate
+				</ProjectTemplateLink>
+				<SolutionFolder Name="Props">
+					
+				</SolutionFolder>
 			</SolutionFolder>
 		</ProjectCollection>
 	</TemplateContent>
