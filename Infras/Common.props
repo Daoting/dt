@@ -37,7 +37,7 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     </ItemGroup>
 
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
