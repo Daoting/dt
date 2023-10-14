@@ -73,6 +73,7 @@ namespace Dt.BuildTools
             {
                 BuildSqliteDbs(sb);
                 BuildTypeAlias(sb);
+                BuildPublicTypes(sb);
             }
 
             return sb.ToString();
@@ -124,5 +125,19 @@ namespace Dt.BuildTools
             }
         }
 
+        void BuildPublicTypes(IndentedStringBuilder sb)
+        {
+            using (sb.Block("protected override void MergePublicTypes(Dictionary<string, Type> p_publicTypes)"))
+            {
+                if (_gen.PublicTypes.Count > 0)
+                {
+                    foreach (var item in _gen.PublicTypes)
+                    {
+                        _gen.Context.CancellationToken.ThrowIfCancellationRequested();
+                        sb.AppendLine($"p_publicTypes[\"{item}\"] = typeof({item});");
+                    }
+                }
+            }
+        }
     }
 }

@@ -40,6 +40,7 @@ namespace Dt.BuildTools
 
                 SqliteTypes = new Dictionary<string, SqliteDbTbls>();
                 AliasTypes = new Dictionary<string, List<string>>();
+                PublicTypes = new List<string>();
 
                 var baseApp = context.Compilation.GetTypeByMetadataName("Microsoft.UI.Xaml.Application");
                 var tpSqliteAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.SqliteAttribute");
@@ -47,6 +48,7 @@ namespace Dt.BuildTools
                 _tpIgnore = context.Compilation.GetTypeByMetadataName("Dt.Core.IgnoreAttribute");
                 _tpAttribute = context.Compilation.GetTypeByMetadataName("System.Attribute");
                 _tpEventHandlerAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.EventHandlerAttribute");
+                var tpPublicType = context.Compilation.GetTypeByMetadataName("Dt.Core.IPublicType");
 
                 foreach (var type in types)
                 {
@@ -56,6 +58,13 @@ namespace Dt.BuildTools
                     {
                         // 只查直接继承 Application 的类，多层继承时uno有bug
                         App = type;
+                        continue;
+                    }
+
+                    // 公开UI的类
+                    if (type.AllInterfaces.Any(tp => tp == tpPublicType))
+                    {
+                        ExtractPublicType(type);
                         continue;
                     }
 
@@ -110,6 +119,8 @@ namespace Dt.BuildTools
         public Dictionary<string, SqliteDbTbls> SqliteTypes { get; private set; }
 
         public Dictionary<string, List<string>> AliasTypes { get; private set; }
+
+        public List<string> PublicTypes { get; private set; }
 
         void ExtractSqliteDb(INamedTypeSymbol type, AttributeData attr)
         {
@@ -199,6 +210,11 @@ namespace Dt.BuildTools
                 // 插入头部
                 ls.Insert(0, type.ToString());
             }
+        }
+
+        void ExtractPublicType(INamedTypeSymbol type)
+        {
+            PublicTypes.Add(type.ToString());
         }
 
         bool IsAliasAttr(AttributeData p_attr)

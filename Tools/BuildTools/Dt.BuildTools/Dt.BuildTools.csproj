@@ -12,7 +12,7 @@
 
 	<!-- 包属性 -->
 	<PropertyGroup>
-		<Version>1.3.4</Version>
+		<Version>1.3.5</Version>
 		<Description>搬运工客户端生成时工具包</Description>
 		<Authors>Daoting</Authors>
 		<Product>搬运工基础平台</Product>
@@ -64,5 +64,12 @@
 			<!-- 打包 Dt.WasmTools -->
 			<TfmSpecificPackageFile Include="..\Dt.WasmTools\bin\$(Configuration)\netstandard2.0\Dt.WasmTools.*" Exclude="..\Dt.WasmTools\bin\$(Configuration)\netstandard2.0\Dt.WasmTools.deps.json" PackagePath="tools" />
 		</ItemGroup>
+	</Target>
+
+	<!--打包后新包放在统一位置，删除该版本的旧包-->
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Copy SourceFiles="bin\$(Configuration)\$(PackageId).$(Version).nupkg" DestinationFolder="d:\Dt\Packages\" />
+		<!--删除旧包-->
+		<RemoveDir Directories="$(UserProfile)\.nuget\packages\$(PackageId)\$(Version)" />
 	</Target>
 </Project>
