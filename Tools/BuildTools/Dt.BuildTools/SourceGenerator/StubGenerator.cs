@@ -39,16 +39,16 @@ namespace Dt.BuildTools
                             select type;
 
                 SqliteTypes = new Dictionary<string, SqliteDbTbls>();
-                AliasTypes = new Dictionary<string, List<string>>();
-                PublicTypes = new List<string>();
+                AliasTypes = new Dictionary<string, string>();
+                AliasTypeList = new Dictionary<string, List<string>>();
 
                 var baseApp = context.Compilation.GetTypeByMetadataName("Microsoft.UI.Xaml.Application");
                 var tpSqliteAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.SqliteAttribute");
                 _tpAliasAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.TypeAliasAttribute");
+                _tpListAliasAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.TypeListAliasAttribute");
                 _tpIgnore = context.Compilation.GetTypeByMetadataName("Dt.Core.IgnoreAttribute");
                 _tpAttribute = context.Compilation.GetTypeByMetadataName("System.Attribute");
                 _tpEventHandlerAttr = context.Compilation.GetTypeByMetadataName("Dt.Core.EventHandlerAttribute");
-                var tpPublicType = context.Compilation.GetTypeByMetadataName("Dt.Core.IPublicType");
 
                 foreach (var type in types)
                 {
@@ -58,13 +58,6 @@ namespace Dt.BuildTools
                     {
                         // 只查直接继承 Application 的类，多层继承时uno有bug
                         App = type;
-                        continue;
-                    }
-
-                    // 公开UI的类
-                    if (type.AllInterfaces.Any(tp => tp == tpPublicType))
-                    {
-                        ExtractPublicType(type);
                         continue;
                     }
 
@@ -78,10 +71,19 @@ namespace Dt.BuildTools
                         // 有 SqliteAttribute 标签
                         ExtractSqliteDb(type, attr);
                     }
-                    else if (IsAliasAttr(attr))
+                    else
                     {
-                        // 为继承 TypeAliasAttribute 的子标签
-                        ExtractTypeAlias(type, attr);
+                        var mode = GetTypeAliasMode(attr);
+                        if (mode == TypeAliasMode.One)
+                        {
+                            // 为继承 TypeAliasAttribute 的子标签
+                            ExtractTypeAlias(type, attr);
+                        }
+                        else if (mode == TypeAliasMode.List)
+                        {
+                            // 为继承 TypeListAliasAttribute 的子标签
+                            ExtractTypeListAlias(type, attr);
+                        }
                     }
                 }
             }
@@ -118,9 +120,9 @@ namespace Dt.BuildTools
 
         public Dictionary<string, SqliteDbTbls> SqliteTypes { get; private set; }
 
-        public Dictionary<string, List<string>> AliasTypes { get; private set; }
+        public Dictionary<string, string> AliasTypes { get; private set; }
 
-        public List<string> PublicTypes { get; private set; }
+        public Dictionary<string, List<string>> AliasTypeList { get; private set; }
 
         void ExtractSqliteDb(INamedTypeSymbol type, AttributeData attr)
         {
@@ -155,6 +157,30 @@ namespace Dt.BuildTools
         }
 
         void ExtractTypeAlias(INamedTypeSymbol type, AttributeData attr)
+        {
+            string key = GetAliasKey(type, attr);
+            AliasTypes[key] = type.ToString();
+        }
+
+        void ExtractTypeListAlias(INamedTypeSymbol type, AttributeData attr)
+        {
+            string key = GetAliasKey(type, attr);
+            
+            List<string> ls;
+            if (!AliasTypeList.TryGetValue(key, out ls))
+            {
+                ls = new List<string>();
+                ls.Add(type.ToString());
+                AliasTypeList[key] = ls;
+            }
+            else
+            {
+                // 插入头部
+                ls.Insert(0, type.ToString());
+            }
+        }
+
+        string GetAliasKey(INamedTypeSymbol type, AttributeData attr)
         {
             string alias = "";
             var args = attr.ConstructorArguments;
@@ -197,33 +223,19 @@ namespace Dt.BuildTools
             // 键规则：类名去掉尾部的Attribute-别名
             var name = attr.AttributeClass.Name;
             var key = $"{name.Substring(0, name.Length - 9)}-{alias}";
-
-            List<string> ls;
-            if (!AliasTypes.TryGetValue(key, out ls))
-            {
-                ls = new List<string>();
-                ls.Add(type.ToString());
-                AliasTypes[key] = ls;
-            }
-            else
-            {
-                // 插入头部
-                ls.Insert(0, type.ToString());
-            }
+            return key;
         }
 
-        void ExtractPublicType(INamedTypeSymbol type)
-        {
-            PublicTypes.Add(type.ToString());
-        }
-
-        bool IsAliasAttr(AttributeData p_attr)
+        TypeAliasMode GetTypeAliasMode(AttributeData p_attr)
         {
             INamedTypeSymbol tp = p_attr.AttributeClass.BaseType;
             while (tp != null)
             {
                 if (SymbolEqualityComparer.Default.Equals(tp, _tpAliasAttr))
-                    return true;
+                    return TypeAliasMode.One;
+
+                if (SymbolEqualityComparer.Default.Equals(tp, _tpListAliasAttr))
+                    return TypeAliasMode.List;
 
                 if (tp.BaseType == null
                     || SymbolEqualityComparer.Default.Equals(tp.BaseType, _tpAttribute)
@@ -232,7 +244,7 @@ namespace Dt.BuildTools
 
                 tp = tp.BaseType;
             }
-            return false;
+            return TypeAliasMode.None;
         }
 
         public void Initialize(GeneratorInitializationContext context)
@@ -240,6 +252,7 @@ namespace Dt.BuildTools
         }
 
         INamedTypeSymbol _tpAliasAttr;
+        INamedTypeSymbol _tpListAliasAttr;
         INamedTypeSymbol _tpAttribute;
         INamedTypeSymbol _tpIgnore;
         INamedTypeSymbol _tpEventHandlerAttr;
@@ -255,5 +268,20 @@ namespace Dt.BuildTools
         {
             return Kit.GetMD5(Cols.ToString());
         }
+    }
+
+    public enum TypeAliasMode
+    {
+        None = 0,
+
+        /// <summary>
+        /// 一个类型别名对应一个类型
+        /// </summary>
+        One,
+
+        /// <summary>
+        /// 一个别名对应一个类型列表
+        /// </summary>
+        List
     }
 }

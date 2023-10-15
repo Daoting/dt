@@ -73,7 +73,7 @@ namespace Dt.BuildTools
             {
                 BuildSqliteDbs(sb);
                 BuildTypeAlias(sb);
-                BuildPublicTypes(sb);
+                BuildTypeListAlias(sb);
             }
 
             return sb.ToString();
@@ -109,32 +109,32 @@ namespace Dt.BuildTools
 
         void BuildTypeAlias(IndentedStringBuilder sb)
         {
-            using (sb.Block("protected override void MergeTypeAlias()"))
+            using (sb.Block("protected override void MergeTypeAlias(Dictionary<string, Type> p_dict)"))
             {
                 if (_gen.AliasTypes.Count > 0)
                 {
                     foreach (var item in _gen.AliasTypes)
                     {
                         _gen.Context.CancellationToken.ThrowIfCancellationRequested();
-                        foreach (var tp in item.Value)
-                        {
-                            sb.AppendLine($"DoMergeTypeAlias(\"{item.Key}\", typeof({tp}));");
-                        }
+                        sb.AppendLine($"p_dict[\"{item.Key}\"] = typeof({item.Value});");
                     }
                 }
             }
         }
 
-        void BuildPublicTypes(IndentedStringBuilder sb)
+        void BuildTypeListAlias(IndentedStringBuilder sb)
         {
-            using (sb.Block("protected override void MergePublicTypes(Dictionary<string, Type> p_publicTypes)"))
+            using (sb.Block("protected override void MergeTypeListAlias()"))
             {
-                if (_gen.PublicTypes.Count > 0)
+                if (_gen.AliasTypeList.Count > 0)
                 {
-                    foreach (var item in _gen.PublicTypes)
+                    foreach (var item in _gen.AliasTypeList)
                     {
                         _gen.Context.CancellationToken.ThrowIfCancellationRequested();
-                        sb.AppendLine($"p_publicTypes[\"{item}\"] = typeof({item});");
+                        foreach (var tp in item.Value)
+                        {
+                            sb.AppendLine($"DoMergeTypeAlias(\"{item.Key}\", typeof({tp}));");
+                        }
                     }
                 }
             }
