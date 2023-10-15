@@ -13,22 +13,16 @@ using System;
 namespace Dt.Core
 {
     /// <summary>
-    /// 为类型命名别名的基类标签，一个别名对应一个类型
-    /// 别名可以为任意字符串，也可以为空，空时别名为类型名(不包括命名空间)
+    /// 类型别名标签，一个别名对应一个类型列表
     /// </summary>
-    public abstract class TypeAliasAttribute : Attribute
+    public abstract class TypeListAliasAttribute : Attribute
     {
-        protected TypeAliasAttribute(string p_alias)
+        protected TypeListAliasAttribute(string p_alias)
         {
             Alias = p_alias;
         }
 
-        protected TypeAliasAttribute(Enum p_alias)
-        {
-            Alias = p_alias.ToString();
-        }
-
-        protected TypeAliasAttribute()
+        protected TypeListAliasAttribute()
         { }
 
         /// <summary>

@@ -80,14 +80,33 @@ namespace Dt.Core
         /// <param name="p_attrType">标签类型</param>
         /// <param name="p_alias">别名</param>
         /// <returns>返回类型</returns>
-        internal List<Type> GetTypesByAlias(Type p_attrType, string p_alias)
+        internal Type GetTypeByAlias(Type p_attrType, string p_alias)
         {
             if (p_attrType != null && !string.IsNullOrEmpty(p_alias))
             {
                 // 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
                 var name = p_attrType.Name;
                 var key = $"{name.Substring(0, name.Length - 9)}-{p_alias}";
-                if (_typeAlias.TryGetValue(key, out var ls))
+                if (_aliasTypes.TryGetValue(key, out var tp))
+                    return tp;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据类型别名获取类型列表
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回类型</returns>
+        internal List<Type> GetTypeListByAlias(Type p_attrType, string p_alias)
+        {
+            if (p_attrType != null && !string.IsNullOrEmpty(p_alias))
+            {
+                // 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
+                var name = p_attrType.Name;
+                var key = $"{name.Substring(0, name.Length - 9)}-{p_alias}";
+                if (_aliasTypeList.TryGetValue(key, out var ls))
                     return ls;
             }
             return new List<Type>();
@@ -112,7 +131,8 @@ namespace Dt.Core
         }
 
         internal readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-        internal readonly Dictionary<string, List<Type>> _typeAlias = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
+        internal readonly Dictionary<string, Type> _aliasTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+        internal readonly Dictionary<string, List<Type>> _aliasTypeList = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
         #endregion
 
     }

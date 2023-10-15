@@ -18,13 +18,69 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
+        /// 根据共享类型别名获取实例对象，通常用在两个无引用关系的dll之间的互相访问
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回共享类型的实例对象</returns>
+        public static T GetShareObj<T>(string p_alias)
+        {
+            var tp = Stub.Inst.GetTypeByAlias(typeof(ShareAttribute), p_alias);
+            if (tp == null)
+                Throw.Msg($"别名为{p_alias}的共享类型不存在！");
+            return (T)Activator.CreateInstance(tp);
+        }
+
+        /// <summary>
+        /// 根据共享类型别名获取实例对象，通常用在两个无引用关系的dll之间的互相访问
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="p_enumAlias">别名取枚举成员名称</param>
+        /// <returns>返回共享类型的实例对象</returns>
+        public static T GetShareObj<T>(Enum p_enumAlias)
+        {
+            return GetShareObj<T>(p_enumAlias.ToString());
+        }
+
+        /// <summary>
+        /// 根据别名获取共享类型，通常用在两个无引用关系的dll之间的互相访问
+        /// </summary>
+        /// <param name="p_alias">类型别名</param>
+        /// <returns>返回类型</returns>
+        public static Type GetShareType(string p_alias)
+        {
+            return Stub.Inst.GetTypeByAlias(typeof(ShareAttribute), p_alias);
+        }
+
+        /// <summary>
+        /// 根据别名获取共享类型，通常用在两个无引用关系的dll之间的互相访问
+        /// </summary>
+        /// <param name="p_enumAlias">别名取枚举成员名称</param>
+        /// <returns>返回类型</returns>
+        public static Type GetShareType(Enum p_enumAlias)
+        {
+            return Stub.Inst.GetTypeByAlias(typeof(ShareAttribute), p_enumAlias.ToString());
+        }
+
+        /// <summary>
+        /// 根据类型别名获取类型
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回类型</returns>
+        public static Type GetTypeByAlias(Type p_attrType, string p_alias)
+        {
+            return Stub.Inst.GetTypeByAlias(p_attrType, p_alias);
+        }
+
+        /// <summary>
         /// 根据别名获取视图类型
         /// </summary>
         /// <param name="p_alias">类型别名</param>
         /// <returns>返回类型</returns>
         public static Type GetViewTypeByAlias(string p_alias)
         {
-            return Stub.Inst.GetTypesByAlias(typeof(ViewAttribute), p_alias).FirstOrDefault();
+            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_alias);
         }
 
         /// <summary>
@@ -34,18 +90,7 @@ namespace Dt.Core
         /// <returns>返回类型</returns>
         public static Type GetViewTypeByAlias(Enum p_enumAlias)
         {
-            return Stub.Inst.GetTypesByAlias(typeof(ViewAttribute), p_enumAlias.ToString()).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// 根据类型别名获取所有类型列表
-        /// </summary>
-        /// <param name="p_attrType">标签类型</param>
-        /// <param name="p_alias">别名</param>
-        /// <returns>返回类型</returns>
-        public static List<Type> GetAllTypesByAlias(Type p_attrType, string p_alias)
-        {
-            return Stub.Inst.GetTypesByAlias(p_attrType, p_alias);
+            return Stub.Inst.GetTypeByAlias(typeof(ViewAttribute), p_enumAlias.ToString());
         }
 
         /// <summary>
@@ -58,11 +103,19 @@ namespace Dt.Core
         /// <returns></returns>
         public static MethodInfo GetMethodByAlias(Type p_attrType, string p_alias, string p_methodName, BindingFlags p_flags)
         {
-            var ls = Stub.Inst.GetTypesByAlias(p_attrType, p_alias);
-            return (from tp in ls
-                    let mi = tp.GetMethod(p_methodName, p_flags)
-                    where mi != null
-                    select mi).FirstOrDefault();
+            var tp = Stub.Inst.GetTypeByAlias(p_attrType, p_alias);
+            return tp.GetMethod(p_methodName, p_flags);
+        }
+
+        /// <summary>
+        /// 根据类型别名获取所有类型列表，基础标签为 TypeListAliasAttribute 的类型
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <param name="p_alias">别名</param>
+        /// <returns>返回类型</returns>
+        public static List<Type> GetAllTypesByAlias(Type p_attrType, string p_alias)
+        {
+            return Stub.Inst.GetTypeListByAlias(p_attrType, p_alias);
         }
 
         /// <summary>
@@ -74,7 +127,7 @@ namespace Dt.Core
             if (p_event == null)
                 return;
 
-            var ls = GetAllTypesByAlias(typeof(EventHandlerAttribute), p_event.GetType().Name);
+            var ls = Stub.Inst.GetTypeListByAlias(typeof(EventHandlerAttribute), p_event.GetType().Name);
             if (ls.Count > 0)
             {
                 foreach (var tp in ls)

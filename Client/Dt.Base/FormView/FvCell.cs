@@ -495,7 +495,7 @@ namespace Dt.Base
         {
             if (!string.IsNullOrEmpty(Call))
             {
-                var tp = Kit.GetAllTypesByAlias(typeof(FvCallAttribute), Call).FirstOrDefault();
+                var tp = Kit.GetTypeByAlias(typeof(FvCallAttribute), Call);
                 if (tp != null && tp.GetInterface("IFvCall") == typeof(IFvCall))
                     return Activator.CreateInstance(tp) as IFvCall;
             }

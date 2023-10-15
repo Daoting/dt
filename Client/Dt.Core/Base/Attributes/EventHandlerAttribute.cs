@@ -16,7 +16,7 @@ namespace Dt.Core
     /// 事件处理类型标签
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class EventHandlerAttribute : TypeAliasAttribute
+    public class EventHandlerAttribute : TypeListAliasAttribute
     {
         public EventHandlerAttribute() { }
     }

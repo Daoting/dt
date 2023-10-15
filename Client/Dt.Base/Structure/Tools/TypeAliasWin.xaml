@@ -4,16 +4,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Tab Title="分组" a:Ex.Dock="Left">
-        <a:Lv x:Name="_lvGroup" ItemClick="OnItemClick" a:Ex.Dock="Left">
-            <DataTemplate>
-                <StackPanel Margin="10">
-                    <a:Dot ID="name" />
-                    <a:Dot ID="count" Call="Def.小灰" />
-                </StackPanel>
-            </DataTemplate>
-        </a:Lv>
-    </a:Tab>
+    <a:Pane>
+        <a:Tabs>
+            <a:Tab Title="别名标签" Order="1">
+                <a:Lv x:Name="_lvAttr" ItemClick="OnAttrItemClick">
+                    <DataTemplate>
+                        <StackPanel Margin="10">
+                            <a:Dot ID="name" />
+                            <a:Dot ID="count" Call="Def.小灰" />
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+            <a:Tab Title="多类型别名标签" Order="2">
+                <a:Lv x:Name="_lvGroup" ItemClick="OnGroupItemClick">
+                    <DataTemplate>
+                        <StackPanel Margin="10">
+                            <a:Dot ID="name" />
+                            <a:Dot ID="count" Call="Def.小灰" />
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    
 
     <a:Tab Title="类型列表">
         <a:Lv x:Name="_lvType">

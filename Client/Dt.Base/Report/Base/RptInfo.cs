@@ -228,7 +228,7 @@ namespace Dt.Base
             // 脚本对象
             if (!string.IsNullOrEmpty(Root.ViewSetting.Script))
             {
-                var tp = Kit.GetAllTypesByAlias(typeof(RptScriptAttribute), Root.ViewSetting.Script).FirstOrDefault();
+                var tp = Kit.GetTypeByAlias(typeof(RptScriptAttribute), Root.ViewSetting.Script);
                 if (tp != null && tp.IsSubclassOf(typeof(RptScript)))
                 {
                     ScriptObj = Activator.CreateInstance(tp) as RptScript;

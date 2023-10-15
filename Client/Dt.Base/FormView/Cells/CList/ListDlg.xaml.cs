@@ -271,7 +271,7 @@ namespace Dt.Base
             {
                 cls = _owner.Ex;
             }
-            var tp = Kit.GetAllTypesByAlias(typeof(CListExAttribute), cls).FirstOrDefault();
+            var tp = Kit.GetTypeByAlias(typeof(CListExAttribute), cls);
             if (tp != null && tp.IsSubclassOf(typeof(CListEx)))
             {
                 _ex = Activator.CreateInstance(tp) as CListEx;

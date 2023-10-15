@@ -18,14 +18,14 @@ namespace Dt.Base.Tools
         public TypeAliasWin()
         {
             InitializeComponent();
-            LoadGroup();
+            _lvAttr.Data = LoadGroup(Stub.Inst._aliasTypes.Keys);
+            _lvGroup.Data = LoadGroup(Stub.Inst._aliasTypeList.Keys);
         }
 
-        void LoadGroup()
+        Table LoadGroup(IEnumerable<string> p_keys)
         {
             var tmp = new Dictionary<string, int>();
-            var dt = Stub.Inst._typeAlias;
-            foreach (var key in dt.Keys)
+            foreach (var key in p_keys)
             {
                 int index = key.IndexOf('-');
                 if (index < 1)
@@ -47,16 +47,33 @@ namespace Dt.Base.Tools
             {
                 tbl.AddRow(new { Name = item.Key + "Attribute", Count = $"共 {item.Value} 个类型" });
             }
-            _lvGroup.Data = tbl;
+            return tbl;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnAttrItemClick(object sender, ItemClickArgs e)
         {
             var pre = e.Row.Str(0).Replace("Attribute", "-");
 
             var tbl = new Table { { "alias" }, { "types" } };
-            var dt = Stub.Inst._typeAlias;
-            foreach (var item in Stub.Inst._typeAlias)
+            foreach (var item in Stub.Inst._aliasTypes)
+            {
+                if (!item.Key.StartsWith(pre))
+                    continue;
+
+                var r = tbl.AddRow();
+                r.InitVal("alias", item.Key.Substring(pre.Length));
+                r.InitVal("types", item.Value.FullName);
+            }
+            _lvType.Data = tbl;
+            NaviTo("类型列表");
+        }
+
+        void OnGroupItemClick(object sender, ItemClickArgs e)
+        {
+            var pre = e.Row.Str(0).Replace("Attribute", "-");
+
+            var tbl = new Table { { "alias" }, { "types" } };
+            foreach (var item in Stub.Inst._aliasTypeList)
             {
                 if (!item.Key.StartsWith(pre))
                     continue;

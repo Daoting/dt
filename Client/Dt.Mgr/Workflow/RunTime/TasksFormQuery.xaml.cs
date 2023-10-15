@@ -42,7 +42,7 @@ namespace Dt.Mgr.Workflow
                 return;
             }
 
-            var tp = Kit.GetAllTypesByAlias(typeof(WfListAttribute), row.Str("Name")).FirstOrDefault();
+            var tp = Kit.GetTypeByAlias(typeof(WfListAttribute), row.Str("Name"));
             Throw.IfNull(tp, $"未指定流程表单的查询类型，请在流程表单的查询类型上添加 [WfList(\"{row.Str("Name")}\")] 标签！");
             var win = Activator.CreateInstance(tp);
             row.Tag = win;
