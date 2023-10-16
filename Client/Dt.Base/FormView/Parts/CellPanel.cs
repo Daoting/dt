@@ -44,6 +44,7 @@ namespace Dt.Base.FormView
             if (con != null)
             {
                 con.KeyUp -= pnl.OnKeyUp;
+                con.PreviewKeyDown -= pnl.OnPreviewKeyDown;
                 pnl.Children.Remove(con);
             }
 
@@ -51,6 +52,7 @@ namespace Dt.Base.FormView
             if (con != null)
             {
                 con.KeyUp += pnl.OnKeyUp;
+                con.PreviewKeyDown += pnl.OnPreviewKeyDown;
                 if (pnl.Children.Count > 0)
                     pnl.Children.Insert(pnl.Children.Count - 1, con);
             }
@@ -290,13 +292,26 @@ namespace Dt.Base.FormView
                 _owner.Owner.OnCellClick(_owner);
         }
 
+
+        void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Tab)
+            {
+                // 预览Tab键，标志已处理，不再跳格！否则现象诡异，操
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         /// 同步处理键盘特殊功能键操作
         /// 需要支持以下编辑键：
-        /// Tab：              编辑状态下跳到下一格，未格跳到下行第一格，支持跳过只读格、加shift反跳
+        /// Tab：              编辑状态下跳到下一格，支持跳过只读格、加 Ctrl 反跳
         /// Home, End：        首、未单元格跳
-        /// Enter：            在非TextBox多行的情况下等同于Tab，Ctrl + Enter 触发编辑结束事件
+        /// Enter：            在非TextBox多行的情况下等同于 Tab
         /// Escape：           撤消编辑
+        /// Ctrl + S           保存
+        /// Ctrl + N           新建
+        /// Ctrl + Delete      删除
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -314,32 +329,70 @@ namespace Dt.Base.FormView
             switch (e.Key)
             {
                 case VirtualKey.Tab:
-                    fv.GotoNextCell(_owner);
+                    if (InputKit.IsCtrlPressed)
+                    {
+                        // 加 Ctrl 反跳
+                        fv.GotoPreviousCell(_owner);
+                    }
+                    else
+                    {
+                        fv.GotoNextCell(_owner);
+                    }
                     e.Handled = true;
                     break;
+
                 case VirtualKey.Home:
                     fv.GotoFirstCell();
                     e.Handled = true;
                     break;
+
                 case VirtualKey.End:
                     fv.GotoLastCell();
                     e.Handled = true;
                     break;
+
                 case VirtualKey.Enter:
                     // 长文本回车跳格无法输入换行的bug
                     if (e.OriginalSource is TextBox tb
                         && tb.AcceptsReturn == true)
                         return;
 
-                    fv.GotoNextCell(_owner);
+                    if (InputKit.IsCtrlPressed)
+                    {
+                        // 加 Ctrl 反跳
+                        fv.GotoPreviousCell(_owner);
+                    }
+                    else
+                    {
+                        fv.GotoNextCell(_owner);
+                    }
                     e.Handled = true;
                     break;
+
+                case VirtualKey.S:
+                    if (InputKit.IsCtrlPressed
+                        && sender is UIElement con)
+                    {
+                        // Ctrl + S 保存
+                        e.Handled = true;
+                        // 必须在失去焦点事件中TextBox值才更新到数据源
+                        con.LostFocus += OnConLostFocus;
+                        fv.Focus(FocusState.Programmatic);
+                    }
+                    break;
+
                 case VirtualKey.Escape:
                     _owner.RejectChanges();
                     fv.Focus(FocusState.Programmatic);
                     e.Handled = true;
                     break;
             }
+        }
+
+        void OnConLostFocus(object sender, RoutedEventArgs e)
+        {
+            ((UIElement)sender).LostFocus -= OnConLostFocus;
+            _owner.Owner.OnSave();
         }
 
         /// <summary>

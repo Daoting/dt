@@ -22,6 +22,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
 #endregion
 
 namespace Dt.Base
@@ -147,6 +149,21 @@ namespace Dt.Base
         /// 单元格点击事件
         /// </summary>
         public event EventHandler<FvCell> CellClick;
+
+        /// <summary>
+        /// 保存事件
+        /// </summary>
+        public event Action Save;
+
+        /// <summary>
+        /// 新增事件
+        /// </summary>
+        public event Action Create;
+
+        /// <summary>
+        /// 删除事件
+        /// </summary>
+        public event Action Delete;
         #endregion
 
         #region 属性
@@ -784,6 +801,30 @@ namespace Dt.Base
             }
             return base.MeasureOverride(availableSize);
         }
+
+        protected override void OnKeyUp(KeyRoutedEventArgs e)
+        {
+            base.OnKeyUp(e);
+
+            if (InputKit.IsCtrlPressed && !e.Handled)
+            {
+                if (e.Key == VirtualKey.S)
+                {
+                    // Ctrl + S 保存
+                    OnSave();
+                }
+                else if (e.Key == VirtualKey.N)
+                {
+                    // Ctrl + N 新建
+                    OnCreate();
+                }
+                else if (e.Key == VirtualKey.Delete)
+                {
+                    // Ctrl + Delete 删除
+                    OnDelete();
+                }
+            }
+        }
         #endregion
 
         #region 数据源
@@ -974,6 +1015,21 @@ namespace Dt.Base
         internal void OnCellClick(FvCell p_cell)
         {
             CellClick?.Invoke(this, p_cell);
+        }
+
+        internal void OnSave()
+        {
+            Save?.Invoke();
+        }
+
+        void OnCreate()
+        {
+            Create?.Invoke();
+        }
+
+        void OnDelete()
+        {
+            Delete?.Invoke();
         }
         #endregion
     }
