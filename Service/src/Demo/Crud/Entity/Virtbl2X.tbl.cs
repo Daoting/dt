@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -23,8 +23,8 @@ namespace Demo.Crud
             long ID,
             string Name2 = default)
         {
-            Add("id", ID);
-            Add("name2", Name2);
+            Add("ID", ID);
+            Add("NAME2", Name2);
             IsAdded = true;
         }
         #endregion
@@ -34,8 +34,10 @@ namespace Demo.Crud
         /// </summary>
         public string Name2
         {
-            get { return (string)this["name2"]; }
-            set { this["name2"] = value; }
+            get { return (string)this["NAME2"]; }
+            set { this["NAME2"] = value; }
         }
+
+        public Cell cName2 => _cells["NAME2"];
     }
 }

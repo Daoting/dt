@@ -45,21 +45,6 @@ namespace $rootnamespace$
             //Data = await MyEntityX.New();
         }
 
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
-        void OnAdd(object sender, Mi e)
-        {
-            Create();
-        }
-
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
-        }
-
         void Save()
         {
             //if (await Data.Save())
@@ -68,7 +53,7 @@ namespace $rootnamespace$
             //}
         }
 
-        void OnDel(object sender, Mi e)
+        void Delete()
         {
             //var d = Data;
             //if (d == null)
@@ -93,5 +78,10 @@ namespace $rootnamespace$
         //    get { return _fv.Data.To<MyEntityX>(); }
         //    set { _fv.Data = value; }
         //}
+
+        protected override Task<bool> OnClosing()
+        {
+            return _fv.DiscardChanges();
+        }
     }
 }

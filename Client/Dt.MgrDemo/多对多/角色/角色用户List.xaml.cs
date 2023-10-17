@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.多对多
+namespace Dt.MgrDemo
 {
     public partial class 角色用户List : Tab
     {
@@ -35,7 +35,7 @@ namespace Dt.MgrDemo.多对多
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await 用户X.Query($"where exists ( select user_id from demo_用户角色 b where a.ID = b.user_id and role_id={_releatedID} )");
+                _lv.Data = await 用户X.Query($"where exists ( select USER_ID from DEMO_用户角色 b where a.ID = b.USER_ID and ROLE_ID={_releatedID} )");
             }
             else
             {

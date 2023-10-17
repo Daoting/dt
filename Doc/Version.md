@@ -22,6 +22,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * BuildTools中生成字典内容时将一个别名对应一个类型和对应类型列表分开
 * 增加共享类型的别名标签，用在两个无引用关系的dll之间的互相访问
 
+* 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
+
 ### Bug修改
 * 命名空间与类名相同并放在根目录查找xaml
 * FvCell编辑时Tab快捷键乱跳

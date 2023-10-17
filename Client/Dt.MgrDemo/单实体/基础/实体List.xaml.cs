@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.单实体
+namespace Dt.MgrDemo
 {
     public partial class 实体List : Tab
     {
@@ -34,7 +34,7 @@ namespace Dt.MgrDemo.单实体
             {
                 var par = await Clause.Build<基础X>();
                 _lv.Data = await 基础X.Query(par.Sql, par.Params);
-            }
+    }
         }
         #endregion
 

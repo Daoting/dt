@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.多对多
+namespace Dt.MgrDemo
 {
     public partial class 用户角色X
     {

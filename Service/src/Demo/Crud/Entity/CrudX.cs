@@ -56,7 +56,7 @@ namespace Demo.Crud
                 return Task.CompletedTask;
             });
 
-            OnChanging<string>(nameof(Name), v =>
+            OnChanging(cName, v =>
             {
                 //Kit.Msg("Name新值：" + v);
             });

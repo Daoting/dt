@@ -56,18 +56,28 @@ namespace $rootnamespace$
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
+        #region 内部
+        async void Create()
         {
-            Create();
+            Data = await $entity$.New();
+            UpdateRelated(-1);
         }
 
-        void OnSave(object sender, Mi e)
+        async void Save()
         {
-            Save();
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
+            {
+                _win.MainList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+            }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -89,28 +99,6 @@ namespace $rootnamespace$
             {
                 Clear();
                 _win.MainList.Update();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await $entity$.New();
-            UpdateRelated(-1);
-        }
-
-        async void Save()
-        {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
-            {
-                _win.MainList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
             }
         }
 

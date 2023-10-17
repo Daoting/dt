@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.MgrDemo.一对多.父表Win"
+    x:Class="Dt.MgrDemo.父表Win"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.MgrDemo.一对多">
+    xmlns:l="using:Dt.MgrDemo">
 
     <l:父表List x:Name="_parentList" Order="1" a:Ex.Dock="Left" />
     <l:父表Form x:Name="_parentForm" />

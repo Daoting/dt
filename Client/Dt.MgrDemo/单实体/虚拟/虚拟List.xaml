@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.MgrDemo.单实体.虚拟List"
+    x:Class="Dt.MgrDemo.虚拟List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

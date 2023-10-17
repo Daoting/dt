@@ -103,7 +103,8 @@ namespace Dt
             dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { p_ci.Tbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { p_ci.Tbl });
             dt["$fvbody$"] = await AtSvc.GetFvCells(new List<string> { p_ci.Tbl });
-            dt["$parentidname$"] = p_ci.ParentIDName;
+            dt["$parentid$"] = p_ci.ParentID;
+            dt["$parentidprop$"] = p_ci.ParentIDProperty;
             return dt;
         }
 
@@ -131,6 +132,11 @@ namespace Dt
 
         public string Root { get; set; }
 
-        public string ParentIDName { get; set; }
+        /// <summary>
+        /// 外键字段名
+        /// </summary>
+        public string ParentID { get; set; }
+
+        public string ParentIDProperty => Kit.GetPropertyName(ParentID);
     }
 }

@@ -1,5 +1,5 @@
 ﻿<a:Dlg
-    x:Class="Dt.MgrDemo.多对多.用户4角色Dlg"
+    x:Class="Dt.MgrDemo.用户4角色Dlg"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

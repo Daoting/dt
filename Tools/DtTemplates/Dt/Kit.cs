@@ -235,6 +235,31 @@ namespace Dt
             return clsName;
         }
 
+        /// <summary>
+        /// 字段名转属性名
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        public static string GetPropertyName(string p_fieldName)
+        {
+            string name = "";
+            var arr = p_fieldName.ToLower().Split('_');
+            for (int i = 0; i < arr.Length; i++)
+            {
+                var str = arr[i];
+                if (str == "id")
+                {
+                    // id特殊
+                    name += "ID";
+                }
+                else
+                {
+                    name += char.ToUpper(str[0]) + str.Substring(1);
+                }
+            }
+            return name;
+        }
+
         public static void OpenFile(string p_filePath)
         {
             var dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;

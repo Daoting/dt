@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.MgrDemo.单实体.虚拟Win"
+    x:Class="Dt.MgrDemo.虚拟Win"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.MgrDemo.单实体">
+    xmlns:l="using:Dt.MgrDemo">
 
     <a:Tabs a:Ex.Dock="Left">
         <a:FuzzySearch x:Name="_search" Search="OnSearch">

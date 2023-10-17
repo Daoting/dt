@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.一对多
+namespace Dt.MgrDemo
 {
     public partial class 父表大儿List : Tab
     {
@@ -36,7 +36,7 @@ namespace Dt.MgrDemo.一对多
         {
             if (_parentID > 0)
             {
-                _lv.Data = await 大儿X.Query($"where parent_id={_parentID}");
+                _lv.Data = await 大儿X.Query($"where PARENT_ID={_parentID}");
             }
             else
             {

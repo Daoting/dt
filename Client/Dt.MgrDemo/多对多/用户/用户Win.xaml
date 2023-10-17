@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.MgrDemo.多对多.用户Win"
+    x:Class="Dt.MgrDemo.用户Win"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.MgrDemo.多对多">
+    xmlns:l="using:Dt.MgrDemo">
 
     <l:用户List x:Name="_mainList" Order="1" a:Ex.Dock="Left" />
     <l:用户Form x:Name="_mainForm" />

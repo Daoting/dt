@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -31,13 +31,13 @@ namespace Demo.Crud
             bool EnableNameChangedEvent = default,
             bool EnableDelEvent = default)
         {
-            Add("id", ID);
-            Add("name", Name);
-            Add("dispidx", Dispidx);
-            Add("mtime", Mtime);
-            Add("enable_insert_event", EnableInsertEvent);
-            Add("enable_name_changed_event", EnableNameChangedEvent);
-            Add("enable_del_event", EnableDelEvent);
+            Add("ID", ID);
+            Add("NAME", Name);
+            Add("DISPIDX", Dispidx);
+            Add("MTIME", Mtime);
+            Add("ENABLE_INSERT_EVENT", EnableInsertEvent);
+            Add("ENABLE_NAME_CHANGED_EVENT", EnableNameChangedEvent);
+            Add("ENABLE_DEL_EVENT", EnableDelEvent);
             IsAdded = true;
         }
         #endregion
@@ -47,53 +47,65 @@ namespace Demo.Crud
         /// </summary>
         public string Name
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["NAME"]; }
+            set { this["NAME"] = value; }
         }
+
+        public Cell cName => _cells["NAME"];
 
         /// <summary>
         /// 显示顺序
         /// </summary>
         public int Dispidx
         {
-            get { return (int)this["dispidx"]; }
-            set { this["dispidx"] = value; }
+            get { return (int)this["DISPIDX"]; }
+            set { this["DISPIDX"] = value; }
         }
+
+        public Cell cDispidx => _cells["DISPIDX"];
 
         /// <summary>
         /// 最后修改时间
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["mtime"]; }
-            set { this["mtime"] = value; }
+            get { return (DateTime)this["MTIME"]; }
+            set { this["MTIME"] = value; }
         }
+
+        public Cell cMtime => _cells["MTIME"];
 
         /// <summary>
         /// true时允许发布插入事件
         /// </summary>
         public bool EnableInsertEvent
         {
-            get { return (bool)this["enable_insert_event"]; }
-            set { this["enable_insert_event"] = value; }
+            get { return (bool)this["ENABLE_INSERT_EVENT"]; }
+            set { this["ENABLE_INSERT_EVENT"] = value; }
         }
+
+        public Cell cEnableInsertEvent => _cells["ENABLE_INSERT_EVENT"];
 
         /// <summary>
         /// true时允许发布Name变化事件
         /// </summary>
         public bool EnableNameChangedEvent
         {
-            get { return (bool)this["enable_name_changed_event"]; }
-            set { this["enable_name_changed_event"] = value; }
+            get { return (bool)this["ENABLE_NAME_CHANGED_EVENT"]; }
+            set { this["ENABLE_NAME_CHANGED_EVENT"] = value; }
         }
+
+        public Cell cEnableNameChangedEvent => _cells["ENABLE_NAME_CHANGED_EVENT"];
 
         /// <summary>
         /// true时允许发布删除事件
         /// </summary>
         public bool EnableDelEvent
         {
-            get { return (bool)this["enable_del_event"]; }
-            set { this["enable_del_event"] = value; }
+            get { return (bool)this["ENABLE_DEL_EVENT"]; }
+            set { this["ENABLE_DEL_EVENT"] = value; }
         }
+
+        public Cell cEnableDelEvent => _cells["ENABLE_DEL_EVENT"];
     }
 }

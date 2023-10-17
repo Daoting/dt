@@ -2,16 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.一对多
+namespace Dt.MgrDemo
 {
-    [Tbl("demo_大儿")]
+    [Tbl("DEMO_大儿")]
     public partial class 大儿X : EntityX<大儿X>
     {
         #region 构造方法
@@ -24,8 +24,8 @@ namespace Dt.MgrDemo.一对多
             long ParentID = default,
             string 大儿名 = default)
         {
-            Add("id", ID);
-            Add("parent_id", ParentID);
+            Add("ID", ID);
+            Add("PARENT_ID", ParentID);
             Add("大儿名", 大儿名);
             IsAdded = true;
         }
@@ -36,9 +36,11 @@ namespace Dt.MgrDemo.一对多
         /// </summary>
         public long ParentID
         {
-            get { return (long)this["parent_id"]; }
-            set { this["parent_id"] = value; }
+            get { return (long)this["PARENT_ID"]; }
+            set { this["PARENT_ID"] = value; }
         }
+
+        public Cell cParentID => _cells["PARENT_ID"];
 
         /// <summary>
         /// 
@@ -48,5 +50,7 @@ namespace Dt.MgrDemo.一对多
             get { return (string)this["大儿名"]; }
             set { this["大儿名"] = value; }
         }
+
+        public Cell c大儿名 => _cells["大儿名"];
     }
 }

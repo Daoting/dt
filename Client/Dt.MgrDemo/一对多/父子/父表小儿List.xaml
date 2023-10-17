@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.MgrDemo.一对多.父表小儿List"
+    x:Class="Dt.MgrDemo.父表小儿List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
@@ -7,13 +7,13 @@
 
     <a:Tab.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="group_id" />
+            <a:Col ID="GROUP_ID" />
             <a:Col ID="小儿名" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
             <StackPanel Padding="10">
-                <a:Dot ID="group_id" />
+                <a:Dot ID="GROUP_ID" />
                 <a:Dot ID="小儿名" />
             </StackPanel>
         </DataTemplate>

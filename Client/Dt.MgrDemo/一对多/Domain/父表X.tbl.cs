@@ -2,16 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.一对多
+namespace Dt.MgrDemo
 {
-    [Tbl("demo_父表")]
+    [Tbl("DEMO_父表")]
     public partial class 父表X : EntityX<父表X>
     {
         #region 构造方法
@@ -23,7 +23,7 @@ namespace Dt.MgrDemo.一对多
             long ID,
             string 父名 = default)
         {
-            Add("id", ID);
+            Add("ID", ID);
             Add("父名", 父名);
             IsAdded = true;
         }
@@ -37,5 +37,7 @@ namespace Dt.MgrDemo.一对多
             get { return (string)this["父名"]; }
             set { this["父名"] = value; }
         }
+
+        public Cell c父名 => _cells["父名"];
     }
 }

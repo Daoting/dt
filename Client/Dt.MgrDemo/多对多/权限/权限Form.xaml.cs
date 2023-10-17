@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.多对多
+namespace Dt.MgrDemo
 {
     public sealed partial class 权限Form : Tab
     {
@@ -56,18 +56,28 @@ namespace Dt.MgrDemo.多对多
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
+        #region 内部
+        async void Create()
         {
-            Create();
+            Data = await 权限X.New();
+            UpdateRelated(-1);
         }
 
-        void OnSave(object sender, Mi e)
+        async void Save()
         {
-            Save();
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
+            {
+                _win.MainList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+            }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -89,28 +99,6 @@ namespace Dt.MgrDemo.多对多
             {
                 Clear();
                 _win.MainList.Update();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await 权限X.New();
-            UpdateRelated(-1);
-        }
-
-        async void Save()
-        {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
-            {
-                _win.MainList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
             }
         }
 

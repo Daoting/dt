@@ -163,6 +163,9 @@ namespace Dt.Base
         /// <summary>
         /// 删除事件
         /// </summary>
+#if IOS
+        new
+#endif
         public event Action Delete;
         #endregion
 
@@ -1019,7 +1022,8 @@ namespace Dt.Base
 
         internal void OnSave()
         {
-            Save?.Invoke();
+            if (IsDirty && Save != null)
+                Save.Invoke();
         }
 
         void OnCreate()

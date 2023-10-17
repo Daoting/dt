@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.多对多
+namespace Dt.MgrDemo
 {
     public partial class 角色List : Tab
     {
@@ -65,7 +65,7 @@ namespace Dt.MgrDemo.多对多
         void NaviToChild()
         {
             if (Kit.IsPhoneUI)
-                NaviTo(new List<Tab> { _win.MainForm, _win.用户List, _win.权限List });
+                NaviTo(new List<Tab> { _win.MainForm, _win.权限List, _win.用户List });
         }
 
         async void OnDel(object sender, Mi e)

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.一对多
+namespace Dt.MgrDemo
 {
     public sealed partial class 父表小儿Form : Tab
     {
@@ -49,18 +49,21 @@ namespace Dt.MgrDemo.一对多
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
+        #region 内部
+        async void Create()
         {
-            Create();
+            Data = await 小儿X.New(GroupID: _parentID);
         }
 
-        void OnSave(object sender, Mi e)
+        async void Save()
         {
-            Save();
+            if (await Data.Save())
+            {
+                _win.小儿List.Refresh();
+            }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -81,21 +84,6 @@ namespace Dt.MgrDemo.一对多
             if (await d.Delete())
             {
                 Clear();
-                _win.小儿List.Refresh();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await 小儿X.New(GroupID: _parentID);
-        }
-
-        async void Save()
-        {
-            if (await Data.Save())
-            {
                 _win.小儿List.Refresh();
             }
         }

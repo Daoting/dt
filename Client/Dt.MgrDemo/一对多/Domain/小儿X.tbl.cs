@@ -2,16 +2,16 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-20 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.一对多
+namespace Dt.MgrDemo
 {
-    [Tbl("demo_小儿")]
+    [Tbl("DEMO_小儿")]
     public partial class 小儿X : EntityX<小儿X>
     {
         #region 构造方法
@@ -24,8 +24,8 @@ namespace Dt.MgrDemo.一对多
             long GroupID = default,
             string 小儿名 = default)
         {
-            Add("id", ID);
-            Add("group_id", GroupID);
+            Add("ID", ID);
+            Add("GROUP_ID", GroupID);
             Add("小儿名", 小儿名);
             IsAdded = true;
         }
@@ -36,9 +36,11 @@ namespace Dt.MgrDemo.一对多
         /// </summary>
         public long GroupID
         {
-            get { return (long)this["group_id"]; }
-            set { this["group_id"] = value; }
+            get { return (long)this["GROUP_ID"]; }
+            set { this["GROUP_ID"] = value; }
         }
+
+        public Cell cGroupID => _cells["GROUP_ID"];
 
         /// <summary>
         /// 
@@ -48,5 +50,7 @@ namespace Dt.MgrDemo.一对多
             get { return (string)this["小儿名"]; }
             set { this["小儿名"] = value; }
         }
+
+        public Cell c小儿名 => _cells["小儿名"];
     }
 }

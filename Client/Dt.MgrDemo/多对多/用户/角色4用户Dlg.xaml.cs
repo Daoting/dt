@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-06-01 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.多对多
+namespace Dt.MgrDemo
 {
     public sealed partial class 角色4用户Dlg : Dlg
     {
@@ -24,7 +24,7 @@ namespace Dt.MgrDemo.多对多
 
         public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
         {
-            _lv.Data = await 角色X.Query($"where not exists ( select role_id from demo_用户角色 b where a.ID = b.role_id and user_id={p_releatedID} )");
+            _lv.Data = await 角色X.Query($"where not exists ( select ROLE_ID from DEMO_用户角色 b where a.ID = b.ROLE_ID and USER_ID={p_releatedID} )");
             if (!Kit.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;

@@ -56,7 +56,7 @@ namespace Dt
                 child.Tbl = item.Cells[0].Value.ToString();
                 child.Entity = item.Cells[1].Value.ToString();
                 child.Root = item.Cells[2].Value.ToString();
-                child.ParentIDName = item.Cells[3].Value.ToString();
+                child.ParentID = item.Cells[3].Value.ToString();
                 _params.Children.Add(child);
             }
 

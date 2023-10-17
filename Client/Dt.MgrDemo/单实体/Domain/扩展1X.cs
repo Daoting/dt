@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.MgrDemo.单实体
+namespace Dt.MgrDemo
 {
     public partial class 扩展1X
     {

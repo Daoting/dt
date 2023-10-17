@@ -67,7 +67,30 @@ namespace $rootnamespace$
             Save();
         }
 
-        async void OnDel(object sender, Mi e)
+        #endregion
+
+        #region 内部
+        async void Create()
+        {
+            Data = await $entity$.New();
+            UpdateRelated(-1);
+        }
+
+        async void Save()
+        {
+            var d = Data;
+            bool isNew = d.IsAdded;
+            if (await d.Save())
+            {
+                _win.ParentList.Update();
+                if (isNew)
+                {
+                    UpdateRelated(d.ID);
+                }
+            }
+        }
+
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -89,28 +112,6 @@ namespace $rootnamespace$
             {
                 Clear();
                 _win.ParentList.Update();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await $entity$.New();
-            UpdateRelated(-1);
-        }
-
-        async void Save()
-        {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
-            {
-                _win.ParentList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
             }
         }
 

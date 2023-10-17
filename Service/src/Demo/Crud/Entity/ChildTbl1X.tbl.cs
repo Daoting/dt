@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -24,9 +24,9 @@ namespace Demo.Crud
             long ParentID = default,
             string ItemName = default)
         {
-            Add("id", ID);
-            Add("parent_id", ParentID);
-            Add("item_name", ItemName);
+            Add("ID", ID);
+            Add("PARENT_ID", ParentID);
+            Add("ITEM_NAME", ItemName);
             IsAdded = true;
         }
         #endregion
@@ -36,17 +36,21 @@ namespace Demo.Crud
         /// </summary>
         public long ParentID
         {
-            get { return (long)this["parent_id"]; }
-            set { this["parent_id"] = value; }
+            get { return (long)this["PARENT_ID"]; }
+            set { this["PARENT_ID"] = value; }
         }
+
+        public Cell cParentID => _cells["PARENT_ID"];
 
         /// <summary>
         /// 
         /// </summary>
         public string ItemName
         {
-            get { return (string)this["item_name"]; }
-            set { this["item_name"] = value; }
+            get { return (string)this["ITEM_NAME"]; }
+            set { this["ITEM_NAME"] = value; }
         }
+
+        public Cell cItemName => _cells["ITEM_NAME"];
     }
 }

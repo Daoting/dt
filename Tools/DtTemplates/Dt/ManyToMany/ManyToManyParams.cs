@@ -101,8 +101,8 @@ namespace Dt
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { p_ci.Tbl });
 
             dt["$relatedentity$"] = p_ci.RelatedEntity;
-            dt["$mainrelatedid$"] = p_ci.MainRelatedID;
-            dt["$relatedid$"] = p_ci.RelatedID;
+            dt["$mainrelatedid$"] = p_ci.MainRelatedIDProperty;
+            dt["$relatedid$"] = p_ci.RlatedIDProperty;
             dt["$selectdlg$"] = $"{p_ci.Root}4{MainRoot}Dlg";
 
             var filter = $"exists ( select {p_ci.RelatedID} from {p_ci.RelatedTbl} b where a.ID = b.{p_ci.RelatedID} and {p_ci.MainRelatedID}=";
@@ -140,13 +140,21 @@ namespace Dt
         public string RelatedEntity { get; set; }
 
         /// <summary>
-        /// 关联实体外键
+        /// 关联实体外键，字段名
         /// </summary>
         public string RelatedID { get; set; }
 
         /// <summary>
-        /// 主实体外键
+        /// 关联实体外键的属性名，字段名删除下划线
+        /// </summary>
+        public string RlatedIDProperty => Kit.GetPropertyName(RelatedID);
+
+        /// <summary>
+        /// 主实体外键，字段名
         /// </summary>
         public string MainRelatedID { get; set; }
+
+        public string MainRelatedIDProperty => Kit.GetPropertyName(MainRelatedID);
+
     }
 }

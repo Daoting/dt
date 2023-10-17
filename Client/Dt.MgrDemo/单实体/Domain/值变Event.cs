@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.单实体
+namespace Dt.MgrDemo
 {
     public class 值变Event : IEvent
     {

@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.MgrDemo.多对多.权限List"
+    x:Class="Dt.MgrDemo.权限List"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

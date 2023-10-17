@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-19 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -24,9 +24,9 @@ namespace Demo.Crud
             long GroupID = default,
             string ItemName = default)
         {
-            Add("id", ID);
-            Add("group_id", GroupID);
-            Add("item_name", ItemName);
+            Add("ID", ID);
+            Add("GROUP_ID", GroupID);
+            Add("ITEM_NAME", ItemName);
             IsAdded = true;
         }
         #endregion
@@ -36,17 +36,21 @@ namespace Demo.Crud
         /// </summary>
         public long GroupID
         {
-            get { return (long)this["group_id"]; }
-            set { this["group_id"] = value; }
+            get { return (long)this["GROUP_ID"]; }
+            set { this["GROUP_ID"] = value; }
         }
+
+        public Cell cGroupID => _cells["GROUP_ID"];
 
         /// <summary>
         /// 
         /// </summary>
         public string ItemName
         {
-            get { return (string)this["item_name"]; }
-            set { this["item_name"] = value; }
+            get { return (string)this["ITEM_NAME"]; }
+            set { this["ITEM_NAME"] = value; }
         }
+
+        public Cell cItemName => _cells["ITEM_NAME"];
     }
 }

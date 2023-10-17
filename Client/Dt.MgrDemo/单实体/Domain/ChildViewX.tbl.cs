@@ -2,14 +2,14 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-07 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.MgrDemo.单实体
+namespace Dt.MgrDemo
 {
     [Tbl("DEMO_CHILD_VIEW")]
     public partial class ChildViewX : EntityX<ChildViewX>

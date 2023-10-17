@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-07-27 创建
+* 日志: 2023-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -11,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.MgrDemo.单实体
+namespace Dt.MgrDemo
 {
     public sealed partial class 视图Query : Tab
     {
@@ -33,9 +33,9 @@ namespace Dt.MgrDemo.单实体
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.Add<long>("parent_id");
-            row.Add<string>("item_name");
-            row.Add<string>("name");
+            row.Add<long>("PARENT_ID");
+            row.Add<string>("ITEM_NAME");
+            row.Add<string>("NAME");
 
             _fv.Data = row;
         }
