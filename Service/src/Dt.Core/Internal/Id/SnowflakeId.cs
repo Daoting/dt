@@ -26,8 +26,8 @@ namespace Dt.Core
 
         const int _timestampShift = _sequenceBits + _workerIdBits;
 
-        // 起始时间：70年大庆
-        readonly DateTime _startTime = new DateTime(2019, 10, 1, 0, 0, 0, DateTimeKind.Utc);
+        // 起始时间
+        readonly DateTime _startTime = new DateTime(2023, 10, 1, 0, 0, 0, DateTimeKind.Utc);
         readonly object _syncRoot = new object();
 
         long _workerId;
