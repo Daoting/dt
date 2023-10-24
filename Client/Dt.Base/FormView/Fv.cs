@@ -902,6 +902,9 @@ namespace Dt.Base
                 }
             }
 
+            if (!IsReadOnly)
+                GotoFirstCell();
+
             // 切换数据源事件
             OnFvDataChanged();
         }
