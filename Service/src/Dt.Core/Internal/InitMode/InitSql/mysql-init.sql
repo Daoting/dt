@@ -230,22 +230,24 @@ CREATE TABLE `cm_rpt`  (
 -- ----------------------------
 CREATE TABLE `cm_user`  (
   `id` bigint(20) NOT NULL COMMENT '用户标识',
-  `phone` char(11) NOT NULL COMMENT '手机号，唯一',
-  `name` varchar(32) NOT NULL COMMENT '姓名',
+  `name` varchar(32) NOT NULL COMMENT '账号，唯一',
+  `phone` varchar(16) NOT NULL COMMENT '手机号，唯一',
   `pwd` char(32) NOT NULL COMMENT '密码的md5',
-  `sex` tinyint(4) UNSIGNED NOT NULL DEFAULT 1 COMMENT '#Gender#性别',
   `photo` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
   `expired` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否停用',
   `ctime` datetime NOT NULL COMMENT '创建时间',
   `mtime` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `idx_user_phone`(`phone`) USING BTREE
+  INDEX `idx_user_name`(`name`) USING BTREE,
+  INDEX `idx_user_phone`(`phone`) USING BTREE
 ) ENGINE = InnoDB COMMENT = '系统用户';
 
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO `cm_user` VALUES (1, '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', 1, '[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 09:06:38', '2023-03-16 08:35:39'), (2, '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', 2, '[[\"photo/2.jpg\",\"2\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 13:03:19', '2023-03-16 08:36:23'), (3, '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '[[\"photo/3.jpg\",\"3\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '0001-01-01 00:00:00', '2023-03-16 08:36:46');
+INSERT INTO `cm_user` VALUES (1, 'Windows', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 09:06:38', '2023-03-16 08:35:39');
+INSERT INTO `cm_user` VALUES (2, '安卓', '13522222222', 'b59c67bf196a4758191e42f76670ceba', '[[\"photo/2.jpg\",\"2\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '2019-10-24 13:03:19', '2023-03-16 08:36:23');
+INSERT INTO `cm_user` VALUES (3, '苹果', '13533333333', 'b59c67bf196a4758191e42f76670ceba', '[[\"photo/3.jpg\",\"3\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]', 0, '0001-01-01 00:00:00', '2023-03-16 08:36:46');
 
 -- ----------------------------
 -- Table structure for cm_user_group

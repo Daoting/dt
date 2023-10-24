@@ -58,24 +58,12 @@ namespace Dt.Mgr.Rbac
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
-        {
-            Create();
-        }
-
-        void OnSave(object sender, Mi e)
-        {
-            Save();
-        }
-
+        #region 内部
         void OnPhotoChanged(object sender, object e)
         {
             Save();
         }
-		#endregion
-		
-        #region 内部
+
         async void Create()
         {
             Data = await UserX.New();
@@ -91,6 +79,7 @@ namespace Dt.Mgr.Rbac
                 _win?.MainList.Update();
                 if (isNew)
                 {
+                    Kit.Msg("初始密码为4个1");
                     UpdateRelated(d.ID);
                 }
             }

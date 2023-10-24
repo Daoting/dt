@@ -251,7 +251,7 @@ namespace Dt.Mgr.Chat
                 return;
 
             // 暂时取所有，后续增加好友功能
-            var tbl = await AtCm.Query<ChatMemberX>("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
+            var tbl = await AtCm.Query<ChatMemberX>("select id,name,phone,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
 
             // 将新列表缓存到本地库
             await _da.Exec("delete from ChatMember");

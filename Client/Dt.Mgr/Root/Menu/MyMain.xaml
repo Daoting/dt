@@ -14,10 +14,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Image x:Name="_img" Width="50" Height="50" Margin="0,0,20,0" />
-                <StackPanel VerticalAlignment="Center" Grid.Column="1">
-                    <TextBlock x:Name="_tbName" FontSize="{StaticResource 标题字}" />
-                    <TextBlock x:Name="_tbPhone" Foreground="{StaticResource 深灰2}" />
-                </StackPanel>
+                <TextBlock x:Name="_tbName" FontSize="{StaticResource 标题字}" VerticalAlignment="Center" Grid.Column="1" />
                 <TextBlock Text="编辑" Foreground="{StaticResource 深灰2}" VerticalAlignment="Center" Grid.Column="2" />
             </Grid>
         </a:CLink>

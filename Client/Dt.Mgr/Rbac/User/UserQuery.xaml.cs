@@ -36,7 +36,6 @@ namespace Dt.Mgr.Rbac
             row.Add<string>("Phone");
             row.Add<string>("Name");
             row.Add<string>("Pwd");
-            row.Add<Gender>("Sex");
             row.Add<string>("Photo");
             row.Add<bool>("Expired");
             row.Add<DateTime>("Ctime");

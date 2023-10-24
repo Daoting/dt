@@ -26,14 +26,12 @@ namespace Dt.Mgr.Chat
             long ID,
             string Name = default,
             string Phone = default,
-            Gender Sex = default,
             string Photo = default,
             DateTime Mtime = default)
         {
             Add("ID", ID);
             Add("Name", Name);
             Add("Phone", Phone);
-            Add("Sex", Sex);
             Add("Photo", Photo);
             Add("Mtime", Mtime);
             IsAdded = true;
@@ -66,15 +64,6 @@ namespace Dt.Mgr.Chat
         {
             get { return (string)this["Phone"]; }
             set { this["Phone"] = value; }
-        }
-
-        /// <summary>
-        /// 性别
-        /// </summary>
-        public Gender Sex
-        {
-            get { return (Gender)this["Sex"]; }
-            set { this["Sex"] = value; }
         }
 
         /// <summary>

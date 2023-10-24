@@ -20,7 +20,7 @@ namespace Dt.Mgr.Rbac
         public static async Task<UserX> New()
         {
             long id = await NewID();
-            return new UserX(id, Name: "新用户");
+            return new UserX(id);
         }
 
         public static async Task<UserX> CreateByPhone(string p_phone)
@@ -41,24 +41,32 @@ namespace Dt.Mgr.Rbac
         {
             OnSaving(async () =>
             {
-                if (IsAdded || Cells["Name"].IsChanged)
-                    Throw.IfEmpty(Name, "名称不可为空！");
-
-                if (IsAdded || Cells["Phone"].IsChanged)
-                    Throw.IfEmpty(Phone, "手机号不可为空！");
-
-                Throw.If(!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"), "手机号码错误！");
-
-                if ((IsAdded || Cells["phone"].IsChanged)
-                    && await GetCount($"where phone='{Phone}'", new { phone = Phone }) > 0)
+                if (Name == "" && Phone == "")
                 {
-                    Throw.Msg("手机号码重复！");
+                    Throw.Msg("账号和手机号不可同时为空！");
+                }
+
+                if (Name != ""
+                    && (IsAdded || cName.IsChanged))
+                {
+                    if (await GetCount($"where name='{Name}'") > 0)
+                        Throw.Msg("账号重复！");
+                }
+
+                if (Phone != ""
+                    && (IsAdded || cPhone.IsChanged))
+                {
+                    if (!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"))
+                        Throw.Msg("手机号码错误！");
+
+                    if (await GetCount($"where phone='{Phone}'") > 0)
+                        Throw.Msg("手机号码重复！");
                 }
 
                 if (IsAdded)
                 {
-                    // 初始密码为手机号后4位
-                    Pwd = Kit.GetMD5(Phone.Substring(Phone.Length - 4));
+                    // 初始密码为4个1
+                    Pwd = Kit.GetMD5("1111");
                     Ctime = Mtime = Kit.Now;
                 }
                 else
@@ -73,14 +81,11 @@ namespace Dt.Mgr.Rbac
                 return Task.CompletedTask;
             });
 
-            // 清除以手机号为键名的缓存
-            OnSaved(async () => await this.ClearCache("phone"));
-
-            OnDeleted(async () =>
+            OnDeleted(() =>
             {
-                await this.ClearCache("phone");
                 // 清除用户的数据版本号
                 RbacDs.DelUserDataVer(ID);
+                return Task.CompletedTask;
             });
         }
     }

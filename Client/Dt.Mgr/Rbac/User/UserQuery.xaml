@@ -7,11 +7,8 @@
     Icon="漏斗">
 
     <a:QueryFv x:Name="_fv">
-        <a:CText ID="Phone" Title="手机号，唯一" Query="Editable" />
-        <a:CText ID="Name" Title="姓名" Query="Editable" />
-        <a:CText ID="Pwd" Title="密码的md5" Query="Editable" />
-        <a:CList ID="Sex" Title="性别" Query="Editable" />
-        <a:CText ID="Photo" Title="头像" Query="Editable" />
+        <a:CText ID="Name" Title="账号" Query="Editable" />
+        <a:CText ID="Phone" Title="手机号" Query="Editable" />
         <a:CBool ID="Expired" Title="是否停用" Query="Editable" />
         <a:CDate ID="Ctime" Title="创建时间" Query="Editable" />
         <a:CDate ID="Mtime" Title="修改时间" Query="Editable" />

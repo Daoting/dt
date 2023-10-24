@@ -79,7 +79,7 @@ namespace Dt.Mgr.Rbac
         async void OnResetPwd(object sender, Mi e)
         {
             var user = e.Data.To<UserX>();
-            if (!await Kit.Confirm($"确认要重置[{user.Name}]的密码吗？\r\n密码会重置为手机号后4位！"))
+            if (!await Kit.Confirm($"确认要重置[{user.Name}]的密码吗？\r\n密码会重置为4个1！"))
             {
                 Kit.Msg("已取消重置！");
                 return;
@@ -87,15 +87,15 @@ namespace Dt.Mgr.Rbac
 
             user.IsAdded = false;
             string phone = user.Phone;
-            user.Pwd = Kit.GetMD5(phone.Substring(phone.Length - 4));
+            user.Pwd = Kit.GetMD5("1111");
 
             if (!user.cPwd.IsChanged)
             {
-                Kit.Msg("密码为手机号后4位，无需重置！");
+                Kit.Msg("密码为4个1，无需重置！");
             }
             else if(await user.Save(false))
             {
-                Kit.Msg("密码已重置为手机号后4位！");
+                Kit.Msg("密码已重置为4个1！");
             }
             else
             {

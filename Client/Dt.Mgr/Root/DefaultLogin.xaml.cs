@@ -47,18 +47,15 @@ namespace Dt.Mgr
         /// </summary>
         async void OnLogin()
         {
-            string phone = _tbPhone.Text.Trim();
+            string nameOrPhone = _tbPhone.Text.Trim();
             bool isCode = _tbPwd.Visibility == Visibility.Collapsed;
             string txt = isCode ? _tbCode.Text.Trim() : _tbPwd.Password;
 
-            if (string.IsNullOrEmpty(phone))
+            if (string.IsNullOrEmpty(nameOrPhone))
             {
                 _tbPhone.Focus(FocusState.Programmatic);
                 return;
             }
-
-            if (IsPhoneError())
-                return;
 
             if (string.IsNullOrEmpty(txt))
             {
@@ -77,12 +74,12 @@ namespace Dt.Mgr
                 if (isCode)
                 {
                     // 验证码登录
-                    suc = await LoginDs.LoginByCode(phone, txt, true);
+                    suc = await LoginDs.LoginByCode(nameOrPhone, txt, true);
                 }
                 else
                 {
                     // 密码登录
-                    suc = await LoginDs.LoginByPwd(phone, Kit.GetMD5(txt), true);
+                    suc = await LoginDs.LoginByPwd(nameOrPhone, Kit.GetMD5(txt), true);
                 }
 
                 if (suc)
@@ -177,9 +174,7 @@ namespace Dt.Mgr
 
         void OnPhoneKeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter
-                && _tbPhone.Text.Trim() != string.Empty
-                && Regex.IsMatch(_tbPhone.Text.Trim(), "^1[34578]\\d{9}$"))
+            if (e.Key == VirtualKey.Enter && _tbPhone.Text.Trim() != string.Empty)
             {
                 e.Handled = true;
                 if (_tbPwd.Visibility == Visibility.Visible)

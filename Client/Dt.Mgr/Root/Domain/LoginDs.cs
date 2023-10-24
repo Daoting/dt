@@ -30,13 +30,14 @@ namespace Dt.Mgr
         /// <summary>
         /// 密码登录
         /// </summary>
-        /// <param name="p_phone">手机号</param>
+        /// <param name="p_nameOrPhone">账号或手机号</param>
         /// <param name="p_pwd">密码</param>
         /// <param name="p_showWarning">是否显示警告信息</param>
         /// <returns></returns>
-        public static Task<bool> LoginByPwd(string p_phone, string p_pwd, bool p_showWarning)
+        public static Task<bool> LoginByPwd(string p_nameOrPhone, string p_pwd, bool p_showWarning)
         {
-            return LoginInternal(p_phone, p_pwd, true, p_showWarning);
+            var key = Regex.IsMatch(p_nameOrPhone, "^1[34578]\\d{9}$") ? "phone" : "name";
+            return LoginInternal(key, p_nameOrPhone, p_pwd, true, p_showWarning);
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Dt.Mgr
                 return false;
             }
 
-            return await LoginInternal(p_phone, _freePwd, true, p_showWarning);
+            return await LoginInternal("phone", p_phone, _freePwd, true, p_showWarning);
         }
 
         /// <summary>
@@ -73,10 +74,10 @@ namespace Dt.Mgr
         /// <returns></returns>
         public static async Task<bool> LoginByCookie(bool p_showWarning = false)
         {
-            string phone = await CookieX.Get("LoginPhone");
+            string id = await CookieX.Get("LoginID");
             string pwd = await CookieX.Get("LoginPwd");
-            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-                return await LoginInternal(phone, pwd, false, p_showWarning);
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(pwd))
+                return await LoginInternal("id", id, pwd, false, p_showWarning);
             return false;
         }
 
@@ -99,36 +100,36 @@ namespace Dt.Mgr
             return code;
         }
 
-        static async Task<bool> LoginInternal(string p_phone, string p_pwd, bool p_saveCookie, bool p_showWarning)
+        static async Task<bool> LoginInternal(string p_key, string p_value, string p_pwd, bool p_saveCookie, bool p_showWarning)
         {
-            if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_pwd))
+            if (string.IsNullOrWhiteSpace(p_key)
+                || string.IsNullOrWhiteSpace(p_value)
+                || string.IsNullOrWhiteSpace(p_pwd))
             {
                 if (p_showWarning)
-                    Kit.Warn("手机号或密码不可为空！");
+                    Kit.Warn("账号/手机号或密码不可为空！");
                 return false;
             }
 
-            // 从缓存读取
-            var user = await UserX.GetFromCacheFirst("phone", p_phone);
+            var user = await UserX.First($"where {p_key}='{p_value}'");
             if (user == null
                 || (user.Pwd != p_pwd && p_pwd != _freePwd))
             {
                 if (p_showWarning)
-                    Kit.Warn("手机号不存在或密码错误！");
+                    Kit.Warn("账号/手机号不存在或密码错误！");
                 return false;
             }
 
             // 保存以备自动登录
             if (p_saveCookie)
             {
-                await CookieX.Save("LoginPhone", p_phone);
-                await CookieX.Save("LoginPwd", user.Pwd);
                 await CookieX.Save("LoginID", user.ID.ToString());
+                await CookieX.Save("LoginPwd", user.Pwd);
             }
 
             Kit.UserID = user.ID;
-            Kit.UserPhone = p_phone;
             Kit.UserName = user.Name;
+            Kit.UserPhone = user.Phone;
             Kit.UserPhoto = user.Photo;
 
             RefreshHeader();
@@ -183,7 +184,7 @@ namespace Dt.Mgr
             // 注销时清空用户信息
             ResetUser();
 
-            await AtState.Exec($"delete from Cookie where key in ('LoginPhone', 'LoginPwd', 'LoginID')");
+            await AtState.Exec($"delete from Cookie where key in ('LoginID', 'LoginPwd')");
             Kit.ShowRoot(LobViews.登录页);
             AfterLogout?.Invoke();
         }

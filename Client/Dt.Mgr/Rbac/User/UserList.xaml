@@ -7,9 +7,8 @@
 
     <a:Tab.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="name" Title="姓名" Width="160" />
+            <a:Col ID="name" Title="账号" Width="160" />
             <a:Col ID="phone" Title="手机号" Width="160" />
-            <a:Col ID="sex" Title="性别" Width="60" />
             <a:Col ID="ctime" Title="创建时间" Width="120" />
             <a:Col ID="mtime" Title="修改时间" Width="120" />
         </a:Cols>
