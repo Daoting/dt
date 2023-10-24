@@ -32,9 +32,17 @@ namespace Dt.Core
 
         protected override Type GetColumnType(DbColumn p_col)
         {
+            /* number类型的c#类型的对应关系
+             * number(1-4)   Int16/shot
+             * number(5-9)   Int32/int
+             * number(10-19) Int64/long 但新版 ODP.Net 将19位映射成 decimal
+             * number(20-)   decimal
+             */
+
             if (p_col.DataType == typeof(decimal))
             {
                 // ODP.Net 原来对于 number(19) 映射为long，新版变成 decimal，无用
+                // 无法判断number的位数，只能将19及以上的都映射为 long，此处有坑！！！
                 return (p_col.AllowDBNull.HasValue && p_col.AllowDBNull.Value) ? typeof(long?) : typeof(long);
             }
 
