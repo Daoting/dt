@@ -6,7 +6,7 @@
     Title="我的">
 
     <a:Fv x:Name="_fv">
-        <a:CLink Click="OnEditInfo" RowSpan="2">
+        <a:CLink Call="OnEditInfo" RowSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -19,10 +19,8 @@
             </Grid>
         </a:CLink>
         <a:CBar />
-        <a:CLink Title="我的二维码" />
-        <a:CLink Title="修改密码" />
-        <a:CLink Title="设置" Click="OnSetting" />
-        <a:CLink Title="关于" Click="OnAbout" />
+        <a:CLink Title="修改密码" Call="OnChangePwd" />
+        <a:CLink Title="设置" Call="OnSetting" />
         <a:CBar>
             <Button Content="清除缓存" Click="OnClearLocalFile" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         </a:CBar>

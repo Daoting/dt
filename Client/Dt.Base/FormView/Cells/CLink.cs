@@ -34,11 +34,12 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event TappedEventHandler Click
-        {
-            add { this.AddHandler(TappedEvent, value, true); }
-            remove { this.RemoveHandler(TappedEvent, value); }
-        }
+        public event EventHandler Click;
+
+        /// <summary>
+        /// 点击事件，无事件参数，方便复用处理方法
+        /// </summary>
+        public event Action Call;
         #endregion
 
         #region 重写方法
@@ -102,6 +103,13 @@ namespace Dt.Base
         protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "Normal", true);
+        }
+
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            base.OnTapped(e);
+            Click?.Invoke(this, EventArgs.Empty);
+            Call?.Invoke();
         }
         #endregion
     }

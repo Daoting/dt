@@ -162,7 +162,7 @@ namespace Dt.UIDemo
         }
 
         int _cnt = 0;
-        void OnToggleLink(object sender, TappedRoutedEventArgs e)
+        void OnToggleLink()
         {
             _link.Title = $"切换内容{++_cnt}";
         }

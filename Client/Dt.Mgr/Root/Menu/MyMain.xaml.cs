@@ -66,7 +66,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        async void OnEditInfo(object sender, TappedRoutedEventArgs e)
+        async void OnEditInfo()
         {
             var edit = new UserForm();
             await edit.Update(Kit.UserID, false);
@@ -80,7 +80,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        void OnSetting(object sender, TappedRoutedEventArgs e)
+        void OnSetting()
         {
             Type tp = Kit.GetViewTypeByAlias("我的设置");
             if (tp == null)
@@ -99,8 +99,9 @@ namespace Dt.Mgr.Home
             dlg.Show();
         }
 
-        void OnAbout(object sender, TappedRoutedEventArgs e)
+        void OnChangePwd()
         {
+
         }
     }
 }

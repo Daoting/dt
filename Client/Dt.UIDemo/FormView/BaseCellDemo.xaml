@@ -57,7 +57,7 @@
                             </StackPanel>
                         </StackPanel>
                     </a:CLink>
-                    <a:CLink x:Name="_link" Title="切换内容" ColSpan="1" Click="OnToggleLink" />
+                    <a:CLink x:Name="_link" Title="切换内容" ColSpan="1" Call="OnToggleLink" />
 
                     <a:CBar Title="提示信息格" />
                     <a:CTip ID="tip" Title="普通只读信息" />
