@@ -2314,6 +2314,13 @@ ALTER TABLE "public"."demo_用户角色" ADD CONSTRAINT "fk_demo_用户角色_us
 -- ----------------------------
 -- 序列
 -- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."cm_menu_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_option_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfd_prc_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfi_item_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfi_prc_dispidx";
+DROP SEQUENCE IF EXISTS "public"."demo_crud_dispidx";
+DROP SEQUENCE IF EXISTS "public"."demo_基础_序列";
 create sequence cm_menu_dispidx start 90;
 create sequence cm_option_dispidx start 1032;
 create sequence cm_wfd_prc_dispidx start 12;
@@ -2321,13 +2328,3 @@ create sequence cm_wfi_item_dispidx start 177;
 create sequence cm_wfi_prc_dispidx start 66;
 create sequence demo_crud_dispidx start 86;
 create sequence demo_基础_序列 start 12;
-
--- ----------------------------
--- View structure for demo_child_view
--- ----------------------------
-CREATE VIEW "demo_child_view" AS  SELECT c.id,
-    c.parent_id,
-    c.item_name,
-    p.name
-   FROM demo_child_tbl1 c
-     JOIN demo_par_tbl p ON c.parent_id = p.id;

@@ -2298,6 +2298,13 @@ ALTER TABLE "DEMO_用户角色" ADD CONSTRAINT "DEMO_用户角色_IBFK_2" FOREIG
 -- ----------------------------
 -- 序列
 -- ----------------------------
+DROP SEQUENCE CM_MENU_DISPIDX;
+DROP SEQUENCE CM_OPTION_DISPIDX;
+DROP SEQUENCE CM_WFD_PRC_DISPIDX;
+DROP SEQUENCE CM_WFI_ITEM_DISPIDX;
+DROP SEQUENCE CM_WFI_PRC_DISPIDX;
+DROP SEQUENCE DEMO_CRUD_DISPIDX;
+DROP SEQUENCE DEMO_基础_序列;
 CREATE SEQUENCE CM_MENU_DISPIDX START WITH 90;
 CREATE SEQUENCE CM_OPTION_DISPIDX START WITH 1032;
 CREATE SEQUENCE CM_WFD_PRC_DISPIDX START WITH 12;
@@ -2309,6 +2316,7 @@ CREATE SEQUENCE DEMO_基础_序列 START WITH 12;
 -- ----------------------------
 -- View structure for DEMO_CHILD_VIEW
 -- ----------------------------
+DROP VIEW "DEMO_CHILD_VIEW";
 CREATE VIEW "DEMO_CHILD_VIEW" AS SELECT
 	c.ID,c.PARENT_ID,c.ITEM_NAME, 
 	p.NAME
@@ -2319,6 +2327,7 @@ FROM
 -- ----------------------------
 -- Function structure for DEMO_用户可访问的菜单
 -- ----------------------------
+DROP PROCEDURE "DEMO_用户可访问的菜单";
 CREATE OR REPLACE PROCEDURE "DEMO_用户可访问的菜单" (p_cur out sys_refcursor, p_userid in number)
 AS
 BEGIN

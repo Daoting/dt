@@ -5,6 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for cm_file_my
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_file_my`;
 CREATE TABLE `cm_file_my`  (
   `id` bigint(20) NOT NULL COMMENT '文件标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
@@ -24,6 +25,7 @@ CREATE TABLE `cm_file_my`  (
 -- ----------------------------
 -- Table structure for cm_file_pub
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_file_pub`;
 CREATE TABLE `cm_file_pub`  (
   `id` bigint(20) NOT NULL COMMENT '文件标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
@@ -45,6 +47,7 @@ INSERT INTO `cm_file_pub` VALUES (1, NULL, '公共文件', 1, NULL, '', '2020-10
 -- ----------------------------
 -- Table structure for cm_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_group`;
 CREATE TABLE `cm_group`  (
   `id` bigint(20) NOT NULL COMMENT '组标识',
   `name` varchar(64) NOT NULL COMMENT '组名',
@@ -56,6 +59,7 @@ CREATE TABLE `cm_group`  (
 -- ----------------------------
 -- Table structure for cm_group_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_group_role`;
 CREATE TABLE `cm_group_role`  (
   `group_id` bigint(20) NOT NULL COMMENT '组标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -69,6 +73,7 @@ CREATE TABLE `cm_group_role`  (
 -- ----------------------------
 -- Table structure for cm_menu
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_menu`;
 CREATE TABLE `cm_menu`  (
   `id` bigint(20) NOT NULL COMMENT '菜单标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父菜单标识',
@@ -95,6 +100,7 @@ INSERT INTO `cm_menu` VALUES (1, NULL, '工作台', 1, '', '', '搬运工', '', 
 -- ----------------------------
 -- Table structure for cm_option
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_option`;
 CREATE TABLE `cm_option`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `name` varchar(64) NOT NULL COMMENT '选项名称',
@@ -113,6 +119,7 @@ INSERT INTO `cm_option` VALUES (2,'汉族',2,1),(3,'蒙古族',3,1),(4,'回族',
 -- ----------------------------
 -- Table structure for cm_option_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_option_group`;
 CREATE TABLE `cm_option_group`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `name` varchar(255) NOT NULL COMMENT '分组名称',
@@ -127,6 +134,7 @@ INSERT INTO `cm_option_group` VALUES (1,'民族'),(2,'学历'),(4,'性别'),(5,'
 -- ----------------------------
 -- Table structure for cm_params
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_params`;
 CREATE TABLE `cm_params`  (
   `id` bigint(20) NOT NULL COMMENT '用户参数标识',
   `name` varchar(255) NOT NULL COMMENT '参数名称',
@@ -146,6 +154,7 @@ INSERT INTO `cm_params` VALUES (1, '接收新任务', 'true', '', '2020-12-01 15
 -- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_permission`;
 CREATE TABLE `cm_permission`  (
   `id` bigint(20) NOT NULL COMMENT '权限标识',
   `name` varchar(64) NOT NULL COMMENT '权限名称',
@@ -162,6 +171,7 @@ INSERT INTO `cm_permission` VALUES (1, '公共文件管理', '禁止删除'), (2
 -- ----------------------------
 -- Table structure for cm_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role`;
 CREATE TABLE `cm_role`  (
   `id` bigint(20) NOT NULL COMMENT '角色标识',
   `name` varchar(32) NOT NULL COMMENT '角色名称',
@@ -178,6 +188,7 @@ INSERT INTO `cm_role` VALUES (1, '任何人', '所有用户默认都具有该角
 -- ----------------------------
 -- Table structure for cm_role_menu
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role_menu`;
 CREATE TABLE `cm_role_menu`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
   `menu_id` bigint(20) NOT NULL COMMENT '菜单标识',
@@ -196,6 +207,7 @@ INSERT INTO `cm_role_menu` VALUES (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (1, 7)
 -- ----------------------------
 -- Table structure for cm_role_per
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role_per`;
 CREATE TABLE `cm_role_per`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
   `per_id` bigint(20) NOT NULL COMMENT '权限标识',
@@ -214,6 +226,7 @@ INSERT INTO `cm_role_per` VALUES (1, 1), (1, 2);
 -- ----------------------------
 -- Table structure for cm_rpt
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_rpt`;
 CREATE TABLE `cm_rpt`  (
   `id` bigint(20) NOT NULL COMMENT '报表标识',
   `name` varchar(64) NOT NULL COMMENT '报表名称',
@@ -228,6 +241,7 @@ CREATE TABLE `cm_rpt`  (
 -- ----------------------------
 -- Table structure for cm_user
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user`;
 CREATE TABLE `cm_user`  (
   `id` bigint(20) NOT NULL COMMENT '用户标识',
   `name` varchar(32) NOT NULL COMMENT '账号，唯一',
@@ -252,6 +266,7 @@ INSERT INTO `cm_user` VALUES (3, '苹果', '13533333333', 'b59c67bf196a4758191e4
 -- ----------------------------
 -- Table structure for cm_user_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_group`;
 CREATE TABLE `cm_user_group`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `group_id` bigint(20) NOT NULL COMMENT '组标识',
@@ -265,6 +280,7 @@ CREATE TABLE `cm_user_group`  (
 -- ----------------------------
 -- Table structure for cm_user_params
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_params`;
 CREATE TABLE `cm_user_params`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `param_id` bigint(20) NOT NULL COMMENT '参数标识',
@@ -280,6 +296,7 @@ CREATE TABLE `cm_user_params`  (
 -- ----------------------------
 -- Table structure for cm_user_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_role`;
 CREATE TABLE `cm_user_role`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -298,6 +315,7 @@ INSERT INTO `cm_user_role` VALUES (1,2),(2,2),(3,2);
 -- ----------------------------
 -- Table structure for cm_wfd_atv
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_atv`;
 CREATE TABLE `cm_wfd_atv`  (
   `id` bigint(20) NOT NULL COMMENT '活动标识',
   `prc_id` bigint(20) NOT NULL COMMENT '流程标识',
@@ -322,6 +340,7 @@ CREATE TABLE `cm_wfd_atv`  (
 -- ----------------------------
 -- Table structure for cm_wfd_atv_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_atv_role`;
 CREATE TABLE `cm_wfd_atv_role`  (
   `atv_id` bigint(20) NOT NULL COMMENT '活动标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -334,6 +353,7 @@ CREATE TABLE `cm_wfd_atv_role`  (
 -- ----------------------------
 -- Table structure for cm_wfd_prc
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_prc`;
 CREATE TABLE `cm_wfd_prc`  (
   `id` bigint(20) NOT NULL COMMENT '流程标识',
   `name` varchar(64) NOT NULL COMMENT '流程名称',
@@ -350,6 +370,7 @@ CREATE TABLE `cm_wfd_prc`  (
 -- ----------------------------
 -- Table structure for cm_wfd_trs
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_trs`;
 CREATE TABLE `cm_wfd_trs`  (
   `id` bigint(20) NOT NULL COMMENT '迁移标识',
   `prc_id` bigint(20) NOT NULL COMMENT '流程模板标识',
@@ -365,6 +386,7 @@ CREATE TABLE `cm_wfd_trs`  (
 -- ----------------------------
 -- Table structure for cm_wfi_atv
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_atv`;
 CREATE TABLE `cm_wfi_atv`  (
   `id` bigint(20) NOT NULL COMMENT '活动实例标识',
   `prci_id` bigint(20) NOT NULL COMMENT '流程实例标识',
@@ -383,6 +405,7 @@ CREATE TABLE `cm_wfi_atv`  (
 -- ----------------------------
 -- Table structure for cm_wfi_item
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_item`;
 CREATE TABLE `cm_wfi_item`  (
   `id` bigint(20) NOT NULL COMMENT '工作项标识',
   `atvi_id` bigint(20) NOT NULL COMMENT '活动实例标识',
@@ -406,6 +429,7 @@ CREATE TABLE `cm_wfi_item`  (
 -- ----------------------------
 -- Table structure for cm_wfi_prc
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_prc`;
 CREATE TABLE `cm_wfi_prc`  (
   `id` bigint(20) NOT NULL COMMENT '流程实例标识，同时为业务数据主键',
   `prcd_id` bigint(20) NOT NULL COMMENT '流程模板标识',
@@ -422,6 +446,7 @@ CREATE TABLE `cm_wfi_prc`  (
 -- ----------------------------
 -- Table structure for cm_wfi_trs
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_trs`;
 CREATE TABLE `cm_wfi_trs`  (
   `id` bigint(20) NOT NULL COMMENT '迁移实例标识',
   `trsd_id` bigint(20) NOT NULL COMMENT '迁移模板标识',
@@ -441,6 +466,7 @@ CREATE TABLE `cm_wfi_trs`  (
 -- ----------------------------
 -- Table structure for fsm_file
 -- ----------------------------
+DROP TABLE IF EXISTS `fsm_file`;
 CREATE TABLE `fsm_file`  (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT '文件标识',
   `name` varchar(512) NOT NULL COMMENT '文件名称',
@@ -457,6 +483,7 @@ CREATE TABLE `fsm_file`  (
 -- ----------------------------
 -- Table structure for sequence
 -- ----------------------------
+DROP TABLE IF EXISTS `sequence`;
 CREATE TABLE `sequence`  (
   `id` varchar(64) NOT NULL COMMENT '序列名称',
   `val` int(11) NOT NULL COMMENT '序列的当前值',
@@ -471,6 +498,7 @@ INSERT INTO `sequence` VALUES ('cm_menu_dispidx', 89), ('cm_option_dispidx', 103
 -- ----------------------------
 -- Function structure for nextval
 -- ----------------------------
+DROP FUNCTION IF EXISTS `nextval`;
 CREATE FUNCTION `nextval`(v_seq_name VARCHAR ( 200 ))
  RETURNS int(11)
 BEGIN

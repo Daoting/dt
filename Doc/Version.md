@@ -29,7 +29,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * oracle number映射添加注释
 * Fv切换数据源自动跳入第一个单元格
 * 账号和手机号都支持登录
-
+* 初始化库增加导入初始结构功能
 * CLink的Click和Call事件
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}

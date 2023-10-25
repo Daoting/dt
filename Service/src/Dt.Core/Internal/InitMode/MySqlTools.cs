@@ -48,36 +48,29 @@ namespace Dt.Core
             return true;
         }
 
-        public async Task<string> IsExists()
-        {
-            string msg = null;
-            if (await ExistsDb())
-            {
-                msg = $"数据库【{_newDb}】";
-            }
-            if (await ExistsUser())
-            {
-                if (msg == null)
-                    msg = $"用户【{_newUser}】";
-                else
-                    msg += $"、用户【{_newUser}】";
-            }
-
-            if (msg != null)
-            {
-                msg += "已存在，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
-            }
-            return msg;
-        }
-
-        async Task<bool> ExistsDb()
+        public async Task<bool> ExistsDb()
         {
             return await _da.GetScalar<int>($"select count(*) from information_schema.schemata where schema_name='{_newDb}'") > 0;
         }
 
-        async Task<bool> ExistsUser()
+        public async Task<bool> ExistsUser()
         {
             return await _da.GetScalar<int>($"select count(*) from mysql.user where user='{_newUser}'") > 0;
+        }
+
+        public async Task<bool> IsPwdCorrect()
+        {
+            var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newPwd};";
+            var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> InitDb(int p_initType)
@@ -112,31 +105,38 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("创建空库成功");
 
+            return await Import(p_initType);
+        }
+
+        public Task<bool> ImportToDb(int p_initType)
+        {
+            return Import(p_initType);
+        }
+
+        async Task<bool> Import(int p_initType)
+        {
+            string sql;
             var connStr = $"{_host};Database={_newDb};Uid={_newUser};Pwd={_newPwd};";
+            var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
+            da.AutoClose = false;
 
-            if (p_initType != 1)
+            using (var sr = GetSqlStream(p_initType == 0 ? "mysql-init.sql" : "mysql-demo.sql"))
             {
-                var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
-
-                string sql;
-                using (var sr = GetSqlStream(p_initType == 0 ? "mysql-init.sql" : "mysql-demo.sql"))
-                {
-                    sql = sr.ReadToEnd();
-                }
-
-                await da.Exec(sql);
-                int cntTbl = await da.GetScalar<int>($"select count(*) from information_schema.tables where table_schema='{_newDb}'");
-                int cntFun = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='function'");
-                int cntSp = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='procedure'");
-                int cntView = await da.GetScalar<int>($"select count(*) from information_schema.views where table_schema='{_newDb}'");
-
-                var tp = p_initType == 0 ? "标准库" : "样例库";
-                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntFun}个函数\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
-
-                await da.Close(true);
+                sql = sr.ReadToEnd();
             }
+            await da.Exec(sql);
 
-            Log.Information("新库连接串：\r\n" + connStr);
+            int cntTbl = await da.GetScalar<int>($"select count(*) from information_schema.tables where table_schema='{_newDb}'");
+            int cntFun = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='function'");
+            int cntSp = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='procedure'");
+            int cntView = await da.GetScalar<int>($"select count(*) from information_schema.views where table_schema='{_newDb}'");
+
+            var tp = p_initType == 0 ? "标准库" : "样例库";
+            Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntFun}个函数\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+            await da.Close(true);
+
+            Log.Information("连接串：\r\n" + connStr);
             return true;
         }
 

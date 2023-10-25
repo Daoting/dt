@@ -11,6 +11,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for cm_file_my
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_file_my`;
 CREATE TABLE `cm_file_my`  (
   `id` bigint(20) NOT NULL COMMENT '文件标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
@@ -35,6 +36,7 @@ INSERT INTO `cm_file_my` VALUES (140724076930789376, NULL, '新目录1', 1, NULL
 -- ----------------------------
 -- Table structure for cm_file_pub
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_file_pub`;
 CREATE TABLE `cm_file_pub`  (
   `id` bigint(20) NOT NULL COMMENT '文件标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '上级目录，根目录的parendid为空',
@@ -56,6 +58,7 @@ INSERT INTO `cm_file_pub` VALUES (1, NULL, '公共文件', 1, NULL, '', '2020-10
 -- ----------------------------
 -- Table structure for cm_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_group`;
 CREATE TABLE `cm_group`  (
   `id` bigint(20) NOT NULL COMMENT '组标识',
   `name` varchar(64) NOT NULL COMMENT '组名',
@@ -72,6 +75,7 @@ INSERT INTO `cm_group` VALUES (454483802783240192, '分组1', ''), (454484847190
 -- ----------------------------
 -- Table structure for cm_group_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_group_role`;
 CREATE TABLE `cm_group_role`  (
   `group_id` bigint(20) NOT NULL COMMENT '组标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -90,6 +94,7 @@ INSERT INTO `cm_group_role` VALUES (454483802783240192, 2), (454483802783240192,
 -- ----------------------------
 -- Table structure for cm_menu
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_menu`;
 CREATE TABLE `cm_menu`  (
   `id` bigint(20) NOT NULL COMMENT '菜单标识',
   `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父菜单标识',
@@ -116,6 +121,7 @@ INSERT INTO `cm_menu` VALUES (1, NULL, '工作台', 1, '', '', '搬运工', '', 
 -- ----------------------------
 -- Table structure for cm_option
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_option`;
 CREATE TABLE `cm_option`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `name` varchar(64) NOT NULL COMMENT '选项名称',
@@ -134,6 +140,7 @@ INSERT INTO `cm_option` VALUES (2, '汉族', 2, 1), (3, '蒙古族', 3, 1), (4, 
 -- ----------------------------
 -- Table structure for cm_option_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_option_group`;
 CREATE TABLE `cm_option_group`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `name` varchar(255) NOT NULL COMMENT '分组名称',
@@ -148,6 +155,7 @@ INSERT INTO `cm_option_group` VALUES (1, '民族'), (2, '学历'), (3, '地区')
 -- ----------------------------
 -- Table structure for cm_params
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_params`;
 CREATE TABLE `cm_params`  (
   `id` bigint(20) NOT NULL COMMENT '用户参数标识',
   `name` varchar(255) NOT NULL COMMENT '参数名称',
@@ -167,6 +175,7 @@ INSERT INTO `cm_params` VALUES (1, '接收新任务', 'true', '', '2020-12-01 15
 -- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_permission`;
 CREATE TABLE `cm_permission`  (
   `id` bigint(20) NOT NULL COMMENT '权限标识',
   `name` varchar(64) NOT NULL COMMENT '权限名称',
@@ -183,6 +192,7 @@ INSERT INTO `cm_permission` VALUES (1, '公共文件管理', '禁止删除'), (2
 -- ----------------------------
 -- Table structure for cm_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role`;
 CREATE TABLE `cm_role`  (
   `id` bigint(20) NOT NULL COMMENT '角色标识',
   `name` varchar(32) NOT NULL COMMENT '角色名称',
@@ -199,6 +209,7 @@ INSERT INTO `cm_role` VALUES (1, '任何人', '所有用户默认都具有该角
 -- ----------------------------
 -- Table structure for cm_role_menu
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role_menu`;
 CREATE TABLE `cm_role_menu`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
   `menu_id` bigint(20) NOT NULL COMMENT '菜单标识',
@@ -217,6 +228,7 @@ INSERT INTO `cm_role_menu` VALUES (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (1, 7)
 -- ----------------------------
 -- Table structure for cm_role_per
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_role_per`;
 CREATE TABLE `cm_role_per`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
   `per_id` bigint(20) NOT NULL COMMENT '权限标识',
@@ -235,6 +247,7 @@ INSERT INTO `cm_role_per` VALUES (1, 1), (1, 2), (22844822693027840, 45525388318
 -- ----------------------------
 -- Table structure for cm_rpt
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_rpt`;
 CREATE TABLE `cm_rpt`  (
   `id` bigint(20) NOT NULL COMMENT '报表标识',
   `name` varchar(64) NOT NULL COMMENT '报表名称',
@@ -254,6 +267,7 @@ INSERT INTO `cm_rpt` VALUES (139241259579338752, '测试报表111', '<Rpt cols=\
 -- ----------------------------
 -- Table structure for cm_user
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user`;
 CREATE TABLE `cm_user`  (
   `id` bigint(20) NOT NULL COMMENT '用户标识',
   `name` varchar(32) NOT NULL COMMENT '账号，唯一',
@@ -291,6 +305,7 @@ INSERT INTO `cm_user` VALUES (247170018466197504, '15948341892', '15948341897', 
 -- ----------------------------
 -- Table structure for cm_user_group
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_group`;
 CREATE TABLE `cm_user_group`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `group_id` bigint(20) NOT NULL COMMENT '组标识',
@@ -309,6 +324,7 @@ INSERT INTO `cm_user_group` VALUES (1, 454483802783240192), (1, 4544849240339456
 -- ----------------------------
 -- Table structure for cm_user_params
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_params`;
 CREATE TABLE `cm_user_params`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `param_id` bigint(20) NOT NULL COMMENT '参数标识',
@@ -329,6 +345,7 @@ INSERT INTO `cm_user_params` VALUES (2, 1, 'false', '2020-12-04 13:29:05');
 -- ----------------------------
 -- Table structure for cm_user_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_user_role`;
 CREATE TABLE `cm_user_role`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -347,6 +364,7 @@ INSERT INTO `cm_user_role` VALUES (1, 2), (1, 22844822693027840), (1, 1526959337
 -- ----------------------------
 -- Table structure for cm_wfd_atv
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_atv`;
 CREATE TABLE `cm_wfd_atv`  (
   `id` bigint(20) NOT NULL COMMENT '活动标识',
   `prc_id` bigint(20) NOT NULL COMMENT '流程标识',
@@ -376,6 +394,7 @@ INSERT INTO `cm_wfd_atv` VALUES (146898715155492864, 146898695127691264, '开始
 -- ----------------------------
 -- Table structure for cm_wfd_atv_role
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_atv_role`;
 CREATE TABLE `cm_wfd_atv_role`  (
   `atv_id` bigint(20) NOT NULL COMMENT '活动标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -393,6 +412,7 @@ INSERT INTO `cm_wfd_atv_role` VALUES (146898715155492864, 1), (14690057058555904
 -- ----------------------------
 -- Table structure for cm_wfd_prc
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_prc`;
 CREATE TABLE `cm_wfd_prc`  (
   `id` bigint(20) NOT NULL COMMENT '流程标识',
   `name` varchar(64) NOT NULL COMMENT '流程名称',
@@ -414,6 +434,7 @@ INSERT INTO `cm_wfd_prc` VALUES (146898695127691264, '555', '<Sketch><Node id=\"
 -- ----------------------------
 -- Table structure for cm_wfd_trs
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfd_trs`;
 CREATE TABLE `cm_wfd_trs`  (
   `id` bigint(20) NOT NULL COMMENT '迁移标识',
   `prc_id` bigint(20) NOT NULL COMMENT '流程模板标识',
@@ -434,6 +455,7 @@ INSERT INTO `cm_wfd_trs` VALUES (146898896794021888, 146898695127691264, 1468987
 -- ----------------------------
 -- Table structure for cm_wfi_atv
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_atv`;
 CREATE TABLE `cm_wfi_atv`  (
   `id` bigint(20) NOT NULL COMMENT '活动实例标识',
   `prci_id` bigint(20) NOT NULL COMMENT '流程实例标识',
@@ -457,6 +479,7 @@ INSERT INTO `cm_wfi_atv` VALUES (162025231375790080, 162025231350624256, 1525886
 -- ----------------------------
 -- Table structure for cm_wfi_item
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_item`;
 CREATE TABLE `cm_wfi_item`  (
   `id` bigint(20) NOT NULL COMMENT '工作项标识',
   `atvi_id` bigint(20) NOT NULL COMMENT '活动实例标识',
@@ -485,6 +508,7 @@ INSERT INTO `cm_wfi_item` VALUES (162025231392567296, 162025231375790080, 1, 1, 
 -- ----------------------------
 -- Table structure for cm_wfi_prc
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_prc`;
 CREATE TABLE `cm_wfi_prc`  (
   `id` bigint(20) NOT NULL COMMENT '流程实例标识，同时为业务数据主键',
   `prcd_id` bigint(20) NOT NULL COMMENT '流程模板标识',
@@ -506,6 +530,7 @@ INSERT INTO `cm_wfi_prc` VALUES (162025231350624256, 152588581545967616, 'a', 1,
 -- ----------------------------
 -- Table structure for cm_wfi_trs
 -- ----------------------------
+DROP TABLE IF EXISTS `cm_wfi_trs`;
 CREATE TABLE `cm_wfi_trs`  (
   `id` bigint(20) NOT NULL COMMENT '迁移实例标识',
   `trsd_id` bigint(20) NOT NULL COMMENT '迁移模板标识',
@@ -530,6 +555,7 @@ INSERT INTO `cm_wfi_trs` VALUES (162025255165882368, 152683122982649856, 1620252
 -- ----------------------------
 -- Table structure for demo_cache_tbl1
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_cache_tbl1`;
 CREATE TABLE `demo_cache_tbl1`  (
   `id` bigint(20) NOT NULL,
   `phone` varchar(255) NOT NULL,
@@ -545,6 +571,7 @@ INSERT INTO `demo_cache_tbl1` VALUES (454454068519129088, 'ca4f271212bc4add946c5
 -- ----------------------------
 -- Table structure for demo_child_tbl1
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_child_tbl1`;
 CREATE TABLE `demo_child_tbl1`  (
   `id` bigint(20) NOT NULL,
   `parent_id` bigint(20) NOT NULL,
@@ -560,6 +587,7 @@ INSERT INTO `demo_child_tbl1` VALUES (443588385740705792, 443588385522601984, '�
 -- ----------------------------
 -- Table structure for demo_child_tbl2
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_child_tbl2`;
 CREATE TABLE `demo_child_tbl2`  (
   `id` bigint(20) NOT NULL,
   `group_id` bigint(20) NOT NULL,
@@ -575,6 +603,7 @@ INSERT INTO `demo_child_tbl2` VALUES (443588388416671744, 443588385522601984, '�
 -- ----------------------------
 -- Table structure for demo_crud
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_crud`;
 CREATE TABLE `demo_crud`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `name` varchar(255) NOT NULL COMMENT '名称',
@@ -594,6 +623,7 @@ INSERT INTO `demo_crud` VALUES (446127712370708480, '批增更944', 50, '2023-02
 -- ----------------------------
 -- Table structure for demo_par_tbl
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_par_tbl`;
 CREATE TABLE `demo_par_tbl`  (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -608,6 +638,7 @@ INSERT INTO `demo_par_tbl` VALUES (443588385522601984, '91471c9846a44fe8a7fc4b76
 -- ----------------------------
 -- Table structure for demo_virtbl1
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_virtbl1`;
 CREATE TABLE `demo_virtbl1`  (
   `id` bigint(20) NOT NULL,
   `name1` varchar(255) NOT NULL COMMENT '名称1',
@@ -622,6 +653,7 @@ INSERT INTO `demo_virtbl1` VALUES (484613811564728320, '新1'), (484613939734269
 -- ----------------------------
 -- Table structure for demo_virtbl2
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_virtbl2`;
 CREATE TABLE `demo_virtbl2`  (
   `id` bigint(20) NOT NULL,
   `name2` varchar(255) NOT NULL COMMENT '名称2',
@@ -636,6 +668,7 @@ INSERT INTO `demo_virtbl2` VALUES (484613811564728320, '新2'), (484613939734269
 -- ----------------------------
 -- Table structure for demo_virtbl3
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_virtbl3`;
 CREATE TABLE `demo_virtbl3`  (
   `id` bigint(20) NOT NULL,
   `name3` varchar(255) NOT NULL COMMENT '名称3',
@@ -650,6 +683,7 @@ INSERT INTO `demo_virtbl3` VALUES (484613811564728320, '新3'), (484613939734269
 -- ----------------------------
 -- Table structure for demo_大儿
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_大儿`;
 CREATE TABLE `demo_大儿`  (
   `id` bigint(20) NOT NULL,
   `parent_id` bigint(20) NOT NULL,
@@ -667,6 +701,7 @@ INSERT INTO `demo_大儿` VALUES (453807589999792128, 448686488403595264, '啊�
 -- ----------------------------
 -- Table structure for demo_父表
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_父表`;
 CREATE TABLE `demo_父表`  (
   `id` bigint(20) NOT NULL,
   `父名` varchar(255) NOT NULL,
@@ -681,6 +716,7 @@ INSERT INTO `demo_父表` VALUES (448686488403595264, '123'), (44912096374687744
 -- ----------------------------
 -- Table structure for demo_基础
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_基础`;
 CREATE TABLE `demo_基础`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `序列` int(11) NOT NULL COMMENT '序列自动赋值',
@@ -703,6 +739,7 @@ INSERT INTO `demo_基础` VALUES (1, 1, 'adb', 'ddd', 1, 1, 1, 'a', '2023-01-17 
 -- ----------------------------
 -- Table structure for demo_角色
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_角色`;
 CREATE TABLE `demo_角色`  (
   `id` bigint(20) NOT NULL COMMENT '角色标识',
   `角色名称` varchar(32) NOT NULL COMMENT '角色名称',
@@ -718,6 +755,7 @@ INSERT INTO `demo_角色` VALUES (449487215124303872, 'xxx', 'df'), (44981293166
 -- ----------------------------
 -- Table structure for demo_角色权限
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_角色权限`;
 CREATE TABLE `demo_角色权限`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
   `prv_id` bigint(20) NOT NULL COMMENT '权限标识',
@@ -736,6 +774,7 @@ INSERT INTO `demo_角色权限` VALUES (449487215124303872, 449812884102336512);
 -- ----------------------------
 -- Table structure for demo_扩展1
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_扩展1`;
 CREATE TABLE `demo_扩展1`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `扩展1名称` varchar(255) NOT NULL,
@@ -752,6 +791,7 @@ INSERT INTO `demo_扩展1` VALUES (447555037331214336, 'a', 0, 0), (447577275388
 -- ----------------------------
 -- Table structure for demo_扩展2
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_扩展2`;
 CREATE TABLE `demo_扩展2`  (
   `id` bigint(20) NOT NULL COMMENT '标识',
   `扩展2名称` varchar(255) NOT NULL,
@@ -768,6 +808,7 @@ INSERT INTO `demo_扩展2` VALUES (447555037331214336, 'a', 0, ''), (44757727538
 -- ----------------------------
 -- Table structure for demo_权限
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_权限`;
 CREATE TABLE `demo_权限`  (
   `id` bigint(20) NOT NULL COMMENT '权限名称',
   `权限名称` varchar(255) NOT NULL,
@@ -782,6 +823,7 @@ INSERT INTO `demo_权限` VALUES (449812852120768512, '删除'), (44981288410233
 -- ----------------------------
 -- Table structure for demo_收文
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_收文`;
 CREATE TABLE `demo_收文`  (
   `id` bigint(20) NOT NULL,
   `来文单位` varchar(255) NOT NULL,
@@ -803,6 +845,7 @@ INSERT INTO `demo_收文` VALUES (162025231350624256, '123', '2020-12-21', 0, 'a
 -- ----------------------------
 -- Table structure for demo_小儿
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_小儿`;
 CREATE TABLE `demo_小儿`  (
   `id` bigint(20) NOT NULL,
   `group_id` bigint(20) NOT NULL,
@@ -820,6 +863,7 @@ INSERT INTO `demo_小儿` VALUES (449113382156521472, 448686488403595264, 'wwww'
 -- ----------------------------
 -- Table structure for demo_用户
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_用户`;
 CREATE TABLE `demo_用户`  (
   `id` bigint(20) NOT NULL COMMENT '用户标识',
   `手机号` char(11) NOT NULL COMMENT '手机号，唯一',
@@ -836,6 +880,7 @@ INSERT INTO `demo_用户` VALUES (449772627373871104, '13223333', '阿斯顿', '
 -- ----------------------------
 -- Table structure for demo_用户角色
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_用户角色`;
 CREATE TABLE `demo_用户角色`  (
   `user_id` bigint(20) NOT NULL COMMENT '用户标识',
   `role_id` bigint(20) NOT NULL COMMENT '角色标识',
@@ -854,6 +899,7 @@ INSERT INTO `demo_用户角色` VALUES (449772627373871104, 449487215124303872),
 -- ----------------------------
 -- Table structure for demo_主表
 -- ----------------------------
+DROP TABLE IF EXISTS `demo_主表`;
 CREATE TABLE `demo_主表`  (
   `id` bigint(20) NOT NULL,
   `主表名称` varchar(255) NOT NULL,
@@ -870,6 +916,7 @@ INSERT INTO `demo_主表` VALUES (447555037331214336, 'a', '', ''), (44757727538
 -- ----------------------------
 -- Table structure for fsm_file
 -- ----------------------------
+DROP TABLE IF EXISTS `fsm_file`;
 CREATE TABLE `fsm_file`  (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT '文件标识',
   `name` varchar(512) NOT NULL COMMENT '文件名称',
@@ -890,6 +937,7 @@ CREATE TABLE `fsm_file`  (
 -- ----------------------------
 -- Table structure for sequence
 -- ----------------------------
+DROP TABLE IF EXISTS `sequence`;
 CREATE TABLE `sequence`  (
   `id` varchar(64) NOT NULL COMMENT '序列名称',
   `val` int(11) NOT NULL COMMENT '序列的当前值',
@@ -904,11 +952,13 @@ INSERT INTO `sequence` VALUES ('cm_menu_dispidx', 89), ('cm_option_dispidx', 103
 -- ----------------------------
 -- View structure for demo_child_view
 -- ----------------------------
+DROP VIEW IF EXISTS `demo_child_view`;
 CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `demo_child_view` AS select `c`.`id` AS `id`,`c`.`parent_id` AS `parent_id`,`c`.`item_name` AS `item_name`,`p`.`name` AS `name` from (`demo_child_tbl1` `c` join `demo_par_tbl` `p` on((`c`.`parent_id` = `p`.`id`)));
 
 -- ----------------------------
 -- Procedure structure for demo_用户可访问的菜单
 -- ----------------------------
+DROP PROCEDURE IF EXISTS `demo_用户可访问的菜单`;
 CREATE PROCEDURE `demo_用户可访问的菜单`(`p_userid` bigint)
 BEGIN
 
@@ -937,6 +987,7 @@ END
 -- ----------------------------
 -- Function structure for nextval
 -- ----------------------------
+DROP FUNCTION IF EXISTS `nextval`;
 CREATE FUNCTION `nextval`(v_seq_name VARCHAR ( 200 ))
  RETURNS int(11)
 BEGIN

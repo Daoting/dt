@@ -62,20 +62,74 @@ namespace Dt.Core.Rpc
             return "数据库连接失败，请检查输入！";
         }
 
-        public async Task<string> IsExists(List<string> p_list)
+        public async Task<string> IsExists(List<string> p_list, int p_isNewDb)
         {
-            Log.Information("判断新库或新用户名已存在...");
-            var msg = await GetTools(p_list).IsExists();
-            if (!string.IsNullOrEmpty(msg))
+            var db = GetTools(p_list);
+            bool existsDb = await db.ExistsDb();
+            bool existsUser = await db.ExistsUser();
+
+            string msg = null;
+            if (p_isNewDb == 1)
             {
-                Log.Warning(msg);
+                if (existsDb)
+                {
+                    msg = "数据库";
+                }
+                if (existsUser)
+                {
+                    if (msg == null)
+                        msg = "用户";
+                    else
+                        msg += "、用户";
+                }
+
+                if (msg != null)
+                {
+                    msg += "已存在";
+                    Log.Information(msg);
+                    msg += "，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
+                }
+                else
+                {
+                    Log.Information("数据库、用户都不存在");
+                }
+            }
+            else
+            {
+                if (!existsDb)
+                {
+                    msg = "数据库";
+                }
+                if (!existsUser)
+                {
+                    if (msg == null)
+                        msg = "用户";
+                    else
+                        msg += "、用户";
+                }
+
+                if (msg != null)
+                {
+                    msg += "不存在！";
+                    Log.Information(msg);
+                }
+                else if (!await db.IsPwdCorrect())
+                {
+                    msg = "密码不正确！";
+                    Log.Information(msg);
+                }
+                else
+                {
+                    Log.Information("数据库连接成功");
+                }
             }
             return msg;
         }
 
-        public Task<bool> DoInit(List<string> p_list, int p_initType)
+        public Task<bool> DoInit(List<string> p_list, int p_initType, int p_isNewDb)
         {
-            return GetTools(p_list).InitDb(p_initType);
+            var db = GetTools(p_list);
+            return p_isNewDb == 1 ? db.InitDb(p_initType) : db.ImportToDb(p_initType);
         }
 
         IDbTools GetTools(List<string> p_list)

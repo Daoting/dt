@@ -52,36 +52,29 @@ namespace Dt.Core
             return true;
         }
 
-        public async Task<string> IsExists()
-        {
-            string msg = null;
-            if (await ExistsDb())
-            {
-                msg = $"表空间【{_newDb}】";
-            }
-            if (await ExistsUser())
-            {
-                if (msg == null)
-                    msg = $"用户【{_newUser}】";
-                else
-                    msg += $"、用户【{_newUser}】";
-            }
-
-            if (msg != null)
-            {
-                msg += "已存在，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
-            }
-            return msg;
-        }
-
-        async Task<bool> ExistsDb()
+        public async Task<bool> ExistsDb()
         {
             return await _da.GetScalar<int>($"select count(*) from pg_database where datname='{_newDb}'") > 0;
         }
 
-        async Task<bool> ExistsUser()
+        public async Task<bool> ExistsUser()
         {
             return await _da.GetScalar<int>($"select count(*) from pg_user where usename='{_newUser}'") > 0;
+        }
+
+        public async Task<bool> IsPwdCorrect()
+        {
+            var connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newPwd};";
+            var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> InitDb(int p_initType)
@@ -114,32 +107,57 @@ namespace Dt.Core
             await da.Close(true);
             Log.Information("创建空库成功");
 
-            connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newPwd};";
+            return await Import(p_initType, false);
+        }
 
-            if (p_initType != 1)
+        public Task<bool> ImportToDb(int p_initType)
+        {
+            return Import(p_initType, true);
+        }
+
+        async Task<bool> Import(int p_initType, bool p_dropExists)
+        {
+            var connStr = $"{_host};Database={_newDb};Username={_newUser};Password={_newPwd};";
+            var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
+            da.AutoClose = false;
+
+            string sql;
+            if (p_dropExists)
             {
-                da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
-                da.AutoClose = false;
-
-                string sql;
-                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "postgresql-init.sql" : "postgresql-demo.sql"))
+                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "drop-init.txt" : "drop-demo.txt"))
                 {
-                    sql = sr.ReadToEnd();
+                    while (true)
+                    {
+                        var tbl = sr.ReadLine();
+                        if (tbl == null)
+                            break;
+
+                        if (!string.IsNullOrEmpty(tbl))
+                        {
+                            await da.Exec($"DROP TABLE IF EXISTS {tbl}");
+                        }
+                    }
                 }
-
-                await da.Exec(sql);
-                int cntTbl = await da.GetScalar<int>($"select count(*) from pg_tables where schemaname='public'");
-                int cntSp = await da.GetScalar<int>($"select count(*) from pg_proc p join pg_namespace n on p.pronamespace = n.oid where n.nspname='public' and p.prokind = 'p'");
-                int cntSeq = await da.GetScalar<int>($"select count(*) from pg_sequence");
-                int cntView = await da.GetScalar<int>($"select count(*) from pg_views where schemaname='public'");
-
-                var tp = p_initType == 0 ? "标准库" : "样例库";
-                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
-
-                await da.Close(true);
+                Log.Information($"删除旧表");
             }
 
-            Log.Information("新库连接串：\r\n" + connStr);
+            using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "postgresql-init.sql" : "postgresql-demo.sql"))
+            {
+                sql = sr.ReadToEnd();
+            }
+
+            await da.Exec(sql);
+            int cntTbl = await da.GetScalar<int>($"select count(*) from pg_tables where schemaname='public'");
+            int cntSp = await da.GetScalar<int>($"select count(*) from pg_proc p join pg_namespace n on p.pronamespace = n.oid where n.nspname='public' and p.prokind = 'p'");
+            int cntSeq = await da.GetScalar<int>($"select count(*) from pg_sequence");
+            int cntView = await da.GetScalar<int>($"select count(*) from pg_views where schemaname='public'");
+
+            var tp = p_initType == 0 ? "标准库" : "样例库";
+            Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+            await da.Close(true);
+
+            Log.Information("连接串：\r\n" + connStr);
 
             // 不清理连接池，再次创建同样表空间时无法删除文件
             NpgsqlConnection.ClearAllPools();

@@ -1097,6 +1097,11 @@ ALTER TABLE "public"."cm_wfi_trs" ADD CONSTRAINT "fk_wfi_trs_trsdid" FOREIGN KEY
 -- ----------------------------
 -- 序列
 -- ----------------------------
+DROP SEQUENCE IF EXISTS "public"."cm_menu_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_option_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfd_prc_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfi_item_dispidx";
+DROP SEQUENCE IF EXISTS "public"."cm_wfi_prc_dispidx";
 create sequence cm_menu_dispidx start 90;
 create sequence cm_option_dispidx start 1032;
 create sequence cm_wfd_prc_dispidx start 12;

@@ -16,8 +16,14 @@ namespace Dt.Core
     /// </summary>
     interface IDbTools
     {
-        Task<string> IsExists();
+        Task<bool> ExistsDb();
+
+        Task<bool> ExistsUser();
+
+        Task<bool> IsPwdCorrect();
 
         Task<bool> InitDb(int p_initType);
+
+        Task<bool> ImportToDb(int p_initType);
     }
 }

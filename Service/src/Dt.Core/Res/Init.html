@@ -107,25 +107,23 @@
             </div>
             <div id="divSecond" class="divContent" style="display: none">
                 <div>
-                    <label id="lbldb">新库名</label>
+                    <label id="lbldb">库名</label>
                     <input type="text" id="newdb"><br /><br />
-                    <label>新用户名</label>
+                    <label>用户名</label>
                     <input type="text" id="newuser"><br /><br />
                     <label>密码</label>
                     <input id="newpwd" type="password"><br /><br />
-                    <label>新库内容</label>
+                    <label>导入内容</label>
                     <select id="dbContent" style="width:203px;padding:1px 2px">
-                        <option value="0">标准库</option>
-                        <option value="1">空库</option>
-                        <option value="2">样例库</option>
+                        <option value="0">搬运工初始结构</option>
+                        <option value="1">搬运工样例结构</option>
                     </select><br /><br />
-                    <input id="btn0" type="button" value="创　建　新　库" style="width: 100%;" onclick="onDoInit()">
-                    <input id="btn1" type="button" value="返　回" style="width: 100%; margin-top: 10px;" onclick="onBack()">
+                    <input id="btn0" type="button" value="导　　入　　库" style="width: 100%;" onclick="onDoInit(0)">
+                    <input id="btn1" type="button" value="创　建　新　库" style="width: 100%; margin-top: 10px;" onclick="onDoInit(1)">
+                    <input id="btn2" type="button" value="返　回" style="width: 100%; margin-top: 10px;" onclick="onBack()">
                     <div style="margin-top: 10px;">
-                        <label style="color: red; width: auto;">1. * 新库或新用户名已存在时将删除重建 *</label><br />
-                        <label style="color: red; width: auto;">2. 根据dt库和业务库是否使用同一库，推荐：</label><br />
-                        <label style="color: red; width: auto; margin-left: 20px;">无论是否同库，推荐 新库名和新用户名相同</label><br />
-                        <label style="color: red; width: auto; margin-left: 20px;">不同库时，推荐 dt库名=业务库名_dt</label>
+                        <label style="color: red; width: auto;">1. 导入库时将删除旧的同名表、视图等</label><br />
+                        <label style="color: red; width: auto;">2. 创建新库时若库或用户已存在将删除重建</label><br />
                     </div>
                 </div>
                 
@@ -216,9 +214,21 @@
             $("btnConnec").disabled = "";
         }
 
-        async function onDoInit()
+        async function onDoInit(isNewDb)
         {
             if (!isValid())
+                return;
+
+            var info;
+            if (isNewDb == 0)
+            {
+                info = "导入库时将删除旧的同名表、视图等！！！\r\n是否继续？";
+            }
+            else
+            {
+                info = "创建新库时若库或用户已存在将删除重建！！！\r\n是否继续？";
+            }
+            if (confirm(info) == false)
                 return;
 
             toggleButton(true);
@@ -233,20 +243,31 @@
                 + $("newuser").value + "\",\""
                 + $("newpwd").value + "\"]";
 
-            var msg = await call("[\"IsExists\"," + list + "]");
+            var msg = await call("[\"IsExists\"," + list + "," + isNewDb + "]");
             if (msg != null && msg != "")
             {
-                if (confirm(msg + "\r\n1") == false
-                    || confirm(msg + "\r\n2") == false
-                    || confirm(msg + "\r\n3") == false)
+                if (isNewDb == 0)
                 {
+                    // 导入
+                    alert(msg);
                     toggleButton(false);
                     return;
+                }
+                else
+                {
+                    // 新库
+                    if (confirm(msg + "\r\n1") == false
+                        || confirm(msg + "\r\n2") == false
+                        || confirm(msg + "\r\n3") == false)
+                    {
+                        toggleButton(false);
+                        return;
+                    }
                 }
             }
 
             var initType = $("dbContent").value;
-            await call("[\"DoInit\"," + list + "," + initType + "]");
+            await call("[\"DoInit\"," + list + "," + initType + "," + isNewDb + "]");
             toggleButton(false);
         }
 
@@ -262,11 +283,13 @@
             {
                 $("btn0").disabled = "disabled";
                 $("btn1").disabled = "disabled";
+                $("btn2").disabled = "disabled";
             }
             else
             {
                 $("btn0").disabled = "";
                 $("btn1").disabled = "";
+                $("btn2").disabled = "";
             }
         }
 

@@ -50,36 +50,29 @@ namespace Dt.Core
             return true;
         }
 
-        public async Task<string> IsExists()
-        {
-            string msg = null;
-            if (await ExistsDb())
-            {
-                msg = $"数据库【{_newDb}】";
-            }
-            if (await ExistsUser())
-            {
-                if (msg == null)
-                    msg = $"用户【{_newUser}】";
-                else
-                    msg += $"、用户【{_newUser}】";
-            }
-
-            if (msg != null)
-            {
-                msg += "已存在，\r\n点击【确定】将删除重建！\r\n需要【确定】多次避免误操作！";
-            }
-            return msg;
-        }
-
-        async Task<bool> ExistsDb()
+        public async Task<bool> ExistsDb()
         {
             return await _da.GetScalar<int>($"select count(*) from sys.sysdatabases where name='{_newDb}'") > 0;
         }
 
-        async Task<bool> ExistsUser()
+        public async Task<bool> ExistsUser()
         {
             return await _da.GetScalar<int>($"select count(*) from sys.server_principals where type_desc='SQL_LOGIN' and name='{_newUser}'") > 0;
+        }
+
+        public async Task<bool> IsPwdCorrect()
+        {
+            var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newPwd};Encrypt=True;TrustServerCertificate=True;";
+            var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
+            try
+            {
+                await da.SyncDbTime();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> InitDb(int p_initType)
@@ -133,6 +126,11 @@ namespace Dt.Core
             }
 
             Log.Information("新库连接串：\r\n" + connStr);
+            return true;
+        }
+
+        public async Task<bool> ImportToDb(int p_initType)
+        {
             return true;
         }
 
