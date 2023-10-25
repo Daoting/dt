@@ -762,10 +762,9 @@ INSERT INTO "public"."cm_rpt" VALUES (259588273038290944, '新报表3', '', '', 
 -- ----------------------------
 CREATE TABLE "public"."cm_user" (
   "id" int8 NOT NULL,
-  "phone" char(11) NOT NULL,
   "name" varchar(32) NOT NULL,
+  "phone" varchar(16) NOT NULL,
   "pwd" char(32) NOT NULL,
-  "sex" int2 NOT NULL,
   "photo" varchar(255) NOT NULL,
   "expired" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -773,10 +772,9 @@ CREATE TABLE "public"."cm_user" (
 )
 ;
 COMMENT ON COLUMN "public"."cm_user"."id" IS '用户标识';
+COMMENT ON COLUMN "public"."cm_user"."name" IS '账号，唯一';
 COMMENT ON COLUMN "public"."cm_user"."phone" IS '手机号，唯一';
-COMMENT ON COLUMN "public"."cm_user"."name" IS '姓名';
 COMMENT ON COLUMN "public"."cm_user"."pwd" IS '密码的md5';
-COMMENT ON COLUMN "public"."cm_user"."sex" IS '#Gender#性别';
 COMMENT ON COLUMN "public"."cm_user"."photo" IS '头像';
 COMMENT ON COLUMN "public"."cm_user"."expired" IS '是否停用';
 COMMENT ON COLUMN "public"."cm_user"."ctime" IS '创建时间';
@@ -786,22 +784,22 @@ COMMENT ON TABLE "public"."cm_user" IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO "public"."cm_user" VALUES (1, '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', 1, '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
-INSERT INTO "public"."cm_user" VALUES (2, '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', 2, '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19', '2023-03-16 08:36:23');
-INSERT INTO "public"."cm_user" VALUES (3, '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '0001-01-01 00:00:00', '2023-03-16 08:36:46');
-INSERT INTO "public"."cm_user" VALUES (149709966847897600, '13122222222', '李市场', '934b535800b1cba8f96a5d72f72f1611', 1, '', '0', '2020-11-17 10:54:29', '2020-11-25 16:37:55');
-INSERT INTO "public"."cm_user" VALUES (152695627289198592, '13211111111', '王综合', 'b59c67bf196a4758191e42f76670ceba', 1, '', '0', '2020-11-25 16:38:34', '2020-11-25 16:38:34');
-INSERT INTO "public"."cm_user" VALUES (152695790787362816, '13866666666', '张财务', 'e9510081ac30ffa83f10b68cde1cac07', 1, '', '0', '2020-11-25 16:38:54', '2020-11-25 16:38:54');
-INSERT INTO "public"."cm_user" VALUES (184215437633777664, '15955555555', '15955555555', '6074c6aa3488f3c2dddff2a7ca821aab', 1, '', '0', '2021-02-20 16:06:23', '2021-02-20 16:06:23');
-INSERT INTO "public"."cm_user" VALUES (185188338092601344, '15912345678', '15912345678', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '', '0', '2021-02-23 08:32:20', '2021-02-23 08:32:20');
-INSERT INTO "public"."cm_user" VALUES (185212597401677824, '15912345671', '15912345677', 'cca8f108b55ec9e39d7885e24f7da0af', 2, '', '0', '2021-02-23 10:08:43', '2022-01-19 15:49:43');
-INSERT INTO "public"."cm_user" VALUES (192818293676994560, '18543175028', '18543175028', 'bf8dd8c68d02e161c28dc9ea139d4784', 1, '', '0', '2021-03-16 09:51:02', '2021-03-16 09:51:02');
-INSERT INTO "public"."cm_user" VALUES (196167762048839680, '18843175028', '18843175028', 'bf8dd8c68d02e161c28dc9ea139d4784', 1, '', '0', '2021-03-25 15:40:38', '2021-03-25 15:40:38');
-INSERT INTO "public"."cm_user" VALUES (224062063923556352, '14411111111', '14411111111', 'b59c67bf196a4758191e42f76670ceba', 1, '', '0', '2021-06-10 15:02:39', '2021-06-10 15:02:39');
-INSERT INTO "public"."cm_user" VALUES (227949556179791872, '13612345678', 'WebAssembly', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '', '0', '2021-06-21 08:30:10', '2021-06-21 08:30:34');
-INSERT INTO "public"."cm_user" VALUES (229519641138819072, '13311111111', '13311111111', 'b59c67bf196a4758191e42f76670ceba', 1, '[["editor/E3/18/452737920958222336.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-03 15:38"]]', '0', '2021-06-25 16:29:06', '2021-06-25 16:29:06');
-INSERT INTO "public"."cm_user" VALUES (231620526086156288, '13611111111', '13611111111', 'b59c67bf196a4758191e42f76670ceba', 1, '', '0', '2021-07-01 11:37:18', '2021-07-01 11:37:18');
-INSERT INTO "public"."cm_user" VALUES (247170018466197504, '15948341897', '15948341892', 'af3303f852abeccd793068486a391626', 1, '', '0', '2021-08-13 09:25:26', '2021-09-10 09:36:37');
+INSERT INTO "public"."cm_user" VALUES (1, 'Windows', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
+INSERT INTO "public"."cm_user" VALUES (2, '安卓', '13522222222', 'b59c67bf196a4758191e42f76670ceba', '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19', '2023-03-16 08:36:23');
+INSERT INTO "public"."cm_user" VALUES (3, '苹果', '13533333333', 'b59c67bf196a4758191e42f76670ceba', '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '0001-01-01 00:00:00', '2023-03-16 08:36:46');
+INSERT INTO "public"."cm_user" VALUES (149709966847897600, '李市场', '13122222222', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2020-11-17 10:54:29', '2020-11-25 16:37:55');
+INSERT INTO "public"."cm_user" VALUES (152695627289198592, '王综合', '13211111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2020-11-25 16:38:34', '2020-11-25 16:38:34');
+INSERT INTO "public"."cm_user" VALUES (152695790787362816, '张财务', '13866666666', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2020-11-25 16:38:54', '2020-11-25 16:38:54');
+INSERT INTO "public"."cm_user" VALUES (184215437633777664, '15955555555', '15955555555', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-02-20 16:06:23', '2021-02-20 16:06:23');
+INSERT INTO "public"."cm_user" VALUES (185188338092601344, '15912345678', '15912345678', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-02-23 08:32:20', '2021-02-23 08:32:20');
+INSERT INTO "public"."cm_user" VALUES (185212597401677824, '15912345677', '15912345671', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-02-23 10:08:43', '2022-01-19 15:49:43');
+INSERT INTO "public"."cm_user" VALUES (192818293676994560, '18543175028', '18543175028', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-03-16 09:51:02', '2021-03-16 09:51:02');
+INSERT INTO "public"."cm_user" VALUES (196167762048839680, '18843175028', '18843175028', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-03-25 15:40:38', '2021-03-25 15:40:38');
+INSERT INTO "public"."cm_user" VALUES (224062063923556352, '14411111111', '14411111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-06-10 15:02:39', '2021-06-10 15:02:39');
+INSERT INTO "public"."cm_user" VALUES (227949556179791872, 'WebAssembly', '13612345678', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-06-21 08:30:10', '2021-06-21 08:30:34');
+INSERT INTO "public"."cm_user" VALUES (229519641138819072, '13311111111', '13311111111', 'b59c67bf196a4758191e42f76670ceba', '[["editor/E3/18/452737920958222336.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2023-03-03 15:38"]]', '0', '2021-06-25 16:29:06', '2021-06-25 16:29:06');
+INSERT INTO "public"."cm_user" VALUES (231620526086156288, '13611111111', '13611111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-07-01 11:37:18', '2021-07-01 11:37:18');
+INSERT INTO "public"."cm_user" VALUES (247170018466197504, '15948341892', '15948341897', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2021-08-13 09:25:26', '2021-09-10 09:36:37');
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -1888,7 +1886,11 @@ ALTER TABLE "public"."cm_rpt" ADD PRIMARY KEY ("id");
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE UNIQUE INDEX "idx_user_phone" ON "public"."cm_user" USING btree (
+CREATE INDEX "idx_user_name" ON "public"."cm_user" USING btree (
+  name ASC
+);
+
+CREATE INDEX "idx_user_phone" ON "public"."cm_user" USING btree (
   "phone" ASC
 );
 

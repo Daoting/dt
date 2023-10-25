@@ -50,17 +50,17 @@ namespace Dt.Mgr.Rbac
                     && (IsAdded || cName.IsChanged))
                 {
                     if (await GetCount($"where name='{Name}'") > 0)
-                        Throw.Msg("账号重复！");
+                        Throw.Msg("账号重复！", cName);
                 }
 
                 if (Phone != ""
                     && (IsAdded || cPhone.IsChanged))
                 {
                     if (!Regex.IsMatch(Phone, "^1[34578]\\d{9}$"))
-                        Throw.Msg("手机号码错误！");
+                        Throw.Msg("手机号码错误！", cPhone);
 
                     if (await GetCount($"where phone='{Phone}'") > 0)
-                        Throw.Msg("手机号码重复！");
+                        Throw.Msg("手机号码重复！", cPhone);
                 }
 
                 if (IsAdded)

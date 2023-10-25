@@ -371,10 +371,9 @@ COMMENT ON TABLE "public"."cm_rpt" IS '报表模板定义';
 -- ----------------------------
 CREATE TABLE "public"."cm_user" (
   "id" int8 NOT NULL,
-  "phone" char(11) NOT NULL,
   "name" varchar(32) NOT NULL,
+  "phone" varchar(16) NOT NULL,
   "pwd" char(32) NOT NULL,
-  "sex" int2 NOT NULL,
   "photo" varchar(255) NOT NULL,
   "expired" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -382,10 +381,9 @@ CREATE TABLE "public"."cm_user" (
 )
 ;
 COMMENT ON COLUMN "public"."cm_user"."id" IS '用户标识';
+COMMENT ON COLUMN "public"."cm_user"."name" IS '账号，唯一';
 COMMENT ON COLUMN "public"."cm_user"."phone" IS '手机号，唯一';
-COMMENT ON COLUMN "public"."cm_user"."name" IS '姓名';
 COMMENT ON COLUMN "public"."cm_user"."pwd" IS '密码的md5';
-COMMENT ON COLUMN "public"."cm_user"."sex" IS '#Gender#性别';
 COMMENT ON COLUMN "public"."cm_user"."photo" IS '头像';
 COMMENT ON COLUMN "public"."cm_user"."expired" IS '是否停用';
 COMMENT ON COLUMN "public"."cm_user"."ctime" IS '创建时间';
@@ -395,9 +393,9 @@ COMMENT ON TABLE "public"."cm_user" IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO "public"."cm_user" VALUES (1, '13511111111', 'Windows', 'af3303f852abeccd793068486a391626', 1, '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
-INSERT INTO "public"."cm_user" VALUES (2, '13522222222', '安卓', 'b59c67bf196a4758191e42f76670ceba', 2, '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19', '2023-03-16 08:36:23');
-INSERT INTO "public"."cm_user" VALUES (3, '13533333333', '苹果', '674f3c2c1a8a6f90461e8a66fb5550ba', 1, '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '0001-01-01 00:00:00', '2023-03-16 08:36:46');
+INSERT INTO "public"."cm_user" VALUES (1, 'Windows', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
+INSERT INTO "public"."cm_user" VALUES (2, '安卓', '13522222222', 'b59c67bf196a4758191e42f76670ceba', '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19', '2023-03-16 08:36:23');
+INSERT INTO "public"."cm_user" VALUES (3, '苹果', '13533333333', 'b59c67bf196a4758191e42f76670ceba', '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '0001-01-01 00:00:00', '2023-03-16 08:36:46');
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -832,7 +830,11 @@ ALTER TABLE "public"."cm_rpt" ADD PRIMARY KEY ("id");
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE UNIQUE INDEX "idx_user_phone" ON "public"."cm_user" USING btree (
+CREATE INDEX "idx_user_name" ON "public"."cm_user" USING btree (
+  name ASC
+);
+
+CREATE INDEX "idx_user_phone" ON "public"."cm_user" USING btree (
   "phone" ASC
 );
 

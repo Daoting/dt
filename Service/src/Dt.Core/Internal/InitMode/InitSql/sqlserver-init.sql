@@ -733,10 +733,9 @@ GO
 -- ----------------------------
 CREATE TABLE [dbo].[cm_user] (
   [id] bigint NOT NULL,
-  [phone] char(11) NOT NULL,
   [name] nvarchar(32) NOT NULL,
+  [phone] nvarchar(16) NOT NULL,
   [pwd] char(32) NOT NULL,
-  [sex] tinyint NOT NULL,
   [photo] nvarchar(255) NOT NULL,
   [expired] bit NOT NULL,
   [ctime] datetime NOT NULL,
@@ -759,7 +758,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'姓名',
+'MS_Description', N'账号，唯一',
 'SCHEMA', N'dbo',
 'TABLE', N'cm_user',
 'COLUMN', N'name'
@@ -770,13 +769,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'cm_user',
 'COLUMN', N'pwd'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'#Gender#性别',
-'SCHEMA', N'dbo',
-'TABLE', N'cm_user',
-'COLUMN', N'sex'
 GO
 
 EXEC sp_addextendedproperty
@@ -817,8 +809,10 @@ GO
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO [dbo].[cm_user] VALUES (N'1', N'13511111111', N'Windows', N'af3303f852abeccd793068486a391626', N'1', N'[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 09:06:38', N'2023-03-16 08:35:39'), (N'2', N'13522222222', N'安卓', N'b59c67bf196a4758191e42f76670ceba', N'2', N'[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2019-10-24 13:03:19', N'2023-03-16 08:36:23'), (N'3', N'13533333333', N'苹果', N'674f3c2c1a8a6f90461e8a66fb5550ba', N'1', N'[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', N'0', N'2020-11-19 13:17:25', N'2023-03-16 08:36:46')
-GO
+INSERT INTO [dbo].[cm_user] VALUES (1, N'Windows', N'13511111111', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38.000', '2023-03-16 08:35:39.000'); GO
+INSERT INTO [dbo].[cm_user] VALUES (2, N'安卓', N'13522222222', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19.000', '2023-03-16 08:36:23.000'); GO
+INSERT INTO [dbo].[cm_user] VALUES (3, N'苹果', N'13533333333', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2020-11-19 13:17:25.000', '2023-03-16 08:36:46.000'); GO
+
 
 
 -- ----------------------------
@@ -1932,7 +1926,13 @@ GO
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE UNIQUE NONCLUSTERED INDEX [idx_user_phone]
+CREATE NONCLUSTERED INDEX [idx_user_name]
+ON [dbo].[cm_user] (
+  [name] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [idx_user_phone]
 ON [dbo].[cm_user] (
   [phone] ASC
 )
