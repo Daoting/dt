@@ -1,3 +1,18 @@
+/*
+Navicat 从 mysql 导出后修改：
+1. VARCHAR2 VARCHAR2
+2. NUMBER(4) 布尔类型修改为
+   ISFOLDER CHAR(1) DEFAULT 0 NOT NULL ,
+   ALTER TABLE CM_FILE_MY ADD CHECK (ISFOLDER in (0,1))
+
+   有部分枚举类型改成 NUMBER(3)
+3. NCLOB VARCHAR2(4000)
+4. 双引号 删除
+5. NCHAR CHAR
+6. NUMBER(20) NUMBER(19)
+7. NUMBER(11) NUMBER(9)
+8. 存储过程内部的分号去除，避免 END 被拆分成独立语句
+*/
 
 -- ----------------------------
 -- Table structure for cm_file_my
@@ -407,9 +422,7 @@ COMMENT ON TABLE CM_USER IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO CM_USER VALUES ('1', 'Windows', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('2019-10-24 09:06:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:35:39', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_USER VALUES ('2', '安卓', '13522222222', 'b59c67bf196a4758191e42f76670ceba', '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('2019-10-24 13:03:19', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:23', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_USER VALUES ('3', '苹果', '13533333333', 'b59c67bf196a4758191e42f76670ceba', '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', TO_DATE('0001-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:36:46', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_USER VALUES ('1', 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', TO_DATE('2019-10-24 09:06:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-16 08:35:39', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -455,8 +468,6 @@ COMMENT ON TABLE CM_USER_ROLE IS '用户一角色多对多';
 -- Records of cm_user_role
 -- ----------------------------
 INSERT INTO CM_USER_ROLE VALUES ('1', '2');
-INSERT INTO CM_USER_ROLE VALUES ('2', '2');
-INSERT INTO CM_USER_ROLE VALUES ('3', '2');
 
 -- ----------------------------
 -- Table structure for cm_wfd_atv

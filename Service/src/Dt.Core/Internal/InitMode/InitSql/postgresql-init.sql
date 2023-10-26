@@ -1,3 +1,10 @@
+/*
+Navicat 从 mysql 导出后修改：
+1. int2 部分转bool 其余保留，转bool的数据需要加''
+2. varchar(21000) varchar(65535)
+3. timestamp 转 timestamp(0)
+*/
+
 -- ----------------------------
 -- Table structure for cm_file_my
 -- ----------------------------
@@ -393,9 +400,7 @@ COMMENT ON TABLE "public"."cm_user" IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO "public"."cm_user" VALUES (1, 'Windows', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
-INSERT INTO "public"."cm_user" VALUES (2, '安卓', '13522222222', 'b59c67bf196a4758191e42f76670ceba', '[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19', '2023-03-16 08:36:23');
-INSERT INTO "public"."cm_user" VALUES (3, '苹果', '13533333333', 'b59c67bf196a4758191e42f76670ceba', '[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '0001-01-01 00:00:00', '2023-03-16 08:36:46');
+INSERT INTO "public"."cm_user" VALUES (1, 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -441,8 +446,6 @@ COMMENT ON TABLE "public"."cm_user_role" IS '用户一角色多对多';
 -- Records of cm_user_role
 -- ----------------------------
 INSERT INTO "public"."cm_user_role" VALUES (1, 2);
-INSERT INTO "public"."cm_user_role" VALUES (2, 2);
-INSERT INTO "public"."cm_user_role" VALUES (3, 2);
 
 -- ----------------------------
 -- Table structure for cm_wfd_atv

@@ -120,11 +120,20 @@ namespace Dt.Core
             var da = new MySqlAccess(new DbInfo("mysql", connStr, DatabaseType.MySql));
             da.AutoClose = false;
 
-            using (var sr = GetSqlStream(p_initType == 0 ? "mysql-init.sql" : "mysql-demo.sql"))
+            using (var sr = GetSqlStream("mysql-init.sql"))
             {
                 sql = sr.ReadToEnd();
             }
             await da.Exec(sql);
+
+            if (p_initType == 1)
+            {
+                using (var sr = GetSqlStream("mysql-demo.sql"))
+                {
+                    sql = sr.ReadToEnd();
+                }
+                await da.Exec(sql);
+            }
 
             int cntTbl = await da.GetScalar<int>($"select count(*) from information_schema.tables where table_schema='{_newDb}'");
             int cntFun = await da.GetScalar<int>($"select count(*) from information_schema.routines where routine_schema='{_newDb}' and routine_type='function'");

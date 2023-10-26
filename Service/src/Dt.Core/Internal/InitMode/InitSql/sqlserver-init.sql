@@ -1,4 +1,3 @@
-
 -- ----------------------------
 -- Table structure for cm_file_my
 -- ----------------------------
@@ -809,9 +808,7 @@ GO
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO [dbo].[cm_user] VALUES (1, N'Windows', N'13511111111', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/1.jpg","1","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 09:06:38.000', '2023-03-16 08:35:39.000'); GO
-INSERT INTO [dbo].[cm_user] VALUES (2, N'安卓', N'13522222222', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/2.jpg","2","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2019-10-24 13:03:19.000', '2023-03-16 08:36:23.000'); GO
-INSERT INTO [dbo].[cm_user] VALUES (3, N'苹果', N'13533333333', 'b59c67bf196a4758191e42f76670ceba', N'[["photo/3.jpg","3","300 x 300 (.jpg)",49179,"daoting","2020-03-13 10:37"]]', '0', '2020-11-19 13:17:25.000', '2023-03-16 08:36:46.000'); GO
+INSERT INTO [dbo].[cm_user] VALUES (1, N'admin', N'13511111111', 'b59c67bf196a4758191e42f76670ceba', N'', '0', '2019-10-24 09:06:38.000', '2023-03-16 08:35:39.000'); GO
 
 
 
@@ -924,7 +921,7 @@ GO
 -- ----------------------------
 -- Records of cm_user_role
 -- ----------------------------
-INSERT INTO [dbo].[cm_user_role] VALUES (N'1', N'2'), (N'2', N'2'), (N'3', N'2')
+INSERT INTO [dbo].[cm_user_role] VALUES (N'1', N'2')
 GO
 
 
@@ -2345,6 +2342,13 @@ GO
 -- ----------------------------
 -- 序列
 -- ----------------------------
+drop sequence cm_menu_dispidx;
+drop sequence cm_option_dispidx;
+drop sequence cm_wfd_prc_dispidx;
+drop sequence cm_wfi_item_dispidx;
+drop sequence cm_wfi_prc_dispidx;
+GO
+
 create sequence cm_menu_dispidx start with 90;
 create sequence cm_option_dispidx start with 1032;
 create sequence cm_wfd_prc_dispidx start with 12;

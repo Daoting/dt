@@ -13,6 +13,7 @@ namespace Dt.Core
 {
     class SqlServerTools : IDbTools
     {
+        const string _sqlDrop = "IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[{0}]') AND type IN ('U')) DROP TABLE [dbo].[{0}]";
         SqlServerAccess _da;
         string _host;
         string _newDb;
@@ -85,53 +86,94 @@ namespace Dt.Core
             await _da.Close(true);
             Log.Information("创建空库成功");
 
+            return await Import(p_initType, false);
+        }
+
+        public Task<bool> ImportToDb(int p_initType)
+        {
+            return Import(p_initType, true);
+        }
+
+        async Task<bool> Import(int p_initType, bool p_dropExists)
+        {
             var connStr = $"{_host};Initial Catalog={_newDb};User ID={_newUser};Password={_newPwd};Encrypt=True;TrustServerCertificate=True;";
+            var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
+            da.AutoClose = false;
 
-            if (p_initType != 1)
+            if (p_dropExists)
             {
-                var da = new SqlServerAccess(new DbInfo("sqlserver", connStr, DatabaseType.SqlServer));
-                da.AutoClose = false;
-
-                string sql;
-                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "sqlserver-init.sql" : "sqlserver-demo.sql"))
-                {
-                    sql = sr.ReadToEnd();
-                }
-
-                var ls = sql.Split("GO");
-                foreach (var item in ls)
-                {
-                    if (!string.IsNullOrWhiteSpace(item))
-                    {
-                        try
-                        {
-                            await da.Exec(item);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex.Message);
-                        }
-                    }
-                }
-
-                int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
-                int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
-                int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
-                int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
-
-                var tp = p_initType == 0 ? "标准库" : "样例库";
-                Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
-
-                await da.Close(true);
+                await DropTbl("drop-init.txt", da);
+                if (p_initType == 1)
+                    await DropTbl("drop-demo.txt", da);
+                Log.Information($"删除旧表");
             }
 
-            Log.Information("新库连接串：\r\n" + connStr);
+            await ImportSql("sqlserver-init.sql", da);
+            if (p_initType == 1)
+                await ImportSql("sqlserver-demo.sql", da);
+
+            int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
+            int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
+            int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
+            int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
+
+            var tp = p_initType == 0 ? "标准库" : "样例库";
+            Log.Information($"{tp}初始化成功：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
+
+            await da.Close(true);
+
+            Log.Information("连接串：\r\n" + connStr);
             return true;
         }
 
-        public async Task<bool> ImportToDb(int p_initType)
+        async Task ImportSql(string p_file, SqlServerAccess p_da)
         {
-            return true;
+            string sql;
+            using (var sr = MySqlTools.GetSqlStream(p_file))
+            {
+                sql = sr.ReadToEnd();
+            }
+
+            var ls = sql.Split("GO");
+            foreach (var item in ls)
+            {
+                if (!string.IsNullOrWhiteSpace(item))
+                {
+                    try
+                    {
+                        await p_da.Exec(item);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex.Message);
+                    }
+                }
+            }
+        }
+
+        async Task DropTbl(string p_file, SqlServerAccess p_da)
+        {
+            using (var sr = MySqlTools.GetSqlStream(p_file))
+            {
+                while (true)
+                {
+                    var tbl = sr.ReadLine();
+                    if (tbl == null)
+                        break;
+
+                    if (!string.IsNullOrEmpty(tbl))
+                    {
+                        try
+                        {
+                            await p_da.Exec(string.Format(_sqlDrop, tbl));
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warning(ex.Message);
+                        }
+                    }
+                }
+            }
         }
 
         async Task CreateDb()

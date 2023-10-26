@@ -121,32 +121,30 @@ namespace Dt.Core
             var da = new PostgreSqlAccess(new DbInfo("pg", connStr, DatabaseType.PostgreSql));
             da.AutoClose = false;
 
-            string sql;
             if (p_dropExists)
             {
-                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "drop-init.txt" : "drop-demo.txt"))
-                {
-                    while (true)
-                    {
-                        var tbl = sr.ReadLine();
-                        if (tbl == null)
-                            break;
-
-                        if (!string.IsNullOrEmpty(tbl))
-                        {
-                            await da.Exec($"DROP TABLE IF EXISTS {tbl}");
-                        }
-                    }
-                }
+                await DropTbl("drop-init.txt", da);
+                if (p_initType == 1)
+                    await DropTbl("drop-demo.txt", da);
                 Log.Information($"删除旧表");
             }
 
-            using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "postgresql-init.sql" : "postgresql-demo.sql"))
+            string sql;
+            using (var sr = MySqlTools.GetSqlStream("postgresql-init.sql"))
             {
                 sql = sr.ReadToEnd();
             }
-
             await da.Exec(sql);
+
+            if (p_initType == 1)
+            {
+                using (var sr = MySqlTools.GetSqlStream("postgresql-demo.sql"))
+                {
+                    sql = sr.ReadToEnd();
+                }
+                await da.Exec(sql);
+            }
+
             int cntTbl = await da.GetScalar<int>($"select count(*) from pg_tables where schemaname='public'");
             int cntSp = await da.GetScalar<int>($"select count(*) from pg_proc p join pg_namespace n on p.pronamespace = n.oid where n.nspname='public' and p.prokind = 'p'");
             int cntSeq = await da.GetScalar<int>($"select count(*) from pg_sequence");
@@ -162,6 +160,31 @@ namespace Dt.Core
             // 不清理连接池，再次创建同样表空间时无法删除文件
             NpgsqlConnection.ClearAllPools();
             return true;
+        }
+
+        async Task DropTbl(string p_file, PostgreSqlAccess p_da)
+        {
+            using (var sr = MySqlTools.GetSqlStream(p_file))
+            {
+                while (true)
+                {
+                    var tbl = sr.ReadLine();
+                    if (tbl == null)
+                        break;
+
+                    if (!string.IsNullOrEmpty(tbl))
+                    {
+                        try
+                        {
+                            await p_da.Exec($"DROP TABLE IF EXISTS {tbl}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warning(ex.Message);
+                        }
+                    }
+                }
+            }
         }
 
         #region 删除旧库和用户

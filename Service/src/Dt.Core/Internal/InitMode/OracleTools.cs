@@ -99,60 +99,18 @@ namespace Dt.Core
             var da = new OracleAccess(new DbInfo("orcl", connStr, DatabaseType.Oracle));
             da.AutoClose = false;
 
-            string sql;
             if (p_dropExists)
             {
-                using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "drop-init.txt" : "drop-demo.txt"))
-                {
-                    while (true)
-                    {
-                        var tbl = sr.ReadLine();
-                        if (tbl == null)
-                            break;
-
-                        if (!string.IsNullOrEmpty(tbl))
-                        {
-                            try
-                            {
-                                await da.Exec($"DROP TABLE {tbl}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Warning(ex.Message);
-                            }
-                        }
-                    }
-                }
+                await DropTbl("drop-init.txt", da);
+                if (p_initType == 1)
+                    await DropTbl("drop-demo.txt", da);
                 Log.Information($"删除旧表");
             }
 
-            using (var sr = MySqlTools.GetSqlStream(p_initType == 0 ? "oracle-init.sql" : "oracle-demo.sql"))
-            {
-                sql = sr.ReadToEnd();
-            }
-
             Log.Information($"初始化数据库...");
-            var ls = sql.Split(';');
-            foreach (var item in ls)
-            {
-                if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
-                {
-                    var str = item;
-                    // 存储过程
-                    if (str.EndsWith("END"))
-                    {
-                        str = str.Substring(0, str.Length - 3).TrimEnd() + ";\r\n\r\nEND;";
-                    }
-                    try
-                    {
-                        await da.Exec(str);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warning(ex.Message);
-                    }
-                }
-            }
+            await ImportSql("oracle-init.sql", da);
+            if (p_initType == 1)
+                await ImportSql("oracle-demo.sql", da);
 
             int cntTbl = await da.GetScalar<int>("select count(*) from user_tables");
             int cntSeq = await da.GetScalar<int>("select count(*) from user_objects where object_type='SEQUENCE'");
@@ -169,6 +127,62 @@ namespace Dt.Core
             // 不清理连接池，再次创建同样表空间时无法删除文件
             OracleConnection.ClearAllPools();
             return true;
+        }
+
+        async Task ImportSql(string p_file, OracleAccess p_da)
+        {
+            string sql;
+            using (var sr = MySqlTools.GetSqlStream(p_file))
+            {
+                sql = sr.ReadToEnd();
+            }
+                        
+            var ls = sql.Split(';');
+            foreach (var item in ls)
+            {
+                if (!string.IsNullOrWhiteSpace(item) && item != "\r\nCOMMIT")
+                {
+                    var str = item;
+                    // 存储过程
+                    if (str.EndsWith("END"))
+                    {
+                        str = str.Substring(0, str.Length - 3).TrimEnd() + ";\r\n\r\nEND;";
+                    }
+                    try
+                    {
+                        await p_da.Exec(str);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex.Message);
+                    }
+                }
+            }
+        }
+
+        async Task DropTbl(string p_file, OracleAccess p_da)
+        {
+            using (var sr = MySqlTools.GetSqlStream(p_file))
+            {
+                while (true)
+                {
+                    var tbl = sr.ReadLine();
+                    if (tbl == null)
+                        break;
+
+                    if (!string.IsNullOrEmpty(tbl))
+                    {
+                        try
+                        {
+                            await p_da.Exec($"DROP TABLE {tbl}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warning(ex.Message);
+                        }
+                    }
+                }
+            }
         }
 
         #region 创建表空间和用户
