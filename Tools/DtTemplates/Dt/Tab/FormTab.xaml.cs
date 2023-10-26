@@ -70,7 +70,6 @@ namespace $rootnamespace$
             //    Clear();
             //    return;
             //}
-
         }
 
         //MyEntityX Data

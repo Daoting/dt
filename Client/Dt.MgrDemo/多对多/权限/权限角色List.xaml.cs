@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-17 创建
+* 日志: 2023-10-26 创建
 ******************************************************************************/
 #endregion
 
@@ -35,7 +35,7 @@ namespace Dt.MgrDemo
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await 角色X.Query($"where exists ( select ROLE_ID from DEMO_角色权限 b where a.ID = b.ROLE_ID and PRV_ID={_releatedID} )");
+                _lv.Data = await 角色X.Query($"where exists ( select role_id from demo_角色权限 b where a.ID = b.role_id and prv_id={_releatedID} )");
             }
             else
             {

@@ -124,17 +124,9 @@ namespace $rootnamespace$
 
             _dlgQuery = new Dlg
             {
-                Title = "搜索",
-                IsPinned = true
+                IsPinned = true,
+                ShowVeil = true
             };
-
-            if (!Kit.IsPhoneUI)
-            {
-                _dlgQuery.WinPlacement = DlgPlacement.CenterScreen;
-                _dlgQuery.Width = Kit.ViewWidth / 4;
-                _dlgQuery.Height = Kit.ViewHeight - 100;
-                _dlgQuery.ShowVeil = true;
-            }
             _dlgQuery.LoadTabs(tabs);
         }
 

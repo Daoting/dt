@@ -22,15 +22,23 @@ namespace $rootnamespace$
 
         public void Update()
         {
-            Query();
+            //if (Clause == null)
+            //{
+            //    _lv.Data = await MyEntityX.Query(null);
+            //}
+            //else
+            //{
+            //    var par = await Clause.Build<MyEntityX>();
+            //    _lv.Data = await MyEntityX.Query(par.Sql, par.Params);
+            //}
         }
 
         protected override void OnFirstLoaded()
         {
-            Query();
+            Update();
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnAdd()
         {
             //_win.Form.Update(-1);
             //NaviTo(_win.Form);
@@ -49,29 +57,31 @@ namespace $rootnamespace$
         /// </summary>
         public QueryClause Clause { get; set; }
 
-        public void OnSearch(QueryClause p_clause)
+        void OnQuery()
         {
-            Clause = p_clause;
-            Query();
-            NaviTo(this);
+            //if (_dlgQuery == null)
+            //{
+            //    var fs = new FuzzySearch();
+            //    fs.Fixed.Add("全部");
+            //    fs.CookieID = _win.GetType().FullName;
+            //    fs.Search += (s, e) =>
+            //    {
+            //        Clause = new QueryClause(e);
+            //        _ = Update();
+            //        _dlgQuery.Close();
+            //    };
+
+            //    _dlgQuery = new Dlg
+            //    {
+            //        IsPinned = true,
+            //        ShowVeil = true,
+            //    };
+            //    _dlgQuery.LoadTab(fs);
+            //}
+            //_dlgQuery.Show();
         }
 
-        void OnToSearch(object sender, Mi e)
-        {
-            //NaviTo(new List<Tab> { _win.Search, _win.Query });
-        }
-
-        void Query()
-        {
-            //if (Clause == null)
-            //{
-            //    _lv.Data = await MyEntityX.Query();
-            //}
-            //else
-            //{
-            //    _lv.Data = await MyEntityX.Query(Clause.Where, Clause.Params);
-            //}
-        }
+        //Dlg _dlgQuery;
         #endregion
 
         //$safeitemname$Win _win => ($safeitemname$Win)OwnWin;

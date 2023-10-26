@@ -14,7 +14,7 @@
     </a:Tab.Menu>
 
     <a:Fv x:Name="_fv" Save="Save" Create="Create" Delete="Delete">
-        <a:CNum ID="GROUP_ID" />
+        <a:CNum ID="group_id" />
         <a:CText ID="小儿名" />
     </a:Fv>
 </a:Tab>

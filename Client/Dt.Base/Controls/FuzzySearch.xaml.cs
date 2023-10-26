@@ -129,6 +129,12 @@ namespace Dt.Base
                 _baseUri = $"{_baseUri}+{Title}";
                 await LoadHisItems();
             }
+
+            if (!Kit.IsPhoneUI && OwnDlg != null)
+            {
+                // 防止对话框中多个查询标签时，其它标签内容高度太小造成切换时高度变化
+                OwnDlg.MinHeight = 530;
+            }
         }
 
         async void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
@@ -209,6 +215,10 @@ namespace Dt.Base
             {
                 _tb.Margin = new Thickness(10);
                 _grid.Children.Add(_tb);
+
+                // 设置宽高限制，否则在Dlg中水平铺满，高度太小
+                _grid.MaxWidth = 455;
+                _grid.MinHeight = 400;
             }
         }
 

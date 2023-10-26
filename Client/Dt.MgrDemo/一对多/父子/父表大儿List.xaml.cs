@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-17 创建
+* 日志: 2023-10-26 创建
 ******************************************************************************/
 #endregion
 
@@ -36,7 +36,7 @@ namespace Dt.MgrDemo
         {
             if (_parentID > 0)
             {
-                _lv.Data = await 大儿X.Query($"where PARENT_ID={_parentID}");
+                _lv.Data = await 大儿X.Query($"where parent_id={_parentID}");
             }
             else
             {
