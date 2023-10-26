@@ -528,6 +528,10 @@ namespace Dt.Base
                 Tabs tabs = new Tabs();
                 tabs.Items.Add(p_tab);
                 Content = tabs;
+
+                // 缺省标题
+                if (ReadLocalValue(TitleProperty) == DependencyProperty.UnsetValue)
+                    Title = p_tab.Title;
             }
         }
 
@@ -568,6 +572,10 @@ namespace Dt.Base
                     tabs.Items.Add(tab);
                 }
                 Content = tabs;
+
+                // 缺省标题
+                if (ReadLocalValue(TitleProperty) == DependencyProperty.UnsetValue)
+                    Title = p_tabs[0].Title;
             }
         }
         #endregion
