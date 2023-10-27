@@ -14,18 +14,20 @@ using Microsoft.UI.Xaml.Controls;
 namespace Dt.Mgr.Rbac
 {
     [View(LobViews.基础权限)]
-    public partial class PermissionWin : Win
+    public partial class PerWin : Win
     {
-        public PermissionWin()
+        public PerWin()
         {
             InitializeComponent();
         }
 
-        public PermissionList MainList => _mainList;
+        public PerModuleList ModuleList => _mouleList;
 
-        public PermissionForm MainForm => _mainForm;
+        public PerFuncList FuncList => _funcList;
 
-        public PermissionRoleList RoleList => _roleList;
+        public PerList PerList => _perList;
+
+        public PerRoleList PerRoleList => _perRoleList;
 
     }
 }

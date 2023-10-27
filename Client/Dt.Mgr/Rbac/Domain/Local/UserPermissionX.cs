@@ -20,21 +20,18 @@ namespace Dt.Mgr
         #region 构造方法
         UserPermissionX() { }
 
-        public UserPermissionX(string Name)
+        public UserPermissionX(long ID)
         {
-            Add("Name", Name);
+            Add("ID", ID);
             IsAdded = true;
         }
         #endregion
 
-        /// <summary>
-        /// 权限名称
-        /// </summary>
         [PrimaryKey]
-        public string Name
+        new public long ID
         {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
+            get { return (long)this["ID"]; }
+            set { this["ID"] = value; }
         }
     }
 }

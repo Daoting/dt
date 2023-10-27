@@ -17,11 +17,13 @@ namespace Dt.Mgr.Rbac
     public partial class PermissionX
     {
         public static async Task<PermissionX> New(
+            long FuncID = default,
             string Name = default,
             string Note = default)
         {
             return new PermissionX(
                 ID: await NewID(),
+                FuncID: FuncID,
                 Name: "新权限",
                 Note: Note);
         }

@@ -169,16 +169,13 @@ namespace Dt.Mgr
         /// <summary>
         /// 判断当前登录用户是否具有指定权限
         /// </summary>
-        /// <param name="p_permission">权限名称</param>
+        /// <param name="p_perID">权限ID</param>
         /// <returns>true 表示有权限</returns>
-        protected override async Task<bool> HasPermission(string p_permission)
+        protected override async Task<bool> HasPermission(long p_perID)
         {
-            if (string.IsNullOrEmpty(p_permission))
-                return false;
-
             if (_initPer)
             {
-                return await HasPerInternal(p_permission);
+                return await HasPerInternal(p_perID);
             }
 
             // 查询当前版本号
@@ -190,7 +187,7 @@ namespace Dt.Mgr
                 if (localVer == ver)
                 {
                     // 版本号相同，直接取本地数据
-                    return await HasPerInternal(p_permission);
+                    return await HasPerInternal(p_perID);
                 }
             }
 
@@ -207,15 +204,15 @@ namespace Dt.Mgr
                 List<Dict> dts = new List<Dict>();
                 foreach (var row in tbl)
                 {
-                    var name = row.Str("name");
-                    if (p_permission.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    var id = row.Long("id");
+                    if (p_perID == id)
                         hasPer = true;
 
-                    dts.Add(new Dict { { "name", row.Str("name") } });
-                    sum += row.Long("id");
+                    dts.Add(new Dict { { "id", id } });
+                    sum += id;
                 }
                 var d = new Dict();
-                d["text"] = "insert into UserPermission (name) values (@name)";
+                d["text"] = "insert into UserPermission (id) values (@id)";
                 d["params"] = dts;
                 await AtLob.BatchExec(new List<Dict> { d });
             }
@@ -231,9 +228,9 @@ namespace Dt.Mgr
             return hasPer;
         }
 
-        static async Task<bool> HasPerInternal(string p_permission)
+        static async Task<bool> HasPerInternal(long p_perID)
         {
-            return await AtLob.GetScalar<int>($"select count(*) from UserPermission where Name='{p_permission}'") > 0;
+            return await AtLob.GetScalar<int>($"select count(*) from UserPermission where ID={p_perID}") > 0;
         }
 
         /// <summary>

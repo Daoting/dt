@@ -13,9 +13,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public sealed partial class Role4PermissionDlg : Dlg
+    public sealed partial class Role4PerDlg : Dlg
     {
-        public Role4PermissionDlg()
+        public Role4PerDlg()
         {
             InitializeComponent();
         }

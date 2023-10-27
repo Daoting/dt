@@ -189,9 +189,9 @@ namespace Dt.Core
         /// <summary>
         /// 判断当前登录用户是否具有指定权限
         /// </summary>
-        /// <param name="p_permission">权限名称</param>
+        /// <param name="p_perID">权限ID</param>
         /// <returns>true 表示有权限</returns>
-        internal protected virtual Task<bool> HasPermission(string p_permission)
+        internal protected virtual Task<bool> HasPermission(long p_perID)
         {
             throw new NotSupportedException();
         }

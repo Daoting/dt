@@ -11,25 +11,22 @@
 
 namespace Dt.Mgr.Rbac
 {
-    /// <summary>
-    /// 权限
-    /// </summary>
-    [Tbl("cm_permission")]
-    public partial class PermissionX : EntityX<PermissionX>
+    [Tbl("cm_permission_func")]
+    public partial class PermissionFuncX : EntityX<PermissionFuncX>
     {
         #region 构造方法
-        PermissionX() { }
+        PermissionFuncX() { }
 
-        public PermissionX(CellList p_cells) : base(p_cells) { }
+        public PermissionFuncX(CellList p_cells) : base(p_cells) { }
 
-        public PermissionX(
+        public PermissionFuncX(
             long ID,
-            long FuncID = default,
+            long ModuleID = default,
             string Name = default,
             string Note = default)
         {
             Add("id", ID);
-            Add("func_id", FuncID);
+            Add("module_id", ModuleID);
             Add("name", Name);
             Add("note", Note);
             IsAdded = true;
@@ -37,18 +34,18 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         /// <summary>
-        /// 所属功能
+        /// 所属模块
         /// </summary>
-        public long FuncID
+        public long ModuleID
         {
-            get { return (long)this["func_id"]; }
-            set { this["func_id"] = value; }
+            get { return (long)this["module_id"]; }
+            set { this["module_id"] = value; }
         }
 
-        public Cell cFuncID => _cells["func_id"];
+        public Cell cModuleID => _cells["module_id"];
 
         /// <summary>
-        /// 权限名称
+        /// 功能名称
         /// </summary>
         public string Name
         {
@@ -59,7 +56,7 @@ namespace Dt.Mgr.Rbac
         public Cell cName => _cells["name"];
 
         /// <summary>
-        /// 权限描述
+        /// 功能描述
         /// </summary>
         public string Note
         {

@@ -118,7 +118,7 @@ namespace Dt.Mgr.Rbac
         {
             _win.UserList.Update(p_id);
             _win.MenuList.Update(p_id);
-            _win.PermissionList.Update(p_id);
+            _win.PerList.Update(p_id);
             _win.GroupList.Update(p_id);
         }
 

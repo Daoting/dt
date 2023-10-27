@@ -33,6 +33,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * CLink的Click和Call事件
 * Dlg加载Tab时设置缺省标题
 * 设置FuzzySearch在Dlg的大小
+* 权限增加模块、功能两级目录，适用权限过多的情况
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

@@ -64,7 +64,7 @@ namespace Dt.Mgr.Rbac
         void NaviToChild()
         {
             if (Kit.IsPhoneUI)
-                NaviTo(new List<Tab> { _win.MainForm, _win.UserList, _win.MenuList, _win.PermissionList, _win.GroupList });
+                NaviTo(new List<Tab> { _win.MainForm, _win.UserList, _win.MenuList, _win.PerList, _win.GroupList });
         }
 
         async void OnDel(object sender, Mi e)

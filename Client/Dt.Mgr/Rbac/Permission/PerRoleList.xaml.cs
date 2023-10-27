@@ -13,10 +13,10 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class PermissionRoleList : Tab
+    public partial class PerRoleList : Tab
     {
         #region 构造方法
-        public PermissionRoleList()
+        public PerRoleList()
         {
             InitializeComponent();
         }
@@ -40,13 +40,14 @@ namespace Dt.Mgr.Rbac
             {
                 _lv.Data = null;
             }
+            
         }
         #endregion
 
         #region 交互
         async void OnAdd(object sender, Mi e)
         {
-            var dlg = new Role4PermissionDlg();
+            var dlg = new Role4PerDlg();
             if (await dlg.Show(_releatedID, e)
                 && await RbacDs.AddPerRoles(_releatedID, dlg.SelectedIDs))
             {
@@ -98,7 +99,7 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 内部
-        PermissionWin _win => (PermissionWin)OwnWin;
+        PerWin _win => (PerWin)OwnWin;
         long _releatedID;
         #endregion
     }

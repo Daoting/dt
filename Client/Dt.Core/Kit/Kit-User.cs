@@ -66,11 +66,11 @@ namespace Dt.Core
         /// <summary>
         /// 判断当前登录用户是否具有指定权限
         /// </summary>
-        /// <param name="p_permission">权限名称</param>
+        /// <param name="p_perID">权限ID</param>
         /// <returns>true 表示有权限</returns>
-        public static Task<bool> HasPermission(string p_permission)
+        public static Task<bool> HasPermission(long p_perID)
         {
-            return Stub.Inst.HasPermission(p_permission);
+            return Stub.Inst.HasPermission(p_perID);
         }
         #endregion
 
