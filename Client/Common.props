@@ -128,10 +128,12 @@
         <Using Remove="Microsoft.Extensions.Logging" />
     </ItemGroup>
 
-    <!--win预览xaml用-->
-    <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-    </ItemGroup>
+    <!--win预览xaml用，生成前嵌入，否则xaml页面后台代码的智能失效-->
+    <Target Name="EmbeddedXaml" BeforeTargets="PrepareForBuild" Condition="$(TargetFramework.Contains('-windows'))">
+        <ItemGroup>
+            <EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+        </ItemGroup>
+    </Target>
     
     <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
