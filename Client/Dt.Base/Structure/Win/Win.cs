@@ -85,6 +85,12 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
+        static readonly DependencyProperty OwnDlgProperty = DependencyProperty.Register(
+            "OwnDlg",
+            typeof(Dlg),
+            typeof(Win),
+            new PropertyMetadata(null));
+
         static void OnIsActivedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Win win = (Win)d;
@@ -192,6 +198,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(IsActivedProperty); }
             internal set { SetValue(IsActivedProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取所属的Dlg
+        /// </summary>
+        public Dlg OwnDlg
+        {
+            get { return (Dlg)GetValue(OwnDlgProperty); }
+            internal set { SetValue(OwnDlgProperty, value); }
         }
 
         /// <summary>
@@ -364,6 +379,12 @@ namespace Dt.Base
             {
                 // 移除内嵌窗口
                 tab.Content = null;
+            }
+            else if (OwnDlg is Dlg dlg)
+            {
+                // 在对话框内部
+                dlg.Close();
+                AfterClosed();
             }
             else
             {

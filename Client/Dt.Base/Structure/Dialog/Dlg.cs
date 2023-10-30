@@ -578,6 +578,23 @@ namespace Dt.Base
                     Title = p_tabs[0].Title;
             }
         }
+
+        /// <summary>
+        /// 对话框内部加载窗口，非PhoneUI有效
+        /// </summary>
+        /// <param name="p_win"></param>
+        public void LoadWin(Win p_win)
+        {
+            if (p_win == null)
+                Throw.Msg("Dlg中的Win不可为空！");
+
+            Content = p_win;
+            p_win.OwnDlg = this;
+
+            // 缺省标题
+            if (ReadLocalValue(TitleProperty) == DependencyProperty.UnsetValue)
+                Title = p_win.Title;
+        }
         #endregion
 
         #region 重写方法
