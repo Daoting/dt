@@ -17,10 +17,8 @@ namespace Dt.Mgr
         {
             public class 文件管理
             {
-                public static Task<bool> 公共文件管理 => Kit.HasPermission(1L);
-
-                public const long 公共文件管理1 = 1L;
-                public const long 素材库管理 = 2L;
+                public static Task<bool> 公共文件增删 => Kit.HasPermission(1L);
+                public static Task<bool> 素材库增删 => Kit.HasPermission(2L);
             }
         }
     }

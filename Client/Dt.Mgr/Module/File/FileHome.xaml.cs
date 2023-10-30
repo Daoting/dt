@@ -32,7 +32,7 @@ namespace Dt.Mgr.Module
         {
             var setting = new FileMgrSetting
             {
-                //AllowEdit = async () => await Kit.HasPermission("公共文件管理"),
+                AllowEdit = async () => await Per.系统预留.文件管理.公共文件增删,
                 OnOpenedFile = LoadHistory,
             };
             _tabPub.NaviParams = new PubFileMgr { Setting = setting };

@@ -30,7 +30,7 @@ namespace Dt.Mgr.Module
 
         void OnPublicFile(object sender, RoutedEventArgs e)
         {
-            var setting = new FileMgrSetting();// { AllowEdit = async () => await Kit.HasPermission("公共文件管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await Per.系统预留.文件管理.公共文件增删 };
             Forward(new SelectFilePage(new PubFileMgr { Setting = setting }, _owner));
         }
 
@@ -39,15 +39,9 @@ namespace Dt.Mgr.Module
             Forward(new SelectFilePage(new MyFileMgr { Setting = new FileMgrSetting { AllowEdit = () => Task.FromResult(true) } }, _owner));
         }
 
-        async void OnResFile(object sender, RoutedEventArgs e)
+        void OnResFile(object sender, RoutedEventArgs e)
         {
-            if (await Per.系统预留.文件管理.公共文件管理)
-            {
-
-            }
-
-            var ab = await Kit.HasPermission(Per.系统预留.文件管理.素材库管理);
-            var setting = new FileMgrSetting();// { AllowEdit = async () => await Kit.HasPermission("素材库管理") };
+            var setting = new FileMgrSetting { AllowEdit = async () => await Per.系统预留.文件管理.素材库增删 };
             Forward(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         
