@@ -13,10 +13,10 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class RolePermissionList : Tab
+    public partial class RolePerList : Tab
     {
         #region 构造方法
-        public RolePermissionList()
+        public RolePerList()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace Dt.Mgr.Rbac
         {
             if (_releatedID > 0)
             {
-                _lv.Data = await PermissionX.Query($"where exists ( select per_id from cm_role_per b where a.id = b.per_id and role_id = {_releatedID} )");
+                _lv.Data = await PermissionX.GetRolePermission(_releatedID);
             }
             else
             {
@@ -44,16 +44,39 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        void OnAdd(object sender, Mi e)
         {
-            var dlg = new Permission4RoleDlg();
-            if (await dlg.Show(_releatedID, e)
-                && await RbacDs.AddRolePers(_releatedID, dlg.SelectedIDs))
+            Per4RoleWin win;
+            if (Kit.IsPhoneUI)
             {
-                Refresh();
+                win = (Per4RoleWin)Kit.OpenWin(typeof(Per4RoleWin), null, Icons.Edge, _releatedID);
             }
+            else
+            {
+                win = new Per4RoleWin(_releatedID);
+                var dlg = new Dlg
+                {
+                    WinPlacement = DlgPlacement.TargetBottomLeft,
+                    PlacementTarget = e,
+                    ClipElement = e,
+                    Height = Kit.ViewHeight / 2,
+                    Width = 600,
+                };
+
+                dlg.LoadWin(win);
+                dlg.Show();
+            }
+
+            win.Closed += async (s, e) =>
+            {
+                if (win.IsOK
+                && await RbacDs.AddRolePers(_releatedID, win.SelectedIDs))
+                {
+                    Refresh();
+                }
+            };
         }
-        
+
         async void OnDel(object sender, Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))

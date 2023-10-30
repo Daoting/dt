@@ -29,7 +29,7 @@ namespace Dt.Mgr.Rbac
 
         public RoleMenuList MenuList => _menuList;
 
-        public RolePermissionList PerList => _permissionList;
+        public RolePerList PerList => _permissionList;
 
         public RoleGroupList GroupList => _groupList;
 

@@ -5,9 +5,10 @@
     xmlns:a="using:Dt.Base"
     Title="已授予权限">
 
-    <a:Lv x:Name="_lv">
-        <DataTemplate>
-            <a:Dot ID="name" Margin="10,0,10,0" />
-        </DataTemplate>
+    <a:Lv x:Name="_lv" ViewMode="Table" GroupName="modname">
+        <a:Cols>
+            <a:Col ID="funcname" Title="功能" Width="120" />
+            <a:Col ID="name" Title="权限" Width="160" />
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

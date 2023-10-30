@@ -23,7 +23,7 @@ namespace Dt.Mgr.Rbac
 
         public async void Show(long p_userID)
         {
-            _lv.Data = await PermissionX.GetUserPermission(p_userID);
+            _lv.Data = await PermissionX.GetUserPersAndModule(p_userID);
 
             if (!Kit.IsPhoneUI)
             {

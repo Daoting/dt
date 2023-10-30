@@ -33,6 +33,16 @@ namespace Dt.Mgr.Rbac
             return Query(string.Format(Sql用户具有的权限, p_userID));
         }
 
+        public static Task<Table<PermissionX>> GetRolePermission(long p_roleID)
+        {
+            return Query(string.Format(Sql角色权限, p_roleID));
+        }
+
+        public static Task<Table<PermissionX>> GetUserPersAndModule(long p_userID)
+        {
+            return Query(string.Format(Sql用户具有的权限及所属, p_userID));
+        }
+
         protected override void InitHook()
         {
             OnSaving(async () =>
