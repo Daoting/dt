@@ -373,6 +373,10 @@ namespace Dt.Core
             // 调整对话框层
             _dlgCanvas.Children.Clear();
             Stub.Inst.OnUIModeChanged();
+
+#if WIN
+            MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
+#endif
         }
 #endif
         #endregion
