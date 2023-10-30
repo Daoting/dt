@@ -314,6 +314,57 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 生成判断权限的类
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetPermissionClass()
+        {
+            StringBuilder sb = new StringBuilder();
+            AppendTabSpace(sb, 1);
+            sb.Append("class Per");
+            sb.AppendLine();
+            AppendTabSpace(sb, 1);
+            sb.AppendLine("{");
+
+            var mods = await _da.Query("select * from cm_permission_module");
+            foreach (var mod in mods)
+            {
+                AppendTabSpace(sb, 2);
+                sb.Append("public class ");
+                sb.AppendLine(mod.Str("name"));
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("{");
+
+                var funcs = await _da.Query("select * from cm_permission_func where module_id=" + mod.ID);
+                foreach (var func in funcs)
+                {
+                    AppendTabSpace(sb, 3);
+                    sb.Append("public class ");
+                    sb.AppendLine(mod.Str("name"));
+                    AppendTabSpace(sb, 3);
+                    sb.AppendLine("{");
+
+                    var pers = await _da.Query("select * from cm_permission where func_id=" + func.ID);
+                    foreach (var per in pers)
+                    {
+                        AppendTabSpace(sb, 4);
+                        sb.AppendLine($"public static Task<bool> {per.Str("name")} => Kit.HasPermission({per.ID}L);");
+                    }
+
+                    AppendTabSpace(sb, 3);
+                    sb.AppendLine("}");
+                }
+
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("}");
+            }
+
+            AppendTabSpace(sb, 1);
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// 获取最新的所有表名
         /// </summary>
         /// <returns></returns>

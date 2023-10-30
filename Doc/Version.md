@@ -34,6 +34,10 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Dlg加载Tab时设置缺省标题
 * 设置FuzzySearch在Dlg的大小
 * 权限增加模块、功能两级目录，适用权限过多的情况
+* Win嵌入Dlg
+* 判断权限的简洁写法
+* Win的PhoneUI模式不占用标题栏
+* 生成判断权限的类
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
