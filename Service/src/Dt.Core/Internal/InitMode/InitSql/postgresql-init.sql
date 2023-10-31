@@ -271,15 +271,56 @@ INSERT INTO "public"."cm_params" VALUES (2, '接收新发布通知', 'true', '',
 INSERT INTO "public"."cm_params" VALUES (3, '接收新消息', 'true', '接收通讯录消息推送', '2020-12-02 09:24:28', '2020-12-02 09:24:28');
 
 -- ----------------------------
--- Table structure for cm_permission
+-- Table structure for CM_PERMISSION_MODULE
 -- ----------------------------
-CREATE TABLE "public"."cm_permission" (
+CREATE TABLE "public"."cm_permission_module" (
   "id" int8 NOT NULL,
   "name" varchar(64) NOT NULL,
   "note" varchar(255)
 )
 ;
+COMMENT ON COLUMN "public"."cm_permission_module"."id" IS '模块标识';
+COMMENT ON COLUMN "public"."cm_permission_module"."name" IS '模块名称';
+COMMENT ON COLUMN "public"."cm_permission_module"."note" IS '模块描述';
+COMMENT ON TABLE "public"."cm_permission_module" IS '权限所属模块';
+
+-- ----------------------------
+-- Records of CM_PERMISSION_MODULE
+-- ----------------------------
+INSERT INTO "public"."cm_permission_module" VALUES (1, '系统预留', '系统内部使用的权限控制，禁止删除');
+
+-- ----------------------------
+-- Table structure for CM_PERMISSION_FUNC
+-- ----------------------------
+CREATE TABLE "public"."cm_permission_func" (
+  "id" int8 NOT NULL,
+  "module_id" int8 NOT NULL,
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
+)
+;
+COMMENT ON COLUMN "public"."cm_permission_func"."module_id" IS '所属模块';
+COMMENT ON COLUMN "public"."cm_permission_func"."name" IS '功能名称';
+COMMENT ON COLUMN "public"."cm_permission_func"."note" IS '功能描述';
+COMMENT ON TABLE "public"."cm_permission_func" IS '权限所属功能';
+
+-- ----------------------------
+-- Records of CM_PERMISSION_FUNC
+-- ----------------------------
+INSERT INTO "public"."cm_permission_func" VALUES (1, 1, '文件管理', '管理文件的上传、删除等');
+
+-- ----------------------------
+-- Table structure for cm_permission
+-- ----------------------------
+CREATE TABLE "public"."cm_permission" (
+  "id" int8 NOT NULL,
+  "func_id" int8 NOT NULL,
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
+)
+;
 COMMENT ON COLUMN "public"."cm_permission"."id" IS '权限标识';
+COMMENT ON COLUMN "public"."cm_permission"."func_id" IS '所属功能';
 COMMENT ON COLUMN "public"."cm_permission"."name" IS '权限名称';
 COMMENT ON COLUMN "public"."cm_permission"."note" IS '权限描述';
 COMMENT ON TABLE "public"."cm_permission" IS '权限';
@@ -287,8 +328,8 @@ COMMENT ON TABLE "public"."cm_permission" IS '权限';
 -- ----------------------------
 -- Records of cm_permission
 -- ----------------------------
-INSERT INTO "public"."cm_permission" VALUES (1, '公共文件管理', '禁止删除');
-INSERT INTO "public"."cm_permission" VALUES (2, '素材库管理', '禁止删除');
+INSERT INTO "public"."cm_permission" VALUES (1, 1, '公共文件增删', '公共文件的上传、删除等');
+INSERT INTO "public"."cm_permission" VALUES (2, 1, '素材库增删', '素材库目录的上传、删除等');
 
 -- ----------------------------
 -- Table structure for cm_role
@@ -350,8 +391,8 @@ COMMENT ON TABLE "public"."cm_role_per" IS '角色一权限多对多';
 -- ----------------------------
 -- Records of cm_role_per
 -- ----------------------------
-INSERT INTO "public"."cm_role_per" VALUES (1, 1);
-INSERT INTO "public"."cm_role_per" VALUES (1, 2);
+INSERT INTO "public"."cm_role_per" VALUES (2, 1);
+INSERT INTO "public"."cm_role_per" VALUES (2, 2);
 
 -- ----------------------------
 -- Table structure for cm_rpt
@@ -765,15 +806,47 @@ ALTER TABLE "public"."cm_params" ADD PRIMARY KEY ("id");
 -- ----------------------------
 -- Indexes structure for table cm_permission
 -- ----------------------------
-CREATE UNIQUE INDEX "idx_permission_name" ON "public"."cm_permission" USING btree (
-  "name" ASC
+CREATE INDEX "fk_permission" ON "public"."cm_permission" (
+  "func_id" ASC
 );
-COMMENT ON INDEX "public"."idx_permission_name" IS '不重复';
 
 -- ----------------------------
 -- Primary Key structure for table cm_permission
 -- ----------------------------
 ALTER TABLE "public"."cm_permission" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Indexes structure for table CM_PERMISSION_FUNC
+-- ----------------------------
+CREATE INDEX "fk_permission_func" ON "public"."cm_permission_func" (
+  "module_id" ASC
+);
+
+-- ----------------------------
+-- Primary Key structure for table CM_PERMISSION_FUNC
+-- ----------------------------
+ALTER TABLE "public"."cm_permission_func" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table CM_PERMISSION_MODULE
+-- ----------------------------
+ALTER TABLE "public"."cm_permission_module" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Uniques structure for table cm_permission
+-- ----------------------------
+ALTER TABLE "public"."cm_permission" ADD CONSTRAINT "uq_permission" UNIQUE ("func_id", "name");
+
+-- ----------------------------
+-- Uniques structure for table cm_permission
+-- ----------------------------
+ALTER TABLE "public"."cm_permission_func" ADD CONSTRAINT "uq_permission_func" UNIQUE ("module_id", "name");
+
+ALTER TABLE "public"."cm_permission" 
+  ADD CONSTRAINT "fk_permission_func" FOREIGN KEY ("func_id") REFERENCES "public"."cm_permission_func" ("id");
+
+ALTER TABLE "public"."cm_permission_func" 
+  ADD CONSTRAINT "fk_permission_module" FOREIGN KEY ("module_id") REFERENCES "public"."cm_permission_module" ("id");
 
 -- ----------------------------
 -- Indexes structure for table cm_role

@@ -290,15 +290,56 @@ INSERT INTO CM_PARAMS VALUES ('2', '接收新发布通知', 'true', '', TO_DATE(
 INSERT INTO CM_PARAMS VALUES ('3', '接收新消息', 'true', '接收通讯录消息推送', TO_DATE('2020-12-02 09:24:28', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-12-02 09:24:28', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
+-- Table structure for cm_permission_module
+-- ----------------------------
+CREATE TABLE CM_PERMISSION_MODULE (
+  ID NUMBER(20) NOT NULL,
+  NAME NVARCHAR2(64) NOT NULL,
+  NOTE NVARCHAR2(255)
+)
+;
+COMMENT ON COLUMN CM_PERMISSION_MODULE.ID IS '模块标识';
+COMMENT ON COLUMN CM_PERMISSION_MODULE.NAME IS '模块名称';
+COMMENT ON COLUMN CM_PERMISSION_MODULE.NOTE IS '模块描述';
+COMMENT ON TABLE CM_PERMISSION_MODULE IS '权限所属模块';
+
+-- ----------------------------
+-- Records of cm_permission_module
+-- ----------------------------
+INSERT INTO CM_PERMISSION_MODULE VALUES ('1', '系统预留', '系统内部使用的权限控制，禁止删除');
+
+-- ----------------------------
+-- Table structure for cm_permission_func
+-- ----------------------------
+CREATE TABLE CM_PERMISSION_FUNC (
+  ID NUMBER(20) NOT NULL,
+  MODULE_ID NUMBER(20) NOT NULL,
+  NAME NVARCHAR2(64) NOT NULL,
+  NOTE NVARCHAR2(255)
+)
+;
+COMMENT ON COLUMN CM_PERMISSION_FUNC.MODULE_ID IS '所属模块';
+COMMENT ON COLUMN CM_PERMISSION_FUNC.NAME IS '功能名称';
+COMMENT ON COLUMN CM_PERMISSION_FUNC.NOTE IS '功能描述';
+COMMENT ON TABLE CM_PERMISSION_FUNC IS '权限所属功能';
+
+-- ----------------------------
+-- Records of cm_permission_func
+-- ----------------------------
+INSERT INTO CM_PERMISSION_FUNC VALUES ('1', '1', '文件管理', '管理文件的上传、删除等');
+
+-- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
 CREATE TABLE CM_PERMISSION (
   ID NUMBER(19) NOT NULL,
+  FUNC_ID NUMBER(20) NOT NULL,
   NAME VARCHAR2(64) NOT NULL,
   NOTE VARCHAR2(255)
 )
 ;
 COMMENT ON COLUMN CM_PERMISSION.ID IS '权限标识';
+COMMENT ON COLUMN CM_PERMISSION.FUNC_ID IS '所属功能';
 COMMENT ON COLUMN CM_PERMISSION.NAME IS '权限名称';
 COMMENT ON COLUMN CM_PERMISSION.NOTE IS '权限描述';
 COMMENT ON TABLE CM_PERMISSION IS '权限';
@@ -306,8 +347,8 @@ COMMENT ON TABLE CM_PERMISSION IS '权限';
 -- ----------------------------
 -- Records of cm_permission
 -- ----------------------------
-INSERT INTO CM_PERMISSION VALUES ('1', '公共文件管理', '禁止删除');
-INSERT INTO CM_PERMISSION VALUES ('2', '素材库管理', '禁止删除');
+INSERT INTO CM_PERMISSION VALUES ('1', '1', '公共文件增删', '公共文件的上传、删除等');
+INSERT INTO CM_PERMISSION VALUES ('2', '1', '素材库增删', '素材库目录的上传、删除等');
 
 -- ----------------------------
 -- Table structure for cm_role
@@ -369,8 +410,8 @@ COMMENT ON TABLE CM_ROLE_PER IS '角色一权限多对多';
 -- ----------------------------
 -- Records of cm_role_per
 -- ----------------------------
-INSERT INTO CM_ROLE_PER VALUES ('1', '1');
-INSERT INTO CM_ROLE_PER VALUES ('1', '2');
+INSERT INTO CM_ROLE_PER VALUES ('2', '1');
+INSERT INTO CM_ROLE_PER VALUES ('2', '2');
 
 -- ----------------------------
 -- Table structure for cm_rpt
@@ -794,6 +835,22 @@ CREATE UNIQUE INDEX IDX_PARAMS_NAME
   ON CM_PARAMS (NAME ASC);
 
 -- ----------------------------
+-- Primary Key structure for table cm_permission_module
+-- ----------------------------
+ALTER TABLE CM_PERMISSION_MODULE ADD PRIMARY KEY (ID);
+
+-- ----------------------------
+-- Primary Key structure for table cm_permission_func
+-- ----------------------------
+ALTER TABLE CM_PERMISSION_FUNC ADD PRIMARY KEY (ID);
+
+-- ----------------------------
+-- Indexes structure for table cm_permission_func
+-- ----------------------------
+CREATE INDEX FK_PERMISSION_FUNC
+  ON CM_PERMISSION_FUNC (MODULE_ID ASC);
+
+-- ----------------------------
 -- Primary Key structure for table cm_permission
 -- ----------------------------
 ALTER TABLE CM_PERMISSION ADD PRIMARY KEY (ID);
@@ -801,8 +858,18 @@ ALTER TABLE CM_PERMISSION ADD PRIMARY KEY (ID);
 -- ----------------------------
 -- Indexes structure for table cm_permission
 -- ----------------------------
-CREATE UNIQUE INDEX IDX_PERMISSION_NAME
-  ON CM_PERMISSION (NAME ASC);
+CREATE INDEX FK_PERMISSION
+  ON CM_PERMISSION (FUNC_ID ASC);
+
+-- ----------------------------
+-- Uniques structure for table cm_permission_func
+-- ----------------------------
+ALTER TABLE CM_PERMISSION_FUNC ADD CONSTRAINT UK_PERMISSION_FUNC UNIQUE (MODULE_ID, NAME) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Uniques structure for table cm_permission_func
+-- ----------------------------
+ALTER TABLE CM_PERMISSION ADD CONSTRAINT UK_PERMISSION UNIQUE (FUNC_ID, NAME) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table cm_role

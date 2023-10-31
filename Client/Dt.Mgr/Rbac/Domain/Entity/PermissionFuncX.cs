@@ -27,11 +27,17 @@ namespace Dt.Mgr.Rbac
 
         protected override void InitHook()
         {
-            //OnSaving(() =>
-            //{
+            OnSaving(async () =>
+            {
+                if (Name == "")
+                    Throw.Msg("名称不可为空！");
 
-            //    return Task.CompletedTask;
-            //});
+                if (IsAdded || cName.IsChanged)
+                {
+                    if (await GetCount($"where name='{Name}' and module_id={ModuleID}") > 0)
+                        Throw.Msg("同模块内的功能名称不可重复！", cName);
+                }
+            });
 
             //OnSaved(() =>
             //{

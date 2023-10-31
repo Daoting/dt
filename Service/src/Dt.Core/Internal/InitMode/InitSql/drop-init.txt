@@ -18,6 +18,8 @@ cm_option
 cm_option_group
 cm_params
 cm_permission
+cm_permission_func
+cm_permission_module
 cm_role
 cm_rpt
 cm_file_pub

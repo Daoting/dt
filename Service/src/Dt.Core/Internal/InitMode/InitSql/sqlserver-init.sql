@@ -501,10 +501,102 @@ GO
 
 
 -- ----------------------------
+-- Table structure for cm_permission_module
+-- ----------------------------
+CREATE TABLE [dbo].[cm_permission_module] (
+  [id] bigint NOT NULL,
+  [name] nvarchar(64) NOT NULL,
+  [note] nvarchar(255) NULL
+)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'模块标识',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_module',
+'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'模块名称',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_module',
+'COLUMN', N'name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'模块描述',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_module',
+'COLUMN', N'note'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'权限所属模块',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_module'
+GO
+
+
+-- ----------------------------
+-- Records of cm_permission_module
+-- ----------------------------
+INSERT INTO [dbo].[cm_permission_module] VALUES (N'1', N'系统预留', N'系统内部使用的权限控制，禁止删除')
+GO
+
+
+-- ----------------------------
+-- Table structure for cm_permission_func
+-- ----------------------------
+CREATE TABLE [dbo].[cm_permission_func] (
+  [id] bigint NOT NULL,
+  [module_id] bigint NOT NULL,
+  [name] nvarchar(64) NOT NULL,
+  [note] nvarchar(255) NULL
+)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'所属模块',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_func',
+'COLUMN', N'module_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'功能名称',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_func',
+'COLUMN', N'name'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'功能描述',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_func',
+'COLUMN', N'note'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'权限所属功能',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission_func'
+GO
+
+
+-- ----------------------------
+-- Records of cm_permission_func
+-- ----------------------------
+INSERT INTO [dbo].[cm_permission_func] VALUES (N'1', N'1', N'文件管理', N'管理文件的上传、删除等')
+GO
+
+
+-- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
 CREATE TABLE [dbo].[cm_permission] (
   [id] bigint NOT NULL,
+  [func_id] bigint NOT NULL,
   [name] nvarchar(64) NOT NULL,
   [note] nvarchar(255) NULL
 )
@@ -515,6 +607,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'cm_permission',
 'COLUMN', N'id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'所属功能',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_permission',
+'COLUMN', N'func_id'
 GO
 
 EXEC sp_addextendedproperty
@@ -541,7 +640,7 @@ GO
 -- ----------------------------
 -- Records of cm_permission
 -- ----------------------------
-INSERT INTO [dbo].[cm_permission] VALUES (N'1', N'公共文件管理', N'禁止删除'), (N'2', N'素材库管理', N'禁止删除')
+INSERT INTO [dbo].[cm_permission] VALUES (N'1', N'1', N'公共文件增删', N'公共文件的上传、删除等'), (N'2', N'1', N'素材库增删', N'素材库目录的上传、删除等')
 GO
 
 
@@ -660,7 +759,7 @@ GO
 -- ----------------------------
 -- Records of cm_role_per
 -- ----------------------------
-INSERT INTO [dbo].[cm_role_per] VALUES (N'1', N'1'), (N'1', N'2')
+INSERT INTO [dbo].[cm_role_per] VALUES (N'2', N'1'), (N'2', N'2')
 GO
 
 
@@ -1807,17 +1906,10 @@ GO
 -- ----------------------------
 -- Indexes structure for table cm_permission
 -- ----------------------------
-CREATE UNIQUE NONCLUSTERED INDEX [idx_permission_name]
+CREATE NONCLUSTERED INDEX [fk_permission]
 ON [dbo].[cm_permission] (
-  [name] ASC
+  [func_id] ASC
 )
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'不重复',
-'SCHEMA', N'dbo',
-'TABLE', N'cm_permission',
-'INDEX', N'idx_permission_name'
 GO
 
 
@@ -1828,6 +1920,53 @@ ALTER TABLE [dbo].[cm_permission] ADD PRIMARY KEY CLUSTERED ([id])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 GO
 
+
+-- ----------------------------
+-- Indexes structure for table cm_permission_func
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [fk_permission_func]
+ON [dbo].[cm_permission_func] (
+  [module_id] ASC
+)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table cm_permission_func
+-- ----------------------------
+ALTER TABLE [dbo].[cm_permission_func] ADD PRIMARY KEY CLUSTERED ([id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table cm_permission_module
+-- ----------------------------
+ALTER TABLE [dbo].[cm_permission_module] ADD PRIMARY KEY CLUSTERED ([id])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table cm_permission
+-- ----------------------------
+ALTER TABLE [dbo].[cm_permission] ADD CONSTRAINT [fk_permission_func] FOREIGN KEY ([func_id]) REFERENCES [dbo].[cm_permission_func] ([id])
+GO
+
+
+-- ----------------------------
+-- Foreign Keys structure for table cm_permission_func
+-- ----------------------------
+ALTER TABLE [dbo].[cm_permission_func] ADD CONSTRAINT [fk_permission_module] FOREIGN KEY ([module_id]) REFERENCES [dbo].[cm_permission_module] ([id])
+GO
+
+ALTER TABLE [dbo].[cm_permission_func] ADD CONSTRAINT [uq_permission_func] UNIQUE NONCLUSTERED ([module_id], [name])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+
+ALTER TABLE [dbo].[cm_permission] ADD CONSTRAINT [uq_permission] UNIQUE NONCLUSTERED ([func_id], [name])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
 
 -- ----------------------------
 -- Indexes structure for table cm_role

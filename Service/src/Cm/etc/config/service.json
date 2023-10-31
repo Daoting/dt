@@ -1,7 +1,7 @@
 ﻿{
   //"Mode": "InitDb",
 
-  "DbKey": "mydt",
+  "DbKey": "pgdt",
   "TraceSql": true,
   "TraceRpc": true,
 

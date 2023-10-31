@@ -55,10 +55,10 @@ namespace Dt.Mgr.Rbac
                         Throw.Msg("已取消保存");
                 }
 
-                if ((IsAdded || Cells["Name"].IsChanged)
-                    && await GetCount($"where name='{Name}'") > 0)
+                if (IsAdded || Cells["Name"].IsChanged)
                 {
-                    Throw.Msg("权限名称重复！");
+                    if (await GetCount($"where name='{Name}' and func_id={FuncID}") > 0)
+                        Throw.Msg("相同功能内的权限名称不可重复！", cName);
                 }
             });
 

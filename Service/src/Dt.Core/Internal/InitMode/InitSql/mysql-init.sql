@@ -158,21 +158,58 @@ CREATE TABLE `cm_params`  (
 INSERT INTO `cm_params` VALUES (1, '接收新任务', 'true', '', '2020-12-01 15:13:49', '2020-12-02 09:23:53'), (2, '接收新发布通知', 'true', '', '2020-12-02 09:25:15', '2020-12-02 09:25:15'), (3, '接收新消息', 'true', '接收通讯录消息推送', '2020-12-02 09:24:28', '2020-12-02 09:24:28');
 
 -- ----------------------------
+-- Table structure for cm_permission_module
+-- ----------------------------
+DROP TABLE IF EXISTS `cm_permission_module`;
+CREATE TABLE `cm_permission_module`  (
+  `id` bigint(20) NOT NULL COMMENT '模块标识',
+  `name` varchar(64) NOT NULL COMMENT '模块名称',
+  `note` varchar(255) NULL DEFAULT NULL COMMENT '模块描述',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '权限所属模块';
+
+-- ----------------------------
+-- Records of cm_permission_module
+-- ----------------------------
+INSERT INTO `cm_permission_module` VALUES (1, '系统预留', '系统内部使用的权限控制，禁止删除');
+
+-- ----------------------------
+-- Table structure for cm_permission_func
+-- ----------------------------
+DROP TABLE IF EXISTS `cm_permission_func`;
+CREATE TABLE `cm_permission_func`  (
+  `id` bigint(20) NOT NULL,
+  `module_id` bigint(20) NOT NULL COMMENT '所属模块',
+  `name` varchar(64) NOT NULL COMMENT '功能名称',
+  `note` varchar(255) NULL DEFAULT NULL COMMENT '功能描述',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `fk_permission_func`(`module_id`) USING BTREE,
+  CONSTRAINT `fk_permission_func` FOREIGN KEY (`module_id`) REFERENCES `cm_permission_module` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB COMMENT = '权限所属功能';
+
+-- ----------------------------
+-- Records of cm_permission_func
+-- ----------------------------
+INSERT INTO `cm_permission_func` VALUES (1, 1, '文件管理', '管理文件的上传、删除等');
+
+-- ----------------------------
 -- Table structure for cm_permission
 -- ----------------------------
 DROP TABLE IF EXISTS `cm_permission`;
 CREATE TABLE `cm_permission`  (
   `id` bigint(20) NOT NULL COMMENT '权限标识',
+  `func_id` bigint(20) NOT NULL COMMENT '所属功能',
   `name` varchar(64) NOT NULL COMMENT '权限名称',
   `note` varchar(255) NULL DEFAULT NULL COMMENT '权限描述',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `idx_permission_name`(`name`) USING BTREE COMMENT '不重复'
+  INDEX `fk_permission`(`func_id`) USING BTREE,
+  CONSTRAINT `fk_permission` FOREIGN KEY (`func_id`) REFERENCES `cm_permission_func` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB COMMENT = '权限';
 
 -- ----------------------------
 -- Records of cm_permission
 -- ----------------------------
-INSERT INTO `cm_permission` VALUES (1, '公共文件管理', '禁止删除'), (2, '素材库管理', '禁止删除');
+INSERT INTO `cm_permission` VALUES (1, 1, '公共文件增删', '公共文件的上传、删除等'), (2, 1, '素材库增删', '素材库目录的上传、删除等');
 
 -- ----------------------------
 -- Table structure for cm_role
@@ -227,7 +264,7 @@ CREATE TABLE `cm_role_per`  (
 -- ----------------------------
 -- Records of cm_role_per
 -- ----------------------------
-INSERT INTO `cm_role_per` VALUES (1, 1), (1, 2);
+INSERT INTO `cm_role_per` VALUES (2, 1), (2, 2);
 
 -- ----------------------------
 -- Table structure for cm_rpt
