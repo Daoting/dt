@@ -63,8 +63,14 @@ namespace Dt.Mgr.Module
         }
         #endregion
 
-        #region 交互
-        async void OnSave(object sender, Mi e)
+        #region 内部
+        async void Create()
+        {
+            _fv.Data = await RptX.New(
+                Name: "新报表");
+        }
+
+        async void Save()
         {
             if (await _fv.Data.To<RptX>().Save())
             {
@@ -72,12 +78,7 @@ namespace Dt.Mgr.Module
             }
         }
 
-        void OnAdd(object sender, Mi e)
-        {
-            Create();
-        }
-
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = _fv.Data.To<RptX>();
             if (d == null)
@@ -121,14 +122,6 @@ namespace Dt.Mgr.Module
                 }
                 _ = Rpt.ShowDesign(new AppRptDesignInfo(rpt));
             }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            _fv.Data = await RptX.New(
-                Name: "新报表");
         }
 
         protected override Task<bool> OnClosing()

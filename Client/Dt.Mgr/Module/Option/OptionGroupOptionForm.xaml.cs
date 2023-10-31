@@ -50,18 +50,21 @@ namespace Dt.Mgr.Module
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
+        #region 内部
+        async void Create()
         {
-            Create();
+            Data = await OptionX.New(GroupID: _parentID);
         }
 
-        void OnSave(object sender, Mi e)
+        async void Save()
         {
-            Save();
+            if (await Data.Save())
+            {
+                _win.OptionList.Refresh();
+            }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -82,21 +85,6 @@ namespace Dt.Mgr.Module
             if (await d.Delete())
             {
                 Clear();
-                _win.OptionList.Refresh();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await OptionX.New(GroupID: _parentID);
-        }
-
-        async void Save()
-        {
-            if (await Data.Save())
-            {
                 _win.OptionList.Refresh();
             }
         }

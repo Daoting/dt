@@ -38,6 +38,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 判断权限的简洁写法
 * Win的PhoneUI模式不占用标题栏
 * 生成判断权限的类
+* 权限增加两级目录的sql脚本
+* Fv增加两快捷键：ctrl+s保存、ctrl+n新建
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

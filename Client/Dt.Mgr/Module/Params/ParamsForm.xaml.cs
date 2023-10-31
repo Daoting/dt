@@ -54,18 +54,21 @@ namespace Dt.Mgr.Module
         }
         #endregion
 
-        #region 交互
-        void OnAdd(object sender, Mi e)
+        #region 内部
+        async void Create()
         {
-            Create();
+            Data = await ParamsX.New();
         }
 
-        void OnSave(object sender, Mi e)
+        async void Save()
         {
-            Save();
+            if (await Data.Save())
+            {
+                _win.List.Update();
+            }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -86,21 +89,6 @@ namespace Dt.Mgr.Module
             if (await d.Delete())
             {
                 Clear();
-                _win.List.Update();
-            }
-        }
-        #endregion
-
-        #region 内部
-        async void Create()
-        {
-            Data = await ParamsX.New();
-        }
-
-        async void Save()
-        {
-            if (await Data.Save())
-            {
                 _win.List.Update();
             }
         }

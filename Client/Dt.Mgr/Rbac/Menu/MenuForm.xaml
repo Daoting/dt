@@ -7,17 +7,15 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi Icon="加号" ID="新建">
-                <a:Mi ID="菜单" Icon="文件" Click="OnAddMi" />
-                <a:Mi ID="分组" Icon="文件夹" Click="OnAddGroup" />
-            </a:Mi>
-            <a:Mi ID="保存" Icon="保存" Click="OnSave" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
-            <a:Mi ID="删除" Icon="删除" Click="OnDel" />
-            <a:Mi ID="打开菜单" Icon="点击" Click="OnOpen" />
+            <a:Mi ID="菜单" Icon="加号" Call="AddMi" />
+            <a:Mi ID="分组" Icon="加号" Call="AddGroup" />
+            <a:Mi ID="保存" Icon="保存" Call="Save" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
+            <a:Mi ID="删除" Icon="删除" Call="Delete" />
+            <a:Mi ID="打开菜单" Icon="点击" Call="OnOpen" />
         </a:Menu>
     </a:Tab.Menu>
 
-    <a:Fv x:Name="_fv" DataChanged="OnFvDataChanged">
+    <a:Fv x:Name="_fv" DataChanged="OnFvDataChanged" Save="Save" Create="AddMi" Delete="Delete">
         <a:CText ID="name" Title="名称" />
         <a:CIcon ID="icon" Title="图标" />
         <a:CTree ID="parentname" Title="所属菜单" RefreshData="true" SrcID="id" TgtID="parent_id" LoadData="OnLoadTreeGroup" />

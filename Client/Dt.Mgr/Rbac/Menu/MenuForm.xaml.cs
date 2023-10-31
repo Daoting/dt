@@ -58,31 +58,44 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        void OnAddMi(object sender, Mi e)
+        void AddMi()
         {
             AddMenu(false);
         }
 
-        void OnAddGroup(object sender, Mi e)
+        void AddGroup()
         {
             AddMenu(true);
         }
 
         async void AddMenu(bool p_isGroup)
         {
+            MenuX parent = null;
+            if (_curItem != null)
+            {
+                if (_curItem.IsGroup)
+                {
+                    parent = _curItem;
+                }
+                else if (_curItem.ParentID.HasValue)
+                {
+                    parent = await MenuX.GetWithParentName(_curItem.ParentID.Value);
+                }
+            }
+
             MenuX m = await MenuX.New(
                 Name: p_isGroup ? "新组" : "新菜单",
                 Icon: p_isGroup ? "文件夹" : "文件",
                 IsGroup: p_isGroup,
-                ParentID: _curItem != null ? (long?)_curItem.ID : null,
+                ParentID: parent != null ? (long?)parent.ID : null,
                 Ctime: Kit.Now,
                 Mtime: Kit.Now);
-            m.Add("parentname", _curItem?.Name);
+            m.Add("parentname", parent?.Name);
             Data = m;
             ClearRelated();
         }
 
-        async void OnSave(object sender, Mi e)
+        async void Save()
         {
             var d = Data;
             if (await d.Save())
@@ -92,7 +105,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void Delete()
         {
             var d = Data;
             if (d == null)
@@ -117,16 +130,24 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        void OnOpen(object sender, Mi e)
+        void OnOpen()
         {
-            var row = Data;
-            OmMenu menu = new OmMenu(
-                ID: row.ID,
-                Name: row.Name,
-                Icon: row.Icon,
-                ViewName: row.ViewName,
-                Params: row.Params);
-            MenuDs.OpenMenu(menu);
+            if (Data == null
+                || Data is not MenuX row 
+                || row.IsGroup)
+            {
+                Kit.Warn("请选择要打开的菜单项！");
+            }
+            else
+            {
+                OmMenu menu = new OmMenu(
+                    ID: row.ID,
+                    Name: row.Name,
+                    Icon: row.Icon,
+                    ViewName: row.ViewName,
+                    Params: row.Params);
+                MenuDs.OpenMenu(menu);
+            }
         }
 
         async void OnLoadTreeGroup(object sender, AsyncEventArgs e)
@@ -150,17 +171,14 @@ namespace Dt.Mgr.Rbac
             if (m == null)
             {
                 // 根节点
-                Menu.HideExcept("新建");
                 _fv.HideExcept("name", "icon", "parentname");
             }
             else if (m.IsGroup)
             {
-                Menu.ShowExcept("打开菜单");
                 _fv.HideExcept("name", "icon", "parentname");
             }
             else
             {
-                Menu.ShowExcept("新建");
                 _fv.ShowExcept();
             }
         }

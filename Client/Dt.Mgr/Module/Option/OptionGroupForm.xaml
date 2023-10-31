@@ -7,13 +7,13 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" Click="OnSave" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
-            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
-            <a:Mi ID="删除" Icon="删除" Click="OnDel" />
+            <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" Call="Save" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
+            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Call="Create" />
+            <a:Mi ID="删除" Icon="删除" Call="Delete" />
         </a:Menu>
     </a:Tab.Menu>
 
-    <a:Fv x:Name="_fv">
+    <a:Fv x:Name="_fv" Save="Save" Create="Create" Delete="Delete">
         <a:CText ID="Name" Title="分组名称" />
     </a:Fv>
 </a:Tab>

@@ -42,8 +42,8 @@ order by
         const string Sql角色权限 = @"
 select
 	a.*,
-	b.`name` funcname,
-	c.`name` modname 
+	b.name funcname,
+	c.name modname 
 from
 	cm_permission a,
 	cm_permission_func b,
