@@ -169,13 +169,13 @@ namespace Dt.Base
                 else
                 {
                     _dlg.PlacementTarget = p_tgtPlacement ?? ContextTarget;
-                    _dlg.PhonePlacement = (DlgPlacement)Placement + 5;
+                    _dlg.PhonePlacement = (DlgPlacement)Placement + 13;
                 }
             }
             else if (Placement != MenuPosition.Default)
             {
                 _dlg.PlacementTarget = p_tgtPlacement ?? ContextTarget;
-                _dlg.WinPlacement = (DlgPlacement)Placement + 5;
+                _dlg.WinPlacement = (DlgPlacement)Placement + 13;
             }
             _dlg.Show();
 
