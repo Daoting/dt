@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.Mgr.Home">
 
-    <home:RootMenu x:Name="_menu" Order="1" a:Ex.Dock="Left" />
+    <home:MenuHome x:Name="_menu" Order="1" a:Ex.Dock="Left" />
     <a:Tab Order="2" Title="动态" Icon="心电" />
     <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

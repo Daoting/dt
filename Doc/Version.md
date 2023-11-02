@@ -40,13 +40,15 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 生成判断权限的类
 * 权限增加两级目录的sql脚本
 * Fv增加两快捷键：ctrl+s保存、ctrl+n新建
+* 调整PhoneUI下Lv上下文菜单按钮样式
+* 主页菜单增加收藏功能
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
 ### Bug修改
 * 命名空间与类名相同并放在根目录查找xaml
 * FvCell编辑时Tab快捷键乱跳
-
+* 上下文菜单弹出位置错误
 
 
 

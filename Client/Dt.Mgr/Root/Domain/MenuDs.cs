@@ -22,7 +22,8 @@ namespace Dt.Mgr
         // 所有菜单项 = _rootPageMenus + _leaveMenus
         static Nl<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
-        static readonly GroupData<OmMenu> _favMenus = new GroupData<OmMenu>("常用");
+        static readonly Nl<OmMenu> _favMenus = new Nl<OmMenu>();
+        static List<long> _idsAll;
         #endregion
 
         #region 属性
@@ -35,12 +36,14 @@ namespace Dt.Mgr
         }
 
         /// <summary>
-        /// 获取当前登录用户的常用菜单项：固定项 + 点击次数最多的前n项，总项数不超过 8 个
+        /// 获取所有收藏菜单项
         /// </summary>
-        public static GroupData<OmMenu> FavMenus
-        {
-            get { return _favMenus; }
-        }
+        public static Nl<OmMenu> FavMenus => _favMenus;
+
+        /// <summary>
+        /// 获取设置固定菜单项，通常在加载菜单前由外部设置
+        /// </summary>
+        public static IList<OmMenu> FixedMenus { get; internal set; }
         #endregion
 
         #region 菜单相关
@@ -110,45 +113,72 @@ namespace Dt.Mgr
         }
 
         /// <summary>
-        /// 加载当前登录用户的菜单，性能已调优
+        /// 加载当前登录用户的收藏菜单、所有菜单
         /// </summary>
-        /// <param name="p_fixedMenus">固定菜单项，通常在加载菜单前由外部设置</param>
-        /// <param name="p_maxFavCount">常用组菜单项的最多个数：固定项 + 点击次数最多的前n项</param>
         /// <returns></returns>
-        public static async Task LoadMenus(IList<OmMenu> p_fixedMenus, int p_maxFavCount)
+        public static async Task InitMenus()
         {
             // 所有可访问项
-            List<long> idsAll = await GetAllUserMenus();
+            _idsAll = await GetAllUserMenus();
+            await LoadFavMenus();
+            await LoadMenus();
+        }
 
-            // 常用组菜单项：固定项 + 点击次数最多的前n项
+        /// <summary>
+        /// 加载当前登录用户的收藏菜单
+        /// </summary>
+        /// <returns></returns>
+        public static async Task LoadFavMenus()
+        {
+            // 所有可访问项
             _favMenus.Clear();
 
-            // 外部注入的固定项
-            if (p_fixedMenus != null && p_fixedMenus.Count > 0)
+            // 收藏的菜单
+            var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc");
+            foreach (var fav in favMenu)
             {
-                _favMenus.AddRange(p_fixedMenus);
-            }
-
-            // 点击次数最多的前n项
-            int maxFav = p_maxFavCount - _favMenus.Count;
-            if (maxFav > 0)
-            {
-                var favMenu = await AtLob.Each<MenuFavX>($"select menuid from menufav where userid={Kit.UserID} order by clicks desc LIMIT {maxFav}");
-                foreach (var fav in favMenu)
+                // 过滤无权限的项
+                if (_idsAll.Contains(fav.MenuID))
                 {
-                    // 过滤无权限的项
-                    if (idsAll.Contains(fav.MenuID))
+                    var om = await AtMenu.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                    _favMenus.Add(om);
+                }
+                else if (FixedMenus != null && FixedMenus.Count > 0)
+                {
+                    // 可能在固定项中
+                    foreach (var mi in FixedMenus)
                     {
-                        var om = await AtMenu.First<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
-                        _favMenus.Add(om);
-                        // 原位置仍存在
-                        //idsAll.Remove(fav.MenuID);
+                        if (mi.ID == fav.MenuID)
+                        {
+                            _favMenus.Add(mi);
+                            break;
+                        }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 加载当前登录用户的菜单，性能已调优
+        /// </summary>
+        /// <returns></returns>
+        static async Task LoadMenus()
+        {
+            // 只加载一次
+            if (_rootPageMenus != null)
+                return;
 
             // 根页面菜单
             _rootPageMenus = new Nl<GroupData<OmMenu>>();
+
+            // 外部注入的固定项
+            if (FixedMenus != null && FixedMenus.Count > 0)
+            {
+                var fixedMenus = new GroupData<OmMenu>("常用");
+                fixedMenus.AddRange(FixedMenus);
+                _rootPageMenus.Add(fixedMenus);
+            }
+            
             // 除根页面的剩余项
             _leaveMenus = new List<OmMenu>();
             // 所有一级项
@@ -158,7 +188,7 @@ namespace Dt.Mgr
             foreach (var item in await AtMenu.Each<OmMenu>("select * from OmMenu order by dispidx"))
             {
                 // 过滤无权限的项，保留所有分组
-                if (!item.IsGroup && !idsAll.Contains(item.ID))
+                if (!item.IsGroup && !_idsAll.Contains(item.ID))
                     continue;
 
                 // 一级项和其他分开
@@ -167,9 +197,6 @@ namespace Dt.Mgr
                 else
                     _leaveMenus.Add(item);
             }
-            // 根页面常用组
-            if (_favMenus.Count > 0)
-                _rootPageMenus.Add(_favMenus);
 
             // 移除无用的分组
             int index = 0;

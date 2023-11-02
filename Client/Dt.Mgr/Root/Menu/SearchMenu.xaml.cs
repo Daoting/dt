@@ -50,6 +50,16 @@ namespace Dt.Mgr.Home
                 _lv.Data = MenuDs.LoadMenusByName(p_filter.ToLower());
         }
 
+        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        {
+            RootMenu.DoMenuOpening(sender, e);
+        }
+
+        void OnFav(object sender, Mi e)
+        {
+            RootMenu.DoFavMenu(sender, e);
+        }
+
         void LoadTopBar()
         {
             var sb = new Base.SearchBox

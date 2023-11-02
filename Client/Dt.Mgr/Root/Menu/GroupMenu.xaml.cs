@@ -44,5 +44,15 @@ namespace Dt.Mgr.Home
         {
             Forward(new SearchMenu());
         }
+
+        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        {
+            RootMenu.DoMenuOpening(sender, e);
+        }
+
+        void OnFav(object sender, Mi e)
+        {
+            RootMenu.DoFavMenu(sender, e);
+        }
     }
 }

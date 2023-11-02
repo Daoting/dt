@@ -19,12 +19,18 @@
             <TextBlock x:Name="_tb" VerticalAlignment="Center" Margin="20,0,20,0" />
         </Border>
 
-        <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick" Grid.Row="1">
+        <a:Lv x:Name="_lv" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="NaN" Grid.Row="1">
+            <a:Ex.Menu>
+                <a:Menu Opening="OnMenuOpening">
+                    <a:Mi ID="收藏" Icon="收藏" Click="OnFav" />
+                </a:Menu>
+            </a:Ex.Menu>
             <DataTemplate>
-                <Grid Padding="12">
-                    <StackPanel VerticalAlignment="Center">
-                        <a:Dot ID="Icon" Call="Def.Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,0,4" HorizontalAlignment="Center" />
-                        <a:Dot ID="Name" HorizontalAlignment="Center" />
+                <Grid Padding="10" ColumnDefinitions="Auto,*" MinHeight="60">
+                    <a:Dot ID="Icon" Call="Def.Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                        <a:Dot ID="Name" VerticalAlignment="Center" />
+                        <a:Dot ID="Note" Call="Def.小灰" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>
             </DataTemplate>
