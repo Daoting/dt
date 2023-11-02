@@ -688,14 +688,14 @@ COMMENT ON TABLE "public"."cm_wfi_trs" IS '迁移实例';
 -- Table structure for fsm_file
 -- ----------------------------
 CREATE TABLE "public"."fsm_file" (
-  "id" numeric(20) NOT NULL,
+  "id" int8 NOT NULL,
   "name" varchar(512) NOT NULL,
   "path" varchar(512) NOT NULL,
-  "size" numeric(20) NOT NULL,
+  "size" int8 NOT NULL,
   "info" varchar(512),
-  "uploader" numeric(20) NOT NULL,
+  "uploader" int8 NOT NULL,
   "ctime" timestamp(0) NOT NULL,
-  "downloads" numeric(20) NOT NULL
+  "downloads" int8 NOT NULL
 )
 ;
 COMMENT ON COLUMN "public"."fsm_file"."id" IS '文件标识';

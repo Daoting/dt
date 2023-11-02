@@ -45,6 +45,32 @@ namespace Dt.Core
                 return GetScalar<int>($"select nextval('{p_seqName}')");
             return Task.FromResult(0);
         }
+
+        /*
+        // Postgresql.Net System Type
+        // ----------   ----------------
+        // int8 Int64
+        // int4 Int32
+        // int2 Int16
+        // float8 Double
+        // float4 Single
+        // bool Boolean
+        // varchar String
+        // text String
+        // bytea Byte[]
+        // date DateTime
+        // money Decimal
+        // numeric Decimal
+        // time DateTime
+        // timetz DateTime
+        // timestamp DateTime
+        // timestamptz DateTime
+        // interval TimeSpan
+        // inet IPAddress
+        // bit Boolean
+        // uuid Guid
+        // array Array
+        */
         #endregion
 
         #region 表结构

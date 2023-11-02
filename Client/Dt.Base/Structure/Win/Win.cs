@@ -85,7 +85,7 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
-        static readonly DependencyProperty OwnDlgProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty OwnDlgProperty = DependencyProperty.Register(
             "OwnDlg",
             typeof(Dlg),
             typeof(Win),
