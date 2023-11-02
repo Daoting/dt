@@ -18,6 +18,8 @@ namespace Dt.Mgr.Home
     /// </summary>
     public partial class MenuHome : Tab
     {
+        Dlg _dlg;
+
         public MenuHome()
         {
             InitializeComponent();
@@ -35,6 +37,27 @@ namespace Dt.Mgr.Home
         {
             get { return MenuDs.FixedMenus; }
             set { MenuDs.FixedMenus = value; }
+        }
+
+        /// <summary>
+        /// 显示开始菜单对话框
+        /// </summary>
+        public void ShowDlg()
+        {
+            if (_dlg == null)
+            {
+                _dlg = new Dlg
+                {
+                    HideTitleBar = true,
+                    WinPlacement = DlgPlacement.FromTopLeft,
+                    Width = 400,
+                    Height = Kit.ViewHeight / 2,
+                    BorderThickness = new Thickness(4),
+                    BorderBrush = Res.主蓝,
+                };
+                _dlg.LoadTab(this);
+            }
+            _dlg.Show();
         }
 
         async void LoadMenus()

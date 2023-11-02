@@ -16,6 +16,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Dt.Mgr;
+using Dt.Mgr.Home;
 #endregion
 
 namespace Dt.MgrDemo
@@ -24,8 +25,10 @@ namespace Dt.MgrDemo
     /// 覆盖默认主页
     /// </summary>
     [View(LobViews.主页)]
-    public partial class DemoHome : Win
+    public partial class DemoHome : Win, IStartMenu
     {
+        MenuHome _menuHome;
+
         public DemoHome()
         {
             InitializeComponent();
@@ -64,6 +67,13 @@ namespace Dt.MgrDemo
                     ViewName: "文件"),
 
             };
+        }
+
+        void IStartMenu.ShowStartMenu()
+        {
+            if (_menuHome == null)
+                _menuHome = new MenuHome();
+            _menuHome.ShowDlg();
         }
     }
 }

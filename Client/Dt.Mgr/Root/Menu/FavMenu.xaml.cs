@@ -86,6 +86,11 @@ namespace Dt.Mgr.Home
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
+            if (Tag is MenuHome home)
+                home.OwnDlg?.Close();
+            else
+                OwnDlg?.Close();
+
             Kit.RunAsync(() => MenuDs.OpenMenu((OmMenu)e.Data));
         }
 

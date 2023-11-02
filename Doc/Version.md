@@ -42,6 +42,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Fv增加两快捷键：ctrl+s保存、ctrl+n新建
 * 调整PhoneUI下Lv上下文菜单按钮样式
 * 主页菜单增加收藏功能
+* 任务栏主页按钮显示开始菜单对话框
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

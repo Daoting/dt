@@ -48,14 +48,29 @@ namespace Dt.Base
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            var btn = (Button)GetTemplateChild("BtnMenu");
+            if (btn != null)
+            {
+                btn.Tapped -= BtnMenuTapped;
+                btn.Tapped += BtnMenuTapped;
+            }
             ToggleSelectedState();
+        }
+
+        void BtnMenuTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (_win is IStartMenu sm)
+            {
+                e.Handled = true;
+                sm.ShowStartMenu();
+            }
         }
 #endif
 
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             e.Handled = true;
-            VisualStateManager.GoToState(this, _win.IsActived ? "Selected" : "PointerOver", true);
+            VisualStateManager.GoToState(this, _win.IsActived ? "Selected" : ((_win is IStartMenu) ? "PointerOverMenu" : "PointerOver"), true);
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)

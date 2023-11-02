@@ -67,7 +67,7 @@
     <!--主页按钮-->
     <Style TargetType="a:HomebarItem">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Width" Value="120" />
+        <Setter Property="Width" Value="140" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:HomebarItem">
@@ -75,7 +75,7 @@
                         <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰2}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                             <!--wasm中启动时测量的宽高不对，直接固定宽高-->
                             <TextBlock Text="&#xE001;"
                                        FontFamily="{StaticResource IconFont}"
@@ -85,6 +85,7 @@
                                        VerticalAlignment="Center" />
                             <TextBlock Text="主页" Margin="6,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
+                        <Button x:Name="BtnMenu" Content="&#xE0A0;" Style="{StaticResource 字符按钮}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SelectionStates">
@@ -93,6 +94,13 @@
                                     <VisualState.Setters>
                                         <Setter Target="NormalBorder.Fill" Value="{StaticResource 浅黄}" />
                                         <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOverMenu">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 浅黄}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 亮蓝}" />
+                                        <Setter Target="BtnMenu.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">

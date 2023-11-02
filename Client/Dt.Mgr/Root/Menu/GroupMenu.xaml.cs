@@ -30,6 +30,7 @@ namespace Dt.Mgr.Home
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
+            OwnDlg?.Close();
             Kit.RunAsync(() =>
             {
                 OmMenu menu = (OmMenu)e.Data;
