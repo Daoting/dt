@@ -7,9 +7,11 @@
 #endregion
 
 #region 引用命名
-using System.Threading.Tasks;
+using Dt.Mgr.Home;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Threading.Tasks;
+
 #endregion
 
 namespace $safeprojectname$
@@ -18,8 +20,10 @@ namespace $safeprojectname$
     /// 覆盖默认主页
     /// </summary>
     [View(LobViews.主页)]
-    public partial class HomeWin : Win
+    public partial class HomeWin : Win, IStartMenu
     {
+        MenuHome _menuHome;
+
         public HomeWin()
         {
             InitializeComponent();
@@ -52,6 +56,13 @@ namespace $safeprojectname$
                     ViewName: "文件"),
 
             };
+        }
+
+        void IStartMenu.ShowStartMenu()
+        {
+            if (_menuHome == null)
+                _menuHome = new MenuHome();
+            _menuHome.ShowDlg();
         }
     }
 }

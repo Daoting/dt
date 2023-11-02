@@ -7,7 +7,7 @@
     xmlns:l="using:$safeprojectname$"
     AutoSaveLayout="False">
 
-    <home:RootMenu x:Name="_menu" Order="2" a:Ex.Dock="Left" />
+    <home:MenuHome x:Name="_menu" Order="2" a:Ex.Dock="Left" />
     <l:HomeMain Order="1" />
     <home:MyMain Order="3" a:Ex.Dock="Right" />
 </a:Win>

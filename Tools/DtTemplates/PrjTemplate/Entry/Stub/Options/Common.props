@@ -7,12 +7,11 @@
 		<UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
 		<!-- release不输出pbd调试信息 -->
 		<DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
-		<BaseOutputPath>..\build</BaseOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- 调试包源码可引用 Dt.Client.Debug 包 -->
-		<PackageReference Include="Dt.Client" Version="4.2.5" />
+		<PackageReference Include="Dt.Client" Version="4.2.7" />
 	</ItemGroup>
 
 	<!-- 定义平台常量 -->
@@ -70,6 +69,13 @@
 		<Using Remove="Microsoft.Extensions.Logging" />
 	</ItemGroup>
 
+	<!--win预览xaml用，生成前嵌入，否则xaml页面后台代码的智能失效-->
+	<Target Name="EmbeddedXaml" BeforeTargets="PrepareForBuild" Condition="$(TargetFramework.Contains('-windows'))">
+		<ItemGroup>
+			<EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+		</ItemGroup>
+	</Target>
+	
 	<!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
 	<ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
 		<Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />

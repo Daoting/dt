@@ -71,24 +71,25 @@ namespace Dt.Mgr
             Enum.TryParse(p_menu.Icon, out icon);
             object win = Kit.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
 
+            // 修改为手动收藏
             // 保存点击次数，用于确定哪些是收藏菜单
-            if (win != null)
-            {
-                Task.Run(async () =>
-                {
-                    // 非固定菜单项
-                    if (await AtMenu.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
-                    {
-                        // 点击次数保存在客户端
-                        Dict dt = new Dict();
-                        dt["userid"] = Kit.UserID;
-                        dt["menuid"] = p_menu.ID;
-                        int cnt = await AtLob.Exec("update menufav set clicks=clicks+1 where userid=@userid and menuid=@menuid", dt);
-                        if (cnt == 0)
-                            await AtLob.Exec("insert into menufav (userid, menuid, clicks) values (@userid, @menuid, 1)", dt);
-                    }
-                });
-            }
+            //if (win != null)
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        // 非固定菜单项
+            //        if (await AtMenu.GetScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+            //        {
+            //            // 点击次数保存在客户端
+            //            Dict dt = new Dict();
+            //            dt["userid"] = Kit.UserID;
+            //            dt["menuid"] = p_menu.ID;
+            //            int cnt = await AtLob.Exec("update menufav set clicks=clicks+1 where userid=@userid and menuid=@menuid", dt);
+            //            if (cnt == 0)
+            //                await AtLob.Exec("insert into menufav (userid, menuid, clicks) values (@userid, @menuid, 1)", dt);
+            //        }
+            //    });
+            //}
             return win;
         }
 
