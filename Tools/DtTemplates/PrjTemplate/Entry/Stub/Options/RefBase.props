@@ -3,5 +3,6 @@
 	<ItemGroup>
 		<!-- 引用Base项目 -->
 		<ProjectReference Include="..\$ext_safeprojectname$.Base\$ext_safeprojectname$.Base.csproj" />
+		<Using Include="$ext_safeprojectname$.Base" />
 	</ItemGroup>
 </Project>

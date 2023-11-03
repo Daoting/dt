@@ -68,7 +68,16 @@ namespace Dt.Core
         /// <returns>列值</returns>
         public object this[string p_colName]
         {
-            get { return _cells[p_colName].Val; }
+            get
+            {
+                var cell = _cells[p_colName];
+                if (cell.Type == typeof(string) && cell.Val == null)
+                {
+                    // string类型为null时返回string.Empty，省去null判断，方便外部处理
+                    return string.Empty;
+                }
+                return cell.Val;
+            }
             set { _cells[p_colName].Val = value; }
         }
 
@@ -85,7 +94,14 @@ namespace Dt.Core
             {
                 if (p_index < 0 || p_index >= _cells.Count)
                     throw new Exception(string.Format(_indexError, p_index, _cells.Count));
-                return _cells[p_index].Val;
+
+                var cell = _cells[p_index];
+                if (cell.Type == typeof(string) && cell.Val == null)
+                {
+                    // string类型为null时返回string.Empty，省去null判断，方便外部处理
+                    return string.Empty;
+                }
+                return cell.Val;
             }
             set
             {

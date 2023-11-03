@@ -47,7 +47,15 @@ namespace Dt.Core
             Row = p_row;
             ID = p_cellName;
             Type = p_cellType;
-            _val = OriginalVal = GetValInternal(p_value, Type);
+            if (p_cellType == typeof(string) && p_value == null)
+            {
+                // 保留原始值，因GetValInternal把null字符串返回Empty！！！
+                _val = OriginalVal = null;
+            }
+            else
+            {
+                _val = OriginalVal = GetValInternal(p_value, Type);
+            }
             Row.Cells.Add(this);
         }
         #endregion
@@ -294,9 +302,8 @@ namespace Dt.Core
         /// <param name="p_initVal">是否正在通过InitVal设置默认值，true时不检查IsChanged状态、不检查是否超长、不调用外部hook</param>
         async void SetValueInternal(object p_val, bool p_initVal)
         {
-            // 过滤多次赋值现象，当cell的类型为string时，在给val赋值null时，将一直保持初始的string.Empty的值
-            if (object.Equals(_val, p_val)
-                || (Type == typeof(string) && (string)_val == string.Empty && p_val == null))
+            // 过滤多次赋值现象
+            if (object.Equals(_val, p_val))
                 return;
 
             // 类型不同时转换

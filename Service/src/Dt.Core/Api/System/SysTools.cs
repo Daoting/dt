@@ -708,7 +708,7 @@ namespace Dt.Core
             p_sb.Append("/// ");
             if (p_col.IsEnumCol)
             {
-                p_sb.AppendLine(p_col.Comments.Substring(tpName.Length + 2));
+                p_sb.AppendLine(p_col.Comments.Substring(tpName.TrimEnd('?').Length + 2));
             }
             else if (p_col.Owner.DbType == DatabaseType.Oracle && tpName == "bool")
             {
