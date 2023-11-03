@@ -194,7 +194,9 @@ namespace Dt.Core.Sqlite
                 if (reader.GetFieldType(0) == typeof(T))
                     return reader.GetFieldValue<T>(0);
 
-                return (T)Convert.ChangeType(reader.GetValue(0), typeof(T));
+                var val = reader.GetValue(0);
+                if (val != DBNull.Value)
+                    return (T)Convert.ChangeType(val, typeof(T));
             }
             return default(T);
         }
