@@ -24,11 +24,11 @@ namespace Dt.Mgr
         public MenuFavX(
             long UserID,
             long MenuID = default,
-            int Clicks = default)
+            int Dispidx = default)
         {
             Add("UserID", UserID);
             Add("MenuID", MenuID);
-            Add("Clicks", Clicks);
+            Add("Dispidx", Dispidx);
             IsAdded = true;
         }
         #endregion
@@ -54,12 +54,12 @@ namespace Dt.Mgr
         }
 
         /// <summary>
-        /// 点击次数，在常用列表中排序用，可以被重置
+        /// 在列表中排序用
         /// </summary>
-        public int Clicks
+        public int Dispidx
         {
-            get { return (int)this["Clicks"]; }
-            set { this["Clicks"] = value; }
+            get { return (int)this["Dispidx"]; }
+            set { this["Dispidx"] = value; }
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Dt.Mgr.Home
 
             using (e.Wait())
             {
-                int cnt = await MenuFavX.GetCount("where MenuID=" + om.ID);
+                int cnt = await MenuFavX.GetCount($"where userid={Kit.UserID} and MenuID={om.ID}");
                 menu[0].ID = cnt > 0 ? "取消收藏" : "收藏";
             }
         }
@@ -106,8 +106,9 @@ namespace Dt.Mgr.Home
             var om = e.Data.To<OmMenu>();
             if (e.ID == "收藏")
             {
-                var mf = new MenuFavX(Kit.UserID, om.ID, 10);
-                if (await mf.Save(false))
+                int idx = await AtLob.GetScalar<int>("select max(dispidx) from menufav");
+                int cnt = await AtLob.Exec($"insert into menufav (userid, menuid, dispidx) values ({Kit.UserID}, {om.ID}, {idx + 1})");
+                if (cnt > 0)
                 {
                     Kit.Msg($"[{om.Name}] 收藏成功！");
                     await MenuDs.LoadFavMenus();

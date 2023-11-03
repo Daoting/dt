@@ -85,7 +85,7 @@
                                        VerticalAlignment="Center" />
                             <TextBlock Text="主页" Margin="6,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
-                        <Button x:Name="BtnMenu" Content="&#xE0A0;" Style="{StaticResource 字符按钮}" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Button x:Name="BtnMenu" Content="&#xE0A0;" Style="{StaticResource 字符按钮}" ToolTipService.ToolTip="开始菜单" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SelectionStates">

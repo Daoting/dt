@@ -8,7 +8,6 @@
         <UseMauiEssentials Condition="$(TargetFramework.Contains('-'))">true</UseMauiEssentials>
         <!-- release不输出pbd调试信息 -->
         <DebugType Condition="'$(Configuration)'=='Release'">none</DebugType>
-        <BaseOutputPath>..\build</BaseOutputPath>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
     </PropertyGroup>

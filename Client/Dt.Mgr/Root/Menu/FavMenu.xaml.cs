@@ -97,7 +97,7 @@ namespace Dt.Mgr.Home
         async void OnTop(object sender, Mi e)
         {
             var om = e.Data.To<OmMenu>();
-            var cnt = await AtLob.Exec($"update menufav set Clicks=(select max(clicks)+1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
+            var cnt = await AtLob.Exec($"update menufav set dispidx=(select min(dispidx)-1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
             if (cnt > 0)
             {
                 await MenuDs.LoadFavMenus();
@@ -107,7 +107,7 @@ namespace Dt.Mgr.Home
         async void OnBottom(object sender, Mi e)
         {
             var om = e.Data.To<OmMenu>();
-            var cnt = await AtLob.Exec($"update menufav set Clicks=(select min(clicks)-1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
+            var cnt = await AtLob.Exec($"update menufav set dispidx=(select max(dispidx)+1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
             if (cnt > 0)
             {
                 await MenuDs.LoadFavMenus();
