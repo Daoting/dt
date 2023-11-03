@@ -268,6 +268,25 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取紧挨着的下层对话框，ZIndex小一
+        /// </summary>
+        /// <param name="p_cvs"></param>
+        /// <returns></returns>
+        public static UIElement GetNextLevelDlg(Canvas p_cvs)
+        {
+            int index = Canvas.GetZIndex(p_cvs);
+            foreach (var item in _dlgCanvas.Children.OfType<Canvas>())
+            {
+                if (Canvas.GetZIndex(item) + 1 == index
+                    && item.Children.Count > 0)
+                {
+                    return item.Children[0];
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 将调整对话框大小的外框添加到可视树
         /// </summary>
         /// <param name="p_border">外框</param>

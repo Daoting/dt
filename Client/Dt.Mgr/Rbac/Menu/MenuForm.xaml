@@ -19,10 +19,10 @@
         <a:CText ID="name" Title="名称" />
         <a:CIcon ID="icon" Title="图标" />
         <a:CTree ID="parentname" Title="所属菜单" RefreshData="true" SrcID="id" TgtID="parent_id" LoadData="OnLoadTreeGroup" />
-        <a:CText ID="viewname" Title="视图名称" />
+        <a:CText ID="view_name" Title="视图名称" />
         <a:CText ID="params" Title="视图参数" AcceptsReturn="True" RowSpan="3" />
         <a:CText ID="note" Title="功能说明" AcceptsReturn="True" RowSpan="3" />
-        <a:CBool ID="islocked" Title="锁定不可用" />
+        <a:CBool ID="is_locked" Title="锁定不可用" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
         <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
     </a:Fv>

@@ -1126,7 +1126,19 @@ namespace Dt.Base
         bool IDlgPressed.OnPressed(Point p_point)
         {
             if (!this.ContainPoint(p_point))
+            {
                 OnOuterPressed(p_point);
+            }
+            else if (ShowVeil)
+            {
+                // 在对话框内部点击并且有遮罩时，传递到紧挨的下层对话框！！！
+                // 比如：对话框有遮罩，点击内容弹出菜单，再点击对话框区域(非菜单内)，确保菜单能关闭
+                var dlg = UITree.GetNextLevelDlg(_canvas);
+                if (dlg != null)
+                {
+                    ((IDlgPressed)dlg).OnPressed(p_point);
+                }
+            }
 
             // 无遮罩 且 允许传递时 继续调用下层对话框的 OnPressed
             return !ShowVeil && AllowRelayPress;
