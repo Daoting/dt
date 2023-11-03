@@ -343,8 +343,8 @@ namespace Dt.Core
                 p_writer.WriteStringValue(item.Key);
                 if (item.Value == null)
                 {
-                    // null按string
-                    p_writer.WriteStringValue("String");
+                    // null按object
+                    p_writer.WriteStringValue("Object");
                     p_writer.WriteNullValue();
                 }
                 else
