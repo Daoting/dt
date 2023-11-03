@@ -33,19 +33,19 @@ namespace Dt.Core.Rpc
             bool suc;
             if (p_list[0] == "0")
             {
-                suc = await MySqlTools.TestConnect(p_list);
+                suc = await PostgreSqlTools.TestConnect(p_list);
             }
-            else if (p_list[0] == "1")
+            else if(p_list[0] == "1")
             {
-                suc = await OracleTools.TestConnect(p_list);
+                suc = await MySqlTools.TestConnect(p_list);
             }
             else if (p_list[0] == "2")
             {
-                suc = await SqlServerTools.TestConnect(p_list);
+                suc = await OracleTools.TestConnect(p_list);
             }
             else if (p_list[0] == "3")
             {
-                suc = await PostgreSqlTools.TestConnect(p_list);
+                suc = await SqlServerTools.TestConnect(p_list);
             }
             else
             {
@@ -138,13 +138,13 @@ namespace Dt.Core.Rpc
                 Throw.Msg("参数个数应为9个！");
 
             if (p_list[0] == "0")
-                return new MySqlTools(p_list);
-            if (p_list[0] == "1")
-                return new OracleTools(p_list);
-            if (p_list[0] == "2")
-                return new SqlServerTools(p_list);
-            if (p_list[0] == "3")
                 return new PostgreSqlTools(p_list);
+            if (p_list[0] == "1")
+                return new MySqlTools(p_list);
+            if (p_list[0] == "2")
+                return new OracleTools(p_list);
+            if (p_list[0] == "3")
+                return new SqlServerTools(p_list);
 
             throw new Exception("不支持该数据库类型！");
         }

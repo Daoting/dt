@@ -7,7 +7,7 @@ CREATE TABLE [dbo].[cm_file_my] (
   [name] nvarchar(255) NOT NULL,
   [is_folder] bit NOT NULL,
   [ext_name] nvarchar(8) NULL,
-  [info] nvarchar(512) NOT NULL,
+  [info] nvarchar(512) NULL,
   [ctime] datetime NOT NULL,
   [user_id] bigint NOT NULL
 )
@@ -85,7 +85,7 @@ CREATE TABLE [dbo].[cm_file_pub] (
   [name] nvarchar(255) NOT NULL,
   [is_folder] bit NOT NULL,
   [ext_name] nvarchar(8) NULL,
-  [info] nvarchar(512) NOT NULL,
+  [info] nvarchar(512) NULL,
   [ctime] datetime NOT NULL
 )
 GO
@@ -159,7 +159,7 @@ GO
 CREATE TABLE [dbo].[cm_group] (
   [id] bigint NOT NULL,
   [name] nvarchar(64) NOT NULL,
-  [note] nvarchar(255) NOT NULL
+  [note] nvarchar(255) NULL
 )
 GO
 
@@ -229,10 +229,10 @@ CREATE TABLE [dbo].[cm_menu] (
   [parent_id] bigint NULL,
   [name] nvarchar(64) NOT NULL,
   [is_group] bit NOT NULL,
-  [view_name] nvarchar(128) NOT NULL,
-  [params] nvarchar(4000) NOT NULL,
-  [icon] nvarchar(128) NOT NULL,
-  [note] nvarchar(512) NOT NULL,
+  [view_name] nvarchar(128) NULL,
+  [params] nvarchar(4000) NULL,
+  [icon] nvarchar(128) NULL,
+  [note] nvarchar(512) NULL,
   [dispidx] int NOT NULL,
   [is_locked] bit NOT NULL,
   [ctime] datetime NOT NULL,
@@ -447,8 +447,8 @@ GO
 CREATE TABLE [dbo].[cm_params] (
   [id] bigint NOT NULL,
   [name] nvarchar(255) NOT NULL,
-  [value] nvarchar(255) NOT NULL,
-  [note] nvarchar(255) NOT NULL,
+  [value] nvarchar(255) NULL,
+  [note] nvarchar(255) NULL,
   [ctime] datetime NOT NULL,
   [mtime] datetime NOT NULL
 )
@@ -779,8 +779,8 @@ GO
 CREATE TABLE [dbo].[cm_rpt] (
   [id] bigint NOT NULL,
   [name] nvarchar(64) NOT NULL,
-  [define] nvarchar(max) NOT NULL,
-  [note] nvarchar(255) NOT NULL,
+  [define] nvarchar(max) NULL,
+  [note] nvarchar(255) NULL,
   [ctime] datetime NOT NULL,
   [mtime] datetime NOT NULL
 )
@@ -841,10 +841,10 @@ GO
 -- ----------------------------
 CREATE TABLE [dbo].[cm_user] (
   [id] bigint NOT NULL,
-  [name] nvarchar(32) NOT NULL,
-  [phone] nvarchar(16) NOT NULL,
+  [name] nvarchar(32) NULL,
+  [phone] nvarchar(16) NULL,
   [pwd] char(32) NOT NULL,
-  [photo] nvarchar(255) NOT NULL,
+  [photo] nvarchar(255) NULL,
   [expired] bit NOT NULL,
   [ctime] datetime NOT NULL,
   [mtime] datetime NOT NULL
@@ -957,7 +957,7 @@ GO
 CREATE TABLE [dbo].[cm_user_params] (
   [user_id] bigint NOT NULL,
   [param_id] bigint NOT NULL,
-  [value] nvarchar(255) NOT NULL,
+  [value] nvarchar(255) NULL,
   [mtime] datetime NOT NULL
 )
 GO
@@ -1431,7 +1431,7 @@ CREATE TABLE [dbo].[cm_wfi_item] (
   [atvi_id] bigint NOT NULL,
   [status] tinyint NOT NULL,
   [assign_kind] tinyint NOT NULL,
-  [sender] nvarchar(32) NOT NULL,
+  [sender] nvarchar(32) NULL,
   [stime] datetime NOT NULL,
   [is_accept] bit NOT NULL,
   [accept_time] datetime NULL,

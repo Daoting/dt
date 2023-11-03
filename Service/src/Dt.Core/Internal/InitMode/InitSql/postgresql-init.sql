@@ -14,7 +14,7 @@ CREATE TABLE "public"."cm_file_my" (
   "name" varchar(255) NOT NULL,
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
-  "info" varchar(512) NOT NULL,
+  "info" varchar(512),
   "ctime" timestamp(0) NOT NULL,
   "user_id" int8 NOT NULL
 )
@@ -38,7 +38,7 @@ CREATE TABLE "public"."cm_file_pub" (
   "name" varchar(255) NOT NULL,
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
-  "info" varchar(512) NOT NULL,
+  "info" varchar(512),
   "ctime" timestamp(0) NOT NULL
 )
 ;
@@ -63,7 +63,7 @@ INSERT INTO "public"."cm_file_pub" VALUES (2, NULL, '素材库', '1', NULL, '', 
 CREATE TABLE "public"."cm_group" (
   "id" int8 NOT NULL,
   "name" varchar(64) NOT NULL,
-  "note" varchar(255) NOT NULL
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."cm_group"."id" IS '组标识';
@@ -91,10 +91,10 @@ CREATE TABLE "public"."cm_menu" (
   "parent_id" int8,
   "name" varchar(64) NOT NULL,
   "is_group" bool NOT NULL,
-  "view_name" varchar(128) NOT NULL,
-  "params" varchar(4000) NOT NULL,
-  "icon" varchar(128) NOT NULL,
-  "note" varchar(512) NOT NULL,
+  "view_name" varchar(128),
+  "params" varchar(4000),
+  "icon" varchar(128),
+  "note" varchar(512),
   "dispidx" int4 NOT NULL,
   "is_locked" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -249,8 +249,8 @@ INSERT INTO "public"."cm_option_group" VALUES (5, '数据类型');
 CREATE TABLE "public"."cm_params" (
   "id" int8 NOT NULL,
   "name" varchar(255) NOT NULL,
-  "value" varchar(255) NOT NULL,
-  "note" varchar(255) NOT NULL,
+  "value" varchar(255),
+  "note" varchar(255),
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
 )
@@ -400,8 +400,8 @@ INSERT INTO "public"."cm_role_per" VALUES (2, 2);
 CREATE TABLE "public"."cm_rpt" (
   "id" int8 NOT NULL,
   "name" varchar(64) NOT NULL,
-  "define" varchar(65535) NOT NULL,
-  "note" varchar(255) NOT NULL,
+  "define" varchar(65535),
+  "note" varchar(255),
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
 )
@@ -419,10 +419,10 @@ COMMENT ON TABLE "public"."cm_rpt" IS '报表模板定义';
 -- ----------------------------
 CREATE TABLE "public"."cm_user" (
   "id" int8 NOT NULL,
-  "name" varchar(32) NOT NULL,
-  "phone" varchar(16) NOT NULL,
+  "name" varchar(32),
+  "phone" varchar(16),
   "pwd" char(32) NOT NULL,
-  "photo" varchar(255) NOT NULL,
+  "photo" varchar(255),
   "expired" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
@@ -461,7 +461,7 @@ COMMENT ON TABLE "public"."cm_user_group" IS '用户一组多对多';
 CREATE TABLE "public"."cm_user_params" (
   "user_id" int8 NOT NULL,
   "param_id" int8 NOT NULL,
-  "value" varchar(255) NOT NULL,
+  "value" varchar(255),
   "mtime" timestamp(0) NOT NULL
 )
 ;
@@ -614,7 +614,7 @@ CREATE TABLE "public"."cm_wfi_item" (
   "atvi_id" int8 NOT NULL,
   "status" int2 NOT NULL,
   "assign_kind" int2 NOT NULL,
-  "sender" varchar(32) NOT NULL,
+  "sender" varchar(32),
   "stime" timestamp(0) NOT NULL,
   "is_accept" bool NOT NULL,
   "accept_time" timestamp(0),

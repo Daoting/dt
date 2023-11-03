@@ -86,19 +86,19 @@
                 <div>
                     <label>数据库类型</label>
                     <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
-                        <option value="0">MySql</option>
-                        <option value="1">Oracle</option>
-                        <option value="2">Sql Server</option>
-                        <option value="3">PostgreSql</option>
+                        <option value="0">PostgreSql</option>
+                        <option value="1">MySql</option>
+                        <option value="2">Oracle</option>
+                        <option value="3">Sql Server</option>
                     </select><br /><br />
                     <label>主机</label>
-                    <input type="text" id="host"><br /><br />
+                    <input type="text" id="host" value="10.10.1.2"><br /><br />
                     <label>端口</label>
-                    <input type="text" id="port" value="3306"><br /><br />
-                    <label id="lbldefdb">无需填写</label>
-                    <input id="defdb" type="text" readonly="readonly"><br /><br />
+                    <input type="text" id="port" value="5432"><br /><br />
+                    <label id="lbldefdb">默认库名</label>
+                    <input id="defdb" type="text" value="postgres"><br /><br />
                     <label>用户名 </label>
-                    <input type="text" id="defuser" value="root"><br /><br />
+                    <input type="text" id="defuser" value="postgres"><br /><br />
                     <label>密码</label>
                     <input id="pwd" type="password"><br /><br />
                     <input id="btnConnec" type="button" value="连　　接" style="width:100%;" onclick="onConnect()">
@@ -146,7 +146,7 @@
 
         function onDbChanged(db)
         {
-            if (db == 0)
+            if (db == 1)
             {
                 $("port").value = "3306";
                 $("defuser").value = "root";
@@ -155,7 +155,7 @@
                 $("defdb").value = "";
                 $("lbldb").innerText = "新库名";
             }
-            else if (db == 1)
+            else if (db == 2)
             {
                 $("port").value = "1521";
                 $("defuser").value = "system";
@@ -165,7 +165,7 @@
                 $("defdb").value = "orcl";
                 $("lbldb").innerText = "新表空间";
             }
-            else if (db == 2)
+            else if (db == 3)
             {
                 $("port").value = "1433";
                 $("defuser").value = "sa";
@@ -175,7 +175,7 @@
                 $("defdb").value = "master";
                 $("lbldb").innerText = "新库名";
             }
-            else if (db == 3)
+            else if (db == 0)
             {
                 $("port").value = "5432";
                 $("defuser").value = "postgres";
@@ -304,7 +304,7 @@
             {
                 $("port").focus();
             }
-            else if ($("defdb").value == "" && $("dbtype").value != 0)
+            else if ($("defdb").value == "" && $("dbtype").value != 1)
             {
                 $("defdb").focus();
             }
@@ -334,7 +334,7 @@
             {
                 $("port").focus();
             }
-            else if ($("defdb").value == "" && $("dbtype").value != 0)
+            else if ($("defdb").value == "" && $("dbtype").value != 1)
             {
                 $("defdb").focus();
             }
