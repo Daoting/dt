@@ -147,7 +147,6 @@ namespace Dt.Core
             bool update = false;
             List<Row> insertRows = new List<Row>();
             List<Row> updateRows = new List<Row>();
-            List<string> updateCols = new List<string>();
             foreach (var row in p_rows)
             {
                 if (row.IsAdded)
@@ -159,13 +158,6 @@ namespace Dt.Core
                 {
                     update = true;
                     updateRows.Add(row);
-
-                    // 合并所有行中需要更新的列
-                    foreach (var cell in row.ChangedCells)
-                    {
-                        if (!updateCols.Contains(cell.ID))
-                            updateCols.Add(cell.ID);
-                    }
                 }
             }
 
@@ -205,6 +197,30 @@ namespace Dt.Core
 
                 if (insert)
                 {
+                    // 判断该列是否需要insert
+                    // 列可为null 且 所有值都null时不需要insert
+                    bool isNeedInsert = false;
+                    List<Cell> ls;
+                    if (col.Nullable)
+                    {
+                        ls = new List<Cell>();
+                        foreach (var row in insertRows)
+                        {
+                            var c = row.Cells[col.Name];
+                            ls.Add(c);
+                            if (c.Val != null)
+                                isNeedInsert = true;
+                        }
+                    }
+                    else
+                    {
+                        isNeedInsert = true;
+                        ls = (from row in insertRows
+                              select row.Cells[col.Name]).ToList();
+                    }
+                    if (!isNeedInsert)
+                        continue;
+
                     if (insertCol.Length > 0)
                         insertCol.Append(",");
                     insertCol.Append(Prefix);
@@ -216,12 +232,24 @@ namespace Dt.Core
                     insertVal.Append(VarPrefix);
                     insertVal.Append(col.Name);
 
-                    dtInsert[col.Name] = (from row in insertRows
-                                          select row.Cells[col.Name]).ToList();
+                    dtInsert[col.Name] = ls;
                 }
 
-                if (update && updateCols.Contains(col.Name, StringComparer.OrdinalIgnoreCase))
+                if (update)
                 {
+                    // 判断该列是否需要update
+                    bool isNeedUpdate = false;
+                    List<Cell> ls = new List<Cell>();
+                    foreach (var row in updateRows)
+                    {
+                        var c = row.Cells[col.Name];
+                        ls.Add(c);
+                        if (c.IsChanged)
+                            isNeedUpdate = true;
+                    }
+                    if (!isNeedUpdate)
+                        continue;
+
                     if (updateVal.Length > 0)
                         updateVal.Append(", ");
                     updateVal.Append(Prefix);
@@ -232,8 +260,7 @@ namespace Dt.Core
                     updateVal.Append(updateIndex);
 
                     // 更新主键时避免重复
-                    dtUpdate[updateIndex.ToString()] = (from row in updateRows
-                                                        select row.Cells[col.Name]).ToList();
+                    dtUpdate[updateIndex.ToString()] = ls;
                     updateIndex++;
                 }
             }
@@ -422,8 +449,8 @@ namespace Dt.Core
                 return col;
 
             return (from c in PrimaryKey
-                   where p_colName.Equals(c.Name, StringComparison.OrdinalIgnoreCase)
-                   select c).FirstOrDefault();
+                    where p_colName.Equals(c.Name, StringComparison.OrdinalIgnoreCase)
+                    select c).FirstOrDefault();
         }
 
         /// <summary>
@@ -591,7 +618,7 @@ namespace Dt.Core
         /// <returns></returns>
         public string GetTypeName()
         {
-            return IsEnumCol? GetEnumName() : GetTypeNameStr(Type);
+            return IsEnumCol ? GetEnumName() : GetTypeNameStr(Type);
         }
 
         /// <summary>
