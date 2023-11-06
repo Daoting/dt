@@ -426,20 +426,25 @@ namespace Dt.Core
                     {
                         title = "";
                     }
-                    
-                    if (col.Type == typeof(bool))
+
+                    // 按照字段类型生成FvCell
+                    Type tp = col.Type;
+                    if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        tp = col.Type.GetGenericArguments()[0];
+
+                    if (tp == typeof(bool))
                     {
                         sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
                     }
-                    else if (col.Type == typeof(int))
+                    else if (tp == typeof(int))
                     {
                         sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" />");
                     }
-                    else if (col.Type == typeof(long) || col.Type == typeof(double))
+                    else if (tp == typeof(long) || tp == typeof(double))
                     {
                         sb.Append($"<a:CNum ID=\"{col.Name}\"{title} />");
                     }
-                    else if (col.Type == typeof(DateTime))
+                    else if (tp == typeof(DateTime))
                     {
                         sb.Append($"<a:CDate ID=\"{col.Name}\"{title} />");
                     }
@@ -623,19 +628,24 @@ namespace Dt.Core
                         title = "";
                     }
 
-                    if (col.Type == typeof(bool))
+                    // 字段可能为null
+                    Type tp = col.Type;
+                    if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        tp = col.Type.GetGenericArguments()[0];
+
+                    if (tp == typeof(bool))
                     {
                         sb.Append($"<a:CBool ID=\"{col.Name}\"{title} Query=\"Editable\" />");
                     }
-                    else if (col.Type == typeof(int))
+                    else if (tp == typeof(int))
                     {
                         sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" Query=\"Editable\" />");
                     }
-                    else if (col.Type == typeof(long) || col.Type == typeof(double))
+                    else if (tp == typeof(long) || tp == typeof(double))
                     {
                         sb.Append($"<a:CNum ID=\"{col.Name}\"{title} Query=\"Editable\" />");
                     }
-                    else if (col.Type == typeof(DateTime))
+                    else if (tp == typeof(DateTime))
                     {
                         sb.Append($"<a:CDate ID=\"{col.Name}\"{title} Query=\"Editable\" />");
                     }

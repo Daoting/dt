@@ -629,16 +629,20 @@ namespace Dt.Core
             get
             {
                 bool isEnumType = false;
+                Type tp = Type;
+                if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    tp = Type.GetGenericArguments()[0];
+
                 switch (Owner.DbType)
                 {
                     case DatabaseType.MySql:
                     case DatabaseType.SqlServer:
-                        isEnumType = Type == typeof(byte);
+                        isEnumType = tp == typeof(byte);
                         break;
 
                     case DatabaseType.Oracle:
                     case DatabaseType.PostgreSql:
-                        isEnumType = Type == typeof(short);
+                        isEnumType = tp == typeof(short);
                         break;
 
                 }
@@ -659,7 +663,12 @@ namespace Dt.Core
             {
                 var match = Regex.Match(Comments, @"^#[^\s#]+");
                 if (match.Success)
-                    return match.Value.Trim('#');
+                {
+                    var name = match.Value.Trim('#');
+                    if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        name += "?";
+                    return name;
+                }
             }
             return "byte";
         }
@@ -694,8 +703,12 @@ namespace Dt.Core
                 return "int";
             if (p_type == typeof(long))
                 return "long";
+            if (p_type == typeof(short))
+                return "short";
             if (p_type == typeof(double))
                 return "double";
+            if (p_type == typeof(float))
+                return "float";
             if (p_type == typeof(byte))
                 return "byte";
             if (p_type == typeof(sbyte))
