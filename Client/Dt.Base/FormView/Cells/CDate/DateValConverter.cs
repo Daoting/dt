@@ -36,7 +36,7 @@ namespace Dt.Base
 
         public object Set(Mid m)
         {
-            if (m.ValType == typeof(DateTime))
+            if (m.ValType == typeof(DateTime) || m.ValType == typeof(DateTime?))
                 return m.Val;
 
             object result = null;

@@ -642,7 +642,8 @@ namespace Dt.Core
 #endif
 
         /// <summary>
-        /// 获取新序列值，序列名称全小写：表名+字段名，需要在sequence表中手动添加序列名称行
+        /// 获取新序列值，序列名称全小写：表名_字段名
+        /// <para>需要在db中手动添加序列</para>
         /// </summary>
         /// <param name="p_colName">字段名称，不可为空</param>
         /// <returns>新序列值</returns>

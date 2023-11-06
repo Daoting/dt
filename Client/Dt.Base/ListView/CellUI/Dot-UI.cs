@@ -103,6 +103,10 @@ namespace Dt.Base
             if (tp == typeof(string))
                 return CreateDefaultBlock();
 
+            // 支持可空类型
+            if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                tp = tp.GetGenericArguments()[0];
+
             if (tp == typeof(int) || tp == typeof(long) || tp == typeof(short))
                 return CreateIntBlock();
 
