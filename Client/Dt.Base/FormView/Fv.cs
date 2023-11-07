@@ -902,7 +902,7 @@ namespace Dt.Base
                 }
             }
 
-            if (!IsReadOnly)
+            if (!IsReadOnly && data != null)
                 GotoFirstCell();
 
             // 切换数据源事件
