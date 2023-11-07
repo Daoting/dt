@@ -51,15 +51,21 @@ namespace Dt.Base
                 // 功能扩展提供的数据源
                 lv.Data = await _ex.GetData();
             }
-            else if (((Type)_owner.ValBinding.ConverterParameter).IsEnum)
-            {
-                // 枚举类型
-                lv.Data = CreateEnumData((Type)_owner.ValBinding.ConverterParameter);
-            }
             else if (_owner.Items.Count > 0)
             {
                 // xaml中定义的对象列表
                 lv.Data = _owner.Items;
+            }
+            else
+            {
+                // 支持可null的枚举类型
+                Type tp = (Type)_owner.ValBinding.ConverterParameter;
+                if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    tp = tp.GetGenericArguments()[0];
+
+                // 枚举类型
+                if (tp.IsEnum)
+                    lv.Data = CreateEnumData(tp);
             }
 
             if (lv.View == null)

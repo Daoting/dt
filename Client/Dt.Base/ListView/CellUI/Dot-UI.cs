@@ -189,7 +189,18 @@ namespace Dt.Base
         TextBlock CreateDateTimeBlock()
         {
             var tb = new TextBlock { Style = Res.LvTextBlock };
-            _set = c => tb.Text = c.Date.ToString(string.IsNullOrEmpty(c.Format) ? "yyyy-MM-dd" : c.Format);
+            _set = c =>
+            {
+                string str;
+                // null或DateTime.MinValue时无显示内容
+                if (c.Date == default)
+                    str = "";
+                else
+                    str = c.Date.ToString(string.IsNullOrEmpty(c.Format) ? "yyyy-MM-dd" : c.Format);
+
+                tb.Text = str;
+                c.Dot.ToggleVisible(str == "");
+            };
             return tb;
         }
 

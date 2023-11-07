@@ -496,6 +496,15 @@ namespace Dt.Core
             if (p_tgtType.IsGenericType && p_tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 Type tp = p_tgtType.GetGenericArguments()[0];
+
+                // 可null的枚举类型
+                if (tp.IsEnum)
+                {
+                    if (p_val is string str)
+                        return (str == string.Empty) ? Enum.ToObject(tp, 0) : Enum.Parse(tp, str);
+                    return Enum.ToObject(tp, p_val);
+                }
+
                 // 参数类型不同时先转换
                 if (tp != p_val.GetType())
                     return Convert.ChangeType(p_val, tp);

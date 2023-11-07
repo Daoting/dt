@@ -245,10 +245,17 @@ namespace Dt.Core
                 for (int i = 0; i < props.Length; i++)
                 {
                     var prop = props[i];
-                    if (prop.CanWrite
-                        && (prop.PropertyType.IsEnum || prop.PropertyType == typeof(bool)))
+                    if (prop.CanWrite)
                     {
-                        dt.Add(prop.Name, prop.PropertyType);
+                        // 支持可null类型
+                        Type tp = prop.PropertyType;
+                        if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                            tp = tp.GetGenericArguments()[0];
+
+                        if (tp.IsEnum || tp == typeof(bool))
+                        {
+                            dt.Add(prop.Name, prop.PropertyType);
+                        }
                     }
                 }
             }

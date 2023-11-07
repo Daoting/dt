@@ -32,7 +32,12 @@ namespace Dt.Base
                 return null;
             }
 
-            if (m.Val.GetType() == m.ValType)
+            // 支持可null类型
+            Type tp = m.ValType;
+            if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                tp = tp.GetGenericArguments()[0];
+
+            if (m.Val.GetType() == tp)
                 return m.Val;
 
             // 从ListDlg选择对象后回填数据时
