@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace $rootnamespace$
 {
-    [View("$clsroot$Win")]
+    [View("$clsroot$")]
     public partial class $clsroot$Win : Win
     {
         public $clsroot$Win()

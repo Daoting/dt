@@ -100,6 +100,9 @@ namespace Dt.Base
                 }
             }
 
+            if (tp == null)
+                return null;
+
             if (tp == typeof(string))
                 return CreateDefaultBlock();
 
@@ -128,10 +131,7 @@ namespace Dt.Base
             if (tp == typeof(SolidColorBrush))
                 return CreateBrushRect();
 
-            if (tp != null)
-                return CreateDefaultBlock();
-
-            return null;
+            return CreateDefaultBlock();
         }
 
         TextBlock CreateDefaultBlock()

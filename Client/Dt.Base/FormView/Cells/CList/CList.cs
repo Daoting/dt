@@ -260,7 +260,7 @@ namespace Dt.Base
                         MaxHeight = 300,
                     };
                     if (ViewMode != ViewMode.Table)
-                        _dlg.Width = _grid.ActualWidth;
+                        _dlg.Width = _grid.ActualWidth > 0 ? _grid.ActualWidth : 300;
                 }
             }
             _dlg.ShowDlg();

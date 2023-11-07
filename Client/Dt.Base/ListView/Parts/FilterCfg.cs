@@ -115,6 +115,16 @@ namespace Dt.Base
                     }
                 }
             }
+            else if (p_obj is string str)
+            {
+                if (IsContains(str))
+                    return true;
+            }
+            else if (p_obj.GetType().IsValueType)
+            {
+                if (IsContains(p_obj.ToString()))
+                    return true;
+            }
             else
             {
                 var props = p_obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);

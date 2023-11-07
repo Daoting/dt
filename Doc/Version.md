@@ -45,6 +45,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 任务栏主页按钮显示开始菜单对话框
 * 工作台菜单项增加注释
 * 收藏菜单排序
+* CList在选项超过4个时默认显示过滤框
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
@@ -56,7 +57,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * Cell为string类型时保留原始null值
 * 调整初始化库时可为null的字段
 * 在Dlg内部点击并且有遮罩时，传递到紧挨的下层对话框，比如：对话框有遮罩，点击内容弹出菜单，再点击对话框区域(非菜单内)，确保菜单能关闭
-
+* 可null枚举类型的显示
 
 
 ## Release 4.2.2

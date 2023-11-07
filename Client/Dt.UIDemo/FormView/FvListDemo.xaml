@@ -24,6 +24,9 @@
                             <x:Int32>1</x:Int32>
                             <x:Int32>2</x:Int32>
                             <x:Int32>3</x:Int32>
+                            <x:Int32>4</x:Int32>
+                            <x:Int32>5</x:Int32>
+                            <x:Int32>6</x:Int32>
                         </a:CList.Items>
                     </a:CList>
                     <a:CList ID="idstrdsp" Title="IDStr" SrcID="id" TgtID="idstr">

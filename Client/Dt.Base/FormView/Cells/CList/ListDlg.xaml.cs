@@ -56,10 +56,9 @@ namespace Dt.Base
                 // xaml中定义的对象列表
                 lv.Data = _owner.Items;
             }
-            else
+            else if (_owner.ValBinding.ConverterParameter is Type tp)
             {
                 // 支持可null的枚举类型
-                Type tp = (Type)_owner.ValBinding.ConverterParameter;
                 if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
                     tp = tp.GetGenericArguments()[0];
 
@@ -93,6 +92,23 @@ namespace Dt.Base
                 Top = Kit.ViewHeight - DesiredSize.Height;
                 // uno中不可设置为固定高度！
                 Height = double.NaN;
+            }
+
+            if (lv.Data != null && lv.Data.Count > 0)
+            {
+                lv.SelectedIndex = 0;
+                if (lv.Data.Count > 4
+                    && _owner.FilterCfg == null)
+                {
+                    // 默认显示过滤框
+                    lv.FilterCfg = new FilterCfg
+                    {
+                        EnablePinYin = true,
+                        IsRealtime = true,
+                        Placeholder = "拼音简码或包含的文字",
+                    };
+                }
+                lv.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
             }
         }
 
