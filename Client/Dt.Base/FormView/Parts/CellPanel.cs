@@ -43,16 +43,24 @@ namespace Dt.Base.FormView
             FrameworkElement con = (FrameworkElement)e.OldValue;
             if (con != null)
             {
-                con.KeyUp -= pnl.OnKeyUp;
-                con.PreviewKeyDown -= pnl.OnPreviewKeyDown;
+#if WIN || WASM
+                con.KeyDown -= pnl.OnKeyDown;
+#else
+                con.KeyUp -= pnl.OnKeyDown;
+#endif
                 pnl.Children.Remove(con);
             }
 
             con = (FrameworkElement)e.NewValue;
             if (con != null)
             {
-                con.KeyUp += pnl.OnKeyUp;
-                con.PreviewKeyDown += pnl.OnPreviewKeyDown;
+                // win上KeyUp事件有怪异：Tab跳两格、CList选择后跳两格
+                // 手机上KeyDown事件不触发！！！
+#if WIN || WASM
+                con.KeyDown += pnl.OnKeyDown;
+#else
+                con.KeyUp += pnl.OnKeyDown;
+#endif
                 if (pnl.Children.Count > 0)
                     pnl.Children.Insert(pnl.Children.Count - 1, con);
             }
@@ -292,16 +300,6 @@ namespace Dt.Base.FormView
                 _owner.Owner.OnCellClick(_owner);
         }
 
-
-        void OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Tab)
-            {
-                // 预览Tab键，标志已处理，不再跳格！否则现象诡异，操
-                e.Handled = true;
-            }
-        }
-
         /// <summary>
         /// 同步处理键盘特殊功能键操作
         /// 需要支持以下编辑键：
@@ -315,7 +313,7 @@ namespace Dt.Base.FormView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnKeyUp(object sender, KeyRoutedEventArgs e)
+        void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (_owner == null || _owner.Owner == null)
                 return;
