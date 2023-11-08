@@ -689,5 +689,32 @@ namespace Dt.Core
         // 是否为虚拟实体
         static bool _isVirEntity = typeof(TEntity).GetInterface("IVirEntity") == typeof(IVirEntity);
         #endregion
+
+        #region 视图
+        /// <summary>
+        /// 提供对1号视图的查询
+        /// </summary>
+        public class View1 : EntityView<TEntity, View1Attribute> { }
+
+        /// <summary>
+        /// 提供对2号视图的查询
+        /// </summary>
+        public class View2 : EntityView<TEntity, View2Attribute> { }
+
+        /// <summary>
+        /// 提供对3号视图的查询
+        /// </summary>
+        public class View3 : EntityView<TEntity, View1Attribute> { }
+
+        /// <summary>
+        /// 提供对4号视图的查询
+        /// </summary>
+        public class View4 : EntityView<TEntity, View1Attribute> { }
+
+        /// <summary>
+        /// 提供对5号视图的查询
+        /// </summary>
+        public class View5 : EntityView<TEntity, View1Attribute> { }
+        #endregion
     }
 }

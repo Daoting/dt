@@ -18,6 +18,7 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\Entity.cs" Link="Base\Domain\Entity\Entity.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityEx.cs" Link="Base\Domain\Entity\EntityEx.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityView.cs" Link="Base\Domain\Entity\EntityView.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityX.cs" Link="Base\Domain\Entity\EntityX.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\IVirEntity.cs" Link="Base\Domain\Entity\IVirEntity.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\VirX.cs" Link="Base\Domain\Entity\VirX.cs" />

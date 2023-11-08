@@ -46,6 +46,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 工作台菜单项增加注释
 * 收藏菜单排序
 * CList在选项超过4个时默认显示过滤框
+* Entity增加对视图的简单查询
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
@@ -58,6 +59,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 调整初始化库时可为null的字段
 * 在Dlg内部点击并且有遮罩时，传递到紧挨的下层对话框，比如：对话框有遮罩，点击内容弹出菜单，再点击对话框区域(非菜单内)，确保菜单能关闭
 * 可null枚举类型的显示
+* CList选择后跳两格
 
 
 ## Release 4.2.2
