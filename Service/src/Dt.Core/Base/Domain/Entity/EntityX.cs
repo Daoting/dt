@@ -219,36 +219,10 @@ namespace Dt.Core
         public static async Task<Table<TEntity>> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
 #if SERVER
-            var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
-            {
-                var txt = p_whereOrSqlOrSp.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    sql += " " + txt;
-                }
-                else
-                {
-                    sql = txt;
-                }
-            }
+            var sql = await GetSelectSql(p_whereOrSqlOrSp);
             return await Kit.DataAccess.Query<TEntity>(sql, p_params);
 #else
-            var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
-            {
-                var txt = p_whereOrSqlOrSp.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    res.Item2 += " " + txt;
-                }
-                else
-                {
-                    res.Item2 = txt;
-                }
-            }
+            var res = await GetSelectSql(p_whereOrSqlOrSp);
             return await res.Item1.Query<TEntity>(res.Item2, p_params);
 #endif
         }
@@ -268,44 +242,11 @@ namespace Dt.Core
         public static async Task<Table<TEntity>> Page(int p_starRow, int p_pageSize, string p_whereOrSql, object p_params = null)
         {
 #if SERVER
-            var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSql))
-            {
-                var txt = p_whereOrSql.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    sql += " " + txt;
-                }
-                else
-                {
-                    // Sql语句，自由查询
-                    sql = p_whereOrSql;
-                }
-            }
+            var sql = await GetSelectSql(p_whereOrSql);
             return await Kit.DataAccess.Page<TEntity>(p_starRow, p_pageSize, sql, p_params);
 #else
-            string sql;
-            var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSql))
-            {
-                var txt = p_whereOrSql.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    sql = res.Item2 + " " + txt;
-                }
-                else
-                {
-                    // Sql语句，自由查询
-                    sql = p_whereOrSql;
-                }
-            }
-            else
-            {
-                sql = res.Item2;
-            }
-            return await res.Item1.Page<TEntity>(p_starRow, p_pageSize, sql, p_params);
+            var res = await GetSelectSql(p_whereOrSql);
+            return await res.Item1.Page<TEntity>(p_starRow, p_pageSize, res.Item2, p_params);
 #endif
         }
 
@@ -322,36 +263,10 @@ namespace Dt.Core
         public static async Task<TEntity> First(string p_whereOrSqlOrSp, object p_params = null)
         {
 #if SERVER
-            var sql = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
-            {
-                var txt = p_whereOrSqlOrSp.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    sql += " " + txt;
-                }
-                else
-                {
-                    sql = txt;
-                }
-            }
+            var sql = await GetSelectSql(p_whereOrSqlOrSp);
             return await Kit.DataAccess.First<TEntity>(sql, p_params);
 #else
-            var res = await GetSelectSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
-            {
-                var txt = p_whereOrSqlOrSp.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    res.Item2 += " " + txt;
-                }
-                else
-                {
-                    res.Item2 = txt;
-                }
-            }
+            var res = await GetSelectSql(p_whereOrSqlOrSp);
             return await res.Item1.First<TEntity>(res.Item2, p_params);
 #endif
         }
@@ -403,32 +318,10 @@ namespace Dt.Core
         public static async Task<int> GetCount(string p_where, object p_params = null)
         {
 #if SERVER
-            var sql = await GetCountSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_where))
-            {
-                var txt = p_where.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    sql += " " + txt;
-                }
-            }
+            var sql = await GetCountSql(p_where);
             return await Kit.DataAccess.GetScalar<int>(sql, p_params);
 #else
-            var res = await GetCountSql(typeof(TEntity));
-            if (!string.IsNullOrWhiteSpace(p_where))
-            {
-                var txt = p_where.Trim();
-                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
-                {
-                    // where子句
-                    res.Item2 += " " + txt;
-                }
-                else
-                {
-                    Throw.Msg("GetCount方法的参数以where开头！");
-                }
-            }
+            var res = await GetCountSql(p_where);
             return await res.Item1.GetScalar<int>(res.Item2, p_params);
 #endif
         }
@@ -558,48 +451,126 @@ namespace Dt.Core
         }
 
 #if SERVER
-        static async Task<string> GetSelectSql(Type p_type)
+        static async Task<string> GetSelectSql(string p_whereOrSqlOrSp)
         {
+            string sql;
             if (_isVirEntity)
             {
-                return (await VirEntitySchema.Get(p_type)).GetSelectAllSql();
+                sql = (await VirEntitySchema.Get(typeof(TEntity))).GetSelectAllSql();
             }
-            return (await EntitySchema.Get(p_type)).Schema.GetSelectAllSql();
-        }
-#else
-        static async Task<(IDataAccess, string)> GetSelectSql(Type p_type)
-        {
-            if (_isVirEntity)
+            else
             {
-                var vm = await VirEntitySchema.Get(p_type);
-                return (vm.AccessInfo.GetDataAccess(), vm.GetSelectAllSql());
+                sql = (await EntitySchema.Get(typeof(TEntity))).Schema.GetSelectAllSql();
             }
 
-            var model = await EntitySchema.Get(p_type);
-            return (model.AccessInfo.GetDataAccess(), model.Schema.GetSelectAllSql());
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
+            {
+                var txt = p_whereOrSqlOrSp.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    // sql语句，自由查询
+                    sql = txt;
+                }
+            }
+            return sql;
+        }
+#else
+        static async Task<(IDataAccess, string)> GetSelectSql(string p_whereOrSqlOrSp)
+        {
+            string sql;
+            IDataAccess da;
+            if (_isVirEntity)
+            {
+                var vm = await VirEntitySchema.Get(typeof(TEntity));
+                sql = vm.GetSelectAllSql();
+                da = vm.AccessInfo.GetDataAccess();
+            }
+            else
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                sql = model.Schema.GetSelectAllSql();
+                da = model.AccessInfo.GetDataAccess();
+            }
+
+            if (!string.IsNullOrWhiteSpace(p_whereOrSqlOrSp))
+            {
+                var txt = p_whereOrSqlOrSp.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    // sql语句，自由查询
+                    sql = txt;
+                }
+            }
+            return (da, sql);
         }
 #endif
 
 #if SERVER
-        static async Task<string> GetCountSql(Type p_type)
+        static async Task<string> GetCountSql(string p_where)
         {
+            string sql;
             if (_isVirEntity)
             {
-                return (await VirEntitySchema.Get(p_type)).GetCountSql();
+                sql = (await VirEntitySchema.Get(typeof(TEntity))).GetCountSql();
             }
-            return (await EntitySchema.Get(p_type)).Schema.GetCountSql();
-        }
-#else
-        static async Task<(IDataAccess, string)> GetCountSql(Type p_type)
-        {
-            if (_isVirEntity)
+            else
             {
-                var vm = await VirEntitySchema.Get(p_type);
-                return (vm.AccessInfo.GetDataAccess(), vm.GetCountSql());
+                sql = (await EntitySchema.Get(typeof(TEntity))).Schema.GetCountSql();
             }
 
-            var model = await EntitySchema.Get(p_type);
-            return (model.AccessInfo.GetDataAccess(), model.Schema.GetCountSql());
+            if (!string.IsNullOrWhiteSpace(p_where))
+            {
+                var txt = p_where.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+            }
+            return sql;
+        }
+#else
+        static async Task<(IDataAccess, string)> GetCountSql(string p_where)
+        {
+            string sql;
+            IDataAccess da;
+            if (_isVirEntity)
+            {
+                var vm = await VirEntitySchema.Get(typeof(TEntity));
+                sql = vm.GetSelectAllSql();
+                da = vm.AccessInfo.GetDataAccess();
+            }
+            else
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                sql = model.Schema.GetSelectAllSql();
+                da = model.AccessInfo.GetDataAccess();
+            }
+
+            if (!string.IsNullOrWhiteSpace(p_where))
+            {
+                var txt = p_where.Trim();
+                if (txt.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // where子句
+                    sql += " " + txt;
+                }
+                else
+                {
+                    Throw.Msg("GetCount方法的参数以where开头！");
+                }
+            }
+            return (da, sql);
         }
 #endif
         #endregion
