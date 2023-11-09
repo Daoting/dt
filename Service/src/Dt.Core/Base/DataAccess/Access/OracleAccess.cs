@@ -80,7 +80,7 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "select table_name from user_tables union select view_name from user_views";
+        const string _sqlAllTbls = "select table_name from user_tables";
         const string _sqlCols = "select * from \"{0}\" where 1!=1";
         const string _sqlDef = "select column_name,data_default from user_tab_columns where table_name = '{0}'";
         const string _sqlComment = "select column_name,comments from user_col_comments where table_name = '{0}'";

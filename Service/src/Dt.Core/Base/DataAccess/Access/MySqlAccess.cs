@@ -46,7 +46,7 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "select table_name from information_schema.tables where table_schema='{0}'";
+        const string _sqlAllTbls = "select table_name from information_schema.tables where table_schema='{0}' and table_type='BASE TABLE'";
         const string _sqlCols = "select * from `{0}` where 1!=1";
         const string _sqlComment = "select column_default,column_comment from information_schema.columns where table_schema='{0}' and table_name='{1}' and column_name='{2}'";
 
@@ -60,7 +60,7 @@ namespace Dt.Core
                 {
                     // 原来通过系统表information_schema.columns获取结构，为准确获取与c#的映射类型采用当前方式
 
-                    // 所有表名包括视图
+                    // 所有表名，不包括视图
                     cmd.CommandText = string.Format(_sqlAllTbls, _conn.Database);
                     List<string> tbls = new List<string>();
                     DbDataReader reader;

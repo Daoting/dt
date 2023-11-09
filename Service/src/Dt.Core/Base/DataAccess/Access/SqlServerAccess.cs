@@ -52,7 +52,7 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "select name from sysobjects where xtype='U' or xtype='V'";
+        const string _sqlAllTbls = "select name from sysobjects where xtype='U'";
         const string _sqlCols = "select * from [{0}] where 1!=1";
         const string _sqlComment =
 "SELECT d.text def, c.value comment 　　 \n" +

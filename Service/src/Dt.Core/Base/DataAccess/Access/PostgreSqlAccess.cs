@@ -74,7 +74,7 @@ namespace Dt.Core
         #endregion
 
         #region 表结构
-        const string _sqlAllTbls = "select tablename from pg_tables where schemaname='public' union select viewname from pg_views where schemaname='public'";
+        const string _sqlAllTbls = "select tablename from pg_tables where schemaname='public'";
         const string _sqlCols = "select * from \"{0}\" where 1!=1";
         const string _sqlDefaultVal = @"select column_default from information_schema.columns where (table_schema, table_name, column_name) = ('public', '{0}', '{1}')";
 
