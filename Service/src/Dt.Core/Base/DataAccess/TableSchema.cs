@@ -54,7 +54,8 @@ namespace Dt.Core
                     break;
 
                 case DatabaseType.PostgreSql:
-                    Prefix = Postfix = "\"";
+                    // 默认始终全小写，不需要用引号括
+                    Prefix = Postfix = "";
                     // @ 和 : 都可以
                     VarPrefix = "@";
                     break;
