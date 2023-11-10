@@ -41,7 +41,6 @@ namespace Dt.Base
         public QueryFv()
         {
             DefaultStyleKey = typeof(QueryFv);
-            AutoFocus = false;
         }
         #endregion
 

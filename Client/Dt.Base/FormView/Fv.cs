@@ -63,7 +63,7 @@ namespace Dt.Base
             "AutoFocus",
             typeof(bool),
             typeof(Fv),
-            new PropertyMetadata(true));
+            new PropertyMetadata(false));
 
         public readonly static DependencyProperty MaxColCountProperty = DependencyProperty.Register(
             "MaxColCount",
@@ -224,7 +224,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置切换数据源时是否自动获得焦点，默认true
+        /// 获取设置切换数据源时是否自动获得焦点，默认false
         /// </summary>
         public bool AutoFocus
         {
@@ -917,8 +917,12 @@ namespace Dt.Base
                 }
             }
 
-            if (!IsReadOnly && data != null && AutoFocus)
+            if (!IsReadOnly
+                && data != null
+                && (AutoFocus || (data is Row r && r.IsAdded)))
+            {
                 GotoFirstCell();
+            }
 
             // 切换数据源事件
             OnFvDataChanged();
