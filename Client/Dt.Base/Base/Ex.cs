@@ -107,6 +107,30 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 元素宽度
+        public static readonly DependencyProperty WidthProperty = DependencyProperty.RegisterAttached(
+            "Width",
+            typeof(string),
+            typeof(Ex),
+            new PropertyMetadata(null));
+
+        /// <summary>
+        /// 获取元素的宽度，宽度支持 double数值 或 xx* 两种格式
+        /// </summary>
+        public static string GetWidth(UIElement element)
+        {
+            return (string)element.GetValue(MenuProperty);
+        }
+
+        /// <summary>
+        /// 设置元素的宽度
+        /// </summary>
+        public static void SetWidth(UIElement element, string value)
+        {
+            element.SetValue(MenuProperty, value);
+        }
+        #endregion
+
         #region 标签类型
         /// <summary>
         /// 附加标签的类型名称，包括命名空间，不同程序集引用时需要提供程序集名称，不提供按调用方所在的程序集

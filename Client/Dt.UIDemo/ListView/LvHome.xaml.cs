@@ -29,6 +29,7 @@ namespace Dt.UIDemo
                 new Nav("表格视图", typeof(LvTable), Icons.分组) { Desc = "传统二维表格" },
                 new Nav("列表视图", typeof(LvList), Icons.全选) { Desc = "水平填充式列表，只垂直滚动" },
                 new Nav("磁贴视图", typeof(LvTile), Icons.日历) { Desc = "平铺式磁贴，一行多格，只垂直滚动" },
+                new Nav("表格式列表", typeof(LvTblList), Icons.全选) { Desc = "由像表格一样的多格组成的行，并且采用水平填充式的列表，只垂直滚动" },
                 new Nav("内置单元格UI", typeof(LvCellUI), Icons.书籍) { Desc = "内置单元格UI的所有方法" },
                 new Nav("自定义单元格UI", typeof(LvCustomCellUI), Icons.Bug) { Desc = "自定义样式、UI，支持多个方法同用，支持重写内置方法" },
                 new Nav("自定义行样式", typeof(LvItemStyle), Icons.修改) { Desc = "定义行样式、单元格样式" },
