@@ -171,36 +171,35 @@ namespace Dt.Base
         protected override Size MeasureOverride(Size availableSize)
         {
             // 准确获取可见区大小！
-            if (_panel != null)
+            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
-                if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
-                {
-                    // 外部无ScrollViewer StackPanel的情况
-                    _panel.SetMaxSize(availableSize);
-                }
-                else if (_sizedPresenter != null)
-                {
-                    // Phone模式Lv外部有ScrollViewer时，取父级SizedPresenter有效大小
-                    _panel.SetMaxSize(new Size(
-                        Math.Min(_sizedPresenter.AvailableSize.Width, availableSize.Width),
-                        Math.Min(_sizedPresenter.AvailableSize.Height, availableSize.Height)));
-                }
-                else if (!IsInnerScroll)
-                {
-                    // Win模式外部有ScrollViewer时，动态获取父级，因所属Tabs在Win中恢复布局时变化
-                    var pre = Scroll.FindParentInWin<SizedPresenter>();
-                    _panel.SetMaxSize(new Size(
-                        Math.Min(pre.AvailableSize.Width, availableSize.Width),
-                        Math.Min(pre.AvailableSize.Height, availableSize.Height)));
-                }
-                else
-                {
-                    // 无有效大小时以窗口大小为准
-                    double width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
-                    _panel.SetMaxSize(new Size(width, height));
-                }
+                // 外部无ScrollViewer StackPanel的情况
+                _maxSize = availableSize;
             }
+            else if (_sizedPresenter != null)
+            {
+                // Phone模式Lv外部有ScrollViewer时，取父级SizedPresenter有效大小
+                _maxSize = new Size(
+                    Math.Min(_sizedPresenter.AvailableSize.Width, availableSize.Width),
+                    Math.Min(_sizedPresenter.AvailableSize.Height, availableSize.Height));
+            }
+            else if (!IsInnerScroll)
+            {
+                // Win模式外部有ScrollViewer时，动态获取父级，因所属Tabs在Win中恢复布局时变化
+                var pre = Scroll.FindParentInWin<SizedPresenter>();
+                _maxSize = new Size(
+                    Math.Min(pre.AvailableSize.Width, availableSize.Width),
+                    Math.Min(pre.AvailableSize.Height, availableSize.Height));
+            }
+            else
+            {
+                // 无有效大小时以窗口大小为准
+                double width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
+                double height = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
+                _maxSize = new Size(width, height);
+            }
+
+            _panel?.SetMaxSize(_maxSize);
             return base.MeasureOverride(availableSize);
         }
 
@@ -232,27 +231,26 @@ namespace Dt.Base
                 Scroll.ChangeView(0, 0, null, true);
             }
 
-            LvPanel pnl;
             ViewMode mode = CurrentViewMode;
             if (mode == ViewMode.List)
             {
-                pnl = new ListPanel(this);
+                _panel = new ListPanel(this);
             }
             else if (mode == ViewMode.Table)
             {
                 if (View is Cols)
-                    pnl = new TablePanel(this);
+                    _panel = new TablePanel(this);
                 else
                     throw new Exception("未提供表格所需的Cols定义！");
             }
             else
             {
-                pnl = new TilePanel(this);
+                _panel = new TilePanel(this);
             }
-            // 切换面板时保留大小
-            if (_panel != null)
-                pnl.SetMaxSize(_panel.GetMaxSize());
-            _panel = pnl;
+
+            // 切换面板时保留最大尺寸，加载后切换面板时不再调用Lv.MeasureOverride！
+            if (!_maxSize.IsEmpty)
+                _panel.SetMaxSize(_maxSize);
 
             if (mode == ViewMode.Table)
             {
@@ -293,5 +291,8 @@ namespace Dt.Base
                 _panel.Children.Clear();
             }
         }
+
+        // 记录面板最大尺寸，和LvPanel相同，为了给后加载_panel提供最大尺寸
+        Size _maxSize = Size.Empty;
     }
 }
