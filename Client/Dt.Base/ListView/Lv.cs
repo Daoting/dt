@@ -71,6 +71,18 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(false, OnShowDotBorderChanged));
 
+        public static readonly DependencyProperty ShowListHeaderProperty = DependencyProperty.Register(
+            "ShowListHeader",
+            typeof(bool),
+            typeof(Lv),
+            new PropertyMetadata(false, OnShowListHeaderChanged));
+
+        public static readonly DependencyProperty CustomListHeaderProperty = DependencyProperty.Register(
+            "CustomListHeader",
+            typeof(UIElement),
+            typeof(Lv),
+            new PropertyMetadata(null, OnShowListHeaderChanged));
+
         public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
             "EnteredBrush",
             typeof(Brush),
@@ -183,6 +195,13 @@ namespace Dt.Base
                 lv.Resources.Remove(typeof(Dot));
             }
         }
+
+        static void OnShowListHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if (lv.ViewMode == ViewMode.List)
+                lv.ReloadPanelContent();
+        }
         #endregion
 
         #region 成员变量
@@ -292,6 +311,24 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowDotBorderProperty); }
             set { SetValue(ShowDotBorderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置列表视图时是否显示列头，默认false
+        /// </summary>
+        public bool ShowListHeader
+        {
+            get { return (bool)GetValue(ShowListHeaderProperty); }
+            set { SetValue(ShowListHeaderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置列表视图时的自定义列头，未定义时采用行模板
+        /// </summary>
+        public UIElement CustomListHeader
+        {
+            get { return (UIElement)GetValue(CustomListHeaderProperty); }
+            set { SetValue(CustomListHeaderProperty, value); }
         }
 
         /// <summary>

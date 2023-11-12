@@ -69,5 +69,26 @@ namespace Dt.UIDemo
         {
             _lv.View = Resources[((Button)sender).Tag];
         }
+
+        void OnFilterCfg(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = new FilterCfg();
+        }
+
+        void OnDelFilter(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = null;
+        }
+
+        void OnToolbar(object sender, RoutedEventArgs e)
+        {
+            var temp = (DataTemplate)Resources["Toolbar"];
+            _lv.Toolbar = temp.LoadContent() as Menu;
+        }
+
+        void OnDelToolbar(object sender, RoutedEventArgs e)
+        {
+            _lv.Toolbar = null;
+        }
     }
 }
