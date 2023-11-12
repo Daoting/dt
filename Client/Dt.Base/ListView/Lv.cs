@@ -65,6 +65,12 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(true, OnReload));
 
+        public static readonly DependencyProperty ShowDotBorderProperty = DependencyProperty.Register(
+            "ShowDotBorder",
+            typeof(bool),
+            typeof(Lv),
+            new PropertyMetadata(false, OnShowDotBorderChanged));
+
         public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
             "EnteredBrush",
             typeof(Brush),
@@ -163,6 +169,19 @@ namespace Dt.Base
         static void OnItemHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Lv)d).OnItemHeightChanged();
+        }
+
+        static void OnShowDotBorderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if ((bool)e.NewValue)
+            {
+                lv.Resources.TryAdd(typeof(Dot), Res.DotCellStyle);
+            }
+            else
+            {
+                lv.Resources.Remove(typeof(Dot));
+            }
         }
         #endregion
 
@@ -264,6 +283,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowItemBorderProperty); }
             set { SetValue(ShowItemBorderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置是否显示行内Dot元素的边框，默认false
+        /// </summary>
+        public bool ShowDotBorder
+        {
+            get { return (bool)GetValue(ShowDotBorderProperty); }
+            set { SetValue(ShowDotBorderProperty, value); }
         }
 
         /// <summary>
