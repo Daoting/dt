@@ -14,7 +14,7 @@
       "DbType": "sqlserver"
     },
     "pgdt": {
-      "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
+      "ConnStr": "Host=10.10.1.2;Port=5432;Database=farm;Username=farm;Password=farm;",
       "DbType": "postgresql"
     }
   },
