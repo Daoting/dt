@@ -90,5 +90,16 @@ namespace Dt.UIDemo
         {
             _lv.Toolbar = null;
         }
+
+        void OnCustomHeader(object sender, RoutedEventArgs e)
+        {
+            var temp = (DataTemplate)Resources["CustomHeader"];
+            _lv.CustomListHeader = temp.LoadContent() as FrameworkElement;
+        }
+
+        void OnDelCustomHeader(object sender, RoutedEventArgs e)
+        {
+            _lv.CustomListHeader = null;
+        }
     }
 }

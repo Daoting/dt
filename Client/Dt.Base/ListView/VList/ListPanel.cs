@@ -20,7 +20,7 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class ListPanel : LvPanel
     {
-        UIElement _header;
+        Border _header;
 
         public ListPanel(Lv p_owner) : base(p_owner)
         { }
@@ -33,19 +33,27 @@ namespace Dt.Base.ListView
 
             if (_header == null)
             {
+                FrameworkElement child = null;
                 if (_owner.CustomListHeader != null)
                 {
-                    _header = _owner.CustomListHeader;
+                    child = _owner.CustomListHeader;
                 }
                 else if (((DataTemplate)_owner.View).LoadContent() is FrameworkElement elem)
+                {
+                    child = elem;
+                }
+
+                if (child != null)
                 {
                     Border bd = new Border
                     {
                         Background = Res.浅灰1,
+                        Child = child,
                     };
-                    bd.Child = elem;
-                    bd.DataContext = _owner;
+
                     _header = bd;
+                    _header.MinHeight = Res.RowOuterHeight;
+                    _header.DataContext = _owner;
                 }
             }
 
@@ -57,7 +65,11 @@ namespace Dt.Base.ListView
 
         protected override void ClearColHeader()
         {
-            _header = null;
+            if (_header != null)
+            {
+                _header.Child = null;
+                _header = null;
+            }
         }
         #endregion
 

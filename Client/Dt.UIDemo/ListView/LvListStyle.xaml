@@ -46,6 +46,25 @@
                 <a:Mi ID="筛选" Icon="漏斗" CmdParam="#Filter" />
             </a:Menu>
         </DataTemplate>
+
+        <DataTemplate x:Key="CustomHeader">
+            <StackPanel>
+                <a:HorPanel>
+                    <a:Dot Title="姓名" />
+                    <a:Dot Title="所属部门" a:Ex.Width="200" />
+                    <a:Dot Title="性别" a:Ex.Width="Auto" />
+                    <a:Dot Title="出生日期" a:Ex.Width="0.5*" />
+                    <a:Dot Title="身份证号码" a:Ex.Width="*" />
+                </a:HorPanel>
+                <a:HorPanel>
+                    <a:Dot Title="身份证号码" a:Ex.Width="*" />
+                    <a:Dot Title="所属部门" a:Ex.Width="200" />
+                    <a:Dot Title="性别" a:Ex.Width="Auto" />
+                    <a:Dot Title="姓名" />
+                    <a:Dot Title="出生日期" a:Ex.Width="0.5*" />
+                </a:HorPanel>
+            </StackPanel>
+        </DataTemplate>
     </a:Win.Resources>
 
     <a:Main>
@@ -90,6 +109,12 @@
                     </a:CFree>
                     <a:CBar Title="属性" />
                     <a:CBool Title="显示列头" ID="ShowListHeader" />
+                    <a:CFree Title="自定义列头">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="启用" Click="OnCustomHeader" />
+                            <Button Content="删除" Click="OnDelCustomHeader" />
+                        </StackPanel>
+                    </a:CFree>
                     <a:CBool Title="显示Dot边框" ID="ShowDotBorder" />
                     <a:CList Title="选择模式" ID="SelectionMode" />
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />

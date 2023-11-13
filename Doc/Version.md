@@ -17,6 +17,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译
 * snow算法起始时间20231001
 * CText默认实时更新，否则保存按钮不能实时更新状态
+* 模型库不再包含视图
 
 ### 功能
 * Lv表格调整列宽时按住ctrl显示宽度消息
@@ -47,7 +48,10 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 收藏菜单排序
 * CList在选项超过4个时默认显示过滤框
 * Entity增加对视图的简单查询
+* Fv增加AutoFocus控制切换数据源后是否自动获得焦点，默认false，但对IsAdded的row自动设置焦点
+* 优化查询sql
 * 增加Lv列表模式的列头
+* Lv列表模式的自定义列头
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

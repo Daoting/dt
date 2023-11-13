@@ -79,7 +79,7 @@ namespace Dt.Base
 
         public static readonly DependencyProperty CustomListHeaderProperty = DependencyProperty.Register(
             "CustomListHeader",
-            typeof(UIElement),
+            typeof(FrameworkElement),
             typeof(Lv),
             new PropertyMetadata(null, OnShowListHeaderChanged));
 
@@ -325,9 +325,9 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置列表视图时的自定义列头，未定义时采用行模板
         /// </summary>
-        public UIElement CustomListHeader
+        public FrameworkElement CustomListHeader
         {
-            get { return (UIElement)GetValue(CustomListHeaderProperty); }
+            get { return (FrameworkElement)GetValue(CustomListHeaderProperty); }
             set { SetValue(CustomListHeaderProperty, value); }
         }
 
