@@ -19,11 +19,12 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.UIDemo
 {
-    public partial class LvTblList : Win
+    public partial class LvListStyle : Win
     {
-        public LvTblList()
+        public LvListStyle()
         {
             InitializeComponent();
+            _lv.View = Resources["Table"];
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
 
@@ -62,6 +63,32 @@ namespace Dt.UIDemo
             int index = new Random().Next(0, _lv.Data.Count);
             _lv.ScrollInto(index);
             Kit.Msg($"滚动到第 {index + 1} 行");
+        }
+
+        void OnLoadStyle(object sender, RoutedEventArgs e)
+        {
+            _lv.View = Resources[((Button)sender).Tag];
+        }
+
+        void OnFilterCfg(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = new FilterCfg();
+        }
+
+        void OnDelFilter(object sender, RoutedEventArgs e)
+        {
+            _lv.FilterCfg = null;
+        }
+
+        void OnToolbar(object sender, RoutedEventArgs e)
+        {
+            var temp = (DataTemplate)Resources["Toolbar"];
+            _lv.Toolbar = temp.LoadContent() as Menu;
+        }
+
+        void OnDelToolbar(object sender, RoutedEventArgs e)
+        {
+            _lv.Toolbar = null;
         }
     }
 }

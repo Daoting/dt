@@ -65,6 +65,24 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(true, OnReload));
 
+        public static readonly DependencyProperty ShowDotBorderProperty = DependencyProperty.Register(
+            "ShowDotBorder",
+            typeof(bool),
+            typeof(Lv),
+            new PropertyMetadata(false, OnShowDotBorderChanged));
+
+        public static readonly DependencyProperty ShowListHeaderProperty = DependencyProperty.Register(
+            "ShowListHeader",
+            typeof(bool),
+            typeof(Lv),
+            new PropertyMetadata(false, OnShowListHeaderChanged));
+
+        public static readonly DependencyProperty CustomListHeaderProperty = DependencyProperty.Register(
+            "CustomListHeader",
+            typeof(UIElement),
+            typeof(Lv),
+            new PropertyMetadata(null, OnShowListHeaderChanged));
+
         public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
             "EnteredBrush",
             typeof(Brush),
@@ -163,6 +181,26 @@ namespace Dt.Base
         static void OnItemHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((Lv)d).OnItemHeightChanged();
+        }
+
+        static void OnShowDotBorderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if ((bool)e.NewValue)
+            {
+                lv.Resources.TryAdd(typeof(Dot), Res.DotCellStyle);
+            }
+            else
+            {
+                lv.Resources.Remove(typeof(Dot));
+            }
+        }
+
+        static void OnShowListHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Lv lv = (Lv)d;
+            if (lv.ViewMode == ViewMode.List)
+                lv.ReloadPanelContent();
         }
         #endregion
 
@@ -264,6 +302,33 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowItemBorderProperty); }
             set { SetValue(ShowItemBorderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置是否显示行内Dot元素的边框，默认false
+        /// </summary>
+        public bool ShowDotBorder
+        {
+            get { return (bool)GetValue(ShowDotBorderProperty); }
+            set { SetValue(ShowDotBorderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置列表视图时是否显示列头，默认false
+        /// </summary>
+        public bool ShowListHeader
+        {
+            get { return (bool)GetValue(ShowListHeaderProperty); }
+            set { SetValue(ShowListHeaderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置列表视图时的自定义列头，未定义时采用行模板
+        /// </summary>
+        public UIElement CustomListHeader
+        {
+            get { return (UIElement)GetValue(CustomListHeaderProperty); }
+            set { SetValue(CustomListHeaderProperty, value); }
         }
 
         /// <summary>

@@ -47,6 +47,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 收藏菜单排序
 * CList在选项超过4个时默认显示过滤框
 * Entity增加对视图的简单查询
+* 增加Lv列表模式的列头
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

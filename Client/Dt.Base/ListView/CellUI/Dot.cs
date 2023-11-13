@@ -33,6 +33,12 @@ namespace Dt.Base
             typeof(Dot),
             new PropertyMetadata(null, OnReload));
 
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
+            typeof(string),
+            typeof(Dot),
+            new PropertyMetadata(null));
+
         public static readonly DependencyProperty AutoHideProperty = DependencyProperty.Register(
             "AutoHide",
             typeof(bool),
@@ -96,6 +102,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置标题，作为行头或tooltip时用
+        /// </summary>
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置内容为空时是否自动隐藏Dot，默认true
         /// <para>隐藏时Padding 或 Margin 不再占用位置！</para>
         /// <para>若false，内容为空时仍然占位</para>
@@ -132,7 +147,17 @@ namespace Dt.Base
         {
             ViewItem vi = e.NewValue as ViewItem;
             if (vi == null)
+            {
+                if (e.NewValue is Lv)
+                {
+                    Content = new TextBlock
+                    {
+                        Style = Res.LvTextBlock,
+                        Text = string.IsNullOrEmpty(Title) ? ID : Title,
+                    };
+                }
                 return;
+            }
 
             if (!_isInit)
             {

@@ -15,64 +15,42 @@ using Windows.Foundation;
 namespace Dt.Base
 {
     /// <summary>
-    /// 表格式列表的布局面板
+    /// 水平布局面板，可指定 宽度、star、auto，配合附加依赖属性 a:Ex.Width 使用
     /// </summary>
-    public partial class Hor : Panel
+    public partial class HorPanel : Panel
     {
-        #region 静态内容
-        public readonly static DependencyProperty ItemMarginProperty = DependencyProperty.Register(
-            "ItemMargin",
-            typeof(Thickness),
-            typeof(Hor),
-            new PropertyMetadata(new Thickness(10, 4, 10, 4)));
-
-        static Thickness _rightLine = new Thickness(0, 0, 1, 0);
-        #endregion
-
         // star对应的宽度
         double _unit;
 
-        /// <summary>
-        /// 获取设置项的边距，默认(10, 4, 10, 4)
-        /// </summary>
-        public Thickness ItemMargin
-        {
-            get { return (Thickness)GetValue(ItemMarginProperty); }
-            set { SetValue(ItemMarginProperty, value); }
-        }
-
-        
-        #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
             double height = 0;
             double totalStar = 0;
-            double leaveWidth = availableSize.Width;
+            double leaveWidth = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
             List<(UIElement, double)> ls = new List<(UIElement, double)>();
 
             foreach (var elem in Children)
             {
-                if (elem is Dot dot)
-                {
-                    if (dot.ReadLocalValue(Dot.BorderBrushProperty) == DependencyProperty.UnsetValue)
-                    {
-                        dot.BorderBrush = Res.浅灰2;
-                        dot.BorderThickness = _rightLine;
-                    }
-
-                    if (dot.ReadLocalValue(Dot.PaddingProperty) == DependencyProperty.UnsetValue)
-                    {
-                        dot.Padding = ItemMargin;
-                    }
-                }
-                else if (elem is StackPanel sp)
-                {
-                }
-
                 var str = Ex.GetWidth(elem);
 
+                // 指定宽度
+                double width = 0;
+                if (string.IsNullOrEmpty(str)
+                    || double.TryParse(str, out width))
+                {
+                    if (string.IsNullOrEmpty(str))
+                        width = 110;
+
+                    width = leaveWidth > width ? width : leaveWidth;
+                    elem.Measure(new Size(width, availableSize.Height));
+                    if (elem.DesiredSize.Height > height)
+                        height = elem.DesiredSize.Height;
+                    leaveWidth = Math.Max(0, leaveWidth - width);
+                    continue;
+                }
+
                 // star
-                if (!string.IsNullOrEmpty(str) && str.EndsWith('*'))
+                if (str.EndsWith('*'))
                 {
                     if (str.Length == 1)
                     {
@@ -87,21 +65,14 @@ namespace Dt.Base
                     continue;
                 }
 
-                double width;
-                if (string.IsNullOrEmpty(str))
+                // auto
+                if (str.Equals("auto", StringComparison.OrdinalIgnoreCase))
                 {
-                    width = 100;
+                    elem.Measure(new Size(leaveWidth, availableSize.Height));
+                    if (elem.DesiredSize.Height > height)
+                        height = elem.DesiredSize.Height;
+                    leaveWidth = Math.Max(0, leaveWidth - elem.DesiredSize.Width);
                 }
-                else if (!double.TryParse(str, out width))
-                {
-                    continue;
-                }
-
-                width = leaveWidth > width ? width : leaveWidth;
-                elem.Measure(new Size(width, availableSize.Height));
-                if (elem.DesiredSize.Height > height)
-                    height = elem.DesiredSize.Height;
-                leaveWidth = Math.Max(0, leaveWidth - width);
             }
 
             // 测量star的元素
@@ -142,6 +113,10 @@ namespace Dt.Base
                         width = per * _unit;
                     }
                 }
+                else if (str.Equals("auto", StringComparison.OrdinalIgnoreCase))
+                {
+                    width = elem.DesiredSize.Width;
+                }
                 else
                 {
                     double.TryParse(str, out width);
@@ -152,6 +127,5 @@ namespace Dt.Base
             }
             return finalSize;
         }
-        #endregion
     }
 }

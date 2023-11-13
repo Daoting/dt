@@ -409,5 +409,12 @@
         </Setter>
     </Style>
 
+    <!--****************************** Dot ******************************-->
+    <Style x:Key="DotCellStyle" TargetType="a:Dot">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="Padding" Value="10,4,10,4"/>
+    </Style>
+
     <!--****************************** 数据模板 ******************************-->
 </ResourceDictionary>

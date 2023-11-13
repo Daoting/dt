@@ -395,6 +395,11 @@ namespace Dt.Base
         /// 默认行内容高度
         /// </summary>
         public const double RowInnerHeight = 40d;
+
+        /// <summary>
+        /// 含边框的Dot
+        /// </summary>
+        public static Style DotCellStyle => (Style)_dict["DotCellStyle"];
         #endregion
 
         #region 动画

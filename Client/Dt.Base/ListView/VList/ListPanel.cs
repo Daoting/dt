@@ -10,6 +10,7 @@
 using System;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base.ListView
@@ -19,8 +20,46 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class ListPanel : LvPanel
     {
+        UIElement _header;
+
         public ListPanel(Lv p_owner) : base(p_owner)
         { }
+
+        #region 重写方法
+        protected override void LoadColHeader()
+        {
+            if (!_owner.ShowListHeader)
+                return;
+
+            if (_header == null)
+            {
+                if (_owner.CustomListHeader != null)
+                {
+                    _header = _owner.CustomListHeader;
+                }
+                else if (((DataTemplate)_owner.View).LoadContent() is FrameworkElement elem)
+                {
+                    Border bd = new Border
+                    {
+                        Background = Res.浅灰1,
+                    };
+                    bd.Child = elem;
+                    bd.DataContext = _owner;
+                    _header = bd;
+                }
+            }
+
+            if (_header != null)
+            {
+                Children.Add(_header);
+            }
+        }
+
+        protected override void ClearColHeader()
+        {
+            _header = null;
+        }
+        #endregion
 
         #region 虚拟行
         protected override bool CreateVirRows()
@@ -59,6 +98,10 @@ namespace Dt.Base.ListView
 
         protected override Size MeasureVirRows()
         {
+            // 列头
+            _header?.Measure(new Size(_maxSize.Width, PanelMaxHeight));
+            double height = _header != null ? _header.DesiredSize.Height : 0;
+
             // 数据行
             if (_dataRows.Count > 0)
             {
@@ -70,7 +113,7 @@ namespace Dt.Base.ListView
                     row.Measure(testSize);
                 }
             }
-            double height = _rowHeight * _owner.Rows.Count;
+            height += _rowHeight * _owner.Rows.Count;
 
             // 分组行
             if (_owner.GroupRows != null)
@@ -105,6 +148,9 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeVirRows(Size p_finalSize)
         {
+            // 列头
+            double headerHeight = ArrangeHeader();
+
             // 无数据 或 整个面板不在滚动栏可视区时，也要重新布局
             if (_owner.Rows.Count == 0
                 || _rowHeight == 0
@@ -125,7 +171,7 @@ namespace Dt.Base.ListView
                 for (int i = 0; i < _dataRows.Count; i++)
                 {
                     var item = _dataRows[i];
-                    double top = i * _rowHeight + _topMargin;
+                    double top = i * _rowHeight + _topMargin + headerHeight;
 
                     // 数据行已结束 或 剩下行不可见，结束布局
                     if (i >= _owner.Rows.Count || _deltaY + top > _maxSize.Height)
@@ -159,7 +205,7 @@ namespace Dt.Base.ListView
             // 最顶部的虚拟行索引
             int iVirRow = iRow % _dataRows.Count;
             // 页面顶部偏移
-            double deltaTop = -_deltaY + offset + _topMargin;
+            double deltaTop = -_deltaY + offset + _topMargin + headerHeight;
 
             for (int i = 0; i < _dataRows.Count; i++)
             {
@@ -189,6 +235,9 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeGroupVirRows(Size p_finalSize)
         {
+            // 列头
+            double headerHeight = ArrangeHeader();
+
             // 整个面板不在滚动栏可视区时，布局到空区域
             if (_deltaY >= _maxSize.Height          // 面板在滚动栏下方外部
                 || _deltaY <= -p_finalSize.Height)  // 面板在滚动栏上方外部
@@ -211,7 +260,7 @@ namespace Dt.Base.ListView
             }
 
             int iAllRow = 0, iGrpRow = 0, iDataRow = 0;
-            double totalHeight = _topMargin;
+            double totalHeight = _topMargin + headerHeight;
 
             //----------------------------------------------
             // 面板可见，在滚动栏下方，按顺序布局所有行
@@ -227,7 +276,7 @@ namespace Dt.Base.ListView
                         // 分组导航头高度可能为0！
                         _groupHeader.SetCurrentGroup(_owner.GroupRows[0]);
                         // -_deltaY确保始终在滚动栏顶部位置
-                        _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                        _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin + headerHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                     }
                     else
                     {
@@ -337,7 +386,7 @@ namespace Dt.Base.ListView
                 {
                     _groupHeader.SetCurrentGroup(lastGroup);
                     // -_deltaY确保始终在滚动栏顶部位置
-                    _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                    _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin + headerHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                 }
                 else
                 {
@@ -393,7 +442,10 @@ namespace Dt.Base.ListView
         #region 真实行
         protected override Size MeasureRealRows()
         {
-            double height = 0;
+            // 列头
+            _header?.Measure(new Size(_maxSize.Width, PanelMaxHeight));
+            double height = _header != null ? _header.DesiredSize.Height : 0;
+
             Size size = new Size(_maxSize.Width, PanelMaxHeight);
             if (_owner.MapRows != null)
             {
@@ -450,7 +502,8 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeRealRows(Size p_finalSize)
         {
-            double totalHeight = _topMargin;
+            double totalHeight = ArrangeHeader();
+            totalHeight += _topMargin;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
@@ -461,8 +514,10 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeGroupRealRows(Size p_finalSize)
         {
+            double headerHeight = ArrangeHeader();
+            double totalHeight = headerHeight + _topMargin;
+
             int iGrpRow = 0, iDataRow = 0;
-            double totalHeight = _topMargin;
             GroupRow lastGroup = null;
             bool firstVisible = true;
 
@@ -500,7 +555,7 @@ namespace Dt.Base.ListView
                     // 离滚动栏顶部距离小于分组导航头高度时显示
                     _groupHeader.SetCurrentGroup(lastGroup);
                     // -_deltaY确保始终在滚动栏顶部位置
-                    _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin, p_finalSize.Width, _groupHeader.DesiredSize.Height));
+                    _groupHeader.Arrange(new Rect(0, -_deltaY + _topMargin + headerHeight, p_finalSize.Width, _groupHeader.DesiredSize.Height));
                 }
                 else
                 {
@@ -508,6 +563,19 @@ namespace Dt.Base.ListView
                     _groupHeader.Arrange(Res.HideRect);
                 }
             }
+        }
+
+        double ArrangeHeader()
+        {
+            double headerHeight = 0;
+            if (_header != null)
+            {
+                // 面板在滚动栏下侧时正常布局，超出上侧时始终布局在滚动栏顶部位置
+                double top = _deltaY < 0 ? -_deltaY + _topMargin : _topMargin;
+                _header.Arrange(new Rect(-_deltaX, top, _maxSize.Width, _header.DesiredSize.Height));
+                headerHeight = _header.DesiredSize.Height;
+            }
+            return headerHeight;
         }
         #endregion
     }
