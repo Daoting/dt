@@ -50,7 +50,7 @@ where
 	and a.id = r.atv_id 
 	and ( r.role_id = u.role_id or r.role_id = 1 ) 
 	and u.user_id = {0}
-	and p.is_locked = 0 
+	and p.is_locked = '0'
 	and a.type = 1 
 	) pa 
 where

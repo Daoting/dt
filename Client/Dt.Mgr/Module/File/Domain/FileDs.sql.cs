@@ -18,12 +18,12 @@ select {2} * from
 (
 select info from cm_file_pub
 where
-	is_folder = 0 
+	is_folder = '0' 
 	and name like '{0}'
 union
 select info from cm_file_my
 where
-	is_folder = 0 
+	is_folder = '0' 
 	and user_id = {1} 
 	and name like '{0}'
 ) a
@@ -35,13 +35,13 @@ select {4} * from
 (
 select info from cm_file_pub
 where
-	is_folder = 0 
+	is_folder = '0' 
 	and {3}(ext_name, '{1}') > 0
 	and name like '{0}'
 union
 select info from cm_file_my
 where
-	is_folder = 0 
+	is_folder = '0' 
 	and {3}(ext_name, '{1}') > 0
 	and user_id = {2} 
 	and name like '{0}'

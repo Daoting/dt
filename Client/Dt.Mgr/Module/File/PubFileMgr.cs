@@ -55,17 +55,17 @@ namespace Dt.Mgr.Module
 
         public async Task<Table> GetChildFolders()
         {
-            return await FilePubX.Query($"where is_folder=1 and parent_id={FolderID}");
+            return await FilePubX.Query($"where is_folder='1' and parent_id={FolderID}");
         }
 
         public async Task<Table> GetChildrenByType(string p_typeFilter)
         {
-            return await FilePubX.Query($"where parent_id={FolderID} and ( is_folder = 1 or locate( ext_name, '{p_typeFilter}' ) )");
+            return await FilePubX.Query($"where parent_id={FolderID} and ( is_folder = '1' or locate( ext_name, '{p_typeFilter}' ) )");
         }
 
         public async Task<Table> SearchFiles(string p_name)
         {
-            return await FilePubX.Query($"where is_folder=0 and name like '%{p_name}%' limit 20");
+            return await FilePubX.Query($"where is_folder='0' and name like '%{p_name}%' limit 20");
         }
 
         public Task<bool> SaveFile(Row p_row)

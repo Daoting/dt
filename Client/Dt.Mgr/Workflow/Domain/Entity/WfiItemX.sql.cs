@@ -23,7 +23,7 @@ from
 	cm_wfi_atv b 
 where
 	a.atvi_id = b.id 
-	and b.atvd_id in ( select Tgt_Atv_ID from cm_wfd_trs d where d.Src_Atv_ID = {0} and d.Is_Rollback = 0 ) 
+	and b.atvd_id in ( select Tgt_Atv_ID from cm_wfd_trs d where d.Src_Atv_ID = {0} and d.Is_Rollback = '0' ) 
 	and b.prci_id = {1}
 ";
 

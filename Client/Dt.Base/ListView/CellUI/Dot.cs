@@ -148,6 +148,7 @@ namespace Dt.Base
             ViewItem vi = e.NewValue as ViewItem;
             if (vi == null)
             {
+                // 生成列表视图的列头用
                 if (e.NewValue is Lv)
                 {
                     Content = new TextBlock

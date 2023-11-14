@@ -43,20 +43,20 @@ namespace Dt.Mgr.Module
         public static Task<Table<FileMyX>> GetChildFolders(long p_parentID)
         {
             if (p_parentID == -1)
-                return Query($"where is_folder=1 and parent_id is null and user_id={p_parentID}");
-            return Query($"where is_folder=1 and parent_id={p_parentID}");
+                return Query($"where is_folder='1' and parent_id is null and user_id={p_parentID}");
+            return Query($"where is_folder='1' and parent_id={p_parentID}");
         }
 
         public static Task<Table<FileMyX>> SearchFiles(string p_name)
         {
-            return Query($"where is_folder=0 and user_id={Kit.UserID} and name like '%{p_name}%'");
+            return Query($"where is_folder='0' and user_id={Kit.UserID} and name like '%{p_name}%'");
         }
 
         public static Task<Table<FileMyX>> GetChildrenByType(long p_parentID, string p_typeFilter)
         {
             if (p_parentID == -1)
-                return Query($"where parent_id is null and user_id = {Kit.UserID} and ( is_folder = 1 or locate( ext_name, '{p_typeFilter}' ) )");
-            return Query($"where parent_id={p_parentID} and ( is_folder = 1 or locate( ext_name, '{p_typeFilter}' ) )");
+                return Query($"where parent_id is null and user_id = {Kit.UserID} and ( is_folder = '1' or locate( ext_name, '{p_typeFilter}' ) )");
+            return Query($"where parent_id={p_parentID} and ( is_folder = '1' or locate( ext_name, '{p_typeFilter}' ) )");
         }
     }
 }

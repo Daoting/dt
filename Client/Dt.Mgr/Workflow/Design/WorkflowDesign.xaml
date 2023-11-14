@@ -16,11 +16,11 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="流程名称" />
-                    <a:CBool ID="IsLocked" Title="锁定不可创建实例" />
-                    <a:CBool ID="Singleton" Title="同一时刻只可单例" />
+                    <a:CBool ID="is_locked" Title="锁定不可创建实例" />
+                    <a:CBool ID="singleton" Title="同一时刻只可单例" />
                     <a:CText ID="note" Title="描述" />
-                    <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
-                    <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
+                    <a:CTip ID="ctime" Title="创建时间" />
+                    <a:CTip ID="mtime" Title="修改时间" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

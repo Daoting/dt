@@ -819,7 +819,7 @@ namespace Dt.Mgr.Workflow
             // 是否活动授权任何人
             if (await WfdAtvRoleX.GetCount($"where role_id=1 and atv_id={p_atvid}") == 0)
                 return await _da.Query($"select id,name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
-            return await _da.Query("select id, name from cm_user where expired=0");
+            return await _da.Query("select id, name from cm_user where expired='0'");
         }
 
         static Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)
