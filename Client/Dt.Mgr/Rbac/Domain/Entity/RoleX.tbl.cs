@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Rbac
     /// <summary>
     /// 角色
     /// </summary>
-    [Tbl("CM_ROLE")]
+    [Tbl("cm_role")]
     public partial class RoleX : EntityX<RoleX>
     {
         #region 构造方法
@@ -27,9 +27,9 @@ namespace Dt.Mgr.Rbac
             string Name = default,
             string Note = default)
         {
-            Add("ID", ID);
-            Add("NAME", Name);
-            Add("NOTE", Note);
+            Add("id", ID);
+            Add("name", Name);
+            Add("note", Note);
             IsAdded = true;
         }
         #endregion
@@ -39,21 +39,21 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public string Name
         {
-            get { return (string)this["NAME"]; }
-            set { this["NAME"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
 
-        public Cell cName => _cells["NAME"];
+        public Cell cName => _cells["name"];
 
         /// <summary>
         /// 角色描述
         /// </summary>
         public string Note
         {
-            get { return (string)this["NOTE"]; }
-            set { this["NOTE"] = value; }
+            get { return (string)this["note"]; }
+            set { this["note"] = value; }
         }
 
-        public Cell cNote => _cells["NOTE"];
+        public Cell cNote => _cells["note"];
     }
 }

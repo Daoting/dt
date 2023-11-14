@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-24 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -28,7 +28,7 @@ namespace Dt.Mgr.Rbac
             string Phone = default,
             string Pwd = default,
             string Photo = default,
-            bool Expired = false,
+            bool Expired = default,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {

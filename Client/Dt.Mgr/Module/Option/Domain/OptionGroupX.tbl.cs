@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Module
     /// <summary>
     /// 基础选项分组
     /// </summary>
-    [Tbl("CM_OPTION_GROUP")]
+    [Tbl("cm_option_group")]
     public partial class OptionGroupX : EntityX<OptionGroupX>
     {
         #region 构造方法
@@ -26,8 +26,8 @@ namespace Dt.Mgr.Module
             long ID,
             string Name = default)
         {
-            Add("ID", ID);
-            Add("NAME", Name);
+            Add("id", ID);
+            Add("name", Name);
             IsAdded = true;
         }
         #endregion
@@ -37,10 +37,10 @@ namespace Dt.Mgr.Module
         /// </summary>
         public string Name
         {
-            get { return (string)this["NAME"]; }
-            set { this["NAME"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
 
-        public Cell cName => _cells["NAME"];
+        public Cell cName => _cells["name"];
     }
 }

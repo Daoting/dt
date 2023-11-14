@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-26 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -11,6 +11,9 @@
 
 namespace Dt.Mgr.Rbac
 {
+    /// <summary>
+    /// 权限所属模块
+    /// </summary>
     [Tbl("cm_permission_module")]
     public partial class PermissionModuleX : EntityX<PermissionModuleX>
     {

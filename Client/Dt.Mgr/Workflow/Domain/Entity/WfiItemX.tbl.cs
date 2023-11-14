@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 工作项
     /// </summary>
-    [Tbl("CM_WFI_ITEM")]
+    [Tbl("cm_wfi_item")]
     public partial class WfiItemX : EntityX<WfiItemX>
     {
         #region 构造方法
@@ -38,20 +38,20 @@ namespace Dt.Mgr.Workflow
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
-            Add("ID", ID);
-            Add("ATVI_ID", AtviID);
-            Add("STATUS", Status);
-            Add("ASSIGN_KIND", AssignKind);
-            Add("SENDER", Sender);
-            Add("STIME", Stime);
-            Add("IS_ACCEPT", IsAccept);
-            Add("ACCEPT_TIME", AcceptTime);
-            Add("ROLE_ID", RoleID);
-            Add("USER_ID", UserID);
-            Add("NOTE", Note);
-            Add("DISPIDX", Dispidx);
-            Add("CTIME", Ctime);
-            Add("MTIME", Mtime);
+            Add("id", ID);
+            Add("atvi_id", AtviID);
+            Add("status", Status);
+            Add("assign_kind", AssignKind);
+            Add("sender", Sender);
+            Add("stime", Stime);
+            Add("is_accept", IsAccept);
+            Add("accept_time", AcceptTime);
+            Add("role_id", RoleID);
+            Add("user_id", UserID);
+            Add("note", Note);
+            Add("dispidx", Dispidx);
+            Add("ctime", Ctime);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion
@@ -61,142 +61,142 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         public long AtviID
         {
-            get { return (long)this["ATVI_ID"]; }
-            set { this["ATVI_ID"] = value; }
+            get { return (long)this["atvi_id"]; }
+            set { this["atvi_id"] = value; }
         }
 
-        public Cell cAtviID => _cells["ATVI_ID"];
+        public Cell cAtviID => _cells["atvi_id"];
 
         /// <summary>
         /// 工作项状态 0活动 1结束 2终止 3同步活动
         /// </summary>
         public WfiItemStatus Status
         {
-            get { return (WfiItemStatus)this["STATUS"]; }
-            set { this["STATUS"] = value; }
+            get { return (WfiItemStatus)this["status"]; }
+            set { this["status"] = value; }
         }
 
-        public Cell cStatus => _cells["STATUS"];
+        public Cell cStatus => _cells["status"];
 
         /// <summary>
         /// 指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派
         /// </summary>
         public WfiItemAssignKind AssignKind
         {
-            get { return (WfiItemAssignKind)this["ASSIGN_KIND"]; }
-            set { this["ASSIGN_KIND"] = value; }
+            get { return (WfiItemAssignKind)this["assign_kind"]; }
+            set { this["assign_kind"] = value; }
         }
 
-        public Cell cAssignKind => _cells["ASSIGN_KIND"];
+        public Cell cAssignKind => _cells["assign_kind"];
 
         /// <summary>
         /// 发送者
         /// </summary>
         public string Sender
         {
-            get { return (string)this["SENDER"]; }
-            set { this["SENDER"] = value; }
+            get { return (string)this["sender"]; }
+            set { this["sender"] = value; }
         }
 
-        public Cell cSender => _cells["SENDER"];
+        public Cell cSender => _cells["sender"];
 
         /// <summary>
         /// 发送时间
         /// </summary>
         public DateTime Stime
         {
-            get { return (DateTime)this["STIME"]; }
-            set { this["STIME"] = value; }
+            get { return (DateTime)this["stime"]; }
+            set { this["stime"] = value; }
         }
 
-        public Cell cStime => _cells["STIME"];
+        public Cell cStime => _cells["stime"];
 
         /// <summary>
         /// 是否签收此项任务
         /// </summary>
         public bool IsAccept
         {
-            get { return (bool)this["IS_ACCEPT"]; }
-            set { this["IS_ACCEPT"] = value; }
+            get { return (bool)this["is_accept"]; }
+            set { this["is_accept"] = value; }
         }
 
-        public Cell cIsAccept => _cells["IS_ACCEPT"];
+        public Cell cIsAccept => _cells["is_accept"];
 
         /// <summary>
         /// 签收时间
         /// </summary>
         public DateTime? AcceptTime
         {
-            get { return (DateTime?)this["ACCEPT_TIME"]; }
-            set { this["ACCEPT_TIME"] = value; }
+            get { return (DateTime?)this["accept_time"]; }
+            set { this["accept_time"] = value; }
         }
 
-        public Cell cAcceptTime => _cells["ACCEPT_TIME"];
+        public Cell cAcceptTime => _cells["accept_time"];
 
         /// <summary>
         /// 执行者角色标识
         /// </summary>
         public long? RoleID
         {
-            get { return (long?)this["ROLE_ID"]; }
-            set { this["ROLE_ID"] = value; }
+            get { return (long?)this["role_id"]; }
+            set { this["role_id"] = value; }
         }
 
-        public Cell cRoleID => _cells["ROLE_ID"];
+        public Cell cRoleID => _cells["role_id"];
 
         /// <summary>
         /// 执行者用户标识
         /// </summary>
         public long? UserID
         {
-            get { return (long?)this["USER_ID"]; }
-            set { this["USER_ID"] = value; }
+            get { return (long?)this["user_id"]; }
+            set { this["user_id"] = value; }
         }
 
-        public Cell cUserID => _cells["USER_ID"];
+        public Cell cUserID => _cells["user_id"];
 
         /// <summary>
         /// 工作项备注
         /// </summary>
         public string Note
         {
-            get { return (string)this["NOTE"]; }
-            set { this["NOTE"] = value; }
+            get { return (string)this["note"]; }
+            set { this["note"] = value; }
         }
 
-        public Cell cNote => _cells["NOTE"];
+        public Cell cNote => _cells["note"];
 
         /// <summary>
         /// 显示顺序
         /// </summary>
         public int Dispidx
         {
-            get { return (int)this["DISPIDX"]; }
-            set { this["DISPIDX"] = value; }
+            get { return (int)this["dispidx"]; }
+            set { this["dispidx"] = value; }
         }
 
-        public Cell cDispidx => _cells["DISPIDX"];
+        public Cell cDispidx => _cells["dispidx"];
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)this["CTIME"]; }
-            set { this["CTIME"] = value; }
+            get { return (DateTime)this["ctime"]; }
+            set { this["ctime"] = value; }
         }
 
-        public Cell cCtime => _cells["CTIME"];
+        public Cell cCtime => _cells["ctime"];
 
         /// <summary>
         /// 最后一次状态改变的时间
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["MTIME"]; }
-            set { this["MTIME"] = value; }
+            get { return (DateTime)this["mtime"]; }
+            set { this["mtime"] = value; }
         }
 
-        public Cell cMtime => _cells["MTIME"];
+        public Cell cMtime => _cells["mtime"];
     }
 }

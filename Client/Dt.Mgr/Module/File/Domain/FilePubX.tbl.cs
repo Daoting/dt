@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Module
     /// <summary>
     /// 公共文件
     /// </summary>
-    [Tbl("CM_FILE_PUB")]
+    [Tbl("cm_file_pub")]
     public partial class FilePubX : EntityX<FilePubX>
     {
         #region 构造方法
@@ -31,13 +31,13 @@ namespace Dt.Mgr.Module
             string Info = default,
             DateTime Ctime = default)
         {
-            Add("ID", ID);
-            Add("PARENT_ID", ParentID);
-            Add("NAME", Name);
-            Add("IS_FOLDER", IsFolder);
-            Add("EXT_NAME", ExtName);
-            Add("INFO", Info);
-            Add("CTIME", Ctime);
+            Add("id", ID);
+            Add("parent_id", ParentID);
+            Add("name", Name);
+            Add("is_folder", IsFolder);
+            Add("ext_name", ExtName);
+            Add("info", Info);
+            Add("ctime", Ctime);
             IsAdded = true;
         }
         #endregion
@@ -47,65 +47,65 @@ namespace Dt.Mgr.Module
         /// </summary>
         public long? ParentID
         {
-            get { return (long?)this["PARENT_ID"]; }
-            set { this["PARENT_ID"] = value; }
+            get { return (long?)this["parent_id"]; }
+            set { this["parent_id"] = value; }
         }
 
-        public Cell cParentID => _cells["PARENT_ID"];
+        public Cell cParentID => _cells["parent_id"];
 
         /// <summary>
         /// 名称
         /// </summary>
         public string Name
         {
-            get { return (string)this["NAME"]; }
-            set { this["NAME"] = value; }
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
         }
 
-        public Cell cName => _cells["NAME"];
+        public Cell cName => _cells["name"];
 
         /// <summary>
         /// 是否为文件夹
         /// </summary>
         public bool IsFolder
         {
-            get { return (bool)this["IS_FOLDER"]; }
-            set { this["IS_FOLDER"] = value; }
+            get { return (bool)this["is_folder"]; }
+            set { this["is_folder"] = value; }
         }
 
-        public Cell cIsFolder => _cells["IS_FOLDER"];
+        public Cell cIsFolder => _cells["is_folder"];
 
         /// <summary>
         /// 文件扩展名
         /// </summary>
         public string ExtName
         {
-            get { return (string)this["EXT_NAME"]; }
-            set { this["EXT_NAME"] = value; }
+            get { return (string)this["ext_name"]; }
+            set { this["ext_name"] = value; }
         }
 
-        public Cell cExtName => _cells["EXT_NAME"];
+        public Cell cExtName => _cells["ext_name"];
 
         /// <summary>
         /// 文件描述信息
         /// </summary>
         public string Info
         {
-            get { return (string)this["INFO"]; }
-            set { this["INFO"] = value; }
+            get { return (string)this["info"]; }
+            set { this["info"] = value; }
         }
 
-        public Cell cInfo => _cells["INFO"];
+        public Cell cInfo => _cells["info"];
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)this["CTIME"]; }
-            set { this["CTIME"] = value; }
+            get { return (DateTime)this["ctime"]; }
+            set { this["ctime"] = value; }
         }
 
-        public Cell cCtime => _cells["CTIME"];
+        public Cell cCtime => _cells["ctime"];
     }
 }

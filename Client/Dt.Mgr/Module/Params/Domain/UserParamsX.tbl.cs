@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Module
     /// <summary>
     /// 用户参数值
     /// </summary>
-    [Tbl("CM_USER_PARAMS")]
+    [Tbl("cm_user_params")]
     public partial class UserParamsX : EntityX<UserParamsX>
     {
         #region 构造方法
@@ -28,10 +28,10 @@ namespace Dt.Mgr.Module
             string Value = default,
             DateTime Mtime = default)
         {
-            Add("USER_ID", UserID);
-            Add("PARAM_ID", ParamID);
-            Add("VALUE", Value);
-            Add("MTIME", Mtime);
+            Add("user_id", UserID);
+            Add("param_id", ParamID);
+            Add("value", Value);
+            Add("mtime", Mtime);
             IsAdded = true;
         }
         #endregion
@@ -41,22 +41,22 @@ namespace Dt.Mgr.Module
         /// </summary>
         public long UserID
         {
-            get { return (long)this["USER_ID"]; }
-            set { this["USER_ID"] = value; }
+            get { return (long)this["user_id"]; }
+            set { this["user_id"] = value; }
         }
 
-        public Cell cUserID => _cells["USER_ID"];
+        public Cell cUserID => _cells["user_id"];
 
         /// <summary>
         /// 参数标识
         /// </summary>
         public long ParamID
         {
-            get { return (long)this["PARAM_ID"]; }
-            set { this["PARAM_ID"] = value; }
+            get { return (long)this["param_id"]; }
+            set { this["param_id"] = value; }
         }
 
-        public Cell cParamID => _cells["PARAM_ID"];
+        public Cell cParamID => _cells["param_id"];
 
         new public long ID { get { return -1; } }
 
@@ -65,21 +65,21 @@ namespace Dt.Mgr.Module
         /// </summary>
         public string Value
         {
-            get { return (string)this["VALUE"]; }
-            set { this["VALUE"] = value; }
+            get { return (string)this["value"]; }
+            set { this["value"] = value; }
         }
 
-        public Cell cValue => _cells["VALUE"];
+        public Cell cValue => _cells["value"];
 
         /// <summary>
         /// 修改时间
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)this["MTIME"]; }
-            set { this["MTIME"] = value; }
+            get { return (DateTime)this["mtime"]; }
+            set { this["mtime"] = value; }
         }
 
-        public Cell cMtime => _cells["MTIME"];
+        public Cell cMtime => _cells["mtime"];
     }
 }

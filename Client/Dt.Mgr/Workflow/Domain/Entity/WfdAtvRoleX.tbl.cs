@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 活动授权
     /// </summary>
-    [Tbl("CM_WFD_ATV_ROLE")]
+    [Tbl("cm_wfd_atv_role")]
     public partial class WfdAtvRoleX : EntityX<WfdAtvRoleX>
     {
         #region 构造方法
@@ -26,8 +26,8 @@ namespace Dt.Mgr.Workflow
             long AtvID,
             long RoleID)
         {
-            Add("ATV_ID", AtvID);
-            Add("ROLE_ID", RoleID);
+            Add("atv_id", AtvID);
+            Add("role_id", RoleID);
             IsAdded = true;
         }
         #endregion
@@ -37,22 +37,22 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         public long AtvID
         {
-            get { return (long)this["ATV_ID"]; }
-            set { this["ATV_ID"] = value; }
+            get { return (long)this["atv_id"]; }
+            set { this["atv_id"] = value; }
         }
 
-        public Cell cAtvID => _cells["ATV_ID"];
+        public Cell cAtvID => _cells["atv_id"];
 
         /// <summary>
         /// 角色标识
         /// </summary>
         public long RoleID
         {
-            get { return (long)this["ROLE_ID"]; }
-            set { this["ROLE_ID"] = value; }
+            get { return (long)this["role_id"]; }
+            set { this["role_id"] = value; }
         }
 
-        public Cell cRoleID => _cells["ROLE_ID"];
+        public Cell cRoleID => _cells["role_id"];
 
         new public long ID { get { return -1; } }
     }

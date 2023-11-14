@@ -165,7 +165,7 @@ namespace Dt.Core
                 // 简化写法不需要类型
                 //sb.Append(GetTypeName(col.Type));
                 //sb.Append(">(\"");
-                sb.Append(col.Name);
+                sb.Append(col.Name.ToLower());
                 sb.Append("\", ");
                 // 内部为enum类型
                 //if (IsEnumCol(col))
@@ -413,7 +413,7 @@ namespace Dt.Core
                             title = col.Comments.Substring(tpName.Length + 2);
                             title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
                         }
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} />");
+                        sb.Append($"<a:CList ID=\"{col.Name.ToLower()}\"{title} />");
                         continue;
                     }
 
@@ -434,23 +434,23 @@ namespace Dt.Core
 
                     if (tp == typeof(bool))
                     {
-                        sb.Append($"<a:CBool ID=\"{col.Name}\"{title} />");
+                        sb.Append($"<a:CBool ID=\"{col.Name.ToLower()}\"{title} />");
                     }
                     else if (tp == typeof(int))
                     {
-                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" />");
+                        sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} IsInteger=\"True\" />");
                     }
                     else if (tp == typeof(long) || tp == typeof(double))
                     {
-                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} />");
+                        sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} />");
                     }
                     else if (tp == typeof(DateTime))
                     {
-                        sb.Append($"<a:CDate ID=\"{col.Name}\"{title} />");
+                        sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}\"{title} />");
                     }
                     else
                     {
-                        sb.Append($"<a:CText ID=\"{col.Name}\"{title} />");
+                        sb.Append($"<a:CText ID=\"{col.Name.ToLower()}\"{title} />");
                     }
                 }
             }
@@ -484,7 +484,7 @@ namespace Dt.Core
                 {
                     sb.AppendLine();
                     AppendTabSpace(sb, 4);
-                    sb.Append($"<a:Dot ID=\"{col.Name}\" />");
+                    sb.Append($"<a:Dot ID=\"{col.Name.ToLower()}\" />");
                 }
             }
             sb.AppendLine();
@@ -535,7 +535,7 @@ namespace Dt.Core
                     if (sb.Length > 0)
                         sb.AppendLine();
                     AppendTabSpace(sb, 3);
-                    sb.Append($"<a:Col ID=\"{col.Name}\"{title}");
+                    sb.Append($"<a:Col ID=\"{col.Name.ToLower()}\"{title}");
 
                     Type tp = col.Type;
                     if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -579,7 +579,7 @@ namespace Dt.Core
                     if (col.Type == typeof(string))
                     {
                         sb.Append(" or ");
-                        sb.Append(col.Name);
+                        sb.Append(col.Name.ToLower());
                         sb.Append(" like @input");
                     }
                 }
@@ -627,7 +627,7 @@ namespace Dt.Core
                             title = col.Comments.Substring(tpName.Length + 2);
                             title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
                         }
-                        sb.Append($"<a:CList ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        sb.Append($"<a:CList ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" />");
                         continue;
                     }
 
@@ -648,23 +648,23 @@ namespace Dt.Core
 
                     if (tp == typeof(bool))
                     {
-                        sb.Append($"<a:CBool ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        sb.Append($"<a:CBool ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" />");
                     }
                     else if (tp == typeof(int))
                     {
-                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} IsInteger=\"True\" Query=\"Editable\" />");
+                        sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} IsInteger=\"True\" Query=\"Editable\" />");
                     }
                     else if (tp == typeof(long) || tp == typeof(double))
                     {
-                        sb.Append($"<a:CNum ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" />");
                     }
                     else if (tp == typeof(DateTime))
                     {
-                        sb.Append($"<a:CDate ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" />");
                     }
                     else
                     {
-                        sb.Append($"<a:CText ID=\"{col.Name}\"{title} Query=\"Editable\" />");
+                        sb.Append($"<a:CText ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" />");
                     }
                 }
             }
@@ -694,7 +694,7 @@ namespace Dt.Core
                 foreach (var col in schema.Columns)
                 {
                     AppendTabSpace(sb, 3);
-                    sb.AppendLine($"row.Add<{col.GetTypeName()}>(\"{col.Name}\");");
+                    sb.AppendLine($"row.Add<{col.GetTypeName()}>(\"{col.Name.ToLower()}\");");
                 }
             }
             return sb.ToString();
@@ -753,15 +753,15 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name}\"]; }}");
+            p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name.ToLower()}\"]; }}");
             AppendTabSpace(p_sb, 3);
-            p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
+            p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
 
             p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
-            p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name}\"];");
+            p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name.ToLower()}\"];");
         }
 
         string GetClsName(string p_tblName)

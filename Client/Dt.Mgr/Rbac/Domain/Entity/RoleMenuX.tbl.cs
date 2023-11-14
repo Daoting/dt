@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-09-06 创建
+* 日志: 2023-11-14 创建
 ******************************************************************************/
 #endregion
 
@@ -14,7 +14,7 @@ namespace Dt.Mgr.Rbac
     /// <summary>
     /// 角色一菜单多对多
     /// </summary>
-    [Tbl("CM_ROLE_MENU")]
+    [Tbl("cm_role_menu")]
     public partial class RoleMenuX : EntityX<RoleMenuX>
     {
         #region 构造方法
@@ -26,8 +26,8 @@ namespace Dt.Mgr.Rbac
             long RoleID,
             long MenuID)
         {
-            Add("ROLE_ID", RoleID);
-            Add("MENU_ID", MenuID);
+            Add("role_id", RoleID);
+            Add("menu_id", MenuID);
             IsAdded = true;
         }
         #endregion
@@ -37,22 +37,22 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public long RoleID
         {
-            get { return (long)this["ROLE_ID"]; }
-            set { this["ROLE_ID"] = value; }
+            get { return (long)this["role_id"]; }
+            set { this["role_id"] = value; }
         }
 
-        public Cell cRoleID => _cells["ROLE_ID"];
+        public Cell cRoleID => _cells["role_id"];
 
         /// <summary>
         /// 菜单标识
         /// </summary>
         public long MenuID
         {
-            get { return (long)this["MENU_ID"]; }
-            set { this["MENU_ID"] = value; }
+            get { return (long)this["menu_id"]; }
+            set { this["menu_id"] = value; }
         }
 
-        public Cell cMenuID => _cells["MENU_ID"];
+        public Cell cMenuID => _cells["menu_id"];
 
         new public long ID { get { return -1; } }
     }
