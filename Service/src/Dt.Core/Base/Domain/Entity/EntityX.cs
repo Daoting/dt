@@ -547,13 +547,13 @@ namespace Dt.Core
             if (_isVirEntity)
             {
                 var vm = await VirEntitySchema.Get(typeof(TEntity));
-                sql = vm.GetSelectAllSql();
+                sql = vm.GetCountSql();
                 da = vm.AccessInfo.GetDataAccess();
             }
             else
             {
                 var model = await EntitySchema.Get(typeof(TEntity));
-                sql = model.Schema.GetSelectAllSql();
+                sql = model.Schema.GetCountSql();
                 da = model.AccessInfo.GetDataAccess();
             }
 
