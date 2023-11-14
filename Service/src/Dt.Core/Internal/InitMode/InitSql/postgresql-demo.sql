@@ -4,8 +4,8 @@
 -- ----------------------------
 CREATE TABLE "public"."demo_cache_tbl1" (
   "id" int8 NOT NULL,
-  "phone" varchar(255) NOT NULL,
-  "name" varchar(255) NOT NULL
+  "phone" varchar(255),
+  "name" varchar(255)
 )
 ;
 
@@ -23,7 +23,7 @@ INSERT INTO "public"."demo_cache_tbl1" VALUES (484624179913576448, 'd80e785d1d44
 CREATE TABLE "public"."demo_child_tbl1" (
   "id" int8 NOT NULL,
   "parent_id" int8 NOT NULL,
-  "item_name" varchar(255) NOT NULL
+  "item_name" varchar(255)
 )
 ;
 
@@ -61,7 +61,7 @@ INSERT INTO "public"."demo_child_tbl1" VALUES (484623947016458240, 4846239466934
 CREATE TABLE "public"."demo_child_tbl2" (
   "id" int8 NOT NULL,
   "group_id" int8 NOT NULL,
-  "item_name" varchar(255) NOT NULL
+  "item_name" varchar(255)
 )
 ;
 
@@ -96,12 +96,12 @@ INSERT INTO "public"."demo_child_tbl2" VALUES (484623947121315840, 4846239466934
 -- ----------------------------
 CREATE TABLE "public"."demo_crud" (
   "id" int8 NOT NULL,
-  "name" varchar(255) NOT NULL,
-  "dispidx" int4 NOT NULL,
-  "mtime" timestamp(0) NOT NULL,
-  "enable_insert_event" bool NOT NULL,
-  "enable_name_changed_event" bool NOT NULL,
-  "enable_del_event" bool NOT NULL
+  "name" varchar(255),
+  "dispidx" int4,
+  "mtime" timestamp(0),
+  "enable_insert_event" bool,
+  "enable_name_changed_event" bool,
+  "enable_del_event" bool
 )
 ;
 COMMENT ON COLUMN "public"."demo_crud"."id" IS '标识';
@@ -151,7 +151,7 @@ INSERT INTO "public"."demo_crud" VALUES (487086286626115584, '单个685', 84, '2
 -- ----------------------------
 CREATE TABLE "public"."demo_par_tbl" (
   "id" int8 NOT NULL,
-  "name" varchar(255) NOT NULL
+  "name" varchar(255)
 )
 ;
 
@@ -174,7 +174,7 @@ INSERT INTO "public"."demo_par_tbl" VALUES (484623946693496832, '新增');
 -- ----------------------------
 CREATE TABLE "public"."demo_virtbl1" (
   "id" int8 NOT NULL,
-  "name1" varchar(255) NOT NULL
+  "name1" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_virtbl1"."name1" IS '名称1';
@@ -193,7 +193,7 @@ INSERT INTO "public"."demo_virtbl1" VALUES (484623466739290112, '新1');
 -- ----------------------------
 CREATE TABLE "public"."demo_virtbl2" (
   "id" int8 NOT NULL,
-  "name2" varchar(255) NOT NULL
+  "name2" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_virtbl2"."name2" IS '名称2';
@@ -212,7 +212,7 @@ INSERT INTO "public"."demo_virtbl2" VALUES (484623466739290112, '新2');
 -- ----------------------------
 CREATE TABLE "public"."demo_virtbl3" (
   "id" int8 NOT NULL,
-  "name3" varchar(255) NOT NULL
+  "name3" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_virtbl3"."name3" IS '名称3';
@@ -232,7 +232,7 @@ INSERT INTO "public"."demo_virtbl3" VALUES (484623466739290112, '新3');
 CREATE TABLE "public"."demo_大儿" (
   "id" int8 NOT NULL,
   "parent_id" int8 NOT NULL,
-  "大儿名" varchar(255) NOT NULL
+  "大儿名" varchar(255)
 )
 ;
 
@@ -249,7 +249,7 @@ INSERT INTO "public"."demo_大儿" VALUES (453811364621733888, 45381079844941414
 -- ----------------------------
 CREATE TABLE "public"."demo_父表" (
   "id" int8 NOT NULL,
-  "父名" varchar(255) NOT NULL
+  "父名" varchar(255)
 )
 ;
 
@@ -265,15 +265,15 @@ INSERT INTO "public"."demo_父表" VALUES (453810798449414144, 'aaaa');
 -- ----------------------------
 CREATE TABLE "public"."demo_基础" (
   "id" int8 NOT NULL,
-  "序列" int4 NOT NULL,
-  "限长4" varchar(16) NOT NULL,
-  "不重复" varchar(64) NOT NULL,
-  "禁止选中" bool NOT NULL,
-  "禁止保存" bool NOT NULL,
-  "禁止删除" bool NOT NULL,
-  "值变事件" varchar(64) NOT NULL,
-  "创建时间" timestamp(0) NOT NULL,
-  "修改时间" timestamp(0) NOT NULL
+  "序列" int4,
+  "限长4" varchar(16),
+  "不重复" varchar(64),
+  "禁止选中" bool,
+  "禁止保存" bool,
+  "禁止删除" bool,
+  "值变事件" varchar(64),
+  "创建时间" timestamp(0),
+  "修改时间" timestamp(0)
 )
 ;
 COMMENT ON COLUMN "public"."demo_基础"."id" IS '标识';
@@ -298,7 +298,7 @@ INSERT INTO "public"."demo_基础" VALUES (447570516976357376, 6, '11', 'dd', '0
 -- ----------------------------
 CREATE TABLE "public"."demo_角色" (
   "id" int8 NOT NULL,
-  "角色名称" varchar(32) NOT NULL,
+  "角色名称" varchar(32),
   "角色描述" varchar(255)
 )
 ;
@@ -337,9 +337,9 @@ INSERT INTO "public"."demo_角色权限" VALUES (449487215124303872, 44981288410
 -- ----------------------------
 CREATE TABLE "public"."demo_扩展1" (
   "id" int8 NOT NULL,
-  "扩展1名称" varchar(255) NOT NULL,
-  "禁止选中" bool NOT NULL,
-  "禁止保存" bool NOT NULL
+  "扩展1名称" varchar(255),
+  "禁止选中" bool,
+  "禁止保存" bool
 )
 ;
 COMMENT ON COLUMN "public"."demo_扩展1"."id" IS '标识';
@@ -358,9 +358,9 @@ INSERT INTO "public"."demo_扩展1" VALUES (447577372700463104, '', '0', '0');
 -- ----------------------------
 CREATE TABLE "public"."demo_扩展2" (
   "id" int8 NOT NULL,
-  "扩展2名称" varchar(255) NOT NULL,
-  "禁止删除" bool NOT NULL,
-  "值变事件" varchar(255) NOT NULL
+  "扩展2名称" varchar(255),
+  "禁止删除" bool,
+  "值变事件" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_扩展2"."id" IS '标识';
@@ -379,7 +379,7 @@ INSERT INTO "public"."demo_扩展2" VALUES (447577372700463104, '', '0', '');
 -- ----------------------------
 CREATE TABLE "public"."demo_权限" (
   "id" int8 NOT NULL,
-  "权限名称" varchar(255) NOT NULL
+  "权限名称" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_权限"."id" IS '权限名称';
@@ -396,14 +396,14 @@ INSERT INTO "public"."demo_权限" VALUES (449812884102336512, '修改');
 -- ----------------------------
 CREATE TABLE "public"."demo_收文" (
   "id" int8 NOT NULL,
-  "来文单位" varchar(255) NOT NULL,
-  "来文时间" date NOT NULL,
-  "密级" int2 NOT NULL,
-  "文件标题" varchar(255) NOT NULL,
-  "文件附件" varchar(512) NOT NULL,
-  "市场部经理意见" varchar(255) NOT NULL,
-  "综合部经理意见" varchar(255) NOT NULL,
-  "收文完成时间" date NOT NULL
+  "来文单位" varchar(255),
+  "来文时间" date,
+  "密级" int2,
+  "文件标题" varchar(255),
+  "文件附件" varchar(512),
+  "市场部经理意见" varchar(255),
+  "综合部经理意见" varchar(255),
+  "收文完成时间" date
 )
 ;
 COMMENT ON COLUMN "public"."demo_收文"."密级" IS '#密级#';
@@ -422,7 +422,7 @@ INSERT INTO "public"."demo_收文" VALUES (457388173615452160, '', '2023-03-16',
 CREATE TABLE "public"."demo_小儿" (
   "id" int8 NOT NULL,
   "group_id" int8 NOT NULL,
-  "小儿名" varchar(255) NOT NULL
+  "小儿名" varchar(255)
 )
 ;
 
@@ -438,9 +438,9 @@ INSERT INTO "public"."demo_小儿" VALUES (453811464773324800, 45381079844941414
 -- ----------------------------
 CREATE TABLE "public"."demo_用户" (
   "id" int8 NOT NULL,
-  "手机号" char(11) NOT NULL,
-  "姓名" varchar(32) NOT NULL,
-  "密码" char(32) NOT NULL
+  "手机号" char(11),
+  "姓名" varchar(32),
+  "密码" char(32)
 )
 ;
 COMMENT ON COLUMN "public"."demo_用户"."id" IS '用户标识';
@@ -479,9 +479,9 @@ INSERT INTO "public"."demo_用户角色" VALUES (449772627373871104, 44981293166
 -- ----------------------------
 CREATE TABLE "public"."demo_主表" (
   "id" int8 NOT NULL,
-  "主表名称" varchar(255) NOT NULL,
-  "限长4" varchar(16) NOT NULL,
-  "不重复" varchar(255) NOT NULL
+  "主表名称" varchar(255),
+  "限长4" varchar(16),
+  "不重复" varchar(255)
 )
 ;
 COMMENT ON COLUMN "public"."demo_主表"."限长4" IS '限制最大长度4';
