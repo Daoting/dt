@@ -176,7 +176,8 @@ where tco.constraint_type = 'PRIMARY KEY'
 
         public override async Task SyncDbTime()
         {
-            Kit.Now = await GetScalar<DateTime>("select now()");
+            // 不需要考虑时区
+            Kit.Now = await GetScalar<DateTime>("select now()::timestamp without time zone");
         }
 
         async Task<TableSchema> GetTblOrViewSchema(string p_tblName, DbCommand p_cmd)
