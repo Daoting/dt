@@ -50,15 +50,15 @@ namespace Dt.MgrDemo
 
                 new OmMenu(
                     ID: 1001,
-                    Name: "通讯录",
-                    Icon: "留言",
-                    ViewName: "通讯录"),
+                    Name: "业务样例",
+                    Icon: "双绞线",
+                    ViewName: "业务样例"),
 
                 new OmMenu(
                     ID: 1002,
-                    Name: "任务",
-                    Icon: "双绞线",
-                    ViewName: "任务"),
+                    Name: "通讯录",
+                    Icon: "留言",
+                    ViewName: "通讯录"),
 
                 new OmMenu(
                     ID: 1003,

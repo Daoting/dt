@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.Mgr.Home"
-    xmlns:l="using:Dt.MgrDemo">
+    xmlns:wf="using:Dt.Mgr.Workflow">
 
     <home:MenuHome x:Name="_menu" Order="2" a:Ex.Dock="Left" />
-    <l:DemoMain x:Name="_demo" Order="1" Icon="搬运工" />
+    <wf:CurrentTasks Order="1" />
     <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

@@ -3,9 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:home="using:Dt.Mgr.Home">
+    xmlns:home="using:Dt.Mgr.Home"
+    xmlns:wf="using:Dt.Mgr.Workflow">
 
     <home:MenuHome x:Name="_menu" Order="1" a:Ex.Dock="Left" />
-    <a:Tab Order="2" Title="动态" Icon="心电" />
+    <wf:CurrentTasks Order="2" />
     <home:MyMain x:Name="_my" Order="3" a:Ex.Dock="Right" />
 </a:Win>

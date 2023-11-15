@@ -14,9 +14,7 @@ namespace Dt.Mgr.Workflow
     partial class WfdDs
     {
         const string Sql参与的流程 = @"
-select distinct
-	p.id,
-	p.name
+select distinct(p.id),p.name,p.dispidx
 from
 	cm_wfd_prc p,
 	cm_wfd_atv a,
@@ -61,7 +59,8 @@ order by
 
         // 用户只能看到一个流程实例的最后完成的任务
         const string Sql历史任务 = @"
-select wi.id item_id,
+select * from
+(select wi.id item_id,
        pi.id prci_id,
        pd.id prcd_id,
        ad.id atvd_id,
@@ -72,8 +71,9 @@ select wi.id item_id,
        pi.name formname,
        wi.sender,
        wi.stime,
-       max(wi.mtime) mtime,
-       wi.reCount
+       wi.mtime mtime,
+       wi.reCount,
+       rank() over ( partition by pi.id order by wi.stime desc ) no
 from cm_wfi_atv ai,
      cm_wfi_prc pi,
      cm_wfd_atv ad,
@@ -99,9 +99,8 @@ from cm_wfi_atv ai,
        and pi.prcd_id = pd.id
        and ai.atvd_id = ad.id
        and wi.reCount = 0
-       and (@p_status > 2 or pi.status = @p_status)
- group by prci_id
- order by wi.stime desc
+       and (@p_status > 2 or pi.status = @p_status)) t
+ where t.no=1
 ";
 
         // 用户在一个流程实例中参与的所有任务

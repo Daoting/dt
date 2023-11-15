@@ -18,7 +18,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.MgrDemo
 {
-    public partial class DemoMain : Tab
+    [View("业务样例")]
+    public partial class DemoMain : Win
     {
         public DemoMain()
         {

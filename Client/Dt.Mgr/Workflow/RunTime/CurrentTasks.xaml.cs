@@ -16,17 +16,22 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Mgr.Workflow
 {
-    public partial class CurrentTasks : Win
+    public partial class CurrentTasks : Tab
     {
+        StartWorkflow _dlgStart;
+
         public CurrentTasks()
         {
             InitializeComponent();
 
-            _lv.Loaded += (s, e) => Refresh();
+            if (!Kit.IsPhoneUI)
+                _lv.ViewMode = ViewMode.Table;
+            _lv.FirstLoaded(Refresh);
         }
 
         async void Refresh()
@@ -34,82 +39,123 @@ namespace Dt.Mgr.Workflow
             _lv.Data = await WfdDs.GetMyTodoTasks();
         }
 
-        void OnRefresh(object sender, Mi e)
+        void StartNewWf()
         {
-            Refresh();
+            if (_dlgStart == null)
+                _dlgStart = new StartWorkflow();
+            _dlgStart.Show();
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        void HisTasks()
         {
-            if (InputKit.IsCtrlPressed)
-            {
-                AtWf.OpenFormWin(new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("item_id"), WfFormUsage.Edit));
-            }
-            else if (e.IsChanged)
-            {
-                var info = new WfFormInfo(e.Row.Long("prcd_id"), e.Row.Long("item_id"), WfFormUsage.Edit);
-                var win = await AtWf.CreateFormWin(info);
-                info.FormClosed += (s, arg) => Refresh();
-                LoadMain(win);
-            }
+            Kit.OpenWin(typeof(HistoryTasks), "历史任务", Icons.拆信);
+        }
+
+        void OnItemDoubleClick(object sender, object e)
+        {
+            OpenForm((Row)e);
+        }
+
+        void OnOpenForm(object sender, Mi e)
+        {
+            OpenForm((Row)e.Data);
+        }
+
+        void OnOpenLog(object sender, Mi e)
+        {
+            var row = (Row)e.Data;
+            AtWf.ShowLog(row.Long("prci_id"), row.Long("prcd_id"));
+        }
+
+        void OnOpenList(object sender, Mi e)
+        {
+            var prc = ((Row)e.Data).Str("prcname");
+            var tp = Kit.GetTypeByAlias(typeof(WfListAttribute), prc);
+            Throw.IfNull(tp, $"未指定 [{prc}] 的管理窗口类型，请在管理窗口类型上添加 [WfList(\"{prc}\")] 标签！");
+            Kit.OpenWin(tp, prc);
+        }
+
+        void OpenForm(Row p_row)
+        {
+            AtWf.OpenFormWin(new WfFormInfo(p_row.Long("prcd_id"), p_row.Long("item_id"), WfFormUsage.Edit));
         }
     }
 
     [LvCall]
     public class CurrentTasksUI
     {
-        public static void FormatTitle(Env e)
+        public static void FormatKind(Env e)
         {
-            Grid grid = new Grid { ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto } } };
-            var tbName = new TextBlock { Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center };
-            grid.Children.Add(tbName);
-
-            var rc = new Rectangle { Fill = Res.深灰2 };
-            Grid.SetColumn(rc, 1);
-            grid.Children.Add(rc);
-
-            var tbAtv = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-            Grid.SetColumn(tbAtv, 1);
-            grid.Children.Add(tbAtv);
-
-            rc = new Rectangle();
-            Grid.SetColumn(rc, 2);
-            grid.Children.Add(rc);
-
-            var tbInfo = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-            Grid.SetColumn(tbInfo, 2);
-            grid.Children.Add(tbInfo);
-            e.UI = grid;
+            var tbInfo = new TextBlock
+            {
+                FontFamily = Res.IconFont,
+                FontSize = 20,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            e.UI = tbInfo;
 
             e.Set += c =>
             {
-                tbName.Text = c.Row.Str("formname");
-                tbAtv.Text = c.Row.Str("atvname");
-
                 var kind = (WfiItemAssignKind)c.Row.Int("assign_kind");
                 switch (kind)
                 {
                     case WfiItemAssignKind.起始指派:
-                        rc.Fill = Res.中绿;
-                        tbInfo.Text = "发起";
+                        tbInfo.Foreground = Res.中绿;
+                        tbInfo.Text = "\uE02D";
+                        ToolTipService.SetToolTip(e.Dot, "发起");
                         break;
 
                     case WfiItemAssignKind.回退:
-                        rc.Fill = Res.亮红;
-                        tbInfo.Text = "回退";
+                        tbInfo.Foreground = Res.亮红;
+                        tbInfo.Text = "\uE036";
+                        ToolTipService.SetToolTip(e.Dot, "回退");
                         break;
 
                     case WfiItemAssignKind.追回:
-                        rc.Fill = Res.亮蓝;
-                        tbInfo.Text = "追回";
+                        tbInfo.Foreground = Res.亮蓝;
+                        tbInfo.Text = "\uE07C";
+                        ToolTipService.SetToolTip(e.Dot, "追回");
                         break;
 
                     case WfiItemAssignKind.跳转:
-                        rc.Fill = Res.BlackBrush;
-                        tbInfo.Text = "跳转";
+                        tbInfo.Foreground = Res.亮红;
+                        tbInfo.Text = "\uE07D";
+                        ToolTipService.SetToolTip(e.Dot, "跳转");
+                        break;
+
+                    default:
+                        tbInfo.Foreground = Res.BlackBrush;
+                        tbInfo.Text = "\uE079";
+                        ToolTipService.SetToolTip(e.Dot, "普通");
                         break;
                 }
             };
+        }
+
+        public static void AtvAndLog(Env e)
+        {
+            TextBlock tb = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Foreground = Res.主蓝,
+            };
+            tb.PointerPressed += OnShowLog;
+            e.UI = tb;
+
+            e.Set += c =>
+            {
+                tb.Text = c.Str;
+                tb.Tag = c.Row;
+            };
+        }
+
+        static void OnShowLog(object sender, PointerRoutedEventArgs e)
+        {
+            var tb = sender as TextBlock;
+            if (tb != null && tb.Tag is Row row)
+                AtWf.ShowLog(row.Long("prci_id"), row.Long("prcd_id"));
         }
     }
 }

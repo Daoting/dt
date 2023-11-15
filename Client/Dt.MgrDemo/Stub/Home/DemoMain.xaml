@@ -1,9 +1,8 @@
-﻿<a:Tab
+﻿<a:Win
     x:Class="Dt.MgrDemo.DemoMain"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    xmlns:l="using:Dt.MgrDemo"
     Title="业务样例">
 
     <a:Lv x:Name="_lv" ViewMode="Tile" SelectionMode="None" ItemClick="OnItemClick">
@@ -16,4 +15,4 @@
             </Grid>
         </DataTemplate>
     </a:Lv>
-</a:Tab>
+</a:Win>

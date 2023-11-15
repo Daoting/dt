@@ -206,7 +206,7 @@ namespace Dt.Mgr.Workflow
                     Kit.Warn("已签收无法追回！");
                     return false;
                 }
-                ls.Add(r.Long("atviid"));
+                ls.Add(r.Long("atvi_id"));
             }
 
             // 更新当前实例状态为活动
@@ -217,7 +217,7 @@ namespace Dt.Mgr.Workflow
             curAtvi.Mtime = time;
 
             // 根据当前工作项创建新工作项并更改指派方式
-            var curItem = await WfiItemX.GetByID(row.Long("itemid"));
+            var curItem = await WfiItemX.GetByID(row.Long("item_id"));
             var newItem = await WfiItemX.New(
                 AtviID: curItem.AtviID,
                 Status: WfiItemStatus.活动,
@@ -414,6 +414,7 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
@@ -435,6 +436,7 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
