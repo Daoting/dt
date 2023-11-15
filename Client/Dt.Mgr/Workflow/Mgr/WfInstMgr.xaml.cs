@@ -20,6 +20,7 @@ namespace Dt.Mgr.Workflow
         {
             InitializeComponent();
             LoadSearchData();
+            _fv.Query += OnSearch;
         }
 
         async void LoadSearchData()
@@ -36,7 +37,7 @@ namespace Dt.Mgr.Workflow
             _fv.Data = row;
         }
 
-        async void OnSearch(object sender, Mi e)
+        async void OnSearch(object sender, QueryClause e)
         {
             var row = _fv.Row;
             if (row.Str("prcd_id") == "")

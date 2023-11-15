@@ -13,6 +13,7 @@ using Dt.Core;
 
 namespace Dt.Mgr.Workflow
 {
+    [View(LobViews.流程设计)]
     public partial class WfTemplateMgr : Win
     {
         public WfTemplateMgr()
@@ -79,6 +80,11 @@ namespace Dt.Mgr.Workflow
         void OnToSearch(object sender, Mi e)
         {
             NaviTo("搜索");
+        }
+
+        void OnWfInst(object sender, Mi e)
+        {
+            Kit.OpenWin(typeof(WfInstMgr), "流程实例", Icons.信件);
         }
     }
 }

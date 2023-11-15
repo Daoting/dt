@@ -7,12 +7,7 @@
     <a:Pane>
         <a:Tabs>
             <a:Tab Order="1" Title="查找">
-                <a:Tab.Menu>
-                    <a:Menu>
-                        <a:Mi ID="查询" Icon="搜索" ShowInPhone="Icon" Click="OnSearch" />
-                    </a:Menu>
-                </a:Tab.Menu>
-                <a:Fv x:Name="_fv">
+                <a:QueryFv x:Name="_fv">
                     <a:CList ID="prcdname" Title="选择流程模板" SrcID="id" TgtID="prcd_id" />
                     <a:CList ID="statusname" Title="状态" SrcID="id" TgtID="status">
                         <a:CList.Items>
@@ -31,7 +26,7 @@
                     </StackPanel>
                     <a:CDate ID="start" Title="起始时间" />
                     <a:CDate ID="end" Title="终止时间" />
-                </a:Fv>
+                </a:QueryFv>
             </a:Tab>
         </a:Tabs>
     </a:Pane>
@@ -54,7 +49,7 @@
             </a:Tab>
         </a:Tabs>
     </a:Main>
-    <a:Pane Pos="Right">
+    <a:Pane Pos="Right" InitWidth="600">
         <a:Tabs>
             <a:Tab Title="活动实例">
                 <a:Lv x:Name="_lvAtv" ViewMode="Table" ItemClick="OnAtvClick">
@@ -75,7 +70,7 @@
                         <a:Col ID="sender" Title="发送者" Width="80" />
                         <a:Col ID="recv" Title="执行者" Width="80" />
                         <a:Col ID="is_accept" Title="已签收" Width="80" />
-                        <a:Col ID="mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
+                        <a:Col ID="mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="170" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>
