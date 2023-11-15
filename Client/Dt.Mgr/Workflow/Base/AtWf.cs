@@ -60,9 +60,20 @@ namespace Dt.Mgr
         /// </summary>
         /// <param name="p_prcID">流程实例id</param>
         /// <param name="p_prciID">流程模板id，-1时内部查询</param>
-        public static void ShowLog(long p_prciID, long p_prcID = -1)
+        public static Dlg ShowLog(long p_prciID, long p_prcID = -1)
         {
-            new WfLogDlg().Show(p_prciID, p_prcID);
+            var log = new WfLog();
+            log.Show(p_prciID, p_prcID);
+
+            Dlg dlg = new Dlg { IsPinned = true };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.Height = 700;
+                dlg.Width = 500;
+            }
+            dlg.LoadTab(log);
+            dlg.Show();
+            return dlg;
         }
 
         /// <summary>

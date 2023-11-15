@@ -85,31 +85,79 @@ order by a.dispidx
 ";
 
         const string Sql日志目标项 = @"
-select ( CASE username WHEN NULL THEN rolename ELSE username END ) accpname,
+select ( case username when null then rolename else username end ) accpname,
        atvdname,
        atvdtype,
        join_kind,
        atvi_id
-from (select a.atvi_id,
-             (select group_concat(name order by a.dispidx separator '、') from cm_user where id = a.user_id) as username,
-             (select group_concat(name order by a.dispidx separator '、') from cm_role where id = a.role_id) as rolename,
-             max(a.dispidx) dispidx,
-             c.name as atvdname,
-             c.type as atvdtype,
-             c.join_kind
-      from cm_wfi_item a,
-           (select ti.Tgt_Atvi_ID id
-               from cm_wfi_atv ai, cm_wfi_trs ti
-               where ai.id = ti.Src_Atvi_ID
-                 	and ai.prci_id = {0}
-                 	and ti.Src_Atvi_ID = {1}) b,
-           cm_wfd_atv c,
-           cm_wfi_atv d
-      where a.atvi_id = b.id
-      	and b.id = d.id
-      	and d.atvd_id = c.id
-      group by a.atvi_id, c.name, c.type, c.join_kind) t
- order by dispidx
+from 
+	(
+	select  a.atvi_id,
+			max(d.name) as atvdname,
+			max(d.type) as atvdtype,
+			max(d.join_kind) as join_kind,
+			group_concat(u.name separator '、') as username,
+			group_concat(r.name separator '、') as rolename,
+			max(a.dispidx) as dispidx
+	from
+		cm_wfi_item a
+		join
+		    (
+		    select
+		    	ti.tgt_atvi_id id 
+		    from
+		    	cm_wfi_atv ai,
+		    	cm_wfi_trs ti 
+		    where
+		    	ai.id = ti.src_atvi_id 
+		    	and ai.prci_id = {0}
+		    	and ti.Src_Atvi_ID = {1}
+		    ) b on a.atvi_id = b.id
+		join cm_wfi_atv c on b.id=c.id
+		join cm_wfd_atv d on c.atvd_id=d.id
+		left join cm_user u on a.user_id = u.id
+		left join cm_role r on a.role_id = r.id
+	group by a.atvi_id
+	) t
+order by dispidx
+";
+
+        const string Sql日志目标项_pg = @"
+select ( case username when null then rolename else username end ) accpname,
+       atvdname,
+       atvdtype,
+       join_kind,
+       atvi_id
+from 
+	(
+	select  a.atvi_id,
+			max(d.name) as atvdname,
+			max(d.type) as atvdtype,
+			max(d.join_kind) as join_kind,
+			array_to_string(array_agg(u.name), '、') as username,
+			array_to_string(array_agg(r.name), '、') as rolename,
+			max(a.dispidx) as dispidx
+	from
+		cm_wfi_item a
+		join
+		    (
+		    select
+		    	ti.tgt_atvi_id id 
+		    from
+		    	cm_wfi_atv ai,
+		    	cm_wfi_trs ti 
+		    where
+		    	ai.id = ti.src_atvi_id 
+		    	and ai.prci_id = {0}
+		    	and ti.Src_Atvi_ID = {1}
+		    ) b on a.atvi_id = b.id
+		join cm_wfi_atv c on b.id=c.id
+		join cm_wfd_atv d on c.atvd_id=d.id
+		left join cm_user u on a.user_id = u.id
+		left join cm_role r on a.role_id = r.id
+	group by a.atvi_id
+	) t
+order by dispidx
 ";
     }
 }

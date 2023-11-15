@@ -18,6 +18,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * snow算法起始时间20231001
 * CText默认实时更新，否则保存按钮不能实时更新状态
 * 模型库不再包含视图
+* 按照pg规范表、字段都小写
 
 ### 功能
 * Lv表格调整列宽时按住ctrl显示宽度消息
@@ -52,6 +53,10 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 优化查询sql
 * 增加Lv列表模式的列头
 * Lv列表模式的自定义列头
+* 统一4库对bool类型select时使用 fieldx='1' 的形式
+* 默认主页增加待办任务
+* 简化流程设计二级窗口
+* 流程日志适配pg
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

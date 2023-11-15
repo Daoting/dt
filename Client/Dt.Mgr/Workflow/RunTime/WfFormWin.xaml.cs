@@ -28,6 +28,7 @@ namespace Dt.Mgr.Workflow
             _tab.Content = _form;
             _tab.Title = p_info.PrcDef.Name;
             LoadMenu(p_info);
+            _log.Show(p_info.PrcInst.ID, p_info.PrcDef.ID);
         }
 
         public Task<bool> Save()

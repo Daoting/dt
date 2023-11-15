@@ -66,7 +66,8 @@ namespace Dt.Mgr.Workflow
 
         public static async Task<Table> GetAtviLog(long p_prciID, long p_atviID = 0)
         {
-            return await Query(string.Format(Sql日志目标项, p_prciID, p_atviID));
+            var sql = await AtCm.GetDbType() == DatabaseType.PostgreSql ? Sql日志目标项_pg : Sql日志目标项;
+            return await Query(string.Format(sql, p_prciID, p_atviID));
         }
 
         public void Finished()

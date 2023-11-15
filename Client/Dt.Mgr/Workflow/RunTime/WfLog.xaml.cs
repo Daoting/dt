@@ -22,12 +22,12 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 查看日志
     /// </summary>
-    public sealed partial class WfLogDlg : Dlg
+    public sealed partial class WfLog : Tab
     {
         long _prciID;
         TextBlock _tb;
 
-        public WfLogDlg()
+        public WfLog()
         {
             InitializeComponent();
         }
@@ -73,13 +73,6 @@ namespace Dt.Mgr.Workflow
                     }
                 }
             }
-
-            if (!Kit.IsPhoneUI)
-            {
-                Height = 700;
-                Width = 500;
-            }
-            Show();
         }
 
         async void OnNodeClick(object sender, EventArgs e)
