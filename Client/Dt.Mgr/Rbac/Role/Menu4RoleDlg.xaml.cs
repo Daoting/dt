@@ -32,7 +32,7 @@ namespace Dt.Mgr.Rbac
                 PlacementTarget = p_target;
                 ClipElement = p_target;
                 Height = Kit.ViewHeight / 2;
-                Width = Kit.ViewWidth / 4;
+                Width = 450;
             }
             return await ShowAsync();
         }

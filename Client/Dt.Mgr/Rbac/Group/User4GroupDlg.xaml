@@ -11,18 +11,11 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Lv x:Name="_lv" SelectionMode="Multiple">
-        <DataTemplate>
-            <StackPanel Padding="6">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE060;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="name" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="&#xE0C0;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
+    <a:Lv x:Name="_lv" SelectionMode="Multiple" ViewMode="Table">
+        <a:Cols>
+            <a:Col ID="acc" Title="账号" Width="120" />
+            <a:Col ID="phone" Title="手机号" Width="130" />
+            <a:Col ID="name" Title="姓名" />
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

@@ -41,16 +41,16 @@ namespace Dt.Mgr.Rbac
         {
             OnSaving(async () =>
             {
-                if (Name == "" && Phone == "")
+                if (Acc == "" && Phone == "")
                 {
                     Throw.Msg("账号和手机号不可同时为空！");
                 }
 
-                if (Name != ""
-                    && (IsAdded || cName.IsChanged))
+                if (Acc != ""
+                    && (IsAdded || cAcc.IsChanged))
                 {
-                    if (await GetCount($"where name='{Name}'") > 0)
-                        Throw.Msg("账号重复！", cName);
+                    if (await GetCount($"where acc='{Acc}'") > 0)
+                        Throw.Msg("账号重复！", cAcc);
                 }
 
                 if (Phone != ""

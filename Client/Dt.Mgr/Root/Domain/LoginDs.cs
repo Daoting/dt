@@ -36,7 +36,7 @@ namespace Dt.Mgr
         /// <returns></returns>
         public static Task<bool> LoginByPwd(string p_nameOrPhone, string p_pwd, bool p_showWarning)
         {
-            var key = Regex.IsMatch(p_nameOrPhone, "^1[34578]\\d{9}$") ? "phone" : "name";
+            var key = Regex.IsMatch(p_nameOrPhone, "^1[34578]\\d{9}$") ? "phone" : "acc";
             return LoginInternal(key, p_nameOrPhone, p_pwd, true, p_showWarning);
         }
 
@@ -127,11 +127,7 @@ namespace Dt.Mgr
                 await CookieX.Save("LoginPwd", user.Pwd);
             }
 
-            Kit.UserID = user.ID;
-            Kit.UserName = user.Name;
-            Kit.UserPhone = user.Phone;
-            Kit.UserPhoto = user.Photo;
-
+            UpdateUserInfo(user);
             RefreshHeader();
             LoginSuc?.Invoke();
 
@@ -152,6 +148,15 @@ namespace Dt.Mgr
             _ = Task.Run(() => PushHandler.Register());
             await Task.CompletedTask;
             return true;
+        }
+
+        public static void UpdateUserInfo(UserX p_user)
+        {
+            Kit.UserID = p_user.ID;
+            Kit.UserAccount = p_user.Acc == "" ? "无" : p_user.Acc;
+            Kit.UserPhone = p_user.Phone == "" ? "无" : p_user.Phone;
+            Kit.UserName = p_user.Name != "" ? p_user.Name : (p_user.Acc != "" ? p_user.Acc : p_user.Phone);
+            Kit.UserPhoto = p_user.Photo;
         }
 
         /// <summary>
@@ -195,8 +200,9 @@ namespace Dt.Mgr
         public static void ResetUser()
         {
             Kit.UserID = -1;
-            Kit.UserName = "无";
+            Kit.UserAccount = null;
             Kit.UserPhone = null;
+            Kit.UserName = "无";
             Kit.UserPhoto = null;
 
             RefreshHeader();

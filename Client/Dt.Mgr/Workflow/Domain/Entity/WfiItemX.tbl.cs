@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-14 创建
+* 日志: 2023-11-16 创建
 ******************************************************************************/
 #endregion
 
@@ -27,6 +27,7 @@ namespace Dt.Mgr.Workflow
             long AtviID = default,
             WfiItemStatus Status = default,
             WfiItemAssignKind AssignKind = default,
+            long? SenderID = default,
             string Sender = default,
             DateTime Stime = default,
             bool IsAccept = default,
@@ -42,6 +43,7 @@ namespace Dt.Mgr.Workflow
             Add("atvi_id", AtviID);
             Add("status", Status);
             Add("assign_kind", AssignKind);
+            Add("sender_id", SenderID);
             Add("sender", Sender);
             Add("stime", Stime);
             Add("is_accept", IsAccept);
@@ -90,7 +92,18 @@ namespace Dt.Mgr.Workflow
         public Cell cAssignKind => _cells["assign_kind"];
 
         /// <summary>
-        /// 发送者
+        /// 发送者标识
+        /// </summary>
+        public long? SenderID
+        {
+            get { return (long?)this["sender_id"]; }
+            set { this["sender_id"] = value; }
+        }
+
+        public Cell cSenderID => _cells["sender_id"];
+
+        /// <summary>
+        /// 发送者姓名
         /// </summary>
         public string Sender
         {

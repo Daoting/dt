@@ -13,8 +13,9 @@
     </a:Tab.Menu>
 
     <a:Fv x:Name="_fv" Save="Save" Create="Create">
-        <a:CText ID="name" Title="账号" />
+        <a:CText ID="acc" Title="账号" />
         <a:CText ID="phone" Title="手机号" />
+        <a:CText ID="name" Title="姓名" />
         <a:CImage ID="photo" Title="头像" Changed="OnPhotoChanged" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
         <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />

@@ -141,7 +141,7 @@ namespace Dt.Mgr.Workflow
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Foreground = Res.主蓝,
             };
-            tb.PointerPressed += OnShowLog;
+            tb.Tapped += OnShowLog;
             e.UI = tb;
 
             e.Set += c =>
@@ -151,7 +151,7 @@ namespace Dt.Mgr.Workflow
             };
         }
 
-        static void OnShowLog(object sender, PointerRoutedEventArgs e)
+        static void OnShowLog(object sender, TappedRoutedEventArgs e)
         {
             var tb = sender as TextBlock;
             if (tb != null && tb.Tag is Row row)

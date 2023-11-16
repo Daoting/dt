@@ -72,10 +72,7 @@ namespace Dt.Mgr.Home
             await edit.Update(Kit.UserID, false);
             if (await Forward<bool>(edit))
             {
-                var user = edit.Data;
-                Kit.UserName = user.Name;
-                Kit.UserPhone = user.Phone;
-                Kit.UserPhoto = user.Photo;
+                LoginDs.UpdateUserInfo(edit.Data);
                 LoadInfo();
             }
         }

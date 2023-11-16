@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-14 创建
+* 日志: 2023-11-16 创建
 ******************************************************************************/
 #endregion
 
@@ -24,18 +24,20 @@ namespace Dt.Mgr.Rbac
 
         public UserX(
             long ID,
-            string Name = default,
+            string Acc = default,
             string Phone = default,
             string Pwd = default,
+            string Name = default,
             string Photo = default,
             bool Expired = default,
             DateTime Ctime = default,
             DateTime Mtime = default)
         {
             Add("id", ID);
-            Add("name", Name);
+            Add("acc", Acc);
             Add("phone", Phone);
             Add("pwd", Pwd);
+            Add("name", Name);
             Add("photo", Photo);
             Add("expired", Expired);
             Add("ctime", Ctime);
@@ -47,13 +49,13 @@ namespace Dt.Mgr.Rbac
         /// <summary>
         /// 账号，唯一
         /// </summary>
-        public string Name
+        public string Acc
         {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
+            get { return (string)this["acc"]; }
+            set { this["acc"] = value; }
         }
 
-        public Cell cName => _cells["name"];
+        public Cell cAcc => _cells["acc"];
 
         /// <summary>
         /// 手机号，唯一
@@ -76,6 +78,17 @@ namespace Dt.Mgr.Rbac
         }
 
         public Cell cPwd => _cells["pwd"];
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name
+        {
+            get { return (string)this["name"]; }
+            set { this["name"] = value; }
+        }
+
+        public Cell cName => _cells["name"];
 
         /// <summary>
         /// 头像

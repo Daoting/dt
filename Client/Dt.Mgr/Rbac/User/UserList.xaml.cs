@@ -79,7 +79,7 @@ namespace Dt.Mgr.Rbac
         async void OnResetPwd(object sender, Mi e)
         {
             var user = e.Data.To<UserX>();
-            if (!await Kit.Confirm($"确认要重置[{user.Name}]的密码吗？\r\n密码会重置为4个1！"))
+            if (!await Kit.Confirm($"确认要重置[{user.Acc}]的密码吗？\r\n密码会重置为4个1！"))
             {
                 Kit.Msg("已取消重置！");
                 return;
@@ -107,7 +107,7 @@ namespace Dt.Mgr.Rbac
         {
             var user = e.Data.To<UserX>();
             string act = user.Expired ? "启用" : "停用";
-            if (!await Kit.Confirm($"确认要{act}[{user.Name}]吗？"))
+            if (!await Kit.Confirm($"确认要{act}[{user.Acc}]吗？"))
             {
                 Kit.Msg($"已取消{act}！");
                 return;
@@ -118,7 +118,7 @@ namespace Dt.Mgr.Rbac
 
             if (await user.Save(false))
             {
-                Kit.Msg($"账号[{e.Row.Str("name")}]已{act}！");
+                Kit.Msg($"账号[{e.Row.Str("acc")}]已{act}！");
                 Update();
             }
             else
@@ -130,7 +130,7 @@ namespace Dt.Mgr.Rbac
         async void OnDel(object sender, Mi e)
         {
             var user = e.Data.To<UserX>();
-            if (!await Kit.Confirm($"确认要删除[{user.Name}]吗？\r\n删除后不可恢复，请谨慎删除！"))
+            if (!await Kit.Confirm($"确认要删除[{user.Acc}]吗？\r\n删除后不可恢复，请谨慎删除！"))
             {
                 Kit.Msg("已取消删除！");
                 return;

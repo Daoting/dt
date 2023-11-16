@@ -23,9 +23,15 @@ namespace Dt.Core
         public static long UserID { get; set; } = -1;
 
         /// <summary>
-        /// 姓名
+        /// 姓名，始终有值
+        /// <para>无姓名时：账号非空返回账号，否则返回手机号</para>
         /// </summary>
         public static string UserName { get; set; } = "无";
+
+        /// <summary>
+        /// 登录账号
+        /// </summary>
+        public static string UserAccount { get; set; }
 
         /// <summary>
         /// 手机号码
