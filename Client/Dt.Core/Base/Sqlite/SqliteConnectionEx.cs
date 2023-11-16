@@ -234,6 +234,8 @@ namespace Dt.Core.Sqlite
                 catch
                 {
                     trans.Rollback();
+                    // 外部知道失败
+                    cnt = 0;
                 }
             }
 #endif
@@ -418,7 +420,8 @@ namespace Dt.Core.Sqlite
                 {
                     foreach (var item in dt)
                     {
-                        p_collection.AddWithValue(item.Key, item.Value);
+                        // null时参数值必须为 DBNull.Value ！
+                        var par = p_collection.AddWithValue(item.Key, item.Value == null ? DBNull.Value : item.Value);
                     }
                 }
             }
@@ -427,7 +430,8 @@ namespace Dt.Core.Sqlite
                 // 匿名对象无法在GetProperty时指定BindingFlags！
                 foreach (var prop in p_param.GetType().GetProperties())
                 {
-                    p_collection.AddWithValue(prop.Name, prop.GetValue(p_param));
+                    var val = prop.GetValue(p_param);
+                    p_collection.AddWithValue(prop.Name, val == null ? DBNull.Value : val);
                 }
             }
         }
