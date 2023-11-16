@@ -78,8 +78,13 @@ namespace Dt.Mgr.Workflow
             // 当前工作项置成完成状态
             p_info.WorkItem.Finished();
 
-            var userName = await GetSender(p_info);
-            long userId = await _da.GetScalar<long>($"select id from cm_user where name='{userName}'");
+            long userId = await GetSenderID(p_info);
+            if (userId == 0)
+            {
+                Kit.Msg("未找到要回退的目标用户！");
+                p_info.CloseWin();
+            }
+
             var newItem = await WfiItemX.New(
                 AtviID: newAtvInst.ID,
                 Stime: time,
@@ -87,6 +92,8 @@ namespace Dt.Mgr.Workflow
                 Mtime: time,
                 AssignKind: WfiItemAssignKind.回退,
                 Status: WfiItemStatus.活动,
+                SenderID: Kit.UserID,
+                Sender: Kit.UserName,
                 UserID: userId);
 
             var w = _da.NewWriter();
@@ -108,18 +115,22 @@ namespace Dt.Mgr.Workflow
             }
         }
 
-        static async Task<string> GetSender(WfFormInfo p_info)
+        static async Task<long> GetSenderID(WfFormInfo p_info)
         {
-            string sender = p_info.WorkItem.Sender;
+            long id = 0;
             if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
             {
-                long id = await _da.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
-                if (id != 0)
+                long atvid = await _da.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
+                if (atvid != 0)
                 {
-                    sender = await _da.GetScalar<string>($"select sender from cm_wfi_item where atvi_id={id} order by mtime desc");
+                    id = await _da.GetScalar<long>($"select sender_id from cm_wfi_item where atvi_id={atvid} order by mtime desc");
                 }
             }
-            return sender;
+            else if (p_info.WorkItem.SenderID.HasValue)
+            {
+                id = p_info.WorkItem.SenderID.Value;
+            }
+            return id;
         }
         #endregion
 
@@ -222,6 +233,7 @@ namespace Dt.Mgr.Workflow
                 AtviID: curItem.AtviID,
                 Status: WfiItemStatus.活动,
                 AssignKind: WfiItemAssignKind.追回,
+                SenderID: curItem.SenderID,
                 Sender: curItem.Sender,
                 Stime: curItem.Stime,
                 IsAccept: false,
@@ -414,6 +426,7 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                SenderID: Kit.UserID,
                                 Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
@@ -436,6 +449,7 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                SenderID: Kit.UserID,
                                 Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
@@ -472,6 +486,7 @@ namespace Dt.Mgr.Workflow
                         Status: WfiItemStatus.同步,
                         IsAccept: false,
                         UserID: Kit.UserID,
+                        SenderID: Kit.UserID,
                         Sender: Kit.UserName,
                         Stime: time,
                         Ctime: time,
@@ -512,10 +527,12 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                SenderID: Kit.UserID,
+                                Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: "");
+                                Note: syncAtv.Note);
                             tblItems.Add(wi);
                         }
                     }
@@ -533,10 +550,12 @@ namespace Dt.Mgr.Workflow
                                 Ctime: time,
                                 Mtime: time,
                                 AssignKind: WfiItemAssignKind.普通指派,
+                                SenderID: Kit.UserID,
+                                Sender: Kit.UserName,
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: "");
+                                Note: syncAtv.Note);
                             tblItems.Add(wi);
                         }
                     }
@@ -820,8 +839,8 @@ namespace Dt.Mgr.Workflow
         {
             // 是否活动授权任何人
             if (await WfdAtvRoleX.GetCount($"where role_id=1 and atv_id={p_atvid}") == 0)
-                return await _da.Query($"select id,name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
-            return await _da.Query("select id, name from cm_user where expired='0'");
+                return await _da.Query($"select id,coalesce(name, acc, phone) as name from cm_user u where exists (select distinct (user_id) from cm_user_role ur where exists (select role_id from cm_wfd_atv_role ar where ur.role_id=ar.role_id and atv_id={p_atvid}) and u.id=ur.user_id) order by name");
+            return await _da.Query("select id, coalesce(name, acc, phone) as name from cm_user where expired='0'");
         }
 
         static Task<Table> GetLimitUsers(long p_atvdid, WfdAtvExecLimit p_execLimit, WfFormInfo p_info)

@@ -19,6 +19,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * CText默认实时更新，否则保存按钮不能实时更新状态
 * 模型库不再包含视图
 * 按照pg规范表、字段都小写
+* cm_user 增改acc name，cm_wfi_item增加sender_id
+* 区分账号、姓名，业务系统在绑定账号时可设置姓名
 
 ### 功能
 * Lv表格调整列宽时按住ctrl显示宽度消息
@@ -57,6 +59,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 默认主页增加待办任务
 * 简化流程设计二级窗口
 * 流程日志适配pg
+* 流程工作项cm_wfi_item中添加sender_id
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
@@ -70,6 +73,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 在Dlg内部点击并且有遮罩时，传递到紧挨的下层对话框，比如：对话框有遮罩，点击内容弹出菜单，再点击对话框区域(非菜单内)，确保菜单能关闭
 * 可null枚举类型的显示
 * CList选择后跳两格
+* sqlite的sql语句中参数值null时必须转为 DBNull.Value
 
 
 ## Release 4.2.2

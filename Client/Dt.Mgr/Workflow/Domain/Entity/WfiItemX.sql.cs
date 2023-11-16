@@ -48,7 +48,7 @@ select
 	status,
 	assign_kind,
 	sender,
-	usr.name recv,
+	coalesce(usr.name, usr.acc, usr.phone) as recv,
 	is_accept,
 	wi.mtime 
 from
@@ -69,7 +69,7 @@ select b.prci_id,
        a.is_accept,
        a.accept_time,
        a.status itemstatus,
-       ( CASE user_id WHEN NULL THEN (select name from cm_role t where t.id = a.role_id) ELSE (select name from cm_user t where t.id = a.user_id) END ) username,
+       ( case when user_id is null then (select name from cm_role t where t.id = a.role_id) else (select coalesce(name, acc, phone) from cm_user t where t.id = a.user_id) end ) username,
        a.note,
        a.ctime,
        a.mtime,
@@ -96,7 +96,7 @@ from
 			max(d.name) as atvdname,
 			max(d.type) as atvdtype,
 			max(d.join_kind) as join_kind,
-			group_concat(u.name separator '、') as username,
+			group_concat(coalesce(u.name, u.acc, u.phone) separator '、') as username,
 			group_concat(r.name separator '、') as rolename,
 			max(a.dispidx) as dispidx
 	from
@@ -134,7 +134,7 @@ from
 			max(d.name) as atvdname,
 			max(d.type) as atvdtype,
 			max(d.join_kind) as join_kind,
-			array_to_string(array_agg(u.name), '、') as username,
+			array_to_string(array_agg(coalesce(u.name, u.acc, u.phone)), '、') as username,
 			array_to_string(array_agg(r.name), '、') as rolename,
 			max(a.dispidx) as dispidx
 	from
