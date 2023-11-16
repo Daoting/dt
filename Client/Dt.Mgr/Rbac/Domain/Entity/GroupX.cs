@@ -33,7 +33,7 @@ namespace Dt.Mgr.Rbac
         /// <returns></returns>
         public static Task<List<long>> GetRelationUserIDs(long p_groupid)
         {
-            return AtCm.FirstCol<long>($"select id,name,phone from cm_user a where exists (select user_id from cm_user_group b where a.id=b.user_id and group_id={p_groupid})");
+            return AtCm.FirstCol<long>($"select id from cm_user a where exists (select user_id from cm_user_group b where a.id=b.user_id and group_id={p_groupid})");
         }
 
         protected override void InitHook()

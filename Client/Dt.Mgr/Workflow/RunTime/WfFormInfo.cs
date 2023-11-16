@@ -390,6 +390,7 @@ namespace Dt.Mgr
                 IsAccept: true,
                 Status: WfiItemStatus.活动,
                 UserID: Kit.UserID,
+                SenderID: Kit.UserID,
                 Sender: Kit.UserName);
         }
 

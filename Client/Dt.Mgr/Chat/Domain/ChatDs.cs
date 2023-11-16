@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -251,17 +252,24 @@ namespace Dt.Mgr.Chat
                 return;
 
             // 暂时取所有，后续增加好友功能
-            var tbl = await AtCm.Query<ChatMemberX>("select id,name,phone,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
+            var tbl = await UserX.Query("select id,acc,phone,name,photo,mtime from cm_user");
 
             // 将新列表缓存到本地库
             await _da.Exec("delete from ChatMember");
             if (tbl != null && tbl.Count > 0)
             {
+                Table<ChatMemberX> mems = new Table<ChatMemberX>();
                 foreach (var r in tbl)
                 {
-                    r.IsAdded = true;
+                    var cm = new ChatMemberX(
+                        r.ID,
+                        r.Name == "" ? r.Acc : r.Name,
+                        r.Phone,
+                        r.Photo == "" ? "photo/profilephoto.jpg" : r.Photo,
+                        r.Mtime);
+                    mems.Add(cm);
                 }
-                await tbl.Save(false);
+                await mems.Save(false);
             }
 
             // 记录刷新时间
