@@ -841,9 +841,10 @@ GO
 -- ----------------------------
 CREATE TABLE [dbo].[cm_user] (
   [id] bigint NOT NULL,
-  [name] nvarchar(32) NULL,
+  [acc] nvarchar(32) NULL,
   [phone] nvarchar(16) NULL,
   [pwd] char(32) NOT NULL,
+  [name] nvarchar(32) NULL,
   [photo] nvarchar(255) NULL,
   [expired] bit NOT NULL,
   [ctime] datetime NOT NULL,
@@ -869,7 +870,7 @@ EXEC sp_addextendedproperty
 'MS_Description', N'账号，唯一',
 'SCHEMA', N'dbo',
 'TABLE', N'cm_user',
-'COLUMN', N'name'
+'COLUMN', N'acc'
 GO
 
 EXEC sp_addextendedproperty
@@ -877,6 +878,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'cm_user',
 'COLUMN', N'pwd'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'姓名',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_user',
+'COLUMN', N'name'
 GO
 
 EXEC sp_addextendedproperty
@@ -917,7 +925,7 @@ GO
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO [dbo].[cm_user] VALUES (1, N'admin', N'13511111111', 'b59c67bf196a4758191e42f76670ceba', N'', '0', '2019-10-24 09:06:38.000', '2023-03-16 08:35:39.000'); GO
+INSERT INTO [dbo].[cm_user] VALUES (1, N'admin', N'13511111111', 'b59c67bf196a4758191e42f76670ceba', N'', N'', '0', '2019-10-24 09:06:38.000', '2023-03-16 08:35:39.000'); GO
 
 
 
@@ -1431,6 +1439,7 @@ CREATE TABLE [dbo].[cm_wfi_item] (
   [atvi_id] bigint NOT NULL,
   [status] tinyint NOT NULL,
   [assign_kind] tinyint NOT NULL,
+  [sender_id] bigint NULL,
   [sender] nvarchar(32) NULL,
   [stime] datetime NOT NULL,
   [is_accept] bit NOT NULL,
@@ -1473,7 +1482,14 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'发送者',
+'MS_Description', N'发送者标识',
+'SCHEMA', N'dbo',
+'TABLE', N'cm_wfi_item',
+'COLUMN', N'sender_id'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'发送者姓名',
 'SCHEMA', N'dbo',
 'TABLE', N'cm_wfi_item',
 'COLUMN', N'sender'
@@ -2072,9 +2088,9 @@ GO
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE NONCLUSTERED INDEX [idx_user_name]
+CREATE NONCLUSTERED INDEX [idx_user_acc]
 ON [dbo].[cm_user] (
-  [name] ASC
+  [acc] ASC
 )
 GO
 

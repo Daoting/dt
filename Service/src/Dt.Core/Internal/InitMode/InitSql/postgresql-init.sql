@@ -419,9 +419,10 @@ COMMENT ON TABLE "public"."cm_rpt" IS '报表模板定义';
 -- ----------------------------
 CREATE TABLE "public"."cm_user" (
   "id" int8 NOT NULL,
-  "name" varchar(32),
+  "acc" varchar(32),
   "phone" varchar(16),
   "pwd" char(32) NOT NULL,
+  "name" varchar(32),
   "photo" varchar(255),
   "expired" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -429,9 +430,10 @@ CREATE TABLE "public"."cm_user" (
 )
 ;
 COMMENT ON COLUMN "public"."cm_user"."id" IS '用户标识';
-COMMENT ON COLUMN "public"."cm_user"."name" IS '账号，唯一';
+COMMENT ON COLUMN "public"."cm_user"."acc" IS '账号，唯一';
 COMMENT ON COLUMN "public"."cm_user"."phone" IS '手机号，唯一';
 COMMENT ON COLUMN "public"."cm_user"."pwd" IS '密码的md5';
+COMMENT ON COLUMN "public"."cm_user"."name" IS '姓名';
 COMMENT ON COLUMN "public"."cm_user"."photo" IS '头像';
 COMMENT ON COLUMN "public"."cm_user"."expired" IS '是否停用';
 COMMENT ON COLUMN "public"."cm_user"."ctime" IS '创建时间';
@@ -441,7 +443,7 @@ COMMENT ON TABLE "public"."cm_user" IS '系统用户';
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO "public"."cm_user" VALUES (1, 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
+INSERT INTO "public"."cm_user" VALUES (1, 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', '', '0', '2019-10-24 09:06:38', '2023-03-16 08:35:39');
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -614,6 +616,7 @@ CREATE TABLE "public"."cm_wfi_item" (
   "atvi_id" int8 NOT NULL,
   "status" int2 NOT NULL,
   "assign_kind" int2 NOT NULL,
+  "sender_id" int8,
   "sender" varchar(32),
   "stime" timestamp(0) NOT NULL,
   "is_accept" bool NOT NULL,
@@ -630,7 +633,8 @@ COMMENT ON COLUMN "public"."cm_wfi_item"."id" IS '工作项标识';
 COMMENT ON COLUMN "public"."cm_wfi_item"."atvi_id" IS '活动实例标识';
 COMMENT ON COLUMN "public"."cm_wfi_item"."status" IS '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动';
 COMMENT ON COLUMN "public"."cm_wfi_item"."assign_kind" IS '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派';
-COMMENT ON COLUMN "public"."cm_wfi_item"."sender" IS '发送者';
+COMMENT ON COLUMN "public"."cm_wfi_item"."sender_id" IS '发送者标识';
+COMMENT ON COLUMN "public"."cm_wfi_item"."sender" IS '发送者姓名';
 COMMENT ON COLUMN "public"."cm_wfi_item"."stime" IS '发送时间';
 COMMENT ON COLUMN "public"."cm_wfi_item"."is_accept" IS '是否签收此项任务';
 COMMENT ON COLUMN "public"."cm_wfi_item"."accept_time" IS '签收时间';
@@ -906,8 +910,8 @@ ALTER TABLE "public"."cm_rpt" ADD PRIMARY KEY ("id");
 -- ----------------------------
 -- Indexes structure for table cm_user
 -- ----------------------------
-CREATE INDEX "idx_user_name" ON "public"."cm_user" USING btree (
-  name ASC
+CREATE INDEX "idx_user_acc" ON "public"."cm_user" USING btree (
+  acc ASC
 );
 
 CREATE INDEX "idx_user_phone" ON "public"."cm_user" USING btree (

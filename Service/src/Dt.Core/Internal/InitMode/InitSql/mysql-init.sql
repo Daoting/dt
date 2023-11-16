@@ -297,22 +297,23 @@ CREATE TABLE `cm_rpt`  (
 DROP TABLE IF EXISTS `cm_user`;
 CREATE TABLE `cm_user`  (
   `id` bigint(20) NOT NULL COMMENT '用户标识',
-  `name` varchar(32) NULL DEFAULT NULL COMMENT '账号，唯一',
+  `acc` varchar(32) NULL DEFAULT NULL COMMENT '账号，唯一',
   `phone` varchar(16) NULL DEFAULT NULL COMMENT '手机号，唯一',
   `pwd` char(32) NOT NULL COMMENT '密码的md5',
+  `name` varchar(32) NULL DEFAULT NULL COMMENT '姓名',
   `photo` varchar(255) NULL DEFAULT NULL DEFAULT '' COMMENT '头像',
   `expired` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否停用',
   `ctime` datetime NOT NULL COMMENT '创建时间',
   `mtime` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_user_name`(`name`) USING BTREE,
+  INDEX `idx_user_acc`(`acc`) USING BTREE,
   INDEX `idx_user_phone`(`phone`) USING BTREE
 ) ENGINE = InnoDB COMMENT = '系统用户';
 
 -- ----------------------------
 -- Records of cm_user
 -- ----------------------------
-INSERT INTO `cm_user` VALUES (1, 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', 0, '2019-10-24 09:06:38', '2023-03-16 08:35:39');
+INSERT INTO `cm_user` VALUES (1, 'admin', '13511111111', 'b59c67bf196a4758191e42f76670ceba', '', '', 0, '2019-10-24 09:06:38', '2023-03-16 08:35:39');
 
 -- ----------------------------
 -- Table structure for cm_user_group
@@ -462,7 +463,8 @@ CREATE TABLE `cm_wfi_item`  (
   `atvi_id` bigint(20) NOT NULL COMMENT '活动实例标识',
   `status` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiItemStatus#工作项状态 0活动 1结束 2终止 3同步活动',
   `assign_kind` tinyint(4) UNSIGNED NOT NULL COMMENT '#WfiItemAssignKind#指派方式 0普通指派 1起始指派 2回退 3跳转 4追回 5回退指派',
-  `sender` varchar(32) NULL DEFAULT NULL COMMENT '发送者',
+  `sender_id` bigint(20) NULL DEFAULT NULL COMMENT '发送者标识',
+  `sender` varchar(32) NULL DEFAULT NULL COMMENT '发送者姓名',
   `stime` datetime NOT NULL COMMENT '发送时间',
   `is_accept` tinyint(1) NOT NULL COMMENT '是否签收此项任务',
   `accept_time` datetime NULL DEFAULT NULL COMMENT '签收时间',
