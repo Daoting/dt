@@ -42,6 +42,11 @@ namespace Dt.UIDemo
                     cell.Title = attr.Title;
                     items.Add(cell);
                 }
+
+                cell = new CBool();
+                cell.ID = "ShowTitle";
+                cell.Title = "显示标题";
+                items.Add(cell);
             }
             p_fv.Data = p_tgtCell;
         }

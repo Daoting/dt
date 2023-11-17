@@ -56,6 +56,7 @@ namespace Dt.UIDemo
                 { "checkint", typeof(int) },
                 { "checkstr" },
                 { "checkswitch", typeof(bool) },
+                { "checktitle", typeof(bool) },
 
                 { "masknum", typeof(double) },
                 { "maskregex" },
@@ -94,6 +95,7 @@ namespace Dt.UIDemo
                 checkint = 1,
                 checkstr = "男",
                 checkswitch = true,
+                checktitle = true,
 
                 masknum = 12345d,
                 maskregex = "321124321",

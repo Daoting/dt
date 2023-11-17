@@ -37,6 +37,7 @@
                     </a:CBool>
                     <a:CBool ID="checkstr" Title="字符串选择框" TrueVal="男" FalseVal="女" />
                     <a:CBool ID="checkswitch" Title="开关" IsSwitch="True" />
+                    <a:CBool ID="checktitle" Title="标题在选择框后" ShowTitle="False" />
 
                     <a:CBar Title="掩码" />
                     <a:CMask ID="masknum" Title="数字型" MaskType="Numeric" Mask="d6" />
