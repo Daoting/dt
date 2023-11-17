@@ -10,6 +10,7 @@
             <StackPanel Margin="-1,-1,0,0">
                 <a:BtnItem Icon="公告" Title="内容为窗口" Click="OnChanged" a:Ex.TagCls="Dt.UIDemo.SingleViewWin" />
                 <a:BtnItem Icon="田字格" Title="内容为嵌套窗口" Click="OnChanged" a:Ex.TagCls="Dt.UIDemo.ToggleWinCenter" />
+                <a:BtnItem Icon="文件夹" Title="内容为Tab" Click="OnChanged" a:Ex.TagCls="Dt.UIDemo.TabNaviItem" />
                 <a:BtnItem Icon="保存" Title="内容为Button" Click="OnCenterBtn" />
                 <a:BtnItem Icon="pos机" Title="内容为字符串" Click="OnCenterStr" />
                 <a:BtnItem Title="内容为空" Click="OnCenterNull" />

@@ -30,6 +30,7 @@ namespace Dt.UIDemo
             {
                 new Nav("内容为窗口", typeof(SingleViewWin), Icons.公告),
                 new Nav("内容为嵌套窗口", typeof(ToggleWinCenter), Icons.田字格),
+                new Nav("内容为Tab", typeof(TabNaviItem), Icons.文件夹),
                 new Nav("内容为Button", typeof(TabNaviItem), Icons.保存) { Callback = OnCreateBtn },
                 new Nav("内容为空", default(Type), Icons.全选),
                 new Nav("窗口标识：" + _id),

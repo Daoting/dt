@@ -99,6 +99,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
+        const string _mainTabFlag = "MainTab";
         static Size _defaultFloatSize = new Size(300.0, 300.0);
         Canvas _popupPanel;
         Compass _compass;
@@ -830,6 +831,8 @@ namespace Dt.Base
         {
             if (Kit.IsPhoneUI)
                 LoadPhoneMain(p_content);
+            else if (p_content is Tab tab)
+                LoadWinMainTab(tab);
             else
                 LoadWinMain(p_content);
         }
@@ -845,6 +848,10 @@ namespace Dt.Base
             {
                 win.NaviToHome();
             }
+            else if (p_content is Tab nt)
+            {
+                PhonePage.Show(nt);
+            }
             else
             {
                 Tab tab = (Tab)GetValue(PhoneMainTabProperty);
@@ -858,13 +865,44 @@ namespace Dt.Base
             }
         }
 
+        void LoadWinMainTab(Tab p_tab)
+        {
+            Tabs tabs = (Tabs)GetValue(MainTabsProperty);
+            if (tabs != null)
+            {
+                // 上次内容为Tab时不需清除内容
+                if (tabs.Items.Count > 0 && tabs.Tag != _mainTabFlag)
+                {
+                    // 清除内容，以便下次再添加
+                    tabs.Items[0].Content = null;
+                }
+                CenterItem.Items.Remove(tabs);
+                tabs.Items.Clear();
+            }
+
+            tabs = new Tabs { Tag = _mainTabFlag };
+            tabs.Items.Add(p_tab);
+            SetValue(MainTabsProperty, tabs);
+            CenterItem.Items.Add(tabs);
+        }
+
         void LoadWinMain(object p_content)
         {
             Tab tab;
             Tabs tabs = (Tabs)GetValue(MainTabsProperty);
-            if (tabs == null || tabs.Items.Count == 0)
+
+            if (tabs != null && tabs.Tag == _mainTabFlag)
             {
-                // 初次加载 或 恢复默认布局后
+                // 上次内容为Tab，全移除
+                CenterItem.Items.Remove(tabs);
+                tabs.Items.Clear();
+            }
+
+            if (tabs == null
+                || tabs.Items.Count == 0
+                || tabs.Tag == _mainTabFlag)
+            {
+                // 初次加载 或 恢复默认布局后 或 上次内容为Tab
                 tabs = new Tabs { ShowHeader = false };
                 tab = new Tab();
                 tabs.Items.Add(tab);
