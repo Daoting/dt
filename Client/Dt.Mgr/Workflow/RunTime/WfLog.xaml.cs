@@ -175,7 +175,7 @@ namespace Dt.Mgr.Workflow
 
                 string note = dr.Str("note");
                 if (!string.IsNullOrEmpty(note))
-                    sb.AppendFormat("\n备注：【{0}】📣 ", note);
+                    sb.AppendFormat("\n留言：【{0}】📣 ", note);
             }
 
             if (p_atvdID == 0)

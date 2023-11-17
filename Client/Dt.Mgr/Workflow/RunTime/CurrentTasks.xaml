@@ -24,6 +24,7 @@
         </a:Ex.Menu>
         <a:Cols>
             <a:Col ID="kind" Title="　" Call="CurrentTasksUI.FormatKind" Width="42" />
+            <a:Col ID="note" Title="留言" Call="CurrentTasksUI.FormatNote" Width="56" />
             <a:Col ID="prcname" Title="工作流程" Width="120" />
             <a:Col ID="atvname" Title="任务名称" Call="CurrentTasksUI.AtvAndLog" Width="120" />
             <a:Col ID="formname" Title="表单内容" Width="200" />

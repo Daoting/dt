@@ -133,6 +133,51 @@ namespace Dt.Mgr.Workflow
             };
         }
 
+        public static void FormatNote(Env e)
+        {
+            var tbInfo = new TextBlock
+            {
+                FontFamily = Res.IconFont,
+                FontSize = 20,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Text = "\uE07F",
+                Foreground = Res.主蓝,
+            };
+            e.Dot.Background = Res.TransparentBrush;
+            e.UI = tbInfo;
+
+            e.Set += c =>
+            {
+                e.Dot.Tapped -= OnShowNote;
+                if (c.Str == "")
+                {
+                    tbInfo.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    tbInfo.Visibility = Visibility.Visible;
+                    e.Dot.Tag = c.Str;
+                    e.Dot.Tapped += OnShowNote;
+                }
+            };
+        }
+
+        static void OnShowNote(object sender, TappedRoutedEventArgs e)
+        {
+            var dot = (Dot)sender;
+            Dlg dlg = new Dlg
+            {
+                Title = "留言",
+                Content = new TextBlock { Text = dot.Tag.ToString(), Margin = new Thickness(10), TextWrapping = TextWrapping.Wrap },
+                PlacementTarget = dot,
+                WinPlacement = DlgPlacement.TargetBottomLeft,
+                Width = 300,
+                Height = 300,
+            };
+            dlg.Show();
+        }
+
         public static void AtvAndLog(Env e)
         {
             TextBlock tb = new TextBlock

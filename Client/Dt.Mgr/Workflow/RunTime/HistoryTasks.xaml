@@ -46,7 +46,7 @@
                     <a:Cols>
                         <a:Col ID="status" Title="　" Call="HistoryTaskUI.FormatStatus" Width="42" />
                         <a:Col ID="prcname" Title="工作流程" Width="120" />
-                        <a:Col ID="atvname" Title="任务名称" Call="CurrentTasksUI.AtvAndLog" Width="120" />
+                        <a:Col ID="atvname" Title="任务名称" Width="120" />
                         <a:Col ID="formname" Title="表单内容" Width="200" />
                         <a:Col ID="sender" Title="发送者" />
                         <a:Col ID="stime" Title="发送时间" Width="170" Format="yyyy-MM-dd HH:mm:ss" />

@@ -100,7 +100,8 @@ from cm_wfi_atv ai,
        and ai.atvd_id = ad.id
        and wi.reCount = 0
        and (@p_status > 2 or pi.status = @p_status)) t
- where t.no=1 {0}
+ where t.no=1 {0} 
+ order by stime desc
 ";
 
         // 用户在一个流程实例中参与的所有任务
@@ -155,7 +156,8 @@ select wi.id   item_id,
        wi.assign_kind,
        wi.sender,
        wi.stime,
-       wi.is_accept
+       wi.is_accept,
+       wi.note
 from cm_wfi_atv ai,
      cm_wfd_atv ad,
      cm_wfi_prc pi,
@@ -165,7 +167,8 @@ from cm_wfi_atv ai,
              sender,
              stime,
              is_accept,
-             assign_kind
+             assign_kind,
+             note
       from cm_wfi_item wi
       where status = 0
       	and (user_id = {0} or
