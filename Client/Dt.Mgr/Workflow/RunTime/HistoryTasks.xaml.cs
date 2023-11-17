@@ -25,6 +25,9 @@ namespace Dt.Mgr.Workflow
         public HistoryTasks()
         {
             InitializeComponent();
+
+            if (!Kit.IsPhoneUI)
+                _lv.ViewMode = ViewMode.Table;
             LoadSearchData();
         }
 
@@ -36,13 +39,16 @@ namespace Dt.Mgr.Workflow
             row.Add<int>("status", 3);
             row.Add("statusname", "全部");
             row.Add<bool>("type");
+            row.Add("prcdname", "全部");
+            row.Add("prcd_id", -1L);
             _fv.Data = row;
+            _fv.Query += OnSearch;
         }
 
-        async void OnSearch(object sender, Mi e)
+        async void OnSearch(object sender, QueryClause e)
         {
             var row = _fv.Row;
-            _lv.Data = await WfdDs.GetMyHistoryPrcs(row.Bool("type"), row.Date("start"), row.Date("end"), row.Int("status"));
+            _lv.Data = await WfdDs.GetMyHistoryPrcs(row.Bool("type"), row.Date("start"), row.Date("end"), row.Int("status"), row.Long("prcd_id"));
         }
 
         void OnMonthClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -96,40 +102,63 @@ namespace Dt.Mgr.Workflow
         {
             AtWf.ShowLog(e.Row.Long("prci_id"), e.Row.Long("prcd_id"));
         }
+
+        void OnOpenList(object sender, Mi e)
+        {
+            var prc = ((Row)e.Data).Str("prcname");
+            var tp = Kit.GetTypeByAlias(typeof(WfListAttribute), prc);
+            Throw.IfNull(tp, $"未指定 [{prc}] 的管理窗口类型，请在管理窗口类型上添加 [WfList(\"{prc}\")] 标签！");
+            Kit.OpenWin(tp, prc);
+        }
+
+        async void OnLoadPrcd(object sender, AsyncEventArgs e)
+        {
+            using (e.Wait())
+            {
+                var prc = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
+                prc.Insert(0, prc.NewRow(new { id = -1, name = "全部" }));
+                ((CList)sender).Data = prc;
+            }
+        }
     }
 
     [LvCall]
     public class HistoryTaskUI
     {
-        public static void FormatTile(Env e)
+        public static void FormatStatus(Env e)
         {
-            Grid grid = new Grid { ColumnDefinitions = { new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto }, } };
-
-            var tbName = new TextBlock { Margin = new Thickness(0, 0, 4, 0), VerticalAlignment = VerticalAlignment.Center };
-            grid.Children.Add(tbName);
-
-            var rc = new Rectangle();
-            Grid.SetColumn(rc, 1);
-            grid.Children.Add(rc);
-
-            var tbAtv = new TextBlock { Margin = new Thickness(4, 2, 4, 2), Foreground = Res.WhiteBrush };
-            Grid.SetColumn(tbAtv, 1);
-            grid.Children.Add(tbAtv);
-            e.UI = grid;
+            var tbInfo = new TextBlock
+            {
+                FontFamily = Res.IconFont,
+                FontSize = 20,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            e.UI = tbInfo;
 
             e.Set += c =>
             {
-                tbName.Text = c.Row.Str("formname");
+                var kind = (WfiPrcStatus)c.Int;
+                switch (kind)
+                {
+                    case WfiPrcStatus.活动:
+                        tbInfo.Foreground = Res.中绿;
+                        tbInfo.Text = "\uE01E";
+                        ToolTipService.SetToolTip(e.Dot, "流程进行中...");
+                        break;
 
-                int status = c.Row.Int("status");
-                if (status == 0)
-                    rc.Fill = Res.中绿;
-                else if (status == 1)
-                    rc.Fill = Res.深灰2;
-                else
-                    rc.Fill = Res.BlackBrush;
+                    case WfiPrcStatus.结束:
+                        tbInfo.Foreground = Res.BlackBrush;
+                        tbInfo.Text = "\uE16C";
+                        ToolTipService.SetToolTip(e.Dot, "已结束");
+                        break;
 
-                tbAtv.Text = c.Row.Str("atvname");
+                    case WfiPrcStatus.终止:
+                        tbInfo.Foreground = Res.亮红;
+                        tbInfo.Text = "\uE036";
+                        ToolTipService.SetToolTip(e.Dot, "已被终止");
+                        break;
+                }
             };
         }
     }

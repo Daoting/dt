@@ -50,15 +50,17 @@ namespace Dt.Mgr.Workflow
             return _da.GetScalar<int>(string.Format(Sql待办任务总数, Kit.UserID));
         }
 
-        public static async Task<Table> GetMyHistoryPrcs(bool p_allItems, DateTime p_start, DateTime p_end, int p_status)
+        public static async Task<Table> GetMyHistoryPrcs(bool p_allItems, DateTime p_start, DateTime p_end, int p_status, long p_prcdID)
         {
             var dt = new { p_userid = Kit.UserID, p_start = p_start, p_end = p_end, p_status = p_status };
 
-            string sql = p_allItems? Sql所有经办历史任务 : Sql历史任务;
+            string sql = p_allItems ? Sql所有经办历史任务 : Sql历史任务;
+            sql = string.Format(sql, p_prcdID > 0 ? $"and prcd_id={p_prcdID}" : "");
+
             var db = await _da.GetDbType();
             if (db == DatabaseType.Oracle)
                 sql = sql.Replace("@", ":");
-                        
+
             return await _da.Query(sql, dt);
         }
     }

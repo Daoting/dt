@@ -100,7 +100,7 @@ from cm_wfi_atv ai,
        and ai.atvd_id = ad.id
        and wi.reCount = 0
        and (@p_status > 2 or pi.status = @p_status)) t
- where t.no=1
+ where t.no=1 {0}
 ";
 
         // 用户在一个流程实例中参与的所有任务
@@ -141,7 +141,7 @@ from cm_wfi_atv ai,
        and ai.prci_id = pi.id
        and pi.prcd_id = pd.id
        and ai.atvd_id = ad.id
-       and (@p_status > 2 or pi.status = @p_status)
+       and (@p_status > 2 or pi.status = @p_status) {0}
  order by wi.stime desc
 ";
 
