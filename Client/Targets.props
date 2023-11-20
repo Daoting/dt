@@ -4,10 +4,10 @@
         <!-- 默认目标框架 -->
 		<TargetFrameworks>net7.0;net7.0-android;net7.0-ios</TargetFrameworks>
         <!-- 覆盖默认 -->
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Droid.sln'">net7.0-android</TargetFrameworks>
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-IOS.sln'">net7.0-ios</TargetFrameworks>
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Wasm.sln'">net7.0</TargetFrameworks>
-        <TargetFrameworks Condition="'$(SolutionFileName)' == 'Client-Win.sln'"></TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-android'))">net7.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-ios'))">net7.0-ios</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-wasm'))">net7.0</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-win'))"></TargetFrameworks>
         <!-- 始终包含windows目标 -->
         <TargetFrameworks>$(TargetFrameworks);net7.0-windows10.0.19041</TargetFrameworks>
 	</PropertyGroup>
