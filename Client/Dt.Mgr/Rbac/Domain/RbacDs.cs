@@ -156,6 +156,15 @@ namespace Dt.Mgr.Rbac
 
             return await _da.FirstCol<long>(string.Format(Sql角色列表的用户, string.Join(',', p_roleIDs)));
         }
+
+        public static async Task<bool> ExistsUserRole(long p_userID, long p_roleID)
+        {
+            // 任何人
+            if (p_roleID == 1)
+                return true;
+
+            return await _da.GetScalar<int>($"select count(*) from cm_user_role where user_id={p_userID} and role_id={p_roleID}") > 0;
+        }
         #endregion
 
         #region 分组角色

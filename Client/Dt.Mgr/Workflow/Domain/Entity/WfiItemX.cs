@@ -51,7 +51,7 @@ namespace Dt.Mgr.Workflow
             return Query(string.Format(Sql后续活动工作项, p_atvdid, p_prciid));
         }
 
-        public static async Task<Row> GetLastItem(long p_prciid)
+        public static async Task<WfiItemX> GetLastItem(long p_prciid)
         {
             return await First(string.Format(Sql最后工作项, p_prciid));
         }

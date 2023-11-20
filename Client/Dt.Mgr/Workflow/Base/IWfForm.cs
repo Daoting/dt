@@ -21,7 +21,7 @@ namespace Dt.Mgr
         /// 初始化表单
         /// </summary>
         /// <param name="p_info"></param>
-        void Init(WfFormInfo p_info);
+        Task Init(WfFormInfo p_info);
 
         /// <summary>
         /// 保存表单数据

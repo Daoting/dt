@@ -138,11 +138,11 @@ namespace Dt.Mgr.Workflow
         public static async Task<bool> SaveForm(WfFormInfo p_info)
         {
             // 先保存表单数据
-            if (!await p_info.FormWin.Save())
+            if (!await p_info.Form.Save())
                 return false;
 
             // 标题
-            string name = p_info.FormWin.GetPrcName();
+            string name = p_info.Form.GetPrcName();
             if (name != p_info.PrcInst.Name)
             {
                 p_info.PrcInst.Name = name;
@@ -882,14 +882,14 @@ namespace Dt.Mgr.Workflow
         #region 删除
         public static async Task Delete(WfFormInfo p_info)
         {
-            if (p_info.Usage == WfFormUsage.Read)
+            if (p_info.IsReadOnly)
             {
                 Kit.Warn("禁止删除表单！");
                 return;
             }
 
             // 管理时始终可删除
-            if (p_info.Usage == WfFormUsage.Edit
+            if (!p_info.IsReadOnly
                 && (p_info.AtvDef == null || (!p_info.AtvDef.CanDelete && p_info.AtvDef.Type != WfdAtvType.Start)))
             {
                 Kit.Warn("您无权删除当前表单！请回退或发送到其他用户进行删除。");
@@ -899,7 +899,7 @@ namespace Dt.Mgr.Workflow
             if (!await Kit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
-            if (await p_info.FormWin.Delete())
+            if (await p_info.Form.Delete())
             {
                 if (!p_info.PrcInst.IsAdded)
                 {

@@ -15,9 +15,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Dt.Mgr;
+using Dt.Mgr.Workflow;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Base
 {
     /// <summary>
     /// 查看日志

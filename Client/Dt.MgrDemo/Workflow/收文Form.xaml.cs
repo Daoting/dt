@@ -16,7 +16,7 @@ using System.ComponentModel;
 namespace Dt.MgrDemo.Workflow
 {
     [WfForm("收文样例")]
-    public partial class 收文Form : UserControl, IWfForm
+    public partial class 收文Form : Tab, IWfForm
     {
         WfFormInfo _info;
 
@@ -25,9 +25,10 @@ namespace Dt.MgrDemo.Workflow
             InitializeComponent();
         }
 
-        public async void Init(WfFormInfo p_info)
+        public async Task Init(WfFormInfo p_info)
         {
             _info = p_info;
+            Title = p_info.PrcDef.Name;
 
             if (_info.IsNew)
             {
@@ -56,6 +57,8 @@ namespace Dt.MgrDemo.Workflow
                     _fv.Hide("收文完成时间");
                     break;
             }
+
+            Menu = await _info.CreateMenu(_fv);
         }
 
         void OnUploaded(object sender, PropertyChangedEventArgs e)

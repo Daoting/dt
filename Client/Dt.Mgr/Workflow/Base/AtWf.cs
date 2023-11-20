@@ -23,36 +23,30 @@ namespace Dt.Mgr
     public static class AtWf
     {
         /// <summary>
-        /// 打开流程表单窗口（创建、编辑或浏览表单）
+        /// 打开流程表单窗口（创建、编辑或浏览表单），参数优先级：
+        /// 1. itemID > 0 时，其余两项无效，以当前工作项为标准
+        /// 2. prciID > 0 时，以该流程实例的最后工作项为标准
+        /// 3. 提供流程名称时，创建新工作项、流程实例、起始活动实例
         /// </summary>
-        /// <param name="p_info">流程表单描述信息</param>
-        public static async void OpenFormWin(WfFormInfo p_info)
+        /// <param name="p_itemID">工作项标识</param>
+        /// <param name="p_prciID">流程实例标识</param>
+        /// <param name="p_prcName">流程名称</param>
+        public static async void OpenFormWin(long p_itemID = -1, long p_prciID = -1, string p_prcName = null)
         {
-            Throw.IfNull(p_info, "流程表单描述信息不可为空！");
+            WfFormInfo info = new WfFormInfo();
+            await info.Init(p_itemID, p_prciID, p_prcName);
 
-            if (!Kit.IsPhoneUI)
+            if (info.FormType.IsSubclassOf(typeof(Win)))
             {
-                // 因p_info.Init耗时，先激活已打开的窗口，Kit.OpenWin中也有判断
-                Win win = Desktop.Inst.ActiveWin(typeof(WfFormWin), p_info);
-                if (win != null)
-                    return;
+                // 需要在窗口内部设置 info.Form ！
+                info.FormWin = (Win)Kit.OpenWin(info.FormType, info.PrcInst.Name, Icons.None, info);
             }
-
-            await p_info.Init();
-            p_info.FormWin = (WfFormWin)Kit.OpenWin(typeof(WfFormWin), p_info.PrcInst.Name, Icons.None, p_info);
-        }
-
-        /// <summary>
-        /// 创建流程表单窗口
-        /// </summary>
-        /// <param name="p_info">流程表单描述信息</param>
-        /// <returns></returns>
-        public static async Task<WfFormWin> CreateFormWin(WfFormInfo p_info)
-        {
-            await p_info.Init();
-            var win = new WfFormWin(p_info);
-            p_info.FormWin = win;
-            return win;
+            else
+            {
+                var win = (WfFormWin)Kit.OpenWin(typeof(WfFormWin), info.PrcInst.Name, Icons.None, info);
+                info.FormWin = win;
+                info.Form = win.Form;
+            }
         }
 
         /// <summary>
@@ -82,18 +76,18 @@ namespace Dt.Mgr
         /// <param name="p_lv"></param>
         public static void AddMenu(Lv p_lv)
         {
-            Throw.IfNull(p_lv);
-            p_lv.ItemDoubleClick += (s, e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
+            //Throw.IfNull(p_lv);
+            //p_lv.ItemDoubleClick += (s, e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
 
-            Menu menu = new Menu();
-            var mi = new Mi { ID = "查看表单", Icon = Icons.全选 };
-            mi.Click += (s, e) => OpenFormWin(new WfFormInfo(e.Row.Long("id")));
-            menu.Items.Add(mi);
+            //Menu menu = new Menu();
+            //var mi = new Mi { ID = "查看表单", Icon = Icons.全选 };
+            //mi.Click += (s, e) => OpenFormWin(new WfFormInfo(e.Row.Long("id")));
+            //menu.Items.Add(mi);
 
-            mi = new Mi { ID = "日志", Icon = Icons.审核 };
-            mi.Click += (s, e) => ShowLog(e.Row.Long("id"));
-            menu.Items.Add(mi);
-            Ex.SetMenu(p_lv, menu);
+            //mi = new Mi { ID = "日志", Icon = Icons.审核 };
+            //mi.Click += (s, e) => ShowLog(e.Row.Long("id"));
+            //menu.Items.Add(mi);
+            //Ex.SetMenu(p_lv, menu);
         }
 
     }

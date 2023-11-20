@@ -2,13 +2,7 @@
     x:Class="Dt.Mgr.Workflow.WfFormWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    xmlns:wf="using:Dt.Mgr.Workflow">
+    xmlns:a="using:Dt.Base">
 
-    <a:Main>
-        <a:Tabs>
-            <a:Tab x:Name="_tab" />
-        </a:Tabs>
-    </a:Main>
-    <wf:WfLog x:Name="_log" a:Ex.Dock="Right" />
+    <a:WfLog x:Name="_log" a:Ex.Dock="Right" />
 </a:Win>

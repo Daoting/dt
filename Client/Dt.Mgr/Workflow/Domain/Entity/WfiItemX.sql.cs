@@ -29,14 +29,13 @@ where
 
         const string Sql最后工作项 = @"
 select
-	wi.id itemid,
-	pi.prcd_id prcid 
+	wi.*
 from
 	cm_wfi_item wi,
 	cm_wfi_atv wa,
 	cm_wfi_prc pi 
 where
-	wi.atvi_id = wa.id 
+	wi.atvi_id = wa.id
 	and wa.prci_id = pi.id 
 	and pi.id = {0}
 order by

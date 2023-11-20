@@ -92,8 +92,7 @@ namespace Dt.Mgr.Workflow
 
         void ShowFormWin(Row p_row)
         {
-            var info = new WfFormInfo(p_row.Long("id"), WfFormUsage.Manage);
-            AtWf.OpenFormWin(info);
+            AtWf.OpenFormWin(p_prciID: p_row.ID);
         }
     }
 }

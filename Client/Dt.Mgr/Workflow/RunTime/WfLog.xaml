@@ -1,5 +1,5 @@
 ﻿<a:Tab
-    x:Class="Dt.Mgr.Workflow.WfLog"
+    x:Class="Dt.Base.WfLog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

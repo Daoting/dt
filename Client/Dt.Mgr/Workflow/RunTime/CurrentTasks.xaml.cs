@@ -77,7 +77,7 @@ namespace Dt.Mgr.Workflow
 
         void OpenForm(Row p_row)
         {
-            AtWf.OpenFormWin(new WfFormInfo(p_row.Long("prcd_id"), p_row.Long("item_id"), WfFormUsage.Edit));
+            AtWf.OpenFormWin(p_itemID: p_row.Long("item_id"));
         }
     }
 

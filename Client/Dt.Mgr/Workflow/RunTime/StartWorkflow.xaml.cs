@@ -36,18 +36,18 @@ namespace Dt.Mgr.Workflow
 
         void OnItemDoubleClick(object sender, object e)
         {
-            StartNew(e.To<Row>().ID);
+            StartNew(e.To<Row>().Str("name"));
         }
 
         void OnStart(object sender, Mi e)
         {
-            StartNew(_lv.SelectedRow.ID);
+            StartNew(_lv.SelectedRow.Str("name"));
         }
 
-        void StartNew(long p_prcID)
+        void StartNew(string p_prcName)
         {
             Close();
-            AtWf.OpenFormWin(new WfFormInfo(p_prcID, -1, WfFormUsage.Edit));
+            AtWf.OpenFormWin(p_prcName: p_prcName);
         }
     }
 }

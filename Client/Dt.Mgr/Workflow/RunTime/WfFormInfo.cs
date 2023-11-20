@@ -13,6 +13,7 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dt.Mgr.Rbac;
 #endregion
 
 namespace Dt.Mgr
@@ -24,9 +25,6 @@ namespace Dt.Mgr
     {
         #region 成员变量
         static readonly Dictionary<long, WfdPrcX> _prcDefs = new Dictionary<long, WfdPrcX>();
-        long _prcID;
-        long _prciID;
-        long _itemID;
         bool _locked;
 
         WfSaveCmd _cmdSave;
@@ -35,25 +33,6 @@ namespace Dt.Mgr
         WfAcceptCmd _cmdAccept;
         WfDeleteCmd _cmdDelete;
         WfLogCmd _cmdLog;
-        #endregion
-
-        #region 构造方法
-        public WfFormInfo(long p_prcID, long p_itemID, WfFormUsage p_usage)
-        {
-            _prcID = p_prcID;
-            _itemID = p_itemID;
-            _prciID = -1;
-            Usage = p_usage;
-        }
-
-        public WfFormInfo(long p_prciID, WfFormUsage p_usage = WfFormUsage.Read)
-        {
-            // 流程模板id 和 最后工作项id根据流程实例id查询
-            _prciID = p_prciID;
-            _prcID = -1;
-            _itemID = -1;
-            Usage = p_usage;
-        }
         #endregion
 
         #region 事件
@@ -72,42 +51,22 @@ namespace Dt.Mgr
         /// <summary>
         /// 获取当前状态名称（即活动名称）
         /// </summary>
-        public string State
-        {
-            get
-            {
-                // 管理时无状态
-                if (Usage == WfFormUsage.Manage)
-                    return null;
-                return AtvDef.Name;
-            }
-        }
+        public string State => AtvDef.Name;
 
         /// <summary>
         /// 业务数据主键，也是流程实例主键
         /// </summary>
-        public long ID
-        {
-            get { return PrcInst.ID; }
-        }
+        public long ID => PrcInst.ID;
 
         /// <summary>
         /// 是否为新表单
         /// </summary>
-        public bool IsNew
-        {
-            get { return _itemID < 0; }
-        }
+        public bool IsNew => PrcInst.IsAdded;
 
         /// <summary>
-        /// 获取设置表单的使用场景
+        /// 表单是否只读状态
         /// </summary>
-        public WfFormUsage Usage { get; }
-
-        /// <summary>
-        /// 获取表单菜单
-        /// </summary>
-        public Menu Menu { get; internal set; }
+        public bool IsReadOnly { get; private set; }
 
         /// <summary>
         /// 获取流程模板定义
@@ -149,13 +108,18 @@ namespace Dt.Mgr
         {
             get { return AtvDef.Type == WfdAtvType.Start; }
         }
+
+        /// <summary>
+        /// 流程表单界面
+        /// </summary>
+        public IWfForm Form { get; set; }
         #endregion
 
         #region 内部属性
         /// <summary>
-        /// 流程表单窗口
+        /// 流程表单所在窗口
         /// </summary>
-        internal WfFormWin FormWin { get; set; }
+        internal Win FormWin { get; set; }
 
         /// <summary>
         /// 表单类型
@@ -249,6 +213,50 @@ namespace Dt.Mgr
         #endregion
 
         #region 外部方法
+        /// <summary>
+        /// 加载默认菜单，自动绑定命令
+        /// </summary>
+        public async Task<Menu> CreateMenu(Fv fv)
+        {
+            if (fv == null)
+                Throw.Msg("加载默认菜单需要流程表单Fv！");
+
+            Menu m = new Menu();
+            if (!IsReadOnly)
+            {
+                m.Items.Add(new Mi { ID = "发送", Icon = Icons.发出, Cmd = CmdSend });
+
+                if (await AllowRollback())
+                {
+                    m.Items.Add(new Mi { ID = "回退", Icon = Icons.追回, Cmd = CmdRollback });
+                }
+
+                if (!IsStartItem)
+                {
+                    Mi mi = new Mi { ID = "签收", Icon = Icons.锁卡, IsCheckable = true, Cmd = CmdAccept };
+                    if (WorkItem.IsAccept)
+                        mi.IsChecked = true;
+                    m.Items.Add(mi);
+                }
+
+                // 合并IsDirty属性
+                CmdSave.AllowExecute = fv.IsDirty;
+                fv.Dirty += (s, b) => CmdSave.AllowExecute = b;
+                m.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, Cmd = CmdSave });
+                m.Items.Add(new Mi { ID = "撤消", Icon = Icons.撤消, Cmd = fv.CmdUndo });
+
+                if (AtvDef.CanDelete || AtvDef.Type == WfdAtvType.Start)
+                    m.Items.Add(new Mi { ID = "删除", Icon = Icons.垃圾箱, Cmd = CmdDelete });
+            }
+            else
+            {
+                fv.IsReadOnly = true;
+            }
+            return m;
+        }
+        #endregion
+
+        #region 内部方法
         internal async void RunCmd(Func<WfFormInfo, Task> p_func)
         {
             if (_locked)
@@ -300,7 +308,7 @@ namespace Dt.Mgr
         /// <summary>
         /// 加载流程定义
         /// </summary>
-        /// <param name="p_prcID"></param>
+        /// <param name="p_prcID">流程标识</param>
         /// <returns></returns>
         internal static async Task<WfdPrcX> GetPrcDef(long p_prcID)
         {
@@ -309,6 +317,25 @@ namespace Dt.Mgr
             {
                 def = await WfdPrcX.GetByID(p_prcID);
                 _prcDefs[p_prcID] = def;
+            }
+            return def;
+        }
+
+        /// <summary>
+        /// 加载流程定义
+        /// </summary>
+        /// <param name="p_prcName"></param>
+        /// <returns></returns>
+        internal static async Task<WfdPrcX> GetPrcDef(string p_prcName)
+        {
+            WfdPrcX def = (from pr in _prcDefs
+                           where pr.Value.Name == p_prcName
+                           select pr.Value).FirstOrDefault();
+            if (def == null)
+            {
+                def = await WfdPrcX.GetByKey("name", p_prcName);
+                if (def != null)
+                    _prcDefs[def.ID] = def;
             }
             return def;
         }
@@ -333,33 +360,83 @@ namespace Dt.Mgr
         #endregion
 
         #region 初始化
-        internal async Task Init()
+        /// <summary>
+        /// 1. itemID > 0 时，其余两项无效，以当前工作项为标准
+        /// 2. prciID > 0 时，以该流程实例的最后工作项为标准
+        /// 3. 提供流程名称时，创建新工作项、流程实例、起始活动实例
+        /// </summary>
+        /// <param name="p_itemID">工作项标识</param>
+        /// <param name="p_prciID">流程实例标识</param>
+        /// <param name="p_prcName">流程名称</param>
+        internal async Task Init(long p_itemID, long p_prciID, string p_prcName)
         {
-            // 根据流程实例id获取流程id 和 最后工作项id
-            if (_prciID > 0)
+            if (p_itemID > 0)
             {
-                var row = await WfiItemX.GetLastItem(_prciID);
-                _prcID = row.Long("prcID");
-                _itemID = row.Long("itemID");
+                // 当前工作项
+                WorkItem = await WfiItemX.GetByID(p_itemID);
+                AtvInst = await WfiAtvX.First($"where id={WorkItem.AtviID}");
+                AtvDef = await WfdAtvX.GetByID(AtvInst.AtvdID);
+                PrcInst = await WfiPrcX.First($"where id={AtvInst.PrciID}");
+                PrcDef = await GetPrcDef(PrcInst.PrcdID);
             }
+            else if (p_prciID > 0)
+            {
+                // 根据流程实例id获取最后工作项
+                WorkItem = await WfiItemX.GetLastItem(p_prciID);
+                AtvInst = await WfiAtvX.First($"where id={WorkItem.AtviID}");
+                AtvDef = await WfdAtvX.GetByID(AtvInst.AtvdID);
+                PrcInst = await WfiPrcX.First($"where id={p_prciID}");
+                PrcDef = await GetPrcDef(PrcInst.PrcdID);
+            }
+            else if (!string.IsNullOrEmpty(p_prcName))
+            {
+                // 创建新工作项、流程实例、起始活动实例
+                PrcDef = await GetPrcDef(p_prcName);
+                AtvDef = await WfdAtvX.First($"where prc_id={PrcDef.ID} and type=1");
 
-            // 加载流程定义
-            PrcDef = await GetPrcDef(_prcID);
+                PrcInst = await WfiPrcX.New(
+                    PrcdID: PrcDef.ID,
+                    Name: PrcDef.Name);
+
+                AtvInst = await WfiAtvX.New(
+                    PrciID: PrcInst.ID,
+                    AtvdID: AtvDef.ID,
+                    InstCount: 1);
+
+                WorkItem = await WfiItemX.New(
+                    AtviID: AtvInst.ID,
+                    AssignKind: WfiItemAssignKind.起始指派,
+                    IsAccept: true,
+                    Status: WfiItemStatus.活动,
+                    UserID: Kit.UserID,
+                    SenderID: Kit.UserID,
+                    Sender: Kit.UserName);
+            }
+            else
+            {
+                Throw.Msg("WfFormInfo 实例的所有标识都无效！");
+            }
 
             FormType = Kit.GetTypeByAlias(typeof(WfFormAttribute), PrcDef.Name);
             Throw.IfNull(FormType, $"未指定流程表单类型，请在流程表单类型上添加 [WfForm(\"{PrcDef.Name}\")] 标签！");
-            if (FormType.GetInterface("IWfForm") != typeof(IWfForm))
+            if (!FormType.IsSubclassOf(typeof(Win)) && FormType.GetInterface("IWfForm") != typeof(IWfForm))
                 Throw.Msg("任务表单类型需要继承自IWfForm！");
 
-            // 加载活动定义、流程实例、活动实例、工作项
-            if (_itemID < 0)
-                await CreateWorkItem();
+            // 确定表单是否可编辑
+            if (WorkItem.Status == WfiItemStatus.活动
+                && (WorkItem.UserID == Kit.UserID
+                    || (WorkItem.RoleID.HasValue && await RbacDs.ExistsUserRole(Kit.UserID, WorkItem.RoleID.Value))))
+            {
+                IsReadOnly = false;
+            }
             else
-                await LoadWorkItem();
+            {
+                IsReadOnly = true;
+            }
 
             // 自动签收
-            if (_itemID > 0
-                && Usage == WfFormUsage.Edit
+            if (!IsNew
+                && !IsReadOnly
                 && AtvDef.AutoAccept
                 && !WorkItem.IsAccept)
             {
@@ -368,38 +445,6 @@ namespace Dt.Mgr
                 if (await WorkItem.Save())
                     Kit.Msg("已自动签收！");
             }
-        }
-
-        async Task CreateWorkItem()
-        {
-            // 起始活动
-            AtvDef = await WfdAtvX.First($"where prc_id={_prcID} and type=1");
-
-            PrcInst = await WfiPrcX.New(
-                PrcdID: _prcID,
-                Name: PrcDef.Name);
-
-            AtvInst = await WfiAtvX.New(
-                PrciID: PrcInst.ID,
-                AtvdID: AtvDef.ID,
-                InstCount: 1);
-
-            WorkItem = await WfiItemX.New(
-                AtviID: AtvInst.ID,
-                AssignKind: WfiItemAssignKind.起始指派,
-                IsAccept: true,
-                Status: WfiItemStatus.活动,
-                UserID: Kit.UserID,
-                SenderID: Kit.UserID,
-                Sender: Kit.UserName);
-        }
-
-        async Task LoadWorkItem()
-        {
-            PrcInst = await WfiPrcX.First($"where id=(select prci_id from cm_wfi_atv where id=(select atvi_id from cm_wfi_item where id={_itemID}))");
-            AtvInst = await WfiAtvX.First($"where id=(select atvi_id from cm_wfi_item where id={_itemID})");
-            WorkItem = await WfiItemX.GetByID(_itemID);
-            AtvDef = await WfdAtvX.GetByID(AtvInst.AtvdID);
         }
         #endregion
 
@@ -413,8 +458,9 @@ namespace Dt.Mgr
                 return true;
 
             // 只比较标识，识别窗口用
-            WfFormInfo info = (WfFormInfo)obj;
-            return info._itemID == _itemID && info._prcID == _prcID;
+            if (obj is WfFormInfo info)
+                return info.WorkItem.ID == WorkItem.ID;
+            return false;
         }
 
         public override int GetHashCode()
