@@ -165,19 +165,19 @@
 			<Button guid="guidDtPackageCmdSet" id="InsertTabCmdId" priority="0x0101" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
 				<Strings>
-					<ButtonText>模块视图</ButtonText>
+					<ButtonText>模块Tab</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidDtPackageCmdSet" id="InsertWinCmdId" priority="0x0102" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
 				<Strings>
-					<ButtonText>窗口</ButtonText>
+					<ButtonText>窗口Win</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidDtPackageCmdSet" id="InsertDlgCmdId" priority="0x0103" type="Button">
 				<Parent guid="guidDtPackageCmdSet" id="MyFolderPrjItemGroup" />
 				<Strings>
-					<ButtonText>对话框</ButtonText>
+					<ButtonText>对话框Dlg</ButtonText>
 				</Strings>
 			</Button>
 
