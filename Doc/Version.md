@@ -21,6 +21,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 按照pg规范表、字段都小写
 * cm_user 增改acc name，cm_wfi_item增加sender_id
 * 区分账号、姓名，业务系统在绑定账号时可设置姓名
+* sln后缀统一小写
 
 ### 功能
 * Lv表格调整列宽时按住ctrl显示宽度消息
@@ -60,6 +61,9 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 简化流程设计二级窗口
 * 流程日志适配pg
 * 流程工作项cm_wfi_item中添加sender_id
+* 待办任务显示留言
+* Win.LoadMain 支持加载 Tab
+* 移除WfFormUsage，动态判断表单编辑状态
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
