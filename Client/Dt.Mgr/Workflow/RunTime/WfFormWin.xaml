@@ -4,5 +4,4 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:WfLog x:Name="_log" a:Ex.Dock="Right" />
 </a:Win>

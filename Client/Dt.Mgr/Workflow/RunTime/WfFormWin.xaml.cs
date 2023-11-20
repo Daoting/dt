@@ -22,8 +22,14 @@ namespace Dt.Mgr.Workflow
         {
             InitializeComponent();
 
+            if (!Kit.IsPhoneUI)
+            {
+                WfLog log = new WfLog();
+                Ex.SetDock(log, Base.Docking.PanePosition.Right);
+                Items.Add(log);
+                log.Show(p_info.PrcInst.ID, p_info.PrcDef.ID);
+            }
             _form = (IWfForm)Activator.CreateInstance(p_info.FormType);
-            _log.Show(p_info.PrcInst.ID, p_info.PrcDef.ID);
             LoadForm(p_info);
         }
 
