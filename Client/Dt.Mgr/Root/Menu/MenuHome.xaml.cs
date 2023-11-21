@@ -19,6 +19,7 @@ namespace Dt.Mgr.Home
     public partial class MenuHome : Tab
     {
         Dlg _dlg;
+        Tab _tab;
 
         public MenuHome()
         {
@@ -80,6 +81,9 @@ namespace Dt.Mgr.Home
             Menu = p_tab.Menu;
             Content = p_tab.Content;
             p_tab.Tag = this;
+
+            // 在android上，若不设为成员变量，Tab内的所有事件不触发，像被回收了！
+            _tab = p_tab;
         }
     }
 }
