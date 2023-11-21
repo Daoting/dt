@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-17 创建
+* 日志: 2023-11-21 创建
 ******************************************************************************/
 #endregion
 
@@ -37,10 +37,10 @@ namespace Dt.MgrDemo
             row.Add<string>("限长4");
             row.Add<string>("不重复");
             row.Add<string>("扩展1名称");
-            row.Add<bool>("禁止选中");
-            row.Add<bool>("禁止保存");
+            row.Add<bool?>("禁止选中");
+            row.Add<bool?>("禁止保存");
             row.Add<string>("扩展2名称");
-            row.Add<bool>("禁止删除");
+            row.Add<bool?>("禁止删除");
             row.Add<string>("值变事件");
 
             _fv.Data = row;

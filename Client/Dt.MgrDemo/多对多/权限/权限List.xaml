@@ -5,23 +5,10 @@
     xmlns:a="using:Dt.Base"
     Title="权限列表">
 
-    <a:Tab.Resources>
-        <a:Cols x:Key="TableView">
-            <a:Col ID="权限名称" />
-        </a:Cols>
-
-        <DataTemplate x:Key="ListView">
-            <StackPanel Padding="10">
-                <a:Dot ID="权限名称" />
-            </StackPanel>
-        </DataTemplate>
-    </a:Tab.Resources>
-
     <a:Tab.Menu>
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
-            <a:Mi x:Name="_mi" ID="列表" Icon="列表" ShowInPhone="Icon" Click="OnToggleView" />
         </a:Menu>
     </a:Tab.Menu>
 
@@ -31,5 +18,8 @@
                 <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" />
             </a:Menu>
         </a:Ex.Menu>
+        <a:Cols>
+            <a:Col ID="权限名称" />
+        </a:Cols>
     </a:Lv>
 </a:Tab>

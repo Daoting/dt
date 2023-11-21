@@ -28,9 +28,6 @@ namespace Dt.Mgr.Workflow
         public CurrentTasks()
         {
             InitializeComponent();
-
-            if (!Kit.IsPhoneUI)
-                _lv.ViewMode = ViewMode.Table;
             _lv.FirstLoaded(Refresh);
         }
 

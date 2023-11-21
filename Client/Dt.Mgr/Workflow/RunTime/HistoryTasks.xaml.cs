@@ -25,9 +25,6 @@ namespace Dt.Mgr.Workflow
         public HistoryTasks()
         {
             InitializeComponent();
-
-            if (!Kit.IsPhoneUI)
-                _lv.ViewMode = ViewMode.Table;
             LoadSearchData();
         }
 

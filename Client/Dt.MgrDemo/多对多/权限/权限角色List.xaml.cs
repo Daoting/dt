@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-26 创建
+* 日志: 2023-11-21 创建
 ******************************************************************************/
 #endregion
 
@@ -19,7 +19,6 @@ namespace Dt.MgrDemo
         public 权限角色List()
         {
             InitializeComponent();
-            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
         }
         #endregion
 
@@ -105,29 +104,6 @@ namespace Dt.MgrDemo
         {
             _lv.SelectionMode = SelectionMode.Single;
             Menu.ShowExcept("删除", "全选", "取消");
-        }
-        #endregion
-
-        #region 视图
-        void OnToggleView(object sender, Mi e)
-        {
-            ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
-        }
-
-        void ToggleView(ViewMode p_mode)
-        {
-            if (p_mode == ViewMode.List)
-            {
-                _lv.ChangeView(Resources["ListView"], ViewMode.List);
-                _mi.Icon = Icons.表格;
-                _mi.ID = "表格";
-            }
-            else
-            {
-                _lv.ChangeView(Resources["TableView"], ViewMode.Table);
-                _mi.Icon = Icons.列表;
-                _mi.ID = "列表";
-            }
         }
         #endregion
 

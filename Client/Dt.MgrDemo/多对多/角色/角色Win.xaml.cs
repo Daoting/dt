@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-26 创建
+* 日志: 2023-11-21 创建
 ******************************************************************************/
 #endregion
 
@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.MgrDemo
 {
-    [View("角色Win")]
+    [View("角色")]
     public partial class 角色Win : Win
     {
         public 角色Win()
@@ -25,9 +25,9 @@ namespace Dt.MgrDemo
 
         public 角色Form MainForm => _mainForm;
 
-        public 角色用户List 用户List => _用户List;
-
         public 角色权限List 权限List => _权限List;
+
+        public 角色用户List 用户List => _用户List;
 
     }
 }

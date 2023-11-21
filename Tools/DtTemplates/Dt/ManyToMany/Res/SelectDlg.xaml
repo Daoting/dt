@@ -12,8 +12,8 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" SelectionMode="Multiple">
-        <DataTemplate>
-$lvtemp$
-        </DataTemplate>
+        <a:Cols>
+$lvcols$
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

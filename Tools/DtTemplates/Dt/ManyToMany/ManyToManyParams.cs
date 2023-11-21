@@ -53,7 +53,6 @@ namespace Dt
         {
             var dt = BaseParams;
             dt["$entity$"] = MainEntity;
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { MainTbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { MainTbl });
             //dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { MainTbl });
 
@@ -97,7 +96,6 @@ namespace Dt
             var dt = BaseParams;
             dt["$childroot$"] = p_ci.Root;
             dt["$entity$"] = p_ci.Entity;
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { p_ci.Tbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { p_ci.Tbl });
 
             dt["$relatedentity$"] = p_ci.RelatedEntity;

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-10-26 创建
+* 日志: 2023-11-21 创建
 ******************************************************************************/
 #endregion
 
@@ -104,8 +104,8 @@ namespace Dt.MgrDemo
 
         void UpdateRelated(long p_id)
         {
-            _win.用户List.Update(p_id);
             _win.权限List.Update(p_id);
+            _win.用户List.Update(p_id);
         }
 
         protected override Task<bool> OnClosing()

@@ -12,11 +12,9 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" SelectionMode="Multiple">
-        <DataTemplate>
-            <StackPanel Padding="10">
-                <a:Dot ID="角色名称" />
-                <a:Dot ID="角色描述" />
-            </StackPanel>
-        </DataTemplate>
+        <a:Cols>
+            <a:Col ID="角色名称" />
+            <a:Col ID="角色描述" />
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

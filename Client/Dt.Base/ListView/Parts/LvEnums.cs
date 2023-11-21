@@ -38,6 +38,11 @@ namespace Dt.Base
     public enum ViewMode
     {
         /// <summary>
+        /// 自动视图类型，根据View类型自行决定
+        /// </summary>
+        Auto,
+
+        /// <summary>
         /// 列表视图
         /// </summary>
         List,

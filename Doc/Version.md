@@ -64,6 +64,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 待办任务显示留言
 * Win.LoadMain 支持加载 Tab
 * 移除WfFormUsage，动态判断表单编辑状态
+* Lv的ViewMode增加Auto，部分场景可根据View类型自行决定
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
@@ -78,6 +79,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 可null枚举类型的显示
 * CList选择后跳两格
 * sqlite的sql语句中参数值null时必须转为 DBNull.Value
+* CDate中DateTime?类型时default(DateTime) 转null
 
 
 ## Release 4.2.2

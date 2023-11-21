@@ -4,22 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="关联用户">
-
-    <a:Tab.Resources>
-        <a:Cols x:Key="TableView">
-            <a:Col ID="手机号" />
-            <a:Col ID="姓名" />
-            <a:Col ID="密码" />
-        </a:Cols>
-
-        <DataTemplate x:Key="ListView">
-            <StackPanel Padding="10">
-                <a:Dot ID="手机号" />
-                <a:Dot ID="姓名" />
-                <a:Dot ID="密码" />
-            </StackPanel>
-        </DataTemplate>
-    </a:Tab.Resources>
     
     <a:Tab.Menu>
         <a:Menu>
@@ -28,7 +12,6 @@
             <a:Mi ID="全选" Icon="正确" Click="OnSelectAll" Visibility="Collapsed" />
             <a:Mi ID="选择" Icon="全选" Click="OnMultiMode" />
             <a:Mi ID="取消" Icon="全选" Click="OnCancelMulti" Visibility="Collapsed" />
-            <a:Mi x:Name="_mi" ID="列表" Icon="列表" ShowInPhone="Icon" Click="OnToggleView" />
         </a:Menu>
     </a:Tab.Menu>
 
@@ -38,5 +21,10 @@
                 <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" />
             </a:Menu>
         </a:Ex.Menu>
+        <a:Cols>
+            <a:Col ID="手机号" />
+            <a:Col ID="姓名" />
+            <a:Col ID="密码" />
+        </a:Cols>
     </a:Lv>
 </a:Tab>

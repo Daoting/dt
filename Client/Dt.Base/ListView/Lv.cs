@@ -39,7 +39,7 @@ namespace Dt.Base
             "ViewMode",
             typeof(ViewMode),
             typeof(Lv),
-            new PropertyMetadata(ViewMode.List, OnViewModeChanged));
+            new PropertyMetadata(ViewMode.Auto, OnViewModeChanged));
 
         public readonly static DependencyProperty ItemStyleProperty = DependencyProperty.Register(
             "ItemStyle",
@@ -145,9 +145,13 @@ namespace Dt.Base
             var lv = (Lv)d;
             if (e.NewValue != null)
             {
-                if (lv._panel == null)
+                var vm = lv.CurrentViewMode;
+                if (lv._panel == null
+                    || (vm == ViewMode.List && lv._panel is not ListPanel)
+                    || (vm == ViewMode.Table && lv._panel is not TablePanel)
+                    || (vm == ViewMode.Tile && lv._panel is not TilePanel))
                 {
-                    // 初次设置View
+                    // 初次设置View 或 视图类型与视图面板不同时
                     lv.LoadPanel();
                 }
                 else
@@ -199,7 +203,7 @@ namespace Dt.Base
         static void OnShowListHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Lv lv = (Lv)d;
-            if (lv.ViewMode == ViewMode.List)
+            if (lv.CurrentViewMode == ViewMode.List)
                 lv.ReloadPanelContent();
         }
         #endregion
@@ -260,7 +264,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置视图类型：列表、表格、磁贴，默认List
+        /// 获取设置视图类型：自动、列表、表格、磁贴，默认Auto
         /// </summary>
         public ViewMode ViewMode
         {
@@ -438,9 +442,32 @@ namespace Dt.Base
             get { return !(View is DataTemplateSelector || double.IsNaN(ItemHeight) || View is IRowView); }
         }
 
+        /// <summary>
+        /// 当前实际采用的视图类型
+        /// </summary>
         internal ViewMode CurrentViewMode
         {
-            get { return Kit.IsPhoneUI ? (PhoneViewMode.HasValue ? PhoneViewMode.Value : ViewMode) : ViewMode; }
+            get
+            { 
+                if (Kit.IsPhoneUI)
+                {
+                    var vm = PhoneViewMode.HasValue ? PhoneViewMode.Value : ViewMode;
+                    if (vm == ViewMode.Auto)
+                    {
+                        // 始终默认为列表视图
+                        return ViewMode.List;
+                    }
+                    return vm;
+                }
+
+                if (ViewMode == ViewMode.Auto)
+                {
+                    if (View is Cols)
+                        return ViewMode.Table;
+                    return ViewMode.List;
+                }
+                return ViewMode;
+            }
         }
 
         internal ScrollViewer Scroll { get; set; }
@@ -533,7 +560,7 @@ namespace Dt.Base
                 return;
 
             StringBuilder sb = new StringBuilder();
-            if (ViewMode == ViewMode.Table && View is Cols cols)
+            if (CurrentViewMode == ViewMode.Table && View is Cols cols)
             {
                 foreach (var item in _selectedLvItems)
                 {

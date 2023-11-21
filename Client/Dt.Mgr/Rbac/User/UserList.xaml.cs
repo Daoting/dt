@@ -19,7 +19,6 @@ namespace Dt.Mgr.Rbac
         public UserList()
         {
             InitializeComponent();
-            ToggleView(Kit.IsPhoneUI ? ViewMode.List : ViewMode.Table);
 			_lv.ItemStyle = (e) =>
             {
                 if (e.Data.To<UserX>().Expired)
@@ -208,29 +207,6 @@ namespace Dt.Mgr.Rbac
         }
 
         Dlg _dlgQuery;
-        #endregion
-
-        #region 视图
-        void OnToggleView(object sender, Mi e)
-        {
-            ToggleView(_lv.ViewMode == ViewMode.List ? ViewMode.Table : ViewMode.List);
-        }
-
-        void ToggleView(ViewMode p_mode)
-        {
-            if (p_mode == ViewMode.List)
-            {
-                _lv.ChangeView(Resources["ListView"], ViewMode.List);
-                _mi.Icon = Icons.表格;
-                _mi.ID = "表格";
-            }
-            else
-            {
-                _lv.ChangeView(Resources["TableView"], ViewMode.Table);
-                _mi.Icon = Icons.列表;
-                _mi.ID = "列表";
-            }
-        }
         #endregion
 
         #region 内部

@@ -31,7 +31,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="表格">
-                <a:Lv x:Name="_lv" ViewMode="Table" />
+                <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>

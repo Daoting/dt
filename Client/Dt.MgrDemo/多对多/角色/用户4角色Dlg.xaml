@@ -12,12 +12,10 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" SelectionMode="Multiple">
-        <DataTemplate>
-            <StackPanel Padding="10">
-                <a:Dot ID="手机号" />
-                <a:Dot ID="姓名" />
-                <a:Dot ID="密码" />
-            </StackPanel>
-        </DataTemplate>
+        <a:Cols>
+            <a:Col ID="手机号" />
+            <a:Col ID="姓名" />
+            <a:Col ID="密码" />
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

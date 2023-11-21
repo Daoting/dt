@@ -91,10 +91,8 @@ namespace Dt
             var dt = _params.Params;
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}List.xaml.cs"), "Dt.Single.Res.EntityList.xaml.cs", dt);
 
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(_params.Tbls);
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(_params.Tbls);
             Kit.WritePrjFile(Path.Combine(_path, $"{_params.ClsRoot}List.xaml"), "Dt.Single.Res.EntityList.xaml", dt);
-            dt.Remove("$lvtemp$");
             dt.Remove("$lvcols$");
         }
 

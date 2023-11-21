@@ -5,40 +5,10 @@
     xmlns:a="using:Dt.Base"
     Title="用户列表">
 
-    <a:Tab.Resources>
-        <a:Cols x:Key="TableView">
-            <a:Col ID="acc" Title="账号" Width="120" />
-            <a:Col ID="phone" Title="手机号" Width="130" />
-            <a:Col ID="name" Title="姓名" />
-            <a:Col ID="ctime" Title="创建时间" Width="120" />
-            <a:Col ID="mtime" Title="修改时间" Width="120" />
-        </a:Cols>
-
-        <DataTemplate x:Key="ListView">
-            <StackPanel Padding="6">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE062;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="acc" VerticalAlignment="Center" Margin="4,0,10,0" />
-                    <a:Dot ID="name" VerticalAlignment="Center" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                    <TextBlock Text="&#xE0C0;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
-                    <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <a:Dot ID="ctime" Call="Def.小灰" />
-                    <TextBlock Text="&#xE005;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" Style="{StaticResource 小灰}" />
-                    <a:Dot ID="mtime" Call="Def.小灰" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </StackPanel>
-            </StackPanel>
-        </DataTemplate>
-    </a:Tab.Resources>
-
     <a:Tab.Menu>
         <a:Menu>
             <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnToSearch" />
             <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
-            <a:Mi x:Name="_mi" ID="列表" Icon="列表" ShowInPhone="Icon" Click="OnToggleView" />
         </a:Menu>
     </a:Tab.Menu>
 
@@ -52,5 +22,12 @@
                 <a:Mi ID="已授权限" Icon="审核" Click="OnUserPrv" />
             </a:Menu>
         </a:Ex.Menu>
+        <a:Cols>
+            <a:Col ID="acc" Title="账号" Width="120" />
+            <a:Col ID="phone" Title="手机号" Width="130" />
+            <a:Col ID="name" Title="姓名" />
+            <a:Col ID="ctime" Title="创建时间" Width="120" />
+            <a:Col ID="mtime" Title="修改时间" Width="120" />
+        </a:Cols>
     </a:Lv>
 </a:Tab>

@@ -12,10 +12,8 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" SelectionMode="Multiple">
-        <DataTemplate>
-            <StackPanel Padding="10">
-                <a:Dot ID="权限名称" />
-            </StackPanel>
-        </DataTemplate>
+        <a:Cols>
+            <a:Col ID="权限名称" />
+        </a:Cols>
     </a:Lv>
 </a:Dlg>

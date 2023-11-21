@@ -81,10 +81,10 @@ namespace Dt.Base
         /// </summary>
         public NavViewMode ViewMode
         {
-            get { return _lv.ViewMode == Base.ViewMode.List ? NavViewMode.List : NavViewMode.Tile; }
+            get { return _lv.ViewMode == Base.ViewMode.Tile ? NavViewMode.Tile : NavViewMode.List; }
             set
             {
-                var mode = value == NavViewMode.List ? Base.ViewMode.List : Base.ViewMode.Tile;
+                var mode = value == NavViewMode.Tile ? Base.ViewMode.Tile : Base.ViewMode.List;
                 if (mode != _lv.ViewMode)
                 {
                     if (ItemTemplate != null)

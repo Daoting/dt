@@ -259,7 +259,7 @@ namespace Dt.Base
                         ClipElement = _grid,
                         MaxHeight = 300,
                     };
-                    if (ViewMode != ViewMode.Table)
+                    if (_lv.CurrentViewMode != ViewMode.Table)
                         _dlg.Width = _grid.ActualWidth > 0 ? _grid.ActualWidth : 300;
                 }
             }

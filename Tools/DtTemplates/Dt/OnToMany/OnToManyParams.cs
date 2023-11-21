@@ -56,7 +56,6 @@ namespace Dt
         {
             var dt = BaseParams;
             dt["$entity$"] = ParentEntity;
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { ParentTbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { ParentTbl });
             //dt["$blurclause$"] = await AtSvc.GetBlurClause(new List<string> { ParentTbl });
 
@@ -100,7 +99,6 @@ namespace Dt
             var dt = BaseParams;
             dt["$childroot$"] = p_ci.Root;
             dt["$entity$"] = p_ci.Entity;
-            dt["$lvtemp$"] = await AtSvc.GetLvItemTemplate(new List<string> { p_ci.Tbl });
             dt["$lvcols$"] = await AtSvc.GetLvTableCols(new List<string> { p_ci.Tbl });
             dt["$fvbody$"] = await AtSvc.GetFvCells(new List<string> { p_ci.Tbl });
             dt["$parentid$"] = p_ci.ParentID;
