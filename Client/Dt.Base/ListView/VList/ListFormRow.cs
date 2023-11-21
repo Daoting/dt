@@ -99,7 +99,7 @@ namespace Dt.Base.ListView
                 // 行号
                 if (!cols.HideIndex)
                 {
-                    TextBlock tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = TableRow.TextMargin };
+                    TextBlock tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Margin = TableRow.TextMargin, Foreground = Res.主蓝 };
                     tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("FullIndex") });
                     sp.Children.Add(tb);
                 }
@@ -126,7 +126,7 @@ namespace Dt.Base.ListView
                     Height = col.RowSpan * Res.RowOuterHeight,
                     ColumnDefinitions =
                     {
-                        new ColumnDefinition { Width = new GridLength(140) },
+                        new ColumnDefinition { Width = new GridLength(120) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                     },
                 };
@@ -160,6 +160,15 @@ namespace Dt.Base.ListView
 
                 root.Children.Add(grid);
             }
+            var split = new Border
+            {
+                Background = Res.WhiteBrush,
+                BorderBrush = Res.浅灰2,
+                BorderThickness = bdThickness,
+                IsHitTestVisible = false,
+                Height = 6,
+            };
+            root.Children.Add(split);
             Children.Add(root);
 
             // 选择状态背景
