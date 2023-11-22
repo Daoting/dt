@@ -129,7 +129,7 @@ namespace Dt.Base.ListView
                     VisualStateManager.GoToState(this, "Normal", true);
                 }
             }
-            else if (pt.X > Col.Width - _resizePadding)
+            else if (pt.X > Col.ActualWidth - _resizePadding)
             {
                 // 右侧调列宽
                 _resizingCol = Col;
@@ -155,7 +155,7 @@ namespace Dt.Base.ListView
             if (!_isDragging && _resizingCol == null)
             {
                 Point pt = e.GetCurrentPoint(this).Position;
-                if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
+                if (pt.X >= _resizePadding && Col.ActualWidth - pt.X >= _resizePadding)
                 {
                     ResetCursor(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);
@@ -172,11 +172,11 @@ namespace Dt.Base.ListView
             if (_resizingCol != null)
             {
                 Point cur = e.GetCurrentPoint(null).Position;
-                double width = _resizingCol.Width + cur.X - _ptLast.X;
+                double width = _resizingCol.ActualWidth + cur.X - _ptLast.X;
                 if (width > 35)
                 {
                     // 最小宽度能显示一个字
-                    _resizingCol.Width = width;
+                    _resizingCol.Width = width.ToString();
                     _owner.Lv.Cols.OnColWidthChanged();
                     _ptLast = cur;
                 }
@@ -213,7 +213,7 @@ namespace Dt.Base.ListView
         {
             // _resizingCol 在 ResetMouseState() 中已为 null
             Point pt = e.GetPosition(this);
-            if (pt.X > _resizePadding && pt.X < Col.Width - _resizePadding)
+            if (pt.X > _resizePadding && pt.X < Col.ActualWidth - _resizePadding)
                 ChangedSortState();
         }
 
@@ -222,7 +222,7 @@ namespace Dt.Base.ListView
             if (e.IsMouse() && !_isDragging && _resizingCol == null)
             {
                 Point pt = e.GetCurrentPoint(this).Position;
-                if (pt.X >= _resizePadding && Col.Width - pt.X >= _resizePadding)
+                if (pt.X >= _resizePadding && Col.ActualWidth - pt.X >= _resizePadding)
                 {
                     ResetCursor(InputSystemCursorShape.Arrow);
                     VisualStateManager.GoToState(this, "PointerOver", true);

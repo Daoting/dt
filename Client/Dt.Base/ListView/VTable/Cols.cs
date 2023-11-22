@@ -50,7 +50,7 @@ namespace Dt.Base
         /// </summary>
         internal void OnColWidthChanged()
         {
-            FixWidth();
+            FixWidth(_maxWidth);
             ColWidthChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -59,20 +59,93 @@ namespace Dt.Base
         /// </summary>
         internal void OnReloading()
         {
-            FixWidth();
+            FixWidth(_maxWidth);
             Reloading?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
         /// 更新水平位置及总宽
         /// </summary>
-        internal void FixWidth()
+        internal void FixWidth(double p_maxWidth)
         {
+            _maxWidth = p_maxWidth;
             TotalWidth = 0;
+            double totalStar = 0;
+
             foreach (Col col in this.OfType<Col>())
             {
+                var str = col.Width;
+                double w = 0;
+
+                if (string.IsNullOrEmpty(str)
+                    || str.Equals("auto", StringComparison.OrdinalIgnoreCase))
+                {
+                    // auto 或 未指定时
+                    w = _defaultWidth;
+                }
+                else if (double.TryParse(str, out var width))
+                {
+                    w = width;
+                }
+                else if (str.EndsWith('*'))
+                {
+                    // star
+                    if (str.Length == 1)
+                    {
+                        totalStar += 1;
+                    }
+                    else if (double.TryParse(str.TrimEnd('*'), out var per))
+                    {
+                        totalStar += per;
+                    }
+                    else
+                    {
+                        w = _defaultWidth;
+                    }
+                }
+                else
+                {
+                    w = _defaultWidth;
+                }
+
                 col.Left = TotalWidth;
-                TotalWidth += col.Width;
+                col.ActualWidth = w;
+                TotalWidth += w;
+            }
+
+            // 列宽中有*，重新计算 ActualWidth Left
+            if (totalStar > 0)
+            {
+                double unit = p_maxWidth > TotalWidth ? (p_maxWidth - TotalWidth) / totalStar : 0;
+                // *按最小120宽
+                unit = Math.Max(unit, _defaultWidth);
+                TotalWidth = 0;
+
+                foreach (Col col in this.OfType<Col>())
+                {
+                    if (col.ActualWidth > 0)
+                    {
+                        col.Left = TotalWidth;
+                        TotalWidth += col.ActualWidth;
+                    }
+                    else
+                    {
+                        // star
+                        var str = col.Width;
+                        double per = 0;
+                        if (str.Length == 1)
+                        {
+                            per = 1;
+                        }
+                        else if (double.TryParse(str.TrimEnd('*'), out per))
+                        {
+                        }
+
+                        col.Left = TotalWidth;
+                        col.ActualWidth = Math.Floor(per * unit);
+                        TotalWidth += col.ActualWidth;
+                    }
+                }
             }
         }
 
@@ -126,5 +199,9 @@ namespace Dt.Base
             }
             OnReloading();
         }
+
+        // 6个中文字
+        const double _defaultWidth = 120d;
+        double _maxWidth;
     }
 }

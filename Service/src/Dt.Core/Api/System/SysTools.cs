@@ -535,20 +535,7 @@ namespace Dt.Core
                     if (sb.Length > 0)
                         sb.AppendLine();
                     AppendTabSpace(sb, 3);
-                    sb.Append($"<a:Col ID=\"{col.Name.ToLower()}\"{title}");
-
-                    Type tp = col.Type;
-                    if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        tp = col.Type.GetGenericArguments()[0];
-
-                    if (tp == typeof(DateTime))
-                    {
-                        sb.Append($" Width=\"110\" />");
-                    }
-                    else
-                    {
-                        sb.Append(" />");
-                    }
+                    sb.Append($"<a:Col ID=\"{col.Name.ToLower()}\"{title} />");
                 }
             }
             return sb.ToString();

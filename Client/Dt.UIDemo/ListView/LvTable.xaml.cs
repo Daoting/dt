@@ -25,7 +25,7 @@ namespace Dt.UIDemo
         {
             InitializeComponent();
 
-            _lv.View = Resources["View1"];
+            _lv.View = Resources["普通"];
             _lv.GroupName = "bumen";
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
@@ -74,8 +74,8 @@ namespace Dt.UIDemo
 
         void OnToggleView(object sender, RoutedEventArgs e)
         {
-            var view = ((Cols)_lv.View).Count == 9 ? "View2" : "View1";
-            _lv.View = Resources[view];
+            _lv.ItemHeight = 0;
+            _lv.View = Resources[((Button)sender).Tag.ToString()];
         }
     }
 }

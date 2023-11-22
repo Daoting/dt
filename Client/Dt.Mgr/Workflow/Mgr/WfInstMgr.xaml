@@ -42,7 +42,7 @@
                     <a:Cols>
                         <a:Col ID="Status" Title="状态" Width="60" />
                         <a:Col ID="Name" Title="表单名称" Width="200" />
-                        <a:Col ID="Ctime" Title="创建时间" Width="120" />
+                        <a:Col ID="Ctime" Title="创建时间" />
                         <a:Col ID="Mtime" Title="最后修改时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
                     </a:Cols>
                 </a:Lv>

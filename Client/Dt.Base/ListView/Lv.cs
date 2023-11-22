@@ -138,10 +138,6 @@ namespace Dt.Base
 
         static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Cols cols = e.NewValue as Cols;
-            if (cols != null)
-                cols.FixWidth();
-
             var lv = (Lv)d;
             if (e.NewValue != null)
             {

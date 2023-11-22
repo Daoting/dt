@@ -6,9 +6,9 @@
 
     <a:Win.Resources>
         <a:Cols x:Key="TableView">
-            <a:Col ID="xm" Title="姓名" Width="120" />
+            <a:Col ID="xm" Title="姓名" />
             <a:Col ID="bh" Title="编号" Width="80" />
-            <a:Col ID="chushengrq" Title="出生日期" Width="120" />
+            <a:Col ID="chushengrq" Title="出生日期" />
             <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
             <a:Col ID="xb" Title="性别" Width="60" />
             <a:Col ID="hunfou" Title="婚否" Width="60" />

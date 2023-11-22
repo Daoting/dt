@@ -12,7 +12,7 @@
             <a:Col ID="async" Title="异步设置" Call="LvCustomUI.AsyncFunc" Width="100" />
             <a:Col ID="date" Title="修改默认UI" Call="LvCustomUI.ModiDef" Width="160" />
             <a:Col ID="format" Title="Format参数" Call="LvCustomUI.Format" Format="n4" Width="110" />
-            <a:Col ID="warning" Title="重写内置方法" Call="Def.Warning" Width="120" />
+            <a:Col ID="warning" Title="重写内置方法" Call="Def.Warning" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">

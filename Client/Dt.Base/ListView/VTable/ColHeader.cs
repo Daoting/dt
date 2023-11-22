@@ -59,7 +59,7 @@ namespace Dt.Base.ListView
             for (int i = 0; i < cols.Count; i++)
             {
                 col = (Col)cols[i];
-                if (p_pos >= col.Left && p_pos <= col.Left + col.Width)
+                if (p_pos >= col.Left && p_pos <= col.Left + col.ActualWidth)
                 {
                     index = i;
                     break;
@@ -126,7 +126,7 @@ namespace Dt.Base.ListView
             double height = Res.RowOuterHeight;
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Measure(new Size(cell.Col.Width, availableSize.Height));
+                cell.Measure(new Size(cell.Col.ActualWidth, availableSize.Height));
                 if (cell.DesiredSize.Height > height)
                     height = cell.DesiredSize.Height;
             }
@@ -144,7 +144,7 @@ namespace Dt.Base.ListView
         {
             foreach (var cell in Children.OfType<ColHeaderCell>())
             {
-                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.Width, finalSize.Height));
+                cell.Arrange(new Rect(cell.Col.Left, 0, cell.Col.ActualWidth, finalSize.Height));
             }
             if (_lastDrag > -1)
             {

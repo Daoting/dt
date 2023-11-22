@@ -26,8 +26,8 @@
             <a:Col ID="Name" Title="参数名称" Width="180" />
             <a:Col ID="Value" Title="参数缺省值" Width="200" />
             <a:Col ID="Note" Title="参数描述" Width="200" />
-            <a:Col ID="Ctime" Title="创建时间" Width="120" />
-            <a:Col ID="Mtime" Title="修改时间" Width="120" />
+            <a:Col ID="Ctime" Title="创建时间" />
+            <a:Col ID="Mtime" Title="修改时间" />
         </a:Cols>
     </a:Lv>
 </a:Tab>

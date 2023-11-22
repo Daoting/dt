@@ -30,7 +30,7 @@
                                     </a:Menu>
                                 </a:Ex.Menu>
                                 <a:Cols>
-                                    <a:Col ID="xm" Title="姓名" Width="120" />
+                                    <a:Col ID="xm" Title="姓名" />
                                     <a:Col ID="bh" Title="编号" Width="80" />
                                 </a:Cols>
                             </a:Lv>

@@ -375,7 +375,7 @@ namespace Dt.Base
             Cols cols = new Cols();
             foreach (var c in p_tbl.Columns)
             {
-                cols.Add(new Col { ID = c.ID, Title = c.ID, Width = 200 });
+                cols.Add(new Col { ID = c.ID, Title = c.ID, Width = "200" });
             }
             View = cols;
         }

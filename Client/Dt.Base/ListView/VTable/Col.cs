@@ -29,9 +29,9 @@ namespace Dt.Base
 
         public static readonly DependencyProperty WidthProperty = DependencyProperty.Register(
             "Width",
-            typeof(double),
+            typeof(string),
             typeof(Col),
-            new PropertyMetadata(100d, OnWidthChanged));
+            new PropertyMetadata(null, OnWidthChanged));
 
         public static readonly DependencyProperty RowSpanProperty = DependencyProperty.Register(
             "RowSpan",
@@ -135,11 +135,14 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置列宽，默认100
+        /// 获取设置列宽，默认120，能显示6个中文字，支持 * 和 Auto
+        /// <para>1. 未设置或Auto时，120</para>
+        /// <para>2. 数值时为固定列宽</para>
+        /// <para>3. * 或 x* 时，类似Grid动态计算剩余宽度按系数分配，无剩余或1*小于120时采用1*为120的宽度</para>
         /// </summary>
-        public double Width
+        public string Width
         {
-            get { return (double)GetValue(WidthProperty); }
+            get { return (string)GetValue(WidthProperty); }
             set { SetValue(WidthProperty, value); }
         }
 
@@ -229,6 +232,11 @@ namespace Dt.Base
         /// 水平位置
         /// </summary>
         internal double Left { get; set; }
+
+        /// <summary>
+        /// 实际宽度
+        /// </summary>
+        internal double ActualWidth { get; set; }
 
         internal Cols Owner { get; set; }
     }

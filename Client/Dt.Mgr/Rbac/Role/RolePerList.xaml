@@ -22,7 +22,7 @@
             </a:Menu>
         </a:Ex.Menu>
         <a:Cols>
-            <a:Col ID="funcname" Title="功能" Width="120" />
+            <a:Col ID="funcname" Title="功能" />
             <a:Col ID="name" Title="权限" Width="160" />
             <a:Col ID="note" Title="说明" Width="300" />
         </a:Cols>

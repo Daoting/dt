@@ -25,9 +25,9 @@
         <a:Cols>
             <a:Col ID="kind" Title="　" Call="CurrentTasksUI.FormatKind" Width="42" />
             <a:Col ID="note" Title="留言" Call="CurrentTasksUI.FormatNote" Width="56" />
-            <a:Col ID="prcname" Title="工作流程" Width="120" />
-            <a:Col ID="atvname" Title="任务名称" Call="CurrentTasksUI.AtvAndLog" Width="120" />
-            <a:Col ID="formname" Title="表单内容" Width="200" />
+            <a:Col ID="prcname" Title="工作流程" />
+            <a:Col ID="atvname" Title="任务名称" Call="CurrentTasksUI.AtvAndLog" />
+            <a:Col ID="formname" Title="表单内容" Width="*" />
             <a:Col ID="sender" Title="发送者" />
             <a:Col ID="stime" Title="发送时间" Width="170" Format="yyyy-MM-dd HH:mm:ss" />
         </a:Cols>

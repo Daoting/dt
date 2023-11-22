@@ -199,6 +199,12 @@ namespace Dt.Base
                 _maxSize = new Size(width, height);
             }
 
+            if (View is Cols cols)
+            {
+                // 非固定列宽时需要计算 * 的宽度
+                double leftWidth = (SelectionMode == SelectionMode.Multiple) ? 82 : 41;
+                cols.FixWidth(_maxSize.Width - leftWidth);
+            }
             _panel?.SetMaxSize(_maxSize);
             return base.MeasureOverride(availableSize);
         }

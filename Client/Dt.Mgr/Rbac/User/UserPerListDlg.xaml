@@ -7,7 +7,7 @@
 
     <a:Lv x:Name="_lv" ViewMode="Table" GroupName="modname">
         <a:Cols>
-            <a:Col ID="funcname" Title="功能" Width="120" />
+            <a:Col ID="funcname" Title="功能" />
             <a:Col ID="name" Title="权限" Width="160" />
         </a:Cols>
     </a:Lv>

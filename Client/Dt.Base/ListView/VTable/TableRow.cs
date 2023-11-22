@@ -66,7 +66,7 @@ namespace Dt.Base.ListView
                 {
                     Col col = (Col)cols[i];
                     var elem = _cells[col];
-                    elem.Measure(new Size(col.Width, availableSize.Height));
+                    elem.Measure(new Size(col.ActualWidth, availableSize.Height));
                     if (elem.DesiredSize.Height > height)
                         height = elem.DesiredSize.Height;
                 }
@@ -79,7 +79,7 @@ namespace Dt.Base.ListView
                 for (int i = 0; i < cols.Count; i++)
                 {
                     Col col = (Col)cols[i];
-                    _cells[col].Measure(new Size(col.Width, height));
+                    _cells[col].Measure(new Size(col.ActualWidth, height));
                 }
             }
 
@@ -110,7 +110,7 @@ namespace Dt.Base.ListView
             for (int i = 0; i < cols.Count; i++)
             {
                 Col col = (Col)cols[i];
-                _cells[col].Arrange(new Rect(col.Left + headerWidth, 0, col.Width, finalSize.Height));
+                _cells[col].Arrange(new Rect(col.Left + headerWidth, 0, col.ActualWidth, finalSize.Height));
             }
 
             // 选择背景

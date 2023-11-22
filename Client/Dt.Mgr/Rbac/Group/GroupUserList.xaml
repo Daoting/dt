@@ -22,7 +22,7 @@
             </a:Menu>
         </a:Ex.Menu>
         <a:Cols>
-            <a:Col ID="acc" Title="账号" Width="120" />
+            <a:Col ID="acc" Title="账号" />
             <a:Col ID="phone" Title="手机号" Width="130" />
             <a:Col ID="name" Title="姓名" />
         </a:Cols>
