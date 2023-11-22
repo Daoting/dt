@@ -33,7 +33,7 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Title="流程实例">
-                <a:Lv x:Name="_lv" ViewMode="Table" ItemClick="OnItemClick" ItemDoubleClick="OnItemDoubleClick">
+                <a:Lv x:Name="_lv" ItemClick="OnItemClick" ItemDoubleClick="OnItemDoubleClick">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="查看表单" Icon="全选" Click="OnShowInst" />
@@ -52,7 +52,7 @@
     <a:Pane Pos="Right" InitWidth="600">
         <a:Tabs>
             <a:Tab Title="活动实例">
-                <a:Lv x:Name="_lvAtv" ViewMode="Table" ItemClick="OnAtvClick">
+                <a:Lv x:Name="_lvAtv" ItemClick="OnAtvClick">
                     <a:Cols>
                         <a:Col ID="Status" Title="状态" Width="60" />
                         <a:Col ID="Name" Title="活动名称" Width="200" />
@@ -63,7 +63,7 @@
         </a:Tabs>
         <a:Tabs>
             <a:Tab Title="工作项">
-                <a:Lv x:Name="_lvItem" ViewMode="Table">
+                <a:Lv x:Name="_lvItem">
                     <a:Cols>
                         <a:Col ID="Status" Title="状态" Width="60" />
                         <a:Col ID="assign_kind" Title="指派方式" Width="100" />

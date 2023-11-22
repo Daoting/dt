@@ -16,7 +16,7 @@
         </a:Menu>
     </a:Tab.Menu>
 
-    <a:Lv x:Name="_lv" ItemClick="OnItemClick" ViewMode="Table">
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Ex.Menu>
             <a:Menu>
                 <a:Mi ID="删除" Icon="垃圾箱" Click="OnDel" />
