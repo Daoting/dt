@@ -47,15 +47,8 @@ namespace Dt.Core
             Row = p_row;
             ID = p_cellName;
             Type = p_cellType;
-            if (p_cellType == typeof(string) && p_value == null)
-            {
-                // 保留原始值，因GetValInternal把null字符串返回Empty！！！
-                _val = OriginalVal = null;
-            }
-            else
-            {
-                _val = OriginalVal = GetValInternal(p_value, Type);
-            }
+            // 保留原始值，不把null字符串转为Empty！！！
+            _val = OriginalVal = GetValInternal(p_value, Type, false);
             Row.Cells.Add(this);
         }
         #endregion
@@ -227,7 +220,7 @@ namespace Dt.Core
         /// <returns>指定类型的值</returns>
         public T GetVal<T>()
         {
-            return (T)GetValInternal(_val, typeof(T));
+            return (T)GetValInternal(_val, typeof(T), true);
         }
 
         /// <summary>
@@ -241,7 +234,7 @@ namespace Dt.Core
         /// <returns>指定类型的值</returns>
         public T GetOriginalVal<T>()
         {
-            return (T)GetValInternal(OriginalVal, typeof(T));
+            return (T)GetValInternal(OriginalVal, typeof(T), true);
         }
 
         /// <summary>
@@ -307,7 +300,7 @@ namespace Dt.Core
                 return;
 
             // 类型不同时转换
-            object val = GetValInternal(p_val, Type);
+            object val = GetValInternal(p_val, Type, false);
 
 #if !SERVER
             bool hookChangedVal = false;
@@ -454,15 +447,16 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_val">值</param>
         /// <param name="p_tgtType">目标类型</param>
+        /// <param name="p_strNullToEmpty">字符串类型时是否将null转为Empty</param>
         /// <returns>转换结果</returns>
-        internal object GetValInternal(object p_val, Type p_tgtType)
+        internal object GetValInternal(object p_val, Type p_tgtType, bool p_strNullToEmpty)
         {
             // null时
             if (p_val == null)
             {
                 // 字符串返回Empty！！！
                 if (p_tgtType == typeof(string))
-                    return string.Empty;
+                    return p_strNullToEmpty ? string.Empty : null;
 
                 // 值类型，可空类型Nullable<>也属值类型
                 if (p_tgtType.IsValueType)
@@ -579,7 +573,7 @@ namespace Dt.Core
                 if (_newVal != value)
                 {
                     // 类型不同时转换
-                    _newVal = _cell.GetValInternal(value, _cell.Type);
+                    _newVal = _cell.GetValInternal(value, _cell.Type, false);
                 }
             }
         }
@@ -651,7 +645,7 @@ namespace Dt.Core
         /// <returns></returns>
         public T GetVal<T>()
         {
-            return (T)_cell.GetValInternal(_newVal, typeof(T));
+            return (T)_cell.GetValInternal(_newVal, typeof(T), true);
         }
     }
 }
