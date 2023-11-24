@@ -359,14 +359,18 @@ namespace Dt.Core
         /// <para>3. 若存在领域事件，则发布事件</para>
         /// </summary>
         /// <param name="p_isNotify">是否提示保存结果，客户端有效</param>
+        /// <param name="p_notifyIfNotNeed">没有需要保存的数据时是否提示，null时由p_isNotify控制，客户端有效</param>
         /// <returns>是否成功</returns>
-        public async Task<bool> Commit(bool p_isNotify = true)
+        public async Task<bool> Commit(bool p_isNotify = true, bool? p_notifyIfNotNeed = null)
         {
             if (_items.Count == 0)
             {
 #if !SERVER
-                if (p_isNotify)
+                if ((p_notifyIfNotNeed == null && p_isNotify)
+                    || (p_notifyIfNotNeed.HasValue && p_notifyIfNotNeed.Value))
+                {
                     Kit.Warn("没有需要保存的数据！");
+                }
 #endif
                 return true;
             }
