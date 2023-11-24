@@ -51,13 +51,16 @@ namespace Dt.Core
         public async Task Save<TEntity>(Table<TEntity> p_tbl)
             where TEntity : Entity
         {
-            if (p_tbl == null || p_tbl.Count == 0)
+            if (p_tbl == null)
                 return;
 
-            var ls = from en in (IList<TEntity>)p_tbl
-                     where en.IsAdded || en.IsChanged
-                     select en;
-            await Save(ls);
+            if (p_tbl.Count > 0)
+            {
+                var ls = from en in (IList<TEntity>)p_tbl
+                         where en.IsAdded || en.IsChanged
+                         select en;
+                await Save(ls);
+            }
 
             if (p_tbl.ExistDeleted)
             {
@@ -342,6 +345,11 @@ namespace Dt.Core
         #endregion
 
         #region 提交
+        /// <summary>
+        /// 是否有数据需要提交
+        /// </summary>
+        public bool NeedCommit => _items.Count > 0;
+
         /// <summary>
         /// 一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚
         /// <para>无论提交成功失败都清空状态，准备下次提交！</para>

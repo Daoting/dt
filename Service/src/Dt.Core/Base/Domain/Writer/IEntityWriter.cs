@@ -98,6 +98,11 @@ namespace Dt.Core
 
         #region 提交
         /// <summary>
+        /// 是否有数据需要提交
+        /// </summary>
+        bool NeedCommit { get; }
+
+        /// <summary>
         /// 一个事务内批量处理所有待保存、待删除的实体数据，失败时回滚
         /// <para>无论提交成功失败都清空状态，准备下次提交！</para>
         /// <para>处理成功后，对于每个实体：</para>
