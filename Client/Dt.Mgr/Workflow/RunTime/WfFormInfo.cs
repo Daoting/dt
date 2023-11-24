@@ -109,10 +109,6 @@ namespace Dt.Mgr
             get { return AtvDef.Type == WfdAtvType.Start; }
         }
 
-        /// <summary>
-        /// 流程表单界面
-        /// </summary>
-        public IWfForm Form { get; set; }
         #endregion
 
         #region 内部属性
@@ -120,6 +116,11 @@ namespace Dt.Mgr
         /// 流程表单所在窗口
         /// </summary>
         internal Win FormWin { get; set; }
+
+        /// <summary>
+        /// 流程表单界面
+        /// </summary>
+        internal IWfForm Form { get; private set; }
 
         /// <summary>
         /// 表单类型
@@ -214,13 +215,22 @@ namespace Dt.Mgr
 
         #region 外部方法
         /// <summary>
+        /// 记录表单界面
+        /// </summary>
+        /// <param name="p_form"></param>
+        /// <returns></returns>
+        public void SetForm(IWfForm p_form)
+        {
+            Throw.IfNull(p_form, "表单 IWfForm 不可为null");
+            Form = p_form;
+            p_form.Info = this;
+        }
+
+        /// <summary>
         /// 加载默认菜单，自动绑定命令
         /// </summary>
-        public async Task<Menu> CreateMenu(Fv fv)
+        public async Task<Menu> CreateMenu()
         {
-            if (fv == null)
-                Throw.Msg("加载默认菜单需要流程表单Fv！");
-
             Menu m = new Menu();
             if (!IsReadOnly)
             {
@@ -240,17 +250,10 @@ namespace Dt.Mgr
                 }
 
                 // 合并IsDirty属性
-                CmdSave.AllowExecute = fv.IsDirty;
-                fv.Dirty += (s, b) => CmdSave.AllowExecute = b;
                 m.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, Cmd = CmdSave });
-                m.Items.Add(new Mi { ID = "撤消", Icon = Icons.撤消, Cmd = fv.CmdUndo });
 
                 if (AtvDef.CanDelete || AtvDef.Type == WfdAtvType.Start)
                     m.Items.Add(new Mi { ID = "删除", Icon = Icons.垃圾箱, Cmd = CmdDelete });
-            }
-            else
-            {
-                fv.IsReadOnly = true;
             }
             return m;
         }

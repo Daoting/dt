@@ -18,16 +18,16 @@ namespace Dt.Mgr
     public interface IWfForm
     {
         /// <summary>
-        /// 初始化表单
+        /// 表单对应的Info
         /// </summary>
-        /// <param name="p_info"></param>
-        Task Init(WfFormInfo p_info);
+        WfFormInfo Info { get; set; }
 
         /// <summary>
         /// 保存表单数据
         /// </summary>
+        /// <param name="p_isSend">是否为发送时的保存，区分单独保存和发送时的保存</param>
         /// <returns></returns>
-        Task<bool> Save();
+        Task<bool> Save(bool p_isSend);
 
         /// <summary>
         /// 删除表单数据，禁止删除或删除失败时可返回false

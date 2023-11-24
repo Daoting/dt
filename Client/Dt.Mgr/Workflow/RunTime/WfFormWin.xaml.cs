@@ -16,8 +16,6 @@ namespace Dt.Mgr.Workflow
     /// </summary>
     public partial class WfFormWin : Win
     {
-        readonly IWfForm _form;
-
         public WfFormWin(WfFormInfo p_info)
         {
             InitializeComponent();
@@ -29,16 +27,10 @@ namespace Dt.Mgr.Workflow
                 Items.Add(log);
                 log.Show(p_info.PrcInst.ID, p_info.PrcDef.ID);
             }
-            _form = (IWfForm)Activator.CreateInstance(p_info.FormType);
-            LoadForm(p_info);
-        }
 
-        internal IWfForm Form => _form;
-
-        async void LoadForm(WfFormInfo p_info)
-        {
-            await _form.Init(p_info);
-            LoadMain(_form);
+            var form = (IWfForm)Activator.CreateInstance(p_info.FormType);
+            p_info.SetForm(form);
+            LoadMain(form);
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Dt.Mgr.Workflow
         public WfSaveCmd(WfFormInfo p_info)
         {
             _info = p_info;
+            AllowExecute = true;
         }
 
         protected override void DoExecute(object p_parameter)

@@ -18,30 +18,29 @@ namespace Dt.MgrDemo.Workflow
     [WfForm("收文样例")]
     public partial class 收文Form : Tab, IWfForm
     {
-        WfFormInfo _info;
-
         public 收文Form()
         {
             InitializeComponent();
         }
 
-        public async Task Init(WfFormInfo p_info)
-        {
-            _info = p_info;
-            Title = p_info.PrcDef.Name;
+        public WfFormInfo Info { get; set; }
 
-            if (_info.IsNew)
+        protected override async void OnFirstLoaded()
+        {
+            Title = Info.PrcDef.Name;
+
+            if (Info.IsNew)
             {
                 _fv.Data = new 收文X(
-                    ID: _info.ID,
+                    ID: Info.ID,
                     来文时间: Kit.Now);
             }
             else
             {
-                _fv.Data = await 收文X.GetByID(_info.ID);
+                _fv.Data = await 收文X.GetByID(Info.ID);
             }
 
-            switch (_info.State)
+            switch (Info.State)
             {
                 case "接收文件":
                     _fv.Hide("市场部经理意见", "综合部经理意见", "收文完成时间");
@@ -58,7 +57,7 @@ namespace Dt.MgrDemo.Workflow
                     break;
             }
 
-            Menu = await _info.CreateMenu(_fv);
+            Menu = await Info.CreateMenu();
         }
 
         void OnUploaded(object sender, PropertyChangedEventArgs e)
@@ -71,7 +70,7 @@ namespace Dt.MgrDemo.Workflow
             }
         }
 
-        public Task<bool> Save()
+        public Task<bool> Save(bool p_isSend)
         {
             var data = _fv.Data.To<收文X>();
             if (data.IsAdded || data.IsChanged)

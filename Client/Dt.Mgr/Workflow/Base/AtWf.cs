@@ -36,16 +36,14 @@ namespace Dt.Mgr
             WfFormInfo info = new WfFormInfo();
             await info.Init(p_itemID, p_prciID, p_prcName);
 
+            // 需要在窗口内部调用 info.SetForm() ！
             if (info.FormType.IsSubclassOf(typeof(Win)))
             {
-                // 需要在窗口内部设置 info.Form ！
                 info.FormWin = (Win)Kit.OpenWin(info.FormType, info.PrcInst.Name, Icons.None, info);
             }
             else
             {
-                var win = (WfFormWin)Kit.OpenWin(typeof(WfFormWin), info.PrcInst.Name, Icons.None, info);
-                info.FormWin = win;
-                info.Form = win.Form;
+                info.FormWin = (WfFormWin)Kit.OpenWin(typeof(WfFormWin), info.PrcInst.Name, Icons.None, info);
             }
         }
 

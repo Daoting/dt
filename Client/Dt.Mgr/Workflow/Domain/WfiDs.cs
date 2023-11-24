@@ -135,10 +135,15 @@ namespace Dt.Mgr.Workflow
         #endregion
 
         #region 保存表单
-        public static async Task<bool> SaveForm(WfFormInfo p_info)
+        public static Task<bool> SaveForm(WfFormInfo p_info)
+        {
+            return SaveFormInternal(p_info, false);
+        }
+
+        static async Task<bool> SaveFormInternal(WfFormInfo p_info, bool p_isSend)
         {
             // 先保存表单数据
-            if (!await p_info.Form.Save())
+            if (!await p_info.Form.Save(p_isSend))
                 return false;
 
             // 标题
@@ -167,12 +172,9 @@ namespace Dt.Mgr.Workflow
             }
 
             var w = _da.NewWriter();
-            if (p_info.PrcInst.IsAdded || p_info.PrcInst.IsChanged)
-                await w.Save(p_info.PrcInst);
-            if (p_info.AtvInst.IsAdded || p_info.AtvInst.IsChanged)
-                await w.Save(p_info.AtvInst);
-            if (p_info.WorkItem.IsAdded || p_info.WorkItem.IsChanged)
-                await w.Save(p_info.WorkItem);
+            await w.Save(p_info.PrcInst);
+            await w.Save(p_info.AtvInst);
+            await w.Save(p_info.WorkItem);
 
             return await w.Commit(false);
         }
@@ -269,7 +271,7 @@ namespace Dt.Mgr.Workflow
         public static async Task Send(WfFormInfo p_info)
         {
             // 先保存
-            if (!await SaveForm(p_info))
+            if (!await SaveFormInternal(p_info, true))
                 return;
 
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
