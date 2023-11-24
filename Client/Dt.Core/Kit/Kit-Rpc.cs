@@ -102,5 +102,22 @@ namespace Dt.Core
         {
             return GetRequiredService<IRpcConfig>().GetSvcUrl(p_svcName);
         }
+
+        /// <summary>
+        /// 获取设置默认服务名，当前实体存储使用的默认服务名
+        /// </summary>
+        public static string SvcName
+        {
+            get => GetRequiredService<IRpcConfig>().SvcName;
+            set => GetRequiredService<IRpcConfig>().SvcName = value;
+        }
+
+        /// <summary>
+        /// 重置默认服务名为最初
+        /// </summary>
+        public static void ResetSvcName()
+        {
+            GetRequiredService<IRpcConfig>().ResetSvcName();
+        }
     }
 }

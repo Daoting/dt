@@ -36,12 +36,14 @@ namespace Dt.MgrDemo
 
         async void OnUpdate(object sender, RoutedEventArgs e)
         {
+            Kit.SvcName = "demo";
             var x = await CrudX.First(null);
             if (x != null)
             {
                 x.Name = _rnd.Next(1000).ToString();
                 await x.Save();
             }
+            Kit.ResetSvcName();
         }
 
         async void OnDelete(object sender, RoutedEventArgs e)

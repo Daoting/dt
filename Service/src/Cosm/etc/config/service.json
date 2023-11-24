@@ -15,6 +15,9 @@
   // 是否输出所有调用的Api名称
   "TraceRpc": true,
 
+  // 客户端实体存储使用的默认服务名
+  "EntitySvcName": "cm",
+
   // 启动KestrelServer时的监听设置
   "KestrelListen": [
     {

@@ -65,7 +65,7 @@ namespace Dt.Core
             if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
             {
                 Schema = await GetTableSchema(tbl);
-                ai = new AccessInfo(AccessType.Remote, tbl.Svc);
+                ai = new AccessInfo(AccessType.Remote, null);
             }
             else
             {

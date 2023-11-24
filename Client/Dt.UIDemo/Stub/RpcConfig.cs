@@ -26,6 +26,18 @@ namespace Dt.UIDemo
         }
 
         /// <summary>
+        /// 默认服务名，当前进行实体保存使用的服务名
+        /// </summary>
+        public string SvcName { get; set; } = "lob";
+
+        /// <summary>
+        /// 重置默认服务名为最初
+        /// </summary>
+        public void ResetSvcName()
+        {
+        }
+
+        /// <summary>
         /// 调用时服务端返回无访问权限，可以提示用户、跳转到登录页面等
         /// </summary>
         /// <param name="p_methodName"></param>

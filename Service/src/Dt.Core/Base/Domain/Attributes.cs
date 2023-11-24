@@ -18,38 +18,15 @@ namespace Dt.Core
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class TblAttribute : Attribute
     {
-        string _svc;
-
-        public TblAttribute(string p_tblName, string p_svc = null)
+        public TblAttribute(string p_tblName)
         {
             Name = p_tblName;
-            _svc = p_svc;
         }
 
         /// <summary>
         /// 实体类对应的表名
         /// </summary>
         public string Name { get; }
-
-        /// <summary>
-        /// 实体类所使用的服务名
-        /// </summary>
-        public string Svc
-        {
-            get
-            {
-                if (_svc == null)
-                {
-                    if (string.IsNullOrEmpty(Name))
-                        throw new Exception("实体类未设置对应的表名和服务名！");
-
-                    int index = Name.IndexOf("_");
-                    // 缺省使用cm服务
-                    _svc = index == -1 ? "cm" : Name.Substring(0, index).ToLower();
-                }
-                return _svc;
-            }
-        }
     }
 
     /// <summary>

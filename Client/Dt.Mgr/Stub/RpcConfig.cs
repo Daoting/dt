@@ -19,6 +19,7 @@ namespace Dt.Mgr
         #region 成员变量
         bool _isSingletonSvc = false;
         Dictionary<string, string> _urlDict;
+        string _entitySvcName;
         #endregion
 
         public string SvcUrl { get; set; }
@@ -40,6 +41,19 @@ namespace Dt.Mgr
                 return url;
 
             throw new Exception($"[{p_svcName}]服务地址不存在！");
+        }
+
+        /// <summary>
+        /// 默认服务名，当前进行实体保存使用的服务名
+        /// </summary>
+        public string SvcName { get; set; }
+
+        /// <summary>
+        /// 重置默认服务名为最初
+        /// </summary>
+        public void ResetSvcName()
+        {
+            SvcName = _entitySvcName;
         }
 
         /// <summary>
@@ -76,7 +90,8 @@ namespace Dt.Mgr
         /// 初始化所有微服务地址
         /// </summary>
         /// <param name="p_svcUrls"></param>
-        internal void InitSvcUrls(Dict p_svcUrls)
+        /// <param name="p_entitySvcName"></param>
+        internal void InitSvcUrls(Dict p_svcUrls, string p_entitySvcName)
         {
             if (p_svcUrls == null)
             {
@@ -99,6 +114,7 @@ namespace Dt.Mgr
                     _urlDict[item.Key] = url;
                 }
             }
+            SvcName = _entitySvcName = p_entitySvcName;
         }
     }
 }

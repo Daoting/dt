@@ -604,7 +604,7 @@ namespace Dt.Core
 
             if (ai.Type == AccessType.Remote)
             {
-                return await Kit.Rpc<long>(ai.Name, "Da.NewID");
+                return await Kit.Rpc<long>(Kit.SvcName, "Da.NewID");
             }
 
             // 本地库，和服务端算法的_workerId不同
@@ -634,7 +634,7 @@ namespace Dt.Core
 #else
             Throw.If(model.AccessInfo.Type == AccessType.Local, "sqlite本地库不支持序列功能！");
             seq = await Kit.Rpc<int>(
-                model.AccessInfo.Name,
+                Kit.SvcName,
                 "Da.NewSeq",
                 seqName
             );

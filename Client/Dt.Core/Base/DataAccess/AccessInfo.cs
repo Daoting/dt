@@ -31,7 +31,8 @@ namespace Dt.Core
         public virtual AccessType Type { get; }
 
         /// <summary>
-        /// 远程数据访问时为服务名，本地sqlite库访问时为库名
+        /// 远程数据访问时为服务名，null时每次获取IDataAccess都使用当前默认服务名
+        /// <para>本地sqlite库访问时为库名</para>
         /// </summary>
         public virtual string Name { get; }
 
@@ -41,7 +42,15 @@ namespace Dt.Core
         /// <returns></returns>
         public IDataAccess GetDataAccess()
         {
-            return Type == AccessType.Remote ? GetRemoteAccess(Name) : GetSqliteAccess(Name);
+            if (Type == AccessType.Remote)
+            {
+                // null时使用默认服务名
+                if (string.IsNullOrEmpty(Name))
+                    return GetRemoteAccess(Kit.SvcName);
+
+                return GetRemoteAccess(Name);
+            }
+            return GetSqliteAccess(Name);
         }
 
         #region 静态内容

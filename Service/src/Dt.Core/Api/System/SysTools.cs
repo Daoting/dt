@@ -58,36 +58,18 @@ namespace Dt.Core
 
             if (!string.IsNullOrEmpty(schema.Comments))
             {
-                // 取注释中的服务名，和字段注释中的枚举类型相同
-                string svc = null;
-                var match = Regex.Match(schema.Comments, @"^#[^\s#]+");
-                if (match.Success)
-                    svc = match.Value.Trim('#');
-
+                // 取注释
                 AppendTabSpace(sb, 1);
                 sb.AppendLine("/// <summary>");
                 AppendTabSpace(sb, 1);
                 sb.Append("/// ");
-                if (svc != null)
-                    sb.AppendLine(schema.Comments.Substring(svc.Length + 2));
-                else
-                    sb.AppendLine(schema.Comments);
+                sb.AppendLine(schema.Comments);
                 AppendTabSpace(sb, 1);
                 sb.AppendLine("/// </summary>");
-
-                // Tbl标签
-                AppendTabSpace(sb, 1);
-                if (svc != null)
-                    sb.Append($"[Tbl(\"{schema.Name}\", \"{svc}\")]");
-                else
-                    sb.Append($"[Tbl(\"{schema.Name}\")]");
             }
-            else
-            {
-                // Tbl标签
-                AppendTabSpace(sb, 1);
-                sb.Append($"[Tbl(\"{schema.Name}\")]");
-            }
+            // Tbl标签
+            AppendTabSpace(sb, 1);
+            sb.Append($"[Tbl(\"{schema.Name}\")]");
 
             sb.AppendLine();
             AppendTabSpace(sb, 1);
@@ -599,7 +581,7 @@ namespace Dt.Core
                     if (sb.Length > 0)
                         sb.AppendLine();
                     AppendTabSpace(sb, 3);
-                    
+
                     string title;
                     if (col.IsEnumCol)
                     {
