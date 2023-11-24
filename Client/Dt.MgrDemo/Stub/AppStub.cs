@@ -24,8 +24,6 @@ namespace Dt.MgrDemo
             SvcUrl = "http://10.10.1.16/dt-cm";
             SvcUrlOptions = new List<string>
             {
-                "https://x13382a571.oicp.vip/demo",
-                "http://58.240.201.154:25435/lob",
                 "http://10.10.1.16/cosm-mysql",
                 "http://10.10.1.16/cosm-orcl",
                 "http://10.10.1.16/cosm-ms",
