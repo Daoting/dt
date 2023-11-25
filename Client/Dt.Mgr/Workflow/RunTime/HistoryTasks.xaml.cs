@@ -112,7 +112,7 @@ namespace Dt.Mgr.Workflow
         {
             using (e.Wait())
             {
-                var prc = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
+                var prc = await At.Query("select id,name from cm_wfd_prc order by dispidx");
                 prc.Insert(0, prc.NewRow(new { id = -1, name = "全部" }));
                 ((CList)sender).Data = prc;
             }

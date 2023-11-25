@@ -291,4 +291,12 @@ namespace Dt.Core
 
         static IDataAccess _da = new TAccessInfo().GetDataAccess();
     }
+
+    /// <summary>
+    /// 当前默认服务的远程数据访问对象
+    /// </summary>
+    public class At : DataAccess<At.Info>
+    {
+        public class Info : AccessInfo { }
+    }
 }

@@ -11,7 +11,7 @@
 
 namespace Dt.Mgr.Module
 {
-    public partial class FileDs : DomainSvc<FileDs, AtCm.Info>
+    public partial class FileDs : DomainSvc<FileDs>
     {
         public static async Task<Table> SearchFiles(string p_name, string p_ext)
         {

@@ -28,7 +28,7 @@ namespace Dt.Mgr.Workflow
         public static async Task<Table<WfiPrcX>> Search(long p_prcdid, DateTime p_start, DateTime p_end, int p_status, string p_title)
         {
             var sql = Sql查询实例;
-            var db = await AtCm.GetDbType();
+            var db = await At.GetDbType();
             if (db == DatabaseType.Oracle)
                 sql = sql.Replace("@", ":");
 

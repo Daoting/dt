@@ -25,7 +25,7 @@ namespace Dt.Mgr.Workflow
 
         async void LoadSearchData()
         {
-            _fv["prcdname"].To<CList>().Data = await AtCm.Query("select id,name from cm_wfd_prc order by dispidx");
+            _fv["prcdname"].To<CList>().Data = await At.Query("select id,name from cm_wfd_prc order by dispidx");
             Row row = new Row();
             row.Add<string>("prcd_id");
             row.Add<string>("prcdname");

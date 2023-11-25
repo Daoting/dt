@@ -157,7 +157,7 @@ namespace Dt.UIDemo
         }
     }
 
-    class LogDemoDs : DomainSvc<LogDemoDs, AtState.Info>
+    class LogDemoDs : LocalDomainSvc<LogDemoDs, AtState.Info>
     {
         public static void LogDebug()
         {

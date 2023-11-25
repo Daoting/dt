@@ -18,12 +18,15 @@ namespace Dt.Core
     class RemoteAccess : IDataAccess
     {
         #region 构造方法
-        readonly string _svc;
+        readonly string _svcName;
+        string _svc => string.IsNullOrEmpty(_svcName) ? Kit.SvcName : _svcName;
 
-        public RemoteAccess(string p_svc)
+        public RemoteAccess(string p_svcName)
         {
-            _svc = p_svc;
+            _svcName = p_svcName;
         }
+
+        public RemoteAccess() { }
         #endregion
 
         #region 查询

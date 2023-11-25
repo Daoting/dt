@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class RbacDs : DomainSvc<RbacDs, AtCm.Info>
+    public partial class RbacDs : DomainSvc<RbacDs>
     {
         #region 用户分组
         public static Task<bool> AddUserGroups(long p_userID, List<long> p_groupIDs)

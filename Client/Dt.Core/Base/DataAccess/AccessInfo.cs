@@ -44,9 +44,9 @@ namespace Dt.Core
         {
             if (Type == AccessType.Remote)
             {
-                // null时使用默认服务名
+                // null时使用默认远程数据访问
                 if (string.IsNullOrEmpty(Name))
-                    return GetRemoteAccess(Kit.SvcName);
+                    return Kit.SvcAccess;
 
                 return GetRemoteAccess(Name);
             }

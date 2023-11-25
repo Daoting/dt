@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Rbac;
 using Dt.MgrDemo.Crud;
 using Microsoft.UI.Xaml;
 using System.Reflection;
@@ -37,13 +38,17 @@ namespace Dt.MgrDemo
         async void OnUpdate(object sender, RoutedEventArgs e)
         {
             Kit.SvcName = "demo";
-            var x = await CrudX.First(null);
-            if (x != null)
-            {
-                x.Name = _rnd.Next(1000).ToString();
-                await x.Save();
-            }
+            //var x = await CrudX.First(null);
+            //if (x != null)
+            //{
+            //    x.Name = _rnd.Next(1000).ToString();
+            //    await x.Save();
+            //}
+            var x = await UserX.First(null);
+            x = await At.First<UserX>("select * from cm_user");
             Kit.ResetSvcName();
+            x = await UserX.First(null);
+            x = await At.First<UserX>("select * from cm_user");
         }
 
         async void OnDelete(object sender, RoutedEventArgs e)
@@ -342,14 +347,14 @@ namespace Dt.MgrDemo
 
         async void OnQueryBySp(object sender, RoutedEventArgs e)
         {
-            var db = await AtCm.GetDbType();
+            var db = await At.GetDbType();
             if (db == DatabaseType.PostgreSql)
             {
                 Kit.Warn("PostgreSql的存储过程不支持返回数据集");
                 return;
             }
 
-            var tbl = await AtCm.Query("demo_用户可访问的菜单", new { p_userid = Kit.UserID });
+            var tbl = await At.Query("demo_用户可访问的菜单", new { p_userid = Kit.UserID });
             string msg = "可访问的菜单：\r\n";
             foreach (var r in tbl)
             {

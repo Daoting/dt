@@ -11,7 +11,7 @@
 
 namespace Dt.Mgr.Module
 {
-    public partial class ParamsDs : DomainSvc<ParamsDs, AtCm.Info>
+    public partial class ParamsDs : DomainSvc<ParamsDs>
     {
         public static async Task<bool> SaveParams(string p_paramID, string p_value)
         {

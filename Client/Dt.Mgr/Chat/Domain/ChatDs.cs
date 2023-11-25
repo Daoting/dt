@@ -17,7 +17,7 @@ namespace Dt.Mgr.Chat
     /// <summary>
     /// 
     /// </summary>
-    public partial class ChatDs : DomainSvc<ChatDs, AtLob.Info>
+    public partial class ChatDs : LocalDomainSvc<ChatDs, AtLob.Info>
     {
         #region 事件
         /// <summary>

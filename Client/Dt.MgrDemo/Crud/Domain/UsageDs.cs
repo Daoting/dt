@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Dt.MgrDemo.Crud
 {
-    class UsageDs : DomainSvc<UsageDs, AtSvc.Info>
+    class UsageDs : DomainSvc<UsageDs>
     {
         public static async Task BatchSave()
         {

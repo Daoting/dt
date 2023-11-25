@@ -68,7 +68,7 @@ namespace Dt.Mgr.Rbac
                 }
 
                 // 清除关联用户的数据版本号，没放在 OnDeleted 处理因为cm_role_menu有级联删除
-                var ls = await AtCm.FirstCol<long>($"select id from cm_role a where exists (select role_id from cm_role_menu b where a.id=b.role_id and menu_id={ID})");
+                var ls = await At.FirstCol<long>($"select id from cm_role a where exists (select role_id from cm_role_menu b where a.id=b.role_id and menu_id={ID})");
                 RbacDs.DelRoleDataVer(ls, RbacDs.PrefixMenu);
             });
         }

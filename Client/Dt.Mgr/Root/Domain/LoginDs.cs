@@ -19,7 +19,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 登录注销领域服务
     /// </summary>
-    public class LoginDs : DomainSvc<LoginDs, AtCm.Info>
+    public class LoginDs : DomainSvc<LoginDs>
     {
         #region 登录
         /// <summary>

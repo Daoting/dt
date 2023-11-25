@@ -129,7 +129,12 @@ namespace Dt.Core
             _currentSvcName = _entitySvcName = p_entitySvcName;
         }
 
+        /// <summary>
+        /// 当前远程数据访问对象
+        /// </summary>
+        internal static readonly RemoteAccess SvcAccess = new RemoteAccess();
+
         static string _entitySvcName;
-        static string _currentSvcName;
+        static string _currentSvcName = "cm";
     }
 }

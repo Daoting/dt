@@ -40,7 +40,7 @@ namespace Dt.Base
 
             // 查询流程模板id
             if (p_prcID <= 0)
-                p_prcID = await AtCm.GetScalar<long>($"select prcd_id from cm_wfi_prc where id={p_prciID}");
+                p_prcID = await At.GetScalar<long>($"select prcd_id from cm_wfi_prc where id={p_prciID}");
 
             var def = await WfFormInfo.GetPrcDef(p_prcID);
             if (string.IsNullOrEmpty(def.Diagram))
@@ -50,7 +50,7 @@ namespace Dt.Base
             }
 
             _sketch.ReadXml(def.Diagram);
-            var atvs = await AtCm.Query($"select atvd_id,status from cm_wfi_atv where prci_id={p_prciID} order by ctime");
+            var atvs = await At.Query($"select atvd_id,status from cm_wfi_atv where prci_id={p_prciID} order by ctime");
             if (atvs.Count > 0)
             {
                 foreach (var node in _sketch.Container.Children.OfType<SNode>())
