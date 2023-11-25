@@ -10,6 +10,7 @@
             <Button Content="增加新实体" Click="OnInsert" />
             <Button Content="更新实体" Click="OnUpdate" />
             <Button Content="删除实体" Click="OnDelete" />
+            <Button Content="切换服务" Click="OnChangeSvc" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Button Content="批量增加" Click="OnBatchInsert" />

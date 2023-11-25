@@ -37,16 +37,23 @@ namespace Dt.MgrDemo
 
         async void OnUpdate(object sender, RoutedEventArgs e)
         {
+            var x = await CrudX.First(null);
+            if (x != null)
+            {
+                x.Name = _rnd.Next(1000).ToString();
+                await x.Save();
+            }
+        }
+
+        async void OnChangeSvc(object sender, RoutedEventArgs e)
+        {
             Kit.SvcName = "demo";
-            //var x = await CrudX.First(null);
-            //if (x != null)
-            //{
-            //    x.Name = _rnd.Next(1000).ToString();
-            //    await x.Save();
-            //}
+            
             var x = await UserX.First(null);
             x = await At.First<UserX>("select * from cm_user");
+
             Kit.ResetSvcName();
+
             x = await UserX.First(null);
             x = await At.First<UserX>("select * from cm_user");
         }
@@ -363,6 +370,5 @@ namespace Dt.MgrDemo
             }
             Kit.Msg(msg, 0);
         }
-
     }
 }
