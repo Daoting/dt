@@ -26,16 +26,6 @@ namespace Dt.Core
         string GetSvcUrl(string p_svcName);
 
         /// <summary>
-        /// 默认服务名，当前实体存储使用的默认服务名
-        /// </summary>
-        string SvcName { get; set; }
-
-        /// <summary>
-        /// 重置默认服务名为最初
-        /// </summary>
-        void ResetSvcName();
-        
-        /// <summary>
         /// 调用时服务端返回无访问权限，可以提示用户、跳转到登录页面等
         /// </summary>
         /// <param name="p_methodName"></param>

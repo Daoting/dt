@@ -92,8 +92,9 @@ namespace Dt.Mgr
             if (!isSingleton && !cfg.ContainsKey("SvcUrls"))
                 throw new Exception("未包含所有服务地址！服务端缺少url.json文件");
             string svcName = cfg.ContainsKey("EntitySvcName") ? cfg.Str("EntitySvcName") : "cm";
+            Kit.SetOriginSvcName(svcName);
             var rpc = Kit.GetRequiredService<IRpcConfig>() as LobRpcConfig;
-            rpc.InitSvcUrls(isSingleton ? null : (Dict)cfg["SvcUrls"], svcName);
+            rpc.InitSvcUrls(isSingleton ? null : (Dict)cfg["SvcUrls"]);
 
             // 更新sqlite文件
             if (!cfg.ContainsKey("SqliteVer"))

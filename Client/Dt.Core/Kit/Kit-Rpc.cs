@@ -108,8 +108,8 @@ namespace Dt.Core
         /// </summary>
         public static string SvcName
         {
-            get => GetRequiredService<IRpcConfig>().SvcName;
-            set => GetRequiredService<IRpcConfig>().SvcName = value;
+            get => _currentSvcName;
+            set => _currentSvcName = value;
         }
 
         /// <summary>
@@ -117,7 +117,19 @@ namespace Dt.Core
         /// </summary>
         public static void ResetSvcName()
         {
-            GetRequiredService<IRpcConfig>().ResetSvcName();
+            _currentSvcName = _entitySvcName;
         }
+
+        /// <summary>
+        /// 设置初始默认服务名
+        /// </summary>
+        /// <param name="p_entitySvcName"></param>
+        public static void SetOriginSvcName(string p_entitySvcName)
+        {
+            _currentSvcName = _entitySvcName = p_entitySvcName;
+        }
+
+        static string _entitySvcName;
+        static string _currentSvcName;
     }
 }
