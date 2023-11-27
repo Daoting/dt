@@ -221,6 +221,18 @@ namespace Dt.Core
         /// 批量添加待删除的实体，最后由Commit统一提交
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_tbl">待删除实体列表</param>
+        /// <returns></returns>
+        public Task Delete<TEntity>(Table<TEntity> p_tbl)
+            where TEntity : Entity
+        {
+            return Delete((IList<TEntity>)p_tbl);
+        }
+
+        /// <summary>
+        /// 批量添加待删除的实体，最后由Commit统一提交
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_list">待删除实体列表</param>
         /// <returns></returns>
         public async Task Delete<TEntity>(IList<TEntity> p_list)

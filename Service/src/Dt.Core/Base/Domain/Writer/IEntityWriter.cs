@@ -78,6 +78,15 @@ namespace Dt.Core
             where TEntity : Entity;
 
         /// <summary>
+        /// 批量添加待删除的实体，最后由Commit统一提交
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_tbl">待删除实体列表</param>
+        /// <returns></returns>
+        Task Delete<TEntity>(Table<TEntity> p_tbl)
+            where TEntity : Entity;
+
+        /// <summary>
         /// 先根据主键获取该实体，然后添加到待删除，最后由Commit统一提交
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
