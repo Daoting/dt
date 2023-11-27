@@ -70,6 +70,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * IEntityWriter增加NeedCommit，判断是否有数据需要提交
 * IEntityWriter.Commit增加参数，控制没有需要保存的数据时是否提示
 * 服务端配置客户端实体存储使用的默认服务名
+* IEntityWriter增加Delete(Table<TEntity>)
+* 发送回退增加填写留言功能
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

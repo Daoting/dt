@@ -38,7 +38,7 @@ namespace Dt.Mgr
         /// 删除表单数据，禁止删除或删除失败时可返回false
         /// </summary>
         /// <returns></returns>
-        Task<bool> Delete();
+        Task<bool> OnDelete();
 
         /// <summary>
         /// 任务单名称

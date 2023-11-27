@@ -8,6 +8,8 @@
 
 #region 引用命名
 using Dt.Mgr.Rbac;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -176,12 +178,13 @@ namespace Dt.Mgr.Workflow
                 if (manualSend)
                 {
                     // 手动选择后发送
-                    if (await new WfSendDlg().Show(p_info))
-                        DoSend(true, p_info);
+                    var dlg = new WfSendDlg();
+                    if (await dlg.Show(p_info))
+                        DoSend(true, p_info, dlg.Note == "" ? null : dlg.Note);
                 }
                 else
                 {
-                    DoSend(false, p_info);
+                    DoSend(false, p_info, null);
                 }
             }
             else
@@ -195,7 +198,8 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         /// <param name="p_manualSend">是否手动选择接收者</param>
         /// <param name="p_info"></param>
-        static async void DoSend(bool p_manualSend, WfFormInfo p_info)
+        /// <param name="p_note">留言</param>
+        static async void DoSend(bool p_manualSend, WfFormInfo p_info, string p_note)
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
@@ -248,7 +252,7 @@ namespace Dt.Mgr.Workflow
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: ar.Note);
+                                Note: p_note);
                             tblItems.Add(wi);
                         }
                     }
@@ -271,7 +275,7 @@ namespace Dt.Mgr.Workflow
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: ar.Note);
+                                Note: p_note);
                             tblItems.Add(wi);
                         }
                     }
@@ -349,7 +353,7 @@ namespace Dt.Mgr.Workflow
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: syncAtv.Note);
+                                Note: p_note);
                             tblItems.Add(wi);
                         }
                     }
@@ -372,7 +376,7 @@ namespace Dt.Mgr.Workflow
                                 Status: WfiItemStatus.活动,
                                 RoleID: roleID,
                                 UserID: userID,
-                                Note: syncAtv.Note);
+                                Note: p_note);
                             tblItems.Add(wi);
                         }
                     }
@@ -714,7 +718,8 @@ namespace Dt.Mgr.Workflow
                 return;
             }
 
-            if (!await Kit.Confirm("确认要回退吗？"))
+            var res = await Confirm();
+            if (!res.Item1)
                 return;
 
             DateTime time = Kit.Now;
@@ -751,7 +756,8 @@ namespace Dt.Mgr.Workflow
                 Status: WfiItemStatus.活动,
                 SenderID: Kit.UserID,
                 Sender: Kit.UserName,
-                UserID: userId);
+                UserID: userId,
+                Note: res.Item2);
 
             var w = _da.NewWriter();
             if (p_info.AtvInst.IsChanged)
@@ -788,6 +794,39 @@ namespace Dt.Mgr.Workflow
                 id = p_info.WorkItem.SenderID.Value;
             }
             return id;
+        }
+
+        static async Task<(bool, string)> Confirm()
+        {
+            var dlg = new Dlg { Title = "回退确认", IsPinned = true };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.WinPlacement = DlgPlacement.CenterScreen;
+                dlg.Width = 500;
+                dlg.ShowVeil = true;
+            }
+            Grid grid = new Grid { Margin = new Thickness(10) };
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1.0, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            var sp = new StackPanel();
+            sp.Children.Add(new TextBlock { Text = "确认要回退吗？", TextWrapping = TextWrapping.Wrap });
+            var tb = new TextBox { PlaceholderText = "留言", AcceptsReturn = true, Height = 120, Margin = new Thickness(0, 20, 0, 0) };
+            sp.Children.Add(tb);
+            grid.Children.Add(sp);
+
+            StackPanel spBtn = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 20, 0, 0), HorizontalAlignment = HorizontalAlignment.Right };
+            var btn = new Button { Content = "确认", Margin = new Thickness(0, 0, 20, 0) };
+            btn.Click += (s, e) => dlg.Close(true);
+            spBtn.Children.Add(btn);
+            btn = new Button { Content = "取消" };
+            btn.Click += (s, e) => dlg.Close(false);
+            spBtn.Children.Add(btn);
+            Grid.SetRow(spBtn, 1);
+            grid.Children.Add(spBtn);
+            dlg.Content = grid;
+            var res = await dlg.ShowAsync();
+            var txt = tb.Text.Trim().Trim('\r');
+            return (res, txt == "" ? null : txt);
         }
         #endregion
 
@@ -914,7 +953,7 @@ namespace Dt.Mgr.Workflow
                 return;
 
             p_info.NewWriter();
-            if (await p_info.Form.Delete())
+            if (await p_info.Form.OnDelete())
             {
                 if (!p_info.PrcInst.IsAdded)
                 {

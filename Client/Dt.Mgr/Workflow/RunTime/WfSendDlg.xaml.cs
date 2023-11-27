@@ -35,7 +35,7 @@ namespace Dt.Mgr.Workflow
             _info = p_info;
             if (!Kit.IsPhoneUI)
             {
-                Height = 400;
+                Height = 600;
                 Width = 500;
             }
 
@@ -54,6 +54,8 @@ namespace Dt.Mgr.Workflow
                 _m[1].Visibility = Visibility.Visible;
             return ShowAsync();
         }
+
+        public string Note => _tbNote.Text;
 
         void OnSend(object sender, Mi e)
         {

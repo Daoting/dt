@@ -19,9 +19,12 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <ScrollViewer>
-        <StackPanel x:Name="_pnl" />
-    </ScrollViewer>
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer>
+            <StackPanel x:Name="_pnl" />
+        </ScrollViewer>
+        <TextBox x:Name="_tbNote" AcceptsReturn="True" Height="80" PlaceholderText="留言" Grid.Row="1" />
+    </Grid>
 </a:Dlg>
 
     
