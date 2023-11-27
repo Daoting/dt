@@ -25,9 +25,14 @@ namespace Dt.Mgr
         /// <summary>
         /// 保存表单数据
         /// </summary>
-        /// <param name="p_isSend">是否为发送时的保存，区分单独保存和发送时的保存</param>
         /// <returns></returns>
-        Task<bool> Save(bool p_isSend);
+        Task<bool> OnSave();
+
+        /// <summary>
+        /// 执行发送
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> OnSend();
 
         /// <summary>
         /// 删除表单数据，禁止删除或删除失败时可返回false

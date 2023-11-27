@@ -109,6 +109,10 @@ namespace Dt.Mgr
             get { return AtvDef.Type == WfdAtvType.Start; }
         }
 
+        /// <summary>
+        /// 事务的实体写入器，所有需要增删改的实体在一个事务内保存到db
+        /// </summary>
+        public IEntityWriter Writer { get; private set; }
         #endregion
 
         #region 内部属性
@@ -260,6 +264,14 @@ namespace Dt.Mgr
         #endregion
 
         #region 内部方法
+        /// <summary>
+        /// 开始事务，创建新实体写入器
+        /// </summary>
+        internal void NewWriter()
+        {
+            Writer = At.NewWriter();
+        }
+
         internal async void RunCmd(Func<WfFormInfo, Task> p_func)
         {
             if (_locked)
@@ -445,7 +457,7 @@ namespace Dt.Mgr
             {
                 WorkItem.IsAccept = true;
                 WorkItem.AcceptTime = Kit.Now;
-                if (await WorkItem.Save())
+                if (await WorkItem.Save(false))
                     Kit.Msg("已自动签收！");
             }
         }

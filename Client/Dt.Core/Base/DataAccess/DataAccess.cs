@@ -284,6 +284,14 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 实体写入器
+        /// <summary>
+        /// 创建实体写入器
+        /// </summary>
+        /// <returns></returns>
+        public static IEntityWriter NewWriter() => new EntityWriter();
+        #endregion
+
         /// <summary>
         /// 数据访问对象
         /// </summary>

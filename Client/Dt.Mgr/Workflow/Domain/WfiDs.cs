@@ -19,131 +19,18 @@ namespace Dt.Mgr.Workflow
     /// </summary>
     public partial class WfiDs : DomainSvc<WfiDs>
     {
-        #region 签收
-        public static async Task ToggleAccept(WfFormInfo p_info)
-        {
-            if (p_info.WorkItem.IsAccept)
-            {
-                p_info.WorkItem.IsAccept = false;
-                p_info.WorkItem.AcceptTime = null;
-                if (await p_info.WorkItem.Save(false))
-                    Kit.Msg("已取消签收！");
-            }
-            else
-            {
-                p_info.WorkItem.IsAccept = true;
-                p_info.WorkItem.AcceptTime = Kit.Now;
-                if (await p_info.WorkItem.Save(false))
-                    Kit.Msg("已签收！");
-            }
-        }
-        #endregion
-
-        #region 回退
-        public static async Task Rollback(WfFormInfo p_info)
-        {
-            // 活动执行者多于一人时，不允许进行回退
-            if (p_info.AtvInst.InstCount > 1)
-            {
-                Kit.Msg("该活动执行者多于一人，不允许回退！");
-                return;
-            }
-
-            // 获得前一活动实例
-            var pre = await p_info.AtvInst.GetRollbackAtv();
-            if (pre == null)
-            {
-                Kit.Msg("该活动不允许回退！");
-                return;
-            }
-
-            if (!await Kit.Confirm("确认要回退吗？"))
-                return;
-
-            DateTime time = Kit.Now;
-            var newAtvInst = await WfiAtvX.New(
-                PrciID: p_info.PrcInst.ID,
-                AtvdID: pre.AtvdID,
-                Status: WfiAtvStatus.活动,
-                InstCount: 1,
-                Ctime: time,
-                Mtime: time);
-
-            // 创建迁移实例
-            var newTrs = await p_info.CreateAtvTrs(pre.AtvdID, newAtvInst.ID, time, true);
-
-            // 当前活动完成状态
-            p_info.AtvInst.Finished();
-
-            // 当前工作项置成完成状态
-            p_info.WorkItem.Finished();
-
-            long userId = await GetSenderID(p_info);
-            if (userId == 0)
-            {
-                Kit.Msg("未找到要回退的目标用户！");
-                p_info.CloseWin();
-            }
-
-            var newItem = await WfiItemX.New(
-                AtviID: newAtvInst.ID,
-                Stime: time,
-                Ctime: time,
-                Mtime: time,
-                AssignKind: WfiItemAssignKind.回退,
-                Status: WfiItemStatus.活动,
-                SenderID: Kit.UserID,
-                Sender: Kit.UserName,
-                UserID: userId);
-
-            var w = _da.NewWriter();
-            if (p_info.AtvInst.IsChanged)
-                await w.Save(p_info.AtvInst);
-            await w.Save(p_info.WorkItem);
-            await w.Save(newAtvInst);
-            await w.Save(newItem);
-            await w.Save(newTrs);
-
-            if (await w.Commit(false))
-            {
-                Kit.Msg("回退成功！");
-                p_info.CloseWin();
-            }
-            else
-            {
-                Kit.Msg("回退失败！");
-            }
-        }
-
-        static async Task<long> GetSenderID(WfFormInfo p_info)
-        {
-            long id = 0;
-            if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
-            {
-                long atvid = await _da.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
-                if (atvid != 0)
-                {
-                    id = await _da.GetScalar<long>($"select sender_id from cm_wfi_item where atvi_id={atvid} order by mtime desc");
-                }
-            }
-            else if (p_info.WorkItem.SenderID.HasValue)
-            {
-                id = p_info.WorkItem.SenderID.Value;
-            }
-            return id;
-        }
-        #endregion
-
         #region 保存表单
         public static Task<bool> SaveForm(WfFormInfo p_info)
         {
-            return SaveFormInternal(p_info, false);
+            return SaveFormInternal(p_info, true);
         }
 
-        static async Task<bool> SaveFormInternal(WfFormInfo p_info, bool p_isSend)
+        static async Task<bool> SaveFormInternal(WfFormInfo p_info, bool p_isNotify)
         {
-            // 先保存表单数据
-            if (!await p_info.Form.Save(p_isSend))
+            p_info.NewWriter();
+
+            // 先添加待保存的表单数据
+            if (!await p_info.Form.OnSave())
                 return false;
 
             // 标题
@@ -171,94 +58,12 @@ namespace Dt.Mgr.Workflow
                 p_info.WorkItem.Stime = time;
             }
 
-            var w = _da.NewWriter();
+            var w = p_info.Writer;
             await w.Save(p_info.PrcInst);
             await w.Save(p_info.AtvInst);
             await w.Save(p_info.WorkItem);
 
-            return await w.Commit(false);
-        }
-        #endregion
-
-        #region 追回
-        public static async Task<bool> Retrieve(Row row)
-        {
-            var status = (WfiPrcStatus)row.Int("status");
-            if (status != WfiPrcStatus.活动)
-            {
-                Kit.Warn($"该任务已{status}，无法追回");
-                return false;
-            }
-
-            if (row.Int("reCount") > 0)
-            {
-                Kit.Warn("含回退，无法追回");
-                return false;
-            }
-
-            var tbl = await WfiItemX.GetNextItems(row.Long("atvd_id"), row.Long("prci_id"));
-            if (tbl.Count == 0)
-            {
-                Kit.Warn("无后续活动，无法追回");
-                return false;
-            }
-
-            HashSet<long> ls = new HashSet<long>();
-            foreach (var r in tbl)
-            {
-                var itemState = r.Status;
-                if (itemState == WfiItemStatus.同步)
-                {
-                    Kit.Warn("后续活动包含同步，无法追回");
-                    return false;
-                }
-
-                if (itemState != WfiItemStatus.活动
-                    || r.IsAccept)
-                {
-                    Kit.Warn("已签收无法追回！");
-                    return false;
-                }
-                ls.Add(r.Long("atvi_id"));
-            }
-
-            // 更新当前实例状态为活动
-            DateTime time = Kit.Now;
-            WfiAtvX curAtvi = await WfiAtvX.GetByID(row.Long("atvi_id"));
-            curAtvi.Status = WfiAtvStatus.活动;
-            curAtvi.InstCount += 1;
-            curAtvi.Mtime = time;
-
-            // 根据当前工作项创建新工作项并更改指派方式
-            var curItem = await WfiItemX.GetByID(row.Long("item_id"));
-            var newItem = await WfiItemX.New(
-                AtviID: curItem.AtviID,
-                Status: WfiItemStatus.活动,
-                AssignKind: WfiItemAssignKind.追回,
-                SenderID: curItem.SenderID,
-                Sender: curItem.Sender,
-                Stime: curItem.Stime,
-                IsAccept: false,
-                RoleID: curItem.RoleID,
-                UserID: curItem.UserID,
-                Note: curItem.Note,
-                Ctime: time,
-                Mtime: time);
-
-            // 删除已发送的后续活动实例，关联删除工作项及迁移实例
-            Table<WfiAtvX> nextAtvs = new Table<WfiAtvX>();
-            nextAtvs.RecordDeleted();
-            foreach (var id in ls)
-            {
-                nextAtvs.DeletedRows.Add(new WfiAtvX(id));
-            }
-
-            // 一个事务批量保存
-            var w = _da.NewWriter();
-            await w.Save(nextAtvs);
-            await w.Save(curAtvi);
-            await w.Save(newItem);
-            return await w.Commit(false);
+            return await w.Commit(p_isNotify);
         }
         #endregion
 
@@ -270,8 +75,16 @@ namespace Dt.Mgr.Workflow
 
         public static async Task Send(WfFormInfo p_info)
         {
-            // 先保存
-            if (!await SaveFormInternal(p_info, true))
+            // 先按照非发送状态保存表单数据，如自填写、新建等数据
+            // 此保存过程和发送无关，相当于点击保存按钮，与发送不在一个事务！
+            if (!await SaveFormInternal(p_info, false))
+            {
+                Kit.Warn("表单保存失败！");
+                return;
+            }
+
+            // 确保发送时外部自动填写表单数据或特殊校验，如发送人、发送时间、当前状态等
+            if (!await p_info.Form.OnSend())
                 return;
 
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
@@ -339,6 +152,8 @@ namespace Dt.Mgr.Workflow
                     case WfdAtvType.Finish:
                         // 结束活动
                         nextRecvs.FinishedAtv = new AtvFinishedRecv { Def = atv };
+                        if (!await Kit.Confirm($"当前 [{p_info.State}] 通过后，任务即结束！\r\n确认继续执行吗？"))
+                            return;
                         break;
                 }
             }
@@ -586,7 +401,7 @@ namespace Dt.Mgr.Workflow
             #endregion
 
             #region 整理待保存数据
-            var w = _da.NewWriter();
+            var w = p_info.Writer;
             if (p_info.PrcInst.IsChanged)
                 await w.Save(p_info.PrcInst);
 
@@ -637,7 +452,7 @@ namespace Dt.Mgr.Workflow
                 p_info.AtvInst.Finished();
             p_info.WorkItem.Finished();
 
-            var w = _da.NewWriter();
+            var w = p_info.Writer;
             if (p_info.AtvInst.IsChanged)
                 await w.Save(p_info.AtvInst);
             await w.Save(p_info.WorkItem);
@@ -881,6 +696,203 @@ namespace Dt.Mgr.Workflow
         }
         #endregion
 
+        #region 回退
+        public static async Task Rollback(WfFormInfo p_info)
+        {
+            // 活动执行者多于一人时，不允许进行回退
+            if (p_info.AtvInst.InstCount > 1)
+            {
+                Kit.Msg("该活动执行者多于一人，不允许回退！");
+                return;
+            }
+
+            // 获得前一活动实例
+            var pre = await p_info.AtvInst.GetRollbackAtv();
+            if (pre == null)
+            {
+                Kit.Msg("该活动不允许回退！");
+                return;
+            }
+
+            if (!await Kit.Confirm("确认要回退吗？"))
+                return;
+
+            DateTime time = Kit.Now;
+            var newAtvInst = await WfiAtvX.New(
+                PrciID: p_info.PrcInst.ID,
+                AtvdID: pre.AtvdID,
+                Status: WfiAtvStatus.活动,
+                InstCount: 1,
+                Ctime: time,
+                Mtime: time);
+
+            // 创建迁移实例
+            var newTrs = await p_info.CreateAtvTrs(pre.AtvdID, newAtvInst.ID, time, true);
+
+            // 当前活动完成状态
+            p_info.AtvInst.Finished();
+
+            // 当前工作项置成完成状态
+            p_info.WorkItem.Finished();
+
+            long userId = await GetSenderID(p_info);
+            if (userId == 0)
+            {
+                Kit.Msg("未找到要回退的目标用户！");
+                p_info.CloseWin();
+            }
+
+            var newItem = await WfiItemX.New(
+                AtviID: newAtvInst.ID,
+                Stime: time,
+                Ctime: time,
+                Mtime: time,
+                AssignKind: WfiItemAssignKind.回退,
+                Status: WfiItemStatus.活动,
+                SenderID: Kit.UserID,
+                Sender: Kit.UserName,
+                UserID: userId);
+
+            var w = _da.NewWriter();
+            if (p_info.AtvInst.IsChanged)
+                await w.Save(p_info.AtvInst);
+            await w.Save(p_info.WorkItem);
+            await w.Save(newAtvInst);
+            await w.Save(newItem);
+            await w.Save(newTrs);
+
+            if (await w.Commit(false))
+            {
+                Kit.Msg("回退成功！");
+                p_info.CloseWin();
+            }
+            else
+            {
+                Kit.Msg("回退失败！");
+            }
+        }
+
+        static async Task<long> GetSenderID(WfFormInfo p_info)
+        {
+            long id = 0;
+            if (p_info.WorkItem.AssignKind == WfiItemAssignKind.回退)
+            {
+                long atvid = await _da.GetScalar<long>($"select id from cm_wfi_atv where prci_id={p_info.AtvInst.PrciID} and atvd_id={p_info.AtvInst.AtvdID} and status=1 order by mtime desc");
+                if (atvid != 0)
+                {
+                    id = await _da.GetScalar<long>($"select sender_id from cm_wfi_item where atvi_id={atvid} order by mtime desc");
+                }
+            }
+            else if (p_info.WorkItem.SenderID.HasValue)
+            {
+                id = p_info.WorkItem.SenderID.Value;
+            }
+            return id;
+        }
+        #endregion
+
+        #region 追回
+        public static async Task<bool> Retrieve(Row row)
+        {
+            var status = (WfiPrcStatus)row.Int("status");
+            if (status != WfiPrcStatus.活动)
+            {
+                Kit.Warn($"该任务已{status}，无法追回");
+                return false;
+            }
+
+            if (row.Int("reCount") > 0)
+            {
+                Kit.Warn("含回退，无法追回");
+                return false;
+            }
+
+            var tbl = await WfiItemX.GetNextItems(row.Long("atvd_id"), row.Long("prci_id"));
+            if (tbl.Count == 0)
+            {
+                Kit.Warn("无后续活动，无法追回");
+                return false;
+            }
+
+            HashSet<long> ls = new HashSet<long>();
+            foreach (var r in tbl)
+            {
+                var itemState = r.Status;
+                if (itemState == WfiItemStatus.同步)
+                {
+                    Kit.Warn("后续活动包含同步，无法追回");
+                    return false;
+                }
+
+                if (itemState != WfiItemStatus.活动
+                    || r.IsAccept)
+                {
+                    Kit.Warn("已签收无法追回！");
+                    return false;
+                }
+                ls.Add(r.Long("atvi_id"));
+            }
+
+            // 更新当前实例状态为活动
+            DateTime time = Kit.Now;
+            WfiAtvX curAtvi = await WfiAtvX.GetByID(row.Long("atvi_id"));
+            curAtvi.Status = WfiAtvStatus.活动;
+            curAtvi.InstCount += 1;
+            curAtvi.Mtime = time;
+
+            // 根据当前工作项创建新工作项并更改指派方式
+            var curItem = await WfiItemX.GetByID(row.Long("item_id"));
+            var newItem = await WfiItemX.New(
+                AtviID: curItem.AtviID,
+                Status: WfiItemStatus.活动,
+                AssignKind: WfiItemAssignKind.追回,
+                SenderID: curItem.SenderID,
+                Sender: curItem.Sender,
+                Stime: curItem.Stime,
+                IsAccept: false,
+                RoleID: curItem.RoleID,
+                UserID: curItem.UserID,
+                Note: curItem.Note,
+                Ctime: time,
+                Mtime: time);
+
+            // 删除已发送的后续活动实例，关联删除工作项及迁移实例
+            Table<WfiAtvX> nextAtvs = new Table<WfiAtvX>();
+            nextAtvs.RecordDeleted();
+            foreach (var id in ls)
+            {
+                nextAtvs.DeletedRows.Add(new WfiAtvX(id));
+            }
+
+            // 一个事务批量保存
+            var w = _da.NewWriter();
+            await w.Save(nextAtvs);
+            await w.Save(curAtvi);
+            await w.Save(newItem);
+            return await w.Commit(false);
+        }
+        #endregion
+
+        #region 签收
+        public static async Task ToggleAccept(WfFormInfo p_info)
+        {
+            if (p_info.WorkItem.IsAccept)
+            {
+                p_info.WorkItem.IsAccept = false;
+                p_info.WorkItem.AcceptTime = null;
+                if (await p_info.WorkItem.Save(false))
+                    Kit.Msg("已取消签收！");
+            }
+            else
+            {
+                p_info.WorkItem.IsAccept = true;
+                p_info.WorkItem.AcceptTime = Kit.Now;
+                if (await p_info.WorkItem.Save(false))
+                    Kit.Msg("已签收！");
+            }
+        }
+        #endregion
+
         #region 删除
         public static async Task Delete(WfFormInfo p_info)
         {
@@ -901,19 +913,22 @@ namespace Dt.Mgr.Workflow
             if (!await Kit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
+            p_info.NewWriter();
             if (await p_info.Form.Delete())
             {
                 if (!p_info.PrcInst.IsAdded)
                 {
-                    if (!await p_info.PrcInst.Delete(false))
-                        Kit.Warn("表单已删除，未找到待删除的流程实例！");
+                    var w = p_info.Writer;
+                    await w.Delete(p_info.PrcInst);
+                    if (!await w.Commit(false))
+                        Kit.Warn("表单删除失败！");
                 }
                 p_info.CloseWin();
             }
         }
         #endregion
 
-        #region 删除
+        #region 新任务推送
         /// <summary>
         /// 新任务事件
         /// </summary>
@@ -932,7 +947,15 @@ namespace Dt.Mgr.Workflow
             notify.Link = "查看";
             notify.LinkCallback = (e) =>
             {
-                Kit.OpenWin(typeof(CurrentTasks), "待办任务", Icons.信件);
+                Dlg dlg = new Dlg { IsPinned = true };
+                if (!Kit.IsPhoneUI)
+                {
+                    dlg.Width = 700;
+                    dlg.Height = 600;
+                }
+                dlg.LoadTab(new CurrentTasks());
+                dlg.Show();
+
                 // 关闭所有待办提醒的提示
                 var list = new List<NotifyInfo>();
                 foreach (var ni in Kit.NotifyList)
