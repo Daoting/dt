@@ -70,22 +70,24 @@ namespace Dt.MgrDemo.Workflow
             }
         }
 
-        public Task<bool> Save(bool p_isSend)
+        public async Task<bool> OnSave(IEntityWriter w)
         {
-            var data = _fv.Data.To<收文X>();
-            if (data.IsAdded || data.IsChanged)
-                return data.Save();
+            await w.Save(_fv.Data.To<收文X>());
+            return true;
+        }
 
+        public Task<bool> OnSend(IEntityWriter w)
+        {
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete()
+        public async Task<bool> OnDelete(IEntityWriter w)
         {
             var data = _fv.Data.To<收文X>();
             if (!data.IsAdded)
-                return data.Delete();
+                await w.Delete(data);
 
-            return Task.FromResult(true);
+            return true;
         }
 
         public string GetPrcName()

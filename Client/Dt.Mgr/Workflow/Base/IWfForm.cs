@@ -25,20 +25,23 @@ namespace Dt.Mgr
         /// <summary>
         /// 保存表单数据
         /// </summary>
+        /// <param name="w">实体写入器，所有需要增删改的实体在一个事务内保存到db</param>
         /// <returns></returns>
-        Task<bool> OnSave();
+        Task<bool> OnSave(IEntityWriter w);
 
         /// <summary>
         /// 执行发送
         /// </summary>
+        /// <param name="w">实体写入器，所有需要增删改的实体在一个事务内保存到db</param>
         /// <returns></returns>
-        Task<bool> OnSend();
+        Task<bool> OnSend(IEntityWriter w);
 
         /// <summary>
         /// 删除表单数据，禁止删除或删除失败时可返回false
         /// </summary>
+        /// <param name="w">实体写入器，所有需要增删改的实体在一个事务内保存到db</param>
         /// <returns></returns>
-        Task<bool> OnDelete();
+        Task<bool> OnDelete(IEntityWriter w);
 
         /// <summary>
         /// 任务单名称

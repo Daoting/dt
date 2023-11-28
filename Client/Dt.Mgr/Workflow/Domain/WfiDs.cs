@@ -29,10 +29,10 @@ namespace Dt.Mgr.Workflow
 
         static async Task<bool> SaveFormInternal(WfFormInfo p_info, bool p_isNotify)
         {
-            p_info.NewWriter();
+            var w = _da.NewWriter();
 
             // 先添加待保存的表单数据
-            if (!await p_info.Form.OnSave())
+            if (!await p_info.Form.OnSave(w))
                 return false;
 
             // 标题
@@ -60,7 +60,6 @@ namespace Dt.Mgr.Workflow
                 p_info.WorkItem.Stime = time;
             }
 
-            var w = p_info.Writer;
             await w.Save(p_info.PrcInst);
             await w.Save(p_info.AtvInst);
             await w.Save(p_info.WorkItem);
@@ -86,14 +85,15 @@ namespace Dt.Mgr.Workflow
             }
 
             // 确保发送时外部自动填写表单数据或特殊校验，如发送人、发送时间、当前状态等
-            if (!await p_info.Form.OnSend())
+            var w = _da.NewWriter();
+            if (!await p_info.Form.OnSend(w))
                 return;
 
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
             if (!await p_info.AtvInst.IsFinished())
             {
                 // 活动未结束（不是最后一人），只结束当前工作项
-                await SaveWorkItem(false, p_info);
+                await SaveWorkItem(false, p_info, w);
                 return;
             }
 
@@ -102,7 +102,7 @@ namespace Dt.Mgr.Workflow
             if (nextAtvs.Count == 0)
             {
                 // 无后续活动，结束当前工作项和活动
-                await SaveWorkItem(true, p_info);
+                await SaveWorkItem(true, p_info, w);
                 return;
             }
 
@@ -154,7 +154,7 @@ namespace Dt.Mgr.Workflow
                     case WfdAtvType.Finish:
                         // 结束活动
                         nextRecvs.FinishedAtv = new AtvFinishedRecv { Def = atv };
-                        if (!await Kit.Confirm($"当前 [{p_info.State}] 通过后，任务即结束！\r\n确认继续执行吗？"))
+                        if (!await Kit.Confirm($"当前 [{p_info.State}] 通过后，任务将完成结束！\r\n确认继续执行吗？"))
                             return;
                         break;
                 }
@@ -180,11 +180,11 @@ namespace Dt.Mgr.Workflow
                     // 手动选择后发送
                     var dlg = new WfSendDlg();
                     if (await dlg.Show(p_info))
-                        DoSend(true, p_info, dlg.Note == "" ? null : dlg.Note);
+                        DoSend(true, p_info, dlg.Note == "" ? null : dlg.Note, w);
                 }
                 else
                 {
-                    DoSend(false, p_info, null);
+                    DoSend(false, p_info, null, w);
                 }
             }
             else
@@ -199,7 +199,8 @@ namespace Dt.Mgr.Workflow
         /// <param name="p_manualSend">是否手动选择接收者</param>
         /// <param name="p_info"></param>
         /// <param name="p_note">留言</param>
-        static async void DoSend(bool p_manualSend, WfFormInfo p_info, string p_note)
+        /// <param name="w"></param>
+        static async void DoSend(bool p_manualSend, WfFormInfo p_info, string p_note, IEntityWriter w)
         {
             #region 后续活动
             // 生成后续活动的活动实例、工作项、迁移实例，一个或多个
@@ -405,7 +406,6 @@ namespace Dt.Mgr.Workflow
             #endregion
 
             #region 整理待保存数据
-            var w = p_info.Writer;
             if (p_info.PrcInst.IsChanged)
                 await w.Save(p_info.PrcInst);
 
@@ -449,14 +449,14 @@ namespace Dt.Mgr.Workflow
         /// </summary>
         /// <param name="p_isFinished"></param>
         /// <param name="p_info"></param>
+        /// <param name="w"></param>
         /// <returns></returns>
-        static async Task SaveWorkItem(bool p_isFinished, WfFormInfo p_info)
+        static async Task SaveWorkItem(bool p_isFinished, WfFormInfo p_info, IEntityWriter w)
         {
             if (p_isFinished)
                 p_info.AtvInst.Finished();
             p_info.WorkItem.Finished();
 
-            var w = p_info.Writer;
             if (p_info.AtvInst.IsChanged)
                 await w.Save(p_info.AtvInst);
             await w.Save(p_info.WorkItem);
@@ -952,12 +952,11 @@ namespace Dt.Mgr.Workflow
             if (!await Kit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
-            p_info.NewWriter();
-            if (await p_info.Form.OnDelete())
+            var w = _da.NewWriter();
+            if (await p_info.Form.OnDelete(w))
             {
                 if (!p_info.PrcInst.IsAdded)
                 {
-                    var w = p_info.Writer;
                     await w.Delete(p_info.PrcInst);
                     if (!await w.Commit(false))
                         Kit.Warn("表单删除失败！");
