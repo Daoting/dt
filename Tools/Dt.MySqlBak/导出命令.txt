@@ -1,1 +1,0 @@
-mysqldump -h10.10.1.2 -udt -pdt initdb  -R -E --no-create-db  --default-character-set=utf8 --hex-blob --force --single-transaction  > "mysql-init.sql"

@@ -1,7 +1,0 @@
-{
-  "profiles": {
-    "$safeprojectname$": {
-      "commandName": "MsixPackage"
-    }
-  }
-}

@@ -1,8 +1,0 @@
-<Project ToolsVersion="Current">
-	<ItemGroup>
-		<!-- 所有引用 -->
-		<ProjectReference Include="..\$ext_safeprojectname$.Base\$ext_safeprojectname$.Base.csproj" />
-		<ProjectReference Include="..\$ext_safeprojectname$.Entry\$ext_safeprojectname$.Entry.csproj" />
-		
-	</ItemGroup>
-</Project>

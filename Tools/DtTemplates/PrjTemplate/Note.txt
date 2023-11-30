@@ -1,2 +1,0 @@
-﻿
-只升级 Dt 版本，需修改 Client\Stub\Options\Common.props 和 Svc\Svc.csproj 两处
