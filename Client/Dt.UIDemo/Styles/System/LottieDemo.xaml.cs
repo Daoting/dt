@@ -9,9 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Microsoft.UI.Xaml;
-#if !WIN
-using Microsoft.Toolkit.Uwp.UI.Lottie;
-#endif
+using CommunityToolkit.WinUI.Lottie;
 #endregion
 
 namespace Dt.UIDemo
@@ -98,11 +96,6 @@ namespace Dt.UIDemo
             }
         }
 
-#if WIN
-        void LoadLottie()
-        {
-        }
-#else
         void LoadLottie()
         {
             // uno 支持嵌入资源文件，但winui不支持
@@ -117,9 +110,7 @@ namespace Dt.UIDemo
 
             _tb.Text = _names[_cur] + ".json";
         }
-#endif
     }
-
 
     // Skottie https://github.com/unoplatform/Uno.Samples/blob/master/UI/SkottieSample/SkottieSample/SkottieSample.Shared/MainPage.xaml.cs
     /*
