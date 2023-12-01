@@ -30,7 +30,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="!$(TargetFramework.Contains('-'))">
-        <DefineConstants>$(DefineConstants);WASM;UNO_DISABLE_KNOWN_MISSING_TYPES;ENABLECURSOR</DefineConstants>
+        <DefineConstants>$(DefineConstants);WASM;ENABLECURSOR</DefineConstants>
     </PropertyGroup>
 
     <!-- 公共引用包 -->
@@ -38,51 +38,53 @@
         <PackageReference Include="Dt.Infras" Version="3.0.2" />
         <PackageReference Include="Dt.BuildTools" Version="1.3.6" PrivateAssets="none" />
         <!--高于7.0.9时wasm出错-->
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-        <PackageReference Include="Serilog" Version="3.0.1" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-        <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.4" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="2.0.0" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.7" />
     </ItemGroup>
 
     <!-- 非windows引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Uno.WinUI" Version="4.10.26" PrivateAssets="none" />
+        <PackageReference Include="Uno.WinUI" Version="5.0.48" PrivateAssets="none" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-        <PackageReference Include="Uno.WinUI.Lottie" Version="4.10.26" />
+        <PackageReference Include="Uno.WinUI.Lottie" Version="5.0.48" />
         <!-- uno日志 -->
-        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="4.10.26" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="5.0.48" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     </ItemGroup>
 
     <!-- windows引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" PrivateAssets="none" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231115000" PrivateAssets="none" />
+        <!-- Lottie动画已正常 -->
+        <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.0.0-rc" />
         <!-- Toast参数启动引用 -->
         <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     </ItemGroup>
 
     <!-- android引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-        <PackageReference Include="Square.OkHttp3" Version="4.9.3.2" />
+        <PackageReference Include="Square.OkHttp3" Version="4.12.0" />
         <!-- WorkManager后台任务引用 -->
-        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.7.1.4" />
+        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.8.1.6" />
     </ItemGroup>
 
     <!-- iOS引用包 -->
     <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-        <PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.4.0" />
+        <PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
     </ItemGroup>
 
     <!-- wasm引用包 -->
     <ItemGroup Condition="!$(TargetFramework.Contains('-'))">
         <!-- 打包后提供给外部 web 项目引用时，需要 build 里的 .target -->
-        <PackageReference Include="Uno.WinUI.WebAssembly" Version="4.10.26" PrivateAssets="none" />
-        <PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="4.10.26" />
-        <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.4.0" />
-        <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.5" />
+        <PackageReference Include="Uno.WinUI.WebAssembly" Version="5.0.48" PrivateAssets="none" />
+        <PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.0.48" />
+        <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
+        <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
     </ItemGroup>
 
     <!-- 引用包控制
