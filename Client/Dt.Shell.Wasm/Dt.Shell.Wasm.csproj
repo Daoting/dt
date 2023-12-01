@@ -7,8 +7,8 @@
         <!-- 使用Dt.BuildTools标志 -->
         <UseWasmTools>true</UseWasmTools>
         
-        <!-- 必须sdk完整路径，避免总下载失败 -->
-        <NetCoreWasmSDKUri>d:\dt\Packages\wasm\dotnet-runtime-wasm-windows-633c7b6-0cee4aaff9c-3338312971-Sqlite.zip</NetCoreWasmSDKUri>
+        <!-- 必须sdk完整路径，避免总下载失败，实际文件名加后缀 -simd -->
+        <NetCoreWasmSDKUri>d:\dt\Packages\wasm\dotnet-runtime-wasm-windows-5708d38-7331dcb60e0-6866112926-Sqlite.zip</NetCoreWasmSDKUri>
 
         <!-- 默认Interpreter -->
         <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
@@ -17,13 +17,13 @@
     <Import Project="..\Common.props" />
 
     <ItemGroup>
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="7.0.20" />
-        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="7.0.20" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.4" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.4" />
         <!-- 不引用link出错 -->
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.0" />
         
-        <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.js、dotnet.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
-        <!--<PackageReference Include="Uno.sqlite-wasm" Version="3.34.1.4" />-->
+        <!-- 升级wasmsdk压缩包后第一次生成时需要引用该包，生成后将dotnet.native.js、dotnet.native.wasm替换wasmsdk压缩包的同名文件，再次build不需引用该包，节约时间 -->
+        <!--<PackageReference Include="Uno.sqlite-wasm" Version="3.40.0.1" />-->
     </ItemGroup>
 
     <ItemGroup>
