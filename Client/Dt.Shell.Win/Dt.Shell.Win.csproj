@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0-windows10.0.19041</TargetFramework>
+        <TargetFramework>net8.0-windows10.0.19041</TargetFramework>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <Platforms>x86;x64;ARM64</Platforms>
-        <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-        <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
         <DefaultLanguage>zh-CN</DefaultLanguage>
@@ -23,8 +23,6 @@
         
     </PropertyGroup>
 
-    <Import Project="..\Common.props" />
-
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
@@ -34,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dt.Tasks" Version="2.0.0" />
+        <PackageReference Include="Dt.Tasks" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -47,11 +45,5 @@
 
     <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
         <ProjectCapability Include="Msix" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="WinRT.Host.runtimeconfig.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 </Project>

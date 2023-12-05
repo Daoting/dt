@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <NoWarn>NU1701</NoWarn>
         <!-- 使用Dt.BuildTools标志 -->
         <UseWasmTools>true</UseWasmTools>
@@ -13,9 +13,7 @@
         <!-- 默认Interpreter -->
         <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
     </PropertyGroup>
-
-    <Import Project="..\Common.props" />
-
+    
     <ItemGroup>
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.4" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.4" />
@@ -69,5 +67,16 @@
     </PropertyGroup>
     <ItemGroup Condition="'$(Configuration)'=='Release'">
         <Content Include="pwa\**" Exclude="pwa\manifest.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Remove="Microsoft.AspNetCore.Builder" />
+        <Using Remove="Microsoft.AspNetCore.Hosting" />
+        <Using Remove="Microsoft.AspNetCore.Http" />
+        <Using Remove="Microsoft.AspNetCore.Routing" />
+        <Using Remove="Microsoft.Extensions.Configuration" />
+        <Using Remove="Microsoft.Extensions.DependencyInjection" />
+        <Using Remove="Microsoft.Extensions.Hosting" />
+        <Using Remove="Microsoft.Extensions.Logging" />
     </ItemGroup>
 </Project>

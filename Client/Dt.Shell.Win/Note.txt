@@ -1,5 +1,5 @@
 ﻿
-1. 需要包含 WinRT.Host.runtimeconfig.json 文件，将该文件"复制到输出目录"，否则无法启动后台任务
+1. 需要包含 WinRT.Host.runtimeconfig.json 文件，将该文件"复制到输出目录"，否则无法启动后台任务。升级 Dt.Tasks3.0 后不再需要！！！
 
 
 2. 注意 Properties\PublishProfiles 下的配置文件，最初调试时因配置问题造成各种变量异常！

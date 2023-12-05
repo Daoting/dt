@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0-ios</TargetFramework>
+        <TargetFramework>net8.0-ios</TargetFramework>
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <IsUnoHead>true</IsUnoHead>
@@ -29,8 +29,6 @@
       <CodesignProvision>dt.samples.debug</CodesignProvision>
     </PropertyGroup>
     
-    <Import Project="..\Common.props" />
-
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
         <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />

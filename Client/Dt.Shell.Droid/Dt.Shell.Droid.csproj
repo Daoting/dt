@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0-android</TargetFramework>
+        <TargetFramework>net8.0-android</TargetFramework>
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <IsUnoHead>true</IsUnoHead>
@@ -18,8 +18,6 @@
         <AndroidSigningKeyPass>around</AndroidSigningKeyPass>
         <AndroidSigningStorePass>around</AndroidSigningStorePass>
     </PropertyGroup>
-    
-    <Import Project="..\Common.props" />
     
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />

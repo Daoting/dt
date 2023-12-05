@@ -16,11 +16,11 @@ namespace Dt.Core
     /// </summary>
     public class DictionaryResourceBase
     {
-        public void Merge()
+        public void Merge(Dictionary<string, SqliteTblsInfo> p_sqliteDbs, Dictionary<string, Type> p_aliasTypes, Dictionary<string, List<Type>> p_aliasTypeList)
         {
-            MergeSqliteDbs(Stub.Inst._sqliteDbs);
-            MergeTypeAlias(Stub.Inst._aliasTypes);
-            MergeTypeListAlias();
+            MergeSqliteDbs(p_sqliteDbs);
+            MergeTypeAlias(p_aliasTypes);
+            MergeTypeListAlias(p_aliasTypeList);
         }
 
         // 以下方法内容由 Dt.BuildTools 在编译前自动生成
@@ -36,29 +36,31 @@ namespace Dt.Core
         /// 合并类型别名字典，程序集中所有贴有 TypeAliasAttribute 子标签的类型都会收集到字典，如视图类型、工作流表单类型等
         /// 先调用 base.MergeTypeAlias，后添加的别名相同的项放在列表的头部
         /// 键规则：标签类名去掉尾部的Attribute-别名，如：View-主页
-        /// <param name="p_dict"></param>
         /// </summary>
+        /// <param name="p_dict"></param>
         protected virtual void MergeTypeAlias(Dictionary<string, Type> p_dict) { }
 
         /// <summary>
         /// 合并类型别名字典，程序集中所有贴有 TypeListAliasAttribute 子标签的类型都会收集到字典
         /// 键规则和以上相同
         /// </summary>
-        protected virtual void MergeTypeListAlias() { }
+        /// <param name="p_dict"></param>
+        protected virtual void MergeTypeListAlias(Dictionary<string, List<Type>> p_dict) { }
 
         /// <summary>
         /// 合并新类型，若存在相同别名的列表则插入头部，不存在则创建新列表
         /// </summary>
         /// <param name="p_key"></param>
         /// <param name="p_type"></param>
-        protected void DoMergeTypeAlias(string p_key, Type p_type)
+        /// <param name="p_dict"></param>
+        protected void DoMergeTypeAlias(string p_key, Type p_type, Dictionary<string, List<Type>> p_dict)
         {
             List<Type> ls;
-            if (!Stub.Inst._aliasTypeList.TryGetValue(p_key, out ls))
+            if (!p_dict.TryGetValue(p_key, out ls))
             {
                 ls = new List<Type>();
                 ls.Add(p_type);
-                Stub.Inst._aliasTypeList[p_key] = ls;
+                p_dict[p_key] = ls;
             }
             else
             {

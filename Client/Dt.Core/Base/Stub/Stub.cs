@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using System.Collections.Frozen;
 using System.Reflection;
 #endregion
 
@@ -126,13 +127,22 @@ namespace Dt.Core
                 if (mi == null)
                     throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
 
-                mi.Invoke(app, new object[0]);
+                var sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
+                var aliasTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
+                var aliasTypeList = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
+
+                mi.Invoke(app, new object[3] { sqliteDbs, aliasTypes, aliasTypeList });
+
+                // 高性能
+                _sqliteDbs = sqliteDbs.ToFrozenDictionary();
+                _aliasTypes = aliasTypes.ToFrozenDictionary();
+                _aliasTypeList = aliasTypeList.ToFrozenDictionary();
             }
         }
 
-        internal readonly Dictionary<string, SqliteTblsInfo> _sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-        internal readonly Dictionary<string, Type> _aliasTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-        internal readonly Dictionary<string, List<Type>> _aliasTypeList = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
+        internal FrozenDictionary<string, SqliteTblsInfo> _sqliteDbs;
+        internal FrozenDictionary<string, Type> _aliasTypes;
+        internal FrozenDictionary<string, List<Type>> _aliasTypeList;
         #endregion
 
     }

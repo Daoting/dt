@@ -12,8 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.UIDemo", "Dt.UIDemo\Dt.UIDemo.csproj", "{81C47BDD-8EA7-4E73-B1E9-7C445E0975C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{F025676F-4D97-4AB0-A630-97E004A332C0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Win", "Dt.Shell.Win\Dt.Shell.Win.csproj", "{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		References.props = References.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Wasm", "Dt.Shell.Wasm\Dt.Shell.Wasm.csproj", "{B26D391E-8F0E-448C-9EFD-0532DCC9C7BF}"
 EndProject
@@ -77,24 +79,6 @@ Global
 		{81C47BDD-8EA7-4E73-B1E9-7C445E0975C8}.Release|x64.Build.0 = Release|Any CPU
 		{81C47BDD-8EA7-4E73-B1E9-7C445E0975C8}.Release|x86.ActiveCfg = Release|Any CPU
 		{81C47BDD-8EA7-4E73-B1E9-7C445E0975C8}.Release|x86.Build.0 = Release|Any CPU
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|Any CPU.Build.0 = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|Any CPU.Deploy.0 = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x64.ActiveCfg = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x64.Build.0 = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x64.Deploy.0 = Debug|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x86.ActiveCfg = Debug|x86
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x86.Build.0 = Debug|x86
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Debug|x86.Deploy.0 = Debug|x86
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|Any CPU.ActiveCfg = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|Any CPU.Build.0 = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|Any CPU.Deploy.0 = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x64.ActiveCfg = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x64.Build.0 = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x64.Deploy.0 = Release|x64
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x86.ActiveCfg = Release|x86
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x86.Build.0 = Release|x86
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9}.Release|x86.Deploy.0 = Release|x86
 		{B26D391E-8F0E-448C-9EFD-0532DCC9C7BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B26D391E-8F0E-448C-9EFD-0532DCC9C7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26D391E-8F0E-448C-9EFD-0532DCC9C7BF}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -124,7 +108,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2F8F1443-7303-4BAE-9BCC-708AD36A34A9} = {F025676F-4D97-4AB0-A630-97E004A332C0}
 		{B26D391E-8F0E-448C-9EFD-0532DCC9C7BF} = {F025676F-4D97-4AB0-A630-97E004A332C0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

@@ -3,9 +3,6 @@
 		<Description>搬运工控件样例库</Description>
 	</PropertyGroup>
 
-    <Import Project="..\Targets.props" />
-    <Import Project="..\Common.props" />
-    
 	<ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
 		<ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />

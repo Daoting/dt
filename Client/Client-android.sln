@@ -12,8 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.UIDemo", "Dt.UIDemo\Dt.UIDemo.csproj", "{47071AB5-36DE-446A-A55B-2FACBF2CF646}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{AF2D3B64-FDEC-41AA-848E-977C610A7B3F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Win", "Dt.Shell.Win\Dt.Shell.Win.csproj", "{EA91C502-634A-4FF5-854B-128CC7A9E6EB}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		References.props = References.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Shell.Droid", "Dt.Shell.Droid\Dt.Shell.Droid.csproj", "{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}"
 EndProject
@@ -77,29 +79,12 @@ Global
 		{47071AB5-36DE-446A-A55B-2FACBF2CF646}.Release|x64.Build.0 = Release|Any CPU
 		{47071AB5-36DE-446A-A55B-2FACBF2CF646}.Release|x86.ActiveCfg = Release|Any CPU
 		{47071AB5-36DE-446A-A55B-2FACBF2CF646}.Release|x86.Build.0 = Release|Any CPU
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|Any CPU.Build.0 = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|Any CPU.Deploy.0 = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x64.ActiveCfg = Debug|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x64.Build.0 = Debug|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x64.Deploy.0 = Debug|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x86.ActiveCfg = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x86.Build.0 = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Debug|x86.Deploy.0 = Debug|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|Any CPU.ActiveCfg = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|Any CPU.Build.0 = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|Any CPU.Deploy.0 = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x64.ActiveCfg = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x64.Build.0 = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x64.Deploy.0 = Release|x64
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x86.ActiveCfg = Release|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x86.Build.0 = Release|x86
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB}.Release|x86.Deploy.0 = Release|x86
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|x64.Deploy.0 = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Debug|x86.Build.0 = Debug|Any CPU
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -126,7 +111,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{EA91C502-634A-4FF5-854B-128CC7A9E6EB} = {AF2D3B64-FDEC-41AA-848E-977C610A7B3F}
 		{9EDE1839-C7B7-4CCF-A3BD-BFCF8E217547} = {AF2D3B64-FDEC-41AA-848E-977C610A7B3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

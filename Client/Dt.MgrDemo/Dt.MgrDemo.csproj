@@ -2,9 +2,6 @@
 	<PropertyGroup>
 		<Description>搬运工业务样例库</Description>
 	</PropertyGroup>
-
-    <Import Project="..\Targets.props" />
-    <Import Project="..\Common.props" />
      
 	<ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />

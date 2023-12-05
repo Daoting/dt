@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Version>4.2.7</Version>
+		<Version>4.3.0</Version>
         <PackageId Condition="'$(Configuration)'=='Debug'">Dt.Client.Debug</PackageId>
         <PackageId Condition="'$(Configuration)'=='Release'">Dt.Client</PackageId>
 		<Description>搬运工客户端基础包</Description>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-    <Import Project="..\Targets.props" />
-    <Import Project="..\Common.props" />
     <Import Project="..\Package.props" />
 
 	<!-- 包图标 -->

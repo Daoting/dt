@@ -36,14 +36,14 @@ namespace Dt.Core
             {
                 var headers = p_context.Response.Headers;
                 // 允许跨域请求的域
-                headers.Add("Access-Control-Allow-Origin", "*");
+                headers.Append("Access-Control-Allow-Origin", "*");
                 // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
-                headers.Add("Access-Control-Allow-Methods", "*");
+                headers.Append("Access-Control-Allow-Methods", "*");
                 // 允许跨域请求时自定义 header 字段
-                headers.Add("Access-Control-Allow-Headers", "*");
+                headers.Append("Access-Control-Allow-Headers", "*");
                 // 若要支持iframe内的跨域请求，需要以下两个header
-                //headers.Add("Cross-Origin-Embedder-Policy", "require-corp");
-                //headers.Add("Cross-Origin-Opener-Policy", "same-origin");
+                //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
+                //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
 
                 // wasm客户端跨域请求的预检
                 if (p_context.Request.Method == "OPTIONS")

@@ -4,9 +4,6 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-    <Import Project="..\Targets.props" />
-	<Import Project="..\Common.props" />
-
 	<ItemGroup>
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />

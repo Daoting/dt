@@ -4,8 +4,6 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
-    <Import Project="..\Targets.props" />
-    <Import Project="..\Common.props" />
     <ItemGroup>
       <None Remove="Structure\Tools\HistoryLogList.xaml" />
       <None Remove="Structure\Tools\HistoryLogQuery.xaml" />
