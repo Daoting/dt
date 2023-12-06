@@ -76,7 +76,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取桌面实例
         /// </summary>
-        public static Desktop Inst { get; internal set; }
+        public static Desktop Inst => UITree.RootContent as Desktop;
         #endregion
 
         #region 成员变量
@@ -93,7 +93,6 @@ namespace Dt.Base
         public Desktop()
         {
             DefaultStyleKey = typeof(Desktop);
-            Inst = this;
         }
         #endregion
 

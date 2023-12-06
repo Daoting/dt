@@ -118,17 +118,13 @@ namespace Dt.Base.Tools
                     _dlg = new Dlg
                     {
                         Title = "实时日志",
-                        Content = win,
                         IsPinned = true,
                         ShowVeil = false,
-                        WinPlacement = DlgPlacement.FromRight
+                        WinPlacement = DlgPlacement.FromRight,
+                        Width = 755,
+                        Height = Kit.ViewHeight / 2
                     };
-
-                    if (!Kit.IsPhoneUI)
-                    {
-                        _dlg.Width = 755;
-                        _dlg.Height = Kit.ViewHeight / 2;
-                    }
+                    _dlg.LoadWin(win);
                     _dlg.Closed += (s, e) => win.ClearData();
                 }
                 _dlg.Show();

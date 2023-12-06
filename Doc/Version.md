@@ -10,7 +10,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 
 
 # 版本说明
-## Release 4.2.x
+## Release 4.3.x
 ### 变更
 * 因Alt + 快捷键需要点击窗口获取焦点，调整为Ctrl + 快捷键 方式
 * 将一个别名对应一个类型和对应类型列表分开
@@ -72,6 +72,8 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 服务端配置客户端实体存储使用的默认服务名
 * IEntityWriter增加Delete(Table<TEntity>)
 * 发送回退增加填写留言功能
+* 升级net8.0
+* 无桌面时用对话框显示窗口
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 

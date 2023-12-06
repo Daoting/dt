@@ -128,8 +128,10 @@ namespace Dt.Base
 
             // 激活旧窗口，比较窗口类型和初始参数
             Win win;
+            Desktop desktop = Desktop.Inst;
             if (!Kit.IsPhoneUI
-                && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
+                && desktop != null
+                && (win = desktop.ActiveWin(p_type, p_params)) != null)
             {
                 return win;
             }
@@ -155,9 +157,25 @@ namespace Dt.Base
                     win.Params = p_params;
 
                 if (Kit.IsPhoneUI)
+                {
                     win.NaviToHome();
+                }
+                else if (desktop != null)
+                {
+                    desktop.ShowNewWin(win);
+                }
                 else
-                    Desktop.Inst.ShowNewWin(win);
+                {
+                    // 无桌面时用对话框显示
+                    var dlg = new Dlg { IsPinned = true };
+#if WIN
+                    // 空出主窗口的标题栏
+                    dlg.Top = 50;
+                    dlg.Height = Kit.ViewHeight - 50;
+#endif
+                    dlg.LoadWin(win);
+                    dlg.Show();
+                }
                 return win;
             }
 
@@ -222,12 +240,6 @@ namespace Dt.Base
             //            // 显示/隐藏后退按钮
             //            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Kit.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
             //#endif
-
-            if (Kit.IsPhoneUI)
-            {
-                // WinUI模式 -> PhoneUI模式
-                Desktop.Inst = null;
-            }
 
             // 重构根元素，将切换前的窗口设为自启动，符合习惯
             if (UITree.RootContent is Frame frame
