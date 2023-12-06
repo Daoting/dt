@@ -34,15 +34,6 @@
                 <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
                 <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
             </ItemGroup>
-
-            <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
-            <ItemGroup>
-                <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-                <Compile Update="**\*.xaml.cs">
-                    <DependentUpon>%(Filename)</DependentUpon>
-                </Compile>
-                <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-            </ItemGroup>
         </Otherwise>
     </Choose>
 
