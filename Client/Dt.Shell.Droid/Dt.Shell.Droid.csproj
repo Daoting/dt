@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0-android</TargetFramework>
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
         <SingleProject>true</SingleProject>
         <OutputType>Exe</OutputType>
         <IsUnoHead>true</IsUnoHead>
