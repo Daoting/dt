@@ -74,6 +74,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * 发送回退增加填写留言功能
 * 升级net8.0
 * 无桌面时用对话框显示窗口
+* 增加CPick实现选择器的简单功能
 
 * 文档预览服务 https://view.xdocin.com/  https://view.officeapps.live.com/op/view.aspx?src={your_office_url}
 
@@ -90,6 +91,7 @@ wasm版功能基本能运行，但目前编译慢、启动下载慢、交互响�
 * sqlite的sql语句中参数值null时必须转为 DBNull.Value
 * CDate中DateTime?类型时default(DateTime) 转null
 * MenuHome中在android上，Tab内的所有事件不触发，像被回收了
+* Lv键盘上下移动选择行时滚动位置错误
 
 
 ## Release 4.2.2

@@ -22,6 +22,8 @@ namespace Dt.UIDemo
 {
     public partial class SelectionCellDemo : Win
     {
+        Table _tblSelect;
+
         public SelectionCellDemo()
         {
             InitializeComponent();
@@ -39,6 +41,11 @@ namespace Dt.UIDemo
                 { "treedata" },
                 { "treefill" },
 
+                { "query" },
+                { "hm" },
+                { "valid" },
+                { "custom" },
+                
                 { "icon", typeof(Icons) },
                 { "iconint", typeof(int) },
                 { "iconstr" },
@@ -57,6 +64,7 @@ namespace Dt.UIDemo
                 treedata = "消化系统药",
                 treefill = "肛肠科",
 
+                query = "查询结果",
                 icon = Icons.主页,
                 iconint = 10,
                 iconstr = "主页",
@@ -65,11 +73,48 @@ namespace Dt.UIDemo
                 colorstr = "#FF1BA1E2",
                 colorbrush = Res.YellowBrush
             });
+
+            _tblSelect = SampleData.CreatePersonsTbl(100);
+
+            var menu = ((CPick)_fv["valid"]).Toolbar;
+            menu.Items.Add(new Mi { ID = "自定义", Icon = Icons.Bug });
         }
 
         void OnLoadTreeData(object sender, AsyncEventArgs e)
         {
             ((CTree)sender).Data = TvData.GetTbl();
+        }
+
+        void OnSearch(object sender, string e)
+        {
+            var pick = (CPick)sender;
+            pick.Data = _tblSelect;
+            pick.Lv.Filter = obj =>
+            {
+                var xm = obj.To<Row>().Str("xm");
+                return xm.Contains(e) || Kit.GetPinYin(xm).Contains(e.ToLower());
+            };
+        }
+
+        async void OnPicking(object sender, AsyncCancelEventArgs e)
+        {
+            using (e.Wait())
+            {
+                await Task.Delay(100);
+                var pick = (CPick)sender;
+                if (pick.SelectedRow.Str("xm").StartsWith("李"))
+                {
+                    e.Cancel = true;
+                    Kit.Warn("禁止选择李姓人员");
+                }
+            }
+        }
+
+        void OnBtnClick(object sender, EventArgs e)
+        {
+            Kit.Msg("自定义选择对话框，选择后可调用 FillCells 同步填充目标Cell的值");
+            var pick = (CPick)sender;
+            pick.FillCells(_tblSelect[0]);
         }
     }
 }

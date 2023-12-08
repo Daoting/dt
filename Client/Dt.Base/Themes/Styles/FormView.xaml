@@ -452,4 +452,34 @@
         </Setter>
     </Style>
 
+    <!--CPick-->
+    <Style TargetType="a:CPick">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CPick">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="TextBorder" Background="Transparent">
+                                <TextBlock Text="{TemplateBinding Text}"
+                                           Margin="10,0,0,0"
+                                           IsTextSelectionEnabled="True"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                            <Button x:Name="BtnFilter"
+                                    Content="&#xE0F2;"
+                                    Visibility="{Binding ShowButton, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Style="{StaticResource 字符按钮}"
+                                    Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
